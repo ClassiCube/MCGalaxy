@@ -1634,7 +1634,7 @@ namespace MCGalaxy
 
         public void CalcPhysics()
         {
-            /*try
+            try
             {
                 if (physics == 5)
                 {
@@ -1780,20 +1780,6 @@ namespace MCGalaxy
                                                           case Block.door_gold_air:
                                                           case Block.door_cobblestone_air:
                                                           case Block.door_red_air:
-
-                                                          case Block.door_orange_air:
-                                                          case Block.door_yellow_air:
-                                                          case Block.door_lightgreen_air:
-                                                          case Block.door_aquagreen_air:
-                                                          case Block.door_cyan_air:
-                                                          case Block.door_lightblue_air:
-                                                          case Block.door_purple_air:
-                                                          case Block.door_lightpurple_air:
-                                                          case Block.door_pink_air:
-                                                          case Block.door_darkpink_air:
-                                                          case Block.door_darkgrey_air:
-                                                          case Block.door_lightgrey_air:
-                                                          case Block.door_white_air:
 
                                                           case Block.door_dirt_air:
                                                           case Block.door_grass_air:
@@ -3188,20 +3174,6 @@ namespace MCGalaxy
                                                           case Block.door_gold_air:
                                                           case Block.door_cobblestone_air:
                                                           case Block.door_red_air:
-
-                                                          case Block.door_orange_air:
-                                                          case Block.door_yellow_air:
-                                                          case Block.door_lightgreen_air:
-                                                          case Block.door_aquagreen_air:
-                                                          case Block.door_cyan_air:
-                                                          case Block.door_lightblue_air:
-                                                          case Block.door_purple_air:
-                                                          case Block.door_lightpurple_air:
-                                                          case Block.door_pink_air:
-                                                          case Block.door_darkpink_air:
-                                                          case Block.door_darkgrey_air:
-                                                          case Block.door_lightgrey_air:
-                                                          case Block.door_white_air:
 
                                                           case Block.door_dirt_air:
                                                           case Block.door_grass_air:
@@ -5231,7 +5203,7 @@ namespace MCGalaxy
             {
                 Server.s.Log("Level physics error");
                 Server.ErrorLog(e);
-            }*/
+            }
         }
 
         public void AddCheck(int b, string extraInfo = "", bool overRide = false, MCGalaxy.Player Placer = null)

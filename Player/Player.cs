@@ -76,6 +76,7 @@ namespace MCGalaxy {
         public string time;
         public string name;
 		public string DisplayName = "";
+        public string SkinName;
         public string realName;
         public int warn = 0;
         public byte id;
@@ -225,7 +226,10 @@ namespace MCGalaxy {
         public bool copyAir = false;
         public int[] copyoffset = new int[3] { 0, 0, 0 };
         public ushort[] copystart = new ushort[3] { 0, 0, 0 };
-        
+
+        public string model = "humanoid";
+        public bool spawned = false;
+
         public bool Mojangaccount {
         	get {
         		return truename.Contains('@');
@@ -1054,29 +1058,6 @@ namespace MCGalaxy {
                 SetPrefix();
             }
 
-            try {
-                ushort x = (ushort)( ( 0.5 + level.spawnx ) * 32 );
-                ushort y = (ushort)( ( 1 + level.spawny ) * 32 );
-                ushort z = (ushort)( ( 0.5 + level.spawnz ) * 32 );
-                pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
-
-                GlobalSpawn(this, x, y, z, rot[0], rot[1], true);
-                foreach ( Player p in players ) {
-                    if ( p.level == level && p != this && !p.hidden )
-                        SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
-                }
-                foreach ( PlayerBot pB in PlayerBot.playerbots ) {
-                    if ( pB.level == level )
-                        SendSpawn(pB.id, pB.color + pB.name, pB.pos[0], pB.pos[1], pB.pos[2], pB.rot[0], pB.rot[1]);
-                }
-            }
-            catch ( Exception e ) {
-                Server.ErrorLog(e);
-                Server.s.Log("Error spawning player \"" + name + "\"");
-            }
-
-            Loading = false;
-
             if ( Server.verifyadmins == true ) {
                 if ( this.group.Permission >= Server.verifyadminsrank ) {
                     adminpen = true;
@@ -1190,6 +1171,35 @@ namespace MCGalaxy {
             Server.s.Log(name + " [" + ip + "] has joined the server.");
 
             if ( Server.zombie.ZombieStatus() != 0 ) { Player.SendMessage(this, "There is a Zombie Survival game currently in-progress! Join it by typing /g " + Server.zombie.currentLevelName); }
+            if (!spawned)
+            {
+                try
+                {
+                    ushort x = (ushort)((0.5 + level.spawnx) * 32);
+                    ushort y = (ushort)((1 + level.spawny) * 32);
+                    ushort z = (ushort)((0.5 + level.spawnz) * 32);
+                    pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
+
+                    GlobalSpawn(this, x, y, z, rot[0], rot[1], true);
+                    foreach (Player p in players)
+                    {
+                        if (p.level == level && p != this && !p.hidden)
+                            SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+                    }
+                    foreach (PlayerBot pB in PlayerBot.playerbots)
+                    {
+                        if (pB.level == level)
+                            SendSpawn(pB.id, pB.color + pB.name, pB.pos[0], pB.pos[1], pB.pos[2], pB.rot[0], pB.rot[1]);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Server.ErrorLog(e);
+                    Server.s.Log("Error spawning player \"" + name + "\"");
+                }
+                spawned = true;
+            }
+            Loading = false;
         }
 
         public void SetPrefix() { //just change the color name if someone ever decides these titles need different colors O.o I just try to match them with the ranks on comingsoon.tk
@@ -2497,16 +2507,37 @@ return;
             for ( int i = 0; i < send.Length; i++ ) {
                 buffer[i + 1] = send[i];
             }
-            try {
-                socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate(IAsyncResult result) { }, null);
-                buffer = null;
-            }
-            catch ( SocketException e ) {
-                buffer = null;
-                Disconnect();
+            if (id != 17)
+            {
+                try
+                {
+                    socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate(IAsyncResult result) { }, null);
+                    buffer = null;
+                }
+                catch (SocketException e)
+                {
+                    buffer = null;
+                    Disconnect();
 #if DEBUG
                 Server.ErrorLog(e);
 #endif
+                }
+            }
+            else
+            {
+                try
+                {
+                    socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+                    buffer = null;
+                }
+                catch (SocketException e)
+                {
+                    buffer = null;
+                    Disconnect();
+#if DEBUG
+                Server.ErrorLog(e);
+#endif
+                }
             }
         }
         
@@ -2827,16 +2858,52 @@ return;
                 //Server.s.Log((DateTime.Now - start).TotalMilliseconds.ToString()); // We dont want random numbers showing up do we?
             }
         }
-        public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            //pos = new ushort[3] { x, y, z }; // This could be remove and not effect the server :/
-            //rot = new byte[2] { rotx, roty };
-            byte[] buffer = new byte[73]; buffer[0] = id;
-            StringFormat(name, 64).CopyTo(buffer, 1);
-            HTNO(x).CopyTo(buffer, 65);
-            HTNO(y).CopyTo(buffer, 67);
-            HTNO(z).CopyTo(buffer, 69);
-            buffer[71] = rotx; buffer[72] = roty;
-            SendRaw(7, buffer);
+        public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty, string displayName = "", string skinName = "")
+        {
+            if (displayName == "")
+                displayName = DisplayName;
+            if (skinName == "")
+                skinName = displayName;
+            if (!HasExtension("ExtPlayerList", 2))
+            {
+                Server.s.Log("Hi");
+                byte[] buffer = new byte[73]; buffer[0] = id;
+                StringFormat(name, 64).CopyTo(buffer, 1);
+                HTNO(x).CopyTo(buffer, 65);
+                HTNO(y).CopyTo(buffer, 67);
+                HTNO(z).CopyTo(buffer, 69);
+                buffer[71] = rotx; buffer[72] = roty;
+                SendRaw(7, buffer);
+            }
+            else
+            {
+                Server.s.Log("Test");
+                byte[] buffer = new byte[137];
+                buffer[0] = id;
+                StringFormat(displayName, 64).CopyTo(buffer, 1);
+                StringFormat(skinName, 64).CopyTo(buffer, 65);
+                HTNO(x).CopyTo(buffer, 129);
+                HTNO(y).CopyTo(buffer, 131);
+                HTNO(z).CopyTo(buffer, 133);
+                buffer[135] = rotx;
+                buffer[136] = roty;
+                SendRaw(33, buffer);
+            }
+
+            if (HasExtension("ChangeModel"))
+            {
+                Player.players.ForEach(p =>
+                {
+                    if (p.level == this.level)
+                        if (p == this) unchecked { SendChangeModel((byte)-1, model); }
+                        else
+                        {
+                            SendChangeModel(p.id, p.model);
+                            if (p.HasExtension("ChangeModel"))
+                                p.SendChangeModel(this.id, model);
+                        }
+                });
+            }
         }
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             if ( x < 0 ) x = 32;
@@ -2919,27 +2986,27 @@ rot = new byte[2] { rotx, roty };*/
 			buffer[132] = mods;
 			SendRaw( 21, buffer );
 		}
-		public void SendAddPlayerName( byte id, string name, string listname, string groupname, byte grouprank ) {
-			byte[] buffer = new byte[195];
-			HTNO( (short)id ).CopyTo( buffer, 0 );
-			StringFormat( name, 64 ).CopyTo( buffer, 2 );
-			StringFormat( listname, 64 ).CopyTo( buffer, 66 );
-			StringFormat( groupname, 64 ).CopyTo( buffer, 130 );
-			buffer[194] = grouprank;
-			SendRaw( 22, buffer );
-		}
-		public void SendAddEntity2( byte id, string name, string skinname, short x, short y, short z, byte yaw, byte pitch ) {
-			byte[] buffer = new byte[136];
-			buffer [0] = id;
-			StringFormat( name, 64 ).CopyTo( buffer, 1 );
-			StringFormat( skinname, 64 ).CopyTo( buffer, 65 );
-			HTNO(x).CopyTo( buffer, 129 );
-			HTNO (y).CopyTo (buffer, 131);
-			HTNO (z).CopyTo (buffer, 133);
-			buffer[134] = yaw;
-			buffer [135] = pitch;
-			SendRaw(33, buffer );
-		}
+        public void SendExtAddPlayerName(short id, string name, Group grp, string displayname = "")
+        {
+            byte[] buffer = new byte[195];
+            HTNO(id).CopyTo(buffer, 0);
+            StringFormat(name, 64).CopyTo(buffer, 2);
+            if (displayname == "") { displayname = name; }
+            StringFormat(displayname, 64).CopyTo(buffer, 66);
+            StringFormat(grp.color + grp.name.ToUpper() + "s:", 64).CopyTo(buffer, 130);
+            buffer[194] = (byte)grp.Permission.GetHashCode();
+            SendRaw(22, buffer);
+        }
+
+        public void SendExtAddEntity(byte id, string name, string displayname = "")
+        {
+            byte[] buffer = new byte[129];
+            buffer[0] = id;
+            StringFormat(name, 64).CopyTo(buffer, 1);
+            if (displayname == "") { displayname = name; }
+            StringFormat(displayname, 64).CopyTo(buffer, 65);
+            SendRaw(23, buffer);
+        }
 		public void SendDeletePlayerName( byte id ) {
 			byte[] buffer = new byte[2];
 			HTNO( (short)id ).CopyTo( buffer, 0 );

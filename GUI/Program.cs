@@ -554,7 +554,6 @@ namespace MCGalaxy_.Gui
                 if (Player.players != null && Player.players.Any())
                     foreach (Player pl in Player.players) pl.save();
                 
-               File.WriteAllBytes("Updater.exe", MCGalaxy.Properties.Resources.Updater);
                 if (!usingConsole)
                     Process.Start("Updater.exe", "securitycheck10934579068013978427893755755270374" + parent);
                 else
