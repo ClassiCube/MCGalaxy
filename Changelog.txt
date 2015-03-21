@@ -1,0 +1,787 @@
+v5.5.12
+-New:
+  -Dynamic compilation for external DLLs (thanks headdetect)
+  -Added PlayerRotateEvent
+  -New message when players try to skip ranks (thanks xShOtDoOdx)
+-Fixes:
+  -GC can no longer be used in Chat Moderation (thanks nniels900000)
+  -Proper error reporting when IRC errors (thanks niels900000)
+  -Player table and Opstats table now uses TEXT to avoid MySQL/SQLite errors
+  -Other backend fixes and improvements
+-Removals:
+  N/A
+
+v5.5.11
+-New:
+  -Rewrote /report with the option to clear all reports
+  -New Global Chat banlist
+  -New interface for /unloaded (colors show the perbuildrank)
+-Fixes:
+  -!!!SQL Injection fix!!! Database is now save against SQL Injection attacks
+  -The /report command is rewritten and fixed
+  -Whitespace removal from/to GC (caused some clients to crash)
+  -Variable '$' is removed when communicating via GC
+  -SQL: fixed bug that the MCZallDB couldn't be found when starting server
+  -Muted players now remain muted after a relog
+  -Titlefix with using /whowas
+  -Prefix coloring fix with brackets
+  -Fixed that players can't use /deletelvl on maps with perbuild rank higher than theirs
+  -Whenever an invalid rank is set to the map's rank properties, it is auto-set to Permissionlevel 0 (Guest)
+  -Minor bug fixes
+-Removals:
+  -Restriction to the rankname devs/mods/gcmods etc. removed
+  -Staff cannot use protection commands anymore
+  -LavaMapSubmission to comingsoon.tk deleted
+
+v5.5.10
+-New:
+  -New interface for the /eco command and system
+  -'/eco setup apply' added to apply the eco settings changed in Economy.properties (owner and console only)
+  -/eco stats has now additional info: Total spent, Recent purchase, Recent payment, Recent Receivement, Recent fine
+  -Offline support for the Economy system
+  -Offline support when using /give, /take, /pay and /money
+  -When using /jail [player] the player returns to the jail automatically after a relog
+  -The new MCGalaxy Protection System
+  -Option in server.properties to choose a protection level: Off/Mod/Dev
+  -MCGalaxy Devs, Mods and GCMods now have an additional fixed title
+  -Added GUI for Economy Settings under the Properties/Misc tab
+  -Changed the tab Verification/spam to Security and added the option to change Protection Level in GUI
+-Fixes:
+  -!!!Fixed /xundo!!!
+  -/money and /eco stats without [player] shows personal stats
+  -/eco setup rank [maxrank] can't be set to greater ranks than yourself
+  -No colors in the title allowed when buying a title
+  -When player has a color and gets ranked, the color remains intact without a relog
+  -Title + color fix after a rank
+  -Title + titlecolor fix in general
+  -Server.properties allignment improvements
+  -Fixed issue where Console couldn't use /give and /take
+  -Fixed issues where Console tries to use /eco, /money and /take
+  -Mojang users can now login when they have '-' in their email address
+  -Minor bug fixes
+-Removals:
+  -/eco setup map edit dimensions [x] [y] [z]
+  -using /money on a player ranked higher, because /eco stats shows stats for all players
+  -the old staffprotection system, which was spread throughout the source
+
+v5.5.9
+-New:
+  -If textures are enabled, WoM users sees join/leave messages at the top right
+  -GlobalChat changed to irc.comingsoon.tk #GlobalChat
+  -GC data is gotten from remote server.
+-Fixes:
+  -/womid now compatible with xWoM
+  -Fixed bugs with textures
+-Removals:
+  N/A
+
+v5.5.8
+-New:
+  N/A
+-Fixes:
+  -Mojang Accounts can now log in, the username used is the email username + a UID
+  -Fixed /clones
+  -Fixed /seen
+-Removals:
+  N/A
+  
+v5.5.6
+-New:
+  -Admins can now have the server download beta versions
+  -New version system
+-Fixes:
+  -Fixed /ipban
+  -Fixed /mb
+  -Fixed /mb show
+  -Fixed /send
+  -Fixed GC Whitespace issue
+  -Fixed trains (including op_air)
+  -Added &noforward=1 to WOMBeat
+  -Cleans up active physics before unloading a level/server exit
+  -Property window focuses on click
+-Removals:
+  N/A
+
+v5.5.0.5
+-New:
+  N/A
+-Fixes:
+  -Fixed Physics bug
+  -Fixed Messageblock bug
+  -Fixed Title bug
+-Changes:
+  -Updated dev list
+-Removals:
+  N/A
+
+v5.5.0.4
+-New:
+  N/A
+-Fixes:
+  -Fixed Heartbeater only beating once
+  -Fixed MCGalaxy heartbeater
+-Changes:
+  N/A
+-Removals:
+  N/A
+
+v5.5.0.3
+-New:
+  -Ability to turn off omnibans
+  -MCGalaxy now saves if it detects Windows is shutting down.
+  -Multiblock support for /replaceall /replace /replacenot
+  -Basic open classic client support
+  -Added Herobrine
+-Fixes:  
+  -Fixed minecraft.net Heartbeater
+  -Fixed bug in UPNP
+  -More color code exploit fixes!
+-Changes:
+  -Updated developer list
+  -Updated the updater to update from the new update subdomain.
+  -Updated /pass to be more secure
+-Removals:
+  -Removed all developer protection
+  -Removed Herobrine
+
+v5.5.0.2
+-Fixed Console crashing when trying to set up WoM Textures
+-Fixed the color code crashes (for good)
+-Reverted to old networking code
+-Fixed GUI bugs
+-Released Forge Remote for Android and PC : http://www.comingsoon.tk/remote/
+
+v5.5.0.1
+-Fixed Players not disconnecting under mono.
+-Fixed /Jail not working if not used by console.
+-Fixed Crashes with the -1 value error.
+-Fixed console not being able to use global.
+-Fixed where unloading a level will say it isnt loaded even if it was loaded.
+-Possibly fixed the minimizing bug (i cant reproduce it to test).
+
+v5.5.0.0
+-Added a Global Chat Control Panel for Global Chat Moderators and MCGalaxy Developers.
+	-Allows for muting of individual players on a server. 
+	-Provides the ability to prevent a single user from ever using Global Chat. 
+-Added support for  WoM Textures. Once you enable WoM Textures, it will open up an option on the Maps tab in console. You can 
+
+also configure it in extra/cfg/<mapname>.cfg. 
+-Fixed an issue where a player's title and color would not be reset properly upon leaving a game of TNTWars.
+-Fixed an issue with the reference .dll file where the .dll was being falsely registered as a Trojan by most Anti-Virus 
+
+softwares. 
+-Fixed an exploit in commands blocks where people would put in commands like /ban or /setrank and convinced an op/admin to walk 
+
+through them. You can no longer use sensitive admin commands (like setrank, ban, kick, etc...) in Message Blocks.
+-Fixed numerous small memory leaks and bugs. 
+-Fixed CLI on Windows.
+-Made it so you cannot use /sendcmd to impersonate a person on Global Chat. 
+-Server should now Auto-Restart upon encountering an "Out Of Memory" Error. 
+-Moved remote console code to a plugin. Download: http://www.comingsoon.tk/forums/forumdisplay.php?fid=35
+
+v5.4.0.4
+-Fixed physics error
+-Fixed physics not starting automaticly
+-Bug fixes...
+
+v5.4.0.3
+-Fixed a serious issue that made physics not work properly.
+-Made it so you have to read the Global Chat rules, and agree to them using /gcaccept, before using Global Chat.
+-Removed a piece of code that only allowed people to have one instance of MCGalaxy running on a single computer. 
+
+v5.4.0.2
+- Added new command: 
+	- /search - Allows you to search all the blocks, ranks, players, and commands. (Does not support Custom Commands).
+- Modified MCGalaxy Heartbeat to reduce site load.
+- Fixed an issue where physics would cause random CPU usage spikes.
+- Fixed an issue in /mute that counted everyone as offline. 
+
+v5.4.0.1
+- Fixed an issue where auto-updated users did not download a vital .dll file. 
+
+v5.4.0.0
+- Fixed SQLite on Mono.
+- Fixed a chat bug which would cause all players to crash.
+- Fixed numerous small memory leaks.
+- Fixed numerous typos. 
+- Fixed an issue where putting a "-" at the front of a message would cause the "-" to disappear.
+- Fixed the issue where all "%" characters were removed from chat. 
+- Fixed an issue in /botai. 
+- Fixed an issue where chat in IRC from the server would appear white, often becoming invisible on light colored backgrounds. 
+- In global chat, developers names are now prefixed with '[Dev]' if they are on a server and use /global.
+- Added a new gamemode: TNT Wars. 
+- Added Commands:
+	- /ascend - Teleports you to the first free space above you. 
+	- /copyloadnet - Loads a copy from a network location.
+	- /copysavenet - Saves a copy to a network location. 
+	- /descend - Teleports you to the first free space below you.
+	- /opstats [player] [today]|[yesterday]|[thismonth]|[lastmonth]|[all] - Displays information about operator command 
+
+usage.
+	- /quick [function] [block] [type] - Cuboids the selected function instantly. Available functions: cuboid, pyramid, 
+
+replace, replaceall, replacenot, spheroid. 
+	- /tntwars (shortcut /tw):
+	- /tw list - Lists all current games.
+	- /tw join <team/level> - join the game on <level> or on <team> (red/blue).
+	- /tw leave - leave the current game.
+	- /tw scores <top/team/me> - view the top score/team scores/your scores.
+	- /tw players - view current players in your game.
+	- /tw health - view your current health level.
+	- /tw rules - View TNTWars rules. (You can also send these to the map, all players in a TNTWars game, or a single 
+
+player)
+	- /tw setup - Sets up the TNT War game (For more info use /tntwars setup help).
+	- /translate - Shows whether translation is enabled or disabled.
+	- /translate toggle - turns on or off personal translation.	
+- Added C4 block (use /c4 to place).
+- Added Automatic Translation. Disabled by default (/translate is related to this).
+- Added an option to only allow people with premium minecraft accounts onto the server. 
+- Added a Command Usage Register which sends information on how often commands are used to MCGalaxy Devs. This can be disabled.
+- Added support to /write for more characters. Some new characters include: [ ] { } < > ; | ` ( ) ~ 
+- Added a configurable startup script for linux/mac users (mcf.sh).
+- Added Plugin API Events (Examples on how to use can be found here: http://pastebin.com/NZbdJvkK)
+	- OnBlockChangeEvent.Register(delegate, Priority, Plugin)
+	- OnBlockChangeEvent.UnRegister(Plugin)
+	- OnMessageRecieveEvent.Register(delegate, Priority, Plugin)
+	- OnMessageRecieveEvent.UnRegister(Plugin)
+	- OnMySQLSaveEvent.Register(delegate, Priority, Plugin)
+	- OnMySQLSaveEvent.UnRegister(Plugin)
+	- OnPlayerAFKEvent.Register(delegate, Priority, Plugin)
+	- OnPlayerAFKEvent.UnRegister(Plugin)
+	- OnPlayerChatEvent.Register(delegate, Priority, Plugin)
+	- OnPlayerChatEvent.UnRegister(Plugin)
+	- OnPlayerCommandEvent.Register(delegate, Priority, Plugin)
+	- OnPlayerCommandEvent.UnRegister(Plugin)
+	- OnPlayerConnectEvent.Register(delegate, Priority, Plugin)
+	- OnPlayerConnectEvent.UnRegister(Plugin)
+	- OnPlayerDeathEvent.Register(delegate, Priority, Plugin)
+	- OnPlayerDeathEvent.UnRegister(Plugin)
+	- PlayerMoveEvent.Register(delegate, Priority, Plugin)
+	- PlayerMoveEvent.UnRegister(Plugin)
+- Added shortcut /ms to /measure. 
+- Made some changes to the way that cuboid, paste, line, etc... work to make them lag less. 
+- Made it so the CLI Console can now use adminchat, opchat, and whisper chat.
+- Made some changes to /votekick to make it function better.
+- Made it so people can now whisper to hidden players of equal or higher rank. 
+- Modified /tp so it is now /tp <player1> [player2]. Player2 is an optional parameter and will move player one to player two if 
+
+specified. 
+- Re-added shortcut /m for /repeat (Due to complaints.)
+- Removed /zombiespawn due to it being able to crash servers.
+- Revamped /review, so it now uses a queue. 
+	- /review enter - enters you into the review queue (/review does the same for those who can't use /review next).
+	- /review next - will take an op to the next person in the review queue.
+	- /review view - lists everyone in the review queue. 
+	- /review leave - using this will remove you from the queue.
+	- /review clear - clears the review queue.
+	-There is a new tab in the properties window for /review. 
+- Using @@ before a message will send a whisper message to the console.	
+
+v5.3.0.0
+- Added tempranks.
+- More ban options and info.
+- Fixed warn help menu.
+- Fixed a massive memory leak with level unloading.
+- Fixed leaving a channel name black in the IRC settings causing a crash.
+- Fixed /spheroid being lopsided with even numbers.
+- Fixed the way the program restarts (should be way better now)
+- Fixed the update checker so it only updates if there actually is an update.
+- Fixed the program crashing after every update
+- Fixed /xban not working at all if the player is offline.
+- Fixed a bug in /ban that allowed a player to ban someone ranked higher than them if the player being banned was below rank 
+
+permission 80. 
+- Fixed Port Checker.
+- Fixed fireworks leaving blocks behind
+- Fixed an error where /rankmsg wouldn't send the whole message, only the first word.
+- Added ban reasons.
+- Added a new updater (configure it in Properties)
+- Added option for WoM Direct heartbeat.
+- Added suppot for SQLite, which means MySQL isn't required anymore. You can still use MySQL.
+- Added new help category "games"
+- Added warps (/warp)
+- Added the "Notchian" tree generator, use /tree notch.
+- Added command blocks, prepend a / to your /mb message to make it a command block. Example: /mb /cuboid air random
+- Added a Lava Survival map browser, so you can download maps from within the software.
+- Added some default position settings for Lava Survival.
+- Added a shortcut /fz for /freeze.
+- Added new, better CTF and removed the old one. It's pretty much ready to go right out-of-the-box, just type /ctf.
+- Added a lives system to Lava Survival, so players actually have to worry about killer lava/water. You can set the number of 
+
+lives in the properties.
+- Added Global Chat to the chat tab in the GUI.
+- Added color codes to IRC.
+- Added blocks:
+	- fast_hot_lava - Like lava_fast, but it kills you.
+	- All colours are now represented in doors (door_orange, door_cyan, door_pink, etc.)
+- Added commands:
+	- /nyan - 100% self-explanatory!
+	- /warp - For the new warp system!
+	- /vip - Lets you set people who can join the server regardless of the player limit.
+	- /pumpkin - Does what it says on the tin.
+	- /temprank - Sets a temporary rank for the specified player.
+	- /temprankinfo - Lists the info of the temporary rank of the given player.
+	- /tempranklist - Lists every user with a temporary rank.
+	- /server - Restart, backup and more!
+- Added level types:
+	- rainbow - 20% cooler than other level types.
+	- hell - Do we really need to explain this?
+- Removed commands:
+	- /drop - Old CTF command, not needed.
+	- /team - Old CTF command, not needed.
+- Removed that stupid button next to the command input box.
+- Removed the Updater button and the useless text box next to it
+- Removed Restarter.exe and Restarter.pdb
+- Removed bash and batch files related to Updating (no longer needed)
+- Made improvements to leaf decay, should be more random now.
+- Made it so command and block change errors show the error info in-game.
+- Made it so that /inv will send a message to the user if the target (or themselves) has had invincible mode enabled/disabled.
+- Made it so you can use /inv on another person from console. 
+- Disabled color codes in Global Chat, it's just too risky with the exploits.
+- Waypoints are now saved
+- Hard-Coded command permissions are now editable (GUI and a seperate .properties file)
+- Revamped Zombie Survival Mode, more friendly to servers that want to run it on certain levels, freebuild + zombie servers, 
+
+etc.
+
+v5.2.0.0
+- Fixed the server-breaking freeze bug that happened when a player lagged (NOT logged) out.
+- Fixed several possible memory leaks.
+- Fixed /moveall and /map in the console.
+- Fixed /click for guests.
+- Fixed /pyramid so it respects block limits.
+- Fixed /unload empty.
+- Fixed /hide and /xhide to use custom login/logout messages.
+- Fixed /renamelvl so it renames backups, and won't error if MySQL is disabled.
+- Fixed /resetbot so it no longer derps like Derpy Hooves in the server console.
+- Fixed /draw so it respects cuboid limits.
+- Fixed /economy.
+- Fixed level property file saving, it was breaking on certain maps.
+- Fixed in-game messages from the console so they have proper coloring again.
+- Fixed the player and map lists in the GUI not updating.
+- Fixed all the color code exploits which crash clients... hopefully.
+- Fixed GUI so if a box is left empty in the create level (not including seed) it no longer crashes.
+- Fixed newly "opped" (can break adminium) players having to rejoin before they can actually break adminium.
+- Fixed dirt changing into grass when it shouldn't on physics 0.
+- Fixed the "Too many connections!" error that would require a restart.
+- Fixed a few bugs in Zombie Survival.
+- Fixed being unable to set the lowest rank for any blocks after obsidian in the GUI.
+- Fixed the duplicate "death count" option in the GUI.
+- Added global chat, which allows you to chat with other servers! Can be disabled in the properties.
+- Added /copy [save|load|delete|list], and you can load from a URL by appending a # to the end.
+- Added a per-rank undo limit and ditched the old hard-coded limits. It's in seconds, and the limit only applies to undoing 
+
+other players.
+- Added Plugin.Events.CancelEvent().
+- Added tree growing! Use /map growtrees to turn it on, place a sapling and wait a while. Requires physics.
+- Added leaf decay! Use /map leafdecay to turn it on, requires physics.
+- Added missing stuff to the "Maps" tab.
+- Added seed option to /newlvl, check /help newlvl for more information.
+- Added a "Games" tab to the properties window, it's for game mode configuration.
+- Added Lava Survival mode! Yay! The GUI is in the properties.
+- Added server port and NickServ identify to the IRC/SQL settings tab.
+- Added an easter egg. See if you can find it!
+- Added global chat!
+- Added shortcut /l for /line.
+- Added shortcut /alts for /clones.
+- Added commands:
+	- /global or /gc - Send a message to global chat.
+	- /garbage - Runs the .NET garbage collector, which frees up memory. You shouldn't need to use this often.
+	- /lavasurvival or /ls - Setup and use Lava Survival.
+- Added blocks:
+	- griefer_stone - The ultimate anti-griefer block! There are several options for it, such as what it looks like in-game. 
+
+Defaults to Op+ to place/destroy.
+	- lava_sponge - Like normal sponge, but cleans up lava instead of water. Defaults to AdvBuilder+ to place/destroy.
+	- op_lava - Like op_glass, op_water, ect. Defaults to Op+ to place/destroy.
+- Improved the tree generator, the trunk now makes more sense.
+- Improved water/lava physics, they now have random flow. You can go back to the old physics with /map randomflow.
+- Moved Zombie Survival options into the "Games" tab.
+- Made it so in the CLI, you must now use a / before commands. No more chat messages being parsed as commands!
+- Made it so autoload.txt doesn't save when load on /goto is enabled.
+- Made some changes to the right-click menu for the maps box.
+- Made a change to the window title, it looks much more professional.
+- Made it so you can now have different prices for ranks in the Economy.
+- Made it so plugins are loaded last, this fixes a problem with accessing levels in plugins.
+- Made changes to some events (Might break old plugins).
+- Made it so /players now has an option to not show ranks that have no one ranked as them online, and you can see only players 
+
+of a certain rank with /players [rank].
+
+v5.1.0.3
+- Fixed level saving!
+
+v5.1.0.2
+- Fixed the bug that pretty much broke physics
+- Fixed a bug with grass growing on physics 0 and 5
+- Fixed the error that happens when a new user joins the server
+
+v5.1.0.1
+- Hopefully fixed the error-when-a-new-person-joins bug...
+- Fixed the check for updates option
+- Fixed AFK kick!!
+- Added load-on-/goto option for maps, defaults to on and requires the "Load on /goto" server option enabled to work. Disabling 
+
+the option on a map will prevent it from being loaded with /goto
+- Added Zombie Survival mode! :D Use /zombiegame to start it, there are several other commands as well
+
+v5.1.0.0
+- Fixed a bug that caused the console to crash, when clicking on a player
+- Fixed a bug where the server would crash, when generating economy.properties
+- /draw can now be undone with /undo
+- /rankmsg has been successfully added to command list (left out from last release)
+- Added spam control (Mutes players after [X] amount of messages and for [Y] minutes
+- Fixed delay on server start
+- Fixed the updater
+- Added: /perbuildmax [Level] [Rank] - Sets the max rank to build on a map, doesn't exlude player's with access to the command
+- Added: /pervisitmax [Level] [Rank] - Sets the max rank to visit a map, doesn't exclude player's with access to the command
+- Added: /patrol - Teleports you to a random guest.
+- Options for /allowguns now save over server restarts
+- New /whois stat(Cuboided blocks) - Shows how many blocks a player has cuboided.
+- Added: /quick [Function] [Block] [Type] - Instantly complete a cuboid.
+	- Functions include: cuboid, pyramid, replace, replaceall, replacenot and spheroid.
+- Removed: /silentcuboid - No longer required, integrated into cuboid in necessary times. Text files are also no longer required 
+
+for /pyramid
+- Added: /report [Player] [Reason] - Reports a player for the specified reason.
+[For OPs] - /report check - Shows the reported list.
+		  - /report view [Player] - Views the report on the specified player.
+		  - /report remove [Player] - Removes the report on the specified player.
+- Added: Doors-only physics - /physics 5
+
+v5.0.0.0
+- Added a Maps tab to the GUI.
+- Added a Players tab to the GUI.
+- Added a Edit Text window to the GUI.
+- Added a Chat Tab to the GUI. 
+- Removed the Custom Login and Logout windows (Now editable from the Players tab).
+- Added Plugin API.
+- Added VisualBasic Scripting (Custom Commands)
+- Now Supports WOM texturing.
+- Added /waypoint - creates waypoints on a map that you can move from, useful for building.
+- Added /topten - Lists top ten players in several catagories. Requires MySQL.
+- Added /faq -  Creates a file called faq.txt. You may put frequently asked questions in here and their answers.
+- Added /maze -  Creates a maze.
+- Added an ignore system:
+    - Console option to allow ignoring of operators.
+    - /ignore [Player] - Ignores the specified player.
+    - /ignore global - Ignores global chat, does not ignore operators if not allowed.
+- Added /p2p [Player 1] [Player 2] -  sends a specified player to another specified player.
+- Added /draw [Shape] [Height] [Radius] -  can create cones, spheres, and pyramids, hollow spheres, and hollow pyramids. 
+- Added /allowguns [Map] -  Allows or disallows gun usage on a specified level.
+- Added a part to /whois that shows the total time a player has spent on a server.
+- Reverted to old CLI Interface due to an issue where the server would lock up when the console used an invalid command. You no 
+
+longer need to put a "/" infront of commands, for now.
+- Remade the Economy system. Now consolidated into 1 command '/economy' and 1 properties file.
+- /kill now works in the console.
+- /slap now works in the console.
+- /tcolor now works in the console.
+- /color now works in the console.
+- Updated /calculate so it can use operations like "cube".  
+- Made it so that players can no longer change the color of people ranked higher than them. 
+- Fixed a massive number of possible memory leaks and stability issues.
+- Removed /ellipse after a request for its removal by MCDzienny and it's development team.
+- /review now checks if an op is online. If one is not, it will inform the player that there are no ops online.
+- Added a Admin Verification System:
+    - Option to enable or disable for specific ranks
+    - /setpass [Password] - Sets your password, can only be used on first login or after leaving admin pen.
+    - /pass [Password] - Use this to verify yourself when logging in.
+    - /resetpass [Player] - Can only be used by the server owner and resets the specified player's password.
+    - Note: Passwords are encrypted, but still do not set this as your minecraft password!
+- Made it so player's of lower rank cannot /fetch those of higher rank.
+- MySQL Details can now be edited in the properties.
+- Text files such as autoload, awardslist, badwords, cmdautoload, custom$s, emotelist, joker, messages, player awards, rules and 
+
+welcome can now be editing in the GUI Properties.
+- Added Box in console to set the server owner, this is used in some commands.
+- Visual Basic Support for Scripting and Add-on in the Console Properties
+- Added /rankmsg [Rank] [Message] - Sends the message to the specified rank, if no rank is given, player's rank is taken.
+
+v4.9.0.0
+- Fixed a bug in /pyramid
+- Fixed Restart-on-error
+- Fixed an issue where sometimes saving levels would randomly crash the server
+- Added a feature that checks if the Meeby.SmartIrc4Net.dll file exists. If it does not, the server will download it.
+- Modified the CLI Interface. It is now smoother and now you must put a "/" infront of commands in the CLI. 
+- Adminchat Symbol is now "+". 
+- /freeze now works in the console. 
+
+v4.8.0.0
+- Added custom login and logout messages - customizable in the console properties
+- Added /loginmessage [Player] [Message] and /logoutmessage [Player] [Message]
+- Added /explode - For all your exploding needs:
+	-/explode me - Explodes yourself
+	-/explode [Player] - Explodes the specified player
+	-/explode [X] [Y] [Z] - Explodes at the specified co-ordinates
+- Added /pyramid - Builds pyramids, thanks to aaron1tasker:
+	-/pyramid - Builds a solid pyramid
+	-/pyramid hollow - Builds a hollow pyramid
+	-/pyramid reverse - Builds a reverse pyramid
+- Added add-on /hide check - Checks if your hiding
+- Added /tnt allow and /tnt disallow to disable and enable the use of tnt commands
+- Fixed /restart and the console restart button
+- Fixed /overseer - Now accepts players names with upper-case letters, with the creation of maps
+- Fixed /unbanip - It will now unban ips with no more, "Not a valid ip!" messages :)
+- Fixed: Changelog now displays in the console.
+- Updated: /reload - Better version that takes you to the map immediately, sends reload message and logs.
+- Added /chatroom and a full chatroom system
+- Fixed some bugs in /countdown
+- Added 2 new game speeds (ultimate and extreme) to /countdown
+- Added a new game mode to /countdown: freeze (do '/countdown start [speed] freeze' to start it) 
+- Fixed a bug in /megaboid that lets you build/delete on a map that has a higher perbuild than your rank.
+- Added a feature to /xban that allows you to kick a person with a message.
+- Added the shortcut /h to /main, also fixed the help message for /main and put it in the "other" /help catagory.
+- Added the shortcut /fg to /fixgrass. 
+- Added /uban (uban is basically xban without the ipban.)
+- Removed useless code that used up to 90% RAM for no good reason
+- Updated some GUI code so Player and map lists update quicker and they now don't leak memory
+- Updated some of the MySQL code to prevent memory loss and make transactions to the databse quicker
+- Added /allowguns - allows guns on certain maps
+- Added /agree - new guests have to agree to the rules
+- Added option in the properties to allow or disallow players to teleport to people with higher ranks
+- Added /slap <map> - slaps everyone of a lower rank than you in a map
+- Added /p2p - teleports a player to another player
+- Added adminchat - chat with admins (customisable rank via properties), use ';' pre-message to send it to adminchat
+- Changed /Newlvl - Shows valid mapsizes on the help
+- Admins can join silently
+- Fixed /perbuild and /pervistit
+- Added an auto checker and downloader for Restarter.exe and Restarter.pdb
+
+v4.7.0.0
+- Added new game: Countdown
+-Added /splace - Measures a set [distance] and places a stone block at each end. Made by Woldoc, originally named /set.
+-Added /chain - Inspired by the StormCom command of the same name, /chain sends a "chain" of brown mushrooms. Upon coming into 
+
+contact with a block other than air or a level's side wall, it will pull that block back to the start of the chain. 
+- Added color code information to /help.
+- Fixed issue where Player.cs doesn't check for all private network IPs starting with 172 (GitHub issue #2)
+- Hopefully fixed issue where certain color codes could sometimes crash the client (GitHub issue #21)
+- Updater should no longer crash when updating (Github issue #3)
+- /zz no longer shows an error when using "/zz blockname" (Github issue #7)
+- Player, Level, and Server now use an ExtrasCollection member named "Extras" to help manage extra data needed by custom 
+
+commands
+- Custom $ replacements are now possible via file text/custom$s.txt
+- Fixed /fixgrass light not converting shaded grass to dirt.
+- Fixed an issue in CmdLoad.cs where it would constantly get stuck on corrupted levels
+- Removed unused files from the source code repository
+- Increased MCGalaxy heartbeat delay to reduce website load
+- Removed buggy block permissions from block.properties (flagbase and odoor_airs)
+- Fixed an issue with /title where you could use a color code to title yourself [Dev].
+- Removed the omni-bans
+
+v4.6.0.1
+- Command thread will no longer be manually aborted, as this can sometimes cause problems closing the socket.
+
+v4.6.0.0
+This release was a redo of all changes made since 4.3.0.0. Because of this, we've listed all those changes here:
+- Fixed offline undo bug for players who leave autoloaded levels
+- Changed the Console Message in the server for CLI so that it resembles the console message for GUI users.
+- Fixed an issue where running the software would open up a small CLI window as well as the GUI.
+- Port checker now uses comingsoon.tk to see if the server port is accessible.
+- Fixed server verifier to work with Class A and Class B networks (reported in forum topic 688)
+- Command thread will no longer be manually aborted, as this can sometimes cause problems closing the socket.
+
+
+- Added new open-source license information to source headers
+- Updated dev list
+- New commands:
+  - /calculate
+  - /compload
+  - /ellipse
+  - /fakerank and /fakepay
+  - /high5
+  - /news
+  - /ohide and /xhide
+  - /oprules
+  - /pcinema, /scinema, and /cintogif
+  - /playercls and /globalcls
+  - /review
+  - /ragequit
+  - /serverinfo
+  - /xmute
+- Fixed commands:
+  - /summon now force-fetches players from other levels
+  - /hackrank was cleaned up
+  - Fixed permission issues in various commands, making them more secure
+
+v4.3.0.0
+- Fixed issue where errors caused early in server startup weren't being logged correctly and crashing the server.
+- Added a "public IDictionary<string, string> Extras" to Player and Level objects
+  - Allows command devs to store extra temporary data
+  - Devs will responsible for managing this data and not overwriting other commands' data (mostly because I'm too lazy to 
+
+partition it - it'll be fine :P)
+- Changed web references to our new domain: comingsoon.tk
+
+v4.2.0.1
+- Fixed naming typos with commands "seen" and "zombiespawn"
+- Fixed issue where auto-generated main levels sometimes wouldn't have a physics thread
+
+v4.2.0.0
+- Added block: huge TNT
+- Added command: /seen
+- Added new map type: "space"
+- Decreased physics undo buffer size from 60,000 to 20,000 (should save a bit of memory)
+- Fixed issue where player position sometimes "glitches" on spawn
+- Fixed /pcount issue that occured on Mono
+- Fixed spawn bug in /xjail
+- Renamed /zombies to /zombiespawn 
+
+v4.1.3.0
+- Fixed issue where /warn always skipped the first word in the reason given
+- MCGalaxy now has a new icon!
+- (Hopefully) fixed the auto updater
+  - Note: You probably have to manually download/replace MCGalaxy.exe for this to work!
+
+v4.1.2.0
+- Fixed issue caused by Minecraft.net's changes to the heartbeat
+  - They made it so MCGalaxy wouldn't understand the server URL, but we fixed that :)
+- Fixed issue where /warn always required a reason or it would fail
+
+v4.1.1.0
+- Fixed /banip so that people can ban IPs used by other with higher ranks.
+- Fixed /restart so that in-game operators can successfully restart the server without being prevented by a console dialog box
+- Unique identifier is now sent with the heartbeat
+- Fixed some spelling in /warn
+
+v4.1.0.0
+- New commands
+  - /kickall - Give it a try ;)
+  - /lockdown
+    - /lockdown player <player> - sends player to caller's map and jails them
+	- /lockdown map <map> - prevents anybody from visiting that map
+  - /sendcmd - Makes a player do a command (this command is disabled by default)
+  - /votekick - Calls a 30 second vote to kick a player
+- Updated commands
+  - /overseer
+    - Fixed /os zone - it wasn't working before.  Downside is that player can't delete a single zone, its all or nothing (for 
+
+now)
+	- Added ability for player to have max of 2 maps
+	- Added /os map physics
+	- Changed most of /os so it can handle 2 maps
+  - /warn - kicks a player after so many warnings
+  - /zz - Checks if player has permission to use static or cuboid first
+- UI Tweaks
+  - Player and Map lists now auto-update themselves every 10 seconds
+  - Map list shows correct rank for visit and build permissions
+
+v4.0.0.0
+- Heartbeat will no longer loop infinitely if the beat timed out
+   - This was the cause of high CPU load on the servers
+- Guest limit has been added
+   - Limits the total number of guests (perm = 0) allowed on the server
+- More UI Tweaks
+   - Added hidden/afk status to player list UI
+   - Moved IRC stuff to its own tab
+   - Max players and max guests are now numeric up/down boxes
+- Minor physics optimization added
+- Player timers and buffers are disposed on disconnect (memory optimization)
+
+v3.0.1.1
+- Profanity filter now ignores empty lines in badwords.txt
+- Added extra layers of protection to help prevent the error logger from crashing
+- Profanity filter will reload when you save/apply server Properties
+   - Not the best way, but it works
+- Added current and banned number of players to /info
+
+v3.0.1.0
+- Undid change where all global messages appeared in console (caused alot of console spam)
+- /save will now notify console of which backup # was created
+- Shortened the length of the /hacks message
+- /rules is now usable by the console
+- /undo [player] will now report actions to the console
+- Fixed issue where "/overseer map add" failed to create the level
+
+v3.0.0.1
+- Fixed issue where 'Help' button in Commands tab didn't do anything
+
+v3.0.0.0
+- Sockets are now closed when a player disconnects instead of hanging around in a CLOSE_WAIT state
+- Heartbeat will save new hash/URL if it happens to change sometime after server startup
+- Economy system permission changes (everything except for stats and setup is disabled by default)
+  - Change the command permissions via console properties to selectively enable features
+- Fixed the updater that we broke... derp
+- Fixed the broken Commands tab
+- Joker no longer fails horribly if file is empty
+- Minor text changes in commands
+- Fixed security issue with CmdText
+- UI Tweaks:
+   - Balloon popups when users enter and disconnect
+   - Enhanced player list - shows name, rank, and level they're on
+   - Enhanced map list - Shows name, # of players, physics level, and build/visit permission
+   - Autoscrolling boxes for console and commands won't autoscroll if you're not at the bottom
+- Fixed issues where log viewer failed when month/day is a single digit
+- Changed default permission of  /shutdown to Admin
+- Fixed issue where /cuboid (and commands using it like /zz) didn't respect the anti-tunneling limit
+- Fixed issue where profanity filter setting didn't save on Apply/Save
+- /undo will now work if used by console (no redo though)
+- Profanity filter tweaks
+- CmdSave now displays the proper backup # and also works via console
+- Added Door_red block
+- New Commands!
+   - /fetch -forcefetching over levels (should we merge this with summon?)
+   - /hackrank
+   - /main - moves player to main level
+   - /money - shows your amount of servermoneys
+   - /moveall - moves all players to <map>
+   - /unflood - unfloods the current map
+- Improved /overseer
+   - Levels shouldnt be saved as player00, they should be just player
+   - when the level is made through /overseer it loads itself
+   - add /overseer load, loads the players ma
+- Global messages will now appear in the console
+- New IRC commands:
+   - promote
+   - demote
+
+v2.0.0.0
+- New profanity filter (optional)
+- Revamped the heartbeat system
+  - Prevents the initial failure and gets the server URL much faster 
+- Fixed a couple issues with the application and notification icons
+- New Economy System
+  - /economy
+  - /economystats
+  - /economysetup
+  - /economybuyrank
+  - /economybuytitle
+  - /economybuycolor
+  - /economybuymap
+- Added /changelog
+- Added restart button
+- Added shortcut to /clones command to the right-click player list
+- Added confirmations to shutdown/close/restart actions
+- Added Custom Commands Tab
+- Added Logs tab to read previous server logs
+- Double-clicking the server URL causes it to become highlighted - easier for copypasting
+- Scripting - if a custom command DLL has multiple commands inside it, all commands will be loaded!
+- New Doors!
+  - Door_Gold
+  - Door_Cobblestone
+- Added $banned (shows the total number of people banned)
+
+v1.2.1.0
+ - Revamped the heartbeat, which fixed a few issues
+ - Fixed issue where tray icon sometimes didn't disappear after the server shutdown
+
+v1.2.0.2
+- Edited /crashserver
+- Edited /hacks
+- Fixed Port Checker
+
+v1.2.0.1
+-Added /ozone 
+-Added /Overseer
+-Added /xban
+-Added /warn
+-Added a checker for /fly making to check to see if a game of CTF is being played, if one is the player can't use /fly.
+-Added port checker to Console
+
+v1.1.1.0
+ - MCLawl Custom commands may now be used
+ - /inv is the new shorthand for /Invincible
+ - Fixed Updater

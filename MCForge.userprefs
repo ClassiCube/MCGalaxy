@@ -1,0 +1,31 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Server.cs">
+    <Files>
+      <File FileName="Commands/CmdCuboid.cs" Line="1" Column="1" />
+      <File FileName="Commands/Command.cs" Line="37" Column="1" />
+      <File FileName="Player/Player.cs" Line="749" Column="39" />
+      <File FileName="IRCBot.cs" Line="147" Column="11" />
+      <File FileName="Server.cs" Line="344" Column="317" />
+      <File FileName="Commands/CmdGifToCin.cs" Line="20" Column="28" />
+      <File FileName="Commands/CmdAbort.cs" Line="1" Column="1" />
+      <File FileName="Commands/CmdCopy.cs" Line="159" Column="10" />
+      <File FileName="Commands/CmdFill.cs" Line="145" Column="1" />
+      <File FileName="Commands/CmdSetspawn.cs" Line="1" Column="1" />
+      <File FileName="Levels/Level.cs" Line="352" Column="30" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="MCForge_" expanded="True">
+            <Node name="Server.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
