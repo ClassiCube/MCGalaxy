@@ -169,6 +169,7 @@ namespace MCGalaxy
 			all.Add(new CmdMessageBlock());
 			all.Add(new CmdMissile());
 			all.Add(new CmdMode());
+            all.Add(new CmdModel());
             all.Add(new CmdMods());
 			all.Add(new CmdModerate());
 			all.Add(new CmdMoney());

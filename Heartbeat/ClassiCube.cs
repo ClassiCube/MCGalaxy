@@ -25,7 +25,7 @@ namespace MCGalaxy
         {
             get
             {
-                return "www.classicube.net/heartbeat.jsp";
+                return "http://www.classicube.net/heartbeat.jsp";
             }
         }
 
@@ -44,7 +44,7 @@ namespace MCGalaxy
                 "&salt=" + Server.salt +
                 "&users=" + Player.players.Count + "&software=MCGalaxy";
         }
-
+        public bool UrlSaid = false;
 
         public void OnResponse(string line)
         {
@@ -61,7 +61,11 @@ namespace MCGalaxy
                     Server.URL = line;
                     Server.s.UpdateUrl(Server.URL);
                     File.WriteAllText("text/externalurl.txt", Server.URL);
-                    Server.s.Log("URL found: " + Server.URL);
+                    if (UrlSaid == false)
+                    {
+                        Server.s.Log("ClassiCube URL found: " + Server.URL);
+                        UrlSaid = true;
+                    }
                 }
             }
         }

@@ -904,6 +904,7 @@ namespace MCGalaxy {
                         else { Kick("Already logged in!"); return; }
                     }
                 }
+
 				if ( extension ) {
 
 					SendExtInfo( 12 );
@@ -931,11 +932,9 @@ namespace MCGalaxy {
                 SendMotd();
                 SendMap();
                 Loading = true;
-
                 if ( disconnected ) return;
-
-                loggedIn = true;
                 id = FreeId();
+                loggedIn = true;
 
                 lock ( players )
                     players.Add(this);
@@ -1173,6 +1172,7 @@ namespace MCGalaxy {
             if ( Server.zombie.ZombieStatus() != 0 ) { Player.SendMessage(this, "There is a Zombie Survival game currently in-progress! Join it by typing /g " + Server.zombie.currentLevelName); }
             if (!spawned)
             {
+                Server.s.Log("Hi");
                 try
                 {
                     ushort x = (ushort)((0.5 + level.spawnx) * 32);
@@ -1185,6 +1185,10 @@ namespace MCGalaxy {
                     {
                         if (p.level == level && p != this && !p.hidden)
                             SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+                        if (HasExtension("ChangeModel"))
+                        {
+                            SendChangeModel(p.id, p.model);
+                        }
                     }
                     foreach (PlayerBot pB in PlayerBot.playerbots)
                     {
@@ -2862,13 +2866,12 @@ return;
         {
             if (displayName == "")
                 displayName = DisplayName;
-            if (skinName == "")
-                skinName = displayName;
+            if (skinName == "" || skinName == null)
+                skinName = DisplayName;
             if (!HasExtension("ExtPlayerList", 2))
             {
-                Server.s.Log("Hi");
                 byte[] buffer = new byte[73]; buffer[0] = id;
-                StringFormat(name, 64).CopyTo(buffer, 1);
+                StringFormat(name.TrimEnd('+'), 64).CopyTo(buffer, 1);
                 HTNO(x).CopyTo(buffer, 65);
                 HTNO(y).CopyTo(buffer, 67);
                 HTNO(z).CopyTo(buffer, 69);
@@ -2877,11 +2880,10 @@ return;
             }
             else
             {
-                Server.s.Log("Test");
                 byte[] buffer = new byte[137];
                 buffer[0] = id;
-                StringFormat(displayName, 64).CopyTo(buffer, 1);
-                StringFormat(skinName, 64).CopyTo(buffer, 65);
+                StringFormat(name.TrimEnd('+'), 64).CopyTo(buffer, 1);
+                StringFormat(name, 64).CopyTo(buffer, 65);
                 HTNO(x).CopyTo(buffer, 129);
                 HTNO(y).CopyTo(buffer, 131);
                 HTNO(z).CopyTo(buffer, 133);
@@ -3048,7 +3050,7 @@ rot = new byte[2] { rotx, roty };*/
 			buffer[2] = candelete;
 			SendRaw( 28, buffer );
 		}
-		void SendChangeModel( byte id, string model ) {
+		public void SendChangeModel( byte id, string model ) {
 			byte[] buffer = new byte[65];
 			buffer[0] = id;
 			StringFormat( model, 64 ).CopyTo( buffer, 1 );

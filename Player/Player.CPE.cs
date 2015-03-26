@@ -45,7 +45,7 @@ namespace MCGalaxy
                         if (version > 0)
                             Player.players.ForEach(delegate(Player p)
                             {
-                                if (p.HasExtension("ExtPlayerList", 2))
+                                if (p.HasExtension("ExtPlayerList", 2) && p != this)
                                 {
                                     p.SendExtAddPlayerName(id, name, group, color + name);
                                 }
