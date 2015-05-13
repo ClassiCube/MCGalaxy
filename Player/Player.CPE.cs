@@ -39,7 +39,7 @@ namespace MCGalaxy
                     case "TextHotKey":
                         TextHotKey = version;
                         break;
-                    case "ExtPlayerList":
+                    /*case "ExtPlayerList":
                         ExtPlayerList = version;
                         spawned = true;
                         if (version > 0)
@@ -86,7 +86,7 @@ namespace MCGalaxy
                             Server.ErrorLog(e);
                             Server.s.Log("Error spawning player \"" + name + "\"");
                         }
-                        break;
+                        break;*/
                     case "EnvColors":
                         EnvColors = version;
                         break;

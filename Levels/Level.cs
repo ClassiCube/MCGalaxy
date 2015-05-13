@@ -125,7 +125,7 @@ namespace MCGalaxy
         public int overload = 1500;
         public LevelPermission perbuildmax = LevelPermission.Nobody;
 
-        public LevelPermission permissionbuild = LevelPermission.Builder;
+        public LevelPermission permissionbuild = LevelPermission.Guest;
         // What ranks can go to this map (excludes banned)
 
         public LevelPermission permissionvisit = LevelPermission.Guest;

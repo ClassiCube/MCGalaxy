@@ -178,8 +178,6 @@ namespace MCGalaxy {
 				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace('&', '%'));
 
 			message = message.MCCharFilter();
-			if (Player.MessageHasBadColorCodes(null, message))
-				return;
 
 			if(String.IsNullOrEmpty(message.Trim()))
 				message = ".";
@@ -219,7 +217,7 @@ namespace MCGalaxy {
 		void Listener_OnNick(UserInfo user, string newNick) {
 			//Player.GlobalMessage(Server.IRCColour + "[IRC] " + user.Nick + " changed nick to " + newNick);
 
-			if (Player.HasBadColorCodes(newNick) || newNick.Trim() == "") {
+			if (newNick.Trim() == "") {
 				this.Pm(user.Nick, "You cannot have that username");
 				return;
 			}
@@ -246,7 +244,7 @@ namespace MCGalaxy {
 		void Player_PlayerChat(Player p, string message) {
 
 			
-			if (Player.HasBadColorCodes(message) || String.IsNullOrEmpty(message.Trim())) {
+			if (String.IsNullOrEmpty(message.Trim())) {
 				Player.SendMessage(p, "You cannot send that message");
 				return;
 			}

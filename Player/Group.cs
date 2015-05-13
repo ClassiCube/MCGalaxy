@@ -45,6 +45,7 @@ namespace MCGalaxy {
         public string name;
         public string trueName;
         public string color;
+        public byte OverseerMaps = 3;
         public LevelPermission Permission;
         public int maxBlocks;
         public long maxUndo;
@@ -70,7 +71,7 @@ namespace MCGalaxy {
         /// <param name="newColor">The color of the group (Not including the &)</param>
         /// <param name="motd">the custom MOTD for the group</param>
         /// <param name="file">The file path where the current players of this group are stored</param>
-        public Group(LevelPermission Perm, int maxB, long maxUn, string fullName, char newColor, string motd, string file) {
+        public Group(LevelPermission Perm, int maxB, long maxUn, string fullName, char newColor, string motd, string file, byte maps = 2) {
             Permission = Perm;
             maxBlocks = maxB;
             maxUndo = maxUn;
@@ -212,6 +213,14 @@ namespace MCGalaxy {
                                             thisGroup.MOTD = value;
                                         gots++;
                                         break;
+                                    case "osmaps":
+                                        byte osmaps;
+                                        if(byte.TryParse(value, out osmaps) == false)
+                                        { osmaps = 2; }
+
+                                        gots++;
+                                        thisGroup.OverseerMaps = osmaps;
+                                        break;
                                 }
 
                                 if ((gots >= 4 && version < 2) || (gots >= 5 && version < 3) || gots >= 6) {
@@ -222,7 +231,14 @@ namespace MCGalaxy {
                                             thisGroup.maxUndo = 5400;
                                     }
 
-                                    GroupList.Add(new Group(thisGroup.Permission, thisGroup.maxBlocks, thisGroup.maxUndo, thisGroup.trueName, thisGroup.color[0], thisGroup.MOTD, thisGroup.fileName));
+                                    GroupList.Add(new Group(thisGroup.Permission, 
+                                        thisGroup.maxBlocks, 
+                                        thisGroup.maxUndo, 
+                                        thisGroup.trueName, 
+                                        thisGroup.color[0], 
+                                        thisGroup.MOTD, 
+                                        thisGroup.fileName, 
+                                        thisGroup.OverseerMaps));
                                 }
                             }
                         } else {
@@ -298,9 +314,11 @@ namespace MCGalaxy {
                 SW.WriteLine("#MOTD = string");
                 SW.WriteLine("#		Alternate MOTD players of the rank will see when joining the server.");
                 SW.WriteLine("#		Leave blank to use the server MOTD.");
+                SW.WriteLine("#OSMaps = num");
+                SW.WriteLine("#		The number of maps the players will have in /os");
+                SW.WriteLine("#		Defaults to 2 if invalid number (number has to be between 0-128");
                 SW.WriteLine();
                 SW.WriteLine();
-
                 foreach (Group grp in givenList) {
                     if (grp.name != "nobody") {
                         SW.WriteLine("RankName = " + grp.trueName);
@@ -310,6 +328,7 @@ namespace MCGalaxy {
                         SW.WriteLine("Color = " + grp.color[1]);
                         SW.WriteLine("MOTD = " + grp.MOTD);
                         SW.WriteLine("FileName = " + grp.fileName);
+                        //SW.WriteLine("OSMaps = " + grp.OverseerMaps.ToString());
                         SW.WriteLine();
                     }
                 }

@@ -116,12 +116,6 @@ namespace MCGalaxy
                 }
                 return;
             }
-            if (Player.HasBadColorCodes(message))
-            {
-                Player.SendMessage(p, "Can't let you do that Mr whale!");
-                if (p != null) { p.Kick("Kicked for trying to crash all players!"); }
-                return;
-            }
             if (message.ToLower().Contains(Server.name.ToLower()))
             {
                 Player.SendMessage(p, "Let's not advertise Mr whale!");
@@ -330,9 +324,6 @@ namespace MCGalaxy
             message = message.MCCharFilter();
 
             if (String.IsNullOrEmpty(message))
-                return;
-
-            if (Player.MessageHasBadColorCodes(null, message))
                 return;
 
             if (OnNewRecieveGlobalMessage != null)

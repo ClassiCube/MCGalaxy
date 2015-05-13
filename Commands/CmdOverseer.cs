@@ -29,7 +29,9 @@ namespace MCGalaxy.Commands
 		public CmdOverseer() { }
 		public override void Use(Player p, string message)
 		{
-
+            byte test;
+            if (p.group.OverseerMaps == 0)
+                p.SendMessage("Your rank is set to have 0 overseer maps. Therefore, you may not use overseer.");
 			if (message == "") { Help(p); return; }
 			Player who = Player.Find(message.Split(' ')[0]);
 			string cmd = message.Split(' ')[0].ToUpper();
@@ -54,6 +56,16 @@ namespace MCGalaxy.Commands
 
 			if (cmd == "GO")
 			{
+                if(byte.TryParse(par, out test) == false)
+                {
+                    Help(p);
+                    return;
+                }
+                if(test > p.group.OverseerMaps)
+                {
+                    p.SendMessage("Your rank does not allow you to have more than " + p.group.OverseerMaps + ".");
+                    return;
+                }
 				if ((par == "1") || (par == ""))
 				{
 					string mapname = properMapName(p, false);
@@ -63,9 +75,9 @@ namespace MCGalaxy.Commands
 					}
 					Command.all.Find("goto").Use(p, mapname);
 				}
-				else if (par == "2")
+				else
 				{
-					string mapname = p.name.ToLower() + "2";
+					string mapname = p.name.ToLower() + par;
 					if (!Server.levels.Any(l => l.name == mapname))
 					{
 						Command.all.Find("load").Use(p, mapname);
@@ -76,7 +88,7 @@ namespace MCGalaxy.Commands
 			// Set Spawn (if you are on your own map level)
 			else if (cmd == "SPAWN")
 			{
-				if ((p.name.ToUpper() == p.level.name.ToUpper()) || (p.name.ToUpper() + "00" == p.level.name.ToUpper()) || (p.name.ToUpper() + "2" == p.level.name.ToUpper()))
+				if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
 				{
 					Command.all.Find("setspawn").Use(p, "");
 				}
@@ -89,33 +101,44 @@ namespace MCGalaxy.Commands
 				{
 					if ((File.Exists(@"levels\" + p.name.ToLower() + ".lvl")) || (File.Exists(@"levels\" + p.name.ToLower() + "00.lvl")))
 					{
-						if (!File.Exists(@"levels\" + p.name.ToLower() + "2.lvl"))
-						{
-							Player.SendMessage(p, p.color + p.name + Server.DefaultColor + " you already have a map, let me create a second one for you.");
-							string mType;
-							if (par2.ToUpper() == "" || par2.ToUpper() == "DESERT" || par2.ToUpper() == "FLAT" || par2.ToUpper() == "FOREST" || par2.ToUpper() == "ISLAND" || par2.ToUpper() == "MOUNTAINS" || par2.ToUpper() == "OCEAN" || par2.ToUpper() == "PIXEL" || par2.ToUpper() == "SPACE")
-							{
-								if (par2 != "")
-								{
-									mType = par2;
-								}
-								else
-								{
-									mType = "flat";
-								}
-								Player.SendMessage(p, "Creating your 2nd map, " + p.color + p.name);
-								Command.all.Find("newlvl").Use(p, p.name.ToLower() + "2 " + mSize(p) + " " + mType);
-							}
-							else
-							{
-								Player.SendMessage(p, "A wrong map type was specified. Valid map types: Desert, flat, forest, island, mountians, ocean, pixel and space.");
-							}
-						}
-						else
-						{
-							Player.SendMessage(p, p.color + p.name + Server.DefaultColor + " you already have two maps.");
-							Player.SendMessage(p, "If you would like to delete one type /os map delete <1 or 2>");
-						}
+                        foreach(string filenames in Directory.GetFiles(@"levels\"))
+                        {
+                            for(int i = 1; i < p.group.OverseerMaps + 2; i++)
+                            {
+                                //Not the best way to do it, but I'm lazy
+                                if (i == 1)
+                                    i = 2;
+                                if(i != 0)
+                                {
+                                if(!File.Exists(@"levels\" + p.name.ToLower() + i + ".lvl"))
+                                {
+                                    if(i > p.group.OverseerMaps)
+                                    {
+                                        p.SendMessage("You have reached the limit for your overseer maps.."); return;
+                                    }
+                                    Player.SendMessage(p, Server.DefaultColor + "Creating a new map for you.." + p.name.ToLower() + i.ToString());
+                                    string mType;
+                                    if (par2.ToUpper() == "" || par2.ToUpper() == "DESERT" || par2.ToUpper() == "FLAT" || par2.ToUpper() == "FOREST" || par2.ToUpper() == "ISLAND" || par2.ToUpper() == "MOUNTAINS" || par2.ToUpper() == "OCEAN" || par2.ToUpper() == "PIXEL" || par2.ToUpper() == "SPACE")
+                                    {
+                                        if (par2 != "")
+                                        {
+                                            mType = par2;
+                                        }
+                                        else
+                                        {
+                                            mType = "flat";
+                                        }
+                                        Command.all.Find("newlvl").Use(p, p.name.ToLower() + i.ToString() + " " + mSize(p) + " " + mType);
+                                    }
+                                    else
+                                    {
+                                        Player.SendMessage(p, "A wrong map type was specified. Valid map types: Desert, flat, forest, island, mountians, ocean, pixel and space.");
+                                    }
+                                    return;
+                                }
+                                }
+                            }
+                        }
 					}
 					else
 					{
@@ -142,7 +165,7 @@ namespace MCGalaxy.Commands
 				}
 				else if (par == "PHYSICS")
 				{
-					if ((p.level.name.ToUpper().Equals(p.name.ToUpper())) || (p.level.name.ToUpper().Equals(p.name.ToUpper() + "00")) || (p.level.name.ToUpper().Equals(p.name.ToUpper() + "2")))
+					if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
 					{
 						if (par2 != "")
 						{
@@ -166,8 +189,12 @@ namespace MCGalaxy.Commands
 							{
 								Command.all.Find("physics").Use(p, p.level.name + " 4");
 							}
+                            else if (par2 == "5")
+                            {
+                                Command.all.Find("physics").Use(p, p.level.name + " 5");
+                            }
 						}
-						else { Player.SendMessage(p, "You didn't enter a number! Please enter one of these numbers: 0, 1, 2, 3, 4"); }
+						else { Player.SendMessage(p, "You didn't enter a number! Please enter one of these numbers: 0, 1, 2, 3, 4, 5"); }
 					}
 					else { Player.SendMessage(p, "You have to be on one of your maps to set its physics!"); }
 				}
@@ -176,7 +203,7 @@ namespace MCGalaxy.Commands
 				{
 					if (par2 == "")
 					{
-						Player.SendMessage(p, "To delete one of your maps type /os map delete <1 or 2> 1 is your first map 2 is your second.");
+						Player.SendMessage(p, "To delete one of your maps type /os map delete <map number>");
 					}
 					else if (par2 == "1")
 					{
@@ -184,12 +211,17 @@ namespace MCGalaxy.Commands
 						Player.SendMessage(p, "Your 1st map has been removed.");
 						return;
 					}
-					else if (par2 == "2")
+					else if (byte.TryParse(par2, out test) == true)
 					{
-						Command.all.Find("deletelvl").Use(p, p.name.ToLower() + "2");
-						Player.SendMessage(p, "Your 2nd map has been removed.");
+						Command.all.Find("deletelvl").Use(p, p.name.ToLower() + par2);
+						Player.SendMessage(p, "Your map has been removed.");
 						return;
 					}
+                    else
+                    {
+                        Help(p);
+                        return;
+                    }
 
 				}
 				else
@@ -213,7 +245,7 @@ namespace MCGalaxy.Commands
 				// Add Zone to your personal map(took a while to get it to work(it was a big derp))
 				else if (par == "ADD")
 				{
-					if ((p.level.name.ToUpper().Equals(p.name.ToUpper())) || (p.level.name.ToUpper().Equals(p.name.ToUpper() + "00")) || (p.level.name.ToUpper().Equals(p.name.ToUpper() + "2")))
+					if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
 					{
 						if (par2 != "")
 						{
@@ -229,7 +261,7 @@ namespace MCGalaxy.Commands
 				}
 				else if (par == "DEL")
 				{
-					if ((p.level.name.ToLower().Equals(p.name.ToUpper())) || (p.level.name.ToLower().Equals(p.name.ToLower() + "00")) || (p.level.name.ToLower().Equals(p.name.ToLower() + "2")))
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
 					{
 						// I need to add the ability to delete a single zone, I need help!
 						if ((par2.ToUpper() == "ALL") || (par2.ToUpper() == ""))
@@ -261,17 +293,29 @@ namespace MCGalaxy.Commands
 						Command.all.Find("load").Use(p, properMapName(p, false));
 						Player.SendMessage(p, "Your level is now loaded.");
 					}
-					else if (par == "2")
+					else if (byte.TryParse(par, out test) == true)
 					{
-						Command.all.Find("load").Use(p, p.name + "2");
-						Player.SendMessage(p, "Your 2nd level is now loaded.");
+						Command.all.Find("load").Use(p, p.name + par);
+						Player.SendMessage(p, "Your level is now loaded.");
 					}
+                    else
+                    {
+                        Help(p);
+                        return;
+                    }
 				}
-				else { Player.SendMessage(p, "Type /os load <1 or 2> to load one of your maps"); }
+				else { Player.SendMessage(p, "Type /os load <number> to load one of your maps"); }
 			}
-			else if (cmd == "KICKALL")
+			else if (cmd == "KICK")
 			{
-				Command.all.Find("kickall").Use(p, "");
+                if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                {
+                    Command.all.Find("move").Use(p, par2 + " " + Server.mainLevel.name);
+                }
+                else 
+                { 
+                    p.SendMessage("This is not your map..");
+                }
 			}
 			else
 			{
@@ -284,7 +328,7 @@ namespace MCGalaxy.Commands
 			// Remember to include or exclude the spoof command(s) -- MakeMeOp
 			Player.SendMessage(p, "/overseer [command string] - sends command to The Overseer");
 			Player.SendMessage(p, "Accepted Commands:");
-			Player.SendMessage(p, "Go, map, spawn, zone, kickall, load");
+			Player.SendMessage(p, "Go, map, spawn, zone, kick, load");
 			Player.SendMessage(p, "/os - Command shortcut.");
 		}
 
