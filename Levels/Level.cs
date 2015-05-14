@@ -92,6 +92,7 @@ namespace MCGalaxy
         public bool backedup;
         public List<BlockPos> blockCache = new List<BlockPos>();
         public byte[] blocks;
+        public byte weather;
 
         public bool cancelsave1;
         public bool cancelunload;
@@ -775,6 +776,7 @@ namespace MCGalaxy
                     SW.WriteLine("LeafDecay = " + level.leafDecay.ToString());
                     SW.WriteLine("RandomFlow = " + level.randomFlow.ToString());
                     SW.WriteLine("GrowTrees = " + level.growTrees.ToString());
+                    SW.WriteLine("Weather = " + level.weather.ToString());
                 }
             }
             catch (Exception)
@@ -1366,6 +1368,7 @@ namespace MCGalaxy
                                     case "growtrees":
                                         level.growTrees = bool.Parse(value);
                                         break;
+                                    case "weather": level.weather = byte.Parse(value); break;
                                 }
                             }
                             catch (Exception e)

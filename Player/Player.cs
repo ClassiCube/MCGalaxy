@@ -2960,6 +2960,10 @@ return;
                 GC.WaitForPendingFinalizers();
                 //Server.s.Log((DateTime.Now - start).TotalMilliseconds.ToString()); // We dont want random numbers showing up do we?
             }
+            if (HasExtension("EnvWeatherType"))
+            {
+                SendSetMapWeather(level.weather);
+            }
         }
         public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty)
         {
@@ -3143,7 +3147,7 @@ rot = new byte[2] { rotx, roty };*/
 			HTNO( sidelevel ).CopyTo( buffer, 66 );
 			SendRaw( 30, buffer );
 		}
-		void SendSetMapWeather( byte weather ) { // 0 - sunny; 1 - raining; 2 - snowing
+		public void SendSetMapWeather( byte weather ) { // 0 - sunny; 1 - raining; 2 - snowing
 			byte[] buffer = new byte[1];
 			buffer[0] = weather;
 			SendRaw( 31, buffer );
