@@ -171,7 +171,30 @@ namespace MCGalaxy {
 		void Listener_OnPublic(UserInfo user, string channel, string message) {
 			//string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
 			// Allowed chars are any ASCII char between 20h/32 and 7Ah/122 inclusive, except for 26h/38 (&) and 60h/96 (`)
+            if(message.StartsWith(".who") || message.StartsWith(".players"))
+            {
+                CmdPlayers();
+            }
+            if(message.StartsWith(".x"))
+            {
+                if (Server.ircControllers.Contains(user.Nick))
+                {
+                    if (message.Split(' ')[1] == "resetbot" || banCmd.Contains(message.Split(' ')[0])) { Server.IRC.Say("You cannot use this command from IRC!"); return; }
+                    if (Player.CommandHasBadColourCodes(null, message)) { Server.IRC.Say("Your command had invalid color codes!"); return; }
 
+                    Command cmd = Command.all.Find(message.Split(' ')[1]);
+                    if (cmd != null)
+                    {
+                        Server.s.Log("IRC Command: /" + message);
+                        usedCmd = user.Nick;
+                        try { cmd.Use(null, message.Split(' ')[2].Trim()); }
+                        catch { Server.IRC.Say("Failed command!"); }
+                        usedCmd = "";
+                    }
+                    else
+                        Server.IRC.Say("Unknown command!");
+                }
+            }
 			for (byte i = 10; i < 16; i++)
 				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace('&', '%'));
 			for (byte i = 0; i < 10; i++)
@@ -283,6 +306,140 @@ namespace MCGalaxy {
 			if (!Server.irc) return false;
 			try { return connection.Connected; }
 			catch { return false; }
-		}
-	}
+        }
+        #region Commands
+        struct playergroups { public Group group; public List<string> players; }
+        public static void CmdPlayers()
+        {
+            //Was lazy
+            string message = "";
+            try
+            {
+                List<playergroups> playerList = new List<playergroups>();
+
+                foreach (Group grp in Group.GroupList)
+                {
+                    if (grp.name != "nobody")
+                    {
+                        if (String.IsNullOrEmpty(message) || !Group.Exists(message))
+                        {
+                            playergroups groups;
+                            groups.group = grp;
+                            groups.players = new List<string>();
+                            playerList.Add(groups);
+                        }
+                        else
+                        {
+                            Group grp2 = Group.Find(message);
+                            if (grp2 != null && grp == grp2)
+                            {
+                                playergroups groups;
+                                groups.group = grp;
+                                groups.players = new List<string>();
+                                playerList.Add(groups);
+                            }
+                        }
+                    }
+                }
+
+                string devs = "";
+                string mods = "";
+                string gcmods = "";
+                int totalPlayers = 0;
+                foreach (Player pl in Player.players)
+                {
+                    if (String.IsNullOrEmpty(message) || !Group.Exists(message) || Group.Find(message) == pl.group)
+                    {
+                        totalPlayers++;
+                        string foundName = pl.name;
+
+                        if (Server.afkset.Contains(pl.name))
+                        {
+                            foundName = pl.name + "-afk";
+                        }
+
+                        if (pl.muted) foundName += "[muted]";
+
+
+                        if (pl.isDev)
+                        {
+                            if (pl.voice)
+                                devs += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
+                            else
+                                devs += " " + foundName + " (" + pl.level.name + "),";
+                        }
+                        if (pl.isMod)
+                        {
+                            if (pl.voice)
+                                mods += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
+                            else
+                                mods += " " + foundName + " (" + pl.level.name + "),";
+                        }
+                        if (pl.isGCMod)
+                        {
+                            if (pl.voice)
+                                gcmods += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
+                            else
+                                gcmods += " " + foundName + " (" + pl.level.name + "),";
+                        }
+
+                        if (pl.voice)
+                            playerList.Find(grp => grp.group == pl.group).players.Add("&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + ")");
+                        else
+                            playerList.Find(grp => grp.group == pl.group).players.Add(foundName + " (" + pl.level.name + ")");
+                    }
+                }
+
+                Server.IRC.Say("There are %a" + totalPlayers + Server.DefaultColor + " players online.", false, true);
+                bool staff = devs.Length > 0 || mods.Length > 0 || gcmods.Length > 0;
+                if (staff) Server.IRC.Say("%cMCGalaxy Staff Online:", false, true);
+                if (devs.Length > 0)
+                {
+                    Server.IRC.Say("#%9MCGalaxy Devs:" + Server.DefaultColor + devs.Trim(','), false, true);
+                }
+                if (mods.Length > 0) {
+                    Server.IRC.Say("#%2MCGalaxy Mods:" + Server.DefaultColor + mods.Trim(','), false, true);
+                }
+                if (gcmods.Length > 0) {
+                    Server.IRC.Say("#%6MCGalaxy GCMods:" + Server.DefaultColor + gcmods.Trim(','), false, true);
+                }
+                if (staff) Server.IRC.Say("%aNormal Players Online:", false, true);
+                for (int i = playerList.Count - 1; i >= 0; i--)
+                {
+                    playergroups groups = playerList[i];
+                    if (groups.players.Count > 0 || Server.showEmptyRanks)
+                    {
+                        string appendString = "";
+                        foreach (string player in groups.players)
+                            appendString += ", " + player;
+
+                        if (appendString != "")
+                            appendString = appendString.Remove(0, 2);
+                        appendString = ":" + groups.group.color + getPlural(groups.group.trueName) + ": " + appendString;
+
+                        Server.IRC.Say(appendString, false, true);
+                    }
+                }
+            }
+            catch (Exception e) { Server.ErrorLog(e); }
+        }
+
+        public static string getPlural(string groupName)
+        {
+            try
+            {
+                string last2 = groupName.Substring(groupName.Length - 2).ToLower();
+                if ((last2 != "ed" || groupName.Length <= 3) && last2[1] != 's')
+                {
+                    return groupName + "s";
+                }
+                return groupName;
+            }
+            catch
+            {
+                return groupName;
+            }
+        }
+        #endregion
+    }
 }
