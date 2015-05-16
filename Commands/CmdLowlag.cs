@@ -44,6 +44,7 @@ namespace MCGalaxy.Commands
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/lowlag - Turns lowlag mode on or off");
+            
         }
     }
 }

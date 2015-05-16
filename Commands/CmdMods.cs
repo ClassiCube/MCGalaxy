@@ -28,17 +28,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (message != "") { Help(p); return; }
-            string modlist = "";
-            string tempmods;
-            foreach (string mod in Server.Mods)
-            {
-                tempmods = mod.Substring(0, 1);
-                tempmods = tempmods.ToUpper() + mod.Remove(0, 1);
-                modlist += tempmods + ", ";
-            }
-            modlist = modlist.Remove(modlist.Length - 2);
-            Player.SendMessage(p, "&9MCGalaxy Moderation Team: " + Server.DefaultColor + modlist + "&e.");
+            Player.SendMessage(p, "&9MCGalaxy Moderation Team: " + Server.DefaultColor + "[Add mods here]&e.");
         }
 
         public override void Help(Player p)
