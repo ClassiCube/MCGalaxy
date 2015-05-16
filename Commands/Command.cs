@@ -127,7 +127,7 @@ namespace MCGalaxy
 			all.Add(new CmdHackRank());
 			all.Add(new CmdHacks());
 			all.Add(new CmdHasirc());
-		  //all.Add(new CmdHeartbeat()); // DEBUG COMMAND DO NOT USE
+		    //all.Add(new CmdHeartbeat()); // DEBUG COMMAND DO NOT USE
 			all.Add(new CmdHelp());
 			all.Add(new CmdHide());
 			all.Add(new CmdHigh5());
@@ -180,7 +180,7 @@ namespace MCGalaxy
 			all.Add(new CmdNewLvl());
 			all.Add(new CmdNews());
 			all.Add(new CmdNick ());
-	      //all.Add(new CmdNyan());
+	        //all.Add(new CmdNyan());
 			all.Add(new CmdOHide());
 			all.Add(new CmdOpChat());
 			all.Add(new CmdOpRules());
@@ -212,7 +212,7 @@ namespace MCGalaxy
 			all.Add(new CmdPortal());
 			all.Add(new CmdPossess());
 			all.Add(new CmdPromote());
-		  //all.Add(new CmdPumpkin());
+		    //all.Add(new CmdPumpkin());
 			all.Add(new CmdPUnload());
 			all.Add(new CmdPyramid());
 			all.Add(new CmdQueue());
