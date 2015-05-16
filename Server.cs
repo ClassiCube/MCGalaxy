@@ -318,7 +318,16 @@ namespace MCGalaxy
         public static string IRCColour = "&5";
 
         public static bool UseGlobalChat = true;
-        public static string GlobalChatNick = "MCF" + new Random().Next();
+        public static string GlobalChatNick = globalChatNick();
+        private static string globalChatNick()
+        {
+            string serverName = Server.name.Replace(" ", "");
+            if(serverName.Length > 28)
+            { 
+                serverName.Substring(0, 28);
+            }
+            return serverName;
+        }
         public static string GlobalChatColor = "&6";
 
 

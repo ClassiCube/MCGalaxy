@@ -270,7 +270,8 @@ namespace MCGalaxy {
         public Level level = Server.mainLevel;
         public bool Loading = true; //True if player is loading a map.
         public ushort[] lastClick = new ushort[] { 0, 0, 0 };
-
+        public ushort[] beforeTeleportPos = new ushort[] { 0, 0, 0 };
+        public string beforeTeleportMap = "";
         public ushort[] pos = new ushort[] { 0, 0, 0 };
         ushort[] oldpos = new ushort[] { 0, 0, 0 };
         ushort[] basepos = new ushort[] { 0, 0, 0 };

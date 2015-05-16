@@ -91,19 +91,36 @@ namespace MCGalaxy.Commands
             if (stored.Count > (p.group.maxBlocks * 2)) { Player.SendMessage(p, "Cannot replace more than " + (p.group.maxBlocks * 2) + " blocks."); wait = 1; return; }
 
             p.SendMessage(stored.Count + " blocks out of " + currentBlock + " will be replaced.");
-
-            if (p.level.bufferblocks && !p.level.Instant)
+            if (stored.Count < 10000)
             {
-                foreach (Pos Pos in stored)
+                if (p.level.bufferblocks && !p.level.Instant)
                 {
-                    BlockQueue.Addblock(p, Pos.x, Pos.y, Pos.z, newType);
+                    foreach (Pos Pos in stored)
+                    {
+                        BlockQueue.Addblock(p, Pos.x, Pos.y, Pos.z, newType);
+                    }
+                }
+                else
+                {
+                    foreach (Pos Pos in stored)
+                    {
+                        p.level.Blockchange(p, Pos.x, Pos.y, Pos.z, newType);
+                    }
                 }
             }
             else
             {
+                p.SendMessage("You tried to replace over 10000 blocks, reloading map for faster replace.");
                 foreach (Pos Pos in stored)
                 {
-                    p.level.Blockchange(p, Pos.x, Pos.y, Pos.z, newType);
+                    p.level.SetTile(Pos.x, Pos.y, Pos.z, newType);
+                }
+                foreach (Player pl in Player.players)
+                {
+                    if (pl.level.name.ToLower() == p.level.name.ToLower())
+                    {
+                        Command.all.Find("reveal").Use(p, pl.name);
+                    }
                 }
             }
 

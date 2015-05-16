@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands
 
                                 p.inTNTwarsMap = true;
                             }
-                            Server.IRC.Say(p.color + p.name + " went to &b" + foundLevel.name, false, true);
+                            Server.IRC.Say(p.color + p.name + " went to &8" + foundLevel.name, false, true);
                         }
                         else Player.SendMessage(p, "The level " + message + " is locked.");
                     }

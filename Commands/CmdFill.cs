@@ -123,22 +123,38 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "You cannot fill more than " + p.group.maxBlocks + ".");
                     return;
                 }
-
-                if (p.level.bufferblocks && !p.level.Instant)
+                if (buffer.Count < 10000)
                 {
-                    foreach (Pos pos in buffer)
+                    if (p.level.bufferblocks && !p.level.Instant)
                     {
-                      BlockQueue.Addblock(p, pos.x, pos.y, pos.z, cpos.type);
+                        foreach (Pos pos in buffer)
+                        {
+                            BlockQueue.Addblock(p, pos.x, pos.y, pos.z, cpos.type);
+                        }
+                    }
+                    else
+                    {
+                        foreach (Pos pos in buffer)
+                        {
+                            p.level.Blockchange(p, pos.x, pos.y, pos.z, cpos.type);
+                        }
                     }
                 }
                 else
                 {
+                    p.SendMessage("You tried to cuboid over 10000 blocks, reloading map for faster fill.");
                     foreach (Pos pos in buffer)
                     {
-                        p.level.Blockchange(p, pos.x, pos.y, pos.z, cpos.type);
+                        p.level.SetTile(pos.x, pos.y, pos.z, cpos.type);
+                    }
+                    foreach (Player pl in Player.players)
+                    {
+                        if (pl.level.name.ToLower() == p.level.name.ToLower())
+                        {
+                            Command.all.Find("reveal").Use(p, pl.name);
+                        }
                     }
                 }
-
                 Player.SendMessage(p, "Filled " + buffer.Count + " blocks.");
                 buffer.Clear();
                 buffer = null;

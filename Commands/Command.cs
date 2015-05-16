@@ -50,6 +50,7 @@ namespace MCGalaxy
 			all.Add(new CmdAward());
 			all.Add(new CmdAwards());
 			all.Add(new CmdAwardMod());
+            all.Add(new CmdBack());
 			all.Add(new CmdBan());
 			all.Add(new CmdBanEdit());
 			all.Add(new CmdBaninfo());

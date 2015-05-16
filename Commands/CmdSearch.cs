@@ -1,5 +1,5 @@
 /*
-Copyright 2011 MCGalaxy
+Copyright 2011-2014 MCGalaxy
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -12,9 +12,12 @@ BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
 */
+using System;
+using System.Collections.Generic;
+using System.IO;
 namespace MCGalaxy.Commands
 {
-    public sealed class CmdSearch : Command
+    public class CmdSearch : Command
     {
         public override string name { get { return "search"; } }
         public override string shortcut { get { return ""; } }
@@ -71,7 +74,7 @@ namespace MCGalaxy.Commands
                 string ranks = "";
                 foreach (Group g in Group.GroupList)
                 {
-                    if (g.name.Contains(keyword)) 
+                    if (g.name.Contains(keyword))
                     {
                         ranks += g.color + g.name + "'";
                     }
@@ -92,6 +95,38 @@ namespace MCGalaxy.Commands
                 if (players == "") { Player.SendMessage(p, "No usernames found containing &b" + keyword); }
                 else { Player.SendMessage(p, players.Remove(0, 2)); }
             }
+            if (type.ToLower().Contains("loaded"))
+            {
+                string levels = "";
+                foreach (Level level in Server.levels)
+                {
+                    if (level.name.ToLower().Contains(keyword.ToLower()))
+                    {
+                        levels += ", " + level.name;
+                    }
+                }
+                if (levels == "") { Player.SendMessage(p, "No loaded levels found containing &b" + keyword); }
+                else { Player.SendMessage(p, levels.Remove(0, 2)); }
+            }
+            if (type.ToLower().Contains("levels"))
+            {
+                string searched = "";
+                DirectoryInfo di = new DirectoryInfo("levels/");
+                FileInfo[] fi = di.GetFiles("*.lvl");
+
+                foreach (FileInfo file in fi)
+                {
+                    string level = file.Name.Replace(".lvl", "".ToLower());
+                    if ((level.Contains(keyword.ToLower())))
+                    {
+                        searched += ", " + level;
+                    }
+                }
+
+                if (searched == "") { Player.SendMessage(p, "No levels found containing &b" + keyword); }
+                else { Player.SendMessage(p, searched.Remove(0, 2)); }
+            }
+
         }
         public override void Help(Player p)
         {
@@ -99,6 +134,8 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "&b/search &2blocks &a<keyword> &e- finds blocks with that keyword");
             Player.SendMessage(p, "&b/search &2ranks &a<keyword> &e- finds blocks with that keyword");
             Player.SendMessage(p, "&b/search &2players &a<keyword> &e- find players with that keyword");
+            Player.SendMessage(p, "&b/search &2loaded &a<keyword> &e- finds loaded levels with that keyword");
+            Player.SendMessage(p, "&b/search &2levels &a<keyword> &e- find all levels with that keyword");
         }
     }
 }

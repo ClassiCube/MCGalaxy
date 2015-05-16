@@ -462,7 +462,7 @@ namespace MCGalaxy.Commands
                 {
                     if(pl.level.name.ToLower() == p.level.name.ToLower())
                     {
-                        Command.all.Find("reveal").Use(pl, "");
+                        Command.all.Find("reveal").Use(p, pl.name);
                     }
                 }
             }

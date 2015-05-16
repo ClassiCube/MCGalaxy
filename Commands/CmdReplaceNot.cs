@@ -113,20 +113,37 @@ namespace MCGalaxy.Commands
             }
 
             Player.SendMessage(p, buffer.Count.ToString() + " blocks.");
-
-            if (p.level.bufferblocks && !p.level.Instant)
+            if (buffer.Count < 10000)
             {
-                buffer.ForEach(delegate(Pos pos)
+                if (p.level.bufferblocks && !p.level.Instant)
                 {
-                    BlockQueue.Addblock(p, pos.x, pos.y, pos.z, cpos.newType);                  //update block for everyone
-                });
+                    buffer.ForEach(delegate(Pos pos)
+                    {
+                        BlockQueue.Addblock(p, pos.x, pos.y, pos.z, cpos.newType);                  //update block for everyone
+                    });
+                }
+                else
+                {
+                    buffer.ForEach(delegate(Pos pos)
+                    {
+                        p.level.Blockchange(p, pos.x, pos.y, pos.z, cpos.newType);                  //update block for everyone
+                    });
+                }
             }
             else
             {
-                buffer.ForEach(delegate(Pos pos)
+                p.SendMessage("You tried to replace over 10000 blocks, reloading map for faster replace.");
+                foreach (Pos pos in buffer)
                 {
-                    p.level.Blockchange(p, pos.x, pos.y, pos.z, cpos.newType);                  //update block for everyone
-                });
+                    p.level.SetTile(pos.x, pos.y, pos.z, cpos.newType);
+                }
+                foreach (Player pl in Player.players)
+                {
+                    if (pl.level.name.ToLower() == p.level.name.ToLower())
+                    {
+                        Command.all.Find("reveal").Use(p, pl.name);
+                    }
+                }
             }
             wait = 2;
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

@@ -56,7 +56,7 @@ namespace MCGalaxy
             catch 
             {
             	server = "irc.geekshed.net";
-            	channel = "#mcforge";
+            	channel = "#MCGalaxy";
             }
             this.nick = nick.Replace(" ", "");
             connection = new Connection(new ConnectionArgs(nick, server), false, false);

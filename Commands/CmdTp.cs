@@ -65,8 +65,18 @@ namespace MCGalaxy.Commands
                                 return;
                             }
                         }
+                        p.beforeTeleportMap = p.level.name;
+                        p.beforeTeleportPos = p.pos;
                         Command.all.Find("goto").Use(p, who.level.name);
+                        if (who.Loading)
+                        {
+                            Player.SendMessage(p, "Waiting for " + who.color + who.name + Server.DefaultColor + " to spawn...");
+                            while (who.Loading) { }
+                        }
+                        while (p.Loading) { }  //Wait for player to spawn in new map
+                        unchecked { p.SendPos((byte)-1, who.pos[0], who.pos[1], who.pos[2], who.rot[0], 0); }
                     }
+                    return;
                 }
                 if (p.level == who.level)
                 {
@@ -78,7 +88,8 @@ namespace MCGalaxy.Commands
                             return;
                         }
                     }
-
+                    p.beforeTeleportMap = p.level.name;
+                    p.beforeTeleportPos = p.pos;
                     if (who.Loading)
                     {
                         Player.SendMessage(p, "Waiting for " + who.color + who.name + Server.DefaultColor + " to spawn...");
