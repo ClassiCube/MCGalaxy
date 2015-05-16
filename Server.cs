@@ -1321,8 +1321,9 @@ namespace MCGalaxy
                 }
             } catch (Exception e) {
                 ErrorLog(e);
-                s.Log("Couldn't update MCGalaxy staff list, turning MCGalaxy Staff Protection Level off. . . ");
-                forgeProtection = ForgeProtection.Off;
+              //s.Log("Couldn't update MCGalaxy staff list, turning MCGalaxy Staff Protection Level off. . . ");
+              //forgeProtection = ForgeProtection.Off;
+                s.Log("Updating MCGalaxy staff list. . . ");
                 devs.Clear();
                 mods.Clear();
                 gcmods.Clear();

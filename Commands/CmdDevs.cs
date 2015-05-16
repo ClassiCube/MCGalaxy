@@ -25,16 +25,7 @@ namespace MCGalaxy.Commands {
 		public CmdDevs() { }
 
 		public override void Use(Player p, string message) {
-			if ( message != "" ) { Help(p); return; }
-			string devlist = "";
-			string temp;
-			foreach ( string dev in Server.Devs ) {
-				temp = dev.Substring(0, 1);
-				temp = temp.ToUpper() + dev.Remove(0, 1);
-				devlist += temp + ", ";
-			}
-			devlist = devlist.Remove(devlist.Length - 2);
-			Player.SendMessage(p, "&9MCGalaxy Development Team: " + Server.DefaultColor + devlist + "&e.");
+			Player.SendMessage(p, "&9MCGalaxy Development Team: " + Server.DefaultColor + "[Add devs here]&e.");
 		}
 
 		public override void Help(Player p) {

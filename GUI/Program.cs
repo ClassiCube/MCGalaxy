@@ -121,7 +121,7 @@ namespace MCGalaxy_.Gui
                     s.OnSystem += WriteToConsole;
                     s.Start();
 
-                    Console.Title = Server.name + " - MCGalaxy " + Server.Version;
+                    Console.Title = Server.name + " - MCGalaxy";
                     usingConsole = true;
                     handleComm();
 
