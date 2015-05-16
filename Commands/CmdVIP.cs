@@ -19,10 +19,6 @@ using System.Collections.Generic;
 using System.Text;
 namespace MCGalaxy.Commands
 {
-    /// <summary>
-    /// This is the command /vip
-    /// use /help vip in-game for more info
-    /// </summary>
     public sealed class CmdVIP : Command
     {
         public override string name { get { return "vip"; } }

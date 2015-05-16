@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdDeleteLvl()), "delete remove level lvl");
             new CommandKeywords((new CmdDelTempRank()), "del remove temp rank");
             new CommandKeywords((new CmdDemote()), "rank lower");
-            new CommandKeywords((new CmdDevs()), "dev MCGalaxy forgeware forgecraft");
+            new CommandKeywords((new CmdDevs()), "dev devs MCGalaxy");
             new CommandKeywords((new CmdDisagree()), "no rules");
             new CommandKeywords((new CmdDescend()), "down below");
             new CommandKeywords((new CmdDisInfect()), "infect player");
@@ -119,7 +119,7 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdHackRank()), "fake rank color set mod");
             new CommandKeywords((new CmdHacks()), "hack fake");
             new CommandKeywords((new CmdHasirc()), "has " + Server.ircChannel);
-            new CommandKeywords((new CmdHeartbeat()), "heart server list");
+          //new CommandKeywords((new CmdHeartbeat()), "heart server list");
             new CommandKeywords((new CmdHelp()), "info commands cmd list");
             new CommandKeywords((new CmdHide()), "hidden show invisible");
             new CommandKeywords((new CmdHigh5()), "high 5 fun");
@@ -162,7 +162,7 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdMissile()), "gun missil");
             new CommandKeywords((new CmdMode()), "block place");
             new CommandKeywords((new CmdModerate()), "chat enable disable allow disallow");
-            new CommandKeywords((new CmdMoney()), "cash " + Server.moneys);
+            new CommandKeywords((new CmdMoney()), "cash money" + Server.moneys);
             new CommandKeywords((new CmdMove()), "player pos");
             new CommandKeywords((new CmdMoveAll()), "move all player pos");
             new CommandKeywords((new CmdMuseum()), "musea map lvl level");
