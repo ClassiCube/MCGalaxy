@@ -2,15 +2,15 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Player/Player.cs">
     <Files>
-      <File FileName="Commands/CmdCuboid.cs" Line="1" Column="1" />
+      <File FileName="Commands/CmdCuboid.cs" Line="439" Column="40" />
       <File FileName="Commands/Command.cs" Line="120" Column="30" />
-      <File FileName="Player/Player.cs" Line="2966" Column="14" />
-      <File FileName="Server.cs" Line="344" Column="48" />
+      <File FileName="Player/Player.cs" Line="2076" Column="18" />
+      <File FileName="Server.cs" Line="167" Column="40" />
       <File FileName="Commands/CmdAbort.cs" Line="1" Column="1" />
       <File FileName="Commands/CmdCopy.cs" Line="1" Column="1" />
       <File FileName="Commands/CmdFill.cs" Line="1" Column="1" />
       <File FileName="Commands/CmdSetspawn.cs" Line="1" Column="1" />
-      <File FileName="Levels/Level.cs" Line="114" Column="22" />
+      <File FileName="Levels/Level.cs" Line="458" Column="9" />
       <File FileName="Heartbeat/ClassiCube.cs" Line="22" Column="35" />
       <File FileName="properties/Resources.resx" Line="1" Column="1" />
       <File FileName="Heartbeat/IBeat.cs" Line="1" Column="1" />
@@ -21,13 +21,15 @@
       <File FileName="Player/Player.CPE.cs" Line="136" Column="26" />
       <File FileName="Commands/CmdWeather.cs" Line="67" Column="25" />
       <File FileName="Commands/CmdAdminChat.cs" Line="1" Column="1" />
+      <File FileName="Commands/CmdJail.cs" Line="66" Column="31" />
+      <File FileName="Commands/CmdPromote.cs" Line="1" Column="1" />
+      <File FileName="Commands/CmdSetRank.cs" Line="173" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="MCGalaxy_" expanded="True">
             <Node name="Commands" expanded="True" />
-            <Node name="Levels" expanded="True" />
             <Node name="Player" expanded="True">
               <Node name="Player.cs" selected="True" />
             </Node>

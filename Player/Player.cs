@@ -2074,11 +2074,6 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     SendMessage(c.teal + "Partial message: " + c.white + storedMessage.Replace("|<|", "").Replace("|>|", " "));
                     return;
                 }
-                if ( Regex.IsMatch(text, "%[^a-fA-F0-9]") )//This causes all players to crash!
-                {
-                    SendMessage(this, "You're not allowed to send that message!");
-                    return;
-                }
 
                 text = Regex.Replace(text, @"\s\s+", " ");
                 if ( text.Any(ch => ch < 32 || ch >= 127 || ch == '&') ) {
