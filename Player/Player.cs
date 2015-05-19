@@ -2086,7 +2086,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     if ( Server.afkset.Contains(this.name) ) {
                         Server.afkset.Remove(this.name);
                         Player.GlobalMessage("-" + this.color + this.name + Server.DefaultColor + "- is no longer AFK");
-                        //IRCBot.Say(this.name + " is no longer AFK");
+                        Server.IRC.Say(this.name + " is no longer AFK");
                     }
                 }
                 // This will allow people to type
@@ -2432,8 +2432,6 @@ return;
                     return;
                 }
 
-                if ( CommandHasBadColourCodes(this, message) )
-                    return;
                 string foundShortcut = Command.all.FindShort(cmd);
                 if ( foundShortcut != "" ) cmd = foundShortcut;
                 if ( OnCommand != null )
@@ -2453,7 +2451,13 @@ return;
                     cmd = cmdBind[foundCb];
                 }
                 catch { }
-
+                Alias alias =  Alias.Find(cmd);
+                if (alias != null)
+                {
+                    string[] pars = alias.Command.Split(new string[] { " " }, (int)2, StringSplitOptions.None);
+                    cmd = pars[0];
+                    message = pars[1] + " " + message;
+                }
                 Command command = Command.all.Find(cmd);
                 //Group old = null;
                 if ( command != null ) {

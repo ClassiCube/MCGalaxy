@@ -1051,6 +1051,7 @@ namespace MCGalaxy
             Warp.LOAD();
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
+            Alias.Load();
         }
 
         public static void Setup()
