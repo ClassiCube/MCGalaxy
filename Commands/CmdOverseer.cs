@@ -56,34 +56,38 @@ namespace MCGalaxy.Commands
 
 			if (cmd == "GO")
 			{
-                if(byte.TryParse(par, out test) == false)
+                if ((par == "1") || (par == ""))
                 {
-                    Help(p);
-                    return;
+                    string mapname = properMapName(p, false);
+                    if (!Server.levels.Any(l => l.name == mapname))
+                    {
+                        Command.all.Find("load").Use(p, mapname);
+                    }
+                    Command.all.Find("goto").Use(p, mapname);
                 }
-                if(test > p.group.OverseerMaps)
+                else
                 {
-                    p.SendMessage("Your rank does not allow you to have more than " + p.group.OverseerMaps + ".");
-                    return;
+                    if (byte.TryParse(par, out test) == false)
+                    {
+                        Help(p);
+                        return;
+                    }
+                    if (test > p.group.OverseerMaps)
+                    {
+                        p.SendMessage("Your rank does not allow you to have more than " + p.group.OverseerMaps + ".");
+                        return;
+                    }
+
+                    else
+                    {
+                        string mapname = p.name.ToLower() + par;
+                        if (!Server.levels.Any(l => l.name == mapname))
+                        {
+                            Command.all.Find("load").Use(p, mapname);
+                        }
+                        Command.all.Find("goto").Use(p, mapname);
+                    }
                 }
-				if ((par == "1") || (par == ""))
-				{
-					string mapname = properMapName(p, false);
-					if (!Server.levels.Any(l => l.name == mapname))
-					{
-						Command.all.Find("load").Use(p, mapname);
-					}
-					Command.all.Find("goto").Use(p, mapname);
-				}
-				else
-				{
-					string mapname = p.name.ToLower() + par;
-					if (!Server.levels.Any(l => l.name == mapname))
-					{
-						Command.all.Find("load").Use(p, mapname);
-					}
-					Command.all.Find("goto").Use(p, mapname);
-				}
 			}
 			// Set Spawn (if you are on your own map level)
 			else if (cmd == "SPAWN")

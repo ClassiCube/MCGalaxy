@@ -755,6 +755,7 @@ namespace MCGalaxy
                 if (!File.Exists("ranks/jailed.txt")) { File.Create("ranks/jailed.txt").Close(); Server.s.Log("CREATED NEW: ranks/jailed.txt"); }
                 Extensions.UncapitalizeAll("ranks/banned.txt");
                 Extensions.UncapitalizeAll("ranks/muted.txt");
+                devs.Add("Hetal+");
                 if (forgeProtection == ForgeProtection.Mod || forgeProtection == ForgeProtection.Dev) {
                     foreach (string dev in Devs) {
                         Extensions.DeleteExactLineWord("ranks/banned.txt", dev);

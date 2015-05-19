@@ -974,7 +974,7 @@ namespace MCGalaxy
                             var level = new byte[blocks.Length];
                             for (int i = 0; i < blocks.Length; ++i)
                             {
-                                if (blocks[i] < 57)
+                                if (blocks[i] < 66)
                                 //CHANGED THIS TO INCOPARATE SOME MORE SPACE THAT I NEEDED FOR THE door_orange_air ETC.
                                 {
                                     level[i] = blocks[i];

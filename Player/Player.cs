@@ -939,22 +939,9 @@ namespace MCGalaxy {
                 }
 
                 if (version != Server.version) { Kick("Wrong version!"); return; }
-                if (type == 0x42) { extension = true; }
-
-                foreach (Player p in players)
+                if (type == 0x42)
                 {
-                    if (p.name == name)
-                    {
-                        if (Server.verify)
-                        {
-                            p.Kick("Someone logged in as you!"); break;
-                        }
-                        else { Kick("Already logged in!"); return; }
-                    }
-                }
-
-                if (extension)
-                {
+                    extension = true;
 
                     SendExtInfo(11);
                     SendExtEntry("ClickDistance", 1);
@@ -969,7 +956,18 @@ namespace MCGalaxy {
                     SendExtEntry("EnvWeatherType", 1);
                     SendExtEntry("HackControl", 1);
 
-                    //SendCustomBlockSupportLevel( 1 );
+                    SendCustomBlockSupportLevel(1);
+                }
+                foreach (Player p in players)
+                {
+                    if (p.name == name)
+                    {
+                        if (Server.verify)
+                        {
+                            p.Kick("Someone logged in as you!"); break;
+                        }
+                        else { Kick("Already logged in!"); return; }
+                    }
                 }
 
                 try { left.Remove(name.ToLower()); }
@@ -2916,8 +2914,18 @@ return;
                 BitConverter.GetBytes(IPAddress.HostToNetworkOrder(level.blocks.Length)).CopyTo(buffer, 0);
                 //ushort xx; ushort yy; ushort zz;
 
-                for ( int i = 0; i < level.blocks.Length; ++i )
-                    buffer[4 + i] = Block.Convert(level.blocks[i]);
+                for (int i = 0; i < level.blocks.Length; ++i)
+                {
+                    if (extension)
+                    {
+                        buffer[4 + i] = (byte)Block.Convert(level.blocks[i]);
+                    }
+                    else
+                    {
+                        //Fallback
+                        buffer[4 + i] = (byte)Block.Convert(Block.ConvertCPE(level.blocks[i]));
+                    }
+                }
                 SendRaw(2);
                 buffer = buffer.GZip();
                 int number = (int)Math.Ceiling(( (double)buffer.Length ) / 1024);
@@ -3024,12 +3032,20 @@ rot = new byte[2] { rotx, roty };*/
             HTNO(x).CopyTo(buffer, 0);
             HTNO(y).CopyTo(buffer, 2);
             HTNO(z).CopyTo(buffer, 4);
-            buffer[6] = Block.Convert(type);
+            if (extension == true)
+            {
+                buffer[6] = (byte)Block.Convert(type);
+            }
+            else
+            {
+                buffer[6] = (byte)Block.Convert(Block.ConvertCPE(type));
+            }
+
             SendRaw(6, buffer);
         }
         void SendKick(string message) { SendRaw(14, StringFormat(message, 64)); }
         void SendPing() { /*pingDelay = 0; pingDelayTimer.Start();*/ SendRaw(1); }
-		void SendExtInfo( short count ) {
+		void SendExtInfo( byte count ) {
 			byte[] buffer = new byte[66];
 			StringFormat( "MCGalaxy " + Server.Version, 64 ).CopyTo( buffer, 0 );
 			HTNO( count ).CopyTo( buffer, 64 );
