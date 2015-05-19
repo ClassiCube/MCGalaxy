@@ -162,7 +162,7 @@ namespace MCGalaxy {
 			if (cmd != null) {
 				Server.s.Log("IRC Command: /" + message);
 				usedCmd = user.Nick;
-				try { cmd.Use(null, message.Split(' ').Length > 1 ? message.Substring(message.IndexOf(' ')).Trim() : ""); }
+				try { cmd.Use(new Player("IRC"), message.Split(' ').Length > 1 ? message.Substring(message.IndexOf(' ')).Trim() : ""); }
 				catch { Pm(user.Nick, "Failed command!"); }
 				usedCmd = "";
 			}
@@ -187,10 +187,10 @@ namespace MCGalaxy {
                     Command cmd = Command.all.Find(message.Split(' ')[1]);
                     if (cmd != null)
                     {
-                        Server.s.Log("IRC Command: /" + message);
+                        Server.s.Log("IRC Command: /" + message.Replace(".x ", ""));
                         usedCmd = user.Nick;
-                        try { cmd.Use(null, message.Split(' ')[2].Trim()); }
-                        catch { Server.IRC.Say("Failed command!"); }
+                        try { cmd.Use(new Player("IRC"), message.Split(' ')[2].Trim()); }
+                        catch (Exception e) { Logger.WriteError(e); }
                         usedCmd = "";
                     }
                     else

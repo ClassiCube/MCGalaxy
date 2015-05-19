@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
                 Player.GlobalChatLevel(p, p.color + "*" + p.name + " " + message, false);
             }
             //IRCBot.Say("*" + p.name + " " + message);
-            Server.IRC.Say("*" + p.name + " " + message);
+            Server.IRC.Say("*" + p.DisplayName + " " + message);
 
 
         }

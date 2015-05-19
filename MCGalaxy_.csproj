@@ -123,6 +123,7 @@
     <Compile Include="Commands\CmdSearch.cs" />
     <Compile Include="Commands\CmdStaff.cs" />
     <Compile Include="Commands\CmdTntWars.cs" />
+    <Compile Include="Commands\CmdTopFive.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
     <Compile Include="Donators.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">

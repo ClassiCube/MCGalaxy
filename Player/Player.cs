@@ -2696,6 +2696,10 @@ return;
         }
 
         public static void SendMessage(Player p, string message) {
+            if (p.name == "IRC")
+            {
+                Server.IRC.Say(message, false, true);
+            }
             if ( p == null ) { Server.s.Log(message); return; }
             SendMessage(p, message, true);
         }
@@ -2851,7 +2855,6 @@ return;
                     if ( newLine.TrimEnd(' ')[newLine.TrimEnd(' ').Length - 1] < '!' ) {
                         newLine += '\'';
                     }
-
                     StringFormat(newLine, 64).CopyTo(buffer, 1);
                     SendRaw(13, buffer);
                 }
