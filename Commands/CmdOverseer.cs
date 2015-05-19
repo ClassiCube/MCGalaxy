@@ -99,9 +99,9 @@ namespace MCGalaxy.Commands
 			{
 				if (par == "ADD")
 				{
-					if ((File.Exists(@"levels\" + p.name.ToLower() + ".lvl")) || (File.Exists(@"levels\" + p.name.ToLower() + "00.lvl")))
+					if ((File.Exists("levels/" + p.name.ToLower() + ".lvl")) || (File.Exists("levels/" + p.name.ToLower() + "00.lvl")))
 					{
-                        foreach(string filenames in Directory.GetFiles(@"levels\"))
+                        foreach(string filenames in Directory.GetFiles("levels"))
                         {
                             for(int i = 1; i < p.group.OverseerMaps + 2; i++)
                             {
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
                                     i = 2;
                                 if(i != 0)
                                 {
-                                if(!File.Exists(@"levels\" + p.name.ToLower() + i + ".lvl"))
+                                if(!File.Exists("levels/" + p.name.ToLower() + i + ".lvl"))
                                 {
                                     if(i > p.group.OverseerMaps)
                                     {

@@ -1966,7 +1966,7 @@ namespace MCGalaxy
                 case fishlavashark: return obsidian;
 
                 default:
-                    if (b < 50) return b; else return 22;
+                    if (b < 66) return b; else return 22;
             }
         }
         public static byte SaveConvert(byte b)

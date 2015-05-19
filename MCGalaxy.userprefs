@@ -1,11 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Player/Player.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Commands/CmdOverseer.cs">
     <Files>
       <File FileName="Commands/CmdCuboid.cs" Line="439" Column="40" />
       <File FileName="Commands/Command.cs" Line="120" Column="30" />
-      <File FileName="Player/Player.cs" Line="2076" Column="18" />
-      <File FileName="Server.cs" Line="167" Column="40" />
+      <File FileName="Player/Player.cs" Line="2745" Column="38" />
       <File FileName="Commands/CmdAbort.cs" Line="1" Column="1" />
       <File FileName="Commands/CmdCopy.cs" Line="1" Column="1" />
       <File FileName="Commands/CmdFill.cs" Line="1" Column="1" />
@@ -24,15 +23,20 @@
       <File FileName="Commands/CmdJail.cs" Line="66" Column="31" />
       <File FileName="Commands/CmdPromote.cs" Line="1" Column="1" />
       <File FileName="Commands/CmdSetRank.cs" Line="173" Column="1" />
+      <File FileName="Color.cs" Line="86" Column="28" />
+      <File FileName="ForgeBot.cs" Line="94" Column="42" />
+      <File FileName="Commands/CmdWhois.cs" Line="36" Column="92" />
+      <File FileName="Commands/CmdGoto.cs" Line="140" Column="104" />
+      <File FileName="Commands/CmdOverseer.cs" Line="163" Column="7" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="MCGalaxy_" expanded="True">
-            <Node name="Commands" expanded="True" />
-            <Node name="Player" expanded="True">
-              <Node name="Player.cs" selected="True" />
+            <Node name="Commands" expanded="True">
+              <Node name="CmdOverseer.cs" selected="True" />
             </Node>
+            <Node name="Player" expanded="True" />
           </Node>
         </State>
       </Pad>

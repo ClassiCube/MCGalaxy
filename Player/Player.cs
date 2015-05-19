@@ -2742,6 +2742,7 @@ return;
             StringBuilder sb = new StringBuilder(message);
 
             if ( colorParse ) {
+                sb.Replace("%r", "&f");
                 for ( int i = 0; i < 10; i++ ) {
                     sb.Replace("%" + i, "&" + i);
                     sb.Replace("&" + i + " &", " &");

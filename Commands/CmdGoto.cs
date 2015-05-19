@@ -136,7 +136,10 @@ namespace MCGalaxy.Commands
                 else if (Server.AutoLoad)
                 {
                     if (!File.Exists("levels/" + message + ".lvl"))
-                        Player.SendMessage(p, "Level \"" + message + "\" doesn't exist!");
+                    {
+                        Player.SendMessage(p, "Level \"" + message + "\" doesn't exist! Did you mean...");
+                        Command.all.Find("search").Use(p, "levels " + message);
+                    }
                     else if (Level.Find(message) != null || Level.CheckLoadOnGoto(message))
                     {
                         Command.all.Find("load").Use(p, message);
@@ -146,7 +149,11 @@ namespace MCGalaxy.Commands
                     else
                         Player.SendMessage(p, "Level \"" + message + "\" cannot be loaded using /goto!");
                 }
-                else Player.SendMessage(p, "There is no level \"" + message + "\" loaded.");
+                else 
+                { 
+                    Player.SendMessage(p, "There is no level \"" + message + "\" loaded. Did you mean..");
+                    Command.all.Find("search").Use(p, "levels " + message);
+                }
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
