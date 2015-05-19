@@ -24,6 +24,7 @@ using Sharkbite.Irc;
 namespace MCGalaxy {
 	public sealed class ForgeBot {
 		public static readonly string ColorSignal = "\x03";
+        public static readonly string ColorSignal2 = "\x030";
 		public static readonly string ResetSignal = "\x0F";
 		private Connection connection;
 		private List<string> banCmd;
@@ -99,6 +100,7 @@ namespace MCGalaxy {
 					sb.Replace("&" + ch, ColorSignal + c.MCtoIRC("&" + ch));
 				}
 			}
+            sb.Replace("%r", ResetSignal);
 
 			connection.Sender.PublicMessage(opchat ? opchannel : channel, sb.ToString());
 		}
@@ -195,11 +197,15 @@ namespace MCGalaxy {
                         Server.IRC.Say("Unknown command!");
                 }
             }
+            for (byte i = 10; i < 16; i++)
+                message = message.Replace(ColorSignal2 + i, c.IRCtoMC(i).Replace("&", "%"));
+            for (byte i = 0; i < 10; i++)
+                message = message.Replace(ColorSignal2 + i, c.IRCtoMC(i).Replace("&", "%"));
 			for (byte i = 10; i < 16; i++)
-				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace('&', '%'));
+				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));
 			for (byte i = 0; i < 10; i++)
-				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace('&', '%'));
-
+				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));
+            message.Replace(ResetSignal, "%f");
 			message = message.MCCharFilter();
 
 			if(String.IsNullOrEmpty(message.Trim()))

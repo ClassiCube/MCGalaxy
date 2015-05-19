@@ -138,8 +138,8 @@ namespace MCGalaxy
             {
                 if (b != 38 && b != 96 && b >= 32 && b <= 125)
                     sb.Append(b);
-                else
-                    sb.Append("*");
+                /*else
+                    sb.Append("*");*/
             }
 
             return sb.ToString();

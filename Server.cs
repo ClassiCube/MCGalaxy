@@ -264,7 +264,7 @@ namespace MCGalaxy
         public static bool reportBack = true;
 
         public static bool irc = false;
-        public static bool ircColorsEnable = false;
+        public static bool ircColorsEnable = true;
         //        public static bool safemode = false; //Never used
         public static int ircPort = 6667;
         public static string ircNick = "ForgeBot";
