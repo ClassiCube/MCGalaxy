@@ -268,7 +268,7 @@ namespace MCGalaxy
         //        public static bool safemode = false; //Never used
         public static int ircPort = 6667;
         public static string ircNick = "ForgeBot";
-        public static string ircServer = "irc.comingsoon.tk";
+        public static string ircServer = "irc.geekshed.net";
         public static string ircChannel = "#changethis";
         public static string ircOpChannel = "#changethistoo";
         public static bool ircIdentify = false;
@@ -432,7 +432,7 @@ namespace MCGalaxy
                     {
                         using (WebClient WEB = new WebClient())
                         {
-                            WEB.DownloadFile("http://comingsoon.tk/uploads/MySql.Data.dll", "MySql.Data.dll");
+                            WEB.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/MySql.Data.dll?raw=true", "MySql.Data.dll");
                         }
                         if (File.Exists("MySql.Data.dll"))
                         {
@@ -451,7 +451,7 @@ namespace MCGalaxy
                     {
                         using (WebClient WEB = new WebClient())
                         {
-                            WEB.DownloadFile("http://comingsoon.tk/uploads/System.Data.SQLite.dll", "System.Data.SQLite.dll");
+                            WEB.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/System.Data.SQLite.dll?raw=true", "System.Data.SQLite.dll");
                         }
                         if (File.Exists("System.Data.SQLite.dll"))
                         {
@@ -470,7 +470,7 @@ namespace MCGalaxy
                     {
                         using (WebClient WEB = new WebClient())
                         {
-                            WEB.DownloadFile("http://www.comingsoon.tk/sqlite3.dll", "sqlite3.dll");
+                            WEB.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/sqlite3.dll?raw=true", "sqlite3.dll");
                         }
                         if (File.Exists("sqlite3.dll"))
                         {
@@ -489,7 +489,7 @@ namespace MCGalaxy
                 	{
                 		using (WebClient WEB = new WebClient())
                 		{
-                			WEB.DownloadFile("http://update.comingsoon.tk/oldf/Newtonsoft.Json.dll", "Newtonsoft.Json.dll");
+                            WEB.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/Newtonsoft.Json/Newtonsoft.Json.dll?raw=true", "Newtonsoft.Json.dll");
                 		}
                 		if (File.Exists("Newtonsoft.Json.dll"))
                 		{
@@ -570,8 +570,8 @@ namespace MCGalaxy
                     SW.WriteLine("// This is used to create custom $s");
                     SW.WriteLine("// If you start the line with a // it wont be used");
                     SW.WriteLine("// It should be formatted like this:");
-                    SW.WriteLine("// $website:comingsoon.tk");
-                    SW.WriteLine("// That would replace '$website' in any message to 'comingsoon.tk'");
+                    SW.WriteLine("// $website:mcgalaxy.ml");
+                    SW.WriteLine("// That would replace '$website' in any message to 'mcgalaxy.ml'");
                     SW.WriteLine("// It must not start with a // and it must not have a space between the 2 sides and the colon (:)");
                     SW.Close();
                 }
@@ -1010,12 +1010,6 @@ namespace MCGalaxy
                 }));
 
                 locationChecker.Start();
-                try
-                {
-                    using (WebClient web = new WebClient())
-                        IP = web.DownloadString("http://server.comingsoon.tk/ip.php");
-                }
-                catch { }
 #if DEBUG
 	  UseTextures = true;          
 #endif
@@ -1289,7 +1283,7 @@ namespace MCGalaxy
                 gcnamebans.Clear();
                 JArray jason; //jason plz (troll)
                 using (var client = new WebClient()) {
-                    jason = JArray.Parse(client.DownloadString("http://server.comingsoon.tk/gcbanned.txt"));
+                    jason = JArray.Parse(client.DownloadString("http://mcgalaxy.ml/gcbanned.txt"));
                 }
                 foreach (JObject ban in jason) {
                     if((string)ban["banned_isIp"] == "0")

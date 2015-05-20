@@ -520,7 +520,6 @@
       <DependentUpon>UpdateWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Heartbeat\IBeat.cs" />
-    <Compile Include="Heartbeat\MCForgeBeat.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\ConvertDAT.cs" />
     <Compile Include="MySQL.cs" />

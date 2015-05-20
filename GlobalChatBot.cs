@@ -40,24 +40,8 @@ namespace MCGalaxy
         const string nocaps = "abcdefghijklmnopqrstuvwxyz ";
         public GlobalChatBot(string nick)
         {
-            /*if (!File.Exists("Sharkbite.Thresher.dll"))
-            {
-                Server.UseGlobalChat = false;
-                Server.s.Log("[GlobalChat] The IRC dll was not found!");
-                return;
-            }*/
-            try {
-            	using (WebClient wc = new WebClient()) {
-            		string data = wc.DownloadString("http://server.comingsoon.tk/gcdata");
-            		server = data.Split('&')[0];
-            		channel = data.Split('&')[1];
-            	}
-            }
-            catch 
-            {
-            	server = "irc.geekshed.net";
-            	channel = "#MCGalaxy";
-            }
+            server = "irc.geekshed.net";
+           	channel = "#MCGalaxy";
             this.nick = nick.Replace(" ", "");
             connection = new Connection(new ConnectionArgs(nick, server), false, false);
 
@@ -240,7 +224,7 @@ namespace MCGalaxy
             switch (code)
             {
                 case ReplyCode.ERR_BANNEDFROMCHAN:
-                    Server.s.Log("Your server is banned from the Global Chat Channel. Please appeal at comingsoon.tk");
+                    Server.s.Log("Your server is banned from the Global Chat Channel. Please appeal at mcgalaxy.tk");
                     break;
                 case ReplyCode.ERR_INVITEONLYCHAN:
                     Server.s.Log("Cannot join Global Chat. (Channel is invite only (+i))");

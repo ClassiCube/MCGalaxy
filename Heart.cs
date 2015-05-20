@@ -46,9 +46,7 @@ namespace MCGalaxy {
         private readonly static IBeat[] Beats = {
 
             //Keep in this order.
-            new ClassiCubeBeat(),
-            //new WOMBeat(),
-            //new MCGalaxyBeat(),
+            new ClassiCubeBeat()
         };
 
 

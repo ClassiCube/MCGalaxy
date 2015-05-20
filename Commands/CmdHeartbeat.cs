@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
         {
             try
             {
-                Heart.Pump(new MCGalaxyBeat());
+                Heart.Pump(new ClassiCubeBeat());
             }
             catch (Exception e)
             {
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/heartbeat - Forces a pump for the MCGalaxy heartbeat.  DEBUG PURPOSES ONLY.");
+            Player.SendMessage(p, "/heartbeat - Forces a pump for the ClassiCube heartbeat.  DEBUG PURPOSES ONLY.");
         }
     }
 }

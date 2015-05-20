@@ -1,11 +1,19 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starter", "Starter.csproj", "{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCGalaxy_", "MCGalaxy_.csproj", "{12597DB0-7C34-4DE1-88EA-9250FF3372EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "updater\Updater.csproj", "{1C317052-9B87-471C-A8AF-5AB2D779C174}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uploads", "Uploads", "{56CFDA77-2704-49F6-9169-78FAE8021941}"
+	ProjectSection(SolutionItems) = preProject
+		devs.txt = devs.txt
+		gcbanned.txt = gcbanned.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +21,10 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}.Debug|x86.ActiveCfg = Release|x86
+		{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}.Debug|x86.Build.0 = Release|x86
+		{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}.Release|x86.ActiveCfg = Release|x86
+		{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}.Release|x86.Build.0 = Release|x86
 		{12597DB0-7C34-4DE1-88EA-9250FF3372EB}.Debug|x86.ActiveCfg = Release|x86
 		{12597DB0-7C34-4DE1-88EA-9250FF3372EB}.Debug|x86.Build.0 = Release|x86
 		{12597DB0-7C34-4DE1-88EA-9250FF3372EB}.Release|x86.ActiveCfg = Release|x86
@@ -21,10 +33,9 @@ Global
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Debug|x86.Build.0 = Release|x86
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Release|x86.ActiveCfg = Release|x86
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Release|x86.Build.0 = Release|x86
-		{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}.Debug|x86.ActiveCfg = Release|x86
-		{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}.Debug|x86.Build.0 = Release|x86
-		{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}.Release|x86.ActiveCfg = Release|x86
-		{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Starter.csproj
@@ -32,21 +43,17 @@ Global
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = None
 		$1.ResourceNamePolicy = FileFormatDefault
-		$0.TextStylePolicy = $2
+		$0.TextStylePolicy = $4
 		$2.inheritsSet = null
 		$2.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $3
 		$3.inheritsSet = Mono
 		$3.inheritsScope = text/x-csharp
 		$3.scope = text/x-csharp
-		$0.TextStylePolicy = $4
 		$4.FileWidth = 120
 		$4.TabWidth = 4
 		$4.inheritsSet = Mono
 		$4.inheritsScope = text/plain
 		$4.scope = text/plain
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
