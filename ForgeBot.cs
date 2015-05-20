@@ -189,7 +189,7 @@ namespace MCGalaxy {
                     {
                         Server.s.Log("IRC Command: /" + message.Replace(".x ", ""));
                         usedCmd = user.Nick;
-                        try { cmd.Use(new Player("IRC"), message.Split(' ')[2].Trim()); }
+                        try { cmd.Use(new Player("IRC"), message.Split(new char[]{' '}, 3)[2].Trim()); }
                         catch (Exception e) { Logger.WriteError(e); }
                         usedCmd = "";
                     }

@@ -46,6 +46,7 @@ namespace MCGalaxy.Commands
 			who.DisplayName = newName;
 			Player.GlobalDie(who, false);
 			Player.GlobalSpawn(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1], false);
+            PlayerDB.Save(who);
 		}
 		public override void Help(Player p)
 		{

@@ -45,8 +45,10 @@ namespace MCGalaxy.Commands
             Player who = null;
             if (message != "")
             {
-                if (p != null || (int)p.group.Permission < CommandOtherPerms.GetPerm(this))
+                if (p == null || (int)p.group.Permission < CommandOtherPerms.GetPerm(this))
                 {
+                    Server.s.Log(((int)p.group.Permission).ToString());
+                    Server.s.Log(CommandOtherPerms.GetPerm(this).ToString());
                     Player.SendMessage(p, "You cant send /rules to another player!");
                     return;
                 }

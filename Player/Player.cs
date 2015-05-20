@@ -368,7 +368,7 @@ namespace MCGalaxy {
 
         //This is so that plugin devs can declare a player without needing a socket..
         //They would still have to do p.Dispose()..
-        public Player(string playername) { name = playername; }
+        public Player(string playername) { name = playername; if (playername == "IRC") { group = Group.Find("nobody"); color = c.lime; } }
 
         public Queue<Packet> Packets;
         public NetworkStream Stream;
