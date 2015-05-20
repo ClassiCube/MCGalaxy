@@ -181,7 +181,6 @@ namespace MCGalaxy
 			all.Add(new CmdNewLvl());
 			all.Add(new CmdNews());
 			all.Add (new CmdNick ());
-			all.Add(new CmdNyan());
 			all.Add(new CmdOHide());
 			all.Add(new CmdOpChat());
 			all.Add(new CmdOpRules());
@@ -213,7 +212,6 @@ namespace MCGalaxy
 			all.Add(new CmdPortal());
 			all.Add(new CmdPossess());
 			all.Add(new CmdPromote());
-			all.Add(new CmdPumpkin());
 			all.Add(new CmdPUnload());
 			all.Add(new CmdPyramid());
 			all.Add(new CmdQueue());

@@ -1307,7 +1307,7 @@ namespace MCGalaxy
                 mods.Clear();
                 gcmods.Clear();
                 using (WebClient web = new WebClient()) {
-                    string[] result = web.DownloadString("http://server.comingsoon.tk/devs.txt").Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.None);
+                    string[] result = web.DownloadString("https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/devs.txt").Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.None);
                     foreach (string line in result) {
                         string type = line.Split(':')[0].ToLower();
                         List<string> staffList = type.Equals("devs") ? devs : type.Equals("mods") ? mods : type.Equals("gcmods") ? gcmods : null;

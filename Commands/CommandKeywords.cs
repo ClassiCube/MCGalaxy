@@ -169,7 +169,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdMute()), "voice chat player");
             new CommandKeywords((new CmdNewLvl()), "new add lvl level map");
             new CommandKeywords((new CmdNews()), "info latest");
-            new CommandKeywords((new CmdNyan()), "troll cat");
             new CommandKeywords((new CmdOHide()), "hide rank player invisible");
             new CommandKeywords((new CmdOpChat()), "private chat op");
             new CommandKeywords((new CmdOpRules()), "op rules info");
@@ -201,7 +200,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdPortal()), "teleport tp move transport");
             new CommandKeywords((new CmdPossess()), "imp control");
             new CommandKeywords((new CmdPromote()), "rank up");
-            new CommandKeywords((new CmdPumpkin()), "halloween");
             new CommandKeywords((new CmdPUnload()), "plugin unload");
             new CommandKeywords((new CmdPyramid()), "egypt pyram piram sand");
             new CommandKeywords((new CmdQueue()), "zombie");

@@ -37,7 +37,7 @@ namespace MCGalaxy
 
                 sql.WriteLine("-- MCGalaxy SQL Database Dump");
                 sql.WriteLine("-- version 1.5");
-                sql.WriteLine("-- http://www.comingsoon.tk");
+                sql.WriteLine("-- http://mcgalaxy.ml");
                 sql.WriteLine("--");
                 sql.WriteLine("-- Host: {0}", Server.MySQLHost);
                 sql.WriteLine("-- Generation Time: {0} at {1}", DateTime.Now.Date, DateTime.Now.TimeOfDay);

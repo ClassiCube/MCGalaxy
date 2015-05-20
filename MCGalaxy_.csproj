@@ -128,7 +128,6 @@
     <Compile Include="Commands\CmdTntWars.cs" />
     <Compile Include="Commands\CmdTopFive.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
-    <Compile Include="Donators.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -204,7 +203,6 @@
     <Compile Include="Commands\CmdBanEdit.cs" />
     <Compile Include="Commands\CmdDescend.cs" />
     <Compile Include="Commands\CmdOpStats.cs" />
-    <Compile Include="Commands\CmdPumpkin.cs" />
     <Compile Include="Commands\CmdRankInfo.cs" />
     <Compile Include="Commands\CmdReview.cs" />
     <Compile Include="Commands\CmdTranslate.cs" />
@@ -246,7 +244,6 @@
     <Compile Include="Commands\CmdInfected.cs" />
     <Compile Include="Commands\CmdKillPhysics.cs" />
     <Compile Include="Commands\CmdLavaSurvival.cs" />
-    <Compile Include="Commands\CmdNyan.cs" />
     <Compile Include="Commands\CmdPatrol.cs" />
     <Compile Include="Commands\CmdGlobalCLS.cs" />
     <Compile Include="Commands\CmdHackRank.cs" />

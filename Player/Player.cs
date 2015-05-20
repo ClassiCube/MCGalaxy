@@ -1106,14 +1106,6 @@ namespace MCGalaxy {
                 PlayerConnect(this);
             OnPlayerConnectEvent.Call(this);
 
-            DonatorPlayers atribs = Donators.GetDonationAtribs(this); //well there seem to be no donators yet, so for the time being this will stay null
-            if (atribs != null)
-            {
-                color = "&" + atribs.Color;
-                title = atribs.Title;
-                SetPrefix();
-            }
-
             if (Server.server_owner != "" && Server.server_owner.ToLower().Equals(this.name.ToLower()))
             {
                 if (color == Group.standard.color)
