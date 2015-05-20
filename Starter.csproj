@@ -39,7 +39,7 @@
     <StartupObject>Starter.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>MCForge.ico</ApplicationIcon>
+    <ApplicationIcon>Galaxy.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -59,7 +59,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MCForge.ico" />
+    <Content Include="Galaxy.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -31,7 +31,7 @@ namespace MCGalaxy
 		public OmniBan()
 		{
 			bans = new List<string>();
-			kickMsg = "You are Omnibanned! Visit comingsoon.tk to appeal.";
+			kickMsg = "You are Omnibanned! Visit mcgalaxy.ml to appeal.";
 		}
 
 		public void Load(bool web)
@@ -44,7 +44,7 @@ namespace MCGalaxy
 					try
 					{
 						using (WebClient WC = new WebClient())
-							data = WC.DownloadString("http://comingsoon.tk/serverdata/omnibans.txt").ToLower();
+                            data = WC.DownloadString("https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/omnibans.txt").ToLower();
 					}
 					catch { Load(false); return; }
 

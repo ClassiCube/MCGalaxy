@@ -9,7 +9,7 @@ About MCGalaxy Classic
 
 MCGalaxy classic is a classic Minecraft server software based on MCLawl.  It has been released under an open-source license to allow the community to help us develop it further.  We welcome all pull requests and will merge them in at our own discretion.  For more information, visit [our wiki][1].
 
-The official website for MCGalaxy is [comingsoon.tk][2]
+The official website for MCGalaxy is [MCGalaxy.ml][2]
 
 Contributors
 ------------
@@ -40,7 +40,4 @@ It is also required that any derivative works clearly state that they are based 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-[1]: http://wiki.comingsoon.tk/index.php?title=Development
-[2]: http://www.comingsoon.tk
-[3]: https://raw.github.com/MCGalaxy/MCGalaxy-MCLawl/master/LICENSE.txt
-[4]: https://help.github.com/articles/dealing-with-line-endings
+[1]: http://MCGalaxy.ml

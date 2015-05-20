@@ -43,12 +43,10 @@ namespace MCGalaxy_.Gui
         public static string parent = Path.GetFileName(Assembly.GetEntryAssembly().Location);
         public static string parentfullpath = Assembly.GetEntryAssembly().Location;
         public static string parentfullpathdir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-        private static string CurrentVersionFile = "http://update.comingsoon.tk/current_version.txt";
-        private static string DLLLocation = "http://update.comingsoon.tk/dll/MCGalaxy_.dll";
-        private static string ChangelogLocation = "http://update.comingsoon.tk/changelog.txt";
-        private static string EXELocation = "http://update.comingsoon.tk/program/MCGalaxy.exe";
-        //private static string RevisionList = "http://update.comingsoon.tk/revs.txt";
-        //private static string HeartbeatAnnounce = "http://www.comingsoon.tk/hbannounce.php";
+        private static string CurrentVersionFile = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/current_version.txt";
+        private static string DLLLocation = "https://github.com/Hetal728/MCGalaxy/blob/master/Uploads/MCGalaxy_.dll?raw=true";
+        private static string ChangelogLocation = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Changelog.txt";
+        private static string EXELocation = "https://github.com/Hetal728/MCGalaxy/blob/master/Uploads/MCGalaxy.exe?raw=true";
 
         [DllImport("kernel32")]
         public static extern IntPtr GetConsoleWindow();
@@ -451,7 +449,7 @@ namespace MCGalaxy_.Gui
                         Player.SendMessage(p, "No update found!");
                     }
                 }
-                catch { try { Server.s.Log("No web server found to update on."); } catch { } }
+                catch(Exception e) { /*try { Server.s.Log("No web server found to update on.");*/Logger.WriteError(e); } /*catch { }*/ //}
                 Client.Dispose();
                 CurrentUpdate = false;
             })); updateThread.Start();

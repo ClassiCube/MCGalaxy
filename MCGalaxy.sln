@@ -9,12 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCGalaxy_", "MCGalaxy_.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "updater\Updater.csproj", "{1C317052-9B87-471C-A8AF-5AB2D779C174}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uploads", "Uploads", "{56CFDA77-2704-49F6-9169-78FAE8021941}"
-	ProjectSection(SolutionItems) = preProject
-		devs.txt = devs.txt
-		gcbanned.txt = gcbanned.txt
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

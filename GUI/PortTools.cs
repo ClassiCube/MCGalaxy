@@ -51,7 +51,7 @@ namespace MCGalaxy.Gui.Popups {
         }
 
         private void linkHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            try { Process.Start( "http://www.comingsoon.tk/community/forum/46-help-support/" ); }
+            try { Process.Start( "http://www.mcgalaxy.ml" ); }
             catch { }
         }
 
@@ -129,7 +129,7 @@ namespace MCGalaxy.Gui.Popups {
         }
 
         private void linkHelpForward_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            try { Process.Start("https://github.com/MCGalaxy/MCGalaxy-Vanilla/wiki/Setup%20MCGalaxy%205.5.0.2"); }
+            try { Process.Start("https://portforward.com"); }
             catch { }
         }
 

@@ -64,7 +64,7 @@
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>MCForge.ico</ApplicationIcon>
+    <ApplicationIcon>Galaxy.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -680,6 +680,7 @@
     <Compile Include="Commands\CmdVoteKick.cs" />
     <Compile Include="Plugins\Manager\Plugin.Events.cs" />
     <None Include="bin\Release\Updater.exe" />
+    <Content Include="Galaxy.ico" />
     <Content Include="mcf.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -709,7 +710,6 @@
     <Content Include="LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MCForge.ico" />
     <Compile Include="Player\VoteKickChoice.cs" />
     <Content Include="mcpony.png" />
     <Content Include="sqlite3.dll">

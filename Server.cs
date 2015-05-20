@@ -755,7 +755,6 @@ namespace MCGalaxy
                 if (!File.Exists("ranks/jailed.txt")) { File.Create("ranks/jailed.txt").Close(); Server.s.Log("CREATED NEW: ranks/jailed.txt"); }
                 Extensions.UncapitalizeAll("ranks/banned.txt");
                 Extensions.UncapitalizeAll("ranks/muted.txt");
-                devs.Add("Hetal+");
                 if (forgeProtection == ForgeProtection.Mod || forgeProtection == ForgeProtection.Dev) {
                     foreach (string dev in Devs) {
                         Extensions.DeleteExactLineWord("ranks/banned.txt", dev);
@@ -1283,7 +1282,7 @@ namespace MCGalaxy
                 gcnamebans.Clear();
                 JArray jason; //jason plz (troll)
                 using (var client = new WebClient()) {
-                    jason = JArray.Parse(client.DownloadString("http://mcgalaxy.ml/gcbanned.txt"));
+                    jason = JArray.Parse(client.DownloadString("https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/gcbanned.txt"));
                 }
                 foreach (JObject ban in jason) {
                     if((string)ban["banned_isIp"] == "0")
@@ -1307,7 +1306,7 @@ namespace MCGalaxy
                 mods.Clear();
                 gcmods.Clear();
                 using (WebClient web = new WebClient()) {
-                    string[] result = web.DownloadString("https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/devs.txt").Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.None);
+                    string[] result = web.DownloadString("https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/devs.txt").Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.None);
                     foreach (string line in result) {
                         string type = line.Split(':')[0].ToLower();
                         List<string> staffList = type.Equals("devs") ? devs : type.Equals("mods") ? mods : type.Equals("gcmods") ? gcmods : null;
