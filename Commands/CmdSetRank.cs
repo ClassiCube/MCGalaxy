@@ -31,7 +31,6 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             var split = message.Split(' ');
-            Server.s.Log(split.Length.ToString());
             if (split.Length < 2) { Help(p); return; }
             Player who = Player.Find(split[0]);
             Group newRank = Group.Find(split[1]);
