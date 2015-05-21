@@ -56,7 +56,6 @@ namespace MCGalaxy
         {
             foreach (Alias alias in aliases)
             {
-                Server.s.Log(alias.trigger);
                 if (alias.trigger == id)
                 {
                     return alias;

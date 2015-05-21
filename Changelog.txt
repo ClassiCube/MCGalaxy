@@ -1,3 +1,7 @@
+v1.0.3.1
+ - Fixed aliases (hopefully)
+v1.0.0.2
+ - Fixed updating
 v1.0.0.1
  - Fixed /whois showing your nick instead of the player's
  - Fixed GUI stuff

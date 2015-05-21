@@ -2447,8 +2447,15 @@ return;
                 if (alias != null)
                 {
                     string[] pars = alias.Command.Split(new string[] { " " }, (int)2, StringSplitOptions.None);
-                    cmd = pars[0];
-                    message = pars[1] + " " + message;
+                    try
+                    {
+                        Command.all.Find(pars[0]).Use(this, pars[1] + " " + message);
+                    }
+                    catch
+                    { //pars[1] is empty/null
+                        Command.all.Find(pars[0]).Use(this, message);
+                    }
+                    return;
                 }
                 Command command = Command.all.Find(cmd);
                 //Group old = null;
