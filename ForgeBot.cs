@@ -25,7 +25,7 @@ namespace MCGalaxy {
 	public sealed class ForgeBot {
 		public static readonly string ColorSignal = "\x03";
         public static readonly string ColorSignal2 = "\x030";
-		public static readonly string ResetSignal = "\x0F";
+		public static readonly string ResetSignal = "\x03";
 		private Connection connection;
 		private List<string> banCmd;
 		private string channel, opchannel;
@@ -197,15 +197,15 @@ namespace MCGalaxy {
                         Server.IRC.Say("Unknown command!");
                 }
             }
-            for (byte i = 10; i < 16; i++)
-                message = message.Replace(ColorSignal2 + i, c.IRCtoMC(i).Replace("&", "%"));
+            //message.Replace(ResetSignal, "%f");
             for (byte i = 0; i < 10; i++)
                 message = message.Replace(ColorSignal2 + i, c.IRCtoMC(i).Replace("&", "%"));
-			for (byte i = 10; i < 16; i++)
+            for (byte i = 10; i < 16; i++)
+                message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));
+			/*for (byte i = 10; i < 16; i++)
 				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));
 			for (byte i = 0; i < 10; i++)
-				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));
-            message.Replace(ResetSignal, "%f");
+				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));*/
 			message = message.MCCharFilter();
 
 			if(String.IsNullOrEmpty(message.Trim()))
@@ -280,9 +280,11 @@ namespace MCGalaxy {
 
 
 			if (Server.ircColorsEnable == true && Server.irc && IsConnected())
-				Say(p.color + p.prefix + p.DisplayName + ": &0" + message, p.opchat);
-			if (Server.ircColorsEnable == false && Server.irc && IsConnected())
-				Say(p.DisplayName + ": " + "%r" + message, p.opchat);
+				Say(p.color + p.prefix + p.DisplayName + ": %r" + message, p.opchat);
+            if (Server.ircColorsEnable == false && Server.irc && IsConnected())
+            {
+                Say(p.DisplayName + ": " + message, p.opchat);
+            }
 		}
 		public void Connect() {
 			if (!Server.irc || Server.shuttingDown) return;

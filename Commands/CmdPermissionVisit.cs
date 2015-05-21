@@ -51,28 +51,25 @@ namespace MCGalaxy.Commands
                 {
                     int pos = message.IndexOf(' ');
                     string t = message.Substring(0, pos).ToLower();
+                    Level level = Level.Find(t);
                     string s = message.Substring(pos + 1).ToLower();
+                    if (level == null)
+                        Player.SendMessage(p, "There is no level \"" + s + "\" loaded.");
                     LevelPermission Perm = Level.PermissionFromName(s);
                     if (Perm == LevelPermission.Null) { Player.SendMessage(p, "Not a valid rank"); return; }
 
-                    Level level = Level.Find(t);
                     if (level.permissionvisit > p.group.Permission)
                     {
                         Player.SendMessage(p, "You cannot change the pervisit of a level with a pervisit higher than your rank.");
                         return;
                     }
-                    if (level != null)
-                    {
-                        level.permissionvisit = Perm;
-                        Level.SaveSettings(level);
-                        Server.s.Log(level.name + " visit permission changed to " + s + ".");
-                        Player.GlobalMessageLevel(level, "visit permission changed to " + s + ".");
-                        if (p != null)
-                            if (p.level != level) { Player.SendMessage(p, "visit permission changed to " + s + " on " + level.name + "."); }
-                        return;
-                    }
-                    else
-                        Player.SendMessage(p, "There is no level \"" + s + "\" loaded.");
+                    level.permissionvisit = Perm;
+                    Level.SaveSettings(level);
+                    Server.s.Log(level.name + " visit permission changed to " + s + ".");
+                    Player.GlobalMessageLevel(level, "visit permission changed to " + s + ".");
+                    if (p != null)
+                        if (p.level != level) { Player.SendMessage(p, "visit permission changed to " + s + " on " + level.name + "."); }
+                    return;
                 }
             }
             else
