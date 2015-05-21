@@ -1,3 +1,6 @@
+v1.0.0.1
+ - Fixed /whois showing your nick instead of the player's
+ - Fixed GUI stuff
 v1.0.0.0
  - MCLawl Custom commands may now be used
  - /inv is the new shorthand for /Invincible
