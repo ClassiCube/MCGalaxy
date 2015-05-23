@@ -955,6 +955,7 @@ namespace MCGalaxy {
                     SendExtEntry("EnvMapAppearance", 1);
                     SendExtEntry("EnvWeatherType", 1);
                     SendExtEntry("HackControl", 1);
+                    SendCustomBlockSupportLevel(1);
                 }
                 foreach (Player p in players)
                 {

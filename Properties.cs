@@ -415,7 +415,14 @@ namespace MCGalaxy {
 								else Server.s.Log("Invalid main name");
 								break;
                             case "default-texture-url":
-                                Server.defaultTextureUrl = value;
+                                if (!value.StartsWith("http://") && !value.StartsWith("https://"))
+                                {
+                                    Server.defaultTextureUrl = "";
+                                }
+                                else
+                                {
+                                    Server.defaultTextureUrl = value;
+                                }
                                 break;
 							case "dollar-before-dollar":
 								try { Server.dollardollardollar = bool.Parse(value); }

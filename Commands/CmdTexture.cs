@@ -36,6 +36,11 @@ namespace MCGalaxy.Commands
                 Help(p);
                 return;
             }
+            if(!pars[1].StartsWith("http://") && !pars[1].StartsWith("https://"))
+            {
+                p.SendMessage("Please use http:// or https:// in front of your URL");
+                return;
+            }
             if(pars[0].ToLower() == "global") {
                 Server.defaultTextureUrl = pars[1];
                 p.SendMessage("Set server's default texture to " + pars[1]);
@@ -46,6 +51,7 @@ namespace MCGalaxy.Commands
                         pl.SendSetMapAppearance(Server.defaultTextureUrl, 7, 8, (short)(pl.level.depth / 2));
                     }
                 }
+                SrvProperties.Save("properties/server.properties");
                 return;
             }
             if(pars[0].ToLower() == "level")
@@ -59,6 +65,7 @@ namespace MCGalaxy.Commands
                         pl.SendSetMapAppearance(pl.level.textureUrl, 7, 8, (short)(pl.level.depth / 2));
                     }
                 }
+                p.level.Save();
                 return;
             }
         }
