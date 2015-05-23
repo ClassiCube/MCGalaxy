@@ -3167,7 +3167,7 @@ rot = new byte[2] { rotx, roty };*/
 			StringFormat( model, 64 ).CopyTo( buffer, 1 );
 			SendRaw( 29, buffer );
 		}
-		void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, short sidelevel ) {
+		public void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, short sidelevel ) {
 			byte[] buffer = new byte[68];
 			StringFormat( url, 64 ).CopyTo( buffer, 0 );
 			buffer[64] = sideblock;

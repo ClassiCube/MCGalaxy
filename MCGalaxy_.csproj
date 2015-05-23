@@ -125,6 +125,7 @@
     <Compile Include="Commands\CmdMods.cs" />
     <Compile Include="Commands\CmdSearch.cs" />
     <Compile Include="Commands\CmdStaff.cs" />
+    <Compile Include="Commands\CmdTexture.cs" />
     <Compile Include="Commands\CmdTntWars.cs" />
     <Compile Include="Commands\CmdTopFive.cs" />
     <Compile Include="Commands\CmdWhoNick.cs" />

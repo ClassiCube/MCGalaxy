@@ -271,6 +271,7 @@ namespace MCGalaxy
 			all.Add(new CmdTempRankInfo());
 			all.Add(new CmdTempRankList());
 			all.Add(new CmdText());
+            all.Add(new CmdTexture());
 			all.Add(new CmdTime());
 			all.Add(new CmdTimer());
 			all.Add(new CmdTitle());
