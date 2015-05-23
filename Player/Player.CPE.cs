@@ -120,8 +120,12 @@ namespace MCGalaxy
 
         public bool HasExtension(string Extension, int version = 1)
         {
-            if (!extension) return false;
-            switch (Extension)
+            if(extension)
+            {
+                return true;
+            }
+            return false;
+            /*switch (Extension)
             {
                 case "ClickDistance": return ClickDistance == version;
                 case "CustomBlocks": return CustomBlocks == version;
@@ -138,7 +142,7 @@ namespace MCGalaxy
                 case "EmoteFix": return EmoteFix == version;
                 case "MessageTypes": return MessageTypes == version;
                 default: return false;
-            }
+            }*/
         }
     }
 }

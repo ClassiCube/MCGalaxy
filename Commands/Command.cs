@@ -306,6 +306,7 @@ namespace MCGalaxy
 			all.Add(new CmdWhitelist());
 			all.Add(new CmdWhoip());
 			all.Add(new CmdWhois());
+            all.Add(new CmdWhoNick());
 			all.Add(new CmdWhowas());
 			all.Add(new CmdWrite());
 			all.Add(new CmdXban());

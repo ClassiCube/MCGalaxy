@@ -93,6 +93,7 @@ namespace MCGalaxy
         public List<BlockPos> blockCache = new List<BlockPos>();
         public byte[] blocks;
         public byte weather;
+        public string textureUrl = "";
 
         public bool cancelsave1;
         public bool cancelunload;
@@ -777,6 +778,7 @@ namespace MCGalaxy
                     SW.WriteLine("RandomFlow = " + level.randomFlow.ToString());
                     SW.WriteLine("GrowTrees = " + level.growTrees.ToString());
                     SW.WriteLine("Weather = " + level.weather.ToString());
+                    SW.WriteLine("Texture = " + level.textureUrl);
                 }
             }
             catch (Exception)
@@ -1369,6 +1371,7 @@ namespace MCGalaxy
                                         level.growTrees = bool.Parse(value);
                                         break;
                                     case "weather": level.weather = byte.Parse(value); break;
+                                    case "texture": level.textureUrl = value; break;
                                 }
                             }
                             catch (Exception e)

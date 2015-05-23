@@ -414,6 +414,9 @@ namespace MCGalaxy {
 								if ( Player.ValidName(value) ) Server.level = value;
 								else Server.s.Log("Invalid main name");
 								break;
+                            case "default-texture-url":
+                                Server.defaultTextureUrl = value;
+                                break;
 							case "dollar-before-dollar":
 								try { Server.dollardollardollar = bool.Parse(value); }
 								catch { Server.s.Log("Invalid " + key + ". Using default."); }
@@ -583,22 +586,6 @@ namespace MCGalaxy {
 									Server.grieferStoneRank = (LevelPermission)parsed;
 								}
 								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "wom-direct":
-								try { Server.WomDirect = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "wom-serveralt":
-								Server.Server_ALT = value;
-								break;
-							case "wom-serverdis":
-								Server.Server_Disc = value;
-								break;
-							case "wom-serverflag":
-								Server.Server_Flag = value;
-								break;
-							case "wom-textures":
-								Server.UseTextures = bool.Parse(value);
 								break;
 							case "review-view-perm":
 								try {
@@ -1155,6 +1142,7 @@ namespace MCGalaxy {
 			w.WriteLine("restart-on-error = " + Server.restartOnError);
             w.WriteLine("MCGalaxy-protection-level = " + Enum.GetName(typeof(ForgeProtection), Server.forgeProtection));
 			w.WriteLine("main-name = " + Server.level);
+            w.WriteLine("default-texture-url = " + Server.defaultTextureUrl);
 			//w.WriteLine("guest-goto = " + Server.guestGoto);
 			w.WriteLine();
 			w.WriteLine("# irc bot options");
@@ -1276,12 +1264,6 @@ namespace MCGalaxy {
 			w.WriteLine("griefer-stone-type = " + Block.Name(Server.grieferStoneType));
 			w.WriteLine("griefer-stone-rank = " + ( (sbyte)Server.grieferStoneRank ).ToString());
 			w.WriteLine();
-			w.WriteLine("#WoM Settings");
-			w.WriteLine("wom-direct = " + Server.WomDirect.ToString().ToLower());
-			w.WriteLine("wom-serveralt = " + Server.Server_ALT);
-			w.WriteLine("wom-serverdis = " + Server.Server_Disc);
-			w.WriteLine("wom-serverflag = " + Server.Server_Flag);
-			w.WriteLine("wom-textures = " + Server.UseTextures);
 			w.WriteLine();
 			w.WriteLine("#Review settings");
 			w.WriteLine("review-view-perm = " + ( (sbyte)Server.reviewview ).ToString());

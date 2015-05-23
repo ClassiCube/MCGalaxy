@@ -15,6 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 namespace MCGalaxy
 {
     public static class c
@@ -105,6 +109,38 @@ namespace MCGalaxy
                 case white: return 0;
                 default: return 0;
             }
+        }
+        static readonly Dictionary<string, string> MinecraftToIRCColors = new Dictionary<string, string> {
+            { white, "\u000300" },
+            { black, "\u000301" },
+            { navy, "\u000302" },
+            { green, "\u000303" },
+            { red, "\u000304" },
+            { maroon, "\u000305" },
+            { purple, "\u000306" },
+            { gold, "\u000307" },
+            { yellow, "\u000308" },
+            { lime, "\u000309" },
+            { teal, "\u000310" },
+            { aqua, "\u000311" },
+            { blue, "\u000312" },
+            { pink, "\u000313" },
+            { gray, "\u000314" },
+            { silver, "\u000315" },
+        };
+        static readonly Regex IrcTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
+        public static string IrcToMinecraftColors(string input)
+        {
+            if (input == null) throw new ArgumentNullException("input");
+            input = IrcTwoColorCode.Replace(input, "$1");
+            StringBuilder sb = new StringBuilder(input);
+            foreach (var codePair in MinecraftToIRCColors)
+            {
+                sb.Replace(codePair.Value, codePair.Key);
+            }
+            sb.Replace("\u0003", white); // color reset
+            sb.Replace("\u000f", white); // reset
+            return sb.ToString();
         }
         public static string IRCtoMC(byte str)
         {

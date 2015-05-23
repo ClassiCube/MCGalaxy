@@ -197,16 +197,7 @@ namespace MCGalaxy {
                         Server.IRC.Say("Unknown command!");
                 }
             }
-            //message.Replace(ResetSignal, "%f");
-            for (byte i = 0; i < 10; i++)
-                message = message.Replace(ColorSignal2 + i, c.IRCtoMC(i).Replace("&", "%"));
-            for (byte i = 10; i < 16; i++)
-                message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));
-			/*for (byte i = 10; i < 16; i++)
-				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));
-			for (byte i = 0; i < 10; i++)
-				message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace("&", "%"));*/
-			message = message.MCCharFilter();
+            message = c.IrcToMinecraftColors(message);
 
 			if(String.IsNullOrEmpty(message.Trim()))
 				message = ".";

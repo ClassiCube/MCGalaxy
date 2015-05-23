@@ -955,8 +955,6 @@ namespace MCGalaxy {
                     SendExtEntry("EnvMapAppearance", 1);
                     SendExtEntry("EnvWeatherType", 1);
                     SendExtEntry("HackControl", 1);
-
-                    SendCustomBlockSupportLevel(1);
                 }
                 foreach (Player p in players)
                 {
@@ -2914,6 +2912,17 @@ return;
         }
 
         public void SendMap() {
+            if (HasExtension("EnvMapAppearance"))
+            {
+                if (level.textureUrl == "")
+                {
+                    SendSetMapAppearance(Server.defaultTextureUrl, 7, 8, (short)(level.depth / 2));
+                }
+                else
+                {
+                    SendSetMapAppearance(level.textureUrl, 7, 8, (short)(level.depth / 2));
+                }
+            }
             if ( level.blocks == null ) return;
             try {
                 byte[] buffer = new byte[level.blocks.Length + 4];
@@ -4056,6 +4065,26 @@ catch { }*/
 
             if ( returnNull == true ) return null;
             if ( tempPlayer != null ) return tempPlayer;
+            return null;
+        }
+        public static Player FindNick(string nick)
+        {
+            List<Player> tempList = new List<Player>();
+            tempList.AddRange(players);
+            Player tempPlayer = null; bool returnNull = false;
+
+            foreach (Player p in tempList)
+            {
+                if (p.DisplayName.ToLower() == nick.ToLower()) return p;
+                if (p.DisplayName.ToLower().IndexOf(nick.ToLower()) != -1)
+                {
+                    if (tempPlayer == null) tempPlayer = p;
+                    else returnNull = true;
+                }
+            }
+
+            if (returnNull == true) return null;
+            if (tempPlayer != null) return tempPlayer;
             return null;
         }
         public static Group GetGroup(string name) {
