@@ -414,7 +414,8 @@ namespace MCGalaxy
         {
             //if (!Server.useMySQL) return;
             if (blockCache.Count == 0) return;
-            List<BlockPos> tempCache = blockCache;
+            List<BlockPos> tempCache = new List<BlockPos>();
+            tempCache.AddRange(blockCache);
             blockCache = new List<BlockPos>();
 
             string template = "INSERT INTO `Block" + name +

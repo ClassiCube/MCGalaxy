@@ -281,7 +281,7 @@ namespace MCGalaxy {
 
 
 			if (Server.ircColorsEnable == true && Server.irc && IsConnected())
-				Say(p.color + p.prefix + p.DisplayName + "%r:" + message, p.opchat);
+				Say(p.color + p.prefix + p.DisplayName + "%r: " + message, p.opchat);
             if (Server.ircColorsEnable == false && Server.irc && IsConnected())
             {
                 Say(p.DisplayName + ": " + message, p.opchat);
