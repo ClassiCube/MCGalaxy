@@ -189,8 +189,18 @@ namespace MCGalaxy {
                     {
                         Server.s.Log("IRC Command: /" + message.Replace(".x ", ""));
                         usedCmd = user.Nick;
-                        try { cmd.Use(new Player("IRC"), message.Split(new char[]{' '}, 3)[2].Trim()); }
-                        catch (Exception e) { Logger.WriteError(e); }
+                        try
+                        {
+                            cmd.Use(new Player("IRC"), message.Split(new char[] { ' ' }, 3)[2].Trim());
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+                            cmd.Use(new Player("IRC"), message.Split(new char[] { ' ' }, 3)[1].Trim());
+                        }
+                        catch (Exception e)
+                        {
+                            Server.IRC.Say("CMD Error: " + e.ToString());
+                        }
                         usedCmd = "";
                     }
                     else
@@ -271,7 +281,7 @@ namespace MCGalaxy {
 
 
 			if (Server.ircColorsEnable == true && Server.irc && IsConnected())
-				Say(p.color + p.prefix + p.DisplayName + ": %r" + message, p.opchat);
+				Say(p.color + p.prefix + p.DisplayName + "%r:" + message, p.opchat);
             if (Server.ircColorsEnable == false && Server.irc && IsConnected())
             {
                 Say(p.DisplayName + ": " + message, p.opchat);
