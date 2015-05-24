@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands
                 p.SendMessage("You tried to replace over 10000 blocks, reloading map for faster replace.");
                 foreach (Pos Pos in stored)
                 {
-                    p.level.SetTile(Pos.x, Pos.y, Pos.z, newType);
+                    p.level.SetTile(Pos.x, Pos.y, Pos.z, newType, p);
                 }
                 foreach (Player pl in Player.players)
                 {

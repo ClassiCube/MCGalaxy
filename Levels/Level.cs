@@ -457,12 +457,24 @@ namespace MCGalaxy
             blocks[b] = type;
             //blockchanges[x + width * z + width * height * y] = pName;
         }
-        public void SetTile(ushort x, ushort y, ushort z, byte type)
+        public void SetTile(ushort x, ushort y, ushort z, byte type, Player p = null)
         {
             if (blocks == null) return;
             if (!InBound(x, y, z)) return;
             blocks[PosToInt(x, y, z)] = type;
-            //blockchanges[x + width * z + width * height * y] = pName;
+            if (p != null)
+            {
+                Level.BlockPos bP;
+                bP.name = p.name;
+                bP.TimePerformed = DateTime.Now;
+                bP.x = x; bP.y = y; bP.z = z;
+                bP.type = type;
+                if (bP.type == 0)
+                    bP.deleted = true;
+                else
+                    bP.deleted = false;
+                blockCache.Add(bP);
+            }
         }
 
         public bool InBound(ushort x, ushort y, ushort z)

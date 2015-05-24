@@ -145,7 +145,7 @@ namespace MCGalaxy.Commands
                     p.SendMessage("You tried to cuboid over 10000 blocks, reloading map for faster fill.");
                     foreach (Pos pos in buffer)
                     {
-                        p.level.SetTile(pos.x, pos.y, pos.z, cpos.type);
+                        p.level.SetTile(pos.x, pos.y, pos.z, cpos.type, p);
                     }
                     foreach (Player pl in Player.players)
                     {

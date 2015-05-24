@@ -91,14 +91,20 @@ namespace MCGalaxy {
 				message = ".";
 
 			if (color) {
-				for (int i = 0; i < 10; i++) {
-					sb.Replace("%" + i, ColorSignal + c.MCtoIRC("&" + i));
-					sb.Replace("&" + i, ColorSignal + c.MCtoIRC("&" + i));
-				}
-				for (char ch = 'a'; ch <= 'f'; ch++) {
-					sb.Replace("%" + ch, ColorSignal + c.MCtoIRC("&" + ch));
-					sb.Replace("&" + ch, ColorSignal + c.MCtoIRC("&" + ch));
-				}
+                for (int i = 0; i < 10; i++)
+                {
+                    sb.Replace("%" + i, ColorSignal + c.MCtoIRC("&" + i));
+                    //sb.Replace("&" + i, ColorSignal + c.MCtoIRC("&" + i));
+                }
+                for (char ch = 'a'; ch <= 'f'; ch++)
+                {
+                    sb.Replace("%" + ch, ColorSignal2 + c.MCtoIRC("&" + ch));
+                    //sb.Replace("&" + ch, ColorSignal2 + c.MCtoIRC("&" + ch));
+                }
+                foreach (var codePair in c.MinecraftToIRCColors)
+                {
+                    message.Replace(codePair.Key, codePair.Value);
+                }
 			}
             sb.Replace("%r", ResetSignal);
 
@@ -207,6 +213,10 @@ namespace MCGalaxy {
                         Server.IRC.Say("Unknown command!");
                 }
             }
+            for (byte i = 10; i < 16; i++)
+                message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace('&', '%'));
+            for (byte i = 0; i < 10; i++)
+                message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace('&', '%'));
             message = c.IrcToMinecraftColors(message);
 
 			if(String.IsNullOrEmpty(message.Trim()))

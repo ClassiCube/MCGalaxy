@@ -110,7 +110,7 @@ namespace MCGalaxy
                 default: return 0;
             }
         }
-        static readonly Dictionary<string, string> MinecraftToIRCColors = new Dictionary<string, string> {
+        public static readonly Dictionary<string, string> MinecraftToIRCColors = new Dictionary<string, string> {
             { white, "\u000300" },
             { black, "\u000301" },
             { navy, "\u000302" },
@@ -187,6 +187,32 @@ namespace MCGalaxy
                 case 15: return silver;
                 default: return "";
             }
+        }
+        /// <summary> Replaces Minecraft color codes with equivalent IRC color codes, in the given StringBuilder.
+        /// Opposite of IrcToMinecraftColors method. </summary>
+        /// <param name="sb"> StringBuilder objects, the contents of which will be processed. </param>
+        /// <exception cref="ArgumentNullException"> sb is null. </exception>
+        public static void MinecraftToIrcColors(StringBuilder sb)
+        {
+            if (sb == null) throw new ArgumentNullException("sb");
+            foreach (var codePair in MinecraftToIRCColors)
+            {
+                sb.Replace(codePair.Key, codePair.Value);
+            }
+        }
+
+
+        /// <summary> Replaces Minecraft color codes with equivalent IRC color codes, in the given string.
+        /// Opposite of IrcToMinecraftColors method. </summary>
+        /// <param name="input"> String to process. </param>
+        /// <returns> A processed string. </returns>
+        /// <exception cref="ArgumentNullException"> input is null. </exception>
+        public static string MinecraftToIrcColors(string input)
+        {
+            if (input == null) throw new ArgumentNullException("input");
+            StringBuilder sb = new StringBuilder(input);
+            MinecraftToIrcColors(sb);
+            return sb.ToString();
         }
     }
 }

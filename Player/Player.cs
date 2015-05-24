@@ -2749,12 +2749,13 @@ return;
                 sb.Replace("%r", "&f");
                 for ( int i = 0; i < 10; i++ ) {
                     sb.Replace("%" + i, "&" + i);
-                    sb.Replace("&" + i + " &", " &");
+                    //sb.Replace("&" + i + " &", " &");
                 }
                 for ( char ch = 'a'; ch <= 'f'; ch++ ) {
                     sb.Replace("%" + ch, "&" + ch);
-                    sb.Replace("&" + ch + " &", " &");
+                    //sb.Replace("&" + ch + " &", " &");
                 }
+                message = c.MinecraftToIrcColors(message);
                 // Begin fix to replace all invalid color codes typed in console or chat with "."
                 for ( char ch = (char)0; ch <= (char)47; ch++ ) // Characters that cause clients to disconnect
                     sb.Replace("&" + ch, String.Empty);
