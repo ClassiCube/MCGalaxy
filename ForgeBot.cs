@@ -94,19 +94,15 @@ namespace MCGalaxy {
                 for (int i = 0; i < 10; i++)
                 {
                     sb.Replace("%" + i, ColorSignal + c.MCtoIRC("&" + i));
-                    //sb.Replace("&" + i, ColorSignal + c.MCtoIRC("&" + i));
+                    sb.Replace("&" + i, ColorSignal + c.MCtoIRC("&" + i));
                 }
                 for (char ch = 'a'; ch <= 'f'; ch++)
                 {
-                    sb.Replace("%" + ch, ColorSignal2 + c.MCtoIRC("&" + ch));
-                    //sb.Replace("&" + ch, ColorSignal2 + c.MCtoIRC("&" + ch));
-                }
-                foreach (var codePair in c.MinecraftToIRCColors)
-                {
-                    message.Replace(codePair.Key, codePair.Value);
+                    sb.Replace("%" + ch, ColorSignal + c.MCtoIRC("&" + ch));
+                    sb.Replace("&" + ch, ColorSignal + c.MCtoIRC("&" + ch));
                 }
 			}
-            sb.Replace("%r", ResetSignal);
+            //sb.Replace("%r", ResetSignal);
 
 			connection.Sender.PublicMessage(opchat ? opchannel : channel, sb.ToString());
 		}
