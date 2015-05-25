@@ -102,7 +102,7 @@ namespace MCGalaxy {
                     sb.Replace("&" + ch, ColorSignal + c.MCtoIRC("&" + ch));
                 }
 			}
-            //sb.Replace("%r", ResetSignal);
+            sb.Replace("%r", ResetSignal);
 
 			connection.Sender.PublicMessage(opchat ? opchannel : channel, sb.ToString());
 		}
