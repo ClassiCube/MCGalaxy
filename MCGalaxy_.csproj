@@ -123,6 +123,7 @@
     <Compile Include="Commands\CmdGcrules.cs" />
     <Compile Include="Commands\CmdModel.cs" />
     <Compile Include="Commands\CmdMods.cs" />
+    <Compile Include="Commands\CmdQuit.cs" />
     <Compile Include="Commands\CmdSearch.cs" />
     <Compile Include="Commands\CmdStaff.cs" />
     <Compile Include="Commands\CmdTexture.cs" />
