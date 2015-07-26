@@ -175,15 +175,16 @@ namespace MCGalaxy {
 		void Listener_OnPublic(UserInfo user, string channel, string message) {
 			//string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
 			// Allowed chars are any ASCII char between 20h/32 and 7Ah/122 inclusive, except for 26h/38 (&) and 60h/96 (`)
-            if(message.StartsWith(".who") || message.StartsWith(".players"))
+            string ircCommand = message.Split(' ')[0].ToLower();
+            if (ircCommand == ".who" || ircCommand == ".players")
             {
                 CmdPlayers();
             }
-            if(message.StartsWith(".x"))
+            if (ircCommand == ".x")
             {
                 if (Server.ircControllers.Contains(user.Nick))
                 {
-                    if (message.Split(' ')[1] == "resetbot" || banCmd.Contains(message.Split(' ')[0])) { Server.IRC.Say("You cannot use this command from IRC!"); return; }
+                    if (message.Split(' ')[1].Equals("resetbot", StringComparison.OrdinalIgnoreCase) || banCmd.Contains(ircCommand)) { Server.IRC.Say("You cannot use this command from IRC!"); return; }
                     if (Player.CommandHasBadColourCodes(null, message)) { Server.IRC.Say("Your command had invalid color codes!"); return; }
 
                     Command cmd = Command.all.Find(message.Split(' ')[1]);
@@ -217,8 +218,7 @@ namespace MCGalaxy {
 
 			if(String.IsNullOrEmpty(message.Trim()))
 				message = ".";
-				
-			
+
 			if (channel == opchannel) {
 				Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
 				Player.GlobalMessageOps(String.Format("To Ops &f-{0}[IRC] {1}&f- {2}", Server.IRCColour, user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
@@ -235,7 +235,7 @@ namespace MCGalaxy {
 			retries = 0;
 			if (Server.ircIdentify && Server.ircPassword != "") {
 				Server.s.Log("Identifying with NickServ");
-				connection.Sender.PrivateMessage("nickserv", "IDENTIFY " + Server.ircPassword);
+				connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + Server.ircPassword);
 			}
 
 			Server.s.Log("Joining channels...");

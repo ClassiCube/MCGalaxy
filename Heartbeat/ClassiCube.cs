@@ -59,12 +59,21 @@ namespace MCGalaxy
                 {
                     Server.Hash = newHash;
                     Server.URL = line;
-                    Server.s.UpdateUrl(Server.URL);
-                    File.WriteAllText("text/externalurl.txt", Server.URL);
-                    if (UrlSaid == false)
+                    if (!Server.URL.Contains("\"errors\": ["))
                     {
-                        Server.s.Log("ClassiCube URL found: " + Server.URL);
-                        UrlSaid = true;
+                        Server.s.UpdateUrl(Server.URL);
+                        File.WriteAllText("text/externalurl.txt", Server.URL);
+                        if (UrlSaid == false)
+                        {
+                            Server.s.Log("ClassiCube URL found: " + Server.URL);
+                            UrlSaid = true;
+                        }
+                    }
+                    else
+                    {
+                        Server.URL = "Error while finding URL. Is the port open?";
+                        Server.s.UpdateUrl(Server.URL);
+                        Server.s.Log(Server.URL);
                     }
                 }
             }
