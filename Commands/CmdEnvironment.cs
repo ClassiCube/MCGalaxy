@@ -501,7 +501,7 @@ namespace MCGalaxy.Commands
                     case "edge":
                     case "water":
                         byte block = Block.water;
-                        if (!(Block.Byte(valueText) == Block.Zero) && !(valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase)))
+                        if (Block.Byte(valueText) != Block.Zero && !(valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase)))
                         {
                             Help(p);
                             return;
@@ -537,7 +537,7 @@ namespace MCGalaxy.Commands
                     case "border":
                     case "bedrock":
                         byte blockhorizon = Block.blackrock;
-                        if (!(Block.Byte(valueText) == Block.Zero) && !(valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase)))
+                        if (Block.Byte(valueText) == Block.Zero && !(valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase)))
                         {
                             Help(p);
                             return;
@@ -613,6 +613,7 @@ namespace MCGalaxy.Commands
                         break;
                 }
             }
+            p.level.Save(true);
         }
         /// <summary> Ensures that the hex color has the correct length (1-6 characters)
         /// and character set (alphanumeric chars allowed). </summary>
