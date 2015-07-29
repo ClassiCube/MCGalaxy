@@ -318,8 +318,7 @@ namespace MCGalaxy
         public static string IRCColour = "&5";
 
         public static bool UseGlobalChat = true;
-        public static string GlobalChatNick = globalChatNick();
-        private static string globalChatNick()
+        public static string GlobalChatNick()
         {
             string serverName = Server.name.Replace(" ", "");
             if(serverName.Length > 28)
@@ -906,7 +905,7 @@ namespace MCGalaxy
 
                 // We always construct this to prevent errors...
                 IRC = new ForgeBot(Server.ircChannel, Server.ircOpChannel, Server.ircNick, Server.ircServer);
-                GlobalChat = new GlobalChatBot(GlobalChatNick);
+                GlobalChat = new GlobalChatBot(GlobalChatNick());
 
                 if (Server.irc) IRC.Connect();
                 if (Server.UseGlobalChat) GlobalChat.Connect();

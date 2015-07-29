@@ -116,7 +116,29 @@ namespace MCGalaxy
         public ushort height; // z      THIS IS STUPID, SHOULD HAVE BEEN Y
         public int id;
         public byte jailrotx, jailroty;
+        /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        public string CloudColor = null;
 
+        /// <summary> Color of the fog (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        public string FogColor = null;
+
+        /// <summary> Color of the sky (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        public string SkyColor = null;
+
+        /// <summary> Color of the blocks in shadows (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        public string ShadowColor = null;
+
+        /// <summary> Color of the blocks in the light (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        public string LightColor = null;
+
+        /// <summary> Elevation of the "ocean" that surrounds maps. Set to -1 to use client default (halfway up the map). </summary>
+        public short EdgeLevel = -1;
+
+        /// <summary> The block which will be displayed on the horizon. </summary>
+        public byte HorizonBlock = Block.water;
+
+        /// <summary> The block which will be displayed on the edge of the map. </summary>
+        public byte EdgeBlock = Block.blackrock;
         public ushort jailx, jaily, jailz;
         public int lastCheck;
         public int lastUpdate;
@@ -792,6 +814,14 @@ namespace MCGalaxy
                     SW.WriteLine("GrowTrees = " + level.growTrees.ToString());
                     SW.WriteLine("Weather = " + level.weather.ToString());
                     SW.WriteLine("Texture = " + level.textureUrl);
+                    SW.WriteLine("CloudColor = " + level.CloudColor.ToString());
+                    SW.WriteLine("SkyColor = " + level.SkyColor.ToString());
+                    SW.WriteLine("LightColor = " + level.LightColor.ToString());
+                    SW.WriteLine("ShadowColor = " + level.ShadowColor.ToString());
+                    SW.WriteLine("FogColor = " + level.CloudColor.ToString());
+                    SW.WriteLine("EdgeLevel = " + level.EdgeLevel.ToString());
+                    SW.WriteLine("EdgeBlock = " + level.EdgeBlock.ToString());
+                    SW.WriteLine("HorizonBlock = " + level.HorizonBlock.ToString());
                 }
             }
             catch (Exception)
@@ -1385,6 +1415,14 @@ namespace MCGalaxy
                                         break;
                                     case "weather": level.weather = byte.Parse(value); break;
                                     case "texture": level.textureUrl = value; break;
+                                    case "cloudcolor": level.CloudColor = value; break;
+                                    case "fogcolor": level.FogColor = value; break;
+                                    case "skycolor": level.SkyColor = value; break;
+                                    case "shadowcolor": level.ShadowColor = value; break;
+                                    case "lightcolor": level.LightColor = value; break;
+                                    case "edgeblock": level.EdgeBlock = byte.Parse(value); break;
+                                    case "edgelevel": level.EdgeLevel = byte.Parse(value); break;
+                                    case "horizonblock": level.HorizonBlock = byte.Parse(value); break;
                                 }
                             }
                             catch (Exception e)

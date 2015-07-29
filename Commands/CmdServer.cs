@@ -272,7 +272,6 @@ namespace MCGalaxy.Commands
             Server.IRCColour = "&5";
 
             Server.UseGlobalChat = true;
-            Server.GlobalChatNick = "MCG" + new Random().Next();
             Server.GlobalChatColor = "&6";
 
 

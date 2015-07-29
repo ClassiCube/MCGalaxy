@@ -557,11 +557,6 @@ namespace MCGalaxy {
 								catch { Server.s.Log("Invalid " + key + ". Using default"); }
 								break;
 
-							case "global-chat-nick":
-								if ( value != "" )
-									Server.GlobalChatNick = value;
-								break;
-
 							case "global-chat-color":
 								color = c.Parse(value);
 								if ( color == "" ) {
@@ -1263,7 +1258,6 @@ namespace MCGalaxy {
 			w.WriteLine();
 			w.WriteLine("#Global Chat Settings");
 			w.WriteLine("global-chat-enabled = " + Server.UseGlobalChat.ToString().ToLower());
-			w.WriteLine("global-chat-nick = " + Server.GlobalChatNick);
 			w.WriteLine("global-chat-color = " + Server.GlobalChatColor);
 			w.WriteLine();
 			w.WriteLine("#Griefer_stone Settings");

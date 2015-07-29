@@ -858,7 +858,6 @@ namespace MCGalaxy.Gui {
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
 
             Server.UseGlobalChat = chkGlobalChat.Checked;
-            Server.GlobalChatNick = txtGlobalChatNick.Text;
             Server.GlobalChatColor = cmbGlobalChatColor.SelectedItem.ToString();
 
             Server.grieferStoneBan = chkGrieferStoneBan.Checked;

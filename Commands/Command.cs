@@ -103,6 +103,7 @@ namespace MCGalaxy
 			all.Add(new CmdEconomy());
 			all.Add(new CmdEmote());
 			all.Add(new CmdEndRound());
+            all.Add(new CmdEnvironment());
 			all.Add(new CmdExplode());
 			all.Add(new CmdFakePay());
 			all.Add(new CmdFakeRank());

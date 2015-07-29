@@ -36,25 +36,26 @@ namespace MCGalaxy.Commands
                 Help(p);
                 return;
             }
-            if(!pars[1].StartsWith("http://") && !pars[1].StartsWith("https://"))
+            if (!pars[1].StartsWith("http://") && !pars[1].StartsWith("https://"))
             {
                 p.SendMessage("Please use http:// or https:// in front of your URL");
                 return;
             }
-            if(pars[0].ToLower() == "global") {
+            if (pars[0].ToLower() == "global")
+            {
                 Server.defaultTextureUrl = pars[1];
                 p.SendMessage("Set server's default texture to " + pars[1]);
                 foreach (Player pl in Player.players)
                 {
-                    if(pl.HasExtension("EnvMapAppearance") && pl.level.textureUrl == "")
+                    if (pl.HasExtension("EnvMapAppearance") && pl.level.textureUrl == "")
                     {
-                        pl.SendSetMapAppearance(Server.defaultTextureUrl, 7, 8, (short)(pl.level.depth / 2));
+                        pl.SendSetMapAppearance(Server.defaultTextureUrl, p.level.EdgeBlock, p.level.HorizonBlock, p.level.EdgeLevel);
                     }
                 }
                 SrvProperties.Save("properties/server.properties");
                 return;
             }
-            if(pars[0].ToLower() == "level")
+            if (pars[0].ToLower() == "level")
             {
                 p.level.textureUrl = pars[1];
                 p.SendMessage("Set level's texture to " + pars[1]);
@@ -62,7 +63,7 @@ namespace MCGalaxy.Commands
                 {
                     if (pl.HasExtension("EnvMapAppearance") && pl.level == p.level)
                     {
-                        pl.SendSetMapAppearance(pl.level.textureUrl, 7, 8, (short)(pl.level.depth / 2));
+                        pl.SendSetMapAppearance(p.level.textureUrl, p.level.EdgeBlock, p.level.HorizonBlock, p.level.EdgeLevel);
                     }
                 }
                 p.level.Save();

@@ -279,14 +279,13 @@ namespace MCGalaxy
             }
             if (message.Contains("^GETINFO "))
             {
-                if (Server.GlobalChatNick == message.Split(' ')[1])
+                if (message.Split(' ')[1] == Server.GlobalChatNick())
                 {
                     if (Server.UseGlobalChat && IsConnected())
                     {
                         connection.Sender.PublicMessage(channel, "^NAME: " + Server.name);
                         connection.Sender.PublicMessage(channel, "^MOTD: " + Server.motd);
                         connection.Sender.PublicMessage(channel, "^VERSION: " + Server.VersionString);
-                        connection.Sender.PublicMessage(channel, "^GLOBAL NAME: " + Server.GlobalChatNick);
                         connection.Sender.PublicMessage(channel, "^URL: " + Server.URL);
                         connection.Sender.PublicMessage(channel, "^PLAYERS: " + Player.players.Count + "/" + Server.players);
                     }
@@ -296,7 +295,7 @@ namespace MCGalaxy
             //for RoboDash's anti advertise/swear in #globalchat
             if (message.Contains("^ISASERVER "))
             {
-                if (Server.GlobalChatNick == message.Split(' ')[1])
+                if (Server.GlobalChatNick() == message.Split(' ')[1])
                 {
                     connection.Sender.PublicMessage(channel, "^IMASERVER");
                 }

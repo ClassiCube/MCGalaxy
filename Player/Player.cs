@@ -2918,11 +2918,11 @@ return;
             {
                 if (level.textureUrl == "")
                 {
-                    SendSetMapAppearance(Server.defaultTextureUrl, 7, 8, (short)(level.depth / 2));
+                    SendSetMapAppearance(Server.defaultTextureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
                 }
                 else
                 {
-                    SendSetMapAppearance(level.textureUrl, 7, 8, (short)(level.depth / 2));
+                    SendSetMapAppearance(level.textureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
                 }
             }
             if ( level.blocks == null ) return;
@@ -3010,6 +3010,45 @@ return;
                                 p.SendChangeModel(this.id, model);
                         }
                 });
+            }
+            if (HasExtension("EnvSetColor"))
+            {
+                SendEnvSetColor(0, -1, -1, -1);
+                SendEnvSetColor(1, -1, -1, -1);
+                SendEnvSetColor(2, -1, -1, -1);
+                SendEnvSetColor(3, -1, -1, -1);
+                SendEnvSetColor(4, -1, -1, -1);
+                System.Drawing.Color col;
+                try
+                {
+                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.SkyColor.ToUpper());
+                    SendEnvSetColor(0, col.R, col.G, col.B);
+                }
+                catch { }
+                try
+                {
+                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.CloudColor.ToUpper());
+                    SendEnvSetColor(1, col.R, col.G, col.B);
+                }
+                catch { }
+                try
+                {
+                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.FogColor.ToUpper());
+                    SendEnvSetColor(2, col.R, col.G, col.B);
+                }
+                catch { }
+                try
+                {
+                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.ShadowColor.ToUpper());
+                    SendEnvSetColor(3, col.R, col.G, col.B);
+                }
+                catch { }
+                try
+                {
+                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.LightColor.ToUpper());
+                    SendEnvSetColor(4, col.R, col.G, col.B);
+                }
+                catch { }
             }
         }
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
