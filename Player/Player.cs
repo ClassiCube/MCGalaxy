@@ -2698,10 +2698,10 @@ return;
         }
 
         public static void SendMessage(Player p, string message) {
-            if (p.name == "IRC")
+            /*if (p.name == "IRC")
             {
                 Server.IRC.Say(message, false, true);
-            }
+            }*/
             if ( p == null ) { Server.s.Log(message); return; }
             SendMessage(p, message, true);
         }
