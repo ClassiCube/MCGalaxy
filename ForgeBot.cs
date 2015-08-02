@@ -185,6 +185,7 @@ namespace MCGalaxy {
                 if (Server.ircControllers.Contains(user.Nick))
                 {
                     if (message.Split(' ')[1].Equals("resetbot", StringComparison.OrdinalIgnoreCase) || banCmd.Contains(ircCommand)) { Server.IRC.Say("You cannot use this command from IRC!"); return; }
+                    if (message.Split(' ')[1].Equals("oprules", StringComparison.OrdinalIgnoreCase) || banCmd.Contains(ircCommand)) { Server.IRC.Say("You cannot use this command from IRC!"); return; }
                     if (Player.CommandHasBadColourCodes(null, message)) { Server.IRC.Say("Your command had invalid color codes!"); return; }
 
                     Command cmd = Command.all.Find(message.Split(' ')[1]);
