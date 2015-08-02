@@ -221,19 +221,45 @@ namespace MCGalaxy.Commands
 						Player.SendMessage(p, "Your map has been removed.");
 						return;
 					}
-                    else
-                    {
-                        Help(p);
-                        return;
-                    }
+                    			else
+                    			{
+                        			Help(p);
+                        			return;
+                    			}
 
 				}
+				//Save your map
+				else if (par == "SAVE")
+                		{
+                    			if (par2 == "")
+                    			{
+                        			Player.SendMessage(p, "To save one of your maps type /os map save <map number>");
+                    			}
+                    			else if (par2 == "1")
+                    			{
+                        			Command.all.Find("save").Use(p, properMapName(p, false));
+                        			Player.SendMessage(p, "Your 1st map has been saved.");
+                        			return;
+                    			}
+                    			else if (byte.TryParse(par2, out test) == true)
+                    			{
+                        			Command.all.Find("save").Use(p, p.name.ToLower() + par2);
+                        			Player.SendMessage(p, "Your map has been saved.");
+                        			return;
+                    			}
+                    			else
+                    			{
+                 				Help(p);
+                        			return;
+                    			}
+                		}
 				else
 				{
 					//all is good here :)
 					Player.SendMessage(p, "/overseer map add [type - default is flat] -- Creates your map");
 					Player.SendMessage(p, "/overseer map physics -- Sets the physics on your map.");
 					Player.SendMessage(p, "/overseer map delete -- Deletes your map");
+					Player.SendMessage(p, "/overseer map save -- Saves your map");
 					Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountians, ocean, pixel and space");
 				}
 			}
