@@ -17,14 +17,14 @@
 */
 namespace MCGalaxy.Commands
 {
-    public sealed class CmdAbort : Command
+    public sealed class CmdReloadControllers : Command
     {
         public override string name { get { return "reloadcontrollers"; } }
         public override string shortcut { get { return "rlctl"; } }
         public override string type { get { return "mod"; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdAbort() { }
+        public CmdReloadControllers() { }
 
         public override void Use(Player p, string message)
         {
