@@ -1,5 +1,3 @@
-ircControllers = PlayerList.Load("IRC_Controllers.txt", null);
-
 /*
 	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
 	
