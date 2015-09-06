@@ -374,48 +374,6 @@ namespace MCGalaxy.Levels.Textures
                     var match = HttpFirstLine.Match(firstLine);
                     if (match.Success)
                     {
-                        string worldName = match.Groups[1].Value;
-                        bool firstTime = match.Groups[2].Success;
-                        Level l = Level.Find(worldName);
-                        if (l != null)
-                        {
-                            string cfg = "";
-                            if (cachecfg == "" || update)
-                            {
-                                if (!File.Exists("extra/cfg/" + l.name + ".cfg"))
-                                    l.textures.CreateCFG();
-                                cfg = GetCFG();
-                                cachecfg = cfg;
-                                update = false;
-                            }
-                            else
-                                cfg = cachecfg;
-                            byte[] content = Encoding.UTF8.GetBytes(cfg);
-                            textWriter.Write("HTTP/1.1 200 OK");
-                            textWriter.WriteLine("Date: " + DateTime.UtcNow.ToString("R"));
-                            textWriter.WriteLine("Server: Apache/2.2.21 (CentOS)");
-                            textWriter.WriteLine("Last-Modified: " + DateTime.UtcNow.ToString("R"));
-                            textWriter.WriteLine("Accept-Ranges: bytes");
-                            textWriter.WriteLine("Content-Length: " + content.Length);
-                            textWriter.WriteLine("Connection: close");
-                            textWriter.WriteLine("Content-Type: text/plain");
-                            textWriter.WriteLine();
-                            textWriter.WriteLine(cfg);
-                        }
-                        else if (isMusic(worldName, p)) {
-                            byte[] data = getData(worldName);
-                            textWriter.WriteLine("Date: " + DateTime.UtcNow.ToString("R"));
-                            textWriter.WriteLine("Server: Apache/2.2.21 (CentOS)");
-                            textWriter.WriteLine("Last-Modified: " + DateTime.UtcNow.ToString("R"));
-                            textWriter.WriteLine("Accept-Ranges: bytes");
-                            textWriter.WriteLine("Content-Length: " + data.Length);
-                            textWriter.WriteLine("Connection: close");
-                            textWriter.WriteLine("Content-Type: application/octet-stream");
-                            textWriter.WriteLine();
-                            textWriter.WriteLine(data);
-                        }
-                        else
-                            textWriter.WriteLine("HTTP/1.1 404 Not Found");
                     }
                     else
                         textWriter.WriteLine("HTTP/1.1 400 Bad Request");

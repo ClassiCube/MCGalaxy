@@ -27,6 +27,7 @@ using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.SQL;
 using MonoTorrent.Client;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MCGalaxy
@@ -70,7 +71,8 @@ namespace MCGalaxy
         public static Thread blockThread;
         public static bool IgnoreOmnibans = false;
         //public static List<MySql.Data.MySqlClient.MySqlCommand> mySQLCommands = new List<MySql.Data.MySqlClient.MySqlCommand>();
-
+        public static WebServer APIServer;
+        public static WebServer InfoServer;
         public static int speedPhysics = 250;
 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
@@ -903,7 +905,17 @@ namespace MCGalaxy
                 }
                 else File.Create("text/messages.txt").Close();
 
-                // We always construct this to prevent errors...
+                try
+                {
+                    APIServer = new WebServer(SendResponse, "http://localhost:8080/api/");
+                    APIServer.Run();
+                    InfoServer = new WebServer(WhoIsResponse, "http://localhost:8080/whois/");
+                    InfoServer.Run();
+                }
+                catch
+                {
+                    Server.s.Log("Failed to start local API server");
+                }
                 IRC = new ForgeBot(Server.ircChannel, Server.ircOpChannel, Server.ircNick, Server.ircServer);
                 GlobalChat = new GlobalChatBot(GlobalChatNick());
 
@@ -1030,7 +1042,52 @@ namespace MCGalaxy
                 BlockQueue.Start();
             });
         }
-
+        public static string SendResponse(HttpListenerRequest request)
+        {
+            try {
+                string api = "";
+                API API = new API();
+                API.max_players = (int)Server.players;
+                API.players = Player.players.Select(mc => mc.name).ToArray();
+                API.chat = Player.Last50Chat.ToArray();
+                api = JsonConvert.SerializeObject(API, Formatting.Indented);
+                return api;
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e);
+            }
+            return "Error";
+        }
+        public static string WhoIsResponse(HttpListenerRequest request)
+        {
+            try
+            {
+                string p = request.QueryString.Get("name");
+                if (p == null || p == "")
+                    return "Error";
+                var whois = new WhoWas(p);
+                if (whois.rank.Contains("banned"))
+                    whois.banned = true;
+                else
+                    whois.banned = Ban.Isbanned(p);
+                string[] bandata;
+                if (whois.banned)
+                {
+                    bandata = Ban.Getbandata(p);
+                    whois.banned_by = bandata[0];
+                    whois.ban_reason = bandata[1].Replace("%20", " ");
+                    whois.banned_time = bandata[2].Replace("%20", " ");
+                }
+                
+                return JsonConvert.SerializeObject(whois, Formatting.Indented);
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e);
+            }
+            return "Error";
+        }
         public static void LoadAllSettings()
         {
             SrvProperties.Load("properties/server.properties");
@@ -1103,7 +1160,8 @@ namespace MCGalaxy
                 else
                     Player.Find(p).Kick("Server restarted! Rejoin!");
             }
-
+            APIServer.Stop();
+            InfoServer.Stop();
             //Player.players.ForEach(delegate(Player p) { p.Kick("Server shutdown. Rejoin in 10 seconds."); });
             Player.connections.ForEach(
             delegate(Player p)

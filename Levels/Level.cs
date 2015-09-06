@@ -481,6 +481,7 @@ namespace MCGalaxy
         }
         public void SetTile(ushort x, ushort y, ushort z, byte type, Player p = null)
         {
+            byte oldType = GetTile(x, y, z);
             if (blocks == null) return;
             if (!InBound(x, y, z)) return;
             blocks[PosToInt(x, y, z)] = type;
@@ -496,6 +497,15 @@ namespace MCGalaxy
                 else
                     bP.deleted = false;
                 blockCache.Add(bP);
+                Player.UndoPos Pos;
+                Pos.x = x;
+                Pos.y = y;
+                Pos.z = z;
+                Pos.mapName = this.name;
+                Pos.type = oldType;
+                Pos.newtype = type;
+                Pos.timePlaced = DateTime.Now;
+                p.UndoBuffer.Add(Pos);
             }
         }
 

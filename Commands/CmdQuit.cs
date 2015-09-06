@@ -16,6 +16,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
+            p.totalKicked = p.totalKicked - 1;
             if (message != "")
             {
                 p.Kick("Left the game: " + message);

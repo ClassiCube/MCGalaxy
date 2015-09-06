@@ -85,26 +85,15 @@ namespace MCGalaxy {
 		}
 		public void Say(string message, bool opchat = false, bool color = true) {
 			if (!Server.irc || !IsConnected()) return;
-			StringBuilder sb = new StringBuilder(message);
 
 			if(String.IsNullOrEmpty(message.Trim()))
 				message = ".";
 
 			if (color) {
-                for (int i = 0; i < 10; i++)
-                {
-                    sb.Replace("%" + i, ColorSignal + c.MCtoIRC("&" + i));
-                    sb.Replace("&" + i, ColorSignal + c.MCtoIRC("&" + i));
-                }
-                for (char ch = 'a'; ch <= 'f'; ch++)
-                {
-                    sb.Replace("%" + ch, ColorSignal + c.MCtoIRC("&" + ch));
-                    sb.Replace("&" + ch, ColorSignal + c.MCtoIRC("&" + ch));
-                }
+                message = c.MinecraftToIrcColors(message).Replace("%r", ResetSignal);
 			}
-            sb.Replace("%r", ResetSignal);
 
-			connection.Sender.PublicMessage(opchat ? opchannel : channel, sb.ToString());
+			connection.Sender.PublicMessage(opchat ? opchannel : channel, message);
 		}
 		public void Pm(string user, string message) {
 			if (Server.irc && IsConnected())
@@ -211,10 +200,6 @@ namespace MCGalaxy {
                         Server.IRC.Say("Unknown command!");
                 }
             }
-            for (byte i = 10; i < 16; i++)
-                message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace('&', '%'));
-            for (byte i = 0; i < 10; i++)
-                message = message.Replace(ColorSignal + i, c.IRCtoMC(i).Replace('&', '%'));
             message = c.IrcToMinecraftColors(message);
 
 			if(String.IsNullOrEmpty(message.Trim()))

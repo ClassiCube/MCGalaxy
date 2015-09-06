@@ -1207,7 +1207,9 @@ namespace MCGalaxy {
                                                    buffer = null;
                                                }
                                                else
+                                               {
                                                    Player.SendMessage(p1, joinm);
+                                               }
                                            });
                 }
             }
@@ -2914,17 +2916,6 @@ return;
         }
 
         public void SendMap() {
-            if (HasExtension("EnvMapAppearance"))
-            {
-                if (level.textureUrl == "")
-                {
-                    SendSetMapAppearance(Server.defaultTextureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
-                }
-                else
-                {
-                    SendSetMapAppearance(level.textureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
-                }
-            }
             if ( level.blocks == null ) return;
             try {
                 byte[] buffer = new byte[level.blocks.Length + 4];
@@ -2986,31 +2977,6 @@ return;
             {
                 SendSetMapWeather(level.weather);
             }
-        }
-        public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty)
-        {
-            byte[] buffer = new byte[73]; buffer[0] = id;
-            StringFormat(name.TrimEnd('+'), 64).CopyTo(buffer, 1);
-            HTNO(x).CopyTo(buffer, 65);
-            HTNO(y).CopyTo(buffer, 67);
-            HTNO(z).CopyTo(buffer, 69);
-            buffer[71] = rotx; buffer[72] = roty;
-            SendRaw(7, buffer);
-
-            if (HasExtension("ChangeModel"))
-            {
-                Player.players.ForEach(p =>
-                {
-                    if (p.level == this.level)
-                        if (p == this) unchecked { SendChangeModel((byte)-1, model); }
-                        else
-                        {
-                            SendChangeModel(p.id, p.model);
-                            if (p.HasExtension("ChangeModel"))
-                                p.SendChangeModel(this.id, model);
-                        }
-                });
-            }
             if (HasExtension("EnvSetColor"))
             {
                 SendEnvSetColor(0, -1, -1, -1);
@@ -3049,6 +3015,42 @@ return;
                     SendEnvSetColor(4, col.R, col.G, col.B);
                 }
                 catch { }
+            }
+            if (HasExtension("EnvMapAppearance"))
+            {
+                if (level.textureUrl == "")
+                {
+                    SendSetMapAppearance(Server.defaultTextureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+                }
+                else
+                {
+                    SendSetMapAppearance(level.textureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+                }
+            }
+        }
+        public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty)
+        {
+            byte[] buffer = new byte[73]; buffer[0] = id;
+            StringFormat(name.TrimEnd('+'), 64).CopyTo(buffer, 1);
+            HTNO(x).CopyTo(buffer, 65);
+            HTNO(y).CopyTo(buffer, 67);
+            HTNO(z).CopyTo(buffer, 69);
+            buffer[71] = rotx; buffer[72] = roty;
+            SendRaw(7, buffer);
+
+            if (HasExtension("ChangeModel"))
+            {
+                Player.players.ForEach(p =>
+                {
+                    if (p.level == this.level)
+                        if (p == this) unchecked { SendChangeModel((byte)-1, model); }
+                        else
+                        {
+                            SendChangeModel(p.id, p.model);
+                            if (p.HasExtension("ChangeModel"))
+                                p.SendChangeModel(this.id, model);
+                        }
+                });
             }
         }
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
@@ -3439,7 +3441,15 @@ changed |= 4;*/
                     return;
                 }
             }
+            if (Last50Chat.Count() == 50)
+                Last50Chat.RemoveAt(0);
+            var chatmessage = new ChatMessage();
+            chatmessage.text = message;
+            chatmessage.username = from.color + from.name;
+            chatmessage.time = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
 
+
+            Last50Chat.Add(chatmessage);
             if ( showname ) {
                 String referee = "";
                 if ( from.referee ) {
@@ -3718,6 +3728,7 @@ changed |= 4;*/
                 }
             });
         }
+        public static List<ChatMessage> Last50Chat = new List<ChatMessage>();
         public static void GlobalMessage(string message) {
             GlobalMessage(message, false);
         }
@@ -3960,7 +3971,7 @@ changed |= 4;*/
                     		string leavem = "&c- " + color + prefix + name + Server.DefaultColor + " " + File.ReadAllText("text/logout/" + name + ".txt");
                     		if ((Server.guestLeaveNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
                     		{
-                    			Player.players.ForEach(delegate(Player p1)
+                                Player.players.ForEach(delegate(Player p1)
 									                       {
 									                       	if (p1.UsingWom)
 									                       	{

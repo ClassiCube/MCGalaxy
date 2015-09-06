@@ -21,12 +21,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace MCGalaxy {
+namespace MCGalaxy
+{
     /// <summary>
     /// This is the group object
     /// Where ranks and there data are stored
     /// </summary>
-    public sealed class Group {
+    public sealed class Group
+    {
         public delegate void RankSet(Player p, Group newrank);
         [Obsolete("Please use OnPlayerRankSetEvent.Register()")]
         public static event RankSet OnPlayerRankSet;
@@ -57,7 +59,8 @@ namespace MCGalaxy {
         /// <summary>
         /// Create a new group object
         /// </summary>
-        public Group() {
+        public Group()
+        {
             Permission = LevelPermission.Null;
         }
 
@@ -71,7 +74,8 @@ namespace MCGalaxy {
         /// <param name="newColor">The color of the group (Not including the &)</param>
         /// <param name="motd">the custom MOTD for the group</param>
         /// <param name="file">The file path where the current players of this group are stored</param>
-        public Group(LevelPermission Perm, int maxB, long maxUn, string fullName, char newColor, string motd, string file, byte maps = 2) {
+        public Group(LevelPermission Perm, int maxB, long maxUn, string fullName, char newColor, string motd, string file, byte maps = 2)
+        {
             Permission = Perm;
             maxBlocks = maxB;
             maxUndo = maxUn;
@@ -88,7 +92,8 @@ namespace MCGalaxy {
         /// <summary>
         /// Fill the commands that this group can use
         /// </summary>
-        public void fillCommands() {
+        public void fillCommands()
+        {
             CommandList _commands = new CommandList();
             GrpCommands.AddCommands(out _commands, Permission);
             commands = _commands;
@@ -105,29 +110,40 @@ namespace MCGalaxy {
         /// <summary>
         /// Load up all server groups
         /// </summary>
-        public static void InitAll() {
+        public static void InitAll()
+        {
             GroupList = new List<Group>();
 
-            if (File.Exists("properties/ranks.properties")) {
+            if (File.Exists("properties/ranks.properties"))
+            {
                 string[] lines = File.ReadAllLines("properties/ranks.properties");
 
                 Group thisGroup = new Group();
                 int gots = 0, version = 1;
-                if (lines.Length > 0 && lines[0].StartsWith("#Version ")) {
-                    try { version = int.Parse(lines[0].Remove(0, 9)); } catch { Server.s.Log("The ranks.properties version header is invalid! Ranks may fail to load!"); }
+                if (lines.Length > 0 && lines[0].StartsWith("#Version "))
+                {
+                    try { version = int.Parse(lines[0].Remove(0, 9)); }
+                    catch { Server.s.Log("The ranks.properties version header is invalid! Ranks may fail to load!"); }
                 }
 
-                foreach (string s in lines) {
-                    try {
+                foreach (string s in lines)
+                {
+                    try
+                    {
                         if (s == "" || s[0] == '#') continue;
-                        if (s.Split('=').Length == 2) {
+                        if (s.Split('=').Length == 2)
+                        {
                             string property = s.Split('=')[0].Trim();
                             string value = s.Split('=')[1].Trim();
 
-                            if (thisGroup.name == "" && property.ToLower() != "rankname") {
+                            if (thisGroup.name == "" && property.ToLower() != "rankname")
+                            {
                                 Server.s.Log("Hitting an error at " + s + " of ranks.properties");
-                            } else {
-                                switch (property.ToLower()) {
+                            }
+                            else
+                            {
+                                switch (property.ToLower())
+                                {
                                     case "rankname":
                                         gots = 0;
                                         thisGroup = new Group();
@@ -142,35 +158,44 @@ namespace MCGalaxy {
                                     case "permission":
                                         int foundPermission;
 
-                                        try {
+                                        try
+                                        {
                                             foundPermission = int.Parse(value);
-                                        } catch { Server.s.Log("Invalid permission on " + s); break; }
+                                        }
+                                        catch { Server.s.Log("Invalid permission on " + s); break; }
 
-                                        if (thisGroup.Permission != LevelPermission.Null) {
+                                        if (thisGroup.Permission != LevelPermission.Null)
+                                        {
                                             Server.s.Log("Setting permission again on " + s);
                                             gots--;
                                         }
 
                                         bool allowed = GroupList.Find(grp => grp.Permission == (LevelPermission)foundPermission) == null;
 
-                                        if (foundPermission > 119 || foundPermission < -50) {
+                                        if (foundPermission > 119 || foundPermission < -50)
+                                        {
                                             Server.s.Log("Permission must be between -50 and 119 for ranks");
                                             break;
                                         }
 
-                                        if (allowed) {
+                                        if (allowed)
+                                        {
                                             gots++;
                                             thisGroup.Permission = (LevelPermission)foundPermission;
-                                        } else {
+                                        }
+                                        else
+                                        {
                                             Server.s.Log("Cannot have 2 ranks set at permission level " + value);
                                         }
                                         break;
                                     case "limit":
                                         int foundLimit;
 
-                                        try {
+                                        try
+                                        {
                                             foundLimit = int.Parse(value);
-                                        } catch { Server.s.Log("Invalid limit on " + s); break; }
+                                        }
+                                        catch { Server.s.Log("Invalid limit on " + s); break; }
 
                                         gots++;
                                         thisGroup.maxBlocks = foundLimit;
@@ -178,9 +203,11 @@ namespace MCGalaxy {
                                     case "maxundo":
                                         int foundMax;
 
-                                        try {
+                                        try
+                                        {
                                             foundMax = int.Parse(value);
-                                        } catch { Server.s.Log("Invalid maximum on " + s); break; }
+                                        }
+                                        catch { Server.s.Log("Invalid maximum on " + s); break; }
 
                                         gots++;
                                         thisGroup.maxUndo = foundMax;
@@ -188,19 +215,25 @@ namespace MCGalaxy {
                                     case "color":
                                         char foundChar;
 
-                                        try {
+                                        try
+                                        {
                                             foundChar = char.Parse(value);
-                                        } catch { Server.s.Log("Incorrect color on " + s); break; }
+                                        }
+                                        catch { Server.s.Log("Incorrect color on " + s); break; }
 
-                                        if ((foundChar >= '0' && foundChar <= '9') || (foundChar >= 'a' && foundChar <= 'f')) {
+                                        if ((foundChar >= '0' && foundChar <= '9') || (foundChar >= 'a' && foundChar <= 'f'))
+                                        {
                                             gots++;
                                             thisGroup.color = foundChar.ToString(CultureInfo.InvariantCulture);
-                                        } else {
+                                        }
+                                        else
+                                        {
                                             Server.s.Log("Invalid color code at " + s);
                                         }
                                         break;
                                     case "filename":
-                                        if (value.Contains("\\") || value.Contains("/")) {
+                                        if (value.Contains("\\") || value.Contains("/"))
+                                        {
                                             Server.s.Log("Invalid filename on " + s);
                                             break;
                                         }
@@ -215,7 +248,7 @@ namespace MCGalaxy {
                                         break;
                                     case "osmaps":
                                         byte osmaps;
-                                        if(byte.TryParse(value, out osmaps) == false)
+                                        if (byte.TryParse(value, out osmaps) == false)
                                         { osmaps = 2; }
 
                                         gots++;
@@ -223,28 +256,33 @@ namespace MCGalaxy {
                                         break;
                                 }
 
-                                if ((gots >= 4 && version < 2) || (gots >= 5 && version < 3) || gots >= 6) {
-                                    if (version < 2) {
+                                if ((gots >= 4 && version < 2) || (gots >= 5 && version < 3) || gots >= 6)
+                                {
+                                    if (version < 2)
+                                    {
                                         if ((int)thisGroup.Permission >= 100)
                                             thisGroup.maxUndo = int.MaxValue;
                                         else if ((int)thisGroup.Permission >= 80)
                                             thisGroup.maxUndo = 5400;
                                     }
 
-                                    GroupList.Add(new Group(thisGroup.Permission, 
-                                        thisGroup.maxBlocks, 
-                                        thisGroup.maxUndo, 
-                                        thisGroup.trueName, 
-                                        thisGroup.color[0], 
-                                        thisGroup.MOTD, 
-                                        thisGroup.fileName, 
+                                    GroupList.Add(new Group(thisGroup.Permission,
+                                        thisGroup.maxBlocks,
+                                        thisGroup.maxUndo,
+                                        thisGroup.trueName,
+                                        thisGroup.color[0],
+                                        thisGroup.MOTD,
+                                        thisGroup.fileName,
                                         thisGroup.OverseerMaps));
                                 }
                             }
-                        } else {
+                        }
+                        else
+                        {
                             Server.s.Log("In ranks.properties, the line " + s + " is wrongly formatted");
                         }
-                    } catch (Exception e) { Server.s.Log("Encountered an error at line \"" + s + "\" in ranks.properties"); Server.ErrorLog(e); }
+                    }
+                    catch (Exception e) { Server.s.Log("Encountered an error at line \"" + s + "\" in ranks.properties"); Server.ErrorLog(e); }
                 }
             }
 
@@ -257,10 +295,12 @@ namespace MCGalaxy {
             GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));
 
             bool swap = true; Group storedGroup;
-            while (swap) {
+            while (swap)
+            {
                 swap = false;
                 for (int i = 0; i < GroupList.Count - 1; i++)
-                    if (GroupList[i].Permission > GroupList[i + 1].Permission) {
+                    if (GroupList[i].Permission > GroupList[i + 1].Permission)
+                    {
                         swap = true;
                         storedGroup = GroupList[i];
                         GroupList[i] = GroupList[i + 1];
@@ -271,7 +311,8 @@ namespace MCGalaxy {
             if (Group.Find(Server.defaultRank) != null) standard = Group.Find(Server.defaultRank);
             else standard = Group.findPerm(LevelPermission.Guest);
 
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in Player.players)
+            {
                 pl.group = GroupList.Find(g => g.name == pl.group.name);
             }
             if (OnGroupLoad != null)
@@ -283,9 +324,11 @@ namespace MCGalaxy {
         /// Save givenList group
         /// </summary>
         /// <param name="givenList">The list of groups to save</param>
-        public static void saveGroups(List<Group> givenList) {
+        public static void saveGroups(List<Group> givenList)
+        {
             File.Create("properties/ranks.properties").Dispose();
-            using (StreamWriter SW = File.CreateText("properties/ranks.properties")) {
+            using (StreamWriter SW = File.CreateText("properties/ranks.properties"))
+            {
                 SW.WriteLine("#Version 3");
                 SW.WriteLine("#RankName = string");
                 SW.WriteLine("#     The name of the rank, use capitalization.");
@@ -319,8 +362,10 @@ namespace MCGalaxy {
                 SW.WriteLine("#		Defaults to 2 if invalid number (number has to be between 0-128");
                 SW.WriteLine();
                 SW.WriteLine();
-                foreach (Group grp in givenList) {
-                    if (grp.name != "nobody") {
+                foreach (Group grp in givenList)
+                {
+                    if (grp.name != "nobody")
+                    {
                         SW.WriteLine("RankName = " + grp.trueName);
                         SW.WriteLine("Permission = " + (int)grp.Permission);
                         SW.WriteLine("Limit = " + grp.maxBlocks);
@@ -342,7 +387,8 @@ namespace MCGalaxy {
         /// </summary>
         /// <param name="name">The name of the group to search for</param>
         /// <returns>Return true if it does exists, returns false if it doesnt</returns>
-        public static bool Exists(string name) {
+        public static bool Exists(string name)
+        {
             name = name.ToLower();
             return GroupList.Any(gr => gr.name == name);
         }
@@ -351,7 +397,8 @@ namespace MCGalaxy {
         /// </summary>
         /// <param name="name">The name of the group</param>
         /// <returns>The group object with that name</returns>
-        public static Group Find(string name) {
+        public static Group Find(string name)
+        {
             name = name.ToLower();
 
             if (name == "adv") name = "advbuilder";
@@ -366,7 +413,8 @@ namespace MCGalaxy {
         /// </summary>
         /// <param name="Perm">The level permission to search for</param>
         /// <returns>The group object with that level permission</returns>
-        public static Group findPerm(LevelPermission Perm) {
+        public static Group findPerm(LevelPermission Perm)
+        {
             return GroupList.FirstOrDefault(grp => grp.Permission == Perm);
         }
 
@@ -375,7 +423,8 @@ namespace MCGalaxy {
         /// </summary>
         /// <param name="Perm">The level permission to search for</param>
         /// <returns>The group object with that level permission</returns>
-        public static Group findPermInt(int Perm) {
+        public static Group findPermInt(int Perm)
+        {
             return GroupList.FirstOrDefault(grp => (int)grp.Permission == Perm);
         }
 
@@ -384,8 +433,10 @@ namespace MCGalaxy {
         /// </summary>
         /// <param name="playerName">The player Name</param>
         /// <returns>The group name</returns>
-        public static string findPlayer(string playerName) {
-            foreach (Group grp in Group.GroupList.Where(grp => grp.playerList.Contains(playerName))) {
+        public static string findPlayer(string playerName)
+        {
+            foreach (Group grp in Group.GroupList.Where(grp => grp.playerList.Contains(playerName)))
+            {
                 return grp.name;
             }
             return Group.standard.name;
@@ -396,21 +447,29 @@ namespace MCGalaxy {
         /// </summary>
         /// <param name="playerName">The player name</param>
         /// <returns>The group object that the player is in</returns>
-        public static Group findPlayerGroup(string playerName) {
-            foreach (Group grp in Group.GroupList.Where(grp => grp.playerList.Contains(playerName))) {
+        public static Group findPlayerGroup(string playerName)
+        {
+            foreach (Group grp in Group.GroupList.Where(grp => grp.playerList.Contains(playerName)))
+            {
                 return grp;
             }
             return Group.standard;
         }
 
-        public static string concatList(bool includeColor = true, bool skipExtra = false, bool permissions = false) {
+        public static string concatList(bool includeColor = true, bool skipExtra = false, bool permissions = false)
+        {
             string returnString = "";
-            foreach (Group grp in Group.GroupList.Where(grp => !skipExtra || (grp.Permission > LevelPermission.Guest && grp.Permission < LevelPermission.Nobody))) {
-                if (includeColor) {
+            foreach (Group grp in Group.GroupList.Where(grp => !skipExtra || (grp.Permission > LevelPermission.Guest && grp.Permission < LevelPermission.Nobody)))
+            {
+                if (includeColor)
+                {
                     returnString += ", " + grp.color + grp.name + Server.DefaultColor;
-                } else if (permissions) {
+                }
+                else if (permissions)
+                {
                     returnString += ", " + ((int)grp.Permission).ToString(CultureInfo.InvariantCulture);
-                } else
+                }
+                else
                     returnString += ", " + grp.name;
             }
 
@@ -420,8 +479,10 @@ namespace MCGalaxy {
         }
     }
 
-    public class GrpCommands {
-        public class rankAllowance {
+    public class GrpCommands
+    {
+        public class rankAllowance
+        {
             public string commandName;
             public LevelPermission lowestRank;
             public List<LevelPermission> disallow = new List<LevelPermission>();
@@ -430,39 +491,46 @@ namespace MCGalaxy {
         public static List<rankAllowance> allowedCommands;
         public static List<string> foundCommands = new List<string>();
 
-        public static LevelPermission defaultRanks(string command) {
+        public static LevelPermission defaultRanks(string command)
+        {
             Command cmd = Command.all.Find(command);
 
             return cmd != null ? cmd.defaultRank : LevelPermission.Null;
         }
 
-        public static void fillRanks() {
+        public static void fillRanks()
+        {
             foundCommands = Command.all.commandNames();
             allowedCommands = new List<rankAllowance>();
 
             rankAllowance allowVar;
 
-            foreach (Command cmd in Command.all.All()) {
+            foreach (Command cmd in Command.all.All())
+            {
                 allowVar = new rankAllowance();
                 allowVar.commandName = cmd.name;
                 allowVar.lowestRank = cmd.defaultRank;
                 allowedCommands.Add(allowVar);
             }
 
-            if (File.Exists("properties/command.properties")) {
+            if (File.Exists("properties/command.properties"))
+            {
                 string[] lines = File.ReadAllLines("properties/command.properties");
 
                 //if (lines.Length == 0) ; // this is useless?
                 /*else */
-                if (lines[0] == "#Version 2") {
+                if (lines[0] == "#Version 2")
+                {
                     string[] colon = new[] { " : " };
-                    foreach (string line in lines) {
+                    foreach (string line in lines)
+                    {
                         allowVar = new rankAllowance();
                         if (line == "" || line[0] == '#') continue;
                         //Name : Lowest : Disallow : Allow
                         string[] command = line.Split(colon, StringSplitOptions.None);
 
-                        if (!foundCommands.Contains(command[0])) {
+                        if (!foundCommands.Contains(command[0]))
+                        {
                             Server.s.Log("Incorrect command name: " + command[0]);
                             continue;
                         }
@@ -475,41 +543,56 @@ namespace MCGalaxy {
                         if (command[3] != "")
                             allow = command[3].Split(',');
 
-                        try {
+                        try
+                        {
                             allowVar.lowestRank = (LevelPermission)int.Parse(command[1]);
                             foreach (string s in disallow) { allowVar.disallow.Add((LevelPermission)int.Parse(s)); }
                             foreach (string s in allow) { allowVar.allow.Add((LevelPermission)int.Parse(s)); }
-                        } catch {
+                        }
+                        catch
+                        {
                             Server.s.Log("Hit an error on the command " + line);
                             continue;
                         }
 
                         int current = 0;
-                        foreach (rankAllowance aV in allowedCommands) {
-                            if (command[0] == aV.commandName) {
+                        foreach (rankAllowance aV in allowedCommands)
+                        {
+                            if (command[0] == aV.commandName)
+                            {
                                 allowedCommands[current] = allowVar;
                                 break;
                             }
                             current++;
                         }
                     }
-                } else {
-                    foreach (string line in lines.Where(line => line != "" && line[0] != '#')) {
+                }
+                else
+                {
+                    foreach (string line in lines.Where(line => line != "" && line[0] != '#'))
+                    {
                         allowVar = new rankAllowance();
                         string key = line.Split('=')[0].Trim().ToLower();
                         string value = line.Split('=')[1].Trim().ToLower();
 
-                        if (!foundCommands.Contains(key)) {
+                        if (!foundCommands.Contains(key))
+                        {
                             Server.s.Log("Incorrect command name: " + key);
-                        } else if (Level.PermissionFromName(value) == LevelPermission.Null) {
+                        }
+                        else if (Level.PermissionFromName(value) == LevelPermission.Null)
+                        {
                             Server.s.Log("Incorrect value given for " + key + ", using default value.");
-                        } else {
+                        }
+                        else
+                        {
                             allowVar.commandName = key;
                             allowVar.lowestRank = Level.PermissionFromName(value);
 
                             int current = 0;
-                            foreach (rankAllowance aV in allowedCommands) {
-                                if (key == aV.commandName) {
+                            foreach (rankAllowance aV in allowedCommands)
+                            {
+                                if (key == aV.commandName)
+                                {
                                     allowedCommands[current] = allowVar;
                                     break;
                                 }
@@ -519,17 +602,22 @@ namespace MCGalaxy {
                     }
                 }
                 Save(allowedCommands);
-            } else Save(allowedCommands);
+            }
+            else Save(allowedCommands);
 
-            foreach (Group grp in Group.GroupList) {
+            foreach (Group grp in Group.GroupList)
+            {
                 grp.fillCommands();
             }
         }
 
-        public static void Save(List<rankAllowance> givenList) {
-            try {
+        public static void Save(List<rankAllowance> givenList)
+        {
+            try
+            {
                 File.Create("properties/command.properties").Dispose();
-                using (StreamWriter w = File.CreateText("properties/command.properties")) {
+                using (StreamWriter w = File.CreateText("properties/command.properties"))
+                {
                     w.WriteLine("#Version 2");
                     w.WriteLine("#   This file contains a reference to every command found in the server software");
                     w.WriteLine("#   Use this file to specify which ranks get which commands");
@@ -539,24 +627,30 @@ namespace MCGalaxy {
                     w.WriteLine("#   CommandName : LowestRank : Disallow : Allow");
                     w.WriteLine("#   gun : 60 : 80,67 : 40,41,55");
                     w.WriteLine("");
-                    foreach (rankAllowance aV in givenList) {
+                    foreach (rankAllowance aV in givenList)
+                    {
                         w.WriteLine(aV.commandName + " : " + (int)aV.lowestRank + " : " + getInts(aV.disallow) + " : " + getInts(aV.allow));
                     }
                 }
-            } catch {
+            }
+            catch
+            {
                 Server.s.Log("SAVE FAILED! command.properties");
             }
         }
-        public static string getInts(List<LevelPermission> givenList) {
+        public static string getInts(List<LevelPermission> givenList)
+        {
             string returnString = ""; bool foundOne = false;
-            foreach (LevelPermission Perm in givenList) {
+            foreach (LevelPermission Perm in givenList)
+            {
                 foundOne = true;
                 returnString += "," + (int)Perm;
             }
             if (foundOne) returnString = returnString.Remove(0, 1);
             return returnString;
         }
-        public static void AddCommands(out CommandList commands, LevelPermission perm) {
+        public static void AddCommands(out CommandList commands, LevelPermission perm)
+        {
             commands = new CommandList();
 
             foreach (rankAllowance aV in allowedCommands.Where(aV => (aV.lowestRank <= perm && !aV.disallow.Contains(perm)) || aV.allow.Contains(perm)))

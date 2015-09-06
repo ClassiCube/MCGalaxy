@@ -500,8 +500,8 @@ namespace MCGalaxy.Commands
                     case "horizon":
                     case "edge":
                     case "water":
-                        byte block = Block.water;
-                        if (Block.Byte(valueText) != Block.Zero && !(valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase)))
+                        byte block = Block.Byte(valueText);
+                        if (block == Block.Zero && !(valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase)))
                         {
                             Help(p);
                             return;
@@ -536,8 +536,8 @@ namespace MCGalaxy.Commands
                     case "side":
                     case "border":
                     case "bedrock":
-                        byte blockhorizon = Block.blackrock;
-                        if (Block.Byte(valueText) == Block.Zero && !(valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase)))
+                        byte blockhorizon = Block.Byte(valueText);
+                        if (blockhorizon == Block.Zero && !(valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase)))
                         {
                             Help(p);
                             return;

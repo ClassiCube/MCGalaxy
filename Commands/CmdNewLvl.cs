@@ -144,7 +144,7 @@ namespace MCGalaxy.Commands
                     return true;
             }
 
-            return false;
+            return true;
         }
     }
 }

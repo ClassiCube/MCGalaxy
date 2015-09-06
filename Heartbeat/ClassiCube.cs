@@ -48,7 +48,6 @@ namespace MCGalaxy
 
         public void OnResponse(string line)
         {
-
             // Only run the code below if we receive a response
             if (!String.IsNullOrEmpty(line.Trim()))
             {

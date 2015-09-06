@@ -26,6 +26,7 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override void Use(Player p, string message)
         {
+            p.totalKicked = p.totalKicked - 1;
             p.Kick("RAGEQUIT!!");
         }
 

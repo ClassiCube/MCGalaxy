@@ -195,6 +195,14 @@ namespace MCGalaxy
         public static void MinecraftToIrcColors(StringBuilder sb)
         {
             if (sb == null) throw new ArgumentNullException("sb");
+            for (int i = 0; i < 10; i++)
+            {
+                sb.Replace("%" + i, "&" + i);
+            }
+            for (char ch = 'a'; ch <= 'f'; ch++)
+            {
+                sb.Replace("%" + ch, "&" + ch);
+            }
             foreach (var codePair in MinecraftToIRCColors)
             {
                 sb.Replace(codePair.Key, codePair.Value);
