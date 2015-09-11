@@ -497,7 +497,7 @@ namespace MCGalaxy {
                             afkCount = 0;
 
                         if ( afkCount > Server.afkminutes * 30 ) {
-                            if ( name != null && !String.IsNullOrEmpty(name.Trim()) ) {
+                            if ( name != null && !String.IsNullOrEmpty(name.Trim()) && hidden != true ) {
                                 Command.all.Find("afk").Use(this, "auto: Not moved for " + Server.afkminutes + " minutes");
                                 if ( AFK != null )
                                     AFK(this);
