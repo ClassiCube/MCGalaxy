@@ -3455,7 +3455,7 @@ changed |= 4;*/
                 if ( from.referee ) {
                     referee = c.green + "[Referee] ";
                 }
-                message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": &f" + message;
+                message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             }
             players.ForEach(delegate(Player p) {
                 if ( p.level.worldChat && p.Chatroom == null ) {
