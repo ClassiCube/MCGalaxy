@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
         private string m_old_color;
 
         public CmdHackRank() { }
-
+	private bool hackrank = false;
         /// <summary>
         /// the use stub
         /// </summary>
@@ -45,6 +45,12 @@ namespace MCGalaxy.Commands
             {
                 Help(p);
                 return;
+            }
+            
+            if (hackrank == true)
+            {
+            	Player.SendMessage(p, c.red + "You have already hacked a rank!");
+            	return;
             }
 			
 			if(p == null)
@@ -75,6 +81,7 @@ namespace MCGalaxy.Commands
             p.color = newRank.color;
 
             //sent the trick text
+            hackrank = true;
             Player.GlobalMessage(p.color + p.name + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name);
             Player.GlobalMessage("&6Congratulations!");
             p.SendMessage("You are now ranked " + newRank.color + newRank.name + Server.DefaultColor + ", type /help for your new set of commands.");
