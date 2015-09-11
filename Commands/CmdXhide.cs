@@ -35,12 +35,17 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Stop your current possession first.");
                 return;
             }
+            Command adminchat = Command.all.Find("adminchat");
             p.hidden = !p.hidden;
             if (p.hidden)
             {
                 Player.GlobalDie(p, true);
                 Player.GlobalChat(p, "&c- " + p.color + p.prefix + p.name + Server.DefaultColor + " " + (File.Exists("text/logout/" + p.name + ".txt") ? File.ReadAllText("text/logout/" + p.name + ".txt") : "Disconnected."), false);
                 Server.IRC.Say(p.name + " left the game (Disconnected.)");
+                if (!p.adminchat)
+                {
+                    adminchat.Use(p, message);
+                }
 
             }
             else
@@ -48,6 +53,10 @@ namespace MCGalaxy.Commands
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false, "");
                 Player.GlobalChat(p, "&a+ " + p.color + p.prefix + p.name + Server.DefaultColor + " " + (File.Exists("text/login/" + p.name + ".txt") ? File.ReadAllText("text/login/" + p.name + ".txt") : "joined the game."), false);
                 Server.IRC.Say(p.name + " joined the game");
+                if (p.adminchat)
+                {
+                    adminchat.Use(p, message);
+                }
             }
         }
         public override void Help(Player p)
