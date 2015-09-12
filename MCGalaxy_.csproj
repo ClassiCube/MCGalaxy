@@ -341,6 +341,10 @@
     <Compile Include="Commands\CmdWarp.cs" />
     <Compile Include="Commands\CmdWaypoint.cs" />
     <Compile Include="Commands\CmdXban.cs" />
+    <Compile Include="Commands\CmdXColor.cs" />
+    <Compile Include="Commands\CmdXTColor.cs" />
+    <Compile Include="Commands\CmdXNick.cs" />
+    <Compile Include="Commands\CmdXTitle.cs" />
     <Compile Include="Commands\CmdXmute.cs" />
     <Compile Include="Commands\CmdXspawn.cs" />
     <Compile Include="Commands\CmdXundo.cs" />
