@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
                         {
                             goto case "old";
                         }
-                        else
+                        if (Server.menustyle != 1)
                         {
                             Player.SendMessage(p, "Use &b/help ranks" + Server.DefaultColor + " for a list of ranks.");
                             Player.SendMessage(p, "Use &b/help build" + Server.DefaultColor + " for a list of building commands.");
@@ -49,9 +49,37 @@ namespace MCGalaxy.Commands
                             Player.SendMessage(p, "Use &b/help shortcuts" + Server.DefaultColor + " for a list of shortcuts.");
                             Player.SendMessage(p, "Use &b/help old" + Server.DefaultColor + " to view the Old help menu.");
                             Player.SendMessage(p, "Use &b/help [command] or /help [block] " + Server.DefaultColor + "to view more info.");
+                        }
+                        else
+                        {
+                            Player.SendMessage(p, Server.DefaultColor + "  To see a list of all commands, write %a/Help List");
+                            Player.SendMessage(p, Server.DefaultColor + "  To see detailed help for a command, write %a/Help Command");
+                            Player.SendMessage(p, Server.DefaultColor + "  To see your stats, write %a/Whois");
+                            Player.SendMessage(p, Server.DefaultColor + "  To see loaded maps, write %a/Maps");
+                            Player.SendMessage(p, Server.DefaultColor + "  To start building, use %a/OS");
+                            Player.SendMessage(p, Server.DefaultColor + "  To join a Map, write %a/Goto WorldName");
+                            Player.SendMessage(p, Server.DefaultColor + "  To send private messages, write %a@PlayerName Message");
 
-                        } break;
+                        } 
+                        } 
+                        break;
+                    case "list":
+                    case "List":
+                        message = "";
+                        Player.SendMessage(p, Server.DefaultColor + "  To view all commands in a category, write %a/Help Category");
+                        Player.SendMessage(p, Server.DefaultColor + "Command Categories:");
+                        Player.SendMessage(p, "    %aRanks");
+                        Player.SendMessage(p, "    %aBuilding");
+                        Player.SendMessage(p, "    %aModeration");
+                        Player.SendMessage(p, "    %aInfo");
+                        Player.SendMessage(p, "    %aGames");
+                        Player.SendMessage(p, "    %aOther");
+                        Player.SendMessage(p, "    %aColors");
+                        Player.SendMessage(p, "    %aShortcuts");
+                        Player.SendMessage(p, "    %aOldMenu");
+                        break;
                     case "ranks":
+                    case "Ranks":
                         message = "";
                         foreach (Group grp in Group.GroupList)
                         {
@@ -60,6 +88,8 @@ namespace MCGalaxy.Commands
                         }
                         break;
                     case "build":
+                    case "building":
+                    case "Building":
                         message = "";
                         foreach (Command comm in Command.all.commands)
                         {
@@ -74,7 +104,9 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, message.Remove(0, 2) + ".");
                         break;
                     case "mod":
+                    case "Mod":
                     case "moderation":
+                    case "Moderation":
                         message = "";
                         foreach (Command comm in Command.all.commands)
                         {
@@ -88,7 +120,10 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, "Moderation commands you may use:");
                         Player.SendMessage(p, message.Remove(0, 2) + ".");
                         break;
+                    case "info":
+                    case "Info":
                     case "information":
+                    case "Information":
                         message = "";
                         foreach (Command comm in Command.all.commands)
                         {
@@ -102,7 +137,8 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, "Information commands you may use:");
                         Player.SendMessage(p, message.Remove(0, 2) + ".");
                         break;
-                    case "games": case "game":
+                    case "games": 
+                    case "Games":
                         message = "";
                         foreach (Command comm in Command.all.commands)
                         {
@@ -117,7 +153,9 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, message.Remove(0, 2) + ".");
                         break;
                     case "other":
+                    case "Other":
                     case "others":
+                    case "Others":
                         message = "";
                         foreach (Command comm in Command.all.commands)
                         {
@@ -140,6 +178,15 @@ namespace MCGalaxy.Commands
                     case "short 2":
                     case "shortcut 2":
                     case "shortcuts 2":
+                    case "Short":
+                    case "Shortcut":
+                    case "Shortcuts":
+                    case "Short 1":
+                    case "Shortcut 1":
+                    case "Shortcuts 1":
+                    case "Short 2":
+                    case "Shortcut 2":
+                    case "Shortcuts 2":
                         bool list1 = true;
                         try { if (message.Split()[1] == "2") list1 = false; } catch { }
                         message = "";
@@ -162,6 +209,8 @@ namespace MCGalaxy.Commands
                         break;
                     case "colours":
                     case "colors":
+                    case "Colours":
+                    case "Colors":
                             Player.SendMessage(p, "&fTo use a color simply put a '%' sign symbol before you put the color code.");
                             Player.SendMessage(p, "Colors Available:");
                             Player.SendMessage(p, "0 - &0Black " + Server.DefaultColor + "| 8 - &8Gray");
@@ -174,8 +223,13 @@ namespace MCGalaxy.Commands
                             Player.SendMessage(p, "7 - &7Silver " + Server.DefaultColor + "| f - &fWhite");
                             break;
                     case "old":
+                    case "Old":
+                    case "oldmenu":
+                    case "OldMenu":
                     case "commands":
                     case "command":
+                    case "Commands":
+                    case "Command":
                         string commandsFound = "";
                         foreach (Command comm in Command.all.commands)
                             if (p == null || p.group.commands.All().Contains(comm))

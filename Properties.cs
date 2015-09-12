@@ -1008,6 +1008,10 @@ namespace MCGalaxy {
                                         break;
                                 }
                                 break;
+                            case "menu-style":
+                                try { Server.menustyle = Convert.ToInt32(value); }
+                                catch { Server.s.Log("menu-style value invalid! setting to default."); }
+                                break;
 						}
 					}
 				}
@@ -1123,6 +1127,8 @@ namespace MCGalaxy {
 			w.WriteLine();
             w.WriteLine("#   MCGalaxy-protection-level\t\t= Choose between: Dev/Mod/Off (default is Off). When set to Mod, MCGalaxy Moderators AND Developers are protected. When set to Dev, MCGalaxy Developers only are protected. When set to Off, MCGalaxy staff are not protected.");
             w.WriteLine();
+            w.WriteLine("#   menu-style\t\t\t\t= Choose between the default MCGalaxy help menu(0) or the redesigned layout(1). ");
+            w.WriteLine();
 			w.WriteLine("# Server options");
 			w.WriteLine("server-name = " + Server.name);
 			w.WriteLine("motd = " + Server.motd);
@@ -1143,6 +1149,7 @@ namespace MCGalaxy {
 			w.WriteLine("restarttime = " + Server.restarttime.ToShortTimeString());
 			w.WriteLine("restart-on-error = " + Server.restartOnError);
             w.WriteLine("MCGalaxy-protection-level = " + Enum.GetName(typeof(ForgeProtection), Server.forgeProtection));
+                        w.WriteLine("menu-style = " + Server.menustyle.ToString());
 			w.WriteLine("main-name = " + Server.level);
             w.WriteLine("default-texture-url = " + Server.defaultTextureUrl);
 			//w.WriteLine("guest-goto = " + Server.guestGoto);

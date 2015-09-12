@@ -239,6 +239,7 @@ namespace MCGalaxy
         public static string name = "[MCGalaxy] Default";
         public static string motd = "Welcome!";
         public static byte players = 12;
+        public static int menustyle = 0;
         //for the limiting no. of guests:
         public static byte maxGuests = 10;
 
