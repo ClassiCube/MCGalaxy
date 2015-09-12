@@ -141,6 +141,7 @@ namespace MCGalaxy.Gui {
             comboBoxProtection.Items.Add("Off");
             comboBoxProtection.Items.Add("Dev");
             comboBoxProtection.Items.Add("Mod");
+            comboBoxProtection.SelectedIndex = comboBoxProtection.Items.Count - 3;
 
             //Load server stuff
             LoadProp("properties/server.properties");
