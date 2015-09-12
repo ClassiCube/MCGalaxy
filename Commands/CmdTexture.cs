@@ -67,6 +67,7 @@ namespace MCGalaxy.Commands
                     }
                 }
                 p.level.Save();
+                Level.SaveSettings(p.level);
                 return;
             }
         }
