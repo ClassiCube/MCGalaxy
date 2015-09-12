@@ -308,19 +308,23 @@ namespace MCGalaxy
 			all.Add(new CmdWhitelist());
 			all.Add(new CmdWhoip());
 			all.Add(new CmdWhois());
-            all.Add(new CmdWhoNick());
+            		all.Add(new CmdWhoNick());
 			all.Add(new CmdWhowas());
 			all.Add(new CmdWrite());
 			all.Add(new CmdXban());
+			all.Add(new CmdXColor());
 			all.Add(new CmdXhide());
 			all.Add(new CmdXJail());
 			all.Add(new CmdXmute());
+			all.Add(new CmdXNick());
 			all.Add(new CmdXspawn());
+			all.Add(new CmdXTColor());
+			all.Add(new CmdXTitle());
 			all.Add(new CmdXundo());
 			all.Add(new CmdZombieGame());
 			all.Add(new CmdZone());
 			all.Add(new CmdZz());
-            all.Add(new CmdQuit());
+            		all.Add(new CmdQuit());
 			core.commands = new List<Command>(all.commands);
 			Scripting.Autoload();
 		}
