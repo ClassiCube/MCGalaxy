@@ -73,6 +73,14 @@ namespace MCGalaxy.Commands
             {
                 Player.SendMessage(p, "No backups for this map exist yet.");
             }
+            if (foundLevel.textureUrl != "")
+            {
+                Player.SendMessage(p, "TexturePack: %b" + foundLevel.textureUrl);
+            }
+            else
+            {
+                Player.SendMessage(p, "No textures for this map exist yet.");
+            }
         }
         public override void Help(Player p)
         {
