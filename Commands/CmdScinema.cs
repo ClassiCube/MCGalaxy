@@ -122,6 +122,7 @@ namespace MCGalaxy.Commands
             //com(p, "stuff is copied. now append to file");
             //com(p, "get the number of next frame");
             int FrameNumber = 0;
+            Byte[] ba = new Byte[5];
 			using (FileStream ReadStream = File.OpenRead(Filepath))
 			{
 				String temp = "";
@@ -133,7 +134,6 @@ namespace MCGalaxy.Commands
 				//framecount aquired(hopefully)
 				//now we have to add 1 to that and write it back in the file
 				FrameNumber++;
-				Byte[] ba = new Byte[5];
 				int Fnum = FrameNumber;
 				for (int i = 4; i >= 0; i--)
 				{
@@ -142,13 +142,14 @@ namespace MCGalaxy.Commands
 					//ba[i] = (Byte)49;
 					Fnum /= 10;
 				}
-
-				using (FileStream WriteStream = File.OpenWrite(Filepath))
-				{
-					WriteStream.Write(ba, 0, 5);
-					//written new number in file
-				}
 			}
+
+			using (FileStream WriteStream = File.OpenWrite(Filepath))
+			{
+				WriteStream.Write(ba, 0, 5);
+				//written new number in file
+			}
+			
             cin = File.AppendText(Filepath);
             cin.Write("[Frame" + String.Format("{0:00000}", FrameNumber) + "]{");
             //written frameheader
