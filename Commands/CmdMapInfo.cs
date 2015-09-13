@@ -77,6 +77,10 @@ namespace MCGalaxy.Commands
             {
                 Player.SendMessage(p, "TexturePack: %b" + foundLevel.textureUrl);
             }
+            else if (foundLevel == Server.mainLevel && Server.defaultTextureUrl != "")
+            {
+                Player.SendMessage(p, "TexturePack: " + Server.defaultTextureUrl);
+            }
             else
             {
                 Player.SendMessage(p, "No textures for this map exist yet.");
