@@ -116,7 +116,6 @@ namespace MCGalaxy.Gui
             this.cmbVerificationRank = new System.Windows.Forms.ComboBox();
             this.chkEnableVerification = new System.Windows.Forms.CheckBox();
             this.chkSpamControl = new System.Windows.Forms.CheckBox();
-            this.txtGlobalChatNick = new System.Windows.Forms.TextBox();
             this.cmbGlobalChatColor = new System.Windows.Forms.ComboBox();
             this.lsChkSendAFKMain = new System.Windows.Forms.CheckBox();
             this.lsChkStartOnStartup = new System.Windows.Forms.CheckBox();
@@ -180,7 +179,6 @@ namespace MCGalaxy.Gui
             this.chkPrmOnly = new System.Windows.Forms.CheckBox();
             this.groupBox19 = new System.Windows.Forms.GroupBox();
             this.lblGlobalChatColor = new System.Windows.Forms.Label();
-            this.label51 = new System.Windows.Forms.Label();
             this.chkGlobalChat = new System.Windows.Forms.CheckBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.label48 = new System.Windows.Forms.Label();
@@ -1261,14 +1259,6 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip( this.chkSpamControl, "If enabled it mutes a player for spamming. Default false.\r\n" );
             this.chkSpamControl.UseVisualStyleBackColor = true;
             // 
-            // txtGlobalChatNick
-            // 
-            this.txtGlobalChatNick.Location = new System.Drawing.Point( 42, 49 );
-            this.txtGlobalChatNick.Name = "txtGlobalChatNick";
-            this.txtGlobalChatNick.Size = new System.Drawing.Size( 63, 21 );
-            this.txtGlobalChatNick.TabIndex = 1;
-            this.toolTip.SetToolTip( this.txtGlobalChatNick, "The name of the bot in the Global Chat IRC channel." );
-            // 
             // cmbGlobalChatColor
             // 
             this.cmbGlobalChatColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1999,8 +1989,6 @@ namespace MCGalaxy.Gui
             this.groupBox19.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox19.Controls.Add( this.cmbGlobalChatColor );
             this.groupBox19.Controls.Add( this.lblGlobalChatColor );
-            this.groupBox19.Controls.Add( this.label51 );
-            this.groupBox19.Controls.Add( this.txtGlobalChatNick );
             this.groupBox19.Controls.Add( this.chkGlobalChat );
             this.groupBox19.Location = new System.Drawing.Point( 368, 283 );
             this.groupBox19.Name = "groupBox19";
@@ -2015,15 +2003,6 @@ namespace MCGalaxy.Gui
             this.lblGlobalChatColor.Name = "lblGlobalChatColor";
             this.lblGlobalChatColor.Size = new System.Drawing.Size( 21, 21 );
             this.lblGlobalChatColor.TabIndex = 12;
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point( 6, 52 );
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size( 30, 13 );
-            this.label51.TabIndex = 2;
-            this.label51.Text = "Nick:";
             // 
             // chkGlobalChat
             // 
@@ -4971,8 +4950,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox txtIRCPort;
         private System.Windows.Forms.CheckBox chkShowEmptyRanks;
         private System.Windows.Forms.GroupBox groupBox19;
-        private System.Windows.Forms.Label label51;
-        private System.Windows.Forms.TextBox txtGlobalChatNick;
         private System.Windows.Forms.CheckBox chkGlobalChat;
         private System.Windows.Forms.ComboBox cmbGlobalChatColor;
         private System.Windows.Forms.Label lblGlobalChatColor;
