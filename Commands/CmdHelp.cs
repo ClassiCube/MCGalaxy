@@ -60,8 +60,7 @@ namespace MCGalaxy.Commands
                             Player.SendMessage(p, Server.DefaultColor + "  To join a Map, write %a/Goto WorldName");
                             Player.SendMessage(p, Server.DefaultColor + "  To send private messages, write %a@PlayerName Message");
 
-                        } 
-                        } 
+                        }
                         break;
                     case "list":
                     case "List":

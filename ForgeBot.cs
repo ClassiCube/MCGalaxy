@@ -116,7 +116,7 @@ namespace MCGalaxy {
 
 		private void doJoinLeaveMessage(string who, string verb, string channel) {
 			Server.s.Log(String.Format("{0} has {1} channel {2}", who, verb, channel));
-			Player.GlobalMessage(String.Format("{0}[IRC] {1} has {2} the{3} channel", Server.IRCColour, who, verb, (channel == opchannel ? " operator" : "")));
+			Player.GlobalMessage(String.Format("{0}[IRC] {1} has {2} the{3} channel", Server.IRCColour, who, verb, (channel.ToLower() == opchannel.ToLower() ? " operator" : "")));
 		}
 		void Player_PlayerDisconnect(Player p, string reason) {
 			if (Server.irc && IsConnected())
@@ -205,7 +205,7 @@ namespace MCGalaxy {
 			if(String.IsNullOrEmpty(message.Trim()))
 				message = ".";
 
-			if (channel == opchannel) {
+			if (channel.ToLower() == opchannel.ToLower()) {
 				Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
 				Player.GlobalMessageOps(String.Format("To Ops &f-{0}[IRC] {1}&f- {2}", Server.IRCColour, user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
 			}
