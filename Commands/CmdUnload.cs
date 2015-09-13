@@ -43,7 +43,13 @@ namespace MCGalaxy.Commands
             {
                 if (!level.Unload()) Player.SendMessage(p, "You cannot unload the main level.");
                 return;
-            }       
+            }
+            if (message == "")
+            {
+                level = p.level;
+                level.Unload();
+                return;
+            }
 
             Player.SendMessage(p, "There is no level \"" + message + "\" loaded.");
         }
