@@ -650,10 +650,6 @@ namespace MCGalaxy.Gui {
                             chkGlobalChat.Checked = ( value.ToLower() == "true" ) ? true : false;
                             break;
 
-                        case "global-chat-nick":
-                            if ( value != "" ) txtGlobalChatNick.Text = value;
-                            break;
-
                         case "global-chat-color":
                             color = c.Parse(value);
                             if ( color == "" ) {
