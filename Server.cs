@@ -323,7 +323,7 @@ namespace MCGalaxy
         public static bool UseGlobalChat = true;
         public static string GlobalChatNick()
         {
-            string serverName = Server.name.Replace(" ", "");
+            string serverName = Server.name.Replace(" ", "").Replace("'", "").Replace("!", "");;
             if(serverName.Length > 28)
             { 
                 serverName.Substring(0, 28);
