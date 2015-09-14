@@ -505,7 +505,7 @@ namespace MCGalaxy
                 	}
                 }
             }
-            UpdateGlobalSettings();
+            //UpdateGlobalSettings();
             if (!Directory.Exists("properties")) Directory.CreateDirectory("properties");
             if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
             if (!Directory.Exists("bots")) Directory.CreateDirectory("bots");
