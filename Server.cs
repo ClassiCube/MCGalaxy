@@ -1333,7 +1333,7 @@ namespace MCGalaxy
             }
             return Group.standard.color;
         }
-        public static void UpdateGlobalSettings()
+        /*public static void UpdateGlobalSettings()
         {
             try
             {
@@ -1358,7 +1358,7 @@ namespace MCGalaxy
                 gcnamebans.Clear();
                 gcipbans.Clear();
             }
-        }
+        }*/
         public void UpdateStaffList() {
             try {
                 devs.Clear();
