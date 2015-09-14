@@ -379,10 +379,10 @@ namespace MCGalaxy {
                 socket = s;
                 ip = socket.RemoteEndPoint.ToString().Split(':')[0];
 
-                if (IPInPrivateRange(ip))
+                /*if (IPInPrivateRange(ip))
                     exIP = ResolveExternalIP(ip);
                 else
-                    exIP = ip;
+                    exIP = ip;*/
 
                 Server.s.Log(ip + " connected to the server.");
 
@@ -4425,14 +4425,14 @@ Next: continue;
             //return IsLocalIpAddress(ip);
         }
 
-        public string ResolveExternalIP(string ip) {
+        /*public string ResolveExternalIP(string ip) {
             HTTPGet req = new HTTPGet();
             req.Request("http://checkip.dyndns.org");
             string[] a1 = req.ResponseBody.Split(':');
             string a2 = a1[1].Substring(1);
             string[] a3 = a2.Split('<');
             return a3[0];
-        }
+        }*/
 
         public static bool IsLocalIpAddress(string host) {
             try { // get host IP addresses
