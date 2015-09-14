@@ -120,7 +120,7 @@ namespace MCGalaxy
 			all.Add(new CmdGcaccept());
             all.Add(new CmdGcmods());
 			all.Add(new CmdGcrules());
-			all.Add(new CmdGcbanlistupdate());
+			//all.Add(new CmdGcbanlistupdate());
 			all.Add(new CmdGive());
 			all.Add(new CmdGlobal());
 			all.Add(new CmdGlobalCLS());
