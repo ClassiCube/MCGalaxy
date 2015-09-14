@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands
                                 }
                                 catch
                                 {
-                                    p.SendEnvSetColor(3, -1, -1, -1);
+                                    p.SendEnvSetColor(2, -1, -1, -1);
                                 }
                             }
                         break;

@@ -838,7 +838,7 @@ namespace MCGalaxy
                     if (level.ShadowColor != null) 
                         sw.WriteLine("ShadowColor = " + level.ShadowColor.ToString());
                     if (level.FogColor != null)
-                        sw.WriteLine("FogColor = " + level.CloudColor.ToString());
+                        sw.WriteLine("FogColor = " + level.FogColor.ToString());
                     if (level.EdgeLevel != null)
                         sw.WriteLine("EdgeLevel = " + level.EdgeLevel.ToString());
                     if (level.EdgeBlock != null) 
