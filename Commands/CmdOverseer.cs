@@ -336,11 +336,12 @@ namespace MCGalaxy.Commands
 				}
 				else { Player.SendMessage(p, "Type /os load <number> to load one of your maps"); }
 			}
-			else if (cmd == "KICK")
+			//Kicks all other players from your current map
+			else if (cmd == "KICKALL")
 			{
                 if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                 {
-                    Command.all.Find("move").Use(p, par2 + " " + Server.mainLevel.name);
+                    Player.players.ForEach(delegate(Player pl) { if (pl.level == p.level && pl.name != p.name) Command.all.Find("goto").Use(pl, Server.mainLevel.name); });
                 }
                 else 
                 { 
@@ -358,7 +359,7 @@ namespace MCGalaxy.Commands
 			// Remember to include or exclude the spoof command(s) -- MakeMeOp
 			Player.SendMessage(p, "/overseer [command string] - sends command to The Overseer");
 			Player.SendMessage(p, "Accepted Commands:");
-			Player.SendMessage(p, "Go, map, spawn, zone, kick, load");
+			Player.SendMessage(p, "Go, map, spawn, zone, load, kickall");
 			Player.SendMessage(p, "/os - Command shortcut.");
 		}
 
