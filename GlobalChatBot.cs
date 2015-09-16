@@ -246,11 +246,11 @@ namespace MCGalaxy
             RemoveVariables(ref message);
             RemoveWhitespace(ref message);
 
-            if (message.Contains("^UGCS"))
-            {
-                Server.UpdateGlobalSettings();
-                return;
-            }
+            //if (message.Contains("^UGCS"))
+            //{
+            //    Server.UpdateGlobalSettings();
+            //    return;
+            //}
             if (message.Contains("^IPGET "))
             {
                 foreach (Player p in Player.players)

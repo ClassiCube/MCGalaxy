@@ -522,7 +522,7 @@ namespace MCGalaxy
             foreach (Level level in Server.levels)
             {
                 if (level.name.ToLower() == levelName) return level;
-                if (level.name.ToLower().IndexOf(levelName.ToLower(), System.StringComparison.Ordinal) == -1) continue;
+                else { continue; }
                 if (tempLevel == null) tempLevel = level;
                 else returnNull = true;
             }

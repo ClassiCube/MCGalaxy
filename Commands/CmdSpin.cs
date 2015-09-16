@@ -38,6 +38,7 @@ namespace MCGalaxy.Commands
 
             switch (message)
             {
+                case "90":
                 case "y":
                     p.CopyBuffer.ForEach(delegate(Player.CopyPos Pos)
                     {
