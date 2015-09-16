@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
         {
             p.SendMessage("/env [target] [variable] [value]");
             p.SendMessage("Valid targets: player, level [Abbreviated as p and l]");
-            p.SendMessage("Valid variables: fog, cloud, sky, sun, shadow, level, horizon, border");
+            p.SendMessage("Valid variables: fog, cloud, sky, sun, shadow, level, horizon, border, weather");
             p.SendMessage("Using 'normal' as a value will reset the variable");
 
         }
