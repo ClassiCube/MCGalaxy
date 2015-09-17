@@ -98,6 +98,281 @@ namespace MCGalaxy.Commands
 				}
 				else { Player.SendMessage(p, "You can only change the Spawn Point when you are on your own map."); }
 			}
+			else if (cmd == "WEATHER")
+            {
+                    if (par == "SUN")
+                    {
+                        if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                        {
+                            Command.all.Find("env").Use(p, "l weather 0");
+                            return;
+                        }
+                        else
+                        {
+                            p.SendMessage("This is not your map..");
+                            return;
+                        }
+                    }
+                    else if (par == "RAIN")
+                    {
+                        if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                        {
+                            Command.all.Find("env").Use(p, "l weather 1");
+                            return;
+                        }
+                        else
+                        {
+                            p.SendMessage("This is not your map..");
+                            return;
+                        }
+                    }
+                    else if (par == "SNOW")
+                    {
+                        if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                        {
+                            Command.all.Find("env").Use(p, "l weather 2");
+                            return;
+                        }
+                        else
+                        {
+                            p.SendMessage("This is not your map..");
+                            return;
+                        }
+                    }
+                    else if (par == "NORMAL")
+                    {
+                        if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                        {
+                            Command.all.Find("env").Use(p, "l weather 0");
+                            return;
+                        }
+                        else
+                        {
+                            p.SendMessage("This is not your map..");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Player.SendMessage(p, "/overseer weather [sun/rain/snow/normal] -- Changes the weather of your map.");
+                        return;
+                    }
+            }
+            // Set Env (if you are on your own map level)
+            else if (cmd == "ENV")
+            {
+                if (par == "FOG")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+
+                        int pos = message.IndexOf("fog ");
+                        string fogcolor = "";
+                        if (message.Split(' ').Length > 2) fogcolor = message.Substring(pos + 4);
+                        if (fogcolor.Length != 6 && fogcolor != "")
+                        {
+                            Player.SendMessage(p, "Your fogcolor must be a 6 digit color hex code!");
+                            return;
+                        }
+                        if (fogcolor == "")
+                        {
+                            Command.all.Find("env").Use(p, "l fog " + -1);
+                        }
+                        else
+                        {
+                            Command.all.Find("env").Use(p, "l fog " + fogcolor);
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else if (par == "CLOUDS")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        int pos = message.IndexOf("clouds ");
+                        string cloudcolor = "";
+                        if (message.Split(' ').Length > 2) cloudcolor = message.Substring(pos + 7);
+                        if (cloudcolor.Length != 6 && cloudcolor != "")
+                        {
+                            Player.SendMessage(p, "Your cloudcolor must be a 6 digit color hex code!");
+                            return;
+                        }
+                        if (cloudcolor == "")
+                        {
+                            Command.all.Find("env").Use(p, "l clouds " + -1);
+                        }
+                        else
+                        {
+                            Command.all.Find("env").Use(p, "l clouds " + cloudcolor);
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else if (par == "SKY")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        int pos = message.IndexOf("sky ");
+                        string skycolor = "";
+                        if (message.Split(' ').Length > 2) skycolor = message.Substring(pos + 4);
+                        if (skycolor.Length != 6 && skycolor != "")
+                        {
+                            Player.SendMessage(p, "Your skycolor must be a 6 digit color hex code!");
+                            return;
+                        }
+                        if (skycolor == "")
+                        {
+                            Command.all.Find("env").Use(p, "l sky " + -1);
+                        }
+                        else
+                        {
+                            Command.all.Find("env").Use(p, "l sky " + skycolor);
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else if (par == "SHADOW")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        int pos = message.IndexOf("shadow ");
+                        string shadowcolor = "";
+                        if (message.Split(' ').Length > 2) shadowcolor = message.Substring(pos + 7);
+                        if (shadowcolor.Length != 6 && shadowcolor != "")
+                        {
+                            Player.SendMessage(p, "Your shadowcolor must be a 6 digit color hex code!");
+                            return;
+                        }
+                        if (shadowcolor == "")
+                        {
+                            Command.all.Find("env").Use(p, "l shadow " + -1);
+                        }
+                        else
+                        {
+                            Command.all.Find("env").Use(p, "l shadow " + shadowcolor);
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else if (par == "SUNLIGHT")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        int pos = message.IndexOf("sunlight ");
+                        string sunlightcolor = "";
+                        if (message.Split(' ').Length > 2) sunlightcolor = message.Substring(pos + 9);
+                        if (sunlightcolor.Length != 6 && sunlightcolor != "")
+                        {
+                            Player.SendMessage(p, "Your sunlightcolor must be a 6 digit color hex code!");
+                            return;
+                        }
+                        if (sunlightcolor == "")
+                        {
+                            Command.all.Find("env").Use(p, "l sunlight " + -1);
+                        }
+                        else
+                        {
+                            Command.all.Find("env").Use(p, "l sunlight " + sunlightcolor);
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else if (par == "WATERLEVEL")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        int pos = message.IndexOf("waterlevel ");
+                        string waterlevel = "";
+                        if (message.Split(' ').Length > 2) waterlevel = message.Substring(pos + 11);
+                        if (waterlevel == "")
+                        {
+                            Command.all.Find("env").Use(p, "l level reset");
+                        }
+                        else
+                        {
+                            Command.all.Find("env").Use(p, "l level " + waterlevel);
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else if (par == "HORIZON")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        int pos = message.IndexOf("horizon ");
+                        string horizonblock = "";
+                        if (message.Split(' ').Length > 2) horizonblock = message.Substring(pos + 11);
+                        if (horizonblock == "")
+                        {
+                            Command.all.Find("env").Use(p, "l water reset");
+                        }
+                        else
+                        {
+                            Command.all.Find("env").Use(p, "l water " + horizonblock);
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else if (par == "BEDROCK")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        int pos = message.IndexOf("bedrock ");
+                        string bedrockblock = "";
+                        if (message.Split(' ').Length > 2) bedrockblock = message.Substring(pos + 11);
+                        if (bedrockblock == "")
+                        {
+                            Command.all.Find("env").Use(p, "l bedrock reset");
+                        }
+                        else
+                        {
+                            Command.all.Find("env").Use(p, "l bedrock " + bedrockblock);
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else
+                {
+                    Player.SendMessage(p, "/overseer env [fog/clouds/sky/shadow/sunlight] [hex color code] -- Changes cloud color of your map");
+                    Player.SendMessage(p, "/overseer env waterlevel -- Sets the water height of your map");
+                    Player.SendMessage(p, "/overseer env horizon -- Sets what block the \"ocean\" shows outside your map");
+                    Player.SendMessage(p, "/overseer env bedrock -- Sets what block replaces the bedrock below sea level in your map");
+                    Player.SendMessage(p, "  Warning: Air,Shrub,Glass,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock env!");
+                    Player.SendMessage(p, "  Note: If no hex or block is given, the default will be used.");
+                }
+            }
 			// Map Commands
 			else if (cmd == "MAP")
 			{
@@ -253,6 +528,106 @@ namespace MCGalaxy.Commands
                         			return;
                     			}
                 		}
+                //Give your map a custom motd
+                else if (par == "MOTD")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        int pos = message.IndexOf("motd ");
+                        string newMotd = "";
+                        if (message.Split(' ').Length > 2) newMotd = message.Substring(pos + 5);
+
+                        if (newMotd == "")
+                        {
+                            Command.all.Find("map").Use(p, "motd ignore");
+                            p.level.Save();
+                            Level.SaveSettings(p.level);
+                            return;
+                        }
+                        else if (newMotd.Length > 30)
+                        {
+                            Player.SendMessage(p, "Your motd can be no longer than %b30" + Server.DefaultColor + " characters.");
+                            return;
+                        }
+                        else
+                        {
+                            Command.all.Find("map").Use(p, "motd " + newMotd);
+                            p.level.Save();
+                            Level.SaveSettings(p.level);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                //Change the gun permission of your map
+                else if (par == "GUNS")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        Command.all.Find("allowguns").Use(p, null);
+                        return;
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                //Change the pervisit of your map
+                else if (par == "PERVISIT")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        if (par2 == "")
+                        {
+                            Command.all.Find("pervisit").Use(p, Server.defaultRank);
+                            return;
+                        }
+                        else
+                        {
+                            Command.all.Find("pervisit").Use(p, par2);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                //Give your map a texture
+                else if (par == "TEXTURE")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        if (par2 == "")
+                        {
+                            Player.SendMessage(p, "Removing current texture.");
+                            Command.all.Find("texture").Use(p, "level http://null.png");
+                            return;
+                        }
+                        if (par2.Substring(par2.Length - 4) != ".png")
+                        {
+                            Player.SendMessage(p, "Your texture image must end in .png");
+                            return;
+                        }
+                        else
+                        {
+                            Command.all.Find("texture").Use(p, "level " + par2);
+                            Player.SendMessage(p, "Your texture has been updated!");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
 				else
 				{
 					//all is good here :)
@@ -260,7 +635,13 @@ namespace MCGalaxy.Commands
 					Player.SendMessage(p, "/overseer map physics -- Sets the physics on your map.");
 					Player.SendMessage(p, "/overseer map delete -- Deletes your map");
 					Player.SendMessage(p, "/overseer map save -- Saves your map");
+					Player.SendMessage(p, "/overseer map motd -- Changes the motd of your map");
+                    Player.SendMessage(p, "/overseer map guns -- Toggles if guns can be used on your map");
+                    Player.SendMessage(p, "/overseer map pervisit %b[default is " + Server.defaultRank + "]" + Server.DefaultColor + " -- Changes the pervisit of you map");
+                    Player.SendMessage(p, "/overseer map texture -- Add a texture to your map");
+                    Player.SendMessage(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
 					Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountians, ocean, pixel and space");
+					Player.SendMessage(p, "  Motd: If no message is provided, the default message will be used.");
 				}
 			}
 			else if (cmd == "ZONE")
@@ -359,7 +740,7 @@ namespace MCGalaxy.Commands
 			// Remember to include or exclude the spoof command(s) -- MakeMeOp
 			Player.SendMessage(p, "/overseer [command string] - sends command to The Overseer");
 			Player.SendMessage(p, "Accepted Commands:");
-			Player.SendMessage(p, "Go, map, spawn, zone, load, kickall");
+			Player.SendMessage(p, "Go, map, spawn, zone, load, kickall, env, weather");
 			Player.SendMessage(p, "/os - Command shortcut.");
 		}
 
