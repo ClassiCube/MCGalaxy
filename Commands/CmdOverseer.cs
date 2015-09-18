@@ -98,6 +98,120 @@ namespace MCGalaxy.Commands
 				}
 				else { Player.SendMessage(p, "You can only change the Spawn Point when you are on your own map."); }
 			}
+			else if (cmd == "PRESET")
+            {
+                if (par == "MIDNIGHT")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        Command.all.Find("env").Use(p, "l fog 8b8989");
+                        Command.all.Find("env").Use(p, "l shadow 918A3B");
+                        Command.all.Find("env").Use(p, "l clouds 000080");
+                        Command.all.Find("env").Use(p, "l sun 0000cd");
+                        Command.all.Find("env").Use(p, "l sky 191970");
+                        return;
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                if (par == "CARTOON")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        Command.all.Find("env").Use(p, "l fog 00ffff");
+                        Command.all.Find("env").Use(p, "l shadow f4a460");
+                        Command.all.Find("env").Use(p, "l clouds 00bfff");
+                        Command.all.Find("env").Use(p, "l sun f5deb3");
+                        Command.all.Find("env").Use(p, "l sky 1e90ff");
+                        return;
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                if (par == "NOIR")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        Command.all.Find("env").Use(p, "l fog 000000");
+                        Command.all.Find("env").Use(p, "l shadow 1f1f1f");
+                        Command.all.Find("env").Use(p, "l clouds 000000");
+                        Command.all.Find("env").Use(p, "l sun 696969");
+                        Command.all.Find("env").Use(p, "l sky 1f1f1f");
+                        return;
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                if (par == "TRIPPY")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        Command.all.Find("env").Use(p, "l fog 4B0082");
+                        Command.all.Find("env").Use(p, "l shadow B22222");
+                        Command.all.Find("env").Use(p, "l clouds 006400");
+                        Command.all.Find("env").Use(p, "l sun 7CFC00");
+                        Command.all.Find("env").Use(p, "l sky FFD700");
+                        return;
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                if (par == "WATERY")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        Command.all.Find("env").Use(p, "l fog 5f9ea0");
+                        Command.all.Find("env").Use(p, "l shadow 008B8B");
+                        Command.all.Find("env").Use(p, "l clouds 008B8B");
+                        Command.all.Find("env").Use(p, "l sun E0FFFF");
+                        Command.all.Find("env").Use(p, "l sky 008080");
+                        return;
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                if (par == "NORMAL")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        Command.all.Find("env").Use(p, "l fog -1");
+                        Command.all.Find("env").Use(p, "l shadow -1");
+                        Command.all.Find("env").Use(p, "l clouds -1");
+                        Command.all.Find("env").Use(p, "l sun -1");
+                        Command.all.Find("env").Use(p, "l sky -1");
+                        Command.all.Find("env").Use(p, "l weather 0");
+                        Command.all.Find("env").Use(p, "l water normal");
+                        Command.all.Find("env").Use(p, "l bedrock normal");
+                        Command.all.Find("env").Use(p, "l level normal");
+                        return;
+                    }
+                    else
+                    {
+                        p.SendMessage("This is not your map..");
+                        return;
+                    }
+                }
+                else
+                {
+                    Player.SendMessage(p, "/overseer preset [type] -- Uses an env preset on your map");
+                    Player.SendMessage(p, "  Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery");
+                }
+            }
 			else if (cmd == "WEATHER")
             {
                     if (par == "SUN")
@@ -328,7 +442,7 @@ namespace MCGalaxy.Commands
                         if (message.Split(' ').Length > 2) horizonblock = message.Substring(pos + 8);
                         if (horizonblock == "")
                         {
-                            Command.all.Find("env").Use(p, "l water reset");
+                            Command.all.Find("env").Use(p, "l water normal");
                         }
                         else
                         {
@@ -350,7 +464,7 @@ namespace MCGalaxy.Commands
                         if (message.Split(' ').Length > 2) bedrockblock = message.Substring(pos + 7);
                         if (bedrockblock == "")
                         {
-                            Command.all.Find("env").Use(p, "l bedrock reset");
+                            Command.all.Find("env").Use(p, "l bedrock normal");
                         }
                         else
                         {
@@ -740,7 +854,7 @@ namespace MCGalaxy.Commands
 			// Remember to include or exclude the spoof command(s) -- MakeMeOp
 			Player.SendMessage(p, "/overseer [command string] - sends command to The Overseer");
 			Player.SendMessage(p, "Accepted Commands:");
-			Player.SendMessage(p, "Go, map, spawn, zone, load, kickall, env, weather");
+			Player.SendMessage(p, "Go, map, spawn, zone, load, kickall, env, weather, preset");
 			Player.SendMessage(p, "/os - Command shortcut.");
 		}
 
