@@ -78,9 +78,9 @@ namespace MCGalaxy
 		public const byte sandstone = (byte)52;
 		public const byte snow = (byte)53;
 		public const byte fire = (byte)54;
-		public const byte lightpinkwool = (byte)55;
-		public const byte forestgreenwool = (byte)56;
-		public const byte brownwool = (byte)57;
+		public const byte lightpink = (byte)55;
+		public const byte forestgreen = (byte)56;
+		public const byte brown = (byte)57;
 		public const byte deepblue = (byte)58;
 		public const byte turquoise = (byte)59;
 		public const byte ice = (byte)60;
@@ -1237,9 +1237,9 @@ namespace MCGalaxy
 				case 52: return "sandstone";
 				case 53: return "snow";
 				case 54: return "fire";
-				case 55: return "lightpinkwool";
-				case 56: return "forestgreenwool";
-				case 57: return "brownwool";
+				case 55: return "lightpink";
+				case 56: return "forestgreen";
+				case 57: return "brown";
 				case 58: return "deepblue";
 				case 59: return "turquoise";
 				case 60: return "ice";
@@ -1446,76 +1446,143 @@ namespace MCGalaxy
         {
             switch (type.ToLower())
             {
+                case "0":
                 case "air": return 0;
+                case "1":
                 case "stone": return 1;
+                case "2":
                 case "grass": return 2;
+                case "3":
                 case "dirt": return 3;
+                case "4":
                 case "cobblestone": return 4;
+                case "5":
                 case "wood": return 5;
+                case "6":
                 case "plant": return 6;
                 case "solid":
                 case "admintite":
                 case "blackrock":
+                case "7":
                 case "adminium": return 7;
                 case "activewater":
+                case "8":
                 case "active_water": return 8;
+                case "9":
                 case "water": return 9;
                 case "activelava":
+                case "10":
                 case "active_lava": return 10;
+                case "11":
                 case "lava": return 11;
+                case "12":
                 case "sand": return 12;
+                case "13":
                 case "gravel": return 13;
+                case "14":
                 case "gold_ore": return 14;
+                case "15":
                 case "iron_ore": return 15;
+                case "16":
                 case "coal": return 16;
+                case "17":
                 case "tree": return 17;
+                case "18":
                 case "leaves": return 18;
+                case "19":
                 case "sponge": return 19;
+                case "20":
                 case "glass": return 20;
+                case "21":
                 case "red": return 21;
+                case "22":
                 case "orange": return 22;
+                case "23":
                 case "yellow": return 23;
+                case "24":
                 case "greenyellow": return 24;
+                case "25":
                 case "green": return 25;
+                case "26":
                 case "springgreen": return 26;
+                case "27":
                 case "cyan": return 27;
+                case "28":
                 case "blue": return 28;
+                case "29":
                 case "blueviolet": return 29;
+                case "30":
                 case "indigo": return 30;
+                case "31":
                 case "purple": return 31;
+                case "32":
                 case "magenta": return 32;
+                case "33":
                 case "pink": return 33;
+                case "34":
                 case "black": return 34;
+                case "35":
                 case "gray": return 35;
+                case "36":
                 case "white": return 36;
+                case "37":
                 case "yellow_flower": return 37;
+                case "38":
                 case "red_flower": return 38;
+                case "39":
                 case "brown_shroom": return 39;
+                case "40":
                 case "red_shroom": return 40;
+                case "41":
                 case "gold": return 41;
+                case "42":
                 case "iron": return 42;
+                case "43":
                 case "double_stair": return 43;
+                case "44":
                 case "stair": return 44;
+                case "45":
                 case "brick": return 45;
+                case "46":
                 case "tnt": return 46;
+                case "47":
                 case "bookcase": return 47;
+                case "48":
                 case "mossy_cobblestone": return 48;
+                case "49":
                 case "obsidian": return 49;
-				case "rope": return 51;
-				case "sandstone": return 52;
-				case "snow": return 53;
-				case "fire": return 54;
-				case "lightpinkwool": return 55;
-				case "forestgreenwool": return 56;
-				case "brownwool": return 57;
-				case "deepblue": return 58;
-				case "turquoise": return 59;
-				case "ice": return 60;
-				case "ceramictile": return 61;
-				case "magmablock": return 62;
-				case "pillar": return 63;
-				case "crate": return 64;
-				case "stonebrick": return 65;
+                case "50":
+                case "cobblestoneslab": return 50;
+                case "51":
+                case "rope": return 51;
+                case "52":
+                case "sandstone": return 52;
+                case "53":
+                case "snow": return 53;
+                case "54":
+                case "fire": return 54;
+                case "55":
+                case "lightpink": return 55;
+                case "56":
+                case "forestgreen": return 56;
+                case "57":
+                case "brown": return 57;
+                case "58":
+                case "deepblue": return 58;
+                case "59":
+                case "turquoise": return 59;
+                case "60":
+                case "ice": return 60;
+                case "61":
+                case "ceramictile": return 61;
+                case "62":
+                case "magmablock": return 62;
+                case "63":
+                case "pillar": return 63;
+                case "64":
+                case "crate": return 64;
+                case "65":
+                case "stonebrick": return 65;
                 case "fhl":
                 case "fast_hot_lava": return 73;
                 case "op_glass": return 100;
