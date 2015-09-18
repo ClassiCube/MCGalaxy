@@ -325,7 +325,7 @@ namespace MCGalaxy.Commands
                     {
                         int pos = message.IndexOf("horizon ");
                         string horizonblock = "";
-                        if (message.Split(' ').Length > 2) horizonblock = message.Substring(pos + 11);
+                        if (message.Split(' ').Length > 2) horizonblock = message.Substring(pos + 8);
                         if (horizonblock == "")
                         {
                             Command.all.Find("env").Use(p, "l water reset");
@@ -347,7 +347,7 @@ namespace MCGalaxy.Commands
                     {
                         int pos = message.IndexOf("bedrock ");
                         string bedrockblock = "";
-                        if (message.Split(' ').Length > 2) bedrockblock = message.Substring(pos + 11);
+                        if (message.Split(' ').Length > 2) bedrockblock = message.Substring(pos + 8);
                         if (bedrockblock == "")
                         {
                             Command.all.Find("env").Use(p, "l bedrock reset");
