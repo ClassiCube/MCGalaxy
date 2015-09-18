@@ -189,13 +189,13 @@ namespace MCGalaxy.Commands
                         return;
                     }
                 }
-                else if (par == "CLOUDS")
+                else if (par == "CLOUD")
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        int pos = message.IndexOf("clouds ");
+                        int pos = message.IndexOf("cloud ");
                         string cloudcolor = "";
-                        if (message.Split(' ').Length > 2) cloudcolor = message.Substring(pos + 7);
+                        if (message.Split(' ').Length > 2) cloudcolor = message.Substring(pos + 6);
                         if (cloudcolor.Length != 6 && cloudcolor != "")
                         {
                             Player.SendMessage(p, "Your cloudcolor must be a 6 digit color hex code!");
@@ -270,13 +270,13 @@ namespace MCGalaxy.Commands
                         return;
                     }
                 }
-                else if (par == "SUNLIGHT")
+                else if (par == "SUN")
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        int pos = message.IndexOf("sunlight ");
+                        int pos = message.IndexOf("sun ");
                         string sunlightcolor = "";
-                        if (message.Split(' ').Length > 2) sunlightcolor = message.Substring(pos + 9);
+                        if (message.Split(' ').Length > 2) sunlightcolor = message.Substring(pos + 4);
                         if (sunlightcolor.Length != 6 && sunlightcolor != "")
                         {
                             Player.SendMessage(p, "Your sunlightcolor must be a 6 digit color hex code!");
@@ -297,13 +297,13 @@ namespace MCGalaxy.Commands
                         return;
                     }
                 }
-                else if (par == "WATERLEVEL")
+                else if (par == "LEVEL")
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        int pos = message.IndexOf("waterlevel ");
+                        int pos = message.IndexOf("level ");
                         string waterlevel = "";
-                        if (message.Split(' ').Length > 2) waterlevel = message.Substring(pos + 11);
+                        if (message.Split(' ').Length > 2) waterlevel = message.Substring(pos + 6);
                         if (waterlevel == "")
                         {
                             Command.all.Find("env").Use(p, "l level reset");
@@ -341,13 +341,13 @@ namespace MCGalaxy.Commands
                         return;
                     }
                 }
-                else if (par == "BEDROCK")
+                else if (par == "BORDER")
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        int pos = message.IndexOf("bedrock ");
+                        int pos = message.IndexOf("border ");
                         string bedrockblock = "";
-                        if (message.Split(' ').Length > 2) bedrockblock = message.Substring(pos + 8);
+                        if (message.Split(' ').Length > 2) bedrockblock = message.Substring(pos + 7);
                         if (bedrockblock == "")
                         {
                             Command.all.Find("env").Use(p, "l bedrock reset");
@@ -365,10 +365,10 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player.SendMessage(p, "/overseer env [fog/clouds/sky/shadow/sunlight] [hex color code] -- Changes cloud color of your map");
-                    Player.SendMessage(p, "/overseer env waterlevel -- Sets the water height of your map");
+                    Player.SendMessage(p, "/overseer env [fog/clouds/sky/shadow/sun] [hex color code] -- Changes cloud color of your map");
+                    Player.SendMessage(p, "/overseer env level -- Sets the water height of your map");
                     Player.SendMessage(p, "/overseer env horizon -- Sets what block the \"ocean\" shows outside your map");
-                    Player.SendMessage(p, "/overseer env bedrock -- Sets what block replaces the bedrock below sea level in your map");
+                    Player.SendMessage(p, "/overseer env border -- Sets what block replaces the bedrock below sea level in your map");
                     Player.SendMessage(p, "  Warning: Air,Shrub,Glass,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock env!");
                     Player.SendMessage(p, "  Note: If no hex or block is given, the default will be used.");
                 }
