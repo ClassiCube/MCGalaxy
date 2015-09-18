@@ -365,7 +365,7 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player.SendMessage(p, "/overseer env [fog/clouds/sky/shadow/sun] [hex color code] -- Changes cloud color of your map");
+                    Player.SendMessage(p, "/overseer env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes cloud color of your map");
                     Player.SendMessage(p, "/overseer env level -- Sets the water height of your map");
                     Player.SendMessage(p, "/overseer env horizon -- Sets what block the \"ocean\" shows outside your map");
                     Player.SendMessage(p, "/overseer env border -- Sets what block replaces the bedrock below sea level in your map");
