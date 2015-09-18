@@ -473,7 +473,7 @@ namespace MCGalaxy.Commands
                         if (valueText.Equals("normal", StringComparison.OrdinalIgnoreCase) || valueText.Equals("reset", StringComparison.OrdinalIgnoreCase) || valueText.Equals("default", StringComparison.OrdinalIgnoreCase) || valueText.Equals("middle", StringComparison.OrdinalIgnoreCase) || valueText.Equals("center", StringComparison.OrdinalIgnoreCase))
                         {
                             p.SendMessage(string.Format("Reset water level for {0}&S to normal", p.level.name));
-                            p.level.EdgeLevel = (short)(p.level.height / 2);
+                            p.level.EdgeLevel = (short)(p.level.depth / 2);
                         }
                         else
                         {

@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands
                     case "motd":
                         if (message.Split(' ').Length == 1) foundLevel.motd = "ignore";
                         else foundLevel.motd = message.Substring(message.IndexOf(' ') + 1);
-                        foundLevel.ChatLevel("Map MOTD: &b" + foundLevel.motd);
+                        foundLevel.ChatLevel("Map's MOTD was changed to: &b" + foundLevel.motd);
                         break;
                     case "death": foundLevel.Death = !foundLevel.Death; foundLevel.ChatLevel("Survival death: " + FoundCheck(foundLevel, foundLevel.Death)); if (p == null) Player.SendMessage(p, "Survival death: " + FoundCheck(foundLevel, foundLevel.Death, true)); break;
                     case "killer": foundLevel.Killer = !foundLevel.Killer; foundLevel.ChatLevel("Killer blocks: " + FoundCheck(foundLevel, foundLevel.Killer)); if (p == null) Player.SendMessage(p, "Killer blocks: " + FoundCheck(foundLevel, foundLevel.Killer, true)); break;

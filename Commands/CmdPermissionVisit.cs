@@ -42,6 +42,11 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, "You cannot change the pervisit of a level with a pervisit higher than your rank.");
                         return;
                     }
+                    if (Level.PermissionFromName(message) > p.group.Permission)
+                    {
+                        Player.SendMessage(p, "You cannot change the pervisit to a pervisit higher than your rank.");
+                        return;
+                    }
                     p.level.permissionvisit = Perm;
                     Level.SaveSettings(p.level);
                     Server.s.Log(p.level.name + " visit permission changed to " + message + ".");

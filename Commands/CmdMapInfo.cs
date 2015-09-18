@@ -85,6 +85,23 @@ namespace MCGalaxy.Commands
             {
                 Player.SendMessage(p, "No textures for this map exist yet.");
             }
+            Player.SendMessage(p, "Map Env:");
+            if (foundLevel.FogColor != null) { Player.SendMessage(p, "Fog Color: %b" + foundLevel.FogColor.ToString()); }
+            else { Player.SendMessage(p, "Fog Color: %bnone");  }
+            if (foundLevel.CloudColor != null) { Player.SendMessage(p, "Cloud Color: %b" + foundLevel.CloudColor.ToString()); }
+            else { Player.SendMessage(p, "Cloud Color: %bnone"); }
+            if (foundLevel.SkyColor != null) { Player.SendMessage(p, "Sky Color: %b" + foundLevel.SkyColor.ToString()); }
+            else { Player.SendMessage(p, "Sky Color: %bnone"); }
+            if (foundLevel.ShadowColor != null) { Player.SendMessage(p, "Shadow Color: %b" + foundLevel.ShadowColor.ToString()); }
+            else { Player.SendMessage(p, "Shadow Color: %bnone"); }
+            if (foundLevel.LightColor != null) { Player.SendMessage(p, "Sunlight Color: %b" + foundLevel.LightColor.ToString()); }
+            else { Player.SendMessage(p, "Sunlight Color: %bnone"); }
+            if (foundLevel.EdgeLevel != -1) { Player.SendMessage(p, "Water Level: %b" + foundLevel.EdgeLevel.ToString()); }
+            else { Player.SendMessage(p, "Water Level: %bdefault"); }
+            if (foundLevel.EdgeBlock != Block.blackrock) { Player.SendMessage(p, "Edge Block: %b" + foundLevel.EdgeBlock.ToString()); }
+            else { Player.SendMessage(p, "Edge Block: %bdefault"); }
+            if (foundLevel.HorizonBlock != Block.water) { Player.SendMessage(p, "Horizon Block: %b" + foundLevel.HorizonBlock.ToString()); }
+            else { Player.SendMessage(p, "Horizon Block: %bdefault"); }
         }
         public override void Help(Player p)
         {

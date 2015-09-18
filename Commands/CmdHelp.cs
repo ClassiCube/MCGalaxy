@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands
                             Player.SendMessage(p, Server.DefaultColor + "  To see detailed help for a command, write %a/Help Command");
                             Player.SendMessage(p, Server.DefaultColor + "  To see your stats, write %a/Whois");
                             Player.SendMessage(p, Server.DefaultColor + "  To see loaded maps, write %a/Maps");
-                            Player.SendMessage(p, Server.DefaultColor + "  To start building, use %a/OS");
+                            Player.SendMessage(p, Server.DefaultColor + "  To view your personal world options, use %a/OS");
                             Player.SendMessage(p, Server.DefaultColor + "  To join a Map, write %a/Goto WorldName");
                             Player.SendMessage(p, Server.DefaultColor + "  To send private messages, write %a@PlayerName Message");
 
