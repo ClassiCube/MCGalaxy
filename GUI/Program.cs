@@ -595,9 +595,8 @@ namespace MCGalaxy_.Gui
                     }
                     else
                     {
-                        //Process.Start("mono", parentfullpath);
+                        System.Diagnostics.Process.Start(Application.ExecutablePath);
                         Application.Exit();
-                        Application.Restart();
                     }
                 }
                 else
