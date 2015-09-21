@@ -315,6 +315,7 @@ namespace MCGalaxy
 			all.Add(new CmdXColor());
 			all.Add(new CmdXhide());
 			all.Add(new CmdXJail());
+			all.Add(new CmdXModel());
 			all.Add(new CmdXmute());
 			all.Add(new CmdXNick());
 			all.Add(new CmdXspawn());
