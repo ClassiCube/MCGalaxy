@@ -641,7 +641,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="util\ExtrasCollection.cs" />
-    <Compile Include="Commands\cmdRestart.cs" />
+    <Compile Include="Commands\CmdRestart.cs" />
     <Compile Include="Heartbeat\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="queue\Cache.cs" />
