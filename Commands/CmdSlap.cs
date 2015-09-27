@@ -53,6 +53,11 @@ namespace MCGalaxy.Commands
                     return;
                 }
             }
+            if (who.hidden)
+            {
+                Player.SendMessage(p, "Could not find player or map specified");
+                return;
+            }
             if (p != null)
             {
                 if (who.group.Permission > p.group.Permission)

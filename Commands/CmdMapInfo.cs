@@ -85,7 +85,6 @@ namespace MCGalaxy.Commands
             {
                 Player.SendMessage(p, "No textures for this map exist yet.");
             }
-            Player.SendMessage(p, "Map Env:");
             if (foundLevel.FogColor != null) { Player.SendMessage(p, "Fog Color: %b" + foundLevel.FogColor.ToString()); }
             else { Player.SendMessage(p, "Fog Color: %bnone");  }
             if (foundLevel.CloudColor != null) { Player.SendMessage(p, "Cloud Color: %b" + foundLevel.CloudColor.ToString()); }
