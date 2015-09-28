@@ -38,6 +38,7 @@ namespace MCGalaxy.Commands
                 {
                     case "flat":
                     case "pixel":
+                    case "empty":
                     case "island":
                     case "mountains":
                     case "ocean":
@@ -49,7 +50,7 @@ namespace MCGalaxy.Commands
                         break;
 
                     default:
-                        Player.SendMessage(p, "Valid types: island, mountains, forest, ocean, flat, pixel, desert, space, rainbow, and hell"); return;
+                        Player.SendMessage(p, "Valid types: island, mountains, forest, ocean, flat, pixel, empty, desert, space, rainbow, and hell"); return;
                 }
 
                 string name = parameters[0].ToLower();
@@ -76,7 +77,7 @@ namespace MCGalaxy.Commands
                 if (!Player.ValidName(name)) { Player.SendMessage(p, "Invalid name!"); return; }
                 if (System.IO.File.Exists("levels/" + name + ".lvl")) { Player.SendMessage(p, "Level \"" + name + "\" already exists!"); return; }
 
-                /*try
+                try
                 {
                     if (p != null)
                     if (p.group.Permission < LevelPermission.Admin)
@@ -91,7 +92,7 @@ namespace MCGalaxy.Commands
                 catch 
                 { 
                     Player.SendMessage(p, "An error occured"); 
-                }*/
+                }
 
                 // create a new level...
                 try
@@ -118,7 +119,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/newlvl - creates a new level.");
             Player.SendMessage(p, "/newlvl mapname 128 64 128 type seed");
             Player.SendMessage(p, "Valid sizes: 16, 32, 64, 128, 256, 512, 1024"); //Update this to add more?
-            Player.SendMessage(p, "Valid types: island, mountains, forest, ocean, flat, pixel, desert, space, rainbow, and hell");
+            Player.SendMessage(p, "Valid types: island, mountains, forest, ocean, flat, pixel, empty, desert, space, rainbow, and hell");
             Player.SendMessage(p, "The seed is optional, and controls how the level is generated.");
             Player.SendMessage(p, "If the seed is the same, the level will be the same.");
             Player.SendMessage(p, "The seed does not do anything on flat and pixel type maps.");

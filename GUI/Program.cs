@@ -183,8 +183,8 @@ namespace MCGalaxy_.Gui
                 case '1': return ConsoleColor.DarkBlue;
                 case '2': return ConsoleColor.DarkGreen;
                 case '3': return ConsoleColor.DarkCyan;
-                case '4': return ConsoleColor.DarkMagenta;
-                    //No love for purples
+                case '4': return ConsoleColor.DarkRed;
+                case '5': return ConsoleColor.DarkMagenta;
                 case '7': return ConsoleColor.Gray;
                 case '6': return ConsoleColor.DarkYellow;
                 case '8': return ConsoleColor.DarkGray;
