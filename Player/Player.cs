@@ -2066,7 +2066,7 @@ cliprot = rot;
                 return;
             if ( lastDeath.AddSeconds(2) < DateTime.Now ) {
 
-                if ( level.Killer && !invincible ) {
+                if ( level.Killer && !invincible && !hidden ) {
 
                     switch ( b ) {
                         case Block.tntexplosion: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " &cblew into pieces.", false); break;
