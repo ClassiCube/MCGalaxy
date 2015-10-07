@@ -4793,8 +4793,7 @@ Next: continue;
         public void RankReason(DateTime when, string type, string group, string reason, string assigner)
         {
             if (!Directory.Exists("ranks/reasons")) Directory.CreateDirectory("ranks/reasons");
-            string path = "ranks/reasons/" + this.name + ".txt";
-            foreach (Group grp in Group.GroupList) 
+            string path = "ranks/reasons/" + this.name + ".txt"; 
 
             if (!File.Exists(path)) File.Create(path).Dispose();
             try
