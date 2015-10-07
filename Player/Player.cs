@@ -4789,5 +4789,23 @@ Next: continue;
             return Encoding.UTF8.GetString(chars).TrimEnd().Replace("\0", string.Empty);
 
         }
+        
+        public void RankReason(DateTime when, string type, string group, string reason, string assigner)
+        {
+            if (!Directory.Exists("ranks/reasons")) Directory.CreateDirectory("ranks/reasons");
+            string path = "ranks/reasons/" + this.name + ".txt";
+            foreach (Group grp in Group.GroupList) 
+
+            if (!File.Exists(path)) File.Create(path).Dispose();
+            try
+            {
+                StreamWriter sw = File.AppendText(path);
+                sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
+                sw.Close();
+
+            }
+            catch { Server.s.Log("Error saving RankReason!"); }
+
+        }
     }
 }
