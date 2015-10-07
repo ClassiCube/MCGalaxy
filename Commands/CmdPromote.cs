@@ -1,24 +1,12 @@
-/*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+using System;
+using System.IO;
+
 namespace MCGalaxy.Commands
 {
-    public sealed class CmdPromote : Command
+
+    public class CmdPromote : Command
     {
+
         public override string name { get { return "promote"; } }
         public override string shortcut { get { return "pr"; } }
         public override string type { get { return "mod"; } }
@@ -28,43 +16,94 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
-            Player who = Player.Find(message);
-            string foundName;
-            Group foundGroup;
-            if (who == null)
+            string name;
+            string reason;
+            Group group;
+            string promoter;
+            promoter = (p == null) ? "&a<CONSOLE>" : p.color + p.name;
+            Player player = Player.Find(message.Split(new char[] { ' ' })[0]);
+            if (message == "")
             {
-                foundName = message;
-                foundGroup = Group.findPlayerGroup(message);
+                Help(p); return;
+            }
+            if (player == null)
+            {
+                Help(p); return;
             }
             else
             {
-                foundName = who.name;
-                foundGroup = who.group;
+                name = player.name;
+                group = player.group;
             }
-
-            Group nextGroup = null; bool nextOne = false;
-            for (int i = 0; i < Group.GroupList.Count; i++)
+            if (message.Split(new char[] { ' ' }).Length == 1)
             {
-                Group grp = Group.GroupList[i];
-                if (nextOne)
+                reason = "Unknown";
+                Group group2 = null;
+                bool flag = false;
+                for (int i = 0; i < Group.GroupList.Count; i++)
                 {
-                    if (grp.Permission >= LevelPermission.Nobody) break;
-                    nextGroup = grp;
-                    break;
+                    Group group3 = Group.GroupList[i];
+                    if (flag)
+                    {
+                        if (group3.Permission < LevelPermission.Nobody)
+                        {
+                            group2 = group3;
+                        }
+                        break;
+                    }
+                    if (group3 == group)
+                    {
+                        flag = true;
+                    }
                 }
-                if (grp == foundGroup)
-                    nextOne = true;
+                if (group2 != null)
+                {
+                    Command.all.Find("setrank").Use(p, name + " " + group2.name + " " + Server.customPromoteMessage);
+                    player.RankReason(DateTime.Now, "&a[PROMOTED]", group2.name, reason, promoter);
+                }
+                else
+                {
+                    Player.SendMessage(p, "No higher ranks exist");
+                }
             }
-
-            if (nextGroup != null)
-                Command.all.Find("setrank").Use(p, foundName + " " + nextGroup.name + " " + Server.customPromoteMessage);
             else
-                Player.SendMessage(p, "No higher ranks exist");
+            {
+                reason = message.Substring(message.IndexOf(' ') + 1).Trim();
+                Group group2 = null;
+                bool flag = false;
+                for (int i = 0; i < Group.GroupList.Count; i++)
+                {
+                    Group group3 = Group.GroupList[i];
+                    if (flag)
+                    {
+                        if (group3.Permission < LevelPermission.Nobody)
+                        {
+                            group2 = group3;
+                        }
+                        break;
+                    }
+                    if (group3 == group)
+                    {
+                        flag = true;
+                    }
+                }
+                if (group2 != null)
+                {
+                    Command.all.Find("setrank").Use(p, name + " " + group2.name + " " + Server.customPromoteMessage);
+                    player.RankReason(DateTime.Now, "&a[PROMOTED]", group2.name, reason, promoter);
+                }
+                else
+                {
+                    Player.SendMessage(p, "No higher ranks exist");
+                }
+            }
         }
+
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/promote <name> - Promotes <name> up a rank");
+            Player.SendMessage(p, "/promote <name> <reason>- Promotes <name> up a rank");
+            Player.SendMessage(p, "If <reason> is left blank, the server will use \"Unknown\"");
         }
     }
+
 }
