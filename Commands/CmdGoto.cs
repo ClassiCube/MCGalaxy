@@ -43,6 +43,8 @@ namespace MCGalaxy.Commands
                     GC.Collect();
 
                     if (p.level == foundLevel) { Player.SendMessage(p, "You are already in \"" + foundLevel.name + "\"."); return; }
+                    bool blacklisted = Player.BlacklistCheck(p.name, message);
+                    if (blacklisted == true) { Player.SendMessage(p, "You are blacklisted from " + foundLevel.name + "."); return; }
                     if (!p.ignorePermission)
                         if (p.group.Permission < foundLevel.permissionvisit) { Player.SendMessage(p, "You're not allowed to go to " + foundLevel.name + "."); return; }
                     if (!p.ignorePermission)
