@@ -799,12 +799,107 @@ namespace MCGalaxy.Commands
 					}
 					else { Player.SendMessage(p, "You have to be on one of your maps to delete or add zones!"); }
 				}
+				else if (par == "BLOCK")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        if (par2 != "")
+                        {
+                            par2 = par2.Replace("+", "");
+                            string path = "levels/blacklists/" + p.level.name + ".txt";
+                            if (File.ReadAllText(path).Contains(par2)) { Player.SendMessage(p, par2 + " is already blacklisted."); return; }
+                            if (!Directory.Exists("levels/blacklists/"))
+                            {
+                                Directory.CreateDirectory("levels/blacklists/");
+                            }
+                            if (!File.Exists(path))
+                            {
+                                File.Create(path).Dispose();
+                            }
+                            try
+                            {
+                                StreamWriter sw = File.AppendText(path);
+                                DateTime when = DateTime.Now;
+                                sw.WriteLine(when.Day + "." + when.Month + "." + when.Year + ": " + par2 + "+");
+                                sw.Close();
+
+                            }
+                            catch { Server.s.Log("Error saving level blacklist"); }
+                            Player.SendMessage(p, par2 + " has been blacklisted from joining your map.");
+                        }
+                        else
+                        {
+                            Player.SendMessage(p, "You did not specify a name to blacklist from your map.");
+                        }
+                    }
+                    else { Player.SendMessage(p, "You must be on one of your maps to add a blacklist"); }
+                }
+                else if (par == "UNBLOCK")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        if (par2 != "")
+                        {
+                            string path = "levels/blacklists/" + p.level.name + ".txt";
+                            par2 = par2.Replace("+", "");
+                            if (!File.ReadAllText(path).Contains(par2)) { Player.SendMessage(p, par2 + " is not blacklisted."); return; }
+                            par2 = par2 + "+";
+                            if (!Directory.Exists("levels/blacklists/"))
+                            {
+                                Directory.CreateDirectory("levels/blacklists/");
+                            }
+                            if (!File.Exists(path))
+                            {
+                                File.Create(path).Dispose();
+                            }
+                            try
+                            {
+                                var oldLines = File.ReadAllLines(path);
+                                var newLines = oldLines.Where(line => !line.Contains(par2));
+                                File.WriteAllLines(path, newLines);
+                            }
+                            catch { Server.s.Log("Error saving level unblock"); }
+                            Player.SendMessage(p, par2 + " has been unblocked from joining your map.");
+                        }
+                        else
+                        {
+                            Player.SendMessage(p, "You did not specify a name to unblock from your map.");
+                        }
+                    }
+                    else { Player.SendMessage(p, "You must be on one of your maps to remove a blacklist"); }
+                }
+                else if (par == "BLACKLIST")
+                {
+                    string path = "levels/blacklists/" + p.level.name + ".txt";
+                    if (!File.Exists(path))
+                    {
+                        Player.SendMessage(p, "There are no blacklisted players on this map.");
+                    }
+                    else
+                    {
+                        Player.SendMessage(p, "Current blocked players on level &b" + p.level.name + Server.DefaultColor + ":");
+                        string blocked = "";
+                        using (StreamReader sr = new StreamReader(path))
+                        {
+                            string[] lines = File.ReadAllLines(path);
+                            foreach (string line in lines)
+                            {
+                                string player = line.Split(' ')[1];
+                                blocked += player + ", ";
+                            }
+                            Player.SendMessage(p, blocked);
+                        }
+                    }
+                }
 				else
 				{
 					// Unknown Zone Request
 					Player.SendMessage(p, "/overseer ZONE add [playername or rank] -- Add a zone for a player or a rank."); ;
 					Player.SendMessage(p, "/overseer ZONE del [all] -- Deletes all zones.");
 					Player.SendMessage(p, "/overseer ZONE list -- show active zones on brick.");
+					Player.SendMessage(p, "/overseer ZONE block - Blacklist a player from joining your map.");
+                    Player.SendMessage(p, "/overseer ZONE unblock - Unblocks a player from your map.");
+                    Player.SendMessage(p, "/overseer ZONE blacklist - Show current blacklisted players.");
 					Player.SendMessage(p, "You can only delete all zones for now.");
 				}
 			}
@@ -843,6 +938,30 @@ namespace MCGalaxy.Commands
                     p.SendMessage("This is not your map..");
                 }
 			}
+			else if (cmd == "KICK")
+            {
+                if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                {
+                    if (par != "")
+                    {
+                        Player kicked = Player.Find(par);
+                        if (kicked == null) { p.SendMessage("Error: Player not found."); }
+                        else
+                        {
+                            if (kicked.level.name == p.level.name) { Command.all.Find("goto").Use(kicked, Server.mainLevel.name); }
+                            else { p.SendMessage("Player is not on your level!"); }
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("Error: you must specify a player.");
+                    }
+                }
+                else
+                {
+                    p.SendMessage("This is not your map..");
+                }
+            }
 			else
 			{
 				Help(p);
@@ -854,7 +973,7 @@ namespace MCGalaxy.Commands
 			// Remember to include or exclude the spoof command(s) -- MakeMeOp
 			Player.SendMessage(p, "/overseer [command string] - sends command to The Overseer");
 			Player.SendMessage(p, "Accepted Commands:");
-			Player.SendMessage(p, "Go, map, spawn, zone, load, kickall, env, weather, preset");
+			Player.SendMessage(p, "Go, map, spawn, zone, load, kick, kickall, env, weather, preset");
 			Player.SendMessage(p, "/os - Command shortcut.");
 		}
 
