@@ -104,11 +104,7 @@ namespace MCGalaxy.Commands
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        Command.all.Find("env").Use(p, "l fog 8b8989");
-                        Command.all.Find("env").Use(p, "l shadow 918A3B");
-                        Command.all.Find("env").Use(p, "l clouds 000080");
-                        Command.all.Find("env").Use(p, "l sun 0000cd");
-                        Command.all.Find("env").Use(p, "l sky 191970");
+                        Command.all.Find("env").Use(p, "l preset midnight");
                         return;
                     }
                     else
@@ -121,11 +117,7 @@ namespace MCGalaxy.Commands
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        Command.all.Find("env").Use(p, "l fog 00ffff");
-                        Command.all.Find("env").Use(p, "l shadow f4a460");
-                        Command.all.Find("env").Use(p, "l clouds 00bfff");
-                        Command.all.Find("env").Use(p, "l sun f5deb3");
-                        Command.all.Find("env").Use(p, "l sky 1e90ff");
+                        Command.all.Find("env").Use(p, "l preset cartoon");
                         return;
                     }
                     else
@@ -138,11 +130,7 @@ namespace MCGalaxy.Commands
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        Command.all.Find("env").Use(p, "l fog 000000");
-                        Command.all.Find("env").Use(p, "l shadow 1f1f1f");
-                        Command.all.Find("env").Use(p, "l clouds 000000");
-                        Command.all.Find("env").Use(p, "l sun 696969");
-                        Command.all.Find("env").Use(p, "l sky 1f1f1f");
+                        Command.all.Find("env").Use(p, "l preset noir");
                         return;
                     }
                     else
@@ -155,11 +143,7 @@ namespace MCGalaxy.Commands
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        Command.all.Find("env").Use(p, "l fog 4B0082");
-                        Command.all.Find("env").Use(p, "l shadow B22222");
-                        Command.all.Find("env").Use(p, "l clouds 006400");
-                        Command.all.Find("env").Use(p, "l sun 7CFC00");
-                        Command.all.Find("env").Use(p, "l sky FFD700");
+                        Command.all.Find("env").Use(p, "l preset trippy");
                         return;
                     }
                     else
@@ -172,11 +156,7 @@ namespace MCGalaxy.Commands
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        Command.all.Find("env").Use(p, "l fog 5f9ea0");
-                        Command.all.Find("env").Use(p, "l shadow 008B8B");
-                        Command.all.Find("env").Use(p, "l clouds 008B8B");
-                        Command.all.Find("env").Use(p, "l sun E0FFFF");
-                        Command.all.Find("env").Use(p, "l sky 008080");
+                        Command.all.Find("env").Use(p, "l preset watery");
                         return;
                     }
                     else
@@ -189,15 +169,7 @@ namespace MCGalaxy.Commands
                 {
                     if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                     {
-                        Command.all.Find("env").Use(p, "l fog -1");
-                        Command.all.Find("env").Use(p, "l shadow -1");
-                        Command.all.Find("env").Use(p, "l clouds -1");
-                        Command.all.Find("env").Use(p, "l sun -1");
-                        Command.all.Find("env").Use(p, "l sky -1");
-                        Command.all.Find("env").Use(p, "l weather 0");
-                        Command.all.Find("env").Use(p, "l water normal");
-                        Command.all.Find("env").Use(p, "l bedrock normal");
-                        Command.all.Find("env").Use(p, "l level normal");
+                        Command.all.Find("env").Use(p, "l preset normal");
                         return;
                     }
                     else
@@ -209,7 +181,7 @@ namespace MCGalaxy.Commands
                 else
                 {
                     Player.SendMessage(p, "/overseer preset [type] -- Uses an env preset on your map");
-                    Player.SendMessage(p, "  Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery");
+                    Player.SendMessage(p, "Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery");
                 }
             }
 			else if (cmd == "WEATHER")
