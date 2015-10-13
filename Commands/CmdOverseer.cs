@@ -777,9 +777,11 @@ namespace MCGalaxy.Commands
                     {
                         if (par2 != "")
                         {
-                            par2 = par2.Replace("+", "");
+                            Player blocked = Player.Find(par2);
+                            if (blocked == null) { Player.SendMessage(p, "Cannot find player."); return; }
+                            if (blocked.isStaff) { Player.SendMessage(p, "Can't let you do that."); return; }
                             string path = "levels/blacklists/" + p.level.name + ".txt";
-                            if (File.ReadAllText(path).Contains(par2)) { Player.SendMessage(p, par2 + " is already blacklisted."); return; }
+                            if (File.ReadAllText(path).Contains(blocked.name)) { Player.SendMessage(p, blocked.name + " is already blacklisted."); return; }
                             if (!Directory.Exists("levels/blacklists/"))
                             {
                                 Directory.CreateDirectory("levels/blacklists/");
@@ -792,12 +794,12 @@ namespace MCGalaxy.Commands
                             {
                                 StreamWriter sw = File.AppendText(path);
                                 DateTime when = DateTime.Now;
-                                sw.WriteLine(when.Day + "." + when.Month + "." + when.Year + ": " + par2 + "+");
+                                sw.WriteLine(when.Day + "." + when.Month + "." + when.Year + ": " + blocked.name + "+");
                                 sw.Close();
 
                             }
                             catch { Server.s.Log("Error saving level blacklist"); }
-                            Player.SendMessage(p, par2 + " has been blacklisted from joining your map.");
+                            Player.SendMessage(p, blocked.name + " has been blacklisted from your map.");
                         }
                         else
                         {
@@ -831,7 +833,7 @@ namespace MCGalaxy.Commands
                                 File.WriteAllLines(path, newLines);
                             }
                             catch { Server.s.Log("Error saving level unblock"); }
-                            Player.SendMessage(p, par2 + " has been unblocked from joining your map.");
+                            Player.SendMessage(p, par2 + " has been removed from your map's blacklist.");
                         }
                         else
                         {
@@ -903,7 +905,7 @@ namespace MCGalaxy.Commands
 			{
                 if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                 {
-                    Player.players.ForEach(delegate(Player pl) { if (pl.level == p.level && pl.name != p.name) Command.all.Find("goto").Use(pl, Server.mainLevel.name); });
+                    Player.players.ForEach(delegate(Player pl) { if (pl.level == p.level && pl.name != p.name && !pl.isStaff) Command.all.Find("goto").Use(pl, Server.mainLevel.name); });
                 }
                 else 
                 { 
@@ -918,6 +920,7 @@ namespace MCGalaxy.Commands
                     {
                         Player kicked = Player.Find(par);
                         if (kicked == null) { p.SendMessage("Error: Player not found."); }
+                        else if (kicked.isStaff) { Player.SendMessage(p, "Can't let you do that"); return; }
                         else
                         {
                             if (kicked.level.name == p.level.name) { Command.all.Find("goto").Use(kicked, Server.mainLevel.name); }
