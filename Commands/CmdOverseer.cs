@@ -781,7 +781,10 @@ namespace MCGalaxy.Commands
                             if (blocked == null) { Player.SendMessage(p, "Cannot find player."); return; }
                             if (blocked.isStaff) { Player.SendMessage(p, "Can't let you do that."); return; }
                             string path = "levels/blacklists/" + p.level.name + ".txt";
-                            if (File.ReadAllText(path).Contains(blocked.name)) { Player.SendMessage(p, blocked.name + " is already blacklisted."); return; }
+                            if (File.Exists(path))
+                            {
+                                if (File.ReadAllText(path).Contains(blocked.name)) { Player.SendMessage(p, blocked.name + " is already blacklisted."); return; }
+                            }
                             if (!Directory.Exists("levels/blacklists/"))
                             {
                                 Directory.CreateDirectory("levels/blacklists/");
@@ -800,6 +803,7 @@ namespace MCGalaxy.Commands
                             }
                             catch { Server.s.Log("Error saving level blacklist"); }
                             Player.SendMessage(p, blocked.name + " has been blacklisted from your map.");
+                            
                         }
                         else
                         {
