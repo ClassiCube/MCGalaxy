@@ -803,7 +803,7 @@ namespace MCGalaxy.Commands
                             }
                             catch { Server.s.Log("Error saving level blacklist"); }
                             Player.SendMessage(p, blocked.name + " has been blacklisted from your map.");
-                            
+                            if (blocked.level.name == p.level.name) { Command.all.Find("goto").Use(blocked, Server.mainLevel.name); return; }
                         }
                         else
                         {
