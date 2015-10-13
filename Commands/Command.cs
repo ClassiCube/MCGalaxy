@@ -164,6 +164,7 @@ namespace MCGalaxy
 			all.Add(new CmdMain());
 			all.Add(new CmdMap());
 			all.Add(new CmdMapInfo());
+			all.Add(new CmdMark());
 			all.Add(new CmdMaze());
 			all.Add(new CmdMe());
 			all.Add(new CmdMeasure());
