@@ -106,6 +106,72 @@ namespace MCGalaxy.Commands
             	who.title = newTitle;
             	who.SetPrefix();
             }
+            else if (who == p)
+            {
+                string query;
+                string newTitle = "";
+                if (message.Split(' ').Length > 1) newTitle = message.Substring(pos + 1);
+                else
+                {
+                    p.title = "";
+                    p.SetPrefix();
+                    Player.GlobalChat(who, who.color + who.name + Server.DefaultColor + " had their title removed.", false);
+                    query = "UPDATE Players SET Title = '' WHERE Name = @Name";
+                    Database.AddParams("@Name", p.name);
+                    Database.executeQuery(query);
+                    return;
+                }
+
+                if (newTitle != "")
+                { //remove the brackets from the given title
+                    newTitle = newTitle.ToString().Trim().Replace("[", "");
+                    newTitle = newTitle.Replace("]", "");
+                }
+
+                if (newTitle.Length > 17) { Player.SendMessage(p, "Title must be under 17 letters."); return; }
+
+
+                /*string title = newTitle.ToLower();
+                foreach (char c in Server.ColourCodesNoPercent) { title = title.Replace("%" + c, ""); title = title.Replace("&" + c, ""); }
+                foreach (string occur in Server.BadTitles) {
+                    if (title.Contains(occur)) { Player.SendMessage(p, "%cYou're not a developer! Stop pretending you are!"); return; }
+                }*/
+
+
+                if (newTitle != "")
+                    Player.GlobalChat(who, who.color + who.name + Server.DefaultColor + " was given the title of &b[" + newTitle + "%b]", false);
+                else Player.GlobalChat(who, who.color + who.prefix + who.name + Server.DefaultColor + " had their title removed.", false);
+
+                if (!Regex.IsMatch(newTitle.ToLower(), @".*%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])"))
+                {
+                    if (Regex.IsMatch(newTitle.ToLower(), @".*%([0-9]|[a-f]|[k-r])(.+?).*"))
+                    {
+                        Regex rg = new Regex(@"%([0-9]|[a-f]|[k-r])(.+?)");
+                        MatchCollection mc = rg.Matches(newTitle.ToLower());
+                        if (mc.Count > 0)
+                        {
+                            Match ma = mc[0];
+                            GroupCollection gc = ma.Groups;
+                            newTitle.Replace("%" + gc[1].ToString().Substring(1), "&" + gc[1].ToString().Substring(1));
+                        }
+                    }
+                }
+
+                if (newTitle == "")
+                {
+                    query = "UPDATE Players SET Title = '' WHERE Name = @Name";
+                    Database.AddParams("@Name", p.name);
+                }
+                else
+                {
+                    query = "UPDATE Players SET Title = @Title WHERE Name = @Name";
+                    Database.AddParams("@Title", newTitle);
+                    Database.AddParams("@Name", p.name);
+                }
+                Database.executeQuery(query);
+                p.title = newTitle;
+                p.SetPrefix();
+            }
             else
             {
                 Player.SendMessage(p, "Cannot change the title of someone else");
