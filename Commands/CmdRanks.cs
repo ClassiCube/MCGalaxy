@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             string path = "ranks/reasons/" + checkname + ".txt";
             if (!File.Exists(path)) { Player.SendMessage(p, c.red + "No rank changes found for &b" + checkname); return; }
             string[] lines = File.ReadAllLines(path);
-            Player.SendMessage(p, "Player " + checking.color + checkname + Server.DefaultColor + " has &b" + lines.Count() + Server.DefaultColor + " rank notes:");
+            Player.SendMessage(p, "Player " + checkname + Server.DefaultColor + " has &b" + lines.Count() + Server.DefaultColor + " rank notes:");
             if (message.Contains(' '))
             {
                 bool breaks = false;
