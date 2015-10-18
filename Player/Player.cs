@@ -4789,5 +4789,37 @@ Next: continue;
             return Encoding.UTF8.GetString(chars).TrimEnd().Replace("\0", string.Empty);
 
         }
+        
+        public void RankReason(DateTime when, string type, string group, string reason, string assigner)
+        {
+            if (!Directory.Exists("ranks/reasons")) Directory.CreateDirectory("ranks/reasons");
+            string path = "ranks/reasons/" + this.name + ".txt"; 
+
+            if (!File.Exists(path)) File.Create(path).Dispose();
+            try
+            {
+                StreamWriter sw = File.AppendText(path);
+                sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
+                sw.Close();
+
+            }
+            catch { Server.s.Log("Error saving RankReason!"); }
+
+        }
+        
+        public static bool BlacklistCheck(string name, string foundLevel)
+        {
+            string path = "levels/blacklists/" + foundLevel + ".txt";
+            if (!File.Exists(path)) { return false; }
+            if (File.ReadAllText(path).Contains(name) && foundLevel.StartsWith(name)) 
+            {
+                var oldLines = File.ReadAllLines(path);
+                var newLines = oldLines.Where(line => !line.Contains(name));
+                File.WriteAllLines(path, newLines);
+                return false;
+            } 
+            if (File.ReadAllText(path).Contains(name)) { return true; }
+            return false;
+        }
     }
 }

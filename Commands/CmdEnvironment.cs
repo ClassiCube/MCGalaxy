@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
         {
             p.SendMessage("/env [target] [variable] [value]");
             p.SendMessage("Valid targets: player, level [Abbreviated as p and l]");
-            p.SendMessage("Valid variables: fog, cloud, sky, sun, shadow, level, horizon, border, weather");
+            p.SendMessage("Valid variables: fog, cloud, sky, sun, shadow, level, horizon, border, weather, preset(l only)");
             p.SendMessage("Using 'normal' as a value will reset the variable");
 
         }
@@ -606,6 +606,72 @@ namespace MCGalaxy.Commands
                             {
                                 pl.SendSetMapWeather(p.level.weather);
                             }
+                        }
+                        break;
+                    case "preset":
+                        if (valueText.Equals(""))
+                        {
+                            p.SendMessage("/env l preset [type] -- Uses an env preset on your map");
+                            p.SendMessage("Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery");
+                            return;
+                        }
+                        if (valueText.Equals("midnight", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Command.all.Find("env").Use(p, "l fog 8b8989");
+                            Command.all.Find("env").Use(p, "l shadow 918A3B");
+                            Command.all.Find("env").Use(p, "l clouds 000080");
+                            Command.all.Find("env").Use(p, "l sun 0000cd");
+                            Command.all.Find("env").Use(p, "l sky 191970");
+                            return;
+                        }
+                        if (valueText.Equals("cartoon", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Command.all.Find("env").Use(p, "l fog 00ffff");
+                            Command.all.Find("env").Use(p, "l shadow f4a460");
+                            Command.all.Find("env").Use(p, "l clouds 00bfff");
+                            Command.all.Find("env").Use(p, "l sun f5deb3");
+                            Command.all.Find("env").Use(p, "l sky 1e90ff");
+                            return;
+                        }
+                        if (valueText.Equals("noir", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Command.all.Find("env").Use(p, "l fog 000000");
+                            Command.all.Find("env").Use(p, "l shadow 1f1f1f");
+                            Command.all.Find("env").Use(p, "l clouds 000000");
+                            Command.all.Find("env").Use(p, "l sun 696969");
+                            Command.all.Find("env").Use(p, "l sky 1f1f1f");
+                            return;
+                        }
+                        if (valueText.Equals("trippy", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Command.all.Find("env").Use(p, "l fog 4B0082");
+                            Command.all.Find("env").Use(p, "l shadow B22222");
+                            Command.all.Find("env").Use(p, "l clouds 006400");
+                            Command.all.Find("env").Use(p, "l sun 7CFC00");
+                            Command.all.Find("env").Use(p, "l sky FFD700");
+                            return;
+                        }
+                        if (valueText.Equals("watery", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Command.all.Find("env").Use(p, "l fog 5f9ea0");
+                            Command.all.Find("env").Use(p, "l shadow 008B8B");
+                            Command.all.Find("env").Use(p, "l clouds 008B8B");
+                            Command.all.Find("env").Use(p, "l sun E0FFFF");
+                            Command.all.Find("env").Use(p, "l sky 008080");
+                            return;
+                        }
+                        if (valueText.Equals("normal", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Command.all.Find("env").Use(p, "l fog -1");
+                            Command.all.Find("env").Use(p, "l shadow -1");
+                            Command.all.Find("env").Use(p, "l clouds -1");
+                            Command.all.Find("env").Use(p, "l sun -1");
+                            Command.all.Find("env").Use(p, "l sky -1");
+                            Command.all.Find("env").Use(p, "l weather 0");
+                            Command.all.Find("env").Use(p, "l water normal");
+                            Command.all.Find("env").Use(p, "l bedrock normal");
+                            Command.all.Find("env").Use(p, "l level normal");
+                            return;
                         }
                         break;
                     default:

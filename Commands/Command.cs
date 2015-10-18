@@ -164,6 +164,7 @@ namespace MCGalaxy
 			all.Add(new CmdMain());
 			all.Add(new CmdMap());
 			all.Add(new CmdMapInfo());
+			all.Add(new CmdMark());
 			all.Add(new CmdMaze());
 			all.Add(new CmdMe());
 			all.Add(new CmdMeasure());
@@ -220,7 +221,8 @@ namespace MCGalaxy
 			all.Add(new CmdRagequit());
 			all.Add(new CmdRainbow());
 			all.Add(new CmdRankInfo());
-			all.Add(new CmdRankMsg());            
+			all.Add(new CmdRankMsg()); 
+			all.Add(new CmdRanks());
 			all.Add(new CmdRedo());
 			all.Add(new CmdReload());
 			all.Add(new CmdReferee());
@@ -320,7 +322,7 @@ namespace MCGalaxy
 			all.Add(new CmdXNick());
 			all.Add(new CmdXspawn());
 			all.Add(new CmdXTColor());
-			all.Add(new CmdXTitle());
+			//all.Add(new CmdXTitle());
 			all.Add(new CmdXundo());
 			all.Add(new CmdZombieGame());
 			all.Add(new CmdZone());
