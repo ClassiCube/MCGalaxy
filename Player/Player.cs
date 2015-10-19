@@ -4811,13 +4811,6 @@ Next: continue;
         {
             string path = "levels/blacklists/" + foundLevel + ".txt";
             if (!File.Exists(path)) { return false; }
-            if (File.ReadAllText(path).Contains(name) && foundLevel.StartsWith(name)) 
-            {
-                var oldLines = File.ReadAllLines(path);
-                var newLines = oldLines.Where(line => !line.Contains(name));
-                File.WriteAllLines(path, newLines);
-                return false;
-            } 
             if (File.ReadAllText(path).Contains(name)) { return true; }
             return false;
         }
