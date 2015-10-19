@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/hide - Makes yourself (in)visible to other players also turns opchat on and off.");
+            Player.SendMessage(p, "/hide - Toggles your visibility to other players, also toggles opchat.");
         }
     }
 }
