@@ -219,6 +219,7 @@
     <Compile Include="Plugins\ServerEvents\OnServerLogEvent.cs" />
     <Compile Include="Plugins\Utils\Priority.cs" />
     <Compile Include="Translate.cs" />
+    <Compile Include="Commands\CmdLocation.cs" />
     <Compile Include="Commands\CmdMark.cs" />
     <Compile Include="Commands\CmdRanks.cs" />
     <Compile Include="Commands\CmdXModel.cs" />
