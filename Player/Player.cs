@@ -4830,6 +4830,10 @@ Next: continue;
             {
                 direction = stream.ReadToEnd();
                 replacement = Regex.Replace(direction, @"\n", "");
+                if (replacement == "")
+                {
+                    replacement = "Unknown";
+                }
             }
             using (WebResponse response2 = requestcountry.GetResponse())
             using (StreamReader stream2 = new StreamReader(response2.GetResponseStream()))
