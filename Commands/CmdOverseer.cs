@@ -779,6 +779,7 @@ namespace MCGalaxy.Commands
                         if (par2 != "")
                         {
                             Player blocked = Player.Find(par2);
+                            if (blocked.name.StartsWith(p.name)) { Player.SendMessage(p, "You can't blacklist yourself"); return; }
                             if (blocked == null) { Player.SendMessage(p, "Cannot find player."); return; }
                             if (blocked.isStaff) { Player.SendMessage(p, "Can't let you do that."); return; }
                             string path = "levels/blacklists/" + p.level.name + ".txt";
