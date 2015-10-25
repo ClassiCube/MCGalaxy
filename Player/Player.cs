@@ -2899,6 +2899,29 @@ return;
         public void SendMessage(byte id, string message) {
             SendMessage(id, message, true);
         }
+        
+        public static string StripColours( string value ) {
+			if( value.IndexOf( '%' ) == -1 ) {
+				return value;
+			}
+			
+			char[] output = new char[value.Length];
+			int usedChars = 0;
+			
+			for( int i = 0; i < value.Length; i++ ) {
+				char token = value[i];
+				if( token == '%' ) {
+					i++; // Skip over the following colour code.
+				} else {
+					output[usedChars++] = token;
+				}
+			}
+			return new String( output, 0, usedChars );
+		}
+        
+        //string DisplayNameNoColors = StripColours(DisplayName);
+        
+        
         public void SendMessage(byte id, string message, bool colorParse) {
             if ( this == null ) { Server.s.Log(message); return; }
             if ( ZoneSpam.AddSeconds(2) > DateTime.Now && message.Contains("This zone belongs to ") ) return;
@@ -2929,10 +2952,11 @@ return;
                 // End fix
             }
 
+            
             if ( Server.dollardollardollar )
-                sb.Replace("$name", "$" + DisplayName);
+                sb.Replace("$name", "$" + StripColours(DisplayName));
             else
-            	sb.Replace("$name", DisplayName);
+            	sb.Replace("$name", StripColours(DisplayName));
             sb.Replace("$date", DateTime.Now.ToString("yyyy-MM-dd"));
             sb.Replace("$time", DateTime.Now.ToString("HH:mm:ss"));
             sb.Replace("$ip", ip);
