@@ -42,12 +42,12 @@ namespace MCGalaxy.Commands
 
             if (who.group.Permission >= p.group.Permission)
             {
-                Player.GlobalChat(p, p.color + p.name + " " + Server.DefaultColor + "tried to votekick " + who.color + who.name + " " + Server.DefaultColor + "but failed!", false);
+                Player.GlobalChat(p, p.color + p.DisplayName + " " + Server.DefaultColor + "tried to votekick " + who.color + who.DisplayName + " " + Server.DefaultColor + "but failed!", false);
                 return;
             }
 
-            Player.GlobalMessageOps(p.color + p.name + Server.DefaultColor + " used &a/votekick");
-            Player.GlobalMessage("&9A vote to kick " + who.color + who.name + " " + Server.DefaultColor + "has been called!");
+            Player.GlobalMessageOps(p.color + p.DisplayName + Server.DefaultColor + " used &a/votekick");
+            Player.GlobalMessage("&9A vote to kick " + who.color + who.DisplayName + " " + Server.DefaultColor + "has been called!");
             Player.GlobalMessage("&9Type &aY " + Server.DefaultColor + "or &cN " + Server.DefaultColor + "to vote.");
 
             // 1/3rd of the players must vote or nothing happens
@@ -79,20 +79,20 @@ namespace MCGalaxy.Commands
 
                 // Should we also send this to players?
                 Player.GlobalMessageOps("Vote Ended.  Results: &aY: " + votesYes + " &cN: " + votesNo);
-                Server.s.Log("VoteKick results for " + who.name + ": " + votesYes + " yes and " + votesNo + " no votes.");
+                Server.s.Log("VoteKick results for " + who.DisplayName + ": " + votesYes + " yes and " + votesNo + " no votes.");
 
                 if (votesYes + votesNo < Server.voteKickVotesNeeded)
                 {
-                    Player.GlobalMessage("Not enough votes were made. " + who.color + who.name + " " + Server.DefaultColor + "shall remain!");
+                    Player.GlobalMessage("Not enough votes were made. " + who.color + who.DisplayName + " " + Server.DefaultColor + "shall remain!");
                 }
                 else if (netVotesYes > 0)
                 {
-                    Player.GlobalMessage("The people have spoken, " + who.color + who.name + " " + Server.DefaultColor + "is gone!");
+                    Player.GlobalMessage("The people have spoken, " + who.color + who.DisplayName + " " + Server.DefaultColor + "is gone!");
                     who.Kick("Vote-Kick: The people have spoken!");
                 }
                 else
                 {
-                    Player.GlobalMessage(who.color + who.name + " " + Server.DefaultColor + "shall remain!");
+                    Player.GlobalMessage(who.color + who.DisplayName + " " + Server.DefaultColor + "shall remain!");
                 }
 
                 voteTimer.Dispose();

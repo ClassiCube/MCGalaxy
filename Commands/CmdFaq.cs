@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
             if (message != "")
             {
                 if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this))
-                { Player.SendMessage(p, "You cant send the FAQ to another player!"); return; }
+                { Player.SendMessage(p, "You can't send the FAQ to another player!"); return; }
                 who = Player.Find(message);
             }
             else

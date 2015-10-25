@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             if (message == "") { who = p; message = p.name; } else { who = Player.Find(message); }
             if (who != null && !who.hidden)
             {
-                Player.SendMessage(p, who.color + who.name + " (" + who.DisplayName + ") " + Server.DefaultColor + " is on &b" + who.level.name);
+                Player.SendMessage(p, who.color + who.name + Server.DefaultColor + " (" + who.DisplayName + ") " + Server.DefaultColor + " is on &b" + who.level.name);
                 Player.SendMessage(p, who.color + who.prefix + who.name + Server.DefaultColor + " has :");
                 Player.SendMessage(p, "> > the rank of " + who.group.color + who.group.name);
                 try

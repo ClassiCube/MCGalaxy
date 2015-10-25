@@ -16,6 +16,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
+using System;
+using System.Threading;
 namespace MCGalaxy.Commands
 {
     public sealed class CmdHacks : Command
@@ -29,14 +31,17 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (message != "") { Help(p); return; }
-            p.Kick("Your IP has been backtraced + reported to FBI Cyber Crimes Unit.");
-
+        	string[] words = message.Split(' ');
+            if (words.Length >= 1 && message != "")
+            {
+	            Player.SendMessage(p, "&cIncorrect syntax. Abuse detected.");
+	            Thread.Sleep(3000);
+   			}
+            p.Kick("Your IP has been backtraced + reported to FBI Cyber Crimes Unit.");	
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/hacks - GIVES YOU CONTROL OF THE SERVER!");
+            Player.SendMessage(p, "/hacks - Performs various server hacks. OPERATORS ONLY!!!");
         }
     }
-
 }

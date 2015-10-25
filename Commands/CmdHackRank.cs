@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands
 
             //sent the trick text
             hackrank = true;
-            Player.GlobalMessage(p.color + p.name + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name);
+            Player.GlobalMessage(p.color + p.DisplayName + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name);
             Player.GlobalMessage("&6Congratulations!");
             p.SendMessage("You are now ranked " + newRank.color + newRank.name + Server.DefaultColor + ", type /help for your new set of commands.");
             

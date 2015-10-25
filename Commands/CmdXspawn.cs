@@ -47,8 +47,8 @@ namespace MCGalaxy.Commands
                 return;
             }
             Command.all.Find("spawn").Use(player, "");
-            Player.SendMessage(p, "Succesfully spawned " + player.color + player.name + Server.DefaultColor + ".");
-            Player.GlobalMessage(player.color + player.name + Server.DefaultColor + " was respawned by " + p.color + p.name + Server.DefaultColor + ".");
+            Player.SendMessage(p, "Succesfully spawned " + player.color + player.DisplayName + Server.DefaultColor + ".");
+            Player.GlobalMessage(player.color + player.name + Server.DefaultColor + " was respawned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
         }
 		public override void Help(Player p)
 		{

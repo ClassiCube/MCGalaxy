@@ -41,10 +41,10 @@ namespace MCGalaxy.Commands
 				return;
             }
 
-			string giver = (p == null) ? "The Console" : p.name;
+			string giver = (p == null) ? "The Console" : p.DisplayName;
 			string color = (p == null) ? "" : p.color;
             Player.SendMessage(player1, giver + " just highfived you");
-            Player.GlobalMessage(color + giver + " " + Server.DefaultColor + "just highfived " + player1.color + player1.name);
+            Player.GlobalMessage(color + giver + " " + Server.DefaultColor + "just highfived " + player1.color + player1.DisplayName);
         }
 
         // This one controls what happens when you use /help [commandname].

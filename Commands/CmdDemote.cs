@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
                 }
                 if (group2 != null)
                 {
-                    Command.all.Find("setrank").Use(p, name + " " + group2.name + " " + Server.customPromoteMessage);
+                    Command.all.Find("setrank").Use(p, name + " " + group2.name + " " + Server.customDemoteMessage);
                     player.RankReason(DateTime.Now, "&c[DEMOTED]", group2.name, reason, demoter);
                 }
                 else

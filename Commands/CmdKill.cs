@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
                 who = Player.Find(message);
                 if (p != null)
                 {
-                    killMsg = " was killed by " + p.color + p.name;
+                    killMsg = " was killed by " + p.color + p.DisplayName;
                 }
                 else
                 {
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
                     {
                         if (p != null)
                         {
-                            killMsg = " was exploded by " + p.color + p.name;
+                            killMsg = " was exploded by " + p.color + p.DisplayName;
                         }
                         else
                         {
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands
             {
                 if (who.group.Permission > p.group.Permission)
                 {
-                    p.HandleDeath(Block.rock, " was killed by " + who.color + who.name);
+                    p.HandleDeath(Block.rock, " was killed by " + who.color + who.DisplayName);
                     Player.SendMessage(p, "Cannot kill someone of higher rank");
                     return;
                 }

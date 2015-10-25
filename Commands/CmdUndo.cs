@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player.GlobalChat(who, who.color + who.name + Server.DefaultColor + "'s actions for the past &b" + seconds + " seconds were undone.", false);
+                    Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + "'s actions for the past &b" + seconds + " seconds were undone.", false);
                     // Also notify console
                     Server.s.Log(who.name + "'s actions for the past " + seconds + " seconds were undone.");
                 }

@@ -37,9 +37,10 @@ namespace MCGalaxy.Commands
 				}
 				else
 				{
-					string playerName = message.Split(' ')[0];
-					message = message.Substring(message.IndexOf(' ') + 1);
-					Player.GlobalMessage(playerName + ": &f" + message);
+					Player.SendMessage(p, "You can't impersonate '" + message.Split(' ')[0] + ",' because that person is not online!");
+					//string playerName = message.Split(' ')[0];
+					//message = message.Substring(message.IndexOf(' ') + 1);
+					//Player.GlobalMessage(playerName + ": &f" + message);
 				}
 			}
 			else { Player.SendMessage(p, "No message was given."); }

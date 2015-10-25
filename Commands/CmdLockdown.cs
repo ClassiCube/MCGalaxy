@@ -102,14 +102,14 @@ namespace MCGalaxy.Commands
                             }
                         }
                         who.jailed = true;
-                        Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " has been locked down!");
+                        Player.GlobalMessage(who.color + who.DisplayName + Server.DefaultColor + " has been locked down!");
                         Player.GlobalMessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
                         return;
                     }
                     else
                     {
                         who.jailed = false;
-                        Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " has been unlocked.");
+                        Player.GlobalMessage(who.color + who.DisplayName + Server.DefaultColor + " has been unlocked.");
                         Player.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                         return;
                     }

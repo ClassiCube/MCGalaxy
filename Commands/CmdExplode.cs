@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands
                         ushort y = (ushort)(who.pos[1] / 32);
                         ushort z = (ushort)(who.pos[2] / 32);
                         p.level.MakeExplosion(x, y, z, 1);
-                        Player.SendMessage(p, who.color + who.name + Server.DefaultColor + " has been exploded!");
+                        Player.SendMessage(p, who.color + who.DisplayName + Server.DefaultColor + " has been exploded!");
                         return;
                 }
                 Player.SendMessage(p, "The specified player does not exist!");

@@ -55,9 +55,9 @@ namespace MCGalaxy.Commands
                         {
                             message = "";
                         }
-                        Player.GlobalMessage("-" + p.color + p.name + Server.DefaultColor + "- is AFK " + message);
+                        Player.GlobalMessage("-" + p.color + p.DisplayName + Server.DefaultColor + "- is AFK " + message);
                         //IRCBot.Say(p.name + " is AFK " + message);
-                        Server.IRC.Say(p.name + " is AFK " + message);
+                        Server.IRC.Say(p.DisplayName + " is AFK " + message);
                         p.afkStart = DateTime.Now;
                         return;
 
@@ -65,9 +65,9 @@ namespace MCGalaxy.Commands
                     else
                     {
                         Server.afkset.Remove(p.name);
-                        Player.GlobalMessage("-" + p.color + p.name + Server.DefaultColor + "- is no longer AFK");
+                        Player.GlobalMessage("-" + p.color + p.DisplayName + Server.DefaultColor + "- is no longer AFK");
                         //IRCBot.Say(p.name + " is no longer AFK");
-                        Server.IRC.Say(p.name + " is no longer AFK");
+                        Server.IRC.Say(p.DisplayName + " is no longer AFK");
                         return;
                     }
                 }

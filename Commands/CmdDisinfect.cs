@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
                 if (!who.referee)
                 {
                     Server.zombie.DisinfectPlayer(who);
-                    Player.GlobalMessage(p.color + p.name + Server.DefaultColor + " just got Disnfected!");
+                    Player.GlobalMessage(p.color + p.DisplayName + Server.DefaultColor + " just got Disnfected!");
                 }
             }
         }

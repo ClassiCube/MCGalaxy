@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands
                     if (!Block.Walkthrough(p.level.GetTile(currentX, yy, currentZ)) && p.level.GetTile(currentX, yy, currentZ) != Block.Zero)
                     {
                         foundHeight = (ushort)(yy - 1);
-                        who.level.ChatLevel(who.color + who.name + Server.DefaultColor + " was slapped into the roof by " + p.color + p.name);
+                        who.level.ChatLevel(who.color + who.DisplayName + Server.DefaultColor + " was slapped into the roof by " + p.color + p.DisplayName);
                         break;
                     }
                 }
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
                     if (!Block.Walkthrough(who.level.GetTile(currentX, yy, currentZ)) && who.level.GetTile(currentX, yy, currentZ) != Block.Zero)
                     {
                         foundHeight = (ushort)(yy - 1);
-                        who.level.ChatLevel(who.color + who.name + Server.DefaultColor + " was slapped into the roof by " + "the Console.");
+                        who.level.ChatLevel(who.color + who.DisplayName + Server.DefaultColor + " was slapped into the roof by " + "the Console.");
                         break;
                     }
                 }
@@ -97,11 +97,11 @@ namespace MCGalaxy.Commands
             {
                 if (p != null)
                 {
-                    who.level.ChatLevel(who.color + who.name + Server.DefaultColor + " was slapped sky high by " + p.color + p.name);
+                    who.level.ChatLevel(who.color + who.DisplayName + Server.DefaultColor + " was slapped sky high by " + p.color + p.DisplayName);
                 }
                 else
                 {
-                    who.level.ChatLevel(who.color + who.name + Server.DefaultColor + " was slapped sky high by " + "the Console.");
+                    who.level.ChatLevel(who.color + who.DisplayName + Server.DefaultColor + " was slapped sky high by " + "the Console.");
                 }
                 foundHeight = 1000;
             }

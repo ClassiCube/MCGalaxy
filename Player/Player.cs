@@ -1089,7 +1089,7 @@ namespace MCGalaxy {
                         int currentNumOfGuests = Player.players.Count(pl => pl.group.Permission <= LevelPermission.Guest);
                         if (currentNumOfGuests >= Server.maxGuests)
                         {
-                            if (Server.guestLimitNotify) GlobalMessageOps("Guest " + this.name + " couldn't log in - too many guests.");
+                            if (Server.guestLimitNotify) GlobalMessageOps("Guest " + this.DisplayName + " couldn't log in - too many guests.");
                             Server.s.Log("Guest " + this.name + " couldn't log in - too many guests.");
                             Kick("Server has reached max number of guests");
                             return;
@@ -1201,7 +1201,7 @@ namespace MCGalaxy {
                 this.overallBlocks = 0;
 
                 this.timeLogged = DateTime.Now;
-                SendMessage("Welcome " + name + "! This is your first visit.");
+                SendMessage("Welcome " + DisplayName + "! This is your first visit.");
                 string query = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + name + "', " + money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
                 if (Server.useMySQL)
                 {
@@ -1247,11 +1247,11 @@ namespace MCGalaxy {
                 //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
                 money = Economy.RetrieveEcoStats(this.name).money;
                 totalKicked = int.Parse(playerDb.Rows[0]["totalKicked"].ToString());
-                SendMessage("Welcome back " + color + prefix + name + Server.DefaultColor + "! You've been here " + totalLogins + " times!");
+                SendMessage("Welcome back " + color + prefix + DisplayName + Server.DefaultColor + "! You've been here " + totalLogins + " times!");
                 if (Server.muted.Contains(name))
                 {
                     muted = true;
-                    GlobalMessage(name + " is still muted from the last time they went offline.");
+                    GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
                 }
             }
             if (!Directory.Exists("players"))
@@ -1352,7 +1352,7 @@ namespace MCGalaxy {
             }
             else { agreed = true; }
 
-            string joinm = "&a+ " + this.color + this.prefix + this.name + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
+            string joinm = "&a+ " + this.color + this.prefix + this.DisplayName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
             if (this.group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
             {
                 if ((Server.guestJoinNotify == true && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
@@ -1511,7 +1511,7 @@ namespace MCGalaxy {
             }
             catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
-                GlobalMessageOps(name + " has triggered a block change error");
+                GlobalMessageOps(DisplayName + " has triggered a block change error");
                 GlobalMessageOps(e.GetType().ToString() + ": " + e.Message);
                 Server.ErrorLog(e);
             }
@@ -1609,7 +1609,7 @@ namespace MCGalaxy {
                 if ( Diff > 12 ) {
                     if ( lastCMD != "click" ) {
                         Server.s.Log(name + " attempted to build with a " + Diff.ToString() + " distance offset");
-                        GlobalMessageOps("To Ops &f-" + color + name + "&f- attempted to build with a " + Diff.ToString() + " distance offset");
+                        GlobalMessageOps("To Ops &f-" + color + DisplayName + "&f- attempted to build with a " + Diff.ToString() + " distance offset");
                         SendMessage("You can't build that far away.");
                         SendBlockchange(x, y, z, b); return;
                     }
@@ -2070,33 +2070,33 @@ cliprot = rot;
                 if ( level.Killer && !invincible && !hidden ) {
 
                     switch ( b ) {
-                        case Block.tntexplosion: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " &cblew into pieces.", false); break;
-                        case Block.deathair: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " walked into &cnerve gas and suffocated.", false); break;
+                        case Block.tntexplosion: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " &cblew into pieces.", false); break;
+                        case Block.deathair: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " walked into &cnerve gas and suffocated.", false); break;
                         case Block.deathwater:
-                        case Block.activedeathwater: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " stepped in &dcold water and froze.", false); break;
+                        case Block.activedeathwater: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " stepped in &dcold water and froze.", false); break;
                         case Block.deathlava:
                         case Block.activedeathlava:
-                        case Block.fastdeathlava: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " stood in &cmagma and melted.", false); break;
-                        case Block.magma: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was hit by &cflowing magma and melted.", false); break;
-                        case Block.geyser: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was hit by &cboiling water and melted.", false); break;
-                        case Block.birdkill: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was hit by a &cphoenix and burnt.", false); break;
-                        case Block.train: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was hit by a &ctrain.", false); break;
-                        case Block.fishshark: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was eaten by a &cshark.", false); break;
-                        case Block.fire: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " burnt to a &ccrisp.", false); break;
-                        case Block.rockethead: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was &cin a fiery explosion.", false); level.MakeExplosion(x, y, z, 0); break;
-                        case Block.zombiebody: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " died due to lack of &5brain.", false); break;
-                        case Block.creeper: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was killed &cb-SSSSSSSSSSSSSS", false); level.MakeExplosion(x, y, z, 1); break;
-                        case Block.air: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " hit the floor &chard.", false); break;
-                        case Block.water: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " &cdrowned.", false); break;
-                        case Block.Zero: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was &cterminated", false); break;
-                        case Block.fishlavashark: GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + " was eaten by a ... LAVA SHARK?!", false); break;
+                        case Block.fastdeathlava: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " stood in &cmagma and melted.", false); break;
+                        case Block.magma: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was hit by &cflowing magma and melted.", false); break;
+                        case Block.geyser: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was hit by &cboiling water and melted.", false); break;
+                        case Block.birdkill: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was hit by a &cphoenix and burnt.", false); break;
+                        case Block.train: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was hit by a &ctrain.", false); break;
+                        case Block.fishshark: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was eaten by a &cshark.", false); break;
+                        case Block.fire: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " burnt to a &ccrisp.", false); break;
+                        case Block.rockethead: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was &cin a fiery explosion.", false); level.MakeExplosion(x, y, z, 0); break;
+                        case Block.zombiebody: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " died due to lack of &5brain.", false); break;
+                        case Block.creeper: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was killed &cb-SSSSSSSSSSSSSS", false); level.MakeExplosion(x, y, z, 1); break;
+                        case Block.air: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " hit the floor &chard.", false); break;
+                        case Block.water: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " &cdrowned.", false); break;
+                        case Block.Zero: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was &cterminated", false); break;
+                        case Block.fishlavashark: GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " was eaten by a ... LAVA SHARK?!", false); break;
                         case Block.rock:
                             if ( explode ) level.MakeExplosion(x, y, z, 1);
-                            GlobalChat(this, this.color + this.prefix + this.name + Server.DefaultColor + customMessage, false);
+                            GlobalChat(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + customMessage, false);
                             break;
                         case Block.stone:
                             if ( explode ) level.MakeExplosion(x, y, z, 1);
-                            GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + customMessage, false);
+                            GlobalChatLevel(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + customMessage, false);
                             break;
                     }
                     if ( team != null && this.level.ctfmode ) {
@@ -2127,7 +2127,7 @@ cliprot = rot;
                     }
 
                     if ( Server.deathcount )
-                        if ( overallDeath > 0 && overallDeath % 10 == 0 ) GlobalChat(this, this.color + this.prefix + this.name + Server.DefaultColor + " has died &3" + overallDeath + " times", false);
+                        if ( overallDeath > 0 && overallDeath % 10 == 0 ) GlobalChat(this, this.color + this.prefix + this.DisplayName + Server.DefaultColor + " has died &3" + overallDeath + " times", false);
                 }
                 lastDeath = DateTime.Now;
 
@@ -2197,9 +2197,9 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 // handles the /womid client message, which displays the WoM version
                 if ( text.Truncate(6) == "/womid" ) {
                 	string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
-                	Player.GlobalMessage(c.red + "[INFO] " + color + name + "%f is using wom client");
+                	Player.GlobalMessage(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
                 	Player.GlobalMessage(c.red + "[INFO] %fVersion: " + version);
-                	Server.s.Log(c.red + "[INFO] " + color + name + "%f is using wom client");
+                	Server.s.Log(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
                 	Server.s.Log(c.red + "[INFO] %fVersion: " + version);
                     UsingWom = true;
                     WoMVersion = version.Split('-')[1];
@@ -2239,8 +2239,8 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if ( text != "/afk" ) {
                     if ( Server.afkset.Contains(this.name) ) {
                         Server.afkset.Remove(this.name);
-                        Player.GlobalMessage("-" + this.color + this.name + Server.DefaultColor + "- is no longer AFK");
-                        Server.IRC.Say(this.name + " is no longer AFK");
+                        Player.GlobalMessage("-" + this.color + this.DisplayName + Server.DefaultColor + "- is no longer AFK");
+                        Server.IRC.Say(this.DisplayName + " is no longer AFK");
                     }
                 }
                 // This will allow people to type
@@ -2325,7 +2325,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     if ( this.consecutivemessages >= Server.spamcounter ) {
                         int total = Server.mutespamtime;
                         Command.all.Find("mute").Use(null, this.name);
-                        Player.GlobalMessage(this.name + " has been &0muted &efor spamming!");
+                        Player.GlobalMessage(this.color + this.DisplayName + Server.DefaultColor + " has been &0muted &efor spamming!");
                         muteTimer.Elapsed += delegate {
                             total--;
                             if ( total <= 0 ) {
@@ -2347,7 +2347,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     text = text.Remove(0, 2);
                     if ( text.Length < 1 ) { SendMessage("No message entered"); return; }
                     SendChat(this, Server.DefaultColor + "[<] Console: &f" + text);
-                    Server.s.Log("[>] " + this.name + ": " + text);
+                    Server.s.Log("[>] " + this.DisplayName + ": " + text);
                     return;
                 }
                 if ( text[0] == '@' || whisper ) {
@@ -2375,9 +2375,9 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     string newtext = text;
                     if ( text[0] == '#' ) newtext = text.Remove(0, 1).Trim();
 
-                    GlobalMessageOps("To Ops &f-" + color + name + "&f- " + newtext);
+                    GlobalMessageOps("To Ops &f-" + color + DisplayName + "&f- " + newtext);
                     if ( group.Permission < Server.opchatperm && !isStaff )
-                        SendMessage("To Ops &f-" + color + name + "&f- " + newtext);
+                        SendMessage("To Ops &f-" + color + DisplayName + "&f- " + newtext);
                     Server.s.Log("(OPs): " + name + ": " + newtext);
                     //Server.s.OpLog("(OPs): " + name + ": " + newtext);
                     //IRCBot.Say(name + ": " + newtext, true);
@@ -2388,7 +2388,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     string newtext = text;
                     if ( text[0] == '+' ) newtext = text.Remove(0, 1).Trim();
 
-                    GlobalMessageAdmins("To Admins &f-" + color + name + "&f- " + newtext); //to make it easy on remote
+                    GlobalMessageAdmins("To Admins &f-" + color + DisplayName + "&f- " + newtext); //to make it easy on remote
                     if ( group.Permission < Server.adminchatperm && !isStaff )
                         SendMessage("To Admins &f-" + color + name + "&f- " + newtext);
                     Server.s.Log("(Admins): " + name + ": " + newtext);
@@ -2434,7 +2434,7 @@ return;
                 if ( this.joker ) {
                     if ( File.Exists("text/joker.txt") ) {
                         Server.s.Log("<JOKER>: " + this.name + ": " + text);
-                        Player.GlobalMessageOps(Server.DefaultColor + "<&aJ&bO&cK&5E&9R" + Server.DefaultColor + ">: " + this.color + this.name + ":&f " + text);
+                        Player.GlobalMessageOps(Server.DefaultColor + "<&aJ&bO&cK&5E&9R" + Server.DefaultColor + ">: " + this.color + this.DisplayName + ":&f " + text);
                         FileInfo jokertxt = new FileInfo("text/joker.txt");
                         StreamReader stRead = jokertxt.OpenText();
                         List<string> lines = new List<string>();
@@ -2563,7 +2563,7 @@ return;
                 //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
                 if ( cmd.ToLower() == "pony" ) {
                     if ( ponycount < 2 ) {
-                        GlobalMessage(this.color + this.name + Server.DefaultColor + " just so happens to be a proud brony! Everyone give " + this.color + this.name + Server.DefaultColor + " a brohoof!");
+                        GlobalMessage(this.color + this.DisplayName + Server.DefaultColor + " just so happens to be a proud brony! Everyone give " + this.color + this.name + Server.DefaultColor + " a brohoof!");
                         ponycount += 1;
                     }
                     else {
@@ -2733,27 +2733,27 @@ return;
                     if ( this.group.Permission >= Server.opchatperm ) {
                         if ( p.group.Permission < this.group.Permission ) {
                             Server.s.Log(name + " @" + p.name + ": " + message);
-                            SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.name + ": &f" + message);
-                            SendChat(p, "&9[>] " + this.color + this.prefix + this.name + ": &f" + message);
+                            SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
+                            SendChat(p, "&9[>] " + this.color + this.prefix + this.DisplayName + ": &f" + message);
                             return;
                         }
                     }
                 }
                 Server.s.Log(name + " @" + p.name + ": " + message);
-                SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.name + ": &f" + message);
+                SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
                 return;
             }
             foreach ( string ignored2 in p.listignored ) {
                 if ( ignored2 == this.name ) {
                     Server.s.Log(name + " @" + p.name + ": " + message);
-                    SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.name + ": &f" + message);
+                    SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
                     return;
                 }
             }
             if ( p != null && !p.hidden || p.hidden && this.group.Permission >= p.group.Permission ) {
                 Server.s.Log(name + " @" + p.name + ": " + message);
-                SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.name + ": &f" + message);
-                SendChat(p, "&9[>] " + this.color + this.prefix + this.name + ": &f" + message);
+                SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
+                SendChat(p, "&9[>] " + this.color + this.prefix + this.DisplayName + ": &f" + message);
             }
             else { SendMessage("Player \"" + to + "\" doesn't exist!"); }
         }
@@ -2930,9 +2930,9 @@ return;
             }
 
             if ( Server.dollardollardollar )
-                sb.Replace("$name", "$" + name);
+                sb.Replace("$name", "$" + DisplayName);
             else
-                sb.Replace("$name", name);
+            	sb.Replace("$name", DisplayName);
             sb.Replace("$date", DateTime.Now.ToString("yyyy-MM-dd"));
             sb.Replace("$time", DateTime.Now.ToString("HH:mm:ss"));
             sb.Replace("$ip", ip);
@@ -3816,7 +3816,7 @@ changed |= 4;*/
                             who.SendMessage("Sorry, Your colour codes in this command were invalid (You cannot use 2 colour codes next to each other");
                             who.SendMessage("Command failed.");
                             Server.s.Log(who.name + " attempted to send a command with invalid colours codes (2 colour codes were next to each other)!");
-                            GlobalMessageOps(who.color + who.name + " " + Server.DefaultColor + " attempted to send a command with invalid colours codes (2 colour codes were next to each other)!");
+                            GlobalMessageOps(who.color + who.DisplayName + " " + Server.DefaultColor + " attempted to send a command with invalid colours codes (2 colour codes were next to each other)!");
                         }
                         return true;
                     }
@@ -4132,7 +4132,7 @@ changed |= 4;*/
                             File.WriteAllText("text/logout/" + name + ".txt", "Disconnected.");
                         }
                         if ( !hidden ) {
-                    		string leavem = "&c- " + color + prefix + name + Server.DefaultColor + " " + File.ReadAllText("text/logout/" + name + ".txt");
+                    		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + File.ReadAllText("text/logout/" + name + ".txt");
                     		if ((Server.guestLeaveNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
                     		{
                                 Player.players.ForEach(delegate(Player p1)
@@ -4154,7 +4154,7 @@ changed |= 4;*/
                     }
                     else {
                         totalKicked++;
-                        GlobalChat(this, "&c- " + color + prefix + name + Server.DefaultColor + " kicked (" + kickString + Server.DefaultColor + ").", false);
+                        GlobalChat(this, "&c- " + color + prefix + DisplayName + Server.DefaultColor + " kicked (" + kickString + Server.DefaultColor + ").", false);
                         //IRCBot.Say(name + " kicked (" + kickString + ").");
                         Server.s.Log(name + " kicked (" + kickString + ").");
                     }
@@ -4542,7 +4542,7 @@ Next: continue;
                 double spamTimer = DateTime.Now.Subtract(oldestTime).TotalSeconds;
                 if ( spamTimer < spamBlockTimer && !ignoreGrief ) {
                     this.Kick("You were kicked by antigrief system. Slow down.");
-                    SendMessage(c.red + name + " was kicked for suspected griefing.");
+                    SendMessage(c.red + DisplayName + " was kicked for suspected griefing.");
                     Server.s.Log(name + " was kicked for block spam (" + spamBlockCount + " blocks in " + spamTimer + " seconds)");
                     return true;
                 }
