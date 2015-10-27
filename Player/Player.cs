@@ -4836,15 +4836,37 @@ Next: continue;
         {
             string path = "levels/blacklists/" + foundLevel + ".txt";
             if (!File.Exists(path)) { return false; }
-            if (File.ReadAllText(path).Contains(name) && foundLevel.StartsWith(name)) 
-            {
-                var oldLines = File.ReadAllLines(path);
-                var newLines = oldLines.Where(line => !line.Contains(name));
-                File.WriteAllLines(path, newLines);
-                return false;
-            } 
             if (File.ReadAllText(path).Contains(name)) { return true; }
             return false;
+        }
+        
+        public static string GetIPLocation(string IP)
+        {
+            string direction;
+            string direction2;
+            string city = "http://ipinfo.io/" + IP + "/city";
+            string country = "http://ipinfo.io/" + IP + "/country";
+            string replacement;
+            string replacement2;
+            WebRequest requestcity = WebRequest.Create(city);
+            WebRequest requestcountry = WebRequest.Create(country);
+            using (WebResponse response1 = requestcity.GetResponse())
+            using (StreamReader stream = new StreamReader(response1.GetResponseStream()))
+            {
+                direction = stream.ReadToEnd();
+                replacement = Regex.Replace(direction, @"\n", "");
+                if (replacement == "")
+                {
+                    replacement = "Unknown";
+                }
+            }
+            using (WebResponse response2 = requestcountry.GetResponse())
+            using (StreamReader stream2 = new StreamReader(response2.GetResponseStream()))
+            {
+                direction2 = stream2.ReadToEnd();
+                replacement2 = Regex.Replace(direction2, @"\n", "");
+            }
+            return replacement + "/" + replacement2;
         }
     }
 }

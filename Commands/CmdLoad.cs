@@ -137,7 +137,7 @@ namespace MCGalaxy.Commands
                 lock (Server.levels) {
                     Server.addLevel(level);
                 }
-                Player.GlobalMessage("Level \"" + level.name + "\" loaded.");
+                if (!p.hidden) { Player.GlobalMessage("Level \"" + level.name + "\" loaded."); }
                 /*try
                 {
                     Gui.Window.thisWindow.UpdatePlayerMapCombo();
