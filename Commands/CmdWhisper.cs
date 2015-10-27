@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
 
                 p.whisper = true;
                 p.whisperTo = who.name;
-                Player.SendMessage(p, "Auto-whisper enabled.  All messages will now be sent to " + who.name + ".");
+                Player.SendMessage(p, "Auto-whisper enabled.  All messages will now be sent to " + who.DisplayName + ".");
             }
 
         }

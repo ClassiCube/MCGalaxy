@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands
                         Command.all.Find("goto").Use(p, who.level.name);
                         if (who.Loading)
                         {
-                            Player.SendMessage(p, "Waiting for " + who.color + who.name + Server.DefaultColor + " to spawn...");
+                            Player.SendMessage(p, "Waiting for " + who.color + who.DisplayName + Server.DefaultColor + " to spawn...");
                             while (who.Loading) { }
                         }
                         while (p.Loading) { }  //Wait for player to spawn in new map
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands
                     p.beforeTeleportPos = p.pos;
                     if (who.Loading)
                     {
-                        Player.SendMessage(p, "Waiting for " + who.color + who.name + Server.DefaultColor + " to spawn...");
+                        Player.SendMessage(p, "Waiting for " + who.color + who.DisplayName + Server.DefaultColor + " to spawn...");
                         while (who.Loading) { }
                     }
                     while (p.Loading) { }  //Wait for player to spawn in new map

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
             else
                 if (p == null) message = "You were kicked by an IRC controller!";
                 else if (p != null)
-                    message = "You were kicked by " + p.name + "!";
+                    message = "You were kicked by " + p.DisplayName + "!";
 
             if (p != null)
             {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
                 if (who.@group.Permission >= p.@group.Permission)
                 {
                     Player.GlobalChat(p,
-                                      p.color + p.name + Server.DefaultColor + " tried to kick " + who.color + who.name + Server.DefaultColor +
+                                      p.color + p.DisplayName + Server.DefaultColor + " tried to kick " + who.color + who.DisplayName + Server.DefaultColor +
                                       " but failed.",
                                       false);
                     return;

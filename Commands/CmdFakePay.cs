@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            Player.GlobalMessage(who.color + who.prefix + who.name + Server.DefaultColor + " was given " + amount + " " + Server.moneys);
+            Player.GlobalMessage(who.color + who.prefix + who.DisplayName + Server.DefaultColor + " was given " + amount + " " + Server.moneys);
 
         }
     }

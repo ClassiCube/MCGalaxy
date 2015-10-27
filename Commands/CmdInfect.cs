@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
                     if (Server.zombie.GameInProgess())
                     {
                         Server.zombie.InfectPlayer(who);
-                        Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " just got Infected!");
+                        Player.GlobalMessage(who.color + who.DisplayName + Server.DefaultColor + " just got Infected!");
                     }
                 }
             }

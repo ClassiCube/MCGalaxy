@@ -36,11 +36,11 @@ namespace MCGalaxy.Commands
 
             if (Server.worldChat)
             {
-                Player.GlobalChat(p, p.color + "*" + p.name + " " + message, false);
+                Player.GlobalChat(p, p.color + "*" + p.DisplayName + " " + message, false);
             }
             else
             {
-                Player.GlobalChatLevel(p, p.color + "*" + p.name + " " + message, false);
+                Player.GlobalChatLevel(p, p.color + "*" + p.DisplayName + " " + message, false);
             }
             //IRCBot.Say("*" + p.name + " " + message);
             Server.IRC.Say("*" + p.DisplayName + " " + message);

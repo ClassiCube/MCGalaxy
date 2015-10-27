@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
                     {
                         File.WriteAllText("text/logout/" + target.name + ".txt", s);
                     }
-                    Player.SendMessage(p, "The logout message of " + target.name + " has been changed to:");
+                    Player.SendMessage(p, "The logout message of " + target.color + target.DisplayName + Server.DefaultColor + " has been changed to:");
                     Player.SendMessage(p, s);
                     if (p != null)
                     {

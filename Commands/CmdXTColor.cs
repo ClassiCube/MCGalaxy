@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             if (message == "") 
             {
                 p.titlecolor = "";
-                Player.GlobalChat(p, p.color + p.name + Server.DefaultColor + " had their title color removed.", false);
+                Player.GlobalChat(p, p.color + p.DisplayName + Server.DefaultColor + " had their title color removed.", false);
                 Database.AddParams("@Name", p.name);
                 Database.executeQuery("UPDATE Players SET title_color = '' WHERE Name = @Name");
                 p.SetPrefix();
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
                 Database.AddParams("@Color", c.Name(color));
                 Database.AddParams("@Name", p.name);
                 Database.executeQuery("UPDATE Players SET title_color = @Color WHERE Name = @Name");
-                Player.GlobalChat(p, p.color + p.name + Server.DefaultColor + " had their title color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
+                Player.GlobalChat(p, p.color + p.DisplayName + Server.DefaultColor + " had their title color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
                 p.titlecolor = color;
                 p.SetPrefix();
             }

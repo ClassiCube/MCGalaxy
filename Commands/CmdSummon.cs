@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
                         if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission)
                         {
                             unchecked { pl.SendPos((byte)-1, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0); }
-                            pl.SendMessage("You were summoned by " + p.color + p.name + Server.DefaultColor + ".");
+                            pl.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
                         }
                     }
                 }
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
                 {
                     Server.ErrorLog(e);
                 }
-                Player.GlobalMessage(p.color + p.name + Server.DefaultColor + " summoned everyone!");
+                Player.GlobalMessage(p.color + p.DisplayName + Server.DefaultColor + " summoned everyone!");
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
             }
             if (p.level != who.level)
             {
-                Player.SendMessage(p, who.name + " is in a different Level. Forcefetching has started!");
+                Player.SendMessage(p, who.DisplayName + " is in a different Level. Forcefetching has started!");
                 Level where = p.level;
                 Command.all.Find("goto").Use(who, where.name);
                 Thread.Sleep(1000);
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
             }
 
             unchecked { who.SendPos((byte)-1, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0); }
-            who.SendMessage("You were summoned by " + p.color + p.name + Server.DefaultColor + ".");
+            who.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
         }
         public override void Help(Player p)
         {

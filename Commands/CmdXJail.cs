@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands
                                 {
                                 }
                                 if (!player.jailed) { jail.Use(p, message); }
-                                Player.GlobalMessage(player.color + player.name + Server.DefaultColor + " was XJailed!");
+                                Player.GlobalMessage(player.color + player.DisplayName + Server.DefaultColor + " was XJailed!");
                                 return;
                             }
                             else
@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands
                                     jail.Use(p, message);
                                     freeze.Use(p, message);
                                     spawn.Use(player, "");
-                                    Player.GlobalMessage(player.color + player.name + Server.DefaultColor + " was released from XJail!");
+                                    Player.GlobalMessage(player.color + player.DisplayName + Server.DefaultColor + " was released from XJail!");
                                 }
                                 return;
                             }

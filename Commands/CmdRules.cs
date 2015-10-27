@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
                 {
                     Server.s.Log(((int)p.group.Permission).ToString());
                     Server.s.Log(CommandOtherPerms.GetPerm(this).ToString());
-                    Player.SendMessage(p, "You cant send /rules to another player!");
+                    Player.SendMessage(p, "You can't send /rules to another player!");
                     return;
                 }
                 who = Player.Find(message);

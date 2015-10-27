@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
                 if (message[0] == '#') {
                     message = message.Remove(0, 1).Trim();
                     stealth = true;
-                    Server.s.Log("Stealth Ban Attempted by " + p == null ? "Console" : p.name);
+                    Server.s.Log("Stealth Ban Attempted by " + p == null ? "Console" : p.DisplayName);
                 } else if (message[0] == '@') {
                     if (p == null) {
                         message = message.Remove(0, 1).Trim();
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                     } else {
                         totalBan = true;
                         message = message.Remove(0, 1).Trim();
-                        Server.s.Log("Total Ban Attempted by " + p.name);
+                        Server.s.Log("Total Ban Attempted by " + p.DisplayName);
                     }
                 }
                 string reason = "-";
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands {
                     foundGroup.playerList.Remove(message);
                     foundGroup.playerList.Save();
                     if (p != null) {
-                        Player.GlobalMessage(message + " &f(offline)" + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + p.color + p.name + Server.DefaultColor + ".");
+                        Player.GlobalMessage(message + " &f(offline)" + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + ".");
                     } else {
                         Player.GlobalMessage(message + " &f(offline)" + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by console.");
                     }
@@ -113,8 +113,8 @@ namespace MCGalaxy.Commands {
                     who.group.playerList.Save();
 
                     if (p != null) {
-                        if (stealth) Player.GlobalMessageOps(who.color + who.name + Server.DefaultColor + " was STEALTH &8banned" + Server.DefaultColor + " by " + p.color + p.name + Server.DefaultColor + "!");
-                        else Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + p.color + p.name + Server.DefaultColor + "!");
+                        if (stealth) Player.GlobalMessageOps(who.color + who.name + Server.DefaultColor + " was STEALTH &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + "!");
+                        else Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + "!");
                     } else {
                         if (stealth) Player.GlobalMessageOps(who.color + who.name + Server.DefaultColor + " was STEALTH &8banned" + Server.DefaultColor + " by console.");
                         else Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by console.");
@@ -129,8 +129,8 @@ namespace MCGalaxy.Commands {
                 Group.findPerm(LevelPermission.Banned).playerList.Save();
 
                 if (p != null) {
-                    Server.IRC.Say(message + " was banned by " + p.name + ".");
-                    Server.s.Log("BANNED: " + message.ToLower() + " by " + p.name);
+                    Server.IRC.Say(message + " was banned by " + p.DisplayName + ".");
+                    Server.s.Log("BANNED: " + message.ToLower() + " by " + p.DisplayName);
                 } else {
                     Server.IRC.Say(message + " was banned by console.");
                     Server.s.Log("BANNED: " + message.ToLower() + " by console.");

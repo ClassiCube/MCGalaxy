@@ -35,14 +35,14 @@ namespace MCGalaxy.Commands
                 if (who.voice)
                 {
                     who.voice = false;
-                    Player.SendMessage(p, "Removing voice status from " + who.name);
+                    Player.SendMessage(p, "Removing voice status from " + who.color + who.DisplayName);
                     who.SendMessage("Your voice status has been revoked.");
                     who.voicestring = "";
                 }
                 else
                 {
                     who.voice = true;
-                    Player.SendMessage(p, "Giving voice status to " + who.name);
+                    Player.SendMessage(p, "Giving voice status to " + who.color + who.DisplayName);
                     who.SendMessage("You have received voice status.");
                     who.voicestring = "&f+";
                 }
