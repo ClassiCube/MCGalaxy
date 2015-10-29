@@ -101,88 +101,13 @@ namespace MCGalaxy.Commands
 			}
 			else if (cmd == "PRESET")
             {
-                if (par == "MIDNIGHT")
+                if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                 {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l preset midnight");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "CARTOON")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l preset cartoon");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "NOIR")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l preset noir");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "TRIPPY")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l preset trippy");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "WATERY")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l preset watery");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "NORMAL")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l preset normal");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
+	            	Command.all.Find("env").Use(p, "l preset " + par);
                 }
                 else
                 {
-                    Player.SendMessage(p, "/overseer preset [type] -- Uses an env preset on your map");
-                    Player.SendMessage(p, "Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery");
+                	p.SendMessage("This is not your map.");
                 }
             }
 			else if (cmd == "WEATHER")
