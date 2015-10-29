@@ -323,7 +323,7 @@ namespace MCGalaxy
 			all.Add(new CmdXNick());
 			all.Add(new CmdXspawn());
 			all.Add(new CmdXTColor());
-			//all.Add(new CmdXTitle());
+			all.Add(new CmdXTitle());
 			all.Add(new CmdXundo());
 			all.Add(new CmdZombieGame());
 			all.Add(new CmdZone());

@@ -116,7 +116,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/fly - Allows you to fly, it is a bit glitchy, you can't fly while playing CTF.");
+            Player.SendMessage(p, "/fly - The old method of flight before custom clients.");
+            Player.SendMessage(p, "May not work at all depending on your connection.");
         }
 
         struct Pos { public ushort x, y, z; }

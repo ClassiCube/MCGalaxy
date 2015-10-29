@@ -1102,7 +1102,7 @@ namespace MCGalaxy {
                 {
                     extension = true;
 
-                    SendExtInfo(11);
+                    SendExtInfo(12);
                     SendExtEntry("ClickDistance", 1);
                     SendExtEntry("CustomBlocks", 1);
                     SendExtEntry("HeldBlock", 1);
@@ -2347,7 +2347,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     text = text.Remove(0, 2);
                     if ( text.Length < 1 ) { SendMessage("No message entered"); return; }
                     SendChat(this, Server.DefaultColor + "[<] Console: &f" + text);
-                    Server.s.Log("[>] " + this.DisplayName + ": " + text);
+                    Server.s.Log("[>] " + this.name + ": " + text);
                     return;
                 }
                 if ( text[0] == '@' || whisper ) {
@@ -3042,12 +3042,6 @@ return;
         retryTag: try {
                 foreach ( string line in Wordwrap(message) ) {
                     string newLine = line;
-                    if ( newLine.TrimEnd(' ')[newLine.TrimEnd(' ').Length - 1] < '!' ) {
-                        if (HasExtension("EmoteFix"))
-                        {
-                            newLine += '\'';
-                        }
-                    }
                     StringFormat(newLine, 64).CopyTo(buffer, 1);
                     SendRaw(13, buffer);
                 }

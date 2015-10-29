@@ -71,11 +71,11 @@ namespace MCGalaxy.Commands
                         if (String.IsNullOrEmpty(message) || !Group.Exists(message) || Group.Find(message) == pl.group)
                         {
                             totalPlayers++;
-                            string foundName = pl.name;
+                            string foundName = Player.StripColours(pl.DisplayName);
 
                             if (Server.afkset.Contains(pl.name))
                             {
-                                foundName = pl.name + "-afk";
+                            	foundName = Player.StripColours(pl.DisplayName + "-afk");
                             }
 
                             if (pl.muted) foundName += "[muted]";

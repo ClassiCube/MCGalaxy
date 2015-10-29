@@ -52,7 +52,6 @@ namespace MCGalaxy.Commands
             p.SendMessage("Valid targets: player, level [Abbreviated as p and l]");
             p.SendMessage("Valid variables: fog, cloud, sky, sun, shadow, level, horizon, border, weather, preset(l only)");
             p.SendMessage("Using 'normal' as a value will reset the variable");
-
         }
         public void Parse(Player p, string target, string[] pars)
         {
@@ -609,12 +608,6 @@ namespace MCGalaxy.Commands
                         }
                         break;
                     case "preset":
-                        if (valueText.Equals(""))
-                        {
-                            p.SendMessage("/env l preset [type] -- Uses an env preset on your map");
-                            p.SendMessage("Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery");
-                            return;
-                        }
                         if (valueText.Equals("midnight", StringComparison.OrdinalIgnoreCase))
                         {
                             Command.all.Find("env").Use(p, "l fog 8b8989");
@@ -673,7 +666,45 @@ namespace MCGalaxy.Commands
                             Command.all.Find("env").Use(p, "l level normal");
                             return;
                         }
-                        break;
+						if (valueText.Equals("gloomy", StringComparison.OrdinalIgnoreCase))//if (args[0] == "gloomy") 
+						{
+							Command.all.Find("env").Use(p, "l cloud 405875");
+							Command.all.Find("env").Use(p, "l sky 405875");
+							Command.all.Find("env").Use(p, "l sun 444466");
+							Command.all.Find("env").Use(p, "l shadow 3B3B59");
+							Command.all.Find("env").Use(p, "l fog 6A80A5");
+							return;
+						}
+						if (valueText.Equals("cloudy", StringComparison.OrdinalIgnoreCase))//if (args[0] == "cloudy") 
+						{
+							Command.all.Find("env").Use(p, "l cloud 8E8E8E");
+							Command.all.Find("env").Use(p, "l sky 8E8E8E");
+							Command.all.Find("env").Use(p, "l sun 9b9b9b");
+							Command.all.Find("env").Use(p, "l shadow 8C8C8C");
+							Command.all.Find("env").Use(p, "l fog AFAFAF");
+							return;
+						}
+						if (valueText.Equals("sunset", StringComparison.OrdinalIgnoreCase))//if (args[0] == "sunset") 
+						{
+							Command.all.Find("env").Use(p, "l cloud 9A6551");
+							Command.all.Find("env").Use(p, "l sky 836668");
+							Command.all.Find("env").Use(p, "l sun 7F6C60");
+							Command.all.Find("env").Use(p, "l shadow 46444C");
+							Command.all.Find("env").Use(p, "l fog FFA322");
+							return;
+						}
+						if (valueText.Equals("midnight2", StringComparison.OrdinalIgnoreCase))//if (args[0] == "midnight") 
+						{
+							Command.all.Find("env").Use(p, "l cloud 1E223A");
+							Command.all.Find("env").Use(p, "l sky 070A23");
+							Command.all.Find("env").Use(p, "l sun 181828");
+							Command.all.Find("env").Use(p, "l shadow 0F0F19");
+							Command.all.Find("env").Use(p, "l fog 131947");
+							return;
+						}
+						p.SendMessage("/env l preset [type] -- Uses an env preset on your map");
+                        p.SendMessage("Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
+                        return;
                     default:
                         Help(p);
                         break;

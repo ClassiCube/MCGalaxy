@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
                 newRank.playerList.Add(who.name);
                 newRank.playerList.Save();
 
-                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name, false);
+                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name + Server.DefaultColor + ".", false);
                 Player.SendMessage(who, "&6" + msgGave, false);
                 Server.IRC.Say(who.color + who.DisplayName + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name + ". Reason: " + msgGave);
 

@@ -51,12 +51,13 @@ namespace MCGalaxy.Commands
              
              if (grp.name == "banned")
              {
-                 Player.GlobalMessage(plr.color + plr.DisplayName + Server.DefaultColor + " is now &8banned" + Server.DefaultColor + "!");
+                 Player.GlobalMessage(plr.color + plr.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + "!");
              }
              else
              {
                  Player.GlobalMessage(plr.color + plr.DisplayName + Server.DefaultColor + "'s rank was set to " + grp.color + grp.name + Server.DefaultColor + ".");
-                 Player.GlobalMessage("&6Congratulations!");
+                 plr.SendMessage("&6Congratulations!");
+                 plr.SendMessage("You are now ranked " + grp.color + grp.name + Server.DefaultColor + ", type /help for your new set of commands.");
              }
          }
    
