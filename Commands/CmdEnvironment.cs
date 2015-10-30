@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands {
                     return;
             }
             
-            if (level )
+            if (level)
                 p.level.Save(true);
         }
         
