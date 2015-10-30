@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
 
             if (message.IndexOf(' ') == -1)
             {
-                if (p.canBuild == true) //Checks if player can build there
+                if (p.canBuild) //Checks if player can build there
                 {
                     switch (message.ToLower()) //If true - they can delete the zone
                     {

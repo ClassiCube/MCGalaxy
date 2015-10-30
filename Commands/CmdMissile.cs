@@ -289,7 +289,7 @@ namespace MCGalaxy.Commands
 								{
 									if (by != Block.glass)
 									{
-										if (p.allowTnt == true)
+										if (p.allowTnt)
 										{
 											p.level.MakeExplosion(pos.x, pos.y, pos.z, 1);
 											break;
@@ -335,7 +335,7 @@ namespace MCGalaxy.Commands
 						{
 							if (p.level.physics >= 3 && bp.ending >= 2)
 							{
-								if (p.allowTnt == true)
+								if (p.allowTnt)
 								{
 									p.level.MakeExplosion(lookedAt.x, lookedAt.y, lookedAt.z, 2);
 									break;

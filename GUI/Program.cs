@@ -375,9 +375,9 @@ namespace MCGalaxy_.Gui
                     Version availableUpdateVersion = new Version(raw);
                     if (availableUpdateVersion > Server.Version)
                     {
-                        if (Server.autoupdate == true || p != null)
+                        if (Server.autoupdate || p != null)
                         {
-                            if (Server.autonotify == true || p != null)
+                            if (Server.autonotify || p != null)
                             {
                                 //if (p != null) Server.restartcountdown = "20";  This is set by the user.  Why change it?
                                 Player.GlobalMessage("Update found. Prepare for restart in &f" + Server.restartcountdown + Server.DefaultColor + " seconds.");
@@ -390,7 +390,7 @@ namespace MCGalaxy_.Gui
                                 countDown.Start();
                                 countDown.Elapsed += delegate
                                 {
-                                    if (Server.autoupdate == true || p != null)
+                                    if (Server.autoupdate || p != null)
                                     {
                                         Player.GlobalMessage("Updating in &f" + timeLeft + Server.DefaultColor + " seconds.");
                                         Server.s.Log("Updating in " + timeLeft + " seconds.");

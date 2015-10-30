@@ -150,15 +150,13 @@ namespace MCGalaxy
 					return true;
 				case 1:
 					CompilerError error = results.Errors[0];
-					bool exists = (File.Exists("logs/errors/compiler.log")) ? true : false;
+					bool exists = File.Exists("logs/errors/compiler.log");
 					StringBuilder sb = new StringBuilder();
 					if (exists)
 					{
 						sb.AppendLine();
 						sb.AppendLine(divider);
 						sb.AppendLine();
-
-
 					}
 					sb.AppendLine("Error " + error.ErrorNumber);
 					sb.AppendLine("Message: " + error.ErrorText);

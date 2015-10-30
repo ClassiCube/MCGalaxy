@@ -75,7 +75,7 @@ namespace MCGalaxy
                 initialChangeLevel = true;
             }
 
-            while (cutVariable == true)
+            while (cutVariable)
             {
                 int gameStatus = Server.gameStatus;
                 Server.zombieRound = false;
@@ -140,7 +140,7 @@ namespace MCGalaxy
             Random random = new Random();
             int firstinfect = random.Next(players.Count());
             Player player = null;
-            if (Server.queZombie == true)
+            if (Server.queZombie)
                 player = Player.Find(Server.nextZombie);
             else
                 player = players[firstinfect];
@@ -169,7 +169,7 @@ namespace MCGalaxy
             }
 
             infectd.Clear();
-            if (Server.queZombie == true)
+            if (Server.queZombie)
             infectd.Add(Player.Find(Server.nextZombie));
             else
             infectd.Add(player);
@@ -373,7 +373,7 @@ namespace MCGalaxy
 
         public void ChangeLevel()
         {
-            if (Server.queLevel == true)
+            if (Server.queLevel)
             {
                 ChangeLevel(Server.nextLevel, Server.ZombieOnlyServer);
             }
@@ -428,7 +428,7 @@ namespace MCGalaxy
 
                     if (Server.gameStatus == 4 || Server.gameStatus == 0) { return; }
 
-                    if (initialChangeLevel == true)
+                    if (initialChangeLevel)
                     {
                         Server.votingforlevel = true;
                         Player.GlobalMessage(" " + c.black + "Level Vote: " + Server.DefaultColor + selectedLevel1 + ", " + selectedLevel2 + " or random " + "(" + c.lime + "1" + Server.DefaultColor + "/" + c.red + "2" + Server.DefaultColor + "/" + c.blue + "3" + Server.DefaultColor + ")");
@@ -479,7 +479,7 @@ namespace MCGalaxy
             {
                 int firstinfect = random.Next(alive.Count);
                 firstinfect = firstinfect - 1;
-                while (alive[firstinfect].referee == true || alive[firstinfect].level.name == Server.zombie.currentLevelName)
+                while (alive[firstinfect].referee || alive[firstinfect].level.name == Server.zombie.currentLevelName)
                 {
                     if (firstinfect == alive.Count)
                     {

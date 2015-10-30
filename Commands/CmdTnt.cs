@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
             }
             else if (message.ToLower() == "small" || message == "")
             {
-                if (p.allowTnt == true) 
+                if (p.allowTnt) 
                 {
                     p.BlockAction = 13; Player.SendMessage(p, "TNT mode is now &aON" + Server.DefaultColor + ".");
                     return;

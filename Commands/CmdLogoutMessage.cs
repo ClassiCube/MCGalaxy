@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/logoutmessage [Player] [Message] - Customize your logout message.");
-            if (Server.mono == true)
+            if (Server.mono)
             {
                 Player.SendMessage(p, "Please note that if the player is offline, the name is case sensitive.");
             }

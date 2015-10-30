@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
             if (p == null) { Player.SendMessage(p, "This command can only be used in-game!"); return; }
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
 
-            if (Server.voteKickInProgress == true) { p.SendMessage("Please wait for the current vote to finish!"); return; }
+            if (Server.voteKickInProgress) { p.SendMessage("Please wait for the current vote to finish!"); return; }
 
             Player who = Player.Find(message);
             if (who == null)

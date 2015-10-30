@@ -209,7 +209,7 @@ namespace MCGalaxy.Commands {
                                         break;
 
                                     case "enable":
-                                        if (Economy.Settings.Levels == true) { Player.SendMessage(p, "%cMaps are already enabled for the economy system"); break; } else { Economy.Settings.Levels = true; Player.SendMessage(p, "%aMaps are now enabled for the economy system"); break; }
+                                        if (Economy.Settings.Levels) { Player.SendMessage(p, "%cMaps are already enabled for the economy system"); break; } else { Economy.Settings.Levels = true; Player.SendMessage(p, "%aMaps are now enabled for the economy system"); break; }
 
                                     case "disable":
                                         if (Economy.Settings.Levels == false) { Player.SendMessage(p, "%cMaps are already disabled for the economy system"); break; } else { Economy.Settings.Levels = false; Player.SendMessage(p, "%aMaps are now disabled for the economy system"); break; }
@@ -224,7 +224,7 @@ namespace MCGalaxy.Commands {
                             case "title":
                                 switch (par2) {
                                     case "enable":
-                                        if (Economy.Settings.Titles == true) { Player.SendMessage(p, "%cTitles are already enabled for the economy system"); break; } else { Economy.Settings.Titles = true; Player.SendMessage(p, "%aTitles are now enabled for the economy system"); break; }
+                                        if (Economy.Settings.Titles) { Player.SendMessage(p, "%cTitles are already enabled for the economy system"); break; } else { Economy.Settings.Titles = true; Player.SendMessage(p, "%aTitles are now enabled for the economy system"); break; }
 
                                     case "disable":
                                         if (Economy.Settings.Titles == false) { Player.SendMessage(p, "%cTitles are already disabled for the economy system"); break; } else { Economy.Settings.Titles = false; Player.SendMessage(p, "%aTitles are now disabled for the economy system"); break; }
@@ -248,7 +248,7 @@ namespace MCGalaxy.Commands {
                             case "colour":
                                 switch (par2) {
                                     case "enable":
-                                        if (Economy.Settings.Colors == true) { Player.SendMessage(p, "%cColors are already enabled for the economy system"); break; } else { Economy.Settings.Colors = true; Player.SendMessage(p, "%aColors are now enabled for the economy system"); break; }
+                                        if (Economy.Settings.Colors) { Player.SendMessage(p, "%cColors are already enabled for the economy system"); break; } else { Economy.Settings.Colors = true; Player.SendMessage(p, "%aColors are now enabled for the economy system"); break; }
 
                                     case "disable":
                                         if (Economy.Settings.Colors == false) { Player.SendMessage(p, "%cColors are already disabled for the economy system"); break; } else { Economy.Settings.Colors = false; Player.SendMessage(p, "%aColors are now disabled for the economy system"); break; }
@@ -272,7 +272,7 @@ namespace MCGalaxy.Commands {
                             case "tc":
                                 switch (par2) {
                                     case "enable":
-                                        if (Economy.Settings.TColors == true) Player.SendMessage(p, "%cTitleColors are already enabled for the economy system");
+                                        if (Economy.Settings.TColors) Player.SendMessage(p, "%cTitleColors are already enabled for the economy system");
                                         else { Economy.Settings.TColors = true; Player.SendMessage(p, "%aTitleColors are now enabled for the economy system"); }
                                         break;
                                     case "disable":
@@ -294,7 +294,7 @@ namespace MCGalaxy.Commands {
                             case "rank":
                                 switch (par2) {
                                     case "enable":
-                                        if (Economy.Settings.Ranks == true) { Player.SendMessage(p, "%cRanks are already enabled for the economy system"); break; } else { Economy.Settings.Ranks = true; Player.SendMessage(p, "%aRanks are now enabled for the economy system"); break; }
+                                        if (Economy.Settings.Ranks) { Player.SendMessage(p, "%cRanks are already enabled for the economy system"); break; } else { Economy.Settings.Ranks = true; Player.SendMessage(p, "%aRanks are now enabled for the economy system"); break; }
 
                                     case "disable":
                                         if (Economy.Settings.Ranks == false) { Player.SendMessage(p, "%cRanks are already disabled for the economy system"); break; } else { Economy.Settings.Ranks = false; Player.SendMessage(p, "%aRanks are now disabled for the economy system"); break; }
@@ -341,7 +341,7 @@ namespace MCGalaxy.Commands {
                                 break;
 
                             case "enable":
-                                if (Economy.Settings.Enabled == true) { Player.SendMessage(p, "%cThe economy system is already enabled"); return; } else { Economy.Settings.Enabled = true; Player.SendMessage(p, "%aThe economy system is now enabled"); return; }
+                                if (Economy.Settings.Enabled) { Player.SendMessage(p, "%cThe economy system is already enabled"); return; } else { Economy.Settings.Enabled = true; Player.SendMessage(p, "%aThe economy system is now enabled"); return; }
 
                             case "disable":
                                 if (Economy.Settings.Enabled == false) { Player.SendMessage(p, "%cThe economy system is already disabled"); return; } else { Economy.Settings.Enabled = false; Player.SendMessage(p, "%aThe economy system is now disabled"); return; }
@@ -417,58 +417,10 @@ namespace MCGalaxy.Commands {
                                 return;
                             }
                             if (!par2.StartsWith("&") || !par2.StartsWith("%")) {
-                                switch (par2) {
-                                    case "black":
-                                        par2 = "&0";
-                                        break;
-                                    case "navy":
-                                        par2 = "&1";
-                                        break;
-                                    case "green":
-                                        par2 = "&2";
-                                        break;
-                                    case "teal":
-                                        par2 = "&3";
-                                        break;
-                                    case "maroon":
-                                        par2 = "&4";
-                                        break;
-                                    case "purple":
-                                        par2 = "&5";
-                                        break;
-                                    case "gold":
-                                        par2 = "&6";
-                                        break;
-                                    case "silver":
-                                        par2 = "&7";
-                                        break;
-                                    case "gray":
-                                        par2 = "&8";
-                                        break;
-                                    case "blue":
-                                        par2 = "&9";
-                                        break;
-                                    case "lime":
-                                        par2 = "&a";
-                                        break;
-                                    case "aqua":
-                                        par2 = "&b";
-                                        break;
-                                    case "red":
-                                        par2 = "&c";
-                                        break;
-                                    case "pink":
-                                        par2 = "&d";
-                                        break;
-                                    case "yellow":
-                                        par2 = "&e";
-                                        break;
-                                    case "white":
-                                        par2 = "&f";
-                                        break;
-                                    default:
-                                        Player.SendMessage(p, "%cThat wasn't a color");
-                                        return;
+                            	par2 = c.Parse(par2);
+                            	if (par2 == null) {
+                            		Player.SendMessage(p, "%cThat wasn't a color");
+                            		return;
                                 }
                             }
                             if (par2 == p.color) {
@@ -496,58 +448,10 @@ namespace MCGalaxy.Commands {
                                 return;
                             }
                             if (!par2.StartsWith("&") || !par2.StartsWith("%")) {
-                                switch (par2) {
-                                    case "black":
-                                        par2 = "&0";
-                                        break;
-                                    case "navy":
-                                        par2 = "&1";
-                                        break;
-                                    case "green":
-                                        par2 = "&2";
-                                        break;
-                                    case "teal":
-                                        par2 = "&3";
-                                        break;
-                                    case "maroon":
-                                        par2 = "&4";
-                                        break;
-                                    case "purple":
-                                        par2 = "&5";
-                                        break;
-                                    case "gold":
-                                        par2 = "&6";
-                                        break;
-                                    case "silver":
-                                        par2 = "&7";
-                                        break;
-                                    case "gray":
-                                        par2 = "&8";
-                                        break;
-                                    case "blue":
-                                        par2 = "&9";
-                                        break;
-                                    case "lime":
-                                        par2 = "&a";
-                                        break;
-                                    case "aqua":
-                                        par2 = "&b";
-                                        break;
-                                    case "red":
-                                        par2 = "&c";
-                                        break;
-                                    case "pink":
-                                        par2 = "&d";
-                                        break;
-                                    case "yellow":
-                                        par2 = "&e";
-                                        break;
-                                    case "white":
-                                        par2 = "&f";
-                                        break;
-                                    default:
-                                        Player.SendMessage(p, "%cThat wasn't a color");
-                                        return;
+                                par2 = c.Parse(par2);
+                            	if (par2 == null) {
+                            		Player.SendMessage(p, "%cThat wasn't a color");
+                            		return;
                                 }
                             }
                             if (par2 == p.titlecolor) {
@@ -663,7 +567,7 @@ namespace MCGalaxy.Commands {
                     return;
                 case "info":
                 case "about":
-                    if (Economy.Settings.Enabled == true) {
+                    if (Economy.Settings.Enabled) {
                         switch (par1) {
                             case "map":
                             case "level":

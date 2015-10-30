@@ -502,7 +502,7 @@ namespace MCGalaxy.Commands
 						Player.SendMessage(p, "Your 1st map has been removed.");
 						return;
 					}
-					else if (byte.TryParse(par2, out test) == true)
+					else if (byte.TryParse(par2, out test))
 					{
 						Command.all.Find("deletelvl").Use(p, p.name.ToLower() + par2);
 						Player.SendMessage(p, "Your map has been removed.");
@@ -528,7 +528,7 @@ namespace MCGalaxy.Commands
                         			Player.SendMessage(p, "Your 1st map has been saved.");
                         			return;
                     			}
-                    			else if (byte.TryParse(par2, out test) == true)
+                    			else if (byte.TryParse(par2, out test))
                     			{
                         			Command.all.Find("save").Use(p, p.name.ToLower() + par2);
                         			Player.SendMessage(p, "Your map has been saved.");
@@ -818,7 +818,7 @@ namespace MCGalaxy.Commands
 						Command.all.Find("load").Use(p, properMapName(p, false));
 						Player.SendMessage(p, "Your level is now loaded.");
 					}
-					else if (byte.TryParse(par, out test) == true)
+					else if (byte.TryParse(par, out test))
 					{
 						Command.all.Find("load").Use(p, p.name + par);
 						Player.SendMessage(p, "Your level is now loaded.");
@@ -900,7 +900,7 @@ namespace MCGalaxy.Commands
 			{
 				r = p.name.ToLower();
 			}
-			if (Ext == true) { r = r + ".lvl"; }
+			if (Ext) { r = r + ".lvl"; }
 			return r;
 		}
 

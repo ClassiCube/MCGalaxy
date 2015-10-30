@@ -647,8 +647,8 @@ namespace MCGalaxy
         {
             if (GameMode == TntWarsGameMode.TDM)
             {
-                if (p1.Red == true && p2.Red) return true;
-                if (p1.Blue == true && p2.Blue) return true;
+                if (p1.Red && p2.Red) return true;
+                if (p1.Blue && p2.Blue) return true;
             }
             return false;
         }

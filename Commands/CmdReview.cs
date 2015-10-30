@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands
                             {
                                 isopson = true;
                             }
-                            if (isopson == true)
+                            if (isopson)
                             {
                                 Server.reviewlist.Add(p.name);
                                 int reviewlistpos = Server.reviewlist.IndexOf(p.name);

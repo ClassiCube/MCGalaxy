@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands
 
             else
             {
-                if (Warp.WarpExists(par0) == true)
+                if (Warp.WarpExists(par0))
                 {
                     Warp.Wrp w = new Warp.Wrp();
                     w = Warp.GetWarp(par0);

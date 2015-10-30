@@ -138,15 +138,18 @@
     <Compile Include="Commands\CmdGcbanlistupdate.cs" />
     <Compile Include="Commands\CmdGcmods.cs" />
     <Compile Include="Commands\CmdGcrules.cs" />
+    <Compile Include="Commands\CmdMark.cs" />
     <Compile Include="Commands\CmdModel.cs" />
     <Compile Include="Commands\CmdMods.cs" />
     <Compile Include="Commands\CmdQuit.cs" />
+    <Compile Include="Commands\CmdRanks.cs" />
     <Compile Include="Commands\CmdSearch.cs" />
     <Compile Include="Commands\CmdStaff.cs" />
     <Compile Include="Commands\CmdTexture.cs" />
     <Compile Include="Commands\CmdTntWars.cs" />
-    <Compile Include="Commands\CmdTopFive.cs" />
+    <Compile Include="Commands\CmdTop.cs" />
     <Compile Include="Commands\CmdWhoNick.cs" />
+    <Compile Include="Commands\CmdXModel.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">
       <SubType>Component</SubType>
@@ -320,7 +323,6 @@
     <Compile Include="Commands\CmdTempRank.cs" />
     <Compile Include="Commands\CmdTempRankInfo.cs" />
     <Compile Include="Commands\CmdTempRankList.cs" />
-    <Compile Include="Commands\CmdTopTen.cs" />
     <Compile Include="Commands\CmdTpZone.cs" />
     <Compile Include="Commands\CmdFlipHeads.cs" />
     <Compile Include="Commands\CmdFly.cs" />

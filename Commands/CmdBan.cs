@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands {
                     Server.s.Log("BANNED: " + message.ToLower() + " by console.");
                 }
 
-                if (totalBan == true) {
+                if (totalBan) {
                     Command.all.Find("undo").Use(p, message + " 0");
                     Command.all.Find("banip").Use(p, "@ " + message);
                 }

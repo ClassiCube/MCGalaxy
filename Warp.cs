@@ -199,7 +199,7 @@ namespace MCGalaxy
                             }
                         }
                     }
-                    if (anyfailed == true)
+                    if (anyfailed)
                     {
                         SAVE();
                     }
