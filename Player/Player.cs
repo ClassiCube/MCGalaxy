@@ -385,6 +385,10 @@ namespace MCGalaxy {
         public bool copyAir = false;
         public int[] copyoffset = new int[3] { 0, 0, 0 };
         public ushort[] copystart = new ushort[3] { 0, 0, 0 };
+        
+        //Center
+        public int[] centerstart = new int[3] { 0, 0, 0 };
+        public int[] centerend = new int[3] { 0, 0, 0 };
 
         public string model = "humanoid";
         public bool spawned = false;
