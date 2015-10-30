@@ -147,7 +147,7 @@
     <Compile Include="Commands\CmdStaff.cs" />
     <Compile Include="Commands\CmdTexture.cs" />
     <Compile Include="Commands\CmdTntWars.cs" />
-    <Compile Include="Commands\CmdTopFive.cs" />
+    <Compile Include="Commands\CmdTop.cs" />
     <Compile Include="Commands\CmdWhoNick.cs" />
     <Compile Include="Commands\CmdXModel.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
@@ -323,7 +323,6 @@
     <Compile Include="Commands\CmdTempRank.cs" />
     <Compile Include="Commands\CmdTempRankInfo.cs" />
     <Compile Include="Commands\CmdTempRankList.cs" />
-    <Compile Include="Commands\CmdTopTen.cs" />
     <Compile Include="Commands\CmdTpZone.cs" />
     <Compile Include="Commands\CmdFlipHeads.cs" />
     <Compile Include="Commands\CmdFly.cs" />

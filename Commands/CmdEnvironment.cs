@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands {
                     return;
                 }
                 
-                p.SendMessage(string.Format("Set {0} color for {1}&S to #{2}", envTypeName, "you", value));
+                p.SendMessage(string.Format("Set {0} color for {1}&S to #{2}", envTypeName, target, value));
                 if( level )
                     modify = value;
             }
@@ -322,11 +322,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            p.SendMessage("&a/env [target] [variable] [value]");
-            p.SendMessage("&e  Valid targets: player or p, level or l");
-            p.SendMessage("&e  Valid variables: fog, cloud, sky, sun, shadow, weather");
-            p.SendMessage("&e     level only variables: level, horizon, border, preset");
-            p.SendMessage("&eUsing 'normal' as a value will reset the variable");
+            p.SendMessage("%a/env [target] [variable] [value]");
+            p.SendMessage("%e  Valid targets: player or p, level or l");
+            p.SendMessage("%e  Valid variables: fog, cloud, sky, sun, shadow, weather");
+            p.SendMessage("%e     level only variables: level, horizon, border, preset");
+            p.SendMessage("%eUsing 'normal' as a value will reset the variable");
         }
     }
 }

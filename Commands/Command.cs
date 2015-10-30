@@ -281,6 +281,7 @@ namespace MCGalaxy
 			all.Add(new CmdTitle());
 			all.Add(new CmdTnt());
 			all.Add(new CmdTntWars());
+			all.Add(new CmdTop());
             all.Add(new CmdTopFive());
 			all.Add(new CmdTopTen());
 			all.Add(new CmdTp());
