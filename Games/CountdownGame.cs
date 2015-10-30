@@ -128,7 +128,7 @@ namespace MCGalaxy
             {
                 CountdownGame.squaresleft.Clear();
                 PopulateSquaresLeft();
-                if (freezemode == true)
+                if (freezemode)
                 {
                     mapon.ChatLevel("Countdown starting with difficulty " + speedtype + " and mode freeze in:");
                 }
@@ -188,7 +188,7 @@ namespace MCGalaxy
                     {
                         mapon.ChatLevel(squaresleft.Count + " Squares Left and " + playersleft.ToString() + " Players left!!");
                     }
-                    if (cancel == true)
+                    if (cancel)
                     {
                         End(null);
                     }
@@ -285,7 +285,7 @@ namespace MCGalaxy
                         {
                             mapon.ChatLevel(squaresleft.Count + " Squares Left and " + playersleft.ToString() + " Players left!!");
                         }
-                        if (cancel == true)
+                        if (cancel)
                         {
                             End(null);
                         }
@@ -363,19 +363,19 @@ namespace MCGalaxy
                             }
                         }
                         {//diagonal >:(
-                            if ((mapon.GetTile((ushort)(x1 - 2), y, (ushort)(z1 - 2)) == Block.air) && left == true && down == true) //bottom left
+                            if ((mapon.GetTile((ushort)(x1 - 2), y, (ushort)(z1 - 2)) == Block.air) && left && down) //bottom left
                             {
                                 mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), Block.air);
                             }
-                            if ((mapon.GetTile((ushort)(x1 - 2), y, (ushort)(z2 + 2)) == Block.air) && right == true && down == true) //bottom right
+                            if ((mapon.GetTile((ushort)(x1 - 2), y, (ushort)(z2 + 2)) == Block.air) && right && down) //bottom right
                             {
                                 mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), Block.air);
                             }
-                            if ((mapon.GetTile((ushort)(x2 + 2), y, (ushort)(z1 - 2)) == Block.air) && left == true && up == true) //top left
+                            if ((mapon.GetTile((ushort)(x2 + 2), y, (ushort)(z1 - 2)) == Block.air) && left && up) //top left
                             {
                                 mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), Block.air);
                             }
-                            if ((mapon.GetTile((ushort)(x2 + 2), y, (ushort)(z2 + 2)) == Block.air) && right == true && up == true) //top right
+                            if ((mapon.GetTile((ushort)(x2 + 2), y, (ushort)(z2 + 2)) == Block.air) && right && up) //top right
                             {
                                 mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), Block.air);
                             }
@@ -575,7 +575,7 @@ namespace MCGalaxy
             if (gamestatus == CountdownGameStatus.Enabled || gamestatus == CountdownGameStatus.Finished || gamestatus == CountdownGameStatus.Disabled)
             {
                 {
-                    if (all == true)
+                    if (all)
                     {
                         { //clean variables
                             CountdownGame.gamestatus = CountdownGameStatus.Disabled;
@@ -710,7 +710,7 @@ namespace MCGalaxy
                     gamestatus = CountdownGameStatus.Enabled;
                     foreach (Player pl in Player.players)
                     {
-                        if (pl.playerofcountdown == true)
+                        if (pl.playerofcountdown)
                         {
                             if (pl.level == mapon)
                             {
@@ -726,7 +726,7 @@ namespace MCGalaxy
                         }
                     }
                 }
-                else if (all == true)
+                else if (all)
                 {
                     if (p != null)
                     {
@@ -773,7 +773,7 @@ namespace MCGalaxy
         {
             foreach (Player pl in Player.players)
             {
-                if (pl.playerofcountdown == true)
+                if (pl.playerofcountdown)
                 {
                     Player.SendMessage(pl, message);
                 }

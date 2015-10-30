@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands
                 Level foundLevel;
                 if (message == "")
                 {
-                    if (p.level.guns == true)
+                    if (p.level.guns)
                     {
                         p.level.guns = false;
                         Player.GlobalMessage("&9Gun usage has been disabled on &c" + p.level.name + "&9!");
@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands
                     {
                         Player.SendMessage(p, "&9The level, &c" + message + " &9does not exist!"); return;
                     }
-                    if (foundLevel.guns == true)
+                    if (foundLevel.guns)
                     {
                         foundLevel.guns = false;
                         Player.GlobalMessage("&9Gun usage has been disabled on &c" + message + "&9!");
@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands
                 {
                     Player.SendMessage(p, "The level, " + message + " does not exist!"); return;
                 }
-                if (foundLevel.guns == true)
+                if (foundLevel.guns)
                 {
                     foundLevel.guns = false;
                     Player.GlobalMessage("&9Gun usage has been disabled on &c" + message + "&9!");

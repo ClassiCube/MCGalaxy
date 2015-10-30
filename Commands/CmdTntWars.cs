@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
 					break;
 
 				case "join":
-					if (p.PlayingTntWars == true || (TntWarsGame.GetTntWarsGame(p) != null && TntWarsGame.GetTntWarsGame(p).Players.Contains(TntWarsGame.GetTntWarsGame(p).FindPlayer(p))))
+					if (p.PlayingTntWars || (TntWarsGame.GetTntWarsGame(p) != null && TntWarsGame.GetTntWarsGame(p).Players.Contains(TntWarsGame.GetTntWarsGame(p).FindPlayer(p))))
 					{
 						Player.SendMessage(p, "TNT Wars Error: You have already joined a game!");
 						return;
@@ -575,7 +575,7 @@ namespace MCGalaxy.Commands
                             case "start":
                                 if (it.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers)
                                 {
-                                    if (it.CheckAllSetUp(p, true) == true)
+                                    if (it.CheckAllSetUp(p, true))
                                     {
                                         if (it.PlayingPlayers() >= 2)
                                         {
@@ -759,7 +759,7 @@ namespace MCGalaxy.Commands
                                         case "c":
                                         case "now":
                                         case "ATM":
-                                            if (it.GracePeriod == true) msg = "enabled";
+                                            if (it.GracePeriod) msg = "enabled";
                                             else msg = "disabled";
                                             Player.SendMessage(p, "TNT Wars: Grace Period is currently " + msg);
                                             return;
@@ -774,7 +774,7 @@ namespace MCGalaxy.Commands
                                     it.GracePeriod = !it.GracePeriod;
                                 }
                                 {
-                                    if (it.GracePeriod == true) msg = "enabled";
+                                    if (it.GracePeriod) msg = "enabled";
                                     else msg = "disabled";
                                     Player.SendMessage(p, "TNT Wars: Grace Period is now " + msg);
                                 }
@@ -1068,7 +1068,7 @@ namespace MCGalaxy.Commands
                                             it.GameDifficulty = TntWarsGame.TntWarsDifficulty.Easy;
                                             if (!it.Players.Contains(it.FindPlayer(p))) Player.SendMessage(p, "TNT Wars: Changed difficulty to easy");
                                             it.SendAllPlayersMessage("TNT Wars: Changed difficulty to easy!");
-                                            if (it.TeamKills == true)
+                                            if (it.TeamKills)
                                             {
                                                 Player.SendMessage(p, "TNT Wars: Team killing is now off");
                                                 it.TeamKills = false;
@@ -1089,7 +1089,7 @@ namespace MCGalaxy.Commands
                                             it.GameDifficulty = TntWarsGame.TntWarsDifficulty.Normal;
                                             if (!it.Players.Contains(it.FindPlayer(p))) Player.SendMessage(p, "TNT Wars: Changed difficulty to normal");
                                             it.SendAllPlayersMessage("TNT Wars: Changed difficulty to normal!");
-                                            if (it.TeamKills == true)
+                                            if (it.TeamKills)
                                             {
                                                 Player.SendMessage(p, "TNT Wars: Team killing is now off");
                                                 it.TeamKills = false;
@@ -1197,7 +1197,7 @@ namespace MCGalaxy.Commands
                                         {
                                             case "on":
                                             case "enable":
-                                                if (it.Streaks == true)
+                                                if (it.Streaks)
                                                 {
                                                     Player.SendMessage(p, "TNT Wars Error: Streaks are already enabled");
                                                     return;
@@ -1229,7 +1229,7 @@ namespace MCGalaxy.Commands
                                             case "ATM":
                                             case "c":
                                             case "t":
-                                                if (it.Streaks == true) { Player.SendMessage(p, "TNT Wars: Streaks are currently enabled"); return; }
+                                                if (it.Streaks) { Player.SendMessage(p, "TNT Wars: Streaks are currently enabled"); return; }
                                                 else if (it.Streaks == false) { Player.SendMessage(p, "TNT Wars: Streaks are currently disabled"); return; }
                                                 break;
 
@@ -1240,7 +1240,7 @@ namespace MCGalaxy.Commands
                                                     Player.SendMessage(p, "TNT Wars: Streaks are now enabled");
                                                     return;
                                                 }
-                                                else if (it.Streaks == true)
+                                                else if (it.Streaks)
                                                 {
                                                     it.Streaks = false;
                                                     Player.SendMessage(p, "TNT Wars: Streaks are now disabled");
@@ -1470,7 +1470,7 @@ namespace MCGalaxy.Commands
                                 {
                                     case "on":
                                     case "enable":
-                                        if (it.BalanceTeams == true)
+                                        if (it.BalanceTeams)
                                         {
                                             Player.SendMessage(p, "TNT Wars Error: Team balancing is already enabled");
                                             return;
@@ -1502,7 +1502,7 @@ namespace MCGalaxy.Commands
                                     case "ATM":
                                     case "c":
                                     case "t":
-                                        if (it.BalanceTeams == true) { Player.SendMessage(p, "TNT Wars: Team balancing is currently enabled"); return; }
+                                        if (it.BalanceTeams) { Player.SendMessage(p, "TNT Wars: Team balancing is currently enabled"); return; }
                                         else if (it.BalanceTeams == false) { Player.SendMessage(p, "TNT Wars: Team balancing is currently disabled"); return; }
                                         break;
 
@@ -1513,7 +1513,7 @@ namespace MCGalaxy.Commands
                                             Player.SendMessage(p, "TNT Wars: Team balancing is now enabled");
                                             return;
                                         }
-                                        else if (it.BalanceTeams == true)
+                                        else if (it.BalanceTeams)
                                         {
                                             it.BalanceTeams = false;
                                             Player.SendMessage(p, "TNT Wars: Team balancing is now disabled");
@@ -1537,7 +1537,7 @@ namespace MCGalaxy.Commands
                                 {
                                     case "on":
                                     case "enable":
-                                        if (it.TeamKills == true)
+                                        if (it.TeamKills)
                                         {
                                             Player.SendMessage(p, "TNT Wars Error: Team killing is already enabled");
                                             return;
@@ -1569,7 +1569,7 @@ namespace MCGalaxy.Commands
                                     case "ATM":
                                     case "c":
                                     case "t":
-                                        if (it.TeamKills == true) { Player.SendMessage(p, "TNT Wars: Team killing is currently enabled"); return; }
+                                        if (it.TeamKills) { Player.SendMessage(p, "TNT Wars: Team killing is currently enabled"); return; }
                                         else if (it.TeamKills == false) { Player.SendMessage(p, "TNT Wars: Team killing is currently disabled"); return; }
                                         break;
 
@@ -1580,7 +1580,7 @@ namespace MCGalaxy.Commands
                                             Player.SendMessage(p, "TNT Wars: Team killing is now enabled");
                                             return;
                                         }
-                                        else if (it.TeamKills == true)
+                                        else if (it.TeamKills)
                                         {
                                             it.TeamKills = false;
                                             Player.SendMessage(p, "TNT Wars: Team killing is now disabled");
@@ -1836,7 +1836,7 @@ namespace MCGalaxy.Commands
                 return;
             }
             TntWarsGame it = TntWarsGame.GetTntWarsGame(p);
-            if (DeleteZone == true)
+            if (DeleteZone)
             {
                 if (it == null)
                 {
@@ -1850,7 +1850,7 @@ namespace MCGalaxy.Commands
                     }
                 }
             }
-            else if (CheckZone == true && NoTntZone == true)
+            else if (CheckZone && NoTntZone)
             {
                 if (it == null)
                 {
@@ -1871,7 +1871,7 @@ namespace MCGalaxy.Commands
                     }
                 }
             }
-            else if (CheckZone == true && NoTntZone == false)
+            else if (CheckZone && NoTntZone == false)
             {
                 if (it == null)
                 {

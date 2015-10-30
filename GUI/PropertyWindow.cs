@@ -510,40 +510,40 @@ namespace MCGalaxy.Gui {
                             chkAutoload.Checked = ( value.ToLower() == "true" );
                             break;
                         case "parse-emotes":
-                            chkSmile.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkSmile.Checked = value.ToLower() == "true";
                             break;
                         case "allow-tp-to-higher-ranks":
-                            chkTpToHigherRanks.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkTpToHigherRanks.Checked = value.ToLower() == "true";
                             break;
                         case "agree-to-rules-on-entry":
-                            chkAgreeToRules.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkAgreeToRules.Checked = value.ToLower() == "true";
                             break;
                         case "admins-join-silent":
-                            chkAdminsJoinSilent.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkAdminsJoinSilent.Checked = value.ToLower() == "true";
                             break;
                         case "main-name":
                             txtMain.Text = value;
                             break;
                         case "dollar-before-dollar":
-                            chk17Dollar.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chk17Dollar.Checked = value.ToLower() == "true";
                             break;
                         case "money-name":
                             txtMoneys.Text = value;
                             break;
                         /*case "mono":
-                            chkMono.Checked = (value.ToLower() == "true") ? true : false;
+                            chkMono.Checked = value.ToLower() == "true";
                             break;*/
                         case "restart-on-error":
-                            chkRestart.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkRestart.Checked = value.ToLower() == "true";
                             break;
                         case "repeat-messages":
-                            chkRepeatMessages.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkRepeatMessages.Checked = value.ToLower() == "true";
                             break;
                         case "host-state":
                             if ( value != "" ) txtHost.Text = value;
                             break;
                         case "kick-on-hackrank":
-                            hackrank_kick.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            hackrank_kick.Checked = value.ToLower() == "true";
                             break;
                         case "hackrank-kick-time":
                             hackrank_kick_time.Text = value;
@@ -552,28 +552,28 @@ namespace MCGalaxy.Gui {
                             txtServerOwner.Text = value;
                             break;
                         case "zombie-on-server-start":
-                            chkZombieOnServerStart.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkZombieOnServerStart.Checked = value.ToLower() == "true";
                             break;
                         case "no-respawning-during-zombie":
-                            chkNoRespawnDuringZombie.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkNoRespawnDuringZombie.Checked = value.ToLower() == "true";
                             break;
                         case "no-level-saving-during-zombie":
-                            chkNoLevelSavingDuringZombie.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkNoLevelSavingDuringZombie.Checked = value.ToLower() == "true";
                             break;
                         case "no-pillaring-during-zombie":
-                            chkNoPillaringDuringZombie.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkNoPillaringDuringZombie.Checked = value.ToLower() == "true";
                             break;
                         case "zombie-name-while-infected":
                             ZombieName.Text = value;
                             break;
                         case "enable-changing-levels":
-                            chkEnableChangingLevels.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkEnableChangingLevels.Checked = value.ToLower() == "true";
                             break;
                         case "zombie-survival-only-server":
-                            chkZombieOnlyServer.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkZombieOnlyServer.Checked = value.ToLower() == "true";
                             break;
                         case "use-level-list":
-                            chkUseLevelList.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkUseLevelList.Checked = value.ToLower() == "true";
                             break;
                         case "zombie-level-list":
                             if ( value != "" ) {
@@ -624,7 +624,7 @@ namespace MCGalaxy.Gui {
                             }
                             break;
                         case "mute-on-spam":
-                            chkSpamControl.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkSpamControl.Checked = value.ToLower() == "true";
                             break;
                         case "spam-messages":
                             try {
@@ -643,11 +643,11 @@ namespace MCGalaxy.Gui {
                             }
                             break;
                         case "show-empty-ranks":
-                            chkShowEmptyRanks.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkShowEmptyRanks.Checked = value.ToLower() == "true";
                             break;
 
                         case "global-chat-enabled":
-                            chkGlobalChat.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkGlobalChat.Checked = value.ToLower() == "true";
                             break;
 
                         case "global-chat-color":
@@ -658,7 +658,7 @@ namespace MCGalaxy.Gui {
                             cmbGlobalChatColor.SelectedIndex = cmbGlobalChatColor.Items.IndexOf(c.Name(color)); break;
 
                         case "griefer-stone-tempban":
-                            chkGrieferStoneBan.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkGrieferStoneBan.Checked = value.ToLower() == "true";
                             break;
 
                         case "griefer-stone-type":
@@ -669,10 +669,10 @@ namespace MCGalaxy.Gui {
                             }
                             break;
                         case "wom-direct":
-                            chkWomDirect.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkWomDirect.Checked = value.ToLower() == "true";
                             break;
                         case "premium-only":
-                            chkPrmOnly.Checked = ( value.ToLower() == "true" ) ? true : false;
+                            chkPrmOnly.Checked = value.ToLower() == "true";
                             break;
                         case "view":
                             Server.reviewview = Level.PermissionFromName(value.ToLower());
@@ -1913,7 +1913,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 TntWrsGraceTimeChck.Value = TntWarsGame.GuiLoaded.GracePeriodSecs;
                 TntWrsGraceTimeChck.Enabled = TntWarsGame.GuiLoaded.GracePeriod;
                 //Teams
-                TntWrsTmsChck.Checked = ( TntWarsGame.GuiLoaded.GameMode == TntWarsGame.TntWarsGameMode.TDM ? true : false );
+                TntWrsTmsChck.Checked = TntWarsGame.GuiLoaded.GameMode == TntWarsGame.TntWarsGameMode.TDM;
                 TntWrsTmsChck.Enabled = true;
                 TntWrsBlnceTeamsChck.Checked = TntWarsGame.GuiLoaded.BalanceTeams;
                 TntWrsBlnceTeamsChck.Enabled = true;
@@ -2053,7 +2053,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 case "Easy":
                     TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Easy;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to easy!");
-                    if ( TntWarsGame.GuiLoaded.TeamKills == true ) {
+                    if ( TntWarsGame.GuiLoaded.TeamKills ) {
                         TntWarsGame.GuiLoaded.TeamKills = false;
                     }
                     break;
@@ -2061,7 +2061,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 case "Normal":
                     TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Normal;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to normal!");
-                    if ( TntWarsGame.GuiLoaded.TeamKills == true ) {
+                    if ( TntWarsGame.GuiLoaded.TeamKills ) {
                         TntWarsGame.GuiLoaded.TeamKills = false;
                     }
                     break;

@@ -109,7 +109,7 @@ namespace MCGalaxy
                 }
             }
 
-            if (returnNull == true) return null;
+            if (returnNull) return null;
             if (tempPlayer != null) return tempPlayer;
             return null;
         }

@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands
 
             Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(foundLevel.perbuildmax).color + Group.findPerm(foundLevel.perbuildmax).trueName + Server.DefaultColor + " : VisitMax Rank = " + Group.findPerm(foundLevel.pervisitmax).color + Group.findPerm(foundLevel.pervisitmax).trueName);
 
-            if (foundLevel.guns == true)
+            if (foundLevel.guns)
             {
                 Player.SendMessage(p, "&cGuns &eare &aonline &eon " + foundLevel.name + ".");
             }

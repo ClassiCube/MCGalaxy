@@ -1278,7 +1278,7 @@ namespace MCGalaxy {
                 SetPrefix();
             }
 
-            if (Server.verifyadmins == true)
+            if (Server.verifyadmins)
             {
                 if (this.group.Permission >= Server.verifyadminsrank)
                 {
@@ -1355,7 +1355,7 @@ namespace MCGalaxy {
             string joinm = "&a+ " + this.color + this.prefix + this.DisplayName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
             if (this.group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
             {
-                if ((Server.guestJoinNotify == true && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
+                if ((Server.guestJoinNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
                 {
                     Player.players.ForEach(p1 =>
                                            {
@@ -1373,7 +1373,7 @@ namespace MCGalaxy {
                                            });
                 }
             }
-            if (this.group.Permission >= Server.adminchatperm && Server.adminsjoinsilent == true)
+            if (this.group.Permission >= Server.adminchatperm && Server.adminsjoinsilent)
             {
                 this.hidden = true;
                 this.adminchat = true;
@@ -1539,8 +1539,8 @@ namespace MCGalaxy {
                 return;
             }
 
-            if ( Server.verifyadmins == true ) {
-                if ( this.adminpen == true ) {
+            if ( Server.verifyadmins ) {
+                if ( this.adminpen ) {
                     SendBlockchange(x, y, z, b);
                     this.SendMessage("&cYou must use &a/pass [Password]&c to verify!");
                     return;
@@ -1923,8 +1923,8 @@ return;
             byte[] message = (byte[])m;
             byte thisid = message[0];
 
-            if ( this.incountdown == true && CountdownGame.gamestatus == CountdownGameStatus.InProgress && CountdownGame.freezemode == true ) {
-                if ( this.countdownsettemps == true ) {
+            if ( this.incountdown && CountdownGame.gamestatus == CountdownGameStatus.InProgress && CountdownGame.freezemode ) {
+                if ( this.countdownsettemps ) {
                     countdowntempx = NTHO(message, 1);
                     Thread.Sleep(100);
                     countdowntempz = NTHO(message, 5);
@@ -2306,11 +2306,11 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if ( Server.chatmod && !this.voice ) { this.SendMessage("Chat moderation is on, you cannot speak."); return; }
 
                 // Filter out bad words
-                if ( Server.profanityFilter == true ) {
+                if ( Server.profanityFilter ) {
                     text = ProfanityFilter.Parse(text);
                 }
 
-                if ( Server.checkspam == true ) {
+                if ( Server.checkspam ) {
                     //if (consecutivemessages == 0)
                     //{
                     // consecutivemessages++;
@@ -2330,7 +2330,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                             total--;
                             if ( total <= 0 ) {
                                 muteTimer.Stop();
-                                if ( this.muted == true ) {
+                                if ( this.muted ) {
                                     Command.all.Find("mute").Use(null, this.name);
                                 }
                                 this.consecutivemessages = 0;
@@ -2642,7 +2642,7 @@ return;
                                 return;
                             }
                         }
-                        if ( this.joker == true || this.muted == true ) {
+                        if ( this.joker || this.muted ) {
                             if ( cmd.ToLower() == "me" ) {
                                 SendMessage("Cannot use /me while muted or jokered.");
                                 return;
@@ -2728,7 +2728,7 @@ return;
             if ( p == this ) { SendMessage("Trying to talk to yourself, huh?"); return; }
             if ( p == null ) { SendMessage("Could not find player."); return; }
             if ( p.hidden ) { if ( this.hidden == false ) { Player.SendMessage(p, "Could not find player."); } }
-            if ( p.ignoreglobal == true ) {
+            if ( p.ignoreglobal ) {
                 if ( Server.globalignoreops == false ) {
                     if ( this.group.Permission >= Server.opchatperm ) {
                         if ( p.group.Permission < this.group.Permission ) {
@@ -3272,7 +3272,7 @@ rot = new byte[2] { rotx, roty };*/
             HTNO(x).CopyTo(buffer, 0);
             HTNO(y).CopyTo(buffer, 2);
             HTNO(z).CopyTo(buffer, 4);
-            if (extension == true)
+            if (extension)
             {
                 buffer[6] = (byte)Block.Convert(type);
             }
@@ -3554,7 +3554,7 @@ changed |= 4;*/
                 }
             }
 
-            if ( Server.voting == true ) {
+            if ( Server.voting ) {
                 if ( message.ToLower() == "yes" || message.ToLower() == "ye" || message.ToLower() == "y" ) {
                     if ( !from.voted ) {
                         Server.YesVotes++;
@@ -3581,7 +3581,7 @@ changed |= 4;*/
                 }
             }
 
-            if ( Server.votingforlevel == true ) {
+            if ( Server.votingforlevel ) {
                 if ( message.ToLower() == "1" || message.ToLower() == "one" ) {
                     if ( !from.voted ) {
                         Server.Level1Vote++;
@@ -4297,7 +4297,7 @@ catch { }*/
                 }
             }
 
-            if ( returnNull == true ) return null;
+            if ( returnNull ) return null;
             if ( tempPlayer != null ) return tempPlayer;
             return null;
         }
@@ -4317,7 +4317,7 @@ catch { }*/
                 }
             }
 
-            if (returnNull == true) return null;
+            if (returnNull) return null;
             if (tempPlayer != null) return tempPlayer;
             return null;
         }

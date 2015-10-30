@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            if (who.invincible == true)
+            if (who.invincible)
             {
                 who.invincible = false;
                 if(p != null && who == p)

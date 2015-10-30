@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
 				return;
             }
             Player player1 = Player.Find(message);
-            if (player1 == null || player1.hidden == true)
+            if (player1 == null || player1.hidden)
             {
                 Player.SendMessage(p, "Could not find player specified.");
 				return;
