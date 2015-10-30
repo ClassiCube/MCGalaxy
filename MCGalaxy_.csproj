@@ -243,6 +243,7 @@
     <Compile Include="Commands\CmdBaninfo.cs" />
     <Compile Include="Commands\CmdBanlist.cs" />
     <Compile Include="Commands\CmdCalculate.cs" />
+    <Compile Include="Commands\CmdCenter.cs" />
     <Compile Include="Commands\CmdChain.cs" />
     <Compile Include="Commands\CmdChangeLog.cs" />
     <Compile Include="Commands\CmdChatRoom.cs" />
