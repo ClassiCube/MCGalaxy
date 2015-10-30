@@ -417,58 +417,10 @@ namespace MCGalaxy.Commands {
                                 return;
                             }
                             if (!par2.StartsWith("&") || !par2.StartsWith("%")) {
-                                switch (par2) {
-                                    case "black":
-                                        par2 = "&0";
-                                        break;
-                                    case "navy":
-                                        par2 = "&1";
-                                        break;
-                                    case "green":
-                                        par2 = "&2";
-                                        break;
-                                    case "teal":
-                                        par2 = "&3";
-                                        break;
-                                    case "maroon":
-                                        par2 = "&4";
-                                        break;
-                                    case "purple":
-                                        par2 = "&5";
-                                        break;
-                                    case "gold":
-                                        par2 = "&6";
-                                        break;
-                                    case "silver":
-                                        par2 = "&7";
-                                        break;
-                                    case "gray":
-                                        par2 = "&8";
-                                        break;
-                                    case "blue":
-                                        par2 = "&9";
-                                        break;
-                                    case "lime":
-                                        par2 = "&a";
-                                        break;
-                                    case "aqua":
-                                        par2 = "&b";
-                                        break;
-                                    case "red":
-                                        par2 = "&c";
-                                        break;
-                                    case "pink":
-                                        par2 = "&d";
-                                        break;
-                                    case "yellow":
-                                        par2 = "&e";
-                                        break;
-                                    case "white":
-                                        par2 = "&f";
-                                        break;
-                                    default:
-                                        Player.SendMessage(p, "%cThat wasn't a color");
-                                        return;
+                            	par2 = c.Parse(par2);
+                            	if (par2 == null) {
+                            		Player.SendMessage(p, "%cThat wasn't a color");
+                            		return;
                                 }
                             }
                             if (par2 == p.color) {
@@ -496,58 +448,10 @@ namespace MCGalaxy.Commands {
                                 return;
                             }
                             if (!par2.StartsWith("&") || !par2.StartsWith("%")) {
-                                switch (par2) {
-                                    case "black":
-                                        par2 = "&0";
-                                        break;
-                                    case "navy":
-                                        par2 = "&1";
-                                        break;
-                                    case "green":
-                                        par2 = "&2";
-                                        break;
-                                    case "teal":
-                                        par2 = "&3";
-                                        break;
-                                    case "maroon":
-                                        par2 = "&4";
-                                        break;
-                                    case "purple":
-                                        par2 = "&5";
-                                        break;
-                                    case "gold":
-                                        par2 = "&6";
-                                        break;
-                                    case "silver":
-                                        par2 = "&7";
-                                        break;
-                                    case "gray":
-                                        par2 = "&8";
-                                        break;
-                                    case "blue":
-                                        par2 = "&9";
-                                        break;
-                                    case "lime":
-                                        par2 = "&a";
-                                        break;
-                                    case "aqua":
-                                        par2 = "&b";
-                                        break;
-                                    case "red":
-                                        par2 = "&c";
-                                        break;
-                                    case "pink":
-                                        par2 = "&d";
-                                        break;
-                                    case "yellow":
-                                        par2 = "&e";
-                                        break;
-                                    case "white":
-                                        par2 = "&f";
-                                        break;
-                                    default:
-                                        Player.SendMessage(p, "%cThat wasn't a color");
-                                        return;
+                                par2 = c.Parse(par2);
+                            	if (par2 == null) {
+                            		Player.SendMessage(p, "%cThat wasn't a color");
+                            		return;
                                 }
                             }
                             if (par2 == p.titlecolor) {

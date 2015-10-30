@@ -1,10 +1,9 @@
 using System;
-using System.IO;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdDemote : Command
-    {
+namespace MCGalaxy.Commands {
+
+    public class CmdDemote : Command {
+
         public override string name { get { return "demote"; } }
         public override string shortcut { get { return "de"; } }
         public override string type { get { return "mod"; } }
@@ -12,89 +11,36 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdDemote() { }
 
-        public override void Use(Player p, string message)
-        {
-            string name;
-            string reason;
-            Group group;
-            string demoter;
-            demoter = (p == null) ? "&a<CONSOLE>" : p.color + p.name;
-            Player player = Player.Find(message.Split(new char[] { ' ' })[0]);
-
-            if (message == "")
-            {
-                Help(p); return;
+        public override void Use(Player p, string message) {
+            string demoter = (p == null) ? "&a<CONSOLE>" : p.color + p.name;
+            string[] args = message.Split( new char[] { ' ' }, 2 );
+            Player target = null;
+            
+            if (args.Length == 0 || (target = Player.Find(args[0])) == null) {
+                Help(p); 
+                return;
             }
-            if (player == null)
-            {
-                Help(p); return;
+            
+            string reason = args.Length == 1 ? "Unknown" : args[1];    
+            Group next = null;
+            int index = Group.GroupList.IndexOf(target.group);
+            if (index > 0) {
+                Group nextLower = Group.GroupList[index - 1];
+                if (nextLower.Permission > LevelPermission.Banned)
+                    next = nextLower;
             }
-            else
-            {
-                name = player.name;
-                group = player.group;
-            }
-
-            if (message.Split(new char[] { ' ' }).Length == 1)
-            {
-                reason = "Unknown";
-                Group group2 = null;
-                bool flag = false;
-                for (int i = Group.GroupList.Count - 1; i >= 0; i--)
-                {
-                Group group3 = Group.GroupList[i];
-                if (flag)
-                {
-                    if (group3.Permission <= LevelPermission.Banned) break;
-                    group2 = group3;
-                    break;
-                }
-                if (group3 == group)
-                    flag = true;
-                }
-                if (group2 != null)
-                {
-                    Command.all.Find("setrank").Use(p, name + " " + group2.name + " " + Server.customDemoteMessage);
-                    player.RankReason(DateTime.Now, "&c[DEMOTED]", group2.name, reason, demoter);
-                }
-                else
-                {
-                    Player.SendMessage(p, "No higher ranks exist");
-                }
-            }
-            else
-            {
-                reason = message.Substring(message.IndexOf(' ') + 1).Trim();
-                Group group2 = null;
-                bool flag = false;
-                for (int i = Group.GroupList.Count - 1; i >= 0; i--)
-                {
-                    Group group3 = Group.GroupList[i];
-                    if (flag)
-                    {
-                        if (group3.Permission <= LevelPermission.Banned) break;
-                        group2 = group3;
-                        break;
-                    }
-                    if (group3 == group)
-                    flag = true;
-                }
-                if (group2 != null)
-                {
-                    Command.all.Find("setrank").Use(p, name + " " + group2.name + " " + Server.customPromoteMessage);
-                    player.RankReason(DateTime.Now, "&c[DEMOTED]", group2.name, reason, demoter);
-                }
-                else
-                {
-                    Player.SendMessage(p, "No higher ranks exist");
-                }
+            
+            if (next != null) {
+                Command.all.Find("setrank").Use(p, target.name + " " + next.name + " " + Server.customDemoteMessage);
+                target.RankReason(DateTime.Now, "&a[DEMOTED]", next.name, reason, demoter);
+            } else {
+                Player.SendMessage(p, "No lower ranks exist");
             }
         }
-        public override void Help(Player p)
-        {
+
+        public override void Help(Player p) {
             Player.SendMessage(p, "/demote <name> <reason> - Demotes <name> down a rank");
             Player.SendMessage(p, "If <reason> is left blank, the server will use \"Unknown\"");
         }
     }
-
 }
