@@ -127,6 +127,7 @@
   <ItemGroup>
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
+    <Compile Include="Player\FullCP437Handler.cs" />
     <Compile Include="Server\AutoSaver.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Levels\Block.cs" />

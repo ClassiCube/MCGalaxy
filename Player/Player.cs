@@ -1093,7 +1093,7 @@ namespace MCGalaxy {
                 {
                     extension = true;
 
-                    SendExtInfo(12);
+                    SendExtInfo(13);
                     SendExtEntry("ClickDistance", 1);
                     SendExtEntry("CustomBlocks", 1);
                     SendExtEntry("HeldBlock", 1);
@@ -1106,6 +1106,7 @@ namespace MCGalaxy {
                     SendExtEntry("EnvWeatherType", 1);
                     SendExtEntry("HackControl", 1);
                     SendExtEntry("EmoteFix", 1);
+                    SendExtEntry("FullCP437", 1);
                  //TODO   SendExtEntry("BlockDefinitions", 1);
                     SendCustomBlockSupportLevel(1);
                 }
@@ -1511,14 +1512,14 @@ namespace MCGalaxy {
             }
         }
         public void manualChange(ushort x, ushort y, ushort z, byte action, byte type) {
-             if (!(!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null) && HasExtension("BlockDefinitions")))
-              {
+             //if (!(!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null) && HasExtension("BlockDefinitions")))
+            //  {
                  if (type > 65)
                  {
                     Kick("Unknown block type!");
                     return;
                   }
-              }
+            //  }
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
             if ( jailed || !agreed ) { SendBlockchange(x, y, z, b); return; }
@@ -1860,8 +1861,6 @@ namespace MCGalaxy {
 
         public void placeBlock(byte b, byte type, ushort x, ushort y, ushort z) {
             if ( Block.odoor(b) != Block.Zero ) { SendMessage("oDoor here!"); return; }
-            if (!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null))
-                level.Blockchange(this, x, y, z, type, true, true);
             switch ( BlockAction ) {
                 case 0: //normal
                     if ( level.physics == 0 || level.physics == 5 ) {
@@ -2939,7 +2938,6 @@ return;
                     sb.Replace("%" + ch, "&" + ch);
                     //sb.Replace("&" + ch + " &", " &");
                 }
-                message = c.MinecraftToIrcColors(message);
                 // Begin fix to replace all invalid color codes typed in console or chat with "."
                 for ( char ch = (char)0; ch <= (char)47; ch++ ) // Characters that cause clients to disconnect
                     sb.Replace("&" + ch, String.Empty);
@@ -3027,6 +3025,7 @@ return;
             sb.Replace("(down)", enc.GetString(stored));*/
 
             message = ReplaceEmoteKeywords(sb.ToString());
+            message = FullCP437Handler.Replace(message);
             int totalTries = 0;
             if ( MessageRecieve != null )
                 MessageRecieve(this, message);
@@ -3046,7 +3045,10 @@ return;
                             newLine += '\'';
                         }
                     }
-                    StringFormat(newLine, 64).CopyTo(buffer, 1);
+                    if(HasExtension("FullCP437"))
+                        StringFormat437(newLine, 64).CopyTo(buffer, 1);
+                    else
+                        StringFormat(newLine, 64).CopyTo(buffer, 1);
                     SendRaw(13, buffer);
                 }
             }
@@ -4401,6 +4403,17 @@ Next: continue;
         public static byte[] StringFormat(string str, int size) {
             byte[] bytes = new byte[size];
             bytes = enc.GetBytes(str.PadRight(size).Substring(0, size));
+            return bytes;
+        }
+
+        public static byte[] StringFormat437(string str, int size)
+        {
+            byte[] bytes = new byte[size];
+            for (int i = 0; i < size; i++)
+                bytes[i] = (byte)' ';
+
+            for (int i = 0; i < Math.Min(str.Length, size); i++)
+                bytes[i] = (byte)str[i];
             return bytes;
         }
 

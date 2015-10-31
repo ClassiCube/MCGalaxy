@@ -545,7 +545,7 @@ namespace MCGalaxy
         }
 
 
-        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, bool addaction = true, bool blockdefinitions = true)
+        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, bool addaction = true, bool blockdefinitions = false)
         {
             string errorLocation = "start";
         retry:
