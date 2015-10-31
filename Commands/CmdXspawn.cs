@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
         }
 		public override void Help(Player p)
 		{
-			Player.SendMessage(p, "/xspawn - Spawn another player.");
+			Player.SendMessage(p, "/xspawn [player] - Spawn another player.");
             Player.SendMessage(p, "WARNING: It says who used it!");
 		}
 	}

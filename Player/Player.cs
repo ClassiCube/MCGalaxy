@@ -528,7 +528,6 @@ namespace MCGalaxy {
         //They would still have to do p.Dispose()..
         public Player(string playername) { name = playername; if (playername == "IRC") { group = Group.Find("nobody"); color = c.lime; } }
 
-        public Queue<Packet> Packets;
         public NetworkStream Stream;
         public BinaryReader Reader;
 
@@ -898,13 +897,6 @@ namespace MCGalaxy {
                 name = enc.GetString(message, 1, 64).Trim();
                 truename = name;
 
-                if (name.Split('@').Length > 1)
-                {
-                    name = name.Split('@')[0];
-                    if (!MojangAccount.HasID(truename))
-                        MojangAccount.AddUser(truename);
-                    name += "_" + MojangAccount.GetID(truename);
-                }
                 string verify = enc.GetString(message, 65, 32).Trim();
                 if (Server.verify)
                 {
@@ -4495,7 +4487,6 @@ Next: continue;
         }
         public static bool ValidName(string name, Player p = null) {
             string allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._+";
-            if (p != null && p.Mojangaccount) allowedchars += "-";
             return name.All(ch => allowedchars.IndexOf(ch) != -1);
         }
 

@@ -61,7 +61,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdBotSet()), "set bot ai");
             new CommandKeywords((new CmdBotSummon()), "summon bot");
             new CommandKeywords((new CmdC4()), "tnt c4 explosion");
-            new CommandKeywords((new CmdCalculate()), "calc number");
             new CommandKeywords((new CmdChain()), "grab block mushroom brown");
             new CommandKeywords((new CmdChangeLog()), "MCGalaxy change log");
             new CommandKeywords((new CmdChatRoom()), "chat room join leave del add remove");
