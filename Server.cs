@@ -73,6 +73,8 @@ namespace MCGalaxy
         //public static List<MySql.Data.MySqlClient.MySqlCommand> mySQLCommands = new List<MySql.Data.MySqlClient.MySqlCommand>();
         public static WebServer APIServer;
         public static WebServer InfoServer;
+
+        public static List<BlockDefinitions> Blocks = new List<BlockDefinitions>();
         public static int speedPhysics = 250;
 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
@@ -917,6 +919,7 @@ namespace MCGalaxy
                 {
                     Server.s.Log("Failed to start local API server");
                 }
+
                 IRC = new ForgeBot(Server.ircChannel, Server.ircOpChannel, Server.ircNick, Server.ircServer);
                 GlobalChat = new GlobalChatBot(GlobalChatNick());
 
@@ -1103,6 +1106,7 @@ namespace MCGalaxy
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Alias.Load();
+            Server.Blocks = BlockDefinitionsJSON.Load("blocks.json");
         }
 
         public static void Setup()

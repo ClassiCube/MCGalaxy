@@ -18,6 +18,7 @@ namespace MCGalaxy
         public int HackControl = 0;
         public int EmoteFix = 0;
         public int MessageTypes = 0;
+        public int BlockDefinitions = 0;
 
         public void AddExtension(string Extension, int version)
         {
@@ -88,6 +89,42 @@ namespace MCGalaxy
                         }
                         break;*/
                     case "EnvColors":
+                        SendEnvSetColor(0, -1, -1, -1);
+                        SendEnvSetColor(1, -1, -1, -1);
+                        SendEnvSetColor(2, -1, -1, -1);
+                        SendEnvSetColor(3, -1, -1, -1);
+                        SendEnvSetColor(4, -1, -1, -1);
+                        System.Drawing.Color col;
+                        try
+                        {
+                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.SkyColor.ToUpper());
+                            SendEnvSetColor(0, col.R, col.G, col.B);
+                        }
+                        catch { }
+                        try
+                        {
+                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.CloudColor.ToUpper());
+                            SendEnvSetColor(1, col.R, col.G, col.B);
+                        }
+                        catch { }
+                        try
+                        {
+                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.FogColor.ToUpper());
+                            SendEnvSetColor(2, col.R, col.G, col.B);
+                        }
+                        catch { }
+                        try
+                        {
+                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.ShadowColor.ToUpper());
+                            SendEnvSetColor(3, col.R, col.G, col.B);
+                        }
+                        catch { }
+                        try
+                        {
+                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.LightColor.ToUpper());
+                            SendEnvSetColor(4, col.R, col.G, col.B);
+                        }
+                        catch { }
                         EnvColors = version;
                         break;
                     case "SelectionCuboid":
@@ -97,12 +134,32 @@ namespace MCGalaxy
                         BlockPermissions = version;
                         break;
                     case "ChangeModel":
+                        Player.players.ForEach(p =>
+                        {
+                            if (p.level == this.level)
+                                if (p == this) unchecked { SendChangeModel((byte)-1, model); }
+                                else
+                                {
+                                    SendChangeModel(p.id, p.model);
+                                    if (p.HasExtension("ChangeModel"))
+                                        p.SendChangeModel(this.id, model);
+                                }
+                        });
                         ChangeModel = version;
                         break;
                     case "EnvMapAppearance":
+                        if (level.textureUrl == "")
+                        {
+                            SendSetMapAppearance(Server.defaultTextureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+                        }
+                        else
+                        {
+                            SendSetMapAppearance(level.textureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+                        }
                         EnvMapAppearance = version;
                         break;
                     case "EnvWeatherType":
+                        SendSetMapWeather(level.weather);
                         EnvWeatherType = version;
                         break;
                     case "HackControl":
@@ -114,18 +171,31 @@ namespace MCGalaxy
                     case "MessageTypes":
                         MessageTypes = version;
                         break;
+                    case "BlockDefinitions":
+                        try
+                        {
+
+                            foreach (BlockDefinitions bd in Server.Blocks)
+                            {
+                                SendBlockDefinitions(bd);
+                                SendSetBlockPermission(bd.ID, 1, 1);
+                            }
+                            Server.s.Log("Player supports Block Definitions");
+                        }
+                        catch { }
+                        BlockDefinitions = version;
+                        break;
                 }
             }
         }
 
         public bool HasExtension(string Extension, int version = 1)
         {
-            if(extension)
+            if(!extension)
             {
-                return true;
+                return false;
             }
-            return false;
-            /*switch (Extension)
+            switch (Extension)
             {
                 case "ClickDistance": return ClickDistance == version;
                 case "CustomBlocks": return CustomBlocks == version;
@@ -141,8 +211,9 @@ namespace MCGalaxy
                 case "HackControl": return HackControl == version;
                 case "EmoteFix": return EmoteFix == version;
                 case "MessageTypes": return MessageTypes == version;
+                case "BlockDefinitions": return BlockDefinitions == version;
                 default: return false;
-            }*/
+            }
         }
     }
 }

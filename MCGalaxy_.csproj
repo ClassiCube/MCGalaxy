@@ -130,7 +130,9 @@
     <Compile Include="AutoSaver.cs" />
     <Compile Include="Ban.cs" />
     <Compile Include="Block.cs" />
+    <Compile Include="BlockDefinitions.cs" />
     <Compile Include="ChatMessage.cs" />
+    <Compile Include="Commands\CmdAddGlobalBlock.cs" />
     <Compile Include="Commands\CmdBack.cs" />
     <Compile Include="Commands\CmdC4.cs" />
     <Compile Include="Commands\CmdEnvironment.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="Commands\CmdTopFive.cs" />
     <Compile Include="Commands\CmdWhoNick.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
+    <Compile Include="BlockDefinitionsJSON.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -584,12 +587,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\EditText.resx">
       <DependentUpon>EditText.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Textures.resx">
       <DependentUpon>Textures.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PropertyWindow.resx">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
@@ -605,6 +610,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\WoM.resx">
       <DependentUpon>WoM.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />
     <Compile Include="sharkbite.thresher\CommandBuilder.cs" />

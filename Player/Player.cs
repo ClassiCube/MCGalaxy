@@ -1115,6 +1115,7 @@ namespace MCGalaxy {
                     SendExtEntry("EnvWeatherType", 1);
                     SendExtEntry("HackControl", 1);
                     SendExtEntry("EmoteFix", 1);
+                 //TODO   SendExtEntry("BlockDefinitions", 1);
                     SendCustomBlockSupportLevel(1);
                 }
                 foreach (Player p in players)
@@ -1180,6 +1181,7 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
             }
+
             //OpenClassic Client Check
             SendBlockchange(0, 0, 0, 0);
             Database.AddParams("@Name", name);
@@ -1261,6 +1263,7 @@ namespace MCGalaxy {
             PlayerDB.Load(this);
             SetPrefix();
             playerDb.Dispose();
+
             if (PlayerConnect != null)
                 PlayerConnect(this);
             OnPlayerConnectEvent.Call(this);
@@ -1516,11 +1519,14 @@ namespace MCGalaxy {
             }
         }
         public void manualChange(ushort x, ushort y, ushort z, byte action, byte type) {
-            if ( type > 65 ) {
-                Kick("Unknown block type!");
-                return;
-            }
-
+             if (!(!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null) && HasExtension("BlockDefinitions")))
+              {
+                 if (type > 65)
+                 {
+                    Kick("Unknown block type!");
+                    return;
+                  }
+              }
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
             if ( jailed || !agreed ) { SendBlockchange(x, y, z, b); return; }
@@ -1662,15 +1668,15 @@ namespace MCGalaxy {
 
 
             if ( action > 1 ) { Kick("Unknown block action!"); }
-
             byte oldType = type;
-            type = bindings[type];
+            //Block Definitions
+            if (type < 128)
+                type = bindings[type];
             //Ignores updating blocks that are the same and send block only to the player
             if ( b == (byte)( ( painting || action == 1 ) ? type : (byte)0 ) ) {
                 if ( painting || oldType != type ) { SendBlockchange(x, y, z, b); } return;
             }
             //else
-
             if ( !painting && action == 0 ) {
                 if ( !deleteMode ) {
                     if ( Block.portal(b) ) { HandlePortal(this, x, y, z, b); return; }
@@ -1862,7 +1868,8 @@ namespace MCGalaxy {
 
         public void placeBlock(byte b, byte type, ushort x, ushort y, ushort z) {
             if ( Block.odoor(b) != Block.Zero ) { SendMessage("oDoor here!"); return; }
-
+            if (!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null))
+                level.Blockchange(this, x, y, z, type, true, true);
             switch ( BlockAction ) {
                 case 0: //normal
                     if ( level.physics == 0 || level.physics == 5 ) {
@@ -3018,7 +3025,7 @@ return;
                 foreach ( string line in Wordwrap(message) ) {
                     string newLine = line;
                     if ( newLine.TrimEnd(' ')[newLine.TrimEnd(' ').Length - 1] < '!' ) {
-                        if (HasExtension("EmoteFix"))
+                        if (!HasExtension("EmoteFix"))
                         {
                             newLine += '\'';
                         }
@@ -3098,6 +3105,7 @@ return;
                     }
                 }
                 SendRaw(2);
+
                 buffer = buffer.GZip();
                 int number = (int)Math.Ceiling(( (double)buffer.Length ) / 1024);
                 for ( int i = 1; buffer.Length > 0; ++i ) {
@@ -3120,7 +3128,60 @@ return;
                 HTNO((short)level.height).CopyTo(buffer, 4);
                 SendRaw(4, buffer);
                 Loading = false;
-
+                if (HasExtension("EnvWeatherType"))
+                {
+                    SendSetMapWeather(level.weather);
+                }
+                if (HasExtension("EnvSetColor"))
+                {
+                    SendEnvSetColor(0, -1, -1, -1);
+                    SendEnvSetColor(1, -1, -1, -1);
+                    SendEnvSetColor(2, -1, -1, -1);
+                    SendEnvSetColor(3, -1, -1, -1);
+                    SendEnvSetColor(4, -1, -1, -1);
+                    System.Drawing.Color col;
+                    try
+                    {
+                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.SkyColor.ToUpper());
+                        SendEnvSetColor(0, col.R, col.G, col.B);
+                    }
+                    catch { }
+                    try
+                    {
+                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.CloudColor.ToUpper());
+                        SendEnvSetColor(1, col.R, col.G, col.B);
+                    }
+                    catch { }
+                    try
+                    {
+                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.FogColor.ToUpper());
+                        SendEnvSetColor(2, col.R, col.G, col.B);
+                    }
+                    catch { }
+                    try
+                    {
+                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.ShadowColor.ToUpper());
+                        SendEnvSetColor(3, col.R, col.G, col.B);
+                    }
+                    catch { }
+                    try
+                    {
+                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.LightColor.ToUpper());
+                        SendEnvSetColor(4, col.R, col.G, col.B);
+                    }
+                    catch { }
+                }
+                if (HasExtension("EnvMapAppearance"))
+                {
+                    if (level.textureUrl == "")
+                    {
+                        SendSetMapAppearance(Server.defaultTextureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+                    }
+                    else
+                    {
+                        SendSetMapAppearance(level.textureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+                    }
+                }
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
             }
@@ -3135,60 +3196,6 @@ return;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 //Server.s.Log((DateTime.Now - start).TotalMilliseconds.ToString()); // We dont want random numbers showing up do we?
-            }
-            if (HasExtension("EnvWeatherType"))
-            {
-                SendSetMapWeather(level.weather);
-            }
-            if (HasExtension("EnvSetColor"))
-            {
-                SendEnvSetColor(0, -1, -1, -1);
-                SendEnvSetColor(1, -1, -1, -1);
-                SendEnvSetColor(2, -1, -1, -1);
-                SendEnvSetColor(3, -1, -1, -1);
-                SendEnvSetColor(4, -1, -1, -1);
-                System.Drawing.Color col;
-                try
-                {
-                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.SkyColor.ToUpper());
-                    SendEnvSetColor(0, col.R, col.G, col.B);
-                }
-                catch { }
-                try
-                {
-                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.CloudColor.ToUpper());
-                    SendEnvSetColor(1, col.R, col.G, col.B);
-                }
-                catch { }
-                try
-                {
-                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.FogColor.ToUpper());
-                    SendEnvSetColor(2, col.R, col.G, col.B);
-                }
-                catch { }
-                try
-                {
-                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.ShadowColor.ToUpper());
-                    SendEnvSetColor(3, col.R, col.G, col.B);
-                }
-                catch { }
-                try
-                {
-                    col = System.Drawing.ColorTranslator.FromHtml("#" + level.LightColor.ToUpper());
-                    SendEnvSetColor(4, col.R, col.G, col.B);
-                }
-                catch { }
-            }
-            if (HasExtension("EnvMapAppearance"))
-            {
-                if (level.textureUrl == "")
-                {
-                    SendSetMapAppearance(Server.defaultTextureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
-                }
-                else
-                {
-                    SendSetMapAppearance(level.textureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
-                }
             }
         }
         public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty)
@@ -3246,6 +3253,12 @@ rot = new byte[2] { rotx, roty };*/
         //TODO: Figure a way to SendPos without changing rotation
         public void SendDie(byte id) { SendRaw(0x0C, new byte[1] { id }); }
         public void SendBlockchange(ushort x, ushort y, ushort z, byte type) {
+            bool skip = false;
+            if (type == Block.block_definitions)
+            {
+                skip = true;
+                type = level.CustomBlocks[level.PosToInt(x, y, z)];
+            }
             if ( x < 0 || y < 0 || z < 0 ) return;
             if ( x >= level.width || y >= level.depth || z >= level.height ) return;
 
@@ -3253,15 +3266,17 @@ rot = new byte[2] { rotx, roty };*/
             HTNO(x).CopyTo(buffer, 0);
             HTNO(y).CopyTo(buffer, 2);
             HTNO(z).CopyTo(buffer, 4);
-            if (extension == true)
+            if (!skip)
             {
-                buffer[6] = (byte)Block.Convert(type);
+                if (extension == true)
+                {
+                    buffer[6] = (byte)Block.Convert(type);
+                }
+                else
+                {
+                    buffer[6] = (byte)Block.Convert(Block.ConvertCPE(type));
+                }
             }
-            else
-            {
-                buffer[6] = (byte)Block.Convert(Block.ConvertCPE(type));
-            }
-
             SendRaw(6, buffer);
         }
         void SendKick(string message) { SendRaw(14, StringFormat(message, 64)); }
@@ -3397,6 +3412,27 @@ rot = new byte[2] { rotx, roty };*/
 			HTNO( maxjumpheight ).CopyTo( buffer, 6 );
 			SendRaw( 32, buffer );
 		}
+        public void SendBlockDefinitions(BlockDefinitions bd)
+        {
+            byte[] buffer = new byte[79];
+            buffer[0] = bd.ID;
+            StringFormat(bd.Name, 64).CopyTo(buffer, 1);
+            buffer[65] = bd.Solidity;
+            buffer[66] = bd.MovementSpeed;
+            buffer[67] = bd.TopT;
+            buffer[68] = bd.SideT;
+            buffer[69] = bd.BottomT;
+            buffer[70] = bd.TransmitsLight;
+            buffer[71] = bd.WalkSound;
+            buffer[72] = bd.FullBright;
+            buffer[73] = bd.Shape;
+            buffer[74] = bd.BlockDraw;
+            buffer[75] = bd.FogD;
+            buffer[76] = bd.FogR;
+            buffer[77] = bd.FogG;
+            buffer[78] = bd.FogB;
+            SendRaw(35, buffer);
+        }
         void UpdatePosition() {
 
             //pingDelayTimer.Stop();

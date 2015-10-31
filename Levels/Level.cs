@@ -92,6 +92,7 @@ namespace MCGalaxy
         public bool backedup;
         public List<BlockPos> blockCache = new List<BlockPos>();
         public byte[] blocks;
+        public byte[] CustomBlocks;
         public byte weather;
         public string textureUrl = "";
 
@@ -214,6 +215,7 @@ namespace MCGalaxy
 
             name = n;
             blocks = new byte[width * depth * height];
+            CustomBlocks = new byte[width * depth * height];
             ZoneList = new List<Zone>();
 
             var half = (ushort)(depth / 2);
@@ -326,6 +328,7 @@ namespace MCGalaxy
             ZoneList.Clear();
             blockqueue.Clear();
             blocks = null;
+            CustomBlocks = null;
         }
 
         #endregion
@@ -536,7 +539,7 @@ namespace MCGalaxy
         }
 
 
-        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, bool addaction = true)
+        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, bool addaction = true, bool blockdefinitions = true)
         {
             string errorLocation = "start";
         retry:
@@ -546,6 +549,9 @@ namespace MCGalaxy
                 if (x >= width || y >= depth || z >= height) return;
 
                 byte b = GetTile(x, y, z);
+
+                if (blockdefinitions)
+                    b = Block.block_definitions;
 
                 errorLocation = "Block rank checking";
                 if (!Block.AllowBreak(b))
@@ -1047,7 +1053,9 @@ namespace MCGalaxy
                             header[14] = (byte)permissionvisit;
                             header[15] = (byte)permissionbuild;
                             gs.Write(header, 0, header.Length);
+
                             var level = new byte[blocks.Length];
+
                             for (int i = 0; i < blocks.Length; ++i)
                             {
                                 if (blocks[i] < 66)
@@ -1061,6 +1069,31 @@ namespace MCGalaxy
                                 }
                             }
                             gs.Write(level, 0, level.Length);
+                            CustomBlocks[0] = 1;
+                            if (CustomBlocks != null)
+                            {
+                                var chunks = CustomBlocks.Split(width * height * depth / 4096);
+                                //Identifier
+                                gs.WriteByte(2);
+                                foreach (var test in chunks)
+                                {
+                                    bool empty = true;
+                                    foreach (byte a in test)
+                                    {
+                                        if (a != 0)
+                                            empty = false;
+                                    }
+                                    if (empty)
+                                    {
+                                        gs.WriteByte(0);
+                                    }
+                                    else
+                                    {
+                                        gs.WriteByte(1);
+                                        gs.Write(test.ToArray(), 0, test.Count());
+                                    }
+                                }
+                            }
                             gs.Close();
                             File.Delete(string.Format("{0}.backup", path));
                             File.Copy(string.Format("{0}.back", path), path + ".backup");
@@ -1276,7 +1309,29 @@ namespace MCGalaxy
                     level.setPhysics(phys);
 
                     var blocks = new byte[level.width * level.height * level.depth];
+                    var customblocks = new byte[level.width * level.length * level.depth];
                     gs.Read(blocks, 0, blocks.Length);
+                    try {
+                        int chunkSize = level.width * level.length * level.depth / 4096;
+                        int offset = 0;
+                        if (gs.ReadByte() == 2)
+                        {
+                            for (int i = 1; i <= chunkSize; i++)
+                            {
+                                offset += 1;
+                                if (gs.ReadByte() == 1)
+                                {
+                                    gs.Read(customblocks, offset, chunkSize);
+                                    offset += 16;
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        customblocks = null;
+                    }
+                    level.CustomBlocks = customblocks;
                     level.blocks = blocks;
                     gs.Close();
                     gs.Dispose();

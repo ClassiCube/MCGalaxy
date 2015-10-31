@@ -38,17 +38,17 @@ namespace MCGalaxy
         }
         public static byte[] GZip(this byte[] bytes)
         {
-			using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
-			{
-				GZipStream gs = new GZipStream(ms, CompressionMode.Compress, true);
-				gs.Write(bytes, 0, bytes.Length);
-				gs.Close();
-				ms.Position = 0;
-				bytes = new byte[ms.Length];
-				ms.Read(bytes, 0, (int)ms.Length);
-				ms.Close();
-				ms.Dispose();
-			}
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                GZipStream gs = new GZipStream(ms, CompressionMode.Compress, true);
+                gs.Write(bytes, 0, bytes.Length);
+                gs.Close();
+                ms.Position = 0;
+                bytes = new byte[ms.Length];
+                ms.Read(bytes, 0, (int)ms.Length);
+                ms.Close();
+                ms.Dispose();
+            }
             return bytes;
         }
         public static byte[] Decompress(this byte[] gzip)
@@ -88,7 +88,7 @@ namespace MCGalaxy
             }
             else throw new NotImplementedException("This function only supports positive integers for offset");
 
-            if(length > 0)
+            if (length > 0)
             {
                 tmp = tmp.Take(length);
             }
@@ -97,7 +97,7 @@ namespace MCGalaxy
                 // Do nothing
             }
             else throw new NotImplementedException("This function only supports non-negative integers for length");
-            
+
             return tmp.ToArray();
         }
         public static string Capitalize(this string str)
@@ -128,8 +128,8 @@ namespace MCGalaxy
         {
             // Allowed chars are any ASCII char between 20h/32 and 7Dh/125 inclusive, except for 26h/38 (&) and 60h/96 (`)
             str = Regex.Replace(str, @"[^\u0000-\u007F]", "");
-             
-            if (String.IsNullOrEmpty(str.Trim())) 
+
+            if (String.IsNullOrEmpty(str.Trim()))
                 return str;
 
             StringBuilder sb = new StringBuilder();
@@ -152,26 +152,39 @@ namespace MCGalaxy
             return "application/octet-stream";
         }
 
-        public static void DeleteLine(string file, string line) {
+        public static void DeleteLine(string file, string line)
+        {
             var complete = from selectLine in File.ReadAllLines(file) where selectLine != line select selectLine;
             File.WriteAllLines(file, complete.ToArray());
         }
 
-        public static void DeleteLineWord(string file, string word) {
-                var complete = from selectLine in File.ReadAllLines(file) where !selectLine.Contains(word) select selectLine;
-                File.WriteAllLines(file, complete.ToArray());
+        public static void DeleteLineWord(string file, string word)
+        {
+            var complete = from selectLine in File.ReadAllLines(file) where !selectLine.Contains(word) select selectLine;
+            File.WriteAllLines(file, complete.ToArray());
         }
 
-        public static void DeleteExactLineWord(string file, string word) {
+        public static void DeleteExactLineWord(string file, string word)
+        {
             var complete = from selectLine in File.ReadAllLines(file) where !selectLine.Equals(word) select selectLine;
             File.WriteAllLines(file, complete.ToArray());
         }
 
-        public static void UncapitalizeAll(string file) {
+        public static void UncapitalizeAll(string file)
+        {
             string[] complete = File.ReadAllLines(file);
             for (int i = 0; i < complete.Length; i++)
                 complete[i] = complete[i].ToLower();
             File.WriteAllLines(file, complete);
+        }
+
+        public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> list, int parts)
+        {
+            int i = 0;
+            var splits = from item in list
+                         group item by i++ % parts into part
+                         select part.AsEnumerable();
+            return splits;
         }
     }
 }

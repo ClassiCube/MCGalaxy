@@ -35,7 +35,7 @@ using System.Text.RegularExpressions;
 using Org.Mentalis.Security.Ssl;
 #endif
 
-[assembly:CLSCompliant(true)]
+[assembly:CLSCompliant(false)]
 [assembly:ComVisible(false)]
 namespace Sharkbite.Irc
 {
