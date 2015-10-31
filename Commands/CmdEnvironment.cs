@@ -29,11 +29,16 @@ namespace MCGalaxy.Commands {
         public CmdEnvironment() { }
 
         public override void Use(Player p, string message) {
+        	message = message.ToLower();
+        	if (message == "l preset" || message == "level preset") {
+        		SendPresetsMessage(p);
+        		return;
+        	}
             string[] args = null;
             if (message == "" || (args = message.Split(' ')).Length < 3) {
                 Help(p); return;
             } else {
-                string group = args[0].ToLower();
+                string group = args[0];
                 string target = null;
                 
                 if (group == "player" || group == "p") {
@@ -44,7 +49,7 @@ namespace MCGalaxy.Commands {
                     p.SendMessage(string.Format("Env: Unrecognised target \"{0}\".", group));
                     return;
                 }
-                Handle(p, target, args[1].ToLower(), args[2].ToLower());
+                Handle(p, target, args[1], args[2]);
             }
         }
         
@@ -273,10 +278,16 @@ namespace MCGalaxy.Commands {
             
             if( preset != null ) {
                 SendEnvColorPacket(p, level, 0, preset.Sky);
+                if (level) p.level.SkyColor = preset.Sky;
                 SendEnvColorPacket(p, level, 1, preset.Clouds);
+                if (level) p.level.CloudColor = preset.Clouds;
                 SendEnvColorPacket(p, level, 2, preset.Fog);
+                if (level) p.level.FogColor = preset.Fog;
                 SendEnvColorPacket(p, level, 3, preset.Shadow);
+                if (level) p.level.ShadowColor = preset.Shadow;
                 SendEnvColorPacket(p, level, 4, preset.Sun);
+                if (level) p.level.LightColor = preset.Sun;
+                
                 if (CaselessEquals( value, "normal") && level) {
                     Command.all.Find("env").Use(p, "l weather 0");
                     Command.all.Find("env").Use(p, "l water normal");
@@ -285,8 +296,7 @@ namespace MCGalaxy.Commands {
                 }
                 return true;
             } else {
-                p.SendMessage("/env l preset [type] -- Uses an env preset on your map");
-                p.SendMessage("Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
+            	SendPresetsMessage(p);
                 return false;
             }
         }
@@ -319,6 +329,11 @@ namespace MCGalaxy.Commands {
         
         bool CaselessEquals(string a, string b) {
             return a.Equals(b, StringComparison.OrdinalIgnoreCase);
+        }
+        
+        static void SendPresetsMessage(Player p) {
+        	 p.SendMessage("/env l preset [type] -- Uses an env preset on your map");
+             p.SendMessage("Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
         }
         
         public override void Help(Player p) {

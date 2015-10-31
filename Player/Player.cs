@@ -38,7 +38,7 @@ namespace MCGalaxy {
         /// All players who have left this restart.
         /// </summary>
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();
-        private static readonly char[] UnicodeReplacements = " ☺☻♥♦♣♠•◘○\n♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼".ToCharArray();
+
         public static readonly Dictionary<string, char> EmoteKeywords = new Dictionary<string, char> {
             { "darksmile", '\u0001' },
 
@@ -194,7 +194,6 @@ namespace MCGalaxy {
             output.Append(message, lastAppendedIndex, message.Length - lastAppendedIndex);
             return output.ToString();
         }
-        private static readonly Regex EmoteSymbols = new Regex("[\x00-\x1F\x7F☺☻♥♦♣♠•◘○\n♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼⌂]");
         public void ClearChat() { OnChat = null; }
         public static Dictionary<string, string> left = new Dictionary<string, string>();
         /// <summary>
