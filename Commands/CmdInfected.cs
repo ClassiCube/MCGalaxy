@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
                 string playerstring = "";
                 ZombieGame.infectd.ForEach(delegate(Player player)
                 {
-                    playerstring = playerstring + c.red + player.name + Server.DefaultColor + ", ";
+                    playerstring = playerstring + c.red + player.DisplayName + Server.DefaultColor + ", ";
                 });
                 Player.SendMessage(p, playerstring);
             }

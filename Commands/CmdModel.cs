@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands
             else
             {
                 Command.all.Find("aka").Use(targetPlayer, "");
-                Player.GlobalMessage(targetPlayer.color + targetPlayer.name + "'s" + Server.DefaultColor + " model was changed to a &c" + model);
+                Player.GlobalMessage(targetPlayer.color + targetPlayer.DisplayName + "'s" + Server.DefaultColor + " model was changed to a &c" + model);
             }
         }
 

@@ -237,7 +237,13 @@ namespace MCGalaxy
                                 else if (x == 0 || x == width - 1 || z == 0 || z == height - 1)
                                     SetTile(x, y, z, 36);
                     break;
-
+                case "empty":
+                    for (x = 0; x < width; ++x)
+                        for (z = 0; z < height; ++z)
+                            for (y = 0; y < depth; ++y)
+                                if (y == 0)
+                                    SetTile(x, y, z, 7);
+                    break;
                 case "space":
                     Random rand = useSeed ? new Random(seed) : new Random();
 

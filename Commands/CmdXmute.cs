@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            Player.GlobalMessage(muter.color + muter.name + " has been muted for " + time + " seconds");
+            Player.GlobalMessage(muter.color + muter.DisplayName + Server.DefaultColor + " has been muted for " + time + " seconds");
             Player.SendMessage(muter, "You have been muted for " + time + " seconds");
 
             Thread.Sleep(time * 1000);

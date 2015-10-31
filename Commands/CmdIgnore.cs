@@ -94,13 +94,13 @@ namespace MCGalaxy.Commands
             if (!File.Exists(chosenpath) || !p.listignored.Contains(who.name))
             {
                 p.listignored.Add(who.name);
-                Player.SendMessage(p, "Player now ignored: &c" + who.name + "!");
+                Player.SendMessage(p, "Player now ignored: &c" + who.DisplayName + "!");
                 return;
             }
             if (p.listignored.Contains(who.name))
             {
                 p.listignored.Remove(who.name);
-                Player.SendMessage(p, "Player is no longer ignored: &a" + who.name + "!");
+                Player.SendMessage(p, "Player is no longer ignored: &a" + who.DisplayName + "!");
                 return;
             }
             Player.SendMessage(p, "Something is stuffed.... Tell a MCGalaxy Developer!");

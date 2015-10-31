@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
             else
             {
                 who.ignoreGrief = !who.ignoreGrief;
-                Player.SendMessage(p, who.color + who.name + Server.DefaultColor + "'s trust status: " + who.ignoreGrief);
+                Player.SendMessage(p, who.color + who.DisplayName + Server.DefaultColor + "'s trust status: " + who.ignoreGrief);
                 who.SendMessage("Your trust status was changed to: " + who.ignoreGrief);
             }
         }

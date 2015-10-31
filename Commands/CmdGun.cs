@@ -226,7 +226,7 @@ namespace MCGalaxy.Commands
                             {
                                 if (by != Block.glass)
                                 {
-                                    if (p.allowTnt == true)
+                                    if (p.allowTnt)
                                     {
                                         p.level.MakeExplosion(pos.x, pos.y, pos.z, 1);
                                         break;

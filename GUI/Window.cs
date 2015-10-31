@@ -1415,7 +1415,7 @@ namespace MCGalaxy.Gui
                 return;
             }
             Command.all.Find("Hide").Use(prpertiesofplyer, "");
-            if (prpertiesofplyer.hidden == true)
+            if (prpertiesofplyer.hidden)
             {
                 PlayersTextBox.AppendTextAndScroll("Hid Player");
                 HideBt.Text = "UnHide";
@@ -1448,7 +1448,7 @@ namespace MCGalaxy.Gui
                 return;
             }
             Command.all.Find("Joker").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.joker == true)
+            if (prpertiesofplyer.joker)
             {
                 PlayersTextBox.AppendTextAndScroll("Jokered Player");
                 JokerBt.Text = "UnJoker";
@@ -1470,7 +1470,7 @@ namespace MCGalaxy.Gui
                 return;
             }
             Command.all.Find("Freeze").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.frozen == true)
+            if (prpertiesofplyer.frozen)
             {
                 PlayersTextBox.AppendTextAndScroll("Froze Player");
                 FreezeBt.Text = "UnFreeze";
@@ -1492,7 +1492,7 @@ namespace MCGalaxy.Gui
                 return;
             }
             Command.all.Find("Mute").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.muted == true)
+            if (prpertiesofplyer.muted)
             {
                 PlayersTextBox.AppendTextAndScroll("Muted Player");
                 MuteBt.Text = "UnMute";
@@ -1514,7 +1514,7 @@ namespace MCGalaxy.Gui
                 return;
             }
             Command.all.Find("Voice").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.voice == true)
+            if (prpertiesofplyer.voice)
             {
                 PlayersTextBox.AppendTextAndScroll("Voiced Player");
                 VoiceBt.Text = "UnVoice";
@@ -1548,7 +1548,7 @@ namespace MCGalaxy.Gui
                 return;
             }
             Command.all.Find("Jail").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.jailed == true)
+            if (prpertiesofplyer.jailed)
             {
                 PlayersTextBox.AppendTextAndScroll("Jailed Player");
                 JailBt.Text = "UnJail";

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
             if (message != "") { Help(p); return; }
             Command.all.Find("devs").Use(p, "");
             Command.all.Find("mods").Use(p, "");
-            Command.all.Find("gcmods").Use(p, "");
+            //Command.all.Find("gcmods").Use(p, "");
         }
 
         public override void Help(Player p)

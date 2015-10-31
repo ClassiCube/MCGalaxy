@@ -131,8 +131,9 @@
     <Compile Include="Ban.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="BlockDefinitions.cs" />
+    <Compile Include="BlockDefinitionsJSON.cs" />
     <Compile Include="ChatMessage.cs" />
-    <Compile Include="Commands\CmdAddGlobalBlock.cs" />
+    <Compile Include="CmdAddGlobalBlock.cs" />
     <Compile Include="Commands\CmdBack.cs" />
     <Compile Include="Commands\CmdC4.cs" />
     <Compile Include="Commands\CmdEnvironment.cs" />
@@ -140,17 +141,19 @@
     <Compile Include="Commands\CmdGcbanlistupdate.cs" />
     <Compile Include="Commands\CmdGcmods.cs" />
     <Compile Include="Commands\CmdGcrules.cs" />
+    <Compile Include="Commands\CmdMark.cs" />
     <Compile Include="Commands\CmdModel.cs" />
     <Compile Include="Commands\CmdMods.cs" />
     <Compile Include="Commands\CmdQuit.cs" />
+    <Compile Include="Commands\CmdRanks.cs" />
     <Compile Include="Commands\CmdSearch.cs" />
     <Compile Include="Commands\CmdStaff.cs" />
     <Compile Include="Commands\CmdTexture.cs" />
     <Compile Include="Commands\CmdTntWars.cs" />
-    <Compile Include="Commands\CmdTopFive.cs" />
+    <Compile Include="Commands\CmdTop.cs" />
     <Compile Include="Commands\CmdWhoNick.cs" />
+    <Compile Include="Commands\CmdXModel.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
-    <Compile Include="BlockDefinitionsJSON.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -222,6 +225,7 @@
     <Compile Include="Plugins\ServerEvents\OnServerLogEvent.cs" />
     <Compile Include="Plugins\Utils\Priority.cs" />
     <Compile Include="Translate.cs" />
+    <Compile Include="Commands\CmdLocation.cs" />
     <Compile Include="Commands\CmdAscend.cs" />
     <Compile Include="Commands\CmdBanEdit.cs" />
     <Compile Include="Commands\CmdDescend.cs" />
@@ -322,7 +326,6 @@
     <Compile Include="Commands\CmdTempRank.cs" />
     <Compile Include="Commands\CmdTempRankInfo.cs" />
     <Compile Include="Commands\CmdTempRankList.cs" />
-    <Compile Include="Commands\CmdTopTen.cs" />
     <Compile Include="Commands\CmdTpZone.cs" />
     <Compile Include="Commands\CmdFlipHeads.cs" />
     <Compile Include="Commands\CmdFly.cs" />
@@ -587,14 +590,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\EditText.resx">
       <DependentUpon>EditText.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Textures.resx">
       <DependentUpon>Textures.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PropertyWindow.resx">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
@@ -610,7 +611,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\WoM.resx">
       <DependentUpon>WoM.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />
     <Compile Include="sharkbite.thresher\CommandBuilder.cs" />
@@ -647,7 +647,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="util\ExtrasCollection.cs" />
-    <Compile Include="Commands\cmdRestart.cs" />
+    <Compile Include="Commands\CmdRestart.cs" />
     <Compile Include="Heartbeat\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="queue\Cache.cs" />

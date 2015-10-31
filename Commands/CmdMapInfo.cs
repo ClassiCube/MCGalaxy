@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands
 
             Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(foundLevel.perbuildmax).color + Group.findPerm(foundLevel.perbuildmax).trueName + Server.DefaultColor + " : VisitMax Rank = " + Group.findPerm(foundLevel.pervisitmax).color + Group.findPerm(foundLevel.pervisitmax).trueName);
 
-            if (foundLevel.guns == true)
+            if (foundLevel.guns)
             {
                 Player.SendMessage(p, "&cGuns &eare &aonline &eon " + foundLevel.name + ".");
             }
@@ -85,7 +85,6 @@ namespace MCGalaxy.Commands
             {
                 Player.SendMessage(p, "No textures for this map exist yet.");
             }
-            Player.SendMessage(p, "Map Env:");
             if (foundLevel.FogColor != null) { Player.SendMessage(p, "Fog Color: %b" + foundLevel.FogColor.ToString()); }
             else { Player.SendMessage(p, "Fog Color: %bnone");  }
             if (foundLevel.CloudColor != null) { Player.SendMessage(p, "Cloud Color: %b" + foundLevel.CloudColor.ToString()); }

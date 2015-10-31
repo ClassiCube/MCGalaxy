@@ -41,6 +41,11 @@ namespace MCGalaxy.Commands
                 p.SendMessage("Please use http:// or https:// in front of your URL");
                 return;
             }
+            if (!pars[1].EndsWith(".png"))
+            {
+                p.SendMessage("Please make sure your URL ends in .png");
+                return;
+            }
             if (pars[0].ToLower() == "global")
             {
                 Server.defaultTextureUrl = pars[1];

@@ -38,11 +38,11 @@ namespace MCGalaxy.Commands
                     }
                     if (pl.group.Permission <= p.group.Permission && pl.hidden)
                     {
-                        Player.SendMessage(p, pl.color + pl.name + Server.DefaultColor + " last used \"" + pl.lastCMD + "\"");
+                        Player.SendMessage(p, pl.color + pl.DisplayName + Server.DefaultColor + " last used \"" + pl.lastCMD + "\"");
                     }
                     if (!pl.hidden)
                     {
-                        Player.SendMessage(p, pl.color + pl.name + Server.DefaultColor + " last used \"" + pl.lastCMD + "\"");
+                        Player.SendMessage(p, pl.color + pl.DisplayName + Server.DefaultColor + " last used \"" + pl.lastCMD + "\"");
                     }
                 }
             }
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
                 {
                     who.lastCMD = "";
                 }
-                Player.SendMessage(p, who.color + who.name + Server.DefaultColor + " last used \"" + who.lastCMD + "\"");
+                Player.SendMessage(p, who.color + who.DisplayName + Server.DefaultColor + " last used \"" + who.lastCMD + "\"");
             }
         }
         public override void Help(Player p)

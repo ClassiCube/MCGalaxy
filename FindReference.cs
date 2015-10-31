@@ -866,7 +866,38 @@ namespace MCGalaxy
                 tempref.b = 225;
                 tempref.type = 36;
                 refCol.Add(tempref);
-
+                tempref.r = 163;
+                tempref.g = 163;
+                tempref.b = 163;
+                tempref.type = 43; //doubleStair
+                refCol.Add(tempref);  
+                /*
+                tempref.r = 217; Turns out the back layer blocks are handled awfully.
+                tempref.g = 131;
+                tempref.b = 155;
+                tempref.type = 55; //lightPink
+                refCol.Add(tempref);      
+                tempref.r = 56;
+                tempref.g = 77;
+                tempref.b = 24;
+                tempref.type = 56; //forestGreen
+                refCol.Add(tempref);
+                tempref.r = 86;
+                tempref.g = 51;
+                tempref.b = 28;
+                tempref.type = 57; //brownWool
+                refCol.Add(tempref);
+                tempref.r = 39;
+                tempref.g = 51;
+                tempref.b = 154;
+                tempref.type = 58; //deepBlue
+                refCol.Add(tempref);
+                tempref.r = 39;
+                tempref.g = 117;
+                tempref.b = 149;
+                tempref.type = 59; //turk oys
+                refCol.Add(tempref); 
+                */
                 // BACK LAYER BLOCKS
 
                 tempref.r = 57;
@@ -974,6 +1005,7 @@ namespace MCGalaxy
                 tempref.b = 0;
                 tempref.type = 49;
                 refCol.Add(tempref);
+                
             }
             else if (popType == 2) // poptype 2 = 1 layer color image
             {

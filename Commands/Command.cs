@@ -158,6 +158,7 @@ namespace MCGalaxy
 			all.Add(new CmdLimit());
 			all.Add(new CmdLine());
 			all.Add(new CmdLoad());
+			all.Add(new CmdLocation());
 			all.Add(new CmdLockdown());
 			all.Add(new CmdLoginMessage());
 			all.Add(new CmdLogoutMessage());
@@ -165,6 +166,7 @@ namespace MCGalaxy
 			all.Add(new CmdMain());
 			all.Add(new CmdMap());
 			all.Add(new CmdMapInfo());
+			all.Add(new CmdMark());
 			all.Add(new CmdMaze());
 			all.Add(new CmdMe());
 			all.Add(new CmdMeasure());
@@ -221,7 +223,8 @@ namespace MCGalaxy
 			all.Add(new CmdRagequit());
 			all.Add(new CmdRainbow());
 			all.Add(new CmdRankInfo());
-			all.Add(new CmdRankMsg());            
+			all.Add(new CmdRankMsg()); 
+			all.Add(new CmdRanks());
 			all.Add(new CmdRedo());
 			all.Add(new CmdReload());
 			all.Add(new CmdReferee());
@@ -279,6 +282,7 @@ namespace MCGalaxy
 			all.Add(new CmdTitle());
 			all.Add(new CmdTnt());
 			all.Add(new CmdTntWars());
+			all.Add(new CmdTop());
             all.Add(new CmdTopFive());
 			all.Add(new CmdTopTen());
 			all.Add(new CmdTp());
@@ -316,6 +320,7 @@ namespace MCGalaxy
 			all.Add(new CmdXColor());
 			all.Add(new CmdXhide());
 			all.Add(new CmdXJail());
+			all.Add(new CmdXModel());
 			all.Add(new CmdXmute());
 			all.Add(new CmdXNick());
 			all.Add(new CmdXspawn());

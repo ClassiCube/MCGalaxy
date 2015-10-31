@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
 
             if (p.level != who.level)
             {
-                Player.SendMessage(p, who.name + " is in a different Level. Forcefetching has started!");
+                Player.SendMessage(p, who.DisplayName + " is in a different Level. Forcefetching has started!");
                 Level where = p.level;
                 Command.all.Find("goto").Use(who, where.name);
                 Thread.Sleep(1000);

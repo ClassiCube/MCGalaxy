@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/loginmessage [Player] [Message] - Customize your login message.");
-            if(Server.mono == true)
+            if(Server.mono)
             {
                 Player.SendMessage(p, "Please note that if the player is offline, the name is case sensitive.");
             }
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
                     {
                         File.WriteAllText("text/login/" + target.name + ".txt", s);
                     }
-                    Player.SendMessage(p, "The login message of " + target.name + " has been changed to:");
+                    Player.SendMessage(p, "The login message of " + target.color + target.DisplayName + Server.DefaultColor + " has been changed to:");
                     Player.SendMessage(p, s);
                     if (p != null)
                     {

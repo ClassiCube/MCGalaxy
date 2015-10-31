@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            if (who.invincible == true)
+            if (who.invincible)
             {
                 who.invincible = false;
                 if(p != null && who == p)
@@ -60,11 +60,11 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                	Player.SendMessage(p, who.color + who.name + Server.DefaultColor + " is no longer invincible.");
+                	Player.SendMessage(p, who.color + who.DisplayName + Server.DefaultColor + " is no longer invincible.");
                 }
                 
                 if (Server.cheapMessage && !p.hidden)
-                    Player.GlobalChat(who, who.color + who.name + Server.DefaultColor + " has stopped being immortal", false);
+                    Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " has stopped being immortal", false);
             }
             else
             {
@@ -74,11 +74,11 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-            		Player.SendMessage( p, who.color + who.name + Server.DefaultColor + "is now invincible.");
+            		Player.SendMessage( p, who.color + who.DisplayName + Server.DefaultColor + "is now invincible.");
                 }
                 who.invincible = true;
                 if (Server.cheapMessage && !p.hidden)
-                    Player.GlobalChat(who, who.color + who.name + Server.DefaultColor + " " + Server.cheapMessageGiven, false);
+                    Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " " + Server.cheapMessageGiven, false);
             }
         }
         public override void Help(Player p)

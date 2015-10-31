@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
                 if ( message.Substring(pos + 1) == "del" ) {
                     Database.AddParams("@Name", who.name);
                     Database.executeQuery("UPDATE Players SET color = '' WHERE name = @Name");
-                    Player.GlobalChat(who, who.color + "*" + Name(who.name) + " color reverted to " + who.group.color + "their group's default" + Server.DefaultColor + ".", false);
+                    Player.GlobalChat(who, who.color + "*" + Name(who.DisplayName) + " color reverted to " + who.group.color + "their group's default" + Server.DefaultColor + ".", false);
                     who.color = who.group.color;
 
                     Player.GlobalDie(who, false);
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
                 }
                 string color = c.Parse(message.Substring(pos + 1));
                 if ( color == "" ) { Player.SendMessage(p, "There is no color \"" + message + "\"."); }
-                else if ( color == who.color ) { Player.SendMessage(p, who.name + " already has that color."); }
+                else if ( color == who.color ) { Player.SendMessage(p, who.DisplayName + " already has that color."); }
                 else {
                     //Player.GlobalChat(who, p.color + "*" + p.name + "&e changed " + who.color + Name(who.name) +
                     //                  " color to " + color +
@@ -57,9 +57,9 @@ namespace MCGalaxy.Commands {
                     Database.AddParams("@Name", who.name);
                     Database.executeQuery("UPDATE Players SET color = @Color WHERE name = @Name");
 
-                    Player.GlobalChat(who, who.color + "*" + Name(who.name) + " color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
+                    Player.GlobalChat(who, who.color + "*" + Name(who.DisplayName) + " color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
                     if ( p == null ) {
-                        Player.SendMessage(p, "*" + Name(who.name) + " color was changed to " + c.Name(color) + ".");
+                        Player.SendMessage(p, "*" + Name(who.DisplayName) + " color was changed to " + c.Name(color) + ".");
                     }
                     who.color = color;
 
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
                         Database.AddParams("@Name", p.name);
                         Database.executeQuery("UPDATE Players SET color = '' WHERE name = @Name");
 
-                        Player.GlobalChat(p, p.color + "*" + Name(p.name) + " color reverted to " + p.group.color + "their group's default" + Server.DefaultColor + ".", false);
+                        Player.GlobalChat(p, p.color + "*" + Name(p.DisplayName) + " color reverted to " + p.group.color + "their group's default" + Server.DefaultColor + ".", false);
                         p.color = p.group.color;
 
                         Player.GlobalDie(p, false);
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands {
                         Database.AddParams("@Name", p.name);
                         Database.executeQuery("UPDATE Players SET color = @Color WHERE name = @Name");
 
-                        Player.GlobalChat(p, p.color + "*" + Name(p.name) + " color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
+                        Player.GlobalChat(p, p.color + "*" + Name(p.DisplayName) + " color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
                         p.color = color;
 
                         Player.GlobalDie(p, false);

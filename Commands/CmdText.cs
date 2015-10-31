@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             if (message.ToLower() == "superops" || message.ToLower() == "ops" || message.ToLower() == "advbuilders" || message.ToLower() == "builders")
             {
                 p.SendMessage("You cannot try to promote yourself with /text! You have been reported to all Ops!");
-                Player.GlobalMessageOps(p.color + p.name + Server.DefaultColor + " tried to promote themselves by using /text!!");
+                Player.GlobalMessageOps(p.color + p.DisplayName + Server.DefaultColor + " tried to promote themselves by using /text!!");
                 Server.s.Log(p.name + " tried to promote themselves using /text!!");
                 return;
             }

@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "You're not the server owner!");
                 return;
             }
-            if (p != null && p.adminpen == true)
+            if (p != null && p.adminpen)
             {
                 Player.SendMessage(p, "You cannot reset a password while in the admin pen!");
                 return;

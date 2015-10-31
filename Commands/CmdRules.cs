@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
                 {
                     Server.s.Log(((int)p.group.Permission).ToString());
                     Server.s.Log(CommandOtherPerms.GetPerm(this).ToString());
-                    Player.SendMessage(p, "You cant send /rules to another player!");
+                    Player.SendMessage(p, "You can't send /rules to another player!");
                     return;
                 }
                 who = Player.Find(message);
@@ -64,9 +64,10 @@ namespace MCGalaxy.Commands
                 who.hasreadrules = true;
                 if (who.level == Server.mainLevel && Server.mainLevel.permissionbuild == LevelPermission.Guest) { who.SendMessage("You are currently on the guest map where anyone can build"); }
                 who.SendMessage("Server Rules:");
+                if (who.name != p.name) {Player.SendMessage(p, "Sent the rules to " + who.color + who.DisplayName + Server.DefaultColor + ".");}
                 foreach (string s in rules)
                     who.SendMessage(s);
-                
+                if (who.name != p.name) {who.SendMessage(p.color + p.DisplayName + Server.DefaultColor + " sent you the rules.");}
             }
             else if (p == null && String.IsNullOrEmpty(message))
             {
@@ -82,7 +83,15 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/rules [player]- Displays server rules to a player");
+        	if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this))
+        	{
+        		Player.SendMessage(p, "/rules [player]- Displays server rules to a player.");
+        		Player.SendMessage(p, "If no [player] is given, the rules will be sent to you.");
+        	}
+        	else
+        	{
+            	Player.SendMessage(p, "/rules - Displays the server rules.");
+        	}
         }
     }
 }

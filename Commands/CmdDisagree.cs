@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "This command can only be used in-game");
                 return;
             }
-            p.Kick("Consider agreeing next time =S");
+            p.Kick("If you don't agree with the rules, consider playing elsewhere.");
         }
 
         public override void Help(Player p)

@@ -67,13 +67,13 @@ namespace MCGalaxy.Commands
                     if (CmdCuboid.wait == 2)
                     {
                         Command.all.Find("reveal").Use(p, "all");
-                        if (p.level.Instant == true)
+                        if (p.level.Instant)
                         {
                             p.level.Instant = false;
                         }
                     }
                 }
-                if (p.level.Instant == true)
+                if (p.level.Instant)
                 {
                     p.level.Instant = false;
                 }
@@ -91,13 +91,13 @@ namespace MCGalaxy.Commands
                     if (CmdReplace.wait == 2)
                     {
                         Command.all.Find("reveal").Use(p, "all");
-                        if (p.level.Instant == true)
+                        if (p.level.Instant)
                         {
                             p.level.Instant = false;
                         }
                     }
                 }
-                if (p.level.Instant == true)
+                if (p.level.Instant)
                 {
                     p.level.Instant = false;
                 }
@@ -115,13 +115,13 @@ namespace MCGalaxy.Commands
                     if (CmdReplaceAll.wait == 2)
                     {
                         Command.all.Find("reveal").Use(p, "all");
-                        if (p.level.Instant == true)
+                        if (p.level.Instant)
                         {
                             p.level.Instant = false;
                         }
                     }
                 }
-                if (p.level.Instant == true)
+                if (p.level.Instant)
                 {
                     p.level.Instant = false;
                 }
@@ -139,13 +139,13 @@ namespace MCGalaxy.Commands
                     if (CmdReplaceNot.wait == 2)
                     {
                         Command.all.Find("reveal").Use(p, "all");
-                        if (p.level.Instant == true)
+                        if (p.level.Instant)
                         {
                             p.level.Instant = false;
                         }
                     }
                 }
-                if (p.level.Instant == true)
+                if (p.level.Instant)
                 {
                     p.level.Instant = false;
                 }
@@ -163,13 +163,13 @@ namespace MCGalaxy.Commands
                     if (CmdSpheroid.wait == 2)
                     {
                         Command.all.Find("reveal").Use(p, "all");
-                        if (p.level.Instant == true)
+                        if (p.level.Instant)
                         {
                             p.level.Instant = false;
                         }
                     }
                 }
-                if (p.level.Instant == true)
+                if (p.level.Instant)
                 {
                     p.level.Instant = false;
                 }
@@ -187,13 +187,13 @@ namespace MCGalaxy.Commands
                     if (CmdPyramid.wait == 2)
                     {
                         Command.all.Find("reveal").Use(p, "all");
-                        if (p.level.Instant == true)
+                        if (p.level.Instant)
                         {
                             p.level.Instant = false;
                         }
                     }
                 }
-                if (p.level.Instant == true)
+                if (p.level.Instant)
                 {
                     p.level.Instant = false;
                 }

@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
             { 
                 p.title = "";
                 p.SetPrefix();
-                Player.GlobalChat(p, p.color + p.name + Server.DefaultColor + " had their title removed.", false);
+                Player.GlobalChat(p, p.color + p.DisplayName + Server.DefaultColor + " had their title removed.", false);
                 query = "UPDATE Players SET Title = '' WHERE Name = @Name";
                 Database.AddParams("@Name", p.name);
                 Database.executeQuery(query);
@@ -54,8 +54,8 @@ namespace MCGalaxy.Commands
             if (newTitle.Length > 17) { Player.SendMessage(p, "Title must be under 17 letters."); return; }
 
             if (newTitle != "")
-                Player.GlobalChat(p, p.color + p.name + Server.DefaultColor + " gave themself the title of &b[" + newTitle + "%b]", false);
-            else Player.GlobalChat(p, p.color + p.prefix + p.name + Server.DefaultColor + " had their title removed.", false);
+                Player.GlobalChat(p, p.color + p.DisplayName + Server.DefaultColor + " gave themself the title of &b[" + newTitle + "%b]", false);
+            else Player.GlobalChat(p, p.color + p.prefix + p.DisplayName + Server.DefaultColor + " had their title removed.", false);
 
             if (!Regex.IsMatch(newTitle.ToLower(), @".*%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])"))
             {

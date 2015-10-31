@@ -28,11 +28,11 @@ namespace MCGalaxy.Commands
 		{
             if ((p.group.CanExecute(Command.all.Find("cuboid"))) && (p.group.CanExecute(Command.all.Find("static"))))
             {
-                if ((!p.staticCommands == true) && (!p.megaBoid == true))
+                if ((!p.staticCommands) && (!p.megaBoid))
                 {
                     Command.all.Find("static").Use(p, "");
                     Command.all.Find("cuboid").Use(p, message);
-                    Player.SendMessage(p, p.color + p.name + Server.DefaultColor + " to stop this, use /zz again");
+                    Player.SendMessage(p, p.color + p.DisplayName + Server.DefaultColor + ", to stop this, use /zz again");
                 }
                 else 
                 {

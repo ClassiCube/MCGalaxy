@@ -505,7 +505,7 @@ namespace MCGalaxy
                 }
             }
 
-            if (returnNull == true) return null;
+            if (returnNull) return null;
             if (tempPlayer != null) return tempPlayer;
             return null;
         }
@@ -516,7 +516,7 @@ namespace MCGalaxy
         }
         #endregion
 
-        #region == True Global ==
+        #region Global ==
         public static void GlobalUpdatePosition()
         {
             playerbots.ForEach(delegate(PlayerBot b) { b.UpdatePosition(); });

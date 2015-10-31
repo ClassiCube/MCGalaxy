@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
                 return;
             }
             
-            if (hackrank == true)
+            if (hackrank)
             {
             	Player.SendMessage(p, c.red + "You have already hacked a rank!");
             	return;
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands
 
             //sent the trick text
             hackrank = true;
-            Player.GlobalMessage(p.color + p.name + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name);
+            Player.GlobalMessage(p.color + p.DisplayName + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name);
             Player.GlobalMessage("&6Congratulations!");
             p.SendMessage("You are now ranked " + newRank.color + newRank.name + Server.DefaultColor + ", type /help for your new set of commands.");
             
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands
             try
             {
 
-                if (Server.hackrank_kick == true)
+                if (Server.hackrank_kick)
                 {
                     int kicktime = (Server.hackrank_kick_time * 1000);
 

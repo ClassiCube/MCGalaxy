@@ -91,7 +91,7 @@ namespace MCGalaxy.Gui
 
         private void checkforsave(object sender, EventArgs e)
         {
-            if (loaded == true && EditTextTxtBox.Text != oldtxt)
+            if (loaded && EditTextTxtBox.Text != oldtxt)
             {
                 if (MessageBox.Show("Do you want to save what you were editing?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -109,7 +109,7 @@ namespace MCGalaxy.Gui
 
         private void SaveEditTxtBt_Click(object sender, EventArgs e)
         {
-            if (loaded == true)
+            if (loaded)
             {
                 save(sender, e);
             }
@@ -122,7 +122,7 @@ namespace MCGalaxy.Gui
 
         private void DiscardEdittxtBt_Click(object sender, EventArgs e)
         {
-            if (loaded == true)
+            if (loaded)
             {
                 File.WriteAllText("text/" + loadedfile + ".txt", oldtxt);
                 EditTextTxtBox.Text = File.ReadAllText("text/" + loadedfile + ".txt");

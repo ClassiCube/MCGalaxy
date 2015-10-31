@@ -65,7 +65,7 @@ namespace Sharkbite.Irc
 		{
 			lock( lockObject ) 
 			{
-				if( running == true ) 
+				if( running ) 
 				{
 					throw new Exception("Identd already started.");
 				}
@@ -94,7 +94,7 @@ namespace Sharkbite.Irc
 		{
 			lock( lockObject ) 
 			{
-				if( running == true ) 
+				if( running ) 
 				{
 					listener.Stop();
 					Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"[" + Thread.CurrentThread.Name +"] Identd::Stop()");

@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands
         public override string shortcut { get { return ""; } }
         public override string type { get { return "other"; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdFly() { }
 
         public override void Use(Player p, string message)
@@ -116,7 +116,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/fly - Allows you to fly, it is a bit glitchy, you can't fly while playing CTF.");
+            Player.SendMessage(p, "/fly - The old method of flight before custom clients.");
+            Player.SendMessage(p, "May not work at all depending on your connection.");
         }
 
         struct Pos { public ushort x, y, z; }

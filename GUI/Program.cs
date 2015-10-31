@@ -183,8 +183,8 @@ namespace MCGalaxy_.Gui
                 case '1': return ConsoleColor.DarkBlue;
                 case '2': return ConsoleColor.DarkGreen;
                 case '3': return ConsoleColor.DarkCyan;
-                case '4': return ConsoleColor.DarkMagenta;
-                    //No love for purples
+                case '4': return ConsoleColor.DarkRed;
+                case '5': return ConsoleColor.DarkMagenta;
                 case '7': return ConsoleColor.Gray;
                 case '6': return ConsoleColor.DarkYellow;
                 case '8': return ConsoleColor.DarkGray;
@@ -375,9 +375,9 @@ namespace MCGalaxy_.Gui
                     Version availableUpdateVersion = new Version(raw);
                     if (availableUpdateVersion > Server.Version)
                     {
-                        if (Server.autoupdate == true || p != null)
+                        if (Server.autoupdate || p != null)
                         {
-                            if (Server.autonotify == true || p != null)
+                            if (Server.autonotify || p != null)
                             {
                                 //if (p != null) Server.restartcountdown = "20";  This is set by the user.  Why change it?
                                 Player.GlobalMessage("Update found. Prepare for restart in &f" + Server.restartcountdown + Server.DefaultColor + " seconds.");
@@ -390,7 +390,7 @@ namespace MCGalaxy_.Gui
                                 countDown.Start();
                                 countDown.Elapsed += delegate
                                 {
-                                    if (Server.autoupdate == true || p != null)
+                                    if (Server.autoupdate || p != null)
                                     {
                                         Player.GlobalMessage("Updating in &f" + timeLeft + Server.DefaultColor + " seconds.");
                                         Server.s.Log("Updating in " + timeLeft + " seconds.");

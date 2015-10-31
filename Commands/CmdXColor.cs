@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             {
                 Database.AddParams("@Name", p.name);
                 Database.executeQuery("UPDATE Players SET color = '' WHERE name = @Name");
-                Player.GlobalChat(p, p.color + "*" + p.name + Server.DefaultColor + "'s color reverted to " + p.group.color + "their group's default" + Server.DefaultColor + ".", false);
+                Player.GlobalChat(p, p.color + "*" + p.DisplayName + Server.DefaultColor + "'s color reverted to " + p.group.color + "their group's default" + Server.DefaultColor + ".", false);
                 p.color = p.group.color;
 
                 Player.GlobalDie(p, false);
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
                 Database.AddParams("@Name", p.name);
                 Database.executeQuery("UPDATE Players SET color = @Color WHERE name = @Name");
 
-                Player.GlobalChat(p, p.color + "*" + p.name + Server.DefaultColor + "'s color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
+                Player.GlobalChat(p, p.color + "*" + p.DisplayName + Server.DefaultColor + "'s color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
                 p.color = color;
 
                 Player.GlobalDie(p, false);

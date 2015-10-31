@@ -15,6 +15,7 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
+using System;
 using System.IO;
 using System.Linq;
 namespace MCGalaxy.Commands
@@ -100,116 +101,13 @@ namespace MCGalaxy.Commands
 			}
 			else if (cmd == "PRESET")
             {
-                if (par == "MIDNIGHT")
+                if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                 {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l fog 8b8989");
-                        Command.all.Find("env").Use(p, "l shadow 918A3B");
-                        Command.all.Find("env").Use(p, "l clouds 000080");
-                        Command.all.Find("env").Use(p, "l sun 0000cd");
-                        Command.all.Find("env").Use(p, "l sky 191970");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "CARTOON")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l fog 00ffff");
-                        Command.all.Find("env").Use(p, "l shadow f4a460");
-                        Command.all.Find("env").Use(p, "l clouds 00bfff");
-                        Command.all.Find("env").Use(p, "l sun f5deb3");
-                        Command.all.Find("env").Use(p, "l sky 1e90ff");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "NOIR")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l fog 000000");
-                        Command.all.Find("env").Use(p, "l shadow 1f1f1f");
-                        Command.all.Find("env").Use(p, "l clouds 000000");
-                        Command.all.Find("env").Use(p, "l sun 696969");
-                        Command.all.Find("env").Use(p, "l sky 1f1f1f");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "TRIPPY")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l fog 4B0082");
-                        Command.all.Find("env").Use(p, "l shadow B22222");
-                        Command.all.Find("env").Use(p, "l clouds 006400");
-                        Command.all.Find("env").Use(p, "l sun 7CFC00");
-                        Command.all.Find("env").Use(p, "l sky FFD700");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "WATERY")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l fog 5f9ea0");
-                        Command.all.Find("env").Use(p, "l shadow 008B8B");
-                        Command.all.Find("env").Use(p, "l clouds 008B8B");
-                        Command.all.Find("env").Use(p, "l sun E0FFFF");
-                        Command.all.Find("env").Use(p, "l sky 008080");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
-                }
-                if (par == "NORMAL")
-                {
-                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
-                    {
-                        Command.all.Find("env").Use(p, "l fog -1");
-                        Command.all.Find("env").Use(p, "l shadow -1");
-                        Command.all.Find("env").Use(p, "l clouds -1");
-                        Command.all.Find("env").Use(p, "l sun -1");
-                        Command.all.Find("env").Use(p, "l sky -1");
-                        Command.all.Find("env").Use(p, "l weather 0");
-                        Command.all.Find("env").Use(p, "l water normal");
-                        Command.all.Find("env").Use(p, "l bedrock normal");
-                        Command.all.Find("env").Use(p, "l level normal");
-                        return;
-                    }
-                    else
-                    {
-                        p.SendMessage("This is not your map..");
-                        return;
-                    }
+	            	Command.all.Find("env").Use(p, "l preset " + par);
                 }
                 else
                 {
-                    Player.SendMessage(p, "/overseer preset [type] -- Uses an env preset on your map");
-                    Player.SendMessage(p, "  Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery");
+                	p.SendMessage("This is not your map.");
                 }
             }
 			else if (cmd == "WEATHER")
@@ -511,7 +409,7 @@ namespace MCGalaxy.Commands
                                     }
                                     Player.SendMessage(p, Server.DefaultColor + "Creating a new map for you.." + p.name.ToLower() + i.ToString());
                                     string mType;
-                                    if (par2.ToUpper() == "" || par2.ToUpper() == "DESERT" || par2.ToUpper() == "FLAT" || par2.ToUpper() == "FOREST" || par2.ToUpper() == "ISLAND" || par2.ToUpper() == "MOUNTAINS" || par2.ToUpper() == "OCEAN" || par2.ToUpper() == "PIXEL" || par2.ToUpper() == "SPACE")
+                                    if (par2.ToUpper() == "" || par2.ToUpper() == "DESERT" || par2.ToUpper() == "FLAT" || par2.ToUpper() == "FOREST" || par2.ToUpper() == "ISLAND" || par2.ToUpper() == "MOUNTAINS" || par2.ToUpper() == "OCEAN" || par2.ToUpper() == "PIXEL" || par2.ToUpper() == "EMPTY" || par2.ToUpper() == "SPACE")
                                     {
                                         if (par2 != "")
                                         {
@@ -525,7 +423,7 @@ namespace MCGalaxy.Commands
                                     }
                                     else
                                     {
-                                        Player.SendMessage(p, "A wrong map type was specified. Valid map types: Desert, flat, forest, island, mountians, ocean, pixel and space.");
+                                        Player.SendMessage(p, "A wrong map type was specified. Valid map types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space.");
                                     }
                                     return;
                                 }
@@ -536,7 +434,7 @@ namespace MCGalaxy.Commands
 					else
 					{
 						string mType;
-						if (par2.ToUpper() == "" || par2.ToUpper() == "DESERT" || par2.ToUpper() == "FLAT" || par2.ToUpper() == "FOREST" || par2.ToUpper() == "ISLAND" || par2.ToUpper() == "MOUNTAINS" || par2.ToUpper() == "OCEAN" || par2.ToUpper() == "PIXEL" || par2.ToUpper() == "SPACE")
+						if (par2.ToUpper() == "" || par2.ToUpper() == "DESERT" || par2.ToUpper() == "FLAT" || par2.ToUpper() == "FOREST" || par2.ToUpper() == "ISLAND" || par2.ToUpper() == "MOUNTAINS" || par2.ToUpper() == "OCEAN" || par2.ToUpper() == "PIXEL" || par2.ToUpper() == "EMPTY" || par2.ToUpper() == "SPACE")
 						{
 							if (par2 != "")
 							{
@@ -551,7 +449,7 @@ namespace MCGalaxy.Commands
 						}
 						else
 						{
-							Player.SendMessage(p, "A wrong map type was specified. Valid map types: Desert, flat, forest, island, mountians, ocean, pixel and space.");
+							Player.SendMessage(p, "A wrong map type was specified. Valid map types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space.");
 						}
 					}
 
@@ -604,7 +502,7 @@ namespace MCGalaxy.Commands
 						Player.SendMessage(p, "Your 1st map has been removed.");
 						return;
 					}
-					else if (byte.TryParse(par2, out test) == true)
+					else if (byte.TryParse(par2, out test))
 					{
 						Command.all.Find("deletelvl").Use(p, p.name.ToLower() + par2);
 						Player.SendMessage(p, "Your map has been removed.");
@@ -630,7 +528,7 @@ namespace MCGalaxy.Commands
                         			Player.SendMessage(p, "Your 1st map has been saved.");
                         			return;
                     			}
-                    			else if (byte.TryParse(par2, out test) == true)
+                    			else if (byte.TryParse(par2, out test))
                     			{
                         			Command.all.Find("save").Use(p, p.name.ToLower() + par2);
                         			Player.SendMessage(p, "Your map has been saved.");
@@ -754,7 +652,7 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "/overseer map pervisit %b[default is " + Server.defaultRank + "]" + Server.DefaultColor + " -- Changes the pervisit of you map");
                     Player.SendMessage(p, "/overseer map texture -- Add a texture to your map");
                     Player.SendMessage(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
-					Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountians, ocean, pixel and space");
+					Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space");
 					Player.SendMessage(p, "  Motd: If no message is provided, the default message will be used.");
 				}
 			}
@@ -799,12 +697,114 @@ namespace MCGalaxy.Commands
 					}
 					else { Player.SendMessage(p, "You have to be on one of your maps to delete or add zones!"); }
 				}
+				else if (par == "BLOCK")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        if (par2 != "")
+                        {
+                            Player blocked = Player.Find(par2);
+                            if (blocked.name.StartsWith(p.name)) { Player.SendMessage(p, "You can't blacklist yourself"); return; }
+                            if (blocked == null) { Player.SendMessage(p, "Cannot find player."); return; }
+                            if (blocked.isStaff) { Player.SendMessage(p, "Can't let you do that."); return; }
+                            string path = "levels/blacklists/" + p.level.name + ".txt";
+                            if (File.Exists(path))
+                            {
+                                if (File.ReadAllText(path).Contains(blocked.name)) { Player.SendMessage(p, blocked.name + " is already blacklisted."); return; }
+                            }
+                            if (!Directory.Exists("levels/blacklists/"))
+                            {
+                                Directory.CreateDirectory("levels/blacklists/");
+                            }
+                            if (!File.Exists(path))
+                            {
+                                File.Create(path).Dispose();
+                            }
+                            try
+                            {
+                                StreamWriter sw = File.AppendText(path);
+                                DateTime when = DateTime.Now;
+                                sw.WriteLine(when.Day + "." + when.Month + "." + when.Year + ": " + blocked.name + "+");
+                                sw.Close();
+
+                            }
+                            catch { Server.s.Log("Error saving level blacklist"); }
+                            Player.SendMessage(p, blocked.name + " has been blacklisted from your map.");
+                            if (blocked.level.name == p.level.name) { Command.all.Find("goto").Use(blocked, Server.mainLevel.name); return; }
+                        }
+                        else
+                        {
+                            Player.SendMessage(p, "You did not specify a name to blacklist from your map.");
+                        }
+                    }
+                    else { Player.SendMessage(p, "You must be on one of your maps to add a blacklist"); }
+                }
+                else if (par == "UNBLOCK")
+                {
+                    if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                    {
+                        if (par2 != "")
+                        {
+                            string path = "levels/blacklists/" + p.level.name + ".txt";
+                            par2 = par2.Replace("+", "");
+                            if (!File.ReadAllText(path).Contains(par2)) { Player.SendMessage(p, par2 + " is not blacklisted."); return; }
+                            par2 = par2 + "+";
+                            if (!Directory.Exists("levels/blacklists/"))
+                            {
+                                Directory.CreateDirectory("levels/blacklists/");
+                            }
+                            if (!File.Exists(path))
+                            {
+                                File.Create(path).Dispose();
+                            }
+                            try
+                            {
+                                var oldLines = File.ReadAllLines(path);
+                                var newLines = oldLines.Where(line => !line.Contains(par2));
+                                File.WriteAllLines(path, newLines);
+                            }
+                            catch { Server.s.Log("Error saving level unblock"); }
+                            Player.SendMessage(p, par2 + " has been removed from your map's blacklist.");
+                        }
+                        else
+                        {
+                            Player.SendMessage(p, "You did not specify a name to unblock from your map.");
+                        }
+                    }
+                    else { Player.SendMessage(p, "You must be on one of your maps to remove a blacklist"); }
+                }
+                else if (par == "BLACKLIST")
+                {
+                    string path = "levels/blacklists/" + p.level.name + ".txt";
+                    if (!File.Exists(path))
+                    {
+                        Player.SendMessage(p, "There are no blacklisted players on this map.");
+                    }
+                    else
+                    {
+                        Player.SendMessage(p, "Current blocked players on level &b" + p.level.name + Server.DefaultColor + ":");
+                        string blocked = "";
+                        using (StreamReader sr = new StreamReader(path))
+                        {
+                            string[] lines = File.ReadAllLines(path);
+                            foreach (string line in lines)
+                            {
+                                string player = line.Split(' ')[1];
+                                blocked += player + ", ";
+                            }
+                            Player.SendMessage(p, blocked);
+                        }
+                    }
+                }
 				else
 				{
 					// Unknown Zone Request
 					Player.SendMessage(p, "/overseer ZONE add [playername or rank] -- Add a zone for a player or a rank."); ;
 					Player.SendMessage(p, "/overseer ZONE del [all] -- Deletes all zones.");
 					Player.SendMessage(p, "/overseer ZONE list -- show active zones on brick.");
+					Player.SendMessage(p, "/overseer ZONE block - Blacklist a player from joining your map.");
+                    Player.SendMessage(p, "/overseer ZONE unblock - Unblocks a player from your map.");
+                    Player.SendMessage(p, "/overseer ZONE blacklist - Show current blacklisted players.");
 					Player.SendMessage(p, "You can only delete all zones for now.");
 				}
 			}
@@ -818,7 +818,7 @@ namespace MCGalaxy.Commands
 						Command.all.Find("load").Use(p, properMapName(p, false));
 						Player.SendMessage(p, "Your level is now loaded.");
 					}
-					else if (byte.TryParse(par, out test) == true)
+					else if (byte.TryParse(par, out test))
 					{
 						Command.all.Find("load").Use(p, p.name + par);
 						Player.SendMessage(p, "Your level is now loaded.");
@@ -836,13 +836,38 @@ namespace MCGalaxy.Commands
 			{
                 if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
                 {
-                    Player.players.ForEach(delegate(Player pl) { if (pl.level == p.level && pl.name != p.name) Command.all.Find("goto").Use(pl, Server.mainLevel.name); });
+                    Player.players.ForEach(delegate(Player pl) { if (pl.level == p.level && pl.name != p.name && !pl.isStaff) Command.all.Find("goto").Use(pl, Server.mainLevel.name); });
                 }
                 else 
                 { 
                     p.SendMessage("This is not your map..");
                 }
 			}
+			else if (cmd == "KICK")
+            {
+                if (p.level.name.ToUpper().StartsWith(p.name.ToUpper()))
+                {
+                    if (par != "")
+                    {
+                        Player kicked = Player.Find(par);
+                        if (kicked == null) { p.SendMessage("Error: Player not found."); }
+                        else if (kicked.isStaff) { Player.SendMessage(p, "Can't let you do that"); return; }
+                        else
+                        {
+                            if (kicked.level.name == p.level.name) { Command.all.Find("goto").Use(kicked, Server.mainLevel.name); }
+                            else { p.SendMessage("Player is not on your level!"); }
+                        }
+                    }
+                    else
+                    {
+                        p.SendMessage("Error: you must specify a player.");
+                    }
+                }
+                else
+                {
+                    p.SendMessage("This is not your map..");
+                }
+            }
 			else
 			{
 				Help(p);
@@ -854,7 +879,7 @@ namespace MCGalaxy.Commands
 			// Remember to include or exclude the spoof command(s) -- MakeMeOp
 			Player.SendMessage(p, "/overseer [command string] - sends command to The Overseer");
 			Player.SendMessage(p, "Accepted Commands:");
-			Player.SendMessage(p, "Go, map, spawn, zone, load, kickall, env, weather, preset");
+			Player.SendMessage(p, "Go, map, spawn, zone, load, kick, kickall, env, weather, preset");
 			Player.SendMessage(p, "/os - Command shortcut.");
 		}
 
@@ -875,7 +900,7 @@ namespace MCGalaxy.Commands
 			{
 				r = p.name.ToLower();
 			}
-			if (Ext == true) { r = r + ".lvl"; }
+			if (Ext) { r = r + ".lvl"; }
 			return r;
 		}
 

@@ -15,6 +15,7 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
+using System;
 namespace MCGalaxy.Commands
 {
     public sealed class CmdMe : Command
@@ -25,7 +26,6 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdMe() { }
-
         public override void Use(Player p, string message)
         {
             if (message == "") { Player.SendMessage(p, "You"); return; }
@@ -36,11 +36,11 @@ namespace MCGalaxy.Commands
 
             if (Server.worldChat)
             {
-                Player.GlobalChat(p, p.color + "*" + p.name + " " + message, false);
+                Player.GlobalChat(p, p.color + "*" + Player.StripColours(p.DisplayName) + p.color + " " + message, false);
             }
             else
             {
-                Player.GlobalChatLevel(p, p.color + "*" + p.name + " " + message, false);
+                Player.GlobalChatLevel(p, p.color + "*" + Player.StripColours(p.DisplayName) + p.color + " " + message, false);
             }
             //IRCBot.Say("*" + p.name + " " + message);
             Server.IRC.Say("*" + p.DisplayName + " " + message);

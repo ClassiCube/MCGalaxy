@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
             if (who.muted)
             {
                 who.muted = false;
-                Player.GlobalChat(who, who.color + who.name + Server.DefaultColor + " has been &bun-muted", false);
+                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " has been &bun-muted", false);
                 Extensions.DeleteLineWord("ranks/muted.txt", who.name.ToLower());
             }
             else
@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands
                     if (who != p) if (who.group.Permission >= p.group.Permission) { Player.SendMessage(p, "Cannot mute someone of a higher or equal rank."); return; }
                 }
                 who.muted = true;
-                Player.GlobalChat(who, who.color + who.name + Server.DefaultColor + " has been &8muted", false);
+                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " has been &8muted", false);
                 using (StreamWriter writer = new StreamWriter("ranks/muted.txt", true))
                 {
                     writer.WriteLine(who.name.ToLower());
