@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands {
                         p.SendMessage("This feature is not available for 'player' target");
                         return;
                     }
-                    SetEnvMapAppearance(p, value, "sides block", true, Block.blackrock, ref p.level.EdgeBlock);
+                    SetEnvMapAppearance(p, value, "sides block", true, Block.blackrock, ref p.level.HorizonBlock);
                     break;
                 case "preset":
                     if (!SetPreset(p, value, level))
@@ -152,12 +152,12 @@ namespace MCGalaxy.Commands {
         }
         
         void SendEnvColorPacket(Player p, byte envType, string value) {
-            if (p.HasExtension("EnvSetColor")) {
+            if (p.HasExtension("EnvColors")) {
                 try {
                     System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml("#" + value.ToUpper());
-                    p.SendEnvSetColor(envType, col.R, col.G, col.B);
+                    p.SendEnvColors(envType, col.R, col.G, col.B);
                 } catch {
-                    p.SendEnvSetColor(envType, -1, -1, -1);
+                    p.SendEnvColors(envType, -1, -1, -1);
                 }
             }
         }

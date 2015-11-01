@@ -90,40 +90,40 @@ namespace MCGalaxy
                         }
                         break;*/
                     case "EnvColors":
-                        SendEnvSetColor(0, -1, -1, -1);
-                        SendEnvSetColor(1, -1, -1, -1);
-                        SendEnvSetColor(2, -1, -1, -1);
-                        SendEnvSetColor(3, -1, -1, -1);
-                        SendEnvSetColor(4, -1, -1, -1);
+                        SendEnvColors(0, -1, -1, -1);
+                        SendEnvColors(1, -1, -1, -1);
+                        SendEnvColors(2, -1, -1, -1);
+                        SendEnvColors(3, -1, -1, -1);
+                        SendEnvColors(4, -1, -1, -1);
                         System.Drawing.Color col;
                         try
                         {
                             col = System.Drawing.ColorTranslator.FromHtml("#" + level.SkyColor.ToUpper());
-                            SendEnvSetColor(0, col.R, col.G, col.B);
+                            SendEnvColors(0, col.R, col.G, col.B);
                         }
                         catch { }
                         try
                         {
                             col = System.Drawing.ColorTranslator.FromHtml("#" + level.CloudColor.ToUpper());
-                            SendEnvSetColor(1, col.R, col.G, col.B);
+                            SendEnvColors(1, col.R, col.G, col.B);
                         }
                         catch { }
                         try
                         {
                             col = System.Drawing.ColorTranslator.FromHtml("#" + level.FogColor.ToUpper());
-                            SendEnvSetColor(2, col.R, col.G, col.B);
+                            SendEnvColors(2, col.R, col.G, col.B);
                         }
                         catch { }
                         try
                         {
                             col = System.Drawing.ColorTranslator.FromHtml("#" + level.ShadowColor.ToUpper());
-                            SendEnvSetColor(3, col.R, col.G, col.B);
+                            SendEnvColors(3, col.R, col.G, col.B);
                         }
                         catch { }
                         try
                         {
                             col = System.Drawing.ColorTranslator.FromHtml("#" + level.LightColor.ToUpper());
-                            SendEnvSetColor(4, col.R, col.G, col.B);
+                            SendEnvColors(4, col.R, col.G, col.B);
                         }
                         catch { }
                         EnvColors = version;
