@@ -222,11 +222,6 @@
     <Compile Include="Commands\info\CmdWhoip.cs" />
     <Compile Include="Commands\info\CmdWhoNick.cs" />
     <Compile Include="Commands\info\CmdWhowas.cs" />
-    <Compile Include="Commands\moderation\CmdFixGrass.cs" />
-    <Compile Include="Commands\moderation\CmdHighlight.cs" />
-    <Compile Include="Commands\moderation\CmdLocation.cs" />
-    <Compile Include="Commands\moderation\CmdTempBan.cs" />
-    <Compile Include="Commands\moderation\CmdTrust.cs" />
     <Compile Include="Commands\mod\CmdAka.cs" />
     <Compile Include="Commands\mod\CmdAlive.cs" />
     <Compile Include="Commands\mod\CmdAllowGuns.cs" />
@@ -249,11 +244,13 @@
     <Compile Include="Commands\mod\CmdEndRound.cs" />
     <Compile Include="Commands\mod\CmdExplode.cs" />
     <Compile Include="Commands\mod\CmdFetch.cs" />
+    <Compile Include="Commands\mod\CmdFixGrass.cs" />
     <Compile Include="Commands\mod\CmdFollow.cs" />
     <Compile Include="Commands\mod\CmdFreeze.cs" />
     <Compile Include="Commands\mod\CmdGcbanlistupdate.cs" />
     <Compile Include="Commands\mod\CmdHacks.cs" />
     <Compile Include="Commands\mod\CmdHide.cs" />
+    <Compile Include="Commands\mod\CmdHighlight.cs" />
     <Compile Include="Commands\mod\CmdImport.cs" />
     <Compile Include="Commands\mod\CmdJail.cs" />
     <Compile Include="Commands\mod\CmdJoker.cs" />
@@ -262,6 +259,7 @@
     <Compile Include="Commands\mod\CmdKillPhysics.cs" />
     <Compile Include="Commands\mod\CmdLimit.cs" />
     <Compile Include="Commands\mod\CmdLoad.cs" />
+    <Compile Include="Commands\mod\CmdLocation.cs" />
     <Compile Include="Commands\mod\CmdLowlag.cs" />
     <Compile Include="Commands\mod\CmdMap.cs" />
     <Compile Include="Commands\mod\CmdModerate.cs" />
@@ -296,9 +294,11 @@
     <Compile Include="Commands\mod\CmdSetRank.cs" />
     <Compile Include="Commands\mod\CmdSetspawn.cs" />
     <Compile Include="Commands\mod\CmdShutdown.cs" />
+    <Compile Include="Commands\mod\CmdTempBan.cs" />
     <Compile Include="Commands\mod\CmdTempRank.cs" />
     <Compile Include="Commands\mod\CmdTempRankInfo.cs" />
     <Compile Include="Commands\mod\CmdTempRankList.cs" />
+    <Compile Include="Commands\mod\CmdTrust.cs" />
     <Compile Include="Commands\mod\CmdUBan.cs" />
     <Compile Include="Commands\mod\CmdUnban.cs" />
     <Compile Include="Commands\mod\CmdUnbanip.cs" />
@@ -757,7 +757,6 @@
     <Folder Include="Commands\game" />
     <Folder Include="Commands\info" />
     <Folder Include="Commands\mod" />
-    <Folder Include="Commands\moderation" />
     <Folder Include="Commands\other" />
     <Folder Include="Plugins\OpenClassicEvents\" />
   </ItemGroup>
