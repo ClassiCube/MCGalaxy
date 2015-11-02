@@ -70,22 +70,14 @@ namespace MCGalaxy
 			all.Add(new CmdC4());
 			all.Add(new CmdChain());
 			all.Add(new CmdChangeLog());
-			all.Add(new CmdChatRoom());
 			all.Add(new CmdClearBlockChanges());
 			all.Add(new CmdClick());
 			all.Add(new CmdClones());
 			all.Add(new CmdCmdBind());
-			all.Add(new CmdCmdCreate());
-			all.Add(new CmdCmdLoad());
 			all.Add(new CmdCmdSet());
-			all.Add(new CmdCmdUnload());
-			all.Add(new CmdCompile());
-			all.Add(new CmdCompLoad());
 			all.Add(new CmdColor());
 			all.Add(new CmdCopy());
-			all.Add(new CmdCopyLoadNet());
 			all.Add(new CmdCopyLVL());
-			all.Add(new CmdCopySaveNet());
 			all.Add(new CmdCountdown());
 			all.Add(new CmdCrashServer());
 			all.Add(new CmdCTF());
@@ -117,18 +109,12 @@ namespace MCGalaxy
 			all.Add(new CmdFollow());
 			all.Add(new CmdFreeze());
 			all.Add(new CmdGarbage());
-			all.Add(new CmdGcaccept());
-            all.Add(new CmdGcmods());
-			all.Add(new CmdGcrules());
-			//all.Add(new CmdGcbanlistupdate());
 			all.Add(new CmdGive());
-			all.Add(new CmdGlobal());
 			all.Add(new CmdGlobalCLS());
 			all.Add(new CmdGoto());
 			all.Add(new CmdGun());
 			all.Add(new CmdHackRank());
 			all.Add(new CmdHacks());
-			all.Add(new CmdHasirc());
 			//all.Add(new CmdHeartbeat()); // DEBUG COMMAND DO NOT USE
 			all.Add(new CmdHelp());
 			all.Add(new CmdHide());
@@ -137,10 +123,8 @@ namespace MCGalaxy
 			all.Add(new CmdHollow());
 			all.Add(new CmdHost());
 			all.Add(new CmdIgnore());
-			all.Add(new CmdImpersonate());
 			all.Add(new CmdImport());
 			all.Add(new CmdImageprint());
-			all.Add(new CmdInbox());
 			all.Add(new CmdInfect());
 			all.Add(new CmdInfected());
 			all.Add(new CmdInfo());
@@ -193,7 +177,6 @@ namespace MCGalaxy
 			all.Add(new CmdOZone());
 			all.Add(new CmdP2P());
 			all.Add(new CmdPaint());
-			all.Add(new CmdPass());
 			all.Add(new CmdPaste());
 			all.Add(new CmdPatrol());
 			all.Add(new CmdPause());
@@ -211,11 +194,9 @@ namespace MCGalaxy
 			all.Add(new CmdPlace());
 			all.Add(new CmdPlayerCLS());
 			all.Add(new CmdPlayers());
-			all.Add(new CmdPLoad());
 			all.Add(new CmdPortal());
 			all.Add(new CmdPossess());
 			all.Add(new CmdPromote());
-			all.Add(new CmdPUnload());
 			all.Add(new CmdPyramid());
 			all.Add(new CmdQueue());
 			all.Add(new CmdQuick());
@@ -233,8 +214,6 @@ namespace MCGalaxy
 			all.Add(new CmdReplaceAll());
 			all.Add(new CmdReplaceNot());
 			all.Add(new CmdReport());
-			all.Add(new CmdResetBot());
-			all.Add(new CmdResetPass());
 			all.Add(new CmdRestart());
 			all.Add(new CmdRestartPhysics());
 			all.Add(new CmdRestore());
@@ -250,11 +229,8 @@ namespace MCGalaxy
 			all.Add(new CmdSCinema());
 			all.Add(new CmdSearch());
 			all.Add(new CmdSeen());
-			all.Add(new CmdSend());
-			all.Add(new CmdSendCmd());
 			all.Add(new CmdServerReport());
 			all.Add(new CmdServer());
-			all.Add(new CmdSetPass());
 			all.Add(new CmdSetRank());
 			all.Add(new CmdSetspawn());
 			all.Add(new CmdShutdown());
@@ -297,7 +273,6 @@ namespace MCGalaxy
 			all.Add(new CmdUnload());
 			all.Add(new CmdUnloaded());
 			all.Add(new CmdUnlock());
-			all.Add(new CmdUpdate());
 			all.Add(new CmdView());
 			all.Add(new CmdViewRanks());
 			all.Add(new CmdVIP());
@@ -312,7 +287,7 @@ namespace MCGalaxy
 			all.Add(new CmdWhitelist());
 			all.Add(new CmdWhoip());
 			all.Add(new CmdWhois());
-            		all.Add(new CmdWhoNick());
+            all.Add(new CmdWhoNick());
 			all.Add(new CmdWhowas());
 			all.Add(new CmdWrite());
 			all.Add(new CmdXban());
@@ -329,9 +304,8 @@ namespace MCGalaxy
 			all.Add(new CmdZombieGame());
 			all.Add(new CmdZone());
 			all.Add(new CmdZz());
-            		all.Add(new CmdQuit());
+            all.Add(new CmdQuit());
 			core.commands = new List<Command>(all.commands);
-			Scripting.Autoload();
 		}
 		/// <summary>
 		/// Add a command to the server
@@ -341,5 +315,13 @@ namespace MCGalaxy
 		{
 			all.Add(command);
 		}
+	}
+	
+	public sealed class CommandTypes {
+		public const string Building = "build";
+		public const string Moderation = "mod";
+		public const string Games = "game";
+		public const string Information = "information";
+		public const string Other = "other";
 	}
 }

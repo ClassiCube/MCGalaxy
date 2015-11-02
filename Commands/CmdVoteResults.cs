@@ -17,15 +17,11 @@
 */
 namespace MCGalaxy.Commands
 {
-    /// <summary>
-    /// This is the command /voteresults
-    /// use /help voteresults in-game for more info
-    /// </summary>
     public sealed class CmdVoteResults : Command
     {
         public override string name { get { return "voteresults"; } }
         public override string shortcut { get { return "vr"; } }
-        public override string type { get { return ""; } }
+        public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdVoteResults() { }
