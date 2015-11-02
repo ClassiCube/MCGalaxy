@@ -70,6 +70,7 @@ namespace MCGalaxy
 			all.Add(new CmdC4());
 			all.Add(new CmdChain());
 			all.Add(new CmdChangeLog());
+			all.Add(new CmdChatRoom());
 			all.Add(new CmdClearBlockChanges());
 			all.Add(new CmdClick());
 			all.Add(new CmdClones());
@@ -319,9 +320,12 @@ namespace MCGalaxy
 	
 	public sealed class CommandTypes {
 		public const string Building = "build";
-		public const string Moderation = "mod";
+		public const string Chat = "chat";
+		public const string Economy = "economy";
 		public const string Games = "game";
 		public const string Information = "information";
+		public const string Moderation = "mod";
 		public const string Other = "other";
+		public const string World = "world";
 	}
 }

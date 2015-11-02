@@ -144,7 +144,7 @@ namespace MCGalaxy
                     {
                         SW.WriteLine(otpe.cmd.name + ":" + otpe.number + ":" + otpe.Permission + ":" + otpe.Description);
                     }
-                    catch { Server.s.Log("Saving an additional command permission failed!!"); }
+                    catch { Server.s.Log("Saving an additional command permission failed!!" + otpe.Description); }
                 }
                 SW.Dispose();
             }
