@@ -342,4 +342,15 @@ namespace MCGalaxy
 			all.Add(command);
 		}
 	}
+	
+	public sealed class CommandTypes {
+		public const string Building = "build";
+		public const string Chat = "chat";
+		public const string Economy = "economy";
+		public const string Games = "game";
+		public const string Information = "information";
+		public const string Moderation = "mod";
+		public const string Other = "other";
+		public const string World = "world";
+	}
 }
