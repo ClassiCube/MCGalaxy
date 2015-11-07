@@ -3671,76 +3671,7 @@ namespace MCGalaxy
                                                               break;
 
                                                           case Block.train:
-                                                              if (rand.Next(1, 10) <= 5) mx = 1;
-                                                              else mx = -1;
-                                                              if (rand.Next(1, 10) <= 5) my = 1;
-                                                              else my = -1;
-                                                              if (rand.Next(1, 10) <= 5) mz = 1;
-                                                              else mz = -1;
-
-                                                              for (int cx = (-1 * mx);
-                                                                   cx != ((1 * mx) + mx);
-                                                                   cx = cx + (1 * mx))
-                                                                  for (int cy = (-1 * my);
-                                                                       cy != ((1 * my) + my);
-                                                                       cy = cy + (1 * my))
-                                                                      for (int cz = (-1 * mz);
-                                                                           cz != ((1 * mz) + mz);
-                                                                           cz = cz + (1 * mz))
-                                                                      {
-                                                                          if (
-                                                                              GetTile((ushort)(x + cx),
-                                                                                      (ushort)(y + cy - 1),
-                                                                                      (ushort)(z + cz)) == Block.red &&
-                                                                              (GetTile((ushort)(x + cx),
-                                                                                       (ushort)(y + cy),
-                                                                                       (ushort)(z + cz)) == Block.air ||
-                                                                               GetTile((ushort)(x + cx),
-                                                                                       (ushort)(y + cy),
-                                                                                       (ushort)(z + cz)) == Block.water) &&
-                                                                              !InnerChange)
-                                                                          {
-                                                                              AddUpdate(
-                                                                                  PosToInt((ushort)(x + cx),
-                                                                                           (ushort)(y + cy),
-                                                                                           (ushort)(z + cz)),
-                                                                                  Block.train);
-                                                                              AddUpdate(PosToInt(x, y, z), Block.air);
-                                                                              AddUpdate(IntOffset(C.b, 0, -1, 0),
-                                                                                        Block.obsidian, true,
-                                                                                        "wait 5 revert " +
-                                                                                        Block.red.ToString());
-
-                                                                              InnerChange = true;
-                                                                              break;
-                                                                          }
-                                                                          if (
-                                                                              GetTile((ushort)(x + cx),
-                                                                                      (ushort)(y + cy - 1),
-                                                                                      (ushort)(z + cz)) == Block.op_air &&
-                                                                              (GetTile((ushort)(x + cx),
-                                                                                       (ushort)(y + cy),
-                                                                                       (ushort)(z + cz)) == Block.air ||
-                                                                               GetTile((ushort)(x + cx),
-                                                                                       (ushort)(y + cy),
-                                                                                       (ushort)(z + cz)) == Block.water) &&
-                                                                              !InnerChange)
-                                                                          {
-                                                                              AddUpdate(
-                                                                                  PosToInt((ushort)(x + cx),
-                                                                                           (ushort)(y + cy),
-                                                                                           (ushort)(z + cz)),
-                                                                                  Block.train);
-                                                                              AddUpdate(PosToInt(x, y, z), Block.air);
-                                                                              AddUpdate(IntOffset(C.b, 0, -1, 0),
-                                                                                        Block.glass, true,
-                                                                                        "wait 5 revert " +
-                                                                                        Block.op_air.ToString());
-
-                                                                              InnerChange = true;
-                                                                              break;
-                                                                          }
-                                                                      }
+                                                              TrainPhysics.Do(this, C, rand);
                                                               break;
 
                                                           case Block.magma:
@@ -5278,7 +5209,7 @@ namespace MCGalaxy
             }
         }
 
-        private bool AddUpdate(int b, int type, bool overRide = false, string extraInfo = "")
+        internal bool AddUpdate(int b, int type, bool overRide = false, string extraInfo = "")
         {
             try
             {

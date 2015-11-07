@@ -423,6 +423,7 @@
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\CmdUnlock.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
+    <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
     <Compile Include="Player\FullCP437Handler.cs" />
