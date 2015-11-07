@@ -425,6 +425,7 @@
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
     <Compile Include="Levels\Physics\FinitePhysics.cs" />
+    <Compile Include="Levels\Physics\FirePhysics.cs" />
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
