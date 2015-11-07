@@ -30,17 +30,10 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            List<string> faq = new List<string>();
-            if (!File.Exists("text/faq.txt"))
-            {
-                File.WriteAllText("text/faq.txt", "Example: What does this server run on? This server runs on &bMCGalaxy");
+            if (!File.Exists("text/faq.txt")) {
+                CP437Writer.WriteAllText("text/faq.txt", "Example: What does this server run on? This server runs on &bMCGalaxy");
             }
-			using (StreamReader r = File.OpenText("text/faq.txt"))
-			{
-				while (!r.EndOfStream)
-					faq.Add(r.ReadLine());
-
-			}
+			List<string> faq = CP437Reader.ReadAllLines("text/faq.txt");
 
             Player who = null;
             if (message != "")

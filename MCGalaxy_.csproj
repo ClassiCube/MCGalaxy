@@ -649,6 +649,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="util\CP437Reader.cs" />
+    <Compile Include="util\CP437Writer.cs" />
     <Compile Include="Util\ExtrasCollection.cs" />
     <Compile Include="Heartbeat\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />

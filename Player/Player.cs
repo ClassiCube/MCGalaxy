@@ -422,19 +422,15 @@ namespace MCGalaxy {
                         loginTimer.Stop();
                         if ( File.Exists("text/welcome.txt") ) {
                             try {
-                                using ( StreamReader wm = File.OpenText("text/welcome.txt") ) {
-                                    List<string> welcome = new List<string>();
-                                    while ( !wm.EndOfStream )
-                                        welcome.Add(wm.ReadLine());
-                                    foreach ( string w in welcome )
-                                        SendMessage(w);
-                                }
+                        		List<string> welcome = CP437Reader.ReadAllLines("text/welcome.txt");
+                        		foreach (string w in welcome)
+                        			SendMessage(w);
                             }
                             catch { }
                         }
                         else {
                             Server.s.Log("Could not find Welcome.txt. Using default.");
-                            File.WriteAllText("text/welcome.txt", "Welcome to my server!");
+                            CP437Writer.WriteAllText("text/welcome.txt", "Welcome to my server!");
                             SendMessage("Welcome to my server!");
                         }
                         extraTimer.Start();
@@ -1126,13 +1122,11 @@ namespace MCGalaxy {
                 }
             }
             if (emoteList.Contains(name)) parseSmiley = false;
-            if (!Directory.Exists("text/login"))
-            {
+            if (!Directory.Exists("text/login")) {
                 Directory.CreateDirectory("text/login");
             }
-            if (!File.Exists("text/login/" + this.name + ".txt"))
-            {
-                File.WriteAllText("text/login/" + this.name + ".txt", "joined the server.");
+            if (!File.Exists("text/login/" + this.name + ".txt"))  {
+                CP437Writer.WriteAllText("text/login/" + this.name + ".txt", "joined the server.");
             }
 
             //very very sloppy, yes I know.. but works for the time
@@ -3997,7 +3991,7 @@ changed |= 4;*/
                             Directory.CreateDirectory("text/logout");
                         }
                         if ( !File.Exists("text/logout/" + name + ".txt") ) {
-                            File.WriteAllText("text/logout/" + name + ".txt", "Disconnected.");
+                            CP437Writer.WriteAllText("text/logout/" + name + ".txt", "Disconnected.");
                         }
                         if ( !hidden ) {
                     		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + File.ReadAllText("text/logout/" + name + ".txt");

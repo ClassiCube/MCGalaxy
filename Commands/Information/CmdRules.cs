@@ -31,16 +31,10 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            List<string> rules = new List<string>();
-            if (!File.Exists("text/rules.txt"))
-            {
-                File.WriteAllText("text/rules.txt", "No rules entered yet!");
+            if (!File.Exists("text/rules.txt")) {
+                CP437Writer.WriteAllText("text/rules.txt", "No rules entered yet!");
             }
-			using (StreamReader r = File.OpenText("text/rules.txt"))
-			{
-				while (!r.EndOfStream)
-					rules.Add(r.ReadLine());
-			}
+            List<string> rules = CP437Reader.ReadAllLines("text/rules.txt");
 
             Player who = null;
             if (message != "")

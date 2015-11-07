@@ -30,18 +30,10 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            //Do you really need a list for this?
-            List<string> oprules = new List<string>();
-            if (!File.Exists("text/oprules.txt"))
-            {
-                File.WriteAllText("text/oprules.txt", "No oprules entered yet!");
+            if (!File.Exists("text/oprules.txt")) {
+                CP437Writer.WriteAllText("text/oprules.txt", "No oprules entered yet!");
             }
-
-			using (StreamReader r = File.OpenText("text/oprules.txt"))
-			{
-				while (!r.EndOfStream)
-					oprules.Add(r.ReadLine());
-			}
+            List<string> oprules = CP437Reader.ReadAllLines("text/oprules.txt");
 
             Player who = null;
             if (message != "")
