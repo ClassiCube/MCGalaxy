@@ -27,7 +27,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <NoWin32Manifest>False</NoWin32Manifest>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
@@ -424,6 +424,7 @@
     <Compile Include="Commands\World\CmdUnlock.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
+    <Compile Include="Levels\Physics\FinitePhysics.cs" />
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />

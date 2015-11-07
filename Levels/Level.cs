@@ -2194,7 +2194,7 @@ namespace MCGalaxy
                                                           goto newPhysic;
                                                       }
                                                       if (finiteWater)
-                                                          finiteMovement(C, x, y, z);
+                                                          FinitePhysics.DoWaterOrLava(this, C, rand);
                                                       else if (rainbow)
                                                           if (C.time < 4)
                                                           {
@@ -3015,98 +3015,11 @@ namespace MCGalaxy
 
                                                           case Block.finiteWater:
                                                           case Block.finiteLava:
-                                                              finiteMovement(C, x, y, z);
+                                                              FinitePhysics.DoWaterOrLava(this, C, rand);
                                                               break;
 
                                                           case Block.finiteFaucet:
-                                                              var bufferfinitefaucet = new List<int>();
-
-                                                              for (int i = 0; i < 6; ++i) bufferfinitefaucet.Add(i);
-
-                                                              for (int k = bufferfinitefaucet.Count - 1; k > 1; --k)
-                                                              {
-                                                                  int randIndx = rand.Next(k);
-                                                                  int temp = bufferfinitefaucet[k];
-                                                                  bufferfinitefaucet[k] = bufferfinitefaucet[randIndx];
-                                                                  // move random num to end of list.
-                                                                  bufferfinitefaucet[randIndx] = temp;
-                                                              }
-
-                                                              foreach (int i in bufferfinitefaucet)
-                                                              {
-                                                                  switch (i)
-                                                                  {
-                                                                      case 0:
-                                                                          if (GetTile((ushort)(x - 1), y, z) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt((ushort)(x - 1), y, z),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 1:
-                                                                          if (GetTile((ushort)(x + 1), y, z) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt((ushort)(x + 1), y, z),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 2:
-                                                                          if (GetTile(x, (ushort)(y - 1), z) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, (ushort)(y - 1), z),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 3:
-                                                                          if (GetTile(x, (ushort)(y + 1), z) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, (ushort)(y + 1), z),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 4:
-                                                                          if (GetTile(x, y, (ushort)(z - 1)) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, y, (ushort)(z - 1)),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 5:
-                                                                          if (GetTile(x, y, (ushort)(z + 1)) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, y, (ushort)(z + 1)),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                  }
-
-                                                                  if (InnerChange) break;
-                                                              }
-
+                                                              FinitePhysics.DoFaucet(this, C, rand);
                                                               break;
 
                                                           case Block.sand: //Sand
@@ -6203,72 +6116,9 @@ namespace MCGalaxy
                                                     Math.Max(storedRand1, storedRand2)), false, "drop 100 dissipate 25");
         }
 
-        public void finiteMovement(Check C, ushort x, ushort y, ushort z)
-        {
+        public void finiteMovement(Check C, ushort x, ushort y, ushort z) {
             var rand = new Random();
-
-            var bufferfiniteWater = new List<int>();
-            var bufferfiniteWaterList = new List<Pos>();
-
-            if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-            {
-                AddUpdate(PosToInt(x, (ushort)(y - 1), z), blocks[C.b], false, C.extraInfo);
-                AddUpdate(C.b, Block.air);
-                C.extraInfo = "";
-            }
-            else if (GetTile(x, (ushort)(y - 1), z) == Block.waterstill ||
-                     GetTile(x, (ushort)(y - 1), z) == Block.lavastill)
-            {
-                AddUpdate(C.b, Block.air);
-                C.extraInfo = "";
-            }
-            else
-            {
-                for (int i = 0; i < 25; ++i) bufferfiniteWater.Add(i);
-
-                for (int k = bufferfiniteWater.Count - 1; k > 1; --k)
-                {
-                    int randIndx = rand.Next(k); //
-                    int temp = bufferfiniteWater[k];
-                    bufferfiniteWater[k] = bufferfiniteWater[randIndx]; // move random num to end of list.
-                    bufferfiniteWater[randIndx] = temp;
-                }
-
-                Pos pos;
-
-                for (var xx = (ushort)(x - 2); xx <= x + 2; ++xx)
-                {
-                    for (var zz = (ushort)(z - 2); zz <= z + 2; ++zz)
-                    {
-                        pos.x = xx;
-                        pos.z = zz;
-                        bufferfiniteWaterList.Add(pos);
-                    }
-                }
-
-                foreach (int i in bufferfiniteWater)
-                {
-                    pos = bufferfiniteWaterList[i];
-                    if (GetTile(pos.x, (ushort)(y - 1), pos.z) == Block.air &&
-                        GetTile(pos.x, y, pos.z) == Block.air)
-                    {
-                        if (pos.x < x) pos.x = (ushort)(Math.Floor((double)(pos.x + x) / 2));
-                        else pos.x = (ushort)(Math.Ceiling((double)(pos.x + x) / 2));
-                        if (pos.z < z) pos.z = (ushort)(Math.Floor((double)(pos.z + z) / 2));
-                        else pos.z = (ushort)(Math.Ceiling((double)(pos.z + z) / 2));
-
-                        if (GetTile(pos.x, y, pos.z) == Block.air)
-                        {
-                            if (AddUpdate(PosToInt(pos.x, y, pos.z), blocks[C.b], false, C.extraInfo))
-                            {
-                                AddUpdate(C.b, Block.air);
-                                C.extraInfo = "";
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            FinitePhysics.DoWaterOrLava(this, C, rand);
         }
 
         public struct Pos
