@@ -1212,6 +1212,7 @@ namespace MCGalaxy
 
         public void Log(string message, bool systemMsg = false)
         {
+        	message = CP437Writer.ConvertFromRaw(message);
             if (ServerLog != null)
             {
                 ServerLog(message);
@@ -1239,6 +1240,7 @@ namespace MCGalaxy
         }
         public void OpLog(string message, bool systemMsg = false)
         {
+        	message = CP437Writer.ConvertFromRaw(message);
             if (ServerOpLog != null)
             {
                 OpLog(message);
@@ -1265,6 +1267,7 @@ namespace MCGalaxy
 
         public void AdminLog(string message, bool systemMsg = false)
         {
+        	message = CP437Writer.ConvertFromRaw(message);
             if (ServerAdminLog != null)
             {
                 ServerAdminLog(message);
@@ -1297,6 +1300,7 @@ namespace MCGalaxy
 
         public void CommandUsed(string message)
         {
+        	message = CP437Writer.ConvertFromRaw(message);
             if (OnCommand != null) OnCommand(DateTime.Now.ToString("(HH:mm:ss) ") + message);
             Logger.Write(DateTime.Now.ToString("(HH:mm:ss) ") + message + Environment.NewLine);
         }

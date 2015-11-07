@@ -3994,7 +3994,8 @@ changed |= 4;*/
                             CP437Writer.WriteAllText("text/logout/" + name + ".txt", "Disconnected.");
                         }
                         if ( !hidden ) {
-                    		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + File.ReadAllText("text/logout/" + name + ".txt");
+                    		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + 
+                    			CP437Reader.ReadAllText("text/logout/" + name + ".txt");
                     		if ((Server.guestLeaveNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
                     		{
                                 Player.players.ForEach(delegate(Player p1)

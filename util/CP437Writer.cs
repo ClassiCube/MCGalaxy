@@ -24,10 +24,10 @@ namespace MCGalaxy {
     
     public class CP437Writer : StreamWriter {
         
-        public CP437Writer(string file) : base(file, false, Encoding.UTF8) {
+        public CP437Writer(string file) : base(file, false) {
         }
         
-        public CP437Writer(string file, bool append) : base(file, append, Encoding.UTF8) {
+        public CP437Writer(string file, bool append) : base(file, append) {
         }
         
         const string newline = "\r\n";
@@ -39,7 +39,7 @@ namespace MCGalaxy {
             if (text != null && text.Length > 0) {
                 char[] c = text.ToCharArray();
                 for (int i = 0; i < text.Length; i++)
-                    c[i] = text[i];
+                	c[i] = ConvertChar(text[i]);
                 base.Write(c);
             }
         }
@@ -63,12 +63,21 @@ namespace MCGalaxy {
                 writer.Write(text);
         }
         
-        static unsafe string ConvertLine(string line) {
-            fixed (char* ptr = line) {
-                for (int i = 0; i < line.Length; i++)
-                    ptr[i] = ConvertChar(ptr[i]);
-            }
-            return line;
+        public static string ConvertFromRaw(string text) {
+        	if (text == null) return null;
+        	if (text.Length == 0) return "";
+        	
+        	bool hasEmotes = false;
+        	for (int i = 0; i < text.Length; i++) {
+        		if (text[i] < 0x20 || text[i] >= 0x7F)
+        			hasEmotes = true;
+        	}
+        	if( !hasEmotes ) return text;
+        	
+        	char[] c = text.ToCharArray();
+        	for (int i = 0; i < text.Length; i++)
+        		c[i] = ConvertChar(text[i]);
+        	return new String( c );
         }
         
         static char ConvertChar(char c) {

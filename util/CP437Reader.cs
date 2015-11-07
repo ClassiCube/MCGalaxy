@@ -24,7 +24,7 @@ namespace MCGalaxy {
     
     public class CP437Reader : StreamReader {
         
-        public CP437Reader(string file) : base(file, Encoding.UTF8, false) {
+        public CP437Reader(string file) : base(file, Encoding.UTF8) {
         }
         
         public override string ReadLine() {
