@@ -26,6 +26,7 @@ using System.Threading;
 using MCGalaxy.Levels.Textures;
 using MCGalaxy.SQL;
 using Timer = System.Timers.Timer;
+using MCGalaxy.BlockPhysics;
 //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
 //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
 
@@ -2193,7 +2194,7 @@ namespace MCGalaxy
                                                           goto newPhysic;
                                                       }
                                                       if (finiteWater)
-                                                          finiteMovement(C, x, y, z);
+                                                          FinitePhysics.DoWaterOrLava(this, C, rand);
                                                       else if (rainbow)
                                                           if (C.time < 4)
                                                           {
@@ -2759,353 +2760,17 @@ namespace MCGalaxy
                                                               }
                                                               break;
 
-                                                          #region fire
-
                                                           case Block.fire:
-                                                              if (C.time < 2)
-                                                              {
-                                                                  C.time++;
-                                                                  break;
-                                                              }
-
-                                                              storedRand = rand.Next(1, 20);
-                                                              if (storedRand < 2 && C.time % 2 == 0)
-                                                              {
-                                                                  storedRand = rand.Next(1, 18);
-
-                                                                  if (storedRand <= 3 &&
-                                                                      GetTile((ushort)(x - 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                Block.fire);
-                                                                  else if (storedRand <= 6 &&
-                                                                           GetTile((ushort)(x + 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                Block.fire);
-                                                                  else if (storedRand <= 9 &&
-                                                                           GetTile(x, (ushort)(y - 1), z) ==
-                                                                           Block.air)
-                                                                      AddUpdate(
-                                                                          PosToInt(x, (ushort)(y - 1), z),
-                                                                          Block.fire);
-                                                                  else if (storedRand <= 12 &&
-                                                                           GetTile(x, (ushort)(y + 1), z) ==
-                                                                           Block.air)
-                                                                      AddUpdate(
-                                                                          PosToInt(x, (ushort)(y + 1), z),
-                                                                          Block.fire);
-                                                                  else if (storedRand <= 15 &&
-                                                                           GetTile(x, y, (ushort)(z - 1)) ==
-                                                                           Block.air)
-                                                                      AddUpdate(
-                                                                          PosToInt(x, y,
-                                                                                   (ushort)(z - 1)),
-                                                                          Block.fire);
-                                                                  else if (storedRand <= 18 &&
-                                                                           GetTile(x, y, (ushort)(z + 1)) ==
-                                                                           Block.air)
-                                                                      AddUpdate(
-                                                                          PosToInt(x, y,
-                                                                                   (ushort)(z + 1)),
-                                                                          Block.fire);
-                                                              }
-
-                                                              if (
-                                                                  Block.LavaKill(GetTile((ushort)(x - 1), y,
-                                                                                         (ushort)(z - 1))))
-                                                              {
-                                                                  if (GetTile((ushort)(x - 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                Block.fire);
-                                                                  if (GetTile(x, y, (ushort)(z - 1)) == Block.air)
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z - 1)),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile((ushort)(x + 1), y,
-                                                                                         (ushort)(z - 1))))
-                                                              {
-                                                                  if (GetTile((ushort)(x + 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                Block.fire);
-                                                                  if (GetTile(x, y, (ushort)(z - 1)) == Block.air)
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z - 1)),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile((ushort)(x - 1), y,
-                                                                                         (ushort)(z + 1))))
-                                                              {
-                                                                  if (GetTile((ushort)(x - 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                Block.fire);
-                                                                  if (GetTile(x, y, (ushort)(z + 1)) == Block.air)
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z + 1)),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile((ushort)(x + 1), y,
-                                                                                         (ushort)(z + 1))))
-                                                              {
-                                                                  if (GetTile((ushort)(x + 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                Block.fire);
-                                                                  if (GetTile(x, y, (ushort)(z + 1)) == Block.air)
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z + 1)),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile(x, (ushort)(y - 1),
-                                                                                         (ushort)(z - 1))))
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-                                                                      AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                Block.fire);
-                                                                  if (GetTile(x, y, (ushort)(z - 1)) == Block.air)
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z - 1)),
-                                                                                Block.fire);
-                                                              }
-                                                              else if (GetTile(x, (ushort)(y - 1), z) == Block.grass)
-                                                                  AddUpdate(PosToInt(x, (ushort)(y - 1), z), Block.dirt);
-
-                                                              if (
-                                                                  Block.LavaKill(GetTile(x, (ushort)(y + 1),
-                                                                                         (ushort)(z - 1))))
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y + 1), z) == Block.air)
-                                                                      AddUpdate(PosToInt(x, (ushort)(y + 1), z),
-                                                                                Block.fire);
-                                                                  if (GetTile(x, y, (ushort)(z - 1)) == Block.air)
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z - 1)),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile(x, (ushort)(y - 1),
-                                                                                         (ushort)(z + 1))))
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-                                                                      AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                Block.fire);
-                                                                  if (GetTile(x, y, (ushort)(z + 1)) == Block.air)
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z + 1)),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile(x, (ushort)(y + 1),
-                                                                                         (ushort)(z + 1))))
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y + 1), z) == Block.air)
-                                                                      AddUpdate(PosToInt(x, (ushort)(y + 1), z),
-                                                                                Block.fire);
-                                                                  if (GetTile(x, y, (ushort)(z + 1)) == Block.air)
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z + 1)),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile((ushort)(x - 1),
-                                                                                         (ushort)(y - 1), z)))
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-                                                                      AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                Block.fire);
-                                                                  if (GetTile((ushort)(x - 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile((ushort)(x - 1),
-                                                                                         (ushort)(y + 1), z)))
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y + 1), z) == Block.air)
-                                                                      AddUpdate(PosToInt(x, (ushort)(y + 1), z),
-                                                                                Block.fire);
-                                                                  if (GetTile((ushort)(x - 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile((ushort)(x + 1),
-                                                                                         (ushort)(y - 1), z)))
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-                                                                      AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                Block.fire);
-                                                                  if (GetTile((ushort)(x + 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                Block.fire);
-                                                              }
-                                                              if (
-                                                                  Block.LavaKill(GetTile((ushort)(x + 1),
-                                                                                         (ushort)(y + 1), z)))
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y + 1), z) == Block.air)
-                                                                      AddUpdate(PosToInt(x, (ushort)(y + 1), z),
-                                                                                Block.fire);
-                                                                  if (GetTile((ushort)(x + 1), y, z) == Block.air)
-                                                                      AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                Block.fire);
-                                                              }
-
-                                                              if (physics >= 2)
-                                                              {
-                                                                  if (C.time < 4)
-                                                                  {
-                                                                      C.time++;
-                                                                      break;
-                                                                  }
-
-                                                                  if (Block.LavaKill(GetTile((ushort)(x - 1), y, z)))
-                                                                      AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                Block.fire);
-                                                                  else if (GetTile((ushort)(x - 1), y, z) == Block.tnt)
-                                                                      MakeExplosion((ushort)(x - 1), y, z, -1);
-
-                                                                  if (Block.LavaKill(GetTile((ushort)(x + 1), y, z)))
-                                                                      AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                Block.fire);
-                                                                  else if (GetTile((ushort)(x + 1), y, z) == Block.tnt)
-                                                                      MakeExplosion((ushort)(x + 1), y, z, -1);
-
-                                                                  if (Block.LavaKill(GetTile(x, (ushort)(y - 1), z)))
-                                                                      AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                Block.fire);
-                                                                  else if (GetTile(x, (ushort)(y - 1), z) == Block.tnt)
-                                                                      MakeExplosion(x, (ushort)(y - 1), z, -1);
-
-                                                                  if (Block.LavaKill(GetTile(x, (ushort)(y + 1), z)))
-                                                                      AddUpdate(PosToInt(x, (ushort)(y + 1), z),
-                                                                                Block.fire);
-                                                                  else if (GetTile(x, (ushort)(y + 1), z) == Block.tnt)
-                                                                      MakeExplosion(x, (ushort)(y + 1), z, -1);
-
-                                                                  if (Block.LavaKill(GetTile(x, y, (ushort)(z - 1))))
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z - 1)),
-                                                                                Block.fire);
-                                                                  else if (GetTile(x, y, (ushort)(z - 1)) == Block.tnt)
-                                                                      MakeExplosion(x, y, (ushort)(z - 1), -1);
-
-                                                                  if (Block.LavaKill(GetTile(x, y, (ushort)(z + 1))))
-                                                                      AddUpdate(PosToInt(x, y, (ushort)(z + 1)),
-                                                                                Block.fire);
-                                                                  else if (GetTile(x, y, (ushort)(z + 1)) == Block.tnt)
-                                                                      MakeExplosion(x, y, (ushort)(z + 1), -1);
-                                                              }
-
-                                                              C.time++;
-                                                              if (C.time > 5)
-                                                              {
-                                                                  storedRand = (rand.Next(1, 10));
-                                                                  if (storedRand <= 2)
-                                                                  {
-                                                                      AddUpdate(C.b, Block.coal);
-                                                                      C.extraInfo = "drop 63 dissipate 10";
-                                                                  }
-                                                                  else if (storedRand <= 4)
-                                                                  {
-                                                                      AddUpdate(C.b, Block.obsidian);
-                                                                      C.extraInfo = "drop 63 dissipate 10";
-                                                                  }
-                                                                  else if (storedRand <= 8) AddUpdate(C.b, Block.air);
-                                                                  else C.time = 3;
-                                                              }
-
+                                                              FirePhysics.Do(this, C, rand);
                                                               break;
-
-                                                          #endregion
 
                                                           case Block.finiteWater:
                                                           case Block.finiteLava:
-                                                              finiteMovement(C, x, y, z);
+                                                              FinitePhysics.DoWaterOrLava(this, C, rand);
                                                               break;
 
                                                           case Block.finiteFaucet:
-                                                              var bufferfinitefaucet = new List<int>();
-
-                                                              for (int i = 0; i < 6; ++i) bufferfinitefaucet.Add(i);
-
-                                                              for (int k = bufferfinitefaucet.Count - 1; k > 1; --k)
-                                                              {
-                                                                  int randIndx = rand.Next(k);
-                                                                  int temp = bufferfinitefaucet[k];
-                                                                  bufferfinitefaucet[k] = bufferfinitefaucet[randIndx];
-                                                                  // move random num to end of list.
-                                                                  bufferfinitefaucet[randIndx] = temp;
-                                                              }
-
-                                                              foreach (int i in bufferfinitefaucet)
-                                                              {
-                                                                  switch (i)
-                                                                  {
-                                                                      case 0:
-                                                                          if (GetTile((ushort)(x - 1), y, z) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt((ushort)(x - 1), y, z),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 1:
-                                                                          if (GetTile((ushort)(x + 1), y, z) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt((ushort)(x + 1), y, z),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 2:
-                                                                          if (GetTile(x, (ushort)(y - 1), z) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, (ushort)(y - 1), z),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 3:
-                                                                          if (GetTile(x, (ushort)(y + 1), z) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, (ushort)(y + 1), z),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 4:
-                                                                          if (GetTile(x, y, (ushort)(z - 1)) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, y, (ushort)(z - 1)),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                      case 5:
-                                                                          if (GetTile(x, y, (ushort)(z + 1)) ==
-                                                                              Block.air)
-                                                                          {
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, y, (ushort)(z + 1)),
-                                                                                      Block.finiteWater))
-                                                                                  InnerChange = true;
-                                                                          }
-                                                                          break;
-                                                                  }
-
-                                                                  if (InnerChange) break;
-                                                              }
-
+                                                              FinitePhysics.DoFaucet(this, C, rand);
                                                               break;
 
                                                           case Block.sand: //Sand
@@ -3670,76 +3335,7 @@ namespace MCGalaxy
                                                               break;
 
                                                           case Block.train:
-                                                              if (rand.Next(1, 10) <= 5) mx = 1;
-                                                              else mx = -1;
-                                                              if (rand.Next(1, 10) <= 5) my = 1;
-                                                              else my = -1;
-                                                              if (rand.Next(1, 10) <= 5) mz = 1;
-                                                              else mz = -1;
-
-                                                              for (int cx = (-1 * mx);
-                                                                   cx != ((1 * mx) + mx);
-                                                                   cx = cx + (1 * mx))
-                                                                  for (int cy = (-1 * my);
-                                                                       cy != ((1 * my) + my);
-                                                                       cy = cy + (1 * my))
-                                                                      for (int cz = (-1 * mz);
-                                                                           cz != ((1 * mz) + mz);
-                                                                           cz = cz + (1 * mz))
-                                                                      {
-                                                                          if (
-                                                                              GetTile((ushort)(x + cx),
-                                                                                      (ushort)(y + cy - 1),
-                                                                                      (ushort)(z + cz)) == Block.red &&
-                                                                              (GetTile((ushort)(x + cx),
-                                                                                       (ushort)(y + cy),
-                                                                                       (ushort)(z + cz)) == Block.air ||
-                                                                               GetTile((ushort)(x + cx),
-                                                                                       (ushort)(y + cy),
-                                                                                       (ushort)(z + cz)) == Block.water) &&
-                                                                              !InnerChange)
-                                                                          {
-                                                                              AddUpdate(
-                                                                                  PosToInt((ushort)(x + cx),
-                                                                                           (ushort)(y + cy),
-                                                                                           (ushort)(z + cz)),
-                                                                                  Block.train);
-                                                                              AddUpdate(PosToInt(x, y, z), Block.air);
-                                                                              AddUpdate(IntOffset(C.b, 0, -1, 0),
-                                                                                        Block.obsidian, true,
-                                                                                        "wait 5 revert " +
-                                                                                        Block.red.ToString());
-
-                                                                              InnerChange = true;
-                                                                              break;
-                                                                          }
-                                                                          if (
-                                                                              GetTile((ushort)(x + cx),
-                                                                                      (ushort)(y + cy - 1),
-                                                                                      (ushort)(z + cz)) == Block.op_air &&
-                                                                              (GetTile((ushort)(x + cx),
-                                                                                       (ushort)(y + cy),
-                                                                                       (ushort)(z + cz)) == Block.air ||
-                                                                               GetTile((ushort)(x + cx),
-                                                                                       (ushort)(y + cy),
-                                                                                       (ushort)(z + cz)) == Block.water) &&
-                                                                              !InnerChange)
-                                                                          {
-                                                                              AddUpdate(
-                                                                                  PosToInt((ushort)(x + cx),
-                                                                                           (ushort)(y + cy),
-                                                                                           (ushort)(z + cz)),
-                                                                                  Block.train);
-                                                                              AddUpdate(PosToInt(x, y, z), Block.air);
-                                                                              AddUpdate(IntOffset(C.b, 0, -1, 0),
-                                                                                        Block.glass, true,
-                                                                                        "wait 5 revert " +
-                                                                                        Block.op_air.ToString());
-
-                                                                              InnerChange = true;
-                                                                              break;
-                                                                          }
-                                                                      }
+                                                              TrainPhysics.Do(this, C, rand);
                                                               break;
 
                                                           case Block.magma:
@@ -3885,90 +3481,7 @@ namespace MCGalaxy
                                                           case Block.birdwhite:
                                                           case Block.birdlava:
                                                           case Block.birdwater:
-                                                              switch (rand.Next(1, 15))
-                                                              {
-                                                                  case 1:
-                                                                      if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-                                                                          AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                    blocks[C.b]);
-                                                                      else goto case 3;
-                                                                      break;
-                                                                  case 2:
-                                                                      if (GetTile(x, (ushort)(y + 1), z) == Block.air)
-                                                                          AddUpdate(PosToInt(x, (ushort)(y + 1), z),
-                                                                                    blocks[C.b]);
-                                                                      else goto case 6;
-                                                                      break;
-                                                                  case 3:
-                                                                  case 4:
-                                                                  case 5:
-                                                                      switch (GetTile((ushort)(x - 1), y, z))
-                                                                      {
-                                                                          case Block.air:
-                                                                              AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                        blocks[C.b]);
-                                                                              break;
-                                                                          case Block.op_air:
-                                                                              break;
-                                                                          default:
-                                                                              AddUpdate(C.b, Block.red, false,
-                                                                                        "dissipate 25");
-                                                                              break;
-                                                                      }
-                                                                      break;
-                                                                  case 6:
-                                                                  case 7:
-                                                                  case 8:
-                                                                      switch (GetTile((ushort)(x + 1), y, z))
-                                                                      {
-                                                                          case Block.air:
-                                                                              AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                        blocks[C.b]);
-                                                                              break;
-                                                                          case Block.op_air:
-                                                                              break;
-                                                                          default:
-                                                                              AddUpdate(C.b, Block.red, false,
-                                                                                        "dissipate 25");
-                                                                              break;
-                                                                      }
-                                                                      break;
-                                                                  case 9:
-                                                                  case 10:
-                                                                  case 11:
-                                                                      switch (GetTile(x, y, (ushort)(z - 1)))
-                                                                      {
-                                                                          case Block.air:
-                                                                              AddUpdate(PosToInt(x, y, (ushort)(z - 1)),
-                                                                                        blocks[C.b]);
-                                                                              break;
-                                                                          case Block.op_air:
-                                                                              break;
-                                                                          default:
-                                                                              AddUpdate(C.b, Block.red, false,
-                                                                                        "dissipate 25");
-                                                                              break;
-                                                                      }
-                                                                      break;
-                                                                  default:
-                                                                      switch (GetTile(x, y, (ushort)(z + 1)))
-                                                                      {
-                                                                          case Block.air:
-                                                                              AddUpdate(PosToInt(x, y, (ushort)(z + 1)),
-                                                                                        blocks[C.b]);
-                                                                              break;
-                                                                          case Block.op_air:
-                                                                              break;
-                                                                          default:
-                                                                              AddUpdate(C.b, Block.red, false,
-                                                                                        "dissipate 25");
-                                                                              break;
-                                                                      }
-                                                                      break;
-                                                              }
-                                                              AddUpdate(C.b, Block.air);
-                                                              C.time = 255;
-
+                                                              BirdPhysics.Do(this, C, rand);
                                                               break;
 
                                                           case Block.snaketail:
@@ -3981,32 +3494,7 @@ namespace MCGalaxy
                                                           case Block.snake:
 
                                                               #region SNAKE
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement_Snake:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 19)
@@ -4272,32 +3760,7 @@ namespace MCGalaxy
                                                           case Block.birdkill:
 
                                                               #region HUNTER BIRDS
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 19)
@@ -4455,32 +3918,7 @@ namespace MCGalaxy
                                                           case Block.fishsponge:
 
                                                               #region FISH
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement_fish:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 19)
@@ -4671,32 +4109,7 @@ namespace MCGalaxy
                                                           case Block.fishlavashark:
 
                                                               #region lavafish
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement_lavafish:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 19)
@@ -5001,32 +4414,7 @@ namespace MCGalaxy
                                                                   AddUpdate(IntOffset(C.b, 0, 1, 0), Block.air);
                                                                   break;
                                                               }
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement_zomb:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 18)
@@ -5402,7 +4790,7 @@ namespace MCGalaxy
             }
         }
 
-        private bool AddUpdate(int b, int type, bool overRide = false, string extraInfo = "")
+        internal bool AddUpdate(int b, int type, bool overRide = false, string extraInfo = "")
         {
             try
             {
@@ -6479,72 +5867,9 @@ namespace MCGalaxy
                                                     Math.Max(storedRand1, storedRand2)), false, "drop 100 dissipate 25");
         }
 
-        public void finiteMovement(Check C, ushort x, ushort y, ushort z)
-        {
+        public void finiteMovement(Check C, ushort x, ushort y, ushort z) {
             var rand = new Random();
-
-            var bufferfiniteWater = new List<int>();
-            var bufferfiniteWaterList = new List<Pos>();
-
-            if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-            {
-                AddUpdate(PosToInt(x, (ushort)(y - 1), z), blocks[C.b], false, C.extraInfo);
-                AddUpdate(C.b, Block.air);
-                C.extraInfo = "";
-            }
-            else if (GetTile(x, (ushort)(y - 1), z) == Block.waterstill ||
-                     GetTile(x, (ushort)(y - 1), z) == Block.lavastill)
-            {
-                AddUpdate(C.b, Block.air);
-                C.extraInfo = "";
-            }
-            else
-            {
-                for (int i = 0; i < 25; ++i) bufferfiniteWater.Add(i);
-
-                for (int k = bufferfiniteWater.Count - 1; k > 1; --k)
-                {
-                    int randIndx = rand.Next(k); //
-                    int temp = bufferfiniteWater[k];
-                    bufferfiniteWater[k] = bufferfiniteWater[randIndx]; // move random num to end of list.
-                    bufferfiniteWater[randIndx] = temp;
-                }
-
-                Pos pos;
-
-                for (var xx = (ushort)(x - 2); xx <= x + 2; ++xx)
-                {
-                    for (var zz = (ushort)(z - 2); zz <= z + 2; ++zz)
-                    {
-                        pos.x = xx;
-                        pos.z = zz;
-                        bufferfiniteWaterList.Add(pos);
-                    }
-                }
-
-                foreach (int i in bufferfiniteWater)
-                {
-                    pos = bufferfiniteWaterList[i];
-                    if (GetTile(pos.x, (ushort)(y - 1), pos.z) == Block.air &&
-                        GetTile(pos.x, y, pos.z) == Block.air)
-                    {
-                        if (pos.x < x) pos.x = (ushort)(Math.Floor((double)(pos.x + x) / 2));
-                        else pos.x = (ushort)(Math.Ceiling((double)(pos.x + x) / 2));
-                        if (pos.z < z) pos.z = (ushort)(Math.Floor((double)(pos.z + z) / 2));
-                        else pos.z = (ushort)(Math.Ceiling((double)(pos.z + z) / 2));
-
-                        if (GetTile(pos.x, y, pos.z) == Block.air)
-                        {
-                            if (AddUpdate(PosToInt(pos.x, y, pos.z), blocks[C.b], false, C.extraInfo))
-                            {
-                                AddUpdate(C.b, Block.air);
-                                C.extraInfo = "";
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            FinitePhysics.DoWaterOrLava(this, C, rand);
         }
 
         public struct Pos

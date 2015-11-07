@@ -422,6 +422,11 @@
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\CmdUnlock.cs" />
+    <Compile Include="Levels\Physics\AIPhysics.cs" />
+    <Compile Include="Levels\Physics\BirdPhysics.cs" />
+    <Compile Include="Levels\Physics\FinitePhysics.cs" />
+    <Compile Include="Levels\Physics\FirePhysics.cs" />
+    <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
     <Compile Include="Player\EmotesHandler.cs" />
@@ -764,6 +769,7 @@
     <Folder Include="Commands\Chat" />
     <Folder Include="Commands\World" />
     <Folder Include="Commands\Other" />
+    <Folder Include="Levels\Physics" />
     <Folder Include="Plugins\OpenClassicEvents\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
