@@ -183,7 +183,7 @@ namespace MCGalaxy
                     fs = new FileStream(path, FileMode.Append, FileAccess.Write);
                     while (cache.Count > 0)
                     {
-                        byte[] tmp = Encoding.Default.GetBytes(cache.Dequeue());
+                        byte[] tmp = Encoding.UTF8.GetBytes(cache.Dequeue());
                         fs.Write(tmp, 0, tmp.Length);
                     }
                     fs.Close();

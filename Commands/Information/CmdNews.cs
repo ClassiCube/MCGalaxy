@@ -15,7 +15,9 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
+using System.Collections.Generic;
 using System.IO;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdNews : Command
@@ -28,18 +30,16 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             string newsFile = "text/news.txt";
-            if (!File.Exists(newsFile) || (File.Exists(newsFile) && File.ReadAllLines(newsFile).Length == -1))
+            if (!File.Exists(newsFile))
             {
-                using (var SW = new StreamWriter(newsFile))
-                {
-                    SW.WriteLine("News have not been created. Put News in '" + newsFile + "'.");
-                }
+            	CP437Writer.WriteAllText(newsFile, "News have not been created. Put News in '" + newsFile + "'.");
                 return;
             }
-            string[] strArray = File.ReadAllLines(newsFile);
+            
+            List<string> lines = CP437Reader.ReadAllLines(newsFile);
             if (message == "")
             {
-                foreach (string t in strArray)
+                foreach (string t in lines)
                 {
                     Player.SendMessage(p, t);
                 }
@@ -47,10 +47,20 @@ namespace MCGalaxy.Commands
             else
             {
                 string[] split = message.Split(' ');
-                if (split[0] == "all") { if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) { Player.SendMessage(p, "You must be at least " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " to send this to all players."); return; } for (int k = 0; k < strArray.Length; k++) { Player.GlobalMessage(strArray[k]); } return; }
+                if (split[0] == "all") { 
+                	if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
+                		Player.SendMessage(p, "You must be at least " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " to send this to all players."); 
+                		return; 
+                	} 
+                	for (int k = 0; k < lines.Count; k++) { 
+                		Player.GlobalMessage(lines[k]); 
+                	} 
+                	return; 
+                }
+                
                 Player player = Player.Find(split[0]);
                 if (player == null) { Player.SendMessage(p, "Could not find player \"" + split[0] + "\"!"); return; }
-                foreach (string t in strArray)
+                foreach (string t in lines)
                 {
                     Player.SendMessage(player, t);
                 }

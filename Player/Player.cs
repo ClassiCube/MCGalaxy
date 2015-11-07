@@ -39,161 +39,6 @@ namespace MCGalaxy {
         /// </summary>
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();
 
-        public static readonly Dictionary<string, char> EmoteKeywords = new Dictionary<string, char> {
-            { "darksmile", '\u0001' },
-
-			{ "smile", '\u0002' }, // ☻
-
-            { "heart", '\u0003' }, // ♥
-            { "hearts", '\u0003' },
-
-            { "diamond", '\u0004' }, // ♦
-            { "diamonds", '\u0004' },
-            { "rhombus", '\u0004' },
-
-            { "club", '\u0005' }, // ♣
-            { "clubs", '\u0005' },
-            { "clover", '\u0005' },
-            { "shamrock", '\u0005' },
-
-            { "spade", '\u0006' }, // ♠
-            { "spades", '\u0006' },
-
-            { "*", '\u0007' }, // •
-            { "bullet", '\u0007' },
-            { "dot", '\u0007' },
-            { "point", '\u0007' },
-
-            { "hole", '\u0008' }, // ◘
-
-            { "circle", '\u0009' }, // ○
-            { "o", '\u0009' },
-
-            { "male", '\u000B' }, // ♂
-            { "mars", '\u000B' },
-
-            { "female", '\u000C' }, // ♀
-            { "venus", '\u000C' },
-
-            { "8", '\u000D' }, // ♪
-            { "note", '\u000D' },
-            { "quaver", '\u000D' },
-
-            { "notes", '\u000E' }, // ♫
-            { "music", '\u000E' },
-
-            { "sun", '\u000F' }, // ☼
-            { "celestia", '\u000F' },
-
-            { ">>", '\u0010' }, // ►
-            { "right", '\u0010' },
-
-            { "<<", '\u0011' }, // ◄
-            { "left", '\u0011' },
-
-            { "updown", '\u0012' }, // ↕
-            { "^v", '\u0012' },
-
-            { "!!", '\u0013' }, // ‼
-
-            { "p", '\u0014' }, // ¶
-            { "para", '\u0014' },
-            { "pilcrow", '\u0014' },
-            { "paragraph", '\u0014' },
-
-            { "s", '\u0015' }, // §
-            { "sect", '\u0015' },
-            { "section", '\u0015' },
-
-            { "-", '\u0016' }, // ▬
-            { "_", '\u0016' },
-            { "bar", '\u0016' },
-            { "half", '\u0016' },
-
-            { "updown2", '\u0017' }, // ↨
-            { "^v_", '\u0017' },
-
-            { "^", '\u0018' }, // ↑
-            { "uparrow", '\u0018' },
-
-            { "v", '\u0019' }, // ↓
-            { "downarrow", '\u0019' },
-
-            { "->", '\u001A' }, // →
-            { "rightarrow", '\u001A' },
-
-            { "<-", '\u001B' }, // ←
-            { "leftarrow", '\u001B' },
-
-            { "l", '\u001C' }, // ∟
-            { "angle", '\u001C' },
-            { "corner", '\u001C' },
-
-            { "<>", '\u001D' }, // ↔
-            { "<->", '\u001D' },
-            { "leftright", '\u001D' },
-
-            { "^^", '\u001E' }, // ▲
-            { "up", '\u001E' },
-
-            { "vv", '\u001F' }, // ▼
-            { "down", '\u001F' },
-
-            { "house", '\u007F' } // ⌂
-        };
-        public static string ReplaceEmoteKeywords(string message)
-        {
-            if (message == null)
-                throw new ArgumentNullException("message");
-            int startIndex = message.IndexOf('(');
-            if (startIndex == -1)
-            {
-                return message;
-            }
-
-            StringBuilder output = new StringBuilder(message.Length);
-            int lastAppendedIndex = 0;
-            while (startIndex != -1)
-            {
-                int endIndex = message.IndexOf(')', startIndex + 1);
-                if (endIndex == -1)
-                {
-                    break;
-                }
-
-                bool escaped = false;
-                for (int i = startIndex - 1; i >= 0 && message[i] == '\\'; i--)
-                {
-                    escaped = !escaped;
-                }
-
-                string keyword = message.Substring(startIndex + 1, endIndex - startIndex - 1);
-                char substitute;
-                if (EmoteKeywords.TryGetValue(keyword.ToLowerInvariant(), out substitute))
-                {
-                    if (escaped)
-                    {
-                        startIndex++;
-                        output.Append(message, lastAppendedIndex, startIndex - lastAppendedIndex - 2);
-                        lastAppendedIndex = startIndex - 1;
-                    }
-                    else
-                    {
-                        output.Append(message, lastAppendedIndex, startIndex - lastAppendedIndex);
-                        output.Append(substitute);
-                        startIndex = endIndex + 1;
-                        lastAppendedIndex = startIndex;
-                    }
-                }
-                else
-                {
-                    startIndex++;
-                }
-                startIndex = message.IndexOf('(', startIndex);
-            }
-            output.Append(message, lastAppendedIndex, message.Length - lastAppendedIndex);
-            return output.ToString();
-        }
         public void ClearChat() { OnChat = null; }
         public static Dictionary<string, string> left = new Dictionary<string, string>();
         /// <summary>
@@ -577,19 +422,15 @@ namespace MCGalaxy {
                         loginTimer.Stop();
                         if ( File.Exists("text/welcome.txt") ) {
                             try {
-                                using ( StreamReader wm = File.OpenText("text/welcome.txt") ) {
-                                    List<string> welcome = new List<string>();
-                                    while ( !wm.EndOfStream )
-                                        welcome.Add(wm.ReadLine());
-                                    foreach ( string w in welcome )
-                                        SendMessage(w);
-                                }
+                        		List<string> welcome = CP437Reader.ReadAllLines("text/welcome.txt");
+                        		foreach (string w in welcome)
+                        			SendMessage(w);
                             }
                             catch { }
                         }
                         else {
                             Server.s.Log("Could not find Welcome.txt. Using default.");
-                            File.WriteAllText("text/welcome.txt", "Welcome to my server!");
+                            CP437Writer.WriteAllText("text/welcome.txt", "Welcome to my server!");
                             SendMessage("Welcome to my server!");
                         }
                         extraTimer.Start();
@@ -1281,13 +1122,11 @@ namespace MCGalaxy {
                 }
             }
             if (emoteList.Contains(name)) parseSmiley = false;
-            if (!Directory.Exists("text/login"))
-            {
+            if (!Directory.Exists("text/login")) {
                 Directory.CreateDirectory("text/login");
             }
-            if (!File.Exists("text/login/" + this.name + ".txt"))
-            {
-                File.WriteAllText("text/login/" + this.name + ".txt", "joined the server.");
+            if (!File.Exists("text/login/" + this.name + ".txt"))  {
+                CP437Writer.WriteAllText("text/login/" + this.name + ".txt", "joined the server.");
             }
 
             //very very sloppy, yes I know.. but works for the time
@@ -2182,14 +2021,23 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 			                       	}
 			                       });
         }
+        
+        char[] characters = new char[64];
+        string GetString( byte[] data, int offset ) {
+            int length = 0;
+            for( int i = 63; i >= 0; i-- ) {
+                byte code = data[i + offset];
+                if( length == 0 && !( code == 0 || code == 0x20 ) )
+                    length = i + 1;
+                characters[i] = (char)code;
+            }
+            return new String( characters, 0, length );
+        }
+        
         void HandleChat(byte[] message) {
             try {
                 if ( !loggedIn ) return;
-
-                //byte[] message = (byte[])m;
-                string text = enc.GetString(message, 1, 64).Trim();
-                // removing nulls (matters for the /womid messages)
-                text = text.Trim('\0');
+                string text = GetString(message, 1);
 
                 // handles the /womid client message, which displays the WoM version
                 if ( text.Truncate(6) == "/womid" ) {
@@ -2225,7 +2073,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 }
 
                 text = Regex.Replace(text, @"\s\s+", " ");
-                if ( text.Any(ch => ch < 32 || ch >= 127 || ch == '&') ) {
+                if ( text.Any(ch => ch == '&') ) {
                     Kick("Illegal character in chat message!");
                     return;
                 }
@@ -2985,46 +2833,7 @@ return;
                 sb.Replace("<3", "(heart)");
             }
 
-            /*byte[] stored = new byte[1];
-
-            stored[0] = (byte)1;
-            sb.Replace("(darksmile)", enc.GetString(stored));
-            stored[0] = (byte)2;
-            sb.Replace("(smile)", enc.GetString(stored));
-            stored[0] = (byte)3;
-            sb.Replace("(heart)", enc.GetString(stored));
-            stored[0] = (byte)4;
-            sb.Replace("(diamond)", enc.GetString(stored));
-            stored[0] = (byte)7;
-            sb.Replace("(bullet)", enc.GetString(stored));
-            stored[0] = (byte)8;
-            sb.Replace("(hole)", enc.GetString(stored));
-            stored[0] = (byte)11;
-            sb.Replace("(male)", enc.GetString(stored));
-            stored[0] = (byte)12;
-            sb.Replace("(female)", enc.GetString(stored));
-            stored[0] = (byte)15;
-            sb.Replace("(sun)", enc.GetString(stored));
-            stored[0] = (byte)16;
-            sb.Replace("(right)", enc.GetString(stored));
-            stored[0] = (byte)17;
-            sb.Replace("(left)", enc.GetString(stored));
-            stored[0] = (byte)19;
-            sb.Replace("(double)", enc.GetString(stored));
-            stored[0] = (byte)22;
-            sb.Replace("(half)", enc.GetString(stored));
-            stored[0] = (byte)24;
-            sb.Replace("(uparrow)", enc.GetString(stored));
-            stored[0] = (byte)25;
-            sb.Replace("(downarrow)", enc.GetString(stored));
-            stored[0] = (byte)26;
-            sb.Replace("(rightarrow)", enc.GetString(stored));
-            stored[0] = (byte)30;
-            sb.Replace("(up)", enc.GetString(stored));
-            stored[0] = (byte)31;
-            sb.Replace("(down)", enc.GetString(stored));*/
-
-            message = ReplaceEmoteKeywords(sb.ToString());
+            message = EmotesHandler.ReplaceEmoteKeywords(sb.ToString());
             message = FullCP437Handler.Replace(message);
             int totalTries = 0;
             if ( MessageRecieve != null )
@@ -4182,10 +3991,11 @@ changed |= 4;*/
                             Directory.CreateDirectory("text/logout");
                         }
                         if ( !File.Exists("text/logout/" + name + ".txt") ) {
-                            File.WriteAllText("text/logout/" + name + ".txt", "Disconnected.");
+                            CP437Writer.WriteAllText("text/logout/" + name + ".txt", "Disconnected.");
                         }
                         if ( !hidden ) {
-                    		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + File.ReadAllText("text/logout/" + name + ".txt");
+                    		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + 
+                    			CP437Reader.ReadAllText("text/logout/" + name + ".txt");
                     		if ((Server.guestLeaveNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
                     		{
                                 Player.players.ForEach(delegate(Player p1)
@@ -4862,13 +4672,12 @@ Next: continue;
             if (!File.Exists(path)) File.Create(path).Dispose();
             try
             {
-                StreamWriter sw = File.AppendText(path);
-                sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
-                sw.Close();
-
+            	using (CP437Writer sw = new CP437Writer(path, true)) {
+            		 sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + 
+            		             Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
+            	}
             }
             catch { Server.s.Log("Error saving RankReason!"); }
-
         }
         
         public static bool BlacklistCheck(string name, string foundLevel)

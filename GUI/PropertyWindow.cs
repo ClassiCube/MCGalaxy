@@ -718,7 +718,7 @@ namespace MCGalaxy.Gui {
 
         public void Save(string givenPath) {
             try {
-                using ( StreamWriter w = new StreamWriter(File.Create(givenPath)) ) {
+                using ( CP437Writer w = new CP437Writer(givenPath) ) {
                     if ( givenPath.IndexOf("server") != -1 ) {
                         saveAll(); // saves everything to the server variables
                         SrvProperties.SaveProps(w); // When we have this, why define it again?

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            string alltext = File.ReadAllText("text/rankinfo.txt");
+            string alltext = CP437Reader.ReadAllText("text/rankinfo.txt");
             if (message == "")
             {
                 Help(p);
@@ -48,10 +48,8 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "&cPlayer &a" + message + "&c has not been ranked yet!");
                 return;
             }
-            
 
-
-            foreach (string line3 in File.ReadAllLines("text/rankinfo.txt"))
+            foreach (string line3 in CP437Reader.ReadAllLines("text/rankinfo.txt"))
             {
                 if (!line3.Contains(message))
                     continue;
@@ -72,8 +70,6 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "&aDate of assignment: " + ExpireDate.ToString());
                 Player.SendMessage(p, "&aRanked by: " + assigner);
             }
-
-
         }
         public override void Help(Player p)
         {

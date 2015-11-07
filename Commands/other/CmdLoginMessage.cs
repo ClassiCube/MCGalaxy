@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands
                     }
                     else
                     {
-                        File.WriteAllText("text/login/" + target.name + ".txt", s);
+                        CP437Writer.WriteAllText("text/login/" + target.name + ".txt", s);
                     }
                     Player.SendMessage(p, "The login message of " + target.color + target.DisplayName + Server.DefaultColor + " has been changed to:");
                     Player.SendMessage(p, s);
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands
                     }
                     else
                     {
-                        File.WriteAllText("text/login/" + t + ".txt", s);
+                        CP437Writer.WriteAllText("text/login/" + t + ".txt", s);
                     }
                     Player.SendMessage(p, "The login message of " + t + " has been changed to:");
                     Player.SendMessage(p, s);

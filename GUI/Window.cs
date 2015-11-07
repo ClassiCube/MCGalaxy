@@ -1043,7 +1043,7 @@ namespace MCGalaxy.Gui
                         if (File.Exists("text/login/" + p.name + ".txt"))
                         {
                             LoginTxt.Text = null;
-                            LoginTxt.Text = File.ReadAllText("text/login/" + p.name + ".txt");
+                            LoginTxt.Text = CP437Reader.ReadAllText("text/login/" + p.name + ".txt");
                         }
                         else
                         {
@@ -1055,7 +1055,7 @@ namespace MCGalaxy.Gui
                         if (File.Exists("text/logout/" + p.name + ".txt"))
                         {
                             LogoutTxt.Text = null;
-                            LogoutTxt.Text = File.ReadAllText("text/logout/" + p.name + ".txt");
+                            LogoutTxt.Text = CP437Reader.ReadAllText("text/logout/" + p.name + ".txt");
                         }
                         else
                         {
@@ -1176,8 +1176,8 @@ namespace MCGalaxy.Gui
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            File.WriteAllText("text/login/" + prpertiesofplyer.name + ".txt", null);
-            File.WriteAllText("text/login/" + prpertiesofplyer.name + ".txt", LoginTxt.Text);
+            CP437Writer.WriteAllText("text/login/" + prpertiesofplyer.name + ".txt", null);
+            CP437Writer.WriteAllText("text/login/" + prpertiesofplyer.name + ".txt", LoginTxt.Text);
             PlayersTextBox.AppendTextAndScroll("The login message has been saved!");
         }
 
@@ -1188,8 +1188,8 @@ namespace MCGalaxy.Gui
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            File.WriteAllText("text/logout/" + prpertiesofplyer.name + ".txt", null);
-            File.WriteAllText("text/logout/" + prpertiesofplyer.name + ".txt", LogoutTxt.Text);
+            CP437Writer.WriteAllText("text/logout/" + prpertiesofplyer.name + ".txt", null);
+            CP437Writer.WriteAllText("text/logout/" + prpertiesofplyer.name + ".txt", LogoutTxt.Text);
             PlayersTextBox.AppendTextAndScroll("The logout message has been saved!");
         }
 

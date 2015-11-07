@@ -92,7 +92,6 @@ namespace MCGalaxy
         public static string URL = String.Empty;
 
         public static Socket listen;
-        public static System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess();
         public static System.Timers.Timer updateTimer = new System.Timers.Timer(100);
         //static System.Timers.Timer heartbeatTimer = new System.Timers.Timer(60000); //Every 45 seconds
         static System.Timers.Timer messageTimer = new System.Timers.Timer(60000 * 5); //Every 5 mins
@@ -895,8 +894,6 @@ namespace MCGalaxy
                 };
                 messageTimer.Start();
 
-                process = System.Diagnostics.Process.GetCurrentProcess();
-
                 if (File.Exists("text/messages.txt"))
                 {
                     using (StreamReader r = File.OpenText("text/messages.txt"))
@@ -1215,6 +1212,7 @@ namespace MCGalaxy
 
         public void Log(string message, bool systemMsg = false)
         {
+        	message = CP437Writer.ConvertFromRaw(message);
             if (ServerLog != null)
             {
                 ServerLog(message);
@@ -1242,6 +1240,7 @@ namespace MCGalaxy
         }
         public void OpLog(string message, bool systemMsg = false)
         {
+        	message = CP437Writer.ConvertFromRaw(message);
             if (ServerOpLog != null)
             {
                 OpLog(message);
@@ -1268,6 +1267,7 @@ namespace MCGalaxy
 
         public void AdminLog(string message, bool systemMsg = false)
         {
+        	message = CP437Writer.ConvertFromRaw(message);
             if (ServerAdminLog != null)
             {
                 ServerAdminLog(message);
@@ -1300,6 +1300,7 @@ namespace MCGalaxy
 
         public void CommandUsed(string message)
         {
+        	message = CP437Writer.ConvertFromRaw(message);
             if (OnCommand != null) OnCommand(DateTime.Now.ToString("(HH:mm:ss) ") + message);
             Logger.Write(DateTime.Now.ToString("(HH:mm:ss) ") + message + Environment.NewLine);
         }
