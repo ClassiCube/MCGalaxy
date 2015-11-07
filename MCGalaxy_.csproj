@@ -424,6 +424,7 @@
     <Compile Include="Commands\World\CmdUnlock.cs" />
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
+    <Compile Include="Player\EmotesHandler.cs" />
     <Compile Include="Player\FullCP437Handler.cs" />
     <Compile Include="Server\AutoSaver.cs" />
     <Compile Include="Player\Ban.cs" />

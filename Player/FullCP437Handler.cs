@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MCGalaxy
 {
-    public class FullCP437Handler
+    public static class FullCP437Handler
     {
         public static readonly Dictionary<string, char> Replacements = new Dictionary<string, char> {
             { "big-c-cedilla", '\u0080' }, // Ç
@@ -94,58 +94,16 @@ namespace MCGalaxy
 			{ "black-square", '\u00FE' }, // ■
     };
 
-        public static string Replace(string message)
-        {
-            if (message == null)
-                throw new ArgumentNullException("message");
-            int startIndex = message.IndexOf('{');
-            if (startIndex == -1)
-            {
-                return message;
-            }
-
-            StringBuilder output = new StringBuilder(message.Length);
-            int lastAppendedIndex = 0;
-            while (startIndex != -1)
-            {
-                int endIndex = message.IndexOf('}', startIndex + 1);
-                if (endIndex == -1)
-                {
-                    break;
-                }
-
-                bool escaped = false;
-                for (int i = startIndex - 1; i >= 0 && message[i] == '\\'; i--)
-                {
-                    escaped = !escaped;
-                }
-
-                string keyword = message.Substring(startIndex + 1, endIndex - startIndex - 1);
-                char substitute;
-                if (Replacements.TryGetValue(keyword.ToLowerInvariant(), out substitute))
-                {
-                    if (escaped)
-                    {
-                        startIndex++;
-                        output.Append(message, lastAppendedIndex, startIndex - lastAppendedIndex - 2);
-                        lastAppendedIndex = startIndex - 1;
-                    }
-                    else
-                    {
-                        output.Append(message, lastAppendedIndex, startIndex - lastAppendedIndex);
-                        output.Append(substitute);
-                        startIndex = endIndex + 1;
-                        lastAppendedIndex = startIndex;
-                    }
-                }
-                else
-                {
-                    startIndex++;
-                }
-                startIndex = message.IndexOf('{', startIndex);
-            }
-            output.Append(message, lastAppendedIndex, message.Length - lastAppendedIndex);
-            return output.ToString();
+        public static string Replace(string message) {
+    		return EmotesHandler.Unescape(message, '{', '}', Replacements);
         }
+    	
+    	/// <summary> Conversion for code page 437 characters from index 0 to 31 to unicode. </summary>
+		public const string ControlCharReplacements = "\0☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼";
+		
+		/// <summary> Conversion for code page 437 characters from index 127 to 255 to unicode. </summary>
+		public const string ExtendedCharReplacements = "⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»" +
+			"░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌" +
+			"█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■\u00a0";
     }
 }
