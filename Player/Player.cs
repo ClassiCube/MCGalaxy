@@ -4671,13 +4671,12 @@ Next: continue;
             if (!File.Exists(path)) File.Create(path).Dispose();
             try
             {
-                StreamWriter sw = File.AppendText(path);
-                sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
-                sw.Close();
-
+            	using (CP437Writer sw = new CP437Writer(path, true)) {
+            		 sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + 
+            		             Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
+            	}
             }
             catch { Server.s.Log("Error saving RankReason!"); }
-
         }
         
         public static bool BlacklistCheck(string name, string foundLevel)
