@@ -26,6 +26,7 @@ using System.Threading;
 using MCGalaxy.Levels.Textures;
 using MCGalaxy.SQL;
 using Timer = System.Timers.Timer;
+using MCGalaxy.BlockPhysics;
 //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
 //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
 
@@ -3981,32 +3982,7 @@ namespace MCGalaxy
                                                           case Block.snake:
 
                                                               #region SNAKE
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement_Snake:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 19)
@@ -4272,32 +4248,7 @@ namespace MCGalaxy
                                                           case Block.birdkill:
 
                                                               #region HUNTER BIRDS
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 19)
@@ -4455,32 +4406,7 @@ namespace MCGalaxy
                                                           case Block.fishsponge:
 
                                                               #region FISH
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement_fish:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 19)
@@ -4671,32 +4597,7 @@ namespace MCGalaxy
                                                           case Block.fishlavashark:
 
                                                               #region lavafish
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement_lavafish:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 19)
@@ -5001,32 +4902,7 @@ namespace MCGalaxy
                                                                   AddUpdate(IntOffset(C.b, 0, 1, 0), Block.air);
                                                                   break;
                                                               }
-
-                                                              if (ai)
-                                                                  Player.players.ForEach(delegate(Player p)
-                                                                                             {
-                                                                                                 if (p.level == this &&
-                                                                                                     !p.invincible)
-                                                                                                 {
-                                                                                                     currentNum =
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[0] /
-                                                                                                              32) - x) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[1] /
-                                                                                                              32) - y) +
-                                                                                                         Math.Abs(
-                                                                                                             (p.pos[2] /
-                                                                                                              32) - z);
-                                                                                                     if (currentNum <
-                                                                                                         foundNum)
-                                                                                                     {
-                                                                                                         foundNum =
-                                                                                                             currentNum;
-                                                                                                         foundPlayer = p;
-                                                                                                     }
-                                                                                                 }
-                                                                                             });
+                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
 
                                                           randomMovement_zomb:
                                                               if (foundPlayer != null && rand.Next(1, 20) < 18)
