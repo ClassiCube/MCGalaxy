@@ -2182,14 +2182,23 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 			                       	}
 			                       });
         }
+               		
+        char[] characters = new char[64];
+        string GetString( byte[] data ) {
+            int length = 0;
+            for( int i = 63; i >= 0; i-- ) {
+                byte code = data[i + 1];
+                if( length == 0 && !( code == 0 || code == 0x20 ) )
+                    length = i + 1;
+                characters[i] = (char)code;
+            }
+            return new String( characters, 0, length );
+        }
+        
         void HandleChat(byte[] message) {
             try {
                 if ( !loggedIn ) return;
-
-                //byte[] message = (byte[])m;
-                string text = enc.GetString(message, 1, 64).Trim();
-                // removing nulls (matters for the /womid messages)
-                text = text.Trim('\0');
+                string text = GetString(message);
 
                 // handles the /womid client message, which displays the WoM version
                 if ( text.Truncate(6) == "/womid" ) {
@@ -2225,7 +2234,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 }
 
                 text = Regex.Replace(text, @"\s\s+", " ");
-                if ( text.Any(ch => ch < 32 || ch >= 127 || ch == '&') ) {
+                if ( text.Any(ch => ch == '&') ) {
                     Kick("Illegal character in chat message!");
                     return;
                 }
