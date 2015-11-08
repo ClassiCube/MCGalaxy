@@ -53,7 +53,12 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, c.red + "Player has an internal IP, cannot trace");
                 return;
             }
-            Player.SendMessage(p, c.lime + "The IP of " + c.aqua + who.name + c.lime + " has been traced to: " + c.aqua + Player.GetIPLocation(searchip));
+            if (who != null)
+                name = who.name;
+            else
+                name = message;
+                
+            Player.SendMessage(p, c.lime + "The IP of " + c.aqua + name + c.lime + " has been traced to: " + c.aqua + Player.GetIPLocation(searchip));
         }
         public override void Help(Player p)
         {
