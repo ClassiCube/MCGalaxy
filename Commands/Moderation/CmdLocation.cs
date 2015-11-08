@@ -32,6 +32,7 @@ namespace MCGalaxy.Commands
         {
             Player who = null;
             string searchip = "";
+            string name;
             who = Player.Find(message);
             if (who == null)
             {
