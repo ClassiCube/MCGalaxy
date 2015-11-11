@@ -92,14 +92,14 @@ namespace MCGalaxy
             Random rand = new Random();
             if (spawnx == 0 && spawny == 0 && spawnz == 0)
             {
-                ushort xx = (ushort)(rand.Next(0, mainlevel.width));
-                ushort yy = (ushort)(rand.Next(0, mainlevel.depth));
-                ushort zz = (ushort)(rand.Next(0, mainlevel.height));
+                ushort xx = (ushort)(rand.Next(0, mainlevel.Width));
+                ushort yy = (ushort)(rand.Next(0, mainlevel.Height));
+                ushort zz = (ushort)(rand.Next(0, mainlevel.Length));
                 while (mainlevel.GetTile(xx, yy, zz) != Block.air && game.OnSide((ushort)(zz * 32), this))
                 {
-                    xx = (ushort)(rand.Next(0, mainlevel.width));
-                    yy = (ushort)(rand.Next(0, mainlevel.depth));
-                    zz = (ushort)(rand.Next(0, mainlevel.height));
+                    xx = (ushort)(rand.Next(0, mainlevel.Width));
+                    yy = (ushort)(rand.Next(0, mainlevel.Height));
+                    zz = (ushort)(rand.Next(0, mainlevel.Length));
                 }
                 unchecked { p1.SendPos((byte)-1, (ushort)(xx * 32), (ushort)(yy * 32), (ushort)(zz * 32), p1.rot[0], p1.rot[1]); }
             }
@@ -370,24 +370,20 @@ namespace MCGalaxy
             LoadMap(maps[new Random().Next(maps.Count)]);
             if (look)
             {
-                for (ushort x = 0; x < mainlevel.width; x++)
+                for (ushort y = 0; y < mainlevel.Height; y++)
+                    for (ushort z = 0; z < mainlevel.Length; z++)
+                        for (ushort x = 0; x < mainlevel.Width; x++)
                 {
-                    for (ushort y = 0; y < mainlevel.depth; y++)
+                    if (mainlevel.GetTile(x, y, z) == Block.red)
                     {
-                        for (ushort z = 0; z < mainlevel.height; z++)
-                        {
-                            if (mainlevel.GetTile(x, y, z) == Block.red)
-                            {
-                                redbase.x = x; redbase.y = y; redbase.z = z;
-                            }
-                            else if (mainlevel.GetTile(x, y, z) == Block.blue || mainlevel.GetTile(x, y, z) == Block.cyan)
-                            {
-                                bluebase.x = x; bluebase.y = y; bluebase.z = z;
-                            }
-                        }
+                        redbase.x = x; redbase.y = y; redbase.z = z;
+                    }
+                    else if (mainlevel.GetTile(x, y, z) == Block.blue || mainlevel.GetTile(x, y, z) == Block.cyan)
+                    {
+                        bluebase.x = x; bluebase.y = y; bluebase.z = z;
                     }
                 }
-                zline = mainlevel.height / 2;
+                zline = mainlevel.Length / 2;
             }
             redbase.block = Block.red;
             bluebase.block = Block.blue;

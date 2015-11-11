@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            ushort max = p.level.height;
+            ushort max = p.level.Length;
             ushort posy = (ushort)(p.pos[1] / 32);
             bool found = false;
             ushort xpos = (ushort)(p.pos[0] / 32);

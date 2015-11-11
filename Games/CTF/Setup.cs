@@ -206,7 +206,7 @@ namespace MCGalaxy.CTF
             if (cmd.ToLower() == "ctfsetup")
             {
                 Level current = p.level;
-                int middle = p.level.height / 2;
+                int middle = p.level.Length / 2;
                 Player.SendMessage(p, "%2Hello and welcome to the noob friendly CTF setup :D");
                 if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
                 Player.SendMessage(p, "I'll setup this map, but first can you stand in the middle of the map?");

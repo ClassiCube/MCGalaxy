@@ -1598,9 +1598,9 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 Server.lava.AddMap(name);
 
                 LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(level.name);
-                settings.blockFlood = new LavaSurvival.Pos((ushort)( level.width / 2 ), (ushort)( level.depth - 1 ), (ushort)( level.height / 2 ));
-                settings.blockLayer = new LavaSurvival.Pos(0, (ushort)( level.depth / 2 ), 0);
-                ushort x = (ushort)( level.width / 2 ), y = (ushort)( level.depth / 2 ), z = (ushort)( level.height / 2 );
+                settings.blockFlood = new LavaSurvival.Pos((ushort)( level.Width / 2 ), (ushort)( level.Height - 1 ), (ushort)( level.Length / 2 ));
+                settings.blockLayer = new LavaSurvival.Pos(0, (ushort)( level.Height / 2 ), 0);
+                ushort x = (ushort)( level.Width / 2 ), y = (ushort)( level.Height / 2 ), z = (ushort)( level.Length / 2 );
                 settings.safeZone = new LavaSurvival.Pos[] { new LavaSurvival.Pos((ushort)( x - 3 ), y, (ushort)( z - 3 )), new LavaSurvival.Pos((ushort)( x + 3 ), (ushort)( y + 4 ), (ushort)( z + 3 )) };
                 Server.lava.SaveMapSettings(settings);
 

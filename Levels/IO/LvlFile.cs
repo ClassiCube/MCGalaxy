@@ -32,9 +32,9 @@ namespace MCGalaxy.Levels.IO {
                 BitConverter.GetBytes(1874).CopyTo(header, 0);
                 gs.Write(header, 0, 2);
 
-                BitConverter.GetBytes(level.width).CopyTo(header, 0);
-                BitConverter.GetBytes(level.height).CopyTo(header, 2);
-                BitConverter.GetBytes(level.depth).CopyTo(header, 4);
+                BitConverter.GetBytes(level.Width).CopyTo(header, 0);
+                BitConverter.GetBytes(level.Length).CopyTo(header, 2);
+                BitConverter.GetBytes(level.Height).CopyTo(header, 4);
                 BitConverter.GetBytes(level.spawnx).CopyTo(header, 6);
                 BitConverter.GetBytes(level.spawnz).CopyTo(header, 8);
                 BitConverter.GetBytes(level.spawny).CopyTo(header, 10);
@@ -56,23 +56,18 @@ namespace MCGalaxy.Levels.IO {
                 }
                 gs.Write(convBlocks, 0, convBlocks.Length);
                 
-                level.CustomBlocks[0] = 1;
-                if (level.CustomBlocks != null) {
-                    var chunks = level.CustomBlocks.Split(level.width * level.height * level.depth / 4096);
-                    //Identifier
-                    gs.WriteByte(2);
-                    foreach (var test in chunks) {
-                        bool empty = true;
-                        foreach (byte a in test) {
-                            if (a != 0)
-                                empty = false;
-                        }
-                        if (empty) {
-                            gs.WriteByte(0);
-                        } else {
-                            gs.WriteByte(1);
-                            gs.Write(test.ToArray(), 0, test.Count());
-                        }
+                // write out new blockdefinitions data
+                gs.WriteByte( 0xBD );
+                for (int y = 0; y < level.ChunksY; y++)
+                	for (int z = 0; z < level.ChunksZ; z++)
+                		for (int x = 0; x < level.ChunksX; x++)
+                {
+                    byte[] chunk = level.CustomBlocks[x + z * level.ChunksX + y * level.ChunksX * level.ChunksY];
+                    if (chunk == null) {
+                        gs.WriteByte(0);
+                    } else {
+                        gs.WriteByte(1);
+                        gs.Write(chunk, 0, chunk.Length);
                     }
                 }
             }
@@ -94,11 +89,11 @@ namespace MCGalaxy.Levels.IO {
                     offset = 2;
                 } else {
                     gs.Read(header, 0, 12);
-                }                
+                }
                 vars[1] = BitConverter.ToUInt16(header, offset);
                 vars[2] = BitConverter.ToUInt16(header, offset + 2);
 
-                Level level = new Level(name, vars[0], vars[2], vars[1], 
+                Level level = new Level(name, vars[0], vars[2], vars[1],
                                         "full_empty", 0, loadTexturesConfig);
                 level.spawnx = BitConverter.ToUInt16(header, offset + 4);
                 level.spawny = BitConverter.ToUInt16(header, offset + 6);
@@ -107,23 +102,20 @@ namespace MCGalaxy.Levels.IO {
                 level.roty = header[offset + 11];
                 
                 gs.Read(level.blocks, 0, level.blocks.Length);
-                try {
-                    int chunkSize = level.width * level.length * level.depth / 4096;
-                    int curOffset = 0;
-                    if (gs.ReadByte() == 2)
-                    {
-                        for (int i = 1; i <= chunkSize; i++)
-                        {
-                            curOffset += 1;
-                            if (gs.ReadByte() == 1)
-                            {
-                                gs.Read(level.CustomBlocks, curOffset, chunkSize);
-                                curOffset += 16;
-                            }
-                        }
+                if (gs.ReadByte() != 0xBD) 
+                    return level;
+                
+                int index = 0;
+                for (int y = 0; y < level.ChunksY; y++)
+                	for (int z = 0; z < level.ChunksZ; z++)
+                		for (int x = 0; x < level.ChunksX; x++)
+                {
+                    if (gs.ReadByte() == 1) {
+                        byte[] chunk = new byte[16 * 16 * 16];
+                        gs.Read(chunk, 0, chunk.Length);
+                        level.CustomBlocks[index] = chunk;
                     }
-                } catch {
-                    level.CustomBlocks = null;
+                    index++;
                 }
                 return level;
             }

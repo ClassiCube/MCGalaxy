@@ -95,23 +95,23 @@ namespace MCGalaxy.Levels.IO {
                                 Array.Copy(data, headerEnd + offset - 4, temp, 0, sizeof(int));
                                 if (MemCmp(data, pointer, "width"))
                                 {
-                                    lvl.width = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
+                                    lvl.Width = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
                                 }
                                 else if (MemCmp(data, pointer, "depth"))
                                 {
-                                    lvl.depth = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
+                                    lvl.Height = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
                                 }
                                 else if (MemCmp(data, pointer, "height"))
                                 {
-                                    lvl.height = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
+                                    lvl.Length = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
                                 }
 
                                 pointer += skip;
                             }
 
-                            lvl.spawnx = (ushort)(lvl.width / 1.3);
-                            lvl.spawny = (ushort)(lvl.depth / 1.3);
-                            lvl.spawnz = (ushort)(lvl.height / 1.3);
+                            lvl.spawnx = (ushort)(lvl.Width / 1.3);
+                            lvl.spawny = (ushort)(lvl.Height / 1.3);
+                            lvl.spawnz = (ushort)(lvl.Length / 1.3);
 
                             // find the start of the block array
                             bool foundBlockArray = false;

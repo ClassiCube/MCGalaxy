@@ -129,9 +129,9 @@ namespace MCGalaxy.Commands
 								Server.lava.AddMap(foundLevel.name);
 
 								LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(foundLevel.name);
-								settings.blockFlood = new LavaSurvival.Pos((ushort)(foundLevel.width / 2), (ushort)(foundLevel.depth - 1), (ushort)(foundLevel.height / 2));
-								settings.blockLayer = new LavaSurvival.Pos(0, (ushort)(foundLevel.depth / 2), 0);
-								ushort x = (ushort)(foundLevel.width / 2), y = (ushort)(foundLevel.depth / 2), z = (ushort)(foundLevel.height / 2);
+								settings.blockFlood = new LavaSurvival.Pos((ushort)(foundLevel.Width / 2), (ushort)(foundLevel.Height - 1), (ushort)(foundLevel.Length / 2));
+								settings.blockLayer = new LavaSurvival.Pos(0, (ushort)(foundLevel.Height / 2), 0);
+								ushort x = (ushort)(foundLevel.Width / 2), y = (ushort)(foundLevel.Height / 2), z = (ushort)(foundLevel.Length / 2);
 								settings.safeZone = new LavaSurvival.Pos[] { new LavaSurvival.Pos((ushort)(x - 3), y, (ushort)(z - 3)), new LavaSurvival.Pos((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
 								Server.lava.SaveMapSettings(settings);
 

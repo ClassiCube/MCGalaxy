@@ -94,7 +94,8 @@ namespace MCGalaxy
         public bool backedup;
         public List<BlockPos> blockCache = new List<BlockPos>();
         public byte[] blocks;
-        public byte[] CustomBlocks;
+        public byte[][] CustomBlocks;
+        public int ChunksX, ChunksY, ChunksZ;
         public byte weather;
         public string textureUrl = "";
 
@@ -108,7 +109,14 @@ namespace MCGalaxy
         public bool countdowninprogress;
         public bool ctfmode;
         public int currentUndo;
-        public ushort depth; // y       THIS IS STUPID, SHOULD HAVE BEEN Z
+        public ushort Width, Height, Length;
+        // NOTE: These are for legacy matching only, you should use upper case Width/Height/Length
+        // as these correctly map Y to beinh Height
+        public ushort width { get { return Width; } }
+        public ushort height { get { return Length; } }
+        public ushort depth { get { return Height; } }
+        public ushort length { get { return Length; } }
+        
         public int drown = 70;
         public bool edgeWater;
         public int fall = 9;
@@ -116,8 +124,6 @@ namespace MCGalaxy
         public bool fishstill;
         public bool growTrees;
         public bool guns = true;
-        public ushort height; // z      THIS IS STUPID, SHOULD HAVE BEEN Y
-        public int id;
         public byte jailrotx, jailroty;
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
         public string CloudColor = null;
@@ -179,16 +185,13 @@ namespace MCGalaxy
         public byte rotx;
         public byte roty;
         public bool rp = true;
-        public ushort spawnx;
-        public ushort spawny;
-        public ushort spawnz;
+        public ushort spawnx, spawny, spawnz;
 
         public int speedPhysics = 250;
         public LevelTextures textures;
 
         public string theme = "Normal";
         public bool unload = true;
-        public ushort width; // x
         public bool worldChat = true;
         public bool bufferblocks = Server.bufferblocks;
         public List<BlockQueue.block> blockqueue = new List<BlockQueue.block>();
@@ -200,66 +203,69 @@ namespace MCGalaxy
                      bool useSeed = false, bool loadTexturesConfig = true)
         {
             //onLevelSave += null;
-            width = x;
-            depth = y;
-            height = z;
-            if (width < 16)
-                width = 16;
-            if (depth < 16)
-                depth = 16;
-            if (height < 16)
-                height = 16;
+            Width = x;
+            Height = y;
+            Length = z;
+            if (Width < 16)
+                Width = 16;
+            if (Height < 16)
+                Height = 16;
+            if (Length < 16)
+                Length = 16;
 
             name = n;
-            blocks = new byte[width * depth * height];
-            CustomBlocks = new byte[width * depth * height];
+            blocks = new byte[Width * Height * Length];
+            ChunksX = (Width + 15) >> 4;
+            ChunksY = (Height + 15) >> 4;
+            ChunksZ = (Length + 15) >> 4;
+            CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
             ZoneList = new List<Zone>();
 
-            var half = (ushort)(depth / 2);
+            var half = (ushort)(Height / 2);
             switch (type)
             {
                 case "flat":
-                    for (x = 0; x < width; ++x)
-                        for (z = 0; z < height; ++z)
+                    for (x = 0; x < Width; ++x)
+                        for (z = 0; z < Length; ++z)
                             for (y = 0; y <= half; ++y)
                                 SetTile(x, y, z, y < half ? Block.dirt : Block.grass);
                     //SetTile(x, y, z, (byte)(y != half ? (y >= half) ? 0 : 3 : 2));
                     break;
                 case "pixel":
-                    for (x = 0; x < width; ++x)
-                        for (z = 0; z < height; ++z)
-                            for (y = 0; y < depth; ++y)
+                    for (x = 0; x < Width; ++x)
+                        for (z = 0; z < Length; ++z)
+                            for (y = 0; y < Height; ++y)
                                 if (y == 0)
                                     SetTile(x, y, z, 7);
-                                else if (x == 0 || x == width - 1 || z == 0 || z == height - 1)
+                                else if (x == 0 || x == Width - 1 || z == 0 || z == Length - 1)
                                     SetTile(x, y, z, 36);
                     break;
                 case "empty":
-                    for (x = 0; x < width; ++x)
-                        for (z = 0; z < height; ++z)
-                            for (y = 0; y < depth; ++y)
+                    for (x = 0; x < Width; ++x)
+                        for (z = 0; z < Length; ++z)
+                            for (y = 0; y < Height; ++y)
                                 if (y == 0)
                                     SetTile(x, y, z, 7);
                     break;
                 case "space":
                     Random rand = useSeed ? new Random(seed) : new Random();
 
-                    for (x = 0; x < width; ++x)
-                        for (z = 0; z < height; ++z)
-                            for (y = 0; y < depth; ++y)
+                    for (x = 0; x < Width; ++x)
+                        for (z = 0; z < Length; ++z)
+                            for (y = 0; y < Height; ++y)
                                 if (y == 0)
                                     SetTile(x, y, z, 7);
-                                else if (x == 0 || x == width - 1 || z == 0 || z == height - 1 || y == 1 ||
-                                         y == depth - 1)
+                                else if (x == 0 || x == Width - 1 || z == 0 || z == Length - 1 || y == 1 ||
+                                         y == Height - 1)
                                     SetTile(x, y, z, rand.Next(100) == 0 ? Block.iron : Block.obsidian);
                     break;
 
                 case "rainbow":
                     Random random = useSeed ? new Random(seed) : new Random();
-                    for (x = 0; x < width; ++x)
-                        for (z = 0; z < height; ++z)
-                            for (y = 0; y < depth; ++y)
-                                if (y == 0 || y == depth - 1 || x == 0 || x == width - 1 || z == 0 || z == height - 1)
+                    for (x = 0; x < Width; ++x)
+                        for (z = 0; z < Length; ++z)
+                            for (y = 0; y < Height; ++y)
+                                if (y == 0 || y == Height - 1 || x == 0 || x == Width - 1 || z == 0 || z == Length - 1)
                                     SetTile(x, y, z, (byte)random.Next(21, 36));
 
                     break;
@@ -267,21 +273,21 @@ namespace MCGalaxy
 
                 case "hell":
                     Random random2 = useSeed ? new Random(seed) : new Random();
-                    for (x = 0; x < width; ++x)
-                        for (z = 0; z < height; ++z)
-                            for (y = 0; y < depth; ++y)
+                    for (x = 0; x < Width; ++x)
+                        for (z = 0; z < Length; ++z)
+                            for (y = 0; y < Height; ++y)
                                 if (y == 0)
                                     SetTile(x, y, z, 7);
-                                else if (x == 0 || x == width - 1 || z == 0 || z == height - 1 || y == 0 ||
-                                         y == depth - 1)
+                                else if (x == 0 || x == Width - 1 || z == 0 || z == Length - 1 || y == 0 ||
+                                         y == Height - 1)
                                     SetTile(x, y, z, Block.obsidian);
-                                else if (x == 1 || x == width - 2 || z == 1 || z == height - 2)
+                                else if (x == 1 || x == Width - 2 || z == 1 || z == Length - 2)
                                 {
                                     if (random2.Next(1000) == 7)
                                     {
-                                        for (int i = 1; i < (depth - y); ++i)
+                                        for (int i = 1; i < (Height - y); ++i)
                                         {
-                                            SetTile(x, (ushort)(depth - i), z, Block.lava);
+                                            SetTile(x, (ushort)(Height - i), z, Block.lava);
                                         }
                                     }
                                 }
@@ -298,19 +304,14 @@ namespace MCGalaxy
 
                 //no need for default
             }
-            spawnx = (ushort)(width / 2);
-            spawny = (ushort)(depth * 0.75f);
-            spawnz = (ushort)(height / 2);
+            spawnx = (ushort)(Width / 2);
+            spawny = (ushort)(Height * 0.75f);
+            spawnz = (ushort)(Length / 2);
             rotx = 0;
             roty = 0;
             if (loadTexturesConfig)
             	textures = new LevelTextures(this);
             //season = new SeasonsCore(this);
-        }
-
-        public ushort length
-        {
-            get { return height; }
         }
 
         public List<Player> players
@@ -352,7 +353,7 @@ namespace MCGalaxy
 
         public void CopyBlocks(byte[] source, int offset)
         {
-            blocks = new byte[width * depth * height];
+            blocks = new byte[Width * Height * Length];
             Array.Copy(source, offset, blocks, 0, blocks.Length);
 
             for (int i = 0; i < blocks.Length; i++)
@@ -466,10 +467,9 @@ namespace MCGalaxy
 
         public byte GetTile(ushort x, ushort y, ushort z)
         {
-            if (blocks == null) return Block.Zero;
-            //if (PosToInt(x, y, z) >= blocks.Length) { return null; }
-            //Avoid internal overflow
-            return !InBound(x, y, z) ? Block.Zero : blocks[PosToInt(x, y, z)];
+        	int index = PosToInt(x, y, z);
+            if (index < 0 || blocks == null) return Block.Zero;
+            return blocks[index];
         }
 
         public byte GetTile(int b)
@@ -518,7 +518,7 @@ namespace MCGalaxy
 
         public bool InBound(ushort x, ushort y, ushort z)
         {
-            return x >= 0 && y >= 0 && z >= 0 && x < width && y < depth && z < height;
+            return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
 
         public static Level Find(string levelName)
@@ -550,7 +550,7 @@ namespace MCGalaxy
             try
             {
                 if (x < 0 || y < 0 || z < 0) return;
-                if (x >= width || y >= depth || z >= height) return;
+                if (x >= Width || y >= Height || z >= Length) return;
 
                 byte b = GetTile(x, y, z);
 
@@ -854,7 +854,7 @@ namespace MCGalaxy
         //Block change made by physics
         {
             if (x < 0 || y < 0 || z < 0) return;
-            if (x >= width || y >= depth || z >= height) return;
+            if (x >= Width || y >= Height || z >= Length) return;
             byte b = GetTile(x, y, z);
 
             try
@@ -922,7 +922,7 @@ namespace MCGalaxy
         public void skipChange(ushort x, ushort y, ushort z, byte type)
         {
             if (x < 0 || y < 0 || z < 0) return;
-            if (x >= width || y >= depth || z >= height) return;
+            if (x >= Width || y >= Height || z >= Length) return;
 
             SetTile(x, y, z, type);
         }
@@ -1347,24 +1347,24 @@ namespace MCGalaxy
 
         public int PosToInt(ushort x, ushort y, ushort z)
         {
-            if (x < 0 || x >= width || y < 0 || y >= depth || z < 0 || z >= height)
+            if (x < 0 || x >= Width || y < 0 || y >= Height || z < 0 || z >= Length)
                 return -1;
-            return x + (z * width) + (y * width * height);
+            return x + (z * Width) + (y * Width * Length);
             //alternate method: (h * widthY + y) * widthX + x;
         }
 
         public void IntToPos(int pos, out ushort x, out ushort y, out ushort z)
         {
-            y = (ushort)(pos / width / height);
-            pos -= y * width * height;
-            z = (ushort)(pos / width);
-            pos -= z * width;
+            y = (ushort)(pos / Width / Length);
+            pos -= y * Width * Length;
+            z = (ushort)(pos / Width);
+            pos -= z * Width;
             x = (ushort)pos;
         }
 
         public int IntOffset(int pos, int x, int y, int z)
         {
-            return pos + x + z * width + y * width * height;
+            return pos + x + z * Width + y * Width * Length;
         }
 
         public static LevelPermission PermissionFromName(string name)
@@ -1895,10 +1895,10 @@ namespace MCGalaxy
                                                               //Edge of map water
                                                               if (edgeWater)
                                                               {
-                                                                  if (y < depth / 2 && y >= (depth / 2) - 2)
+                                                                  if (y < Height / 2 && y >= (Height / 2) - 2)
                                                                   {
-                                                                      if (x == 0 || x == width - 1 || z == 0 ||
-                                                                          z == height - 1)
+                                                                      if (x == 0 || x == Width - 1 || z == 0 ||
+                                                                          z == Length - 1)
                                                                       {
                                                                           AddUpdate(C.b, Block.water);
                                                                       }
@@ -3973,7 +3973,7 @@ namespace MCGalaxy
                                                               {
                                                                   if (GetTile(x, (ushort)(y + 1), z) == Block.air)
                                                                   {
-                                                                      if ((depth / 100) * 80 < y) mx = rand.Next(1, 20);
+                                                                      if ((Height / 100) * 80 < y) mx = rand.Next(1, 20);
                                                                       else mx = 5;
 
                                                                       if (mx > 1)

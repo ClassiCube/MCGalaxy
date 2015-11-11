@@ -81,9 +81,9 @@ namespace MCGalaxy.Commands
             if (testValue < 0)
                 return false;
 
-            if (testValue >= p.level.width && dimension == 0) return false;
-            else if (testValue >= p.level.depth && dimension == 1) return false;
-            else if (testValue >= p.level.height && dimension == 2) return false;
+            if (testValue >= p.level.Width && dimension == 0) return false;
+            else if (testValue >= p.level.Height && dimension == 1) return false;
+            else if (testValue >= p.level.Length && dimension == 2) return false;
 
             return true;
         }

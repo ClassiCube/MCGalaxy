@@ -81,18 +81,19 @@ namespace MCGalaxy.Commands
                 p.SendMessage("Cant restore selection of different size maps.");
                 return false;
             }
-            int width = other.width, height = other.height;
+            int width = other.Width, height = other.Length;
 
-            if (p.level.bufferblocks && !p.level.Instant) {             
+            if (p.level.bufferblocks && !p.level.Instant) {
                 for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
                     for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                         for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
                 {
                     BlockQueue.Addblock(p, xx, yy, zz, blocks[xx + (zz * width) + (yy * width * height)]);
                 }
-            } else { 
+            } else {
                 for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
                     for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
+                        
                         for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
                 {
                     p.level.Blockchange(p, xx, yy, zz, blocks[xx + (zz * width) + (yy * width * height)]);

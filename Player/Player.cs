@@ -1458,7 +1458,7 @@ namespace MCGalaxy {
 
                 if ( Server.antiTunnel ) {
                     if ( !ignoreGrief && !PlayingTntWars ) {
-                        if ( y < level.depth / 2 - Server.maxDepth ) {
+                        if ( y < level.Height / 2 - Server.maxDepth ) {
                             SendMessage("You're not allowed to build this far down!");
                             SendBlockchange(x, y, z, b); return;
                         }
@@ -2954,9 +2954,9 @@ return;
                     else if ( Server.updateTimer.Interval > 1000 ) Thread.Sleep(100);
                     else Thread.Sleep(10);
                 } buffer = new byte[6];
-                HTNO((short)level.width).CopyTo(buffer, 0);
-                HTNO((short)level.depth).CopyTo(buffer, 2);
-                HTNO((short)level.height).CopyTo(buffer, 4);
+                HTNO((short)level.Width).CopyTo(buffer, 0);
+                HTNO((short)level.Height).CopyTo(buffer, 2);
+                HTNO((short)level.Length).CopyTo(buffer, 4);
                 SendRaw(4, buffer);
                 Loading = false;
                 if (HasExtension("EnvWeatherType"))
@@ -3058,8 +3058,8 @@ return;
             if ( x < 0 ) x = 32;
             if ( y < 0 ) y = 32;
             if ( z < 0 ) z = 32;
-            if ( x > level.width * 32 ) x = (ushort)( level.width * 32 - 32 );
-            if ( z > level.height * 32 ) z = (ushort)( level.height * 32 - 32 );
+            if ( x > level.Width * 32 ) x = (ushort)( level.Width * 32 - 32 );
+            if ( z > level.Length * 32 ) z = (ushort)( level.Length * 32 - 32 );
             if ( x > 32767 ) x = 32730;
             if ( y > 32767 ) y = 32730;
             if ( z > 32767 ) z = 32730;
@@ -3084,14 +3084,19 @@ rot = new byte[2] { rotx, roty };*/
         //TODO: Figure a way to SendPos without changing rotation
         public void SendDie(byte id) { SendRaw(0x0C, new byte[1] { id }); }
         public void SendBlockchange(ushort x, ushort y, ushort z, byte type) {
+        	if (x < 0 || y < 0 || z < 0) return;
+            if (x >= level.Width || y >= level.Height || z >= level.Length) return;
             bool skip = false;
             if (type == Block.block_definitions)
             {
                 skip = true;
-                type = level.CustomBlocks[level.PosToInt(x, y, z)];
-            }
-            if ( x < 0 || y < 0 || z < 0 ) return;
-            if ( x >= level.width || y >= level.depth || z >= level.height ) return;
+                byte[] chunk = level.CustomBlocks[(x >> 4) + (z >> 4) * level.ChunksX + 
+                                                  (y >> 4) * level.ChunksX * level.ChunksZ];
+                if (chunk == null)
+                	type = Block.stone;
+                else
+                	type = chunk[(x & 0xF) | (y & 0xF) << 4 | (z & 0x0F) << 8];
+            }          
 
             byte[] buffer = new byte[7];
             HTNO(x).CopyTo(buffer, 0);

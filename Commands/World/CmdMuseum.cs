@@ -89,9 +89,9 @@ namespace MCGalaxy.Commands
 						p.SendRaw(3, send);
 						Thread.Sleep(10);
 					} buffer = new byte[6];
-					Player.HTNO((short)level.width).CopyTo(buffer, 0);
-					Player.HTNO((short)level.depth).CopyTo(buffer, 2);
-					Player.HTNO((short)level.height).CopyTo(buffer, 4);
+					Player.HTNO((short)level.Width).CopyTo(buffer, 0);
+					Player.HTNO((short)level.Height).CopyTo(buffer, 2);
+					Player.HTNO((short)level.Length).CopyTo(buffer, 4);
 					p.SendRaw(4, buffer);
 
 					ushort x = (ushort)((0.5 + level.spawnx) * 32);

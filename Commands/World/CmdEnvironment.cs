@@ -209,7 +209,7 @@ namespace MCGalaxy.Commands {
                 if( block )
                     modifyBlock = defValue;
                 else
-                    p.level.EdgeLevel = (short)(p.level.depth / 2);
+                    p.level.EdgeLevel = (short)(p.level.Height / 2);
             } else {
                 if (block && !CheckBlock(p, value, variable, ref modifyBlock))
                     return;
