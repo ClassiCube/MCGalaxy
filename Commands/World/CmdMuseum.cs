@@ -20,6 +20,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Threading;
+using MCGalaxy.Levels.IO;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdMuseum : Command
@@ -35,7 +37,6 @@ namespace MCGalaxy.Commands
         {
 
             string path;
-
             if (message.Split(' ').Length == 1) path = "levels/" + message + ".lvl";
             else if (message.Split(' ').Length == 2) try { path = @Server.backupLocation + "/" + message.Split(' ')[0] + "/" + int.Parse(message.Split(' ')[1]) + "/" + message.Split(' ')[0] + ".lvl"; }
                 catch { Help(p); return; }
@@ -43,67 +44,17 @@ namespace MCGalaxy.Commands
 
             if (File.Exists(path))
             {
-                FileStream fs = File.OpenRead(path);
                 try
                 {
-
-                    GZipStream gs = new GZipStream(fs, CompressionMode.Decompress);
-                    byte[] ver = new byte[2];
-                    gs.Read(ver, 0, ver.Length);
-                    ushort version = BitConverter.ToUInt16(ver, 0);
-					ushort[] vars = new ushort[6];
-					byte[] rot = new byte[2];
-
-					if (version == 1874)
-					{
-						byte[] header = new byte[16]; gs.Read(header, 0, header.Length);
-
-						vars[0] = BitConverter.ToUInt16(header, 0);
-						vars[1] = BitConverter.ToUInt16(header, 2);
-						vars[2] = BitConverter.ToUInt16(header, 4);
-						vars[3] = BitConverter.ToUInt16(header, 6);
-						vars[4] = BitConverter.ToUInt16(header, 8);
-						vars[5] = BitConverter.ToUInt16(header, 10);
-
-						rot[0] = header[12];
-						rot[1] = header[13];
-
-						//level.permissionvisit = (LevelPermission)header[14];
-						//level.permissionbuild = (LevelPermission)header[15];
-					}
-					else
-					{
-						byte[] header = new byte[12]; gs.Read(header, 0, header.Length);
-
-						vars[0] = version;
-						vars[1] = BitConverter.ToUInt16(header, 0);
-						vars[2] = BitConverter.ToUInt16(header, 2);
-						vars[3] = BitConverter.ToUInt16(header, 4);
-						vars[4] = BitConverter.ToUInt16(header, 6);
-						vars[5] = BitConverter.ToUInt16(header, 8);
-
-						rot[0] = header[10];
-						rot[1] = header[11];
-					}
-
-					Level level = new Level(name, vars[0], vars[2], vars[1], "empty");
+					Level level = LvlFile.Load(name, path);
 					level.setPhysics(0);
-
-					level.spawnx = vars[3];
-					level.spawnz = vars[4];
-					level.spawny = vars[5];
-					level.rotx = rot[0];
-					level.roty = rot[1];
-
-					byte[] blocks = new byte[level.width * level.height * level.depth];
-					gs.Read(blocks, 0, blocks.Length);
-					level.blocks = blocks;
-					gs.Close();
 
 					level.backedup = true;
 					level.permissionbuild = LevelPermission.Admin;
 
-					level.jailx = (ushort)(level.spawnx * 32); level.jaily = (ushort)(level.spawny * 32); level.jailz = (ushort)(level.spawnz * 32);
+					level.jailx = (ushort)(level.spawnx * 32); 
+					level.jaily = (ushort)(level.spawny * 32); 
+					level.jailz = (ushort)(level.spawnz * 32);
 					level.jailrotx = level.rotx; level.jailroty = level.roty;
 
 					p.Loading = true;
@@ -161,11 +112,13 @@ namespace MCGalaxy.Commands
 					{
                         Player.GlobalMessage(p.color + p.prefix + p.name + Server.DefaultColor + " went to the " + level.name);
 					}
-				}
-                catch (Exception ex) { Player.SendMessage(p, "Error loading level."); Server.ErrorLog(ex); return; }
-                finally { fs.Close(); }
+				} catch (Exception ex) { 
+                	Player.SendMessage(p, "Error loading level."); 
+                	Server.ErrorLog(ex);
+                }
+            } else { 
+            	Player.SendMessage(p, "Level or backup could not be found.");
             }
-            else { Player.SendMessage(p, "Level or backup could not be found."); return; }
         }
         public override void Help(Player p)
         {

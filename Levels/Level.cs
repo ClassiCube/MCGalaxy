@@ -27,6 +27,7 @@ using MCGalaxy.Levels.Textures;
 using MCGalaxy.SQL;
 using Timer = System.Timers.Timer;
 using MCGalaxy.BlockPhysics;
+using MCGalaxy.Levels.IO;
 //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
 //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
 
@@ -195,24 +196,19 @@ namespace MCGalaxy
 
         public List<C4.C4s> C4list = new List<C4.C4s>();
 
-        public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false)
+        public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, 
+                     bool useSeed = false, bool loadTexturesConfig = true)
         {
             //onLevelSave += null;
             width = x;
             depth = y;
             height = z;
             if (width < 16)
-            {
                 width = 16;
-            }
             if (depth < 16)
-            {
                 depth = 16;
-            }
             if (height < 16)
-            {
                 height = 16;
-            }
 
             name = n;
             blocks = new byte[width * depth * height];
@@ -307,7 +303,8 @@ namespace MCGalaxy
             spawnz = (ushort)(height / 2);
             rotx = 0;
             roty = 0;
-            textures = new LevelTextures(this);
+            if (loadTexturesConfig)
+            	textures = new LevelTextures(this);
             //season = new SeasonsCore(this);
         }
 
@@ -789,90 +786,10 @@ namespace MCGalaxy
             //} b.type = type;
         }
 
-        public static void SaveSettings(Level level)
-        {
-            try
-            {
-                File.Create("levels/level properties/" + level.name + ".properties").Dispose();
-                File.Create("levels/level properties/" + level.name + ".env").Dispose();
-                using (StreamWriter SW = File.CreateText("levels/level properties/" + level.name + ".properties"))
-                {
-                    SW.WriteLine("#Level properties for " + level.name);
-                    SW.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
-                    SW.WriteLine("Theme = " + level.theme);
-                    SW.WriteLine("Physics = " + level.physics.ToString());
-                    SW.WriteLine("Physics speed = " + level.speedPhysics.ToString());
-                    SW.WriteLine("Physics overload = " + level.overload.ToString());
-                    SW.WriteLine("Finite mode = " + level.finite.ToString());
-                    SW.WriteLine("Animal AI = " + level.ai.ToString());
-                    SW.WriteLine("Edge water = " + level.edgeWater.ToString());
-                    SW.WriteLine("Survival death = " + level.Death.ToString());
-                    SW.WriteLine("Fall = " + level.fall.ToString());
-                    SW.WriteLine("Drown = " + level.drown.ToString());
-                    SW.WriteLine("MOTD = " + level.motd);
-                    SW.WriteLine("JailX = " + level.jailx.ToString());
-                    SW.WriteLine("JailY = " + level.jaily.ToString());
-                    SW.WriteLine("JailZ = " + level.jailz.ToString());
-                    SW.WriteLine("Unload = " + level.unload.ToString());
-                    SW.WriteLine("WorldChat = " + level.worldChat.ToString());
-                    SW.WriteLine("PerBuild = " +
-                                 (Group.Exists(PermissionToName(level.permissionbuild).ToLower())
-                                      ? PermissionToName(level.permissionbuild).ToLower()
-                                      : PermissionToName(LevelPermission.Builder)));
-                    SW.WriteLine("PerVisit = " +
-                                 (Group.Exists(PermissionToName(level.permissionvisit).ToLower())
-                                      ? PermissionToName(level.permissionvisit).ToLower()
-                                      : PermissionToName(LevelPermission.Guest)));
-                    SW.WriteLine("PerBuildMax = " +
-                                 (Group.Exists(PermissionToName(level.perbuildmax).ToLower())
-                                      ? PermissionToName(level.perbuildmax).ToLower()
-                                      : PermissionToName(LevelPermission.Nobody)));
-                    SW.WriteLine("PerVisitMax = " +
-                                 (Group.Exists(PermissionToName(level.pervisitmax).ToLower())
-                                      ? PermissionToName(level.pervisitmax).ToLower()
-                                      : PermissionToName(LevelPermission.Nobody)));
-                    SW.WriteLine("Guns = " + level.guns.ToString());
-                    SW.WriteLine("LoadOnGoto = " + level.loadOnGoto.ToString());
-                    SW.WriteLine("LeafDecay = " + level.leafDecay.ToString());
-                    SW.WriteLine("RandomFlow = " + level.randomFlow.ToString());
-                    SW.WriteLine("GrowTrees = " + level.growTrees.ToString());
-                    SW.WriteLine("Weather = " + level.weather.ToString());
-                    SW.WriteLine("Texture = " + level.textureUrl);
-                }
-                try
-                {
-                    StreamWriter sw = new StreamWriter(File.Create("levels/level properties/" + level.name.ToLower() + ".env"));
-                    if(level.CloudColor != null)
-                        sw.WriteLine("CloudColor = " + level.CloudColor.ToString());
-                    if (level.SkyColor != null)
-                        sw.WriteLine("SkyColor = " + level.SkyColor.ToString());
-                    if (level.LightColor != null)
-                        sw.WriteLine("LightColor = " + level.LightColor.ToString());
-                    if (level.ShadowColor != null) 
-                        sw.WriteLine("ShadowColor = " + level.ShadowColor.ToString());
-                    if (level.FogColor != null)
-                        sw.WriteLine("FogColor = " + level.FogColor.ToString());
-                    if (level.EdgeLevel != null)
-                        sw.WriteLine("EdgeLevel = " + level.EdgeLevel.ToString());
-                    if (level.EdgeBlock != null) 
-                        sw.WriteLine("EdgeBlock = " + level.EdgeBlock.ToString());
-                    if (level.HorizonBlock != null)
-                        sw.WriteLine("HorizonBlock = " + level.HorizonBlock.ToString());
-                    sw.Flush();
-                    sw.Close();
-                    sw.Dispose();
-                }
-                catch (Exception e)
-                {
-                    Server.s.Log("Failed to save environment properties");
-                    Logger.WriteError(e);
-                }
-            }
-            catch (Exception)
-            {
-                Server.s.Log("Failed to save level properties!");
-            }
+        public static void SaveSettings(Level level) {
+        	LvlProperties.Save(level, "levels/level properties/" + level.name);
         }
+        
         public void Blockchange(int b, byte type, bool overRide = false, string extraInfo = "")
         //Block change made by physics
         {
@@ -1037,117 +954,18 @@ namespace MCGalaxy
                 if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics))
                 {
                     if (clearPhysics)
-                    {
                         ClearPhysics();
-                    }
-                    using (FileStream fs = File.Create(string.Format("{0}.back", path)))
-                    {
-                        using (GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
-                        {
+                    
+                    LvlFile.Save(this, path + ".back");
+                    File.Delete(path + ".backup");
+                    File.Copy(path + ".back", path + ".backup");
+                    File.Delete(path);
+                    File.Move(path + ".back", path);
+                    SaveSettings(this);
 
-                            var header = new byte[16];
-                            BitConverter.GetBytes(1874).CopyTo(header, 0);
-                            gs.Write(header, 0, 2);
-
-                            BitConverter.GetBytes(width).CopyTo(header, 0);
-                            BitConverter.GetBytes(height).CopyTo(header, 2);
-                            BitConverter.GetBytes(depth).CopyTo(header, 4);
-                            BitConverter.GetBytes(spawnx).CopyTo(header, 6);
-                            BitConverter.GetBytes(spawnz).CopyTo(header, 8);
-                            BitConverter.GetBytes(spawny).CopyTo(header, 10);
-                            header[12] = rotx;
-                            header[13] = roty;
-                            header[14] = (byte)permissionvisit;
-                            header[15] = (byte)permissionbuild;
-                            gs.Write(header, 0, header.Length);
-
-                            var level = new byte[blocks.Length];
-
-                            for (int i = 0; i < blocks.Length; ++i)
-                            {
-                                if (blocks[i] < 66)
-                                //CHANGED THIS TO INCOPARATE SOME MORE SPACE THAT I NEEDED FOR THE door_orange_air ETC.
-                                {
-                                    level[i] = blocks[i];
-                                }
-                                else
-                                {
-                                    level[i] = Block.SaveConvert(blocks[i]);
-                                }
-                            }
-                            gs.Write(level, 0, level.Length);
-                            CustomBlocks[0] = 1;
-                            if (CustomBlocks != null)
-                            {
-                                var chunks = CustomBlocks.Split(width * height * depth / 4096);
-                                //Identifier
-                                gs.WriteByte(2);
-                                foreach (var test in chunks)
-                                {
-                                    bool empty = true;
-                                    foreach (byte a in test)
-                                    {
-                                        if (a != 0)
-                                            empty = false;
-                                    }
-                                    if (empty)
-                                    {
-                                        gs.WriteByte(0);
-                                    }
-                                    else
-                                    {
-                                        gs.WriteByte(1);
-                                        gs.Write(test.ToArray(), 0, test.Count());
-                                    }
-                                }
-                            }
-                            gs.Close();
-                            File.Delete(string.Format("{0}.backup", path));
-                            File.Copy(string.Format("{0}.back", path), path + ".backup");
-                            File.Delete(path);
-                            File.Move(string.Format("{0}.back", path), path);
-
-                            SaveSettings(this);
-
-                            Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
-                                                       Player.players.Count, Server.players));
-                            changed = false;
-
-                            gs.Dispose();
-                            fs.Dispose();
-                        }
-                    }
-
-                    // UNCOMPRESSED LEVEL SAVING! DO NOT USE!
-                    /*using (FileStream fs = File.Create(path + ".wtf"))
-                    {
-                        byte[] header = new byte[16];
-                        BitConverter.GetBytes(1874).CopyTo(header, 0);
-                        fs.Write(header, 0, 2);
-
-                        BitConverter.GetBytes(width).CopyTo(header, 0);
-                        BitConverter.GetBytes(height).CopyTo(header, 2);
-                        BitConverter.GetBytes(depth).CopyTo(header, 4);
-                        BitConverter.GetBytes(spawnx).CopyTo(header, 6);
-                        BitConverter.GetBytes(spawnz).CopyTo(header, 8);
-                        BitConverter.GetBytes(spawny).CopyTo(header, 10);
-                        header[12] = rotx; header[13] = roty;
-                        header[14] = (byte)permissionvisit;
-                        header[15] = (byte)permissionbuild;
-                        fs.Write(header, 0, header.Length);
-                        byte[] level = new byte[blocks.Length];
-                        for (int i = 0; i < blocks.Length; ++i)
-                        {
-                            if (blocks[i] < 80)
-                            {
-                                level[i] = blocks[i];
-                            }
-                            else
-                            {
-                                level[i] = Block.SaveConvert(blocks[i]);
-                            }
-                        } fs.Write(level, 0, level.Length); fs.Close();
-                    }*/
+                    Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
+                                               Player.players.Count, Server.players));
+                    changed = false;
                 }
                 else
                 {
@@ -1164,7 +982,6 @@ namespace MCGalaxy
                     {
                         if (pr.ProcessName == "MCGalaxy")
                             pr.Kill();
-
                     }
                 }
                 else
@@ -1257,91 +1074,11 @@ namespace MCGalaxy
             string path = string.Format("levels/{0}.lvl", givenName);
             if (File.Exists(path))
             {
-                FileStream fs = File.OpenRead(path);
                 try
                 {
-                    var gs = new GZipStream(fs, CompressionMode.Decompress);
-                    var ver = new byte[2];
-                    gs.Read(ver, 0, ver.Length);
-                    ushort version = BitConverter.ToUInt16(ver, 0);
-                    var vars = new ushort[6];
-                    var rot = new byte[2];
-
-                    if (version == 1874)
-                    {
-                        var header = new byte[16];
-                        gs.Read(header, 0, header.Length);
-
-                        vars[0] = BitConverter.ToUInt16(header, 0);
-                        vars[1] = BitConverter.ToUInt16(header, 2);
-                        vars[2] = BitConverter.ToUInt16(header, 4);
-                        vars[3] = BitConverter.ToUInt16(header, 6);
-                        vars[4] = BitConverter.ToUInt16(header, 8);
-                        vars[5] = BitConverter.ToUInt16(header, 10);
-
-                        rot[0] = header[12];
-                        rot[1] = header[13];
-
-                        //level.permissionvisit = (LevelPermission)header[14];
-                        //level.permissionbuild = (LevelPermission)header[15];
-                    }
-                    else
-                    {
-                        var header = new byte[12];
-                        gs.Read(header, 0, header.Length);
-
-                        vars[0] = version;
-                        vars[1] = BitConverter.ToUInt16(header, 0);
-                        vars[2] = BitConverter.ToUInt16(header, 2);
-                        vars[3] = BitConverter.ToUInt16(header, 4);
-                        vars[4] = BitConverter.ToUInt16(header, 6);
-                        vars[5] = BitConverter.ToUInt16(header, 8);
-
-                        rot[0] = header[10];
-                        rot[1] = header[11];
-                    }
-
-                    var level = new Level(givenName, vars[0], vars[2], vars[1], "empty")
-                                    {
-                                        permissionbuild = (LevelPermission)30,
-                                        spawnx = vars[3],
-                                        spawnz = vars[4],
-                                        spawny = vars[5],
-                                        rotx = rot[0],
-                                        roty = rot[1],
-                                        name = givenName
-                                    };
-
-
+                    Level level = LvlFile.Load(givenName,path);
+                    level.permissionbuild = LevelPermission.Builder;
                     level.setPhysics(phys);
-
-                    var blocks = new byte[level.width * level.height * level.depth];
-                    var customblocks = new byte[level.width * level.length * level.depth];
-                    gs.Read(blocks, 0, blocks.Length);
-                    try {
-                        int chunkSize = level.width * level.length * level.depth / 4096;
-                        int offset = 0;
-                        if (gs.ReadByte() == 2)
-                        {
-                            for (int i = 1; i <= chunkSize; i++)
-                            {
-                                offset += 1;
-                                if (gs.ReadByte() == 1)
-                                {
-                                    gs.Read(customblocks, offset, chunkSize);
-                                    offset += 16;
-                                }
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        customblocks = null;
-                    }
-                    level.CustomBlocks = customblocks;
-                    level.blocks = blocks;
-                    gs.Close();
-                    gs.Dispose();
                     //level.textures = new LevelTextures(level);
                     level.backedup = true;
 
@@ -1407,140 +1144,14 @@ namespace MCGalaxy
                             }
                         }
                         foundDB.Dispose();
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Server.ErrorLog(e);
                     }
 
-                    try
-                    {
-                        string foundLocation;
-                        foundLocation = "levels/level properties/" + level.name + ".properties";
-                        if (!File.Exists(foundLocation))
-                        {
-                            foundLocation = "levels/level properties/" + level.name;
-                        }
-                        foreach (string line in File.ReadAllLines(foundLocation))
-                        {
-                            try
-                            {
-                                if (line[0] == '#') continue;
-                                string value = line.Substring(line.IndexOf(" = ") + 3);
-
-                                switch (line.Substring(0, line.IndexOf(" = ")).ToLower())
-                                {
-                                    case "theme":
-                                        level.theme = value;
-                                        break;
-                                    case "physics":
-                                        level.setPhysics(int.Parse(value));
-                                        break;
-                                    case "physics speed":
-                                        level.speedPhysics = int.Parse(value);
-                                        break;
-                                    case "physics overload":
-                                        level.overload = int.Parse(value);
-                                        break;
-                                    case "finite mode":
-                                        level.finite = bool.Parse(value);
-                                        break;
-                                    case "animal ai":
-                                        level.ai = bool.Parse(value);
-                                        break;
-                                    case "edge water":
-                                        level.edgeWater = bool.Parse(value);
-                                        break;
-                                    case "survival death":
-                                        level.Death = bool.Parse(value);
-                                        break;
-                                    case "fall":
-                                        level.fall = int.Parse(value);
-                                        break;
-                                    case "drown":
-                                        level.drown = int.Parse(value);
-                                        break;
-                                    case "motd":
-                                        level.motd = value;
-                                        break;
-                                    case "jailx":
-                                        level.jailx = ushort.Parse(value);
-                                        break;
-                                    case "jaily":
-                                        level.jaily = ushort.Parse(value);
-                                        break;
-                                    case "jailz":
-                                        level.jailz = ushort.Parse(value);
-                                        break;
-                                    case "unload":
-                                        level.unload = bool.Parse(value);
-                                        break;
-                                    case "worldchat":
-                                        level.worldChat = bool.Parse(value);
-                                        break;
-                                    case "perbuild":
-                                        level.permissionbuild = PermissionFromName(value) != LevelPermission.Null ? PermissionFromName(value) : LevelPermission.Guest;
-                                        break;
-                                    case "pervisit":
-                                        level.permissionvisit = PermissionFromName(value) != LevelPermission.Null ? PermissionFromName(value) : LevelPermission.Guest;
-                                        break;
-                                    case "perbuildmax":
-                                        level.perbuildmax = PermissionFromName(value) != LevelPermission.Null ? PermissionFromName(value) : LevelPermission.Guest;
-                                        break;
-                                    case "pervisitmax":
-                                        level.pervisitmax = PermissionFromName(value) != LevelPermission.Null ? PermissionFromName(value) : LevelPermission.Guest;
-                                        break;
-                                    case "guns":
-                                        level.guns = bool.Parse(value);
-                                        break;
-                                    case "loadongoto":
-                                        level.loadOnGoto = bool.Parse(value);
-                                        break;
-                                    case "leafdecay":
-                                        level.leafDecay = bool.Parse(value);
-                                        break;
-                                    case "randomflow":
-                                        level.randomFlow = bool.Parse(value);
-                                        break;
-                                    case "growtrees":
-                                        level.growTrees = bool.Parse(value);
-                                        break;
-                                    case "weather": level.weather = byte.Parse(value); break;
-                                    case "texture": level.textureUrl = value; break;
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                Server.ErrorLog(e);
-                            }
-                        }
-                        if(File.Exists(("levels/level properties/" + level.name + ".env")))
-                        {
-                            foreach (string line in File.ReadAllLines("levels/level properties/" + level.name + ".env"))
-                            {
-                                try
-                                {
-                                    if (line[0] == '#') continue;
-                                    string value = line.Substring(line.IndexOf(" = ") + 3);
-
-                                    switch (line.Substring(0, line.IndexOf(" = ")).ToLower())
-                                    {
-                                        case "cloudcolor": level.CloudColor = value; break;
-                                        case "fogcolor": level.FogColor = value; break;
-                                        case "skycolor": level.SkyColor = value; break;
-                                        case "shadowcolor": level.ShadowColor = value; break;
-                                        case "lightcolor": level.LightColor = value; break;
-                                        case "edgeblock": level.EdgeBlock = byte.Parse(value); break;
-                                        case "edgelevel": level.EdgeLevel = byte.Parse(value); break;
-                                        case "horizonblock": level.HorizonBlock = byte.Parse(value); break;
-                                    }
-                                }
-                                catch { }
-                            }
-                        }
-                    }
-                    catch
-                    {
+                    try {
+                        LvlProperties.Load(level, "levels/level properties/" + level.name);
+                    } catch (Exception e) {
+                        Server.ErrorLog(e);
                     }
 
                     Server.s.Log(string.Format("Level \"{0}\" loaded.", level.name));
@@ -1548,16 +1159,9 @@ namespace MCGalaxy
                         LevelLoaded(level);
                     OnLevelLoadedEvent.Call(level);
                     return level;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Server.ErrorLog(ex);
                     return null;
-                }
-                finally
-                {
-                    fs.Close();
-                    fs.Dispose();
                 }
             }
             Server.s.Log("ERROR loading level.");
