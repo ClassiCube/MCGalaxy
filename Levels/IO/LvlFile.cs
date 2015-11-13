@@ -96,8 +96,8 @@ namespace MCGalaxy.Levels.IO {
                 Level level = new Level(name, vars[0], vars[2], vars[1],
                                         "full_empty", 0, loadTexturesConfig);
                 level.spawnx = BitConverter.ToUInt16(header, offset + 4);
-                level.spawny = BitConverter.ToUInt16(header, offset + 6);
-                level.spawnz = BitConverter.ToUInt16(header, offset + 8);
+                level.spawnz = BitConverter.ToUInt16(header, offset + 6);
+                level.spawny = BitConverter.ToUInt16(header, offset + 8);
                 level.rotx = header[offset + 10];
                 level.roty = header[offset + 11];
                 
