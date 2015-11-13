@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands
                     case "others":
                         PrintHelpForGroup(p, "other", "Other" );
                         break;
-                    case "map":
+                    case "maps":
                     case "world":
                         PrintHelpForGroup(p, "world", "World" );
                         break;
