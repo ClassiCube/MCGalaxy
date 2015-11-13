@@ -143,7 +143,7 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void ParseProperty(Level level, string key, string value) {
-            switch (value)
+            switch (key)
             {
                 case "theme":
                     level.theme = value;
