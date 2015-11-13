@@ -49,9 +49,7 @@ namespace MCGalaxy.Commands
                 GrpCommands.fillRanks();
                 Player.SendMessage(p, "Command was successfully loaded.");
                 return;
-            }
-            if (param[1] == "vb")
-            {
+            } else if (param[1] == "vb") {
 
                 string error = ScriptingVB.Load(name);
                 if (error != null)

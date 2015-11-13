@@ -63,9 +63,7 @@ namespace MCGalaxy.Commands
                 {
                     Player.SendMessage(p, "file &9Cmd" + message + ".cs " + Server.DefaultColor + "not found!");
                 }
-            }
-            if (param[1] == "vb")
-            {
+            } else if (param[1] == "vb") {
                 message = message.Remove(message.Length - 3, 3);
                 if (File.Exists("extra/commands/source/Cmd" + message + ".vb"))
                 {
