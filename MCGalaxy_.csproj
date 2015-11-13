@@ -342,6 +342,7 @@
     <Compile Include="Commands\Other\CmdGun.cs" />
     <Compile Include="Commands\Other\CmdHackRank.cs" />
     <Compile Include="Commands\Other\CmdHeartbeat.cs" />
+    <Compile Include="Commands\Other\CmdHug.cs" />
     <Compile Include="Commands\Other\CmdHigh5.cs" />
     <Compile Include="Commands\Other\CmdImpersonate.cs" />
     <Compile Include="Commands\Other\CmdInterval.cs" />
