@@ -940,17 +940,20 @@ namespace MCGalaxy
                     while (true)
                     {
                         Thread.Sleep(blockInterval * 1000);
-                        levels.ForEach(delegate(Level l)
-                        {
-                            try
-                            {
-                                l.saveChanges();
-                            }
-                            catch (Exception e)
-                            {
-                                Server.ErrorLog(e);
-                            }
-                        });
+                        try {
+                            levels.ForEach(
+                                delegate(Level l) {
+                                    try {
+                                        l.saveChanges();
+                                    } catch (Exception e) {
+                                        Server.ErrorLog(e);
+                                    }
+                                });
+                        } catch (Exception e) {
+                            // an exception is raised on Mono if level list is modified
+                            // while enumerating over it with ForEach
+                            Server.ErrorLog(e);
+                        }
                     }
                 }));
                 blockThread.Start();
