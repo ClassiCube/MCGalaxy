@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
 
             string FoundRank = Group.findPlayer(message.ToLower());
             Database.AddParams("@Name", message);
-            DataTable playerDb = Database.fillData("SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE");
+            DataTable playerDb = Database.fillData("SELECT * FROM Players WHERE Name=@Name");
             if (playerDb.Rows.Count == 0) { Player.SendMessage(p, Group.Find(FoundRank).color + message + Server.DefaultColor + " has the rank of " + Group.Find(FoundRank).color + FoundRank); return; }
             string title = playerDb.Rows[0]["Title"].ToString();
             string color = c.Parse(playerDb.Rows[0]["color"].ToString().Trim());
