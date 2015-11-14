@@ -183,13 +183,13 @@ namespace MCGalaxy.Commands
                     return;
                 }
 
-                blocks[x + p.level.width * z + p.level.width * p.level.height * y] = b;
+                blocks[x + z * p.level.Width + y * p.level.Width * p.level.Length] = b;
                 buffer.Add(pos);
 
                 //x
                 if (fillType != FillType.VerticalX)
                 {
-                    if (GetTile((ushort)(x + 1), y, z, p.level, blocks) == oldType)
+                    if (p.level.GetTile((ushort)(x + 1), y, z) == oldType)
                     {
                         deep++;
                         FloodFill(p, (ushort)(x + 1), y, z, b, oldType, fillType, ref blocks, ref buffer);
@@ -197,7 +197,7 @@ namespace MCGalaxy.Commands
                     }
 
                     if (x > 0)
-                        if (GetTile((ushort)(x - 1), y, z, p.level, blocks) == oldType)
+                        if (p.level.GetTile((ushort)(x - 1), y, z) == oldType)
                         {
                             deep++;
                             FloodFill(p, (ushort)(x - 1), y, z, b, oldType, fillType, ref blocks, ref buffer);
@@ -208,7 +208,7 @@ namespace MCGalaxy.Commands
                 //z
                 if (fillType != FillType.VerticalZ)
                 {
-                    if (GetTile(x, y, (ushort)(z + 1), p.level, blocks) == oldType)
+                    if (p.level.GetTile(x, y, (ushort)(z + 1)) == oldType)
                     {
                         deep++;
                         FloodFill(p, x, y, (ushort)(z + 1), b, oldType, fillType, ref blocks, ref buffer);
@@ -216,7 +216,7 @@ namespace MCGalaxy.Commands
                     }
 
                     if (z > 0)
-                        if (GetTile(x, y, (ushort)(z - 1), p.level, blocks) == oldType)
+                        if (p.level.GetTile(x, y, (ushort)(z - 1)) == oldType)
                         {
                             deep++;
                             FloodFill(p, x, y, (ushort)(z - 1), b, oldType, fillType, ref blocks, ref buffer);
@@ -227,7 +227,7 @@ namespace MCGalaxy.Commands
                 //y
                 if (fillType == 0 || fillType == FillType.Up || fillType > FillType.Layer)
                 {
-                    if (GetTile(x, (ushort)(y + 1), z, p.level, blocks) == oldType)
+                    if (p.level.GetTile(x, (ushort)(y + 1), z) == oldType)
                     {
                         deep++;
                         FloodFill(p, x, (ushort)(y + 1), z, b, oldType, fillType, ref blocks, ref buffer);
@@ -238,7 +238,7 @@ namespace MCGalaxy.Commands
                 if (fillType == 0 || fillType == FillType.Down || fillType > FillType.Layer)
                 {
                     if (y > 0)
-                        if (GetTile(x, (ushort)(y - 1), z, p.level, blocks) == oldType)
+                        if (p.level.GetTile(x, (ushort)(y - 1), z) == oldType)
                         {
                             deep++;
                             FloodFill(p, x, (ushort)(y - 1), z, b, oldType, fillType, ref blocks, ref buffer);
@@ -246,23 +246,6 @@ namespace MCGalaxy.Commands
                         }
                 }
             } catch (Exception e) { Server.ErrorLog(e); }
-        }
-
-        public byte GetTile(ushort x, ushort y, ushort z, Level l, byte[] blocks)
-        {
-            //if (PosToInt(x, y, z) >= blocks.Length) { return null; }
-            //Avoid internal overflow
-            if (x < 0) { return Block.Zero; }
-            if (x >= l.width) { return Block.Zero; }
-            if (y < 0) { return Block.Zero; }
-            if (y >= l.depth) { return Block.Zero; }
-            if (z < 0) { return Block.Zero; }
-            if (z >= l.height) { return Block.Zero; }
-            try
-            {
-                return blocks[l.PosToInt(x, y, z)];
-            }
-            catch (Exception e) { Server.ErrorLog(e); return Block.Zero; }
         }
 
         struct CatchPos { public ushort x, y, z; public byte type; public FillType fillType; }

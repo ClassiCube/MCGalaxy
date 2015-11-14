@@ -18,6 +18,8 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using MCGalaxy.Levels.IO;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdRestoreSelection : Command
@@ -60,56 +62,44 @@ namespace MCGalaxy.Commands
             p.ClearBlockchange();
             p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            FileStream fs = File.OpenRead(@Server.backupLocation + "/" + p.level.name + "/" + cpos.backup + "/" + p.level.name + ".lvl");
-            GZipStream gs = new GZipStream(fs, CompressionMode.Decompress);
-            byte[] ver = new byte[2];
-            gs.Read(ver, 0, ver.Length);
-            ushort version = BitConverter.ToUInt16(ver, 0);
-            ushort[] vars = new ushort[6];
-            try
-            {
-                if (version == 1874)
-                {
-                    byte[] header = new byte[16]; gs.Read(header, 0, header.Length);
-
-                    vars[0] = BitConverter.ToUInt16(header, 0);
-                    vars[1] = BitConverter.ToUInt16(header, 2);
-                    vars[2] = BitConverter.ToUInt16(header, 4);
-                }
-                else
-                {
-                    byte[] header = new byte[12]; gs.Read(header, 0, header.Length);
-
-                    vars[0] = version;
-                    vars[1] = BitConverter.ToUInt16(header, 0);
-                    vars[2] = BitConverter.ToUInt16(header, 2);
-                }
-                byte[] blocks = new byte[vars[0] * vars[2] * vars[1]];
-                gs.Read(blocks, 0, blocks.Length);
-                gs.Dispose();
-                fs.Dispose();
-
-                if (blocks.Length != p.level.blocks.Length) { p.SendMessage("Cant restore selection of different size maps."); blocks = null; return; }
-
-                if (p.level.bufferblocks && !p.level.Instant)
-                {
-                    for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
-                        for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
-                            for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
-                                BlockQueue.Addblock(p, xx, yy, zz, blocks[xx + (zz * vars[0]) + (yy * vars[0] * vars[1])]);
-                }
-                else
-                {
-                    for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
-                        for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
-                            for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
-                                p.level.Blockchange(p, xx, yy, zz, blocks[xx + (zz * vars[0]) + (yy * vars[0] * vars[1])]);
-                }
-
-                blocks = null;
-                if (p.staticCommands) p.Blockchange += Blockchange1;
+            string path = @Server.backupLocation + "/" + p.level.name + "/" + cpos.backup + "/" + p.level.name + ".lvl";
+            
+            try {
+            	using(Level other = LvlFile.Load("tempLevel", path, false)) {
+            		if (!CopyBlocks(p, other, x, y, z, cpos)) return;
+            	}
+                if (p.staticCommands) 
+                	p.Blockchange += Blockchange1;
+            } catch { 
+            	Server.s.Log("Restore selection failed"); 
             }
-            catch { Server.s.Log("Restore selection failed"); }
+        }
+        
+        static bool CopyBlocks(Player p, Level other, ushort x, ushort y, ushort z, CatchPos cpos) {
+            byte[] blocks = other.blocks;
+            if (blocks.Length != p.level.blocks.Length) { 
+                p.SendMessage("Cant restore selection of different size maps.");
+                return false;
+            }
+            int width = other.Width, height = other.Length;
+
+            if (p.level.bufferblocks && !p.level.Instant) {
+                for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
+                    for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
+                        for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
+                {
+                    BlockQueue.Addblock(p, xx, yy, zz, blocks[xx + (zz * width) + (yy * width * height)]);
+                }
+            } else {
+                for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
+                    for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
+                        
+                        for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
+                {
+                    p.level.Blockchange(p, xx, yy, zz, blocks[xx + (zz * width) + (yy * width * height)]);
+                }
+            }
+            return true;
         }
 
         struct CatchPos

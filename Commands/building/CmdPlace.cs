@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands
 
             Level level = p.level;
 
-            if (y >= p.level.depth) y = (ushort)(p.level.depth - 1);
+            if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
 
             p.level.Blockchange(p, x, y, z, b);
             Player.SendMessage(p, "A block was placed at (" + x + ", " + y + ", " + z + ").");

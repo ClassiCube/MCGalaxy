@@ -16,6 +16,8 @@
 	permissions and limitations under the Licenses.
 */
 using System.IO;
+using MCGalaxy.Levels.IO;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdImport : Command

@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands
                                 ushort z = (ushort)(p.pos[2] / 32);
                                 z = (ushort)Math.Round(z + (double)(b * 3));
 
-                                if (x > p.level.width || y > p.level.depth || z > p.level.height) throw new Exception();
+                                if (x > p.level.Width || y > p.level.Height || z > p.level.Length) throw new Exception();
                                 if (x < 0 || y < 0 || z < 0) throw new Exception();
 
                                 for (ushort xx = x; xx <= x + 1; xx++)
@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands
             double b = Math.Cos(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
             double c = Math.Cos(((double)(p.rot[1] + 64) / 256) * 2 * Math.PI);
 
-            double bigDiag = Math.Sqrt(Math.Sqrt(p.level.width * p.level.width + p.level.height * p.level.height) + p.level.depth * p.level.depth + p.level.width * p.level.width);
+            double bigDiag = Math.Sqrt(Math.Sqrt(p.level.Width * p.level.Width + p.level.Length * p.level.Length) + p.level.Height * p.level.Height + p.level.Width * p.level.Width);
 
             List<CatchPos> previous = new List<CatchPos>();
             List<CatchPos> allBlocks = new List<CatchPos>();

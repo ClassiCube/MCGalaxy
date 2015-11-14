@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
 
             if (foundLevel == null) { Player.SendMessage(p, "Could not find specified level."); return; }
 
-            Player.SendMessage(p, "&b" + foundLevel.name + Server.DefaultColor + ": Width=" + foundLevel.width.ToString() + " Height=" + foundLevel.depth.ToString() + " Depth=" + foundLevel.height.ToString());
+            Player.SendMessage(p, "&b" + foundLevel.name + Server.DefaultColor + ": Width=" + foundLevel.Width.ToString() + " Height=" + foundLevel.Height.ToString() + " Depth=" + foundLevel.Length.ToString());
 
             switch (foundLevel.physics)
             {

@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands
 
                     Level level = p.level;
 
-                    if (y >= p.level.depth) y = (ushort)(p.level.depth - 1);
+                    if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
 
                     if (p.level.physics < 3)
                     {

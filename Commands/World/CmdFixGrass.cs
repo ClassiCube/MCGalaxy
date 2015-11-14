@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands
 
                             if (p.level.blocks[i] == Block.dirt)
                             {
-                                for (int iL = 1; iL < (p.level.depth - y); iL++)
+                                for (int iL = 1; iL < (p.level.Height - y); iL++)
                                 {
                                     if (!Block.LightPass(p.level.blocks[p.level.IntOffset(i, 0, iL, 0)]))
                                     {
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands
                             }
                             else if (p.level.blocks[i] == Block.grass)
                             {
-                                for (int iL = 1; iL < (p.level.depth - y); iL++)
+                                for (int iL = 1; iL < (p.level.Height - y); iL++)
                                 {
                                     // Used to change grass to dirt only if all the upper blocks weren't Lightpass.
                                     if (!Block.LightPass(p.level.blocks[p.level.IntOffset(i, 0, iL, 0)]))

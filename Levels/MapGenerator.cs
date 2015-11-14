@@ -50,19 +50,19 @@ namespace MCGalaxy
             try
             {
                 Inuse = true;
-                terrain = new float[Lvl.width * Lvl.height];  //hmm 
-                overlay = new float[Lvl.width * Lvl.height];
+                terrain = new float[Lvl.Width * Lvl.Length];  //hmm 
+                overlay = new float[Lvl.Width * Lvl.Length];
 
                 if (!type.Equals("ocean"))
-                { overlay2 = new float[Lvl.width * Lvl.height]; }
+                { overlay2 = new float[Lvl.Width * Lvl.Length]; }
 
                 //float dispAux, pd;
-                ushort WaterLevel = (ushort)(Lvl.depth / 2 + 2);
+                ushort WaterLevel = (ushort)(Lvl.Height / 2 + 2);
                 ushort LavaLevel = 5;
 
                 if (type.Equals("ocean"))
                 {
-                    WaterLevel = (ushort)(Lvl.depth * 0.85f);
+                    WaterLevel = (ushort)(Lvl.Height * 0.85f);
                 }
                 //Generate the level
                 GenerateFault(terrain, Lvl, type, rand);
@@ -126,8 +126,8 @@ namespace MCGalaxy
                 //loops though evey X/Z coordinate
                 for (int bb = 0; bb < terrain.Length; bb++)
                 {
-                    ushort x = (ushort)(bb % Lvl.width);
-                    ushort y = (ushort)(bb / Lvl.width);
+                    ushort x = (ushort)(bb % Lvl.Width);
+                    ushort y = (ushort)(bb / Lvl.Width);
                     ushort z;
                     if (type.Equals("island"))
                     {
@@ -376,9 +376,9 @@ namespace MCGalaxy
             //    return (TERRAIN_ERROR_NOT_INITIALISED);
 
 
-            halfX = (ushort)(Lvl.width / 2);
-            halfZ = (ushort)(Lvl.height / 2);
-            int numIterations = (int)((Lvl.width + Lvl.height));
+            halfX = (ushort)(Lvl.Width / 2);
+            halfZ = (ushort)(Lvl.Length / 2);
+            int numIterations = (int)((Lvl.Width + Lvl.Length));
             Server.s.Log("Iterations = " + numIterations.ToString());
             for (k = 0; k < numIterations; k++)
             {
@@ -397,9 +397,9 @@ namespace MCGalaxy
                 //    disp = maxDisp + (iterationsDone / (itMinDisp + 0.0)) * (minDisp - maxDisp);
                 //else
                 //    disp = minDisp;
-                for (i = 0; i < Lvl.height; i++)
+                for (i = 0; i < Lvl.Length; i++)
                 {
-                    for (j = 0; j < Lvl.width; j++)
+                    for (j = 0; j < Lvl.Width; j++)
                     {
                         //switch (terrainFunction)
                         //{
@@ -423,7 +423,7 @@ namespace MCGalaxy
                             break;
                     }*/
                         //s.Log("adding " + dispAux.ToString());
-                        AddTerrainHeight(array, j, i, Lvl.width, dispAux);
+                        AddTerrainHeight(array, j, i, Lvl.Width, dispAux);
                         //terrainHeights[i * terrainGridWidth + j] += dispAux;
                     }
                 }
@@ -438,7 +438,7 @@ namespace MCGalaxy
         #region ==PerlinGen==
         void GeneratePerlinNoise(float[] array, Level Lvl, string type, Random rand)
         {
-            GenerateNormalized(array, 0.7f, 8, Lvl.width, Lvl.height, rand.Next(), 64);
+            GenerateNormalized(array, 0.7f, 8, Lvl.Width, Lvl.Length, rand.Next(), 64);
         }
 
         void GenerateNormalized(float[] array, float persistence, int octaves, int width, int height, int seed, float zoom)
@@ -776,9 +776,9 @@ namespace MCGalaxy
         //converts the float into a ushort for map height
         ushort Evaluate(Level lvl, float height)
         {
-            ushort temp = (ushort)(height * lvl.depth);
+            ushort temp = (ushort)(height * lvl.Height);
             if (temp < 0) return 0;
-            if (temp > lvl.depth - 1) return (ushort)(lvl.depth - 1);
+            if (temp > lvl.Height - 1) return (ushort)(lvl.Height - 1);
             return temp;
         }
 
@@ -791,8 +791,8 @@ namespace MCGalaxy
 
             for (int bb = 0; bb < terrain.Length; bb++)
             {
-                ushort x = (ushort)(bb % Lvl.width);
-                ushort y = (ushort)(bb / Lvl.width);
+                ushort x = (ushort)(bb % Lvl.Width);
+                ushort y = (ushort)(bb / Lvl.Width);
                 filtered[bb] = GetAverage9(x, y, Lvl);
             }
 
@@ -836,11 +836,11 @@ namespace MCGalaxy
         float GetPixel(ushort x, ushort y, Level Lvl)
         {
             if (x < 0) { return 0.0f; }
-            if (x >= Lvl.width) { return 0.0f; }
+            if (x >= Lvl.Width) { return 0.0f; }
             if (y < 0) { return 0.0f; }
-            if (y >= Lvl.height) { return 0.0f; }
+            if (y >= Lvl.Length) { return 0.0f; }
             divide += 1.0f;
-            return terrain[x + y * Lvl.width];
+            return terrain[x + y * Lvl.Width];
         }
 
         //converts the height into a range
@@ -855,8 +855,8 @@ namespace MCGalaxy
         {
             float tempx = 0.0f, tempy = 0.0f;
             float temp;
-            if (x != 0) { tempx = ((float)x / (float)Lvl.width) * 0.5f; }
-            if (y != 0) { tempy = ((float)y / (float)Lvl.height) * 0.5f; }
+            if (x != 0) { tempx = ((float)x / (float)Lvl.Width) * 0.5f; }
+            if (y != 0) { tempy = ((float)y / (float)Lvl.Length) * 0.5f; }
             tempx = Math.Abs(tempx - 0.25f);
             tempy = Math.Abs(tempy - 0.25f);
             if (tempx > tempy)

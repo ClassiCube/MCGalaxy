@@ -58,9 +58,9 @@ namespace MCGalaxy.Commands
                 ushort x = Convert.ToUInt16(num2);
                 ushort y = Convert.ToUInt16(num3);
                 ushort z = Convert.ToUInt16(num4);
-                int width = p.level.width;
+                int width = p.level.Width;
                 int num9 = width - num2;
-                int length = p.level.height;
+                int length = p.level.Length;
                 int num11 = length - num4;
                 if ((num > 0x21) && (num < 0x60))
                 {

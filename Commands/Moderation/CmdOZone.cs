@@ -34,9 +34,9 @@ namespace MCGalaxy.Commands
             if (message == "") { this.Help(p); }
             else
             {
-                int x2 = p.level.width - 1;
-                int y2 = p.level.depth - 1;
-                int z2 = p.level.height - 1;
+                int x2 = p.level.Width - 1;
+                int y2 = p.level.Height - 1;
+                int z2 = p.level.Length - 1;
                 Command zone = Command.all.Find("zone");
                 Command click = Command.all.Find("click");
                 zone.Use(p, "add " + message);

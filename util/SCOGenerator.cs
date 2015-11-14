@@ -39,13 +39,13 @@ namespace MCGalaxy.Util
 			short num3 = (short)(num - random.Next(2, 4));
 			for (short j = Convert.ToInt16(-num3); j <= num3; j = (short)(j + 1))
 			{
-				if ((x + j) < 0 || (x + j) > p.level.width) continue;
+				if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 				for (short k = Convert.ToInt16(-num3); k <= num3; k = (short)(k + 1))
 				{
-					if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+					if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 					for (short m = Convert.ToInt16(-num3); m <= num3; m = (short)(m + 1))
 					{
-						if ((z + m) < 0 || (z + m) > p.level.length) continue;
+						if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 						short maxValue = (short)Math.Sqrt((double)(((j * j) + (k * k)) + (m * m)));
 						if ((maxValue < (num3 + 1)) && (random.Next(maxValue) < 2))
 						{
@@ -117,13 +117,13 @@ namespace MCGalaxy.Util
 
 			for (short j = Convert.ToInt16(-num3); j <= num3; j = (short)(j + 1))
 			{
-				if ((x + j) < 0 || (x + j) > l.width) continue;
+				if ((x + j) < 0 || (x + j) > l.Width) continue;
 				for (short k = Convert.ToInt16(-num3); k <= num3; k = (short)(k + 1))
 				{
-					if ((y + k) < 0 || (y + k) > l.depth) continue;
+					if ((y + k) < 0 || (y + k) > l.Height) continue;
 					for (short m = Convert.ToInt16(-num3); m <= num3; m = (short)(m + 1))
 					{
-						if ((z + m) < 0 || (z + m) > l.length) continue;
+						if ((z + m) < 0 || (z + m) > l.Length) continue;
 						short maxValue = (short)Math.Sqrt((double)(((j * j) + (k * k)) + (m * m)));
 						if ((maxValue < (num3 + 1)) && (random.Next(maxValue) < 15))
 						{
@@ -133,7 +133,7 @@ namespace MCGalaxy.Util
 								ushort y2 = (ushort)(y + k); //depth
 								ushort z2 = (ushort)(z + m); //height
 
-								if (x2 <= l.width && y2 <= l.depth && z2 <= l.length)
+								if (x2 <= l.Width && y2 <= l.Height && z2 <= l.Length)
 								{
 									byte that = l.GetTile((ushort)(x + j), (ushort)((y + k)), (ushort)(z + m));
 
@@ -160,13 +160,13 @@ namespace MCGalaxy.Util
 
 			for (short j = Convert.ToInt16(-num3); j <= num3; j = (short)(j + 1))
 			{
-				if ((x + j) < 0 || (x + j) > l.width) continue;
+				if ((x + j) < 0 || (x + j) > l.Width) continue;
 				for (short k = Convert.ToInt16(-num3); k <= num3; k = (short)(k + 1))
 				{
-					if ((y + k) < 0 || (y + k) > l.depth) continue;
+					if ((y + k) < 0 || (y + k) > l.Height) continue;
 					for (short m = Convert.ToInt16(-num3); m <= num3; m = (short)(m + 1))
 					{
-						if ((z + m) < 0 || (z + m) > l.length) continue;
+						if ((z + m) < 0 || (z + m) > l.Length) continue;
 
 						short maxValue = (short)Math.Sqrt((double)(((j * j) + (k * k)) + (m * m))); //W00t FOUND THE SECRET!
 						if ((maxValue < (num3 + 1)) && (random.Next(maxValue) < size))
@@ -177,7 +177,7 @@ namespace MCGalaxy.Util
 								ushort y2 = (ushort)(y + k); //depth
 								ushort z2 = (ushort)(z + m); //height
 
-								if (x2 <= l.width && y2 <= l.depth && z2 <= l.length)
+								if (x2 <= l.Width && y2 <= l.Height && z2 <= l.Length)
 								{
 									byte that = l.GetTile((ushort)(x + j), (ushort)((y + k)), (ushort)(z + m));
 
@@ -203,13 +203,13 @@ namespace MCGalaxy.Util
             List<Player.CopyPos> buffer = new List<Player.CopyPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-				if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+				if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-                    if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                    if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;
@@ -254,7 +254,7 @@ namespace MCGalaxy.Util
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried Coning " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
             buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
-            if ((y + height) <= p.level.depth)
+            if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y + height), z, block);
 		}
 		public static void HCone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
@@ -265,13 +265,13 @@ namespace MCGalaxy.Util
 
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-                if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-                    if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                    if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;
@@ -316,7 +316,7 @@ namespace MCGalaxy.Util
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HConing " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
             buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
-            if ((y + height) <= p.level.depth)
+            if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y + height), z, block);
 		}
 		public static void ICone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
@@ -327,13 +327,13 @@ namespace MCGalaxy.Util
 
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-                if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-                    if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                    if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;
@@ -388,13 +388,13 @@ namespace MCGalaxy.Util
 
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-                if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-                    if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                    if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;
@@ -449,13 +449,13 @@ namespace MCGalaxy.Util
             List<Player.CopyPos> buffer = new List<Player.CopyPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-                if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-                    if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                    if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;
@@ -498,7 +498,7 @@ namespace MCGalaxy.Util
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried Pyramiding " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
             buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
-            if ((y + height) <= p.level.depth)
+            if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y + height), z, block);
 		}
 		public static void HPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
@@ -507,13 +507,13 @@ namespace MCGalaxy.Util
             List<Player.CopyPos> buffer = new List<Player.CopyPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-                if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-                    if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                    if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;
@@ -556,7 +556,7 @@ namespace MCGalaxy.Util
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HPyramiding " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
             buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
-            if ((y + height) <= p.level.depth)
+            if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y), z, block);
 		}
 		public static void IPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
@@ -565,13 +565,13 @@ namespace MCGalaxy.Util
             List<Player.CopyPos> buffer = new List<Player.CopyPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-                if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-                    if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                    if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;
@@ -614,7 +614,7 @@ namespace MCGalaxy.Util
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried IPyramiding " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
             buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
-            if ((y + height) <= p.level.depth)
+            if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y + height), z, block);
 		}
 		public static void HIPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
@@ -623,13 +623,13 @@ namespace MCGalaxy.Util
             List<Player.CopyPos> buffer = new List<Player.CopyPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-                if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-                    if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                    if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;
@@ -672,7 +672,7 @@ namespace MCGalaxy.Util
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HIPyramiding " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
             buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
-            if ((y + height) <= p.level.depth)
+            if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y), z, block);
 		}
 
@@ -681,13 +681,13 @@ namespace MCGalaxy.Util
             List<Player.CopyPos> buffer = new List<Player.CopyPos>();
 			for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 			{
-                if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 				for (short k = Convert.ToInt16(-radius); k <= radius; k = (short)(k + 1))
 				{
-                    if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                    if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 						short maxValue = (short)Math.Sqrt((double)(((j * j) + (k * k)) + (m * m)));
 						if ((maxValue < (radius + 1)))
 						{
@@ -696,7 +696,7 @@ namespace MCGalaxy.Util
 								ushort x2 = (ushort)(x + j);
 								ushort y2 = (ushort)(y + k);
 								ushort z2 = (ushort)(z + m);
-                                if (x2 <= p.level.width && y2 <= p.level.depth && z2 <= p.level.length)
+                                if (x2 <= p.level.Width && y2 <= p.level.Height && z2 <= p.level.Length)
 								{
                                     byte that = p.level.GetTile((ushort)(x + j), (ushort)((y + k)), (ushort)(z + m));
 									if (that != 7)
@@ -725,13 +725,13 @@ namespace MCGalaxy.Util
             List<Player.CopyPos> buffer = new List<Player.CopyPos>();
 			for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 			{
-                if ((x + j) < 0 || (x + j) > p.level.width) continue;
+                if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 				for (short k = Convert.ToInt16(-radius); k <= radius; k = (short)(k + 1))
 				{
-                    if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+                    if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-                        if ((z + m) < 0 || (z + m) > p.level.length) continue;
+                        if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 						short maxValue = (short)Math.Sqrt((double)(((j * j) + (k * k)) + (m * m)));
 						if (maxValue < (radius + 1) && maxValue >= (radius - 1))
 						{
@@ -740,7 +740,7 @@ namespace MCGalaxy.Util
 								ushort x2 = (ushort)(x + j);
 								ushort y2 = (ushort)(y + k);
 								ushort z2 = (ushort)(z + m);
-                                if (x2 <= p.level.width && y2 <= p.level.depth && z2 <= p.level.length)
+                                if (x2 <= p.level.Width && y2 <= p.level.Height && z2 <= p.level.Length)
 								{
                                     byte that = p.level.GetTile((ushort)(x + j), (ushort)((y + k)), (ushort)(z + m));
 									if (that != 7)
@@ -773,13 +773,13 @@ namespace MCGalaxy.Util
 
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
-				if ((y + k) < 0 || (y + k) > p.level.depth) continue;
+				if ((y + k) < 0 || (y + k) > p.level.Height) continue;
 				for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 				{
-					if ((x + j) < 0 || (x + j) > p.level.width) continue;
+					if ((x + j) < 0 || (x + j) > p.level.Width) continue;
 					for (short m = Convert.ToInt16(-radius); m <= radius; m = (short)(m + 1))
 					{
-						if ((z + m) < 0 || (z + m) > p.level.length) continue;
+						if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
 						int ox = x;
 						int oy = y;

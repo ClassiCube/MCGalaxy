@@ -423,6 +423,9 @@
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\CmdUnlock.cs" />
+    <Compile Include="Levels\IO\ConvertDAT.cs" />
+    <Compile Include="Levels\IO\LvlFile.cs" />
+    <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
     <Compile Include="Levels\Physics\FinitePhysics.cs" />
@@ -560,7 +563,6 @@
     </Compile>
     <Compile Include="Heartbeat\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
-    <Compile Include="Levels\ConvertDAT.cs" />
     <Compile Include="Database\MySQL.cs" />
     <Compile Include="Player\Team.cs" />
     <Compile Include="Player\Group.cs" />
@@ -772,6 +774,7 @@
     <Folder Include="Commands\Chat" />
     <Folder Include="Commands\World" />
     <Folder Include="Commands\Other" />
+    <Folder Include="Levels\IO" />
     <Folder Include="Levels\Physics" />
     <Folder Include="Plugins\OpenClassicEvents\" />
   </ItemGroup>
