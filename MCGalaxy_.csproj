@@ -343,6 +343,7 @@
     <Compile Include="Commands\Other\CmdHackRank.cs" />
     <Compile Include="Commands\Other\CmdHeartbeat.cs" />
     <Compile Include="Commands\Other\CmdHigh5.cs" />
+    <Compile Include="Commands\Other\CmdHug.cs" />
     <Compile Include="Commands\Other\CmdImpersonate.cs" />
     <Compile Include="Commands\Other\CmdInterval.cs" />
     <Compile Include="Commands\Other\CmdInvincible.cs" />
@@ -383,6 +384,7 @@
     <Compile Include="Commands\Other\CmdTitle.cs" />
     <Compile Include="Commands\Other\CmdTnt.cs" />
     <Compile Include="Commands\Other\CmdTp.cs" />
+    <Compile Include="Commands\Other\CmdTpA.cs" />
     <Compile Include="Commands\Other\CmdTpZone.cs" />
     <Compile Include="Commands\Other\CmdTranslate.cs" />
     <Compile Include="Commands\Other\CmdView.cs" />
