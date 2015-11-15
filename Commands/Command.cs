@@ -137,6 +137,7 @@ namespace MCGalaxy
 			all.Add(new CmdHighlight());
 			all.Add(new CmdHollow());
 			all.Add(new CmdHost());
+			all.Add(new CmdHug());
 			all.Add(new CmdIgnore());
 			all.Add(new CmdImpersonate());
 			all.Add(new CmdImport());
@@ -286,6 +287,9 @@ namespace MCGalaxy
             all.Add(new CmdTopFive());
 			all.Add(new CmdTopTen());
 			all.Add(new CmdTp());
+			all.Add(new CmdTpA());
+            all.Add(new CmdTpAccept());
+            all.Add(new CmdTpDeny());
 			all.Add(new CmdTpZone());
 			all.Add(new CmdTranslate());
 			all.Add(new CmdTree());
