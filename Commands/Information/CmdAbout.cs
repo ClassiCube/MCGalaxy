@@ -61,8 +61,7 @@ namespace MCGalaxy.Commands
             message = p.level.foundInfo(x, y, z);
             if (message != "") Player.SendMessage(p, "Physics information: &a" + message);
 
-            //safe against SQL injections because no user input is given here
-            DataTable Blocks = Database.fillData("SELECT * FROM " + '"' + "Block" + p.level.name + '"' + " WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
+            DataTable Blocks = Server.useMySQL ? MySQL.fillData("SELECT * FROM `Block" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z) : SQLite.fillData("SELECT * FROM Block" + p.level.name + " WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
 
             string Username, TimePerformed, BlockUsed;
             bool Deleted, foundOne = false;
