@@ -287,6 +287,9 @@ namespace MCGalaxy
             all.Add(new CmdTopFive());
 			all.Add(new CmdTopTen());
 			all.Add(new CmdTp());
+			all.Add(new CmdTpA());
+            all.Add(new CmdTpAccept());
+            all.Add(new CmdTpDeny());
 			all.Add(new CmdTpZone());
 			all.Add(new CmdTranslate());
 			all.Add(new CmdTree());
