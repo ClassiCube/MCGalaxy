@@ -384,6 +384,7 @@
     <Compile Include="Commands\Other\CmdTitle.cs" />
     <Compile Include="Commands\Other\CmdTnt.cs" />
     <Compile Include="Commands\Other\CmdTp.cs" />
+    <Compile Include="Commands\Other\CmdTpA.cs" />
     <Compile Include="Commands\Other\CmdTpZone.cs" />
     <Compile Include="Commands\Other\CmdTranslate.cs" />
     <Compile Include="Commands\Other\CmdView.cs" />
