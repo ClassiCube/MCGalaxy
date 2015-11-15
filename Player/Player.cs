@@ -2623,7 +2623,7 @@ return;
             for ( int i = 0; i < send.Length; i++ ) {
                 buffer[i + 1] = send[i];
             }
-            if (id != 17)
+            if (!(id == 16 || id == 17)) // must send ExtEntry and ExtInfo packets synchronously.
             {
                 try
                 {
