@@ -281,6 +281,7 @@
     <Compile Include="Commands\Moderation\CmdP2P.cs" />
     <Compile Include="Commands\Moderation\CmdPatrol.cs" />
     <Compile Include="Commands\Moderation\CmdPCreate.cs" />
+    <Compile Include="Commands\Moderation\CmdPlayerEditDB.cs" />
     <Compile Include="Commands\Moderation\CmdPLoad.cs" />
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
     <Compile Include="Commands\Moderation\CmdPromote.cs" />

@@ -212,6 +212,7 @@ namespace MCGalaxy
 			all.Add(new CmdPhysics());
 			all.Add(new CmdPlace());
 			all.Add(new CmdPlayerCLS());
+			all.Add(new CmdPlayerEditDB());
 			all.Add(new CmdPlayers());
 			all.Add(new CmdPLoad());
 			all.Add(new CmdPortal());

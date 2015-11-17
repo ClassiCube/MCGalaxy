@@ -350,45 +350,48 @@ namespace MCGalaxy {
                 int totalPlayers = 0;
                 foreach (Player pl in Player.players)
                 {
-                    if (String.IsNullOrEmpty(message) || !Group.Exists(message) || Group.Find(message) == pl.group)
+                	if (!pl.hidden)
                     {
-                        totalPlayers++;
-                        string foundName = pl.name;
+                    	if (String.IsNullOrEmpty(message) || !Group.Exists(message) || Group.Find(message) == pl.group)
+                    	{
+                        	totalPlayers++;
+                        	string foundName = pl.name;
 
-                        if (Server.afkset.Contains(pl.name))
-                        {
-                            foundName = pl.name + "-afk";
-                        }
+                        	if (Server.afkset.Contains(pl.name))
+                        	{
+                        	    foundName = pl.name + "-afk";
+                        	}
 
-                        if (pl.muted) foundName += "[muted]";
+                        	if (pl.muted) foundName += "[muted]";
 
 
-                        if (pl.isDev)
-                        {
-                            if (pl.voice)
-                                devs += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
-                            else
-                                devs += " " + foundName + " (" + pl.level.name + "),";
-                        }
-                        if (pl.isMod)
-                        {
-                            if (pl.voice)
-                                mods += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
-                            else
-                                mods += " " + foundName + " (" + pl.level.name + "),";
-                        }
-                        if (pl.isGCMod)
-                        {
-                            if (pl.voice)
-                                gcmods += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
-                            else
-                                gcmods += " " + foundName + " (" + pl.level.name + "),";
-                        }
+                        	if (pl.isDev)
+                        	{
+                            	if (pl.voice)
+                                	devs += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
+                            	else
+                                	devs += " " + foundName + " (" + pl.level.name + "),";
+                        	}
+                        	if (pl.isMod)
+                        	{
+                            	if (pl.voice)
+                                	mods += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
+                            	else
+                                	mods += " " + foundName + " (" + pl.level.name + "),";
+                        	}
+                        	if (pl.isGCMod)
+                        	{
+                            	if (pl.voice)
+                                	gcmods += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
+                            	else
+                                	gcmods += " " + foundName + " (" + pl.level.name + "),";
+                        	}
 
-                        if (pl.voice)
-                            playerList.Find(grp => grp.group == pl.group).players.Add("&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + ")");
-                        else
-                            playerList.Find(grp => grp.group == pl.group).players.Add(foundName + " (" + pl.level.name + ")");
+                        	if (pl.voice)
+                            	playerList.Find(grp => grp.group == pl.group).players.Add("&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + ")");
+                        	else
+                            	playerList.Find(grp => grp.group == pl.group).players.Add(foundName + " (" + pl.level.name + ")");
+                    	}
                     }
                 }
 
