@@ -55,6 +55,11 @@ namespace MCGalaxy {
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
         public static string lastMSG = "";
+        
+        //TpA
+        public bool Request = false;
+        public string senderName = "";
+        public string currentTpa = "";
 
         public static bool storeHelp = false;
         public static string storedHelp = "";
