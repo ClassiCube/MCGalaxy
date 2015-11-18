@@ -3355,170 +3355,19 @@ namespace MCGalaxy
                                                           case Block.birdred:
                                                           case Block.birdblue:
                                                           case Block.birdkill:
-
-                                                              #region HUNTER BIRDS
-                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
-
-                                                          randomMovement:
-                                                              if (foundPlayer != null && rand.Next(1, 20) < 19)
-                                                              {
-                                                                  currentNum = rand.Next(1, 10);
-                                                                  foundNum = 0;
-
-                                                                  switch (currentNum)
-                                                                  {
-                                                                      case 1:
-                                                                      case 2:
-                                                                      case 3:
-                                                                          if ((foundPlayer.pos[0] / 32) - x != 0)
-                                                                          {
-                                                                              newNum =
-                                                                                  PosToInt(
-                                                                                      (ushort)
-                                                                                      (x +
-                                                                                       Math.Sign((foundPlayer.pos[0] / 32) -
-                                                                                                 x)), y, z);
-                                                                              if (GetTile(newNum) == Block.air)
-                                                                                  if (AddUpdate(newNum, blocks[C.b]))
-                                                                                      goto removeSelf;
-                                                                          }
-
-                                                                          foundNum++;
-                                                                          if (foundNum >= 3) goto default;
-                                                                          else goto case 4;
-                                                                      case 4:
-                                                                      case 5:
-                                                                      case 6:
-                                                                          if ((foundPlayer.pos[1] / 32) - y != 0)
-                                                                          {
-                                                                              newNum = PosToInt(x,
-                                                                                                (ushort)
-                                                                                                (y +
-                                                                                                 Math.Sign(
-                                                                                                     (foundPlayer.pos[1] /
-                                                                                                      32) - y)), z);
-                                                                              if (GetTile(newNum) == Block.air)
-                                                                                  if (AddUpdate(newNum, blocks[C.b]))
-                                                                                      goto removeSelf;
-                                                                          }
-
-                                                                          foundNum++;
-                                                                          if (foundNum >= 3) goto default;
-                                                                          else goto case 7;
-                                                                      case 7:
-                                                                      case 8:
-                                                                      case 9:
-                                                                          if ((foundPlayer.pos[2] / 32) - z != 0)
-                                                                          {
-                                                                              newNum = PosToInt(x, y,
-                                                                                                (ushort)
-                                                                                                (z +
-                                                                                                 Math.Sign(
-                                                                                                     (foundPlayer.pos[2] /
-                                                                                                      32) - z)));
-                                                                              if (GetTile(newNum) == Block.air)
-                                                                                  if (AddUpdate(newNum, blocks[C.b]))
-                                                                                      goto removeSelf;
-                                                                          }
-
-                                                                          foundNum++;
-                                                                          if (foundNum >= 3) goto default;
-                                                                          else goto case 1;
-                                                                      default:
-                                                                          foundPlayer = null;
-                                                                          goto randomMovement;
-                                                                  }
-                                                              }
-                                                              else
-                                                              {
-                                                                  switch (rand.Next(1, 15))
-                                                                  {
-                                                                      case 1:
-                                                                          if (GetTile(x, (ushort)(y - 1), z) ==
-                                                                              Block.air)
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, (ushort)(y - 1), z),
-                                                                                      blocks[C.b])) break;
-                                                                              else goto case 3;
-                                                                          else goto case 3;
-                                                                      case 2:
-                                                                          if (GetTile(x, (ushort)(y + 1), z) ==
-                                                                              Block.air)
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, (ushort)(y + 1), z),
-                                                                                      blocks[C.b])) break;
-                                                                              else goto case 6;
-                                                                          else goto case 6;
-                                                                      case 3:
-                                                                      case 4:
-                                                                      case 5:
-                                                                          if (GetTile((ushort)(x - 1), y, z) ==
-                                                                              Block.air)
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt((ushort)(x - 1), y, z),
-                                                                                      blocks[C.b])) break;
-                                                                              else goto case 9;
-                                                                          else goto case 9;
-                                                                      case 6:
-                                                                      case 7:
-                                                                      case 8:
-                                                                          if (GetTile((ushort)(x + 1), y, z) ==
-                                                                              Block.air)
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt((ushort)(x + 1), y, z),
-                                                                                      blocks[C.b])) break;
-                                                                              else goto case 12;
-                                                                          else goto case 12;
-                                                                      case 9:
-                                                                      case 10:
-                                                                      case 11:
-                                                                          if (GetTile(x, y, (ushort)(z - 1)) ==
-                                                                              Block.air)
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, y, (ushort)(z - 1)),
-                                                                                      blocks[C.b])) break;
-                                                                              else InnerChange = true;
-                                                                          else InnerChange = true;
-                                                                          break;
-                                                                      case 12:
-                                                                      case 13:
-                                                                      case 14:
-                                                                      default:
-                                                                          if (GetTile(x, y, (ushort)(z + 1)) ==
-                                                                              Block.air)
-                                                                              if (
-                                                                                  AddUpdate(
-                                                                                      PosToInt(x, y, (ushort)(z + 1)),
-                                                                                      blocks[C.b])) break;
-                                                                              else InnerChange = true;
-                                                                          else InnerChange = true;
-                                                                          break;
-                                                                  }
-                                                              }
-
-                                                          removeSelf:
-                                                              if (!InnerChange)
-                                                                  AddUpdate(C.b, Block.air);
+                                                              HunterPhysics.DoKiller(this, C, rand, Block.air);
                                                               break;
-
-                                                              #endregion
-
                                                           case Block.fishbetta:
                                                           case Block.fishshark:
-                                                              FishPhysics.DoKiller(this, C, rand, Block.water);
+                                                              HunterPhysics.DoKiller(this, C, rand, Block.water);
                                                               break;
                                                           case Block.fishgold:
                                                           case Block.fishsalmon:
                                                           case Block.fishsponge:
-                                                              FishPhysics.DoNonKiller(this, C, rand, Block.water);
+                                                              HunterPhysics.DoFlee(this, C, rand, Block.water);
                                                               break;
                                                           case Block.fishlavashark:
-                                                              FishPhysics.DoKiller(this, C, rand, Block.lava);
+                                                              HunterPhysics.DoKiller(this, C, rand, Block.lava);
                                                               break;
                                                           case Block.rockethead:
                                                               RocketPhysics.Do(this, C, rand);
