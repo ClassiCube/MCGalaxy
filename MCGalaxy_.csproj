@@ -436,6 +436,7 @@
     <Compile Include="Levels\Physics\HunterPhysics.cs" />
     <Compile Include="Levels\Physics\RocketPhysics.cs" />
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
+    <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
