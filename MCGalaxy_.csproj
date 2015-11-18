@@ -433,6 +433,7 @@
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
     <Compile Include="Levels\Physics\FinitePhysics.cs" />
     <Compile Include="Levels\Physics\FirePhysics.cs" />
+    <Compile Include="Levels\Physics\FishPhysics.cs" />
     <Compile Include="Levels\Physics\RocketPhysics.cs" />
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
