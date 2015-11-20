@@ -331,8 +331,8 @@ namespace MCGalaxy.Commands
                             {
                                 try
                                 {
-                                    string onlyTime = timespentstr.Substring(3, 8);
-                                    DateTime timeFrame = DateTime.Parse(onlyTime);
+                                    string onlyTime = split[2].Substring(3, 8);
+                                    DateTime timeFrame = DateTime.ParseExact(onlyTime, "HH:mm:ss", new CultureInfo("en-US") );
                                     timeSpent = timespentstr;
                                 }
                                 catch (FormatException)
