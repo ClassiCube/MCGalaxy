@@ -2067,7 +2067,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                         storedMessage = "";
                     }
                 }
-                if (text.StartsWith(">") || text.StartsWith("<")) return;
+                //if (text.StartsWith(">") || text.StartsWith("<")) return;
                 if (text.EndsWith(">"))
                 {
                     storedMessage += text.Replace(">", "|>|");
