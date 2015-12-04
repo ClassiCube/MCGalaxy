@@ -18,6 +18,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using MCGalaxy.Drawing;
+
 namespace MCGalaxy.Commands
 {
 	public sealed class CmdCopy : Command
@@ -30,91 +33,75 @@ namespace MCGalaxy.Commands
 		public int allowoffset = 0;
 		public CmdCopy() { }
 
-		public override void Use(Player p, string message)
-		{
-			if (message.Split(' ')[0].ToLower() == "save")
-			{
-				if (message.Split(' ').Length != 2 || String.IsNullOrEmpty(message.Split(' ')[1])) { Help(p); return; }
-				Savecopy(p, message.Split(' ')[1]); return;
+		public override void Use(Player p, string message) {
+			allowoffset = message.IndexOf('@');
+			if (allowoffset != -1)
+				message = message.Replace("@ ", "");
+			
+			string[] parts = message.Split(' ');
+			if (parts.Length == 0) {
+				Help(p); return;
 			}
-			if (message.Split(' ')[0].ToLower() == "load")
-			{
-				if (message.Split(' ').Length != 2 || String.IsNullOrEmpty(message.Split(' ')[1])) { Help(p); return; }
-				Loadcopy(p, message.Split(' ')[1]); return;
-			}
-			if (message.Split(' ')[0].ToLower() == "delete")
-			{
-				if (message.Split(' ').Length != 2 || String.IsNullOrEmpty(message.Split(' ')[1])) { Help(p); return; }
-				message = message.Split(' ')[1];
-				if (!File.Exists("extra/savecopy/" + p.name + "/" + message + ".cpy")) { Player.SendMessage(p, "No such copy exists"); return; }
-				File.Delete("extra/savecopy/" + p.name + "/" + message + ".cpy");
-				Player.SendMessage(p, "Deleted copy " + message); return;
-			}
-			if (message.ToLower() == "list")
-			{
-				if (!Directory.Exists("extra/savecopy/" + p.name)) { Player.SendMessage(p, "No such directory exists"); return; }
-				FileInfo[] fin = new DirectoryInfo("extra/savecopy/" + p.name).GetFiles();
-				for (int i = 0; i < fin.Length; i++)
-				{
-					Player.SendMessage(p, fin[i].Name.Replace(".cpy", ""));
+			string opt = parts[0].ToLower();
+			
+			if (opt == "save") {
+				if (message.Length != 2) { Help(p); return; }
+				SaveCopy(p, parts[1]);
+			} else if (opt == "load") {
+				if (message.Length != 2) { Help(p); return; }
+				LoadCopy(p, parts[1]);
+			} else if (opt == "delete") {
+				if (message.Length != 2) { Help(p); return; }
+				string path = "extra/savecopy/" + parts[1] + "/" + message + ".cpy";
+				if (!File.Exists(path)) { 
+					Player.SendMessage(p, "No such copy exists"); return; 
 				}
-				return;
+				
+				File.Delete(path);
+				Player.SendMessage(p, "Deleted copy " + parts[1]);
+			} else if (opt == "list") {
+				string dir = "extra/savecopy/" + p.name;
+				if (!Directory.Exists(dir)) {
+					Player.SendMessage(p, "No such directory exists"); return;
+				}
+				
+				FileInfo[] fin = new DirectoryInfo(dir).GetFiles();
+				for (int i = 0; i < fin.Length; i++)
+					Player.SendMessage(p, fin[i].Name.Replace(".cpy", ""));
+			} else {
+				HandleOther(p, opt, parts);
 			}
-			CatchPos cpos;
+		}
+		
+		void HandleOther(Player p, string opt, string[] parts) {
+			CatchPos cpos = default(CatchPos);
 			cpos.ignoreTypes = new List<byte>();
-			cpos.type = 0;
-			p.copyoffset[0] = 0; p.copyoffset[1] = 0; p.copyoffset[2] = 0;
-			allowoffset = (message.IndexOf('@'));
-			if (allowoffset != -1) { message = message.Replace("@ ", ""); }
-			if (message.ToLower() == "cut") { cpos.type = 1; message = ""; }
-			else if (message.ToLower() == "air") { cpos.type = 2; message = ""; }
-			else if (message == "@") { message = ""; }
-			else if (message.IndexOf(' ') != -1)
-			{
-				if (message.Split(' ')[0] == "ignore")
-				{
-					foreach (string s in message.Substring(message.IndexOf(' ') + 1).Split(' '))
-					{
-						if (Block.Byte(s) != Block.Zero)
-						{
-							cpos.ignoreTypes.Add(Block.Byte(s));
-							Player.SendMessage(p, "Ignoring &b" + s);
-						}
+			p.copyoffset[0] = 0; p.copyoffset[1] = 0; p.copyoffset[2] = 0;	
+			
+			if (opt == "cut") {
+				cpos.type = 1;
+			} else if (opt == "air") {
+				cpos.type = 2;
+			} else if (opt == "ignore") {
+				for (int i = 1; i < parts.Length; i++ ) {
+					string s = parts[i];
+					if (Block.Byte(s) != Block.Zero) {
+						cpos.ignoreTypes.Add(Block.Byte(s));
+						Player.SendMessage(p, "Ignoring &b" + s);
 					}
 				}
-				else
-				{
-					Help(p); return;
-				}
-				message = "";
+			} else {
+				Help(p); return;
 			}
 
-			cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
-
-			if (message != "") { Help(p); return; }
-
+			p.blockchangeObject = cpos;
 			Player.SendMessage(p, "Place two blocks to determine the edges.");
 			p.ClearBlockchange();
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
 		}
-		public override void Help(Player p)
-		{
-			Player.SendMessage(p, "/copy - Copies the blocks in an area.");
-			Player.SendMessage(p, "/copy save <save_name> - Saves what you have copied.");
-			Player.SendMessage(p, "/copy load <load_name> - Loads what you have saved.");
-			Player.SendMessage(p, "/copy delete <delete_name> - Deletes the specified copy.");
-			Player.SendMessage(p, "/copy list - Lists all you have copied.");
-			Player.SendMessage(p, "/copy cut - Copies the blocks in an area, then removes them.");
-			Player.SendMessage(p, "/copy air - Copies the blocks in an area, including air.");
-			Player.SendMessage(p, "/copy ignore <block1> <block2>.. - Ignores <blocks> when copying");
-			Player.SendMessage(p, "/copy @ - @ toggle for all the above, gives you a third click after copying that determines where to paste from");
-		}
 
-		public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
-		{
-			p.ClearBlockchange();
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
+		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type) {
+			RevertBlockState(p, x, y, z);
 			CatchPos bp = (CatchPos)p.blockchangeObject;
 			p.copystart[0] = x;
 			p.copystart[1] = y;
@@ -124,139 +111,120 @@ namespace MCGalaxy.Commands
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
 		}
 
-		public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
-		{
-			p.ClearBlockchange();
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
+		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type) {
+			RevertBlockState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 			ushort minX = (ushort)Math.Min(x, cpos.x), minY = (ushort)Math.Min(y, cpos.y);
 			ushort minZ = (ushort)Math.Min(z, cpos.z), maxX = (ushort)Math.Max(x, cpos.x);
 			ushort maxY = (ushort)Math.Max(y, cpos.y), maxZ = (ushort)Math.Max(z, cpos.z);
 			
-
-			p.CopyBuffer.Clear();
-			int TotalAir = 0;
-			if (cpos.type == 2)
-				p.copyAir = true;
-			else
-				p.copyAir = false;
-
-			for (ushort xx = minX; x <= maxX; ++xx)
-				for (ushort yy = minY; y <= maxY; ++yy)
-					for (ushort zz = minZ; z <= maxZ; ++zz)
+			CopyState state = new CopyState(minX, minY, minZ, maxX, maxY, maxZ);
+			int totalAir = 0, index = 0;
+			p.copyAir = cpos.type == 2;
+			
+			for (ushort yy = minY; y <= maxY; ++yy)
+				for (ushort zz = minZ; z <= maxZ; ++zz)
+					for (ushort xx = minX; x <= maxX; ++xx)
 			{
-				b = p.level.GetTile(xx, yy, zz);
-				if (Block.canPlace(p, b))
-				{
-					if (b == Block.air && cpos.type != 2 || cpos.ignoreTypes.Contains(b)) TotalAir++;
+				byte b = p.level.GetTile(xx, yy, zz);
+				if (!Block.canPlace(p, b)) { index++; continue; }
+				
+				if (b == Block.air && cpos.type != 2 || cpos.ignoreTypes.Contains(b))
+					totalAir++;
 
-					if (cpos.ignoreTypes.Contains(b))
-						BufferAdd(p, (ushort)(xx - cpos.x), (ushort)(yy - cpos.y), (ushort)(zz - cpos.z), Block.air);
-					else
-						BufferAdd(p, (ushort)(xx - cpos.x), (ushort)(yy - cpos.y), (ushort)(zz - cpos.z), b);
-				}
-				else
-					BufferAdd(p, (ushort)(xx - cpos.x), (ushort)(yy - cpos.y), (ushort)(zz - cpos.z), Block.air);
+				if (!cpos.ignoreTypes.Contains(b))
+					state.Blocks[index] = b;
+				index++;
 			}
+			p.CopyBuffer = state;
 
-			if ((p.CopyBuffer.Count - TotalAir) > p.group.maxBlocks)
-			{
-				Player.SendMessage(p, "You tried to copy " + p.CopyBuffer.Count + " blocks.");
+			if ((state.Volume - totalAir) > p.group.maxBlocks) {
+				Player.SendMessage(p, "You tried to copy " + state.Volume + " blocks.");
 				Player.SendMessage(p, "You cannot copy more than " + p.group.maxBlocks + ".");
-				p.CopyBuffer.Clear();
+				p.CopyBuffer = null;
 				return;
 			}
 
 			if (cpos.type == 1)
-				for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
-					for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
-						for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
+				for (ushort yy = minY; y <= maxY; ++yy)
+					for (ushort zz = minZ; z <= maxZ; ++zz)
+						for (ushort xx = minX; x <= maxX; ++xx)
 			{
-				b = p.level.GetTile(xx, yy, zz);
+				byte b = p.level.GetTile(xx, yy, zz);
 				if (b != Block.air && Block.canPlace(p, b))
 					p.level.Blockchange(p, xx, yy, zz, Block.air);
 			}
 
-			Player.SendMessage(p, (p.CopyBuffer.Count - TotalAir) + " blocks copied.");
-			if (allowoffset != -1)
-			{
+			Player.SendMessage(p, (state.Volume - totalAir) + " blocks copied.");
+			if (allowoffset != -1) {
 				Player.SendMessage(p, "Place a block to determine where to paste from");
 				p.Blockchange += new Player.BlockchangeEventHandler(Blockchange3);
 			}
-
 		}
 
-		public void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type)
-		{
-
-			p.ClearBlockchange();
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
+		void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type) {
+			RevertBlockState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
-
 
 			p.copyoffset[0] = (p.copystart[0] - x);
 			p.copyoffset[1] = (p.copystart[1] - y);
 			p.copyoffset[2] = (p.copystart[2] - z);
-
 		}
 
-		void Savecopy(Player p, string message)
-		{
-			if (Player.ValidName(message))
-			{
-				if (!Directory.Exists("extra/savecopy")) Directory.CreateDirectory("extra/savecopy");
-				if (!Directory.Exists("extra/savecopy/" + p.name)) Directory.CreateDirectory("extra/savecopy/" + p.name);
-				if (Directory.GetFiles("extra/savecopy/" + p.name).Length > 14) { Player.SendMessage(p, "You can only save 15 copy's. /copy delete some."); return; }
-				using (FileStream fs = new FileStream("extra/savecopy/" + p.name + "/" + message + ".cpy", FileMode.Create))
-				{
-					byte[] cnt = new byte[p.CopyBuffer.Count * 7];
-					int k = 0;
-					for (int i = 0; i < p.CopyBuffer.Count; i++)
-					{
-						BitConverter.GetBytes(p.CopyBuffer[i].x).CopyTo(cnt, 0 + k);
-						BitConverter.GetBytes(p.CopyBuffer[i].y).CopyTo(cnt, 2 + k);
-						BitConverter.GetBytes(p.CopyBuffer[i].z).CopyTo(cnt, 4 + k);
-						cnt[6 + k] = p.CopyBuffer[i].type;  //BitConverter.GetBytes(p.CopyBuffer[i].type).CopyTo(cnt, 6 + k);
-						k = k + 7;
-					}
-					cnt = cnt.GZip();
-					fs.Write(cnt, 0, cnt.Length);
-					fs.Flush();
-					fs.Close();
-				}
-				Player.SendMessage(p, "Saved copy as " + message);
+		void SaveCopy(Player p, string message) {
+			if (!Player.ValidName(message)) {
+				Player.SendMessage(p, "Bad file name");
+				return;
 			}
-			else Player.SendMessage(p, "Bad file name");
+			
+			if (!Directory.Exists("extra/savecopy"))
+				Directory.CreateDirectory("extra/savecopy");
+			if (!Directory.Exists("extra/savecopy/" + p.name))
+				Directory.CreateDirectory("extra/savecopy/" + p.name);
+			if (Directory.GetFiles("extra/savecopy/" + p.name).Length > 15) {
+				Player.SendMessage(p, "You can only save a maxmium of 15 copies. /copy delete some.");
+				return;
+			}
+			
+			string path = "extra/savecopy/" + p.name + "/" + message + ".cpy";
+			using (FileStream fs = new FileStream(path, FileMode.Create))
+				using(GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
+			{
+				p.CopyBuffer.SaveTo(gs);
+			}
+			Player.SendMessage(p, "Saved copy as " + message);
 		}
 
-		void Loadcopy(Player p, string message)
-		{
-			if (!File.Exists("extra/savecopy/" + p.name + "/" + message + ".cpy")) { Player.SendMessage(p, "No such copy exists"); return; }
-			p.CopyBuffer.Clear();
-			using (FileStream fs = new FileStream("extra/savecopy/" + p.name + "/" + message + ".cpy", FileMode.Open))
+		void LoadCopy(Player p, string message) {
+			
+			string path = "extra/savecopy/" + p.name + "/" + message + ".cpy";
+			if (!File.Exists(path)) {
+				Player.SendMessage(p, "No such copy exists");
+				return;
+			}
+			using (FileStream fs = new FileStream(path, FileMode.Open))
+				using(GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
 			{
-				byte[] cnt = new byte[fs.Length];
-				fs.Read(cnt, 0, (int)fs.Length);
-				cnt = cnt.Decompress();
-				int k = 0;
-				for (int i = 0; i < cnt.Length / 7; i++)
-				{
-					p.CopyBuffer.Add(new Player.CopyPos() { x = BitConverter.ToUInt16(cnt, 0 + k), y = BitConverter.ToUInt16(cnt, 2 + k), z = BitConverter.ToUInt16(cnt, 4 + k), type = cnt[6 + k] });
-					k = k + 7;
-				}
-				fs.Flush();
-				fs.Close();
+				CopyState state = new CopyState();
+				state.LoadFrom(gs);
+				p.CopyBuffer = state;
 			}
 			Player.SendMessage(p, "Loaded copy as " + message);
 		}
-
-		void BufferAdd(Player p, ushort x, ushort y, ushort z, byte type)
-		{
-			Player.CopyPos pos; pos.x = x; pos.y = y; pos.z = z; pos.type = type;
-			p.CopyBuffer.Add(pos);
-		}
+		
 		struct CatchPos { public ushort x, y, z; public int type; public List<byte> ignoreTypes; }
+		
+		public override void Help(Player p)
+		{
+			Player.SendMessage(p, "/copy - Copies the blocks in an area.");
+			Player.SendMessage(p, "/copy save <save_name> - Saves what you have copied.");
+			Player.SendMessage(p, "/copy load <load_name> - Loads what you have saved.");
+			Player.SendMessage(p, "/copy delete <delete_name> - Deletes the specified copy.");
+			Player.SendMessage(p, "/copy list - Lists all saved copies you have");
+			Player.SendMessage(p, "/copy cut - Copies the blocks in an area, then removes them.");
+			Player.SendMessage(p, "/copy air - Copies the blocks in an area, including air.");
+			Player.SendMessage(p, "/copy ignore <block1> <block2>.. - Ignores <blocks> when copying");
+			Player.SendMessage(p, "/copy @ - @ toggle for all the above, gives you a third click after copying that determines where to paste from");
+		}
 	}
 }

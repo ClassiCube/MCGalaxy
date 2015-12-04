@@ -4117,7 +4117,8 @@ level.Unload();
             //throw new NotImplementedException();
             if ( connections.Contains(this) ) connections.Remove(this);
             Extras.Clear();
-            CopyBuffer.Clear();
+            if (CopyBuffer != null)
+            	CopyBuffer.Clear();
             RedoBuffer.Clear();
             UndoBuffer.Clear();
             spamBlockLog.Clear();

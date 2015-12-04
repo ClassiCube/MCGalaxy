@@ -16,6 +16,8 @@
 	permissions and limitations under the Licenses.
 */
 using System.Collections.Generic;
+using MCGalaxy.Drawing;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdSpin : Command
@@ -115,6 +117,7 @@ namespace MCGalaxy.Commands
 
             Player.SendMessage(p, "Spun: &b" + message);
         }
+        
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/spin <y/180/mirror/upsidedown> - Spins the copied object.");

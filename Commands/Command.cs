@@ -343,6 +343,12 @@ namespace MCGalaxy
 		{
 			all.Add(command);
 		}
+		
+		protected static void RevertBlockState(Player p, ushort x, ushort y, ushort z) {
+			p.ClearBlockchange();
+			byte b = p.level.GetTile(x, y, z);
+			p.SendBlockchange(x, y, z, b);
+		}
 	}
 	
 	public sealed class CommandTypes {
