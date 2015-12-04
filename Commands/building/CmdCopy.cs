@@ -36,19 +36,19 @@ namespace MCGalaxy.Commands
 		public override void Use(Player p, string message) {
 			allowoffset = message.IndexOf('@');
 			if (allowoffset != -1)
-				message = message.Replace("@ ", "");
+				message = message.Replace("@ ", "").Replace("@", "");
 			
 			string[] parts = message.Split(' ');
 			string opt = parts.Length == 0 ? null : parts[0].ToLower();
 			
 			if (opt == "save") {
-				if (message.Length != 2) { Help(p); return; }
+				if (parts.Length != 2) { Help(p); return; }
 				SaveCopy(p, parts[1]);
 			} else if (opt == "load") {
-				if (message.Length != 2) { Help(p); return; }
+				if (parts.Length != 2) { Help(p); return; }
 				LoadCopy(p, parts[1]);
 			} else if (opt == "delete") {
-				if (message.Length != 2) { Help(p); return; }
+				if (parts.Length != 2) { Help(p); return; }
 				string path = "extra/savecopy/" + parts[1] + "/" + message + ".cpy";
 				if (!File.Exists(path)) { 
 					Player.SendMessage(p, "No such copy exists"); return; 
@@ -143,9 +143,9 @@ namespace MCGalaxy.Commands
 			}
 
 			if (cpos.type == 1)
-				for (ushort yy = minY; y <= maxY; ++yy)
-					for (ushort zz = minZ; z <= maxZ; ++zz)
-						for (ushort xx = minX; x <= maxX; ++xx)
+				for (ushort yy = minY; yy <= maxY; ++yy)
+					for (ushort zz = minZ; zz <= maxZ; ++zz)
+						for (ushort xx = minX; xx <= maxX; ++xx)
 			{
 				byte b = p.level.GetTile(xx, yy, zz);
 				if (b != Block.air && Block.canPlace(p, b))

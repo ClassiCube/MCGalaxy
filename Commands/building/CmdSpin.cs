@@ -33,6 +33,10 @@ namespace MCGalaxy.Commands
 		{
 			if (message.Split(' ').Length > 1) { Help(p); return; }
 			if (message == "") message = "y";
+			
+			if (p.CopyBuffer == null) {
+				Player.SendMessage(p, "You haven't copied anything yet"); return;
+			}
 
 			switch (message)
 			{
@@ -41,7 +45,7 @@ namespace MCGalaxy.Commands
 					p.CopyBuffer = RotateY(p.CopyBuffer);
 					goto case "m";
 				case "180":
-					FlipDiagonal(p.CopyBuffer); break;
+					FlipX(p.CopyBuffer); FlipZ(p.CopyBuffer); break;
 				case "upsidedown":
 				case "u":
 					FlipY(p.CopyBuffer); break;
@@ -64,11 +68,12 @@ namespace MCGalaxy.Commands
 			CopyState newState = new CopyState(state.X, state.Y, state.Z,
 			                                   state.Width, state.Length, state.Height);
 			byte[] blocks = state.Blocks;
+			int newMaxY = newState.Height - 1;
 			
 			for (int i = 0; i < blocks.Length; i++) {
 				ushort x, y, z;
 				state.GetCoords(i, out x, out y, out z);
-				newState.Set(x, z, y, blocks[i]);
+				newState.Set(x, newMaxY - z, y, blocks[i]);
 			}
 			return newState;
 		}
@@ -90,11 +95,12 @@ namespace MCGalaxy.Commands
 			CopyState newState = new CopyState(state.X, state.Y, state.Z,
 			                                   state.Height, state.Width, state.Length);
 			byte[] blocks = state.Blocks;
+			int newMaxY = newState.Height - 1;
 			
 			for (int i = 0; i < blocks.Length; i++) {
 				ushort x, y, z;
 				state.GetCoords(i, out x, out y, out z);
-				newState.Set(y, x, z, blocks[i]);
+				newState.Set(y, newMaxY - x, z, blocks[i]);
 			}
 			return newState;
 		}
@@ -122,8 +128,7 @@ namespace MCGalaxy.Commands
 			for (int y = 0; y < midY; y++) {
 				int endY = maxY - y;
 				int start = state.GetIndex(0, y, 0);
-				int end = state.GetIndex(0, endY, 0);
-				
+				int end = state.GetIndex(0, endY, 0);			
 				for (int z = 0; z < state.Length; z++) {
 					for (int x = 0; x < state.Width; x++) {
 						Swap(blocks, start, end);
@@ -133,30 +138,28 @@ namespace MCGalaxy.Commands
 			}
 		}
 		
-		void FlipDiagonal(CopyState state) {
-			int midX = state.Width / 2, maxX = state.Width - 1;
-			int midZ = state.Length / 2, maxZ = state.Length - 1;
+		void FlipZ(CopyState state) {
+			int midZ = state.Width / 2, maxZ = state.Length - 1;
 			byte[] blocks = state.Blocks;
 			
-			for (int y = 0; y < state.Height; y++) {
+			for (int y = 0; y < state.Height; y++) {			
 				for (int z = 0; z < midZ; z++) {
 					int endZ = maxZ - z;
-					for (int x = 0; x < midX; x++) {
-						int endX = maxX - x;
-						int start = state.GetIndex(x, y, z);
-						int end = state.GetIndex(endX, y, endZ);
+					int start = state.GetIndex(0, y, z);
+					int end = state.GetIndex(0, y, endZ);
+					for (int x = 0; x < state.Width; x++) {						
 						Swap(blocks, start, end);
+						start++; end++;
 					}
 				}
 			}
 		}
-		
-		static void Swap( byte[] b, int start, int end ) {
+
+		static void Swap(byte[] b, int start, int end) {
 			byte a = b[start]; b[start] = b[end]; b[end] = a;
 		}
 		
-		public override void Help(Player p)
-		{
+		public override void Help(Player p) {
 			Player.SendMessage(p, "/spin <y/180/mirror/upsidedown> - Spins the copied object.");
 			Player.SendMessage(p, "Shotcuts: m for mirror, u for upside down, x for spin 90 on x, y for spin 90 on y, z for spin 90 on z.");
 		}
