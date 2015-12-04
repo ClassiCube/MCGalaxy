@@ -166,7 +166,7 @@ namespace MCGalaxy.Commands
             public ushort x, y, z;
         }
 
-        protected struct CatchPos
+        struct CatchPos
         {
             public List<byte> oldType;
             public byte newType;

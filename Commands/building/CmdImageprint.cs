@@ -320,7 +320,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Use switch (&flayer" + Server.DefaultColor + ") or (&fl" + Server.DefaultColor + ") to print horizontally.");
         }
 
-        public struct CatchPos { public ushort x, y, z; }
+        struct CatchPos { public ushort x, y, z; }
 
         string bitmaplocation;
         bool layer = false;

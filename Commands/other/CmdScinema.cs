@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands
             //getting the startpos of copy stored in blockchangeobject
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
-            List<Player.CopyPos> CBuffer = new List<Player.CopyPos>();
+            List<CopyPos> CBuffer = new List<CopyPos>();
 
             CBuffer.Clear();
             //com(p, "copy stuff");
@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands
             cin = File.AppendText(Filepath);
             cin.Write("[Frame" + String.Format("{0:00000}", FrameNumber) + "]{");
             //written frameheader
-            foreach (Player.CopyPos CP in CBuffer)
+            foreach (CopyPos CP in CBuffer)
             {
                 String tBlock = "";
                 tBlock += CP.x + ";";
@@ -177,9 +177,9 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/sCinema [name] - Saves a given Frame to the File. Can be Played by pCinema");
         }
 
-        void BufferAdd(Player p, ushort x, ushort y, ushort z, byte type, List<Player.CopyPos> Buf)
+        void BufferAdd(Player p, ushort x, ushort y, ushort z, byte type, List<CopyPos> Buf)
         {
-            Player.CopyPos pos;
+            CopyPos pos;
             pos.x = x;
             pos.y = y;
             pos.z = z;
@@ -188,7 +188,7 @@ namespace MCGalaxy.Commands
         }
 
         struct CatchPos { public ushort x, y, z; }
-
+        struct CopyPos { public ushort x, y, z; public byte type; }
 
     }
 }

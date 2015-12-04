@@ -44,12 +44,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <BaseAddress>4194304</BaseAddress>
-    <Prefer32Bit>False</Prefer32Bit>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>PdbOnly</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -59,7 +58,6 @@
     <DebugSymbols>True</DebugSymbols>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
     <BaseAddress>4194304</BaseAddress>
-    <Prefer32Bit>False</Prefer32Bit>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <PlatformTarget>x86</PlatformTarget>
@@ -76,7 +74,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <BaseAddress>4194304</BaseAddress>
-    <Prefer32Bit>False</Prefer32Bit>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
@@ -158,13 +155,11 @@
     <Compile Include="Commands\Building\CmdReplaceAll.cs" />
     <Compile Include="Commands\Building\CmdReplaceNot.cs" />
     <Compile Include="Commands\Building\CmdRestartPhysics.cs" />
-    <Compile Include="Commands\Building\CmdRetrieve.cs" />
     <Compile Include="Commands\Building\CmdSpheroid.cs" />
     <Compile Include="Commands\Building\CmdSpin.cs" />
     <Compile Include="Commands\Building\CmdSPlace.cs" />
     <Compile Include="Commands\Building\CmdStairs.cs" />
     <Compile Include="Commands\Building\CmdStatic.cs" />
-    <Compile Include="Commands\Building\CmdStore.cs" />
     <Compile Include="Commands\Building\CmdTree.cs" />
     <Compile Include="Commands\Building\CmdUndo.cs" />
     <Compile Include="Commands\Building\CmdWrite.cs" />
@@ -426,6 +421,7 @@
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\CmdUnlock.cs" />
+    <Compile Include="Drawing\CopyState.cs" />
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />

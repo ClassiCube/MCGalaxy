@@ -14,75 +14,76 @@
 	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
-*/
+ */
 using System;
+using MCGalaxy.Drawing;
+
 namespace MCGalaxy.Commands
 {
-    public sealed class CmdPaste : Command
-    {
-        public override string name { get { return "paste"; } }
-        public override string shortcut { get { return "v"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        
-        public string loadname;
-        public CmdPaste() { }
-        
-        public override void Use(Player p, string message)
-        {
-            if (message != "") { Help(p); return; }
+	public sealed class CmdPaste : Command
+	{
+		public override string name { get { return "paste"; } }
+		public override string shortcut { get { return "v"; } }
+		public override string type { get { return CommandTypes.Building; } }
+		public override bool museumUsable { get { return false; } }
+		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+		
+		public CmdPaste() { }
+		
+		public override void Use(Player p, string message) {
+			if (message != "") { Help(p); return; }
+			if (p.CopyBuffer == null) {
+				Player.SendMessage(p, "You haven't copied anything yet"); return;
+			}
+			
+			p.blockchangeObject = default(CatchPos);
+			Player.SendMessage(p, "Place a block in the corner of where you want to paste."); p.ClearBlockchange();
+			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+		}
 
-            CatchPos cpos;
-            cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
+		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type) {
+			RevertBlockState(p, x, y, z);
+			int offX = p.copyoffset[0] + x, offY = p.copyoffset[1] + y, offZ = p.copyoffset[2] + z;
 
-            Player.SendMessage(p, "Place a block in the corner of where you want to paste."); p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
-        }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "/paste - Pastes the stored copy.");
-            Player.SendMessage(p, "&4BEWARE: " + Server.DefaultColor + "The blocks will always be pasted in a set direction");
-        }
+			Player.UndoPos Pos1;
+			CopyState state = p.CopyBuffer;
+			
+			if (p.level.bufferblocks && !p.level.Instant) {			
+				for (int i = 0; i < state.Blocks.Length; i++ ) {
+					ushort locX, locY, locZ;
+					byte b = state.Blocks[i];
+					state.GetCoords(i, out locX, out locY, out locZ);
+					
+					Pos1.x = (ushort)(locX + offX);
+					Pos1.y = (ushort)(locY + offY);
+					Pos1.z = (ushort)(locZ + offZ);
+					if ((b != Block.air || p.copyAir) && p.level.InBound(Pos1.x, Pos1.y, Pos1.z))
+						BlockQueue.Addblock(p, Pos1.x, Pos1.y, Pos1.z, b);
+				}
+			} else {
+				for (int i = 0; i < state.Blocks.Length; i++ ) {
+					ushort locX, locY, locZ;
+					byte b = state.Blocks[i];
+					state.GetCoords(i, out locX, out locY, out locZ);
+					
+					Pos1.x = (ushort)(locX + offX);
+					Pos1.y = (ushort)(locY + offY);
+					Pos1.z = (ushort)(locZ + offZ);
+					if ((b != Block.air || p.copyAir) && p.level.InBound(Pos1.x, Pos1.y, Pos1.z))
+						p.level.Blockchange(p, Pos1.x, Pos1.y, Pos1.z, b);
+				}
+			}
 
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
-        {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+			Player.SendMessage(p, "Pasted " + p.CopyBuffer.Volume + " blocks.");
+			if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+		}
 
-            Player.UndoPos Pos1;
-            //p.UndoBuffer.Clear();
-            if (p.level.bufferblocks && !p.level.Instant)
-            {
-                p.CopyBuffer.ForEach(delegate(Player.CopyPos pos)
-                {
-                    Pos1.x = (ushort)(Math.Abs(pos.x) + x);
-                    Pos1.y = (ushort)(Math.Abs(pos.y) + y);
-                    Pos1.z = (ushort)(Math.Abs(pos.z) + z);
-
-                    if (pos.type != Block.air || p.copyAir)
-                        unchecked { if (p.level.GetTile(Pos1.x, Pos1.y, Pos1.z) != Block.Zero) BlockQueue.Addblock(p, (ushort)(Pos1.x + p.copyoffset[0]), (ushort)(Pos1.y + p.copyoffset[1]), (ushort)(Pos1.z + p.copyoffset[2]), pos.type); }
-                });
-            }
-            else
-            {
-                p.CopyBuffer.ForEach(delegate(Player.CopyPos pos)
-                {
-                    Pos1.x = (ushort)(Math.Abs(pos.x) + x);
-                    Pos1.y = (ushort)(Math.Abs(pos.y) + y);
-                    Pos1.z = (ushort)(Math.Abs(pos.z) + z);
-
-                    if (pos.type != Block.air || p.copyAir)
-                        unchecked { if (p.level.GetTile(Pos1.x, Pos1.y, Pos1.z) != Block.Zero) p.level.Blockchange(p, (ushort)(Pos1.x + p.copyoffset[0]), (ushort)(Pos1.y + p.copyoffset[1]), (ushort)(Pos1.z + p.copyoffset[2]), pos.type); }
-                });
-            }
-
-            Player.SendMessage(p, "Pasted " + p.CopyBuffer.Count + " blocks.");
-
-            if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
-        }
-
-        struct CatchPos { public ushort x, y, z; }
-    }
+		struct CatchPos { public ushort x, y, z; }
+		
+		public override void Help(Player p)
+		{
+			Player.SendMessage(p, "/paste - Pastes the stored copy.");
+			Player.SendMessage(p, "&4BEWARE: " + Server.DefaultColor + "The blocks will always be pasted in a set direction");
+		}
+	}
 }

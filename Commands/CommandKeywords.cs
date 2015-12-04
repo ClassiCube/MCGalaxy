@@ -205,7 +205,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdRestartPhysics()), "restart physics");
             new CommandKeywords((new CmdRestore()), "old rest copy");
             new CommandKeywords((new CmdRestoreSelection()), "restore select");
-            new CommandKeywords((new CmdRetrieve()), "copy paste file get block");
             new CommandKeywords((new CmdReveal()), "show");
             new CommandKeywords((new CmdReview()), "view look judge");
             new CommandKeywords((new CmdRide()), "drive train");
@@ -228,7 +227,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdSPlace()), "measure place");
             new CommandKeywords((new CmdStairs()), "stair");
             new CommandKeywords((new CmdStatic()), "toggle mode");
-            new CommandKeywords((new CmdStore()), "selection save");
             new CommandKeywords((new CmdSummon()), "move teleport tp player user");
             new CommandKeywords((new CmdTake()), "get money");
             new CommandKeywords((new CmdTColor()), "title color set");

@@ -297,7 +297,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Available [at end] values: &cexplode, destroy, laser, tp");
         }
 
-        public struct CatchPos { public ushort x, y, z; }
-        public struct Pos { public ushort x, y, z; public int ending; }
+        struct CatchPos { public ushort x, y, z; }
+        struct Pos { public ushort x, y, z; public int ending; }
     }
 }
