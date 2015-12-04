@@ -24,6 +24,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using MCGalaxy.Drawing;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
@@ -229,8 +230,7 @@ namespace MCGalaxy {
         public Player HarmedBy = null; //For Assists
 
         //Copy
-        public List<CopyPos> CopyBuffer = new List<CopyPos>();
-        public struct CopyPos { public ushort x, y, z; public byte type; }
+        public CopyState CopyBuffer;
         public bool copyAir = false;
         public int[] copyoffset = new int[3] { 0, 0, 0 };
         public ushort[] copystart = new ushort[3] { 0, 0, 0 };

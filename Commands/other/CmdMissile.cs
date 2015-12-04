@@ -367,10 +367,10 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "Differs from /gun in that the missile is guided");
 		}
 
-		public struct CatchPos { public ushort x, y, z; }
-		public struct Pos { public ushort x, y, z; public int ending; }
+		struct CatchPos { public ushort x, y, z; }
+		struct Pos { public ushort x, y, z; public int ending; }
 
-		public void findNext(CatchPos lookedAt, ref CatchPos pos)
+		void findNext(CatchPos lookedAt, ref CatchPos pos)
 		{
 			int dx, dy, dz, l, m, n, x_inc, y_inc, z_inc, err_1, err_2, dx2, dy2, dz2;
 			int[] pixel = new int[3];

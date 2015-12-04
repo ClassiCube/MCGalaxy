@@ -200,7 +200,7 @@ namespace MCGalaxy.Util
 		public static void Cone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
 				if ((y + k) < 0 || (y + k) > p.level.Height) continue;
@@ -237,7 +237,7 @@ namespace MCGalaxy.Util
                                 byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 								if (ctile == 0)
 								{
-                                    Player.CopyPos temp = new Player.CopyPos();
+                                    CatchPos temp = new CatchPos();
                                     temp.x = (ushort)cx; 
                                     temp.y = (ushort)cy; 
                                     temp.z = (ushort)cz;
@@ -252,7 +252,7 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried Coning " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
             if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y + height), z, block);
@@ -260,7 +260,7 @@ namespace MCGalaxy.Util
 		public static void HCone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			double origionalhypotenuse = sqrt((height * height) + (radius * radius));
 
 			for (short k = 0; k <= height; k = (short)(k + 1))
@@ -299,7 +299,7 @@ namespace MCGalaxy.Util
                                 byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 								if (ctile == 0)
 								{
-                                    Player.CopyPos temp = new Player.CopyPos();
+                                    CatchPos temp = new CatchPos();
                                     temp.x = (ushort)cx;
                                     temp.y = (ushort)cy;
                                     temp.z = (ushort)cz;
@@ -314,7 +314,7 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HConing " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
             if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y + height), z, block);
@@ -322,7 +322,7 @@ namespace MCGalaxy.Util
 		public static void ICone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			double origionalhypotenuse = sqrt((height * height) + (radius * radius));
 
 			for (short k = 0; k <= height; k = (short)(k + 1))
@@ -361,7 +361,7 @@ namespace MCGalaxy.Util
                                 byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 								if (ctile == 0)
 								{
-                                    Player.CopyPos temp = new Player.CopyPos();
+                                    CatchPos temp = new CatchPos();
                                     temp.x = (ushort)cx;
                                     temp.y = (ushort)cy;
                                     temp.z = (ushort)cz;
@@ -376,14 +376,14 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried IConing " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
             p.level.Blockchange(p, x, y, z, block);
 		}
 		public static void HICone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			double origionalhypotenuse = sqrt((height * height) + (radius * radius));
 
 			for (short k = 0; k <= height; k = (short)(k + 1))
@@ -422,7 +422,7 @@ namespace MCGalaxy.Util
                                 byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 								if (ctile == 0)
 								{
-                                    Player.CopyPos temp = new Player.CopyPos();
+                                    CatchPos temp = new CatchPos();
                                     temp.x = (ushort)cx;
                                     temp.y = (ushort)cy;
                                     temp.z = (ushort)cz;
@@ -437,7 +437,7 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HIConing " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
             p.level.Blockchange(p, x, y, z, block);
 		}
@@ -446,7 +446,7 @@ namespace MCGalaxy.Util
 		public static void Pyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
                 if ((y + k) < 0 || (y + k) > p.level.Height) continue;
@@ -482,7 +482,7 @@ namespace MCGalaxy.Util
                             byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 							if (ctile == 0)
 							{
-                                Player.CopyPos temp = new Player.CopyPos();
+                                CatchPos temp = new CatchPos();
                                 temp.x = (ushort)cx;
                                 temp.y = (ushort)cy;
                                 temp.z = (ushort)cz;
@@ -496,7 +496,7 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried Pyramiding " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
             if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y + height), z, block);
@@ -504,7 +504,7 @@ namespace MCGalaxy.Util
 		public static void HPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
                 if ((y + k) < 0 || (y + k) > p.level.Height) continue;
@@ -540,7 +540,7 @@ namespace MCGalaxy.Util
                             byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 							if (ctile == 0)
 							{
-                                Player.CopyPos temp = new Player.CopyPos();
+                                CatchPos temp = new CatchPos();
                                 temp.x = (ushort)cx;
                                 temp.y = (ushort)cy;
                                 temp.z = (ushort)cz;
@@ -554,7 +554,7 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HPyramiding " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
             if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y), z, block);
@@ -562,7 +562,7 @@ namespace MCGalaxy.Util
 		public static void IPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
                 if ((y + k) < 0 || (y + k) > p.level.Height) continue;
@@ -598,7 +598,7 @@ namespace MCGalaxy.Util
                             byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 							if (ctile == 0)
 							{
-                                Player.CopyPos temp = new Player.CopyPos();
+                                CatchPos temp = new CatchPos();
                                 temp.x = (ushort)cx;
                                 temp.y = (ushort)cy;
                                 temp.z = (ushort)cz;
@@ -612,7 +612,7 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried IPyramiding " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
             if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y + height), z, block);
@@ -620,7 +620,7 @@ namespace MCGalaxy.Util
 		public static void HIPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			for (short k = 0; k <= height; k = (short)(k + 1))
 			{
                 if ((y + k) < 0 || (y + k) > p.level.Height) continue;
@@ -656,7 +656,7 @@ namespace MCGalaxy.Util
                             byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 							if (ctile == 0)
 							{
-                                Player.CopyPos temp = new Player.CopyPos();
+                                CatchPos temp = new CatchPos();
                                 temp.x = (ushort)cx;
                                 temp.y = (ushort)cy;
                                 temp.z = (ushort)cz;
@@ -670,7 +670,7 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HIPyramiding " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
             if ((y + height) <= p.level.Height)
                 p.level.Blockchange(p, x, (ushort)(y), z, block);
@@ -678,7 +678,7 @@ namespace MCGalaxy.Util
 
 		public static void Sphere(Player p, ushort x, ushort y, ushort z, int radius, byte type)
 		{
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 			{
                 if ((x + j) < 0 || (x + j) > p.level.Width) continue;
@@ -701,7 +701,7 @@ namespace MCGalaxy.Util
                                     byte that = p.level.GetTile((ushort)(x + j), (ushort)((y + k)), (ushort)(z + m));
 									if (that != 7)
 									{
-                                        Player.CopyPos temp = new Player.CopyPos();
+                                        CatchPos temp = new CatchPos();
                                         temp.x = (ushort)(x + j);
                                         temp.y = (ushort)(y + k);
                                         temp.z = (ushort)(z + m);
@@ -717,12 +717,12 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried Sphering " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
 		}
 		public static void HSphere(Player p, ushort x, ushort y, ushort z, int radius, byte type)
 		{
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			for (short j = Convert.ToInt16(-radius); j <= radius; j = (short)(j + 1))
 			{
                 if ((x + j) < 0 || (x + j) > p.level.Width) continue;
@@ -745,7 +745,7 @@ namespace MCGalaxy.Util
                                     byte that = p.level.GetTile((ushort)(x + j), (ushort)((y + k)), (ushort)(z + m));
 									if (that != 7)
 									{
-                                        Player.CopyPos temp = new Player.CopyPos();
+                                        CatchPos temp = new CatchPos();
                                         temp.x = (ushort)(x + j);
                                         temp.y = (ushort)(y + k);
                                         temp.z = (ushort)(z + m);
@@ -761,14 +761,14 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HSphering " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
 		}
 
 		public static void Volcano(Player p, ushort x, ushort y, ushort z, int height, int radius)
 		{
 			//foreach (Player p in Player.players) if (p.level == l) p.SendBlockchange(x, y, z, 0);
-            List<Player.CopyPos> buffer = new List<Player.CopyPos>();
+            List<CatchPos> buffer = new List<CatchPos>();
 			double originalhypotenuse = sqrt((height * height) + (radius * radius));
 
 			for (short k = 0; k <= height; k = (short)(k + 1))
@@ -807,7 +807,7 @@ namespace MCGalaxy.Util
 								byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 								if (ctile == 0)
 								{
-                                    Player.CopyPos temp = new Player.CopyPos();
+                                    CatchPos temp = new CatchPos();
                                     temp.x = (ushort)cx;
                                     temp.y = (ushort)cy;
                                     temp.z = (ushort)cz;
@@ -821,7 +821,7 @@ namespace MCGalaxy.Util
 								byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 								if (ctile == 0)
 								{
-                                    Player.CopyPos temp = new Player.CopyPos();
+                                    CatchPos temp = new CatchPos();
                                     temp.x = (ushort)cx;
                                     temp.y = (ushort)cy;
                                     temp.z = (ushort)cz;
@@ -836,7 +836,7 @@ namespace MCGalaxy.Util
 				}
 			}
             if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried Valcanoing " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-            buffer.ForEach(delegate(Player.CopyPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+            buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
 		}
 
@@ -890,6 +890,7 @@ namespace MCGalaxy.Util
 		{
 			return Math.Sqrt(x);
 		}
+		struct CatchPos { public ushort x, y, z; public byte type; }
 		#endregion
 	}
 }
