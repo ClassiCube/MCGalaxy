@@ -84,9 +84,7 @@ namespace MCGalaxy
 			all.Add(new CmdCompLoad());
 			all.Add(new CmdColor());
 			all.Add(new CmdCopy());
-			all.Add(new CmdCopyLoadNet());
 			all.Add(new CmdCopyLVL());
-			all.Add(new CmdCopySaveNet());
 			all.Add(new CmdCountdown());
 			all.Add(new CmdCrashServer());
 			all.Add(new CmdCTF());
@@ -242,7 +240,6 @@ namespace MCGalaxy
 			all.Add(new CmdRestartPhysics());
 			all.Add(new CmdRestore());
 			all.Add(new CmdRestoreSelection());
-			all.Add(new CmdRetrieve());
 			all.Add(new CmdReveal());
 			all.Add(new CmdReview());
 			all.Add(new CmdRide());
@@ -269,7 +266,6 @@ namespace MCGalaxy
             all.Add(new CmdStaff());
 			all.Add(new CmdStairs());
 			all.Add(new CmdStatic());
-			all.Add(new CmdStore());
 			all.Add(new CmdSummon());
 			all.Add(new CmdTake());
 			all.Add(new CmdTColor());

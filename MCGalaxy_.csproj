@@ -158,7 +158,6 @@
     <Compile Include="Commands\Building\CmdReplaceAll.cs" />
     <Compile Include="Commands\Building\CmdReplaceNot.cs" />
     <Compile Include="Commands\Building\CmdRestartPhysics.cs" />
-    <Compile Include="Commands\Building\CmdRetrieve.cs" />
     <Compile Include="Commands\Building\CmdSpheroid.cs" />
     <Compile Include="Commands\Building\CmdSpin.cs" />
     <Compile Include="Commands\Building\CmdSPlace.cs" />
