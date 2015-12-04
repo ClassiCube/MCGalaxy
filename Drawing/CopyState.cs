@@ -22,57 +22,53 @@ namespace MCGalaxy.Drawing {
 
 	public sealed class CopyState {
 		
-		public ushort[] MinCoords;
-		public ushort[] MaxCoords;
 		public byte[] Blocks;
+		public int X, Y, Z;			
+		public int Width, Height, Length;
 		
-		int width, height, length;
 		const int identifier = 0x434F5059; // 'COPY'
 		
 		public int Volume {
-			get { return width * height * length; }
+			get { return Width * Height * Length; }
 		}
 		
-		public CopyState() { }
+		public CopyState(int x, int y, int z, int width, int height, int length, byte[] blocks) {
+			X = x; Y = y; Z = z;
+			Width = width; Height = height; Length = length;
+			Blocks = blocks; 
+		}
 		
-		public CopyState(ushort minX, ushort minY, ushort minZ,
-		                 ushort maxX, ushort maxY, ushort maxZ) {
-			SetBounds(minX, minY, minZ, maxX, maxY, maxZ);
-			width = maxX - minX + 1;
-			height = maxY - minY + 1;
-			length = maxZ - minZ + 1;
+		public CopyState(int x, int y, int z, int width, int height, int length)
+			: this(x, y, z, width, height, length, null) {
 			Blocks = new byte[width * height * length];
-		}
-		
-		public void SetBounds(ushort minX, ushort minY, ushort minZ,
-		                      ushort maxX, ushort maxY, ushort maxZ) {
-			MinCoords = new [] { minX, minY, minZ };
-			MaxCoords = new [] { maxX, maxY, maxZ };
 		}
 		
 		public void Clear() {
 			Blocks = null;
-			MinCoords = null;
-			MaxCoords = null;
 		}
 		
 		public void GetCoords(int index, out ushort x, out ushort y, out ushort z) {
-			y = (ushort)(index / width / length);
-			index -= y * width * length;
-			z = (ushort)(index / width);
-			index -= z * width;
+			y = (ushort)(index / Width / Length);
+			index -= y * Width * Length;
+			z = (ushort)(index / Width);
+			index -= z * Width;
 			x = (ushort)index;
+		}
+		
+		public int GetIndex(int x, int y, int z) {
+			return (y * Length + z) * Width + x;
+		}
+		
+		public void Set(int x, int y, int z, byte block) {
+			Blocks[(y * Length + z) * Width + x] = block;
 		}
 		
 		public void SaveTo(Stream stream) {
 			BinaryWriter w = new BinaryWriter(stream);
 			w.Write(identifier);
-			w.Write(MinCoords[0]); w.Write(MinCoords[1]); w.Write(MinCoords[2]);
-			w.Write(MaxCoords[0]); w.Write(MaxCoords[1]); w.Write(MaxCoords[2]);
 			
-			w.Write(width);
-			w.Write(height);
-			w.Write(length);
+			w.Write(X); w.Write(Y); w.Write(Z);			
+			w.Write(Width); w.Write(Height); w.Write(Length);
 			w.Write(Blocks);
 		}
 		
@@ -80,14 +76,10 @@ namespace MCGalaxy.Drawing {
 			BinaryReader r = new BinaryReader(stream);
 			if (r.ReadInt32() != identifier)
 				throw new InvalidDataException("invalid identifier");
-			ushort minX = r.ReadUInt16(), minY = r.ReadUInt16(), minZ = r.ReadUInt16();
-			ushort maxX = r.ReadUInt16(), maxY = r.ReadUInt16(), maxZ = r.ReadUInt16();
-			SetBounds( minX, minY, minZ, maxX, maxY, maxZ );
 			
-			width = r.ReadInt32();
-			height = r.ReadInt32();
-			length = r.ReadInt32();
-			Blocks = r.ReadBytes(width * height * length);
+			X = r.ReadInt32(); Y = r.ReadInt32(); Z = r.ReadInt32();
+			Width = r.ReadInt32(); Height = r.ReadInt32(); Length = r.ReadInt32();
+			Blocks = r.ReadBytes(Width * Height * Length);
 		}
 	}
 }

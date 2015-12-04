@@ -205,7 +205,7 @@ namespace MCGalaxy.Commands
 			using (FileStream fs = new FileStream(path, FileMode.Open))
 				using(GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
 			{
-				CopyState state = new CopyState();
+				CopyState state = new CopyState(0, 0, 0, 0, 0, 0, null);
 				state.LoadFrom(gs);
 				p.CopyBuffer = state;
 			}
