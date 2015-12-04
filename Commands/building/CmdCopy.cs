@@ -39,10 +39,7 @@ namespace MCGalaxy.Commands
 				message = message.Replace("@ ", "");
 			
 			string[] parts = message.Split(' ');
-			if (parts.Length == 0) {
-				Help(p); return;
-			}
-			string opt = parts[0].ToLower();
+			string opt = parts.Length == 0 ? null : parts[0].ToLower();
 			
 			if (opt == "save") {
 				if (message.Length != 2) { Help(p); return; }
@@ -90,7 +87,7 @@ namespace MCGalaxy.Commands
 						Player.SendMessage(p, "Ignoring &b" + s);
 					}
 				}
-			} else {
+			} else if (!String.IsNullOrEmpty(opt)) {
 				Help(p); return;
 			}
 
@@ -118,20 +115,20 @@ namespace MCGalaxy.Commands
 			ushort minZ = (ushort)Math.Min(z, cpos.z), maxX = (ushort)Math.Max(x, cpos.x);
 			ushort maxY = (ushort)Math.Max(y, cpos.y), maxZ = (ushort)Math.Max(z, cpos.z);
 			
-			CopyState state = new CopyState(minX, minY, minZ, maxX, maxY, maxZ);
+			CopyState state = new CopyState(minX, minY, minZ, maxX - minX + 1, 
+			                                maxY - minY + 1, maxZ - minZ + 1);
 			int totalAir = 0, index = 0;
 			p.copyAir = cpos.type == 2;
 			
-			for (ushort yy = minY; y <= maxY; ++yy)
-				for (ushort zz = minZ; z <= maxZ; ++zz)
-					for (ushort xx = minX; x <= maxX; ++xx)
+			for (ushort yy = minY; yy <= maxY; ++yy)
+				for (ushort zz = minZ; zz <= maxZ; ++zz)
+					for (ushort xx = minX; xx <= maxX; ++xx)
 			{
 				byte b = p.level.GetTile(xx, yy, zz);
 				if (!Block.canPlace(p, b)) { index++; continue; }
 				
 				if (b == Block.air && cpos.type != 2 || cpos.ignoreTypes.Contains(b))
 					totalAir++;
-
 				if (!cpos.ignoreTypes.Contains(b))
 					state.Blocks[index] = b;
 				index++;
