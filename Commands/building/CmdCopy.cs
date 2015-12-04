@@ -204,45 +204,6 @@ namespace MCGalaxy.Commands
 
 		void Savecopy(Player p, string message)
 		{
-			if (message.EndsWith("#"))
-			{
-				if (!p.group.CanExecute(Command.all.Find("copysavenet")))
-				{
-					Player.SendMessage(p, "You are not allowed to save to network locations.");
-					return;
-				}
-				message = message.Remove(message.Length - 1);
-				byte[] cnt = new byte[p.CopyBuffer.Count * 7];
-				int k = 0;
-				for (int i = 0; i < p.CopyBuffer.Count; i++)
-				{
-					BitConverter.GetBytes(p.CopyBuffer[i].x).CopyTo(cnt, 0 + k);
-					BitConverter.GetBytes(p.CopyBuffer[i].y).CopyTo(cnt, 2 + k);
-					BitConverter.GetBytes(p.CopyBuffer[i].z).CopyTo(cnt, 4 + k);
-					cnt[6 + k] = p.CopyBuffer[i].type;  //BitConverter.GetBytes(p.CopyBuffer[i].type).CopyTo(cnt, 6 + k);
-					k = k + 7;
-				}
-				cnt = cnt.GZip();
-				if (!message.StartsWith("http://", true, System.Globalization.CultureInfo.CurrentCulture)) message = "http://" + message;
-				try
-				{
-					string savefile = "temp" + p.name + new Random().Next(999) + ".cpy";
-					using (FileStream fs = new FileStream(savefile, FileMode.Create))
-					{
-						fs.Write(cnt, 0, cnt.Length);
-					}
-					using (System.Net.WebClient webup = new System.Net.WebClient())
-					{
-						webup.UploadFile(message, savefile);
-						//webup.UploadData(message, cnt);
-					}
-					File.Delete(savefile);
-					Player.SendMessage(p, "Saved copy to " + message + "/" + savefile);
-				}
-				catch (Exception e) { Player.SendMessage(p, "Failed to upload " + message + e); }
-				return;
-			}
-
 			if (Player.ValidName(message))
 			{
 				if (!Directory.Exists("extra/savecopy")) Directory.CreateDirectory("extra/savecopy");
@@ -272,34 +233,6 @@ namespace MCGalaxy.Commands
 
 		void Loadcopy(Player p, string message)
 		{
-			if (message.EndsWith("#"))
-			{
-				if (!p.group.CanExecute(Command.all.Find("copyloadnet")))
-				{
-					Player.SendMessage(p, "You are not allowed to load from network locations.");
-					return;
-				}
-				try
-				{
-					p.CopyBuffer.Clear();
-					message = message.Remove(message.Length - 1);
-					if (!message.StartsWith("http://", true, System.Globalization.CultureInfo.CurrentCulture)) message = "http://" + message;
-					using (System.Net.WebClient webget = new System.Net.WebClient())
-					{
-						byte[] cnt = webget.DownloadData(message);
-						cnt = cnt.Decompress();
-						int k = 0;
-						for (int i = 0; i < cnt.Length / 7; i++)
-						{
-							p.CopyBuffer.Add(new Player.CopyPos() { x = BitConverter.ToUInt16(cnt, 0 + k), y = BitConverter.ToUInt16(cnt, 2 + k), z = BitConverter.ToUInt16(cnt, 4 + k), type = cnt[6 + k] });
-							k = k + 7;
-						}
-						Player.SendMessage(p, "Loaded copy from " + message);
-					}
-				}
-				catch { Player.SendMessage(p, "Failed to load copy from " + message); }
-				return;
-			}
 			if (!File.Exists("extra/savecopy/" + p.name + "/" + message + ".cpy")) { Player.SendMessage(p, "No such copy exists"); return; }
 			p.CopyBuffer.Clear();
 			using (FileStream fs = new FileStream("extra/savecopy/" + p.name + "/" + message + ".cpy", FileMode.Open))
@@ -325,47 +258,5 @@ namespace MCGalaxy.Commands
 			p.CopyBuffer.Add(pos);
 		}
 		struct CatchPos { public ushort x, y, z; public int type; public List<byte> ignoreTypes; }
-	}
-
-	public class CmdCopyLoadNet : Command
-	{
-		public override string name { get { return "copyloadnet"; } }
-		public override string shortcut { get { return ""; } }
-		public override string type { get { return CommandTypes.Building; } }
-		public override bool museumUsable { get { return false; } }
-		public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-		public CmdCopyLoadNet() { }
-
-		public override void Use(Player p, string message)
-		{
-			Command.all.Find("copy").Use(p, "load " + message + "#");
-		}
-
-		public override void Help(Player p)
-		{
-			Player.SendMessage(p, "/copyloadnet - Loads a copy from network location. Example below:");
-			Player.SendMessage(p, "/copyloadnet servername.com/directory/savename.cpy");
-		}
-	}
-
-	public class CmdCopySaveNet : Command
-	{
-		public override string name { get { return "copysavenet"; } }
-		public override string shortcut { get { return ""; } }
-		public override string type { get { return CommandTypes.Building; } }
-		public override bool museumUsable { get { return false; } }
-		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-		public CmdCopySaveNet() { }
-
-		public override void Use(Player p, string message)
-		{
-			Command.all.Find("copy").Use(p, "save " + message + "#");
-		}
-
-		public override void Help(Player p)
-		{
-			Player.SendMessage(p, "/copysavenet - Saves a copy to a network location. Example below:");
-			Player.SendMessage(p, "/copysavenet servername.com/directory/");
-		}
 	}
 }
