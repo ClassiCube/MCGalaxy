@@ -63,8 +63,10 @@ namespace MCGalaxy.Commands
 				}
 				
 				FileInfo[] fin = new DirectoryInfo(dir).GetFiles();
-				for (int i = 0; i < fin.Length; i++)
-					Player.SendMessage(p, fin[i].Name.Replace(".cpy", ""));
+				for (int i = 0; i < fin.Length; i++) {
+					string name = fin[i].Name.Replace(".cpy", "").Replace(".cpb", "");
+					Player.SendMessage(p, name);
+				}
 			} else {
 				HandleOther(p, opt, parts);
 			}
@@ -168,8 +170,8 @@ namespace MCGalaxy.Commands
 			p.copyoffset[2] = (p.copystart[2] - z);
 		}
 
-		void SaveCopy(Player p, string message) {
-			if (!Player.ValidName(message)) {
+		void SaveCopy(Player p, string file) {
+			if (!Player.ValidName(file)) {
 				Player.SendMessage(p, "Bad file name");
 				return;
 			}
@@ -183,30 +185,36 @@ namespace MCGalaxy.Commands
 				return;
 			}
 			
-			string path = "extra/savecopy/" + p.name + "/" + message + ".cpy";
+			string path = "extra/savecopy/" + p.name + "/" + file + ".cpb";
 			using (FileStream fs = new FileStream(path, FileMode.Create))
 				using(GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
 			{
 				p.CopyBuffer.SaveTo(gs);
 			}
-			Player.SendMessage(p, "Saved copy as " + message);
+			Player.SendMessage(p, "Saved copy as " + file);
 		}
 
-		void LoadCopy(Player p, string message) {
-			
-			string path = "extra/savecopy/" + p.name + "/" + message + ".cpy";
-			if (!File.Exists(path)) {
+		void LoadCopy(Player p, string file) {		
+			string path = "extra/savecopy/" + p.name + "/" + file;
+			bool existsNew = File.Exists(path + ".cpb");
+			bool existsOld = File.Exists(path + ".cpy");
+			if (!existsNew && !existsOld) {
 				Player.SendMessage(p, "No such copy exists");
 				return;
 			}
+			path = existsNew ? path + ".cpb" : path + ".cpy";
+
 			using (FileStream fs = new FileStream(path, FileMode.Open))
 				using(GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
 			{
 				CopyState state = new CopyState(0, 0, 0, 0, 0, 0, null);
-				state.LoadFrom(gs);
+				if (existsNew)
+					state.LoadFrom(gs);
+				else
+					state.LoadFromOld(gs, fs);
 				p.CopyBuffer = state;
 			}
-			Player.SendMessage(p, "Loaded copy as " + message);
+			Player.SendMessage(p, "Loaded copy as " + file);
 		}
 		
 		struct CatchPos { public ushort x, y, z; public int type; public List<byte> ignoreTypes; }
