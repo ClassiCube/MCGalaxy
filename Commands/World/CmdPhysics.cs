@@ -71,8 +71,8 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p) {
             Player.SendMessage(p, "%a/physics [map] [0/1/2/3/4/5]");
-            Player.SendMessage(p, "%ePauses physics on the given map for the specified number of seconds.");
-            Player.SendMessage(p, "%e  If no map name is given, uses the map you are currently in.");
+            Player.SendMessage(p, "%eSets the physics state for the given map to the specified state.");
+            Player.SendMessage(p, "%e  If no map name is given, sets physics state for the current map.");
             Player.SendMessage(p, "%e  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only"); 
         }
     }

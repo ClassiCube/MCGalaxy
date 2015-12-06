@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands
         public override void Help(Player p) {
             Player.SendMessage(p, "%a/pause [map] [seconds]");
             Player.SendMessage(p, "%ePauses physics on the given map for the specified number of seconds.");
-            Player.SendMessage(p, "%e  If no map name is given, pauses physics on the map you are currently in.");
+            Player.SendMessage(p, "%e  If no map name is given, pauses physics on the current map.");
             Player.SendMessage(p, "%e  If no or non-numerical seconds are given, pauses physics for 30 seconds.");    
         }
     }
