@@ -33,7 +33,8 @@ namespace MCGalaxy.Commands
                 foreach (Level l in Server.levels)
                 {
                     if (l.physics > 0)
-                        Player.SendMessage(p, "&5" + l.name + Server.DefaultColor + " has physics at &b" + l.physics + Server.DefaultColor + ". &cChecks: " + l.lastCheck + "; Updates: " + l.lastUpdate);
+                        Player.SendMessage(p, "&5" + l.name + Server.DefaultColor + " has physics at &b" + l.physics + 
+                    	                   Server.DefaultColor + ". &cChecks: " + l.lastCheck + "; Updates: " + l.lastUpdate);
                 }
                 return;
             }
