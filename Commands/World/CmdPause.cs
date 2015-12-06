@@ -46,8 +46,7 @@ namespace MCGalaxy.Commands
             }
 
             if (lvl == null) {
-                Player.SendMessage(p, "Could not find entered level.");
-                return;
+                Player.SendMessage(p, "Could not find entered level."); return;
             }
             
             bool enabled = lvl.physPause;
