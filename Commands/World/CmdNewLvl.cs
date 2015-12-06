@@ -16,12 +16,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdNewLvl : Command
     {
         public override string name { get { return "newlvl"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "gen"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -36,6 +38,7 @@ namespace MCGalaxy.Commands
                 MapGen.PrintValidFormats(p); return;
             }
 
+            ushort x, y, z;
             string name = args[0].ToLower();
             if (!UInt16.TryParse(args[1], out x) || !UInt16.TryParse(args[2], out y) || !UInt16.TryParse(args[3], out z)) {
                 Player.SendMessage(p, "Invalid dimensions."); return;
