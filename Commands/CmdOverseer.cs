@@ -408,22 +408,15 @@ namespace MCGalaxy.Commands
                                         p.SendMessage("You have reached the limit for your overseer maps.."); return;
                                     }
                                     Player.SendMessage(p, Server.DefaultColor + "Creating a new map for you.." + p.name.ToLower() + i.ToString());
-                                    string mType;
-                                    if (par2.ToUpper() == "" || par2.ToUpper() == "DESERT" || par2.ToUpper() == "FLAT" || par2.ToUpper() == "FOREST" || par2.ToUpper() == "ISLAND" || par2.ToUpper() == "MOUNTAINS" || par2.ToUpper() == "OCEAN" || par2.ToUpper() == "PIXEL" || par2.ToUpper() == "EMPTY" || par2.ToUpper() == "SPACE")
+                                    if (par2 == "" || MapGen.IsRecognisedFormat(par2))
                                     {
-                                        if (par2 != "")
-                                        {
-                                            mType = par2;
-                                        }
-                                        else
-                                        {
-                                            mType = "flat";
-                                        }
+                                    	string mType = par2 == "" ? "flat" : par2;
                                         Command.all.Find("newlvl").Use(p, p.name.ToLower() + i.ToString() + " " + mSize(p) + " " + mType);
                                     }
                                     else
                                     {
-                                        Player.SendMessage(p, "A wrong map type was specified. Valid map types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space.");
+                                    	Player.SendMessage(p, "A wrong map type was specified.");
+                                    	MapGen.PrintValidFormats(p);
                                     }
                                     return;
                                 }
@@ -433,23 +426,16 @@ namespace MCGalaxy.Commands
 					}
 					else
 					{
-						string mType;
-						if (par2.ToUpper() == "" || par2.ToUpper() == "DESERT" || par2.ToUpper() == "FLAT" || par2.ToUpper() == "FOREST" || par2.ToUpper() == "ISLAND" || par2.ToUpper() == "MOUNTAINS" || par2.ToUpper() == "OCEAN" || par2.ToUpper() == "PIXEL" || par2.ToUpper() == "EMPTY" || par2.ToUpper() == "SPACE")
+						if (par2 == "" || MapGen.IsRecognisedFormat(par2))
 						{
-							if (par2 != "")
-							{
-								mType = par2;
-							}
-							else
-							{
-								mType = "flat";
-							}
+							string mType = par2 == "" ? "flat" : par2;
 							Player.SendMessage(p, "Creating your map, " + p.color + p.name);
 							Command.all.Find("newlvl").Use(p, p.name.ToLower() + " " + mSize(p) + " " + mType);
 						}
 						else
 						{
-							Player.SendMessage(p, "A wrong map type was specified. Valid map types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space.");
+							 Player.SendMessage(p, "A wrong map type was specified.");
+							 MapGen.PrintValidFormats(p);
 						}
 					}
 

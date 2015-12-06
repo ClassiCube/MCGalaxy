@@ -429,6 +429,7 @@
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
+    <Compile Include="Levels\MapGen.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
     <Compile Include="Levels\Physics\DoorPhysics.cs" />
@@ -574,7 +575,7 @@
     <Compile Include="Player\Group.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Server\Extra\Heart.cs" />
-    <Compile Include="Levels\MapGenerator.cs" />
+    <Compile Include="Levels\RealisticMapGen.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\PlayerBot.cs" />
