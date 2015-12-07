@@ -41,18 +41,14 @@ namespace MCGalaxy.Commands
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte block = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, block);
+            RevertAndClearState(p, x, y, z);
             Position bp;
             bp.x = x; bp.y = y; bp.z = z; bp.type = type; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte block = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, block);
+            RevertAndClearState(p, x, y, z);
             Position cpos = (Position)p.blockchangeObject;
             unchecked { if (cpos.type != (byte)-1) { type = cpos.type; } }
 

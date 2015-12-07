@@ -19,9 +19,7 @@ namespace MCGalaxy.Commands
 
         private void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);
             p.centerstart[0] = x;
             p.centerstart[1] = y;
             p.centerstart[2] = z;
@@ -30,9 +28,7 @@ namespace MCGalaxy.Commands
         }
         private void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);
             p.centerend[0] = x;
             p.centerend[1] = y;
             p.centerend[2] = z;

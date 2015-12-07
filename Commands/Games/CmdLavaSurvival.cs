@@ -366,8 +366,7 @@ namespace MCGalaxy.Commands
 
 		public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
 		{
-			p.ClearBlockchange();
-			p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 
 			if (cpos.mode == 2)
@@ -388,8 +387,7 @@ namespace MCGalaxy.Commands
 
 		public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
 		{
-			p.ClearBlockchange();
-			p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 
 			if (cpos.mode == 2)

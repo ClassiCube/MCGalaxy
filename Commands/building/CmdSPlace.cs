@@ -68,9 +68,7 @@ namespace MCGalaxy.Commands
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
@@ -78,9 +76,7 @@ namespace MCGalaxy.Commands
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
         {
             type = p.bindings[type];
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
             if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z))
@@ -100,7 +96,7 @@ namespace MCGalaxy.Commands
                 else
                 {
                     p.level.Blockchange(p, (ushort)(cpos.x - (distance - 1)), cpos.y, cpos.z, blocktype);
-                    p.level.Blockchange(p, cpos.x, cpos.y, cpos.z, b = blocktype);
+                    p.level.Blockchange(p, cpos.x, cpos.y, cpos.z, blocktype);
                     if (interval > 0)
                     {
                         for (ushort offset = interval; cpos.x - (distance - 1) < cpos.x - offset; offset += interval)

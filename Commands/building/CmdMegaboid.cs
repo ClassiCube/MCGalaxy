@@ -86,9 +86,7 @@ namespace MCGalaxy.Commands
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
@@ -97,9 +95,7 @@ namespace MCGalaxy.Commands
         {
             System.Timers.Timer megaTimer = new System.Timers.Timer(1);
 
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             unchecked { if (cpos.type != (byte)-1) type = cpos.type; else type = p.bindings[type]; }
             List<Pos> buffer = new List<Pos>();

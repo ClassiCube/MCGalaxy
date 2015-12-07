@@ -50,8 +50,7 @@ namespace MCGalaxy.Commands
 
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+            RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += Blockchange2;
@@ -59,8 +58,7 @@ namespace MCGalaxy.Commands
 
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+            RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             string path = @Server.backupLocation + "/" + p.level.name + "/" + cpos.backup + "/" + p.level.name + ".lvl";
             

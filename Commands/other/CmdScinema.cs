@@ -71,14 +71,8 @@ namespace MCGalaxy.Commands
 
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            //com(p, "get the type of the changed block");
-            byte b = p.level.GetTile(x, y, z);
-            //com(p, "undo the change2");
-            p.SendBlockchange(x, y, z, b);
-            //com(p, "blockundone making Catchpos bp");
+            RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
-            //com(p, "copy the coordinates");
             p.copystart[0] = x;
             p.copystart[1] = y;
             p.copystart[2] = z;
@@ -96,14 +90,8 @@ namespace MCGalaxy.Commands
 
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            //com(p, "get the type of the changed block");
-            byte b = p.level.GetTile(x, y, z);
-            //com(p, "undo the change");
-            p.SendBlockchange(x, y, z, b);
-            //getting the startpos of copy stored in blockchangeobject
+            RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-
             List<CopyPos> CBuffer = new List<CopyPos>();
 
             CBuffer.Clear();
@@ -114,7 +102,7 @@ namespace MCGalaxy.Commands
                 {
                     for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                     {
-                        b = p.level.GetTile(xx, yy, zz);
+                        byte b = p.level.GetTile(xx, yy, zz);
                         BufferAdd(p, (ushort)(xx - cpos.x), (ushort)(yy - cpos.y), (ushort)(zz - cpos.z), b, CBuffer);
                     }
                 }

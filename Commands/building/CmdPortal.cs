@@ -107,9 +107,7 @@ namespace MCGalaxy.Commands
         }
         public void ExitChange(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);
             portalPos bp = (portalPos)p.blockchangeObject;
 
             foreach (portPos pos in bp.port)

@@ -320,9 +320,7 @@ namespace MCGalaxy.Commands
 			int height = p.BcVar[0];
 			int radius = p.BcVar[1];
 
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
-			p.ClearBlockchange();
+			RevertAndClearState(p, x, y, z);
 			Util.SCOGenerator.Cone(p, x, y, z, height, radius, type);
 		}
 		public void BlockchangeHCone(Player p, ushort x, ushort y, ushort z, byte type)
@@ -330,9 +328,7 @@ namespace MCGalaxy.Commands
 			int height = p.BcVar[0];
 			int radius = p.BcVar[1];
 
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
-			p.ClearBlockchange();
+			RevertAndClearState(p, x, y, z);
 			Util.SCOGenerator.HCone(p, x, y, z, height, radius, type);
 		}
 		public void BlockchangeICone(Player p, ushort x, ushort y, ushort z, byte type)
@@ -340,9 +336,7 @@ namespace MCGalaxy.Commands
 			int height = p.BcVar[0];
 			int radius = p.BcVar[1];
 
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
-			p.ClearBlockchange();
+			RevertAndClearState(p, x, y, z);
 			Util.SCOGenerator.ICone(p, x, y, z, height, radius, type);
 		}
 		public void BlockchangeHICone(Player p, ushort x, ushort y, ushort z, byte type)
@@ -350,9 +344,7 @@ namespace MCGalaxy.Commands
 			int height = p.BcVar[0];
 			int radius = p.BcVar[1];
 
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
-			p.ClearBlockchange();
+			RevertAndClearState(p, x, y, z);
 			Util.SCOGenerator.HICone(p, x, y, z, height, radius, type);
 		}
 		#endregion
@@ -362,9 +354,7 @@ namespace MCGalaxy.Commands
 			int height = p.BcVar[0];
 			int radius = p.BcVar[1];
 
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
-			p.ClearBlockchange();
+			RevertAndClearState(p, x, y, z);
 			Util.SCOGenerator.Pyramid(p, x, y, z, height, radius, type);
 		}
 		public void BlockchangeHPyramid(Player p, ushort x, ushort y, ushort z, byte type)
@@ -404,9 +394,7 @@ namespace MCGalaxy.Commands
 			int height = p.BcVar[0];
 			int radius = p.BcVar[1];
 
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
-			p.ClearBlockchange();
+			RevertAndClearState(p, x, y, z);
 			Util.SCOGenerator.Sphere(p, x, y, z, radius, type);
 		}
 		public void BlockchangeHSphere(Player p, ushort x, ushort y, ushort z, byte type)
@@ -414,9 +402,7 @@ namespace MCGalaxy.Commands
 			int height = p.BcVar[0];
 			int radius = p.BcVar[1];
 
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
-			p.ClearBlockchange();
+			RevertAndClearState(p, x, y, z);
 			Util.SCOGenerator.HSphere(p, x, y, z, radius, type);
 		}
 		#endregion
@@ -426,9 +412,7 @@ namespace MCGalaxy.Commands
 			int height = p.BcVar[0];
 			int radius = p.BcVar[1];
 
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
-			p.ClearBlockchange();
+			RevertAndClearState(p, x, y, z);
 			Util.SCOGenerator.Volcano(p, x, y, z, height, radius);
 		}
 		#endregion

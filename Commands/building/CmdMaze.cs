@@ -49,17 +49,13 @@ namespace MCGalaxy.Commands
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);;
             p.blockchangeObject = new CatchPos(x, y, z);
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
         {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+            RevertAndClearState(p, x, y, z);
             Player.SendMessage(p, "Generating maze... this could take a while");
             CatchPos first = (CatchPos)p.blockchangeObject;
             int width = Math.Max(x, first.X) - Math.Min(x, first.X);
