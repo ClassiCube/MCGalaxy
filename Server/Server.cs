@@ -74,7 +74,7 @@ namespace MCGalaxy
         public static WebServer APIServer;
         public static WebServer InfoServer;
 
-        public static List<BlockDefinitions> Blocks = new List<BlockDefinitions>();
+        public static List<BlockDefinitions> GlobalDefinitions = new List<BlockDefinitions>();
         public static int speedPhysics = 250;
 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
@@ -1105,7 +1105,7 @@ namespace MCGalaxy
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Alias.Load();
-            Server.Blocks = BlockDefinitionsJSON.Load("blocks.json");
+            Server.GlobalDefinitions = BlockDefinitionsJSON.Load("blocks.json");
         }
 
         public static void Setup()

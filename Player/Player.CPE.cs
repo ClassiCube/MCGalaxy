@@ -176,7 +176,7 @@ namespace MCGalaxy
                         try
                         {
 
-                            foreach (BlockDefinitions bd in Server.Blocks)
+                            foreach (BlockDefinitions bd in Server.GlobalDefinitions)
                             {
                                 SendBlockDefinitions(bd);
                                 SendSetBlockPermission(bd.ID, 1, 1);
