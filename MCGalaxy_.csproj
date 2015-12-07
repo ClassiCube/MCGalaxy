@@ -426,6 +426,7 @@
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
     <Compile Include="Levels\Physics\DoorPhysics.cs" />
+    <Compile Include="Levels\Physics\ExtraInfoPhysics.cs" />
     <Compile Include="Levels\Physics\FinitePhysics.cs" />
     <Compile Include="Levels\Physics\FirePhysics.cs" />
     <Compile Include="Levels\Physics\HunterPhysics.cs" />

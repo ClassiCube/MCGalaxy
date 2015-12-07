@@ -47,11 +47,8 @@ namespace MCGalaxy.Commands
                         switch (s)
                         {
                             case "drop":
-                            case "explode":
                             case "dissipate":
-                            case "finite":
                             case "wait":
-                            case "rainbow":
                                 break;
                             case "revert":
                                 if (skip) break;
@@ -96,7 +93,7 @@ namespace MCGalaxy.Commands
         {
             Player.SendMessage(p, "/restartphysics ([type] [num]) ([type2] [num2]) (...) - Restarts every physics block in an area");
             Player.SendMessage(p, "[type] will set custom physics for selected blocks");
-            Player.SendMessage(p, "Possible [types]: drop, explode, dissipate, finite, wait, rainbow, revert");
+            Player.SendMessage(p, "Possible [types]: drop, dissipate, wait, revert");
             Player.SendMessage(p, "/rp revert takes block names");
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
