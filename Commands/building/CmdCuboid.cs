@@ -440,15 +440,13 @@ namespace MCGalaxy.Commands
                     {
                         BlockQueue.Addblock(p, pos.x, pos.y, pos.z, type);
                     });
-                } else
-                {
+                } else {
                     buffer.ForEach(delegate(Pos pos)
                     {
                         p.level.Blockchange(p, pos.x, pos.y, pos.z, type);
                     });
                 }
-            } else
-            {
+            } else {
                 p.SendMessage("You tried to cuboid over 10000 blocks, reloading map for faster cuboid.");
                 buffer.ForEach(delegate(Pos pos)
                    {

@@ -418,7 +418,10 @@
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\CmdUnlock.cs" />
+    <Compile Include="Drawing\Brush.cs" />
     <Compile Include="Drawing\CopyState.cs" />
+    <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\DrawOp.cs" />
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
@@ -777,6 +780,7 @@
     <Folder Include="Commands\Chat" />
     <Folder Include="Commands\World" />
     <Folder Include="Commands\Other" />
+    <Folder Include="Drawing\DrawOps" />
     <Folder Include="Levels\IO" />
     <Folder Include="Levels\Physics" />
     <Folder Include="Plugins\OpenClassicEvents\" />
