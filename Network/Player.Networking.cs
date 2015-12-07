@@ -74,7 +74,7 @@ namespace MCGalaxy {
             }
         }
         
-        public bool extension = false;
+        public bool hasCpe = false;
         public string appName;
         public int extensionCount;
         public List<string> extensions = new List<string>();
@@ -142,37 +142,21 @@ namespace MCGalaxy {
             for ( int i = 0; i < send.Length; i++ ) {
                 buffer[i + 1] = send[i];
             }
-            if (!(id == 16 || id == 17)) // must send ExtEntry and ExtInfo packets synchronously.
-            {
-                try
-                {
-                    socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate(IAsyncResult result) { }, null);
-                    buffer = null;
-                }
-                catch (SocketException e)
-                {
-                    buffer = null;
-                    Disconnect();
-                    #if DEBUG
-                    Server.ErrorLog(e);
-                    #endif
-                }
-            }
-            else
-            {
-                try
-                {
+            
+            try {
+                // must send ExtEntry and ExtInfo packets synchronously.
+                if (id == Opcode.CpeExtEntry || id == Opcode.CpeExtInfo)
                     socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-                    buffer = null;
-                }
-                catch (SocketException e)
-                {
-                    buffer = null;
-                    Disconnect();
-                    #if DEBUG
-                    Server.ErrorLog(e);
-                    #endif
-                }
+                else
+                    socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate(IAsyncResult result) { }, null);
+                
+                buffer = null;
+            } catch (SocketException e) {
+                buffer = null;
+                Disconnect();
+                #if DEBUG
+                Server.ErrorLog(e);
+                #endif
             }
         }
 
@@ -391,7 +375,7 @@ namespace MCGalaxy {
 
                 for (int i = 0; i < level.blocks.Length; ++i)
                 {
-                    if (extension)
+                    if (hasCpe)
                     {
                         buffer[4 + i] = (byte)Block.Convert(level.blocks[i]);
                     }
@@ -425,76 +409,28 @@ namespace MCGalaxy {
                 HTNO((short)level.Length).CopyTo(buffer, 4);
                 SendRaw(Opcode.LevelFinalise, buffer);
                 Loading = false;
+                
                 if (HasExtension("EnvWeatherType"))
-                {
                     SendSetMapWeather(level.weather);
-                }
                 if (HasExtension("EnvColors"))
-                {
-                    SendEnvColors(0, -1, -1, -1);
-                    SendEnvColors(1, -1, -1, -1);
-                    SendEnvColors(2, -1, -1, -1);
-                    SendEnvColors(3, -1, -1, -1);
-                    SendEnvColors(4, -1, -1, -1);
-                    System.Drawing.Color col;
-                    try
-                    {
-                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.SkyColor.ToUpper());
-                        SendEnvColors(0, col.R, col.G, col.B);
-                    }
-                    catch { }
-                    try
-                    {
-                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.CloudColor.ToUpper());
-                        SendEnvColors(1, col.R, col.G, col.B);
-                    }
-                    catch { }
-                    try
-                    {
-                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.FogColor.ToUpper());
-                        SendEnvColors(2, col.R, col.G, col.B);
-                    }
-                    catch { }
-                    try
-                    {
-                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.ShadowColor.ToUpper());
-                        SendEnvColors(3, col.R, col.G, col.B);
-                    }
-                    catch { }
-                    try
-                    {
-                        col = System.Drawing.ColorTranslator.FromHtml("#" + level.LightColor.ToUpper());
-                        SendEnvColors(4, col.R, col.G, col.B);
-                    }
-                    catch { }
-                }
+                	SendCurrentMapAppearance();
                 if (HasExtension("EnvMapAppearance"))
-                {
-                    if (level.textureUrl == "")
-                    {
-                        SendSetMapAppearance(Server.defaultTextureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
-                    }
-                    else
-                    {
-                        SendSetMapAppearance(level.textureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
-                    }
-                }
+                	SendCurrentMapAppearance();
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
-            }
-            catch ( Exception ex ) {
+            } catch ( Exception ex ) {
                 Command.all.Find("goto").Use(this, Server.mainLevel.name);
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
                 Server.ErrorLog(ex);
-            }
-            finally {
-                //if (derp) SendMessage("Something went derp when sending the map data, you should return to the main level.");
+            } finally {
                 //DateTime start = DateTime.Now;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 //Server.s.Log((DateTime.Now - start).TotalMilliseconds.ToString()); // We dont want random numbers showing up do we?
             }
         }
+        
+        
         public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty)
         {
             byte[] buffer = new byte[73]; buffer[0] = id;
@@ -506,20 +442,7 @@ namespace MCGalaxy {
             SendRaw(Opcode.AddEntity, buffer);
 
             if (HasExtension("ChangeModel"))
-            {
-                Player.players.ForEach(
-                    p =>
-                    {
-                        if (p.level == this.level)
-                            if (p == this) unchecked { SendChangeModel((byte)-1, model); }
-                        else
-                        {
-                            SendChangeModel(p.id, p.model);
-                            if (p.HasExtension("ChangeModel"))
-                                p.SendChangeModel(this.id, model);
-                        }
-                    });
-            }
+            	UpdateModels();
         }
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             if ( x < 0 ) x = 32;
@@ -572,7 +495,7 @@ namespace MCGalaxy {
             HTNO(z).CopyTo(buffer, 4);
             if(!skip)
             {
-                if (extension == true)
+                if (hasCpe == true)
                 {
                     buffer[6] = (byte)Block.Convert(type);
                 }
@@ -583,18 +506,22 @@ namespace MCGalaxy {
             }
             SendRaw(Opcode.SetBlock , buffer);
         }
+        
         void SendKick(string message) { 
         	SendRaw(Opcode.Kick, StringFormat(message, 64)); 
         }
+        
         void SendPing() { 
         	SendRaw(Opcode.Ping);
         }
+        
         void SendExtInfo( byte count ) {
             byte[] buffer = new byte[66];
             StringFormat( "MCGalaxy " + Server.Version, 64 ).CopyTo( buffer, 0 );
             HTNO( count ).CopyTo( buffer, 64 );
             SendRaw( Opcode.CpeExtInfo, buffer );
         }
+        
         void SendExtEntry( string name, int version ) {
             byte[] version_ = BitConverter.GetBytes(version);
             if (BitConverter.IsLittleEndian)
@@ -604,22 +531,26 @@ namespace MCGalaxy {
             version_.CopyTo(buffer, 64);
             SendRaw( Opcode.CpeExtEntry, buffer );
         }
+        
         void SendClickDistance( short distance ) {
             byte[] buffer = new byte[2];
             HTNO( distance ).CopyTo( buffer, 0 );
             SendRaw( Opcode.CpeSetClickDistance, buffer );
         }
+        
         void SendCustomBlockSupportLevel(byte level) {
             byte[] buffer = new byte[1];
             buffer[0] = level;
             SendRaw( Opcode.CpeCustomBlockSupportLevel, buffer );
         }
+        
         void SendHoldThis( byte type, byte locked ) { // if locked is on 1, then the player can't change their selected block.
             byte[] buffer = new byte[2];
             buffer[0] = type;
             buffer[1] = locked;
             SendRaw( Opcode.CpeHoldThis, buffer );
         }
+        
         void SendTextHotKey( string label, string command, int keycode, byte mods ) {
             byte[] buffer = new byte[133];
             StringFormat( label, 64 ).CopyTo( buffer, 0 );
@@ -628,6 +559,7 @@ namespace MCGalaxy {
             buffer[132] = mods;
             SendRaw( Opcode.CpeSetTextHotkey, buffer );
         }
+        
         public void SendExtAddPlayerName(short id, string name, Group grp, string displayname = "")
         {
             byte[] buffer = new byte[195];
@@ -649,19 +581,22 @@ namespace MCGalaxy {
             StringFormat(displayname, 64).CopyTo(buffer, 65);
             SendRaw( Opcode.CpeExtAddEntity, buffer);
         }
+        
         public void SendDeletePlayerName( byte id ) {
             byte[] buffer = new byte[2];
             HTNO( (short)id ).CopyTo( buffer, 0 );
             SendRaw( Opcode.CpeExtRemovePlayerName, buffer );
         }
-        public void SendEnvColors( byte type, short r, short g, short b ) {
+        
+        public void SendEnvColor( byte type, short r, short g, short b ) {
             byte[] buffer = new byte[7];
             buffer[0] = type;
             HTNO( r ).CopyTo( buffer, 1 );
             HTNO( g ).CopyTo( buffer, 3 );
             HTNO( b ).CopyTo( buffer, 5 );
-            SendRaw( Opcode.CpeEnvColours, buffer );
+            SendRaw( Opcode.CpeEnvColors, buffer );
         }
+        
         public void SendMakeSelection( byte id, string label, short smallx, short smally, short smallz, short bigx, short bigy, short bigz, short r, short g, short b, short opacity ) {
             byte[] buffer = new byte[85];
             buffer[0] = id;
@@ -678,6 +613,7 @@ namespace MCGalaxy {
             HTNO( opacity ).CopyTo( buffer, 83 );
             SendRaw( Opcode.CpeMakeSelection, buffer );
         }
+        
         public void SendDeleteSelection( byte id ) {
             byte[] buffer = new byte[1];
             buffer[0] = id;
@@ -690,12 +626,14 @@ namespace MCGalaxy {
             buffer[2] = candelete;
             SendRaw( Opcode.CpeSetBlockPermission, buffer );
         }
+        
         public void SendChangeModel( byte id, string model ) {
             byte[] buffer = new byte[65];
             buffer[0] = id;
             StringFormat( model, 64 ).CopyTo( buffer, 1 );
             SendRaw( Opcode.CpeChangeModel, buffer );
         }
+        
         public void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, short sidelevel ) {
             byte[] buffer = new byte[68];
             StringFormat( url, 64 ).CopyTo( buffer, 0 );
@@ -711,7 +649,8 @@ namespace MCGalaxy {
             SendRaw( Opcode.CpeEnvWeatherType, buffer );
         }
         
-        void SendHackControl( byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning, byte allowthirdperson, byte allowchangingweather, short maxjumpheight ) {
+        void SendHackControl( byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning, 
+                             byte allowthirdperson, byte allowchangingweather, short maxjumpheight ) {
             byte[] buffer = new byte[7];
             buffer[0] = allowflying;
             buffer[1] = allownoclip;
@@ -723,8 +662,7 @@ namespace MCGalaxy {
             SendRaw( Opcode.CpeHackControl, buffer );
         }
         
-        public void SendBlockDefinitions(BlockDefinitions bd)
-        {
+        public void SendBlockDefinitions(BlockDefinitions bd) {
             byte[] buffer = new byte[79];
             buffer[0] = bd.ID;
             StringFormat(bd.Name, 64).CopyTo(buffer, 1);

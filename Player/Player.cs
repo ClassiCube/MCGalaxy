@@ -875,7 +875,7 @@ namespace MCGalaxy {
                 if (version != Server.version) { Kick("Wrong version!"); return; }
                 if (type == 0x42)
                 {
-                    extension = true;
+                    hasCpe = true;
 
                     SendExtInfo(13);
                     SendExtEntry("ClickDistance", 1);

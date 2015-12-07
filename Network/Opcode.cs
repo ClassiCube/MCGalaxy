@@ -1,7 +1,7 @@
 ﻿/*
     Copyright 2015 MCGalaxy
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -47,7 +47,7 @@ namespace MCGalaxy {
 		public const byte CpeExtAddPlayerName = 22;
 		public const byte CpeExtAddEntity = 23;
 		public const byte CpeExtRemovePlayerName = 24;
-		public const byte CpeEnvColours = 25;
+		public const byte CpeEnvColors = 25;
 		public const byte CpeMakeSelection = 26;
 		public const byte CpeRemoveSelection = 27;
 		public const byte CpeSetBlockPermission = 28;
