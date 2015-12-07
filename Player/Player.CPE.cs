@@ -1,5 +1,23 @@
-
+/*
+    Copyright 2015 MCGalaxy
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
+using System.Drawing;
+
 namespace MCGalaxy
 {
     public partial class Player
@@ -90,42 +108,7 @@ namespace MCGalaxy
                         }
                         break;*/
                     case "EnvColors":
-                        SendEnvColors(0, -1, -1, -1);
-                        SendEnvColors(1, -1, -1, -1);
-                        SendEnvColors(2, -1, -1, -1);
-                        SendEnvColors(3, -1, -1, -1);
-                        SendEnvColors(4, -1, -1, -1);
-                        System.Drawing.Color col;
-                        try
-                        {
-                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.SkyColor.ToUpper());
-                            SendEnvColors(0, col.R, col.G, col.B);
-                        }
-                        catch { }
-                        try
-                        {
-                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.CloudColor.ToUpper());
-                            SendEnvColors(1, col.R, col.G, col.B);
-                        }
-                        catch { }
-                        try
-                        {
-                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.FogColor.ToUpper());
-                            SendEnvColors(2, col.R, col.G, col.B);
-                        }
-                        catch { }
-                        try
-                        {
-                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.ShadowColor.ToUpper());
-                            SendEnvColors(3, col.R, col.G, col.B);
-                        }
-                        catch { }
-                        try
-                        {
-                            col = System.Drawing.ColorTranslator.FromHtml("#" + level.LightColor.ToUpper());
-                            SendEnvColors(4, col.R, col.G, col.B);
-                        }
-                        catch { }
+                        SendCurrentEnvColors();
                         EnvColors = version;
                         break;
                     case "SelectionCuboid":
@@ -135,28 +118,11 @@ namespace MCGalaxy
                         BlockPermissions = version;
                         break;
                     case "ChangeModel":
-                        Player.players.ForEach(p =>
-                        {
-                            if (p.level == this.level)
-                                if (p == this) unchecked { SendChangeModel((byte)-1, model); }
-                                else
-                                {
-                                    SendChangeModel(p.id, p.model);
-                                    if (p.HasExtension("ChangeModel"))
-                                        p.SendChangeModel(this.id, model);
-                                }
-                        });
+                        UpdateModels();
                         ChangeModel = version;
                         break;
                     case "EnvMapAppearance":
-                        if (level.textureUrl == "")
-                        {
-                            SendSetMapAppearance(Server.defaultTextureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
-                        }
-                        else
-                        {
-                            SendSetMapAppearance(level.textureUrl, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
-                        }
+                        SendCurrentMapAppearance();
                         EnvMapAppearance = version;
                         break;
                     case "EnvWeatherType":
@@ -193,12 +159,9 @@ namespace MCGalaxy
             }
         }
 
-        public bool HasExtension(string Extension, int version = 1)
-        {
-            if(!extension)
-            {
+        public bool HasExtension(string Extension, int version = 1) {
+            if(!hasCpe)
                 return false;
-            }
             switch (Extension)
             {
                 case "ClickDistance": return ClickDistance == version;
@@ -218,6 +181,43 @@ namespace MCGalaxy
                 case "BlockDefinitions": return BlockDefinitions == version;
                 case "FullCP437": return FullCP437 == version;
                 default: return false;
+            }
+        }
+        
+        public void UpdateModels() {
+            Player.players.ForEach(
+                p =>
+                {
+                    if (p.level == this.level)
+                        if (p == this) {
+                            SendChangeModel(0xFF, model);
+                        } else {
+                            SendChangeModel(p.id, p.model);
+                            if (p.HasExtension("ChangeModel"))
+                                p.SendChangeModel(this.id, model);
+                    }
+                });
+        }
+        
+        public void SendCurrentMapAppearance() {
+            string url = level.textureUrl == "" ? Server.defaultTextureUrl : level.textureUrl;
+            SendSetMapAppearance(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+        }
+        
+        public void SendCurrentEnvColors() {
+            SendEnvColor(0, level.SkyColor);
+            SendEnvColor(1, level.CloudColor);
+            SendEnvColor(2, level.FogColor);
+            SendEnvColor(3, level.ShadowColor);
+            SendEnvColor(4, level.LightColor);
+        }
+        
+        void SendEnvColor(byte type, string src) {
+            try {
+                Color col = System.Drawing.ColorTranslator.FromHtml("#" + src.ToUpper());
+                SendEnvColor(type, col.R, col.G, col.B);
+            } catch { 
+                SendEnvColor(type, -1, -1, -1);
             }
         }
     }

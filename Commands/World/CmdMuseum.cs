@@ -65,34 +65,8 @@ namespace MCGalaxy.Commands
 
 					p.level = level;
 					p.SendMotd();
-
-					p.SendRaw(2);
-					byte[] buffer = new byte[level.blocks.Length + 4];
-					BitConverter.GetBytes(IPAddress.HostToNetworkOrder(level.blocks.Length)).CopyTo(buffer, 0);
-					//ushort xx; ushort yy; ushort zz;
-
-					for (int i = 0; i < level.blocks.Length; ++i)
-						buffer[4 + i] = Block.Convert(level.blocks[i]);
-
-					buffer = buffer.GZip();
-					int number = (int)Math.Ceiling(((double)buffer.Length) / 1024);
-					for (int i = 1; buffer.Length > 0; ++i)
-					{
-						short length = (short)Math.Min(buffer.Length, 1024);
-						byte[] send = new byte[1027];
-						Player.HTNO(length).CopyTo(send, 0);
-						Buffer.BlockCopy(buffer, 0, send, 2, length);
-						byte[] tempbuffer = new byte[buffer.Length - length];
-						Buffer.BlockCopy(buffer, length, tempbuffer, 0, buffer.Length - length);
-						buffer = tempbuffer;
-						send[1026] = (byte)(i * 100 / number);
-						p.SendRaw(3, send);
-						Thread.Sleep(10);
-					} buffer = new byte[6];
-					Player.HTNO((short)level.Width).CopyTo(buffer, 0);
-					Player.HTNO((short)level.Height).CopyTo(buffer, 2);
-					Player.HTNO((short)level.Length).CopyTo(buffer, 4);
-					p.SendRaw(4, buffer);
+					if (!p.SendRawMap(level))
+						return;
 
 					ushort x = (ushort)((0.5 + level.spawnx) * 32);
 					ushort y = (ushort)((1 + level.spawny) * 32);

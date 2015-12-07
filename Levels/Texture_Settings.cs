@@ -66,20 +66,12 @@ namespace MCGalaxy.Levels.Textures
             if (p.level == l && p.UsingWom)
             {
                 if (text == "")
-                {
-                    Player.StringFormat(detail, 64).CopyTo(buffer, 1);
-                    p.SendRaw(13, buffer);
-                }
+                    NetUtils.WriteAscii(detail, buffer, 1);
                 else if (!text.StartsWith("^"))
-                {
-                    Player.StringFormat("^detail.user=" + text, 64).CopyTo(buffer, 1);
-                    p.SendRaw(13, buffer);
-                }
+                    NetUtils.WriteAscii("^detail.user=" + text, buffer, 1);
                 else
-                {
-                    Player.StringFormat(text, 64).CopyTo(buffer, 1);
-                    p.SendRaw(13, buffer);
-                }
+                    NetUtils.WriteAscii(text, buffer, 1);
+                p.SendRaw(Opcode.Message, buffer);
             }
             buffer = null;
         }

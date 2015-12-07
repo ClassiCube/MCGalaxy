@@ -155,9 +155,9 @@ namespace MCGalaxy.Commands {
             if (p.HasExtension("EnvColors")) {
                 try {
                     System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml("#" + value.ToUpper());
-                    p.SendEnvColors(envType, col.R, col.G, col.B);
+                    p.SendEnvColor(envType, col.R, col.G, col.B);
                 } catch {
-                    p.SendEnvColors(envType, -1, -1, -1);
+                    p.SendEnvColor(envType, -1, -1, -1);
                 }
             }
         }
