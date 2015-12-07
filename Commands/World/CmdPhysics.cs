@@ -67,12 +67,12 @@ namespace MCGalaxy.Commands
             level.changed = true;
         }
         
-        static string[] states = { "&cOFF", "&aNormal, &aAdvanced, &aHardcore, &aInstant, &4Doors-only" };
+        static string[] states = { "&cOFF", "&aNormal", "&aAdvanced", "&aHardcore", "&aInstant", "&4Doors-only" };
 
         public override void Help(Player p) {
             Player.SendMessage(p, "%a/physics [map] [0/1/2/3/4/5]");
-            Player.SendMessage(p, "%eSets the physics state for the given map to the specified state.");
-            Player.SendMessage(p, "%e  If no map name is given, sets physics state for the current map.");
+            Player.SendMessage(p, "%eSets the physics state for the given map.");
+            Player.SendMessage(p, "%e  If no map name is given, uses the current map.");
             Player.SendMessage(p, "%e  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only"); 
         }
     }

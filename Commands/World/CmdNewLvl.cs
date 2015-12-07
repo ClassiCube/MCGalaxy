@@ -80,9 +80,9 @@ namespace MCGalaxy.Commands
             
             string format = useSeed ? "Level \"{0}\" created with seed \"{1}\"" : "Level \"{0}\" created";
             if (useSeed)
-                Player.GlobalMessage(String.Format(format, name));
+               Player.GlobalMessage(String.Format(format, name, args[5]));
             else
-                Player.GlobalMessage(String.Format(format, name, args[5]));
+                Player.GlobalMessage(String.Format(format, name));
         }
         
         public override void Help(Player p) {

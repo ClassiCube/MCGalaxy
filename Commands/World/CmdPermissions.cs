@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            Level level = args.Length == 1 ? p.level : Level.Find(args[1]);
+            Level level = args.Length == 1 ? p.level : Level.Find(args[0]);
             if (level == null) {
                 Player.SendMessage(p, "There is no level \"" + args[1] + "\" loaded."); return;
             }
@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Not a valid rank"); return;
             }
 
-            if (getter(level) > p.group.Permission) {
+            if (p != null && getter(level) > p.group.Permission) {
                 if (skipNobodyPerm || (getter(level) != LevelPermission.Nobody)) {
                     Player.SendMessage(p, "You cannot change the " + target + " of a level " +
                                        "with a " + target + " higher than your rank.");
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
             Level.SaveSettings(level);
             Server.s.Log(level.name + " " + target + " permission changed to " + newRank + ".");
             Player.GlobalMessageLevel(level, target + " permission changed to " + newRank + ".");
-            if (p.level != level)
+            if (p == null || p.level != level)
                 Player.SendMessage(p, target + " permission changed to " + newRank + " on " + level.name + ".");
         }
     }

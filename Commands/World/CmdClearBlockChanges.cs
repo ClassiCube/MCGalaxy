@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
 			if (p == null && message == "") {
 				Player.SendMessage(p, "You must provide a map name when running the command from console."); return;
 			}
-			Level lvl = p.level;
+			Level lvl = p == null ? null : p.level;
 			if (message != "") {
 				lvl = Level.Find(message.ToLower());
 				if (lvl == null) {

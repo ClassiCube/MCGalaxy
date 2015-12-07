@@ -101,7 +101,7 @@ namespace MCGalaxy {
                         if (y == 0) {
                             blocks[index] = Block.blackrock;
                         } else if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == 0 || y == height - 1) {
-                            blocks[index++] = Block.obsidian;
+                            blocks[index] = Block.obsidian;
                         } else if (x == 1 || x == width - 2 || z == 1 || z == length - 2) {
                             if (random2.Next(1000) != 7) {
                                 index++; continue;
