@@ -26,19 +26,22 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdSetspawn() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message != "") { Help(p); return; }
-            Player.SendMessage(p, "Spawn location changed.");
+        public override void Use(Player p, string message) {
+            if (message != "") { 
+        		Help(p); return; 
+        	}
+        	
+            Player.SendMessage(p, "Spawn location set to your current position.");
             p.level.spawnx = (ushort)(p.pos[0] / 32);
             p.level.spawny = (ushort)(p.pos[1] / 32);
             p.level.spawnz = (ushort)(p.pos[2] / 32);
             p.level.rotx = p.rot[0];
             p.level.roty = 0;
         }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "/setspawn - Set the default spawn location.");
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "%a/setspawn");
+            Player.SendMessage(p, "%eSets the default spawn location of the map you are currently located in.");  
         }
     }
 }

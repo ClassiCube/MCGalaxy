@@ -1,765 +1,55 @@
 /*
-	Copyright 2011 MCGalaxy
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2011 MCGalaxy
+        
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System.Collections.Generic;
 
 namespace MCGalaxy
 {
     internal static class FindReference
     {
-        public static ushort writeLetter(Player p, char c, ushort x, ushort y, ushort z, byte b, int direction)
-        {
+        public static ushort writeLetter(Player p, char c, ushort x, ushort y, ushort z, byte b, int direction) {
             return writeLetter(p.level, p, c, x, y, z, b, direction);
         }
-
-        public static ushort writeLetter(Level l, Player p, char c, ushort x, ushort y, ushort z, byte b, int directionToGo)
+        
+        public static ushort writeLetter(Level l, Player p, char c, ushort x, ushort y, ushort z, byte b, int direction)
         {
-            switch (c)
-            {
-                case 'A':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case 'B':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case 'C':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'D':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case 'E':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'F':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'G':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'H':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'I':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'J':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'K':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'L':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    break;
-                case 'M':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'N':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'O':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case 'P':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case 'Q':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case 'R':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case 'S':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'T':
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'U':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'V':
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'W':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'X':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'Y':
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case 'Z':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-
-
-                case '0':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case '1':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    break;
-                case '2':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '3':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '4':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    break;
-                case '5':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '6':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '7':
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '8':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '9':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-
-
-                case ':':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case '\\':
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    break;
-                case '/':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '.':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    break;
-                case '!':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case ',':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    break;
-                case '\'':
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case '"':
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case ' ':
-                    break;
-
-
-                case '+':
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    break;
-                case '-':
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    break;
-                case '_':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    break;
-                case '=':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case '(':
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case ')':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case '{':
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    break;
-                case '}':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    break;
-                case '<':
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '>':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    break;
-                case '|':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '`':
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case '[':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    break;
-                case ']':
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 0), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    break;
-                case '~':
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 2), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    break;
-                case ';':
-                    placeBlock(l, p, x, (ushort)(y + 4), z, b);
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    placeBlock(l, p, x, (ushort)(y + 3), z, b);
-                    placeBlock(l, p, x, (ushort)(y + 1), z, b);
-                    break;
-                default:
-                    Player.SendMessage(p, "\"" + c + "\" is currently not supported. Space left");
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    if (directionToGo == 0) x++; else if (directionToGo == 1) x--; else if (directionToGo == 2) z++; else z--;
-                    break;
+            if( (int)c >= 256 || letters[(int)c] == null ) {
+                Player.SendMessage(p, "\"" + c + "\" is currently not supported. Space left");
+                if (direction == 0) x += 4; else if (direction == 1) x -= 4;
+                else if (direction == 2) z += 4; else z -= 4;
+            } else {
+                byte[] flags = letters[(int)c];
+                for( int i = 0; i < flags.Length; i++ ) {
+                    byte yUsed = flags[i];
+                    for (int j = 0; j < 8; j++) {
+                        if ((yUsed & (1 << j)) == 0) continue;
+                        
+                        placeBlock(l, p, x, (ushort)(y + j), z, b);
+                    }
+                    
+                    if (direction == 0) x++; else if (direction == 1) x--; 
+                    else if (direction == 2) z++; else z--;
+                }
             }
 
-            if (directionToGo == 0) return (ushort)(x + 2);
-            else if (directionToGo == 1) return (ushort)(x - 2);
-            else if (directionToGo == 2) return (ushort)(z + 2);
-            else return (ushort)(z - 2);
+            if (direction == 0) return (ushort)(x + 1);
+            else if (direction == 1) return (ushort)(x - 1);
+            else if (direction == 2) return (ushort)(z + 1);
+            else return (ushort)(z - 1);
         }
 
         public static List<ColorBlock> popRefCol(byte popType)
@@ -870,13 +160,13 @@ namespace MCGalaxy
                 tempref.g = 163;
                 tempref.b = 163;
                 tempref.type = 43; //doubleStair
-                refCol.Add(tempref);  
+                refCol.Add(tempref);
                 /*
                 tempref.r = 217; Turns out the back layer blocks are handled awfully.
                 tempref.g = 131;
                 tempref.b = 155;
                 tempref.type = 55; //lightPink
-                refCol.Add(tempref);      
+                refCol.Add(tempref);
                 tempref.r = 56;
                 tempref.g = 77;
                 tempref.b = 24;
@@ -896,8 +186,8 @@ namespace MCGalaxy
                 tempref.g = 117;
                 tempref.b = 149;
                 tempref.type = 59; //turk oys
-                refCol.Add(tempref); 
-                */
+                refCol.Add(tempref);
+                 */
                 // BACK LAYER BLOCKS
 
                 tempref.r = 57;
@@ -1194,8 +484,7 @@ namespace MCGalaxy
             return refCol;
         }
 
-        public static void placeBlock(Level l, Player p, ushort x, ushort y, ushort z, byte type)
-        {
+        public static void placeBlock(Level l, Player p, ushort x, ushort y, ushort z, byte type) {
             if (p == null)
                 l.Blockchange(x, y, z, type);
             else
@@ -1205,6 +494,74 @@ namespace MCGalaxy
         public struct ColorBlock
         {
             public ushort x, y, z; public byte type, r, g, b, a;
+        }
+        
+        static byte[][] letters;
+        static FindReference() {
+            letters = new byte[256][];
+            // each set bit indicates to place a block with a y offset equal to the bit index.
+            // e.g. for 0x3, indicates to place a block at 'y = 0' and 'y = 1'
+            letters[(int)'A'] = new byte[] { 0x0F, 0x14, 0x0F };
+            letters[(int)'B'] = new byte[] { 0x1F, 0x15, 0x0A };
+            letters[(int)'C'] = new byte[] { 0x0E, 0x11, 0x11 };
+            letters[(int)'D'] = new byte[] { 0x1F, 0x11, 0x0E };
+            letters[(int)'E'] = new byte[] { 0x1F, 0x15, 0x15 };
+            letters[(int)'F'] = new byte[] { 0x1F, 0x14, 0x14 };
+            letters[(int)'G'] = new byte[] { 0x0E, 0x11, 0x17 };
+            letters[(int)'H'] = new byte[] { 0x1F, 0x04, 0x1F };
+            letters[(int)'I'] = new byte[] { 0x11, 0x1F, 0x11 };
+            letters[(int)'J'] = new byte[] { 0x11, 0x11, 0x1E };
+            letters[(int)'K'] = new byte[] { 0x1F, 0x04, 0x1B };
+            letters[(int)'L'] = new byte[] { 0x1F, 0x01, 0x01 };
+            letters[(int)'M'] = new byte[] { 0x1F, 0x08, 0x04, 0x08, 0x1F };
+            letters[(int)'N'] = new byte[] { 0x1F, 0x08, 0x04, 0x02, 0x1F };
+            letters[(int)'O'] = new byte[] { 0x0E, 0x11, 0x0E };
+            letters[(int)'P'] = new byte[] { 0x1F, 0x14, 0x08 };
+            letters[(int)'Q'] = new byte[] { 0x0E, 0x11, 0x13, 0x0F };
+            letters[(int)'R'] = new byte[] { 0x1F, 0x14, 0x0B };
+            letters[(int)'S'] = new byte[] { 0x09, 0x15, 0x12 };
+            letters[(int)'T'] = new byte[] { 0x10, 0x1F, 0x10 };
+            letters[(int)'U'] = new byte[] { 0x1E, 0x01, 0x1E };
+            letters[(int)'V'] = new byte[] { 0x18, 0x06, 0x01, 0x06, 0x18 };
+            letters[(int)'W'] = new byte[] { 0x1F, 0x02, 0x04, 0x02, 0x1F };
+            letters[(int)'X'] = new byte[] { 0x1B, 0x04, 0x1B };
+            letters[(int)'Y'] = new byte[] { 0x10, 0x08, 0x07, 0x08, 0x10 };
+            letters[(int)'Z'] = new byte[] { 0x11, 0x13, 0x15, 0x19, 0x11 };
+            letters[(int)'0'] = new byte[] { 0x0E, 0x13, 0x15, 0x19, 0x0E };
+            letters[(int)'1'] = new byte[] { 0x09, 0x1F, 0x01 };
+            letters[(int)'2'] = new byte[] { 0x17, 0x15, 0x1D };
+            letters[(int)'3'] = new byte[] { 0x15, 0x15, 0x1F };
+            letters[(int)'4'] = new byte[] { 0x1E, 0x02, 0x07, 0x02 };
+            letters[(int)'5'] = new byte[] { 0x1D, 0x15, 0x17 };
+            letters[(int)'6'] = new byte[] { 0x1F, 0x15, 0x17 };
+            letters[(int)'7'] = new byte[] { 0x10, 0x10, 0x1F };
+            letters[(int)'8'] = new byte[] { 0x1F, 0x15, 0x1F };
+            letters[(int)'9'] = new byte[] { 0x1D, 0x15, 0x1F };
+            letters[(int)':'] = new byte[] { 0x0A };
+            letters[(int)'\\'] = new byte[] { 0x10, 0x08, 0x04, 0x02, 0x01 };
+            letters[(int)'/'] = new byte[] { 0x01, 0x02, 0x04, 0x08, 0x10 };
+            letters[(int)'.'] = new byte[] { 0x01 };
+            letters[(int)'!'] = new byte[] { 0x1D };
+            letters[(int)','] = new byte[] { 0x01, 0x03 };
+            letters[(int)'\''] = new byte[] { 0x18 };
+            letters[(int)'"'] = new byte[] { 0x18, 0x00, 0x18 };
+            letters[(int)' '] = new byte[] { 0x00 };
+            letters[(int)'+'] = new byte[] { 0x04, 0x0E, 0x04 };
+            letters[(int)'-'] = new byte[] { 0x04, 0x04, 0x04 };
+            letters[(int)'_'] = new byte[] { 0x01, 0x01, 0x01, 0x01 };
+            letters[(int)'='] = new byte[] { 0x0A, 0x0A, 0x0A };
+            letters[(int)'('] = new byte[] { 0x0E, 0x11 };
+            letters[(int)')'] = new byte[] { 0x11, 0x0E };
+            letters[(int)'{'] = new byte[] { 0x04, 0x1B, 0x11 };
+            letters[(int)'}'] = new byte[] { 0x11, 0x1B, 0x04 };
+            letters[(int)'<'] = new byte[] { 0x04, 0x0A, 0x11 };
+            letters[(int)'>'] = new byte[] { 0x11, 0x0A, 0x04 };
+            letters[(int)'|'] = new byte[] { 0x1F };
+            letters[(int)'`'] = new byte[] { 0x10, 0x08 };
+            letters[(int)'['] = new byte[] { 0x1F, 0x11 };
+            letters[(int)']'] = new byte[] { 0x11, 0x1F };
+            letters[(int)'~'] = new byte[] { 0x04, 0x08, 0x04, 0x08 };
+            letters[(int)';'] = new byte[] { 0x10, 0x0A };
         }
     }
 }

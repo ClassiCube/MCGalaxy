@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCGalaxy
         
-    Dual-licensed under the	Educational Community License, Version 2.0 and
+    Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 namespace MCGalaxy.Commands
 {
@@ -27,103 +27,61 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdPause() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message == "")
-            {
-                if (p != null)
-                {
-                    message = p.level.name + " 30";
-                }
-                else
-                {
-                    message = Server.mainLevel + " 30";
-                }
-            }
-            int foundNum = 0; Level foundLevel;
-
-            if (message.IndexOf(' ') == -1)
-            {
-                try
-                {
-                    foundNum = int.Parse(message);
-                    if (p != null)
-                    {
-                        foundLevel = p.level;
+        public override void Use(Player p, string message) {
+            int seconds = 30;
+            Level lvl = p != null ? p.level : Server.mainLevel;
+            if (message != "") {
+                string[] parts = message.Split(' ');
+                if (parts.Length == 1) {
+                    if (!int.TryParse(parts[0], out seconds)) {
+                        seconds = 30;
+                        lvl = Level.Find(parts[0].ToLower());
                     }
-                    else
-                    {
-                        foundLevel = Server.mainLevel;
+                } else {
+                    if (!int.TryParse(parts[0], out seconds)) {
+                        Player.SendMessage(p, "You must specify pause time in seconds"); return;
                     }
-                }
-                catch
-                {
-                    foundNum = 30;
-                    foundLevel = Level.Find(message);
-                }
-            }
-            else
-            {
-                try
-                {
-                    foundNum = int.Parse(message.Split(' ')[1]);
-                    foundLevel = Level.Find(message.Split(' ')[0]);
-                }
-                catch
-                {
-                    Player.SendMessage(p, "Invalid input");
-                    return;
+                    lvl = Level.Find(parts[1].ToLower());
                 }
             }
 
-            if (foundLevel == null)
-            {
-                Player.SendMessage(p, "Could not find entered level.");
-                return;
+            if (lvl == null) {
+                Player.SendMessage(p, "Could not find entered level."); return;
             }
-
-            try
-            {
-                if (foundLevel.physPause)
-                {
-                    foundLevel.PhysicsEnabled = true;
-                    foundLevel.physResume = DateTime.Now;
-                    foundLevel.physPause = false;
-                    Player.GlobalMessage("Physics on " + foundLevel.name + " were re-enabled.");
-                }
-                else
-                {
-                    foundLevel.PhysicsEnabled  = false;
-                    foundLevel.physResume = DateTime.Now.AddSeconds(foundNum);
-                    foundLevel.physPause = true;
-                    Player.GlobalMessage("Physics on " + foundLevel.name + " were temporarily disabled.");
-
-                    foundLevel.physTimer.Elapsed += delegate
-                    {
-                        if (DateTime.Now > foundLevel.physResume)
-                        {
-                            foundLevel.physPause = false;
-                            try
-                            {
-                                foundLevel.PhysicsEnabled = true;
-                            }
-                            catch (Exception e) { Server.ErrorLog(e); }
-                            Player.GlobalMessage("Physics on " + foundLevel.name + " were re-enabled.");
-                            foundLevel.physTimer.Stop();
-                            foundLevel.physTimer.Dispose();
-                        }
-                    };
-                    foundLevel.physTimer.Start();
-                }
-            }
-            catch (Exception e)
-            {
-                Server.ErrorLog(e);
+            
+            bool enabled = lvl.physPause;
+            lvl.PhysicsEnabled = enabled;
+            lvl.physPause = !lvl.physPause;
+            lvl.physResume = DateTime.UtcNow;
+            if (enabled) {
+                Player.GlobalMessage("Physics on " + lvl.name + " were re-enabled.");
+            } else {
+                lvl.physResume = lvl.physResume.AddSeconds(seconds);
+                Player.GlobalMessage("Physics on " + lvl.name + " were temporarily disabled.");
+                StartPauseCheck(lvl);
             }
         }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "/pause [map] [amount] - Pauses physics on [map] for 30 seconds");
+        
+        static void StartPauseCheck(Level lvl) {
+            lvl.physTimer.Elapsed += delegate
+            {
+                if (DateTime.UtcNow > lvl.physResume) {
+                    lvl.physPause = false;
+                    lvl.PhysicsEnabled = true;
+                    
+                    Player.GlobalMessage("Physics on " + lvl.name + " were re-enabled.");
+                    lvl.physTimer.Stop();
+                    lvl.physTimer.Dispose();
+                }
+            };
+            lvl.physTimer.Start();
+        }
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "%a/pause [map] [seconds]");
+            Player.SendMessage(p, "%ePauses physics on the given map for the specified number of seconds.");
+            Player.SendMessage(p, "%e  If no map name is given, pauses physics on the current map.");
+            Player.SendMessage(p, "%e  If no or non-numerical seconds are given, pauses physics for 30 seconds.");    
         }
     }
 }

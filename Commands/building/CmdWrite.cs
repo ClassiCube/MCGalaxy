@@ -63,44 +63,18 @@ namespace MCGalaxy.Commands
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
             ushort cur;
-
             if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
 
-            if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z))
-            {
+            if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z)) {
                 cur = cpos.x;
-                if (x > cpos.x)
-                {
-                    foreach (char c in cpos.givenMessage)
-                    {
-                        cur = FindReference.writeLetter(p, c, cur, cpos.y, cpos.z, type, 0);
-                    }
-                }
-                else
-                {
-                    foreach (char c in cpos.givenMessage)
-                    {
-                        cur = FindReference.writeLetter(p, c, cur, cpos.y, cpos.z, type, 1);
-                    }
-                }
-            }
-            else
-            {
+                int dir = x > cpos.x ? 0 : 1;
+                foreach (char c in cpos.givenMessage)
+                	cur = FindReference.writeLetter(p, c, cur, cpos.y, cpos.z, type, 0);
+            } else {
                 cur = cpos.z;
-                if (z > cpos.z)
-                {
-                    foreach (char c in cpos.givenMessage)
-                    {
-                        cur = FindReference.writeLetter(p, c, cpos.x, cpos.y, cur, type, 2);
-                    }
-                }
-                else
-                {
-                    foreach (char c in cpos.givenMessage)
-                    {
-                        cur = FindReference.writeLetter(p, c, cpos.x, cpos.y, cur, type, 3);
-                    }
-                }
+                int dir = z > cpos.z ? 2 : 3;
+                foreach (char c in cpos.givenMessage)
+                	cur = FindReference.writeLetter(p, c, cpos.x, cpos.y, cur, type, dir);
             }
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

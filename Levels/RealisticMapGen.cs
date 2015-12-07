@@ -27,18 +27,13 @@ Ideas, concepts, and code were used from the following two sources:
 using System;
 namespace MCGalaxy
 {
-    public sealed class MapGenerator
+    public sealed class RealisticMapGen
     {
         static bool Inuse = false;
         static float[] terrain;
         static float[] overlay;
         static float[] overlay2;
         static float divide;
-
-        public MapGenerator()
-        {
-
-        }
 
         public bool GenerateMap(Level Lvl, string type, int seed = 0, bool useSeed = false)
         {

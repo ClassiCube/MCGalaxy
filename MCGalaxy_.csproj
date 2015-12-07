@@ -409,10 +409,7 @@
     <Compile Include="Commands\World\CmdMuseum.cs" />
     <Compile Include="Commands\World\CmdNewLvl.cs" />
     <Compile Include="Commands\World\CmdPause.cs" />
-    <Compile Include="Commands\World\CmdPerbuildMax.cs" />
-    <Compile Include="Commands\World\CmdPermissionBuild.cs" />
-    <Compile Include="Commands\World\CmdPermissionVisit.cs" />
-    <Compile Include="Commands\World\CmdPervisitMax.cs" />
+    <Compile Include="Commands\World\CmdPermissions.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
     <Compile Include="Commands\World\CmdReload.cs" />
     <Compile Include="Commands\World\CmdRestore.cs" />
@@ -425,6 +422,7 @@
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
+    <Compile Include="Levels\MapGen.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
     <Compile Include="Levels\Physics\DoorPhysics.cs" />
@@ -570,7 +568,7 @@
     <Compile Include="Player\Group.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Server\Extra\Heart.cs" />
-    <Compile Include="Levels\MapGenerator.cs" />
+    <Compile Include="Levels\RealisticMapGen.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\PlayerBot.cs" />

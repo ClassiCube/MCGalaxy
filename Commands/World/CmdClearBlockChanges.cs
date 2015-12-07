@@ -18,7 +18,9 @@ using System.Text.RegularExpressions;
 */
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
+	
 	public sealed class CmdClearBlockChanges : Command {
+		
 		public override string name { get { return "clearblockchanges"; } }
 		public override string shortcut { get { return "cbc"; } }
 		public override string type { get { return CommandTypes.World; } }
@@ -27,25 +29,33 @@ namespace MCGalaxy.Commands {
 		public CmdClearBlockChanges() { }
 
 		public override void Use(Player p, string message) {
-			if ( p == null ) {
-				Player.SendMessage(p, "This command can only be used in-game");
-				return;
+			if (p == null && message == "") {
+				Player.SendMessage(p, "You must provide a map name when running the command from console."); return;
 			}
-			Level l = Level.Find(message);
-			if ( l == null && message != "" ) { Player.SendMessage(p, "Could not find level."); return; }
-			if ( l == null ) l = p.level;
+			Level lvl = p == null ? null : p.level;
+			if (message != "") {
+				lvl = Level.Find(message.ToLower());
+				if (lvl == null) {
+					Player.SendMessage(p, "Could not find the entered level."); return; 
+				}
+			}
 
-			if ( !Regex.IsMatch(l.name.ToLower(), @"^[a-z0-9]*?$") ) {
-				Player.SendMessage(p, "Level name is not accepted");
-				return;
+			if (!Regex.IsMatch(lvl.name.ToLower(), @"^[a-z0-9]*?$")) {
+				Player.SendMessage(p, "Level name is not accepted"); return;
 			}
-            //safe against SQL injections because no user input is given here
-			if ( Server.useMySQL ) MySQL.executeQuery("TRUNCATE TABLE `Block" + l.name + "`"); else SQLite.executeQuery("DELETE FROM `Block" + l.name + "`");
-			Player.SendMessage(p, "Cleared &cALL" + Server.DefaultColor + " recorded block changes in: &d" + l.name);
+			
+			if ( Server.useMySQL ) 
+				MySQL.executeQuery("TRUNCATE TABLE `Block" + lvl.name + "`"); 
+			else 
+				SQLite.executeQuery("DELETE FROM `Block" + lvl.name + "`");
+			Player.SendMessage(p, "Cleared &cALL" + Server.DefaultColor + " recorded block changes for: &d" + lvl.name);
 		}
+		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "/clearblockchanges <map> - Clears the block changes stored in /about for <map>.");
-			Player.SendMessage(p, "&cUSE WITH CAUTION");
+			Player.SendMessage(p, "%a/clearblockchanges [map]");
+			Player.SendMessage(p, "%eClears the block changes stored in /about for [map]");
+			Player.SendMessage(p, "%e  If no map name is given, clears block changes for the current map.");
+			Player.SendMessage(p, "&cUse with great caution!");
 		}
 	}
 }
