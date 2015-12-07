@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
         public void BlankMessage(Player p)
         {
             byte[] buffer = new byte[65];
-            Player.StringFormat(" ", 64).CopyTo(buffer, 1);
+            NetUtils.WriteAscii("", buffer, 1);
             p.SendRaw(Opcode.Message, buffer);
             buffer = null;
         }

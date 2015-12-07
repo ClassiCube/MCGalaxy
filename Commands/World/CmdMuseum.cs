@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands
 					{
 						short length = (short)Math.Min(buffer.Length, 1024);
 						byte[] send = new byte[1027];
-						Player.HTNO(length).CopyTo(send, 0);
+						NetUtils.WriteI16(length, buffer, 0);
 						Buffer.BlockCopy(buffer, 0, send, 2, length);
 						byte[] tempbuffer = new byte[buffer.Length - length];
 						Buffer.BlockCopy(buffer, length, tempbuffer, 0, buffer.Length - length);
@@ -89,9 +89,9 @@ namespace MCGalaxy.Commands
 						p.SendRaw(Opcode.LevelDataChunk, send);
 						Thread.Sleep(10);
 					} buffer = new byte[6];
-					Player.HTNO((short)level.Width).CopyTo(buffer, 0);
-					Player.HTNO((short)level.Height).CopyTo(buffer, 2);
-					Player.HTNO((short)level.Length).CopyTo(buffer, 4);
+					NetUtils.WriteI16((short)level.Width, buffer, 0);
+					NetUtils.WriteI16((short)level.Height, buffer, 2);
+					NetUtils.WriteI16((short)level.Length, buffer, 4);
 					p.SendRaw(Opcode.LevelFinalise, buffer);
 
 					ushort x = (ushort)((0.5 + level.spawnx) * 32);

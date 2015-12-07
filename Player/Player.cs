@@ -1139,7 +1139,8 @@ namespace MCGalaxy {
                                                if (p1.UsingWom)
                                                {
                                                    byte[] buffer = new byte[65];
-                                                   Player.StringFormat("^detail.user.join=" + color + name + c.white, 64).CopyTo(buffer, 1);
+                                                   string joinMsg = "^detail.user.join=" + color + name + c.white;
+									               NetUtils.WriteAscii(joinMsg, buffer, 1);
                                                    p1.SendRaw(Opcode.Message, buffer);
                                                    buffer = null;
                                                }
@@ -1248,18 +1249,15 @@ namespace MCGalaxy {
         }
 
         void HandleBlockchange(byte[] message) {
-            int section = 0;
             try {
-                //byte[] message = (byte[])m;
                 if ( !loggedIn )
                     return;
                 if ( CheckBlockSpam() )
                     return;
-
-                section++;
-                ushort x = NTHO(message, 0);
-                ushort y = NTHO(message, 2);
-                ushort z = NTHO(message, 4);
+                
+                ushort x = NetUtils.ReadU16(message, 0);
+                ushort y = NetUtils.ReadU16(message, 2);
+                ushort z = NetUtils.ReadU16(message, 4);
                 byte action = message[6];
                 byte type = message[7];
 
@@ -1704,27 +1702,26 @@ return;
 
             if ( this.incountdown && CountdownGame.gamestatus == CountdownGameStatus.InProgress && CountdownGame.freezemode ) {
                 if ( this.countdownsettemps ) {
-                    countdowntempx = NTHO(message, 1);
+            		countdowntempx = NetUtils.ReadU16(message, 1);
                     Thread.Sleep(100);
-                    countdowntempz = NTHO(message, 5);
+                    countdowntempz = NetUtils.ReadU16(message, 5);
                     Thread.Sleep(100);
                     countdownsettemps = false;
                 }
                 ushort x = countdowntempx;
-                ushort y = NTHO(message, 3);
+                ushort y = NetUtils.ReadU16(message, 3);
                 ushort z = countdowntempz;
                 byte rotx = message[7];
                 byte roty = message[8];
                 pos = new ushort[3] { x, y, z };
                 rot = new byte[2] { rotx, roty };
-                if ( countdowntempx != NTHO(message, 1) || countdowntempz != NTHO(message, 5) ) {
+                if ( countdowntempx != NetUtils.ReadU16(message, 1) || countdowntempz != NetUtils.ReadU16(message, 5) ) {
                     unchecked { this.SendPos((byte)-1, pos[0], pos[1], pos[2], rot[0], rot[1]); }
                 }
-            }
-            else {
-                ushort x = NTHO(message, 1);
-                ushort y = NTHO(message, 3);
-                ushort z = NTHO(message, 5);
+            } else {
+                ushort x = NetUtils.ReadU16(message, 1);
+                ushort y = NetUtils.ReadU16(message, 3);
+                ushort z = NetUtils.ReadU16(message, 5);
 
                 if ( !this.referee && Server.noRespawn && Server.ZombieModeOn ) {
                     if ( this.pos[0] >= x + 70 || this.pos[0] <= x - 70 ) {
@@ -3120,7 +3117,8 @@ return;
 									                       	if (p1.UsingWom)
 									                       	{
 									                       		byte[] buffer = new byte[65];
-									                       		Player.StringFormat("^detail.user.part=" + color +  name + c.white, 64).CopyTo(buffer, 1);
+									                       		string partMsg = "^detail.user.part=" + color + name + c.white;
+									                       		NetUtils.WriteAscii(partMsg, buffer, 1);
 									                       		p1.SendRaw(Opcode.Message, buffer);
 									                       		buffer = null;
 									                       	}
