@@ -264,7 +264,6 @@ namespace MCGalaxy
 			all.Add(new CmdSpin());
 			all.Add(new CmdSPlace());
             all.Add(new CmdStaff());
-			all.Add(new CmdStairs());
 			all.Add(new CmdStatic());
 			all.Add(new CmdSummon());
 			all.Add(new CmdTake());

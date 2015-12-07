@@ -158,7 +158,6 @@
     <Compile Include="Commands\Building\CmdSpheroid.cs" />
     <Compile Include="Commands\Building\CmdSpin.cs" />
     <Compile Include="Commands\Building\CmdSPlace.cs" />
-    <Compile Include="Commands\Building\CmdStairs.cs" />
     <Compile Include="Commands\Building\CmdStatic.cs" />
     <Compile Include="Commands\Building\CmdTree.cs" />
     <Compile Include="Commands\Building\CmdUndo.cs" />

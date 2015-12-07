@@ -225,7 +225,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdSpheroid()), "sphere");
             new CommandKeywords((new CmdSpin()), "rotate");
             new CommandKeywords((new CmdSPlace()), "measure place");
-            new CommandKeywords((new CmdStairs()), "stair");
             new CommandKeywords((new CmdStatic()), "toggle mode");
             new CommandKeywords((new CmdSummon()), "move teleport tp player user");
             new CommandKeywords((new CmdTake()), "get money");
