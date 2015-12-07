@@ -38,9 +38,10 @@ namespace MCGalaxy.Commands
         //Trust me...I'm a doctor
         public void BlankMessage(Player p)
         {
-            byte[] buffer = new byte[65];
-            NetUtils.WriteAscii("", buffer, 1);
-            p.SendRaw(Opcode.Message, buffer);
+            byte[] buffer = new byte[66];
+            buffer[0] = Opcode.Message;
+            NetUtils.WriteAscii("", buffer, 2);
+            p.SendRaw(buffer);
             buffer = null;
         }
         public override void Help(Player p)

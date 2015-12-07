@@ -3004,7 +3004,13 @@ return;
             return true;
         }
 
-        public static void GlobalUpdate() { players.ForEach(delegate(Player p) { if ( !p.hidden ) { p.UpdatePosition(); } }); }
+        public static void GlobalUpdate() { 
+        	players.ForEach(
+        		delegate(Player p) {
+        			if ( !p.hidden ) 
+        				p.UpdatePosition();
+        		});
+        }
         #endregion
         #region == DISCONNECTING ==
         public void Disconnect() { leftGame(); }

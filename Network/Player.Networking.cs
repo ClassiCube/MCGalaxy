@@ -136,7 +136,7 @@ namespace MCGalaxy {
         	SendRaw(buffer);
         }
         
-        [ObsoleteAttribute]
+        [Obsolete]
         public void SendRaw(int id, byte[] send) {
             byte[] buffer = new byte[send.Length + 1];
             buffer[0] = (byte)id;
@@ -238,8 +238,9 @@ namespace MCGalaxy {
             if ( this == null ) { Server.s.Log(message); return; }
             if ( ZoneSpam.AddSeconds(2) > DateTime.Now && message.Contains("This zone belongs to ") ) return;
 
-            byte[] buffer = new byte[65];
-            buffer[0] = id;
+            byte[] buffer = new byte[66];
+            buffer[0] = Opcode.Message;
+            buffer[1] = id;
             StringBuilder sb = new StringBuilder(message);
 
             if ( colorParse ) {
@@ -319,10 +320,10 @@ namespace MCGalaxy {
                             newLine += '\'';
                     }
                     if(HasExtension("FullCP437"))
-                    	NetUtils.WriteCP437(newLine, buffer, 1);
+                    	NetUtils.WriteCP437(newLine, buffer, 2);
                     else
-                        NetUtils.WriteAscii(newLine, buffer, 1);
-                    SendRaw(Opcode.Message, buffer);
+                        NetUtils.WriteAscii(newLine, buffer, 2);
+                    SendRaw(buffer);
                 }
             }
             catch ( Exception e ) {
@@ -409,13 +410,14 @@ namespace MCGalaxy {
                     byte[] tempbuffer = new byte[buffer.Length - length];
                     Buffer.BlockCopy(buffer, length, tempbuffer, 0, buffer.Length - length);
                     buffer = tempbuffer;
-                    send[1026] = (byte)( i * 100 / number );
+                    send[1026] = (byte)(i * 100 / number);
                     //send[1026] = (byte)(100 - (i * 100 / number)); // Backwards progress lololol...
                     SendRaw(Opcode.LevelDataChunk, send);
                     if ( ip == "127.0.0.1" ) { }
                     else if ( Server.updateTimer.Interval > 1000 ) Thread.Sleep(100);
                     else Thread.Sleep(10);
-                } buffer = new byte[6];
+                } 
+                buffer = new byte[6];
                 NetUtils.WriteI16((short)level.Width, buffer, 0);
 				NetUtils.WriteI16((short)level.Height, buffer, 2);
 				NetUtils.WriteI16((short)level.Length, buffer, 4);
@@ -440,18 +442,19 @@ namespace MCGalaxy {
                 GC.WaitForPendingFinalizers();
                 //Server.s.Log((DateTime.Now - start).TotalMilliseconds.ToString()); // We dont want random numbers showing up do we?
             }
-        }
-        
+        }  
         
         public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            byte[] buffer = new byte[73]; 
-            buffer[0] = id;;
-            NetUtils.WriteAscii(name.TrimEnd('+'), buffer, 1);
-            NetUtils.WriteU16(x, buffer, 65);
-            NetUtils.WriteU16(y, buffer, 67);
-            NetUtils.WriteU16(z, buffer, 69);
-            buffer[71] = rotx; buffer[72] = roty;
-            SendRaw(Opcode.AddEntity, buffer);
+            byte[] buffer = new byte[74];
+            buffer[0] = Opcode.AddEntity;
+            buffer[1] = id;
+            NetUtils.WriteAscii(name.TrimEnd('+'), buffer, 2);
+            NetUtils.WriteU16(x, buffer, 66);
+            NetUtils.WriteU16(y, buffer, 68);
+            NetUtils.WriteU16(z, buffer, 70);
+            buffer[72] = rotx; 
+            buffer[73] = roty;
+            SendRaw(buffer);
 
             if (HasExtension("ChangeModel"))
             	UpdateModels();
@@ -470,23 +473,26 @@ namespace MCGalaxy {
             pos[0] = x; pos[1] = y; pos[2] = z;
             rot[0] = rotx; rot[1] = roty;
 
-            byte[] buffer = new byte[9]; 
-            buffer[0] = id;
-            NetUtils.WriteU16(x, buffer, 1);
-            NetUtils.WriteU16(y, buffer, 3);
-            NetUtils.WriteU16(z, buffer, 5);
-            buffer[7] = rotx; 
-            buffer[8] = roty;
-            SendRaw(Opcode.EntityTeleport, buffer);
+            byte[] buffer = new byte[10]; 
+            buffer[0] = Opcode.EntityTeleport;
+            buffer[1] = id;
+            NetUtils.WriteU16(x, buffer, 2);
+            NetUtils.WriteU16(y, buffer, 4);
+            NetUtils.WriteU16(z, buffer, 6);
+            buffer[8] = rotx; 
+            buffer[9] = roty;
+            SendRaw(buffer);
         }
-        // Update user type for weather or not they are opped
+        
         public void SendUserType(bool op) {
             SendRaw(Opcode.SetPermission, op ? (byte)100 : (byte)0);
         }
+        
         //TODO: Figure a way to SendPos without changing rotation
         public void SendDie(byte id) { 
-        	SendRaw(Opcode.RemoveEntity, new byte[1] { id }); 
+        	SendRaw(Opcode.RemoveEntity, id); 
         }
+        
         public void SendBlockchange(ushort x, ushort y, ushort z, byte type) {
             if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
@@ -502,24 +508,26 @@ namespace MCGalaxy {
                     type = chunk[(x & 0xF) | (y & 0xF) << 4 | (z & 0x0F) << 8];
             }
 
-            byte[] buffer = new byte[7];
-            NetUtils.WriteU16(x, buffer, 0);
-            NetUtils.WriteU16(y, buffer, 2);
-            NetUtils.WriteU16(z, buffer, 4);
-            if(!skip)
-            {
+            byte[] buffer = new byte[8];
+            buffer[0] = Opcode.SetBlock;
+            NetUtils.WriteU16(x, buffer, 1);
+            NetUtils.WriteU16(y, buffer, 3);
+            NetUtils.WriteU16(z, buffer, 5);
+            
+            if (!skip) {
                 if (hasCpe)
-                    buffer[6] = (byte)Block.Convert(type);
+                    buffer[7] = (byte)Block.Convert(type);
                 else
-                    buffer[6] = (byte)Block.Convert(Block.ConvertCPE(type));
+                    buffer[7] = (byte)Block.Convert(Block.ConvertCPE(type));
             }
-            SendRaw(Opcode.SetBlock , buffer);
+            SendRaw(buffer);
         }
         
         void SendKick(string message) {
-        	byte[] buffer = new byte[64];
-        	NetUtils.WriteAscii(message, buffer, 0);
-        	SendRaw(Opcode.Kick, buffer); 
+        	byte[] buffer = new byte[65];
+        	buffer[0] = Opcode.Kick;
+        	NetUtils.WriteAscii(message, buffer, 1);
+        	SendRaw(buffer); 
         }
         
         void SendPing() { 
@@ -527,23 +535,26 @@ namespace MCGalaxy {
         }
         
         void SendExtInfo( byte count ) {
-            byte[] buffer = new byte[66];
-            NetUtils.WriteAscii("MCGalaxy " + Server.Version, buffer, 0 );
-            NetUtils.WriteI16((short)count, buffer, 64);
-            SendRaw( Opcode.CpeExtInfo, buffer );
+            byte[] buffer = new byte[67];
+            buffer[0] = Opcode.CpeExtInfo;
+            NetUtils.WriteAscii("MCGalaxy " + Server.Version, buffer, 1);
+            NetUtils.WriteI16((short)count, buffer, 65);
+            SendRaw(buffer);
         }
         
         void SendExtEntry( string name, int version ) {
-        	byte[] buffer = new byte[68];
-            NetUtils.WriteAscii(name, buffer, 0);
-            NetUtils.WriteI32(version, buffer, 64);
-            SendRaw( Opcode.CpeExtEntry, buffer );
+        	byte[] buffer = new byte[69];
+        	buffer[0] = Opcode.CpeExtEntry;
+            NetUtils.WriteAscii(name, buffer, 1);
+            NetUtils.WriteI32(version, buffer, 65);
+            SendRaw(buffer);
         }
         
         void SendClickDistance( short distance ) {
-            byte[] buffer = new byte[2];
-            NetUtils.WriteI16(distance, buffer, 0);
-            SendRaw( Opcode.CpeSetClickDistance, buffer );
+            byte[] buffer = new byte[3];
+            buffer[0] = Opcode.CpeSetClickDistance;
+            NetUtils.WriteI16(distance, buffer, 1);
+            SendRaw(buffer);
         }
         
         void SendCustomBlockSupportLevel(byte level) {
@@ -551,10 +562,11 @@ namespace MCGalaxy {
         }
         
         void SendHoldThis( byte type, byte locked ) { // if locked is on 1, then the player can't change their selected block.
-            byte[] buffer = new byte[2];
-            buffer[0] = type;
-            buffer[1] = locked;
-            SendRaw( Opcode.CpeHoldThis, buffer );
+            byte[] buffer = new byte[3];
+            buffer[0] = Opcode.CpeHoldThis;
+            buffer[1] = type;
+            buffer[2] = locked;
+            SendRaw(buffer);
         }
         
         void SendTextHotKey( string label, string command, int keycode, byte mods ) {
@@ -563,7 +575,7 @@ namespace MCGalaxy {
             NetUtils.WriteAscii(command, buffer, 64);
             NetUtils.WriteI32(keycode, buffer, 128);
             buffer[132] = mods;
-            SendRaw( Opcode.CpeSetTextHotkey, buffer );
+            SendRaw(Opcode.CpeSetTextHotkey, buffer);
         }
         
         public void SendExtAddPlayerName(short id, string name, Group grp, string displayname = "") {
@@ -585,22 +597,23 @@ namespace MCGalaxy {
             if (displayname == "") 
             	displayname = name;
             NetUtils.WriteAscii(displayname, buffer, 65);
-            SendRaw( Opcode.CpeExtAddEntity, buffer);
+            SendRaw(Opcode.CpeExtAddEntity, buffer);
         }
         
         public void SendDeletePlayerName( byte id ) {
             byte[] buffer = new byte[2];
             NetUtils.WriteI16(id, buffer, 0);
-            SendRaw( Opcode.CpeExtRemovePlayerName, buffer );
+            SendRaw(Opcode.CpeExtRemovePlayerName, buffer);
         }
         
         public void SendEnvColor( byte type, short r, short g, short b ) {
-            byte[] buffer = new byte[7];
-            buffer[0] = type;
-            NetUtils.WriteI16( r, buffer, 1 );
-            NetUtils.WriteI16( g, buffer, 3 );
-            NetUtils.WriteI16( b, buffer, 5 );
-            SendRaw( Opcode.CpeEnvColors, buffer );
+            byte[] buffer = new byte[8];
+            buffer[0] = Opcode.CpeEnvColors;
+            buffer[1] = type;
+            NetUtils.WriteI16( r, buffer, 2 );
+            NetUtils.WriteI16( g, buffer, 4 );
+            NetUtils.WriteI16( b, buffer, 6 );
+            SendRaw(buffer);
         }
         
         public void SendMakeSelection( byte id, string label, short smallx, short smally, short smallz, short bigx, short bigy, short bigz, short r, short g, short b, short opacity ) {
@@ -617,40 +630,42 @@ namespace MCGalaxy {
             NetUtils.WriteI16( g, buffer, 79);
             NetUtils.WriteI16( b, buffer, 81 );
             NetUtils.WriteI16( opacity, buffer, 83 );
-            SendRaw( Opcode.CpeMakeSelection, buffer );
+            SendRaw(Opcode.CpeMakeSelection, buffer);
         }
         
         public void SendDeleteSelection( byte id ) {
-            byte[] buffer = new byte[1];
-            buffer[0] = id;
-            SendRaw( Opcode.CpeRemoveSelection, buffer );
+            SendRaw(Opcode.CpeRemoveSelection, id);
         }
+        
         void SendSetBlockPermission( byte type, byte canplace, byte candelete ) {
-            byte[] buffer = new byte[3];
-            buffer[0] = type;
-            buffer[1] = canplace;
-            buffer[2] = candelete;
-            SendRaw( Opcode.CpeSetBlockPermission, buffer );
+            byte[] buffer = new byte[4];
+            buffer[0] = Opcode.CpeSetBlockPermission;
+            buffer[1] = type;
+            buffer[2] = canplace;
+            buffer[3] = candelete;
+            SendRaw(buffer);
         }
         
         public void SendChangeModel( byte id, string model ) {
-            byte[] buffer = new byte[65];
-            buffer[0] = id;
-            NetUtils.WriteAscii(model, buffer, 1);
-            SendRaw( Opcode.CpeChangeModel, buffer );
+            byte[] buffer = new byte[66];
+            buffer[0] = Opcode.CpeChangeModel;
+            buffer[1] = id;
+            NetUtils.WriteAscii(model, buffer, 2);
+            SendRaw(buffer);
         }
         
         public void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, short sidelevel ) {
-            byte[] buffer = new byte[68];
-            NetUtils.WriteAscii(url, buffer, 0);
-            buffer[64] = sideblock;
-            buffer[65] = edgeblock;
-            NetUtils.WriteI16(sidelevel, buffer, 66);
-            SendRaw( Opcode.CpeEnvSetMapApperance, buffer );
+        	byte[] buffer = new byte[69];
+        	buffer[0] = Opcode.CpeEnvSetMapApperance;
+            NetUtils.WriteAscii(url, buffer, 1);
+            buffer[65] = sideblock;
+            buffer[66] = edgeblock;
+            NetUtils.WriteI16(sidelevel, buffer, 67);
+            SendRaw(buffer);
         }
         
         public void SendSetMapWeather( byte weather ) { // 0 - sunny; 1 - raining; 2 - snowing
-            SendRaw( Opcode.CpeEnvWeatherType, weather );
+            SendRaw(Opcode.CpeEnvWeatherType, weather);
         }
         
         void SendHackControl( byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning, 
@@ -688,108 +703,26 @@ namespace MCGalaxy {
         }
         
         void UpdatePosition() {
-
-            //pingDelayTimer.Stop();
-
-            // Shameless copy from JTE's Server
-            byte changed = 0; //Denotes what has changed (x,y,z, rotation-x, rotation-y)
-            // 0 = no change - never happens with this code.
-            // 1 = position has changed
-            // 2 = rotation has changed
-            // 3 = position and rotation have changed
-            // 4 = Teleport Required (maybe something to do with spawning)
-            // 5 = Teleport Required + position has changed
-            // 6 = Teleport Required + rotation has changed
-            // 7 = Teleport Required + position and rotation has changed
-            //NOTE: Players should NOT be teleporting this often. This is probably causing some problems.
-            if ( oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2] )
-                changed |= 1;
-
-            if ( oldrot[0] != rot[0] || oldrot[1] != rot[1] ) {
-                changed |= 2;
-            }
-            /*if (Math.Abs(pos[0] - basepos[0]) > 32 || Math.Abs(pos[1] - basepos[1]) > 32 || Math.Abs(pos[2] - basepos[2]) > 32)
-changed |= 4;
-
-if ((oldpos[0] == pos[0] && oldpos[1] == pos[1] && oldpos[2] == pos[2]) && (basepos[0] != pos[0] || basepos[1] != pos[1] || basepos[2] != pos[2]))
-changed |= 4;*/
-            if ( Math.Abs(pos[0] - oldpos[0]) > 32 || Math.Abs(pos[1] - oldpos[1]) > 32 || Math.Abs(pos[2] - oldpos[2]) > 32 )
-                changed |= 4;
-            if ( changed == 0 ) { if ( oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2] ) changed |= 1; }
-
-            byte[] buffer = new byte[0]; byte msg = 0;
-            if ( ( changed & 4 ) != 0 ) {
-                msg = 8; //Player teleport - used for spawning or moving too fast
-                buffer = new byte[9]; buffer[0] = id;
-                NetUtils.WriteU16(pos[0], buffer, 1);
-                NetUtils.WriteU16(pos[1], buffer, 3);
-                NetUtils.WriteU16(pos[2], buffer, 5);
-                buffer[7] = rot[0];
-
-                if ( Server.flipHead || ( this.flipHead && this.infected ) )
-                    if ( rot[1] > 64 && rot[1] < 192 )
-                        buffer[8] = rot[1];
-                    else
-                        buffer[8] = (byte)( rot[1] - ( rot[1] - 128 ) );
-                    else
-                        buffer[8] = rot[1];
-
-                //Realcode
-                //buffer[8] = rot[1];
-            }
-            else if ( changed == 1 ) {
-                try {
-                    msg = 10; //Position update
-                    buffer = new byte[4]; buffer[0] = id;
-                    Buffer.BlockCopy(System.BitConverter.GetBytes((sbyte)( pos[0] - oldpos[0] )), 0, buffer, 1, 1);
-                    Buffer.BlockCopy(System.BitConverter.GetBytes((sbyte)( pos[1] - oldpos[1] )), 0, buffer, 2, 1);
-                    Buffer.BlockCopy(System.BitConverter.GetBytes((sbyte)( pos[2] - oldpos[2] )), 0, buffer, 3, 1);
-                }
-                catch { }
-            }
-            else if ( changed == 2 ) {
-                msg = 11; //Orientation update
-                buffer = new byte[3]; buffer[0] = id;
-                buffer[1] = rot[0];
-
-                if ( Server.flipHead || ( this.flipHead && this.infected ) )
-                    if ( rot[1] > 64 && rot[1] < 192 )
-                        buffer[2] = rot[1];
-                    else
-                        buffer[2] = (byte)( rot[1] - ( rot[1] - 128 ) );
-                    else
-                        buffer[2] = rot[1];
-            }
-            else if ( changed == 3 ) {
-                try {
-                    msg = 9; //Position and orientation update
-                    buffer = new byte[6]; buffer[0] = id;
-                    Buffer.BlockCopy(System.BitConverter.GetBytes((sbyte)( pos[0] - oldpos[0] )), 0, buffer, 1, 1);
-                    Buffer.BlockCopy(System.BitConverter.GetBytes((sbyte)( pos[1] - oldpos[1] )), 0, buffer, 2, 1);
-                    Buffer.BlockCopy(System.BitConverter.GetBytes((sbyte)( pos[2] - oldpos[2] )), 0, buffer, 3, 1);
-                    buffer[4] = rot[0];
-
-                    if ( Server.flipHead || ( this.flipHead && this.infected ) )
-                        if ( rot[1] > 64 && rot[1] < 192 )
-                            buffer[5] = rot[1];
-                        else
-                            buffer[5] = (byte)( rot[1] - ( rot[1] - 128 ) );
-                        else
-                            buffer[5] = rot[1];
-                }
-                catch { }
-            }
-
-            oldpos = pos; oldrot = rot;
-            if ( changed != 0 )
-                try {
-                foreach ( Player p in players ) {
-                    if ( p != this && p.level == level ) {
-                        p.SendRaw(msg, buffer);
-                    }
-                }
-            }
-            catch { }
+        	//pingDelayTimer.Stop();
+        	byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, MakePitch());
+        	oldpos = pos; oldrot = rot;
+        	if (packet == null) return;
+        	
+        	try {
+        		foreach (Player p in players) {
+        			if (p != this && p.level == level)
+        				p.SendRaw(packet);
+        		}
+        	} catch { }
+        }
+        
+        byte MakePitch() {
+        	if (Server.flipHead || (flipHead && infected))
+        		if (rot[1] > 64 && rot[1] < 192)
+        			return rot[1];
+        		else
+        			return 128;
+        	return rot[1];
         }
 
         internal void CloseSocket() {
