@@ -54,11 +54,11 @@ namespace MCGalaxy {
         }
 		
 		public static short ReadI16(byte[] array, int offset) {
-			return (short)(array[0] << 8 | array[1]);
+			return (short)(array[offset] << 8 | array[offset + 1]);
 		}
         
         public static ushort ReadU16(byte[] array, int offset) {
-			return (ushort)(array[0] << 8 | array[1]);
+			return (ushort)(array[offset] << 8 | array[offset + 1]);
 		}
         
         public static int ReadI32(byte[] array, int offset) {
@@ -84,13 +84,16 @@ namespace MCGalaxy {
 		}
 		
 		public static byte[] GetPositionPacket(byte id, ushort[] pos, ushort[] oldpos,
-		                                       byte[] rot, byte[] oldrot, byte realPitch) {
+		                                       byte[] rot, byte[] oldrot, byte realPitch, bool bot) {
 			bool posChanged = false, oriChanged = false, absPosUpdate = false;
         	if (oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2])
         		posChanged = true;
         	if (oldrot[0] != rot[0] || oldrot[1] != rot[1])
         		oriChanged = true;
         	if (Math.Abs(pos[0] - oldpos[0]) > 32 || Math.Abs(pos[1] - oldpos[1]) > 32 || Math.Abs(pos[2] - oldpos[2]) > 32)
+        		absPosUpdate = true;
+        	// TODO: not sure why this is necessary for bots
+        	if (bot) 
         		absPosUpdate = true;
 
         	byte[] buffer = null;
@@ -119,8 +122,8 @@ namespace MCGalaxy {
         		buffer[2] = (byte)(pos[0] - oldpos[0]);
         		buffer[3] = (byte)(pos[1] - oldpos[1]);
         		buffer[4] = (byte)(pos[2] - oldpos[2]);
-        	} else {
-        		buffer = new byte[3];
+        	} else if (oriChanged) {
+        		buffer = new byte[4];
         		buffer[0] = Opcode.OrientationUpdate;
         		buffer[1] = id;
         		buffer[2] = rot[0];

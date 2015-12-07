@@ -706,7 +706,7 @@ namespace MCGalaxy {
         
         void UpdatePosition() {
         	//pingDelayTimer.Stop();
-        	byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, MakePitch());
+        	byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, MakePitch(), false);
         	oldpos = pos; oldrot = rot;
         	if (packet == null) return;
         	

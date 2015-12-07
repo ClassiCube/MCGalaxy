@@ -39,13 +39,8 @@ namespace MCGalaxy
         public List<Pos> Waypoints = new List<Pos>();
         public struct Pos { public string type, newscript; public int seconds, rotspeed; public ushort x, y, z; public byte rotx, roty; }
 
-        public ushort[] pos = new ushort[3] { 0, 0, 0 };
-        ushort[] oldpos = new ushort[3] { 0, 0, 0 };
-        public byte[] rot = new byte[2] { 0, 0 };
-        byte[] oldrot = new byte[2] { 0, 0 };
-
-        ushort[] foundPos = new ushort[3] { 0, 0, 0 };
-        byte[] foundRot = new byte[2] { 0, 0 };
+        public ushort[] pos = new ushort[3], oldpos = new ushort[3], foundPos = new ushort[3];
+        public byte[] rot = new byte[2], oldrot = new byte[2], foundRot = new byte[2];
         bool movement = false;
         public int movementSpeed = 24;
         bool jumping = false;
@@ -421,7 +416,7 @@ namespace MCGalaxy
         }
 
         void UpdatePosition() {
-        	byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, rot[1]);
+        	byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, rot[1], true);
         	oldpos = pos; oldrot = rot;
         	if (packet == null) return;
         	
