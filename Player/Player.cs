@@ -1140,7 +1140,7 @@ namespace MCGalaxy {
                                                {
                                                    byte[] buffer = new byte[65];
                                                    Player.StringFormat("^detail.user.join=" + color + name + c.white, 64).CopyTo(buffer, 1);
-                                                   p1.SendRaw(13, buffer);
+                                                   p1.SendRaw(Opcode.Message, buffer);
                                                    buffer = null;
                                                }
                                                else
@@ -3121,7 +3121,7 @@ return;
 									                       	{
 									                       		byte[] buffer = new byte[65];
 									                       		Player.StringFormat("^detail.user.part=" + color +  name + c.white, 64).CopyTo(buffer, 1);
-									                       		p1.SendRaw(13, buffer);
+									                       		p1.SendRaw(Opcode.Message, buffer);
 									                       		buffer = null;
 									                       	}
 									                       	else

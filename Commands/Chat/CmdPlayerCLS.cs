@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
         {
             byte[] buffer = new byte[65];
             Player.StringFormat(" ", 64).CopyTo(buffer, 1);
-            p.SendRaw(13, buffer);
+            p.SendRaw(Opcode.Message, buffer);
             buffer = null;
         }
         public override void Help(Player p)

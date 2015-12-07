@@ -107,7 +107,7 @@ namespace MCGalaxy {
                     {
                         byte[] buffer = new byte[65];
                         Player.StringFormat("^detail.user.here=" + p.color + p.name, 64).CopyTo(buffer, 1);
-                        SendRaw(13, buffer);
+                        SendRaw(Opcode.Message, buffer);
                         buffer = null;
                     }
                 });
@@ -329,7 +329,7 @@ namespace MCGalaxy {
                         StringFormat437(newLine, 64).CopyTo(buffer, 1);
                     else
                         StringFormat(newLine, 64).CopyTo(buffer, 1);
-                    SendRaw(13, buffer);
+                    SendRaw(Opcode.Message, buffer);
                 }
             }
             catch ( Exception e ) {
@@ -359,8 +359,7 @@ namespace MCGalaxy {
             if ( OnSendMOTD != null ) {
                 OnSendMOTD(this, buffer);
             }
-            SendRaw(0, buffer);
-
+            SendRaw(Opcode.Handshake, buffer);
         }
 
         public void SendUserMOTD() {
@@ -380,7 +379,7 @@ namespace MCGalaxy {
                 buffer[129] = 100;
             else
                 buffer[129] = 0;
-            SendRaw(0, buffer);
+            SendRaw(Opcode.Handshake, buffer);
         }
 
         public void SendMap() {
@@ -402,7 +401,7 @@ namespace MCGalaxy {
                         buffer[4 + i] = (byte)Block.Convert(Block.ConvertCPE(level.blocks[i]));
                     }
                 }
-                SendRaw(2);
+                SendRaw(Opcode.LevelInitialise);
 
                 buffer = buffer.GZip();
                 int number = (int)Math.Ceiling(( (double)buffer.Length ) / 1024);
@@ -416,7 +415,7 @@ namespace MCGalaxy {
                     buffer = tempbuffer;
                     send[1026] = (byte)( i * 100 / number );
                     //send[1026] = (byte)(100 - (i * 100 / number)); // Backwards progress lololol...
-                    SendRaw(3, send);
+                    SendRaw(Opcode.LevelDataChunk, send);
                     if ( ip == "127.0.0.1" ) { }
                     else if ( Server.updateTimer.Interval > 1000 ) Thread.Sleep(100);
                     else Thread.Sleep(10);
@@ -424,7 +423,7 @@ namespace MCGalaxy {
                 HTNO((short)level.Width).CopyTo(buffer, 0);
                 HTNO((short)level.Height).CopyTo(buffer, 2);
                 HTNO((short)level.Length).CopyTo(buffer, 4);
-                SendRaw(4, buffer);
+                SendRaw(Opcode.LevelFinalise, buffer);
                 Loading = false;
                 if (HasExtension("EnvWeatherType"))
                 {
@@ -504,21 +503,22 @@ namespace MCGalaxy {
             HTNO(y).CopyTo(buffer, 67);
             HTNO(z).CopyTo(buffer, 69);
             buffer[71] = rotx; buffer[72] = roty;
-            SendRaw(7, buffer);
+            SendRaw(Opcode.AddEntity, buffer);
 
             if (HasExtension("ChangeModel"))
             {
-                Player.players.ForEach(p =>
-                                       {
-                                           if (p.level == this.level)
-                                               if (p == this) unchecked { SendChangeModel((byte)-1, model); }
-                                           else
-                                           {
-                                               SendChangeModel(p.id, p.model);
-                                               if (p.HasExtension("ChangeModel"))
-                                                   p.SendChangeModel(this.id, model);
-                                           }
-                                       });
+                Player.players.ForEach(
+                    p =>
+                    {
+                        if (p.level == this.level)
+                            if (p == this) unchecked { SendChangeModel((byte)-1, model); }
+                        else
+                        {
+                            SendChangeModel(p.id, p.model);
+                            if (p.HasExtension("ChangeModel"))
+                                p.SendChangeModel(this.id, model);
+                        }
+                    });
             }
         }
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
@@ -534,22 +534,23 @@ namespace MCGalaxy {
             pos[0] = x; pos[1] = y; pos[2] = z;
             rot[0] = rotx; rot[1] = roty;
 
-            /*
-pos = new ushort[3] { x, y, z };
-rot = new byte[2] { rotx, roty };*/
-            byte[] buffer = new byte[9]; buffer[0] = id;
+            byte[] buffer = new byte[9]; 
+            buffer[0] = id;
             HTNO(x).CopyTo(buffer, 1);
             HTNO(y).CopyTo(buffer, 3);
             HTNO(z).CopyTo(buffer, 5);
-            buffer[7] = rotx; buffer[8] = roty;
-            SendRaw(8, buffer);
+            buffer[7] = rotx; 
+            buffer[8] = roty;
+            SendRaw(Opcode.EntityTeleport, buffer);
         }
         // Update user type for weather or not they are opped
         public void SendUserType(bool op) {
-            SendRaw(15, op ? (byte)100 : (byte)0);
+            SendRaw(Opcode.SetPermission, op ? (byte)100 : (byte)0);
         }
         //TODO: Figure a way to SendPos without changing rotation
-        public void SendDie(byte id) { SendRaw(0x0C, new byte[1] { id }); }
+        public void SendDie(byte id) { 
+        	SendRaw(Opcode.RemoveEntity, new byte[1] { id }); 
+        }
         public void SendBlockchange(ushort x, ushort y, ushort z, byte type) {
             if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
@@ -580,15 +581,19 @@ rot = new byte[2] { rotx, roty };*/
                     buffer[6] = (byte)Block.Convert(Block.ConvertCPE(type));
                 }
             }
-            SendRaw(6, buffer);
+            SendRaw(Opcode.SetBlock , buffer);
         }
-        void SendKick(string message) { SendRaw(14, StringFormat(message, 64)); }
-        void SendPing() { /*pingDelay = 0; pingDelayTimer.Start();*/ SendRaw(1); }
+        void SendKick(string message) { 
+        	SendRaw(Opcode.Kick, StringFormat(message, 64)); 
+        }
+        void SendPing() { 
+        	SendRaw(Opcode.Ping);
+        }
         void SendExtInfo( byte count ) {
             byte[] buffer = new byte[66];
             StringFormat( "MCGalaxy " + Server.Version, 64 ).CopyTo( buffer, 0 );
             HTNO( count ).CopyTo( buffer, 64 );
-            SendRaw( 16, buffer );
+            SendRaw( Opcode.CpeExtInfo, buffer );
         }
         void SendExtEntry( string name, int version ) {
             byte[] version_ = BitConverter.GetBytes(version);
@@ -597,23 +602,23 @@ rot = new byte[2] { rotx, roty };*/
             byte[] buffer = new byte[68];
             StringFormat(name, 64).CopyTo(buffer, 0);
             version_.CopyTo(buffer, 64);
-            SendRaw( 17, buffer );
+            SendRaw( Opcode.CpeExtEntry, buffer );
         }
         void SendClickDistance( short distance ) {
             byte[] buffer = new byte[2];
             HTNO( distance ).CopyTo( buffer, 0 );
-            SendRaw( 18, buffer );
+            SendRaw( Opcode.CpeSetClickDistance, buffer );
         }
         void SendCustomBlockSupportLevel(byte level) {
             byte[] buffer = new byte[1];
             buffer[0] = level;
-            SendRaw( 19, buffer );
+            SendRaw( Opcode.CpeCustomBlockSupportLevel, buffer );
         }
         void SendHoldThis( byte type, byte locked ) { // if locked is on 1, then the player can't change their selected block.
             byte[] buffer = new byte[2];
             buffer[0] = type;
             buffer[1] = locked;
-            SendRaw( 20, buffer );
+            SendRaw( Opcode.CpeHoldThis, buffer );
         }
         void SendTextHotKey( string label, string command, int keycode, byte mods ) {
             byte[] buffer = new byte[133];
@@ -621,7 +626,7 @@ rot = new byte[2] { rotx, roty };*/
             StringFormat( command, 64 ).CopyTo( buffer, 64 );
             BitConverter.GetBytes( keycode ).CopyTo( buffer, 128 );
             buffer[132] = mods;
-            SendRaw( 21, buffer );
+            SendRaw( Opcode.CpeSetTextHotkey, buffer );
         }
         public void SendExtAddPlayerName(short id, string name, Group grp, string displayname = "")
         {
@@ -632,7 +637,7 @@ rot = new byte[2] { rotx, roty };*/
             StringFormat(displayname, 64).CopyTo(buffer, 66);
             StringFormat(grp.color + grp.name.ToUpper() + "s:", 64).CopyTo(buffer, 130);
             buffer[194] = (byte)grp.Permission.GetHashCode();
-            SendRaw(22, buffer);
+            SendRaw(Opcode.CpeExtAddPlayerName, buffer);
         }
 
         public void SendExtAddEntity(byte id, string name, string displayname = "")
@@ -642,12 +647,12 @@ rot = new byte[2] { rotx, roty };*/
             StringFormat(name, 64).CopyTo(buffer, 1);
             if (displayname == "") { displayname = name; }
             StringFormat(displayname, 64).CopyTo(buffer, 65);
-            SendRaw(23, buffer);
+            SendRaw( Opcode.CpeExtAddEntity, buffer);
         }
         public void SendDeletePlayerName( byte id ) {
             byte[] buffer = new byte[2];
             HTNO( (short)id ).CopyTo( buffer, 0 );
-            SendRaw( 24, buffer );
+            SendRaw( Opcode.CpeExtRemovePlayerName, buffer );
         }
         public void SendEnvColors( byte type, short r, short g, short b ) {
             byte[] buffer = new byte[7];
@@ -655,7 +660,7 @@ rot = new byte[2] { rotx, roty };*/
             HTNO( r ).CopyTo( buffer, 1 );
             HTNO( g ).CopyTo( buffer, 3 );
             HTNO( b ).CopyTo( buffer, 5 );
-            SendRaw( 25, buffer );
+            SendRaw( Opcode.CpeEnvColours, buffer );
         }
         public void SendMakeSelection( byte id, string label, short smallx, short smally, short smallz, short bigx, short bigy, short bigz, short r, short g, short b, short opacity ) {
             byte[] buffer = new byte[85];
@@ -671,25 +676,25 @@ rot = new byte[2] { rotx, roty };*/
             HTNO( g ).CopyTo( buffer, 79);
             HTNO( b ).CopyTo( buffer, 81 );
             HTNO( opacity ).CopyTo( buffer, 83 );
-            SendRaw( 26, buffer );
+            SendRaw( Opcode.CpeMakeSelection, buffer );
         }
         public void SendDeleteSelection( byte id ) {
             byte[] buffer = new byte[1];
             buffer[0] = id;
-            SendRaw( 27, buffer );
+            SendRaw( Opcode.CpeRemoveSelection, buffer );
         }
         void SendSetBlockPermission( byte type, byte canplace, byte candelete ) {
             byte[] buffer = new byte[3];
             buffer[0] = type;
             buffer[1] = canplace;
             buffer[2] = candelete;
-            SendRaw( 28, buffer );
+            SendRaw( Opcode.CpeSetBlockPermission, buffer );
         }
         public void SendChangeModel( byte id, string model ) {
             byte[] buffer = new byte[65];
             buffer[0] = id;
             StringFormat( model, 64 ).CopyTo( buffer, 1 );
-            SendRaw( 29, buffer );
+            SendRaw( Opcode.CpeChangeModel, buffer );
         }
         public void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, short sidelevel ) {
             byte[] buffer = new byte[68];
@@ -697,13 +702,15 @@ rot = new byte[2] { rotx, roty };*/
             buffer[64] = sideblock;
             buffer[65] = edgeblock;
             HTNO( sidelevel ).CopyTo( buffer, 66 );
-            SendRaw( 30, buffer );
+            SendRaw( Opcode.CpeEnvSetMapApperance, buffer );
         }
+        
         public void SendSetMapWeather( byte weather ) { // 0 - sunny; 1 - raining; 2 - snowing
             byte[] buffer = new byte[1];
             buffer[0] = weather;
-            SendRaw( 31, buffer );
+            SendRaw( Opcode.CpeEnvWeatherType, buffer );
         }
+        
         void SendHackControl( byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning, byte allowthirdperson, byte allowchangingweather, short maxjumpheight ) {
             byte[] buffer = new byte[7];
             buffer[0] = allowflying;
@@ -713,8 +720,9 @@ rot = new byte[2] { rotx, roty };*/
             buffer[4] = allowthirdperson;
             buffer[5] = allowchangingweather;
             HTNO( maxjumpheight ).CopyTo( buffer, 6 );
-            SendRaw( 32, buffer );
+            SendRaw( Opcode.CpeHackControl, buffer );
         }
+        
         public void SendBlockDefinitions(BlockDefinitions bd)
         {
             byte[] buffer = new byte[79];
@@ -734,7 +742,7 @@ rot = new byte[2] { rotx, roty };*/
             buffer[76] = bd.FogR;
             buffer[77] = bd.FogG;
             buffer[78] = bd.FogB;
-            SendRaw(35, buffer);
+            SendRaw(Opcode.CpeDefineBlock, buffer);
         }
         
         void UpdatePosition() {
