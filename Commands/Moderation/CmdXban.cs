@@ -59,9 +59,6 @@ namespace MCGalaxy.Commands
             {
                 if (p != null) p.ignorePermission = false;
             }
-
-
-
         }
 
 
