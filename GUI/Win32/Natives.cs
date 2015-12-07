@@ -30,26 +30,6 @@ namespace MCGalaxy.Gui.Utils {
 
         #region Consts
 
-        private const int SOURCE_COPY = 0x00CC0020;
-        private const int BI_RGB = 0;
-        private const int DIB_RGB_COLORS = 0;
-
-        private const int DTT_COMPOSITED = ( int ) ( 1UL << 13 );
-        private const int DTT_GLOWSIZE = ( int ) ( 1UL << 11 );
-
-        private const int DT_SINGLELINE = 0x00000020;
-        private const int DT_CENTER = 0x00000001;
-        private const int DT_VCENTER = 0x00000004;
-        private const int DT_NOPREFIX = 0x00000800;
-
-        public const int WM_NCHITTEST = 0x84;
-        public const int WM_NCLBUTTONUP = 0x00A2;
-        public const int WM_NCLBUTTONDOWN = 0x00A1;
-        public const int WM_NCLBUTTONDBLCLK = 0x00A3;
-
-        public const int HTCAPTION = 2;
-        public const int HTCLIENT = 1;
-
         public const int S_OK = 0x0;
 
         public const int EP_EDITTEXT = 1;
@@ -70,55 +50,6 @@ namespace MCGalaxy.Gui.Utils {
 
         #region Enums/Structs
 
-        public struct POINTAPI {
-            public int x;
-            public int y;
-        };
-
-        public struct DTTOPTS {
-            public uint dwSize;
-            public uint dwFlags;
-            public uint crText;
-            public uint crBorder;
-            public uint crShadow;
-            public int iTextShadowType;
-            public POINTAPI ptShadowOffset;
-            public int iBorderSize;
-            public int iFontPropId;
-            public int iColorPropId;
-            public int iStateId;
-            public int fApplyOverlay;
-            public int iGlowSize;
-            public IntPtr pfnDrawTextCallback;
-            public int lParam;
-        };
-
-        public struct BITMAPINFOHEADER {
-            public int biSize;
-            public int biWidth;
-            public int biHeight;
-            public short biPlanes;
-            public short biBitCount;
-            public int biCompression;
-            public int biSizeImage;
-            public int biXPelsPerMeter;
-            public int biYPelsPerMeter;
-            public int biClrUsed;
-            public int biClrImportant;
-        }
-
-        public struct RGBQUAD {
-            public byte rgbBlue;
-            public byte rgbGreen;
-            public byte rgbRed;
-            public byte rgbReserved;
-        }
-
-        public struct BITMAPINFO {
-            public BITMAPINFOHEADER bmiHeader;
-            public RGBQUAD bmiColors;
-        }
-
         [StructLayout( LayoutKind.Sequential )]
         public struct DLLVersionInfo {
             public int cbSize;
@@ -137,48 +68,6 @@ namespace MCGalaxy.Gui.Utils {
         #endregion
 
         #region P/Invoke API Calls
-
-        [DllImport( "dwmapi.dll", PreserveSig = false )]
-        private static extern bool DwmIsCompositionEnabled();
-
-        [DllImport( "dwmapi.dll" )]
-        private static extern void DwmExtendFrameIntoClientArea( IntPtr hWnd, ref Margins margin );
-
-        [DllImport( "gdi32.dll", ExactSpelling = true, SetLastError = true )]
-        private static extern int SaveDC( IntPtr hdc );
-
-        [DllImport( "user32.dll", ExactSpelling = true, SetLastError = true )]
-        private static extern int ReleaseDC( IntPtr hdc, int state );
-
-        [DllImport( "user32.dll", ExactSpelling = true, SetLastError = true )]
-        private static extern IntPtr GetDC( IntPtr hdc );
-
-        [DllImport( "gdi32.dll", ExactSpelling = true, SetLastError = true )]
-        private static extern IntPtr CreateCompatibleDC( IntPtr hDC );
-
-        [DllImport( "gdi32.dll", ExactSpelling = true )]
-        private static extern IntPtr SelectObject( IntPtr hDC, IntPtr hObject );
-
-        [DllImport( "gdi32.dll", ExactSpelling = true, SetLastError = true )]
-        private static extern bool DeleteObject( IntPtr hObject );
-
-        [DllImport( "gdi32.dll", ExactSpelling = true, SetLastError = true )]
-        private static extern bool DeleteDC( IntPtr hdc );
-
-        [DllImport( "gdi32.dll" )]
-        private static extern bool BitBlt( IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, uint dwRop );
-
-        [DllImport( "gdi32.dll", ExactSpelling = true, SetLastError = true )]
-        private static extern IntPtr CreateDIBSection( IntPtr hdc, ref BITMAPINFO pbmi, uint iUsage, int ppvBits, IntPtr hSection, uint dwOffset );
-
-        [DllImport( "user32.dll", CharSet = CharSet.Auto, SetLastError = false )]
-        public static extern IntPtr SendMessage( IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam );
-
-        [DllImport( "user32.dll", SetLastError = false )]
-        public static extern bool PostMessage( IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam );
-
-        [DllImport( "UxTheme.dll", ExactSpelling = true, SetLastError = true, CharSet = CharSet.Unicode )]
-        private static extern int DrawThemeTextEx( IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, string text, int iCharCount, int dwFlags, ref RECT pRect, ref DTTOPTS pOptions );
 
         [DllImport( "UxTheme.dll", CharSet = CharSet.Auto )]
         public static extern bool IsAppThemed();
@@ -206,9 +95,6 @@ namespace MCGalaxy.Gui.Utils {
 
         [DllImport( "uxtheme", ExactSpelling = true )]
         public extern static Int32 DrawThemeParentBackground( IntPtr hWnd, IntPtr hdc, ref RECT pRect );
-
-        [DllImport( "uxtheme", ExactSpelling = true )]
-        public extern static Int32 DrawThemeBackground( IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, ref RECT pRect, ref RECT pClipRect );
 
         [DllImport( "user32.dll" )]
         public static extern IntPtr GetWindowDC( IntPtr hWnd );
@@ -243,10 +129,8 @@ namespace MCGalaxy.Gui.Utils {
                 }
 
                 return false;
-            }
-            else {
-                bool result = (bool)pi.GetValue(null, null);
-                return result;
+            } else {
+            	return (bool)pi.GetValue(null, null);
             }
         }
 
