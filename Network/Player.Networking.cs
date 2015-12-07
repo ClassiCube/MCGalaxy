@@ -384,13 +384,14 @@ namespace MCGalaxy {
             SendRaw(Opcode.Handshake, buffer);
         }
 
-        public void SendMap() {
-            if ( level.blocks == null ) return;
-            try {
+        public void SendMap() { SendRawMap(level); }
+        
+        public bool SendRawMap(Level level) {
+            if ( level.blocks == null ) return false;
+            bool success = true;
+            try { 
                 byte[] buffer = new byte[level.blocks.Length + 4];
-                BitConverter.GetBytes(IPAddress.HostToNetworkOrder(level.blocks.Length)).CopyTo(buffer, 0);
-                //ushort xx; ushort yy; ushort zz;
-
+                NetUtils.WriteI32(level.blocks.Length, buffer, 0);
                 if (hasCpe) {
                 	for (int i = 0; i < level.blocks.Length; ++i)
                 		buffer[i + 4] = (byte)Block.Convert(level.blocks[i]);
@@ -399,29 +400,30 @@ namespace MCGalaxy {
                 		buffer[i + 4] = (byte)Block.Convert(Block.ConvertCPE(level.blocks[i]));
                 }
                 SendRaw(Opcode.LevelInitialise);
-
                 buffer = buffer.GZip();
-                int number = (int)Math.Ceiling(( (double)buffer.Length ) / 1024);
-                for ( int i = 1; buffer.Length > 0; ++i ) {
-                    short length = (short)Math.Min(buffer.Length, 1024);
-                    byte[] send = new byte[1027];
-                    NetUtils.WriteI16(length, buffer, 0);
-                    Buffer.BlockCopy(buffer, 0, send, 2, length);
-                    byte[] tempbuffer = new byte[buffer.Length - length];
-                    Buffer.BlockCopy(buffer, length, tempbuffer, 0, buffer.Length - length);
-                    buffer = tempbuffer;
-                    send[1026] = (byte)(i * 100 / number);
-                    //send[1026] = (byte)(100 - (i * 100 / number)); // Backwards progress lololol...
-                    SendRaw(Opcode.LevelDataChunk, send);
-                    if ( ip == "127.0.0.1" ) { }
-                    else if ( Server.updateTimer.Interval > 1000 ) Thread.Sleep(100);
-                    else Thread.Sleep(10);
-                } 
-                buffer = new byte[6];
-                NetUtils.WriteI16((short)level.Width, buffer, 0);
-				NetUtils.WriteI16((short)level.Height, buffer, 2);
-				NetUtils.WriteI16((short)level.Length, buffer, 4);
-                SendRaw(Opcode.LevelFinalise, buffer);
+                int totalRead = 0;                
+                
+                while (totalRead < buffer.Length) {   
+                    byte[] packet = new byte[1028]; // TODO: Not sure if safe to reuse same buffer with BeginSend
+                    packet[0] = Opcode.LevelDataChunk;
+                    short length = (short)Math.Min(buffer.Length - totalRead, 1024);
+                    NetUtils.WriteI16(length, packet, 1);
+                    Buffer.BlockCopy(buffer, totalRead, packet, 3, length);
+                    packet[1027] = (byte)(100 * (float)totalRead / buffer.Length);
+                    
+                    SendRaw(packet);            
+                    if (ip != "127.0.0.1") {
+                    	Thread.Sleep(Server.updateTimer.Interval > 1000 ? 100 : 10);
+                    }
+                    totalRead += length;
+                }
+                
+                buffer = new byte[7];
+                buffer[0] = Opcode.LevelFinalise;
+                NetUtils.WriteI16((short)level.Width, buffer, 1);
+				NetUtils.WriteI16((short)level.Height, buffer, 3);
+				NetUtils.WriteI16((short)level.Length, buffer, 5);
+                SendRaw(buffer);
                 Loading = false;
                 
                 if (HasExtension("EnvWeatherType"))
@@ -432,16 +434,16 @@ namespace MCGalaxy {
                 	SendCurrentMapAppearance();
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
-            } catch ( Exception ex ) {
+            } catch( Exception ex ) {
+            	success = false;
                 Command.all.Find("goto").Use(this, Server.mainLevel.name);
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
                 Server.ErrorLog(ex);
             } finally {
-                //DateTime start = DateTime.Now;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                //Server.s.Log((DateTime.Now - start).TotalMilliseconds.ToString()); // We dont want random numbers showing up do we?
             }
+            return success;
         }  
         
         public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {

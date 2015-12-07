@@ -1688,7 +1688,7 @@ namespace MCGalaxy {
             }
         }
 
-        void HandleInput(object m) {
+        void HandleInput(byte[] message) {
             if ( !loggedIn || trainGrab || following != "" || frozen )
                 return;
             /*if (CheckIfInsideBlock())
@@ -1696,8 +1696,6 @@ namespace MCGalaxy {
 unchecked { this.SendPos((byte)-1, (ushort)(clippos[0] - 18), (ushort)(clippos[1] - 18), (ushort)(clippos[2] - 18), cliprot[0], cliprot[1]); }
 return;
 }*/
-
-            byte[] message = (byte[])m;
             byte thisid = message[0];
 
             if ( this.incountdown && CountdownGame.gamestatus == CountdownGameStatus.InProgress && CountdownGame.freezemode ) {
