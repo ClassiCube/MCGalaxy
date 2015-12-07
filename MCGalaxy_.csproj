@@ -432,6 +432,7 @@
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
+    <Compile Include="Network\Player.Networking.cs" />
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
     <Compile Include="Player\EmotesHandler.cs" />
@@ -524,7 +525,7 @@
     <Compile Include="GUI\EditText.Designer.cs">
       <DependentUpon>EditText.cs</DependentUpon>
     </Compile>
-    <Compile Include="Heartbeat\WOMBeat.cs" />
+    <Compile Include="Network\WOMBeat.cs" />
     <Compile Include="Games\LavaSurvival.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Database\MySQLTransactionHelper.cs" />
@@ -560,7 +561,7 @@
     <Compile Include="GUI\UpdateWindow.Designer.cs">
       <DependentUpon>UpdateWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Heartbeat\IBeat.cs" />
+    <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Database\MySQL.cs" />
     <Compile Include="Player\Team.cs" />
@@ -660,7 +661,7 @@
     <Compile Include="util\CP437Reader.cs" />
     <Compile Include="util\CP437Writer.cs" />
     <Compile Include="Util\ExtrasCollection.cs" />
-    <Compile Include="Heartbeat\ClassiCube.cs" />
+    <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="Queue\Cache.cs" />
     <Compile Include="Queue\Check.cs" />
