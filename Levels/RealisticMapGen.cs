@@ -141,7 +141,7 @@ namespace MCGalaxy
                             {
                                 if (type == "desert")
                                 {
-                                    Lvl.skipChange(x, (ushort)(z - zz), y, Block.sand);
+                                    Lvl.SetTile(x, (ushort)(z - zz), y, Block.sand);
                                 }
                                 else if (overlay[bb] < 0.72f)    //If not zoned for rocks or gravel
                                 {
@@ -149,30 +149,30 @@ namespace MCGalaxy
                                     {
                                         if (z > WaterLevel + 2)
                                         {
-                                            if (zz == 0) { Lvl.skipChange(x, (ushort)(z - zz), y, Block.grass); }      //top layer
-                                            else if (zz < 3) { Lvl.skipChange(x, (ushort)(z - zz), y, Block.dirt); }   //next few
-                                            else { Lvl.skipChange(x, (ushort)(z - zz), y, Block.rock); }               //ten rock it
+                                            if (zz == 0) { Lvl.SetTile(x, (ushort)(z - zz), y, Block.grass); }      //top layer
+                                            else if (zz < 3) { Lvl.SetTile(x, (ushort)(z - zz), y, Block.dirt); }   //next few
+                                            else { Lvl.SetTile(x, (ushort)(z - zz), y, Block.rock); }               //ten rock it
                                         }
                                         else
                                         {
-                                            Lvl.skipChange(x, (ushort)(z - zz), y, Block.sand);                        //SAAAND extra for islands
+                                            Lvl.SetTile(x, (ushort)(z - zz), y, Block.sand);                        //SAAAND extra for islands
                                         }
                                     }
                                     else if (type == "desert")
                                     {
-                                        Lvl.skipChange(x, (ushort)(z - zz), y, Block.sand);
+                                        Lvl.SetTile(x, (ushort)(z - zz), y, Block.sand);
                                     }
                                     else
                                     {
-                                        if (zz == 0) { Lvl.skipChange(x, (ushort)(z - zz), y, Block.grass); }
-                                        else if (zz < 3) { Lvl.skipChange(x, (ushort)(z - zz), y, Block.dirt); }
-                                        else { Lvl.skipChange(x, (ushort)(z - zz), y, Block.rock); }
+                                        if (zz == 0) { Lvl.SetTile(x, (ushort)(z - zz), y, Block.grass); }
+                                        else if (zz < 3) { Lvl.SetTile(x, (ushort)(z - zz), y, Block.dirt); }
+                                        else { Lvl.SetTile(x, (ushort)(z - zz), y, Block.rock); }
                                     }
                                 }
                                 else
                                 {
 
-                                    Lvl.skipChange(x, (ushort)(z - zz), y, Block.rock);
+                                    Lvl.SetTile(x, (ushort)(z - zz), y, Block.rock);
 
                                 }
                             }
@@ -182,10 +182,10 @@ namespace MCGalaxy
                                 switch (rand.Next(12))
                                 {
                                     case 10:
-                                        Lvl.skipChange(x, (ushort)(z + 1), y, Block.redflower);
+                                        Lvl.SetTile(x, (ushort)(z + 1), y, Block.redflower);
                                         break;
                                     case 11:
-                                        Lvl.skipChange(x, (ushort)(z + 1), y, Block.yellowflower);
+                                        Lvl.SetTile(x, (ushort)(z + 1), y, Block.yellowflower);
                                         break;
                                     default:
                                         break;
@@ -223,21 +223,21 @@ namespace MCGalaxy
                             {
 
                                 if (WaterLevel - zz > z)
-                                { Lvl.skipChange(x, (ushort)(WaterLevel - zz), y, Block.water); }    //better fill the water aboce me
+                                { Lvl.SetTile(x, (ushort)(WaterLevel - zz), y, Block.water); }    //better fill the water aboce me
                                 else if (WaterLevel - zz > z - 3)
                                 {
                                     if (overlay[bb] < 0.75f)
                                     {
-                                        Lvl.skipChange(x, (ushort)(WaterLevel - zz), y, Block.sand);   //sand top
+                                        Lvl.SetTile(x, (ushort)(WaterLevel - zz), y, Block.sand);   //sand top
                                     }
                                     else
                                     {
-                                        Lvl.skipChange(x, (ushort)(WaterLevel - zz), y, Block.gravel);  //zoned for gravel
+                                        Lvl.SetTile(x, (ushort)(WaterLevel - zz), y, Block.gravel);  //zoned for gravel
                                     }
                                 }
                                 else
                                 {
-                                    Lvl.skipChange(x, (ushort)(WaterLevel - zz), y, Block.rock);
+                                    Lvl.SetTile(x, (ushort)(WaterLevel - zz), y, Block.rock);
                                 }
                             }
 
@@ -253,14 +253,14 @@ namespace MCGalaxy
                             {
                                 if (z > (LavaLevel - 1))
                                 {
-                                    if (zz == 0) { Lvl.skipChange(x, (ushort)(z - zz), y, Block.rock); }      //top layer
-                                    else if (zz < 3) { Lvl.skipChange(x, (ushort)(z - zz), y, Block.rock); }
-                                    else if (zz < 2) { Lvl.skipChange(x, (ushort)(z - zz), y, Block.lava); }//next few
-                                    else { Lvl.skipChange(x, (ushort)(z - zz), y, Block.obsidian); }
+                                    if (zz == 0) { Lvl.SetTile(x, (ushort)(z - zz), y, Block.rock); }      //top layer
+                                    else if (zz < 3) { Lvl.SetTile(x, (ushort)(z - zz), y, Block.rock); }
+                                    else if (zz < 2) { Lvl.SetTile(x, (ushort)(z - zz), y, Block.lava); }//next few
+                                    else { Lvl.SetTile(x, (ushort)(z - zz), y, Block.obsidian); }
                                 }
                                 else
                                 {
-                                    Lvl.skipChange(x, (ushort)(z - zz), y, Block.lava);                       
+                                    Lvl.SetTile(x, (ushort)(z - zz), y, Block.lava);                       
                                 }
                                 if (overlay[bb] < 0.3f) 
                                 {
@@ -270,14 +270,14 @@ namespace MCGalaxy
                                         case 10:
                                         case 11:
                                         case 12:
-                                            Lvl.skipChange(x, (ushort)(z + 1), y, Block.lava); //change to lava when time
+                                            Lvl.SetTile(x, (ushort)(z + 1), y, Block.lava); //change to lava when time
                                             break;
                                         default:
                                             break;
                                     }
                                 }
                                 // if (zz == z) Lvl.skipChange(x, (ushort)(z - zz), y, Block.opsidian);
-                                Lvl.skipChange(x, (ushort)(z), y, (rand.Next(100) % 3 == 1 ? Block.darkgrey : Block.obsidian));
+                                Lvl.SetTile(x, (ushort)(z), y, (rand.Next(100) % 3 == 1 ? Block.darkgrey : Block.obsidian));
 
                             }
                         }
@@ -288,22 +288,22 @@ namespace MCGalaxy
                             {
 
                                 if (LavaLevel - zz > z - 1)
-                                { /*if (Lvl.GetTile(x, z, y) == Block.air)*/ Lvl.skipChange(x, (ushort)(LavaLevel - zz), y, Block.lava); }    //better fill the water aboce me
+                                { /*if (Lvl.GetTile(x, z, y) == Block.air)*/ Lvl.SetTile(x, (ushort)(LavaLevel - zz), y, Block.lava); }    //better fill the water aboce me
                                 else if (LavaLevel - zz > z - 3)
                                 {
                                     if (overlay[bb] < .9f)
                                     {
-                                        if (zz < z) Lvl.skipChange(x, (ushort)(z - zz), (ushort)(y), Block.lava);
-                                        else Lvl.skipChange(x, (ushort)(z - zz), y, Block.rock);
+                                        if (zz < z) Lvl.SetTile(x, (ushort)(z - zz), (ushort)(y), Block.lava);
+                                        else Lvl.SetTile(x, (ushort)(z - zz), y, Block.rock);
                                     }
                                     else
                                     {
-                                        Lvl.skipChange(x, (ushort)(LavaLevel - zz), (ushort)(y - 5), Block.lava);  //killer lava
+                                        Lvl.SetTile(x, (ushort)(LavaLevel - zz), (ushort)(y - 5), Block.lava);  //killer lava
                                     }
                                 }
                                 else
                                 {
-                                    Lvl.skipChange(x, (ushort)(LavaLevel - zz), y, Block.stone); //and just make the rest cobblestone
+                                    Lvl.SetTile(x, (ushort)(LavaLevel - zz), y, Block.stone); //and just make the rest cobblestone
                                 }
                             }
                         }
@@ -531,7 +531,7 @@ namespace MCGalaxy
                     if (blockChange)
                         if (p == null) Lvl.Blockchange(x, (ushort)(y + yy), z, Block.trunk);
                         else Lvl.Blockchange(p, x, (ushort)(y + yy), z, Block.trunk);
-                    else Lvl.skipChange(x, (ushort)(y + yy), z, Block.trunk);
+                    else Lvl.SetTile(x, (ushort)(y + yy), z, Block.trunk);
             }
 
 
@@ -556,7 +556,7 @@ namespace MCGalaxy
                                         if (blockChange)
                                             if (p == null) Lvl.Blockchange(xxx, yyy, zzz, Block.leaf);
                                             else Lvl.Blockchange(p, xxx, yyy, zzz, Block.leaf);
-                                        else Lvl.skipChange(xxx, yyy, zzz, Block.leaf);
+                                        else Lvl.SetTile(xxx, yyy, zzz, Block.leaf);
                                 }
                                 catch { }
                             }
@@ -581,7 +581,7 @@ namespace MCGalaxy
                     if (blockChange)
                         if (p == null) Lvl.Blockchange(x, yyy, z, Block.trunk);
                         else Lvl.Blockchange(p, x, yyy, z, Block.trunk);
-                    else Lvl.skipChange(x, yyy, z, Block.trunk);
+                    else Lvl.SetTile(x, yyy, z, Block.trunk);
             }
 
             for (yy = top; yy <= height + 1; yy++)
@@ -610,7 +610,7 @@ namespace MCGalaxy
                                 if (blockChange)
                                     if (p == null) Lvl.Blockchange(xxx, yyy, zzz, Block.leaf);
                                     else Lvl.Blockchange(p, xxx, yyy, zzz, Block.leaf);
-                                else Lvl.skipChange(xxx, yyy, zzz, Block.leaf);
+                                else Lvl.SetTile(xxx, yyy, zzz, Block.leaf);
                             }
                         }
                         else
@@ -618,7 +618,7 @@ namespace MCGalaxy
                             if (blockChange)
                                 if (p == null) Lvl.Blockchange(xxx, yyy, zzz, Block.leaf);
                                 else Lvl.Blockchange(p, xxx, yyy, zzz, Block.leaf);
-                            else Lvl.skipChange(xxx, yyy, zzz, Block.leaf);
+                            else Lvl.SetTile(xxx, yyy, zzz, Block.leaf);
                         }
                     }
                 }
@@ -651,7 +651,7 @@ namespace MCGalaxy
                     if (blockChange)
                         if (p == null) Lvl.Blockchange(x, yyy, z, Block.trunk);
                         else Lvl.Blockchange(p, x, yyy, z, Block.trunk);
-                    else Lvl.skipChange(x, yyy, z, Block.trunk);
+                    else Lvl.SetTile(x, yyy, z, Block.trunk);
             }
 
             for (yy = top; yy <= height + 1; yy++)
@@ -680,7 +680,7 @@ namespace MCGalaxy
                                 if (blockChange)
                                     if (p == null) Lvl.Blockchange(xxx, yyy, zzz, Block.leaf);
                                     else Lvl.Blockchange(p, xxx, yyy, zzz, Block.leaf);
-                                else Lvl.skipChange(xxx, yyy, zzz, Block.leaf);
+                                else Lvl.SetTile(xxx, yyy, zzz, Block.leaf);
                             }
                         }
                         else
@@ -688,7 +688,7 @@ namespace MCGalaxy
                             if (blockChange)
                                 if (p == null) Lvl.Blockchange(xxx, yyy, zzz, Block.leaf);
                                 else Lvl.Blockchange(p, xxx, yyy, zzz, Block.leaf);
-                            else Lvl.skipChange(xxx, yyy, zzz, Block.leaf);
+                            else Lvl.SetTile(xxx, yyy, zzz, Block.leaf);
                         }
                     }
                 }
@@ -706,7 +706,7 @@ namespace MCGalaxy
                     if (blockChange)
                         if (p == null) Lvl.Blockchange(x, (ushort)(y + yy), z, Block.green);
                         else Lvl.Blockchange(p, x, (ushort)(y + yy), z, Block.green);
-                    else Lvl.skipChange(x, (ushort)(y + yy), z, Block.green);
+                    else Lvl.SetTile(x, (ushort)(y + yy), z, Block.green);
             }
 
             int inX = 0, inZ = 0;
@@ -724,7 +724,7 @@ namespace MCGalaxy
                     if (blockChange)
                         if (p == null) Lvl.Blockchange((ushort)(x + inX), (ushort)(y + yy), (ushort)(z + inZ), Block.green);
                         else Lvl.Blockchange(p, (ushort)(x + inX), (ushort)(y + yy), (ushort)(z + inZ), Block.green);
-                    else Lvl.skipChange((ushort)(x + inX), (ushort)(y + yy), (ushort)(z + inZ), Block.green);
+                    else Lvl.SetTile((ushort)(x + inX), (ushort)(y + yy), (ushort)(z + inZ), Block.green);
             }
             for (yy = height; yy <= Rand.Next(height + 2, height + 5); yy++)
             {
@@ -732,7 +732,7 @@ namespace MCGalaxy
                     if (blockChange)
                         if (p == null) Lvl.Blockchange((ushort)(x - inX), (ushort)(y + yy), (ushort)(z - inZ), Block.green);
                         else Lvl.Blockchange(p, (ushort)(x - inX), (ushort)(y + yy), (ushort)(z - inZ), Block.green);
-                    else Lvl.skipChange((ushort)(x - inX), (ushort)(y + yy), (ushort)(z - inZ), Block.green);
+                    else Lvl.SetTile((ushort)(x - inX), (ushort)(y + yy), (ushort)(z - inZ), Block.green);
             }
         }
 

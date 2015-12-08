@@ -48,10 +48,7 @@ namespace MCGalaxy
                             bP.TimePerformed = DateTime.Now;
                             bP.x = l.blockqueue[c].x; bP.y = l.blockqueue[c].y; bP.z = l.blockqueue[c].z;
                             bP.type = l.blockqueue[c].type;
-                            if (bP.type == 0)
-                                bP.deleted = true;
-                            else
-                                bP.deleted = false;
+                            bP.deleted = bP.type == 0;
                             l.Blockchange(l.blockqueue[c].p, l.blockqueue[c].x, l.blockqueue[c].y, l.blockqueue[c].z, l.blockqueue[c].type);
                             l.blockCache.Add(bP);
                         }

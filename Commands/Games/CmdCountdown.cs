@@ -315,7 +315,7 @@ namespace MCGalaxy.Commands
                         try
                         {
                             Command.all.Find("load").Use(null, "countdown");
-                            CountdownGame.mapon = Level.Find("countdown");
+                            CountdownGame.mapon = Level.FindExact("countdown");
                             CountdownGame.gamestatus = CountdownGameStatus.Enabled;
                             Player.GlobalMessage("Countdown has been enabled!!");
                         }

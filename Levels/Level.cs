@@ -389,26 +389,29 @@ namespace MCGalaxy
             return blocks[index];
         }
 
-        public byte GetTile(int b)
-        {
+        public byte GetTile(int b) {
             ushort x = 0, y = 0, z = 0;
             IntToPos(b, out x, out y, out z);
             return GetTile(x, y, z);
         }
-        public void SetTile(int b, byte type)
-        {
-            if (blocks == null) return;
-            if (b >= blocks.Length) return;
-            if (b < 0) return;
+        
+        public void SetTile(int b, byte type) {
+            if (blocks == null || b < 0 || b >= blocks.Length) return;
             blocks[b] = type;
-            //blockchanges[x + width * z + width * height * y] = pName;
         }
-        public void SetTile(ushort x, ushort y, ushort z, byte type, Player p = null)
-        {
-            byte oldType = GetTile(x, y, z);
-            if (blocks == null) return;
-            if (!InBound(x, y, z)) return;
-            blocks[PosToInt(x, y, z)] = type;
+        
+        public void SetTile(ushort x, ushort y, ushort z, byte type) {
+         	int b = PosToInt(x, y, z);
+            if (blocks == null || b < 0) return;
+            blocks[b] = type;
+        }
+        
+        public void SetTile(ushort x, ushort y, ushort z, byte type, Player p) {
+            int b = PosToInt(x, y, z);
+            if (blocks == null || b < 0) return;
+            
+            byte oldType = blocks[b];
+            blocks[b] = type;
             if (p != null)
             {
                 Level.BlockPos bP;
@@ -416,15 +419,11 @@ namespace MCGalaxy
                 bP.TimePerformed = DateTime.Now;
                 bP.x = x; bP.y = y; bP.z = z;
                 bP.type = type;
-                if (bP.type == 0)
-                    bP.deleted = true;
-                else
-                    bP.deleted = false;
+                bP.deleted = bP.type == 0;
                 blockCache.Add(bP);
+                
                 Player.UndoPos Pos;
-                Pos.x = x;
-                Pos.y = y;
-                Pos.z = z;
+                Pos.x = x; Pos.y = y; Pos.z = z;
                 Pos.mapName = this.name;
                 Pos.type = oldType;
                 Pos.newtype = type;
@@ -458,7 +457,6 @@ namespace MCGalaxy
         {
             return Server.levels.Find(lvl => levelName.ToLower() == lvl.name.ToLower());
         }
-
 
         public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, bool addaction = true, bool blockdefinitions = false)
         {
@@ -707,125 +705,53 @@ namespace MCGalaxy
         	LvlProperties.Save(level, "levels/level properties/" + level.name);
         }
         
-        public void Blockchange(int b, byte type, bool overRide = false, string extraInfo = "")
-        //Block change made by physics
-        {
-            if (b < 0) return;
+        public void Blockchange(int b, byte type, bool overRide = false, string extraInfo = "") { //Block change made by physics
+        	if (b < 0 || b >= blocks.Length || blocks == null) return;
             if (b >= blocks.Length) return;
-            byte bb = GetTile(b);
+            byte oldBlock = blocks[b];
 
             try
             {
-                if (!overRide)
-                    if (Block.OPBlocks(bb) || (Block.OPBlocks(type) && extraInfo != "")) return;
+            	if (!overRide)
+            		if (Block.OPBlocks(oldBlock) || (Block.OPBlocks(type) && extraInfo != "")) return;
 
-                if (Block.Convert(bb) != Block.Convert(type))
-                    //Should save bandwidth sending identical looking blocks, like air/op_air changes.
-                    Player.GlobalBlockchange(this, b, type);
+            	if (Block.Convert(oldBlock) != Block.Convert(type))
+            		//Should save bandwidth sending identical looking blocks, like air/op_air changes.
+            		Player.GlobalBlockchange(this, b, type);
 
-                if (b == Block.sponge && physics > 0 && type != Block.sponge)
-                    PhysSpongeRemoved(b);
+            	if (b == Block.sponge && physics > 0 && type != Block.sponge)
+            		PhysSpongeRemoved(b);
 
-                if (b == Block.lava_sponge && physics > 0 && type != Block.lava_sponge)
-                    PhysSpongeRemoved(b, true);
+            	if (b == Block.lava_sponge && physics > 0 && type != Block.lava_sponge)
+            		PhysSpongeRemoved(b, true);
 
-                try
-                {
-                    UndoPos uP;
-                    uP.location = b;
-                    uP.newType = type;
-                    uP.oldType = bb;
-                    uP.timePerformed = DateTime.Now;
+            	UndoPos uP;
+            	uP.location = b;
+            	uP.newType = type;
+            	uP.oldType = oldBlock;
+            	uP.timePerformed = DateTime.Now;
 
-                    if (currentUndo > Server.physUndo)
-                    {
-                        currentUndo = 0;
-                        UndoBuffer[currentUndo] = uP;
-                    }
-                    else if (UndoBuffer.Count < Server.physUndo)
-                    {
-                        currentUndo++;
-                        UndoBuffer.Add(uP);
-                    }
-                    else
-                    {
-                        currentUndo++;
-                        UndoBuffer[currentUndo] = uP;
-                    }
-                }
-                catch
-                {
-                }
+            	if (currentUndo > Server.physUndo) {
+            		currentUndo = 0;
+            		UndoBuffer[currentUndo] = uP;
+            	} else if (UndoBuffer.Count < Server.physUndo) {
+            		currentUndo++;
+            		UndoBuffer.Add(uP);
+            	} else {
+            		currentUndo++;
+            		UndoBuffer[currentUndo] = uP;
+            	}
 
-                SetTile(b, type); //Updates server level blocks
-
-                if (physics > 0)
-                    if (Block.Physics(type) || extraInfo != "") AddCheck(b, extraInfo);
-            }
-            catch
-            {
-                SetTile(b, type);
+            	blocks[b] = type;
+            	if (physics > 0 && ((Block.Physics(type) || extraInfo != "")))
+            	    AddCheck(b, extraInfo);
+            } catch {
+            	blocks[b] = type;
             }
         }
-        public void Blockchange(ushort x, ushort y, ushort z, byte type, bool overRide = false, string extraInfo = "")
-        //Block change made by physics
-        {
-            if (x < 0 || y < 0 || z < 0) return;
-            if (x >= Width || y >= Height || z >= Length) return;
-            byte b = GetTile(x, y, z);
-
-            try
-            {
-                if (!overRide)
-                    if (Block.OPBlocks(b) || (Block.OPBlocks(type) && extraInfo != "")) return;
-
-                if (Block.Convert(b) != Block.Convert(type))
-                    //Should save bandwidth sending identical looking blocks, like air/op_air changes.
-                    Player.GlobalBlockchange(this, x, y, z, type);
-
-                if (b == Block.sponge && physics > 0 && type != Block.sponge)
-                    PhysSpongeRemoved(PosToInt(x, y, z));
-
-                if (b == Block.lava_sponge && physics > 0 && type != Block.lava_sponge)
-                    PhysSpongeRemoved(PosToInt(x, y, z), true);
-
-                try
-                {
-                    UndoPos uP;
-                    uP.location = PosToInt(x, y, z);
-                    uP.newType = type;
-                    uP.oldType = b;
-                    uP.timePerformed = DateTime.Now;
-
-                    if (currentUndo > Server.physUndo)
-                    {
-                        currentUndo = 0;
-                        UndoBuffer[currentUndo] = uP;
-                    }
-                    else if (UndoBuffer.Count < Server.physUndo)
-                    {
-                        currentUndo++;
-                        UndoBuffer.Add(uP);
-                    }
-                    else
-                    {
-                        currentUndo++;
-                        UndoBuffer[currentUndo] = uP;
-                    }
-                }
-                catch
-                {
-                }
-
-                SetTile(x, y, z, type); //Updates server level blocks
-
-                if (physics > 0)
-                    if (Block.Physics(type) || extraInfo != "") AddCheck(PosToInt(x, y, z), extraInfo);
-            }
-            catch
-            {
-                SetTile(x, y, z, type);
-            }
+        
+        public void Blockchange(ushort x, ushort y, ushort z, byte type, bool overRide = false, string extraInfo = "") {
+        	Blockchange(PosToInt(x, y, z), type, overRide, extraInfo); //Block change made by physics
         }
 
         // Returns true if ListCheck does not already have an check in the position.
@@ -833,15 +759,7 @@ namespace MCGalaxy
         public bool CheckClear(ushort x, ushort y, ushort z)
         {
             int b = PosToInt(x, y, z);
-            return !ListCheck.Exists(Check => Check.b == b);
-        }
-
-        public void skipChange(ushort x, ushort y, ushort z, byte type)
-        {
-            if (x < 0 || y < 0 || z < 0) return;
-            if (x >= Width || y >= Height || z >= Length) return;
-
-            SetTile(x, y, z, type);
+            return !ListCheck.Exists(C => C.b == b);
         }
 
         public void Save(bool Override = false, bool clearPhysics = false)
@@ -1188,7 +1106,7 @@ namespace MCGalaxy
         }
 
         /// <summary> Gets or sets a value indicating whether physics are enabled. </summary>
-        public bool PhysicsEnabled { get; set; }
+        public bool PhysicsEnabled;
 
         public void Physics()
         {
@@ -1213,12 +1131,12 @@ namespace MCGalaxy
                         continue;
                     }
 
-                    DateTime Start = DateTime.Now;
+                    DateTime start = DateTime.UtcNow;
 
                     if (physics > 0) CalcPhysics();
 
-                    TimeSpan Took = DateTime.Now - Start;
-                    wait = speedPhysics - (int)Took.TotalMilliseconds;
+                    TimeSpan delta = DateTime.UtcNow - start;
+                    wait = speedPhysics - (int)delta.TotalMilliseconds;
 
                     if (wait < (int)(-overload * 0.75f))
                     {
@@ -1558,6 +1476,7 @@ namespace MCGalaxy
                                                               break;
 
                                                           case Block.staircasestep:
+                                                          case Block.cobblestoneslab:
                                                               PhysStair(C.b);
                                                               C.time = 255;
                                                               break;
@@ -1800,26 +1719,27 @@ namespace MCGalaxy
                                       //attemps on shutdown to change blocks back into normal selves that are active, hopefully without needing to send into to clients.
                                       switch (blocks[C.b])
                                       {
-                                          case 200:
-                                          case 202:
-                                          case 203:
+                                      	  case Block.air_flood:
+                                      	  case Block.air_flood_layer:
+                                          case Block.air_flood_down:
+                                          case Block.air_flood_up:
                                               blocks[C.b] = 0;
                                               break;
-                                          case 201:
+                                          case Block.door_air:
                                               //blocks[C.b] = 111;
-                                              Blockchange(x, y, z, 111);
+                                              Blockchange(x, y, z, Block.door);
                                               break;
-                                          case 205:
+                                          case Block.door2_air:
                                               //blocks[C.b] = 113;
-                                              Blockchange(x, y, z, 113);
+                                              Blockchange(x, y, z, Block.door2);
                                               break;
-                                          case 206:
+                                          case Block.door3_air:
                                               //blocks[C.b] = 114;
-                                              Blockchange(x, y, z, 114);
+                                              Blockchange(x, y, z, Block.door3);
                                               break;
-                                          case 207:
+                                          case Block.door4_air:
                                               //blocks[C.b] = 115;
-                                              Blockchange(x, y, z, 115);
+                                              Blockchange(x, y, z, Block.door4);
                                               break;
                                       }
 
@@ -1854,54 +1774,38 @@ namespace MCGalaxy
         internal void PhysWater(int b, byte type)
         {
             if (b == -1)
-            {
                 return;
-            }
             ushort x, y, z;
             IntToPos(b, out x, out y, out z);
             if (Server.lava.active && Server.lava.map == this && Server.lava.InSafeZone(x, y, z))
-            {
                 return;
-            }
 
             switch (blocks[b])
             {
-                case 0:
+            	case Block.air:
                     if (!PhysSpongeCheck(b))
-                    {
                         AddUpdate(b, type);
-                    }
                     break;
 
-                case 10: //hit active_lava
-                case 112: //hit lava_fast
+                case Block.lava:
+                case Block.lava_fast:
                 case Block.activedeathlava:
                     if (!PhysSpongeCheck(b))
-                    {
-                        AddUpdate(b, 1);
-                    }
+                        AddUpdate(b, Block.rock);
                     break;
 
-                case 6:
-                case 37:
-                case 38:
-                case 39:
-                case 40:
-                    if (physics > 1) //Adv physics kills flowers and mushrooms in water
-                    {
-                        if (physics != 5)
-                        {
-                            if (!PhysSpongeCheck(b))
-                            {
-                                AddUpdate(b, 0);
-                            }
-                        }
-                    }
+                case Block.shrub:
+                case Block.yellowflower:
+                case Block.redflower:
+                case Block.mushroom:
+                case Block.redmushroom:
+                    if (physics > 1 && physics != 5 && !PhysSpongeCheck(b)) 
+                    	AddUpdate(b, 0); //Adv physics kills flowers and mushrooms in water
                     break;
 
-                case 12: //sand
-                case 13: //gravel
-                case 110: //woodfloat
+                case Block.sand:
+                case Block.gravel:
+                case Block.wood_float:
                     AddCheck(b);
                     break;
 
@@ -2067,16 +1971,16 @@ namespace MCGalaxy
         }
 
         //================================================================================================================
-        private void PhysStair(int b)
-        {
-            int tempb = IntOffset(b, 0, -1, 0); //Get block below
-            if (GetTile(tempb) != Block.Zero)
-            {
-                if (GetTile(tempb) == Block.staircasestep)
-                {
-                    AddUpdate(b, 0);
-                    AddUpdate(tempb, 43);
-                }
+        void PhysStair(int b) {
+            int bBelow = IntOffset(b, 0, -1, 0);
+            byte tile = GetTile(bBelow);
+            	
+            if (tile == Block.staircasestep) {
+            	AddUpdate(b, 0);
+            	AddUpdate(bBelow, Block.staircasefull);
+            } else if (tile == Block.cobblestoneslab) {
+            	AddUpdate(b, 0);
+            	AddUpdate(bBelow, Block.stone);
             }
         }
 

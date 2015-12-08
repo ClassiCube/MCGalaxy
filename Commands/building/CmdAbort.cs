@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
                 p.isFlying = false;
                 try
                 {
-                    p.level.blockqueue.RemoveAll((BlockQueue.block b) => { if (b.p == p) return true; return false; });
+                    p.level.blockqueue.RemoveAll(b => b.p == p);
                 }
                 finally { BlockQueue.resume(); }
                 Player.SendMessage(p, "Every toggle or action was aborted.");
