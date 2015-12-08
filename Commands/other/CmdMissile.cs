@@ -153,6 +153,7 @@ namespace MCGalaxy.Commands
 					p.SendBlockchange(cP.x, cP.y, cP.z, Block.air);
 				}
 			}));
+			aimThread.Name = "MCG_AimMissile";
 			aimThread.Start();
 		}
 		public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
@@ -358,6 +359,7 @@ namespace MCGalaxy.Commands
 					Thread.Sleep(100);
 				}
 			}));
+			gunThread.Name = "MCG_Missile";
 			gunThread.Start();
 		}
 		public override void Help(Player p)

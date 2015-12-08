@@ -33,7 +33,7 @@ namespace MCGalaxy
         {
             _interval = interval * 1000;
 
-            new Thread(new ThreadStart(delegate
+            Thread t = new Thread(new ThreadStart(delegate
               {
                  while (true)
                       {
@@ -49,7 +49,9 @@ namespace MCGalaxy
                           try { Server.s.Log("!LEVELS ONLINE: " + allCount.Remove(0, 2), true); }
                           catch { }
                       }
-                                                           })).Start();
+                                                           }));
+            t.Name = "MCG_AutoSaver";
+            t.Start();
         }
 
         /*

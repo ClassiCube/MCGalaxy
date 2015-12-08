@@ -302,7 +302,9 @@ namespace MCGalaxy.Commands
                 }
 
                 Player.SendMessage(p, "Finished printing image using " + printType);
-            })); printThread.Start();
+            }));
+            printThread.Name = "MCG_ImagePrint";
+            printThread.Start();
         }
         public override void Help(Player p)
         {

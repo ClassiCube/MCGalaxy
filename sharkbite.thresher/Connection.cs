@@ -503,7 +503,7 @@ namespace Sharkbite.Irc
 				connected = true;
 				writer = new StreamWriter( client.GetStream(), TextEncoding );
 				writer.AutoFlush = true;
-				reader = new StreamReader(  client.GetStream(), TextEncoding );
+				reader = new StreamReader( client.GetStream(), TextEncoding );
 				socketListenThread = new Thread(new ThreadStart( ReceiveIRCMessages ) );
 				socketListenThread.Name = Name;
 				socketListenThread.Start();		

@@ -90,6 +90,7 @@ namespace MCGalaxy.Commands
                 p.invincible = false;
                 p.trainGrab = false;
             }));
+            trainThread.Name = "MCG_RideTrain";
             trainThread.Start();
             Player.SendMessage(p, "Stand near a train to mount it");
         }

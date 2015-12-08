@@ -123,6 +123,7 @@ namespace MCGalaxy.Commands
                         return;
                     }
                     Thread extract = new Thread(new ParameterizedThreadStart(ExtractPackage));
+                    extract.Name = "MCG_RestoreServer";
                     extract.Start(p);
                     break;
                 default:
@@ -143,6 +144,7 @@ namespace MCGalaxy.Commands
         {
             ParameterizedThreadStart pts = new ParameterizedThreadStart(CreatePackage);
             Thread doWork = new Thread(new ParameterizedThreadStart(CreatePackage));
+            doWork.Name = "MCG_SaveServer";
             List<object> param = new List<object>();
             param.Add("MCGalaxy.zip");
             param.Add(withFiles);

@@ -112,6 +112,7 @@ namespace MCGalaxy.Commands
 
                 Player.SendMessage(p, "Stopped flying");
             }));
+            flyThread.Name = "MCG_Fly";
             flyThread.Start();
         }
         public override void Help(Player p)

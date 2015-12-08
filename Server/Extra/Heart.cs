@@ -53,7 +53,7 @@ namespace MCGalaxy {
 
 
         static Heart() {
-            new Thread(new ThreadStart(() => {
+            Thread t = new Thread(new ThreadStart(() => {
                 Timer = new Timer(OnBeat, null,
 #if DEBUG
                 6000, 6000
@@ -61,7 +61,9 @@ namespace MCGalaxy {
                 45000, 45000
 #endif
                 );
-            })).Start();
+            }));
+        	t.Name = "MCG_Heartbeat";
+        	t.Start();
         }
 
         private static void OnBeat(object state) {

@@ -956,6 +956,7 @@ namespace MCGalaxy
                         }
                     }
                 }));
+                blockThread.Name = "MCG_BlockUpdates";
                 blockThread.Start();
 
                 locationChecker = new Thread(new ThreadStart(delegate
@@ -1022,7 +1023,7 @@ namespace MCGalaxy
                         }
                     }
                 }));
-
+                locationChecker.Name = "MCG_LocationCheck";
                 locationChecker.Start();
 #if DEBUG
 	  UseTextures = true;          

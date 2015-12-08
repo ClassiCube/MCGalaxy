@@ -452,7 +452,9 @@ namespace MCGalaxy_.Gui
                 catch(Exception e) { /*try { Server.s.Log("No web server found to update on.");*/Logger.WriteError(e); } /*catch { }*/ //}
                 Client.Dispose();
                 CurrentUpdate = false;
-            })); updateThread.Start();
+            }));
+            updateThread.Name = "MCG_UpdateCheck";
+            updateThread.Start();
         }
 
         public static void PerformUpdate()

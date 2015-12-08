@@ -73,6 +73,7 @@ namespace MCGalaxy
             if (!Directory.Exists("logs/errors")) Directory.CreateDirectory("logs/errors");
 
             _workingThread = new Thread(new ThreadStart(WorkerThread));
+            _workingThread.Name = "MCG_Logger";
             _workingThread.IsBackground = true;
             _workingThread.Start();
         }

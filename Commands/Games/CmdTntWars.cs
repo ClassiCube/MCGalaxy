@@ -586,6 +586,7 @@ namespace MCGalaxy.Commands
                                                 Server.s.Log("TNT Wars: Increasing physics overload to 2500");
                                             }
                                             Thread t = new Thread(it.Start);
+                                            t.Name = "MCG_TntGame";
                                             t.Start();
                                         }
                                         else

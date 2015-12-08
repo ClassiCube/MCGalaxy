@@ -70,7 +70,7 @@ namespace MCGalaxy.Gui
             this.Show();
             this.BringToFront();
             WindowState = FormWindowState.Normal;
-            new Thread(() =>
+            Thread loadThread = new Thread(() =>
             {
                 s = new Server();
                 s.OnLog += WriteLine;
@@ -98,7 +98,9 @@ namespace MCGalaxy.Gui
 
                 RunOnUiThread(() => btnProperties.Enabled = true);
 
-            }).Start();
+            });
+            loadThread.Name = "MCG_ServerSetup";
+            loadThread.Start();
 
 
             notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(64);
@@ -522,7 +524,7 @@ namespace MCGalaxy.Gui
                 return;
             }
 
-            new Thread(() =>
+            Thread cmdThread = new Thread(() =>
             {
                 try
                 {
@@ -545,7 +547,9 @@ namespace MCGalaxy.Gui
                     Server.ErrorLog(ex);
                     newCommand("CONSOLE: Failed command.");
                 }
-            }).Start();
+            });
+            cmdThread.Name = "MCG_ConsoleCommand";
+            cmdThread.Start();
 
             txtCommands.Clear();
         }
@@ -947,7 +951,7 @@ namespace MCGalaxy.Gui
                 return;
             }
 
-            new Thread(() =>
+            Thread genThread = new Thread(() =>
             {
                 mapgen = true;
                 try
@@ -974,7 +978,9 @@ namespace MCGalaxy.Gui
                     MessageBox.Show("Level may not have been created.");
                 }
                 mapgen = false;
-            }).Start(); ;
+            });
+            genThread.Name = "MCG_GuiGenMap";
+            genThread.Start();
         }
 
         private void ldmapbt_Click(object sender, EventArgs e)

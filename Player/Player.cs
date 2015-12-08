@@ -2429,6 +2429,7 @@ return;
                             }
                             //finally { if (old != null) this.group = old; }
                         }));
+                        commThread.Name = "MCG_Command";
                         commThread.Start();
                     }
                     else { SendMessage("You are not allowed to use \"" + cmd + "\"!"); }

@@ -1180,6 +1180,7 @@ namespace MCGalaxy
                 if (ListCheck.Count == 0 || physicssate)
                     return;
                 physThread = new Thread(Physics);
+                physThread.Name = "MCG_Physics";
                 PhysicsEnabled = true;
                 physThread.Start();
                 physicssate = true;

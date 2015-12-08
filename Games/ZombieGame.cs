@@ -61,6 +61,7 @@ namespace MCGalaxy
 
             //Start the main Zombie thread
              Thread t = new Thread(MainLoop);
+             t.Name = "MCG_ZombieGame";
              t.Start();
         }
 
