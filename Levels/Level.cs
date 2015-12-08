@@ -1221,14 +1221,13 @@ namespace MCGalaxy
 
                     if (wait < (int)(-overload * 0.75f))
                     {
-                        Level Cause = this;
-
                         if (wait < -overload)
                         {
-                            if (!Server.physicsRestart) Cause.setPhysics(0);
-                            Cause.ClearPhysics();
+                            if (!Server.physicsRestart) 
+                            	setPhysics(0);
+                            ClearPhysics();
 
-                            Player.GlobalMessage("Physics shutdown on &b" + Cause.name);
+                            Player.GlobalMessage("Physics shutdown on &b" + name);
                             Server.s.Log("Physics shutdown on " + name);
                             if (PhysicsStateChanged != null)
                                 PhysicsStateChanged(this, PhysicsState.Stopped);
@@ -1332,12 +1331,8 @@ namespace MCGalaxy
                                                   if (PhysicsUpdate != null)
                                                       PhysicsUpdate(x, y, z, C.time, C.extraInfo, this);
                                                   
-                                                  if (C.extraInfo != "") {
-                                                  	if (ExtraInfoPhysics.DoDoorsOnly(this, C, null))
-                                                  		DoorPhysics.Do(this, C);
-                                                  } else {
+                                                  if (C.extraInfo == "" || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
                                                   	  DoorPhysics.Do(this, C);
-                                                  }
                                               }
                                               catch
                                               {
@@ -1383,10 +1378,6 @@ namespace MCGalaxy
                                               {
                                                   IntToPos(C.b, out x, out y, out z);
                                                   bool InnerChange = false;
-                                                  bool skip = false;
-                                                  Player foundPlayer = null;
-                                                  int foundNum = 75, currentNum;
-                                                  int oldNum;
                                                   string foundInfo = C.extraInfo;
                                                   if (PhysicsUpdate != null)
                                                       PhysicsUpdate(x, y, z, C.time, C.extraInfo, this);
@@ -1400,7 +1391,6 @@ namespace MCGalaxy
                                                   }
                                                   else
                                                   {
-                                                      int newNum;
                                                       switch (blocks[C.b])
                                                       {
                                                           case Block.air: //Placed air
@@ -1864,7 +1854,6 @@ namespace MCGalaxy
                                                           case Block.birdwater:
                                                               BirdPhysics.Do(this, C, rand);
                                                               break;
-
                                                           case Block.snaketail:
                                                               if (GetTile(IntOffset(C.b, -1, 0, 0)) != Block.snake ||
                                                                   GetTile(IntOffset(C.b, 1, 0, 0)) != Block.snake ||
@@ -1873,269 +1862,8 @@ namespace MCGalaxy
                                                                   C.extraInfo = "revert 0";
                                                               break;
                                                           case Block.snake:
-
-                                                              #region SNAKE
-                                                              foundPlayer = AIPhysics.ClosestPlayer(this, C);
-
-                                                          randomMovement_Snake:
-                                                              if (foundPlayer != null && rand.Next(1, 20) < 19)
-                                                              {
-                                                                  currentNum = rand.Next(1, 10);
-                                                                  foundNum = 0;
-
-                                                                  switch (currentNum)
-                                                                  {
-                                                                      case 1:
-                                                                      case 2:
-                                                                      case 3:
-                                                                          if ((foundPlayer.pos[0] / 32) - x != 0)
-                                                                          {
-                                                                              newNum =
-                                                                                  PosToInt(
-                                                                                      (ushort)
-                                                                                      (x +
-                                                                                       Math.Sign((foundPlayer.pos[0] / 32) -
-                                                                                                 x)), y, z);
-                                                                              if (GetTile(newNum) == Block.air)
-                                                                                  if (IntOffset(newNum, -1, 0, 0) ==
-                                                                                      Block.grass ||
-                                                                                      IntOffset(newNum, -1, 0, 0) ==
-                                                                                      Block.dirt)
-                                                                                      if (AddUpdate(newNum, blocks[C.b]))
-                                                                                          goto removeSelf_Snake;
-                                                                          }
-                                                                          foundNum++;
-                                                                          if (foundNum >= 3) goto default;
-                                                                          goto case 4;
-
-                                                                      case 4:
-                                                                      case 5:
-                                                                      case 6:
-                                                                          if ((foundPlayer.pos[1] / 32) - y != 0)
-                                                                          {
-                                                                              newNum = PosToInt(x,
-                                                                                                (ushort)
-                                                                                                (y +
-                                                                                                 Math.Sign(
-                                                                                                     (foundPlayer.pos[1] /
-                                                                                                      32) - y)), z);
-                                                                              if (GetTile(newNum) == Block.air)
-                                                                                  if (newNum > 0)
-                                                                                  {
-                                                                                      if (IntOffset(newNum, 0, 1, 0) ==
-                                                                                          Block.grass ||
-                                                                                          IntOffset(newNum, 0, 1, 0) ==
-                                                                                          Block.dirt &&
-                                                                                          IntOffset(newNum, 0, 2, 0) ==
-                                                                                          Block.air)
-                                                                                          if (AddUpdate(newNum,
-                                                                                                        blocks[C.b]))
-                                                                                              goto removeSelf_Snake;
-                                                                                  }
-                                                                                  else if (newNum < 0)
-                                                                                  {
-                                                                                      if (IntOffset(newNum, 0, -2, 0) ==
-                                                                                          Block.grass ||
-                                                                                          IntOffset(newNum, 0, -2, 0) ==
-                                                                                          Block.dirt &&
-                                                                                          IntOffset(newNum, 0, -1, 0) ==
-                                                                                          Block.air)
-                                                                                          if (AddUpdate(newNum,
-                                                                                                        blocks[C.b]))
-                                                                                              goto removeSelf_Snake;
-                                                                                  }
-                                                                          }
-                                                                          foundNum++;
-                                                                          if (foundNum >= 3) goto default;
-                                                                          goto case 7;
-
-                                                                      case 7:
-                                                                      case 8:
-                                                                      case 9:
-                                                                          if ((foundPlayer.pos[2] / 32) - z != 0)
-                                                                          {
-                                                                              newNum = PosToInt(x, y,
-                                                                                                (ushort)
-                                                                                                (z +
-                                                                                                 Math.Sign(
-                                                                                                     (foundPlayer.pos[2] /
-                                                                                                      32) - z)));
-                                                                              if (GetTile(newNum) == Block.air)
-                                                                                  if (IntOffset(newNum, 0, 0, -1) ==
-                                                                                      Block.grass ||
-                                                                                      IntOffset(newNum, 0, 0, -1) ==
-                                                                                      Block.dirt)
-                                                                                      if (AddUpdate(newNum, blocks[C.b]))
-                                                                                          goto removeSelf_Snake;
-                                                                          }
-                                                                          foundNum++;
-                                                                          if (foundNum >= 3) goto default;
-                                                                          else goto case 1;
-                                                                      default:
-                                                                          foundPlayer = null;
-                                                                          goto randomMovement_Snake;
-                                                                  }
-                                                              }
-                                                              else
-                                                              {
-                                                                  switch (rand.Next(1, 13))
-                                                                  {
-                                                                      case 1:
-                                                                      case 2:
-                                                                      case 3:
-                                                                          newNum = IntOffset(C.b, -1, 0, 0);
-                                                                          oldNum = PosToInt(x, y, z);
-
-                                                                          if (GetTile(IntOffset(newNum, 0, -1, 0)) ==
-                                                                              Block.air && GetTile(newNum) == Block.air)
-                                                                              newNum = IntOffset(newNum, 0, -1, 0);
-                                                                          else if (GetTile(newNum) == Block.air &&
-                                                                                   GetTile(IntOffset(newNum, 0, 1, 0)) ==
-                                                                                   Block.air)
-                                                                          {
-                                                                          }
-
-                                                                          else if (
-                                                                              GetTile(IntOffset(newNum, 0, 2, 0)) ==
-                                                                              Block.air &&
-                                                                              GetTile(IntOffset(newNum, 0, 1, 0)) ==
-                                                                              Block.air)
-                                                                              newNum = IntOffset(newNum, 0, 1, 0);
-                                                                          else skip = true; //Not used...
-
-                                                                          if (AddUpdate(newNum, blocks[C.b]))
-                                                                          {
-                                                                              AddUpdate(IntOffset(oldNum, 0, 0, 0),
-                                                                                        Block.snaketail, true,
-                                                                                        string.Format("wait 5 revert {0}", Block.air));
-                                                                              goto removeSelf_Snake;
-                                                                          }
-
-                                                                          foundNum++;
-                                                                          if (foundNum >= 4) InnerChange = true;
-                                                                          else goto case 4;
-                                                                          break;
-
-                                                                      case 4:
-                                                                      case 5:
-                                                                      case 6:
-                                                                          newNum = IntOffset(C.b, 1, 0, 0);
-                                                                          oldNum = PosToInt(x, y, z);
-
-                                                                          if (GetTile(IntOffset(newNum, 0, -1, 0)) ==
-                                                                              Block.air && GetTile(newNum) == Block.air)
-                                                                              newNum = IntOffset(newNum, 0, -1, 0);
-                                                                          else if (GetTile(newNum) == Block.air &&
-                                                                                   GetTile(IntOffset(newNum, 0, 1, 0)) ==
-                                                                                   Block.air)
-                                                                          {
-                                                                          }
-
-                                                                          else if (
-                                                                              GetTile(IntOffset(newNum, 0, 2, 0)) ==
-                                                                              Block.air &&
-                                                                              GetTile(IntOffset(newNum, 0, 1, 0)) ==
-                                                                              Block.air)
-                                                                              newNum = IntOffset(newNum, 0, 1, 0);
-                                                                          else skip = true;
-
-                                                                          if (AddUpdate(newNum, blocks[C.b]))
-                                                                          {
-                                                                              AddUpdate(IntOffset(oldNum, 0, 0, 0),
-                                                                                        Block.snaketail, true,
-                                                                                        "wait 5 revert " +
-                                                                                        Block.air.ToString());
-                                                                              goto removeSelf_Snake;
-                                                                          }
-
-                                                                          foundNum++;
-                                                                          if (foundNum >= 4) InnerChange = true;
-                                                                          else goto case 7;
-                                                                          break;
-
-                                                                      case 7:
-                                                                      case 8:
-                                                                      case 9:
-                                                                          newNum = IntOffset(C.b, 0, 0, 1);
-                                                                          oldNum = PosToInt(x, y, z);
-
-                                                                          if (GetTile(IntOffset(newNum, 0, -1, 0)) ==
-                                                                              Block.air && GetTile(newNum) == Block.air)
-                                                                              newNum = IntOffset(newNum, 0, -1, 0);
-                                                                          else if (GetTile(newNum) == Block.air &&
-                                                                                   GetTile(IntOffset(newNum, 0, 1, 0)) ==
-                                                                                   Block.air)
-                                                                          {
-                                                                          }
-
-                                                                          else if (
-                                                                              GetTile(IntOffset(newNum, 0, 2, 0)) ==
-                                                                              Block.air &&
-                                                                              GetTile(IntOffset(newNum, 0, 1, 0)) ==
-                                                                              Block.air)
-                                                                              newNum = IntOffset(newNum, 0, 1, 0);
-                                                                          else skip = true;
-
-                                                                          if (AddUpdate(newNum, blocks[C.b]))
-                                                                          {
-                                                                              AddUpdate(IntOffset(oldNum, 0, 0, 0),
-                                                                                        Block.snaketail, true,
-                                                                                        "wait 5 revert " +
-                                                                                        Block.air.ToString());
-                                                                              goto removeSelf_Snake;
-                                                                          }
-
-                                                                          foundNum++;
-                                                                          if (foundNum >= 4) InnerChange = true;
-                                                                          else goto case 10;
-                                                                          break;
-                                                                      case 10:
-                                                                      case 11:
-                                                                      case 12:
-                                                                      default:
-                                                                          newNum = IntOffset(C.b, 0, 0, -1);
-                                                                          oldNum = PosToInt(x, y, z);
-
-                                                                          if (GetTile(IntOffset(newNum, 0, -1, 0)) ==
-                                                                              Block.air && GetTile(newNum) == Block.air)
-                                                                              newNum = IntOffset(newNum, 0, -1, 0);
-                                                                          else if (GetTile(newNum) == Block.air &&
-                                                                                   GetTile(IntOffset(newNum, 0, 1, 0)) ==
-                                                                                   Block.air)
-                                                                          {
-                                                                          }
-
-                                                                          else if (
-                                                                              GetTile(IntOffset(newNum, 0, 2, 0)) ==
-                                                                              Block.air &&
-                                                                              GetTile(IntOffset(newNum, 0, 1, 0)) ==
-                                                                              Block.air)
-                                                                              newNum = IntOffset(newNum, 0, 1, 0);
-                                                                          else skip = true;
-
-                                                                          if (AddUpdate(newNum, blocks[C.b]))
-                                                                          {
-                                                                              AddUpdate(IntOffset(oldNum, 0, 0, 0),
-                                                                                        Block.snaketail, true,
-                                                                                        "wait 5 revert " +
-                                                                                        Block.air.ToString());
-                                                                              goto removeSelf_Snake;
-                                                                          }
-
-                                                                          foundNum++;
-                                                                          if (foundNum >= 4) InnerChange = true;
-                                                                          else goto case 1;
-                                                                          break;
-                                                                  }
-                                                              }
-
-                                                          removeSelf_Snake:
-                                                              if (!InnerChange)
-                                                                  AddUpdate(C.b, Block.air);
+                                                              SnakePhysics.Do(this, C, rand);
                                                               break;
-
-                                                              #endregion
-
                                                           case Block.birdred:
                                                           case Block.birdblue:
                                                           case Block.birdkill:
