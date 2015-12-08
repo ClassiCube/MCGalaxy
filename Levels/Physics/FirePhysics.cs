@@ -1,5 +1,6 @@
 ﻿/*
 	Copyright 2015 MCGalaxy
+	Original level physics copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
 		
 	Dual-licensed under the	Educational Community License, Version 2.0 and
 	the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -31,7 +32,7 @@ namespace MCGalaxy.BlockPhysics {
 		
 		static void ExpandDiagonal(Level lvl, ushort x, ushort y, ushort z,
 		                           int xOffset, int yOffset, int zOffset) {
-			if (!Block.LavaKill(lvl.GetTile((ushort)(x + xOffset),
+			if (!Block.FireKill(lvl.GetTile((ushort)(x + xOffset),
 			                                (ushort)(y + yOffset), (ushort)(z + zOffset))))
 				return;
 			
@@ -48,7 +49,7 @@ namespace MCGalaxy.BlockPhysics {
 			if (index < 0) return;
 			byte block = lvl.blocks[index];
 			
-			if (Block.LavaKill(block))
+			if (Block.FireKill(block))
 				lvl.AddUpdate(index, Block.fire);
 			else if (block == Block.tnt)
 				lvl.MakeExplosion((ushort)x, (ushort)y, (ushort)z, -1);

@@ -213,7 +213,7 @@ namespace MCGalaxy.Commands
                         {
                             if (bp.ending == 1)
                             {
-                                if ((!Block.LavaKill(by) && !Block.NeedRestart(by)) && by != Block.glass)
+                                if ((!Block.FireKill(by) && !Block.NeedRestart(by)) && by != Block.glass)
                                 {
                                     break;
                                 }

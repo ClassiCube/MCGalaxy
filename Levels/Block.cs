@@ -941,10 +941,15 @@ namespace MCGalaxy
             return false;
         }
 
+        public static bool FireKill(byte type) {
+        	return type != Block.air && LavaKill(type);
+        }
+        
         public static bool LavaKill(byte type)
         {
             switch (type)
             {
+            	case Block.air:
                 case Block.wood:
                 case Block.shrub:
                 case Block.trunk:
