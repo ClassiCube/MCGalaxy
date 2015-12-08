@@ -427,6 +427,7 @@
     <Compile Include="Levels\Physics\AirPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
     <Compile Include="Levels\Physics\DoorPhysics.cs" />
+    <Compile Include="Levels\Physics\ExtLiquidPhysics.cs" />
     <Compile Include="Levels\Physics\ExtraInfoPhysics.cs" />
     <Compile Include="Levels\Physics\FinitePhysics.cs" />
     <Compile Include="Levels\Physics\FirePhysics.cs" />

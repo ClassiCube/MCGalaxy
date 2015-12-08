@@ -31,7 +31,7 @@ namespace MCGalaxy.BlockPhysics {
 		
 		static void ExpandDiagonal(Level lvl, ushort x, ushort y, ushort z,
 		                           int xOffset, int yOffset, int zOffset) {
-			if (!Block.LavaKill(lvl.GetTile((ushort)(x + xOffset),
+			if (!Block.FireKill(lvl.GetTile((ushort)(x + xOffset),
 			                                (ushort)(y + yOffset), (ushort)(z + zOffset))))
 				return;
 			
@@ -48,7 +48,7 @@ namespace MCGalaxy.BlockPhysics {
 			if (index < 0) return;
 			byte block = lvl.blocks[index];
 			
-			if (Block.LavaKill(block))
+			if (Block.FireKill(block))
 				lvl.AddUpdate(index, Block.fire);
 			else if (block == Block.tnt)
 				lvl.MakeExplosion((ushort)x, (ushort)y, (ushort)z, -1);

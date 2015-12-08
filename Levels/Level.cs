@@ -1377,7 +1377,6 @@ namespace MCGalaxy
                                               try
                                               {
                                                   IntToPos(C.b, out x, out y, out z);
-                                                  bool InnerChange = false;
                                                   string foundInfo = C.extraInfo;
                                                   if (PhysicsUpdate != null)
                                                       PhysicsUpdate(x, y, z, C.time, C.extraInfo, this);
@@ -1470,133 +1469,23 @@ namespace MCGalaxy
                                                               C.time = 255;
                                                               break;
 
-                                                          case Block.water: //Active_water
+                                                          case Block.water:
                                                           case Block.activedeathwater:
                                                               LiquidPhysics.DoWater(this, C, rand);
                                                               break;
                                                           case Block.WaterDown:
-                                                              rand = new Random();
-
-                                                              switch (GetTile(x, (ushort)(y - 1), z))
-                                                              {
-                                                                  case Block.air:
-                                                                      AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                Block.WaterDown);
-                                                                      if (C.extraInfo.IndexOf("wait") == -1) C.time = 255;
-                                                                      break;
-                                                                  case Block.air_flood_down:
-                                                                      break;
-                                                                  case Block.lavastill:
-                                                                  case Block.waterstill:
-                                                                      break;
-                                                                  default:
-                                                                      if (GetTile(x, (ushort)(y - 1), z) !=
-                                                                          Block.WaterDown)
-                                                                      {
-                                                                          PhysWater(
-                                                                              PosToInt((ushort)(x + 1), y, z),
-                                                                              blocks[C.b]);
-                                                                          PhysWater(
-                                                                              PosToInt((ushort)(x - 1), y, z),
-                                                                              blocks[C.b]);
-                                                                          PhysWater(
-                                                                              PosToInt(x, y, (ushort)(z + 1)),
-                                                                              blocks[C.b]);
-                                                                          PhysWater(
-                                                                              PosToInt(x, y, (ushort)(z - 1)),
-                                                                              blocks[C.b]);
-                                                                          if (C.extraInfo.IndexOf("wait") == -1)
-                                                                              C.time = 255;
-                                                                      }
-                                                                      break;
-                                                              }
+                                                              ExtLiquidPhysics.DoWaterfall(this, C, rand);
                                                               break;
-
                                                           case Block.LavaDown:
-                                                              rand = new Random();
-
-                                                              switch (GetTile(x, (ushort)(y - 1), z))
-                                                              {
-                                                                  case Block.air:
-                                                                      AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                Block.LavaDown);
-                                                                      if (C.extraInfo.IndexOf("wait") == -1) C.time = 255;
-                                                                      break;
-                                                                  case Block.air_flood_down:
-                                                                      break;
-                                                                  case Block.lavastill:
-                                                                  case Block.waterstill:
-                                                                      break;
-                                                                  default:
-                                                                      if (GetTile(x, (ushort)(y - 1), z) !=
-                                                                          Block.LavaDown)
-                                                                      {
-                                                                          PhysLava(
-                                                                              PosToInt((ushort)(x + 1), y, z),
-                                                                              blocks[C.b]);
-                                                                          PhysLava(
-                                                                              PosToInt((ushort)(x - 1), y, z),
-                                                                              blocks[C.b]);
-                                                                          PhysLava(
-                                                                              PosToInt(x, y, (ushort)(z + 1)),
-                                                                              blocks[C.b]);
-                                                                          PhysLava(
-                                                                              PosToInt(x, y, (ushort)(z - 1)),
-                                                                              blocks[C.b]);
-                                                                          if (C.extraInfo.IndexOf("wait") == -1)
-                                                                              C.time = 255;
-                                                                      }
-                                                                      break;
-                                                              }
+                                                              ExtLiquidPhysics.DoLavafall(this, C, rand);
                                                               break;
-
                                                           case Block.WaterFaucet:
-                                                              //rand = new Random();
-                                                              C.time++;
-                                                              if (C.time < 2) break;
-
-                                                              C.time = 0;
-
-                                                              switch (GetTile(x, (ushort)(y - 1), z))
-                                                              {
-                                                                  case Block.WaterDown:
-                                                                  case Block.air:
-                                                                      if (rand.Next(1, 10) > 7)
-                                                                          AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                    Block.air_flood_down);
-                                                                      break;
-                                                                  case Block.air_flood_down:
-                                                                      if (rand.Next(1, 10) > 4)
-                                                                          AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                    Block.WaterDown);
-                                                                      break;
-                                                              }
+                                                              ExtLiquidPhysics.DoFaucet(this, C, rand, Block.WaterDown);
                                                               break;
-
                                                           case Block.LavaFaucet:
-                                                              //rand = new Random();
-                                                              C.time++;
-                                                              if (C.time < 2) break;
-
-                                                              C.time = 0;
-
-                                                              switch (GetTile(x, (ushort)(y - 1), z))
-                                                              {
-                                                                  case Block.LavaDown:
-                                                                  case Block.air:
-                                                                      if (rand.Next(1, 10) > 7)
-                                                                          AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                    Block.air_flood_down);
-                                                                      break;
-                                                                  case Block.air_flood_down:
-                                                                      if (rand.Next(1, 10) > 4)
-                                                                          AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                    Block.LavaDown);
-                                                                      break;
-                                                              }
+                                                              ExtLiquidPhysics.DoFaucet(this, C, rand, Block.LavaDown);
                                                               break;
-
-                                                          case Block.lava: //Active_lava
+                                                          case Block.lava:
                                                           case Block.activedeathlava:
                                                               LiquidPhysics.DoLava(this, C, rand);
                                                               break;
@@ -1710,144 +1599,11 @@ namespace MCGalaxy
                                                               TrainPhysics.Do(this, C, rand);
                                                               break;
                                                           case Block.magma:
-                                                              C.time++;
-                                                              if (C.time < 3) break;
-
-                                                              if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-                                                                  AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                            Block.magma);
-                                                              else if (GetTile(x, (ushort)(y - 1), z) != Block.magma)
-                                                              {
-                                                                  PhysLava(PosToInt((ushort)(x + 1), y, z), blocks[C.b]);
-                                                                  PhysLava(PosToInt((ushort)(x - 1), y, z), blocks[C.b]);
-                                                                  PhysLava(PosToInt(x, y, (ushort)(z + 1)), blocks[C.b]);
-                                                                  PhysLava(PosToInt(x, y, (ushort)(z - 1)), blocks[C.b]);
-                                                              }
-
-                                                              if (physics > 1)
-                                                              {
-                                                                  if (C.time > 10)
-                                                                  {
-                                                                      C.time = 0;
-
-                                                                      if (Block.LavaKill(GetTile((ushort)(x + 1), y, z)))
-                                                                      {
-                                                                          AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                    Block.magma);
-                                                                          InnerChange = true;
-                                                                      }
-                                                                      if (Block.LavaKill(GetTile((ushort)(x - 1), y, z)))
-                                                                      {
-                                                                          AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                    Block.magma);
-                                                                          InnerChange = true;
-                                                                      }
-                                                                      if (Block.LavaKill(GetTile(x, y, (ushort)(z + 1))))
-                                                                      {
-                                                                          AddUpdate(PosToInt(x, y, (ushort)(z + 1)),
-                                                                                    Block.magma);
-                                                                          InnerChange = true;
-                                                                      }
-                                                                      if (Block.LavaKill(GetTile(x, y, (ushort)(z - 1))))
-                                                                      {
-                                                                          AddUpdate(PosToInt(x, y, (ushort)(z - 1)),
-                                                                                    Block.magma);
-                                                                          InnerChange = true;
-                                                                      }
-                                                                      if (Block.LavaKill(GetTile(x, (ushort)(y - 1), z)))
-                                                                      {
-                                                                          AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                    Block.magma);
-                                                                          InnerChange = true;
-                                                                      }
-
-                                                                      if (InnerChange)
-                                                                      {
-                                                                          if (
-                                                                              Block.LavaKill(GetTile(x, (ushort)(y + 1),
-                                                                                                     z)))
-                                                                              AddUpdate(
-                                                                                  PosToInt(x, (ushort)(y + 1), z),
-                                                                                  Block.magma);
-                                                                      }
-                                                                  }
-                                                              }
-
+                                                              ExtLiquidPhysics.DoMagma(this, C, rand);
                                                               break;
                                                           case Block.geyser:
-                                                              C.time++;
-
-                                                              if (GetTile(x, (ushort)(y - 1), z) == Block.air)
-                                                                  AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                            Block.geyser);
-                                                              else if (GetTile(x, (ushort)(y - 1), z) != Block.geyser)
-                                                              {
-                                                                  PhysWater(PosToInt((ushort)(x + 1), y, z),
-                                                                            blocks[C.b]);
-                                                                  PhysWater(PosToInt((ushort)(x - 1), y, z),
-                                                                            blocks[C.b]);
-                                                                  PhysWater(PosToInt(x, y, (ushort)(z + 1)),
-                                                                            blocks[C.b]);
-                                                                  PhysWater(PosToInt(x, y, (ushort)(z - 1)),
-                                                                            blocks[C.b]);
-                                                              }
-
-                                                              if (physics > 1)
-                                                              {
-                                                                  if (C.time > 10)
-                                                                  {
-                                                                      C.time = 0;
-
-                                                                      if (
-                                                                          Block.WaterKill(GetTile((ushort)(x + 1), y, z)))
-                                                                      {
-                                                                          AddUpdate(PosToInt((ushort)(x + 1), y, z),
-                                                                                    Block.geyser);
-                                                                          InnerChange = true;
-                                                                      }
-                                                                      if (
-                                                                          Block.WaterKill(GetTile((ushort)(x - 1), y, z)))
-                                                                      {
-                                                                          AddUpdate(PosToInt((ushort)(x - 1), y, z),
-                                                                                    Block.geyser);
-                                                                          InnerChange = true;
-                                                                      }
-                                                                      if (
-                                                                          Block.WaterKill(GetTile(x, y, (ushort)(z + 1))))
-                                                                      {
-                                                                          AddUpdate(PosToInt(x, y, (ushort)(z + 1)),
-                                                                                    Block.geyser);
-                                                                          InnerChange = true;
-                                                                      }
-                                                                      if (
-                                                                          Block.WaterKill(GetTile(x, y, (ushort)(z - 1))))
-                                                                      {
-                                                                          AddUpdate(PosToInt(x, y, (ushort)(z - 1)),
-                                                                                    Block.geyser);
-                                                                          InnerChange = true;
-                                                                      }
-                                                                      if (
-                                                                          Block.WaterKill(GetTile(x, (ushort)(y - 1), z)))
-                                                                      {
-                                                                          AddUpdate(PosToInt(x, (ushort)(y - 1), z),
-                                                                                    Block.geyser);
-                                                                          InnerChange = true;
-                                                                      }
-
-                                                                      if (InnerChange)
-                                                                      {
-                                                                          if (
-                                                                              Block.WaterKill(GetTile(x,
-                                                                                                      (ushort)(y + 1),
-                                                                                                      z)))
-                                                                              AddUpdate(
-                                                                                  PosToInt(x, (ushort)(y + 1), z),
-                                                                                  Block.geyser);
-                                                                      }
-                                                                  }
-                                                              }
+                                                              ExtLiquidPhysics.DoGeyser(this, C, rand);
                                                               break;
-
                                                           case Block.birdblack:
                                                           case Block.birdwhite:
                                                           case Block.birdlava:
