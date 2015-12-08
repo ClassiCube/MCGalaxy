@@ -1404,32 +1404,8 @@ namespace MCGalaxy
                                                       switch (blocks[C.b])
                                                       {
                                                           case Block.air: //Placed air
-                                                              //initialy checks if block is valid
-                                                              PhysAir(PosToInt((ushort)(x + 1), y, z));
-                                                              PhysAir(PosToInt((ushort)(x - 1), y, z));
-                                                              PhysAir(PosToInt(x, y, (ushort)(z + 1)));
-                                                              PhysAir(PosToInt(x, y, (ushort)(z - 1)));
-                                                              PhysAir(PosToInt(x, (ushort)(y + 1), z));
-                                                              //Check block above the air
-                                                              PhysAir(PosToInt(x, (ushort)(y - 1), z));
-                                                              // Check block below the air
-
-                                                              //Edge of map water
-                                                              if (edgeWater)
-                                                              {
-                                                                  if (y < Height / 2 && y >= (Height / 2) - 2)
-                                                                  {
-                                                                      if (x == 0 || x == Width - 1 || z == 0 ||
-                                                                          z == Length - 1)
-                                                                      {
-                                                                          AddUpdate(C.b, Block.water);
-                                                                      }
-                                                                  }
-                                                              }
-
-                                                              if (!C.extraInfo.Contains("wait")) C.time = 255;
+                                                      		  AirPhysics.DoAir(this, C, rand);
                                                               break;
-
                                                           case Block.dirt: //Dirt
                                                               if (!GrassGrow)
                                                               {
@@ -1508,7 +1484,6 @@ namespace MCGalaxy
                                                           case Block.activedeathwater:
                                                               LiquidPhysics.DoWater(this, C, rand);
                                                               break;
-
                                                           case Block.WaterDown:
                                                               rand = new Random();
 
@@ -1645,32 +1620,18 @@ namespace MCGalaxy
                                                           case Block.finiteFaucet:
                                                               FinitePhysics.DoFaucet(this, C, rand);
                                                               break;
-                                                          case Block.sand: //Sand
-                                                              if (PhysSand(C.b, Block.sand))
+                                                          case Block.sand:
+                                                          case Block.gravel:
+                                                              if (PhysSand(C.b, blocks[C.b]))
                                                               {
                                                                   PhysAir(PosToInt((ushort)(x + 1), y, z));
                                                                   PhysAir(PosToInt((ushort)(x - 1), y, z));
                                                                   PhysAir(PosToInt(x, y, (ushort)(z + 1)));
                                                                   PhysAir(PosToInt(x, y, (ushort)(z - 1)));
                                                                   PhysAir(PosToInt(x, (ushort)(y + 1), z));
-                                                                  //Check block above
                                                               }
                                                               C.time = 255;
                                                               break;
-
-                                                          case Block.gravel: //Gravel
-                                                              if (PhysSand(C.b, Block.gravel))
-                                                              {
-                                                                  PhysAir(PosToInt((ushort)(x + 1), y, z));
-                                                                  PhysAir(PosToInt((ushort)(x - 1), y, z));
-                                                                  PhysAir(PosToInt(x, y, (ushort)(z + 1)));
-                                                                  PhysAir(PosToInt(x, y, (ushort)(z - 1)));
-                                                                  PhysAir(PosToInt(x, (ushort)(y + 1), z));
-                                                                  //Check block above
-                                                              }
-                                                              C.time = 255;
-                                                              break;
-
                                                           case Block.sponge: //SPONGE
                                                               PhysSponge(C.b);
                                                               C.time = 255;
@@ -1731,97 +1692,17 @@ namespace MCGalaxy
 
                                                           //Special blocks that are not saved
                                                           case Block.air_flood: //air_flood
-                                                              if (C.time < 1)
-                                                              {
-                                                                  PhysAirFlood(PosToInt((ushort)(x + 1), y, z),
-                                                                               Block.air_flood);
-                                                                  PhysAirFlood(PosToInt((ushort)(x - 1), y, z),
-                                                                               Block.air_flood);
-                                                                  PhysAirFlood(PosToInt(x, y, (ushort)(z + 1)),
-                                                                               Block.air_flood);
-                                                                  PhysAirFlood(PosToInt(x, y, (ushort)(z - 1)),
-                                                                               Block.air_flood);
-                                                                  PhysAirFlood(PosToInt(x, (ushort)(y - 1), z),
-                                                                               Block.air_flood);
-                                                                  PhysAirFlood(PosToInt(x, (ushort)(y + 1), z),
-                                                                               Block.air_flood);
-
-                                                                  C.time++;
-                                                              }
-                                                              else
-                                                              {
-                                                                  AddUpdate(C.b, 0); //Turn back into normal air
-                                                                  C.time = 255;
-                                                              }
+                                                              AirPhysics.DoFlood(this, C, rand, AirFlood.Full, Block.air_flood);
                                                               break;
-
-                                                          case Block.air_flood_layer: //air_flood_layer
-                                                              if (C.time < 1)
-                                                              {
-                                                                  PhysAirFlood(PosToInt((ushort)(x + 1), y, z),
-                                                                               Block.air_flood_layer);
-                                                                  PhysAirFlood(PosToInt((ushort)(x - 1), y, z),
-                                                                               Block.air_flood_layer);
-                                                                  PhysAirFlood(PosToInt(x, y, (ushort)(z + 1)),
-                                                                               Block.air_flood_layer);
-                                                                  PhysAirFlood(PosToInt(x, y, (ushort)(z - 1)),
-                                                                               Block.air_flood_layer);
-
-                                                                  C.time++;
-                                                              }
-                                                              else
-                                                              {
-                                                                  AddUpdate(C.b, 0); //Turn back into normal air
-                                                                  C.time = 255;
-                                                              }
+                                                          case Block.air_flood_layer:
+                                                              AirPhysics.DoFlood(this, C, rand, AirFlood.Layer, Block.air_flood_layer);
                                                               break;
-
-                                                          case Block.air_flood_down: //air_flood_down
-                                                              if (C.time < 1)
-                                                              {
-                                                                  PhysAirFlood(PosToInt((ushort)(x + 1), y, z),
-                                                                               Block.air_flood_down);
-                                                                  PhysAirFlood(PosToInt((ushort)(x - 1), y, z),
-                                                                               Block.air_flood_down);
-                                                                  PhysAirFlood(PosToInt(x, y, (ushort)(z + 1)),
-                                                                               Block.air_flood_down);
-                                                                  PhysAirFlood(PosToInt(x, y, (ushort)(z - 1)),
-                                                                               Block.air_flood_down);
-                                                                  PhysAirFlood(PosToInt(x, (ushort)(y - 1), z),
-                                                                               Block.air_flood_down);
-
-                                                                  C.time++;
-                                                              }
-                                                              else
-                                                              {
-                                                                  AddUpdate(C.b, 0); //Turn back into normal air
-                                                                  C.time = 255;
-                                                              }
+                                                          case Block.air_flood_down:
+                                                              AirPhysics.DoFlood(this, C, rand, AirFlood.Down, Block.air_flood_down);
                                                               break;
-
-                                                          case Block.air_flood_up: //air_flood_up
-                                                              if (C.time < 1)
-                                                              {
-                                                                  PhysAirFlood(PosToInt((ushort)(x + 1), y, z),
-                                                                               Block.air_flood_up);
-                                                                  PhysAirFlood(PosToInt((ushort)(x - 1), y, z),
-                                                                               Block.air_flood_up);
-                                                                  PhysAirFlood(PosToInt(x, y, (ushort)(z + 1)),
-                                                                               Block.air_flood_up);
-                                                                  PhysAirFlood(PosToInt(x, y, (ushort)(z - 1)),
-                                                                               Block.air_flood_up);
-                                                                  PhysAirFlood(PosToInt(x, (ushort)(y + 1), z),
-                                                                               Block.air_flood_up);
-
-                                                                  C.time++;
-                                                              }
-                                                              else
-                                                              {
-                                                                  AddUpdate(C.b, 0); //Turn back into normal air
-                                                                  C.time = 255;
-                                                              }
+                                                          case Block.air_flood_up:
+                                                              AirPhysics.DoFlood(this, C, rand, AirFlood.Up, Block.air_flood_up);
                                                               break;
-
                                                           case Block.smalltnt:
                                                               TntPhysics.DoSmallTnt(this, C, rand);
                                                               break;
@@ -2514,6 +2395,7 @@ namespace MCGalaxy
             ListUpdate.Clear();
         }
 
+        internal void PhysAir(int b) { AirPhysics.PhysAir(this, b); }
         //================================================================================================================
         internal void PhysWater(int b, byte type)
         {
@@ -2632,44 +2514,6 @@ namespace MCGalaxy
                 case 40:
                     if (physics > 1 && physics != 5) //Adv physics kills flowers and mushrooms plus wood in lava
                         if (!PhysSpongeCheck(b, true)) AddUpdate(b, 0);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        //================================================================================================================
-        private void PhysAir(int b)
-        {
-            if (b == -1)
-            {
-                return;
-            }
-            if (Block.Convert(blocks[b]) == Block.water || Block.Convert(blocks[b]) == Block.lava ||
-                (blocks[b] >= 21 && blocks[b] <= 36))
-            {
-                AddCheck(b);
-                return;
-            }
-
-            switch (blocks[b])
-            {
-                //case 8:     //active water
-                //case 10:    //active_lava
-                case 6: //shrub
-                case 12: //sand
-                case 13: //gravel
-                case 18: //leaf
-                case 110: //wood_float
-                    /*case 112:   //lava_fast
-                    case Block.WaterDown:
-                    case Block.LavaDown:
-                    case Block.deathlava:
-                    case Block.deathwater:
-                    case Block.geyser:
-                    case Block.magma:*/
-                    AddCheck(b);
                     break;
 
                 default:
@@ -2884,58 +2728,6 @@ namespace MCGalaxy
         }
 
         //================================================================================================================
-        private void PhysAirFlood(int b, byte type)
-        {
-            if (b == -1)
-            {
-                return;
-            }
-            if (Block.Convert(blocks[b]) == Block.water || Block.Convert(blocks[b]) == Block.lava) AddUpdate(b, type);
-        }
-
-        //================================================================================================================
-        private void PhysFall(byte newBlock, ushort x, ushort y, ushort z, bool random)
-        {
-            var randNum = new Random();
-            byte b;
-            if (!random)
-            {
-                b = GetTile((ushort)(x + 1), y, z);
-                if (b == Block.air || b == Block.waterstill) Blockchange((ushort)(x + 1), y, z, newBlock);
-                b = GetTile((ushort)(x - 1), y, z);
-                if (b == Block.air || b == Block.waterstill) Blockchange((ushort)(x - 1), y, z, newBlock);
-                b = GetTile(x, y, (ushort)(z + 1));
-                if (b == Block.air || b == Block.waterstill) Blockchange(x, y, (ushort)(z + 1), newBlock);
-                b = GetTile(x, y, (ushort)(z - 1));
-                if (b == Block.air || b == Block.waterstill) Blockchange(x, y, (ushort)(z - 1), newBlock);
-            }
-            else
-            {
-                if (GetTile((ushort)(x + 1), y, z) == Block.air && randNum.Next(1, 10) < 3)
-                    Blockchange((ushort)(x + 1), y, z, newBlock);
-                if (GetTile((ushort)(x - 1), y, z) == Block.air && randNum.Next(1, 10) < 3)
-                    Blockchange((ushort)(x - 1), y, z, newBlock);
-                if (GetTile(x, y, (ushort)(z + 1)) == Block.air && randNum.Next(1, 10) < 3)
-                    Blockchange(x, y, (ushort)(z + 1), newBlock);
-                if (GetTile(x, y, (ushort)(z - 1)) == Block.air && randNum.Next(1, 10) < 3)
-                    Blockchange(x, y, (ushort)(z - 1), newBlock);
-            }
-        }
-
-        //================================================================================================================
-        private void PhysReplace(int b, byte typeA, byte typeB) //replace any typeA with typeB
-        {
-            if (b == -1)
-            {
-                return;
-            }
-            if (blocks[b] == typeA)
-            {
-                AddUpdate(b, typeB);
-            }
-        }
-
-        //================================================================================================================
         private bool PhysLeaf(int b)
         {
             byte type, dist = 4;
@@ -3032,23 +2824,6 @@ namespace MCGalaxy
 
             //Server.s.Log((leaves[b] < 0).ToString()); // This is a debug line that spams the console to hell!
             return leaves[b] < 0;
-        }
-
-        //================================================================================================================
-        private byte PhysFlowDirections(int b, bool down = true, bool up = false)
-        {
-            byte dir = 0;
-            ushort x, y, z;
-            IntToPos(b, out x, out y, out z);
-
-            if (GetTile((ushort)(x + 1), y, z) == Block.air) dir++;
-            if (GetTile((ushort)(x - 1), y, z) == Block.air) dir++;
-            if (up && GetTile(x, (ushort)(y + 1), z) == Block.air) dir++;
-            if (down && GetTile(x, (ushort)(y - 1), z) == Block.air) dir++;
-            if (GetTile(x, y, (ushort)(z + 1)) == Block.air) dir++;
-            if (GetTile(x, y, (ushort)(z - 1)) == Block.air) dir++;
-
-            return dir;
         }
 
         //================================================================================================================
@@ -3187,16 +2962,6 @@ namespace MCGalaxy
                                           (byte)
                                           rand.Next(Math.Min(storedRand1, storedRand2),
                                                     Math.Max(storedRand1, storedRand2)), false, "drop 100 dissipate 25");
-        }
-
-        public void finiteMovement(Check C, ushort x, ushort y, ushort z) {
-            var rand = new Random();
-            FinitePhysics.DoWaterOrLava(this, C, rand);
-        }
-
-        public struct Pos
-        {
-            public ushort x, z;
         }
 
         #endregion

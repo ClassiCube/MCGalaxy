@@ -424,6 +424,7 @@
     <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\MapGen.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
+    <Compile Include="Levels\Physics\AirPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
     <Compile Include="Levels\Physics\DoorPhysics.cs" />
     <Compile Include="Levels\Physics\ExtraInfoPhysics.cs" />
