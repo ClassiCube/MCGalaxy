@@ -1640,40 +1640,9 @@ namespace MCGalaxy
                                                           case Block.rockethead:
                                                               RocketPhysics.Do(this, C, rand);
                                                               break;
-
                                                           case Block.firework:
-                                                              if (GetTile(x, (ushort)(y - 1), z) == Block.lavastill)
-                                                              {
-                                                                  if (GetTile(x, (ushort)(y + 1), z) == Block.air)
-                                                                  {
-                                                                      if ((Height / 100) * 80 < y) mx = rand.Next(1, 20);
-                                                                      else mx = 5;
-
-                                                                      if (mx > 1)
-                                                                      {
-                                                                          int bp = PosToInt(x, (ushort)(y + 1), z);
-                                                                          bool unblocked =
-                                                                              !ListUpdate.Exists(
-                                                                                  Update => Update.b == bp);
-                                                                          if (unblocked)
-                                                                          {
-                                                                              AddUpdate(
-                                                                                  PosToInt(x, (ushort)(y + 1), z),
-                                                                                  Block.firework, false);
-                                                                              AddUpdate(PosToInt(x, y, z),
-                                                                                        Block.lavastill, false,
-                                                                                        "wait 1 dissipate 100");
-                                                                              // AddUpdate(PosToInt(x, (ushort)(y - 1), z), Block.air);
-                                                                              C.extraInfo = "wait 1 dissipate 100";
-                                                                              break;
-                                                                          }
-                                                                      }
-                                                                  }
-                                                                  Firework(x, y, z, 4);
-                                                                  break;
-                                                              }
+                                                              FireworkPhysics.Do(this, C, rand);
                                                               break;
-                                                          //Zombie + creeper stuff
                                                           case Block.zombiehead:
                                                               if (GetTile(IntOffset(C.b, 0, -1, 0)) != Block.zombiebody &&
                                                                   GetTile(IntOffset(C.b, 0, -1, 0)) != Block.creeper)
@@ -2113,23 +2082,14 @@ namespace MCGalaxy
         //================================================================================================================
         internal bool PhysSpongeCheck(int b, bool lava = false) //return true if sponge is near
         {
-            int temp = 0;
-            for (int x = -2; x <= +2; ++x)
+            for (int y = -2; y <= +2; ++y)
+                for (int z = -2; z <= +2; ++z)
+                    for (int x = -2; x <= +2; ++x)
             {
-                for (int y = -2; y <= +2; ++y)
-                {
-                    for (int z = -2; z <= +2; ++z)
-                    {
-                        temp = IntOffset(b, x, y, z);
-                        if (GetTile(temp) != Block.Zero)
-                        {
-                            if ((!lava && GetTile(temp) == 19) || (lava && GetTile(temp) == 109))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
+                byte block = GetTile(IntOffset(b, x, y, z));
+                if (block == Block.Zero) continue;
+                if ((!lava && block == Block.sponge) || (lava && block == Block.lava_sponge))
+                    return true;
             }
             return false;
         }
@@ -2422,30 +2382,6 @@ namespace MCGalaxy
                         }
                     }
             //Server.s.Log("Explosion: " + (DateTime.Now - start).TotalMilliseconds.ToString());
-        }
-
-        public void Firework(ushort x, ushort y, ushort z, int size)
-        {
-            ushort xx, yy, zz;
-            var rand = new Random();
-            int storedRand1, storedRand2;
-
-            if (physics < 1) return;
-            if (physics == 5) return;
-            storedRand1 = rand.Next(21, 36);
-            storedRand2 = rand.Next(21, 36);
-            // Not using override, since override = true makes it more likely that a colored block will be generated with no extraInfo, because it sets a Check for that position with no extraInfo.
-            AddUpdate(PosToInt(x, y, z), Block.air);
-
-            for (xx = (ushort)(x - (size + 1)); xx <= (ushort)(x + (size + 1)); ++xx)
-                for (yy = (ushort)(y - (size + 1)); yy <= (ushort)(y + (size + 1)); ++yy)
-                    for (zz = (ushort)(z - (size + 1)); zz <= (ushort)(z + (size + 1)); ++zz)
-                        if (GetTile(xx, yy, zz) == Block.air)
-                            if (rand.Next(1, 40) < 2)
-                                AddUpdate(PosToInt(xx, yy, zz),
-                                          (byte)
-                                          rand.Next(Math.Min(storedRand1, storedRand2),
-                                                    Math.Max(storedRand1, storedRand2)), false, "drop 100 dissipate 25");
         }
 
         #endregion

@@ -431,6 +431,7 @@
     <Compile Include="Levels\Physics\ExtraInfoPhysics.cs" />
     <Compile Include="Levels\Physics\FinitePhysics.cs" />
     <Compile Include="Levels\Physics\FirePhysics.cs" />
+    <Compile Include="Levels\Physics\FireworkPhysics.cs" />
     <Compile Include="Levels\Physics\HunterPhysics.cs" />
     <Compile Include="Levels\Physics\LiquidPhysics.cs" />
     <Compile Include="Levels\Physics\RocketPhysics.cs" />
