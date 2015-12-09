@@ -140,7 +140,6 @@
     <Compile Include="Commands\Building\CmdLine.cs" />
     <Compile Include="Commands\Building\CmdMark.cs" />
     <Compile Include="Commands\Building\CmdMaze.cs" />
-    <Compile Include="Commands\Building\CmdMegaboid.cs" />
     <Compile Include="Commands\Building\CmdMessageBlock.cs" />
     <Compile Include="Commands\Building\CmdMode.cs" />
     <Compile Include="Commands\Building\CmdOutline.cs" />

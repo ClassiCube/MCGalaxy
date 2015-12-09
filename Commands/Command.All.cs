@@ -155,7 +155,6 @@ namespace MCGalaxy
             all.Add(new CmdMaze());
             all.Add(new CmdMe());
             all.Add(new CmdMeasure());
-            all.Add(new CmdMegaboid());
             all.Add(new CmdMessageBlock());
             all.Add(new CmdMissile());
             all.Add(new CmdMode());

@@ -144,7 +144,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdMaze()), "labyrint create");
             new CommandKeywords((new CmdMe()), "do action");
             new CommandKeywords((new CmdMeasure()), "meas block length distance");
-            new CommandKeywords((new CmdMegaboid()), "box cuboid mega");
             new CommandKeywords((new CmdMessageBlock()), "message block msg");
             new CommandKeywords((new CmdMissile()), "gun missil");
             new CommandKeywords((new CmdMode()), "block place");
