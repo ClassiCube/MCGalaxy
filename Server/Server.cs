@@ -32,7 +32,6 @@ using Newtonsoft.Json.Linq;
 
 namespace MCGalaxy
 {
-    public enum ForgeProtection { Off = 0, Mod = 1, Dev = 2 }
     public sealed class Server
     {
         public static bool cancelcommand = false;
@@ -127,8 +126,6 @@ namespace MCGalaxy
         public static List<string> GCmods { get { return new List<string>(gcmods); } }
         internal static readonly List<string> protectover = new List<string>(new string[] { "moderate", "mute", "freeze", "lockdown", "ban", "banip", "kickban", "kick", "global", "xban", "xundo", "undo", "uban", "unban", "unbanip", "demote", "promote", "restart", "shutdown", "setrank", "warn", "tempban", "impersonate", "sendcmd", "possess", "joker", "jail", "ignore", "voice" });
         public static List<string> ProtectOver { get { return new List<string>(protectover); } }
-
-        public static ForgeProtection forgeProtection = ForgeProtection.Off;
 
         internal static readonly List<string> opstats = new List<string>(new string[] { "ban", "tempban", "kick", "warn", "mute", "freeze", "undo", "griefer", "demote", "promote" });
         public static List<string> Opstats { get { return new List<string>(opstats); } }
@@ -684,7 +681,6 @@ namespace MCGalaxy
 
             Economy.LoadDatabase();
             UpdateStaffList();
-            Log("MCGalaxy Staff Protection Level: " + forgeProtection);
 
             if (levels != null)
                 foreach (Level l in levels) { l.Unload(); }
@@ -759,21 +755,6 @@ namespace MCGalaxy
                 if (!File.Exists("ranks/jailed.txt")) { File.Create("ranks/jailed.txt").Close(); Server.s.Log("CREATED NEW: ranks/jailed.txt"); }
                 Extensions.UncapitalizeAll("ranks/banned.txt");
                 Extensions.UncapitalizeAll("ranks/muted.txt");
-                if (forgeProtection == ForgeProtection.Mod || forgeProtection == ForgeProtection.Dev) {
-                    foreach (string dev in Devs) {
-                        Extensions.DeleteExactLineWord("ranks/banned.txt", dev);
-                        Extensions.DeleteExactLineWord("ranks/muted.txt", dev);
-                    }
-                }
-                if (forgeProtection == ForgeProtection.Mod) {
-                    foreach (string mod in Mods) {
-                        Extensions.DeleteExactLineWord("ranks/banned.txt", mod);
-                        Extensions.DeleteExactLineWord("ranks/muted.txt", mod);
-                    }
-                    foreach (string gcmod in GCmods) {
-                        Extensions.DeleteExactLineWord("ranks/muted.txt", gcmod);
-                    }
-                }
             });
 
             ml.Queue(delegate
@@ -1384,7 +1365,6 @@ namespace MCGalaxy
             } catch (Exception e) {
                 ErrorLog(e);
                 s.Log("Couldn't update MCGalaxy staff list, turning MCGalaxy Staff Protection Level off. . . ");
-                forgeProtection = ForgeProtection.Off;
                 devs.Clear();
                 mods.Clear();
                 gcmods.Clear();

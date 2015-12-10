@@ -36,11 +36,7 @@ namespace MCGalaxy.Commands
         {
             if (message == "" || message.Split(' ').Length > 2) { Help(p); return; }
             Player who = Player.Find(message);
-            if (Server.forgeProtection == ForgeProtection.Mod && who != null && who.isGCMod)
-            {
-                Player.SendMessage(p, "%cGlobal Chat Moderators can't be muted");
-                return;
-            }
+
             if (who == null)
             {
                 if (Server.muted.Contains(message))

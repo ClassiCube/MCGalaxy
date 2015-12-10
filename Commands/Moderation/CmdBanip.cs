@@ -83,11 +83,6 @@ namespace MCGalaxy.Commands {
                 }
             }
 
-            if (Server.Devs.Contains(name) && (Server.forgeProtection == ForgeProtection.Mod || Server.forgeProtection == ForgeProtection.Dev))
-                return;
-            if (Server.Mods.Contains(name) && Server.forgeProtection == ForgeProtection.Mod)
-                return;
-
             if (message.Equals("127.0.0.1")) { Player.SendMessage(p, "You can't ip-ban the server!"); return; }
             if (message.IndexOf('.') == -1) { Player.SendMessage(p, "Invalid IP!"); return; }
             if (message.Split('.').Length != 4) { Player.SendMessage(p, "Invalid IP!"); return; }

@@ -331,7 +331,6 @@ namespace MCGalaxy {
 
         public bool isDev, isMod, isGCMod; //is this player a dev/mod/gcmod?
         public bool isStaff;
-        public bool isProtected;
         public bool verifiedName;
 
         public struct OfflinePlayer {
@@ -703,8 +702,6 @@ namespace MCGalaxy {
                 isDev = Server.Devs.Contains(name.ToLower());
                 isMod = Server.Mods.Contains(name.ToLower());
                 isGCMod = Server.GCmods.Contains(name.ToLower());
-                isStaff = isDev || isMod || isGCMod;
-                isProtected = Server.forgeProtection == ForgeProtection.Mod && (isMod || isDev) ? true : Server.forgeProtection == ForgeProtection.Dev && isDev ? true : false;
                 verifiedName = Server.verify ? true : false;
 
                 try
@@ -2133,7 +2130,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     if ( text[0] == '#' ) newtext = text.Remove(0, 1).Trim();
 
                     GlobalMessageOps("To Ops &f-" + color + DisplayName + "&f- " + newtext);
-                    if ( group.Permission < Server.opchatperm && !isStaff )
+                    if ( group.Permission < Server.opchatperm )
                         SendMessage("To Ops &f-" + color + DisplayName + "&f- " + newtext);
                     Server.s.Log("(OPs): " + name + ": " + newtext);
                     //Server.s.OpLog("(OPs): " + name + ": " + newtext);
@@ -2146,7 +2143,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     if ( text[0] == '+' ) newtext = text.Remove(0, 1).Trim();
 
                     GlobalMessageAdmins("To Admins &f-" + color + DisplayName + "&f- " + newtext); //to make it easy on remote
-                    if ( group.Permission < Server.adminchatperm && !isStaff )
+                    if ( group.Permission < Server.adminchatperm )
                         SendMessage("To Admins &f-" + color + name + "&f- " + newtext);
                     Server.s.Log("(Admins): " + name + ": " + newtext);
                     Server.IRC.Say(name + ": " + newtext, true);
@@ -2384,12 +2381,6 @@ return;
                         old = Group.findPerm(this.group.Permission);
                         this.group = Group.findPerm(LevelPermission.Nobody);
                     }*/
-
-                    if (Player.CommandProtected(cmd.ToLower(), message)) {
-                        SendMessage("Cannot use command, player has protection level: " + Server.forgeProtection);
-                        Server.s.CommandUsed(name + " used /" + cmd + " " + message);
-                        return;
-                    }
 
                     if ( group.CanExecute(command)) {
                         if ( cmd != "repeat" ) lastCMD = cmd + " " + message;
@@ -2919,7 +2910,7 @@ return;
         public static void GlobalMessageOps(string message) {
             try {
                 players.ForEach(delegate(Player p) {
-                    if ( p.group.Permission >= Server.opchatperm || p.isStaff ) { //START
+                    if ( p.group.Permission >= Server.opchatperm ) { //START
                         Player.SendMessage(p, message);
                     }
                 });
@@ -2930,7 +2921,7 @@ return;
         public static void GlobalMessageAdmins(string message) {
             try {
                 players.ForEach(delegate(Player p) {
-                    if ( p.group.Permission >= Server.adminchatperm || p.isStaff ) {
+                    if ( p.group.Permission >= Server.adminchatperm ) {
                         Player.SendMessage(p, message);
                     }
                 });
@@ -3426,78 +3417,6 @@ Next: continue;
             {
                 return 0;
             }
-        }
-
-        public static bool CommandProtected(string cmd, string message) {
-            string foundName = "";
-            Player who = null;
-            bool self = false;
-            if (Server.ProtectOver.Contains(cmd))
-                switch (cmd) {
-                    //case "demote":
-                    case "freeze":
-                    case "impersonate":
-                    //case "kick":
-                    case "kickban":
-                    case "mute":
-                    case "possess":
-                    //case "promote":
-                    case "sendcmd":
-                    case "tempban":
-                    case "uban":
-                    case "voice":
-                    case "xban":
-                    //case "unban":
-                    //case "xundo":
-                        if (message.Split().Length > 0) {
-                            who = Find(message.Split()[0]);
-                            foundName = who != null ? who.name : message.Split()[0];
-                        }
-                        break;
-                    /*case "banip": //this one is hard coded into CmdBanip.cs
-                        break;*/
-                    case "ban":
-                    case "joker":
-                        if (message.Split().Length > 0) {
-                            try {
-                                who = message.StartsWith("@") || message.StartsWith("#") ? Find(message.Split()[0].Substring(1)) : Find(message.Split()[0]);
-                            } catch (ArgumentOutOfRangeException e) { who = null; }
-                            foundName = who != null ? who.name : message.Split()[0];
-                        }
-                        break;
-                    case "lockdown":
-                        if (message.Split().Length > 1 && message.Split()[0].ToLower() == "player") {
-                            who = Find(message.Split()[1]);
-                            foundName = who != null ? who.name : message.Split()[1];
-                        }
-                        break;
-                    case "jail":
-                        if(message.Split().Length > 0 && message.Split()[0].ToLower() != "set") {
-                            who = Find(message.Split()[0]);
-                            foundName = who != null ? who.name : message.Split()[0];
-                        }
-                        break;
-                    case "ignore":
-                        List<string> badlist = new List<string>();
-                        badlist.Add("all"); badlist.Add("global"); badlist.Add("list");
-                        if (message.Split().Length > 0 && badlist.Contains(message.Split()[0].ToLower())) {
-                            who = Find(message.Split()[0]);
-                            foundName = who != null ? who.name : message.Split()[0];
-                        }
-                        badlist = null;
-                        break;
-                    default:
-                        break;
-                }
-            foundName = foundName.ToLower();
-            if (who != null && foundName == who.name.ToLower()) { self = true; }
-            try {
-                if (Server.forgeProtection == ForgeProtection.Mod)
-                    return (Server.Mods.Contains(foundName) || Server.Devs.Contains(foundName)) && !self;
-                if (Server.forgeProtection == ForgeProtection.Dev)
-                    return Server.Devs.Contains(foundName) && !self;
-            } catch { }
-            return false;
         }
         #endregion
 

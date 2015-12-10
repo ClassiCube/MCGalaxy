@@ -1054,7 +1054,7 @@ namespace MCGalaxy
                     Player.players.Where(
                         pl =>
                         pl.level == this &&
-                        (pl.group.Permission >= Server.opchatperm || pl.isStaff )))
+                        pl.group.Permission >= Server.opchatperm))
             {
                 pl.SendMessage(message);
             }
@@ -1065,9 +1065,8 @@ namespace MCGalaxy
             foreach (
                 Player pl in
                     Player.players.Where(
-                        pl =>
-                        pl.level == this &&
-                        (pl.group.Permission >= Server.adminchatperm || pl.isStaff)))
+                        pl => pl.level == this &&
+                        pl.group.Permission >= Server.adminchatperm))
             {
                 pl.SendMessage(message);
             }

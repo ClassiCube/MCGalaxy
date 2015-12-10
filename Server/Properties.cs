@@ -995,19 +995,6 @@ namespace MCGalaxy {
 									Server.translang = "en";
 								}
 								break;
-                            case "MCGalaxy-protection-level":
-                                switch (value.ToLower()) {
-                                    case "dev":
-                                        Server.forgeProtection = ForgeProtection.Dev;
-                                        break;
-                                    case "mod":
-                                        Server.forgeProtection = ForgeProtection.Mod;
-                                        break;
-                                    default:
-                                        Server.forgeProtection = ForgeProtection.Off;
-                                        break;
-                                }
-                                break;
                             case "menu-style":
                                 try { Server.menustyle = Convert.ToInt32(value); }
                                 catch { Server.s.Log("menu-style value invalid! setting to default."); }
@@ -1148,8 +1135,7 @@ namespace MCGalaxy {
 			w.WriteLine("auto-restart = " + Server.autorestart.ToString().ToLower());
 			w.WriteLine("restarttime = " + Server.restarttime.ToShortTimeString());
 			w.WriteLine("restart-on-error = " + Server.restartOnError);
-            w.WriteLine("MCGalaxy-protection-level = " + Enum.GetName(typeof(ForgeProtection), Server.forgeProtection));
-                        w.WriteLine("menu-style = " + Server.menustyle.ToString());
+            w.WriteLine("menu-style = " + Server.menustyle.ToString());
 			w.WriteLine("main-name = " + Server.level);
             w.WriteLine("default-texture-url = " + Server.defaultTextureUrl);
 			//w.WriteLine("guest-goto = " + Server.guestGoto);

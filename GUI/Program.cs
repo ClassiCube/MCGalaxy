@@ -226,7 +226,6 @@ namespace MCGalaxy_.Gui
                         Command cmd = Command.all.Find(sentCmd);
                         if (cmd != null)
                         {
-                            if (Player.CommandProtected(sentCmd, sentMsg)) { continue; }
                             cmd.Use(null, sentMsg);
                             Console.WriteLine("CONSOLE: USED /" + sentCmd + " " + sentMsg);
                             if (sentCmd.ToLower() != "restart")

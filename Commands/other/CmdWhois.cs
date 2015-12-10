@@ -56,13 +56,9 @@ namespace MCGalaxy.Commands
 
                 if (who.isDev) {
                     Player.SendMessage(p, Server.DefaultColor + "> > Player is a &9Developer");
-                    if (Server.forgeProtection == ForgeProtection.Mod || Server.forgeProtection == ForgeProtection.Dev)
-                        Player.SendMessage(p, Server.DefaultColor + "> > Player is &CPROTECTED" + Server.DefaultColor + " under MCGalaxy Staff protection");
-                }else if (who.isMod) {
+                } else if (who.isMod) {
                     Player.SendMessage(p, Server.DefaultColor + "> > Player is a &9MCGalaxy Moderator");
-                    if(Server.forgeProtection == ForgeProtection.Mod)
-                        Player.SendMessage(p, Server.DefaultColor + "> > Player is &CPROTECTED" + Server.DefaultColor + " under MCGalaxy Staff protection");
-                }else if (who.isGCMod)
+                } else if (who.isGCMod)
                     Player.SendMessage(p, Server.DefaultColor + "> > Player is a &9Global Chat Moderator");
 
                 if (!(p != null && (int)p.group.Permission <= CommandOtherPerms.GetPerm(this)))

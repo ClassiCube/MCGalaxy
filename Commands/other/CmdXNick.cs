@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands
             newName = message;
 
             if (newName.Length > 60) { Player.SendMessage(p, "Nick must be under 60 letters."); return; }
-            if (Server.devs.Contains(newName.ToLower())) { Player.SendMessage(p, "You cannot impersonate a developer."); return; }
             
             if (newName != "") Player.GlobalChat(p, p.color + p.DisplayName + "&g has changed their nick to " + newName + "&g.", false);
             p.DisplayName = newName;

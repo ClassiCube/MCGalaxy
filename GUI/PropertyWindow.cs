@@ -138,11 +138,6 @@ namespace MCGalaxy.Gui {
             for ( byte b = 1; b < 50; b++ )
                 cmbGrieferStoneType.Items.Add(Block.Name(b));
 
-            comboBoxProtection.Items.Add("Off");
-            comboBoxProtection.Items.Add("Dev");
-            comboBoxProtection.Items.Add("Mod");
-            comboBoxProtection.SelectedIndex = comboBoxProtection.Items.Count - 3;
-
             //Load server stuff
             LoadProp("properties/server.properties");
             LoadRanks();
@@ -343,9 +338,6 @@ namespace MCGalaxy.Gui {
                                 Server.s.Log("max-maps invalid! setting to default.");
                                 txtMaps.Text = "5";
                             }
-                            break;
-                        case "MCGalaxy-protection-level":
-                            comboBoxProtection.SelectedItem = value;
                             break;
                         case "irc":
                             chkIRC.Checked = ( value.ToLower() == "true" );
@@ -756,7 +748,6 @@ namespace MCGalaxy.Gui {
             Server.ircPort = int.Parse(txtIRCPort.Text);
             Server.ircIdentify = chkIrcId.Checked;
             Server.ircPassword = txtIrcId.Text;
-            Server.forgeProtection = comboBoxProtection.SelectedItem.ToString() == "Dev" ? ForgeProtection.Dev : comboBoxProtection.SelectedItem.ToString() == "Mod" ? ForgeProtection.Mod : ForgeProtection.Off;
 
             Server.antiTunnel = ChkTunnels.Checked;
             Server.maxDepth = byte.Parse(txtDepth.Text);

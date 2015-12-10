@@ -37,10 +37,6 @@ namespace MCGalaxy.Commands
 			}
 
 			if (newName.Length > 60) { Player.SendMessage(p, "Nick must be under 60 letters."); return; }
-			if (p == null || !Server.devs.Contains(p.name.ToLower()))
-			{
-				if (Server.devs.Contains(who.name.ToLower())) { Player.SendMessage(p, "Can't let you do that."); return; }
-			}
 
 			if (newName != "") Player.GlobalChat(who, who.color + who.DisplayName + "&g has changed their nick to " + newName + "&g.", false);
 			who.DisplayName = newName;
