@@ -37,6 +37,7 @@ namespace MCGalaxy
         public int EmoteFix = 0;
         public int MessageTypes = 0;
         public int BlockDefinitions = 0;
+        public int LongerMessages = 0;
         public int FullCP437 = 0;
 
         public void AddExtension(string Extension, int version)
@@ -152,6 +153,9 @@ namespace MCGalaxy
                         catch { }
                         BlockDefinitions = version;
                         break;
+                     case "LongerMessages":
+                        LongerMessages = version;
+                        break;
                      case "FullCP437":
                         FullCP437 = version;
                         break;
@@ -179,6 +183,7 @@ namespace MCGalaxy
                 case "EmoteFix": return EmoteFix == version;
                 case "MessageTypes": return MessageTypes == version;
                 case "BlockDefinitions": return BlockDefinitions == version;
+                case "LongerMessages": return LongerMessages == version;
                 case "FullCP437": return FullCP437 == version;
                 default: return false;
             }

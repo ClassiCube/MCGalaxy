@@ -875,20 +875,25 @@ namespace MCGalaxy {
                 {
                     hasCpe = true;
 
-                    SendExtInfo(13);
+                    SendExtInfo(14);
                     SendExtEntry("ClickDistance", 1);
                     SendExtEntry("CustomBlocks", 1);
                     SendExtEntry("HeldBlock", 1);
+                    
                     SendExtEntry("TextHotKey", 1);
                     SendExtEntry("EnvColors", 1);
                     SendExtEntry("SelectionCuboid", 1);
+                    
                     SendExtEntry("BlockPermissions", 1);
                     SendExtEntry("ChangeModel", 1);
                     SendExtEntry("EnvMapAppearance", 1);
+                    
                     SendExtEntry("EnvWeatherType", 1);
                     SendExtEntry("HackControl", 1);
                     SendExtEntry("EmoteFix", 1);
+                    
                     SendExtEntry("FullCP437", 1);
+                    SendExtEntry("LongerMessages", 1);
                  //TODO   SendExtEntry("BlockDefinitions", 1);
                     SendCustomBlockSupportLevel(1);
                 }
@@ -1946,6 +1951,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
         void HandleChat(byte[] message) {
             try {
                 if ( !loggedIn ) return;
+                byte continued = message[0];
                 string text = GetString(message, 1);
 
                 // handles the /womid client message, which displays the WoM version
@@ -1959,6 +1965,11 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     WoMVersion = version.Split('-')[1];
                     SendWomUsers();
                     return;
+                }
+                
+                if( HasExtension( "LongerMessages" ) && continued != 0 ) {
+                	storedMessage += text;
+                	return;
                 }
 
                 if ( storedMessage != "" ) {
