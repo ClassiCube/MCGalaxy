@@ -180,6 +180,9 @@
     <Compile Include="Commands\CommandKeywords.cs" />
     <Compile Include="Commands\CommandList.cs" />
     <Compile Include="Commands\CommandOtherPerms.cs" />
+    <Compile Include="Commands\CPE\CmdModel.cs" />
+    <Compile Include="Commands\CPE\CmdReachDistance.cs" />
+    <Compile Include="Commands\CPE\CmdXModel.cs" />
     <Compile Include="Commands\Economy\CmdAward.cs" />
     <Compile Include="Commands\Economy\CmdAwardMod.cs" />
     <Compile Include="Commands\Economy\CmdAwards.cs" />
@@ -347,7 +350,6 @@
     <Compile Include="Commands\Other\CmdLogoutMessage.cs" />
     <Compile Include="Commands\Other\CmdMain.cs" />
     <Compile Include="Commands\Other\CmdMissile.cs" />
-    <Compile Include="Commands\Other\CmdModel.cs" />
     <Compile Include="Commands\Other\CmdMove.cs" />
     <Compile Include="Commands\Other\CmdNick.cs" />
     <Compile Include="Commands\Other\CmdPass.cs" />
@@ -389,7 +391,6 @@
     <Compile Include="Commands\Other\CmdWhois.cs" />
     <Compile Include="Commands\Other\CmdXColor.cs" />
     <Compile Include="Commands\Other\CmdXJail.cs" />
-    <Compile Include="Commands\Other\CmdXModel.cs" />
     <Compile Include="Commands\Other\CmdXNick.cs" />
     <Compile Include="Commands\Other\CmdXspawn.cs" />
     <Compile Include="Commands\Other\CmdXTColor.cs" />
@@ -780,6 +781,7 @@
     <Folder Include="Commands\Moderation" />
     <Folder Include="Commands\Economy" />
     <Folder Include="Commands\Chat" />
+    <Folder Include="Commands\CPE" />
     <Folder Include="Commands\World" />
     <Folder Include="Commands\Other" />
     <Folder Include="Levels\IO" />

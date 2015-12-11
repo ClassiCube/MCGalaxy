@@ -109,6 +109,7 @@ namespace MCGalaxy {
         public int rdcount = 0;
         public bool hasreadrules = false;
         public bool canusereview = true;
+        public float ReachDistance = 5;
 
         //Gc checks
         public string lastmsg = "";
@@ -1381,10 +1382,9 @@ namespace MCGalaxy {
                 Diff += Math.Abs((int)( pos[1] / 32 ) - y);
                 Diff += Math.Abs((int)( pos[2] / 32 ) - z);
 
-                if ( Diff > 12 ) {
+                if ( Diff > ReachDistance + 4 ) {
                     if ( lastCMD != "click" ) {
-                        Server.s.Log(name + " attempted to build with a " + Diff.ToString() + " distance offset");
-                        GlobalMessageOps("To Ops &f-" + color + DisplayName + "&f- attempted to build with a " + Diff.ToString() + " distance offset");
+                        Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
                         SendMessage("You can't build that far away.");
                         SendBlockchange(x, y, z, b); return;
                     }

@@ -1,4 +1,3 @@
 devs:Hetal+
 mods:Good+
-devs:UnknownShadow200+
 mods:venom983+

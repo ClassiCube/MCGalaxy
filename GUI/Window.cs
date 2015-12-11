@@ -534,6 +534,7 @@ namespace MCGalaxy.Gui
                         Server.s.Log("No such command!");
                         return;
                     }
+                    commandcmd.Use(null, sentMsg);
                     newCommand("CONSOLE: USED /" + sentCmd + " " + sentMsg);
                 }
                 catch (Exception ex)

@@ -552,7 +552,7 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
-        void SendClickDistance( short distance ) {
+       public void SendClickDistance( short distance ) {
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeSetClickDistance;
             NetUtils.WriteI16(distance, buffer, 1);
