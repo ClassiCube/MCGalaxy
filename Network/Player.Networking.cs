@@ -237,10 +237,6 @@ namespace MCGalaxy {
         public void SendMessage(byte id, string message, bool colorParse) {
             if ( this == null ) { Server.s.Log(message); return; }
             if ( ZoneSpam.AddSeconds(2) > DateTime.Now && message.Contains("This zone belongs to ") ) return;
-
-            byte[] buffer = new byte[66];
-            buffer[0] = Opcode.Message;
-            buffer[1] = id;
             StringBuilder sb = new StringBuilder(message);
 
             if ( colorParse ) {
@@ -319,6 +315,10 @@ namespace MCGalaxy {
                         if (!HasExtension("EmoteFix"))
                             newLine += '\'';
                     }
+                    
+                    byte[] buffer = new byte[66];
+                    buffer[0] = Opcode.Message;
+                    buffer[1] = id;
                     if(HasExtension("FullCP437"))
                     	NetUtils.WriteCP437(newLine, buffer, 2);
                     else
