@@ -38,19 +38,20 @@ namespace MCGalaxy.Commands
              }
 
             if (!Server.UseGlobalChat) { Player.SendMessage(p, "Global Chat is disabled."); return; }
-            if (p != null && p.muted) { Player.SendMessage(p, "You are muted."); return; }
-            if (p != null && p.muteGlobal) { Player.SendMessage(p, "You cannot use Global Chat while you have it muted."); return; }
-            if (p != null && Server.chatmod && !p.voice) { Player.SendMessage(p, "You cannot use Global Chat while in Chat Moderation!"); return; }
-            if (p != null && !Server.gcaccepted.Contains(p.name.ToLower())) { RulesMethod(p); return; }
             if (p != null)
             {
+            	if (p.muted) { Player.SendMessage(p, "You are muted."); return; }
+            	if (p.muteGlobal) { Player.SendMessage(p, "You cannot use Global Chat while you have it muted."); return; }
+            	if (Server.chatmod && !p.voice) { Player.SendMessage(p, "You cannot use Global Chat while in Chat Moderation!"); return; }
+            	if (!Server.gcaccepted.Contains(p.name.ToLower())) { RulesMethod(p); return; }
+            	
                 string reason;
                 if (Server.gcnamebans.TryGetValue(p.name.ToLower(), out reason)) {
                     Player.SendMessage(p, "You are %cBANNED" + Server.DefaultColor + " from" + Server.GlobalChatColor + " Global Chat" + Server.DefaultColor + " by " + reason);
                     Player.SendMessage(p, "You can apply a 'Ban Appeal' at %9www.mcgalaxy.ml");
                     return;
                 }
-                if (Server.gcipbans.TryGetValue(p.exIP, out reason)) {
+                if (Server.gcipbans.TryGetValue(p.ip, out reason)) {
                     Player.SendMessage(p, "Your IP is %cBANNED" + Server.DefaultColor + " from" + Server.GlobalChatColor + " Global Chat" + Server.DefaultColor + " by " + reason);
                     Player.SendMessage(p, "You can apply a 'Ban Appeal' at %9www.mcgalaxy.ml");
                     return;

@@ -91,7 +91,6 @@ namespace MCGalaxy {
         public byte id;
         public int userID = -1;
         public string ip;
-        public string exIP; // external IP
         public string color;
         public Group group;
         public bool hidden = false;
