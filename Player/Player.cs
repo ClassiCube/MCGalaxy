@@ -396,130 +396,7 @@ namespace MCGalaxy {
                 for ( byte i = 0; i < 128; ++i ) bindings[i] = i;
 
                 socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, new AsyncCallback(Receive), this);
-                timespent.Elapsed += delegate {
-                    if ( !Loading ) {
-                        try {
-                            int Days = Convert.ToInt32(time.Split(' ')[0]);
-                            int Hours = Convert.ToInt32(time.Split(' ')[1]);
-                            int Minutes = Convert.ToInt32(time.Split(' ')[2]);
-                            int Seconds = Convert.ToInt32(time.Split(' ')[3]);
-                            Seconds++;
-                            if ( Seconds >= 60 ) {
-                                Minutes++;
-                                Seconds = 0;
-                            }
-                            if ( Minutes >= 60 ) {
-                                Hours++;
-                                Minutes = 0;
-                            }
-                            if ( Hours >= 24 ) {
-                                Days++;
-                                Hours = 0;
-                            }
-                            time = "" + Days + " " + Hours + " " + Minutes + " " + Seconds;
-                        }
-                        catch { time = "0 0 0 1"; }
-                    }
-                };
-                timespent.Start();
-                loginTimer.Elapsed += delegate {
-                    if ( !Loading ) {
-                        loginTimer.Stop();
-                        if ( File.Exists("text/welcome.txt") ) {
-                            try {
-                        		List<string> welcome = CP437Reader.ReadAllLines("text/welcome.txt");
-                        		foreach (string w in welcome)
-                        			SendMessage(w);
-                            }
-                            catch { }
-                        }
-                        else {
-                            Server.s.Log("Could not find Welcome.txt. Using default.");
-                            CP437Writer.WriteAllText("text/welcome.txt", "Welcome to my server!");
-                            SendMessage("Welcome to my server!");
-                        }
-                        extraTimer.Start();
-                        loginTimer.Dispose();
-                    }
-                }; loginTimer.Start();
-
-                pingTimer.Elapsed += delegate { SendPing(); };
-                pingTimer.Start();
-
-                extraTimer.Elapsed += delegate {
-                    extraTimer.Stop();
-
-                    try {
-                        if ( !Group.Find("Nobody").commands.Contains("inbox") && !Group.Find("Nobody").commands.Contains("send") ) {
-                            //safe against SQL injections because no user input is given here
-                            DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + name + "`", true);
-
-                            SendMessage("&cYou have &f" + Inbox.Rows.Count + Server.DefaultColor + " &cmessages in /inbox");
-                            Inbox.Dispose();
-                        }
-                    }
-                    catch { }
-                    if ( Server.updateTimer.Interval > 1000 ) SendMessage("Lowlag mode is currently &aON.");
-                    try {
-                        if ( !Group.Find("Nobody").commands.Contains("pay") && !Group.Find("Nobody").commands.Contains("give") && !Group.Find("Nobody").commands.Contains("take") ) SendMessage("You currently have &a" + money + Server.DefaultColor + " " + Server.moneys);
-                    }
-                    catch { }
-                    SendMessage("You have modified &a" + overallBlocks + Server.DefaultColor + " blocks!");
-                    if ( players.Count == 1 )
-                        SendMessage("There is currently &a" + players.Count + " player online.");
-                    else
-                        SendMessage("There are currently &a" + players.Count + " players online.");
-                    try {
-                        if ( !Group.Find("Nobody").commands.Contains("award") && !Group.Find("Nobody").commands.Contains("awards") && !Group.Find("Nobody").commands.Contains("awardmod") ) SendMessage("You have " + Awards.awardAmount(name) + " awards.");
-                    }
-                    catch { }
-                    try {
-                        ZombieGame.alive.Remove(this);
-                        ZombieGame.infectd.Remove(this);
-                    }
-                    catch { }
-                    if ( Server.lava.active ) SendMessage("There is a &aLava Survival " + Server.DefaultColor + "game active! Join it by typing /ls go");
-                    extraTimer.Dispose();
-                };
-
-                afkTimer.Elapsed += delegate {
-                    if ( name == "" ) return;
-
-                    if ( Server.afkset.Contains(name) ) {
-                        afkCount = 0;
-                        if ( Server.afkkick > 0 && group.Permission < Server.afkkickperm )
-                            if ( afkStart.AddMinutes(Server.afkkick) < DateTime.Now )
-                                Kick("Auto-kick, AFK for " + Server.afkkick + " minutes");
-                        if ( ( oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2] ) && ( oldrot[0] != rot[0] || oldrot[1] != rot[1] ) )
-                            Command.all.Find("afk").Use(this, "");
-                    }
-                    else {
-                        if ( oldpos[0] == pos[0] && oldpos[1] == pos[1] && oldpos[2] == pos[2] && oldrot[0] == rot[0] && oldrot[1] == rot[1] )
-                            afkCount++;
-                        else
-                            afkCount = 0;
-
-                        if ( afkCount > Server.afkminutes * 30 ) {
-                            if ( name != null && !String.IsNullOrEmpty(name.Trim()) && hidden != true ) {
-                                Command.all.Find("afk").Use(this, "auto: Not moved for " + Server.afkminutes + " minutes");
-                                if ( AFK != null )
-                                    AFK(this);
-                                if ( ONAFK != null )
-                                    ONAFK(this);
-                                OnPlayerAFKEvent.Call(this);
-                                afkCount = 0;
-                            }
-                        }
-                    }
-                };
-                resetSpamCount.Elapsed += delegate {
-                    if ( consecutivemessages > 0 )
-                        consecutivemessages = 0;
-                };
-                resetSpamCount.Start();
-
-                if ( Server.afkminutes > 0 ) afkTimer.Start();
-
+                InitTimers();
                 connections.Add(this);
             }
             catch ( Exception e ) { Kick("Login failed!"); Server.ErrorLog(e); }
@@ -1529,10 +1406,6 @@ namespace MCGalaxy {
                 Messages.Dispose();
             }
             catch { Player.SendMessage(p, "No message was stored."); return; }
-        }
-
-        private bool checkOp() {
-            return group.Permission < LevelPermission.Operator;
         }
 
         private void deleteBlock(byte b, byte type, ushort x, ushort y, ushort z) {

@@ -439,6 +439,7 @@
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
+    <Compile Include="Player\Player.Timers.cs" />
     <Compile Include="Plugins\Enums.cs" />
     <Compile Include="Plugins\Events\GroupEvents.cs" />
     <Compile Include="Plugins\Events\LevelEvents.cs" />
