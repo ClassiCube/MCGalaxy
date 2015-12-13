@@ -429,7 +429,7 @@ namespace MCGalaxy {
                 if (HasExtension("EnvWeatherType"))
                     SendSetMapWeather(level.weather);
                 if (HasExtension("EnvColors"))
-                	SendCurrentMapAppearance();
+                	SendCurrentEnvColors();
                 if (HasExtension("EnvMapAppearance"))
                 	SendCurrentMapAppearance();
                 if ( OnSendMap != null )
