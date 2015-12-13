@@ -439,6 +439,15 @@
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
+    <Compile Include="Plugins\Enums.cs" />
+    <Compile Include="Plugins\Events\GroupEvents.cs" />
+    <Compile Include="Plugins\Events\LevelEvents.cs" />
+    <Compile Include="Plugins\Events\PlayerEvents.cs" />
+    <Compile Include="Plugins\Events\ServerEvents.cs" />
+    <Compile Include="Plugins\IPluginEvent.cs" />
+    <Compile Include="Plugins\Manager\Plugin.Events.cs" />
+    <Compile Include="Plugins\Manager\Plugin_Manager.cs" />
+    <Compile Include="Plugins\Manager\Plugin_Simple.cs" />
     <Compile Include="Network\NetUtils.cs" />
     <Compile Include="Network\Opcode.cs" />
     <Compile Include="Network\Player.Networking.cs" />
@@ -495,30 +504,6 @@
       <DependentUpon>WoM.cs</DependentUpon>
     </Compile>
     <Compile Include="Levels\Texture_Settings.cs" />
-    <Compile Include="Plugins\GroupEvents\OnGroupLoadedEvent.cs" />
-    <Compile Include="Plugins\GroupEvents\OnGroupLoadEvent.cs" />
-    <Compile Include="Plugins\GroupEvents\OnGroupSaveEvent.cs" />
-    <Compile Include="Plugins\GroupEvents\OnPlayerRankSetEvent.cs" />
-    <Compile Include="Plugins\LevelEvents\OnLevelLoadedEvent.cs" />
-    <Compile Include="Plugins\LevelEvents\OnLevelLoadEvent.cs" />
-    <Compile Include="Plugins\LevelEvents\OnLevelSaveEvent.cs" />
-    <Compile Include="Plugins\LevelEvents\OnLevelUnloadEvent.cs" />
-    <Compile Include="Plugins\LevelEvents\OnPhysicsUpdate.cs" />
-    <Compile Include="Plugins\PlayerEvents\PlayerRotateEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnBlockChangeEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnMessageRecieveEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnMySQLSaveEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnPlayerAFKEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnPlayerChatEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnPlayerCommandEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnPlayerConnectEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnPlayerDeathEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\OnPlayerDisconnectEvent.cs" />
-    <Compile Include="Plugins\PlayerEvents\PlayerMoveEvent.cs" />
-    <Compile Include="Plugins\ServerEvents\OnConsoleCommandEvent.cs" />
-    <Compile Include="Plugins\ServerEvents\OnServerErrorEvent.cs" />
-    <Compile Include="Plugins\ServerEvents\OnServerLogEvent.cs" />
-    <Compile Include="Plugins\Utils\Priority.cs" />
     <Compile Include="Server\Extra\Translate.cs" />
     <Compile Include="Database\DatabaseTransactionHelper.cs" />
     <Compile Include="Database\Database.cs" />
@@ -540,9 +525,6 @@
     <Compile Include="Database\MySQLTransactionHelper.cs" />
     <Compile Include="Server\Extra\OmniBan.cs" />
     <Compile Include="Player\Player.Events.cs" />
-    <Compile Include="Plugins\Utils\Events.cs" />
-    <Compile Include="Plugins\Manager\Plugin_Manager.cs" />
-    <Compile Include="Plugins\Manager\Plugin_Simple.cs" />
     <Compile Include="ScriptingUtil\ScriptingVB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Service References\TranslateService\Reference.cs">
@@ -730,7 +712,6 @@
     <None Include="Service References\TranslateService\configuration.svcinfo" />
     <None Include="Service References\TranslateService\configuration91.svcinfo" />
     <None Include="app.config" />
-    <Compile Include="Plugins\Manager\Plugin.Events.cs" />
     <None Include="bin\Release\Updater.exe" />
     <Content Include="Galaxy.ico" />
     <Content Include="mcf.sh">
@@ -786,7 +767,9 @@
     <Folder Include="Commands\Other" />
     <Folder Include="Levels\IO" />
     <Folder Include="Levels\Physics" />
-    <Folder Include="Plugins\OpenClassicEvents\" />
+    <Folder Include="Plugins" />
+    <Folder Include="Plugins\Events" />
+    <Folder Include="Plugins\Manager" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

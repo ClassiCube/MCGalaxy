@@ -404,7 +404,7 @@ namespace MCGalaxy {
                 int totalRead = 0;                
                 
                 while (totalRead < buffer.Length) {   
-                    byte[] packet = new byte[1028]; // TODO: Not sure if safe to reuse same buffer with BeginSend
+                    byte[] packet = new byte[1028]; // need each packet separate for Mono
                     packet[0] = Opcode.LevelDataChunk;
                     short length = (short)Math.Min(buffer.Length - totalRead, 1024);
                     NetUtils.WriteI16(length, packet, 1);

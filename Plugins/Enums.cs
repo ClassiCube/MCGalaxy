@@ -17,9 +17,7 @@
 */
 namespace MCGalaxy
 {
-    /// <summary>
-    /// These are server event that can be canceled
-    /// </summary>
+    /// <summary> These are server event that can be canceled </summary>
     public enum ServerEvents
     {
     	//TODO
@@ -29,9 +27,8 @@ namespace MCGalaxy
     	ServerAdminLog,
     	ConsoleCommand
     }
-    /// <summary>
-    /// These are player events that can be canceled
-    /// </summary>
+    
+    /// <summary> These are player events that can be canceled </summary>
     public enum PlayerEvents
     {
         PlayerCommand,
@@ -42,20 +39,28 @@ namespace MCGalaxy
         MYSQLSave,
         PlayerRankChange
     }
-    /// <summary>
-    /// These are Global (static) level events that can be canceled
-    /// </summary>
+    
+    /// <summary> These are Global (static) level events that can be canceled </summary>
     public enum GlobalLevelEvents
     {
         LevelLoad,
         LevelSave
     }
-    /// <summary>
-    /// These are level events that can be canceled
-    /// </summary>
+    
+    /// <summary> These are level events that can be canceled </summary>
     public enum LevelEvents
     {
         LevelUnload,
         LevelSave
+    }
+    
+    /// <summary> Importance </summary>
+    public enum Priority : byte
+    {
+        Low = 0,
+        Normal = 1,
+        High = 2,
+        Critical = 3,
+        System_Level = 4
     }
 }

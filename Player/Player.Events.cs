@@ -142,6 +142,12 @@ namespace MCGalaxy
         /// <param name="message">The message that the user said</param>
         public delegate void OnPlayerChat(Player p, string message);
         /// <summary>
+        /// MessageReceived is event is called when a player receives messages from the server. (including chat)
+        /// </summary>
+        /// <param name="p">The player that talked</param>
+        /// <param name="message">The message that the user received</param>
+        public delegate void OnPlayerMessageReceived(Player p, string message);
+        /// <summary>
         /// PlayerChat event is called when a player chats (Player p, string message)
         /// </summary>
         [Obsolete("Please use OnPlayerChatEvent.Register()")]
@@ -151,13 +157,13 @@ namespace MCGalaxy
         /// This event is called when a player is about to recieve a chat message
         /// </summary>
         [Obsolete("Please use OnMessageRecieveEvent.Register()")]
-        public static event OnPlayerChat MessageRecieve = null;
+        public static event OnPlayerMessageReceived MessageRecieve = null;
 
         /// <summary>
         /// This event is called when the player is about to recieve a chat message
         /// </summary>
         [Obsolete("Please use OnMessageRecieveEvent.Register()")]
-        public event OnPlayerChat OnMessageRecieve = null;
+        public event OnPlayerMessageReceived OnMessageRecieve = null;
         /// <summary>
         /// The OnPlayerDeath event is called when...a player dies
         /// </summary>
