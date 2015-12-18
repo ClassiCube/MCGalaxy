@@ -36,7 +36,7 @@ namespace MCGalaxy {
         
         public bool CanDraw(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
                            Player p, out int affected) {
-            affected = GetBlocksAffected(x1, y1, z1, x2, y2, x2);
+            affected = GetBlocksAffected(x1, y1, z1, x2, y2, z2);
             if (affected > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to " + Name + " " + affected + " blocks.");
                 Player.SendMessage(p, "You cannot " + Name + " more than " + p.group.maxBlocks + ".");
@@ -61,7 +61,11 @@ namespace MCGalaxy {
             TotalModified = 0;
         }
         
-        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type) {
+        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+            byte type = brush.NextBlock();
+            if (type == Block.Zero)
+                return;
+            
             switch (method) {
                 case MethodBlockQueue:
                     BlockQueue.Addblock(p, x, y, z, type);
