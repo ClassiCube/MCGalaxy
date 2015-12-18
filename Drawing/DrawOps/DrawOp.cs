@@ -34,8 +34,9 @@ namespace MCGalaxy {
         public abstract void Perform(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
                                      Player p, Level lvl, Brush brush);
         
-        public bool CanDraw(Player p, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            int affected = GetBlocksAffected(x1, y1, z1, x2, y2, x2);
+        public bool CanDraw(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
+                           Player p, out int affected) {
+            affected = GetBlocksAffected(x1, y1, z1, x2, y2, x2);
             if (affected > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to " + Name + " " + affected + " blocks.");
                 Player.SendMessage(p, "You cannot " + Name + " more than " + p.group.maxBlocks + ".");
