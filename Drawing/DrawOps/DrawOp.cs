@@ -38,8 +38,8 @@ namespace MCGalaxy {
                            Player p, out int affected) {
             affected = GetBlocksAffected(x1, y1, z1, x2, y2, z2);
             if (affected > p.group.maxBlocks) {
-                Player.SendMessage(p, "You tried to " + Name + " " + affected + " blocks.");
-                Player.SendMessage(p, "You cannot " + Name + " more than " + p.group.maxBlocks + ".");
+                Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
+                Player.SendMessage(p, "You cannot draw more than " + p.group.maxBlocks + ".");
                 return false;
             }
             return true;
