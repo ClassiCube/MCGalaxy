@@ -36,20 +36,6 @@ namespace MCGalaxy {
         }
     }
     
-     public sealed class HolesBrush : Brush {
-        readonly byte block;
-        
-        public HolesBrush(byte block) {
-            this.block = block;
-        }
-        
-        int i = 0;
-        public override byte NextBlock() {
-            i++;
-            return (i & 1) == 0 ? Block.air : block;
-        }
-    }
-    
     public sealed class RainbowBrush : Brush {
         readonly Random rnd;
         

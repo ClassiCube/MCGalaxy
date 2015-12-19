@@ -61,8 +61,7 @@ namespace MCGalaxy {
             TotalModified = 0;
         }
         
-        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
-            byte type = brush.NextBlock();
+        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type) {
             if (type == Block.Zero)
                 return;
             

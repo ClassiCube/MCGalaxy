@@ -91,25 +91,21 @@ namespace MCGalaxy.Commands
 
             switch (cpos.solid) {
                 case SolidType.solid:
-                    drawOp = new CuboidDrawOp();
-                    brush = new SolidBrush(type); break;
+                    drawOp = new CuboidDrawOp(); break;
                 case SolidType.hollow:
-                    drawOp = new CuboidHollowsDrawOp();
-                    brush = new SolidBrush(type); break;
+                    drawOp = new CuboidHollowsDrawOp(); break;
                 case SolidType.walls:
-                    drawOp = new CuboidWallsDrawOp();
-                    brush = new SolidBrush(type); break;
+                    drawOp = new CuboidWallsDrawOp(); break;
                 case SolidType.holes:
-                    drawOp = new CuboidDrawOp();
-                    brush = new HolesBrush(type); break;
+                    drawOp = new CuboidHolesDrawOp(); break;
                 case SolidType.wire:
-                    drawOp = new CuboidWireframeDrawOp(); 
-                    brush = new SolidBrush(type); break;
+                    drawOp = new CuboidWireframeDrawOp(); break;
                 case SolidType.random:
                     drawOp = new CuboidDrawOp();
                     brush = new RandomBrush(type); break;
             }
             
+            if (brush == null) brush = new SolidBrush(type);
             ushort x1 = Math.Min(cpos.x, x), x2 = Math.Max(cpos.x, x);
             ushort y1 = Math.Min(cpos.y, y), y2 = Math.Max(cpos.y, y);
             ushort z1 = Math.Min(cpos.z, z), z2 = Math.Max(cpos.z, z);
