@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands
                     drawOp = new CuboidWireframeDrawOp(); break;
                 case SolidType.random:
                     drawOp = new CuboidDrawOp();
-                    brush = new RandomBrush(); break;
+                    brush = new RandomBrush(type); break;
             }
             
             if (brush == null) brush = new SolidBrush(type);
