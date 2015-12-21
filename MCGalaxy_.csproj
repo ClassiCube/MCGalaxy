@@ -133,7 +133,6 @@
     <Compile Include="Commands\Building\CmdDelete.cs" />
     <Compile Include="Commands\Building\CmdDraw.cs" />
     <Compile Include="Commands\Building\CmdDrill.cs" />
-    <Compile Include="Commands\Building\CmdEllipse.cs" />
     <Compile Include="Commands\Building\CmdFill.cs" />
     <Compile Include="Commands\Building\CmdHollow.cs" />
     <Compile Include="Commands\Building\CmdImageprint.cs" />
@@ -161,6 +160,7 @@
     <Compile Include="Commands\Building\CmdTree.cs" />
     <Compile Include="Commands\Building\CmdUndo.cs" />
     <Compile Include="Commands\Building\CmdWrite.cs" />
+    <Compile Include="Commands\building\DrawCmd.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
     <Compile Include="Commands\Chat\CmdChatRoom.cs" />
     <Compile Include="Commands\Chat\CmdGcaccept.cs" />
@@ -422,6 +422,8 @@
     <Compile Include="Drawing\CopyState.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />

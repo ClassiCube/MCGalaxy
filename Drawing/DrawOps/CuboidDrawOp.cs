@@ -25,7 +25,7 @@ namespace MCGalaxy {
             get { return "Cuboid"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
         }
         
@@ -46,7 +46,7 @@ namespace MCGalaxy {
             get { return "Cuboid Holes"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
         }
         
@@ -73,7 +73,7 @@ namespace MCGalaxy {
             get { return "Cuboid Hollow"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
             int yQuadsVol = Math.Max(0, Math.Min(lenY, 2) * ((lenX - 2) * lenZ)); // we need to avoid double counting overlaps
@@ -132,7 +132,7 @@ namespace MCGalaxy {
             get { return "Cuboid Walls"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
             int zQuadsVol = Math.Max(0, Math.Min(lenZ, 2) * ((lenX - 2) * lenY)); // we need to avoid double counting overlaps
@@ -157,7 +157,7 @@ namespace MCGalaxy {
             get { return "Cuboid Wireframe"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
             int horSidesvol = 2 * (lenX * 2 + lenZ * 2); // TODO: slightly overestimated by at most four blocks.
             int verSidesVol = Math.Max(0, lenY - 2) * 4;

@@ -86,7 +86,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdDraw()), "cone sphere pyramid create");
             new CommandKeywords((new CmdDrill()), "dig distance");
             new CommandKeywords((new CmdEconomy()), "money cash " + Server.moneys);
-            new CommandKeywords((new CmdEllipse()), "create art");
             new CommandKeywords((new CmdEmote()), "smiley emoticon");
             new CommandKeywords((new CmdEndRound()), "end round game");
             new CommandKeywords((new CmdExplode()), "explosion boom");
