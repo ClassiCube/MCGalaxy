@@ -64,9 +64,8 @@ namespace MCGalaxy.Commands {
                 cpos.type = type;
                 p.blockchangeObject = cpos;
             }
-            if (!p.pyramidsilent) {
-                Player.SendMessage(p, "Place two blocks to determine the edges.");
-            }
+            
+            Player.SendMessage(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -105,7 +104,8 @@ namespace MCGalaxy.Commands {
         protected enum SolidType {
             solid, hollow, walls,
             holes, wire, random,
-            vertical, Invalid = -1,
+            vertical, reverse,
+            Invalid = -1,
         }
     }
 }

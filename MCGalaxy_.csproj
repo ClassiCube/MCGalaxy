@@ -422,7 +422,8 @@
     <Compile Include="Drawing\CopyState.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
-    <Compile Include="Drawing\DrawOps\EllipsoidDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />

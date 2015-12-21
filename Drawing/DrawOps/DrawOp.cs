@@ -29,14 +29,14 @@ namespace MCGalaxy {
         
         public abstract string Name { get; }
         
-        public abstract int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2);
+        public abstract int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2);
         
         public abstract void Perform(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
                                      Player p, Level lvl, Brush brush);
         
         public bool CanDraw(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
                             Player p, out int affected) {
-            affected = GetBlocksAffected(x1, y1, z1, x2, y2, z2);
+            affected = GetBlocksAffected(p.level, x1, y1, z1, x2, y2, z2);
             if (affected > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
                 Player.SendMessage(p, "You cannot draw more than " + p.group.maxBlocks + ".");
@@ -45,7 +45,7 @@ namespace MCGalaxy {
             return true;
         }
         
-        public bool DetermineDrawOpMethod(Level lvl, int affected) {
+        public virtual bool DetermineDrawOpMethod(Level lvl, int affected) {
             if (affected > 10000) {
                 method = MethodSetTile;
                 return true;
@@ -85,8 +85,7 @@ namespace MCGalaxy {
             int affected = 0;
             if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
                 return false;
-            if (!p.pyramidsilent)
-                Player.SendMessage(p, "Drawing an estimated " + affected + " blocks.");
+            Player.SendMessage(p, op.Name + ": drawing an estimated " + affected + " blocks");
             
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);

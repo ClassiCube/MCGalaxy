@@ -25,7 +25,7 @@ namespace MCGalaxy {
             get { return "Ellipsoid"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             double rx = (x2 - x1) / 2.0 + 0.25, ry = (y2 - y1) / 2.0 + 0.25, rz = (z2 - z1) / 2.0 + 0.25;
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
@@ -54,7 +54,7 @@ namespace MCGalaxy {
             get { return "Ellipsoid Hollow"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             double rx = (x2 - x1) / 2.0 + 0.25, ry = (y2 - y1) / 2.0 + 0.25, rz = (z2 - z1) / 2.0 + 0.25;
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
@@ -89,7 +89,7 @@ namespace MCGalaxy {
             get { return "Cylinder"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             double rx = (x2 - x1) / 2.0 + 0.25, rz = (z2 - z1) / 2.0 + 0.25;
             int height = (y2 - y1 + 1);
             return (int)(Math.PI * rx * rz * height);

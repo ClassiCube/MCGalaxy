@@ -119,19 +119,6 @@ namespace MCGalaxy {
         /// </summary>
         public bool canusegc = true;
 
-        //Pyramid Code
-
-        public int pyramidx1;
-        public int pyramidx2;
-        public int pyramidy1;
-        public int pyramidy2;
-        public int pyramidz1;
-        public int pyramidz2;
-        public string pyramidblock;
-        public int pyramidtotal;
-        public int pyramidtotal2;
-        public bool pyramidsilent = false;
-
         public bool deleteMode = false;
         public bool ignorePermission = false;
         public bool ignoreGrief = false;
