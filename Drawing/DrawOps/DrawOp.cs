@@ -35,7 +35,7 @@ namespace MCGalaxy {
                                      Player p, Level lvl, Brush brush);
         
         public bool CanDraw(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
-                           Player p, out int affected) {
+                            Player p, out int affected) {
             affected = GetBlocksAffected(x1, y1, z1, x2, y2, z2);
             if (affected > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
@@ -52,7 +52,7 @@ namespace MCGalaxy {
             } else {
                 method = lvl.bufferblocks && !lvl.Instant ?
                     MethodBlockQueue : MethodBlockChange;
-                return false;    
+                return false;
             }
         }
         
@@ -79,5 +79,24 @@ namespace MCGalaxy {
         }
         
         const int MethodBlockQueue = 0, MethodBlockChange = 1, MethodSetTile = 2;
+        
+        public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
+                                           ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            int affected = 0;
+            if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
+                return false;
+            if (!p.pyramidsilent)
+                Player.SendMessage(p, "Drawing an estimated " + affected + " blocks.");
+            
+            bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
+            op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);
+            if (needReveal) {
+                foreach (Player pl in Player.players) {
+                    if (pl.level.name.ToLower() == p.level.name.ToLower())
+                        Command.all.Find("reveal").Use(p, pl.name);
+                }
+            }
+            return true;
+        }
     }
 }

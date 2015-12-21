@@ -191,7 +191,7 @@ namespace MCGalaxy {
                 return;
             }
             
-            p.SendMessage(p.id, Server.DefaultColor + message, colorParse);
+            p.SendMessage(0, Server.DefaultColor + message, colorParse);
         }
         
         public void SendMessage(string message) {
@@ -199,12 +199,10 @@ namespace MCGalaxy {
         }
         
         public void SendMessage(string message, bool colorParse) {
-            if ( this == null ) { Server.s.Log(message); return; }
-            SendMessage(this.id, Server.DefaultColor + message, colorParse);
+            SendMessage(0, Server.DefaultColor + message, colorParse);
         }
         
         public void SendChat(Player p, string message) {
-            if ( this == null ) { Server.s.Log(message); return; }
             Player.SendMessage(p, message);
         }
         
@@ -235,7 +233,6 @@ namespace MCGalaxy {
         
         
         public void SendMessage(byte id, string message, bool colorParse) {
-            if ( this == null ) { Server.s.Log(message); return; }
             if ( ZoneSpam.AddSeconds(2) > DateTime.Now && message.Contains("This zone belongs to ") ) return;
             StringBuilder sb = new StringBuilder(message);
 
