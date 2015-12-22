@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
 
             switch (cpos.solid) {
                 case SolidType.solid:
-                    drawOp = new EllipsoidDrawOp(); break;
+                    drawOp = new CuboidDrawOp(); break;
                 case SolidType.hollow:
                     drawOp = new CuboidHollowsDrawOp(); break;
                 case SolidType.walls:
