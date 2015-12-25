@@ -208,7 +208,7 @@ namespace MCGalaxy {
 
 			if (channel.ToLower() == opchannel.ToLower()) {
 				Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
-				Player.GlobalMessageOps(String.Format("To Ops &f-{0}[IRC] {1}&f- {2}", Server.IRCColour, user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
+				Chat.GlobalMessageOps(String.Format("To Ops &f-{0}[IRC] {1}&f- {2}", Server.IRCColour, user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
 			}
 			else {
 				Server.s.Log(String.Format("[IRC] {0}: {1}", user.Nick, message));

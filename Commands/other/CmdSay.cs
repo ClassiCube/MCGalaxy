@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             //    message = message.Replace("%" + i, "&" + i);
             //for (char c = 'a'; c <= 'f'; c++)
             //    message = message.Replace("%" + c, "&" + c);
-            message = Player.EscapeColours(message);
+            message = Chat.EscapeColours(message);
             Player.GlobalMessage(message);
 
             for (int i = 0; i < 10; i++)

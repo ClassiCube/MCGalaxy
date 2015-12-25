@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands {
                 }
                 
                 Player.SendMessage(p, "You joined the chat room '" + room + "'");
-                Player.ChatRoom(p, p.color + p.name + Server.DefaultColor + " has joined your chat room", false, room);
+                Chat.ChatRoom(p, p.color + p.name + Server.DefaultColor + " has joined your chat room", false, room);
                 p.Chatroom = room;
             } else {
                 Player.SendMessage(p, "There is no chat room with that name");
@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands {
         
         void HandleLeave(Player p) {
             Player.SendMessage(p, "You left the chat room '" + p.Chatroom + "'");
-            Player.ChatRoom(p, p.color + p.name + Server.DefaultColor + " has left the chat room", false, p.Chatroom);
+            Chat.ChatRoom(p, p.color + p.name + Server.DefaultColor + " has left the chat room", false, p.Chatroom);
             Player.GlobalMessage(p.color + p.name + Server.DefaultColor + " has left their chat room " + p.Chatroom);
             p.Chatroom = null;
         }
@@ -220,7 +220,7 @@ namespace MCGalaxy.Commands {
                 pl.spyChatRooms.Remove(room);
             }
             Player.SendMessage(pl, "You've been forced to join the chat room '" + room + "'");
-            Player.ChatRoom(pl, pl.color + pl.name + Server.DefaultColor + " has force joined your chat room", false, room);
+            Chat.ChatRoom(pl, pl.color + pl.name + Server.DefaultColor + " has force joined your chat room", false, room);
             pl.Chatroom = room;
             Player.SendMessage(p, pl.color + pl.name + Server.DefaultColor +
                                " was forced to join the chatroom '" + room + "' by you");
@@ -249,7 +249,7 @@ namespace MCGalaxy.Commands {
             
             Player.SendMessage(pl, "You were kicked from the chat room '" + pl.Chatroom + "'");
             Player.SendMessage(p, pl.color + pl.name + Server.DefaultColor + " was kicked from the chat room '" + pl.Chatroom + "'");
-            Player.ChatRoom(pl, pl.color + pl.name + Server.DefaultColor + " was kicked from your chat room", false, pl.Chatroom);
+            Chat.ChatRoom(pl, pl.color + pl.name + Server.DefaultColor + " was kicked from your chat room", false, pl.Chatroom);
             pl.Chatroom = null;
         }
         
@@ -257,12 +257,12 @@ namespace MCGalaxy.Commands {
             int length = parts.Length > 1 ? parts[0].Length + 1 : parts[0].Length;
             message = message.Substring( length );
             if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 7)) {
-                Player.GlobalChatRoom(p, message, true);
+                Chat.GlobalChatRoom(p, message, true);
                 return;
             }
             
             if (p.lastchatroomglobal.AddSeconds(30) < DateTime.Now) {
-                Player.GlobalChatRoom(p, message, true);
+                Chat.GlobalChatRoom(p, message, true);
                 p.lastchatroomglobal = DateTime.Now;
             } else {
                 Player.SendMessage(p, "Sorry, you must wait 30 seconds in between each global chatroom message!!");

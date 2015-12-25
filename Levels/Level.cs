@@ -352,7 +352,7 @@ namespace MCGalaxy
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                if (!silent) Player.GlobalMessageOps("&3" + name + Server.DefaultColor + " was unloaded.");
+                if (!silent) Chat.GlobalMessageOps("&3" + name + Server.DefaultColor + " was unloaded.");
                 Server.s.Log(string.Format("{0} was unloaded.", name));
             }
             return true;
@@ -684,8 +684,8 @@ namespace MCGalaxy
             catch (Exception e)
             {
                 Server.ErrorLog(e);
-                Player.GlobalMessageOps(p.name + " triggered a non-fatal error on " + name);
-                Player.GlobalMessageOps("Error location: " + errorLocation);
+                Chat.GlobalMessageOps(p.name + " triggered a non-fatal error on " + name);
+                Chat.GlobalMessageOps("Error location: " + errorLocation);
                 Server.s.Log(p.name + " triggered a non-fatal error on " + name);
                 Server.s.Log("Error location: " + errorLocation);
             }
