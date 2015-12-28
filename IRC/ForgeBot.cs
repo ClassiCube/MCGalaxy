@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MCGalaxy.Commands;
 using Sharkbite.Irc;
 
 namespace MCGalaxy {
@@ -168,7 +169,11 @@ namespace MCGalaxy {
             string ircCommand = message.Split(' ')[0].ToLower();
             if (ircCommand == ".who" || ircCommand == ".players")
             {
-                CmdPlayers();
+                try {
+                    CmdPlayers.DisplayPlayers(null, "", text => Server.IRC.Say(text, false, true));
+                } catch (Exception e) {
+                    Server.ErrorLog(e);
+                }
             }
             if (ircCommand == ".x")
             {
@@ -309,142 +314,5 @@ namespace MCGalaxy {
 			try { return connection.Connected; }
 			catch { return false; }
         }
-        #region Commands
-        struct playergroups { public Group group; public List<string> players; }
-        public static void CmdPlayers()
-        {
-            //Was lazy
-            string message = "";
-            try
-            {
-                List<playergroups> playerList = new List<playergroups>();
-
-                foreach (Group grp in Group.GroupList)
-                {
-                    if (grp.name != "nobody")
-                    {
-                        if (String.IsNullOrEmpty(message) || !Group.Exists(message))
-                        {
-                            playergroups groups;
-                            groups.group = grp;
-                            groups.players = new List<string>();
-                            playerList.Add(groups);
-                        }
-                        else
-                        {
-                            Group grp2 = Group.Find(message);
-                            if (grp2 != null && grp == grp2)
-                            {
-                                playergroups groups;
-                                groups.group = grp;
-                                groups.players = new List<string>();
-                                playerList.Add(groups);
-                            }
-                        }
-                    }
-                }
-
-                string devs = "";
-                string mods = "";
-                string gcmods = "";
-                int totalPlayers = 0;
-                foreach (Player pl in Player.players)
-                {
-                	if (!pl.hidden)
-                    {
-                    	if (String.IsNullOrEmpty(message) || !Group.Exists(message) || Group.Find(message) == pl.group)
-                    	{
-                        	totalPlayers++;
-                        	string foundName = pl.name;
-
-                        	if (Server.afkset.Contains(pl.name))
-                        	{
-                        	    foundName = pl.name + "-afk";
-                        	}
-
-                        	if (pl.muted) foundName += "[muted]";
-
-
-                        	if (pl.isDev)
-                        	{
-                            	if (pl.voice)
-                                	devs += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
-                            	else
-                                	devs += " " + foundName + " (" + pl.level.name + "),";
-                        	}
-                        	if (pl.isMod)
-                        	{
-                            	if (pl.voice)
-                                	mods += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
-                            	else
-                                	mods += " " + foundName + " (" + pl.level.name + "),";
-                        	}
-                        	if (pl.isGCMod)
-                        	{
-                            	if (pl.voice)
-                                	gcmods += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
-                            	else
-                                	gcmods += " " + foundName + " (" + pl.level.name + "),";
-                        	}
-
-                        	if (pl.voice)
-                            	playerList.Find(grp => grp.group == pl.group).players.Add("&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + ")");
-                        	else
-                            	playerList.Find(grp => grp.group == pl.group).players.Add(foundName + " (" + pl.level.name + ")");
-                    	}
-                    }
-                }
-
-                Server.IRC.Say("There are %a" + totalPlayers + Server.DefaultColor + " players online.", false, true);
-                bool staff = devs.Length > 0 || mods.Length > 0 || gcmods.Length > 0;
-                if (staff) Server.IRC.Say("%cMCGalaxy Staff Online:", false, true);
-                if (devs.Length > 0)
-                {
-                    Server.IRC.Say("#%9MCGalaxy Devs:" + Server.DefaultColor + devs.Trim(','), false, true);
-                }
-                if (mods.Length > 0) {
-                    Server.IRC.Say("#%2MCGalaxy Mods:" + Server.DefaultColor + mods.Trim(','), false, true);
-                }
-                if (gcmods.Length > 0) {
-                    Server.IRC.Say("#%6MCGalaxy GCMods:" + Server.DefaultColor + gcmods.Trim(','), false, true);
-                }
-                if (staff) Server.IRC.Say("%aNormal Players Online:", false, true);
-                for (int i = playerList.Count - 1; i >= 0; i--)
-                {
-                    playergroups groups = playerList[i];
-                    if (groups.players.Count > 0 || Server.showEmptyRanks)
-                    {
-                        string appendString = "";
-                        foreach (string player in groups.players)
-                            appendString += ", " + player;
-
-                        if (appendString != "")
-                            appendString = appendString.Remove(0, 2);
-                        appendString = ":" + groups.group.color + getPlural(groups.group.trueName) + ": " + appendString;
-
-                        Server.IRC.Say(appendString, false, true);
-                    }
-                }
-            }
-            catch (Exception e) { Server.ErrorLog(e); }
-        }
-
-        public static string getPlural(string groupName)
-        {
-            try
-            {
-                string last2 = groupName.Substring(groupName.Length - 2).ToLower();
-                if ((last2 != "ed" || groupName.Length <= 3) && last2[1] != 's')
-                {
-                    return groupName + "s";
-                }
-                return groupName;
-            }
-            catch
-            {
-                return groupName;
-            }
-        }
-        #endregion
     }
 }
