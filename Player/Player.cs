@@ -42,9 +42,10 @@ namespace MCGalaxy {
 
         public void ClearChat() { OnChat = null; }
         public static Dictionary<string, string> left = new Dictionary<string, string>();
-        /// <summary>
-        /// 
-        /// </summary>
+        
+        static List<string> pendingNames = new List<string>();
+        static object pendingLock = new object();
+        
         public static List<Player> connections = new List<Player>(Server.players);
         System.Timers.Timer muteTimer = new System.Timers.Timer(1000);
         public static List<string> emoteList = new List<string>();
@@ -493,6 +494,8 @@ namespace MCGalaxy {
                     switch (msg) {
                         case 0:
                             HandleLogin(message);
+                            lock (pendingLock)
+                            	pendingNames.Remove(truename);
                             break;
                         case 5:
                             if (!loggedIn)
@@ -543,6 +546,17 @@ namespace MCGalaxy {
                 byte version = message[0];
                 name = enc.GetString(message, 1, 64).Trim();
                 truename = name;
+                lock (pendingLock) {
+                	pendingNames.Add(name);
+                	int altsCount = 0;
+                	foreach (string other in pendingNames) {
+                		if (other == truename) altsCount++;
+                	}
+                	
+                	if (altsCount > 1) {
+                		Kick("Already logged in!"); return;
+                	}
+                }
 
                 string verify = enc.GetString(message, 65, 32).Trim();
                 if (Server.verify)
