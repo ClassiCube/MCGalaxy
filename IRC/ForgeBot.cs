@@ -44,6 +44,9 @@ namespace MCGalaxy {
 			}*/
 			this.channel = channel.Trim(); this.opchannel = opchannel.Trim(); this.nick = nick.Replace(" ", ""); this.server = server;
 			banCmd = new List<string>();
+			banCmd.Add("resetbot");
+			banCmd.Add("oprules");
+			
 			if (Server.irc) {
 
                 ConnectionArgs con = new ConnectionArgs(nick, server);
@@ -164,46 +167,43 @@ namespace MCGalaxy {
 		}
 
 		void Listener_OnPublic(UserInfo user, string channel, string message) {
+			string[] parts = message.Split(new char[] { ' ' }, 3);
 			//string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
 			// Allowed chars are any ASCII char between 20h/32 and 7Ah/122 inclusive, except for 26h/38 (&) and 60h/96 (`)
-            string ircCommand = message.Split(' ')[0].ToLower();
-            if (ircCommand == ".who" || ircCommand == ".players")
-            {
+            string ircCommand = parts[0].ToLower();
+            if (ircCommand == ".who" || ircCommand == ".players") {
                 try {
                     CmdPlayers.DisplayPlayers(null, "", text => Server.IRC.Say(text, false, true));
                 } catch (Exception e) {
                     Server.ErrorLog(e);
                 }
             }
-            if (ircCommand == ".x")
-            {
+            if (ircCommand == ".x") {
                 if (Server.ircControllers.Contains(user.Nick))
                 {
-                    if (message.Split(' ')[1].Equals("resetbot", StringComparison.OrdinalIgnoreCase) || banCmd.Contains(ircCommand)) { Server.IRC.Say("You cannot use this command from IRC!"); return; }
-                    if (message.Split(' ')[1].Equals("oprules", StringComparison.OrdinalIgnoreCase) || banCmd.Contains(ircCommand)) { Server.IRC.Say("You cannot use this command from IRC!"); return; }
-                    if (Player.CommandHasBadColourCodes(null, message)) { Server.IRC.Say("Your command had invalid color codes!"); return; }
+                	string cmdName = parts.Length >= 2 ? parts[1] : "";
+                    if (banCmd.Contains(cmdName)) { 
+                		Server.IRC.Say("You are not allowed to use this command from IRC."); return; 
+                	}
+                    if (Player.CommandHasBadColourCodes(null, message)) { 
+                		Server.IRC.Say("Your command had invalid color codes!"); return;
+                	}
 
-                    Command cmd = Command.all.Find(message.Split(' ')[1]);
-                    if (cmd != null)
+                    Command cmd = Command.all.Find(cmdName);
+                    if (cmdName != "" && cmd != null)
                     {
                         Server.s.Log("IRC Command: /" + message.Replace(".x ", ""));
                         usedCmd = user.Nick;
-                        try
-                        {
-                            cmd.Use(new Player("IRC"), message.Split(new char[] { ' ' }, 3)[2].Trim());
-                        }
-                        catch (IndexOutOfRangeException e)
-                        {
-                            cmd.Use(new Player("IRC"), message.Split(new char[] { ' ' }, 3)[1].Trim());
-                        }
-                        catch (Exception e)
-                        {
+                        string args = parts.Length >= 3 ? parts[2] : "";
+                        try {
+                            cmd.Use(new Player("IRC"), args);
+                        } catch (Exception e) {
                             Server.IRC.Say("CMD Error: " + e.ToString());
                         }
                         usedCmd = "";
-                    }
-                    else
+                    } else {
                         Server.IRC.Say("Unknown command!");
+                    }
                 }
             }
             message = c.IrcToMinecraftColors(message);
@@ -214,8 +214,7 @@ namespace MCGalaxy {
 			if (channel.ToLower() == opchannel.ToLower()) {
 				Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
 				Chat.GlobalMessageOps(String.Format("To Ops &f-{0}[IRC] {1}&f- {2}", Server.IRCColour, user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
-			}
-			else {
+			} else {
 				Server.s.Log(String.Format("[IRC] {0}: {1}", user.Nick, message));
 				Player.GlobalMessage(String.Format("{0}[IRC] {1}: &f{2}", Server.IRCColour, user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
 			}

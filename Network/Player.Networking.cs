@@ -256,11 +256,12 @@ namespace MCGalaxy {
                 // End fix
             }
 
-            
-            if ( Server.dollardollardollar )
-                sb.Replace("$name", "$" + StripColours(DisplayName));
-            else
-                sb.Replace("$name", StripColours(DisplayName));
+            if( DisplayName != null ) {
+            	if ( Server.dollardollardollar )
+            		sb.Replace("$name", "$" + StripColours(DisplayName));
+            	else
+            		sb.Replace("$name", StripColours(DisplayName));
+            }
             sb.Replace("$date", DateTime.Now.ToString("yyyy-MM-dd"));
             sb.Replace("$time", DateTime.Now.ToString("HH:mm:ss"));
             sb.Replace("$ip", ip);
