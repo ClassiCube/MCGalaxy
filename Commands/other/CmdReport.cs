@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands
                                 File.Delete("extra/reportedbackups/" + msg + ".txt");
                             File.Move("extra/reported/" + msg + ".txt", "extra/reportedbackups/" + msg + ".txt");
                             Player.SendMessage(p, "%a" + msg + "'s report has been deleted.");
-                            Player.GlobalMessageOps(p.prefix + p.color + p.name + Server.DefaultColor + " deleted " + msg + "'s report.");
+                            Chat.GlobalMessageOps(p.prefix + p.color + p.name + Server.DefaultColor + " deleted " + msg + "'s report.");
                             Server.s.Log(msg + "'s report has been deleted by " + p.name);
                         }
                         else
@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands
                                 file.MoveTo("extra/reportedbackups/" + file.Name);
                             }
                             Player.SendMessage(p, "%aYou have cleared all reports!");
-                            Player.GlobalMessageOps(p.prefix + p.name + "%c cleared ALL reports!");
+                            Chat.GlobalMessageOps(p.prefix + p.name + "%c cleared ALL reports!");
                             Server.s.Log(p.name + " cleared ALL reports!");
                         }
                         else
@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands
                             Directory.CreateDirectory("extra/reported");
                         File.WriteAllText("extra/reported/" + msg1 + ".txt", msg2 + " - Reported by " + p.name + "." + " DateTime: " + DateTime.Now);
                         Player.SendMessage(p, "%aYour report has been sent, it should be viewed when an operator is online!");
-                        Player.GlobalMessageOps(p.prefix + p.name + Server.DefaultColor + " has made a report, view it with %f/report list ");
+                        Chat.GlobalMessageOps(p.prefix + p.name + Server.DefaultColor + " has made a report, view it with %f/report list ");
                         break;
                 }
             }

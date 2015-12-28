@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands
                     try { Pb.Waypoints.Clear(); }
                     catch { }
                     Pb.AIName = "";
-                    if (p != null) Player.GlobalChatLevel(p, Pb.color + Pb.name + Server.DefaultColor + "'s hunt instinct: " + Pb.hunt, false);
+                    if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + Server.DefaultColor + "'s hunt instinct: " + Pb.hunt, false);
                     Server.s.Log(Pb.name + "'s hunt instinct: " + Pb.hunt);
                     return;
                 }
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands
                 {
                     if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) { Player.SendMessage(p, "Only a " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + "+ may toggle killer instinct."); return; }
                     Pb.kill = !Pb.kill;
-                    if (p != null) Player.GlobalChatLevel(p, Pb.color + Pb.name + Server.DefaultColor + "'s kill instinct: " + Pb.kill, false);
+                    if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + Server.DefaultColor + "'s kill instinct: " + Pb.kill, false);
                     Server.s.Log(Pb.name + "'s kill instinct: " + Pb.kill);
                     return;
                 }
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands
                 catch { Player.SendMessage(p, "AI file corrupt."); return; }
 
                 Pb.AIName = foundPath;
-                if (p != null) Player.GlobalChatLevel(p, Pb.color + Pb.name + Server.DefaultColor + "'s AI is now set to " + foundPath, false);
+                if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + Server.DefaultColor + "'s AI is now set to " + foundPath, false);
                 Server.s.Log(Pb.name + "'s AI was set to " + foundPath);
             }
             catch { Player.SendMessage(p, "Error"); return; }

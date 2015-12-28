@@ -49,13 +49,13 @@ namespace MCGalaxy.Commands
             if (!who.joker)
             {
                 who.joker = true;
-                if (stealth) { Player.GlobalMessageOps(who.color + who.DisplayName + Server.DefaultColor + " is now STEALTH joker'd. "); return; }
+                if (stealth) { Chat.GlobalMessageOps(who.color + who.DisplayName + Server.DefaultColor + " is now STEALTH joker'd. "); return; }
                 Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " is now a &aJ&bo&ck&5e&9r" + Server.DefaultColor + ".", false);
             }
             else
             {
                 who.joker = false;
-                if (stealth) { Player.GlobalMessageOps(who.color + who.DisplayName + Server.DefaultColor + " is now STEALTH Unjoker'd. "); return; }
+                if (stealth) { Chat.GlobalMessageOps(who.color + who.DisplayName + Server.DefaultColor + " is now STEALTH Unjoker'd. "); return; }
                 Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " is no longer a &aJ&bo&ck&5e&9r" + Server.DefaultColor + ".", false);
             }
         }

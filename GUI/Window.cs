@@ -474,13 +474,13 @@ namespace MCGalaxy.Gui
                 {
                     case '#':
                         text = text.Remove(0, 1);
-                        Player.GlobalMessageOps(text);
+                        MCGalaxy.Chat.GlobalMessageOps(text);
                         Server.s.OpLog("(OPs): Console: " + text);
                         Server.IRC.Say("Console: " + text, true);
                         break;
                     case '+':
                         text = text.Remove(0, 1);
-                        Player.GlobalMessageAdmins(text);
+                        MCGalaxy.Chat.GlobalMessageAdmins(text);
                         Server.s.AdminLog("(Admins): Console: " + text);
                         Server.IRC.Say("Console: " + text, true);
                         break;
@@ -1753,7 +1753,7 @@ namespace MCGalaxy.Gui
                 if (txtOpInput.Text == null || txtOpInput.Text.Trim() == "") { return; }
                 string optext = txtOpInput.Text.Trim();
                 string opnewtext = optext;
-                Player.GlobalMessageOps("To Ops &f-" + Server.DefaultColor + "Console [&a" + Server.ZallState + Server.DefaultColor + "]&f- " + opnewtext);
+                MCGalaxy.Chat.GlobalMessageOps("To Ops &f-" + Server.DefaultColor + "Console [&a" + Server.ZallState + Server.DefaultColor + "]&f- " + opnewtext);
                 Server.s.OpLog("(OPs): Console: " + opnewtext);
                 txtOpInput.Clear();
             }
@@ -1767,7 +1767,7 @@ namespace MCGalaxy.Gui
                 if (txtAdminInput.Text == null || txtAdminInput.Text.Trim() == "") { return; }
                 string admintext = txtAdminInput.Text.Trim();
                 string adminnewtext = admintext;
-                Player.GlobalMessageAdmins("To Admins &f-" + Server.DefaultColor + "Console [&a" + Server.ZallState + Server.DefaultColor + "]&f- " + adminnewtext);
+                MCGalaxy.Chat.GlobalMessageAdmins("To Admins &f-" + Server.DefaultColor + "Console [&a" + Server.ZallState + Server.DefaultColor + "]&f- " + adminnewtext);
                 Server.s.AdminLog("(Admins): Console: " + adminnewtext);
                 txtAdminInput.Clear();
             }

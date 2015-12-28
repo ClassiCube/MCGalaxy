@@ -25,8 +25,8 @@ namespace MCGalaxy {
             get { return "Cuboid"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            return (x2 - x1 + 1) * (y2 - y2 + 1) * (z2 - z1 + 1);
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
         }
         
         public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
@@ -40,14 +40,41 @@ namespace MCGalaxy {
         }
     }
     
+    public class CuboidHolesDrawOp : DrawOp {
+        
+        public override string Name {
+            get { return "Cuboid Holes"; }
+        }
+        
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
+        }
+        
+        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
+                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
+            for (ushort y = y1; y <= y2; y++)
+                for (ushort z = z1; z <= z2; z++)
+            {
+                int i = (y & 1) == 0 ? 0 : 1;
+                if ((z & 1) == 0) i++;
+                
+                for (ushort x = x1; x <= x2; x++) {
+                    byte block = (i & 1) == 0 ? brush.NextBlock() : Block.air;
+                    PlaceBlock(p, lvl, x, y, z, block);
+                    i++;
+                }
+            }
+        }
+    }
+    
     public class CuboidHollowsDrawOp : DrawOp {
         
         public override string Name {
             get { return "Cuboid Hollow"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);            
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
             int yQuadsVol = Math.Max(0, Math.Min(lenY, 2) * ((lenX - 2) * lenZ)); // we need to avoid double counting overlaps
             int zQuadzVol = Math.Max(0, Math.Min(lenZ, 2) * ((lenX - 2) * (lenY - 2)));
@@ -64,15 +91,15 @@ namespace MCGalaxy {
                 QuadX(x2, (ushort)(y1 + 1), z1, (ushort)(y2 - 1), z2, p, lvl, brush);
             }
             if (lenX > 2 && lenY > 2) {
-                QuadZ(x1, (ushort)(x1 + 1), (ushort)(y1 + 1), 
+                QuadZ(z1, (ushort)(x1 + 1), (ushort)(y1 + 1),
                       (ushort)(x2 - 1), (ushort)(y2 - 1), p, lvl, brush);
-                QuadZ(x2, (ushort)(x1 + 1), (ushort)(y1 + 1), 
+                QuadZ(z2, (ushort)(x1 + 1), (ushort)(y1 + 1),
                       (ushort)(x2 - 1), (ushort)(y2 - 1), p, lvl, brush);
-            }    
+            }
         }
         
         protected void QuadX(ushort x, ushort y1, ushort z1, ushort y2, ushort z2,
-                  Player p, Level lvl, Brush brush) {
+                             Player p, Level lvl, Brush brush) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort z = z1; z <= z2; z++)
             {
@@ -81,16 +108,16 @@ namespace MCGalaxy {
         }
         
         protected void QuadY(ushort y, ushort x1, ushort z1, ushort x2, ushort z2,
-                  Player p, Level lvl, Brush brush) {
+                             Player p, Level lvl, Brush brush) {
             for (ushort z = z1; z <= z2; z++)
                 for (ushort x = x1; x <= x2; x++)
             {
                 PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
             }
-        }    
+        }
         
         protected void QuadZ(ushort z, ushort x1, ushort y1, ushort x2, ushort y2,
-                  Player p, Level lvl, Brush brush) {
+                             Player p, Level lvl, Brush brush) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort x = x1; x <= x2; x++)
             {
@@ -105,8 +132,8 @@ namespace MCGalaxy {
             get { return "Cuboid Walls"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);            
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
             int zQuadsVol = Math.Max(0, Math.Min(lenZ, 2) * ((lenX - 2) * lenY)); // we need to avoid double counting overlaps
             return xQuadsVol + zQuadsVol;
@@ -118,9 +145,9 @@ namespace MCGalaxy {
             QuadX(x1, y1, z1, y2, z2, p, lvl, brush);
             QuadX(x2, y1, z1, y2, z2, p, lvl, brush);
             if (lenX > 2) {
-                QuadZ(x1, (ushort)(x1 + 1), y1, (ushort)(x2 - 1), y2, p, lvl, brush);
-                QuadZ(x2, (ushort)(x1 + 1), y1, (ushort)(x2 - 1), y2, p, lvl, brush);
-            }    
+                QuadZ(z1, (ushort)(x1 + 1), y1, (ushort)(x2 - 1), y2, p, lvl, brush);
+                QuadZ(z2, (ushort)(x1 + 1), y1, (ushort)(x2 - 1), y2, p, lvl, brush);
+            }
         }
     }
     
@@ -130,7 +157,7 @@ namespace MCGalaxy {
             get { return "Cuboid Wireframe"; }
         }
         
-        public override int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
             int horSidesvol = 2 * (lenX * 2 + lenZ * 2); // TODO: slightly overestimated by at most four blocks.
             int verSidesVol = Math.Max(0, lenY - 2) * 4;

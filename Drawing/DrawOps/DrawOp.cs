@@ -29,30 +29,30 @@ namespace MCGalaxy {
         
         public abstract string Name { get; }
         
-        public abstract int GetBlocksAffected(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2);
+        public abstract int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2);
         
         public abstract void Perform(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
                                      Player p, Level lvl, Brush brush);
         
         public bool CanDraw(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
-                           Player p, out int affected) {
-            affected = GetBlocksAffected(x1, y1, z1, x2, y2, x2);
+                            Player p, out int affected) {
+            affected = GetBlocksAffected(p.level, x1, y1, z1, x2, y2, z2);
             if (affected > p.group.maxBlocks) {
-                Player.SendMessage(p, "You tried to " + Name + " " + affected + " blocks.");
-                Player.SendMessage(p, "You cannot " + Name + " more than " + p.group.maxBlocks + ".");
+                Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
+                Player.SendMessage(p, "You cannot draw more than " + p.group.maxBlocks + ".");
                 return false;
             }
             return true;
         }
         
-        public bool DetermineDrawOpMethod(Level lvl, int affected) {
+        public virtual bool DetermineDrawOpMethod(Level lvl, int affected) {
             if (affected > 10000) {
                 method = MethodSetTile;
                 return true;
             } else {
                 method = lvl.bufferblocks && !lvl.Instant ?
                     MethodBlockQueue : MethodBlockChange;
-                return false;    
+                return false;
             }
         }
         
@@ -62,6 +62,9 @@ namespace MCGalaxy {
         }
         
         protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type) {
+            if (type == Block.Zero)
+                return;
+            
             switch (method) {
                 case MethodBlockQueue:
                     BlockQueue.Addblock(p, x, y, z, type);
@@ -76,5 +79,23 @@ namespace MCGalaxy {
         }
         
         const int MethodBlockQueue = 0, MethodBlockChange = 1, MethodSetTile = 2;
+        
+        public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
+                                           ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            int affected = 0;
+            if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
+                return false;
+            Player.SendMessage(p, op.Name + ": drawing an estimated " + affected + " blocks");
+            
+            bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
+            op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);
+            if (needReveal) {
+                foreach (Player pl in Player.players) {
+                    if (pl.level.name.ToLower() == p.level.name.ToLower())
+                        Command.all.Find("reveal").Use(p, pl.name);
+                }
+            }
+            return true;
+        }
     }
 }

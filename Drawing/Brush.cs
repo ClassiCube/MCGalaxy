@@ -51,4 +51,17 @@ namespace MCGalaxy {
             return (byte)rnd.Next(Block.red, Block.darkgrey);
         }
     }
+    
+     public sealed class RandomBrush : Brush {
+        readonly Random rnd = new Random();
+        readonly byte block;
+        
+        public RandomBrush(byte block) {
+            this.block = block;
+        }
+        
+        public override byte NextBlock() {
+            return (byte)rnd.Next(1, 11) <= 5 ? block : Block.Zero;
+        }
+    }
 }

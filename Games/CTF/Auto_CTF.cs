@@ -308,7 +308,7 @@ namespace MCGalaxy
                                 Thread.Sleep(300);
                                 if (GetPlayer(p1).hasflag)
                                 {
-                                    Player.GlobalMessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
+                                    Chat.GlobalMessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
                                     GetPlayer(p1).points -= caplose;
                                     mainlevel.Blockchange(b.x, b.y, b.z, b.block);
                                     GetPlayer(p1).hasflag = false;
@@ -333,13 +333,13 @@ namespace MCGalaxy
                 {
                     //cache.Remove(GetPlayer(p));
                     blueteam.members.Remove(p);
-                    Player.GlobalMessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
+                    Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
                 }
                 else if (redteam.members.Contains(p))
                 {
                     //cache.Remove(GetPlayer(p));
                     redteam.members.Remove(p);
-                    Player.GlobalMessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
+                    Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
                 }
             }
         }
@@ -404,34 +404,34 @@ namespace MCGalaxy
             map2 = maps1[rand.Next(maps1.Count)];
             maps1.Remove(map2);
             map3 = maps1[rand.Next(maps1.Count)];
-            Player.GlobalMessageLevel(mainlevel, "%2VOTE:");
-            Player.GlobalMessageLevel(mainlevel, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
+            Chat.GlobalMessageLevel(mainlevel, "%2VOTE:");
+            Chat.GlobalMessageLevel(mainlevel, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
             voting = true;
             int seconds = rand.Next(15, 61);
-            Player.GlobalMessageLevel(mainlevel, "You have " + seconds + " seconds to vote!");
+            Chat.GlobalMessageLevel(mainlevel, "You have " + seconds + " seconds to vote!");
             Thread.Sleep(seconds * 1000);
             voting = false;
-            Player.GlobalMessageLevel(mainlevel, "VOTING ENDED!");
+            Chat.GlobalMessageLevel(mainlevel, "VOTING ENDED!");
             Thread.Sleep(rand.Next(1, 10) * 1000);
             if (vote1 > vote2 && vote1 > vote3)
             {
-                Player.GlobalMessageLevel(mainlevel, map1 + " WON!");
+                Chat.GlobalMessageLevel(mainlevel, map1 + " WON!");
                 return map1;
             }
             if (vote2 > vote1 && vote2 > vote3)
             {
-                Player.GlobalMessageLevel(mainlevel, map2 + " WON!");
+                Chat.GlobalMessageLevel(mainlevel, map2 + " WON!");
                 return map2;
             }
             if (vote3 > vote2 && vote3 > vote1)
             {
-                Player.GlobalMessageLevel(mainlevel, map3 + " WON!");
+                Chat.GlobalMessageLevel(mainlevel, map3 + " WON!");
                 return map3;
             }
             else
             {
-                Player.GlobalMessageLevel(mainlevel, "There was a tie!");
-                Player.GlobalMessageLevel(mainlevel, "I'll choose!");
+                Chat.GlobalMessageLevel(mainlevel, "There was a tie!");
+                Chat.GlobalMessageLevel(mainlevel, "I'll choose!");
                 return maps[rand.Next(maps.Count)];
             }
         }
@@ -453,9 +453,9 @@ namespace MCGalaxy
             }
             else
             {
-                Player.GlobalMessageLevel(mainlevel, "The game ended in a tie!");
+                Chat.GlobalMessageLevel(mainlevel, "The game ended in a tie!");
             }
-            Player.GlobalMessageLevel(mainlevel, "The winner was " + winnerteam.color + winner + "!!");
+            Chat.GlobalMessageLevel(mainlevel, "The winner was " + winnerteam.color + winner + "!!");
             Thread.Sleep(4000);
             //MYSQL!
             cache.ForEach(delegate(Data d)
@@ -470,7 +470,7 @@ namespace MCGalaxy
                 Database.executeQuery(commandString);
             });
             nextmap = Vote();
-            Player.GlobalMessageLevel(mainlevel, "Starting a new game!");
+            Chat.GlobalMessageLevel(mainlevel, "Starting a new game!");
             redbase = null;
             redteam = null;
             bluebase = null;
@@ -492,19 +492,19 @@ namespace MCGalaxy
                 }
                 if (p.level == mainlevel && blueteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z && mainlevel.GetTile(redbase.x, redbase.y, redbase.z) != Block.air)
                 {
-                    Player.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " took the " + redteam.color + " red team's FLAG!");
+                    Chat.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " took the " + redteam.color + " red team's FLAG!");
                     GetPlayer(p).hasflag = true;
                 }
                 if (p.level == mainlevel && redteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z && mainlevel.GetTile(bluebase.x, bluebase.y, bluebase.z) != Block.air)
                 {
-                    Player.GlobalMessageLevel(mainlevel, redteam.color + p.name + " took the " + blueteam.color + " blue team's FLAG");
+                    Chat.GlobalMessageLevel(mainlevel, redteam.color + p.name + " took the " + blueteam.color + " blue team's FLAG");
                     GetPlayer(p).hasflag = true;
                 }
                 if (p.level == mainlevel && blueteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z && mainlevel.GetTile(bluebase.x, bluebase.y, bluebase.z) != Block.air)
                 {
                     if (GetPlayer(p).hasflag)
                     {
-                        Player.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " RETURNED THE FLAG!");
+                        Chat.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " RETURNED THE FLAG!");
                         GetPlayer(p).hasflag = false;
                         GetPlayer(p).cap++;
                         GetPlayer(p).points += cappoint;
@@ -529,7 +529,7 @@ namespace MCGalaxy
                 {
                     if (GetPlayer(p).hasflag)
                     {
-                        Player.GlobalMessageLevel(mainlevel, redteam.color + p.name + " RETURNED THE FLAG!");
+                        Chat.GlobalMessageLevel(mainlevel, redteam.color + p.name + " RETURNED THE FLAG!");
                         GetPlayer(p).hasflag = false;
                         GetPlayer(p).points += cappoint;
                         GetPlayer(p).cap++;
@@ -597,7 +597,7 @@ namespace MCGalaxy
                                 GetPlayer(p).blue = false;
                             }
                             redteam.Add(p);
-                            Player.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("red") + "joined the RED Team");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("red") + "joined the RED Team");
                             Player.SendMessage(p, c.Parse("red") + "You are now on the red team!");
                         }
                         else if (redteam.members.Count > blueteam.members.Count)
@@ -610,7 +610,7 @@ namespace MCGalaxy
                                 GetPlayer(p).blue = true;
                             }
                             blueteam.Add(p);
-                            Player.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("blue") + "joined the BLUE Team");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("blue") + "joined the BLUE Team");
                             Player.SendMessage(p, c.Parse("blue") + "You are now on the blue team!");
                         }
                         else if (new Random().Next(2) == 0)
@@ -623,7 +623,7 @@ namespace MCGalaxy
                                 GetPlayer(p).blue = false;
                             }
                             redteam.Add(p);
-                            Player.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("red") + "joined the RED Team");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("red") + "joined the RED Team");
                             Player.SendMessage(p, c.Parse("red") + "You are now on the red team!");
                         }
                         else
@@ -636,7 +636,7 @@ namespace MCGalaxy
                                 GetPlayer(p).blue = true;
                             }
                             blueteam.Add(p);
-                            Player.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("blue") + "joined the BLUE Team");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("blue") + "joined the BLUE Team");
                             Player.SendMessage(p, c.Parse("blue") + "You are now on the blue team!");
                         }
                     }
@@ -646,13 +646,13 @@ namespace MCGalaxy
                         {
                             //cache.Remove(GetPlayer(p));
                             blueteam.members.Remove(p);
-                            Player.GlobalMessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
                         }
                         else if (redteam.members.Contains(p))
                         {
                             //cache.Remove(GetPlayer(p));
                             redteam.members.Remove(p);
-                            Player.GlobalMessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
                         }
                     }
                 }
@@ -725,13 +725,13 @@ namespace MCGalaxy
                     {
                         if (redteam.members.Contains(p))
                         {
-                            Player.GlobalMessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
+                            Chat.GlobalMessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
                             GetPlayer(p).points -= caplose;
                             mainlevel.Blockchange(redbase.x, redbase.y, redbase.z, Block.red);
                         }
                         else if (blueteam.members.Contains(p))
                         {
-                            Player.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " DROPPED THE FLAG!");
+                            Chat.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " DROPPED THE FLAG!");
                             GetPlayer(p).points -= caplose;
                             mainlevel.Blockchange(bluebase.x, bluebase.y, bluebase.z, Block.blue);
                         }

@@ -259,13 +259,13 @@ namespace MCGalaxy_.Gui
                     else if (s[0] == '#')
                     {
                         msg = String.Format("To Ops -{0}Console [&a{1}{0}]&f- {2}", Server.DefaultColor, Server.ZallState, s);
-                        Player.GlobalMessageOps(msg);
+                        Chat.GlobalMessageOps(msg);
                         Server.IRC.Say(msg, true);
                     }
                     else if (s[0] == '+')
                     {
                         msg = String.Format("To Admins -{0}Console [&a{1}{0}]&f- {2}", Server.DefaultColor, Server.ZallState, s);
-                        Player.GlobalMessageAdmins(msg);
+                        Chat.GlobalMessageAdmins(msg);
                         Server.IRC.Say(msg, true);
                     }
                     else

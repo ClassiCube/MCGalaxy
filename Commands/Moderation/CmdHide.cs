@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands
             if (p.hidden)
             {
                 Player.GlobalDie(p, true);
-                Player.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + Server.DefaultColor + "- is now &finvisible" + Server.DefaultColor + ".");
+                Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + Server.DefaultColor + "- is now &finvisible" + Server.DefaultColor + ".");
                 Player.GlobalChat(p, "&c- " + p.color + p.prefix + p.DisplayName + Server.DefaultColor + " " + 
                                   (File.Exists("text/logout/" + p.name + ".txt") ? CP437Reader.ReadAllText("text/logout/" + p.name + ".txt") : "Disconnected."), false);
                 Server.IRC.Say(p.DisplayName + " left the game (Disconnected.)");
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands
             else
             {
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
-                Player.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + Server.DefaultColor + "- is now &8visible" + Server.DefaultColor + ".");
+                Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + Server.DefaultColor + "- is now &8visible" + Server.DefaultColor + ".");
                 Player.GlobalChat(p, "&a+ " + p.color + p.prefix + p.DisplayName + Server.DefaultColor + " " + 
                                   (File.Exists("text/login/" + p.name + ".txt") ? CP437Reader.ReadAllText("text/login/" + p.name + ".txt") : "joined the game."), false);
                 Server.IRC.Say(p.DisplayName + " joined the game");

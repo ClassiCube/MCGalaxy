@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             setter(level, newRank);
             Level.SaveSettings(level);
             Server.s.Log(level.name + " " + target + " permission changed to " + newRank + ".");
-            Player.GlobalMessageLevel(level, target + " permission changed to " + newRank + ".");
+            Chat.GlobalMessageLevel(level, target + " permission changed to " + newRank + ".");
             if (p == null || p.level != level)
                 Player.SendMessage(p, target + " permission changed to " + newRank + " on " + level.name + ".");
         }

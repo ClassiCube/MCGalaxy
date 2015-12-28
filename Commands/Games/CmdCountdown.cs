@@ -231,11 +231,11 @@ namespace MCGalaxy.Commands
                         }
                         else if (par2 == "map")
                         {
-                            Player.GlobalMessageLevel(p.level, "Countdown Rules being sent to " + p.level.name + " by " + p.color + p.name + ":");
-                            Player.GlobalMessageLevel(p.level, "The aim of the game is to stay alive the longest.");
-                            Player.GlobalMessageLevel(p.level, "Don't fall in the lava!!");
-                            Player.GlobalMessageLevel(p.level, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
-                            Player.GlobalMessageLevel(p.level, "The last person alive will win!!");
+                            Chat.GlobalMessageLevel(p.level, "Countdown Rules being sent to " + p.level.name + " by " + p.color + p.name + ":");
+                            Chat.GlobalMessageLevel(p.level, "The aim of the game is to stay alive the longest.");
+                            Chat.GlobalMessageLevel(p.level, "Don't fall in the lava!!");
+                            Chat.GlobalMessageLevel(p.level, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
+                            Chat.GlobalMessageLevel(p.level, "The last person alive will win!!");
                             Player.SendMessage(p, "Countdown rules sent to: " + p.level.name);
                         }
                     }
