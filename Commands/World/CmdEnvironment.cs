@@ -91,19 +91,17 @@ namespace MCGalaxy.Commands {
                 case "edge":
                 case "water":
                     if (!level) {
-                        p.SendMessage("This feature is not available for 'player' target");
-                        return;
+                        p.SendMessage("This feature is not available for 'player' target"); return;
                     }
-                    SetEnvMapAppearance(p, value, "edge block", true, Block.blackrock, ref p.level.EdgeBlock);
+                    SetEnvMapAppearance(p, value, "edge block", true, Block.waterstill, ref p.level.HorizonBlock);
                     break;
                 case "side":
                 case "border":
                 case "bedrock":
                     if (!level) {
-                        p.SendMessage("This feature is not available for 'player' target");
-                        return;
+                        p.SendMessage("This feature is not available for 'player' target"); return;
                     }
-                    SetEnvMapAppearance(p, value, "sides block", true, Block.blackrock, ref p.level.HorizonBlock);
+                    SetEnvMapAppearance(p, value, "sides block", true, Block.blackrock, ref p.level.EdgeBlock);
                     break;
                 case "preset":
                     if (!SetPreset(p, value, level))
