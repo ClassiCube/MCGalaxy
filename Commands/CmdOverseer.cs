@@ -45,6 +45,7 @@ namespace MCGalaxy.Commands
                 cmd == "KICK" || cmd == "KICKALL" || cmd == "ZONE";
             if (mapOnly && !p.level.name.ToUpper().StartsWith(p.name.ToUpper())) {
                 Player.SendMessage(p, "You may only perform that action on your own map.");
+                return;
             }
 
             if (cmd == "GO" || cmd == "GOTO") {
@@ -165,6 +166,7 @@ namespace MCGalaxy.Commands
                 cmd == "PERVISIT" || cmd == "TEXTURE";
             if (mapOnly && !p.level.name.ToUpper().StartsWith(p.name.ToUpper())) {
                 Player.SendMessage(p, "You may only perform that action on your own map.");
+                return;
             }
             byte mapNum = 0;
             
