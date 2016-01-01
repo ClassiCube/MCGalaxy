@@ -188,38 +188,19 @@ namespace MCGalaxy
                 default: return "";
             }
         }
-        /// <summary> Replaces Minecraft color codes with equivalent IRC color codes, in the given StringBuilder.
-        /// Opposite of IrcToMinecraftColors method. </summary>
-        /// <param name="sb"> StringBuilder objects, the contents of which will be processed. </param>
-        /// <exception cref="ArgumentNullException"> sb is null. </exception>
-        public static void MinecraftToIrcColors(StringBuilder sb)
-        {
-            if (sb == null) throw new ArgumentNullException("sb");
-            for (int i = 0; i < 10; i++)
-            {
-                sb.Replace("%" + i, "&" + i);
-            }
-            for (char ch = 'a'; ch <= 'f'; ch++)
-            {
-                sb.Replace("%" + ch, "&" + ch);
-            }
-            foreach (var codePair in MinecraftToIRCColors)
-            {
-                sb.Replace(codePair.Key, codePair.Value);
-            }
-        }
-
 
         /// <summary> Replaces Minecraft color codes with equivalent IRC color codes, in the given string.
         /// Opposite of IrcToMinecraftColors method. </summary>
         /// <param name="input"> String to process. </param>
         /// <returns> A processed string. </returns>
         /// <exception cref="ArgumentNullException"> input is null. </exception>
-        public static string MinecraftToIrcColors(string input)
-        {
+        public static string MinecraftToIrcColors(string input) {
             if (input == null) throw new ArgumentNullException("input");
+            input = Chat.EscapeColours(input);
             StringBuilder sb = new StringBuilder(input);
-            MinecraftToIrcColors(sb);
+            
+            foreach (var codePair in MinecraftToIRCColors)
+                sb.Replace(codePair.Key, codePair.Value);
             return sb.ToString();
         }
     }

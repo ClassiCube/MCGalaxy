@@ -64,8 +64,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-        	Player.SendMessage(p, "%a/reload [map]");
-        	Player.SendMessage(p, "%eReloads the given map. " +
+        	Player.SendMessage(p, "%T/reload [map]");
+        	Player.SendMessage(p, "%HReloads the given map. " +
         	                   "If no map is specified, reloads the current map you are in.");
         }
     }

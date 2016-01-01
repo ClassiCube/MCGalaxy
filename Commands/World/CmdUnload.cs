@@ -51,10 +51,10 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%a/unload [map name]");
-            Player.SendMessage(p, "%eUnloads the given map.");
-            Player.SendMessage(p, "%e  If map name is \"empty\", unloads all maps with no players in them.");
-            Player.SendMessage(p, "%e  If no map name is given, unloads the current map."); 
+            Player.SendMessage(p, "%T/unload [map name]");
+            Player.SendMessage(p, "%HUnloads the given map.");
+            Player.SendMessage(p, "%H  If map name is \"empty\", unloads all maps with no players in them.");
+            Player.SendMessage(p, "%H  If no map name is given, unloads the current map."); 
         }
     }
 }

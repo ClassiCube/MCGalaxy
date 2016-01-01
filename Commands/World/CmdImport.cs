@@ -53,9 +53,9 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%a/import [name]");
-            Player.SendMessage(p, "%eImports the .dat file with the given name.");
-            Player.SendMessage(p, "%eNote this command only loads .dat files from the /extra/import/ folder");
+            Player.SendMessage(p, "%T/import [name]");
+            Player.SendMessage(p, "%HImports the .dat file with the given name.");
+            Player.SendMessage(p, "%HNote this command only loads .dat files from the /extra/import/ folder");
         }
     }
 }

@@ -121,7 +121,7 @@ namespace MCGalaxy {
 
 		private void doJoinLeaveMessage(string who, string verb, string channel) {
 			Server.s.Log(String.Format("{0} has {1} channel {2}", who, verb, channel));
-			Player.GlobalMessage(String.Format("{0}[IRC] {1} has {2} the{3} channel", Server.IRCColour, who, verb, (channel.ToLower() == opchannel.ToLower() ? " operator" : "")));
+			Player.GlobalMessage(String.Format("%I[IRC] {0} has {1} the{2} channel", who, verb, (channel.ToLower() == opchannel.ToLower() ? " operator" : "")));
 		}
 		void Player_PlayerDisconnect(Player p, string reason) {
 			if (Server.irc && IsConnected())
@@ -142,7 +142,7 @@ namespace MCGalaxy {
 		void Listener_OnQuit(UserInfo user, string reason) {
 			if (user.Nick == nick) return;
 			Server.s.Log(user.Nick + " has left IRC");
-			Player.GlobalMessage(Server.IRCColour + user.Nick + Server.DefaultColor + " has left IRC");
+			Player.GlobalMessage("%I" + user.Nick + Server.DefaultColor + " has left IRC");
 		}
 
 		void Listener_OnError(ReplyCode code, string message) {
@@ -213,10 +213,10 @@ namespace MCGalaxy {
 
 			if (channel.ToLower() == opchannel.ToLower()) {
 				Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
-				Chat.GlobalMessageOps(String.Format("To Ops &f-{0}[IRC] {1}&f- {2}", Server.IRCColour, user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
+				Chat.GlobalMessageOps(String.Format("To Ops &f-%I[IRC] {0}&f- {1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
 			} else {
 				Server.s.Log(String.Format("[IRC] {0}: {1}", user.Nick, message));
-				Player.GlobalMessage(String.Format("{0}[IRC] {1}: &f{2}", Server.IRCColour, user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
+				Player.GlobalMessage(String.Format("%I[IRC] {0}: &f{1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
 			}
 		}
 
@@ -255,18 +255,18 @@ namespace MCGalaxy {
 				if (key != null && key != "") {
 					switch (key) {
 						case "AFK":
-							Player.GlobalMessage("[IRC] " + Server.IRCColour + user.Nick + Server.DefaultColor + " is AFK"); Server.ircafkset.Add(user.Nick); break;
+							Player.GlobalMessage("[IRC] %I" + user.Nick + Server.DefaultColor + " is AFK"); Server.ircafkset.Add(user.Nick); break;
 						case "Away":
-							Player.GlobalMessage("[IRC] " + Server.IRCColour + user.Nick + Server.DefaultColor + " is Away"); Server.ircafkset.Add(user.Nick); break;
+							Player.GlobalMessage("[IRC] %I" + user.Nick + Server.DefaultColor + " is Away"); Server.ircafkset.Add(user.Nick); break;
 					}
 				}
 			}
 			else if (Server.ircafkset.Contains(newNick)) {
-				Player.GlobalMessage("[IRC] " + Server.IRCColour + newNick + Server.DefaultColor + " is back");
+				Player.GlobalMessage("[IRC] %I" + newNick + Server.DefaultColor + " is back");
 				Server.ircafkset.Remove(newNick);
 			}
 			else
-				Player.GlobalMessage("[IRC] " + Server.IRCColour + user.Nick + Server.DefaultColor + " is now known as " + newNick);
+				Player.GlobalMessage("[IRC] %I" + user.Nick + Server.DefaultColor + " is now known as " + newNick);
 		}
 		void Player_PlayerChat(Player p, string message) {
 

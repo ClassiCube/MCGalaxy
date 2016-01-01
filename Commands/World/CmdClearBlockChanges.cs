@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands {
 		}
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "%a/clearblockchanges [map]");
-			Player.SendMessage(p, "%eClears the block changes stored in /about for [map]");
-			Player.SendMessage(p, "%e  If no map name is given, clears block changes for the current map.");
-			Player.SendMessage(p, "&cUse with great caution!");
+			Player.SendMessage(p, "%T/clearblockchanges [map]");
+			Player.SendMessage(p, "%HClears the block changes stored in /about for [map]");
+			Player.SendMessage(p, "%H  If no map name is given, clears block changes for the current map.");
+			Player.SendMessage(p, "%CUse with great caution!");
 		}
 	}
 }

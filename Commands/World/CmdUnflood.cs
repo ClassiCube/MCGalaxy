@@ -65,9 +65,9 @@ namespace MCGalaxy.Commands
 		}
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "%a/unflood [liquid]");
-			Player.SendMessage(p, "%eUnfloods the map you are currently in of [liquid].");
-			Player.SendMessage(p, "%e  If [liquid] is \"all\", unfloods the map of all liquids.");
+			Player.SendMessage(p, "%T/unflood [liquid]");
+			Player.SendMessage(p, "%HUnfloods the map you are currently in of [liquid].");
+			Player.SendMessage(p, "%H  If [liquid] is \"all\", unfloods the map of all liquids.");
 		}
 	}
 }

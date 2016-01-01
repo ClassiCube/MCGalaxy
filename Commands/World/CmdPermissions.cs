@@ -76,8 +76,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%a/perbuildmax [Level] [Rank]");
-            Player.SendMessage(p, "%eSets the highest rank able to build on the given level.");
+            Player.SendMessage(p, "%T/perbuildmax [Level] [Rank]");
+            Player.SendMessage(p, "%HSets the highest rank able to build on the given level.");
         }
     }
     
@@ -102,8 +102,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%a/perbuild [Level] [Rank]");
-            Player.SendMessage(p, "%eSets the lowest rank able to build on the given level.");
+            Player.SendMessage(p, "%T/perbuild [Level] [Rank]");
+            Player.SendMessage(p, "%HSets the lowest rank able to build on the given level.");
         }
     }
     
@@ -128,8 +128,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%a/pervisitmax [level] [rank]");
-            Player.SendMessage(p, "%eSets the highest rank able to visit the given level.");
+            Player.SendMessage(p, "%T/pervisitmax [level] [rank]");
+            Player.SendMessage(p, "%HSets the highest rank able to visit the given level.");
         }
     }
     
@@ -154,8 +154,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%a/pervisit [level] [rank]");
-            Player.SendMessage(p, "%eSets the lowest rank able to visit the given level.");
+            Player.SendMessage(p, "%T/pervisit [level] [rank]");
+            Player.SendMessage(p, "%HSets the lowest rank able to visit the given level.");
         }
     }
 }

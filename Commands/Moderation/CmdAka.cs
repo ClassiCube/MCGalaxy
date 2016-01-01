@@ -74,8 +74,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%a/aka");
-            Player.SendMessage(p, "%eToggles whether infected players show their actual names.");
+            Player.SendMessage(p, "%T/aka");
+            Player.SendMessage(p, "%HToggles whether infected players show their actual names.");
         }
     }
 }

@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands {
 		}
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "%a/reach [distance]");
-			Player.SendMessage(p, "%eSets the reach distance for how far away you can modify blocks.");
-			Player.SendMessage(p, "%e   The default reach distance is 5.");
+			Player.SendMessage(p, "%T/reach [distance]");
+			Player.SendMessage(p, "%HSets the reach distance for how far away you can modify blocks.");
+			Player.SendMessage(p, "%H   The default reach distance is 5.");
 		}
 	}
 }

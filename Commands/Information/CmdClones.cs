@@ -32,17 +32,7 @@ namespace MCGalaxy.Commands
 
 		public override void Use(Player p, string message)
 		{
-			if ( !Regex.IsMatch(message.ToLower(), @".*%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])") ) {
-				if (Regex.IsMatch(message.ToLower(), @".*%([0-9]|[a-f]|[k-r])(.+?).*")) {
-					Regex rg = new Regex(@"%([0-9]|[a-f]|[k-r])(.+?)");
-					MatchCollection mc = rg.Matches(message.ToLower());
-					if (mc.Count > 0) {
-						Match ma = mc[0];
-						GroupCollection gc = ma.Groups;
-						message.Replace("%" + gc[1].ToString().Substring(1), "&" + gc[1].ToString().Substring(1));
-					}
-				}
-			}
+			message = Chat.EscapeColours(message);
 			if (message == "") message = p.name;
 
 			string originalName = message.ToLower();

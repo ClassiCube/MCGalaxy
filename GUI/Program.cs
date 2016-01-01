@@ -176,6 +176,7 @@ namespace MCGalaxy_.Gui
 
         private static ConsoleColor GetColor(char c)
         {
+        	Chat.Map(ref c);
             switch (c)
             {
                 case 'e': return ConsoleColor.Yellow;

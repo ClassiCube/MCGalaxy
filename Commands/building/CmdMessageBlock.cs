@@ -131,21 +131,7 @@ namespace MCGalaxy.Commands
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
             cpos.message = cpos.message.Replace("'", "\\'");
-
-            if (!Regex.IsMatch(cpos.message.ToLower(), @".*%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])%([0-9]|[a-f]|[k-r])"))
-            {
-                if (Regex.IsMatch(cpos.message.ToLower(), @".*%([0-9]|[a-f]|[k-r])(.+?).*"))
-                {
-                    Regex rg = new Regex(@"%([0-9]|[a-f]|[k-r])(.+?)");
-                    MatchCollection mc = rg.Matches(cpos.message.ToLower());
-                    if (mc.Count > 0)
-                    {
-                        Match ma = mc[0];
-                        GroupCollection gc = ma.Groups;
-                        cpos.message.Replace("%" + gc[1].ToString().Substring(1), "&" + gc[1].ToString().Substring(1));
-                    }
-                }
-            }
+            cpos.message = Chat.EscapeColours(cpos.message);
             //safe against SQL injections because no user input is given here
             DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
             Database.AddParams("@Message", cpos.message);

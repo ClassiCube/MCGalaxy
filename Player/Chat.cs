@@ -76,9 +76,9 @@ namespace MCGalaxy {
         
         public static void GlobalMessageLevel(Level l, string message) {
             Player.players.ForEach(
-                delegate(Player p) { 
-                    if ( p.level == l && p.Chatroom == null ) 
-                        Player.SendMessage(p, message); 
+                delegate(Player p) {
+                    if ( p.level == l && p.Chatroom == null )
+                        Player.SendMessage(p, message);
                 });
         }
         
@@ -118,29 +118,89 @@ namespace MCGalaxy {
             }
         }
         
-        public static bool IsValidColorChar(char color) {
-            return ( color >= '0' && color <= '9' ) || ( color >= 'a' && color <= 'f' ) || ( color >= 'A' && color <= 'F' );
+        public static bool IsValidColor(char c) {
+            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
 
-        public static string EscapeColours(string message) {
-            try {
-                int index = 1;
-                StringBuilder sb = new StringBuilder();
-                Regex r = new Regex("^[0-9a-fA-F]$");
-                foreach (char c in message) {
-                    if (c == '%') {
-                        if (message.Length >= index)
-                            sb.Append(r.IsMatch(message[index].ToString()) ? '&' : '%');
-                        else
-                            sb.Append('%');
-                    } else {
-                        sb.Append(c);
-                    }
-                    index++;
+        public static string EscapeColours(string value) {
+            if (value.IndexOf('%') == -1)
+                return value;
+            char[] chars = new char[value.Length];
+            
+            for (int i = 0; i < value.Length; i++ ) {
+                char c = value[i];
+                bool validCode = c == '%' && i < value.Length - 1;
+                if (!validCode) { chars[i] = c; continue; }
+                
+                char color = value[i + 1];
+                if (Map(ref color)) {
+                    chars[i] = '&';
+                    chars[i + 1] = color; 
+                    i++; continue;
                 }
-                return sb.ToString();
-            } catch {
-                return message;
+                chars[i] = '%';
+            }
+            return new string(chars);
+        }
+        
+        public static bool Map(ref char color) {
+            if (IsValidColor(color)) return true;
+            if (color == 's' || color == 'S') { color = Server.DefaultColor[1]; return true; }
+            if (color == 'h' || color == 'H') { color = 'e'; return true; }
+            if (color == 't' || color == 'T') { color = 'a'; return true; }
+            if (color == 'i' || color == 'I') { color = Server.IRCColour[1]; return true; }
+            if (color == 'g' || color == 'G') { color = Server.GlobalChatColor[1]; return true; }
+            if (color == 'r' || color == 'R') { color = 'f'; return true; }
+            return false;
+        }
+        
+        public static string StripColours(string value) {
+            if (value.IndexOf('%') == -1)
+                return value;
+            char[] output = new char[value.Length];
+            int usedChars = 0;
+            
+            for (int i = 0; i < value.Length; i++) {
+                char token = value[i];
+                if( token == '%' ) {
+                    i++; // Skip over the following colour code.
+                } else {
+                    output[usedChars++] = token;
+                }
+            }
+            return new string(output, 0, usedChars);
+        }
+        
+        public static void ApplyDollarTokens(StringBuilder sb, Player p, bool colorParse) {
+            if (p.DisplayName != null) {
+                string prefix = Server.dollardollardollar ? "$" : "";
+                sb.Replace("$name", prefix + Chat.StripColours(p.DisplayName));
+            }
+            sb.Replace("$date", DateTime.Now.ToString("yyyy-MM-dd"));
+            sb.Replace("$time", DateTime.Now.ToString("HH:mm:ss"));
+            sb.Replace("$ip", p.ip);
+            sb.Replace("$serverip", Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP);
+            if ( colorParse ) 
+                sb.Replace("$color", p.color);
+            sb.Replace("$rank", p.group.name);
+            sb.Replace("$level", p.level.name);
+            sb.Replace("$deaths", p.overallDeath.ToString());
+            sb.Replace("$money", p.money.ToString());
+            sb.Replace("$blocks", p.overallBlocks.ToString());
+            sb.Replace("$first", p.firstLogin.ToString());
+            sb.Replace("$kicked", p.totalKicked.ToString());
+            sb.Replace("$server", Server.name);
+            sb.Replace("$motd", Server.motd);
+            sb.Replace("$banned", Player.GetBannedCount().ToString());
+            sb.Replace("$irc", Server.ircServer + " > " + Server.ircChannel);
+
+            foreach ( var customReplacement in Server.customdollars ) {
+                if ( !customReplacement.Key.StartsWith("//") ) {
+                    try {
+                        sb.Replace(customReplacement.Key, customReplacement.Value);
+                    }
+                    catch { }
+                }
             }
         }
     }

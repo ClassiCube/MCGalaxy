@@ -47,18 +47,18 @@ namespace MCGalaxy.Commands
             	
                 string reason;
                 if (Server.gcnamebans.TryGetValue(p.name.ToLower(), out reason)) {
-                    Player.SendMessage(p, "You are %cBANNED" + Server.DefaultColor + " from" + Server.GlobalChatColor + " Global Chat" + Server.DefaultColor + " by " + reason);
+                    Player.SendMessage(p, "You are %cBANNED" + Server.DefaultColor + " from %GGlobal Chat" + Server.DefaultColor + " by " + reason);
                     Player.SendMessage(p, "You can apply a 'Ban Appeal' at %9www.mcgalaxy.ml");
                     return;
                 }
                 if (Server.gcipbans.TryGetValue(p.ip, out reason)) {
-                    Player.SendMessage(p, "Your IP is %cBANNED" + Server.DefaultColor + " from" + Server.GlobalChatColor + " Global Chat" + Server.DefaultColor + " by " + reason);
+                    Player.SendMessage(p, "Your IP is %cBANNED" + Server.DefaultColor + " from%G Global Chat" + Server.DefaultColor + " by " + reason);
                     Player.SendMessage(p, "You can apply a 'Ban Appeal' at %9www.mcgalaxy.ml");
                     return;
                 }
             }            //Server.GlobalChat.Say((p != null ? p.name + ": " : "Console: ") + message, p);
             Server.GlobalChat.Say(p == null ? "Console: " + message : p.name + ": " + message, p);
-            Player.GlobalMessage(Server.GlobalChatColor + "<[Global] " + (p != null ? p.name + ": " : "Console: ") + "&f" + (Server.profanityFilter ? ProfanityFilter.Parse(message) : message), true);
+            Player.GlobalMessage("%G<[Global] " + (p != null ? p.name + ": " : "Console: ") + "&f" + (Server.profanityFilter ? ProfanityFilter.Parse(message) : message), true);
 
         }
         public void RulesMethod(Player p)

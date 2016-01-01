@@ -503,7 +503,6 @@
     <Compile Include="GUI\Win32\Margins.cs" />
     <Compile Include="GUI\Win32\Natives.cs" />
     <Compile Include="GUI\Win32\RECT.cs" />
-    <Compile Include="GUI\Win32\Utils.cs" />
     <Compile Include="GUI\WoM.cs">
       <SubType>Form</SubType>
     </Compile>

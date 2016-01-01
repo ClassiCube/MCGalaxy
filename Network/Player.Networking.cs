@@ -195,99 +195,31 @@ namespace MCGalaxy {
         }
         
         public void SendMessage(string message) {
-            SendMessage(message, true);
+           SendMessage(0, Server.DefaultColor + message, true);
         }
         
         public void SendMessage(string message, bool colorParse) {
             SendMessage(0, Server.DefaultColor + message, colorParse);
         }
         
-        public void SendChat(Player p, string message) {
-            Player.SendMessage(p, message);
-        }
-        
-        public void SendMessage(byte id, string message) {
-            SendMessage(id, message, true);
-        }
-        
-        public static string StripColours( string value ) {
-            if( value.IndexOf( '%' ) == -1 ) {
-                return value;
-            }
-            
-            char[] output = new char[value.Length];
-            int usedChars = 0;
-            
-            for( int i = 0; i < value.Length; i++ ) {
-                char token = value[i];
-                if( token == '%' ) {
-                    i++; // Skip over the following colour code.
-                } else {
-                    output[usedChars++] = token;
-                }
-            }
-            return new String( output, 0, usedChars );
-        }
-        
-        //string DisplayNameNoColors = StripColours(DisplayName);
-        
-        
-        public void SendMessage(byte id, string message, bool colorParse) {
+        public void SendMessage(byte id, string message, bool colorParse = true) {
             if ( ZoneSpam.AddSeconds(2) > DateTime.Now && message.Contains("This zone belongs to ") ) return;
+            if (colorParse)
+            	message = Chat.EscapeColours(message);
             StringBuilder sb = new StringBuilder(message);
 
-            if ( colorParse ) {
-                sb.Replace("%r", "&f");
-                for ( int i = 0; i < 10; i++ ) {
-                    sb.Replace("%" + i, "&" + i);
-                    //sb.Replace("&" + i + " &", " &");
-                }
-                for ( char ch = 'a'; ch <= 'f'; ch++ ) {
-                    sb.Replace("%" + ch, "&" + ch);
-                    //sb.Replace("&" + ch + " &", " &");
-                }
+            if (colorParse) {                
                 // Begin fix to replace all invalid color codes typed in console or chat with "."
-                for ( char ch = (char)0; ch <= (char)47; ch++ ) // Characters that cause clients to disconnect
+                for ( char ch = '\0'; ch <= '/'; ch++ ) // Characters that cause clients to disconnect
                     sb.Replace("&" + ch, String.Empty);
-                for ( char ch = (char)58; ch <= (char)96; ch++ ) // Characters that cause clients to disconnect
+                for ( char ch = ':'; ch <= '`'; ch++ ) // Characters that cause clients to disconnect
                     sb.Replace("&" + ch, String.Empty);
-                for ( char ch = (char)103; ch <= (char)127; ch++ ) // Characters that cause clients to disconnect
+                for ( char ch = 'g'; ch <= '\u007F'; ch++ ) // Characters that cause clients to disconnect
                     sb.Replace("&" + ch, String.Empty);
                 // End fix
             }
-
-            if( DisplayName != null ) {
-            	if ( Server.dollardollardollar )
-            		sb.Replace("$name", "$" + StripColours(DisplayName));
-            	else
-            		sb.Replace("$name", StripColours(DisplayName));
-            }
-            sb.Replace("$date", DateTime.Now.ToString("yyyy-MM-dd"));
-            sb.Replace("$time", DateTime.Now.ToString("HH:mm:ss"));
-            sb.Replace("$ip", ip);
-            sb.Replace("$serverip", IsLocalIpAddress(ip) ? ip : Server.IP);
-            if ( colorParse ) sb.Replace("$color", color);
-            sb.Replace("$rank", group.name);
-            sb.Replace("$level", level.name);
-            sb.Replace("$deaths", overallDeath.ToString());
-            sb.Replace("$money", money.ToString());
-            sb.Replace("$blocks", overallBlocks.ToString());
-            sb.Replace("$first", firstLogin.ToString());
-            sb.Replace("$kicked", totalKicked.ToString());
-            sb.Replace("$server", Server.name);
-            sb.Replace("$motd", Server.motd);
-            sb.Replace("$banned", Player.GetBannedCount().ToString());
-            sb.Replace("$irc", Server.ircServer + " > " + Server.ircChannel);
-
-            foreach ( var customReplacement in Server.customdollars ) {
-                if ( !customReplacement.Key.StartsWith("//") ) {
-                    try {
-                        sb.Replace(customReplacement.Key, customReplacement.Value);
-                    }
-                    catch { }
-                }
-            }
-
+            
+            Chat.ApplyDollarTokens(sb, this, colorParse);
             if ( Server.parseSmiley && parseSmiley ) {
                 sb.Replace(":)", "(darksmile)");
                 sb.Replace(":D", "(smile)");
@@ -323,8 +255,7 @@ namespace MCGalaxy {
                         NetUtils.WriteAscii(newLine, buffer, 2);
                     SendRaw(buffer);
                 }
-            }
-            catch ( Exception e ) {
+            } catch ( Exception e ) {
                 message = "&f" + message;
                 totalTries++;
                 if ( totalTries < 10 ) goto retryTag;

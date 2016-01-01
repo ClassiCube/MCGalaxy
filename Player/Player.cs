@@ -1984,7 +1984,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if ( text.Length >= 2 && text[0] == '@' && text[1] == '@' ) {
                     text = text.Remove(0, 2);
                     if ( text.Length < 1 ) { SendMessage("No message entered"); return; }
-                    SendChat(this, Server.DefaultColor + "[<] Console: &f" + text);
+                    SendMessage(this, Server.DefaultColor + "[<] Console: &f" + text);
                     Server.s.Log("[>] " + this.name + ": " + text);
                     return;
                 }
@@ -2358,33 +2358,33 @@ return;
             Player p = Find(to);
             if ( p == this ) { SendMessage("Trying to talk to yourself, huh?"); return; }
             if ( p == null ) { SendMessage("Could not find player."); return; }
-            if ( p.hidden ) { if ( this.hidden == false ) { Player.SendMessage(p, "Could not find player."); } }
+            if ( p.hidden ) { if ( !this.hidden ) { Player.SendMessage(p, "Could not find player."); } }
             if ( p.ignoreglobal ) {
                 if ( Server.globalignoreops == false ) {
                     if ( this.group.Permission >= Server.opchatperm ) {
                         if ( p.group.Permission < this.group.Permission ) {
                             Server.s.Log(name + " @" + p.name + ": " + message);
-                            SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
-                            SendChat(p, "&9[>] " + this.color + this.prefix + this.DisplayName + ": &f" + message);
+                            SendMessage(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
+                            SendMessage(p, "&9[>] " + this.color + this.prefix + this.DisplayName + ": &f" + message);
                             return;
                         }
                     }
                 }
                 Server.s.Log(name + " @" + p.name + ": " + message);
-                SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
+                SendMessage(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
                 return;
             }
             foreach ( string ignored2 in p.listignored ) {
                 if ( ignored2 == this.name ) {
                     Server.s.Log(name + " @" + p.name + ": " + message);
-                    SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
+                    SendMessage(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
                     return;
                 }
             }
             if ( p != null && !p.hidden || p.hidden && this.group.Permission >= p.group.Permission ) {
                 Server.s.Log(name + " @" + p.name + ": " + message);
-                SendChat(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
-                SendChat(p, "&9[>] " + this.color + this.prefix + this.DisplayName + ": &f" + message);
+                SendMessage(this, Server.DefaultColor + "[<] " + p.color + p.prefix + p.DisplayName + ": &f" + message);
+                SendMessage(p, "&9[>] " + this.color + this.prefix + this.DisplayName + ": &f" + message);
             }
             else { SendMessage("Player \"" + to + "\" doesn't exist!"); }
         }
@@ -2575,6 +2575,7 @@ return;
                 }
             });
         }
+        
         public static void GlobalSpawn(Player from, ushort x, ushort y, ushort z, byte rotx, byte roty, bool self, string possession = "")
         {
             players.ForEach(delegate(Player p)

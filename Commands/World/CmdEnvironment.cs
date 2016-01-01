@@ -335,11 +335,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            p.SendMessage("%a/env [target] [variable] [value]");
-            p.SendMessage("%e  Valid targets: player or p, level or l");
-            p.SendMessage("%e  Valid variables: fog, cloud, sky, sun, shadow, weather");
-            p.SendMessage("%e     level only variables: level, horizon, border, preset");
-            p.SendMessage("%eUsing 'normal' as a value will reset the variable");
+            p.SendMessage("%T/env [target] [variable] [value]");
+            p.SendMessage("%H  Valid targets: player or p, level or l");
+            p.SendMessage("%H  Valid variables: fog, cloud, sky, sun, shadow, weather");
+            p.SendMessage("%H     level only variables: level, horizon, border, preset");
+            p.SendMessage("%HUsing 'normal' as a value will reset the variable");
         }
     }
 }
