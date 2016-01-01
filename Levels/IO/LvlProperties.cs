@@ -134,7 +134,7 @@ namespace MCGalaxy.Levels.IO {
                             case "shadowcolor": level.ShadowColor = value; break;
                             case "lightcolor": level.LightColor = value; break;
                             case "edgeblock": level.EdgeBlock = byte.Parse(value); break;
-                            case "edgelevel": level.EdgeLevel = byte.Parse(value); break;
+                            case "edgelevel": level.EdgeLevel = short.Parse(value); break;
                             case "horizonblock": level.HorizonBlock = byte.Parse(value); break;
                     }
                 } catch {

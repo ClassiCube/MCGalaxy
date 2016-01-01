@@ -142,10 +142,6 @@ namespace MCGalaxy
         public static List<Level> levels;
         //reviewlist intitialize
         public static List<string> reviewlist = new List<string>();
-        //Translate settings initialize
-        public static bool transenabled = false;
-        public static string translang = "en";
-        public static List<string> transignore = new List<string>();
         //Global Chat Rules Accepted list
         public static List<string> gcaccepted = new List<string>();
         //public static List<levelID> allLevels = new List<levelID>();
@@ -759,7 +755,6 @@ namespace MCGalaxy
 
             ml.Queue(delegate
             {
-                transignore.AddRange(File.ReadAllLines("text/transexceptions.txt"));
                 if (File.Exists("text/autoload.txt"))
                 {
                     try
@@ -827,11 +822,6 @@ namespace MCGalaxy
 
             ml.Queue(delegate
             {
-                Translate.Init();
-                foreach (string line in File.ReadAllLines("text/transexceptions.txt"))
-                {
-                    transignore.Add(line); //loading all playernames of people who turned off translation
-                }
                 foreach (string line in File.ReadAllLines("text/gcaccepted.txt"))
                 {
                     gcaccepted.Add(line); //loading all playernames of people who turned off translation

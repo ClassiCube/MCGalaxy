@@ -240,7 +240,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdTopTen()), "top ten user");
             new CommandKeywords((new CmdTp()), "teleport move player user");
             new CommandKeywords((new CmdTpZone()), "tp zone teleport");
-            new CommandKeywords((new CmdTranslate()), "trans lang");
             new CommandKeywords((new CmdTree()), "log");
             new CommandKeywords((new CmdTrust()), "allow agree");
             new CommandKeywords((new CmdUBan()), "ban undo kick mod");

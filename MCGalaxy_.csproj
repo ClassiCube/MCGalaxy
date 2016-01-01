@@ -383,7 +383,6 @@
     <Compile Include="Commands\Other\CmdTp.cs" />
     <Compile Include="Commands\Other\CmdTpA.cs" />
     <Compile Include="Commands\Other\CmdTpZone.cs" />
-    <Compile Include="Commands\Other\CmdTranslate.cs" />
     <Compile Include="Commands\Other\CmdView.cs" />
     <Compile Include="Commands\Other\CmdVote.cs" />
     <Compile Include="Commands\Other\CmdWarp.cs" />
@@ -510,7 +509,6 @@
       <DependentUpon>WoM.cs</DependentUpon>
     </Compile>
     <Compile Include="Levels\Texture_Settings.cs" />
-    <Compile Include="Server\Extra\Translate.cs" />
     <Compile Include="Database\DatabaseTransactionHelper.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Server\Extra\Awards.cs" />
@@ -533,11 +531,6 @@
     <Compile Include="Player\Player.Events.cs" />
     <Compile Include="ScriptingUtil\ScriptingVB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
-    <Compile Include="Service References\TranslateService\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Database\SQLite.cs" />
     <Compile Include="Database\SQLiteTransactionHelper.cs" />
@@ -705,18 +698,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Service References\TranslateService\MCForge.TranslateService.GetTranslationsResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\TranslateService\MCForge.TranslateService.TranslateArrayResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\TranslateService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\TranslateService\configuration.svcinfo" />
-    <None Include="Service References\TranslateService\configuration91.svcinfo" />
     <None Include="app.config" />
     <None Include="bin\Release\Updater.exe" />
     <Content Include="Galaxy.ico" />
@@ -726,20 +707,6 @@
     <None Include="README.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Service References\TranslateService\soap.wsdl" />
-    <None Include="Service References\TranslateService\soap.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\TranslateService\soap1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\TranslateService\soap2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\TranslateService\soap3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\TranslateService\SoapService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Changelog.txt">
@@ -756,9 +723,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\TranslateService\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands" />

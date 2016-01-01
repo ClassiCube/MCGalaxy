@@ -273,7 +273,6 @@ namespace MCGalaxy
             all.Add(new CmdTpAccept());
             all.Add(new CmdTpDeny());
             all.Add(new CmdTpZone());
-            all.Add(new CmdTranslate());
             all.Add(new CmdTree());
             all.Add(new CmdTrust());
             all.Add(new CmdUBan());
