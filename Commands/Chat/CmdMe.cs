@@ -44,9 +44,8 @@ namespace MCGalaxy.Commands
             }
             //IRCBot.Say("*" + p.name + " " + message);
             Server.IRC.Say("*" + p.DisplayName + " " + message);
-
-
         }
+        
         public override void Help(Player p)
         {
             Player.SendMessage(p, "What do you need help with, m'boy?! Are you stuck down a well?!");

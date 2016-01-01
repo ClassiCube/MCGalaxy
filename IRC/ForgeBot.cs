@@ -95,7 +95,7 @@ namespace MCGalaxy {
 				message = ".";
 
 			if (color) {
-                message = c.MinecraftToIrcColors(message).Replace("%r", ResetSignal);
+				message = c.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
 			}
 
 			connection.Sender.PublicMessage(opchat ? opchannel : channel, message);
