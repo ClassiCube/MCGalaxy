@@ -129,7 +129,7 @@ namespace MCGalaxy.Levels.IO {
                             // copy the block array... or fail
                             if (foundBlockArray)
                             {
-                                lvl.CopyBlocks(data, pointer);
+                                CopyBlocks(lvl, data, pointer);
                                 lvl.Save(true);
                             }
                             else
@@ -156,6 +156,32 @@ namespace MCGalaxy.Levels.IO {
                 if( offset + i >= data.Length || data[offset + i] != value[i] ) return false;
             }
             return true;
+        }
+        
+        static void CopyBlocks(Level lvl, byte[] source, int offset) {
+        	byte[] blocks = new byte[lvl.Width * lvl.Height * lvl.Length];
+            Array.Copy(source, offset, blocks, 0, blocks.Length);
+
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                if (blocks[i] >= 50) blocks[i] = 0;
+                switch (blocks[i])
+                {
+                    case Block.waterstill:
+                        blocks[i] = Block.water;
+                        break;
+                    case Block.water:
+                        blocks[i] = Block.waterstill;
+                        break;
+                    case Block.lava:
+                        blocks[i] = Block.lavastill;
+                        break;
+                    case Block.lavastill:
+                        blocks[i] = Block.lava;
+                        break;
+                }
+            }
+            lvl.blocks = blocks;
         }
     }
 }
