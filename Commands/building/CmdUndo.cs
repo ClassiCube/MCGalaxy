@@ -18,6 +18,8 @@
 using System;
 using System.Globalization;
 using System.IO;
+using MCGalaxy.Util;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdUndo : Command
@@ -36,29 +38,21 @@ namespace MCGalaxy.Commands
             byte b; long seconds = -2; Player who = null; Player.UndoPos Pos; int CurrentPos = 0; bool undoPhysics = false; string whoName = String.Empty;
             if (p != null)
                 p.RedoBuffer.Clear();
-
-            if (message == "")
-            {
-                if (p == null)
-                {
-                    Player.SendMessage(null, "Console doesn't have an undo buffer.");
-                    return;
+            if (message == "") {
+                if (p == null) {
+                    Player.SendMessage(null, "Console doesn't have an undo buffer."); return;
                 }
                 message = p.name.ToLower() + " 30";
             }
+            string[] parts = message.Split(' ');
 
-            try
-            {
-                if (message.Split(' ').Length > 1)
-                {
-                    whoName = message.Split(' ')[0];
-                    who = message.Split(' ')[0].ToLower() == "physics" ? null : Player.Find(message.Split(' ')[0]);
-                    undoPhysics = message.Split(' ')[0].ToLower() == "physics";
-                    message = message.Split(' ')[1].ToLower();
-
-                }
-                else
-                {
+            try {
+                if (parts.Length > 1) {
+                    whoName = parts[0];
+                    who = parts[0].ToLower() == "physics" ? null : Player.Find(parts[0]);
+                    undoPhysics = parts[0].ToLower() == "physics";
+                    message = parts[1].ToLower();
+                } else {
                     who = (p == null || message.ToLower() == "physics") ? null : p;
                     undoPhysics = message.ToLower() == "physics";
                 }
@@ -68,9 +62,12 @@ namespace MCGalaxy.Commands
                     seconds = ((message.ToLower() != "all") ? long.Parse(message) : int.MaxValue);
                 else
                     seconds = getAllowed(p, message.ToLower());
-            }
-            catch
-            {
+            } catch {
+            	if (parts.Length > 1 && parts[1].ToLower() == "update") {
+            		UndoFile.UpgradePlayerUndoFiles(whoName);
+            		Player.SendMessage(p, "Updated undo files for " + whoName + " to the new binary format.");
+            		return;
+            	}
                 Player.SendMessage(p, "Invalid seconds, or you're unable to use /xundo. Using 30 seconds."); //only run if seconds is an invalid number
                 seconds = 30;
             }
@@ -202,10 +199,9 @@ namespace MCGalaxy.Commands
                 }
 
                 bool FoundUser = false;
-
                 try
                 {
-                    undoOfflineHelper(p, whoName, seconds, ref FoundUser);
+                    UndoFile.UndoPlayer(p, whoName.ToLower(), seconds, ref FoundUser);
 
                     if (FoundUser)
                     {
@@ -241,85 +237,9 @@ namespace MCGalaxy.Commands
             }
             return secs;
         }
-
-        //Fixed by QuantumHive
-        public bool undoOffline(string[] fileContent, long seconds, Player p)
-        {
-
-            Player.UndoPos Pos;
-
-            //-1 because the last element in the array is an empty string "" go check Player.SaveUndo() if you wanna know why
-            for (int i = (fileContent.Length - 1) / 7; i >= 0; i--)
-            {
-                try
-                {
-                    string datetime = fileContent[(i * 7) - 3];
-                    datetime = datetime.Replace('&', ' ');
-                    DateTime time = DateTime.Parse(datetime, CultureInfo.InvariantCulture);
-                    time = time.AddSeconds(seconds);
-                    if (time < DateTime.Now)
-                        //if (Convert.ToDateTime(fileContent[(i * 7) - 3].Replace('&', ' ')).AddSeconds(seconds) < DateTime.Now)
-                        return false;
-
-                    Level foundLevel = Level.FindExact(fileContent[(i * 7) - 7]);
-                    if (foundLevel != null)
-                    {
-                        Pos.mapName = foundLevel.name;
-                        Pos.x = Convert.ToUInt16(fileContent[(i * 7) - 6]);
-                        Pos.y = Convert.ToUInt16(fileContent[(i * 7) - 5]);
-                        Pos.z = Convert.ToUInt16(fileContent[(i * 7) - 4]);
-
-                        Pos.type = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
-
-                        if (Pos.type == Convert.ToByte(fileContent[(i * 7) - 1]) ||
-                            Block.Convert(Pos.type) == Block.water || Block.Convert(Pos.type) == Block.lava ||
-                            Pos.type == Block.grass)
-                        {
-                            Pos.newtype = Convert.ToByte(fileContent[(i * 7) - 2]);
-                            Pos.timePlaced = DateTime.Now;
-
-                            foundLevel.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true);
-                            if (p != null)
-                                p.RedoBuffer.Add(Pos);
-                        }
-                    }
-                }
-                catch (Exception e) { }
-            }
-
-            return true;
-        }
-        private void undoOfflineHelper(Player p, string whoName, long seconds, ref bool FoundUser)
-        {
-            DirectoryInfo di;
-            string[] fileContent;
-
-            if (p != null)
-                p.RedoBuffer.Clear();
-
-            if (Directory.Exists("extra/undo/" + whoName.ToLower()))
-            {
-                di = new DirectoryInfo("extra/undo/" + whoName.ToLower());
-
-                for (int i = di.GetFiles("*.undo").Length - 1; i >= 0; i--)
-                {
-                    fileContent = File.ReadAllText("extra/undo/" + whoName.ToLower() + "/" + i + ".undo").Split();
-                    if (!undoOffline(fileContent, seconds, p)) break;
-                }
-                FoundUser = true;
-            }
-
-            if (Directory.Exists("extra/undoPrevious/" + whoName.ToLower()))
-            {
-                di = new DirectoryInfo("extra/undoPrevious/" + whoName.ToLower());
-
-                for (int i = di.GetFiles("*.undo").Length - 1; i >= 0; i--)
-                {
-                    fileContent = File.ReadAllText("extra/undoPrevious/" + whoName.ToLower() + "/" + i + ".undo").Split();
-                    if (!undoOffline(fileContent, seconds, p)) break;
-                }
-                FoundUser = true;
-            }
+        
+        private void undoOfflineHelper(Player p, string whoName, long seconds, ref bool FoundUser)  {
+        	UndoFile.UndoPlayer(p, whoName.ToLower(), seconds, ref FoundUser);
         }
 
         public override void Help(Player p)
