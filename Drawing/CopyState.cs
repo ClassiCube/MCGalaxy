@@ -24,6 +24,7 @@ namespace MCGalaxy.Drawing {
 		
 		public byte[] Blocks;
 		public int X, Y, Z;
+		public int OriginX, OriginY, OriginZ;
 		public int Width, Height, Length;
 		
 		const int identifier = 0x434F5059; // 'COPY'
@@ -45,6 +46,10 @@ namespace MCGalaxy.Drawing {
 		
 		public void Clear() {
 			Blocks = null;
+		}
+		
+		public void SetOrigin(int x, int y, int z) {
+			OriginX = x; OriginY = y; OriginZ = z;
 		}
 		
 		public void GetCoords(int index, out ushort x, out ushort y, out ushort z) {
@@ -70,6 +75,7 @@ namespace MCGalaxy.Drawing {
 			w.Write(X); w.Write(Y); w.Write(Z);
 			w.Write(Width); w.Write(Height); w.Write(Length);
 			w.Write(Blocks);
+			w.Write(OriginX); w.Write(OriginY); w.Write(OriginZ);
 		}
 		
 		public void LoadFrom(Stream stream) {
@@ -80,6 +86,12 @@ namespace MCGalaxy.Drawing {
 			X = r.ReadInt32(); Y = r.ReadInt32(); Z = r.ReadInt32();
 			Width = r.ReadInt32(); Height = r.ReadInt32(); Length = r.ReadInt32();
 			Blocks = r.ReadBytes(Width * Height * Length);
+			
+			try {
+				OriginX = r.ReadInt32(); OriginY = r.ReadInt32(); OriginZ = r.ReadInt32();
+			} catch (EndOfStreamException) { // older versions did not have these fields
+				OriginX = X; OriginY = Y; OriginZ = Z;
+			}
 		}
 		
 		public void LoadFromOld(Stream stream, Stream underlying) {
@@ -96,6 +108,7 @@ namespace MCGalaxy.Drawing {
 				byte type = raw[i + 6];
 				Set(x - X, y - Y, z - Z, type);
 			}
+			OriginX = X; OriginY = Y; OriginZ = Z;
 		}
 		
 		void CalculateBoundsOld(byte[] raw) {

@@ -44,9 +44,10 @@ namespace MCGalaxy.Commands
 		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type) {
 			RevertAndClearState(p, x, y, z);
 			int offX = p.copyoffset[0] + x, offY = p.copyoffset[1] + y, offZ = p.copyoffset[2] + z;
-
 			Player.UndoPos Pos1;
 			CopyState state = p.CopyBuffer;
+			if (state.X != state.OriginX) offX -= (state.Width - 1);
+			if (state.Z != state.OriginZ) offZ -= (state.Length - 1);
 			
 			if (p.level.bufferblocks && !p.level.Instant) {			
 				for (int i = 0; i < state.Blocks.Length; i++ ) {

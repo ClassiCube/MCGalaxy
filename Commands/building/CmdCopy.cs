@@ -119,6 +119,7 @@ namespace MCGalaxy.Commands
 			
 			CopyState state = new CopyState(minX, minY, minZ, maxX - minX + 1, 
 			                                maxY - minY + 1, maxZ - minZ + 1);
+			state.SetOrigin(cpos.x, cpos.y, cpos.z);
 			int totalAir = 0, index = 0;
 			p.copyAir = cpos.type == 2;
 			

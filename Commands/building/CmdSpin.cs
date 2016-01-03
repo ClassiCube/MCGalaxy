@@ -75,6 +75,7 @@ namespace MCGalaxy.Commands
 				state.GetCoords(i, out x, out y, out z);
 				newState.Set(x, newMaxY - z, y, blocks[i]);
 			}
+			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
 		}
 		
@@ -88,6 +89,7 @@ namespace MCGalaxy.Commands
 				state.GetCoords(i, out x, out y, out z);
 				newState.Set(z, y, x, blocks[i]);
 			}
+			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
 		}
 		
@@ -102,6 +104,7 @@ namespace MCGalaxy.Commands
 				state.GetCoords(i, out x, out y, out z);
 				newState.Set(y, newMaxY - x, z, blocks[i]);
 			}
+			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
 		}
 		
