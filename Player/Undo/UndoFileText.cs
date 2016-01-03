@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -26,9 +27,9 @@ namespace MCGalaxy.Util {
         
         protected override string Extension { get { return ".undo"; } }
         
-        protected override void SaveUndoData(Player p, string path) {
+        protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
             using (StreamWriter w = File.CreateText(path)) {
-                foreach (Player.UndoPos uP in p.UndoBuffer) {
+                foreach (Player.UndoPos uP in buffer) {
                     w.Write(
                         uP.mapName + " " + uP.x + " " + uP.y + " " + uP.z + " " +
                         uP.timePlaced.ToString(CultureInfo.InvariantCulture).Replace(' ', '&') + " " +
@@ -37,8 +38,9 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string[] lines, long seconds) {
+        protected override bool UndoEntry(Player p, string path, long seconds) {
             Player.UndoPos Pos;
+            string[] lines = File.ReadAllText(path).Split(' ');
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
                 try {
@@ -70,8 +72,9 @@ namespace MCGalaxy.Util {
             return true;
         }
         
-        protected override bool HighlightEntry(Player p, string[] lines, long seconds) {
+        protected override bool HighlightEntry(Player p, string path, long seconds) {
             Player.UndoPos Pos;
+            string[] lines = File.ReadAllText(path).Split(' ');
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
                 try {
@@ -101,9 +104,8 @@ namespace MCGalaxy.Util {
         
         static bool InTime(string line, long seconds) {
             line = line.Replace('&', ' ');
-            DateTime time = DateTime.Parse(line, CultureInfo.InvariantCulture);
-            
-            time = time.AddSeconds(seconds);
+            DateTime time = DateTime.Parse(line, CultureInfo.InvariantCulture)
+                .AddSeconds(seconds);
             return time >= DateTime.Now;
         }
     }

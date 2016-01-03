@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -27,11 +27,11 @@ namespace MCGalaxy.Util {
         protected const string undoDir = "extra/undo", prevUndoDir = "extra/undoPrevious";
         public static UndoFile Instance = new UndoFileText();
         
-        protected abstract void SaveUndoData(Player p, string path);
+        protected abstract void SaveUndoData(List<Player.UndoPos> buffer, string path);
         
-        protected abstract bool UndoEntry(Player p, string[] lines, long seconds);
+        protected abstract bool UndoEntry(Player p, string path, long seconds);
         
-        protected abstract bool HighlightEntry(Player p, string[] lines, long seconds);
+        protected abstract bool HighlightEntry(Player p, string path, long seconds);
         
         protected abstract string Extension { get; }
         
@@ -55,7 +55,7 @@ namespace MCGalaxy.Util {
             string ext = Instance.Extension;
             int numFiles = di.GetFiles("*" + ext).Length;
             string path = Path.Combine(playerDir, numFiles + ext);
-            Instance.SaveUndoData(p, path);
+            Instance.SaveUndoData(p.UndoBuffer, path);
         }
         
         public static void UndoPlayer(Player p, string targetName, long seconds, ref bool FoundUser) {
@@ -72,19 +72,18 @@ namespace MCGalaxy.Util {
         
         static void FilterEntries(Player p, string dir, string name, long seconds, bool highlight, ref bool FoundUser) {
             string path = Path.Combine(dir, name);
-            if (!Directory.Exists(path)) return;
+            if (!Directory.Exists(path))
+                return;
             DirectoryInfo di = new DirectoryInfo(path);
             string ext = Instance.Extension;
             int numFiles = di.GetFiles("*" + ext).Length;
             
             for (int i = numFiles - 1; i >= 0; i--) {
                 string undoPath = Path.Combine(path, i + ext);
-                string[] lines = File.ReadAllText(undoPath).Split(' ');
-                
                 if (highlight) {
-                    if (!Instance.HighlightEntry(p, lines, seconds)) break;
+                    if (!Instance.HighlightEntry(p, undoPath, seconds)) break;
                 } else {
-                    if (!Instance.UndoEntry(p, lines, seconds)) break;
+                    if (!Instance.UndoEntry(p, undoPath, seconds)) break;
                 }
             }
             FoundUser = true;
