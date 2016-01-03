@@ -76,7 +76,6 @@ namespace MCGalaxy {
         public int afkCount = 0;
         public DateTime afkStart;
         public string WoMVersion = "";
-        public bool megaBoid = false;
         public bool cmdTimer = false;
         public bool UsingWom = false;
 
@@ -2344,6 +2343,7 @@ return;
                         case "mapload": cmd = "load"; break;
                         case "colour": cmd = "color"; break;
                         case "materials": cmd = "blocks"; break;
+                        case "zz": cmd = "static"; message = "cuboid"; break;
 
                         default: retry = false; break; //Unknown command, then
                     }

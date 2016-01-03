@@ -204,7 +204,6 @@ namespace MCGalaxy
             all.Add(new CmdPUnload());
             all.Add(new CmdPyramid());
             all.Add(new CmdQueue());
-            all.Add(new CmdQuick());
             all.Add(new CmdRagequit());
             all.Add(new CmdRainbow());
             all.Add(new CmdRankInfo());
@@ -314,7 +313,6 @@ namespace MCGalaxy
             all.Add(new CmdXundo());
             all.Add(new CmdZombieGame());
             all.Add(new CmdZone());
-            all.Add(new CmdZz());
             all.Add(new CmdQuit());
             core.commands = new List<Command>(all.commands);
             Scripting.Autoload();

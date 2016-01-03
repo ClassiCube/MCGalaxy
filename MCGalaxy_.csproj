@@ -147,7 +147,6 @@
     <Compile Include="Commands\Building\CmdPlace.cs" />
     <Compile Include="Commands\Building\CmdPortal.cs" />
     <Compile Include="Commands\Building\CmdPyramid.cs" />
-    <Compile Include="Commands\Building\CmdQuick.cs" />
     <Compile Include="Commands\Building\CmdRedo.cs" />
     <Compile Include="Commands\Building\CmdReplace.cs" />
     <Compile Include="Commands\Building\CmdReplaceAll.cs" />
@@ -312,7 +311,6 @@
     <Compile Include="Commands\Moderation\CmdXhide.cs" />
     <Compile Include="Commands\Moderation\CmdXmute.cs" />
     <Compile Include="Commands\Moderation\CmdZone.cs" />
-    <Compile Include="Commands\Moderation\CmdZz.cs" />
     <Compile Include="Commands\Other\CmdAgree.cs" />
     <Compile Include="Commands\Other\CmdAscend.cs" />
     <Compile Include="Commands\Other\CmdBack.cs" />

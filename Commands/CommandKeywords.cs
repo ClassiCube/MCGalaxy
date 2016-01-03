@@ -185,7 +185,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdPromote()), "rank up");
             new CommandKeywords((new CmdPyramid()), "egypt pyram piram sand");
             new CommandKeywords((new CmdQueue()), "zombie");
-            new CommandKeywords((new CmdQuick()), "fast cuboid box");
             new CommandKeywords((new CmdRagequit()), "rage quit exit stop leave");
             new CommandKeywords((new CmdRainbow()), "rain bow dash");
             new CommandKeywords((new CmdRankInfo()), "rank info display");
@@ -274,7 +273,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdXundo()), "undo extra");
             new CommandKeywords((new CmdZombieGame()), "zombie game");
             new CommandKeywords((new CmdZone()), "area");
-            new CommandKeywords((new CmdZz()), "static cuboid");
         }
         public void Addcustom(Command cmd, string keywords)
         {

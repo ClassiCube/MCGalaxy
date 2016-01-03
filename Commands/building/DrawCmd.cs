@@ -24,17 +24,14 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public static byte wait;
 
         public override void Use(Player p, string message) {
             string[] parts = message.Split(' ');
             for (int i = 0; i < parts.Length; i++)
                 parts[i] = parts[i].ToLower();
-            wait = 0;
             CatchPos cpos = default(CatchPos);
             
             if (parts.Length > 2) {
-                wait = 1;
                 Help(p); return;
             } else if (parts.Length == 2) {                
                 byte type = GetBlock(p, parts[0]);
@@ -86,11 +83,11 @@ namespace MCGalaxy.Commands {
             byte type = Block.Byte(msg);
             if (type == 255) {
                 Player.SendMessage(p, "There is no block \"" + msg + "\".");
-                wait = 1; return 255;
+                return 255;
             }
             if (!Block.canPlace(p, type)) {
                 Player.SendMessage(p, "Cannot place that.");
-                wait = 1; return 255;
+                return 255;
             }
             return type;
         }

@@ -53,7 +53,6 @@ namespace MCGalaxy.Commands
             ushort z1 = Math.Min(cpos.z, z), z2 = Math.Max(cpos.z, z);            
             if (!DrawOp.DoDrawOp(drawOp, brush, p, x1, y1, z1, x2, y2, z2))
                 return;
-            wait = 2;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
