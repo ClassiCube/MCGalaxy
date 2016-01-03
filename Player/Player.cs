@@ -1181,7 +1181,7 @@ namespace MCGalaxy {
             //  }
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
-            if ( jailed || !agreed ) { SendBlockchange(x, y, z, b); return; }
+            if ( jailed || !agreed ) { RevertBlock(x, y, z); return; }
             if ( level.name.Contains("Museum " + Server.DefaultColor) && Blockchange == null ) {
                 return;
             }
@@ -1192,16 +1192,12 @@ namespace MCGalaxy {
             }
 
             if ( !canBuild ) {
-                SendBlockchange(x, y, z, b);
-                return;
+            	RevertBlock(x, y, z); return;
             }
 
-            if ( Server.verifyadmins ) {
-                if ( this.adminpen ) {
-                    SendBlockchange(x, y, z, b);
-                    this.SendMessage("&cYou must use &a/pass [Password]&c to verify!");
-                    return;
-                }
+            if ( Server.verifyadmins && adminpen ) {
+            	SendMessage("&cYou must use &a/pass [Password]&c to verify!");
+            	RevertBlock(x, y, z); return;
             }
 
             if ( Server.ZombieModeOn && ( action == 1 || ( action == 0 && this.painting ) ) ) {
@@ -1209,7 +1205,7 @@ namespace MCGalaxy {
                     if ( blockCount == 0 ) {
                         if ( !referee ) {
                             SendMessage("You have no blocks left.");
-                            SendBlockchange(x, y, z, b); return;
+                            RevertBlock(x, y, z); return;
                         }
                     }
 
@@ -1224,8 +1220,7 @@ namespace MCGalaxy {
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
                 SendMessage("You are out of the round, and cannot build.");
-                SendBlockchange(x, y, z, b);
-                return;
+                RevertBlock(x, y, z); return;
             }
 
             Level.BlockPos bP;
@@ -1267,7 +1262,7 @@ namespace MCGalaxy {
                     if ( lastCMD != "click" ) {
                         Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
                         SendMessage("You can't build that far away.");
-                        SendBlockchange(x, y, z, b); return;
+                        RevertBlock(x, y, z); return;
                     }
                 }
 
@@ -1275,7 +1270,7 @@ namespace MCGalaxy {
                     if ( !ignoreGrief && !PlayingTntWars ) {
                         if ( y < level.Height / 2 - Server.maxDepth ) {
                             SendMessage("You're not allowed to build this far down!");
-                            SendBlockchange(x, y, z, b); return;
+                            RevertBlock(x, y, z); return;
                         }
                     }
                 }
@@ -1295,28 +1290,23 @@ namespace MCGalaxy {
                     return;
                 }
                 grieferStoneWarn++;
-                SendBlockchange(x, y, z, b);
-                return;
+                RevertBlock(x, y, z); return;
             }
 
             if ( !Block.canPlace(this, b) && !Block.BuildIn(b) && !Block.AllowBreak(b) ) {
                 SendMessage("Cannot build here!");
-                SendBlockchange(x, y, z, b);
-                return;
+                RevertBlock(x, y, z); return;
             }
 
             if ( !Block.canPlace(this, type) ) {
                 SendMessage("You can't place this block type!");
-                SendBlockchange(x, y, z, b);
-                return;
+                RevertBlock(x, y, z); return;
             }
 
             if ( b >= 200 && b < 220 ) {
                 SendMessage("Block is active, you cant disturb it!");
-                SendBlockchange(x, y, z, b);
-                return;
+                RevertBlock(x, y, z); return;
             }
-
 
             if ( action > 1 ) { Kick("Unknown block action!"); }
             byte oldType = type;
@@ -1414,18 +1404,19 @@ namespace MCGalaxy {
 
             if ( deleteMode && b != Block.c4det ) { level.Blockchange(this, x, y, z, Block.air); return; }
 
-            if ( Block.tDoor(b) ) { SendBlockchange(x, y, z, b); return; }
+            if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return; }
             if ( Block.DoorAirs(b) != 0 ) {
-                if ( level.physics != 0 ) level.Blockchange(x, y, z, Block.DoorAirs(b));
-                else SendBlockchange(x, y, z, b);
+                if ( level.physics != 0 ) 
+                	level.Blockchange(x, y, z, Block.DoorAirs(b));
+                else 
+                	RevertBlock(x, y, z);
                 return;
             }
             if ( Block.odoor(b) != Block.Zero ) {
                 if ( b == Block.odoor8 || b == Block.odoor8_air ) {
                     level.Blockchange(this, x, y, z, Block.odoor(b));
-                }
-                else {
-                    SendBlockchange(x, y, z, b);
+                } else {
+                   RevertBlock(x, y, z);
                 }
                 return;
             }
@@ -1453,9 +1444,8 @@ namespace MCGalaxy {
                     break;
                 case Block.rocketstart:
                     if ( level.physics < 2 || level.physics == 5 ) {
-                        SendBlockchange(x, y, z, b);
-                    }
-                    else {
+                        RevertBlock(x, y, z);
+                    } else {
                         int newZ = 0, newX = 0, newY = 0;
 
                         SendBlockchange(x, y, z, Block.rocketstart);
@@ -1486,8 +1476,7 @@ namespace MCGalaxy {
                     break;
                 case Block.firework:
                     if ( level.physics == 5 ) {
-                        SendBlockchange(x, y, z, b);
-                        return;
+                    	RevertBlock(x, y, z); return;
                     }
                     if ( level.physics != 0 ) {
                         mx = rand.Next(0, 2); mz = rand.Next(0, 2);
@@ -1497,8 +1486,8 @@ namespace MCGalaxy {
                             level.Blockchange((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 ), Block.firework);
                             level.Blockchange((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 ), Block.lavastill, false, "wait 1 dissipate 100");
                         }
-                    } SendBlockchange(x, y, z, b);
-
+                    }
+                    RevertBlock(x, y, z);
                     break;
 
                 case Block.c4det:
@@ -1510,7 +1499,8 @@ namespace MCGalaxy {
                     level.Blockchange(this, x, y, z, (byte)( Block.air ));
                     break;
             }
-            if ( ( level.physics == 0 || level.physics == 5 ) && level.GetTile(x, (ushort)( y - 1 ), z) == 3 ) level.Blockchange(this, x, (ushort)( y - 1 ), z, 2);
+            if ( (level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)( y - 1 ), z) == Block.dirt ) 
+            	level.Blockchange(this, x, (ushort)( y - 1 ), z, Block.grass);
         }
 
         public void placeBlock(byte b, byte type, ushort x, ushort y, ushort z) {
@@ -3067,6 +3057,11 @@ Next: continue;
         }
         #endregion
 
+        public void RevertBlock(ushort x, ushort y, ushort z) {
+        	byte b = level.GetTile(x, y, z);
+			SendBlockchange(x, y, z, b);
+        }
+        
         bool CheckBlockSpam() {
             if ( spamBlockLog.Count >= spamBlockCount ) {
                 DateTime oldestTime = spamBlockLog.Dequeue();

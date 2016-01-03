@@ -486,7 +486,7 @@ namespace MCGalaxy
             {
                 if (p.level == mainlevel && !blueteam.members.Contains(p) && !redteam.members.Contains(p))
                 {
-                    p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+                    p.RevertBlock(x, y, z);
                     Player.SendMessage(p, "You are not on a team!");
                     Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                 }
@@ -510,7 +510,7 @@ namespace MCGalaxy
                         GetPlayer(p).points += cappoint;
                         blueteam.points++;
                         mainlevel.Blockchange(redbase.x, redbase.y, redbase.z, Block.red);
-                        p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+                        p.RevertBlock(x, y, z);
                         Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                         if (blueteam.points >= maxpoints)
                         {
@@ -521,7 +521,7 @@ namespace MCGalaxy
                     else
                     {
                         Player.SendMessage(p, "You cant take your own flag!");
-                        p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+                        p.RevertBlock(x, y, z);
                         Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                     }
                 }
@@ -535,7 +535,7 @@ namespace MCGalaxy
                         GetPlayer(p).cap++;
                         redteam.points++;
                         mainlevel.Blockchange(bluebase.x, bluebase.y, bluebase.z, Block.blue);
-                        p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+                        p.RevertBlock(x, y, z);
                         Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                         if (redteam.points >= maxpoints)
                         {
@@ -546,7 +546,7 @@ namespace MCGalaxy
                     else
                     {
                         Player.SendMessage(p, "You cant take your own flag!");
-                        p.SendBlockchange(x, y, z, p.level.GetTile(x, y, z));
+                        p.RevertBlock(x, y, z);
                         Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                     }
                 }

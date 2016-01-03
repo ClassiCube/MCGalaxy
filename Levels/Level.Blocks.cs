@@ -17,23 +17,14 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Threading;
-using MCGalaxy.Levels.Textures;
 using MCGalaxy.SQL;
-using Timer = System.Timers.Timer;
-using MCGalaxy.BlockPhysics;
-using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy {
 
     public sealed partial class Level : IDisposable {
         
-		public byte[] blocks;
+        public byte[] blocks;
         public byte[][] CustomBlocks;
         public int ChunksX, ChunksY, ChunksZ;
         
@@ -50,13 +41,13 @@ namespace MCGalaxy {
         }
         
         public byte GetCustomTile(ushort x, ushort y, ushort z) {
-        	int index = PosToInt(x, y, z);
+            int index = PosToInt(x, y, z);
             if (index < 0 || blocks == null) return Block.Zero;
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
             return chunk == null ? (byte)0 :
-            	chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
+                chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
         public void SetTile(int b, byte type) {
@@ -71,15 +62,15 @@ namespace MCGalaxy {
         }
         
         public void SetCustomTile(ushort x, ushort y, ushort z, byte type) {
-        	int index = PosToInt(x, y, z);
+            int index = PosToInt(x, y, z);
             if (index < 0 || blocks == null) return;
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;
             byte[] chunk = CustomBlocks[cIndex];
             if (chunk == null) {
-            	chunk = new byte[16 * 16 * 16];
-            	CustomBlocks[cIndex] = chunk;
+                chunk = new byte[16 * 16 * 16];
+                CustomBlocks[cIndex] = chunk;
             }
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = type;
         }
@@ -128,8 +119,7 @@ namespace MCGalaxy {
                 {
                     if (!Block.canPlace(p, b) && !Block.BuildIn(b))
                     {
-                        p.SendBlockchange(x, y, z, b);
-                        return;
+                        p.RevertBlock(x, y, z); return;
                     }
                 }
                 errorLocation = "Allowed to place tnt there (TNT Wars)";
@@ -139,8 +129,7 @@ namespace MCGalaxy {
                     {
                         if (TntWarsGame.GetTntWarsGame(p).InZone(x, y, z, true))
                         {
-                            p.SendBlockchange(x, y, z, b);
-                            return;
+                            p.RevertBlock(x, y, z); return;
                         }
                     }
                 }
@@ -151,15 +140,13 @@ namespace MCGalaxy {
                     {
                         if (p.CurrentAmountOfTnt == TntWarsGame.GetTntWarsGame(p).TntPerPlayerAtATime)
                         {
-                            p.SendBlockchange(x, y, z, b);
                             Player.SendMessage(p, "TNT Wars: Maximum amount of TNT placed");
-                            return;
+                            p.RevertBlock(x, y, z); return;
                         }
                         if (p.CurrentAmountOfTnt > TntWarsGame.GetTntWarsGame(p).TntPerPlayerAtATime)
                         {
-                            p.SendBlockchange(x, y, z, b);
                             Player.SendMessage(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!");
-                            return;
+                            p.RevertBlock(x, y, z); return;
                         }
                         else
                         {
@@ -203,7 +190,7 @@ namespace MCGalaxy {
                                                           "'");
                                     toDel.Add(Zn);
 
-                                    p.SendBlockchange(x, y, z, b);
+                                    p.RevertBlock(x, y, z);
                                     Player.SendMessage(p, "Zone deleted for &b" + Zn.Owner);
                                     foundDel = true;
                                 }
@@ -269,9 +256,8 @@ namespace MCGalaxy {
                 {
                     if (p.group.Permission < permissionbuild && (!inZone || !AllowBuild))
                     {
-                        p.SendBlockchange(x, y, z, b);
                         Player.SendMessage(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
-                        return;
+                        p.RevertBlock(x, y, z); return;
                     }
                 }
 
@@ -282,9 +268,8 @@ namespace MCGalaxy {
                     {
                         if (!p.group.CanExecute(Command.all.Find("perbuildmax")))
                         {
-                            p.SendBlockchange(x, y, z, b);
                             Player.SendMessage(p, "Your rank must be " + perbuildmax + " or lower to build here!");
-                            return;
+                            p.RevertBlock(x, y, z); return;
                         }
                     }
                 }
