@@ -38,29 +38,21 @@ namespace MCGalaxy.Commands
             byte b; long seconds = -2; Player who = null; Player.UndoPos Pos; int CurrentPos = 0; bool undoPhysics = false; string whoName = String.Empty;
             if (p != null)
                 p.RedoBuffer.Clear();
-
-            if (message == "")
-            {
-                if (p == null)
-                {
-                    Player.SendMessage(null, "Console doesn't have an undo buffer.");
-                    return;
+            if (message == "") {
+                if (p == null) {
+                    Player.SendMessage(null, "Console doesn't have an undo buffer."); return;
                 }
                 message = p.name.ToLower() + " 30";
             }
+            string[] parts = message.Split(' ');
 
-            try
-            {
-                if (message.Split(' ').Length > 1)
-                {
-                    whoName = message.Split(' ')[0];
-                    who = message.Split(' ')[0].ToLower() == "physics" ? null : Player.Find(message.Split(' ')[0]);
-                    undoPhysics = message.Split(' ')[0].ToLower() == "physics";
-                    message = message.Split(' ')[1].ToLower();
-
-                }
-                else
-                {
+            try {
+                if (parts.Length > 1) {
+                    whoName = parts[0];
+                    who = parts[0].ToLower() == "physics" ? null : Player.Find(parts[0]);
+                    undoPhysics = parts[0].ToLower() == "physics";
+                    message = parts[1].ToLower();
+                } else {
                     who = (p == null || message.ToLower() == "physics") ? null : p;
                     undoPhysics = message.ToLower() == "physics";
                 }
@@ -70,9 +62,12 @@ namespace MCGalaxy.Commands
                     seconds = ((message.ToLower() != "all") ? long.Parse(message) : int.MaxValue);
                 else
                     seconds = getAllowed(p, message.ToLower());
-            }
-            catch
-            {
+            } catch {
+            	if (parts.Length > 1 && parts[1].ToLower() == "update") {
+            		UndoFile.UpgradePlayerUndoFiles(whoName);
+            		Player.SendMessage(p, "Updated undo files for " + whoName + " to the new binary format.");
+            		return;
+            	}
                 Player.SendMessage(p, "Invalid seconds, or you're unable to use /xundo. Using 30 seconds."); //only run if seconds is an invalid number
                 seconds = 30;
             }

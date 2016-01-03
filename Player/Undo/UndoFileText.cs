@@ -52,7 +52,8 @@ namespace MCGalaxy.Util {
                 Pos.y = ushort.Parse(lines[i + 2]);
                 Pos.z = ushort.Parse(lines[i + 3]);
                 
-                Pos.timePlaced = DateTime.Parse(lines[i + 4], CultureInfo.InvariantCulture);
+                string time = lines[i + 4].Replace('&', ' ');
+                Pos.timePlaced = DateTime.Parse(time, CultureInfo.InvariantCulture);
                 Pos.type = byte.Parse(lines[i + 5]);
                 Pos.newtype = byte.Parse(lines[i + 6]);
                 buffer.Add(Pos);
