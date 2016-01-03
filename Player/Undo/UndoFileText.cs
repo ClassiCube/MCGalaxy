@@ -22,30 +22,12 @@ using System.Linq;
 
 namespace MCGalaxy.Util {
 
-    public static class UndoFile {
+    public sealed class UndoFileText : UndoFile {
         
-        const string undoDir = "extra/undo", prevUndoDir = "extra/undoPrevious";        
-        public static void SaveUndo(Player p) {
-            if( p == null || p.UndoBuffer == null || p.UndoBuffer.Count < 1) return;
-            
-            CreateDefaultDirectories();
-            
-            DirectoryInfo di = new DirectoryInfo(undoDir);
-            if (di.GetDirectories("*").Length >= Server.totalUndo) {
-                Directory.Delete(prevUndoDir, true);
-                Directory.Move(undoDir, prevUndoDir);
-                Directory.CreateDirectory(undoDir);
-            }
-
-            string playerDir = Path.Combine(undoDir, p.name.ToLower());
-            if (!Directory.Exists(playerDir))
-                Directory.CreateDirectory(playerDir);
-            
-            di = new DirectoryInfo(playerDir);
-            int number = di.GetFiles("*.undo").Length;
-            string file = number + ".undo";
-            
-            using (StreamWriter w = File.CreateText(Path.Combine(playerDir, file))) {
+        protected override string Extension { get { return ".undo"; } }
+        
+        protected override void SaveUndoData(Player p, string path) {
+            using (StreamWriter w = File.CreateText(path)) {
                 foreach (Player.UndoPos uP in p.UndoBuffer) {
                     w.Write(
                         uP.mapName + " " + uP.x + " " + uP.y + " " + uP.z + " " +
@@ -55,38 +37,7 @@ namespace MCGalaxy.Util {
             }
         }
         
-        public static void UndoPlayer(Player p, string targetName, long seconds, ref bool FoundUser) {
-            if (p != null)
-                p.RedoBuffer.Clear();
-            FilterEntries(p, undoDir, targetName, seconds, false, ref FoundUser);
-            FilterEntries(p, prevUndoDir, targetName, seconds, false, ref FoundUser);
-        }
-        
-        public static void HighlightPlayer(Player p, string targetName, long seconds, ref bool FoundUser) {
-            FilterEntries(p, undoDir, targetName, seconds, true, ref FoundUser);
-            FilterEntries(p, prevUndoDir, targetName, seconds, true, ref FoundUser);
-        }
-        
-        static void FilterEntries(Player p, string dir, string name, long seconds, bool highlight, ref bool FoundUser) {
-            string path = Path.Combine(dir, name);
-            if (!Directory.Exists(path)) return;
-            DirectoryInfo di = new DirectoryInfo(path);
-            int numFiles = di.GetFiles("*.undo").Length;
-            
-            for (int i = numFiles - 1; i >= 0; i--) {
-                string undoPath = Path.Combine(path, i + ".undo");
-                string[] lines = File.ReadAllText(undoPath).Split(' ');
-                
-                if (highlight) {
-                    if (!HighlightEntry(p, lines, seconds)) break;
-                } else {
-                    if (!UndoEntry(p, lines, seconds)) break;
-                }
-            }
-            FoundUser = true;
-        }
-        
-        static bool UndoEntry(Player p, string[] lines, long seconds) {
+        protected override bool UndoEntry(Player p, string[] lines, long seconds) {
             Player.UndoPos Pos;
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
@@ -119,7 +70,7 @@ namespace MCGalaxy.Util {
             return true;
         }
         
-        static bool HighlightEntry(Player p, string[] lines, long seconds) {
+        protected override bool HighlightEntry(Player p, string[] lines, long seconds) {
             Player.UndoPos Pos;
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
@@ -154,13 +105,6 @@ namespace MCGalaxy.Util {
             
             time = time.AddSeconds(seconds);
             return time >= DateTime.Now;
-        }
-        
-        public static void CreateDefaultDirectories() {
-            if (!Directory.Exists(undoDir))
-                Directory.CreateDirectory(undoDir);
-            if (!Directory.Exists(prevUndoDir))
-                Directory.CreateDirectory(prevUndoDir);
         }
     }
 }

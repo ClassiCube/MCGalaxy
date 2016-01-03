@@ -443,6 +443,9 @@
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
     <Compile Include="Player\Chat.cs" />
     <Compile Include="Player\Player.Timers.cs" />
+    <Compile Include="Player\Undo\UndoFile.cs" />
+    <Compile Include="Player\Undo\UndoFileBin.cs" />
+    <Compile Include="Player\Undo\UndoFileText.cs" />
     <Compile Include="Plugins\Enums.cs" />
     <Compile Include="Plugins\Events\GroupEvents.cs" />
     <Compile Include="Plugins\Events\LevelEvents.cs" />
@@ -583,7 +586,6 @@
     <Compile Include="Games\ZombieGame.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="API\WhoWas.cs" />
-    <Compile Include="util\UndoFile.cs" />
     <EmbeddedResource Include="GUI\Eco\EcoLevelWindow.resx">
       <DependentUpon>EcoLevelWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -737,6 +739,7 @@
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Levels\IO" />
     <Folder Include="Levels\Physics" />
+    <Folder Include="Player\Undo" />
     <Folder Include="Plugins" />
     <Folder Include="Plugins\Events" />
     <Folder Include="Plugins\Manager" />
