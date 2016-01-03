@@ -583,6 +583,7 @@
     <Compile Include="Games\ZombieGame.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="API\WhoWas.cs" />
+    <Compile Include="util\UndoFile.cs" />
     <EmbeddedResource Include="GUI\Eco\EcoLevelWindow.resx">
       <DependentUpon>EcoLevelWindow.cs</DependentUpon>
     </EmbeddedResource>
