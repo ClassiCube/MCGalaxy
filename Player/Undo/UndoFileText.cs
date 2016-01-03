@@ -38,6 +38,27 @@ namespace MCGalaxy.Util {
             }
         }
         
+        protected override void ReadUndoData(List<Player.UndoPos> buffer, string path) {
+            Player.UndoPos Pos;
+            string[] lines = File.ReadAllText(path).Split(' ');
+            int approxEntries = (int)(lines.Length / 7);
+            if (buffer.Capacity < approxEntries)
+                buffer.Capacity = approxEntries;
+            
+            for (int i = 0; i < lines.Length; i += 7) {
+                if (lines[i].Length == 0) continue;
+                Pos.mapName = lines[i];
+                Pos.x = ushort.Parse(lines[i + 1]);
+                Pos.y = ushort.Parse(lines[i + 2]);
+                Pos.z = ushort.Parse(lines[i + 3]);
+                
+                Pos.timePlaced = DateTime.Parse(lines[i + 4], CultureInfo.InvariantCulture);
+                Pos.type = byte.Parse(lines[i + 5]);
+                Pos.newtype = byte.Parse(lines[i + 6]);
+                buffer.Add(Pos);
+            }
+        }
+        
         protected override bool UndoEntry(Player p, string path, long seconds) {
             Player.UndoPos Pos;
             string[] lines = File.ReadAllText(path).Split(' ');

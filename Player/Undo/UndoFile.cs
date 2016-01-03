@@ -25,9 +25,12 @@ namespace MCGalaxy.Util {
     public abstract class UndoFile {
         
         protected const string undoDir = "extra/undo", prevUndoDir = "extra/undoPrevious";
-        public static UndoFile Instance = new UndoFileText();
+        public static UndoFile OldFormat = new UndoFileText();
+        public static UndoFile NewFormat = new UndoFileBin();
         
         protected abstract void SaveUndoData(List<Player.UndoPos> buffer, string path);
+        
+        protected abstract void ReadUndoData(List<Player.UndoPos> buffer, string path);
         
         protected abstract bool UndoEntry(Player p, string path, long seconds);
         
@@ -39,9 +42,7 @@ namespace MCGalaxy.Util {
             if( p == null || p.UndoBuffer == null || p.UndoBuffer.Count < 1) return;
             
             CreateDefaultDirectories();
-            
-            DirectoryInfo di = new DirectoryInfo(undoDir);
-            if (di.GetDirectories("*").Length >= Server.totalUndo) {
+            if (Directory.GetDirectories(undoDir).Length >= Server.totalUndo) {
                 Directory.Delete(prevUndoDir, true);
                 Directory.Move(undoDir, prevUndoDir);
                 Directory.CreateDirectory(undoDir);
@@ -51,11 +52,9 @@ namespace MCGalaxy.Util {
             if (!Directory.Exists(playerDir))
                 Directory.CreateDirectory(playerDir);
             
-            di = new DirectoryInfo(playerDir);
-            string ext = Instance.Extension;
-            int numFiles = di.GetFiles("*" + ext).Length;
-            string path = Path.Combine(playerDir, numFiles + ext);
-            Instance.SaveUndoData(p.UndoBuffer, path);
+            int numFiles = Directory.GetFiles(playerDir).Length;
+            string path = Path.Combine(playerDir, numFiles + NewFormat.Extension);
+            NewFormat.SaveUndoData(p.UndoBuffer, path);
         }
         
         public static void UndoPlayer(Player p, string targetName, long seconds, ref bool FoundUser) {
@@ -74,19 +73,38 @@ namespace MCGalaxy.Util {
             string path = Path.Combine(dir, name);
             if (!Directory.Exists(path))
                 return;
-            DirectoryInfo di = new DirectoryInfo(path);
-            string ext = Instance.Extension;
-            int numFiles = di.GetFiles("*" + ext).Length;
+            string[] files = Directory.GetFiles(path);
+            Array.Sort<string>(files, CompareFiles);
             
-            for (int i = numFiles - 1; i >= 0; i--) {
-                string undoPath = Path.Combine(path, i + ext);
+            for (int i = files.Length - 1; i >= 0; i--) {
+                path = files[i];
+                string file = Path.GetFileName(path);
+                if (file.Length == 0 || file[0] < '0' || file[0] > '9')
+                    continue;
+                
+                UndoFile format = null;
+                if (path.EndsWith(OldFormat.Extension)) format = OldFormat;
+                if (path.EndsWith(NewFormat.Extension)) format = NewFormat;
+                if (format == null) continue;
+                
                 if (highlight) {
-                    if (!Instance.HighlightEntry(p, undoPath, seconds)) break;
+                    if (!format.HighlightEntry(p, path, seconds)) break;
                 } else {
-                    if (!Instance.UndoEntry(p, undoPath, seconds)) break;
+                    if (!format.UndoEntry(p, path, seconds)) break;
                 }
             }
             FoundUser = true;
+        }
+        
+        static int CompareFiles(string a, string b) {
+            int aNumEnd = a.IndexOf('.'), bNumEnd = b.IndexOf('.');
+            if (aNumEnd < 0 || bNumEnd < 0) return a.CompareTo(b);
+            
+            int aNum, bNum;
+            if (!int.TryParse(a.Substring(0, aNumEnd), out aNum) ||
+                !int.TryParse(b.Substring(0, bNumEnd), out bNum))
+                return a.CompareTo(b);
+            return aNum.CompareTo(bNum);
         }
         
         public static void CreateDefaultDirectories() {
@@ -94,6 +112,31 @@ namespace MCGalaxy.Util {
                 Directory.CreateDirectory(undoDir);
             if (!Directory.Exists(prevUndoDir))
                 Directory.CreateDirectory(prevUndoDir);
+        }
+        
+        public static void UpgradePlayerUndoFiles(string name) {
+            UpgradeFiles(undoDir, name);
+            UpgradeFiles(prevUndoDir, name);
+        }
+        
+        static void UpgradeFiles(string dir, string name) {
+            string path = Path.Combine(dir, name);
+            if (!Directory.Exists(path))
+                return;
+            string[] files = Directory.GetFiles(path);
+            List<Player.UndoPos> buffer = new List<Player.UndoPos>();
+            
+            for (int i = 0; i < files.Length; i++) {
+                path = files[i];
+                if (!path.EndsWith(OldFormat.Extension)) 
+                    continue;
+                buffer.Clear();
+                OldFormat.ReadUndoData(buffer, path);
+                
+                string newPath = Path.ChangeExtension(path, NewFormat.Extension);
+                NewFormat.SaveUndoData(buffer, newPath);
+                File.Delete(path);
+            }
         }
     }
 }
