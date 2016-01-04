@@ -163,13 +163,13 @@ namespace MCGalaxy.Commands
 				p.ClearBlockchange();
 				p.aiming = false;
 			}
-			byte by = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, by);
+			p.RevertBlock(x, y, z);
 			Pos bp = (Pos)p.blockchangeObject;
 
 			List<CatchPos> previous = new List<CatchPos>();
 			List<CatchPos> allBlocks = new List<CatchPos>();
 			CatchPos pos;
+			byte by = 0;
 
 			if (p.modeType != Block.air)
 				type = p.modeType;

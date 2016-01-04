@@ -203,7 +203,6 @@ namespace MCGalaxy {
         }
         
         public void SendMessage(byte id, string message, bool colorParse = true) {
-            if ( ZoneSpam.AddSeconds(2) > DateTime.Now && message.Contains("This zone belongs to ") ) return;
             if (colorParse)
             	message = Chat.EscapeColours(message);
             StringBuilder sb = new StringBuilder(message);
@@ -363,6 +362,8 @@ namespace MCGalaxy {
                 	SendCurrentMapAppearance();
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
+                if (!level.guns)
+                	aiming = false;
             } catch( Exception ex ) {
             	success = false;
                 Command.all.Find("goto").Use(this, Server.mainLevel.name);
@@ -428,15 +429,9 @@ namespace MCGalaxy {
             if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
             bool skip = false;
-            if (type == Block.block_definitions)
-            {
+            if (type == Block.block_definitions) {
                 skip = true;
-                byte[] chunk = level.CustomBlocks[(x >> 4) + (z >> 4) * level.ChunksX +
-                                                  (y >> 4) * level.ChunksX * level.ChunksZ];
-                if (chunk == null)
-                    type = Block.stone;
-                else
-                    type = chunk[(x & 0xF) | (y & 0xF) << 4 | (z & 0x0F) << 8];
+                type = level.GetCustomTile(x, y, z);
             }
 
             byte[] buffer = new byte[8];

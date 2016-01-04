@@ -424,6 +424,7 @@
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
+    <Compile Include="Levels\Level.Blocks.cs" />
     <Compile Include="Levels\MapGen.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\AirPhysics.cs" />

@@ -48,8 +48,7 @@ namespace MCGalaxy
 		
 		protected static void RevertAndClearState(Player p, ushort x, ushort y, ushort z) {
 			p.ClearBlockchange();
-			byte b = p.level.GetTile(x, y, z);
-			p.SendBlockchange(x, y, z, b);
+			p.RevertBlock(x, y, z);
 		}
 	}
 	

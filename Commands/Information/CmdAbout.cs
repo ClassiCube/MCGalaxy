@@ -62,7 +62,8 @@ namespace MCGalaxy.Commands
             if (message != "") Player.SendMessage(p, "Physics information: &a" + message);
 
             //safe against SQL injections because no user input is given here
-            DataTable Blocks = Server.useMySQL ? MySQL.fillData("SELECT * FROM `Block" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z) : SQLite.fillData("SELECT * FROM Block" + p.level.name + " WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
+            DataTable Blocks = Server.useMySQL ? MySQL.fillData("SELECT * FROM `Block" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z) 
+            	: SQLite.fillData("SELECT * FROM Block" + p.level.name + " WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
 
             string Username, TimePerformed, BlockUsed;
             bool Deleted, foundOne = false;
@@ -82,7 +83,8 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Date and time modified: &2" + TimePerformed);
             }
 
-            List<Level.BlockPos> inCache = p.level.blockCache.FindAll(bP => bP.x == x && bP.y == y && bP.z == z);
+            int bpIndex = p.level.PosToInt(x, y, z);
+            List<Level.BlockPos> inCache = p.level.blockCache.FindAll(bP => bP.index == bpIndex);
 
             for (int i = 0; i < inCache.Count; i++)
             {
