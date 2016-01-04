@@ -117,42 +117,42 @@ namespace MCGalaxy.Commands
 
         public void BlockchangeCone(Player p, ushort x, ushort y, ushort z, byte type) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.Cone(p, x, y, z, p.BcVar[0], p.BcVar[1], type);
+            Util.SCOGenerator.Cone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, false);
         }
         
         public void BlockchangeHCone(Player p, ushort x, ushort y, ushort z, byte type) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HCone(p, x, y, z, p.BcVar[0], p.BcVar[1], type);
+            Util.SCOGenerator.HCone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, false);
         }
         
         public void BlockchangeICone(Player p, ushort x, ushort y, ushort z, byte type) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.ICone(p, x, y, z, p.BcVar[0], p.BcVar[1], type);
+            Util.SCOGenerator.Cone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, true);
         }
         
         public void BlockchangeHICone(Player p, ushort x, ushort y, ushort z, byte type) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HICone(p, x, y, z, p.BcVar[0], p.BcVar[1], type);
+            Util.SCOGenerator.HCone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, true);
         }
 
         public void BlockchangePyramid(Player p, ushort x, ushort y, ushort z, byte type) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.Pyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type);
+            Util.SCOGenerator.Pyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, false);
         }
         
         public void BlockchangeHPyramid(Player p, ushort x, ushort y, ushort z, byte type) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type);
+            Util.SCOGenerator.HPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, false);
         }
         
         public void BlockchangeIPyramid(Player p, ushort x, ushort y, ushort z, byte type) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.IPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type);
+            Util.SCOGenerator.Pyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, true);
         }
         
         public void BlockchangeHIPyramid(Player p, ushort x, ushort y, ushort z, byte type) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HIPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type);
+            Util.SCOGenerator.HPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, true);
         }
 
         public void BlockchangeSphere(Player p, ushort x, ushort y, ushort z, byte type) {
