@@ -37,22 +37,18 @@ namespace MCGalaxy {
     }
     
     public sealed class RainbowBrush : Brush {
-        readonly Random rnd;
-        
-        public RainbowBrush() {
-            rnd = new Random();
-        }
-        
-        public RainbowBrush(int seed) {
-            rnd = new Random(seed);
-        }
+        byte curBlock = Block.red;
         
         public override byte NextBlock() {
-            return (byte)rnd.Next(Block.red, Block.darkgrey);
+            byte block = curBlock; 
+            curBlock++;
+            if (curBlock > Block.darkpink)
+                curBlock = Block.red;
+            return block;
         }
     }
     
-     public sealed class RandomBrush : Brush {
+    public sealed class RandomBrush : Brush {
         readonly Random rnd = new Random();
         readonly byte block;
         
@@ -62,6 +58,22 @@ namespace MCGalaxy {
         
         public override byte NextBlock() {
             return (byte)rnd.Next(1, 11) <= 5 ? block : Block.Zero;
+        }
+    }
+    
+    public sealed class RandomRainbowBrush : Brush {
+        readonly Random rnd;
+        
+        public RandomRainbowBrush() {
+            rnd = new Random();
+        }
+        
+        public RandomRainbowBrush(int seed) {
+            rnd = new Random(seed);
+        }
+        
+        public override byte NextBlock() {
+            return (byte)rnd.Next(Block.red, Block.darkgrey);
         }
     }
 }

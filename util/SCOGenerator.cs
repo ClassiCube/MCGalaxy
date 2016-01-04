@@ -211,13 +211,7 @@ namespace MCGalaxy.Util
 					{
                         if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = height - k;
 
@@ -273,13 +267,7 @@ namespace MCGalaxy.Util
 					{
                         if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = height - k;
 
@@ -335,13 +323,7 @@ namespace MCGalaxy.Util
 					{
                         if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = k;
 
@@ -396,13 +378,7 @@ namespace MCGalaxy.Util
 					{
                         if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = k;
 
@@ -457,13 +433,7 @@ namespace MCGalaxy.Util
 					{
                         if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = height - k;
 
@@ -515,13 +485,7 @@ namespace MCGalaxy.Util
 					{
                         if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = height - k;
 
@@ -573,13 +537,7 @@ namespace MCGalaxy.Util
 					{
                         if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = k;
 
@@ -631,13 +589,7 @@ namespace MCGalaxy.Util
 					{
                         if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = k;
 
@@ -781,13 +733,7 @@ namespace MCGalaxy.Util
 					{
 						if ((z + m) < 0 || (z + m) > p.level.Length) continue;
 
-						int ox = x;
-						int oy = y;
-						int oz = z;
-
-						int cx = (x + j);
-						int cy = (y + k);
-						int cz = (z + m);
+						int cx = (x + j), cy = (y + k), cz = (z + m);
 
 						double currentheight = height - k;
 
@@ -839,51 +785,6 @@ namespace MCGalaxy.Util
             buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
             buffer = null;
 		}
-
-		#region Stuff that's not used in MCGalaxy (at least not yet)
-		//public void ToAirMethod(List<string> toair)
-		//{
-		//    if (toair.Count >= 1)
-		//    {
-		//        foreach (string s in toair)
-		//        {
-		//            try
-		//            {
-		//                string[] k = s.Split('^');
-		//                Level l = Level.Find(k[0]);
-		//                ushort x = Convert.ToUInt16(k[1]);
-		//                ushort y = Convert.ToUInt16(k[2]);
-		//                ushort z = Convert.ToUInt16(k[3]);
-		//                l.Blockchange(x, y, z, 0);
-		//            }
-		//            catch { }
-		//        }
-		//    }
-		//}
-
-		//public void TNTthreader() //We may leave this because i cant think of an efficient way to do this.
-		//{
-		//    while (true)
-		//    {
-		//        try
-		//        {
-		//            foreach (string t in TNTCHAIN.ToArray())
-		//            {
-		//                TNTCHAIN.Remove(t); //do first so if it fails its not there anymore :D
-
-		//                string[] t2 = t.Split('^');
-		//                Level l = Level.Find(t2[0]);
-		//                ushort x = Convert.ToUInt16(t2[1]);
-		//                ushort y = Convert.ToUInt16(t2[2]);
-		//                ushort z = Convert.ToUInt16(t2[3]);
-		//                TNT(l, x, y, z);
-		//            }
-		//        }
-		//        catch { }
-		//        Thread.Sleep(100);
-		//    }
-		//}
-		#endregion
 
 		#region utilities
 		static private double sqrt(double x)
