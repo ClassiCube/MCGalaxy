@@ -1170,7 +1170,7 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
             }
         }
-        public void manualChange(ushort x, ushort y, ushort z, byte action, byte type) {
+        public void manualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
              //if (!(!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null) && HasExtension("BlockDefinitions")))
             //  {
                  if (type > 65)
@@ -1226,8 +1226,9 @@ namespace MCGalaxy {
             Level.BlockPos bP;
             bP.name = name;
             bP.TimePerformed = DateTime.Now;
-            bP.x = x; bP.y = y; bP.z = z;
+            bP.index = level.PosToInt(x, y, z);
             bP.type = type;
+            bP.extType = extType;
 
             lastClick[0] = x;
             lastClick[1] = y;

@@ -22,7 +22,6 @@ namespace MCGalaxy
     {
         public static int time { get { return (int)blocktimer.Interval; } set { blocktimer.Interval = value; } }
         public static int blockupdates = 200;
-        static block b = new block();
         static System.Timers.Timer blocktimer = new System.Timers.Timer(100);
         static byte started = 0;
 
@@ -37,25 +36,28 @@ namespace MCGalaxy
                     try
                     {
                         if (l.blockqueue.Count < 1) return;
-                        int count;
-                        if (l.blockqueue.Count < blockupdates || l.players.Count == 0) count = l.blockqueue.Count;
-                        else count = blockupdates;
+                        int count = blockupdates;
+                        if (l.blockqueue.Count < blockupdates || l.players.Count == 0) 
+                        	count = l.blockqueue.Count;
                         Level.BlockPos bP;
 
                         for (int c = 0; c < count; c++)
                         {
-                            bP.name = l.blockqueue[c].p.name;
+                        	block item = l.blockqueue[c];
+                            bP.name = item.p.name;
                             bP.TimePerformed = DateTime.Now;
-                            bP.x = l.blockqueue[c].x; bP.y = l.blockqueue[c].y; bP.z = l.blockqueue[c].z;
-                            bP.type = l.blockqueue[c].type;
+                            ushort x, y, z;
+                            l.IntToPos(item.index, out x, out y, out z);
+                            
+                            bP.index = item.index;
+                            bP.type = item.type;
+                            bP.extType = item.extType;
                             bP.deleted = bP.type == 0;
-                            l.Blockchange(l.blockqueue[c].p, l.blockqueue[c].x, l.blockqueue[c].y, l.blockqueue[c].z, l.blockqueue[c].type);
+                            l.Blockchange(item.p, x, y, z, bP.type, bP.extType);
                             l.blockCache.Add(bP);
                         }
                         l.blockqueue.RemoveRange(0, count);
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e)  {
                         Server.s.ErrorCase("error:" + e);
                         Server.s.Log(String.Format("Block cache failed for map: {0}. {1} lost.", l.name, l.blockqueue.Count));
                         l.blockqueue.Clear();
@@ -68,12 +70,16 @@ namespace MCGalaxy
         public static void pause() { blocktimer.Enabled = false; }
         public static void resume() { blocktimer.Enabled = true; }
 
-        public static void Addblock(Player P, ushort X, ushort Y, ushort Z, byte Type)
-        {
-            b.x = X; b.y = Y; b.z = Z; b.type = Type; b.p = P;
-            P.level.blockqueue.Add(b);
+        public static void Addblock(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
+        	int index = p.level.PosToInt(x, y, z);
+        	if (index < 0) return;
+        	block item;
+        	
+        	item.p = p; item.index = index;
+        	item.type = type; item.extType = extType;
+            p.level.blockqueue.Add(item);
         }
 
-        public struct block { public Player p; public ushort x; public ushort y; public ushort z; public byte type; }
+        public struct block { public Player p; public int index; public byte type, extType; }
     }
 }

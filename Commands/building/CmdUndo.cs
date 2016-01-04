@@ -180,7 +180,7 @@ namespace MCGalaxy.Commands
                             if (b == uP.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
                             {
                                 p.level.IntToPos(uP.location, out x, out y, out z);
-                                p.level.Blockchange(p, x, y, z, uP.oldType, true);
+                                p.level.Blockchange(p, x, y, z, uP.oldType);
                             }
                         }
                         catch { }

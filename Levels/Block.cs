@@ -703,60 +703,6 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool AnyBuild(byte type)
-        {
-            switch (type)
-            {
-                case Block.air:
-                case Block.rock:
-                case Block.grass:
-                case Block.dirt:
-                case Block.stone:
-                case Block.wood:
-                case Block.shrub:
-                case Block.sand:
-                case Block.gravel:
-                case Block.goldrock:
-                case Block.ironrock:
-                case Block.coal:
-                case Block.trunk:
-                case Block.leaf:
-                case Block.sponge:
-                case Block.glass:
-                case Block.red:
-                case Block.orange:
-                case Block.yellow:
-                case Block.lightgreen:
-                case Block.green:
-                case Block.aquagreen:
-                case Block.cyan:
-                case Block.lightblue:
-                case Block.blue:
-                case Block.purple:
-                case Block.lightpurple:
-                case Block.pink:
-                case Block.darkpink:
-                case Block.darkgrey:
-                case Block.lightgrey:
-                case Block.white:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                case Block.goldsolid:
-                case Block.iron:
-                case Block.staircasefull:
-                case Block.staircasestep:
-                case Block.brick:
-                case Block.tnt:
-                case Block.bookcase:
-                case Block.stonevine:
-                case Block.obsidian:
-                    return true;
-            }
-            return false;
-        }
-
         public static bool AllowBreak(byte type)
         {
             switch (type)
@@ -1266,8 +1212,8 @@ namespace MCGalaxy
                 case 106: return "op_water";              //TODO
                 case 107: return "op_lava";
 
-                case 108: return "griefer_stone";
-                case 109: return "lava_sponge";
+                case griefer_stone: return "griefer_stone";
+                case lava_sponge: return "lava_sponge";
 
                 case wood_float: return "wood_float";            //TODO
                 case door: return "door_wood";
@@ -1454,11 +1400,11 @@ namespace MCGalaxy
             switch (type.ToLower())
             {
                 case "0":
-                case "air": return 0;
+                case "air": return air;
                 case "1":
-                case "stone": return 1;
+                case "stone": return stone;
                 case "2":
-                case "grass": return 2;
+                case "grass": return grass;
                 case "3":
                 case "dirt": return 3;
                 case "4":
@@ -1819,6 +1765,7 @@ namespace MCGalaxy
                 default: return Zero;
             }
         }
+        
 		public static byte ConvertCPE( byte b ) {
 			switch ( b ) {
 				case 50: return 44;
@@ -1845,21 +1792,21 @@ namespace MCGalaxy
         {
             switch (b)
             {
-                case flagbase: return mushroom; //CTF Flagbase
-                case 100: return (byte)20; //Op_glass
-                case 101: return (byte)49; //Opsidian
-                case 102: return (byte)45; //Op_brick
-                case 103: return (byte)1; //Op_stone
-                case 104: return (byte)4; //Op_cobblestone
-                case 105: return (byte)0; //Op_air - Must be cuboided / replaced
-                case 106: return waterstill; //Op_water
-                case 107: return lavastill; //Op_lava
+                case flagbase: return mushroom;
+                case op_glass: return glass;
+                case opsidian: return obsidian;
+                case op_brick: return brick;
+                case op_stone: return rock;
+                case op_cobblestone: return stone;
+                case op_air: return air; //Must be cuboided / replaced
+                case op_water: return waterstill;
+                case op_lava: return lavastill;
 
-                case 108: return Server.grieferStoneType; //Griefer_stone
-                case 109: return (byte)19; //Lava_sponge
+                case griefer_stone: return Server.grieferStoneType; //Griefer_stone
+                case lava_sponge: return sponge;
 
-                case 110: return (byte)5; //wood_float
-                case 112: return (byte)10;
+                case wood_float: return wood; //wood_float
+                case lava_fast: return lava;
                 case 71:
                 case 72:
                     return Block.white;
@@ -1923,14 +1870,14 @@ namespace MCGalaxy
                 case odoor11: return lavastill;
                 case odoor12: return waterstill;
 
-                case 130: return (byte)36;  //upVator
-                case 131: return (byte)34;  //upVator
-                case 132: return (byte)0;   //upVator
-                case MsgWater: return waterstill;   //upVator
-                case MsgLava: return lavastill;  //upVator
+                case MsgWhite: return white;
+                case MsgBlack: return darkgrey;
+                case MsgAir: return air;
+                case MsgWater: return waterstill;
+                case MsgLava: return lavastill;
 
-                case 140: return (byte)8;
-                case 141: return (byte)10;
+                case WaterDown: return water;
+                case LavaDown: return lava;
                 case WaterFaucet: return Block.cyan;
                 case LavaFaucet: return Block.orange;
 
@@ -1938,26 +1885,26 @@ namespace MCGalaxy
                 case finiteLava: return lava;
                 case finiteFaucet: return lightblue;
 
-                case 160: return (byte)0;//air portal
-                case 161: return waterstill;//water portal
-                case 162: return lavastill;//lava portal
+                case air_portal: return air;
+                case water_portal: return waterstill;
+                case lava_portal: return lavastill;
 
                 case air_door: return air;
                 case air_switch: return air;//air door
                 case water_door: return waterstill;//water door
                 case lava_door: return lavastill;
 
-                case 175: return (byte)28;//blue portal
-                case 176: return (byte)22;//orange portal
+                case blue_portal: return lightblue;
+                case orange_portal: return orange;
 
-                case c4: return (byte)46;
-                case c4det: return (byte)red;
-                case 182: return (byte)46;//smalltnt
-                case 183: return (byte)46;//bigtnt
-                case 186: return (byte)46;//nuketnt
-                case 184: return (byte)10;//explosion
+                case c4: return tnt;
+                case c4det: return red;
+                case smalltnt: return tnt;
+                case bigtnt: return tnt;
+                case tntexplosion: return lava;
 
                 case lava_fire: return lava;
+                case nuketnt: return tnt;
 
                 case rocketstart: return glass;
                 case rockethead: return goldsolid;
@@ -1965,7 +1912,7 @@ namespace MCGalaxy
 
                 case Block.deathwater: return waterstill;
                 case Block.deathlava: return lavastill;
-                case Block.deathair: return (byte)0;
+                case Block.deathair: return air;
                 case activedeathwater: return water;
                 case activedeathlava: return lava;
                 case fastdeathlava: return lava;
@@ -1973,21 +1920,21 @@ namespace MCGalaxy
                 case Block.magma: return Block.lava;
                 case Block.geyser: return Block.water;
 
-                case 200: //air_flood
-                case 201: //door_air
-                case 202: //air_flood_layer
-                case 203: //air_flood_down
-                case 204: //air_flood_up
-                case 205: //door2_air
-                case 206: //door3_air
-                case 207: //door4_air
-                case 208: //door5_air
-                case 209: //door6_air
-                case 210: //door7_air
-                case 213: //door10_air
-                case 214: //door10_air
-                case 215: //door10_air
-                case 216: //door10_air
+                case air_flood:
+                case door_air:
+                case air_flood_layer:
+                case air_flood_down:
+               	case air_flood_up:
+                case door2_air:
+                case door3_air:
+                case door4_air:
+                case door5_air:
+                case door6_air:
+                case door7_air:
+                case door10_air:
+                case door11_air:
+                case door12_air:
+                case door13_air:
                 case door14_air:
                 case door_iron_air:
 				case door_gold_air:
@@ -1997,9 +1944,9 @@ namespace MCGalaxy
                 case door_grass_air:
                 case door_blue_air:
                 case door_book_air:
-                    return (byte)0;
-                case door9_air: return lava;
+                    return air;
                 case door8_air: return red;
+                case door9_air: return lava;
 
                 case odoor1_air:
                 case odoor2_air:
@@ -2040,32 +1987,32 @@ namespace MCGalaxy
                 case fishlavashark: return obsidian;
 
                 default:
-                    if (b < 66) return b; else return 22;
+                    return b < 66 ? b : orange;
             }
         }
         public static byte SaveConvert(byte b)
         {
             switch (b)
             {
-                case 200:
-                case 202:
-                case 203:
-                case 204:
+            	case air_flood:
+            	case air_flood_layer:
+            	case air_flood_down:
+            	case air_flood_up:
                     return (byte)0; //air_flood must be converted to air on save to prevent issues
-                case 201: return (byte)111; //door_air back into door
-                case 205: return (byte)113; //door_air back into door
-                case 206: return (byte)114; //door_air back into door
-                case 207: return (byte)115; //door_air back into door
-                case 208: return (byte)116; //door_air back into door
-                case 209: return (byte)117; //door_air back into door
-                case 210: return (byte)118; //door_air back into door
-                case 211: return (byte)119; //door_air back into door
-                case 212: return (byte)120; //door_air back into door
-                case 213: return (byte)121; //door_air back into door
-                case 214: return (byte)165; //door_air back into door
-                case 215: return (byte)166; //door_air back into door
-                case 216: return (byte)167; //door_air back into door
-                case 217: return air_door; //door_air back into door
+                case 201: return door;
+                case 205: return door2;
+                case 206: return door3;
+                case 207: return door4;
+                case 208: return door5;
+                case 209: return door6;
+                case 210: return door7;
+                case 211: return door8;
+                case 212: return door9;
+                case 213: return door10;
+                case 214: return air_switch;
+                case 215: return water_door;
+                case 216: return lava_door;
+                case 217: return air_door;
                 case door_iron_air: return door_iron;
 				case door_gold_air: return door_gold;
                 case door_dirt_air: return door_dirt;

@@ -75,7 +75,7 @@ namespace MCGalaxy {
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = type;
         }
         
-        public void SetTile(ushort x, ushort y, ushort z, byte type, Player p) {
+        public void SetTile(ushort x, ushort y, ushort z, byte type, Player p, byte extType = 0) {
             int b = PosToInt(x, y, z);
             if (blocks == null || b < 0) return;
             
@@ -86,8 +86,9 @@ namespace MCGalaxy {
             Level.BlockPos bP;
             bP.name = p.name;
             bP.TimePerformed = DateTime.Now;
-            bP.x = x; bP.y = y; bP.z = z;
+            bP.index = b;
             bP.type = type;
+            bP.extType = extType;
             bP.deleted = bP.type == 0;
             blockCache.Add(bP);
             
@@ -100,7 +101,7 @@ namespace MCGalaxy {
             p.UndoBuffer.Add(Pos);
         }
 
-        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, bool blockdefinitions = false)
+        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0)
         {
             string errorLocation = "start";
         retry:
@@ -110,9 +111,6 @@ namespace MCGalaxy {
                 if (x >= Width || y >= Height || z >= Length) return;
 
                 byte b = GetTile(x, y, z);
-
-                if (blockdefinitions)
-                    b = Block.block_definitions;
 
                 errorLocation = "Block rank checking";
                 if (!Block.AllowBreak(b))

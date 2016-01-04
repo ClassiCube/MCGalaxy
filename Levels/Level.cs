@@ -336,6 +336,7 @@ namespace MCGalaxy
             if (blockCache.Count == 0) return;
             List<BlockPos> tempCache = blockCache;
             blockCache = new List<BlockPos>();
+            ushort x, y, z;
 
             string template = "INSERT INTO `Block" + name +
                               "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES ('{0}', '{1}', {2}, {3}, {4}, {5}, {6})";
@@ -345,9 +346,10 @@ namespace MCGalaxy
                 foreach (BlockPos bP in tempCache)
                 {
                     int deleted = bP.deleted ? 1 : 0;
+                    IntToPos(bP.index, out x, out y, out z);
                     transaction.Execute(String.Format(template, bP.name,
-                                                      bP.TimePerformed.ToString("yyyy-MM-dd HH:mm:ss"), (int)bP.x,
-                                                      (int)bP.y, (int)bP.z, bP.type, deleted));
+                                                      bP.TimePerformed.ToString("yyyy-MM-dd HH:mm:ss"), 
+                                                      x, y, z, bP.type, deleted));
                 }
                 transaction.Commit();
             }
@@ -1898,18 +1900,14 @@ namespace MCGalaxy
 
         #endregion
 
-        #region Nested type: BlockPos
-
         public struct BlockPos
         {
             public DateTime TimePerformed;
-            public bool deleted;
             public string name;
-            public byte type;
-            public ushort x, y, z;
+            public int index;
+            public bool deleted;
+            public byte type, extType;
         }
-
-        #endregion
 
         #region Nested type: UndoPos
 
