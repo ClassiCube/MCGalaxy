@@ -362,6 +362,8 @@ namespace MCGalaxy {
                 	SendCurrentMapAppearance();
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
+                if (!level.guns)
+                	aiming = false;
             } catch( Exception ex ) {
             	success = false;
                 Command.all.Find("goto").Use(this, Server.mainLevel.name);
