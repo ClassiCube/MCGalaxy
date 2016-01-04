@@ -303,10 +303,8 @@ namespace MCGalaxy {
         public List<string> spyChatRooms = new List<string>();
         public DateTime lastchatroomglobal;
 
-        //Waypoints
-        public List<Waypoint.WP> Waypoints = new List<Waypoint.WP>();
+        public List<Waypoint> Waypoints = new List<Waypoint>();
 
-        //Random...
         public Random random = new Random();
 
         //Global Chat
@@ -1052,7 +1050,7 @@ namespace MCGalaxy {
             }
             try
             {
-                Waypoint.Load(this);
+                WaypointList.Load(this);
                 //if (Waypoints.Count > 0) { this.SendMessage("Loaded " + Waypoints.Count + " waypoints!"); }
             }
             catch (Exception ex)
@@ -1144,8 +1142,7 @@ namespace MCGalaxy {
                     if ( !referee ) {
                         if ( lastYblock == y - 1 && lastXblock == x && lastZblock == z ) {
                             blocksStacked++;
-                        }
-                        else {
+                        } else {
                             blocksStacked = 0;
                         }
                         if ( blocksStacked == 2 ) {
@@ -1154,23 +1151,19 @@ namespace MCGalaxy {
                         if ( blocksStacked == 4 ) {
                             Command.all.Find("kick").Use(null, name + " No pillaring allowed!");
                         }
-}
-}
-
-                lastYblock = y;
-                lastXblock = x;
-                lastZblock = z;
-
-                manualChange(x, y, z, action, type);
-            }
-            catch ( Exception e ) {
+                	}
+                }
+                lastYblock = y; lastXblock = x; lastZblock = z;
+                ManualChange(x, y, z, action, type);
+            } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
                 Chat.GlobalMessageOps(DisplayName + " has triggered a block change error");
                 Chat.GlobalMessageOps(e.GetType().ToString() + ": " + e.Message);
                 Server.ErrorLog(e);
             }
         }
-        public void manualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
+        
+        public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
              //if (!(!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null) && HasExtension("BlockDefinitions")))
             //  {
                  if (type > 65)
@@ -3078,36 +3071,6 @@ Next: continue;
             return false;
         }
 
-        #region getters
-        public ushort[] footLocation {
-            get {
-                return getLoc(false);
-            }
-        }
-        public ushort[] headLocation {
-            get {
-                return getLoc(true);
-            }
-        }
-
-        public ushort[] getLoc(bool head) {
-            ushort[] myPos = pos;
-            myPos[0] /= 32;
-            if ( head ) myPos[1] = (ushort)( ( myPos[1] + 4 ) / 32 );
-            else myPos[1] = (ushort)( ( myPos[1] + 4 ) / 32 - 1 );
-            myPos[2] /= 32;
-            return myPos;
-        }
-
-        public void setLoc(ushort[] myPos) {
-            myPos[0] *= 32;
-            myPos[1] *= 32;
-            myPos[2] *= 32;
-            unchecked { SendPos((byte)-1, myPos[0], myPos[1], myPos[2], rot[0], rot[1]); }
-        }
-
-        #endregion
-
         public static bool IPInPrivateRange(string ip) {
             //range of 172.16.0.0 - 172.31.255.255
             if (ip.StartsWith("172.") && (int.Parse(ip.Split('.')[1]) >= 16 && int.Parse(ip.Split('.')[1]) <= 31))
@@ -3145,138 +3108,6 @@ Next: continue;
             return false;
         }
 
-        public class Waypoint {
-            public class WP {
-                public ushort x;
-                public ushort y;
-                public ushort z;
-                public byte rotx;
-                public byte roty;
-                public string name;
-                public string lvlname;
-            }
-            public static WP Find(string name, Player p) {
-                WP wpfound = null;
-                bool found = false;
-                foreach ( WP wp in p.Waypoints ) {
-                    if ( wp.name.ToLower() == name.ToLower() ) {
-                        wpfound = wp;
-                        found = true;
-                    }
-                }
-                if ( found ) { return wpfound; }
-                else { return null; }
-            }
-            public static void Goto(string waypoint, Player p) {
-                if ( !Exists(waypoint, p) ) return;
-                WP wp = Find(waypoint, p);
-                Level lvl = Level.Find(wp.lvlname);
-                if ( wp == null ) return;
-                if ( lvl != null ) {
-                    if ( p.level != lvl ) {
-                        Command.all.Find("goto").Use(p, lvl.name);
-                        while ( p.Loading ) { Thread.Sleep(250); }
-                    }
-                    unchecked { p.SendPos((byte)-1, wp.x, wp.y, wp.z, wp.rotx, wp.roty); }
-                    Player.SendMessage(p, "Sent you to waypoint");
-                }
-                else { Player.SendMessage(p, "The map that that waypoint is on isn't loaded right now (" + wp.lvlname + ")"); return; }
-            }
-
-            public static void Create(string waypoint, Player p) {
-                Player.Waypoint.WP wp = new Player.Waypoint.WP();
-                {
-                    wp.x = p.pos[0];
-                    wp.y = p.pos[1];
-                    wp.z = p.pos[2];
-                    wp.rotx = p.rot[0];
-                    wp.roty = p.rot[1];
-                    wp.name = waypoint;
-                    wp.lvlname = p.level.name;
-                }
-                p.Waypoints.Add(wp);
-                Save();
-            }
-
-            public static void Update(string waypoint, Player p) {
-                WP wp = Find(waypoint, p);
-                p.Waypoints.Remove(wp);
-                {
-                    wp.x = p.pos[0];
-                    wp.y = p.pos[1];
-                    wp.z = p.pos[2];
-                    wp.rotx = p.rot[0];
-                    wp.roty = p.rot[1];
-                    wp.name = waypoint;
-                    wp.lvlname = p.level.name;
-                }
-                p.Waypoints.Add(wp);
-                Save();
-            }
-
-            public static void Remove(string waypoint, Player p) {
-                WP wp = Find(waypoint, p);
-                p.Waypoints.Remove(wp);
-                Save();
-            }
-
-            public static bool Exists(string waypoint, Player p) {
-                bool exists = false;
-                foreach ( WP wp in p.Waypoints ) {
-                    if ( wp.name.ToLower() == waypoint.ToLower() ) {
-                        exists = true;
-                    }
-                }
-                return exists;
-            }
-
-            public static void Load(Player p) {
-                if ( File.Exists("extra/Waypoints/" + p.name + ".save") ) {
-                    using ( StreamReader SR = new StreamReader("extra/Waypoints/" + p.name + ".save") ) {
-                        bool failed = false;
-                        string line;
-                        while ( SR.EndOfStream == false ) {
-                            line = SR.ReadLine().ToLower().Trim();
-                            if ( !line.StartsWith("#") && line.Contains(":") ) {
-                                failed = false;
-                                string[] LINE = line.ToLower().Split(':');
-                                WP wp = new WP();
-                                try {
-                                    wp.name = LINE[0];
-                                    wp.lvlname = LINE[1];
-                                    wp.x = ushort.Parse(LINE[2]);
-                                    wp.y = ushort.Parse(LINE[3]);
-                                    wp.z = ushort.Parse(LINE[4]);
-                                    wp.rotx = byte.Parse(LINE[5]);
-                                    wp.roty = byte.Parse(LINE[6]);
-                                }
-                                catch {
-                                    Server.s.Log("Couldn't load a Waypoint!");
-                                    failed = true;
-                                }
-                                if ( failed == false ) {
-                                    p.Waypoints.Add(wp);
-                                }
-                            }
-                        }
-                        SR.Dispose();
-                    }
-                }
-            }
-
-            public static void Save() {
-                foreach ( Player p in Player.players ) {
-                    if ( p.Waypoints.Count >= 1 ) {
-                        using ( StreamWriter SW = new StreamWriter("extra/Waypoints/" + p.name + ".save") ) {
-                            foreach ( WP wp in p.Waypoints ) {
-                                SW.WriteLine(wp.name + ":" + wp.lvlname + ":" + wp.x + ":" + wp.y + ":" + wp.z + ":" + wp.rotx + ":" + wp.roty);
-                            }
-                            SW.Dispose();
-                        }
-                    }
-                }
-            }
-        }
         public bool EnoughMoney(int amount) {
             if (this.money >= amount)
                 return true;
