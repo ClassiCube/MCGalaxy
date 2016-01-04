@@ -101,190 +101,169 @@ namespace MCGalaxy {
             p.UndoBuffer.Add(Pos);
         }
 
-        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0)
-        {
+        bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte type) {
+            if (!p.PlayingTntWars) return true;
+            if (!(type == Block.tnt || type == Block.bigtnt || type == Block.nuketnt || type == Block.smalltnt))
+                return true;
+            
+            TntWarsGame game = TntWarsGame.GetTntWarsGame(p);
+            if (game.InZone(x, y, z, true))
+                return false;
+            
+            if (p.CurrentAmountOfTnt == game.TntPerPlayerAtATime) {
+                Player.SendMessage(p, "TNT Wars: Maximum amount of TNT placed"); return false;
+            }
+            if (p.CurrentAmountOfTnt > game.TntPerPlayerAtATime) {
+                Player.SendMessage(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!"); return false;
+            }
+            p.TntAtATime();
+            type = Block.smalltnt;
+            return true;
+        }
+        
+        bool CheckZones(Player p, ushort x, ushort y, ushort z, byte b, ref bool AllowBuild, ref bool inZone, ref string Owners) {
+            bool foundDel = false;
+            if ((p.group.Permission < LevelPermission.Admin || p.ZoneCheck || p.zoneDel) && !Block.AllowBreak(b))
+            {
+                List<Zone> toDel = null;
+                if (ZoneList.Count == 0)
+                    AllowBuild = true;
+                else
+                {
+                    for (int index = 0; index < ZoneList.Count; index++)
+                    {
+                        Zone zn = ZoneList[index];
+                        if (x < zn.smallX || x > zn.bigX || y < zn.smallY || y > zn.bigY || z < zn.smallZ || z > zn.bigZ)
+                            continue;
+                        inZone = true;
+                        if (p.zoneDel) {
+                            if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
+                                string grpName = zn.Owner.Substring(3);
+                                if (p.group.Permission < Group.Find(grpName).Permission)
+                                    continue;
+                        	} else if (zn.Owner != "" && (zn.Owner.ToLower() != p.name.ToLower())) {
+                        		Group group = Group.findPlayerGroup(zn.Owner.ToLower());
+                        		if (p.group.Permission < group.Permission)
+                        			continue;
+                        	}
+                                
+                            Database.executeQuery("DELETE FROM `Zone" + p.level.name + "` WHERE Owner='" +
+                                                  zn.Owner + "' AND SmallX='" + zn.smallX + "' AND SMALLY='" +
+                                                  zn.smallY + "' AND SMALLZ='" + zn.smallZ + "' AND BIGX='" +
+                                                  zn.bigX + "' AND BIGY='" + zn.bigY + "' AND BIGZ='" + zn.bigZ +  "'");
+                            if (toDel == null) toDel = new List<Zone>();
+                            toDel.Add(zn);
+
+                            Player.SendMessage(p, "Zone deleted for &b" + zn.Owner);
+                            foundDel = true;
+                        } else {
+                            if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
+                                string grpName = zn.Owner.Substring(3);
+                                if (Group.Find(grpName).Permission <= p.group.Permission && !p.ZoneCheck) {
+                                    AllowBuild = true; break;
+                                }
+                                AllowBuild = false;
+                                Owners += ", " + grpName;
+                            } else {
+                                if (zn.Owner.ToLower() == p.name.ToLower() && !p.ZoneCheck) {
+                                    AllowBuild = true; break;
+                                }
+                                AllowBuild = false;
+                                Owners += ", " + zn.Owner;
+                            }
+                        }
+                    }
+                }
+
+                if (p.zoneDel) {
+                    if (!foundDel) {
+                        Player.SendMessage(p, "No zones found to delete.");
+                    } else {
+                        foreach (Zone Zn in toDel)
+                            ZoneList.Remove(Zn);
+                    }
+                    p.zoneDel = false;
+                    return false;
+                }
+
+                if (!AllowBuild || p.ZoneCheck) {
+                    if (p.ZoneCheck || p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
+                        if (Owners != "")
+                            Player.SendMessage(p, "This zone belongs to &b" + Owners.Remove(0, 2) + ".");
+                        else
+                            Player.SendMessage(p, "This zone belongs to no one.");
+                        p.ZoneSpam = DateTime.UtcNow;
+                    }
+                    if (p.ZoneCheck && !p.staticCommands)
+                        p.ZoneCheck = false;
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        bool CheckRank(Player p, ushort x, ushort y, ushort z, bool AllowBuild, bool inZone) {
+            if (p.group.Permission < permissionbuild && (!inZone || !AllowBuild)) {
+                if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
+                    Player.SendMessage(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
+                    p.ZoneSpam = DateTime.UtcNow;
+                }
+                return false;
+            }
+            
+            if (p.group.Permission > perbuildmax && (!inZone || !AllowBuild) &&
+                !p.group.CanExecute(Command.all.Find("perbuildmax"))) {
+                if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
+                    Player.SendMessage(p, "Your rank must be " + perbuildmax + " or lower to build here!");
+                    p.ZoneSpam = DateTime.UtcNow;
+                }
+                return false;
+            }
+            return true;
+        }
+        
+        public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, byte b, byte type, byte extType = 0) {
+            if (!Block.AllowBreak(b) && !Block.canPlace(p, b) && !Block.BuildIn(b)) {
+                return false;
+            }
+            if (!CheckTNTWarsChange(p, x, y, z, ref type))
+                return false;
+            
+            string Owners = "";
+            bool AllowBuild = true, inZone = false;
+            if (!CheckZones(p, x, y, z, b, ref AllowBuild, ref inZone, ref Owners))
+                return false;
+            if (Owners == "" && !CheckRank(p, x, y, z, AllowBuild, inZone))
+                return false;
+            return true;
+        }
+        
+        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
             string errorLocation = "start";
         retry:
             try
             {
                 if (x < 0 || y < 0 || z < 0) return;
                 if (x >= Width || y >= Height || z >= Length) return;
-
                 byte b = GetTile(x, y, z);
 
-                errorLocation = "Block rank checking";
-                if (!Block.AllowBreak(b))
-                {
-                    if (!Block.canPlace(p, b) && !Block.BuildIn(b))
-                    {
-                        p.RevertBlock(x, y, z); return;
-                    }
-                }
-                errorLocation = "Allowed to place tnt there (TNT Wars)";
-                if (type == Block.tnt || type == Block.smalltnt || type == Block.bigtnt || type == Block.nuketnt)
-                {
-                    if (p.PlayingTntWars)
-                    {
-                        if (TntWarsGame.GetTntWarsGame(p).InZone(x, y, z, true))
-                        {
-                            p.RevertBlock(x, y, z); return;
-                        }
-                    }
-                }
-                errorLocation = "Max tnt for TNT Wars checking";
-                if (type == Block.tnt || type == Block.smalltnt || type == Block.bigtnt || type == Block.nuketnt)
-                {
-                    if (p.PlayingTntWars)
-                    {
-                        if (p.CurrentAmountOfTnt == TntWarsGame.GetTntWarsGame(p).TntPerPlayerAtATime)
-                        {
-                            Player.SendMessage(p, "TNT Wars: Maximum amount of TNT placed");
-                            p.RevertBlock(x, y, z); return;
-                        }
-                        if (p.CurrentAmountOfTnt > TntWarsGame.GetTntWarsGame(p).TntPerPlayerAtATime)
-                        {
-                            Player.SendMessage(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!");
-                            p.RevertBlock(x, y, z); return;
-                        }
-                        else
-                        {
-                            p.TntAtATime();
-                        }
-                    }
-                }
-
-                errorLocation = "TNT Wars switch TNT block to smalltnt";
-                if ((type == Block.tnt || type == Block.bigtnt || type == Block.nuketnt || type == Block.smalltnt) && p.PlayingTntWars)
-                {
-                    type = Block.smalltnt;
-                }
-
-                errorLocation = "Zone checking";
-
-                #region zones
-
-                bool AllowBuild = true, foundDel = false, inZone = false;
-                string Owners = "";
-                var toDel = new List<Zone>();
-                if ((p.group.Permission < LevelPermission.Admin || p.ZoneCheck || p.zoneDel) && !Block.AllowBreak(b))
-                {
-                    if (ZoneList.Count == 0) AllowBuild = true;
-                    else
-                    {
-                        for (int index = 0; index < ZoneList.Count; index++)
-                        {
-                            Zone Zn = ZoneList[index];
-                            if (Zn.smallX <= x && x <= Zn.bigX && Zn.smallY <= y && y <= Zn.bigY && Zn.smallZ <= z &&
-                                z <= Zn.bigZ)
-                            {
-                                inZone = true;
-                                if (p.zoneDel)
-                                {
-                                    //DB
-                                    Database.executeQuery("DELETE FROM `Zone" + p.level.name + "` WHERE Owner='" +
-                                                          Zn.Owner + "' AND SmallX='" + Zn.smallX + "' AND SMALLY='" +
-                                                          Zn.smallY + "' AND SMALLZ='" + Zn.smallZ + "' AND BIGX='" +
-                                                          Zn.bigX + "' AND BIGY='" + Zn.bigY + "' AND BIGZ='" + Zn.bigZ +
-                                                          "'");
-                                    toDel.Add(Zn);
-
-                                    p.RevertBlock(x, y, z);
-                                    Player.SendMessage(p, "Zone deleted for &b" + Zn.Owner);
-                                    foundDel = true;
-                                }
-                                else
-                                {
-                                    if (Zn.Owner.Substring(0, 3) == "grp")
-                                    {
-                                        if (Group.Find(Zn.Owner.Substring(3)).Permission <= p.group.Permission &&
-                                            !p.ZoneCheck)
-                                        {
-                                            AllowBuild = true;
-                                            break;
-                                        }
-                                        AllowBuild = false;
-                                        Owners += ", " + Zn.Owner.Substring(3);
-                                    }
-                                    else
-                                    {
-                                        if (Zn.Owner.ToLower() == p.name.ToLower() && !p.ZoneCheck)
-                                        {
-                                            AllowBuild = true;
-                                            break;
-                                        }
-                                        AllowBuild = false;
-                                        Owners += ", " + Zn.Owner;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (p.zoneDel)
-                    {
-                        if (!foundDel) Player.SendMessage(p, "No zones found to delete.");
-                        else
-                        {
-                            foreach (Zone Zn in toDel)
-                            {
-                                ZoneList.Remove(Zn);
-                            }
-                        }
-                        p.zoneDel = false;
-                        return;
-                    }
-
-                    if (!AllowBuild || p.ZoneCheck)
-                    {
-                        if (Owners != "") Player.SendMessage(p, "This zone belongs to &b" + Owners.Remove(0, 2) + ".");
-                        else Player.SendMessage(p, "This zone belongs to no one.");
-
-                        p.ZoneSpam = DateTime.Now;
-                        p.SendBlockchange(x, y, z, b);
-
-                        if (p.ZoneCheck) if (!p.staticCommands) p.ZoneCheck = false;
-                        return;
-                    }
-                }
-
-                #endregion
-
-                errorLocation = "Map rank checking";
-                if (Owners == "")
-                {
-                    if (p.group.Permission < permissionbuild && (!inZone || !AllowBuild))
-                    {
-                        Player.SendMessage(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
-                        p.RevertBlock(x, y, z); return;
-                    }
-                }
-
-                errorLocation = "Map Max Rank Checking";
-                if (Owners == "")
-                {
-                    if (p.group.Permission > perbuildmax && (!inZone || !AllowBuild))
-                    {
-                        if (!p.group.CanExecute(Command.all.Find("perbuildmax")))
-                        {
-                            Player.SendMessage(p, "Your rank must be " + perbuildmax + " or lower to build here!");
-                            p.RevertBlock(x, y, z); return;
-                        }
-                    }
+                errorLocation = "Permission checking";
+                if (!CheckAffectPermissions(p, x, y, z, b, type, extType)) {
+                    p.RevertBlock(x, y, z); return;
                 }
 
                 errorLocation = "Block sending";
                 if (Block.Convert(b) != Block.Convert(type) && !Instant)
                     Player.GlobalBlockchange(this, x, y, z, type);
 
-                if (b == Block.sponge && physics > 0 && type != Block.sponge) PhysSpongeRemoved(PosToInt(x, y, z));
+                if (b == Block.sponge && physics > 0 && type != Block.sponge)
+                    PhysSpongeRemoved(PosToInt(x, y, z));
                 if (b == Block.lava_sponge && physics > 0 && type != Block.lava_sponge)
                     PhysSpongeRemoved(PosToInt(x, y, z), true);
 
                 errorLocation = "Undo buffer filling";
                 Player.UndoPos Pos;
-                Pos.x = x;
-                Pos.y = y;
-                Pos.z = z;
+                Pos.x = x; Pos.y = y; Pos.z = z;
                 Pos.mapName = name;
                 Pos.type = b;
                 Pos.newtype = type;
@@ -297,8 +276,7 @@ namespace MCGalaxy {
                 SetTile(x, y, z, type); //Updates server level blocks
 
                 errorLocation = "Growing grass";
-                if (GetTile(x, (ushort)(y - 1), z) == Block.grass && GrassDestroy && !Block.LightPass(type))
-                {
+                if (GetTile(x, (ushort)(y - 1), z) == Block.grass && GrassDestroy && !Block.LightPass(type)) {
                     Blockchange(p, x, (ushort)(y - 1), z, Block.dirt);
                 }
 
@@ -308,15 +286,11 @@ namespace MCGalaxy {
 
                 changed = true;
                 backedup = false;
-            }
-            catch (OutOfMemoryException)
-            {
+            } catch (OutOfMemoryException) {
                 Player.SendMessage(p, "Undo buffer too big! Cleared!");
                 p.UndoBuffer.Clear();
                 goto retry;
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Server.ErrorLog(e);
                 Chat.GlobalMessageOps(p.name + " triggered a non-fatal error on " + name);
                 Chat.GlobalMessageOps("Error location: " + errorLocation);

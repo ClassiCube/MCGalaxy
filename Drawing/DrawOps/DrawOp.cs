@@ -73,6 +73,9 @@ namespace MCGalaxy {
                     p.level.Blockchange(p, x, y, z, type);
                     break;
                 case MethodSetTile:
+                    byte old = lvl.GetTile(x, y, z);
+                    if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
+                    	return;
                     p.level.SetTile(x, y, z, type, p);
                     break;
             }

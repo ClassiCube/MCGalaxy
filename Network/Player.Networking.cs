@@ -203,7 +203,6 @@ namespace MCGalaxy {
         }
         
         public void SendMessage(byte id, string message, bool colorParse = true) {
-            if ( ZoneSpam.AddSeconds(2) > DateTime.Now && message.Contains("This zone belongs to ") ) return;
             if (colorParse)
             	message = Chat.EscapeColours(message);
             StringBuilder sb = new StringBuilder(message);
