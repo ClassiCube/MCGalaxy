@@ -73,7 +73,6 @@ namespace MCGalaxy
         public static WebServer APIServer;
         public static WebServer InfoServer;
 
-        public static List<BlockDefinitions> GlobalDefinitions = new List<BlockDefinitions>();
         public static int speedPhysics = 250;
 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
@@ -274,9 +273,6 @@ namespace MCGalaxy
         public static LevelPermission verifyadminsrank = LevelPermission.Operator;
 
         public static bool restartOnError = true;
-
-        public static bool antiTunnel = true;
-        public static byte maxDepth = 4;
         public static int Overload = 1500;
         public static int rpLimit = 500;
         public static int rpNormLimit = 10000;
@@ -369,11 +365,7 @@ namespace MCGalaxy
         public static bool hackrank_kick = true;
         public static int hackrank_kick_time = 5; //seconds, it converts it to milliseconds in the command.
 
-        // lol useless junk here lolololasdf poop
         public static bool showEmptyRanks = false;
-        public static byte grieferStoneType = 1;
-        public static bool grieferStoneBan = true;
-        public static LevelPermission grieferStoneRank = LevelPermission.Guest;
 
         //reviewoptions intitialize
         public static int reviewcooldown = 600;
@@ -1077,7 +1069,7 @@ namespace MCGalaxy
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Alias.Load();
-            Server.GlobalDefinitions = BlockDefinitionsJSON.Load("blocks.json");
+            BlockDefinition.LoadGlobal("blocks.json");
         }
 
         public static void Setup()

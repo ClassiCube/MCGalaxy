@@ -465,7 +465,6 @@
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Levels\Block.cs" />
     <Compile Include="Levels\BlockDefinitions.cs" />
-    <Compile Include="Levels\BlockDefinitionsJSON.cs" />
     <Compile Include="API\ChatMessage.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">
       <SubType>Component</SubType>

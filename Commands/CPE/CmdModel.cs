@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
 
             foreach (Player pl in Player.players)
             {
-                if (pl.level == targetPlayer.level && pl.HasExtension("ChangeModel"))
+                if (pl.level == targetPlayer.level && pl.HasExtension(CpeExt.ChangeModel))
                 {
                     pl.SendChangeModel(targetPlayer.id, message);
                 }

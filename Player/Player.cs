@@ -258,7 +258,7 @@ namespace MCGalaxy {
         //Games
         public DateTime lastDeath = DateTime.Now;
 
-        public byte BlockAction; //0-Nothing 1-solid 2-lava 3-water 4-active_lava 5 Active_water 6 OpGlass 7 BluePort 8 OrangePort
+        public byte BlockAction;
         public byte modeType;
         public byte[] bindings = new byte[128];
         public string[] cmdBind = new string[10];
@@ -1098,7 +1098,7 @@ namespace MCGalaxy {
                         {
                             SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                         }
-                        if (HasExtension("ChangeModel"))
+                        if (HasExtension(CpeExt.ChangeModel))
                         {
                             SendChangeModel(p.id, p.model);
                         }
@@ -1137,6 +1137,16 @@ namespace MCGalaxy {
                 ushort z = NetUtils.ReadU16(message, 4);
                 byte action = message[6];
                 byte type = message[7];
+                byte extType = type;
+                
+                if (type > 65) {
+                	if (!HasExtension(CpeExt.BlockDefinitions) 
+                	    || BlockDefinition.GlobalDefinitions[type] == null) {
+                		Kick("Unknown block type!"); return;
+                	}
+                	extType = type;
+                	type = Block.block_definitions;
+                }
 
                 if ( action == 1 && Server.ZombieModeOn && Server.noPillaring ) {
                     if ( !referee ) {
@@ -1154,7 +1164,7 @@ namespace MCGalaxy {
                 	}
                 }
                 lastYblock = y; lastXblock = x; lastZblock = z;
-                ManualChange(x, y, z, action, type);
+                ManualChange(x, y, z, action, type, extType);
             } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
                 Chat.GlobalMessageOps(DisplayName + " has triggered a block change error");
@@ -1164,14 +1174,6 @@ namespace MCGalaxy {
         }
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
-             //if (!(!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null) && HasExtension("BlockDefinitions")))
-            //  {
-                 if (type > 65)
-                 {
-                    Kick("Unknown block type!");
-                    return;
-                  }
-            //  }
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
             if ( jailed || !agreed ) { RevertBlock(x, y, z); return; }
@@ -1223,10 +1225,7 @@ namespace MCGalaxy {
             bP.type = type;
             bP.extType = extType;
 
-            lastClick[0] = x;
-            lastClick[1] = y;
-            lastClick[2] = z;
-            //bool test2 = false;
+            lastClick[0] = x; lastClick[1] = y; lastClick[2] = z;
             if ( Blockchange != null ) {
                 if ( Blockchange.Method.ToString().IndexOf("AboutBlockchange") == -1 && !level.name.Contains("Museum " + Server.DefaultColor) ) {
                     bP.deleted = true;
@@ -1246,67 +1245,35 @@ namespace MCGalaxy {
 
             if ( group.Permission == LevelPermission.Banned ) return;
             if ( group.Permission == LevelPermission.Guest ) {
-                int Diff = 0;
+                int Diff = Math.Abs((pos[0] / 32) - x) + Math.Abs((pos[1] / 32) - y) 
+                	+ Math.Abs((pos[2] / 32) - z);
 
-                Diff = Math.Abs((int)( pos[0] / 32 ) - x);
-                Diff += Math.Abs((int)( pos[1] / 32 ) - y);
-                Diff += Math.Abs((int)( pos[2] / 32 ) - z);
-
-                if ( Diff > ReachDistance + 4 ) {
-                    if ( lastCMD != "click" ) {
-                        Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
-                        SendMessage("You can't build that far away.");
-                        RevertBlock(x, y, z); return;
-                    }
-                }
-
-                if ( Server.antiTunnel ) {
-                    if ( !ignoreGrief && !PlayingTntWars ) {
-                        if ( y < level.Height / 2 - Server.maxDepth ) {
-                            SendMessage("You're not allowed to build this far down!");
-                            RevertBlock(x, y, z); return;
-                        }
-                    }
+                if ((Diff > ReachDistance + 4) && lastCMD != "click") {
+                	Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
+                	SendMessage("You can't build that far away.");
+                	RevertBlock(x, y, z); return;
                 }
             }
 
-            if ( b == Block.griefer_stone && group.Permission <= Server.grieferStoneRank && !isDev && !isMod) {
-                if ( grieferStoneWarn < 1 )
-                    SendMessage("Do not grief! This is your first warning!");
-                else if ( grieferStoneWarn < 2 )
-                    SendMessage("Do NOT grief! Next time you will be " + ( Server.grieferStoneBan ? "banned for 30 minutes" : "kicked" ) + "!");
-                else {
-                    if ( Server.grieferStoneBan )
-                        try { Command.all.Find("tempban").Use(null, name + " 30"); }
-                        catch ( Exception ex ) { Server.ErrorLog(ex); }
-                    else
-                        Kick(Server.customGrieferStone ? Server.customGrieferStoneMessage : "Oh noes! You were caught griefing!");
-                    return;
-                }
-                grieferStoneWarn++;
-                RevertBlock(x, y, z); return;
-            }
-
-            if ( !Block.canPlace(this, b) && !Block.BuildIn(b) && !Block.AllowBreak(b) ) {
+            if (!Block.canPlace(this, b) && !Block.BuildIn(b) && !Block.AllowBreak(b)) {
                 SendMessage("Cannot build here!");
                 RevertBlock(x, y, z); return;
             }
 
-            if ( !Block.canPlace(this, type) ) {
+            if (!Block.canPlace(this, type)) {
                 SendMessage("You can't place this block type!");
                 RevertBlock(x, y, z); return;
             }
 
-            if ( b >= 200 && b < 220 ) {
+            if (b >= 200 && b < 220) {
                 SendMessage("Block is active, you cant disturb it!");
                 RevertBlock(x, y, z); return;
             }
 
-            if ( action > 1 ) { Kick("Unknown block action!"); }
+            if (action > 1 ) { Kick("Unknown block action!"); return; }
             byte oldType = type;
-            //Block Definitions
-            if (type < 128)
-                type = bindings[type];
+            if (type < 128) type = bindings[type];
+            
             //Ignores updating blocks that are the same and send block only to the player
             if ( b == (byte)( ( painting || action == 1 ) ? type : (byte)0 ) ) {
                 if ( painting || oldType != type ) { SendBlockchange(x, y, z, b); } return;
@@ -1320,12 +1287,11 @@ namespace MCGalaxy {
 
                 bP.deleted = true;
                 level.blockCache.Add(bP);
-                deleteBlock(b, type, x, y, z);
-            }
-            else {
+                DeleteBlock(b, x, y, z, type, extType);
+            } else {
                 bP.deleted = false;
                 level.blockCache.Add(bP);
-                placeBlock(b, type, x, y, z);
+                PlaceBlock(b, x, y, z, type, extType);
             }
         }
 
@@ -1383,8 +1349,7 @@ namespace MCGalaxy {
                         prevMsg = message;
                     }
                     SendBlockchange(x, y, z, b);
-                }
-                else {
+                } else {
                     Blockchange(this, x, y, z, (byte)0);
                 }
                 Messages.Dispose();
@@ -1392,10 +1357,7 @@ namespace MCGalaxy {
             catch { Player.SendMessage(p, "No message was stored."); return; }
         }
 
-        private void deleteBlock(byte b, byte type, ushort x, ushort y, ushort z) {
-            Random rand = new Random();
-            int mx, mz;
-
+        private void DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if ( deleteMode && b != Block.c4det ) { level.Blockchange(this, x, y, z, Block.air); return; }
 
             if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return; }
@@ -1473,7 +1435,8 @@ namespace MCGalaxy {
                     	RevertBlock(x, y, z); return;
                     }
                     if ( level.physics != 0 ) {
-                        mx = rand.Next(0, 2); mz = rand.Next(0, 2);
+                    	Random rand = new Random();
+                        int mx = rand.Next(0, 2); int mz = rand.Next(0, 2);
                         byte b1 = level.GetTile((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 ));
                         byte b2 = level.GetTile((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 ));
                         if ( b1 == Block.air && b2 == Block.air && level.CheckClear((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 )) && level.CheckClear((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 )) ) {
@@ -1497,7 +1460,7 @@ namespace MCGalaxy {
             	level.Blockchange(this, x, (ushort)( y - 1 ), z, Block.grass);
         }
 
-        public void placeBlock(byte b, byte type, ushort x, ushort y, ushort z) {
+        public void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if ( Block.odoor(b) != Block.Zero ) { SendMessage("oDoor here!"); return; }
             switch ( BlockAction ) {
                 case 0: //normal
@@ -1515,15 +1478,14 @@ namespace MCGalaxy {
                                     break;
                                 }
                                 //else
-                                level.Blockchange(this, x, y, z, type);
+                                level.Blockchange(this, x, y, z, type, extType);
                                 break;
                             default:
-                                level.Blockchange(this, x, y, z, type);
+                                level.Blockchange(this, x, y, z, type, extType);
                                 break;
                         }
-                    }
-                    else {
-                        level.Blockchange(this, x, y, z, type);
+                    } else {
+                        level.Blockchange(this, x, y, z, type, extType);
                     }
                     break;
                 case 6:
@@ -1823,7 +1785,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     return;
                 }
                 
-                if( HasExtension( "LongerMessages" ) && continued != 0 ) {
+                if( HasExtension(CpeExt.LongerMessages) && continued != 0 ) {
                 	storedMessage += text;
                 	return;
                 }

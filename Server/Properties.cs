@@ -176,17 +176,6 @@ namespace MCGalaxy {
 							case "irc-password":
 								Server.ircPassword = value;
 								break;
-							case "anti-tunnels":
-								Server.antiTunnel = ( value.ToLower() == "true" ) ? true : false;
-								break;
-							case "max-depth":
-								try {
-									Server.maxDepth = Convert.ToByte(value);
-								}
-								catch {
-									Server.s.Log("maxDepth invalid! setting to default.");
-								}
-								break;
 
 							case "rplimit":
 								try { Server.rpLimit = Convert.ToInt16(value); }
@@ -570,25 +559,6 @@ namespace MCGalaxy {
 								catch { Server.s.Log("Invalid " + key + ". Using default"); }
 								break;
 
-							case "griefer-stone-tempban":
-								try { Server.grieferStoneBan = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-
-							case "griefer-stone-type":
-								try { Server.grieferStoneType = (byte)MathHelper.Clamp((decimal)Block.Byte(value), 1, 49); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "griefer-stone-rank":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.grieferStoneRank = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
 							case "review-view-perm":
 								try {
 									sbyte parsed = sbyte.Parse(value);
@@ -817,8 +787,6 @@ namespace MCGalaxy {
 			w.WriteLine("irc-password = " + Server.ircPassword);
 			w.WriteLine();
 			w.WriteLine("# other options");
-			w.WriteLine("anti-tunnels = " + Server.antiTunnel.ToString().ToLower());
-			w.WriteLine("max-depth = " + Server.maxDepth.ToString().ToLower());
 			w.WriteLine("rplimit = " + Server.rpLimit.ToString().ToLower());
 			w.WriteLine("rplimit-norm = " + Server.rpNormLimit.ToString().ToLower());
 			w.WriteLine("physicsrestart = " + Server.physicsRestart.ToString().ToLower());
@@ -917,12 +885,6 @@ namespace MCGalaxy {
 			w.WriteLine("#Global Chat Settings");
 			w.WriteLine("global-chat-enabled = " + Server.UseGlobalChat.ToString().ToLower());
 			w.WriteLine("global-chat-color = " + Server.GlobalChatColor);
-			w.WriteLine();
-			w.WriteLine("#Griefer_stone Settings");
-			w.WriteLine("griefer-stone-tempban = " + Server.grieferStoneBan.ToString().ToLower());
-			w.WriteLine("griefer-stone-type = " + Block.Name(Server.grieferStoneType));
-			w.WriteLine("griefer-stone-rank = " + ( (sbyte)Server.grieferStoneRank ).ToString());
-			w.WriteLine();
 			w.WriteLine();
 			w.WriteLine("#Review settings");
 			w.WriteLine("review-view-perm = " + ( (sbyte)Server.reviewview ).ToString());

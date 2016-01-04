@@ -235,8 +235,6 @@ namespace MCGalaxy.Commands
 
             Server.restartOnError = true;
 
-            Server.antiTunnel = true;
-            Server.maxDepth = 4;
             Server.Overload = 1500;
             Server.rpLimit = 500;
             Server.rpNormLimit = 10000;
@@ -313,11 +311,7 @@ namespace MCGalaxy.Commands
             Server.hackrank_kick = true;
             Server.hackrank_kick_time = 5; //seconds, it converts it to milliseconds in the command.
 
-            // lol useless junk here lolololasdf poop
             Server.showEmptyRanks = false;
-            Server.grieferStoneType = 1;
-            Server.grieferStoneBan = true;
-            Server.grieferStoneRank = LevelPermission.Guest;
 
             //WOM Direct
             Server.WomDirect = false;

@@ -40,7 +40,7 @@ namespace MCGalaxy {
             return GetTile(x, y, z);
         }
         
-        public byte GetCustomTile(ushort x, ushort y, ushort z) {
+        public byte GetExtTile(ushort x, ushort y, ushort z) {
             int index = PosToInt(x, y, z);
             if (index < 0 || blocks == null) return Block.Zero;
             
@@ -61,10 +61,13 @@ namespace MCGalaxy {
             blocks[b] = type;
         }
         
-        public void SetCustomTile(ushort x, ushort y, ushort z, byte type) {
+        public void SetExtTile(ushort x, ushort y, ushort z, byte type) {
             int index = PosToInt(x, y, z);
             if (index < 0 || blocks == null) return;
-            
+            SetExtTileNoCheck(x, y, z, type);
+        }
+        
+        public void SetExtTileNoCheck(ushort x, ushort y, ushort z, byte type) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;
             byte[] chunk = CustomBlocks[cIndex];
@@ -81,8 +84,10 @@ namespace MCGalaxy {
             
             byte oldType = blocks[b];
             blocks[b] = type;
+            SetExtTileNoCheck(x, y, z, extType);
             if (p == null)
-                return;
+                return;    
+            
             Level.BlockPos bP;
             bP.name = p.name;
             bP.TimePerformed = DateTime.Now;
@@ -141,11 +146,11 @@ namespace MCGalaxy {
                                 string grpName = zn.Owner.Substring(3);
                                 if (p.group.Permission < Group.Find(grpName).Permission)
                                     continue;
-                        	} else if (zn.Owner != "" && (zn.Owner.ToLower() != p.name.ToLower())) {
-                        		Group group = Group.findPlayerGroup(zn.Owner.ToLower());
-                        		if (p.group.Permission < group.Permission)
-                        			continue;
-                        	}
+                            } else if (zn.Owner != "" && (zn.Owner.ToLower() != p.name.ToLower())) {
+                                Group group = Group.findPlayerGroup(zn.Owner.ToLower());
+                                if (p.group.Permission < group.Permission)
+                                    continue;
+                            }
                                 
                             Database.executeQuery("DELETE FROM `Zone" + p.level.name + "` WHERE Owner='" +
                                                   zn.Owner + "' AND SmallX='" + zn.smallX + "' AND SMALLY='" +
@@ -252,10 +257,6 @@ namespace MCGalaxy {
                     p.RevertBlock(x, y, z); return;
                 }
 
-                errorLocation = "Block sending";
-                if (Block.Convert(b) != Block.Convert(type) && !Instant)
-                    Player.GlobalBlockchange(this, x, y, z, type);
-
                 if (b == Block.sponge && physics > 0 && type != Block.sponge)
                     PhysSpongeRemoved(PosToInt(x, y, z));
                 if (b == Block.lava_sponge && physics > 0 && type != Block.lava_sponge)
@@ -273,7 +274,13 @@ namespace MCGalaxy {
                 errorLocation = "Setting tile";
                 p.loginBlocks++;
                 p.overallBlocks++;
-                SetTile(x, y, z, type); //Updates server level blocks
+                SetTile(x, y, z, type);
+                if (type == Block.block_definitions)
+                    SetExtTileNoCheck(x, y, z, extType);
+                
+                errorLocation = "Block sending";
+                if (Block.Convert(b) != Block.Convert(type) && !Instant)
+                    Player.GlobalBlockchange(this, x, y, z, type);
 
                 errorLocation = "Growing grass";
                 if (GetTile(x, (ushort)(y - 1), z) == Block.grass && GrassDestroy && !Block.LightPass(type)) {

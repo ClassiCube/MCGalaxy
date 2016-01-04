@@ -241,14 +241,14 @@ namespace MCGalaxy {
                 foreach ( string line in Wordwrap(message) ) {
                     string newLine = line;
                     if ( newLine.TrimEnd(' ')[newLine.TrimEnd(' ').Length - 1] < '!' ) {
-                        if (!HasExtension("EmoteFix"))
+                        if (!HasExtension(CpeExt.EmoteFix))
                             newLine += '\'';
                     }
                     
                     byte[] buffer = new byte[66];
                     buffer[0] = Opcode.Message;
                     buffer[1] = id;
-                    if(HasExtension("FullCP437"))
+                    if(HasExtension(CpeExt.FullCP437))
                     	NetUtils.WriteCP437(newLine, buffer, 2);
                     else
                         NetUtils.WriteAscii(newLine, buffer, 2);
@@ -317,6 +317,8 @@ namespace MCGalaxy {
         public bool SendRawMap(Level level) {
             if ( level.blocks == null ) return false;
             bool success = true;
+            bool hasBlockDefinitions = HasExtension(CpeExt.BlockDefinitions);
+            
             try { 
                 byte[] buffer = new byte[level.blocks.Length + 4];
                 NetUtils.WriteI32(level.blocks.Length, buffer, 0);
@@ -324,8 +326,9 @@ namespace MCGalaxy {
                 	for (int i = 0; i < level.blocks.Length; ++i)
                 		buffer[i + 4] = (byte)Block.Convert(level.blocks[i]);
                 } else {
-                	for (int i = 0; i < level.blocks.Length; ++i)
+                	for (int i = 0; i < level.blocks.Length; ++i) {
                 		buffer[i + 4] = (byte)Block.Convert(Block.ConvertCPE(level.blocks[i]));
+                	}
                 }
                 SendRaw(Opcode.LevelInitialise);
                 buffer = buffer.GZip();
@@ -354,11 +357,11 @@ namespace MCGalaxy {
                 SendRaw(buffer);
                 Loading = false;
                 
-                if (HasExtension("EnvWeatherType"))
+                if (HasExtension(CpeExt.EnvWeatherType))
                     SendSetMapWeather(level.weather);
-                if (HasExtension("EnvColors"))
+                if (HasExtension(CpeExt.EnvColors))
                 	SendCurrentEnvColors();
-                if (HasExtension("EnvMapAppearance"))
+                if (HasExtension(CpeExt.EnvMapAppearance))
                 	SendCurrentMapAppearance();
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
@@ -388,7 +391,7 @@ namespace MCGalaxy {
             buffer[73] = roty;
             SendRaw(buffer);
 
-            if (HasExtension("ChangeModel"))
+            if (HasExtension(CpeExt.ChangeModel))
             	UpdateModels();
         }
         
@@ -428,11 +431,6 @@ namespace MCGalaxy {
         public void SendBlockchange(ushort x, ushort y, ushort z, byte type) {
             if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
-            bool skip = false;
-            if (type == Block.block_definitions) {
-                skip = true;
-                type = level.GetCustomTile(x, y, z);
-            }
 
             byte[] buffer = new byte[8];
             buffer[0] = Opcode.SetBlock;
@@ -440,11 +438,15 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            if (!skip) {
-                if (hasCpe)
-                    buffer[7] = (byte)Block.Convert(type);
-                else
-                    buffer[7] = (byte)Block.Convert(Block.ConvertCPE(type));
+            if (type == Block.block_definitions) {
+            	if (HasExtension(CpeExt.BlockDefinitions))
+            		buffer[7] = level.GetExtTile(x, y, z);
+            	else
+            		buffer[7] = BlockDefinition.Fallback(level.GetExtTile(x, y, z));
+            } else if (hasCpe) {
+            	buffer[7] = (byte)Block.Convert(type);
+            } else {
+            	buffer[7] = (byte)Block.Convert(Block.ConvertCPE(type));
             }
             SendRaw(buffer);
         }
@@ -563,7 +565,7 @@ namespace MCGalaxy {
             SendRaw(Opcode.CpeRemoveSelection, id);
         }
         
-        void SendSetBlockPermission( byte type, byte canplace, byte candelete ) {
+        public void SendSetBlockPermission( byte type, byte canplace, byte candelete ) {
             byte[] buffer = new byte[4];
             buffer[0] = Opcode.CpeSetBlockPermission;
             buffer[1] = type;
@@ -607,7 +609,7 @@ namespace MCGalaxy {
             SendRaw( Opcode.CpeHackControl, buffer );
         }
         
-        public void SendBlockDefinitions(BlockDefinitions bd) {
+        public void SendBlockDefinitions(BlockDefinition bd) {
             byte[] buffer = new byte[79];
             buffer[0] = bd.ID;
             NetUtils.WriteAscii(bd.Name, buffer, 1);

@@ -99,8 +99,6 @@ namespace MCGalaxy.Gui {
                     adminchatperm = grp.name;
                 if ( grp.Permission == Server.verifyadminsrank )
                     verifyadminsperm = grp.name;
-                if ( grp.Permission == Server.grieferStoneRank )
-                    grieferstonerank = grp.name;
                 if ( grp.Permission == Server.afkkickperm )
                     afkkickrank = grp.name;
                 if ( grp.Permission == Server.reviewenter )
@@ -749,8 +747,6 @@ namespace MCGalaxy.Gui {
             Server.ircIdentify = chkIrcId.Checked;
             Server.ircPassword = txtIrcId.Text;
 
-            Server.antiTunnel = ChkTunnels.Checked;
-            Server.maxDepth = byte.Parse(txtDepth.Text);
             Server.rpLimit = int.Parse(txtRP.Text);
             Server.rpNormLimit = int.Parse(txtRP.Text);
             Server.physicsRestart = chkPhysicsRest.Checked;
@@ -847,10 +843,6 @@ namespace MCGalaxy.Gui {
 
             Server.UseGlobalChat = chkGlobalChat.Checked;
             Server.GlobalChatColor = cmbGlobalChatColor.SelectedItem.ToString();
-
-            Server.grieferStoneBan = chkGrieferStoneBan.Checked;
-            Server.grieferStoneType = Block.Byte(cmbGrieferStoneType.SelectedItem.ToString());
-            Server.grieferStoneRank = Group.GroupList.Find(grp => grp.name == cmbGrieferStoneRank.SelectedItem.ToString()).Permission;
 
             Server.WomDirect = chkWomDirect.Checked;
             //Server.Server_ALT = ;

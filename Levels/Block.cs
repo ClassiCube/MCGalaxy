@@ -1802,7 +1802,7 @@ namespace MCGalaxy
                 case op_water: return waterstill;
                 case op_lava: return lavastill;
 
-                case griefer_stone: return Server.grieferStoneType; //Griefer_stone
+                case griefer_stone: return stone; //Griefer_stone
                 case lava_sponge: return sponge;
 
                 case wood_float: return wood; //wood_float

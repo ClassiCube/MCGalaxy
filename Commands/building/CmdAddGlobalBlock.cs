@@ -29,21 +29,14 @@ namespace MCGalaxy.Commands
         public CmdAddGlobalBlock() { }
 
         int step = 0;
-        BlockDefinitions bd;
+        BlockDefinition bd;
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (p == null) {
                 Player.SendMessage(p, "This command can only be used in-game!");
                 return;
             }
-            
-            if (Server.GlobalDefinitions != null && Server.GlobalDefinitions.Count > 10) {
-                Player.SendMessage(p, "You must remove a block before adding more. (Max is 10 global blocks)");
-                return;
-                
-            }
-            
+
             p.ClearChat();
             step = 1;
             p.OnChat += ChatEvent;
@@ -59,16 +52,18 @@ namespace MCGalaxy.Commands
             if (value == "abort") {
                 p.ClearChat();
                 p.SendMessage("Aborted.");
+                bd = null;
                 return;
             }
             if (step == 1) {
                 if (value == "continue") {
                     step++;
                     SendStepHelp(p, step);
-                    bd = new BlockDefinitions();
+                    bd = new BlockDefinition();
                 } else {
                     p.ClearChat();
                     p.SendMessage("Aborted. Use command again");
+                    bd = null;
                 }
                 return;
             }
@@ -137,25 +132,15 @@ namespace MCGalaxy.Commands
                 p.ClearChat();
 
                 byte id = 128;
-                //In case a hazardous plugin modifies this
-                if (Server.GlobalDefinitions != null)
-                    Server.GlobalDefinitions = new List<BlockDefinitions>();
-                
-                //Run 10 times to be secure that IDs don't intersect
-                for (int i = 0; i < 10; i++) {
-                    foreach (BlockDefinitions BD in Server.GlobalDefinitions) {
-                        if (id == BD.ID)
-                            id++;
-                    }
+                for (int i = 128; i < 255; i++) {
+                	if ( BlockDefinition.GlobalDefinitions[i] == null) {
+                		id = (byte)i; break;
+                	}
                 }
                 
                 bd.ID = id;
-                Server.GlobalDefinitions.Add(bd);
-                BlockDefinitionsJSON.Write(Server.GlobalDefinitions, "blocks.json");
-                foreach(Player pl in Player.players) {
-                    if(pl.HasExtension("BlockDefinitions"))
-                        pl.SendBlockDefinitions(bd);
-                }
+                BlockDefinition.AddGlobal(bd);
+                BlockDefinition.SaveGlobal("blocks.json");
                 return;
             }
             SendStepHelp(p, step);
