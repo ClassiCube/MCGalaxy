@@ -54,11 +54,20 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
-        	// TODO: temp block for debugging.
+        	GlobalDefinitions[0] = new BlockDefinition();
+        	GlobalDefinitions[0].Name = "Air fallback";
+        	// TODO: temp blocks for debugging.
             GlobalDefinitions[130] = new BlockDefinition();
             GlobalDefinitions[130].Name = "To infinity and beyond!";
             GlobalDefinitions[130].Shape = 14;
             GlobalDefinitions[130].ID = 130;
+            GlobalDefinitions[130].TopT = 10;
+            
+            GlobalDefinitions[131] = new BlockDefinition();
+            GlobalDefinitions[131].Name = "Blocky!";
+            GlobalDefinitions[131].Shape = 6;
+            GlobalDefinitions[131].ID = 131;
+            GlobalDefinitions[131].SideT = 5;
         }
         
         public static void SaveGlobal(string path)  {
@@ -77,10 +86,9 @@ namespace MCGalaxy {
         }
         
         public static void SendAll(Player pl) {
-            Console.WriteLine( "TESTING: " + pl.HasExtension(CpeExt.BlockDefinitions));
             if (!pl.HasExtension(CpeExt.BlockDefinitions))
                 return;
-            for (int i = 0; i < GlobalDefinitions.Length; i++) {
+            for (int i = 1; i < GlobalDefinitions.Length; i++) {
                 BlockDefinition def = GlobalDefinitions[i];
                 if (def == null) continue;
                 
@@ -90,7 +98,7 @@ namespace MCGalaxy {
         }
         
         public static byte Fallback(byte customTile) {
-            return Block.orange; // TODO: implement this
+            return Block.blue; // TODO: implement this
         }
     }
 }

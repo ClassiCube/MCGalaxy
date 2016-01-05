@@ -525,8 +525,7 @@ namespace MCGalaxy {
                     else
                         return new byte[0];
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Server.ErrorLog(e);
             }
             return buffer;
@@ -582,12 +581,9 @@ namespace MCGalaxy {
                 try
                 {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
-                    if (tBan.allowedJoin < DateTime.Now)
-                    {
+                    if (tBan.allowedJoin < DateTime.Now) {
                         Server.tempBans.Remove(tBan);
-                    }
-                    else if (!isDev && !isMod)
-                    {
+                    } else {
                         Kick("You're still banned (temporary ban)!");
                     }
                 }
@@ -620,26 +616,6 @@ namespace MCGalaxy {
                     }
                     onWhitelist = isDev || isMod;
                     if (!onWhitelist) { Kick("This is a private server!"); return; } //i think someone forgot this?
-                }
-
-                //premium check
-                if (Server.PremiumPlayersOnly && !isDev && !isMod)
-                {
-                    using (WebClient Client = new WebClient())
-                    {
-                        int tries = 0;
-                        while (tries++ < 3)
-                        {
-                            try
-                            {
-                                bool haspaid = Convert.ToBoolean(Client.DownloadString("http://www.minecraft.net/haspaid.jsp?user=" + name));
-                                if (!haspaid)
-                                    Kick("Sorry, this is a premium server only!");
-                                break;
-                            }
-                            catch { }
-                        }
-                    }
                 }
 
                 if (File.Exists("ranks/ignore/" + this.name + ".txt"))
@@ -749,27 +725,28 @@ namespace MCGalaxy {
                 {
                     hasCpe = true;
 
-                    SendExtInfo(14);
-                    SendExtEntry("ClickDistance", 1);
-                    SendExtEntry("CustomBlocks", 1);
-                    SendExtEntry("HeldBlock", 1);
+                    SendExtInfo(16);
+                    SendExtEntry(CpeExt.ClickDistance, 1);
+                    SendExtEntry(CpeExt.CustomBlocks, 1);
+                    SendExtEntry(CpeExt.HeldBlock, 1);
                     
-                    SendExtEntry("TextHotKey", 1);
-                    SendExtEntry("EnvColors", 1);
-                    SendExtEntry("SelectionCuboid", 1);
+                    SendExtEntry(CpeExt.TextHotkey, 1);
+                    SendExtEntry(CpeExt.EnvColors, 1);
+                    SendExtEntry(CpeExt.SelectionCuboid, 1);
                     
-                    SendExtEntry("BlockPermissions", 1);
-                    SendExtEntry("ChangeModel", 1);
-                    SendExtEntry("EnvMapAppearance", 1);
+                    SendExtEntry(CpeExt.BlockPermissions, 1);
+                    SendExtEntry(CpeExt.ChangeModel, 1);
+                    SendExtEntry(CpeExt.EnvMapAppearance, 1);
                     
-                    SendExtEntry("EnvWeatherType", 1);
-                    SendExtEntry("HackControl", 1);
-                    SendExtEntry("EmoteFix", 1);
+                    SendExtEntry(CpeExt.EnvWeatherType, 1);
+                    SendExtEntry(CpeExt.HackControl, 1);
+                    SendExtEntry(CpeExt.EmoteFix, 1);
                     
-                    SendExtEntry("FullCP437", 1);
-                    SendExtEntry("LongerMessages", 1);
-                 //TODO   SendExtEntry("BlockDefinitions", 1);
-                    SendCustomBlockSupportLevel(1);
+                    SendExtEntry(CpeExt.FullCP437, 1);
+                    SendExtEntry(CpeExt.LongerMessages, 1);
+                    SendExtEntry(CpeExt.BlockDefinitions, 1);
+                    
+                    SendExtEntry(CpeExt.BlockDefinitionsExt, 1);
                 }
                 foreach (Player p in players)
                 {
@@ -1275,8 +1252,11 @@ namespace MCGalaxy {
             if (type < 128) type = bindings[type];
             
             //Ignores updating blocks that are the same and send block only to the player
-            if ( b == (byte)( ( painting || action == 1 ) ? type : (byte)0 ) ) {
-                if ( painting || oldType != type ) { SendBlockchange(x, y, z, b); } return;
+            byte newBlock = (painting || action == 1) ? type : (byte)0;
+            if (b == newBlock && (painting || oldType != type)) {
+            	if (b != Block.block_definitions || extType == level.GetExtTile(x, y, z)) {
+            		RevertBlock(x, y, z); return;
+            	}
             }
             //else
             if ( !painting && action == 0 ) {
@@ -1772,7 +1752,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 byte continued = message[0];
                 string text = GetString(message, 1);
 
-                // handles the /womid client message, which displays the WoM version
+                // handles the /womid client message, which displays the WoM vrersion
                 if ( text.Truncate(6) == "/womid" ) {
                 	string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
                 	Player.GlobalMessage(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");

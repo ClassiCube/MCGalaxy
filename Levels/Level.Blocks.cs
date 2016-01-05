@@ -50,6 +50,16 @@ namespace MCGalaxy {
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
+        public byte GetExtTile(int index) {
+            ushort x, y, z;
+            IntToPos(index, out x, out y, out z);
+            
+            int cx = x >> 4, cy = y >> 4, cz = z >> 4;
+            byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
+            return chunk == null ? (byte)0 :
+                chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
+        }
+        
         public void SetTile(int b, byte type) {
             if (blocks == null || b < 0 || b >= blocks.Length) return;
             blocks[b] = type;
@@ -250,7 +260,9 @@ namespace MCGalaxy {
             {
                 if (x < 0 || y < 0 || z < 0) return;
                 if (x >= Width || y >= Height || z >= Length) return;
-                byte b = GetTile(x, y, z);
+                byte b = GetTile(x, y, z), extB = 0;
+                if (b == Block.block_definitions)
+                	extB = GetExtTile(x, y, z);
 
                 errorLocation = "Permission checking";
                 if (!CheckAffectPermissions(p, x, y, z, b, type, extType)) {
@@ -279,7 +291,10 @@ namespace MCGalaxy {
                     SetExtTileNoCheck(x, y, z, extType);
                 
                 errorLocation = "Block sending";
-                if (Block.Convert(b) != Block.Convert(type) && !Instant)
+                bool diffBlock = Block.Convert(b) != Block.Convert(type);
+                if (!diffBlock && b == Block.block_definitions)
+                	diffBlock = extType != extB;
+                if (diffBlock && !Instant)
                     Player.GlobalBlockchange(this, x, y, z, type);
 
                 errorLocation = "Growing grass";
