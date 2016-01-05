@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/about - Displays information about a block.");
         }
 
-        public void AboutBlockchange(Player p, ushort x, ushort y, ushort z, byte type)
+        public void AboutBlockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             if (!p.staticCommands) p.ClearBlockchange();
             byte b = p.level.GetTile(x, y, z);

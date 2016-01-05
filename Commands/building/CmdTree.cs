@@ -47,32 +47,32 @@ namespace MCGalaxy.Commands
             p.painting = false;
         }
 
-        void AddTree(Player p, ushort x, ushort y, ushort z, byte type)
+        void AddTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             Server.MapGen.AddTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
-        void AddNotchTree(Player p, ushort x, ushort y, ushort z, byte type)
+        void AddNotchTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             Server.MapGen.AddNotchTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
-        void AddNotchBigTree(Player p, ushort x, ushort y, ushort z, byte type)
+        void AddNotchBigTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             Server.MapGen.AddNotchBigTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
-        void AddNotchPineTree(Player p, ushort x, ushort y, ushort z, byte type)
+        void AddNotchPineTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             Server.MapGen.AddNotchPineTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
-        void AddNotchSwampTree(Player p, ushort x, ushort y, ushort z, byte type)
+        void AddNotchSwampTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             Server.MapGen.AddNotchSwampTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
-        void AddCactus(Player p, ushort x, ushort y, ushort z, byte type)
+        void AddCactus(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             Server.MapGen.AddCactus(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();

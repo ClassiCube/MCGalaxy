@@ -125,7 +125,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/mb show shows or hides MBs");
         }
 
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;

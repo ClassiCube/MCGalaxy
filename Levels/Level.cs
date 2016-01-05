@@ -1914,8 +1914,8 @@ namespace MCGalaxy
         public struct UndoPos
         {
             public int location;
-            public byte newType;
-            public byte oldType;
+            public byte newType, newExtType;
+            public byte oldType, oldExtType;
             public DateTime timePerformed;
         }
 

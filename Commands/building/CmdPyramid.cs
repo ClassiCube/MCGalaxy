@@ -24,12 +24,12 @@ namespace MCGalaxy.Commands
         public override string name { get { return "pyramid"; } }
         public override string shortcut { get { return "pd"; } }
 
-        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type) {
+        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            type = cpos.type == Block.Zero ? p.bindings[type] : cpos.type;
+            GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
-            Brush brush = new SolidBrush(type);
+            Brush brush = new SolidBrush(cpos.type, cpos.extType);
             
             if (y != cpos.y) {
                 Player.SendMessage(p, "The two edges of the pyramid must be on the same level");

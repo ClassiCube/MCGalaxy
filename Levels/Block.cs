@@ -23,6 +23,9 @@ namespace MCGalaxy
 {
     public sealed class Block
     {
+    	public const byte CpeCount = 66;
+    	public const byte CpeMaxBlock = 65;
+    	
         public const byte air = (byte)0;
         public const byte rock = (byte)1;
         public const byte grass = (byte)2;
@@ -774,9 +777,7 @@ namespace MCGalaxy
 						case Block.lavastill:
 								return false;
             }
-
-            if (type > 65) { return false; }
-            return true;
+            return type < Block.CpeCount;
         }
 
         public static bool RightClick(byte type, bool countAir = false)
@@ -1987,7 +1988,7 @@ namespace MCGalaxy
                 case fishlavashark: return obsidian;
 
                 default:
-                    return b < 66 ? b : orange;
+                    return b < CpeCount ? b : orange;
             }
         }
         public static byte SaveConvert(byte b)

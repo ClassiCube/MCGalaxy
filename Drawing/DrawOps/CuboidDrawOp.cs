@@ -35,7 +35,7 @@ namespace MCGalaxy {
                 for (ushort z = z1; z <= z2; z++)
                     for (ushort x = x1; x <= x2; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }
@@ -59,8 +59,10 @@ namespace MCGalaxy {
                 if ((z & 1) == 0) i++;
                 
                 for (ushort x = x1; x <= x2; x++) {
-                    byte block = (i & 1) == 0 ? brush.NextBlock() : Block.air;
-                    PlaceBlock(p, lvl, x, y, z, block);
+                    if ((i & 1) == 0)
+                    	PlaceBlock(p, lvl, x, y, z, brush);
+                    else
+                    	PlaceBlock(p, lvl, x, y, z, Block.air, 0);
                     i++;
                 }
             }
@@ -103,7 +105,7 @@ namespace MCGalaxy {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort z = z1; z <= z2; z++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
         
@@ -112,7 +114,7 @@ namespace MCGalaxy {
             for (ushort z = z1; z <= z2; z++)
                 for (ushort x = x1; x <= x2; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
         
@@ -121,7 +123,7 @@ namespace MCGalaxy {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort x = x1; x <= x2; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }
@@ -167,24 +169,24 @@ namespace MCGalaxy {
         public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
                                      ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
             for (ushort y = y1; y <= y2; y++ ) {
-                PlaceBlock(p, lvl, x1, y, z1, brush.NextBlock());
-                PlaceBlock(p, lvl, x2, y, z1, brush.NextBlock());
-                PlaceBlock(p, lvl, x1, y, z2, brush.NextBlock());
-                PlaceBlock(p, lvl, x2, y, z2, brush.NextBlock());
+                PlaceBlock(p, lvl, x1, y, z1, brush);
+                PlaceBlock(p, lvl, x2, y, z1, brush);
+                PlaceBlock(p, lvl, x1, y, z2, brush);
+                PlaceBlock(p, lvl, x2, y, z2, brush);
             }
 
             for (ushort z = z1; z <= z2; z++) {
-                PlaceBlock(p, lvl, x1, y1, z, brush.NextBlock());
-                PlaceBlock(p, lvl, x2, y1, z, brush.NextBlock());
-                PlaceBlock(p, lvl, x1, y2, z, brush.NextBlock());
-                PlaceBlock(p, lvl, x2, y2, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x1, y1, z, brush);
+                PlaceBlock(p, lvl, x2, y1, z, brush);
+                PlaceBlock(p, lvl, x1, y2, z, brush);
+                PlaceBlock(p, lvl, x2, y2, z, brush);
             }
             
             for (ushort x = x1; x <= x2; x++) {
-                PlaceBlock(p, lvl, x, y1, z1, brush.NextBlock());
-                PlaceBlock(p, lvl, x, y1, z2, brush.NextBlock());
-                PlaceBlock(p, lvl, x, y2, z1, brush.NextBlock());
-                PlaceBlock(p, lvl, x, y2, z2, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y1, z1, brush);
+                PlaceBlock(p, lvl, x, y1, z2, brush);
+                PlaceBlock(p, lvl, x, y2, z1, brush);
+                PlaceBlock(p, lvl, x, y2, z2, brush);
             }
         }
     }

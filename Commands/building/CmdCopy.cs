@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
 		}
 
-		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type) {
+		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos bp = (CatchPos)p.blockchangeObject;
 			p.copystart[0] = x;
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
 		}
 
-		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type) {
+		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 			ushort minX = (ushort)Math.Min(x, cpos.x), minY = (ushort)Math.Min(y, cpos.y);
@@ -162,7 +162,7 @@ namespace MCGalaxy.Commands
 			}
 		}
 
-		void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type) {
+		void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 

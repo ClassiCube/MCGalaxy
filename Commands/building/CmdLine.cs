@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/line [num] <block> [extra] - Creates a line between two blocks [num] long.");
             Player.SendMessage(p, "Possible [extras] - wall");
         }
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
 
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
@@ -267,13 +267,13 @@ namespace MCGalaxy.Commands
             {
                 if (cpos.extraType != 1)
                 {
-                    p.level.Blockchange(p, buffer[count].x, buffer[count].y, buffer[count].z, type);
+                    p.level.Blockchange(p, buffer[count].x, buffer[count].y, buffer[count].z, type, extType);
                 }
                 else
                 {
                     for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); yy++)
                     {
-                        p.level.Blockchange(p, buffer[count].x, yy, buffer[count].z, type);
+                        p.level.Blockchange(p, buffer[count].x, yy, buffer[count].z, type, extType);
                     }
                 }
             }

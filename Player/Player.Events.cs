@@ -86,7 +86,7 @@ namespace MCGalaxy
         /// <param name="y">The y cord. of the block</param>
         /// <param name="z">The z cord. of the block</param>
         /// <param name="type">The block the player is holding</param>
-        public delegate void BlockchangeEventHandler2(Player p, ushort x, ushort y, ushort z, byte type);
+        public delegate void BlockchangeEventHandler2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         /// <summary>
         /// BlockchangeEventHandler event is called when a player removes, or places a block
         /// </summary>
@@ -95,7 +95,7 @@ namespace MCGalaxy
         /// <param name="y">The y cord. of the block</param>
         /// <param name="z">The z cord. of the block</param>
         /// <param name="type">The block the player is holding</param>
-        public delegate void BlockchangeEventHandler(Player p, ushort x, ushort y, ushort z, byte type);
+        public delegate void BlockchangeEventHandler(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         /// <summary>
         /// BlockChange event is called when a player removes or places a block
         /// </summary>

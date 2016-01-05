@@ -94,7 +94,12 @@ namespace MCGalaxy {
             
             byte oldType = blocks[b];
             blocks[b] = type;
-            SetExtTileNoCheck(x, y, z, extType);
+            byte oldExtType = 0;
+            
+            if (oldType == Block.block_definitions)
+            	oldExtType = GetExtTile(x, y, z);
+            if (type == Block.block_definitions)
+            	SetExtTileNoCheck(x, y, z, extType);
             if (p == null)
                 return;    
             
@@ -110,8 +115,8 @@ namespace MCGalaxy {
             Player.UndoPos Pos;
             Pos.x = x; Pos.y = y; Pos.z = z;
             Pos.mapName = this.name;
-            Pos.type = oldType;
-            Pos.newtype = type;
+            Pos.type = oldType; Pos.extType = oldExtType;
+            Pos.newtype = type; Pos.newExtType = extType;
             Pos.timePlaced = DateTime.Now;
             p.UndoBuffer.Add(Pos);
         }
@@ -278,8 +283,8 @@ namespace MCGalaxy {
                 Player.UndoPos Pos;
                 Pos.x = x; Pos.y = y; Pos.z = z;
                 Pos.mapName = name;
-                Pos.type = b;
-                Pos.newtype = type;
+                Pos.type = b; Pos.extType = extB;
+                Pos.newtype = type; Pos.newExtType = extType;
                 Pos.timePlaced = DateTime.Now;
                 p.UndoBuffer.Add(Pos);
 
@@ -295,7 +300,7 @@ namespace MCGalaxy {
                 if (!diffBlock && b == Block.block_definitions)
                 	diffBlock = extType != extB;
                 if (diffBlock && !Instant)
-                    Player.GlobalBlockchange(this, x, y, z, type);
+                    Player.GlobalBlockchange(this, x, y, z, type, extType);
 
                 errorLocation = "Growing grass";
                 if (GetTile(x, (ushort)(y - 1), z) == Block.grass && GrassDestroy && !Block.LightPass(type)) {
@@ -321,19 +326,15 @@ namespace MCGalaxy {
             }
         }
         
-        public void Blockchange(int b, byte type, bool overRide = false, string extraInfo = "") { //Block change made by physics
+        public void Blockchange(int b, byte type, bool overRide = false, string extraInfo = "", byte extType = 0) { //Block change made by physics
             if (b < 0 || b >= blocks.Length || blocks == null) return;
             if (b >= blocks.Length) return;
             byte oldBlock = blocks[b];
-
+            byte oldExtType = GetExtTile(b);
             try
             {
                 if (!overRide)
                     if (Block.OPBlocks(oldBlock) || (Block.OPBlocks(type) && extraInfo != "")) return;
-
-                if (Block.Convert(oldBlock) != Block.Convert(type))
-                    //Should save bandwidth sending identical looking blocks, like air/op_air changes.
-                    Player.GlobalBlockchange(this, b, type);
 
                 if (b == Block.sponge && physics > 0 && type != Block.sponge)
                     PhysSpongeRemoved(b);
@@ -343,8 +344,8 @@ namespace MCGalaxy {
 
                 UndoPos uP;
                 uP.location = b;
-                uP.newType = type;
-                uP.oldType = oldBlock;
+                uP.newType = type; uP.newExtType = extType;
+                uP.oldType = oldBlock; uP.oldExtType = oldExtType;
                 uP.timePerformed = DateTime.Now;
 
                 if (currentUndo > Server.physUndo) {
@@ -359,6 +360,19 @@ namespace MCGalaxy {
                 }
 
                 blocks[b] = type;
+                if (type == Block.block_definitions) {
+                	ushort x, y, z;
+                	IntToPos(b, out x, out y, out z);
+                	SetExtTileNoCheck(x, y, z, extType);
+                }
+                
+                // Save bandwidth sending identical looking blocks, like air/op_air changes.
+                bool diffBlock = Block.Convert(oldBlock) != Block.Convert(type);
+                if (!diffBlock && type == Block.block_definitions)
+                	diffBlock = oldExtType != extType;
+                if (diffBlock)    
+                    Player.GlobalBlockchange(this, b, type, extType);
+                
                 if (physics > 0 && ((Block.Physics(type) || extraInfo != "")))
                     AddCheck(b, extraInfo);
             } catch {
@@ -366,8 +380,12 @@ namespace MCGalaxy {
             }
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, byte type, bool overRide = false, string extraInfo = "") {
-            Blockchange(PosToInt(x, y, z), type, overRide, extraInfo); //Block change made by physics
+        public void Blockchange(ushort x, ushort y, ushort z, byte type, bool overRide = false, string extraInfo = "", byte extType = 0) {
+            Blockchange(PosToInt(x, y, z), type, overRide, extraInfo, extType); //Block change made by physics
+        }
+        
+        public void Blockchange(ushort x, ushort y, ushort z, byte type, byte extType) {
+            Blockchange(PosToInt(x, y, z), type, false, "", extType); //Block change made by physics
         }
 
         public int PosToInt(ushort x, ushort y, ushort z) {

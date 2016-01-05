@@ -48,7 +48,7 @@ namespace MCGalaxy.Levels.IO {
 
                 for (int i = 0; i < blocks.Length; ++i) {
                     byte block = blocks[i];
-                    if (block < 66)    {
+                    if (block < Block.CpeCount) {
                         convBlocks[i] = block; //CHANGED THIS TO INCOPARATE SOME MORE SPACE THAT I NEEDED FOR THE door_orange_air ETC.
                     } else {
                         convBlocks[i] = Block.SaveConvert(block);

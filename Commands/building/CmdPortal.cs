@@ -75,12 +75,12 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/portal show - Shows portals, green = in, red = out.");
         }
 
-        public void EntryChange(Player p, ushort x, ushort y, ushort z, byte type)
+        public void EntryChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             p.ClearBlockchange();
             portalPos bp = (portalPos)p.blockchangeObject;
 
-            if (bp.Multi && type == Block.red && bp.port.Count > 0) { ExitChange(p, x, y, z, type); return; }
+            if (bp.Multi && type == Block.red && bp.port.Count > 0) { ExitChange(p, x, y, z, type, extType); return; }
 
             byte b = p.level.GetTile(x, y, z);
             p.level.Blockchange(p, x, y, z, bp.type);
@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "&aEntry block placed. &cRed block for exit");
             }
         }
-        public void ExitChange(Player p, ushort x, ushort y, ushort z, byte type)
+        public void ExitChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
             portalPos bp = (portalPos)p.blockchangeObject;

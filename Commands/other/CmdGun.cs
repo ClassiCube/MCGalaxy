@@ -167,7 +167,7 @@ namespace MCGalaxy.Commands
                 }
             
         
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             byte by = p.level.GetTile(x, y, z);
             p.SendBlockchange(x, y, z, by);
@@ -237,7 +237,7 @@ namespace MCGalaxy.Commands
                         }
                     }
 
-                    p.level.Blockchange(pos.x, pos.y, pos.z, type);
+                    p.level.Blockchange(pos.x, pos.y, pos.z, type, extType);
                     previous.Add(pos);
                     allBlocks.Add(pos);
 

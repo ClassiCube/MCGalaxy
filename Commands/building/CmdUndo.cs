@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands
                         {
                             if (b == Pos.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
                             {
-                                foundLevel.Blockchange(Pos.x, Pos.y, Pos.z, Pos.type, true);
+                                foundLevel.Blockchange(Pos.x, Pos.y, Pos.z, Pos.type, true, "", Pos.extType);
 
                                 Pos.newtype = Pos.type; Pos.type = b;
                                 if (p != null) p.RedoBuffer.Add(Pos);
@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands
                             if (b == uP.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
                             {
                                 p.level.IntToPos(uP.location, out x, out y, out z);
-                                p.level.Blockchange(p, x, y, z, uP.oldType);
+                                p.level.Blockchange(p, x, y, z, uP.oldType, uP.oldExtType);
                             }
                         }
                         catch { }

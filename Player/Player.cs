@@ -237,7 +237,7 @@ namespace MCGalaxy {
         }
 
         //Undo
-        public struct UndoPos { public ushort x, y, z; public byte type, newtype; public string mapName; public DateTime timePlaced; }
+        public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public DateTime timePlaced; }
         public List<UndoPos> UndoBuffer = new List<UndoPos>();
         public List<UndoPos> RedoBuffer = new List<UndoPos>();
 
@@ -1117,7 +1117,7 @@ namespace MCGalaxy {
                 byte type = message[7];
                 byte extType = type;
                 
-                if (type > 65) {
+                if (type >= Block.CpeCount) {
                 	if (!HasExtension(CpeExt.BlockDefinitions) 
                 	    || BlockDefinition.GlobalDefinitions[type] == null) {
                 		Kick("Unknown block type!"); return;
@@ -1210,12 +1210,12 @@ namespace MCGalaxy {
                     level.blockCache.Add(bP);
                 }
 
-                Blockchange(this, x, y, z, type);
+                Blockchange(this, x, y, z, type, extType);
                 return;
             }
             if ( PlayerBlockChange != null )
-                PlayerBlockChange(this, x, y, z, type);
-            OnBlockChangeEvent.Call(this, x, y, z, type);
+                PlayerBlockChange(this, x, y, z, type, extType);
+            OnBlockChangeEvent.Call(this, x, y, z, type, extType);
             if ( cancelBlock ) {
                 cancelBlock = false;
                 return;
@@ -1300,7 +1300,7 @@ namespace MCGalaxy {
                     Command.all.Find("move").Use(this, this.name + " " + Portals.Rows[LastPortal]["ExitX"].ToString() + " " + Portals.Rows[LastPortal]["ExitY"].ToString() + " " + Portals.Rows[LastPortal]["ExitZ"].ToString());
                 }
                 else {
-                    Blockchange(this, x, y, z, (byte)0);
+                    Blockchange(this, x, y, z, Block.air, 0);
                 }
                 Portals.Dispose();
             }
@@ -1331,7 +1331,7 @@ namespace MCGalaxy {
                     }
                     SendBlockchange(x, y, z, b);
                 } else {
-                    Blockchange(this, x, y, z, (byte)0);
+                    Blockchange(this, x, y, z, Block.air, 0);
                 }
                 Messages.Dispose();
             }
@@ -2317,13 +2317,15 @@ return;
         }
         #endregion
         #region == GLOBAL MESSAGES ==
-        public static void GlobalBlockchange(Level level, int b, byte type) {
+        
+        public static void GlobalBlockchange(Level level, int b, byte type, byte extType) {
             ushort x, y, z;
             level.IntToPos(b, out x, out y, out z);
-            GlobalBlockchange(level, x, y, z, type);
+            GlobalBlockchange(level, x, y, z, type, extType);
         }
-        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type) {
-            players.ForEach(delegate(Player p) { if ( p.level == level ) { p.SendBlockchange(x, y, z, type); } });
+        
+        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type, byte extType) {
+            players.ForEach(delegate(Player p) { if ( p.level == level ) { p.SendBlockchange(x, y, z, type, extType); } });
         }
 
         // THIS IS NOT FOR SENDING GLOBAL MESSAGES!!! IT IS TO SEND A MESSAGE FROM A SPECIFIED PLAYER!!!!!!!!!!!!!!

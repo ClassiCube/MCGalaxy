@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
 		}
 
-		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type) {
+		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			int offX = p.copyoffset[0] + x, offY = p.copyoffset[1] + y, offZ = p.copyoffset[2] + z;
 			Player.UndoPos Pos1;

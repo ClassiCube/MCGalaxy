@@ -69,8 +69,8 @@ namespace MCGalaxy.Util {
                     for (int j = 0; j < chunk.Entries; j++ ) {
                         Pos.timePlaced = chunk.BaseTime.AddSeconds(r.ReadUInt16());
                         Pos.x = r.ReadUInt16(); Pos.y = r.ReadUInt16(); Pos.z = r.ReadUInt16();
-                        Pos.type = r.ReadByte(); r.ReadByte(); // block definitions placeholder
-                        Pos.newtype = r.ReadByte(); r.ReadByte(); // block definitions placeholder
+                        Pos.type = r.ReadByte(); Pos.extType = r.ReadByte();
+                        Pos.newtype = r.ReadByte(); Pos.newExtType = r.ReadByte();
                         buffer.Add(Pos);
                     }
                 }
@@ -101,14 +101,14 @@ namespace MCGalaxy.Util {
                         Pos.x = r.ReadUInt16(); Pos.y = r.ReadUInt16(); Pos.z = r.ReadUInt16();
                         
                         Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
-                        byte oldType = r.ReadByte(); r.ReadByte(); // block definitions placeholder
-                        byte newType = r.ReadByte(); r.ReadByte(); // block definitions placeholder
+                        byte oldType = r.ReadByte(), oldExtType = r.ReadByte();
+                        byte newType = r.ReadByte(), newExtType = r.ReadByte();
 
                         if (Pos.type == newType || Block.Convert(Pos.type) == Block.water
                             || Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
                             
-                            Pos.newtype = oldType;
-                            Pos.timePlaced = now;
+                            Pos.newtype = oldType; Pos.newExtType = oldExtType;
+                            Pos.extType = newExtType; Pos.timePlaced = now;
                             lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true);
                             if (p != null)
                                 p.RedoBuffer.Add(Pos);
@@ -141,8 +141,8 @@ namespace MCGalaxy.Util {
                         ushort x = r.ReadUInt16(), y = r.ReadUInt16(), z = r.ReadUInt16();
                         
                         byte lvlTile = lvl.GetTile(x, y, z);
-                        byte oldType = r.ReadByte(); r.ReadByte(); // block definitions placeholder
-                        byte newType = r.ReadByte(); r.ReadByte(); // block definitions placeholder
+                        byte oldType = r.ReadByte(), oldExtType = r.ReadByte();
+                        byte newType = r.ReadByte(), newExtType = r.ReadByte();
 
                         if (lvlTile == newType || Block.Convert(lvlTile) == Block.water || Block.Convert(lvlTile) == Block.lava) {
                             

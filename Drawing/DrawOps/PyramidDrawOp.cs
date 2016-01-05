@@ -84,7 +84,7 @@ namespace MCGalaxy {
         Brush airBrush;
         public PyramidReverseDrawOp() : base(new CuboidDrawOp(), -1) {
             wallOp = new CuboidWallsDrawOp();
-            airBrush = new SolidBrush(Block.air);
+            airBrush = new SolidBrush(Block.air, 0);
         }
         
         public override string Name {

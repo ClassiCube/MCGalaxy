@@ -480,7 +480,7 @@ namespace MCGalaxy
             Thread.Sleep(2000);
             LoadMap(nextmap);
         }
-        void Player_PlayerBlockChange(Player p, ushort x, ushort y, ushort z, byte type)
+        void Player_PlayerBlockChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             if (started)
             {

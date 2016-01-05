@@ -61,22 +61,25 @@ namespace MCGalaxy {
             TotalModified = 0;
         }
         
-        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type) {
-            if (type == Block.Zero)
-                return;
-            
+        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        	byte type = brush.NextBlock();
+            if (type == Block.Zero) return;
+            PlaceBlock(p, lvl, x, y, z, type, brush.NextExtBlock());
+        }
+        
+        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type, byte extType) {
             switch (method) {
                 case MethodBlockQueue:
-                    BlockQueue.Addblock(p, x, y, z, type);
+                    BlockQueue.Addblock(p, x, y, z, type, extType);
                     break;
                 case MethodBlockChange:
-                    p.level.Blockchange(p, x, y, z, type);
+                    p.level.Blockchange(p, x, y, z, type, extType);
                     break;
                 case MethodSetTile:
                     byte old = lvl.GetTile(x, y, z);
                     if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
                     	return;
-                    p.level.SetTile(x, y, z, type, p);
+                    p.level.SetTile(x, y, z, type, p, extType);
                     break;
             }
         }

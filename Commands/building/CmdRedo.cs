@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands
                 if (foundLevel != null)
                 {
                     b = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
-                    foundLevel.Blockchange(Pos.x, Pos.y, Pos.z, Pos.type);
+                    foundLevel.Blockchange(Pos.x, Pos.y, Pos.z, Pos.type, Pos.extType);
                     Pos.newtype = Pos.type;
                     Pos.type = b;
                     Pos.timePlaced = DateTime.Now;

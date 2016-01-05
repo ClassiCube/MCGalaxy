@@ -469,6 +469,30 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
+        // Duplicated as this packet needs to have maximum optimisation.
+        public void SendBlockchange(ushort x, ushort y, ushort z, byte type, byte extType) {
+            if (x < 0 || y < 0 || z < 0) return;
+            if (x >= level.Width || y >= level.Height || z >= level.Length) return;
+
+            byte[] buffer = new byte[8];
+            buffer[0] = Opcode.SetBlock;
+            NetUtils.WriteU16(x, buffer, 1);
+            NetUtils.WriteU16(y, buffer, 3);
+            NetUtils.WriteU16(z, buffer, 5);
+            
+            if (type == Block.block_definitions) {
+            	if (HasExtension(CpeExt.BlockDefinitions))
+            		buffer[7] = extType;
+            	else
+            		buffer[7] = BlockDefinition.Fallback(extType);
+            } else if (hasCpe) {
+            	buffer[7] = Block.Convert(type);
+            } else {
+            	buffer[7] = Block.Convert(Block.ConvertCPE(type));
+            }
+            SendRaw(buffer);
+        }
+        
         void SendKick(string message) {
         	byte[] buffer = new byte[65];
         	buffer[0] = Opcode.Kick;
