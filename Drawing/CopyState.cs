@@ -22,7 +22,7 @@ namespace MCGalaxy.Drawing {
 
 	public sealed class CopyState {
 		
-		public byte[] Blocks;
+		public byte[] Blocks, ExtBlocks;
 		public int X, Y, Z;
 		public int OriginX, OriginY, OriginZ;
 		public int Width, Height, Length;
@@ -33,19 +33,22 @@ namespace MCGalaxy.Drawing {
 			get { return Width * Height * Length; }
 		}
 		
-		public CopyState(int x, int y, int z, int width, int height, int length, byte[] blocks) {
+		public CopyState(int x, int y, int z, int width, int height, int length, byte[] blocks, byte[] extBlocks) {
 			X = x; Y = y; Z = z;
 			Width = width; Height = height; Length = length;
 			Blocks = blocks;
+			ExtBlocks = extBlocks;
 		}
 		
 		public CopyState(int x, int y, int z, int width, int height, int length)
-			: this(x, y, z, width, height, length, null) {
+			: this(x, y, z, width, height, length, null, null) {
 			Blocks = new byte[width * height * length];
+			ExtBlocks = new byte[width * height * length];
 		}
 		
 		public void Clear() {
 			Blocks = null;
+			ExtBlocks = null;
 		}
 		
 		public void SetOrigin(int x, int y, int z) {
@@ -64,8 +67,9 @@ namespace MCGalaxy.Drawing {
 			return (y * Length + z) * Width + x;
 		}
 		
-		public void Set(int x, int y, int z, byte block) {
-			Blocks[(y * Length + z) * Width + x] = block;
+		public void Set(int x, int y, int z, byte type, byte extType) {
+			Blocks[(y * Length + z) * Width + x] = type;
+			ExtBlocks[(y * Length + z) * Width + x] = extType;
 		}
 		
 		public void SaveTo(Stream stream) {
@@ -75,6 +79,7 @@ namespace MCGalaxy.Drawing {
 			w.Write(X); w.Write(Y); w.Write(Z);
 			w.Write(Width); w.Write(Height); w.Write(Length);
 			w.Write(Blocks);
+			w.Write(ExtBlocks);
 			w.Write(OriginX); w.Write(OriginY); w.Write(OriginZ);
 		}
 		
@@ -86,12 +91,8 @@ namespace MCGalaxy.Drawing {
 			X = r.ReadInt32(); Y = r.ReadInt32(); Z = r.ReadInt32();
 			Width = r.ReadInt32(); Height = r.ReadInt32(); Length = r.ReadInt32();
 			Blocks = r.ReadBytes(Width * Height * Length);
-			
-			try {
-				OriginX = r.ReadInt32(); OriginY = r.ReadInt32(); OriginZ = r.ReadInt32();
-			} catch (EndOfStreamException) { // older versions did not have these fields
-				OriginX = X; OriginY = Y; OriginZ = Z;
-			}
+			ExtBlocks = r.ReadBytes(Width * Height * Length);
+			OriginX = r.ReadInt32(); OriginY = r.ReadInt32(); OriginZ = r.ReadInt32();
 		}
 		
 		public void LoadFromOld(Stream stream, Stream underlying) {
@@ -105,8 +106,7 @@ namespace MCGalaxy.Drawing {
 				ushort x = BitConverter.ToUInt16(raw, i + 0);
 				ushort y = BitConverter.ToUInt16(raw, i + 2);
 				ushort z = BitConverter.ToUInt16(raw, i + 4);
-				byte type = raw[i + 6];
-				Set(x - X, y - Y, z - Z, type);
+				Set(x - X, y - Y, z - Z, raw[i + 6], 0);
 			}
 			OriginX = X; OriginY = Y; OriginZ = Z;
 		}
@@ -129,6 +129,7 @@ namespace MCGalaxy.Drawing {
 			Height = maxY - minY + 1;
 			Length = maxZ - minZ + 1;
 			Blocks = new byte[Width * Height * Length];
+			ExtBlocks = new byte[Width * Height * Length];
 		}
 	}
 }

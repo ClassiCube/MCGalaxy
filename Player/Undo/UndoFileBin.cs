@@ -95,6 +95,7 @@ namespace MCGalaxy.Util {
                     Pos.mapName = chunk.LevelName;
                     fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
                     
+                    // TODO: need to iterate backwards here.
                     for (int j = 0; j < chunk.Entries; j++ ) {
                         DateTime time = chunk.BaseTime.AddSeconds(r.ReadUInt16());
                         if (time.AddSeconds(seconds) < now) return false;
@@ -135,6 +136,7 @@ namespace MCGalaxy.Util {
                     if (lvl == null || lvl != p.level) continue;
                     fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
                     
+                    // TODO: need to iterate backwards here.
                     for (int j = 0; j < chunk.Entries; j++ ) {
                         DateTime time = chunk.BaseTime.AddSeconds(r.ReadUInt16());
                         if (time.AddSeconds(seconds) < now) return false;

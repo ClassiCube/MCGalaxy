@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
 					Pos1.y = (ushort)(locY + offY);
 					Pos1.z = (ushort)(locZ + offZ);
 					if ((b != Block.air || p.copyAir) && p.level.InBound(Pos1.x, Pos1.y, Pos1.z))
-						BlockQueue.Addblock(p, Pos1.x, Pos1.y, Pos1.z, b);
+						BlockQueue.Addblock(p, Pos1.x, Pos1.y, Pos1.z, b, state.ExtBlocks[i]);
 				}
 			} else {
 				for (int i = 0; i < state.Blocks.Length; i++ ) {
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
 					Pos1.y = (ushort)(locY + offY);
 					Pos1.z = (ushort)(locZ + offZ);
 					if ((b != Block.air || p.copyAir) && p.level.InBound(Pos1.x, Pos1.y, Pos1.z))
-						p.level.Blockchange(p, Pos1.x, Pos1.y, Pos1.z, b);
+						p.level.Blockchange(p, Pos1.x, Pos1.y, Pos1.z, b, state.ExtBlocks[i]);
 				}
 			}
 

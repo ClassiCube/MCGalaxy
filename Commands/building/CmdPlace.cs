@@ -68,8 +68,8 @@ namespace MCGalaxy.Commands
             p.level.Blockchange(p, x, y, z, b);
             Player.SendMessage(p, "A block was placed at (" + x + ", " + y + ", " + z + ").");
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/place [block] <x y z> - Places block at your feet or <x y z>");
         }
     }
