@@ -91,7 +91,7 @@ namespace MCGalaxy {
             int affected = 0;
             if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
                 return false;
-            Player.SendMessage(p, op.Name + ": drawing an estimated " + affected + " blocks");
+            Player.SendMessage(p, op.Name + ": affecting up to an estimated " + affected + " blocks");
             
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);

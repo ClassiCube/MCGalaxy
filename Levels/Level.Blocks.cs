@@ -96,9 +96,9 @@ namespace MCGalaxy {
             blocks[b] = type;
             byte oldExtType = 0;
             
-            if (oldType == Block.block_definitions)
+            if (oldType == Block.custom_block)
             	oldExtType = GetExtTile(x, y, z);
-            if (type == Block.block_definitions)
+            if (type == Block.custom_block)
             	SetExtTileNoCheck(x, y, z, extType);
             if (p == null)
                 return;    
@@ -266,7 +266,7 @@ namespace MCGalaxy {
                 if (x < 0 || y < 0 || z < 0) return;
                 if (x >= Width || y >= Height || z >= Length) return;
                 byte b = GetTile(x, y, z), extB = 0;
-                if (b == Block.block_definitions)
+                if (b == Block.custom_block)
                 	extB = GetExtTile(x, y, z);
 
                 errorLocation = "Permission checking";
@@ -292,12 +292,12 @@ namespace MCGalaxy {
                 p.loginBlocks++;
                 p.overallBlocks++;
                 SetTile(x, y, z, type);
-                if (type == Block.block_definitions)
+                if (type == Block.custom_block)
                     SetExtTileNoCheck(x, y, z, extType);
                 
                 errorLocation = "Block sending";
                 bool diffBlock = Block.Convert(b) != Block.Convert(type);
-                if (!diffBlock && b == Block.block_definitions)
+                if (!diffBlock && b == Block.custom_block)
                 	diffBlock = extType != extB;
                 if (diffBlock && !Instant)
                     Player.GlobalBlockchange(this, x, y, z, type, extType);
@@ -360,7 +360,7 @@ namespace MCGalaxy {
                 }
 
                 blocks[b] = type;
-                if (type == Block.block_definitions) {
+                if (type == Block.custom_block) {
                 	ushort x, y, z;
                 	IntToPos(b, out x, out y, out z);
                 	SetExtTileNoCheck(x, y, z, extType);
@@ -368,7 +368,7 @@ namespace MCGalaxy {
                 
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.
                 bool diffBlock = Block.Convert(oldBlock) != Block.Convert(type);
-                if (!diffBlock && type == Block.block_definitions)
+                if (!diffBlock && oldBlock == Block.custom_block)
                 	diffBlock = oldExtType != extType;
                 if (diffBlock)    
                     Player.GlobalBlockchange(this, b, type, extType);

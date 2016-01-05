@@ -63,9 +63,7 @@ namespace MCGalaxy {
         public PyramidSolidDrawOp() : base(new CuboidDrawOp(), 1) {        
         }
         
-        public override string Name {
-            get { return "Pyramid solid"; }
-        }
+        public override string Name { get { return "Pyramid solid"; } }
     }
     
     public class PyramidHollowDrawOp : PyramidDrawOp {      
@@ -73,9 +71,7 @@ namespace MCGalaxy {
         public PyramidHollowDrawOp() : base(new CuboidWallsDrawOp(), 1) {        
         }
         
-        public override string Name {
-            get { return "Pyramid hollow"; }
-        }
+        public override string Name { get { return "Pyramid hollow"; } }
     }
     
     public class PyramidReverseDrawOp : PyramidDrawOp {      
@@ -87,9 +83,7 @@ namespace MCGalaxy {
             airBrush = new SolidBrush(Block.air, 0);
         }
         
-        public override string Name {
-            get { return "Pyramid reverse"; }
-        }
+        public override string Name { get { return "Pyramid reverse"; } }
         
         public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
                                      ushort y2, ushort z2, Player p, Level lvl, Brush brush) {

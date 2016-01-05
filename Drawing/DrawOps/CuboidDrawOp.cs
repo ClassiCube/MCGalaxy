@@ -21,9 +21,7 @@ namespace MCGalaxy {
 
     public class CuboidDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Cuboid"; }
-        }
+        public override string Name { get { return "Cuboid"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
@@ -42,9 +40,7 @@ namespace MCGalaxy {
     
     public class CuboidHolesDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Cuboid Holes"; }
-        }
+        public override string Name { get { return "Cuboid Holes"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
@@ -71,9 +67,7 @@ namespace MCGalaxy {
     
     public class CuboidHollowsDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Cuboid Hollow"; }
-        }
+        public override string Name { get { return "Cuboid Hollow"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
@@ -130,9 +124,7 @@ namespace MCGalaxy {
     
     public class CuboidWallsDrawOp : CuboidHollowsDrawOp {
         
-        public override string Name {
-            get { return "Cuboid Walls"; }
-        }
+        public override string Name { get { return "Cuboid Walls"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
@@ -155,9 +147,7 @@ namespace MCGalaxy {
     
     public class CuboidWireframeDrawOp : CuboidHollowsDrawOp {
         
-        public override string Name {
-            get { return "Cuboid Wireframe"; }
-        }
+        public override string Name { get { return "Cuboid Wireframe"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);

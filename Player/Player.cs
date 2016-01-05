@@ -1123,7 +1123,7 @@ namespace MCGalaxy {
                 		Kick("Unknown block type!"); return;
                 	}
                 	extType = type;
-                	type = Block.block_definitions;
+                	type = Block.custom_block;
                 }
 
                 if ( action == 1 && Server.ZombieModeOn && Server.noPillaring ) {
@@ -1255,7 +1255,7 @@ namespace MCGalaxy {
             //Ignores updating blocks that are the same and send block only to the player
             byte newBlock = (painting || action == 1) ? type : (byte)0;
             if (b == newBlock && (painting || oldType != type)) {
-            	if (b != Block.block_definitions || extType == level.GetExtTile(x, y, z)) {
+            	if (b != Block.custom_block || extType == level.GetExtTile(x, y, z)) {
             		RevertBlock(x, y, z); return;
             	}
             }

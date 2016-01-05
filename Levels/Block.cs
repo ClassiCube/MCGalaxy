@@ -200,7 +200,7 @@ namespace MCGalaxy
         public const byte lava_portal = (byte)162;
 
         //BlockDefinitions
-        public const byte block_definitions = (byte)163;
+        public const byte custom_block = (byte)163;
         //Movement doors
         public const byte air_door = (byte)164;
         public const byte air_switch = (byte)165;
@@ -1309,7 +1309,7 @@ namespace MCGalaxy
                 case 160: return "air_portal";
                 case 161: return "water_portal";
                 case 162: return "lava_portal";
-                case block_definitions: return "custom_block";
+                case custom_block: return "custom_block";
                 case air_door: return "air_door";
                 case air_switch: return "air_switch";
                 case water_door: return "door_water";
@@ -1986,7 +1986,8 @@ namespace MCGalaxy
                 case fishshark: return lightgrey;
                 case fishsponge: return sponge;
                 case fishlavashark: return obsidian;
-
+                
+                case custom_block: return custom_block;
                 default:
                     return b < CpeCount ? b : orange;
             }

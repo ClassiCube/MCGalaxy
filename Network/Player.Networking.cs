@@ -324,7 +324,7 @@ namespace MCGalaxy {
                 if (hasCpe) {
                 	for (int i = 0; i < level.blocks.Length; ++i) {
                 		byte block = level.blocks[i];
-                		if (block == Block.block_definitions) {
+                		if (block == Block.custom_block) {
                 			if (hasBlockDefinitions)
                 				buffer[i + 4] = level.GetExtTile(i);
                 			else
@@ -336,7 +336,7 @@ namespace MCGalaxy {
                 } else {
                 	for (int i = 0; i < level.blocks.Length; ++i) {
                 		byte block = level.blocks[i];
-                		if (block == Block.block_definitions) {
+                		if (block == Block.custom_block) {
                 			if (hasBlockDefinitions)
                 				buffer[i + 4] = Block.ConvertCPE(level.GetExtTile(i));
                 			else
@@ -456,7 +456,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            if (type == Block.block_definitions) {
+            if (type == Block.custom_block) {
             	if (HasExtension(CpeExt.BlockDefinitions))
             		buffer[7] = level.GetExtTile(x, y, z);
             	else
@@ -480,7 +480,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            if (type == Block.block_definitions) {
+            if (type == Block.custom_block) {
             	if (HasExtension(CpeExt.BlockDefinitions))
             		buffer[7] = extType;
             	else

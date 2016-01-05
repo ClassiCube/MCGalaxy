@@ -1,7 +1,7 @@
 ﻿/*
     Copyright 2015 MCGalaxy team
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands {
         
         protected abstract SolidType GetType(string msg);
         
-        static byte GetBlock(Player p, string msg, out byte extType) {
+        internal static byte GetBlock(Player p, string msg, out byte extType) {
             byte type = Block.Byte(msg);
             extType = 0;
             if (type == Block.Zero) {
@@ -89,10 +89,11 @@ namespace MCGalaxy.Commands {
             		return Block.Zero;
             	}
             	extType = type;
-            	return Block.block_definitions;
+            	return Block.custom_block;
             }
+            
             if (!Block.canPlace(p, type)) {
-                Player.SendMessage(p, "Cannot place that.");
+                Player.SendMessage(p, "Cannot place the block \"" + msg + "\".");
                 return Block.Zero;
             }
             return type;
