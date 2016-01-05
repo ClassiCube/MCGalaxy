@@ -349,7 +349,6 @@ namespace MCGalaxy
         public static bool adminsjoinsilent = false;
         public static bool mono { get { return (Type.GetType("Mono.Runtime") != null); } }
         public static string server_owner = "Notch";
-        public static bool WomDirect = false;
         public static bool UseSeasons = false;
         public static bool guestLimitNotify = false;
         public static bool guestJoinNotify = true;

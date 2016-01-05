@@ -300,7 +300,6 @@ namespace MCGalaxy.Commands
             Server.adminsjoinsilent = false;
             //Server.mono = false;
             Server.server_owner = "Notch";
-            Server.WomDirect = false;
 
             Server.flipHead = false;
 
@@ -312,9 +311,6 @@ namespace MCGalaxy.Commands
             Server.hackrank_kick_time = 5; //seconds, it converts it to milliseconds in the command.
 
             Server.showEmptyRanks = false;
-
-            //WOM Direct
-            Server.WomDirect = false;
 
             #endregion
         }

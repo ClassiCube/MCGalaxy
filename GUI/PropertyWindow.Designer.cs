@@ -133,10 +133,6 @@ namespace MCGalaxy.Gui
             this.lsNudRoundTime = new System.Windows.Forms.NumericUpDown();
             this.lsNudFloodTime = new System.Windows.Forms.NumericUpDown();
             this.lsCmbControlRank = new System.Windows.Forms.ComboBox();
-            this.cmbGrieferStoneType = new System.Windows.Forms.ComboBox();
-            this.chkGrieferStoneBan = new System.Windows.Forms.CheckBox();
-            this.txtGrieferStone = new System.Windows.Forms.TextBox();
-            this.cmbGrieferStoneRank = new System.Windows.Forms.ComboBox();
             this.lsNudLives = new System.Windows.Forms.NumericUpDown();
             this.cmbAFKKickPerm = new System.Windows.Forms.ComboBox();
             this.chkGuestLimitNotify = new System.Windows.Forms.CheckBox();
@@ -179,8 +175,6 @@ namespace MCGalaxy.Gui
             this.lblGlobalChatColor = new System.Windows.Forms.Label();
             this.chkGlobalChat = new System.Windows.Forms.CheckBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
-            this.label48 = new System.Windows.Forms.Label();
-            this.label47 = new System.Windows.Forms.Label();
             this.chkShowEmptyRanks = new System.Windows.Forms.CheckBox();
             this.chkIgnoreGlobal = new System.Windows.Forms.CheckBox();
             this.chkNotifyOnJoinLeave = new System.Windows.Forms.CheckBox();
@@ -192,7 +186,6 @@ namespace MCGalaxy.Gui
             this.chkSmile = new System.Windows.Forms.CheckBox();
             this.label34 = new System.Windows.Forms.Label();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.chkGrieferStone = new System.Windows.Forms.CheckBox();
             this.chkShutdown = new System.Windows.Forms.CheckBox();
             this.txtShutdown = new System.Windows.Forms.TextBox();
             this.hackrank_kick_time = new System.Windows.Forms.TextBox();
@@ -253,10 +246,8 @@ namespace MCGalaxy.Gui
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label30 = new System.Windows.Forms.Label();
             this.txechx = new System.Windows.Forms.CheckBox();
-            this.button3 = new System.Windows.Forms.Button();
             this.editTxtsBt = new System.Windows.Forms.Button();
             this.txtHost = new System.Windows.Forms.TextBox();
-            this.chkWomDirect = new System.Windows.Forms.CheckBox();
             this.chkRestart = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -1507,46 +1498,6 @@ namespace MCGalaxy.Gui
             this.lsCmbControlRank.TabIndex = 9;
             this.toolTip.SetToolTip( this.lsCmbControlRank, "Minimum rank required to administrate Lava Survival." );
             // 
-            // cmbGrieferStoneType
-            // 
-            this.cmbGrieferStoneType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGrieferStoneType.FormattingEnabled = true;
-            this.cmbGrieferStoneType.Location = new System.Drawing.Point( 110, 138 );
-            this.cmbGrieferStoneType.Name = "cmbGrieferStoneType";
-            this.cmbGrieferStoneType.Size = new System.Drawing.Size( 94, 21 );
-            this.cmbGrieferStoneType.TabIndex = 13;
-            this.toolTip.SetToolTip( this.cmbGrieferStoneType, "The block type that griefer_stone will look like in-game." );
-            // 
-            // chkGrieferStoneBan
-            // 
-            this.chkGrieferStoneBan.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkGrieferStoneBan.AutoSize = true;
-            this.chkGrieferStoneBan.Location = new System.Drawing.Point( 210, 137 );
-            this.chkGrieferStoneBan.Name = "chkGrieferStoneBan";
-            this.chkGrieferStoneBan.Size = new System.Drawing.Size( 127, 23 );
-            this.chkGrieferStoneBan.TabIndex = 43;
-            this.chkGrieferStoneBan.Text = "Griefer_stone Tempban";
-            this.toolTip.SetToolTip( this.chkGrieferStoneBan, "Should griefer_stone tempban the player or just kick them?" );
-            this.chkGrieferStoneBan.UseVisualStyleBackColor = true;
-            // 
-            // txtGrieferStone
-            // 
-            this.txtGrieferStone.Location = new System.Drawing.Point( 186, 129 );
-            this.txtGrieferStone.Name = "txtGrieferStone";
-            this.txtGrieferStone.Size = new System.Drawing.Size( 134, 21 );
-            this.txtGrieferStone.TabIndex = 36;
-            this.toolTip.SetToolTip( this.txtGrieferStone, "Kick message for griefer_stone. Only works if tempban is off!" );
-            // 
-            // cmbGrieferStoneRank
-            // 
-            this.cmbGrieferStoneRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGrieferStoneRank.FormattingEnabled = true;
-            this.cmbGrieferStoneRank.Location = new System.Drawing.Point( 148, 112 );
-            this.cmbGrieferStoneRank.Name = "cmbGrieferStoneRank";
-            this.cmbGrieferStoneRank.Size = new System.Drawing.Size( 87, 21 );
-            this.cmbGrieferStoneRank.TabIndex = 45;
-            this.toolTip.SetToolTip( this.cmbGrieferStoneRank, "The maximum rank that griefer_stone will kick or ban." );
-            // 
             // lsNudLives
             // 
             this.lsNudLives.Location = new System.Drawing.Point( 71, 133 );
@@ -1991,11 +1942,6 @@ namespace MCGalaxy.Gui
             this.groupBox13.AutoSize = true;
             this.groupBox13.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox13.Controls.Add( this.chkGuestLimitNotify );
-            this.groupBox13.Controls.Add( this.cmbGrieferStoneRank );
-            this.groupBox13.Controls.Add( this.label48 );
-            this.groupBox13.Controls.Add( this.chkGrieferStoneBan );
-            this.groupBox13.Controls.Add( this.cmbGrieferStoneType );
-            this.groupBox13.Controls.Add( this.label47 );
             this.groupBox13.Controls.Add( this.chkShowEmptyRanks );
             this.groupBox13.Controls.Add( this.chkIgnoreGlobal );
             this.groupBox13.Controls.Add( this.chkNotifyOnJoinLeave );
@@ -2014,24 +1960,6 @@ namespace MCGalaxy.Gui
             this.groupBox13.TabIndex = 40;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "Extra";
-            // 
-            // label48
-            // 
-            this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point( 6, 115 );
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size( 140, 13 );
-            this.label48.TabIndex = 44;
-            this.label48.Text = "Griefer_stone kick/ban rank:";
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point( 6, 140 );
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size( 98, 13 );
-            this.label47.TabIndex = 42;
-            this.label47.Text = "Griefer_stone type:";
             // 
             // chkShowEmptyRanks
             // 
@@ -2137,8 +2065,6 @@ namespace MCGalaxy.Gui
             // 
             this.groupBox12.AutoSize = true;
             this.groupBox12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox12.Controls.Add( this.txtGrieferStone );
-            this.groupBox12.Controls.Add( this.chkGrieferStone );
             this.groupBox12.Controls.Add( this.chkShutdown );
             this.groupBox12.Controls.Add( this.txtShutdown );
             this.groupBox12.Controls.Add( this.hackrank_kick );
@@ -2154,16 +2080,6 @@ namespace MCGalaxy.Gui
             this.groupBox12.TabIndex = 39;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Messages";
-            // 
-            // chkGrieferStone
-            // 
-            this.chkGrieferStone.AutoSize = true;
-            this.chkGrieferStone.Location = new System.Drawing.Point( 12, 132 );
-            this.chkGrieferStone.Name = "chkGrieferStone";
-            this.chkGrieferStone.Size = new System.Drawing.Size( 174, 17 );
-            this.chkGrieferStone.TabIndex = 35;
-            this.chkGrieferStone.Text = "Custom griefer_stone message:";
-            this.chkGrieferStone.UseVisualStyleBackColor = true;
             // 
             // chkShutdown
             // 
@@ -2755,10 +2671,8 @@ namespace MCGalaxy.Gui
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add( this.label30 );
             this.groupBox2.Controls.Add( this.txechx );
-            this.groupBox2.Controls.Add( this.button3 );
             this.groupBox2.Controls.Add( this.editTxtsBt );
             this.groupBox2.Controls.Add( this.txtHost );
-            this.groupBox2.Controls.Add( this.chkWomDirect );
             this.groupBox2.Controls.Add( this.chkRestart );
             this.groupBox2.Controls.Add( this.chkPublic );
             this.groupBox2.Controls.Add( this.chkVerify );
@@ -2791,16 +2705,6 @@ namespace MCGalaxy.Gui
             this.txechx.UseVisualStyleBackColor = true;
             this.txechx.CheckedChanged += new System.EventHandler( this.txechx_CheckedChanged );
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point( 10, 49 );
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size( 120, 27 );
-            this.button3.TabIndex = 43;
-            this.button3.Text = "Edit WoM Direct Options";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler( this.button3_Click );
-            // 
             // editTxtsBt
             // 
             this.editTxtsBt.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -2820,18 +2724,6 @@ namespace MCGalaxy.Gui
             this.txtHost.Size = new System.Drawing.Size( 142, 21 );
             this.txtHost.TabIndex = 2;
             this.txtHost.TextChanged += new System.EventHandler( this.txtPort_TextChanged );
-            // 
-            // chkWomDirect
-            // 
-            this.chkWomDirect.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkWomDirect.AutoSize = true;
-            this.chkWomDirect.Location = new System.Drawing.Point( 135, 49 );
-            this.chkWomDirect.Name = "chkWomDirect";
-            this.chkWomDirect.Size = new System.Drawing.Size( 107, 23 );
-            this.chkWomDirect.TabIndex = 25;
-            this.chkWomDirect.Text = "Enable WoM Direct";
-            this.chkWomDirect.UseVisualStyleBackColor = true;
-            this.chkWomDirect.CheckedChanged += new System.EventHandler( this.chkWomDirect_CheckedChanged );
             // 
             // chkRestart
             // 
@@ -4911,8 +4803,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblGlobalChatColor;
         private System.Windows.Forms.TextBox txtMaxUndo;
         private System.Windows.Forms.Label label52;
-        private System.Windows.Forms.TextBox txtGrieferStone;
-        private System.Windows.Forms.CheckBox chkGrieferStone;
         private System.Windows.Forms.GroupBox groupBox20;
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.Label label53;
@@ -4958,14 +4848,8 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ComboBox lsCmbControlRank;
         private System.Windows.Forms.Label label68;
         private System.Windows.Forms.Button lsBtnEndVote;
-        private System.Windows.Forms.ComboBox cmbGrieferStoneType;
-        private System.Windows.Forms.Label label47;
-        private System.Windows.Forms.CheckBox chkGrieferStoneBan;
-        private System.Windows.Forms.ComboBox cmbGrieferStoneRank;
-        private System.Windows.Forms.Label label48;
         private System.Windows.Forms.NumericUpDown numCountReset;
         private System.Windows.Forms.Label label69;
-        private System.Windows.Forms.CheckBox chkWomDirect;
         private System.Windows.Forms.NumericUpDown lsNudLives;
         private System.Windows.Forms.TextBox txtSQLPort;
         private System.Windows.Forms.Label label70;
@@ -4987,7 +4871,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label75;
         private System.Windows.Forms.Label label76;
         private System.Windows.Forms.ComboBox cmbAFKKickPerm;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;
         private System.Windows.Forms.TextBox levelList;
         private System.Windows.Forms.Label label78;
