@@ -27,9 +27,9 @@ namespace MCGalaxy.Util {
 	
 	public sealed class SCOGenerator {
 		
-		public static void Cone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block, bool invert) {
-			List<CatchPos> buffer = new List<CatchPos>();
-			CatchPos temp = new CatchPos();
+		public static void Cone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte type, byte extType, bool invert) {
+			List<Pos> buffer = new List<Pos>();
+			Pos temp = new Pos();
 			for (short yy = 0; yy <= height; yy++)
 				for (short zz = (short)-radius; zz <= radius; zz++)
 					for (short xx = (short)-radius; xx <= radius; xx++)
@@ -46,16 +46,15 @@ namespace MCGalaxy.Util {
 				byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 				if (ctile == 0) {
 					temp.x = (ushort)cx; temp.y = (ushort)cy; temp.z = (ushort)cz;
-					temp.type = block;
 					buffer.Add(temp);
 				}
 			}
-			Draw(ref buffer, p, x, y, z, height, block, invert);
+			Draw(ref buffer, p, x, y, z, height, type, extType, invert);
 		}
 		
-		public static void HCone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block, bool invert) {
-			List<CatchPos> buffer = new List<CatchPos>();
-			CatchPos temp = new CatchPos();
+		public static void HCone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte type, byte extType, bool invert) {
+			List<Pos> buffer = new List<Pos>();
+			Pos temp = new Pos();
 			for (short yy = 0; yy <= height; yy++)
 				for (short zz = (short)-radius; zz <= radius; zz++)
 					for (short xx = (short)-radius; xx <= radius; xx++)
@@ -72,17 +71,16 @@ namespace MCGalaxy.Util {
 				byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 				if (ctile == 0) {
 					temp.x = (ushort)cx; temp.y = (ushort)cy; temp.z = (ushort)cz;
-					temp.type = block;
 					buffer.Add(temp);
 				}
 			}
-			Draw(ref buffer, p, x, y, z, height, block, invert);
+			Draw(ref buffer, p, x, y, z, height, type, extType, invert);
 		}
 
 		//For the pyramid commands, Radius still refers to the distance from the center point, but is axis independant, rather than a referance to both axes
-		public static void Pyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block, bool invert) {
-			List<CatchPos> buffer = new List<CatchPos>();
-			CatchPos temp = new CatchPos();
+		public static void Pyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte type, byte extType, bool invert) {
+			List<Pos> buffer = new List<Pos>();
+			Pos temp = new Pos();
 			for (short yy = 0; yy <= height; yy++)
 				for (short zz = (short)-radius; zz <= radius; zz++)
 					for (short xx = (short)-radius; xx <= radius; xx++)
@@ -98,16 +96,15 @@ namespace MCGalaxy.Util {
 				byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 				if (ctile == 0){
 					temp.x = (ushort)cx; temp.y = (ushort)cy; temp.z = (ushort)cz;
-					temp.type = block;
 					buffer.Add(temp);
 				}
 			}
-			Draw(ref buffer, p, x, y, z, height, block, invert);
+			Draw(ref buffer, p, x, y, z, height, type, extType, invert);
 		}
 		
-		public static void HPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte block, bool invert) {
-			List<CatchPos> buffer = new List<CatchPos>();
-			CatchPos temp = new CatchPos();
+		public static void HPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte type, byte extType, bool invert) {
+			List<Pos> buffer = new List<Pos>();
+			Pos temp = new Pos();
 			for (short yy = 0; yy <= height; yy++)
 				for (short zz = (short)-radius; zz <= radius; zz++)
 					for (short xx = (short)-radius; xx <= radius; xx++)
@@ -124,29 +121,28 @@ namespace MCGalaxy.Util {
 				byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
 				if (ctile == 0) {
 					temp.x = (ushort)cx; temp.y = (ushort)cy; temp.z = (ushort)cz;
-					temp.type = block;
 					buffer.Add(temp);
 				}
 			}
-			Draw(ref buffer, p, x, y, z, height, block, invert);
+			Draw(ref buffer, p, x, y, z, height, type, extType, invert);
 		}
 		
-		static void Draw(ref List<CatchPos> buffer, Player p, ushort x, ushort y, ushort z, int height, byte block, bool invert) {
+		static void Draw(ref List<Pos> buffer, Player p, ushort x, ushort y, ushort z, int height, byte type, byte extType, bool invert) {
 			if (buffer.Count > p.group.maxBlocks) {
 				Player.SendMessage(p, "You tried drawing " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return;
 			}
-			buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+			buffer.ForEach(delegate(Pos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, type, extType); });
 			buffer = null;
 			if (invert)
-				p.level.Blockchange(p, x, y, z, block);
+				p.level.Blockchange(p, x, y, z, type, extType);
 			else
-				p.level.Blockchange(p, x, (ushort)(y + height), z, block);
+				p.level.Blockchange(p, x, (ushort)(y + height), z, type, extType);
 		}
 
-		public static void Sphere(Player p, ushort x, ushort y, ushort z, int radius, byte type) {
+		public static void Sphere(Player p, ushort x, ushort y, ushort z, int radius, byte type, byte extType) {
 			int upper = (radius + 1) * (radius + 1);
-			List<CatchPos> buffer = new List<CatchPos>();
-			CatchPos temp = new CatchPos();
+			List<Pos> buffer = new List<Pos>();
+			Pos temp = new Pos();
 			for (short yy = (short)-radius; yy <= radius; yy++)
 				for (short zz = (short)-radius; zz <= radius; zz++)
 					for (short xx = (short)-radius; xx <= radius; xx++)
@@ -154,19 +150,18 @@ namespace MCGalaxy.Util {
 				int curDist = xx * xx + yy * yy + zz * zz;
 				if (curDist < upper) {
 					temp.x = (ushort)(x + xx); temp.y = (ushort)(y + yy); temp.z = (ushort)(z + zz);
-					temp.type = type;
 					buffer.Add(temp);
 				}
 			}
 			if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried Sphering " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-			buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+			buffer.ForEach(delegate(Pos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, type, extType); });
 			buffer = null;
 		}
 		
-		public static void HSphere(Player p, ushort x, ushort y, ushort z, int radius, byte type) {
+		public static void HSphere(Player p, ushort x, ushort y, ushort z, int radius, byte type, byte extType) {
 			int upper = (radius + 1) * (radius + 1), inner = (radius - 1) * (radius - 1);
-			List<CatchPos> buffer = new List<CatchPos>();
-			CatchPos temp = new CatchPos();
+			List<Pos> buffer = new List<Pos>();
+			Pos temp = new Pos();
 			for (short yy = (short)-radius; yy <= radius; yy++)
 				for (short zz = (short)-radius; zz <= radius; zz++)
 					for (short xx = (short)-radius; xx <= radius; xx++)
@@ -174,12 +169,11 @@ namespace MCGalaxy.Util {
 				int curDist = xx * xx + yy * yy + zz * zz;
 				if (curDist < upper && curDist >= inner) {
 					temp.x = (ushort)(x + xx); temp.y = (ushort)(y + yy); temp.z = (ushort)(z + zz);
-					temp.type = type;
 					buffer.Add(temp);
 				}
 			}
 			if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HSphering " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-			buffer.ForEach(delegate(CatchPos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.type); });
+			buffer.ForEach(delegate(Pos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, type, extType); });
 			buffer = null;
 		}
 
@@ -212,5 +206,6 @@ namespace MCGalaxy.Util {
 			buffer = null;
 		}
 		struct CatchPos { public ushort x, y, z; public byte type; }
+		struct Pos { public ushort x, y, z; }
 	}
 }
