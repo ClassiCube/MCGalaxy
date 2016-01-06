@@ -74,7 +74,7 @@ namespace MCGalaxy {
             }
         }
         
-        public bool hasCpe = false, waitingForExtInfo = false;
+        public bool hasCpe = false, finishedLogin = false;
         public string appName;
         public int extensionCount;
         public List<string> extensions = new List<string>();
@@ -82,12 +82,15 @@ namespace MCGalaxy {
         void HandleExtInfo( byte[] message ) {
             appName = enc.GetString( message, 0, 64 ).Trim();
             extensionCount = message[65];
-            waitingForExtInfo = false;
         }
 
         void HandleExtEntry( byte[] message ) {
             AddExtension(enc.GetString(message, 0, 64).Trim(), NTHO_Int(message, 64));
             extensionCount--;
+            if (extensionCount <= 0 && !finishedLogin) {
+            	CompleteLoginProcess();
+            	finishedLogin = true;
+            }
         }
         public static int NTHO_Int(byte[] x, int offset)
         {

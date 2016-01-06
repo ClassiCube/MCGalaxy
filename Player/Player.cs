@@ -98,7 +98,7 @@ namespace MCGalaxy {
         public bool painting = false;
         public bool muted = false;
         public bool jailed = false;
-        public bool agreed = false;
+        public bool agreed = true;
         public bool invincible = false;
         public string prefix = "";
         public string title = "";
@@ -532,27 +532,28 @@ namespace MCGalaxy {
             return buffer;
         }
 		
+        #region Login
+        
         void HandleLogin(byte[] message)
         {
             try
             {
-                //byte[] message = (byte[])m;
-                if (loggedIn)
-                    return;
+                if (loggedIn) return;
 
                 byte version = message[0];
                 name = enc.GetString(message, 1, 64).Trim();
                 truename = name;
+                
                 lock (pendingLock) {
-                	pendingNames.Add(name);
-                	int altsCount = 0;
-                	foreach (string other in pendingNames) {
-                		if (other == truename) altsCount++;
-                	}
-                	
-                	if (altsCount > 1) {
-                		Kick("Already logged in!"); return;
-                	}
+                    pendingNames.Add(name);
+                    int altsCount = 0;
+                    foreach (string other in pendingNames) {
+                        if (other == truename) altsCount++;
+                    }
+                    
+                    if (altsCount > 1) {
+                        Kick("Already logged in!"); return;
+                    }
                 }
 
                 string verify = enc.GetString(message, 65, 32).Trim();
@@ -587,76 +588,11 @@ namespace MCGalaxy {
                     } else {
                         Kick("You're still banned (temporary ban)!");
                     }
-                }
-                catch { }
+                } catch { }
 
-                // Whitelist check.
-                if (Server.useWhitelist)
-                {
-                    if (Server.verify)
-                    {
-                        if (Server.whiteList.Contains(name))
-                        {
-                            onWhitelist = true;
-                        }
-                    }
-                    else
-                    {
-                        // Verify Names is off. Gotta check the hard way.
-                        Database.AddParams("@IP", ip);
-                        DataTable ipQuery = Database.fillData("SELECT Name FROM Players WHERE IP = @IP");
-
-                        if (ipQuery.Rows.Count > 0)
-                        {
-                            if (ipQuery.Rows.Contains(name) && Server.whiteList.Contains(name))
-                            {
-                                onWhitelist = true;
-                            }
-                        }
-                        ipQuery.Dispose();
-                    }
-                    onWhitelist = isDev || isMod;
-                    if (!onWhitelist) { Kick("This is a private server!"); return; } //i think someone forgot this?
-                }
-
-                if (File.Exists("ranks/ignore/" + this.name + ".txt"))
-                {
-                    try
-                    {
-                        string[] checklines = File.ReadAllLines("ranks/ignore/" + this.name + ".txt");
-                        foreach (string checkline in checklines)
-                        {
-                            this.listignored.Add(checkline);
-                        }
-                        File.Delete("ranks/ignore/" + this.name + ".txt");
-                    }
-                    catch
-                    {
-                        Server.s.Log("Failed to load ignore list for: " + this.name);
-                    }
-                }
-
-                if (File.Exists("ranks/ignore/GlobalIgnore.xml"))
-                {
-                    try
-                    {
-                        string[] searchxmls = File.ReadAllLines("ranks/ignore/GlobalIgnore.xml");
-                        foreach (string searchxml in searchxmls)
-                        {
-                            globalignores.Add(searchxml);
-                        }
-                        foreach (string ignorer in globalignores)
-                        {
-                            Player foundignore = Player.Find(ignorer);
-                            foundignore.ignoreglobal = true;
-                        }
-                        File.Delete("ranks/ignore/GlobalIgnore.xml");
-                    }
-                    catch
-                    {
-                        Server.s.Log("Failed to load global ignore list!");
-                    }
-                }
+                if (!CheckWhitelist())
+                    return;
+                LoadIgnores();
                 // ban check
                 if (!isDev && !isMod)
                 {
@@ -722,8 +658,18 @@ namespace MCGalaxy {
                 }
 
                 if (version != Server.version) { Kick("Wrong version!"); return; }
-                if (type == 0x42)
-                {
+                
+                foreach (Player p in players) {
+                    if (p.name == name)  {
+                        if (Server.verify) {
+                            p.Kick("Someone logged in as you!"); break;
+                        } else { 
+                            Kick("Already logged in!"); return;
+                        }
+                    }
+                }
+                
+                if (type == 0x42) {
                     hasCpe = true;
 
                     SendExtInfo(16);
@@ -748,31 +694,81 @@ namespace MCGalaxy {
                     SendExtEntry(CpeExt.BlockDefinitions, 1);
                     
                     SendExtEntry(CpeExt.BlockDefinitionsExt, 1);
+                } else {
+                    CompleteLoginProcess();
                 }
-                foreach (Player p in players)
-                {
-                    if (p.name == name)
-                    {
-                        if (Server.verify)
-                        {
-                            p.Kick("Someone logged in as you!"); break;
-                        }
-                        else { Kick("Already logged in!"); return; }
-                    }
-                }
-
+                
                 try { left.Remove(name.ToLower()); }
                 catch { }
 
                 group = Group.findPlayerGroup(name);
+                Loading = true;
+                if (disconnected) return;             
+                id = FreeId();
+            } catch (Exception e) {
+                Server.ErrorLog(e);
+                Player.GlobalMessage("An error occurred: " + e.Message);
+            }
+        }
+        
+        bool CheckWhitelist() {
+            if (!Server.useWhitelist)
+                return true;
+            
+            if (Server.verify) {
+                if (Server.whiteList.Contains(name))
+                    onWhitelist = true;
+            } else {
+                // Verify Names is off. Gotta check the hard way.
+                Database.AddParams("@IP", ip);
+                DataTable ipQuery = Database.fillData("SELECT Name FROM Players WHERE IP = @IP");
 
+                if (ipQuery.Rows.Count > 0) {
+                    if (ipQuery.Rows.Contains(name) && Server.whiteList.Contains(name)) {
+                        onWhitelist = true;
+                    }
+                }
+                ipQuery.Dispose();
+            }
+            if (!onWhitelist) 
+                Kick("This is a private server!"); //i think someone forgot this?
+            return onWhitelist;
+        }
+        
+        void LoadIgnores() {
+            if (File.Exists("ranks/ignore/" + name + ".txt")) {
+                try {
+                    string[] lines = File.ReadAllLines("ranks/ignore/" + name + ".txt");
+                    foreach (string line in lines)
+                        listignored.Add(line);
+                    File.Delete("ranks/ignore/" + name + ".txt");
+                } catch {
+                    Server.s.Log("Failed to load ignore list for: " + name);
+                }
+            }
+
+            if (File.Exists("ranks/ignore/GlobalIgnore.xml")) {
+                try {
+                    string[] searchxmls = File.ReadAllLines("ranks/ignore/GlobalIgnore.xml");
+                    foreach (string searchxml in searchxmls)
+                        globalignores.Add(searchxml);
+                    
+                    foreach (string ignorer in globalignores) {
+                        Player foundignore = Player.Find(ignorer);
+                        foundignore.ignoreglobal = true;
+                    }
+                    File.Delete("ranks/ignore/GlobalIgnore.xml");
+                } catch {
+                    Server.s.Log("Failed to load global ignore list!");
+                }
+            }
+        }
+        
+        void CompleteLoginProcess() {
+            try {
                 SendMotd();
                 SendMap();
-                Loading = true;
                 if (disconnected) return;
-                
-                id = FreeId();
-
                 loggedIn = true;
 
                 lock (players)
@@ -783,114 +779,41 @@ namespace MCGalaxy {
                 Server.s.PlayerListUpdate();
 
                 //Test code to show when people come back with different accounts on the same IP
-                string temp = name + " is lately known as:";
+                string alts = name + " is lately known as:";
                 bool found = false;
-                if (!ip.StartsWith("127.0.0."))
-                {
-                    foreach (KeyValuePair<string, string> prev in left)
-                    {
+                if (!ip.StartsWith("127.0.0.")) {
+                    foreach (KeyValuePair<string, string> prev in left)  {
                         if (prev.Value == ip)
                         {
                             found = true;
-                            temp += " " + prev.Key;
+                            alts += " " + prev.Key;
                         }
                     }
-                    if (found)
-                    {
-                        if (this.group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
-                        {
-                            Chat.GlobalMessageOps(temp);
+                    if (found) {
+                        if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
+                            Chat.GlobalMessageOps(alts);
                             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
                         }
-
-                        Server.s.Log(temp);
+                        Server.s.Log(alts);
                     }
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
             }
-
+            
             //OpenClassic Client Check
             SendBlockchange(0, 0, 0, 0);
             Database.AddParams("@Name", name);
             DataTable playerDb = Database.fillData("SELECT * FROM Players WHERE Name=@Name");
 
-
             if (playerDb.Rows.Count == 0)
-            {
-                this.prefix = "";
-                this.time = "0 0 0 1";
-                this.title = "";
-                this.titlecolor = "";
-                this.color = group.color;
-                this.money = 0;
-                this.firstLogin = DateTime.Now;
-                this.totalLogins = 1;
-                this.totalKicked = 0;
-                this.overallDeath = 0;
-                this.overallBlocks = 0;
-
-                this.timeLogged = DateTime.Now;
-                SendMessage("Welcome " + DisplayName + "! This is your first visit.");
-                string query = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + name + "', " + money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
-                if (Server.useMySQL)
-                {
-                    MySQL.executeQuery(String.Format("INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) VALUES ('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')", name, ip, firstLogin, DateTime.Now, totalLogins, prefix, overallDeath, money, loginBlocks, totalKicked, time));
-                    MySQL.executeQuery(query);
-                }
-                else
-                {
-                    SQLite.executeQuery(String.Format("INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) VALUES ('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')", name, ip, firstLogin, DateTime.Now, totalLogins, prefix, overallDeath, money, loginBlocks, totalKicked, time));
-                    SQLite.executeQuery(query);
-                }
-            }
+                InitPlayerStats(playerDb);
             else
-            {
-                totalLogins = int.Parse(playerDb.Rows[0]["totalLogin"].ToString()) + 1;
-                time = playerDb.Rows[0]["TimeSpent"].ToString();
-                userID = int.Parse(playerDb.Rows[0]["ID"].ToString());
-                firstLogin = DateTime.Parse(playerDb.Rows[0]["firstLogin"].ToString());
-                timeLogged = DateTime.Now;
-                if (playerDb.Rows[0]["Title"].ToString().Trim() != "")
-                {
-                    string parse = playerDb.Rows[0]["Title"].ToString().Trim().Replace("[", "");
-                    title = parse.Replace("]", "");
-                }
-                if (playerDb.Rows[0]["title_color"].ToString().Trim() != "")
-                {
-                    titlecolor = c.Parse(playerDb.Rows[0]["title_color"].ToString().Trim());
-                }
-                else
-                {
-                    titlecolor = "";
-                }
-                if (playerDb.Rows[0]["color"].ToString().Trim() != "")
-                {
-                    color = c.Parse(playerDb.Rows[0]["color"].ToString().Trim());
-                }
-                else
-                {
-                    color = group.color;
-                }
-                overallDeath = int.Parse(playerDb.Rows[0]["TotalDeaths"].ToString());
-                overallBlocks = long.Parse(playerDb.Rows[0]["totalBlocks"].ToString().Trim());
-                //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
-                money = Economy.RetrieveEcoStats(this.name).money;
-                totalKicked = int.Parse(playerDb.Rows[0]["totalKicked"].ToString());
-                SendMessage("Welcome back " + color + prefix + DisplayName + Server.DefaultColor + "! You've been here " + totalLogins + " times!");
-                if (Server.muted.Contains(name))
-                {
-                    muted = true;
-                    GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
-                }
-            }
+                LoadPlayerStats(playerDb);
+            
             if (!Directory.Exists("players"))
-            {
                 Directory.CreateDirectory("players");
-            }
             PlayerDB.Load(this);
             SetPrefix();
             playerDb.Dispose();
@@ -899,93 +822,36 @@ namespace MCGalaxy {
                 PlayerConnect(this);
             OnPlayerConnectEvent.Call(this);
 
-            if (Server.server_owner != "" && Server.server_owner.ToLower().Equals(this.name.ToLower()))
-            {
+            if (Server.server_owner != "" && Server.server_owner.ToLower().Equals(name.ToLower())) {
                 if (color == Group.standard.color)
-                {
                     color = "&c";
-                }
                 if (title == "")
-                {
                     title = "Owner";
-                }
                 SetPrefix();
             }
 
-            if (Server.verifyadmins)
-            {
-                if (this.group.Permission >= Server.verifyadminsrank)
-                {
-                    adminpen = true;
-                }
-            }
+            if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank)
+                adminpen = true;
             if (emoteList.Contains(name)) parseSmiley = false;
-            if (!Directory.Exists("text/login")) {
+            if (!Directory.Exists("text/login"))
                 Directory.CreateDirectory("text/login");
-            }
-            if (!File.Exists("text/login/" + this.name + ".txt"))  {
+            if (!File.Exists("text/login/" + this.name + ".txt"))
                 CP437Writer.WriteAllText("text/login/" + this.name + ".txt", "joined the server.");
-            }
 
-            //very very sloppy, yes I know.. but works for the time
-            bool gotoJail = false;
-            string gotoJailMap = "";
-            string gotoJailName = "";
-            try
-            {
-                if (File.Exists("ranks/jailed.txt"))
-                {
-                    using (StreamReader read = new StreamReader("ranks/jailed.txt"))
-                    {
-                        string line;
-                        while ((line = read.ReadLine()) != null)
-                        {
-                            if (line.Split()[0].ToLower() == this.name.ToLower())
-                            {
-                                gotoJail = true;
-                                gotoJailMap = line.Split()[1];
-                                gotoJailName = line.Split()[0];
-                                break;
-                            }
-                        }
-                    }
-                }
-                else { File.Create("ranks/jailed.txt").Close(); }
-            }
-            catch
-            {
-                gotoJail = false;
-            }
-            if (gotoJail)
-            {
-                try
-                {
-                    Command.all.Find("goto").Use(this, gotoJailMap);
-                    Command.all.Find("jail").Use(null, gotoJailName);
-                }
-                catch (Exception e)
-                {
-                    Kick(e.ToString());
-                }
-            }
+            CheckLoginJailed();
 
-            if (Server.agreetorulesonentry)
-            {
+            if (Server.agreetorulesonentry) {
                 if (!File.Exists("ranks/agreed.txt"))
                     File.WriteAllText("ranks/agreed.txt", "");
                 var agreedFile = File.ReadAllText("ranks/agreed.txt");
-                if (this.group.Permission == LevelPermission.Guest)
-                {
-                    if (!agreedFile.Contains(this.name.ToLower()))
-                        SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
-                    else agreed = true;
+                if (group.Permission == LevelPermission.Guest && !agreedFile.Contains(this.name.ToLower())) {
+                    SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
+                    agreed = false;
                 }
-                else { agreed = true; }
             }
-            else { agreed = true; }
 
             string joinm = "&a+ " + this.color + this.prefix + this.DisplayName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
-            if (this.group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
+            if (group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
             {
                 if ((Server.guestJoinNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
                 {
@@ -995,7 +861,7 @@ namespace MCGalaxy {
                                                {
                                                    byte[] buffer = new byte[65];
                                                    string joinMsg = "^detail.user.join=" + color + name + c.white;
-									               NetUtils.WriteAscii(joinMsg, buffer, 1);
+                                                   NetUtils.WriteAscii(joinMsg, buffer, 1);
                                                    p1.SendRaw(Opcode.Message, buffer);
                                                    buffer = null;
                                                }
@@ -1006,25 +872,16 @@ namespace MCGalaxy {
                                            });
                 }
             }
-            if (this.group.Permission >= Server.adminchatperm && Server.adminsjoinsilent)
-            {
-                this.hidden = true;
-                this.adminchat = true;
+            if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
+                hidden = true;
+                adminchat = true;
             }
 
-            if (Server.verifyadmins)
-            {
-                if (this.group.Permission >= Server.verifyadminsrank)
-                {
-                    if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + this.name + ".dat"))
-                    {
-                        this.SendMessage("&cPlease set your admin verification password with &a/setpass [Password]!");
-                    }
-                    else
-                    {
-                        this.SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
-                    }
-                }
+            if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank) {
+                if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + this.name + ".dat"))
+                    SendMessage("&cPlease set your admin verification password with &a/setpass [Password]!");
+                else
+                    SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
             }
             try
             {
@@ -1095,7 +952,106 @@ namespace MCGalaxy {
             }
             Loading = false;
         }
+        
+        void InitPlayerStats(DataTable playerDb) {
+            prefix = "";
+            time = "0 0 0 1";
+            title = "";
+            titlecolor = "";
+            color = group.color;
+            money = 0;
+            firstLogin = DateTime.Now;
+            totalLogins = 1;
+            totalKicked = 0;
+            overallDeath = 0;
+            overallBlocks = 0;
+            timeLogged = DateTime.Now;
+            SendMessage("Welcome " + DisplayName + "! This is your first visit.");
+            
+            Database.executeQuery(String.Format("INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) VALUES " +
+                                                "('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')",
+                                                name, ip, firstLogin, DateTime.Now, totalLogins, prefix, overallDeath, money, loginBlocks, totalKicked, time));
+            string query = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + name + "', " + money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
+            Database.executeQuery(query);
+        }
+        
+        void LoadPlayerStats(DataTable playerDb) {
+            DataRow row = playerDb.Rows[0];
+            totalLogins = int.Parse(row["totalLogin"].ToString()) + 1;
+            time = row["TimeSpent"].ToString();
+            userID = int.Parse(row["ID"].ToString());
+            firstLogin = DateTime.Parse(row["firstLogin"].ToString());
+            timeLogged = DateTime.Now;
+            
+            if (row["Title"].ToString().Trim() != "") {
+                string parse = row["Title"].ToString().Trim().Replace("[", "");
+                title = parse.Replace("]", "");
+            }
+            
+            if (row["title_color"].ToString().Trim() != "")
+                titlecolor = c.Parse(row["title_color"].ToString().Trim());
+            else
+                titlecolor = "";
+            
+            if (row["color"].ToString().Trim() != "")
+                color = c.Parse(row["color"].ToString().Trim());
+            else
+                color = group.color;
+            
+            overallDeath = int.Parse(row["TotalDeaths"].ToString());
+            overallBlocks = long.Parse(row["totalBlocks"].ToString().Trim());
+            //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
+            money = Economy.RetrieveEcoStats(this.name).money;
+            totalKicked = int.Parse(row["totalKicked"].ToString());
+            SendMessage("Welcome back " + color + prefix + DisplayName + Server.DefaultColor + "! You've been here " + totalLogins + " times!");
+            if (Server.muted.Contains(name))
+            {
+                muted = true;
+                GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
+            }
+        }
+        
+        void CheckLoginJailed() {
+            //very very sloppy, yes I know.. but works for the time
+            bool gotoJail = false;
+            string gotoJailMap = "", gotoJailName = "";
+            try  {
+                if (File.Exists("ranks/jailed.txt"))
+                {
+                    using (StreamReader read = new StreamReader("ranks/jailed.txt"))
+                    {
+                        string line;
+                        while ((line = read.ReadLine()) != null)
+                        {
+                            string[] parts = line.Split();
+                            if (parts[0].ToLower() == this.name.ToLower())
+                            {
+                                gotoJail = true;
+                                gotoJailName = parts[0];
+                                gotoJailMap = parts[1];
+                                break;
+                            }
+                        }
+                    }
+                } else { 
+                    File.Create("ranks/jailed.txt").Close(); 
+                }
+            } catch {
+                gotoJail = false;
+            }
+            
+            if (gotoJail) {
+                try {
+                    Command.all.Find("goto").Use(this, gotoJailMap);
+                    Command.all.Find("jail").Use(null, gotoJailName);
+                } catch (Exception e) {
+                    Kick(e.ToString());
+                }
+            }
+        }
 
+        #endregion
+        
         public void SetPrefix() { 
             string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", c.Parse("blue"), color) : isMod ? string.Format("{1}[{0}Mod{1}] ", c.Parse("lime"), color) : isGCMod ? string.Format("{1}[{0}GCMod{1}] ", c.Parse("gold"), color) : "";
             //prefix = ( title == "" ) ? "" : ( titlecolor == "" ) ? color + "[" + title + color + "] " : titlecolor + "[" + titlecolor + title + titlecolor + "] " + color;
