@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                 cpos.type = type;
                 p.blockchangeObject = cpos;
             }
-            
+            OnUse(p, message, parts);
             Player.SendMessage(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
@@ -78,6 +78,8 @@ namespace MCGalaxy.Commands {
         protected abstract void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
         protected abstract SolidType GetType(string msg);
+        
+        protected virtual void OnUse(Player p, string msg, string[] parts) { }
         
         internal static byte GetBlock(Player p, string msg, out byte extType) {
             byte type = Block.Byte(msg);
@@ -114,8 +116,8 @@ namespace MCGalaxy.Commands {
         protected enum SolidType {
             solid, hollow, walls,
             holes, wire, random,
-            vertical, reverse,
-            Invalid = -1,
+            vertical, reverse, 
+            straight, Invalid = -1,
         }
     }
 }

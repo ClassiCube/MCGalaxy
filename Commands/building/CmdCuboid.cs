@@ -74,7 +74,9 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/cuboid [type] <solid/hollow/walls/holes/wire/random> - create a cuboid of blocks.");
+        	Player.SendMessage(p, "%T/cuboid [block type] <mode>");
+        	Player.SendMessage(p, "   %HCreates a cuboid between two points.");
+        	Player.SendMessage(p, "   %HMode can be: solid/hollow/walls/holes/wire/random");
         }
     }
 }
