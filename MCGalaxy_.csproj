@@ -123,7 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Building\CmdAbort.cs" />
-    <Compile Include="Commands\Building\CmdAddGlobalBlock.cs" />
+    <Compile Include="Commands\building\CmdGlobalBlock.cs" />
     <Compile Include="Commands\Building\CmdBind.cs" />
     <Compile Include="Commands\Building\CmdCenter.cs" />
     <Compile Include="Commands\Building\CmdClick.cs" />

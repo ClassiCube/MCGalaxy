@@ -1403,13 +1403,13 @@ namespace MCGalaxy
                 case "0":
                 case "air": return air;
                 case "1":
-                case "stone": return stone;
+                case "stone": return rock;
                 case "2":
                 case "grass": return grass;
                 case "3":
-                case "dirt": return 3;
+                case "dirt": return dirt;
                 case "4":
-                case "cobblestone": return 4;
+                case "cobblestone": return stone;
                 case "5":
                 case "wood": return 5;
                 case "6":

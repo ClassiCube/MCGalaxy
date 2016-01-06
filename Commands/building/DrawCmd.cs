@@ -101,7 +101,6 @@ namespace MCGalaxy.Commands {
         
         protected static void GetRealBlock(byte type, byte extType, Player p, ref CatchPos cpos) {
         	if (cpos.type != Block.Zero) return;
-        	Server.s.Log(type + "," + cpos.type);
             cpos.type = type < 128 ? p.bindings[type] : type;
             cpos.extType = extType;
         }

@@ -134,11 +134,12 @@ namespace MCGalaxy
                     BlockDefinitions = version;
                     BlockDefinition.SendAll(this); break;
                 case CpeExt.BlockDefinitionsExt:
-                    BlockDefinitionsExt = version; break;
+                    BlockDefinitionsExt = version;
+                    BlockDefinition.SendAll(this); break;
             }
         }
 
-        public bool HasExtension(string Extension, int version = 1) {
+        public bool HasCpeExt(string Extension, int version = 1) {
             if(!hasCpe)
                 return false;
             switch (Extension)
@@ -174,7 +175,7 @@ namespace MCGalaxy
                         SendChangeModel(0xFF, model);
                     } else {
                         SendChangeModel(p.id, p.model);
-                        if (p.HasExtension(CpeExt.ChangeModel))
+                        if (p.HasCpeExt(CpeExt.ChangeModel))
                             p.SendChangeModel(this.id, model);
                     }
                 });

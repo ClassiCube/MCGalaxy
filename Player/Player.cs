@@ -1076,7 +1076,7 @@ namespace MCGalaxy {
                         {
                             SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                         }
-                        if (HasExtension(CpeExt.ChangeModel))
+                        if (HasCpeExt(CpeExt.ChangeModel))
                         {
                             SendChangeModel(p.id, p.model);
                         }
@@ -1118,7 +1118,7 @@ namespace MCGalaxy {
                 byte extType = type;
                 
                 if (type >= Block.CpeCount) {
-                	if (!HasExtension(CpeExt.BlockDefinitions) 
+                	if (!HasCpeExt(CpeExt.BlockDefinitions) 
                 	    || BlockDefinition.GlobalDefinitions[type] == null) {
                 		Kick("Unknown block type!"); return;
                 	}
@@ -1766,7 +1766,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     return;
                 }
                 
-                if( HasExtension(CpeExt.LongerMessages) && continued != 0 ) {
+                if( HasCpeExt(CpeExt.LongerMessages) && continued != 0 ) {
                 	storedMessage += text;
                 	return;
                 }

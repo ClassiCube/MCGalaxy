@@ -19,29 +19,28 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace MCGalaxy {
     
     public sealed class BlockDefinition {
         
-        public byte ID;
+        public byte BlockID;
         public string Name;
-        public byte Solidity;
-        public byte MovementSpeed;
-        public byte TopT;
-        public byte SideT;
-        public byte BottomT;
-        public byte TransmitsLight;
+        public byte CollideType;
+        public float Speed;
+        public byte TopTex, SideTex, BottomTex;
+        public bool BlocksLight;
         public byte WalkSound;
-        public byte FullBright;
+        public bool FullBright;
         public byte Shape;
         public byte BlockDraw;
-        public byte FogD;
-        public byte FogR;
-        public byte FogG;
-        public byte FogB;
-        public byte FallBack;
+        public byte FogDensity,FogR, FogG, FogB;  
+        public byte FallBack;        
+        // BlockDefinitionsExt fields
+        public byte MinX, MinY, MinZ;
+        public byte MaxX, MaxY, MaxZ;
         
         public static BlockDefinition[] GlobalDefinitions = new BlockDefinition[256];
         
@@ -53,21 +52,28 @@ namespace MCGalaxy {
                 }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
-            }
+                GlobalDefinitions = new BlockDefinition[256];
+            }        	
+        	for (int i = 0; i < 256; i++) {
+        		if (GlobalDefinitions[i] != null && GlobalDefinitions[i].Name == null)
+        			GlobalDefinitions[i] = null;
+        	}
+        	
         	GlobalDefinitions[0] = new BlockDefinition();
         	GlobalDefinitions[0].Name = "Air fallback";
         	// TODO: temp blocks for debugging.
             GlobalDefinitions[130] = new BlockDefinition();
             GlobalDefinitions[130].Name = "To infinity and beyond!";
             GlobalDefinitions[130].Shape = 14;
-            GlobalDefinitions[130].ID = 130;
-            GlobalDefinitions[130].TopT = 10;
+            GlobalDefinitions[130].BlockID = 130;
+            GlobalDefinitions[130].TopTex = 10;
             
             GlobalDefinitions[131] = new BlockDefinition();
             GlobalDefinitions[131].Name = "Blocky!";
             GlobalDefinitions[131].Shape = 6;
-            GlobalDefinitions[131].ID = 131;
-            GlobalDefinitions[131].SideT = 5;
+            GlobalDefinitions[131].BlockID = 131;
+            GlobalDefinitions[131].SideTex = 5;
+            SaveGlobal("blocks.json");
         }
         
         public static void SaveGlobal(string path)  {
@@ -75,30 +81,91 @@ namespace MCGalaxy {
             File.WriteAllText(path, json);
         }
         
-        public static void AddGlobal(BlockDefinition bd) {
-            GlobalDefinitions[bd.ID] = bd;
+        public static void AddGlobal(BlockDefinition def) {
+            GlobalDefinitions[def.BlockID] = def;
             foreach (Player pl in Player.players) {
-                if (pl.HasExtension(CpeExt.BlockDefinitions)) {
-                    pl.SendBlockDefinitions(bd);
-                    pl.SendSetBlockPermission(bd.ID, 1, 1);
-                }
+                if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
+            		
+                if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
+                	SendDefineBlockExt(pl, def);
+                else
+                	SendDefineBlock(pl, def);
+                pl.SendSetBlockPermission(def.BlockID, 1, 1);
+            }
+        }
+        
+        public static void RemoveGlobal(BlockDefinition def) {
+        	GlobalDefinitions[def.BlockID] = def = null;
+        	foreach (Player p in Player.players) {
+            	if (p.HasCpeExt(CpeExt.BlockDefinitions))
+            		p.SendRaw(Opcode.CpeRemoveBlockDefinition, def.BlockID);
             }
         }
         
         public static void SendAll(Player pl) {
-            if (!pl.HasExtension(CpeExt.BlockDefinitions))
-                return;
+            if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) return;
             for (int i = 1; i < GlobalDefinitions.Length; i++) {
                 BlockDefinition def = GlobalDefinitions[i];
                 if (def == null) continue;
                 
-                pl.SendBlockDefinitions(def);
-                pl.SendSetBlockPermission(def.ID, 1, 1);
+                if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
+                	SendDefineBlockExt(pl, def);
+                else
+                	SendDefineBlock(pl, def);
+                pl.SendSetBlockPermission(def.BlockID, 1, 1);
             }
         }
         
         public static byte Fallback(byte customTile) {
             return Block.blue; // TODO: implement this
+        }
+        
+        static void SendDefineBlock(Player p, BlockDefinition def) {
+        	byte[] buffer = new byte[80];
+        	buffer[0] = Opcode.CpeDefineBlock;
+            MakeDefineBlockStart(def, buffer);
+            buffer[74] = def.Shape;
+            MakeDefineBlockEnd(def, 75, buffer);
+            p.SendRaw(buffer);
+        }
+        
+        static void SendDefineBlockExt(Player p, BlockDefinition def) {
+        	byte[] buffer = new byte[85];
+        	buffer[0] = Opcode.CpeDefineBlockExt;
+            MakeDefineBlockStart(def, buffer);
+            buffer[74] = def.MinX;
+            buffer[75] = def.MinZ;
+            buffer[76] = def.MinY;
+            buffer[77] = def.MaxX;
+            buffer[78] = def.MaxZ;
+            buffer[79] = def.MaxY;
+            MakeDefineBlockEnd(def, 80, buffer);
+            p.SendRaw(buffer);
+        }
+        
+        static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer) {
+        	// speed = 2^((raw - 128) / 64);
+            // therefore raw = 64log2(speed) + 128
+            byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
+            
+            buffer[1] = def.BlockID;
+            Encoding.ASCII.GetBytes(def.Name.PadRight(64), 0, 64, buffer, 2);
+            buffer[66] = def.CollideType;
+            buffer[67] = rawSpeed;
+            buffer[68] = def.TopTex;
+            buffer[69] = def.SideTex;
+            buffer[70] = def.BottomTex;
+            buffer[71] = (byte)(def.BlocksLight ? 0 : 1);
+            buffer[72] = def.WalkSound;
+            buffer[73] = (byte)(def.FullBright ? 1 : 0);
+        }
+        
+        static void MakeDefineBlockEnd(BlockDefinition def, int offset, byte[] buffer) {
+            buffer[offset + 0] = def.BlockDraw;
+            buffer[offset + 1] = def.FogDensity;
+            buffer[offset + 2] = def.FogR;
+            buffer[offset + 3] = def.FogG;
+            buffer[offset + 4] = def.FogB;
         }
     }
 }

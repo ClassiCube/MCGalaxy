@@ -71,21 +71,31 @@ namespace MCGalaxy {
             blocks[b] = type;
         }
         
-        public void SetExtTile(ushort x, ushort y, ushort z, byte type) {
+        public void SetExtTile(ushort x, ushort y, ushort z, byte extType) {
             int index = PosToInt(x, y, z);
             if (index < 0 || blocks == null) return;
-            SetExtTileNoCheck(x, y, z, type);
+            SetExtTileNoCheck(x, y, z, extType);
         }
         
-        public void SetExtTileNoCheck(ushort x, ushort y, ushort z, byte type) {
+        public void SetExtTileNoCheck(ushort x, ushort y, ushort z, byte extType) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;
             byte[] chunk = CustomBlocks[cIndex];
+            
             if (chunk == null) {
                 chunk = new byte[16 * 16 * 16];
                 CustomBlocks[cIndex] = chunk;
             }
-            chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = type;
+            chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = extType;
+        }
+        
+        public void RevertExtTileNoCheck(ushort x, ushort y, ushort z) {
+            int cx = x >> 4, cy = y >> 4, cz = z >> 4;
+            int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;        
+            byte[] chunk = CustomBlocks[cIndex];
+            
+            if (chunk == null) return;
+            chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
         }
         
         public void SetTile(ushort x, ushort y, ushort z, byte type, Player p, byte extType = 0) {
@@ -96,8 +106,11 @@ namespace MCGalaxy {
             blocks[b] = type;
             byte oldExtType = 0;
             
-            if (oldType == Block.custom_block)
+            if (oldType == Block.custom_block) {
             	oldExtType = GetExtTile(x, y, z);
+            	if (type != Block.custom_block)
+            		RevertExtTileNoCheck(x, y, z);
+            }
             if (type == Block.custom_block)
             	SetExtTileNoCheck(x, y, z, extType);
             if (p == null)
@@ -292,6 +305,8 @@ namespace MCGalaxy {
                 p.loginBlocks++;
                 p.overallBlocks++;
                 SetTile(x, y, z, type);
+                if (b == Block.custom_block && type != Block.custom_block)
+                	RevertExtTileNoCheck(x, y, z);
                 if (type == Block.custom_block)
                     SetExtTileNoCheck(x, y, z, extType);
                 
@@ -364,6 +379,10 @@ namespace MCGalaxy {
                 	ushort x, y, z;
                 	IntToPos(b, out x, out y, out z);
                 	SetExtTileNoCheck(x, y, z, extType);
+                } else if (oldBlock == Block.custom_block) {
+                	ushort x, y, z;
+                	IntToPos(b, out x, out y, out z);
+                	RevertExtTileNoCheck(x, y, z);
                 }
                 
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.

@@ -1,20 +1,20 @@
 /*
-	Copyright 2011 MCGalaxy
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2011 MCGalaxy
+        
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.Collections.Generic;
 namespace MCGalaxy.Commands
@@ -30,18 +30,12 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            CatchPos cpos;
-
+            CatchPos cpos = default(CatchPos);
             message = message.ToLower();
 
-            if (message == "")
-            {
-                cpos.maxNum = 0;
-                cpos.extraType = 0;
+            if (message == "") {
                 cpos.type = Block.Zero;
-            }
-            else if (message.IndexOf(' ') == -1)
-            {
+            } else if (message.IndexOf(' ') == -1) {
                 try
                 {
                     cpos.maxNum = int.Parse(message);
@@ -82,8 +76,8 @@ namespace MCGalaxy.Commands
                         cpos.type = Block.Byte(message.Split(' ')[1]);
                         if (cpos.type == Block.Zero)
                             if (message.Split(' ')[1] == "wall") cpos.extraType = 1;
-                            else if (message.Split(' ')[1] == "straight") cpos.extraType = 2;
-                            else cpos.extraType = 0;
+                        else if (message.Split(' ')[1] == "straight") cpos.extraType = 2;
+                        else cpos.extraType = 0;
                         else cpos.extraType = 0;
                     }
                     catch
@@ -130,9 +124,9 @@ namespace MCGalaxy.Commands
         {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            if (cpos.type == Block.Zero) type = p.bindings[type]; else type = cpos.type;
-            List<CatchPos> buffer = new List<CatchPos>();
-            CatchPos pos = new CatchPos();
+            GetRealBlock(type, extType, p, ref cpos);
+            List<Pos> buffer = new List<Pos>();
+            Pos pos = new Pos();
 
             if (cpos.extraType == 2)
             {  //Fun part of making a straight line
@@ -252,8 +246,7 @@ namespace MCGalaxy.Commands
             pos.z = (ushort)pixel[2];
             buffer.Add(pos);
 
-            int count;
-            count = Math.Min(buffer.Count, cpos.maxNum);
+            int count = Math.Min(buffer.Count, cpos.maxNum);
             if (cpos.extraType == 1) count = count * Math.Abs(cpos.y - y);
 
             if (count > p.group.maxBlocks)
@@ -282,6 +275,15 @@ namespace MCGalaxy.Commands
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-        struct CatchPos { public ushort x, y, z; public int maxNum; public int extraType; public byte type; }
+        
+        struct CatchPos { public ushort x, y, z; public int maxNum; public int extraType; public byte type, extType; }
+        
+        struct Pos { public ushort x, y, z; }
+        
+        static void GetRealBlock(byte type, byte extType, Player p, ref CatchPos cpos) {
+            if (cpos.type != Block.Zero) return;
+            cpos.type = type < 128 ? p.bindings[type] : type;
+            cpos.extType = extType;
+        }
     }
 }

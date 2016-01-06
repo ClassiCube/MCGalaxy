@@ -242,14 +242,14 @@ namespace MCGalaxy {
                 foreach ( string line in Wordwrap(message) ) {
                     string newLine = line;
                     if ( newLine.TrimEnd(' ')[newLine.TrimEnd(' ').Length - 1] < '!' ) {
-                        if (!HasExtension(CpeExt.EmoteFix))
+                        if (!HasCpeExt(CpeExt.EmoteFix))
                             newLine += '\'';
                     }
                     
                     byte[] buffer = new byte[66];
                     buffer[0] = Opcode.Message;
                     buffer[1] = id;
-                    if(HasExtension(CpeExt.FullCP437))
+                    if(HasCpeExt(CpeExt.FullCP437))
                     	NetUtils.WriteCP437(newLine, buffer, 2);
                     else
                         NetUtils.WriteAscii(newLine, buffer, 2);
@@ -316,7 +316,7 @@ namespace MCGalaxy {
         public bool SendRawMap(Level level) {
             if ( level.blocks == null ) return false;
             bool success = true;
-            bool hasBlockDefinitions = HasExtension(CpeExt.BlockDefinitions);
+            bool hasBlockDefinitions = HasCpeExt(CpeExt.BlockDefinitions);
             
             try { 
                 byte[] buffer = new byte[level.blocks.Length + 4];
@@ -375,11 +375,11 @@ namespace MCGalaxy {
                 SendRaw(buffer);
                 Loading = false;
                 
-                if (HasExtension(CpeExt.EnvWeatherType))
+                if (HasCpeExt(CpeExt.EnvWeatherType))
                     SendSetMapWeather(level.weather);
-                if (HasExtension(CpeExt.EnvColors))
+                if (HasCpeExt(CpeExt.EnvColors))
                 	SendCurrentEnvColors();
-                if (HasExtension(CpeExt.EnvMapAppearance))
+                if (HasCpeExt(CpeExt.EnvMapAppearance))
                 	SendCurrentMapAppearance();
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
@@ -409,7 +409,7 @@ namespace MCGalaxy {
             buffer[73] = roty;
             SendRaw(buffer);
 
-            if (HasExtension(CpeExt.ChangeModel))
+            if (HasCpeExt(CpeExt.ChangeModel))
             	UpdateModels();
         }
         
@@ -457,7 +457,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (type == Block.custom_block) {
-            	if (HasExtension(CpeExt.BlockDefinitions))
+            	if (HasCpeExt(CpeExt.BlockDefinitions))
             		buffer[7] = level.GetExtTile(x, y, z);
             	else
             		buffer[7] = BlockDefinition.Fallback(level.GetExtTile(x, y, z));
@@ -481,7 +481,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (type == Block.custom_block) {
-            	if (HasExtension(CpeExt.BlockDefinitions))
+            	if (HasCpeExt(CpeExt.BlockDefinitions))
             		buffer[7] = extType;
             	else
             		buffer[7] = BlockDefinition.Fallback(extType);
@@ -649,27 +649,6 @@ namespace MCGalaxy {
             buffer[5] = allowchangingweather;
             NetUtils.WriteI16(maxjumpheight, buffer, 6);
             SendRaw( Opcode.CpeHackControl, buffer );
-        }
-        
-        public void SendBlockDefinitions(BlockDefinition bd) {
-            byte[] buffer = new byte[79];
-            buffer[0] = bd.ID;
-            NetUtils.WriteAscii(bd.Name, buffer, 1);
-            buffer[65] = bd.Solidity;
-            buffer[66] = bd.MovementSpeed;
-            buffer[67] = bd.TopT;
-            buffer[68] = bd.SideT;
-            buffer[69] = bd.BottomT;
-            buffer[70] = bd.TransmitsLight;
-            buffer[71] = bd.WalkSound;
-            buffer[72] = bd.FullBright;
-            buffer[73] = bd.Shape;
-            buffer[74] = bd.BlockDraw;
-            buffer[75] = bd.FogD;
-            buffer[76] = bd.FogR;
-            buffer[77] = bd.FogG;
-            buffer[78] = bd.FogB;
-            SendRaw(Opcode.CpeDefineBlock, buffer);
         }
         
         void UpdatePosition() {

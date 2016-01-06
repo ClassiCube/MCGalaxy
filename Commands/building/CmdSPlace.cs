@@ -73,9 +73,8 @@ namespace MCGalaxy.Commands
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
-            type = p.bindings[type];
+        
+        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }

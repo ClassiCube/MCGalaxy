@@ -108,6 +108,7 @@ namespace MCGalaxy
             //all.Add(new CmdGcbanlistupdate());
             all.Add(new CmdGive());
             all.Add(new CmdGlobal());
+            all.Add(new CmdGlobalBlock());
             all.Add(new CmdGlobalCLS());
             all.Add(new CmdGoto());
             all.Add(new CmdGun());
