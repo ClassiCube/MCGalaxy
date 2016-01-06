@@ -61,7 +61,7 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, long seconds) {
+        protected override bool UndoEntry(Player p, string path, ref byte[] temp, long seconds) {
             Player.UndoPos Pos;
             Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
@@ -96,7 +96,7 @@ namespace MCGalaxy.Util {
             return true;
         }
         
-        protected override bool HighlightEntry(Player p, string path, long seconds) {
+        protected override bool HighlightEntry(Player p, string path, ref byte[] temp, long seconds) {
             Player.UndoPos Pos;
             Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');

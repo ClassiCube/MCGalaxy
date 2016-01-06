@@ -32,9 +32,9 @@ namespace MCGalaxy.Util {
         
         protected abstract void ReadUndoData(List<Player.UndoPos> buffer, string path);
         
-        protected abstract bool UndoEntry(Player p, string path, long seconds);
+        protected abstract bool UndoEntry(Player p, string path, ref byte[] temp, long seconds);
         
-        protected abstract bool HighlightEntry(Player p, string path, long seconds);
+        protected abstract bool HighlightEntry(Player p, string path, ref byte[] temp, long seconds);
         
         protected abstract string Extension { get; }
         
@@ -58,8 +58,6 @@ namespace MCGalaxy.Util {
         }
         
         public static void UndoPlayer(Player p, string targetName, long seconds, ref bool FoundUser) {
-            if (p != null)
-                p.RedoBuffer.Clear();
             FilterEntries(p, undoDir, targetName, seconds, false, ref FoundUser);
             FilterEntries(p, prevUndoDir, targetName, seconds, false, ref FoundUser);
         }
@@ -75,6 +73,7 @@ namespace MCGalaxy.Util {
                 return;
             string[] files = Directory.GetFiles(path);
             Array.Sort<string>(files, CompareFiles);
+            byte[] temp = null;
             
             for (int i = files.Length - 1; i >= 0; i--) {
                 path = files[i];
@@ -88,9 +87,9 @@ namespace MCGalaxy.Util {
                 if (format == null) continue;
                 
                 if (highlight) {
-                    if (!format.HighlightEntry(p, path, seconds)) break;
+                    if (!format.HighlightEntry(p, path, ref temp, seconds)) break;
                 } else {
-                    if (!format.UndoEntry(p, path, seconds)) break;
+                    if (!format.UndoEntry(p, path, ref temp, seconds)) break;
                 }
             }
             FoundUser = true;
