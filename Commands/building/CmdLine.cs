@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "line"; } }
         public override string shortcut { get { return "l"; } }
         public CmdLine() {}
-        int maxLen = int.MaxValue;
+        
+        protected override int MaxArgs { get { return 3; } }
         
         protected override SolidType GetType(string msg) {
             if (msg == "walls")
@@ -35,7 +36,7 @@ namespace MCGalaxy.Commands {
             return SolidType.solid;
         }
         
-        protected override void OnUse(Player p, string msg, string[] parts) {
+        protected override void OnUse(Player p, string msg, string[] parts, ref CatchPos cpos) {
             if (parts.Length == 2 || parts.Length == 3) {
                 string arg = parts[parts.Length - 1];
                 ushort len;
@@ -43,7 +44,7 @@ namespace MCGalaxy.Commands {
                     if (arg == "walls" || arg == "straight" || arg == "normal") return;                
                     Player.SendMessage(p, msg + " is not valid length, assuming maximum length allowed.");
                 } else {
-                    maxLen = len;
+                    cpos.data = len;
                 }
             } 
         }
@@ -87,6 +88,7 @@ namespace MCGalaxy.Commands {
 
             pos.x = (ushort)pixel[0]; pos.y = (ushort)pixel[1]; pos.z = (ushort)pixel[2];
             buffer.Add(pos);
+            int maxLen = cpos.data == null ? int.MaxValue : (ushort)cpos.data;
 
             int count = Math.Min(buffer.Count, maxLen);
             if (cpos.solid == SolidType.walls)

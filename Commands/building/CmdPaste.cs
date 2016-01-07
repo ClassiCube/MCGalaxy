@@ -47,6 +47,7 @@ namespace MCGalaxy.Commands
 			Player.UndoPos Pos1;
 			CopyState state = p.CopyBuffer;
 			if (state.X != state.OriginX) offX -= (state.Width - 1);
+			if (state.Y != state.OriginY) offY -= (state.Height - 1);
 			if (state.Z != state.OriginZ) offZ -= (state.Length - 1);
 			
 			if (p.level.bufferblocks && !p.level.Instant) {			

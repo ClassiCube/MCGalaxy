@@ -31,23 +31,20 @@ namespace MCGalaxy.Commands {
                 parts[i] = parts[i].ToLower();
             CatchPos cpos = default(CatchPos);
             
-            if (parts.Length > 2) {
+            if (parts.Length > MaxArgs) {
                 Help(p); return;
-            } else if (parts.Length == 2) {                
+            } else if (parts.Length >= 2) {                
                 byte type = GetBlock(p, parts[0], out cpos.extType);
                 if (type == 255) return;
                 SolidType solid = GetType(parts[1]);
                 if (solid == SolidType.Invalid) {
                     Help(p); return;
-                }
-                
+                }             
                 cpos.solid = solid;
                 cpos.type = type;
-                p.blockchangeObject = cpos;
             } else if (message == "") {
                 cpos.solid = SolidType.solid;
                 cpos.type = 0xFF;
-                p.blockchangeObject = cpos;
             } else if (parts.Length == 1) {
                 byte type = 0xFF;
                 SolidType solid = GetType(parts[0]);
@@ -55,13 +52,12 @@ namespace MCGalaxy.Commands {
                     solid = SolidType.solid;
                     type = GetBlock(p, parts[0], out cpos.extType);
                     if (type == 255) return;
-                }
-                
+                }             
                 cpos.solid = solid;
-                cpos.type = type;
-                p.blockchangeObject = cpos;
+                cpos.type = type;           
             }
-            OnUse(p, message, parts);
+            OnUse(p, message, parts, ref cpos);
+            p.blockchangeObject = cpos;
             Player.SendMessage(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
@@ -75,18 +71,21 @@ namespace MCGalaxy.Commands {
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
 
+        protected virtual int MaxArgs { get { return 2; } }
+         
         protected abstract void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
         protected abstract SolidType GetType(string msg);
         
-        protected virtual void OnUse(Player p, string msg, string[] parts) { }
+        protected virtual void OnUse(Player p, string msg, string[] parts, ref CatchPos cpos) { }
         
         internal static byte GetBlock(Player p, string msg, out byte extType) {
             byte type = Block.Byte(msg);
             extType = 0;
             if (type == Block.Zero) {
             	// try treat as a block definition id.
-            	if (!byte.TryParse(msg, out type) || BlockDefinition.GlobalDefinitions[type] == null) {
+            	type = BlockDefinition.GetBlock(msg);
+            	if (type == Block.Zero) {
             		Player.SendMessage(p, "There is no block \"" + msg + "\".");
             		return Block.Zero;
             	}
@@ -111,6 +110,7 @@ namespace MCGalaxy.Commands {
             public SolidType solid;
             public byte type, extType;
             public ushort x, y, z;
+            public object data;
         }
 
         protected enum SolidType {

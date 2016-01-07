@@ -53,26 +53,14 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 GlobalDefinitions = new BlockDefinition[256];
-            }        	
-        	for (int i = 0; i < 256; i++) {
-        		if (GlobalDefinitions[i] != null && GlobalDefinitions[i].Name == null)
-        			GlobalDefinitions[i] = null;
-        	}
-        	
-        	GlobalDefinitions[0] = new BlockDefinition();
-        	GlobalDefinitions[0].Name = "Air fallback";
-        	// TODO: temp blocks for debugging.
-            GlobalDefinitions[130] = new BlockDefinition();
-            GlobalDefinitions[130].Name = "To infinity and beyond!";
-            GlobalDefinitions[130].Shape = 14;
-            GlobalDefinitions[130].BlockID = 130;
-            GlobalDefinitions[130].TopTex = 10;
+            }            
+            for (int i = 0; i < 256; i++) {
+                if (GlobalDefinitions[i] != null && GlobalDefinitions[i].Name == null)
+                    GlobalDefinitions[i] = null;
+            }
             
-            GlobalDefinitions[131] = new BlockDefinition();
-            GlobalDefinitions[131].Name = "Blocky!";
-            GlobalDefinitions[131].Shape = 6;
-            GlobalDefinitions[131].BlockID = 131;
-            GlobalDefinitions[131].SideTex = 5;
+            GlobalDefinitions[0] = new BlockDefinition();
+            GlobalDefinitions[0].Name = "Air fallback";
             SaveGlobal("blocks.json");
         }
         
@@ -85,21 +73,22 @@ namespace MCGalaxy {
             GlobalDefinitions[def.BlockID] = def;
             foreach (Player pl in Player.players) {
                 if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
-            		
+                    
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
-                	SendDefineBlockExt(pl, def);
+                    SendDefineBlockExt(pl, def);
                 else
-                	SendDefineBlock(pl, def);
+                    SendDefineBlock(pl, def);
                 pl.SendSetBlockPermission(def.BlockID, 1, 1);
             }
         }
         
         public static void RemoveGlobal(BlockDefinition def) {
-        	GlobalDefinitions[def.BlockID] = def = null;
-        	foreach (Player p in Player.players) {
-            	if (p.HasCpeExt(CpeExt.BlockDefinitions))
-            		p.SendRaw(Opcode.CpeRemoveBlockDefinition, def.BlockID);
+            GlobalDefinitions[def.BlockID] = null;
+            foreach (Player p in Player.players) {
+                if (p.HasCpeExt(CpeExt.BlockDefinitions))
+                    p.SendRaw(Opcode.CpeRemoveBlockDefinition, def.BlockID);
             }
+            SaveGlobal("blocks.json");
         }
         
         public static void SendAll(Player pl) {
@@ -109,20 +98,36 @@ namespace MCGalaxy {
                 if (def == null) continue;
                 
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
-                	SendDefineBlockExt(pl, def);
+                    SendDefineBlockExt(pl, def);
                 else
-                	SendDefineBlock(pl, def);
+                    SendDefineBlock(pl, def);
                 pl.SendSetBlockPermission(def.BlockID, 1, 1);
             }
         }
         
-        public static byte Fallback(byte customTile) {
-            return Block.blue; // TODO: implement this
+        public static byte GetBlock(string msg) {
+             for (int i = 1; i < 255; i++) {
+                BlockDefinition def = GlobalDefinitions[i];
+                if (def == null) continue;
+                
+                if (def.Name.Replace(" ", "").Equals(msg, StringComparison.OrdinalIgnoreCase))
+                    return def.BlockID;
+            }
+            
+            byte type;
+            if (!byte.TryParse(msg, out type) || BlockDefinition.GlobalDefinitions[type] == null)
+                return Block.Zero;
+            return type;
+        }
+        
+        public static byte Fallback(byte tile) {
+            BlockDefinition def = GlobalDefinitions[tile];
+            return def == null ? Block.air : def.FallBack;
         }
         
         static void SendDefineBlock(Player p, BlockDefinition def) {
-        	byte[] buffer = new byte[80];
-        	buffer[0] = Opcode.CpeDefineBlock;
+            byte[] buffer = new byte[80];
+            buffer[0] = Opcode.CpeDefineBlock;
             MakeDefineBlockStart(def, buffer);
             buffer[74] = def.Shape;
             MakeDefineBlockEnd(def, 75, buffer);
@@ -130,8 +135,8 @@ namespace MCGalaxy {
         }
         
         static void SendDefineBlockExt(Player p, BlockDefinition def) {
-        	byte[] buffer = new byte[85];
-        	buffer[0] = Opcode.CpeDefineBlockExt;
+            byte[] buffer = new byte[85];
+            buffer[0] = Opcode.CpeDefineBlockExt;
             MakeDefineBlockStart(def, buffer);
             buffer[74] = def.MinX;
             buffer[75] = def.MinZ;
@@ -144,7 +149,7 @@ namespace MCGalaxy {
         }
         
         static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer) {
-        	// speed = 2^((raw - 128) / 64);
+            // speed = 2^((raw - 128) / 64);
             // therefore raw = 64log2(speed) + 128
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
             

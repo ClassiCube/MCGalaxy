@@ -33,14 +33,17 @@ namespace MCGalaxy.Commands {
         BlockDefinition bd;
 
         public override void Use(Player p, string message) {
-            if (p == null) {
-                Player.SendMessage(p, "This command can only be used in-game!");
-                return;
-            }
             string[] parts = message.Split(' ');
             for (int i = 0; i < parts.Length; i++)
                 parts[i] = parts[i].ToLower();
-            if (parts.Length < 1) { Help(p); return; }
+            
+            if (message == "") { 
+                if (bd != null)
+                    SendStepHelp(p, step);
+                else
+                    Help(p);
+                return;
+            }
             
             switch (parts[0]) {
                 case "add":
@@ -52,17 +55,55 @@ namespace MCGalaxy.Commands {
                 case "list":
                 case "ids":
                     ListHandler(p, parts); break;
+                case "abort":
+                    Player.SendMessage(p, "Aborted the custom block creation process.");
+                    bd = null; break;
+                    
                 default:
-                    Help(p); break;
+                    if (bd != null)
+                        DefineBlockStep(p, message);
+                    else
+                        Help(p);
+                    break;
             }
         }
         
+        int targetId;
         void AddHandler(Player p, string[] parts) {
-            p.ClearChat();
-            step = 1;
-            p.OnChat += DefineBlockStep;
-            p.SendMessage("Say 'continue' to proceed");
-            p.SendMessage("Say 'abort' anytime to abort the process");
+            if (parts.Length >= 2 ) {
+                string id = parts[1];
+                if (!CheckBlockId(p, id, out targetId)) return;
+                BlockDefinition def = BlockDefinition.GlobalDefinitions[targetId];
+                
+                if (def != null) {
+                    Player.SendMessage(p, "There is already a custom block with the id " + id +
+                                       ", you must either use a different id or use ""/gb remove " + id + """);
+                    return;
+                }
+            } else {
+                targetId = GetFreeId();
+                if (targetId == Block.Zero) {
+                    Player.SendMessage(p, "There are no custom block ids left, " +
+                                       "you must /gb remove a custom block first.");
+                    return;
+                }
+            }
+            
+            bd = new BlockDefinition();                    
+            Player.SendMessage(p, "Type '/gb abort' at anytime to abort the creation process.");
+            Player.SendMessage(p, "Type '/gb revert' to go back a step in the creation process.");
+            Player.SendMessage(p, "Use '/gb <arg>' to enter arguments for the creation process.");
+            Player.SendMessage(p, "%f----------------------------------------------------------");
+            step = 2;
+            SendStepHelp(p, step);
+        }
+        
+        byte GetFreeId() {
+            for (int i = 70; i < 255; i++) {
+                if (BlockDefinition.GlobalDefinitions[i] == null)
+                    return (byte)i;
+            }
+            return Block.Zero;
         }
         
         void ListHandler(Player p, string[] parts) {
@@ -89,7 +130,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-       void RemoveHandler(Player p, string[] parts) {
+        void RemoveHandler(Player p, string[] parts) {
             if (parts.Length < 2) { Help(p); return; }
             int blockID;
             if (!CheckBlockId(p, parts[1], out blockID)) return;
@@ -106,36 +147,14 @@ namespace MCGalaxy.Commands {
         }
         
         void DefineBlockStep(Player p, string value) {
-            p.SendMessage("&a==================================");
-            p.cancelchat = true;
-            string opt = value.ToLower();
-            
-            if (opt == "abort") {
-                p.ClearChat();
-                p.SendMessage("Aborted.");
-                bd = null;
-                return;
-            }
-            if (step == 1) {
-                if (opt == "continue") {
-                    step++;
-                    SendStepHelp(p, step);
-                    bd = new BlockDefinition();
-                } else {
-                    p.ClearChat();
-                    p.SendMessage("Aborted. Use command again");
-                    bd = null;
-                }
-                return;
-            }
+            string opt = value.ToLower();            
             if (opt == "revert" && step > 2) {
-            	step--;
-            	SendStepHelp(p, step);
-            	return;
+                step--;
+                SendStepHelp(p, step); return;
             }
             
             if (step == 2) {
-                bd.Name = value.Capitalize();
+                bd.Name = value;
                 step++;
             } else if (step == 3) {
                 if (value == "0" || value == "1" || value == "2") {
@@ -174,14 +193,14 @@ namespace MCGalaxy.Commands {
                     step++;
             } else if (step == 12) {
                 if (value == "0" || value == "1") {
-            		bd.Shape = value == "0" ? (byte)0 : (byte)16;
-            		step = bd.Shape == 0 ? 15 : 13;
+                    bd.Shape = value == "0" ? (byte)0 : (byte)16;
+                    step = bd.Shape == 0 ? 15 : 13;
                 }
             } else if (step == 13) {
-            	if (ParseCoords(value, out bd.MinX, out bd.MinY, out bd.MinZ))
+                if (ParseCoords(value, out bd.MinX, out bd.MinY, out bd.MinZ))
                     step++;
             } else if (step == 14) {
-            	if (ParseCoords(value, out bd.MaxX, out bd.MaxY, out bd.MaxZ))
+                if (ParseCoords(value, out bd.MaxX, out bd.MaxY, out bd.MaxZ))
                     step++;
                 bd.Shape = bd.MaxY;
             } else if (step == 15) {
@@ -199,36 +218,37 @@ namespace MCGalaxy.Commands {
             } else if (step == 19) {
                 if (Block.Byte(value) == Block.Zero) {
                     SendStepHelp(p, step); return;
-                }
-                
+                }                
                 bd.FallBack = Block.Byte(value);
-                p.SendMessage("Created custom block " + bd.Name);
-                p.ClearChat();
-
-                byte id = 70;
-                for (int i = 70; i < 255; i++) {
-                    if ( BlockDefinition.GlobalDefinitions[i] == null) {
-                        id = (byte)i; break;
+                
+                // in case the list is modified before we finish the command.
+                if (BlockDefinition.GlobalDefinitions[bd.BlockID] != null) {
+                    bd.BlockID = GetFreeId();
+                    if (bd.BlockID == Block.Zero) {
+                        Player.SendMessage(p, "There are no custom block ids left, " +
+                                       "you must /gb remove a custom block first.");
+                        return;
                     }
                 }
                 
-                bd.BlockID = id;
+                Player.SendMessage(p, "Created a new custom block " + bd.Name + "(" + bd.BlockID + ")");
                 BlockDefinition.AddGlobal(bd);
                 BlockDefinition.SaveGlobal("blocks.json");
+                bd = null;
                 return;
             }
             SendStepHelp(p, step);
         }
         
         static bool ParseCoords(string parts, out byte x, out byte y, out byte z) {
-        	x = 0; y = 0; z = 0;
-        	string[] coords = parts.Split(' ');
-        	if (coords.Length != 3) return false;
-        	
-        	if (!byte.TryParse(coords[0], out x) || !byte.TryParse(coords[1], out y) ||
-        	    !byte.TryParse(coords[2], out z)) return false;
-        	if (x > 16 || y > 16 || z > 16) return false;
-        	return true;
+            x = 0; y = 0; z = 0;
+            string[] coords = parts.Split(' ');
+            if (coords.Length != 3) return false;
+            
+            if (!byte.TryParse(coords[0], out x) || !byte.TryParse(coords[1], out y) ||
+                !byte.TryParse(coords[2], out z)) return false;
+            if (x > 16 || y > 16 || z > 16) return false;
+            return true;
         }
         
         static string[][] stepsHelp = new string[][] {
@@ -256,12 +276,12 @@ namespace MCGalaxy.Commands {
                 "5 = Metal, 6 = Glass, 7 = Cloth, 8 = Sand, 9 = Snow",
             },
             new[] { "Type '0' if the block should be darkened when in shadow, '1' if not(e.g lava)." },
-             new[] { "Define the block's draw method.", "0 = Opaque, 1 = Transparent (Like glass)",
+            new[] { "Define the block's draw method.", "0 = Opaque, 1 = Transparent (Like glass)",
                 "2 = Transparent (Like leaves), 3 = Translucent (Like ice)",
             },
             new[] { "Type '0' if the block is treated as a sprite(e.g roses), '1' if not." },
             new[] { "Enter the three minimum coordinates of the cube in pixels (separated by spaces). There are 16 pixels per block." },
-            new[] { "Enter the three maximum coordinates of the cube in pixels (separated by spaces). There are 16 pixels per block." },         
+            new[] { "Enter the three maximum coordinates of the cube in pixels (separated by spaces). There are 16 pixels per block." },
             new[] { "Define the block's fog density (The density of it inside, i.e water, lava",
                 "0 = No fog at all; 1-255 = Less to greater density",
             },
@@ -277,12 +297,13 @@ namespace MCGalaxy.Commands {
             string[] help = stepsHelp[step];
             for (int i = 0; i < help.Length; i++)
                 Player.SendMessage(p, help[i]);
+            Player.SendMessage(p, "%f--------------------------");
         }
         
         static bool CheckBlockId(Player p, string arg, out int blockId) {
             if (!int.TryParse(arg, out blockId)) {
                 Player.SendMessage(p, "Provided block id is not a number."); return false;
-            }           
+            }
             if (blockId <= 0 || blockId >= 255) {
                 Player.SendMessage(p, "Block id must be between 1-254"); return false;
             }
@@ -291,7 +312,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/globalblock <add/remove/list>");
-            Player.SendMessage(p, "%H   /gb add - begins the creation a new custom block.");
+            Player.SendMessage(p, "%H   /gb add [id] - begins the creation a new custom block.");
             Player.SendMessage(p, "%H   /gb remove id - removes the custom block with the given id.");
             Player.SendMessage(p, "%H   /gb list [offset] - lists all custom blocks.");
         }
