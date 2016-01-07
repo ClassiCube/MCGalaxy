@@ -24,10 +24,10 @@ namespace MCGalaxy.Commands
         public override string name { get { return "cuboid"; } }
         public override string shortcut { get { return "z"; } }
 
-        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type) {
+        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            type = cpos.type == Block.Zero ? p.bindings[type] : cpos.type;
+            GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
             Brush brush = null;
 
@@ -44,10 +44,10 @@ namespace MCGalaxy.Commands
                     drawOp = new CuboidWireframeDrawOp(); break;
                 case SolidType.random:
                     drawOp = new CuboidDrawOp();
-                    brush = new RandomBrush(type); break;
+                    brush = new RandomBrush(cpos.type, cpos.extType); break;
             }
             
-            if (brush == null) brush = new SolidBrush(type);
+            if (brush == null) brush = new SolidBrush(cpos.type, cpos.extType);
             ushort x1 = Math.Min(cpos.x, x), x2 = Math.Max(cpos.x, x);
             ushort y1 = Math.Min(cpos.y, y), y2 = Math.Max(cpos.y, y);
             ushort z1 = Math.Min(cpos.z, z), z2 = Math.Max(cpos.z, z);            
@@ -74,7 +74,9 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/cuboid [type] <solid/hollow/walls/holes/wire/random> - create a cuboid of blocks.");
+        	Player.SendMessage(p, "%T/cuboid [block type] <mode>");
+        	Player.SendMessage(p, "   %HCreates a cuboid between two points.");
+        	Player.SendMessage(p, "   %HMode can be: solid/hollow/walls/holes/wire/random");
         }
     }
 }

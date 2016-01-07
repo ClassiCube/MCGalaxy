@@ -35,31 +35,27 @@ namespace MCGalaxy
         public int EnvWeatherType = 0;
         public int HackControl = 0;
         public int EmoteFix = 0;
-        public int MessageTypes = 0;
-        public int BlockDefinitions = 0;
+        public int MessageTypes = 0;        
         public int LongerMessages = 0;
         public int FullCP437 = 0;
+        public int BlockDefinitions = 0;
+        public int BlockDefinitionsExt = 0;
 
         public void AddExtension(string Extension, int version)
         {
-            lock (this)
+            switch (Extension.Trim())
             {
-                switch (Extension.Trim())
-                {
-                    case "ClickDistance":
-                        ClickDistance = version;
-                        break;
-                    case "CustomBlocks":
-                        CustomBlocks = version;
-                        if (version == 1)
-                            SendCustomBlockSupportLevel(1);
-                        break;
-                    case "HeldBlock":
-                        HeldBlock = version;
-                        break;
-                    case "TextHotKey":
-                        TextHotKey = version;
-                        break;
+                case CpeExt.ClickDistance:
+                    ClickDistance = version; break;
+                case CpeExt.CustomBlocks:
+                    CustomBlocks = version;
+                    if (version == 1) SendCustomBlockSupportLevel(1);
+                    break;
+                case CpeExt.HeldBlock:
+                    HeldBlock = version; break;
+                case CpeExt.TextHotkey:
+                    TextHotKey = version; break;
+                    
                     /*case "ExtPlayerList":
                         ExtPlayerList = version;
                         spawned = true;
@@ -108,84 +104,63 @@ namespace MCGalaxy
                             Server.s.Log("Error spawning player \"" + name + "\"");
                         }
                         break;*/
-                    case "EnvColors":
-                        SendCurrentEnvColors();
-                        EnvColors = version;
-                        break;
-                    case "SelectionCuboid":
-                        SelectionCuboid = version;
-                        break;
-                    case "BlockPermissions":
-                        BlockPermissions = version;
-                        break;
-                    case "ChangeModel":
-                        UpdateModels();
-                        ChangeModel = version;
-                        break;
-                    case "EnvMapAppearance":
-                        SendCurrentMapAppearance();
-                        EnvMapAppearance = version;
-                        break;
-                    case "EnvWeatherType":
-                        SendSetMapWeather(level.weather);
-                        EnvWeatherType = version;
-                        break;
-                    case "HackControl":
-                        HackControl = version;
-                        break;
-                    case "EmoteFix":
-                        EmoteFix = version;
-                        break;
-                    case "MessageTypes":
-                        MessageTypes = version;
-                        break;
-                    case "BlockDefinitions":
-                        try
-                        {
-
-                            foreach (BlockDefinitions bd in Server.GlobalDefinitions)
-                            {
-                                SendBlockDefinitions(bd);
-                                SendSetBlockPermission(bd.ID, 1, 1);
-                            }
-                            Server.s.Log("Player supports Block Definitions");
-                        }
-                        catch { }
-                        BlockDefinitions = version;
-                        break;
-                     case "LongerMessages":
-                        LongerMessages = version;
-                        break;
-                     case "FullCP437":
-                        FullCP437 = version;
-                        break;
-                }
+                case CpeExt.EnvColors:
+                    SendCurrentEnvColors();
+                    EnvColors = version; break;
+                case CpeExt.SelectionCuboid:
+                    SelectionCuboid = version; break;
+                case CpeExt.BlockPermissions:
+                    BlockPermissions = version; break;
+                case CpeExt.ChangeModel:
+                    UpdateModels();
+                    ChangeModel = version; break;
+                case CpeExt.EnvMapAppearance:
+                    SendCurrentMapAppearance();
+                    EnvMapAppearance = version; break;
+                case CpeExt.EnvWeatherType:
+                    SendSetMapWeather(level.weather);
+                    EnvWeatherType = version; break;
+                case CpeExt.HackControl:
+                    HackControl = version; break;
+                case CpeExt.EmoteFix:
+                    EmoteFix = version; break;
+                case CpeExt.MessageTypes:
+                    MessageTypes = version; break;
+                case CpeExt.LongerMessages:
+                    LongerMessages = version; break;
+                case CpeExt.FullCP437:
+                    FullCP437 = version; break;
+                case CpeExt.BlockDefinitions:
+                    BlockDefinitions = version; break;
+                case CpeExt.BlockDefinitionsExt:
+                    BlockDefinitionsExt = version; break;
             }
         }
 
-        public bool HasExtension(string Extension, int version = 1) {
+        public bool HasCpeExt(string Extension, int version = 1) {
             if(!hasCpe)
                 return false;
             switch (Extension)
             {
-                case "ClickDistance": return ClickDistance == version;
-                case "CustomBlocks": return CustomBlocks == version;
-                case "HeldBlock": return HeldBlock == version;
-                case "TextHotKey": return TextHotKey == version;
-                case "ExtPlayerList": return ExtPlayerList == version;
-                case "EnvColors": return EnvColors == version;
-                case "SelectionCuboid": return SelectionCuboid == version;
-                case "BlockPermissions": return BlockPermissions == version;
-                case "ChangeModel": return ChangeModel == version;
-                case "EnvMapAppearance": return EnvMapAppearance == version;
-                case "EnvWeatherType": return EnvWeatherType == version;
-                case "HackControl": return HackControl == version;
-                case "EmoteFix": return EmoteFix == version;
-                case "MessageTypes": return MessageTypes == version;
-                case "BlockDefinitions": return BlockDefinitions == version;
-                case "LongerMessages": return LongerMessages == version;
-                case "FullCP437": return FullCP437 == version;
-                default: return false;
+                    case CpeExt.ClickDistance: return ClickDistance == version;
+                    case CpeExt.CustomBlocks: return CustomBlocks == version;
+                    case CpeExt.HeldBlock: return HeldBlock == version;
+                    case CpeExt.TextHotkey: return TextHotKey == version;
+                    case CpeExt.ExtPlayerList: return ExtPlayerList == version;
+                    case CpeExt.EnvColors: return EnvColors == version;
+                    case CpeExt.SelectionCuboid: return SelectionCuboid == version;
+                    case CpeExt.BlockPermissions: return BlockPermissions == version;
+                    case CpeExt.ChangeModel: return ChangeModel == version;
+                    case CpeExt.EnvMapAppearance: return EnvMapAppearance == version;
+                    case CpeExt.EnvWeatherType: return EnvWeatherType == version;
+                    case CpeExt.HackControl: return HackControl == version;
+                    case CpeExt.EmoteFix: return EmoteFix == version;
+                    case CpeExt.MessageTypes: return MessageTypes == version;                    
+                    case CpeExt.LongerMessages: return LongerMessages == version;
+                    case CpeExt.FullCP437: return FullCP437 == version;
+                    case CpeExt.BlockDefinitions: return BlockDefinitions == version;
+                    case CpeExt.BlockDefinitionsExt: return BlockDefinitionsExt == version;
+                    default: return false;
             }
         }
         
@@ -195,11 +170,11 @@ namespace MCGalaxy
                 {
                     if (p.level == this.level)
                         if (p == this) {
-                            SendChangeModel(0xFF, model);
-                        } else {
-                            SendChangeModel(p.id, p.model);
-                            if (p.HasExtension("ChangeModel"))
-                                p.SendChangeModel(this.id, model);
+                        SendChangeModel(0xFF, model);
+                    } else {
+                        SendChangeModel(p.id, p.model);
+                        if (p.HasCpeExt(CpeExt.ChangeModel))
+                            p.SendChangeModel(this.id, model);
                     }
                 });
         }
@@ -221,9 +196,30 @@ namespace MCGalaxy
             try {
                 Color col = System.Drawing.ColorTranslator.FromHtml("#" + src.ToUpper());
                 SendEnvColor(type, col.R, col.G, col.B);
-            } catch { 
+            } catch {
                 SendEnvColor(type, -1, -1, -1);
             }
         }
+    }
+    
+    public static class CpeExt {
+        public const string ClickDistance = "ClickDistance";
+        public const string CustomBlocks = "CustomBlocks";
+        public const string HeldBlock = "HeldBlock";
+        public const string TextHotkey = "TextHotKey";
+        public const string ExtPlayerList = "ExtPlayerList";
+        public const string EnvColors = "EnvColors";
+        public const string SelectionCuboid = "SelectionCuboid";
+        public const string BlockPermissions = "BlockPermissions";
+        public const string ChangeModel = "ChangeModel";
+        public const string EnvMapAppearance = "EnvMapAppearance";
+        public const string EnvWeatherType = "EnvWeatherType";
+        public const string HackControl = "HackControl";
+        public const string EmoteFix = "EmoteFix";
+        public const string MessageTypes = "MessageTypes";
+        public const string LongerMessages = "LongerMessages";
+        public const string FullCP437 = "FullCP437";
+        public const string BlockDefinitions = "BlockDefinitions";
+        public const string BlockDefinitionsExt = "BlockDefinitionsExt";
     }
 }

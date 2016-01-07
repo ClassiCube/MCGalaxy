@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands {
         }
         
         void SendEnvColorPacket(Player p, byte envType, string value) {
-            if (p.HasExtension("EnvColors")) {
+            if (p.HasCpeExt(CpeExt.EnvColors)) {
                 try {
                     System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml("#" + value.ToUpper());
                     p.SendEnvColor(envType, col.R, col.G, col.B);
@@ -191,11 +191,11 @@ namespace MCGalaxy.Commands {
             // Send the changed colour to all players affected by the command.
             if (level) {
                 foreach (Player pl in Player.players) {
-                    if (pl.level == p.level && pl.HasExtension("EnvWeatherType")) {
+                    if (pl.level == p.level && pl.HasCpeExt(CpeExt.EnvWeatherType)) {
                         pl.SendSetMapWeather(weather);
                     }
                 }
-            } else if (p.HasExtension("EnvWeatherType")) {
+            } else if (p.HasCpeExt(CpeExt.EnvWeatherType)) {
                 p.SendSetMapWeather(weather);
             }
         }
@@ -216,7 +216,7 @@ namespace MCGalaxy.Commands {
             }
             
             foreach (Player pl in Player.players) {
-                if (pl.HasExtension("EnvMapAppearance") && pl.level == p.level) {
+                if (pl.HasCpeExt(CpeExt.EnvMapAppearance) && pl.level == p.level) {
                     pl.SendSetMapAppearance(p.level.textureUrl, p.level.EdgeBlock, p.level.HorizonBlock, p.level.EdgeLevel);
                 }
             }

@@ -1,7 +1,7 @@
 ﻿/*
     Copyright 2015 MCGalaxy team
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             if (parts.Length > 2) {
                 Help(p); return;
             } else if (parts.Length == 2) {                
-                byte type = GetBlock(p, parts[0]);
+                byte type = GetBlock(p, parts[0], out cpos.extType);
                 if (type == 255) return;
                 SolidType solid = GetType(parts[1]);
                 if (solid == SolidType.Invalid) {
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
                 SolidType solid = GetType(parts[0]);
                 if (solid == SolidType.Invalid) {
                     solid = SolidType.solid;
-                    type = GetBlock(p, parts[0]);
+                    type = GetBlock(p, parts[0], out cpos.extType);
                     if (type == 255) return;
                 }
                 
@@ -61,13 +61,13 @@ namespace MCGalaxy.Commands {
                 cpos.type = type;
                 p.blockchangeObject = cpos;
             }
-            
+            OnUse(p, message, parts);
             Player.SendMessage(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        protected void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type) {
+        protected void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z;
@@ -75,34 +75,49 @@ namespace MCGalaxy.Commands {
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
 
-        protected abstract void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type);
+        protected abstract void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
         protected abstract SolidType GetType(string msg);
         
-        static byte GetBlock(Player p, string msg) {
+        protected virtual void OnUse(Player p, string msg, string[] parts) { }
+        
+        internal static byte GetBlock(Player p, string msg, out byte extType) {
             byte type = Block.Byte(msg);
-            if (type == 255) {
-                Player.SendMessage(p, "There is no block \"" + msg + "\".");
-                return 255;
+            extType = 0;
+            if (type == Block.Zero) {
+            	// try treat as a block definition id.
+            	if (!byte.TryParse(msg, out type) || BlockDefinition.GlobalDefinitions[type] == null) {
+            		Player.SendMessage(p, "There is no block \"" + msg + "\".");
+            		return Block.Zero;
+            	}
+            	extType = type;
+            	return Block.custom_block;
             }
+            
             if (!Block.canPlace(p, type)) {
-                Player.SendMessage(p, "Cannot place that.");
-                return 255;
+                Player.SendMessage(p, "Cannot place the block \"" + msg + "\".");
+                return Block.Zero;
             }
             return type;
         }
         
+        protected static void GetRealBlock(byte type, byte extType, Player p, ref CatchPos cpos) {
+        	if (cpos.type != Block.Zero) return;
+            cpos.type = type < 128 ? p.bindings[type] : type;
+            cpos.extType = extType;
+        }
+        
         protected struct CatchPos {
             public SolidType solid;
-            public byte type;
+            public byte type, extType;
             public ushort x, y, z;
         }
 
         protected enum SolidType {
             solid, hollow, walls,
             holes, wire, random,
-            vertical, reverse,
-            Invalid = -1,
+            vertical, reverse, 
+            straight, Invalid = -1,
         }
     }
 }

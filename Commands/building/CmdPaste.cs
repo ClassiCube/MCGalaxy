@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
 		}
 
-		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type) {
+		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			int offX = p.copyoffset[0] + x, offY = p.copyoffset[1] + y, offZ = p.copyoffset[2] + z;
 			Player.UndoPos Pos1;
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
 					Pos1.y = (ushort)(locY + offY);
 					Pos1.z = (ushort)(locZ + offZ);
 					if ((b != Block.air || p.copyAir) && p.level.InBound(Pos1.x, Pos1.y, Pos1.z))
-						BlockQueue.Addblock(p, Pos1.x, Pos1.y, Pos1.z, b);
+						BlockQueue.Addblock(p, Pos1.x, Pos1.y, Pos1.z, b, state.ExtBlocks[i]);
 				}
 			} else {
 				for (int i = 0; i < state.Blocks.Length; i++ ) {
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
 					Pos1.y = (ushort)(locY + offY);
 					Pos1.z = (ushort)(locZ + offZ);
 					if ((b != Block.air || p.copyAir) && p.level.InBound(Pos1.x, Pos1.y, Pos1.z))
-						p.level.Blockchange(p, Pos1.x, Pos1.y, Pos1.z, b);
+						p.level.Blockchange(p, Pos1.x, Pos1.y, Pos1.z, b, state.ExtBlocks[i]);
 				}
 			}
 

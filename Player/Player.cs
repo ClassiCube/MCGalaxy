@@ -98,7 +98,7 @@ namespace MCGalaxy {
         public bool painting = false;
         public bool muted = false;
         public bool jailed = false;
-        public bool agreed = false;
+        public bool agreed = true;
         public bool invincible = false;
         public string prefix = "";
         public string title = "";
@@ -237,7 +237,7 @@ namespace MCGalaxy {
         }
 
         //Undo
-        public struct UndoPos { public ushort x, y, z; public byte type, newtype; public string mapName; public DateTime timePlaced; }
+        public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public DateTime timePlaced; }
         public List<UndoPos> UndoBuffer = new List<UndoPos>();
         public List<UndoPos> RedoBuffer = new List<UndoPos>();
 
@@ -259,7 +259,7 @@ namespace MCGalaxy {
         //Games
         public DateTime lastDeath = DateTime.Now;
 
-        public byte BlockAction; //0-Nothing 1-solid 2-lava 3-water 4-active_lava 5 Active_water 6 OpGlass 7 BluePort 8 OrangePort
+        public byte BlockAction;
         public byte modeType;
         public byte[] bindings = new byte[128];
         public string[] cmdBind = new string[10];
@@ -304,10 +304,8 @@ namespace MCGalaxy {
         public List<string> spyChatRooms = new List<string>();
         public DateTime lastchatroomglobal;
 
-        //Waypoints
-        public List<Waypoint.WP> Waypoints = new List<Waypoint.WP>();
+        public List<Waypoint> Waypoints = new List<Waypoint>();
 
-        //Random...
         public Random random = new Random();
 
         //Global Chat
@@ -528,34 +526,34 @@ namespace MCGalaxy {
                     else
                         return new byte[0];
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Server.ErrorLog(e);
             }
             return buffer;
         }
 		
+        #region Login
+        
         void HandleLogin(byte[] message)
         {
             try
             {
-                //byte[] message = (byte[])m;
-                if (loggedIn)
-                    return;
+                if (loggedIn) return;
 
                 byte version = message[0];
                 name = enc.GetString(message, 1, 64).Trim();
                 truename = name;
+                
                 lock (pendingLock) {
-                	pendingNames.Add(name);
-                	int altsCount = 0;
-                	foreach (string other in pendingNames) {
-                		if (other == truename) altsCount++;
-                	}
-                	
-                	if (altsCount > 1) {
-                		Kick("Already logged in!"); return;
-                	}
+                    pendingNames.Add(name);
+                    int altsCount = 0;
+                    foreach (string other in pendingNames) {
+                        if (other == truename) altsCount++;
+                    }
+                    
+                    if (altsCount > 1) {
+                        Kick("Already logged in!"); return;
+                    }
                 }
 
                 string verify = enc.GetString(message, 65, 32).Trim();
@@ -585,104 +583,16 @@ namespace MCGalaxy {
                 try
                 {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
-                    if (tBan.allowedJoin < DateTime.Now)
-                    {
+                    if (tBan.allowedJoin < DateTime.Now) {
                         Server.tempBans.Remove(tBan);
-                    }
-                    else if (!isDev && !isMod)
-                    {
+                    } else {
                         Kick("You're still banned (temporary ban)!");
                     }
-                }
-                catch { }
+                } catch { }
 
-                // Whitelist check.
-                if (Server.useWhitelist)
-                {
-                    if (Server.verify)
-                    {
-                        if (Server.whiteList.Contains(name))
-                        {
-                            onWhitelist = true;
-                        }
-                    }
-                    else
-                    {
-                        // Verify Names is off. Gotta check the hard way.
-                        Database.AddParams("@IP", ip);
-                        DataTable ipQuery = Database.fillData("SELECT Name FROM Players WHERE IP = @IP");
-
-                        if (ipQuery.Rows.Count > 0)
-                        {
-                            if (ipQuery.Rows.Contains(name) && Server.whiteList.Contains(name))
-                            {
-                                onWhitelist = true;
-                            }
-                        }
-                        ipQuery.Dispose();
-                    }
-                    onWhitelist = isDev || isMod;
-                    if (!onWhitelist) { Kick("This is a private server!"); return; } //i think someone forgot this?
-                }
-
-                //premium check
-                if (Server.PremiumPlayersOnly && !isDev && !isMod)
-                {
-                    using (WebClient Client = new WebClient())
-                    {
-                        int tries = 0;
-                        while (tries++ < 3)
-                        {
-                            try
-                            {
-                                bool haspaid = Convert.ToBoolean(Client.DownloadString("http://www.minecraft.net/haspaid.jsp?user=" + name));
-                                if (!haspaid)
-                                    Kick("Sorry, this is a premium server only!");
-                                break;
-                            }
-                            catch { }
-                        }
-                    }
-                }
-
-                if (File.Exists("ranks/ignore/" + this.name + ".txt"))
-                {
-                    try
-                    {
-                        string[] checklines = File.ReadAllLines("ranks/ignore/" + this.name + ".txt");
-                        foreach (string checkline in checklines)
-                        {
-                            this.listignored.Add(checkline);
-                        }
-                        File.Delete("ranks/ignore/" + this.name + ".txt");
-                    }
-                    catch
-                    {
-                        Server.s.Log("Failed to load ignore list for: " + this.name);
-                    }
-                }
-
-                if (File.Exists("ranks/ignore/GlobalIgnore.xml"))
-                {
-                    try
-                    {
-                        string[] searchxmls = File.ReadAllLines("ranks/ignore/GlobalIgnore.xml");
-                        foreach (string searchxml in searchxmls)
-                        {
-                            globalignores.Add(searchxml);
-                        }
-                        foreach (string ignorer in globalignores)
-                        {
-                            Player foundignore = Player.Find(ignorer);
-                            foundignore.ignoreglobal = true;
-                        }
-                        File.Delete("ranks/ignore/GlobalIgnore.xml");
-                    }
-                    catch
-                    {
-                        Server.s.Log("Failed to load global ignore list!");
-                    }
-                }
+                if (!CheckWhitelist())
+                    return;
+                LoadIgnores();
                 // ban check
                 if (!isDev && !isMod)
                 {
@@ -748,56 +658,117 @@ namespace MCGalaxy {
                 }
 
                 if (version != Server.version) { Kick("Wrong version!"); return; }
-                if (type == 0x42)
-                {
-                    hasCpe = true;
-
-                    SendExtInfo(14);
-                    SendExtEntry("ClickDistance", 1);
-                    SendExtEntry("CustomBlocks", 1);
-                    SendExtEntry("HeldBlock", 1);
-                    
-                    SendExtEntry("TextHotKey", 1);
-                    SendExtEntry("EnvColors", 1);
-                    SendExtEntry("SelectionCuboid", 1);
-                    
-                    SendExtEntry("BlockPermissions", 1);
-                    SendExtEntry("ChangeModel", 1);
-                    SendExtEntry("EnvMapAppearance", 1);
-                    
-                    SendExtEntry("EnvWeatherType", 1);
-                    SendExtEntry("HackControl", 1);
-                    SendExtEntry("EmoteFix", 1);
-                    
-                    SendExtEntry("FullCP437", 1);
-                    SendExtEntry("LongerMessages", 1);
-                 //TODO   SendExtEntry("BlockDefinitions", 1);
-                    SendCustomBlockSupportLevel(1);
-                }
-                foreach (Player p in players)
-                {
-                    if (p.name == name)
-                    {
-                        if (Server.verify)
-                        {
+                
+                foreach (Player p in players) {
+                    if (p.name == name)  {
+                        if (Server.verify) {
                             p.Kick("Someone logged in as you!"); break;
+                        } else { 
+                            Kick("Already logged in!"); return;
                         }
-                        else { Kick("Already logged in!"); return; }
                     }
                 }
+                
+                if (type == 0x42) {
+                    hasCpe = true;
 
+                    SendExtInfo(16);
+                    SendExtEntry(CpeExt.ClickDistance, 1);
+                    SendExtEntry(CpeExt.CustomBlocks, 1);
+                    SendExtEntry(CpeExt.HeldBlock, 1);
+                    
+                    SendExtEntry(CpeExt.TextHotkey, 1);
+                    SendExtEntry(CpeExt.EnvColors, 1);
+                    SendExtEntry(CpeExt.SelectionCuboid, 1);
+                    
+                    SendExtEntry(CpeExt.BlockPermissions, 1);
+                    SendExtEntry(CpeExt.ChangeModel, 1);
+                    SendExtEntry(CpeExt.EnvMapAppearance, 1);
+                    
+                    SendExtEntry(CpeExt.EnvWeatherType, 1);
+                    SendExtEntry(CpeExt.HackControl, 1);
+                    SendExtEntry(CpeExt.EmoteFix, 1);
+                    
+                    SendExtEntry(CpeExt.FullCP437, 1);
+                    SendExtEntry(CpeExt.LongerMessages, 1);
+                    SendExtEntry(CpeExt.BlockDefinitions, 1);
+                    
+                    SendExtEntry(CpeExt.BlockDefinitionsExt, 1);
+                } else {
+                    CompleteLoginProcess();
+                }
+                
                 try { left.Remove(name.ToLower()); }
                 catch { }
 
                 group = Group.findPlayerGroup(name);
+                Loading = true;
+                if (disconnected) return;             
+                id = FreeId();
+            } catch (Exception e) {
+                Server.ErrorLog(e);
+                Player.GlobalMessage("An error occurred: " + e.Message);
+            }
+        }
+        
+        bool CheckWhitelist() {
+            if (!Server.useWhitelist)
+                return true;
+            
+            if (Server.verify) {
+                if (Server.whiteList.Contains(name))
+                    onWhitelist = true;
+            } else {
+                // Verify Names is off. Gotta check the hard way.
+                Database.AddParams("@IP", ip);
+                DataTable ipQuery = Database.fillData("SELECT Name FROM Players WHERE IP = @IP");
 
+                if (ipQuery.Rows.Count > 0) {
+                    if (ipQuery.Rows.Contains(name) && Server.whiteList.Contains(name)) {
+                        onWhitelist = true;
+                    }
+                }
+                ipQuery.Dispose();
+            }
+            if (!onWhitelist) 
+                Kick("This is a private server!"); //i think someone forgot this?
+            return onWhitelist;
+        }
+        
+        void LoadIgnores() {
+            if (File.Exists("ranks/ignore/" + name + ".txt")) {
+                try {
+                    string[] lines = File.ReadAllLines("ranks/ignore/" + name + ".txt");
+                    foreach (string line in lines)
+                        listignored.Add(line);
+                    File.Delete("ranks/ignore/" + name + ".txt");
+                } catch {
+                    Server.s.Log("Failed to load ignore list for: " + name);
+                }
+            }
+
+            if (File.Exists("ranks/ignore/GlobalIgnore.xml")) {
+                try {
+                    string[] searchxmls = File.ReadAllLines("ranks/ignore/GlobalIgnore.xml");
+                    foreach (string searchxml in searchxmls)
+                        globalignores.Add(searchxml);
+                    
+                    foreach (string ignorer in globalignores) {
+                        Player foundignore = Player.Find(ignorer);
+                        foundignore.ignoreglobal = true;
+                    }
+                    File.Delete("ranks/ignore/GlobalIgnore.xml");
+                } catch {
+                    Server.s.Log("Failed to load global ignore list!");
+                }
+            }
+        }
+        
+        void CompleteLoginProcess() {
+            try {
                 SendMotd();
                 SendMap();
-                Loading = true;
                 if (disconnected) return;
-                
-                id = FreeId();
-
                 loggedIn = true;
 
                 lock (players)
@@ -808,114 +779,41 @@ namespace MCGalaxy {
                 Server.s.PlayerListUpdate();
 
                 //Test code to show when people come back with different accounts on the same IP
-                string temp = name + " is lately known as:";
+                string alts = name + " is lately known as:";
                 bool found = false;
-                if (!ip.StartsWith("127.0.0."))
-                {
-                    foreach (KeyValuePair<string, string> prev in left)
-                    {
+                if (!ip.StartsWith("127.0.0.")) {
+                    foreach (KeyValuePair<string, string> prev in left)  {
                         if (prev.Value == ip)
                         {
                             found = true;
-                            temp += " " + prev.Key;
+                            alts += " " + prev.Key;
                         }
                     }
-                    if (found)
-                    {
-                        if (this.group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
-                        {
-                            Chat.GlobalMessageOps(temp);
+                    if (found) {
+                        if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
+                            Chat.GlobalMessageOps(alts);
                             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
                         }
-
-                        Server.s.Log(temp);
+                        Server.s.Log(alts);
                     }
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
             }
-
+            
             //OpenClassic Client Check
             SendBlockchange(0, 0, 0, 0);
             Database.AddParams("@Name", name);
             DataTable playerDb = Database.fillData("SELECT * FROM Players WHERE Name=@Name");
 
-
             if (playerDb.Rows.Count == 0)
-            {
-                this.prefix = "";
-                this.time = "0 0 0 1";
-                this.title = "";
-                this.titlecolor = "";
-                this.color = group.color;
-                this.money = 0;
-                this.firstLogin = DateTime.Now;
-                this.totalLogins = 1;
-                this.totalKicked = 0;
-                this.overallDeath = 0;
-                this.overallBlocks = 0;
-
-                this.timeLogged = DateTime.Now;
-                SendMessage("Welcome " + DisplayName + "! This is your first visit.");
-                string query = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + name + "', " + money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
-                if (Server.useMySQL)
-                {
-                    MySQL.executeQuery(String.Format("INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) VALUES ('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')", name, ip, firstLogin, DateTime.Now, totalLogins, prefix, overallDeath, money, loginBlocks, totalKicked, time));
-                    MySQL.executeQuery(query);
-                }
-                else
-                {
-                    SQLite.executeQuery(String.Format("INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) VALUES ('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')", name, ip, firstLogin, DateTime.Now, totalLogins, prefix, overallDeath, money, loginBlocks, totalKicked, time));
-                    SQLite.executeQuery(query);
-                }
-            }
+                InitPlayerStats(playerDb);
             else
-            {
-                totalLogins = int.Parse(playerDb.Rows[0]["totalLogin"].ToString()) + 1;
-                time = playerDb.Rows[0]["TimeSpent"].ToString();
-                userID = int.Parse(playerDb.Rows[0]["ID"].ToString());
-                firstLogin = DateTime.Parse(playerDb.Rows[0]["firstLogin"].ToString());
-                timeLogged = DateTime.Now;
-                if (playerDb.Rows[0]["Title"].ToString().Trim() != "")
-                {
-                    string parse = playerDb.Rows[0]["Title"].ToString().Trim().Replace("[", "");
-                    title = parse.Replace("]", "");
-                }
-                if (playerDb.Rows[0]["title_color"].ToString().Trim() != "")
-                {
-                    titlecolor = c.Parse(playerDb.Rows[0]["title_color"].ToString().Trim());
-                }
-                else
-                {
-                    titlecolor = "";
-                }
-                if (playerDb.Rows[0]["color"].ToString().Trim() != "")
-                {
-                    color = c.Parse(playerDb.Rows[0]["color"].ToString().Trim());
-                }
-                else
-                {
-                    color = group.color;
-                }
-                overallDeath = int.Parse(playerDb.Rows[0]["TotalDeaths"].ToString());
-                overallBlocks = long.Parse(playerDb.Rows[0]["totalBlocks"].ToString().Trim());
-                //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
-                money = Economy.RetrieveEcoStats(this.name).money;
-                totalKicked = int.Parse(playerDb.Rows[0]["totalKicked"].ToString());
-                SendMessage("Welcome back " + color + prefix + DisplayName + Server.DefaultColor + "! You've been here " + totalLogins + " times!");
-                if (Server.muted.Contains(name))
-                {
-                    muted = true;
-                    GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
-                }
-            }
+                LoadPlayerStats(playerDb);
+            
             if (!Directory.Exists("players"))
-            {
                 Directory.CreateDirectory("players");
-            }
             PlayerDB.Load(this);
             SetPrefix();
             playerDb.Dispose();
@@ -924,93 +822,36 @@ namespace MCGalaxy {
                 PlayerConnect(this);
             OnPlayerConnectEvent.Call(this);
 
-            if (Server.server_owner != "" && Server.server_owner.ToLower().Equals(this.name.ToLower()))
-            {
+            if (Server.server_owner != "" && Server.server_owner.ToLower().Equals(name.ToLower())) {
                 if (color == Group.standard.color)
-                {
                     color = "&c";
-                }
                 if (title == "")
-                {
                     title = "Owner";
-                }
                 SetPrefix();
             }
 
-            if (Server.verifyadmins)
-            {
-                if (this.group.Permission >= Server.verifyadminsrank)
-                {
-                    adminpen = true;
-                }
-            }
+            if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank)
+                adminpen = true;
             if (emoteList.Contains(name)) parseSmiley = false;
-            if (!Directory.Exists("text/login")) {
+            if (!Directory.Exists("text/login"))
                 Directory.CreateDirectory("text/login");
-            }
-            if (!File.Exists("text/login/" + this.name + ".txt"))  {
+            if (!File.Exists("text/login/" + this.name + ".txt"))
                 CP437Writer.WriteAllText("text/login/" + this.name + ".txt", "joined the server.");
-            }
 
-            //very very sloppy, yes I know.. but works for the time
-            bool gotoJail = false;
-            string gotoJailMap = "";
-            string gotoJailName = "";
-            try
-            {
-                if (File.Exists("ranks/jailed.txt"))
-                {
-                    using (StreamReader read = new StreamReader("ranks/jailed.txt"))
-                    {
-                        string line;
-                        while ((line = read.ReadLine()) != null)
-                        {
-                            if (line.Split()[0].ToLower() == this.name.ToLower())
-                            {
-                                gotoJail = true;
-                                gotoJailMap = line.Split()[1];
-                                gotoJailName = line.Split()[0];
-                                break;
-                            }
-                        }
-                    }
-                }
-                else { File.Create("ranks/jailed.txt").Close(); }
-            }
-            catch
-            {
-                gotoJail = false;
-            }
-            if (gotoJail)
-            {
-                try
-                {
-                    Command.all.Find("goto").Use(this, gotoJailMap);
-                    Command.all.Find("jail").Use(null, gotoJailName);
-                }
-                catch (Exception e)
-                {
-                    Kick(e.ToString());
-                }
-            }
+            CheckLoginJailed();
 
-            if (Server.agreetorulesonentry)
-            {
+            if (Server.agreetorulesonentry) {
                 if (!File.Exists("ranks/agreed.txt"))
                     File.WriteAllText("ranks/agreed.txt", "");
                 var agreedFile = File.ReadAllText("ranks/agreed.txt");
-                if (this.group.Permission == LevelPermission.Guest)
-                {
-                    if (!agreedFile.Contains(this.name.ToLower()))
-                        SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
-                    else agreed = true;
+                if (group.Permission == LevelPermission.Guest && !agreedFile.Contains(this.name.ToLower())) {
+                    SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
+                    agreed = false;
                 }
-                else { agreed = true; }
             }
-            else { agreed = true; }
 
             string joinm = "&a+ " + this.color + this.prefix + this.DisplayName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
-            if (this.group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
+            if (group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
             {
                 if ((Server.guestJoinNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
                 {
@@ -1020,7 +861,7 @@ namespace MCGalaxy {
                                                {
                                                    byte[] buffer = new byte[65];
                                                    string joinMsg = "^detail.user.join=" + color + name + c.white;
-									               NetUtils.WriteAscii(joinMsg, buffer, 1);
+                                                   NetUtils.WriteAscii(joinMsg, buffer, 1);
                                                    p1.SendRaw(Opcode.Message, buffer);
                                                    buffer = null;
                                                }
@@ -1031,29 +872,20 @@ namespace MCGalaxy {
                                            });
                 }
             }
-            if (this.group.Permission >= Server.adminchatperm && Server.adminsjoinsilent)
-            {
-                this.hidden = true;
-                this.adminchat = true;
+            if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
+                hidden = true;
+                adminchat = true;
             }
 
-            if (Server.verifyadmins)
-            {
-                if (this.group.Permission >= Server.verifyadminsrank)
-                {
-                    if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + this.name + ".dat"))
-                    {
-                        this.SendMessage("&cPlease set your admin verification password with &a/setpass [Password]!");
-                    }
-                    else
-                    {
-                        this.SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
-                    }
-                }
+            if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank) {
+                if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + this.name + ".dat"))
+                    SendMessage("&cPlease set your admin verification password with &a/setpass [Password]!");
+                else
+                    SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
             }
             try
             {
-                Waypoint.Load(this);
+                WaypointList.Load(this);
                 //if (Waypoints.Count > 0) { this.SendMessage("Loaded " + Waypoints.Count + " waypoints!"); }
             }
             catch (Exception ex)
@@ -1101,7 +933,7 @@ namespace MCGalaxy {
                         {
                             SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                         }
-                        if (HasExtension("ChangeModel"))
+                        if (HasCpeExt(CpeExt.ChangeModel))
                         {
                             SendChangeModel(p.id, p.model);
                         }
@@ -1120,7 +952,106 @@ namespace MCGalaxy {
             }
             Loading = false;
         }
+        
+        void InitPlayerStats(DataTable playerDb) {
+            prefix = "";
+            time = "0 0 0 1";
+            title = "";
+            titlecolor = "";
+            color = group.color;
+            money = 0;
+            firstLogin = DateTime.Now;
+            totalLogins = 1;
+            totalKicked = 0;
+            overallDeath = 0;
+            overallBlocks = 0;
+            timeLogged = DateTime.Now;
+            SendMessage("Welcome " + DisplayName + "! This is your first visit.");
+            
+            Database.executeQuery(String.Format("INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) VALUES " +
+                                                "('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')",
+                                                name, ip, firstLogin, DateTime.Now, totalLogins, prefix, overallDeath, money, loginBlocks, totalKicked, time));
+            string query = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + name + "', " + money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
+            Database.executeQuery(query);
+        }
+        
+        void LoadPlayerStats(DataTable playerDb) {
+            DataRow row = playerDb.Rows[0];
+            totalLogins = int.Parse(row["totalLogin"].ToString()) + 1;
+            time = row["TimeSpent"].ToString();
+            userID = int.Parse(row["ID"].ToString());
+            firstLogin = DateTime.Parse(row["firstLogin"].ToString());
+            timeLogged = DateTime.Now;
+            
+            if (row["Title"].ToString().Trim() != "") {
+                string parse = row["Title"].ToString().Trim().Replace("[", "");
+                title = parse.Replace("]", "");
+            }
+            
+            if (row["title_color"].ToString().Trim() != "")
+                titlecolor = c.Parse(row["title_color"].ToString().Trim());
+            else
+                titlecolor = "";
+            
+            if (row["color"].ToString().Trim() != "")
+                color = c.Parse(row["color"].ToString().Trim());
+            else
+                color = group.color;
+            
+            overallDeath = int.Parse(row["TotalDeaths"].ToString());
+            overallBlocks = long.Parse(row["totalBlocks"].ToString().Trim());
+            //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
+            money = Economy.RetrieveEcoStats(this.name).money;
+            totalKicked = int.Parse(row["totalKicked"].ToString());
+            SendMessage("Welcome back " + color + prefix + DisplayName + Server.DefaultColor + "! You've been here " + totalLogins + " times!");
+            if (Server.muted.Contains(name))
+            {
+                muted = true;
+                GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
+            }
+        }
+        
+        void CheckLoginJailed() {
+            //very very sloppy, yes I know.. but works for the time
+            bool gotoJail = false;
+            string gotoJailMap = "", gotoJailName = "";
+            try  {
+                if (File.Exists("ranks/jailed.txt"))
+                {
+                    using (StreamReader read = new StreamReader("ranks/jailed.txt"))
+                    {
+                        string line;
+                        while ((line = read.ReadLine()) != null)
+                        {
+                            string[] parts = line.Split();
+                            if (parts[0].ToLower() == this.name.ToLower())
+                            {
+                                gotoJail = true;
+                                gotoJailName = parts[0];
+                                gotoJailMap = parts[1];
+                                break;
+                            }
+                        }
+                    }
+                } else { 
+                    File.Create("ranks/jailed.txt").Close(); 
+                }
+            } catch {
+                gotoJail = false;
+            }
+            
+            if (gotoJail) {
+                try {
+                    Command.all.Find("goto").Use(this, gotoJailMap);
+                    Command.all.Find("jail").Use(null, gotoJailName);
+                } catch (Exception e) {
+                    Kick(e.ToString());
+                }
+            }
+        }
 
+        #endregion
+        
         public void SetPrefix() { 
             string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", c.Parse("blue"), color) : isMod ? string.Format("{1}[{0}Mod{1}] ", c.Parse("lime"), color) : isGCMod ? string.Format("{1}[{0}GCMod{1}] ", c.Parse("gold"), color) : "";
             //prefix = ( title == "" ) ? "" : ( titlecolor == "" ) ? color + "[" + title + color + "] " : titlecolor + "[" + titlecolor + title + titlecolor + "] " + color;
@@ -1140,13 +1071,22 @@ namespace MCGalaxy {
                 ushort z = NetUtils.ReadU16(message, 4);
                 byte action = message[6];
                 byte type = message[7];
+                byte extType = type;
+                
+                if (type >= Block.CpeCount) {
+                	if (!HasCpeExt(CpeExt.BlockDefinitions) 
+                	    || BlockDefinition.GlobalDefinitions[type] == null) {
+                		Kick("Unknown block type!"); return;
+                	}
+                	extType = type;
+                	type = Block.custom_block;
+                }
 
                 if ( action == 1 && Server.ZombieModeOn && Server.noPillaring ) {
                     if ( !referee ) {
                         if ( lastYblock == y - 1 && lastXblock == x && lastZblock == z ) {
                             blocksStacked++;
-                        }
-                        else {
+                        } else {
                             blocksStacked = 0;
                         }
                         if ( blocksStacked == 2 ) {
@@ -1155,31 +1095,19 @@ namespace MCGalaxy {
                         if ( blocksStacked == 4 ) {
                             Command.all.Find("kick").Use(null, name + " No pillaring allowed!");
                         }
-}
-}
-
-                lastYblock = y;
-                lastXblock = x;
-                lastZblock = z;
-
-                manualChange(x, y, z, action, type);
-            }
-            catch ( Exception e ) {
+                	}
+                }
+                lastYblock = y; lastXblock = x; lastZblock = z;
+                ManualChange(x, y, z, action, type, extType);
+            } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
                 Chat.GlobalMessageOps(DisplayName + " has triggered a block change error");
                 Chat.GlobalMessageOps(e.GetType().ToString() + ": " + e.Message);
                 Server.ErrorLog(e);
             }
         }
-        public void manualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
-             //if (!(!Server.Blocks.FirstOrDefault(w => w.ID == type).Equals(null) && HasExtension("BlockDefinitions")))
-            //  {
-                 if (type > 65)
-                 {
-                    Kick("Unknown block type!");
-                    return;
-                  }
-            //  }
+        
+        public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
             if ( jailed || !agreed ) { RevertBlock(x, y, z); return; }
@@ -1231,22 +1159,19 @@ namespace MCGalaxy {
             bP.type = type;
             bP.extType = extType;
 
-            lastClick[0] = x;
-            lastClick[1] = y;
-            lastClick[2] = z;
-            //bool test2 = false;
+            lastClick[0] = x; lastClick[1] = y; lastClick[2] = z;
             if ( Blockchange != null ) {
                 if ( Blockchange.Method.ToString().IndexOf("AboutBlockchange") == -1 && !level.name.Contains("Museum " + Server.DefaultColor) ) {
                     bP.deleted = true;
                     level.blockCache.Add(bP);
                 }
 
-                Blockchange(this, x, y, z, type);
+                Blockchange(this, x, y, z, type, extType);
                 return;
             }
             if ( PlayerBlockChange != null )
-                PlayerBlockChange(this, x, y, z, type);
-            OnBlockChangeEvent.Call(this, x, y, z, type);
+                PlayerBlockChange(this, x, y, z, type, extType);
+            OnBlockChangeEvent.Call(this, x, y, z, type, extType);
             if ( cancelBlock ) {
                 cancelBlock = false;
                 return;
@@ -1254,70 +1179,41 @@ namespace MCGalaxy {
 
             if ( group.Permission == LevelPermission.Banned ) return;
             if ( group.Permission == LevelPermission.Guest ) {
-                int Diff = 0;
+                int Diff = Math.Abs((pos[0] / 32) - x) + Math.Abs((pos[1] / 32) - y) 
+                	+ Math.Abs((pos[2] / 32) - z);
 
-                Diff = Math.Abs((int)( pos[0] / 32 ) - x);
-                Diff += Math.Abs((int)( pos[1] / 32 ) - y);
-                Diff += Math.Abs((int)( pos[2] / 32 ) - z);
-
-                if ( Diff > ReachDistance + 4 ) {
-                    if ( lastCMD != "click" ) {
-                        Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
-                        SendMessage("You can't build that far away.");
-                        RevertBlock(x, y, z); return;
-                    }
-                }
-
-                if ( Server.antiTunnel ) {
-                    if ( !ignoreGrief && !PlayingTntWars ) {
-                        if ( y < level.Height / 2 - Server.maxDepth ) {
-                            SendMessage("You're not allowed to build this far down!");
-                            RevertBlock(x, y, z); return;
-                        }
-                    }
+                if ((Diff > ReachDistance + 4) && lastCMD != "click") {
+                	Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
+                	SendMessage("You can't build that far away.");
+                	RevertBlock(x, y, z); return;
                 }
             }
 
-            if ( b == Block.griefer_stone && group.Permission <= Server.grieferStoneRank && !isDev && !isMod) {
-                if ( grieferStoneWarn < 1 )
-                    SendMessage("Do not grief! This is your first warning!");
-                else if ( grieferStoneWarn < 2 )
-                    SendMessage("Do NOT grief! Next time you will be " + ( Server.grieferStoneBan ? "banned for 30 minutes" : "kicked" ) + "!");
-                else {
-                    if ( Server.grieferStoneBan )
-                        try { Command.all.Find("tempban").Use(null, name + " 30"); }
-                        catch ( Exception ex ) { Server.ErrorLog(ex); }
-                    else
-                        Kick(Server.customGrieferStone ? Server.customGrieferStoneMessage : "Oh noes! You were caught griefing!");
-                    return;
-                }
-                grieferStoneWarn++;
-                RevertBlock(x, y, z); return;
-            }
-
-            if ( !Block.canPlace(this, b) && !Block.BuildIn(b) && !Block.AllowBreak(b) ) {
+            if (!Block.canPlace(this, b) && !Block.BuildIn(b) && !Block.AllowBreak(b)) {
                 SendMessage("Cannot build here!");
                 RevertBlock(x, y, z); return;
             }
 
-            if ( !Block.canPlace(this, type) ) {
+            if (!Block.canPlace(this, type)) {
                 SendMessage("You can't place this block type!");
                 RevertBlock(x, y, z); return;
             }
 
-            if ( b >= 200 && b < 220 ) {
+            if (b >= 200 && b < 220) {
                 SendMessage("Block is active, you cant disturb it!");
                 RevertBlock(x, y, z); return;
             }
 
-            if ( action > 1 ) { Kick("Unknown block action!"); }
+            if (action > 1 ) { Kick("Unknown block action!"); return; }
             byte oldType = type;
-            //Block Definitions
-            if (type < 128)
-                type = bindings[type];
+            if (type < 128) type = bindings[type];
+            
             //Ignores updating blocks that are the same and send block only to the player
-            if ( b == (byte)( ( painting || action == 1 ) ? type : (byte)0 ) ) {
-                if ( painting || oldType != type ) { SendBlockchange(x, y, z, b); } return;
+            byte newBlock = (painting || action == 1) ? type : (byte)0;
+            if (b == newBlock && (painting || oldType != type)) {
+            	if (b != Block.custom_block || extType == level.GetExtTile(x, y, z)) {
+            		RevertBlock(x, y, z); return;
+            	}
             }
             //else
             if ( !painting && action == 0 ) {
@@ -1328,12 +1224,11 @@ namespace MCGalaxy {
 
                 bP.deleted = true;
                 level.blockCache.Add(bP);
-                deleteBlock(b, type, x, y, z);
-            }
-            else {
+                DeleteBlock(b, x, y, z, type, extType);
+            } else {
                 bP.deleted = false;
                 level.blockCache.Add(bP);
-                placeBlock(b, type, x, y, z);
+                PlaceBlock(b, x, y, z, type, extType);
             }
         }
 
@@ -1361,7 +1256,7 @@ namespace MCGalaxy {
                     Command.all.Find("move").Use(this, this.name + " " + Portals.Rows[LastPortal]["ExitX"].ToString() + " " + Portals.Rows[LastPortal]["ExitY"].ToString() + " " + Portals.Rows[LastPortal]["ExitZ"].ToString());
                 }
                 else {
-                    Blockchange(this, x, y, z, (byte)0);
+                    Blockchange(this, x, y, z, Block.air, 0);
                 }
                 Portals.Dispose();
             }
@@ -1391,19 +1286,15 @@ namespace MCGalaxy {
                         prevMsg = message;
                     }
                     SendBlockchange(x, y, z, b);
-                }
-                else {
-                    Blockchange(this, x, y, z, (byte)0);
+                } else {
+                    Blockchange(this, x, y, z, Block.air, 0);
                 }
                 Messages.Dispose();
             }
             catch { Player.SendMessage(p, "No message was stored."); return; }
         }
 
-        private void deleteBlock(byte b, byte type, ushort x, ushort y, ushort z) {
-            Random rand = new Random();
-            int mx, mz;
-
+        private void DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if ( deleteMode && b != Block.c4det ) { level.Blockchange(this, x, y, z, Block.air); return; }
 
             if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return; }
@@ -1481,7 +1372,8 @@ namespace MCGalaxy {
                     	RevertBlock(x, y, z); return;
                     }
                     if ( level.physics != 0 ) {
-                        mx = rand.Next(0, 2); mz = rand.Next(0, 2);
+                    	Random rand = new Random();
+                        int mx = rand.Next(0, 2); int mz = rand.Next(0, 2);
                         byte b1 = level.GetTile((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 ));
                         byte b2 = level.GetTile((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 ));
                         if ( b1 == Block.air && b2 == Block.air && level.CheckClear((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 )) && level.CheckClear((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 )) ) {
@@ -1505,7 +1397,7 @@ namespace MCGalaxy {
             	level.Blockchange(this, x, (ushort)( y - 1 ), z, Block.grass);
         }
 
-        public void placeBlock(byte b, byte type, ushort x, ushort y, ushort z) {
+        public void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if ( Block.odoor(b) != Block.Zero ) { SendMessage("oDoor here!"); return; }
             switch ( BlockAction ) {
                 case 0: //normal
@@ -1523,15 +1415,14 @@ namespace MCGalaxy {
                                     break;
                                 }
                                 //else
-                                level.Blockchange(this, x, y, z, type);
+                                level.Blockchange(this, x, y, z, type, extType);
                                 break;
                             default:
-                                level.Blockchange(this, x, y, z, type);
+                                level.Blockchange(this, x, y, z, type, extType);
                                 break;
                         }
-                    }
-                    else {
-                        level.Blockchange(this, x, y, z, type);
+                    } else {
+                        level.Blockchange(this, x, y, z, type, extType);
                     }
                     break;
                 case 6:
@@ -1818,7 +1709,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 byte continued = message[0];
                 string text = GetString(message, 1);
 
-                // handles the /womid client message, which displays the WoM version
+                // handles the /womid client message, which displays the WoM vrersion
                 if ( text.Truncate(6) == "/womid" ) {
                 	string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
                 	Player.GlobalMessage(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
@@ -1831,7 +1722,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     return;
                 }
                 
-                if( HasExtension( "LongerMessages" ) && continued != 0 ) {
+                if( HasCpeExt(CpeExt.LongerMessages) && continued != 0 ) {
                 	storedMessage += text;
                 	return;
                 }
@@ -2382,13 +2273,15 @@ return;
         }
         #endregion
         #region == GLOBAL MESSAGES ==
-        public static void GlobalBlockchange(Level level, int b, byte type) {
+        
+        public static void GlobalBlockchange(Level level, int b, byte type, byte extType) {
             ushort x, y, z;
             level.IntToPos(b, out x, out y, out z);
-            GlobalBlockchange(level, x, y, z, type);
+            GlobalBlockchange(level, x, y, z, type, extType);
         }
-        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type) {
-            players.ForEach(delegate(Player p) { if ( p.level == level ) { p.SendBlockchange(x, y, z, type); } });
+        
+        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type, byte extType) {
+            players.ForEach(delegate(Player p) { if ( p.level == level ) { p.SendBlockchange(x, y, z, type, extType); } });
         }
 
         // THIS IS NOT FOR SENDING GLOBAL MESSAGES!!! IT IS TO SEND A MESSAGE FROM A SPECIFIED PLAYER!!!!!!!!!!!!!!
@@ -3058,36 +2951,6 @@ Next: continue;
             return false;
         }
 
-        #region getters
-        public ushort[] footLocation {
-            get {
-                return getLoc(false);
-            }
-        }
-        public ushort[] headLocation {
-            get {
-                return getLoc(true);
-            }
-        }
-
-        public ushort[] getLoc(bool head) {
-            ushort[] myPos = pos;
-            myPos[0] /= 32;
-            if ( head ) myPos[1] = (ushort)( ( myPos[1] + 4 ) / 32 );
-            else myPos[1] = (ushort)( ( myPos[1] + 4 ) / 32 - 1 );
-            myPos[2] /= 32;
-            return myPos;
-        }
-
-        public void setLoc(ushort[] myPos) {
-            myPos[0] *= 32;
-            myPos[1] *= 32;
-            myPos[2] *= 32;
-            unchecked { SendPos((byte)-1, myPos[0], myPos[1], myPos[2], rot[0], rot[1]); }
-        }
-
-        #endregion
-
         public static bool IPInPrivateRange(string ip) {
             //range of 172.16.0.0 - 172.31.255.255
             if (ip.StartsWith("172.") && (int.Parse(ip.Split('.')[1]) >= 16 && int.Parse(ip.Split('.')[1]) <= 31))
@@ -3125,138 +2988,6 @@ Next: continue;
             return false;
         }
 
-        public class Waypoint {
-            public class WP {
-                public ushort x;
-                public ushort y;
-                public ushort z;
-                public byte rotx;
-                public byte roty;
-                public string name;
-                public string lvlname;
-            }
-            public static WP Find(string name, Player p) {
-                WP wpfound = null;
-                bool found = false;
-                foreach ( WP wp in p.Waypoints ) {
-                    if ( wp.name.ToLower() == name.ToLower() ) {
-                        wpfound = wp;
-                        found = true;
-                    }
-                }
-                if ( found ) { return wpfound; }
-                else { return null; }
-            }
-            public static void Goto(string waypoint, Player p) {
-                if ( !Exists(waypoint, p) ) return;
-                WP wp = Find(waypoint, p);
-                Level lvl = Level.Find(wp.lvlname);
-                if ( wp == null ) return;
-                if ( lvl != null ) {
-                    if ( p.level != lvl ) {
-                        Command.all.Find("goto").Use(p, lvl.name);
-                        while ( p.Loading ) { Thread.Sleep(250); }
-                    }
-                    unchecked { p.SendPos((byte)-1, wp.x, wp.y, wp.z, wp.rotx, wp.roty); }
-                    Player.SendMessage(p, "Sent you to waypoint");
-                }
-                else { Player.SendMessage(p, "The map that that waypoint is on isn't loaded right now (" + wp.lvlname + ")"); return; }
-            }
-
-            public static void Create(string waypoint, Player p) {
-                Player.Waypoint.WP wp = new Player.Waypoint.WP();
-                {
-                    wp.x = p.pos[0];
-                    wp.y = p.pos[1];
-                    wp.z = p.pos[2];
-                    wp.rotx = p.rot[0];
-                    wp.roty = p.rot[1];
-                    wp.name = waypoint;
-                    wp.lvlname = p.level.name;
-                }
-                p.Waypoints.Add(wp);
-                Save();
-            }
-
-            public static void Update(string waypoint, Player p) {
-                WP wp = Find(waypoint, p);
-                p.Waypoints.Remove(wp);
-                {
-                    wp.x = p.pos[0];
-                    wp.y = p.pos[1];
-                    wp.z = p.pos[2];
-                    wp.rotx = p.rot[0];
-                    wp.roty = p.rot[1];
-                    wp.name = waypoint;
-                    wp.lvlname = p.level.name;
-                }
-                p.Waypoints.Add(wp);
-                Save();
-            }
-
-            public static void Remove(string waypoint, Player p) {
-                WP wp = Find(waypoint, p);
-                p.Waypoints.Remove(wp);
-                Save();
-            }
-
-            public static bool Exists(string waypoint, Player p) {
-                bool exists = false;
-                foreach ( WP wp in p.Waypoints ) {
-                    if ( wp.name.ToLower() == waypoint.ToLower() ) {
-                        exists = true;
-                    }
-                }
-                return exists;
-            }
-
-            public static void Load(Player p) {
-                if ( File.Exists("extra/Waypoints/" + p.name + ".save") ) {
-                    using ( StreamReader SR = new StreamReader("extra/Waypoints/" + p.name + ".save") ) {
-                        bool failed = false;
-                        string line;
-                        while ( SR.EndOfStream == false ) {
-                            line = SR.ReadLine().ToLower().Trim();
-                            if ( !line.StartsWith("#") && line.Contains(":") ) {
-                                failed = false;
-                                string[] LINE = line.ToLower().Split(':');
-                                WP wp = new WP();
-                                try {
-                                    wp.name = LINE[0];
-                                    wp.lvlname = LINE[1];
-                                    wp.x = ushort.Parse(LINE[2]);
-                                    wp.y = ushort.Parse(LINE[3]);
-                                    wp.z = ushort.Parse(LINE[4]);
-                                    wp.rotx = byte.Parse(LINE[5]);
-                                    wp.roty = byte.Parse(LINE[6]);
-                                }
-                                catch {
-                                    Server.s.Log("Couldn't load a Waypoint!");
-                                    failed = true;
-                                }
-                                if ( failed == false ) {
-                                    p.Waypoints.Add(wp);
-                                }
-                            }
-                        }
-                        SR.Dispose();
-                    }
-                }
-            }
-
-            public static void Save() {
-                foreach ( Player p in Player.players ) {
-                    if ( p.Waypoints.Count >= 1 ) {
-                        using ( StreamWriter SW = new StreamWriter("extra/Waypoints/" + p.name + ".save") ) {
-                            foreach ( WP wp in p.Waypoints ) {
-                                SW.WriteLine(wp.name + ":" + wp.lvlname + ":" + wp.x + ":" + wp.y + ":" + wp.z + ":" + wp.rotx + ":" + wp.roty);
-                            }
-                            SW.Dispose();
-                        }
-                    }
-                }
-            }
-        }
         public bool EnoughMoney(int amount) {
             if (this.money >= amount)
                 return true;

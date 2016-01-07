@@ -21,9 +21,7 @@ namespace MCGalaxy {
 
     public class CuboidDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Cuboid"; }
-        }
+        public override string Name { get { return "Cuboid"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
@@ -35,16 +33,14 @@ namespace MCGalaxy {
                 for (ushort z = z1; z <= z2; z++)
                     for (ushort x = x1; x <= x2; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }
     
     public class CuboidHolesDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Cuboid Holes"; }
-        }
+        public override string Name { get { return "Cuboid Holes"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
@@ -59,8 +55,10 @@ namespace MCGalaxy {
                 if ((z & 1) == 0) i++;
                 
                 for (ushort x = x1; x <= x2; x++) {
-                    byte block = (i & 1) == 0 ? brush.NextBlock() : Block.air;
-                    PlaceBlock(p, lvl, x, y, z, block);
+                    if ((i & 1) == 0)
+                    	PlaceBlock(p, lvl, x, y, z, brush);
+                    else
+                    	PlaceBlock(p, lvl, x, y, z, Block.air, 0);
                     i++;
                 }
             }
@@ -69,9 +67,7 @@ namespace MCGalaxy {
     
     public class CuboidHollowsDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Cuboid Hollow"; }
-        }
+        public override string Name { get { return "Cuboid Hollow"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
@@ -103,7 +99,7 @@ namespace MCGalaxy {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort z = z1; z <= z2; z++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
         
@@ -112,7 +108,7 @@ namespace MCGalaxy {
             for (ushort z = z1; z <= z2; z++)
                 for (ushort x = x1; x <= x2; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
         
@@ -121,16 +117,14 @@ namespace MCGalaxy {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort x = x1; x <= x2; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }
     
     public class CuboidWallsDrawOp : CuboidHollowsDrawOp {
         
-        public override string Name {
-            get { return "Cuboid Walls"; }
-        }
+        public override string Name { get { return "Cuboid Walls"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
@@ -153,9 +147,7 @@ namespace MCGalaxy {
     
     public class CuboidWireframeDrawOp : CuboidHollowsDrawOp {
         
-        public override string Name {
-            get { return "Cuboid Wireframe"; }
-        }
+        public override string Name { get { return "Cuboid Wireframe"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int lenX = (x2 - x1 + 1), lenY = (y2 - y1 + 1), lenZ = (z2 - z2 + 1);
@@ -167,24 +159,24 @@ namespace MCGalaxy {
         public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
                                      ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
             for (ushort y = y1; y <= y2; y++ ) {
-                PlaceBlock(p, lvl, x1, y, z1, brush.NextBlock());
-                PlaceBlock(p, lvl, x2, y, z1, brush.NextBlock());
-                PlaceBlock(p, lvl, x1, y, z2, brush.NextBlock());
-                PlaceBlock(p, lvl, x2, y, z2, brush.NextBlock());
+                PlaceBlock(p, lvl, x1, y, z1, brush);
+                PlaceBlock(p, lvl, x2, y, z1, brush);
+                PlaceBlock(p, lvl, x1, y, z2, brush);
+                PlaceBlock(p, lvl, x2, y, z2, brush);
             }
 
             for (ushort z = z1; z <= z2; z++) {
-                PlaceBlock(p, lvl, x1, y1, z, brush.NextBlock());
-                PlaceBlock(p, lvl, x2, y1, z, brush.NextBlock());
-                PlaceBlock(p, lvl, x1, y2, z, brush.NextBlock());
-                PlaceBlock(p, lvl, x2, y2, z, brush.NextBlock());
+                PlaceBlock(p, lvl, x1, y1, z, brush);
+                PlaceBlock(p, lvl, x2, y1, z, brush);
+                PlaceBlock(p, lvl, x1, y2, z, brush);
+                PlaceBlock(p, lvl, x2, y2, z, brush);
             }
             
             for (ushort x = x1; x <= x2; x++) {
-                PlaceBlock(p, lvl, x, y1, z1, brush.NextBlock());
-                PlaceBlock(p, lvl, x, y1, z2, brush.NextBlock());
-                PlaceBlock(p, lvl, x, y2, z1, brush.NextBlock());
-                PlaceBlock(p, lvl, x, y2, z2, brush.NextBlock());
+                PlaceBlock(p, lvl, x, y1, z1, brush);
+                PlaceBlock(p, lvl, x, y1, z2, brush);
+                PlaceBlock(p, lvl, x, y2, z1, brush);
+                PlaceBlock(p, lvl, x, y2, z2, brush);
             }
         }
     }

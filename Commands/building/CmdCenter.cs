@@ -17,7 +17,7 @@ namespace MCGalaxy.Commands {
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
 
-       void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)  {
+       void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)  {
             RevertAndClearState(p, x, y, z);
             p.centerstart[0] = x;
             p.centerstart[1] = y;
@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
         
-        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type) {
+        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             p.centerend[0] = x;
             p.centerend[1] = y;

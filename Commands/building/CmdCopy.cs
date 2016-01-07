@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
 		}
 
-		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type) {
+		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos bp = (CatchPos)p.blockchangeObject;
 			p.copystart[0] = x;
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
 		}
 
-		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type) {
+		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 			ushort minX = (ushort)Math.Min(x, cpos.x), minY = (ushort)Math.Min(y, cpos.y);
@@ -132,8 +132,11 @@ namespace MCGalaxy.Commands
 				
 				if (b == Block.air && cpos.type != 2 || cpos.ignoreTypes.Contains(b))
 					totalAir++;
-				if (!cpos.ignoreTypes.Contains(b))
+				if (!cpos.ignoreTypes.Contains(b)) {
 					state.Blocks[index] = b;
+					if (b == Block.custom_block)
+						state.ExtBlocks[index] = p.level.GetExtTile(xx, yy, zz);
+				}
 				index++;
 			}
 			p.CopyBuffer = state;
@@ -162,7 +165,7 @@ namespace MCGalaxy.Commands
 			}
 		}
 
-		void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type) {
+		void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 
@@ -208,7 +211,7 @@ namespace MCGalaxy.Commands
 			using (FileStream fs = new FileStream(path, FileMode.Open))
 				using(GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
 			{
-				CopyState state = new CopyState(0, 0, 0, 0, 0, 0, null);
+				CopyState state = new CopyState(0, 0, 0, 0, 0, 0, null, null);
 				if (existsNew)
 					state.LoadFrom(gs);
 				else

@@ -67,13 +67,13 @@ namespace MCGalaxy.Commands
 		CopyState RotateX(CopyState state) {
 			CopyState newState = new CopyState(state.X, state.Y, state.Z,
 			                                   state.Width, state.Length, state.Height);
-			byte[] blocks = state.Blocks;
+			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
 			int newMaxY = newState.Height - 1;
 			
 			for (int i = 0; i < blocks.Length; i++) {
 				ushort x, y, z;
 				state.GetCoords(i, out x, out y, out z);
-				newState.Set(x, newMaxY - z, y, blocks[i]);
+				newState.Set(x, newMaxY - z, y, blocks[i], extBlocks[i]);
 			}
 			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
@@ -82,12 +82,12 @@ namespace MCGalaxy.Commands
 		CopyState RotateY(CopyState state) {
 			CopyState newState = new CopyState(state.X, state.Y, state.Z,
 			                                   state.Length, state.Height, state.Width);
-			byte[] blocks = state.Blocks;
+			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
 			
 			for (int i = 0; i < blocks.Length; i++) {
 				ushort x, y, z;
 				state.GetCoords(i, out x, out y, out z);
-				newState.Set(z, y, x, blocks[i]);
+				newState.Set(z, y, x, blocks[i], extBlocks[i]);
 			}
 			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
@@ -96,13 +96,13 @@ namespace MCGalaxy.Commands
 		CopyState RotateZ(CopyState state) {
 			CopyState newState = new CopyState(state.X, state.Y, state.Z,
 			                                   state.Height, state.Width, state.Length);
-			byte[] blocks = state.Blocks;
+			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
 			int newMaxY = newState.Height - 1;
 			
 			for (int i = 0; i < blocks.Length; i++) {
 				ushort x, y, z;
 				state.GetCoords(i, out x, out y, out z);
-				newState.Set(y, newMaxY - x, z, blocks[i]);
+				newState.Set(y, newMaxY - x, z, blocks[i], extBlocks[i]);
 			}
 			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
 		
 		void FlipX(CopyState state) {
 			int midX = state.Width / 2, maxX = state.Width - 1;
-			byte[] blocks = state.Blocks;
+			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
 			
 			for (int y = 0; y < state.Height; y++) {			
 				for (int z = 0; z < state.Length; z++) {
@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands
 						int endX = maxX - x;
 						int start = state.GetIndex(x, y, z);
 						int end = state.GetIndex(endX, y, z);
-						Swap(blocks, start, end);
+						Swap(blocks, extBlocks, start, end);
 					}
 				}
 			}
@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands
 		
 		void FlipY(CopyState state) {
 			int midY = state.Height / 2, maxY = state.Height - 1;
-			byte[] blocks = state.Blocks;
+			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
 			
 			for (int y = 0; y < midY; y++) {
 				int endY = maxY - y;
@@ -134,7 +134,7 @@ namespace MCGalaxy.Commands
 				int end = state.GetIndex(0, endY, 0);			
 				for (int z = 0; z < state.Length; z++) {
 					for (int x = 0; x < state.Width; x++) {
-						Swap(blocks, start, end);
+						Swap(blocks, extBlocks, start, end);
 						start++; end++;
 					}
 				}
@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands
 		
 		void FlipZ(CopyState state) {
 			int midZ = state.Width / 2, maxZ = state.Length - 1;
-			byte[] blocks = state.Blocks;
+			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
 			
 			for (int y = 0; y < state.Height; y++) {			
 				for (int z = 0; z < midZ; z++) {
@@ -151,15 +151,16 @@ namespace MCGalaxy.Commands
 					int start = state.GetIndex(0, y, z);
 					int end = state.GetIndex(0, y, endZ);
 					for (int x = 0; x < state.Width; x++) {						
-						Swap(blocks, start, end);
+						Swap(blocks, extBlocks, start, end);
 						start++; end++;
 					}
 				}
 			}
 		}
 
-		static void Swap(byte[] b, int start, int end) {
-			byte a = b[start]; b[start] = b[end]; b[end] = a;
+		static void Swap(byte[] blocks, byte[] extBlocks, int a, int b) {
+			byte tmp = blocks[a]; blocks[a] = blocks[b]; blocks[b] = tmp;
+			tmp = extBlocks[a]; extBlocks[a] = extBlocks[b]; extBlocks[b] = tmp;
 		}
 		
 		public override void Help(Player p) {

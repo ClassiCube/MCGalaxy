@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
             else Help(p);
         }
 
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands
             p.Blockchange += Blockchange2;
         }
 
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;

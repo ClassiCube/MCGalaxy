@@ -61,22 +61,25 @@ namespace MCGalaxy {
             TotalModified = 0;
         }
         
-        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type) {
-            if (type == Block.Zero)
-                return;
-            
+        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        	byte type = brush.NextBlock();
+            if (type == Block.Zero) return;
+            PlaceBlock(p, lvl, x, y, z, type, brush.NextExtBlock());
+        }
+        
+        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type, byte extType) {
             switch (method) {
                 case MethodBlockQueue:
-                    BlockQueue.Addblock(p, x, y, z, type);
+                    BlockQueue.Addblock(p, x, y, z, type, extType);
                     break;
                 case MethodBlockChange:
-                    p.level.Blockchange(p, x, y, z, type);
+                    p.level.Blockchange(p, x, y, z, type, extType);
                     break;
                 case MethodSetTile:
                     byte old = lvl.GetTile(x, y, z);
                     if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
                     	return;
-                    p.level.SetTile(x, y, z, type, p);
+                    p.level.SetTile(x, y, z, type, p, extType);
                     break;
             }
         }
@@ -88,7 +91,7 @@ namespace MCGalaxy {
             int affected = 0;
             if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
                 return false;
-            Player.SendMessage(p, op.Name + ": drawing an estimated " + affected + " blocks");
+            Player.SendMessage(p, op.Name + ": affecting up to an estimated " + affected + " blocks");
             
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);

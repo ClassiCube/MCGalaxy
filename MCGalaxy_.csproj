@@ -123,7 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Building\CmdAbort.cs" />
-    <Compile Include="Commands\Building\CmdAddGlobalBlock.cs" />
+    <Compile Include="Commands\building\CmdGlobalBlock.cs" />
     <Compile Include="Commands\Building\CmdBind.cs" />
     <Compile Include="Commands\Building\CmdCenter.cs" />
     <Compile Include="Commands\Building\CmdClick.cs" />
@@ -160,6 +160,7 @@
     <Compile Include="Commands\Building\CmdUndo.cs" />
     <Compile Include="Commands\Building\CmdWrite.cs" />
     <Compile Include="Commands\building\DrawCmd.cs" />
+    <Compile Include="Commands\building\ReplaceCmd.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
     <Compile Include="Commands\Chat\CmdChatRoom.cs" />
     <Compile Include="Commands\Chat\CmdGcaccept.cs" />
@@ -419,6 +420,7 @@
     <Compile Include="Drawing\CopyState.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\ReplaceDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Levels\IO\ConvertDAT.cs" />
@@ -443,6 +445,7 @@
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
     <Compile Include="Player\Chat.cs" />
+    <Compile Include="Player\Waypoint.cs" />
     <Compile Include="Player\Player.Timers.cs" />
     <Compile Include="Player\Undo\UndoFile.cs" />
     <Compile Include="Player\Undo\UndoFileBin.cs" />
@@ -467,7 +470,6 @@
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Levels\Block.cs" />
     <Compile Include="Levels\BlockDefinitions.cs" />
-    <Compile Include="Levels\BlockDefinitionsJSON.cs" />
     <Compile Include="API\ChatMessage.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">
       <SubType>Component</SubType>
@@ -504,12 +506,6 @@
     <Compile Include="GUI\Win32\Margins.cs" />
     <Compile Include="GUI\Win32\Natives.cs" />
     <Compile Include="GUI\Win32\RECT.cs" />
-    <Compile Include="GUI\WoM.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\WoM.Designer.cs">
-      <DependentUpon>WoM.cs</DependentUpon>
-    </Compile>
     <Compile Include="Levels\Texture_Settings.cs" />
     <Compile Include="Database\DatabaseTransactionHelper.cs" />
     <Compile Include="Database\Database.cs" />
@@ -525,7 +521,6 @@
     <Compile Include="GUI\EditText.Designer.cs">
       <DependentUpon>EditText.cs</DependentUpon>
     </Compile>
-    <Compile Include="Network\WOMBeat.cs" />
     <Compile Include="Games\LavaSurvival.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Database\MySQLTransactionHelper.cs" />
@@ -613,9 +608,6 @@
     <EmbeddedResource Include="GUI\Window.resx">
       <DependentUpon>Window.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\WoM.resx">
-      <DependentUpon>WoM.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="SharkBite.Thresher\ChannelModeInfo.cs" />
     <Compile Include="SharkBite.Thresher\CommandBuilder.cs" />

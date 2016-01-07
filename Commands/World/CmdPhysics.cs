@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
             level.changed = true;
         }
         
-        static string[] states = { "&cOFF", "&aNormal", "&aAdvanced", "&aHardcore", "&aInstant", "&4Doors-only" };
+        internal static string[] states = { "&cOFF", "&aNormal", "&aAdvanced", "&aHardcore", "&aInstant", "&4Doors-only" };
 
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/physics [map] [0/1/2/3/4/5]");

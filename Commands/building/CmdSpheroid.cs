@@ -24,12 +24,12 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "spheroid"; } }
         public override string shortcut { get { return "e"; } }
 
-        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type) {
+        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            type = cpos.type == Block.Zero ? p.bindings[type] : cpos.type;
+            GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
-            Brush brush = new SolidBrush(type);
+            Brush brush = new SolidBrush(cpos.type, cpos.extType);
 
             switch (cpos.solid) {
                 case SolidType.solid:

@@ -197,7 +197,7 @@ namespace MCGalaxy.Commands
 
         }
 
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             p.ClearBlockchange();
             //com(p, "get the type of the changed block");

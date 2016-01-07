@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
                 p.SendMessage("Set server's default texture to " + pars[1]);
                 foreach (Player pl in Player.players)
                 {
-                    if (pl.HasExtension("EnvMapAppearance") && pl.level.textureUrl == "")
+                    if (pl.HasCpeExt(CpeExt.EnvMapAppearance) && pl.level.textureUrl == "")
                     {
                         pl.SendSetMapAppearance(Server.defaultTextureUrl, p.level.EdgeBlock, p.level.HorizonBlock, p.level.EdgeLevel);
                     }
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands
                 p.SendMessage("Set level's texture to " + pars[1]);
                 foreach (Player pl in Player.players)
                 {
-                    if (pl.HasExtension("EnvMapAppearance") && pl.level == p.level)
+                    if (pl.HasCpeExt(CpeExt.EnvMapAppearance) && pl.level == p.level)
                     {
                         pl.SendSetMapAppearance(p.level.textureUrl, p.level.EdgeBlock, p.level.HorizonBlock, p.level.EdgeLevel);
                     }

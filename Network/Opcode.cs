@@ -59,5 +59,6 @@ namespace MCGalaxy {
 		public const byte CpePlayerClick = 34;
 		public const byte CpeDefineBlock = 35;
 		public const byte CpeRemoveBlockDefinition = 36;
+		public const byte CpeDefineBlockExt = 37;
 	}
 }

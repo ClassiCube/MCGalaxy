@@ -23,6 +23,9 @@ namespace MCGalaxy
 {
     public sealed class Block
     {
+    	public const byte CpeCount = 66;
+    	public const byte CpeMaxBlock = 65;
+    	
         public const byte air = (byte)0;
         public const byte rock = (byte)1;
         public const byte grass = (byte)2;
@@ -197,7 +200,7 @@ namespace MCGalaxy
         public const byte lava_portal = (byte)162;
 
         //BlockDefinitions
-        public const byte block_definitions = (byte)163;
+        public const byte custom_block = (byte)163;
         //Movement doors
         public const byte air_door = (byte)164;
         public const byte air_switch = (byte)165;
@@ -774,9 +777,7 @@ namespace MCGalaxy
 						case Block.lavastill:
 								return false;
             }
-
-            if (type > 65) { return false; }
-            return true;
+            return type < Block.CpeCount;
         }
 
         public static bool RightClick(byte type, bool countAir = false)
@@ -1308,7 +1309,7 @@ namespace MCGalaxy
                 case 160: return "air_portal";
                 case 161: return "water_portal";
                 case 162: return "lava_portal";
-                case block_definitions: return "custom_block";
+                case custom_block: return "custom_block";
                 case air_door: return "air_door";
                 case air_switch: return "air_switch";
                 case water_door: return "door_water";
@@ -1402,13 +1403,13 @@ namespace MCGalaxy
                 case "0":
                 case "air": return air;
                 case "1":
-                case "stone": return stone;
+                case "stone": return rock;
                 case "2":
                 case "grass": return grass;
                 case "3":
-                case "dirt": return 3;
+                case "dirt": return dirt;
                 case "4":
-                case "cobblestone": return 4;
+                case "cobblestone": return stone;
                 case "5":
                 case "wood": return 5;
                 case "6":
@@ -1802,7 +1803,7 @@ namespace MCGalaxy
                 case op_water: return waterstill;
                 case op_lava: return lavastill;
 
-                case griefer_stone: return Server.grieferStoneType; //Griefer_stone
+                case griefer_stone: return stone; //Griefer_stone
                 case lava_sponge: return sponge;
 
                 case wood_float: return wood; //wood_float
@@ -1985,9 +1986,10 @@ namespace MCGalaxy
                 case fishshark: return lightgrey;
                 case fishsponge: return sponge;
                 case fishlavashark: return obsidian;
-
+                
+                case custom_block: return custom_block;
                 default:
-                    return b < 66 ? b : orange;
+                    return b < CpeCount ? b : orange;
             }
         }
         public static byte SaveConvert(byte b)

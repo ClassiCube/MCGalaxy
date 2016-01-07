@@ -26,6 +26,7 @@ namespace MCGalaxy.Util {
     public sealed class UndoFileBin : UndoFile {
         
         protected override string Extension { get { return ".unbin"; } }
+        const int entrySize = 12;
 
         protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
             using (FileStream fs = File.Create(path)) {
@@ -42,10 +43,8 @@ namespace MCGalaxy.Util {
                     
                     w.Write((ushort)timeDiff);
                     w.Write(uP.x); w.Write(uP.y); w.Write(uP.z);
-                    w.Write(uP.type);
-                    w.Write((byte)0); // block definitions placeholder
-                    w.Write(uP.newtype);
-                    w.Write((byte)0); // block definitions placeholder
+                    w.Write(uP.type); w.Write(uP.extType);
+                    w.Write(uP.newtype); w.Write(uP.newExtType);
                     lastChunk.Entries++;
                 }
                 if (lastChunk.Entries > 0)
@@ -59,7 +58,7 @@ namespace MCGalaxy.Util {
             using (Stream fs = File.OpenRead(path))
                 using (BinaryReader r = new BinaryReader(fs))
             {
-                int approxEntries = (int)(fs.Length / 12);
+                int approxEntries = (int)(fs.Length / entrySize);
                 if (buffer.Capacity < approxEntries)
                     buffer.Capacity = approxEntries;
                 while (fs.Position < fs.Length) {
@@ -69,15 +68,15 @@ namespace MCGalaxy.Util {
                     for (int j = 0; j < chunk.Entries; j++ ) {
                         Pos.timePlaced = chunk.BaseTime.AddSeconds(r.ReadUInt16());
                         Pos.x = r.ReadUInt16(); Pos.y = r.ReadUInt16(); Pos.z = r.ReadUInt16();
-                        Pos.type = r.ReadByte(); r.ReadByte(); // block definitions placeholder
-                        Pos.newtype = r.ReadByte(); r.ReadByte(); // block definitions placeholder
+                        Pos.type = r.ReadByte(); Pos.extType = r.ReadByte();
+                        Pos.newtype = r.ReadByte(); Pos.newExtType = r.ReadByte();
                         buffer.Add(Pos);
                     }
                 }
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, long seconds) {
+        protected override bool UndoEntry(Player p, string path, ref byte[] temp, long seconds) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             DateTime now = DateTime.Now;
             Player.UndoPos Pos;
@@ -92,24 +91,28 @@ namespace MCGalaxy.Util {
                     if (!CheckChunk(chunk, now, seconds, p, out lvl))
                         return false;
                     if (lvl == null || lvl != p.level) continue;
+                    
                     Pos.mapName = chunk.LevelName;
                     fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
+                    if (temp == null) temp = new byte[ushort.MaxValue * entrySize];
+                    fs.Read(temp, 0, chunk.Entries * entrySize);
                     
-                    for (int j = 0; j < chunk.Entries; j++ ) {
-                        DateTime time = chunk.BaseTime.AddSeconds(r.ReadUInt16());
+                    for (int j = chunk.Entries - 1; j >= 0; j-- ) {
+                    	int offset = j * entrySize;
+                    	DateTime time = chunk.BaseTime.AddSeconds(U16(temp, offset + 0));
                         if (time.AddSeconds(seconds) < now) return false;
-                        Pos.x = r.ReadUInt16(); Pos.y = r.ReadUInt16(); Pos.z = r.ReadUInt16();
+                        Pos.x = U16(temp, offset + 2); Pos.y = U16(temp, offset + 4); Pos.z = U16(temp, offset + 6);
                         
                         Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
-                        byte oldType = r.ReadByte(); r.ReadByte(); // block definitions placeholder
-                        byte newType = r.ReadByte(); r.ReadByte(); // block definitions placeholder
+                        byte oldType = temp[offset + 8], oldExtType = temp[offset + 9];
+                        byte newType = temp[offset + 10], newExtType = temp[offset + 11];
 
                         if (Pos.type == newType || Block.Convert(Pos.type) == Block.water
                             || Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
                             
-                            Pos.newtype = oldType;
-                            Pos.timePlaced = now;
-                            lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true);
+                            Pos.newtype = oldType; Pos.newExtType = oldExtType;
+                            Pos.extType = newExtType; Pos.timePlaced = now;
+                            lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true, "", Pos.newExtType);
                             if (p != null)
                                 p.RedoBuffer.Add(Pos);
                         }
@@ -119,7 +122,7 @@ namespace MCGalaxy.Util {
             return true;
         }
 
-        protected override bool HighlightEntry(Player p, string path, long seconds) {
+        protected override bool HighlightEntry(Player p, string path, ref byte[] temp, long seconds) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             DateTime now = DateTime.Now;
             
@@ -133,16 +136,20 @@ namespace MCGalaxy.Util {
                     if (!CheckChunk(chunk, now, seconds, p, out lvl))
                         return false;
                     if (lvl == null || lvl != p.level) continue;
-                    fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
                     
-                    for (int j = 0; j < chunk.Entries; j++ ) {
-                        DateTime time = chunk.BaseTime.AddSeconds(r.ReadUInt16());
+                    fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
+                    if (temp == null) temp = new byte[ushort.MaxValue * entrySize];
+                    fs.Read(temp, 0, chunk.Entries * entrySize);
+                    
+                    for (int j = chunk.Entries - 1; j >= 0; j-- ) {
+                    	int offset = j * entrySize;
+                    	DateTime time = chunk.BaseTime.AddSeconds(U16(temp, offset + 0));
                         if (time.AddSeconds(seconds) < now) return false;
-                        ushort x = r.ReadUInt16(), y = r.ReadUInt16(), z = r.ReadUInt16();
+                        ushort x = U16(temp, offset + 2), y = U16(temp, offset + 4), z = U16(temp, offset + 6);
                         
                         byte lvlTile = lvl.GetTile(x, y, z);
-                        byte oldType = r.ReadByte(); r.ReadByte(); // block definitions placeholder
-                        byte newType = r.ReadByte(); r.ReadByte(); // block definitions placeholder
+                        byte oldType = temp[offset + 8], oldExtType = temp[offset + 9];
+                        byte newType = temp[offset + 10], newExtType = temp[offset + 11];
 
                         if (lvlTile == newType || Block.Convert(lvlTile) == Block.water || Block.Convert(lvlTile) == Block.lava) {
                             
@@ -154,6 +161,10 @@ namespace MCGalaxy.Util {
                 }
             }
             return true;
+        }
+        
+        static ushort U16(byte[] buffer, int offset) {
+        	return (ushort)(buffer[offset + 0] | buffer[offset + 1] << 8);
         }
         
         static bool CheckChunk(ChunkHeader chunk, DateTime now, long seconds, Player p, out Level lvl) {

@@ -1823,7 +1823,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "/tw rules - read the rules");
             }
 		}
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
@@ -1893,7 +1893,7 @@ namespace MCGalaxy.Commands
             }
         }
 
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             p.ClearBlockchange();
             byte b = p.level.GetTile(x, y, z);

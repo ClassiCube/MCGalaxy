@@ -16,10 +16,10 @@
 	permissions and limitations under the Licenses.
 */
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPlace : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdPlace : Command {
+		
         public override string name { get { return "place"; } }
         public override string shortcut { get { return "pl"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -27,49 +27,44 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdPlace() { }
 
-        public override void Use(Player p, string message)
-        {
-            byte b = Block.Zero;
-            ushort x = 0; ushort y = 0; ushort z = 0;
+        public override void Use(Player p, string message) {
+            byte type = Block.Zero, extType = 0;
+            ushort x = (ushort)(p.pos[0] / 32);
+            ushort y = (ushort)((p.pos[1] / 32) - 1);
+            ushort z = (ushort)(p.pos[2] / 32);
 
-            x = (ushort)(p.pos[0] / 32);
-            y = (ushort)((p.pos[1] / 32) - 1);
-            z = (ushort)(p.pos[2] / 32);
-
-            try
-            {
-                switch (message.Split(' ').Length)
-                {
-                    case 0: b = Block.rock; break;
-                    case 1: b = Block.Byte(message); break;
+            try {
+            	string[] parts = message.Split(' ');
+                switch (parts.Length) {
+                    case 0: type = Block.rock; break;
+                    case 1: type = DrawCmd.GetBlock(p, parts[0], out extType); break;
                     case 3:
-                        x = Convert.ToUInt16(message.Split(' ')[0]);
-                        y = Convert.ToUInt16(message.Split(' ')[1]);
-                        z = Convert.ToUInt16(message.Split(' ')[2]);
+                        type = Block.rock;
+                        x = Convert.ToUInt16(parts[0]);
+                        y = Convert.ToUInt16(parts[1]);
+                        z = Convert.ToUInt16(parts[2]);
                         break;
                     case 4:
-                        b = Block.Byte(message.Split(' ')[0]);
-                        x = Convert.ToUInt16(message.Split(' ')[1]);
-                        y = Convert.ToUInt16(message.Split(' ')[2]);
-                        z = Convert.ToUInt16(message.Split(' ')[3]);
+                        type = DrawCmd.GetBlock(p, parts[0], out extType);
+                        x = Convert.ToUInt16(parts[1]);
+                        y = Convert.ToUInt16(parts[2]);
+                        z = Convert.ToUInt16(parts[3]);
                         break;
-                    default: Player.SendMessage(p, "Invalid parameters"); return;
+                    default: Player.SendMessage(p, "Invalid number of parameters"); return;
                 }
+            } catch { 
+            	Player.SendMessage(p, "Invalid parameters"); return; 
             }
-            catch { Player.SendMessage(p, "Invalid parameters"); return; }
 
-            if (b == Block.Zero) b = (byte)1;
-            if (!Block.canPlace(p, b)) { Player.SendMessage(p, "Cannot place that block type."); return; }
-
-            Level level = p.level;
-
+            if (type == Block.Zero) return;
+            if (!Block.canPlace(p, type)) { Player.SendMessage(p, "Cannot place that block type."); return; }
             if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
 
-            p.level.Blockchange(p, x, y, z, b);
+            p.level.Blockchange(p, x, y, z, type, extType);
             Player.SendMessage(p, "A block was placed at (" + x + ", " + y + ", " + z + ").");
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/place [block] <x y z> - Places block at your feet or <x y z>");
         }
     }

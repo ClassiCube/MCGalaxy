@@ -41,9 +41,9 @@ namespace MCGalaxy.Commands
             catch { }
             if (par0.ToLower() == "create" || par0.ToLower() == "new" || par0.ToLower() == "add")
             {
-                if (!Player.Waypoint.Exists(par1, p))
+                if (!WaypointList.Exists(par1, p))
                 {
-                    Player.Waypoint.Create(par1, p);
+                    WaypointList.Create(par1, p);
                     Player.SendMessage(p, "Created waypoint");
                     return;
                 }
@@ -51,18 +51,18 @@ namespace MCGalaxy.Commands
             }
             else if (par0.ToLower() == "goto")
             {
-                if (Player.Waypoint.Exists(par1, p))
+                if (WaypointList.Exists(par1, p))
                 {
-                    Player.Waypoint.Goto(par1, p);
+                    WaypointList.Goto(par1, p);
                     return;
                 }
                 else { Player.SendMessage(p, "That waypoint doesn't exist"); return; }
             }
             else if (par0.ToLower() == "replace" || par0.ToLower() == "update" || par0.ToLower() == "edit")
             {
-                if (Player.Waypoint.Exists(par1, p))
+                if (WaypointList.Exists(par1, p))
                 {
-                    Player.Waypoint.Update(par1, p);
+                    WaypointList.Update(par1, p);
                     Player.SendMessage(p, "Updated waypoint");
                     return;
                 }
@@ -70,9 +70,9 @@ namespace MCGalaxy.Commands
             }
             else if (par0.ToLower() == "delete" || par0.ToLower() == "remove")
             {
-                if (Player.Waypoint.Exists(par1, p))
+                if (WaypointList.Exists(par1, p))
                 {
-                    Player.Waypoint.Remove(par1, p);
+                    WaypointList.Remove(par1, p);
                     Player.SendMessage(p, "Deleted waypoint");
                     return;
                 }
@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands
             else if (par0.ToLower() == "list")
             {
                 Player.SendMessage(p, "Waypoints:");
-                foreach(Player.Waypoint.WP wp in p.Waypoints)
+                foreach (Waypoint wp in p.Waypoints)
                 {
                     if (Level.Find(wp.lvlname) != null)
                     {
@@ -92,9 +92,9 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                if (Player.Waypoint.Exists(par0, p))
+                if (WaypointList.Exists(par0, p))
                 {
-                    Player.Waypoint.Goto(par0, p);
+                    WaypointList.Goto(par0, p);
                     Player.SendMessage(p, "Sent you to waypoint");
                     return;
                 }

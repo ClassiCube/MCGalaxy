@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "[types] - up, down, layer, vertical_x, vertical_z");
         }
         
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             try
             {

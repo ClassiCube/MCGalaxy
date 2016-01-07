@@ -40,6 +40,7 @@ namespace MCGalaxy.Util {
         
         protected override void ReadUndoData(List<Player.UndoPos> buffer, string path) {
             Player.UndoPos Pos;
+            Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
             int approxEntries = (int)(lines.Length / 7);
             if (buffer.Capacity < approxEntries)
@@ -60,8 +61,9 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, long seconds) {
+        protected override bool UndoEntry(Player p, string path, ref byte[] temp, long seconds) {
             Player.UndoPos Pos;
+            Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
@@ -94,8 +96,9 @@ namespace MCGalaxy.Util {
             return true;
         }
         
-        protected override bool HighlightEntry(Player p, string path, long seconds) {
+        protected override bool HighlightEntry(Player p, string path, ref byte[] temp, long seconds) {
             Player.UndoPos Pos;
+            Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {

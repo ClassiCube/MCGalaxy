@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            byte b; long seconds = -2; Player who = null; Player.UndoPos Pos; int CurrentPos = 0; bool undoPhysics = false; string whoName = String.Empty;
+        	byte b; long seconds = -2; Player who = null; Player.UndoPos Pos; bool undoPhysics = false; string whoName = String.Empty;
             if (p != null)
                 p.RedoBuffer.Clear();
             if (message == "") {
@@ -81,23 +81,27 @@ namespace MCGalaxy.Commands
                     if (who != p && (int)p.group.Permission < CommandOtherPerms.GetPerm(this, 1)) { Player.SendMessage(p, "Only an " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 1)).name + "+ may undo other people's actions"); return; }
                 }
                 Level saveLevel = null;
-                for (CurrentPos = who.UndoBuffer.Count - 1; CurrentPos >= 0; --CurrentPos)
+                for (int i = who.UndoBuffer.Count - 1; i >= 0; --i)
                 {
                     try
                     {
-                        Pos = who.UndoBuffer[CurrentPos];
-                        Level foundLevel = Level.FindExact(Pos.mapName);
-                        saveLevel = foundLevel;
-                        b = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
+                        Pos = who.UndoBuffer[i];
+                        Level lvl = Level.FindExact(Pos.mapName);
+                        saveLevel = lvl;
+                        b = lvl.GetTile(Pos.x, Pos.y, Pos.z);
                         if (Pos.timePlaced.AddSeconds(seconds) >= DateTime.Now)
                         {
                             if (b == Pos.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
                             {
-                                foundLevel.Blockchange(Pos.x, Pos.y, Pos.z, Pos.type, true);
-
-                                Pos.newtype = Pos.type; Pos.type = b;
+                                Pos.newtype = Pos.type; Pos.newExtType = Pos.extType;
+                                byte extType = 0;
+                                if (b == Block.custom_block) 
+                                	extType = lvl.GetExtTile(Pos.x, Pos.y, Pos.z);
+                                
+                                lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.type, true, "", Pos.extType);
+                                Pos.type = b; Pos.extType = extType;
                                 if (p != null) p.RedoBuffer.Add(Pos);
-                                who.UndoBuffer.RemoveAt(CurrentPos);
+                                who.UndoBuffer.RemoveAt(i);
                             }
                         }
                         else
@@ -142,11 +146,11 @@ namespace MCGalaxy.Commands
 
                 if (p.level.UndoBuffer.Count != Server.physUndo)
                 {
-                    for (CurrentPos = p.level.currentUndo; CurrentPos >= 0; CurrentPos--)
+                    for (int i = p.level.currentUndo; i >= 0; i--)
                     {
                         try
                         {
-                            uP = p.level.UndoBuffer[CurrentPos];
+                            uP = p.level.UndoBuffer[i];
                             b = p.level.GetTile(uP.location);
                             if (uP.timePerformed.AddSeconds(seconds) < DateTime.Now)
                             {
@@ -155,7 +159,7 @@ namespace MCGalaxy.Commands
                             if (b == uP.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
                             {
                                 p.level.IntToPos(uP.location, out x, out y, out z);
-                                p.level.Blockchange(p, x, y, z, uP.oldType);
+                                p.level.Blockchange(p, x, y, z, uP.oldType, uP.oldExtType);
                             }
                         }
                         catch { }
@@ -163,12 +167,12 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    for (CurrentPos = p.level.currentUndo; CurrentPos != p.level.currentUndo + 1; CurrentPos--)
+                    for (int i = p.level.currentUndo; i != p.level.currentUndo + 1; i--)
                     {
                         try
                         {
-                            if (CurrentPos < 0) CurrentPos = p.level.UndoBuffer.Count - 1;
-                            uP = p.level.UndoBuffer[CurrentPos];
+                            if (i < 0) i = p.level.UndoBuffer.Count - 1;
+                            uP = p.level.UndoBuffer[i];
                             b = p.level.GetTile(uP.location);
                             if (uP.timePerformed.AddSeconds(seconds) < DateTime.Now)
                             {
@@ -177,7 +181,7 @@ namespace MCGalaxy.Commands
                             if (b == uP.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
                             {
                                 p.level.IntToPos(uP.location, out x, out y, out z);
-                                p.level.Blockchange(p, x, y, z, uP.oldType);
+                                p.level.Blockchange(p, x, y, z, uP.oldType, uP.oldExtType);
                             }
                         }
                         catch { }

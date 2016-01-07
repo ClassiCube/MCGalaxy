@@ -22,18 +22,21 @@ namespace MCGalaxy {
     public abstract class Brush {
         
         public abstract byte NextBlock();
+        
+        public abstract byte NextExtBlock();
     }
     
     public sealed class SolidBrush : Brush {
-        readonly byte block;
+        readonly byte type, extType;
         
-        public SolidBrush(byte block) {
-            this.block = block;
+        public SolidBrush(byte type, byte extType) {
+            this.type = type;
+            this.extType = extType;
         }
         
-        public override byte NextBlock() {
-            return block;
-        }
+        public override byte NextBlock() { return type; }
+        
+        public override byte NextExtBlock() { return extType; }
     }
     
     public sealed class RainbowBrush : Brush {
@@ -46,19 +49,24 @@ namespace MCGalaxy {
                 curBlock = Block.red;
             return block;
         }
+        
+        public override byte NextExtBlock() { return 0; }
     }
     
     public sealed class RandomBrush : Brush {
         readonly Random rnd = new Random();
-        readonly byte block;
+        readonly byte type, extType;
         
-        public RandomBrush(byte block) {
-            this.block = block;
+        public RandomBrush(byte type, byte extType) {
+            this.type = type;
+            this.extType = extType;
         }
         
         public override byte NextBlock() {
-            return (byte)rnd.Next(1, 11) <= 5 ? block : Block.Zero;
+            return (byte)rnd.Next(1, 11) <= 5 ? type : Block.Zero;
         }
+        
+        public override byte NextExtBlock() { return extType; }
     }
     
     public sealed class RandomRainbowBrush : Brush {
@@ -75,5 +83,7 @@ namespace MCGalaxy {
         public override byte NextBlock() {
             return (byte)rnd.Next(Block.red, Block.darkgrey);
         }
+        
+        public override byte NextExtBlock() { return 0; }
     }
 }

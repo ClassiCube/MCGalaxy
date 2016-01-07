@@ -47,13 +47,13 @@ namespace MCGalaxy.Commands
             
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);;
             p.blockchangeObject = new CatchPos(x, y, z);
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
             Player.SendMessage(p, "Generating maze... this could take a while");
@@ -128,11 +128,11 @@ namespace MCGalaxy.Commands
             }
             p.ignorePermission = true;
             Command.all.Find("cuboid").Use(p, "walls");
-            p.manualChange(minx, y, minz, 0, Block.staircasefull);
-            p.manualChange(maxx, y, maxz, 0, Block.staircasefull);
+            p.ManualChange(minx, y, minz, 0, Block.staircasefull);
+            p.ManualChange(maxx, y, maxz, 0, Block.staircasefull);
             Command.all.Find("cuboid").Use(p, "walls");
-            p.manualChange(minx, (ushort)(y + 1), minz, 0, Block.leaf);
-            p.manualChange(maxx, (ushort)(y + 2), maxz, 0, Block.leaf);
+            p.ManualChange(minx, (ushort)(y + 1), minz, 0, Block.leaf);
+            p.ManualChange(maxx, (ushort)(y + 2), maxz, 0, Block.leaf);
             Player.SendMessage(p, "Maze painted. Build your entrance and exit yourself");
             randomizer = 0;
         }

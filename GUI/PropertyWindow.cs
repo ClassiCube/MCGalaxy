@@ -62,7 +62,6 @@ namespace MCGalaxy.Gui {
             cmbIRCColour.Items.AddRange(colors);
             cmbColor.Items.AddRange(colors);
             cmbGlobalChatColor.Items.AddRange(colors);
-            button3.Enabled = Server.WomDirect;
 
             grpIRC.BackColor = Server.irc ? Color.White : Color.LightGray;
             grpSQL.BackColor = Server.useMySQL ? Color.White : Color.LightGray;
@@ -85,7 +84,6 @@ namespace MCGalaxy.Gui {
                 cmbVerificationRank.Items.Add(grp.name);
                 lsCmbSetupRank.Items.Add(grp.name);
                 lsCmbControlRank.Items.Add(grp.name);
-                cmbGrieferStoneRank.Items.Add(grp.name);
                 cmbAFKKickPerm.Items.Add(grp.name);
                 cmbViewQueue.Items.Add(grp.name);
                 cmbEnterQueue.Items.Add(grp.name);
@@ -99,8 +97,6 @@ namespace MCGalaxy.Gui {
                     adminchatperm = grp.name;
                 if ( grp.Permission == Server.verifyadminsrank )
                     verifyadminsperm = grp.name;
-                if ( grp.Permission == Server.grieferStoneRank )
-                    grieferstonerank = grp.name;
                 if ( grp.Permission == Server.afkkickperm )
                     afkkickrank = grp.name;
                 if ( grp.Permission == Server.reviewenter )
@@ -127,16 +123,12 @@ namespace MCGalaxy.Gui {
             cmbOpChat.SelectedIndex = ( opchatperm != String.Empty ? cmbOpChat.Items.IndexOf(opchatperm) : 1 );
             cmbAdminChat.SelectedIndex = ( adminchatperm != String.Empty ? cmbAdminChat.Items.IndexOf(adminchatperm) : 1 );
             cmbVerificationRank.SelectedIndex = ( verifyadminsperm != String.Empty ? cmbVerificationRank.Items.IndexOf(verifyadminsperm) : 1 );
-            cmbGrieferStoneRank.SelectedIndex = ( grieferstonerank != String.Empty ? cmbGrieferStoneRank.Items.IndexOf(grieferstonerank) : 1 );
             cmbAFKKickPerm.SelectedIndex = ( afkkickrank != String.Empty ? cmbAFKKickPerm.Items.IndexOf(afkkickrank) : 1 );
             cmbEnterQueue.SelectedIndex = ( enterqueuerank != String.Empty ? cmbEnterQueue.Items.IndexOf(enterqueuerank) : 1 );
             cmbLeaveQueue.SelectedIndex = ( leavequeuerank != String.Empty ? cmbLeaveQueue.Items.IndexOf(leavequeuerank) : 1 );
             cmbViewQueue.SelectedIndex = ( viewqueuerank != String.Empty ? cmbViewQueue.Items.IndexOf(viewqueuerank) : 1 );
             cmbClearQueue.SelectedIndex = ( clearqueuerank != String.Empty ? cmbClearQueue.Items.IndexOf(clearqueuerank) : 1 );
             cmbGotoNext.SelectedIndex = ( gotonextrank != String.Empty ? cmbGotoNext.Items.IndexOf(gotonextrank) : 1 );
-
-            for ( byte b = 1; b < 50; b++ )
-                cmbGrieferStoneType.Items.Add(Block.Name(b));
 
             //Load server stuff
             LoadProp("properties/server.properties");
@@ -460,14 +452,6 @@ namespace MCGalaxy.Gui {
                             txtShutdown.Text = value;
                             break;
 
-                        case "custom-griefer-stone":
-                            chkGrieferStone.Checked = ( value.ToLower() == "true" );
-                            break;
-
-                        case "custom-griefer-stone-message":
-                            txtGrieferStone.Text = value;
-                            break;
-
                         case "auto-restart":
                             chkRestartTime.Checked = ( value.ToLower() == "true" );
                             break;
@@ -648,21 +632,6 @@ namespace MCGalaxy.Gui {
                                 color = c.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
                             }
                             cmbGlobalChatColor.SelectedIndex = cmbGlobalChatColor.Items.IndexOf(c.Name(color)); break;
-
-                        case "griefer-stone-tempban":
-                            chkGrieferStoneBan.Checked = value.ToLower() == "true";
-                            break;
-
-                        case "griefer-stone-type":
-                            try { cmbGrieferStoneType.SelectedIndex = cmbGrieferStoneType.Items.IndexOf(value); }
-                            catch {
-                                try { cmbGrieferStoneType.SelectedIndex = cmbGrieferStoneType.Items.IndexOf(Block.Name(Convert.ToByte(value))); }
-                                catch { Server.s.Log("Could not find " + value); }
-                            }
-                            break;
-                        case "wom-direct":
-                            chkWomDirect.Checked = value.ToLower() == "true";
-                            break;
                         case "premium-only":
                             chkPrmOnly.Checked = value.ToLower() == "true";
                             break;
@@ -749,8 +718,6 @@ namespace MCGalaxy.Gui {
             Server.ircIdentify = chkIrcId.Checked;
             Server.ircPassword = txtIrcId.Text;
 
-            Server.antiTunnel = ChkTunnels.Checked;
-            Server.maxDepth = byte.Parse(txtDepth.Text);
             Server.rpLimit = int.Parse(txtRP.Text);
             Server.rpNormLimit = int.Parse(txtRP.Text);
             Server.physicsRestart = chkPhysicsRest.Checked;
@@ -817,8 +784,6 @@ namespace MCGalaxy.Gui {
             Server.customBanMessage = txtBanMessage.Text;
             Server.customShutdown = chkShutdown.Checked;
             Server.customShutdownMessage = txtShutdown.Text;
-            Server.customGrieferStone = chkGrieferStone.Checked;
-            Server.customGrieferStoneMessage = txtGrieferStone.Text;
             Server.higherranktp = chkTpToHigherRanks.Checked;
             Server.globalignoreops = chkIgnoreGlobal.Checked; // Wasn't in previous setting-saver
 
@@ -848,14 +813,6 @@ namespace MCGalaxy.Gui {
             Server.UseGlobalChat = chkGlobalChat.Checked;
             Server.GlobalChatColor = cmbGlobalChatColor.SelectedItem.ToString();
 
-            Server.grieferStoneBan = chkGrieferStoneBan.Checked;
-            Server.grieferStoneType = Block.Byte(cmbGrieferStoneType.SelectedItem.ToString());
-            Server.grieferStoneRank = Group.GroupList.Find(grp => grp.name == cmbGrieferStoneRank.SelectedItem.ToString()).Permission;
-
-            Server.WomDirect = chkWomDirect.Checked;
-            //Server.Server_ALT = ;
-            //Server.Server_Disc = ;
-            //Server.Server_Flag = ;
             Server.PremiumPlayersOnly = chkPrmOnly.Checked;
 
             Server.reviewview = Group.GroupList.Find(grp => grp.name == cmbViewQueue.SelectedItem.ToString()).Permission;
@@ -1683,14 +1640,6 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         private void numCountReset_ValueChanged(object sender, EventArgs e) {
 
-        }
-
-        private void button3_Click(object sender, EventArgs e) {
-            new GUI.WoM().Show();
-        }
-
-        private void chkWomDirect_CheckedChanged(object sender, EventArgs e) {
-            button3.Enabled = chkWomDirect.Checked;
         }
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {

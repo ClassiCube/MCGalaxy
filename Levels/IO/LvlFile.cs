@@ -48,7 +48,7 @@ namespace MCGalaxy.Levels.IO {
 
                 for (int i = 0; i < blocks.Length; ++i) {
                     byte block = blocks[i];
-                    if (block < 66)    {
+                    if (block < Block.CpeCount) {
                         convBlocks[i] = block; //CHANGED THIS TO INCOPARATE SOME MORE SPACE THAT I NEEDED FOR THE door_orange_air ETC.
                     } else {
                         convBlocks[i] = Block.SaveConvert(block);
@@ -57,18 +57,20 @@ namespace MCGalaxy.Levels.IO {
                 gs.Write(convBlocks, 0, convBlocks.Length);
                 
                 // write out new blockdefinitions data
-                gs.WriteByte( 0xBD );
+                gs.WriteByte(0xBD);
+                int index = 0;
                 for (int y = 0; y < level.ChunksY; y++)
                 	for (int z = 0; z < level.ChunksZ; z++)
                 		for (int x = 0; x < level.ChunksX; x++)
                 {
-                    byte[] chunk = level.CustomBlocks[x + z * level.ChunksX + y * level.ChunksX * level.ChunksY];
+                    byte[] chunk = level.CustomBlocks[index];
                     if (chunk == null) {
                         gs.WriteByte(0);
                     } else {
                         gs.WriteByte(1);
                         gs.Write(chunk, 0, chunk.Length);
                     }
+                    index++;
                 }
             }
         }

@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/drill [distance] - Drills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
         }
         
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type)
+        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             if (!p.staticCommands) p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
