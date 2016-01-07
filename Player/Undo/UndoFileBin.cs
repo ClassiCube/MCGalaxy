@@ -189,7 +189,7 @@ namespace MCGalaxy.Util {
             long len = s.Length;
             while (s.Position < len) {
                 ChunkHeader header = ReadHeader(s, r);
-                s.Seek(header.Entries * 12, SeekOrigin.Current);
+                s.Seek(header.Entries * entrySize, SeekOrigin.Current);
                 list.Add(header);
             }
         }

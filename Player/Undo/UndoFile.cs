@@ -96,12 +96,15 @@ namespace MCGalaxy.Util {
         }
         
         static int CompareFiles(string a, string b) {
-            int aNumEnd = a.IndexOf('.'), bNumEnd = b.IndexOf('.');
-            if (aNumEnd < 0 || bNumEnd < 0) return a.CompareTo(b);
+        	int aNumStart = a.LastIndexOf('\\'), bNumStart = b.LastIndexOf('\\');
+            int aNumEnd = a.LastIndexOf('.'), bNumEnd = b.LastIndexOf('.');
+            if (aNumStart < 0 || bNumStart < 0 || aNumEnd < 0 || 
+                bNumEnd < 0 || aNumStart >= aNumEnd || bNumStart >= bNumEnd)
+            	return a.CompareTo(b);
             
             int aNum, bNum;
-            if (!int.TryParse(a.Substring(0, aNumEnd), out aNum) ||
-                !int.TryParse(b.Substring(0, bNumEnd), out bNum))
+            if (!int.TryParse(a.Substring(aNumStart + 1, aNumEnd - aNumStart - 1), out aNum) ||
+                !int.TryParse(b.Substring(bNumStart + 1, bNumEnd - bNumStart - 1), out bNum))
                 return a.CompareTo(b);
             return aNum.CompareTo(bNum);
         }
