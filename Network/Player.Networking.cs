@@ -88,6 +88,8 @@ namespace MCGalaxy {
             AddExtension(enc.GetString(message, 0, 64).Trim(), NTHO_Int(message, 64));
             extensionCount--;
             if (extensionCount <= 0 && !finishedLogin) {
+            	if (HasCpeExt(CpeExt.BlockDefinitions) || HasCpeExt(CpeExt.BlockDefinitionsExt))
+            		BlockDefinition.SendAll(this);
             	CompleteLoginProcess();
             	finishedLogin = true;
             }

@@ -49,7 +49,6 @@ namespace MCGalaxy.Commands {
                     if (pl.level.name.ToLower() == lvl.name.ToLower())
                         pl.aiming = false;
             } else {
-                lvl.guns = true;
                 Player.GlobalMessage("&9Gun usage has been enabled on &c" + lvl.name + "&9!");            
             }
             lvl.guns = !lvl.guns;

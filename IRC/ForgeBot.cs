@@ -407,15 +407,22 @@ namespace MCGalaxy {
         }
         
         string Unprefix(string nick) {
-            if (nick.Length == 0 || IsNickChar(nick[0]))
-                return nick;
-            return nick.Substring(1);
+            return nick.Substring(GetPrefixLength(nick));
         }
         
         string GetPrefix(string nick) {
-            if (nick.Length == 0 || IsNickChar(nick[0]))
-                return "";
-            return nick.Substring(0, 1);
+            return nick.Substring(0, GetPrefixLength(nick));
+        }
+        
+        int GetPrefixLength(string nick) {
+            int nickChars = 0;
+            for (int i = 0; i < nick.Length; i++) {
+                if (IsNickChar(nick[i])) 
+                    nickChars++;
+                else 
+                    return nickChars;
+            }
+            return nickChars;
         }
         
         bool IsNickChar(char c) {

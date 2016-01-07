@@ -131,11 +131,9 @@ namespace MCGalaxy
                 case CpeExt.FullCP437:
                     FullCP437 = version; break;
                 case CpeExt.BlockDefinitions:
-                    BlockDefinitions = version;
-                    BlockDefinition.SendAll(this); break;
+                    BlockDefinitions = version; break;
                 case CpeExt.BlockDefinitionsExt:
-                    BlockDefinitionsExt = version;
-                    BlockDefinition.SendAll(this); break;
+                    BlockDefinitionsExt = version; break;
             }
         }
 

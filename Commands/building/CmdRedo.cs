@@ -40,6 +40,7 @@ namespace MCGalaxy.Commands {
                 byte type = lvl.GetTile(Pos.x, Pos.y, Pos.z), extType = 0;
                 if (type == Block.custom_block)
                     extType = lvl.GetExtTile(Pos.x, Pos.y, Pos.z);
+
                 lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.type, Pos.extType);
                 Pos.newtype = Pos.type; Pos.newExtType = Pos.extType;
                 Pos.type = type; Pos.extType = extType;

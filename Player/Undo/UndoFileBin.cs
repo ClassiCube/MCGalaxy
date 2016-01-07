@@ -43,10 +43,8 @@ namespace MCGalaxy.Util {
                     
                     w.Write((ushort)timeDiff);
                     w.Write(uP.x); w.Write(uP.y); w.Write(uP.z);
-                    w.Write(uP.type);
-                    w.Write((byte)0); // block definitions placeholder
-                    w.Write(uP.newtype);
-                    w.Write((byte)0); // block definitions placeholder
+                    w.Write(uP.type); w.Write(uP.extType);
+                    w.Write(uP.newtype); w.Write(uP.newExtType);
                     lastChunk.Entries++;
                 }
                 if (lastChunk.Entries > 0)
@@ -114,7 +112,7 @@ namespace MCGalaxy.Util {
                             
                             Pos.newtype = oldType; Pos.newExtType = oldExtType;
                             Pos.extType = newExtType; Pos.timePlaced = now;
-                            lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true);
+                            lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true, "", Pos.newExtType);
                             if (p != null)
                                 p.RedoBuffer.Add(Pos);
                         }
