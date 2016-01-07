@@ -216,9 +216,8 @@ namespace MCGalaxy.Commands {
             }
             
             foreach (Player pl in Player.players) {
-                if (pl.HasCpeExt(CpeExt.EnvMapAppearance) && pl.level == p.level) {
-                    pl.SendSetMapAppearance(p.level.textureUrl, p.level.EdgeBlock, p.level.HorizonBlock, p.level.EdgeLevel);
-                }
+                if (pl.HasCpeExt(CpeExt.EnvMapAppearance) && pl.level == p.level)
+        			pl.SendCurrentMapAppearance();
             }
         }
         
@@ -226,9 +225,8 @@ namespace MCGalaxy.Commands {
             byte block = Block.Byte(value);
             if (block == Block.Zero) {
                 Help(p);
-            } else if (block == Block.air || block == Block.shrub || block == Block.glass ||
-                       block == Block.yellowflower || block == Block.redflower || block == Block.mushroom ||
-                       block == Block.redmushroom || block == Block.rope || block == Block.fire) {
+            } else if (block == Block.shrub || block == Block.yellowflower || block == Block.redflower || 
+                       block == Block.mushroom || block == Block.redmushroom || block == Block.rope || block == Block.fire) {
                 p.SendMessage(string.Format("Env: Cannot use {0} for {1}.", block, variable));
             } else {
                 modify = block;

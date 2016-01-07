@@ -36,8 +36,8 @@ namespace MCGalaxy.Commands {
             try {
             	string[] parts = message.Split(' ');
                 switch (parts.Length) {
-                    case 0: type = Block.rock; break;
-                    case 1: type = DrawCmd.GetBlock(p, parts[0], out extType); break;
+                    case 1: type = message == "" ? Block.rock :
+                        DrawCmd.GetBlock(p, parts[0], out extType); break;
                     case 3:
                         type = Block.rock;
                         x = Convert.ToUInt16(parts[0]);
