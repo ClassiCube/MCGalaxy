@@ -35,7 +35,7 @@ namespace MCGalaxy.Util {
                 ChunkHeader lastChunk = default(ChunkHeader);
                 
                 foreach (Player.UndoPos uP in buffer) {
-                    int timeDiff = (int)(uP.timePlaced.ToUniversalTime() - lastChunk.BaseTime).TotalSeconds;
+                    int timeDiff = (int)(uP.timePlaced - lastChunk.BaseTime).TotalSeconds;
                     if (lastChunk.LevelName != uP.mapName || timeDiff > 65535 || lastChunk.Entries == ushort.MaxValue) {
                         WriteChunkEntries(w, lastChunk.Entries, entriesPos);
                         lastChunk = WriteEmptyChunk(w, uP, ref entriesPos);
