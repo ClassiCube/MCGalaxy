@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands {
                 
                 if (def != null) {
                     Player.SendMessage(p, "There is already a custom block with the id " + id +
-                                       ", you must either use a different id or use ""/gb remove " + id + """);
+                                       ", you must either use a different id or use \"/gb remove " + id + "\"");
                     return;
                 }
             } else {
