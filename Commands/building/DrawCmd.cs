@@ -58,12 +58,18 @@ namespace MCGalaxy.Commands {
             }
             OnUse(p, message, parts, ref cpos);
             p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            
+            if (PlaceMessage == null)
+            	Player.SendMessage(p, "Place two blocks to determine the edges.");
+            else
+            	Player.SendMessage(p, PlaceMessage);
+            
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        protected void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        // most draw commands use two coordinates, so implement this here to simplify implementation.
+        protected virtual void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z;
@@ -72,7 +78,9 @@ namespace MCGalaxy.Commands {
         }
 
         protected virtual int MaxArgs { get { return 2; } }
-         
+        
+        protected virtual string PlaceMessage { get { return null; } }
+        
         protected abstract void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
         protected abstract SolidType GetType(string msg);
@@ -116,8 +124,9 @@ namespace MCGalaxy.Commands {
         protected enum SolidType {
             solid, hollow, walls,
             holes, wire, random,
-            vertical, reverse, 
-            straight, Invalid = -1,
+            vertical, reverse, straight, 
+            up, down, layer, verticalX, verticalZ,
+            Invalid = -1,
         }
     }
 }
