@@ -415,14 +415,14 @@ namespace MCGalaxy {
         }
         
         int GetPrefixLength(string nick) {
-            int nickChars = 0;
+            int prefixChars = 0;
             for (int i = 0; i < nick.Length; i++) {
-                if (IsNickChar(nick[i])) 
-                    nickChars++;
+                if (!IsNickChar(nick[i])) 
+                    prefixChars++;
                 else 
-                    return nickChars;
+                    return prefixChars;
             }
-            return nickChars;
+            return prefixChars;
         }
         
         bool IsNickChar(char c) {
