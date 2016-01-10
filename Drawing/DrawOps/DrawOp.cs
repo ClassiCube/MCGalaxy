@@ -46,7 +46,7 @@ namespace MCGalaxy {
         }
         
         public virtual bool DetermineDrawOpMethod(Level lvl, int affected) {
-            if (affected > 10000) {
+            if (affected > reloadLimit) {
                 method = MethodSetTile;
                 return true;
             } else {

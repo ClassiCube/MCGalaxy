@@ -57,48 +57,23 @@ namespace MCGalaxy.Commands {
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { Player.SendMessage(p, "Cannot fill with that."); return; }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
-            List<Pos> buffer = new List<Pos>();
-            fromWhere.Clear();
-            FloodFill(p, x, y, z, oldType, cpos.solid, bits, ref buffer, 0);
+            List<FillPos> buffer = new List<FillPos>(), origins = new List<FillPos>();
+            FloodFill(p, x, y, z, oldType, cpos.solid, bits, buffer, origins, 0);
 
-            int totalFill = fromWhere.Count;
+            int totalFill = origins.Count;
             for (int i = 0; i < totalFill; i++) {
-                Pos pos = fromWhere[i];
-                FloodFill(p, pos.x, pos.y, pos.z, oldType, cpos.solid, bits, ref buffer, 0);
-                totalFill = fromWhere.Count;
-            }
-            fromWhere.Clear();
-
-            if (buffer.Count > p.group.maxBlocks) {
-                Player.SendMessage(p, "You tried to fill " + buffer.Count + " blocks.");
-                Player.SendMessage(p, "You cannot fill more than " + p.group.maxBlocks + ".");
-                return;
+                FillPos pos = origins[i];
+                FloodFill(p, pos.X, pos.Y, pos.Z, oldType, cpos.solid, bits, buffer, origins, 0);
+                totalFill = origins.Count;
             }
             
-            if (buffer.Count < 10000) {
-                if (p.level.bufferblocks && !p.level.Instant) {
-                    foreach (Pos pos in buffer)
-                        BlockQueue.Addblock(p, pos.x, pos.y, pos.z, cpos.type);
-                } else {
-                    foreach (Pos pos in buffer)
-                        p.level.Blockchange(p, pos.x, pos.y, pos.z, cpos.type);
-                }
-            } else {
-                p.SendMessage("You tried to cuboid over 10000 blocks, reloading map for faster fill.");
-                foreach (Pos pos in buffer)
-                    p.level.SetTile(pos.x, pos.y, pos.z, cpos.type, p);
-                
-                foreach (Player pl in Player.players) {
-                    if (pl.level.name.ToLower() == p.level.name.ToLower())
-                        Command.all.Find("reveal").Use(p, pl.name);
-                }
-            }
-            
-            Player.SendMessage(p, "Filled " + buffer.Count + " blocks.");
-            buffer.Clear();
-            buffer = null;
+            FillDrawOp drawOp = new FillDrawOp();
+            drawOp.Positions = buffer;
+            SolidBrush brush = new SolidBrush(cpos.type, cpos.extType);
+            if (!DrawOp.DoDrawOp(drawOp, brush, p, 0, 0, 0, 0, 0, 0))
+            	return;
             bits.Clear();
-            bits = null;
+            drawOp.Positions = null;           
 
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
@@ -106,45 +81,40 @@ namespace MCGalaxy.Commands {
         
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
 
-        List<Pos> fromWhere = new List<Pos>();
         void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, SolidType fillType,
-                       SparseBitSet bits, ref List<Pos> buffer, int depth) {
-            Pos pos;
-            pos.x = x; pos.y = y; pos.z = z;
+                       SparseBitSet bits, List<FillPos> buffer, List<FillPos> origins, int depth) {
+            FillPos pos;
+            pos.X = x; pos.Y = y; pos.Z = z;
             if (bits.Get(x, y, z)) return;
 
-            if (depth > 2000) {
-                fromWhere.Add(pos); return;
-            }
+            if (depth > 2000) { origins.Add(pos); return; }
             bits.Set(x, y, z, true);
             buffer.Add(pos);
 
             if (fillType != SolidType.verticalX) { // x
                 if (p.level.GetTile((ushort)(x + 1), y, z) == oldType)
-                    FloodFill(p, (ushort)(x + 1), y, z, oldType, fillType, bits, ref buffer, depth + 1);
+                    FloodFill(p, (ushort)(x + 1), y, z, oldType, fillType, bits, buffer, origins, depth + 1);
                 if (p.level.GetTile((ushort)(x - 1), y, z) == oldType)
-                    FloodFill(p, (ushort)(x - 1), y, z, oldType, fillType, bits, ref buffer, depth + 1);
+                    FloodFill(p, (ushort)(x - 1), y, z, oldType, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (fillType != SolidType.verticalZ) { // z
                 if (p.level.GetTile(x, y, (ushort)(z + 1)) == oldType)
-                    FloodFill(p, x, y, (ushort)(z + 1), oldType, fillType, bits, ref buffer, depth + 1);
+                    FloodFill(p, x, y, (ushort)(z + 1), oldType, fillType, bits, buffer, origins, depth + 1);
                 if (p.level.GetTile(x, y, (ushort)(z - 1)) == oldType)
-                    FloodFill(p, x, y, (ushort)(z - 1), oldType, fillType, bits, ref buffer, depth + 1);
+                    FloodFill(p, x, y, (ushort)(z - 1), oldType, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (!(fillType == SolidType.down || fillType == SolidType.layer)) { // y up
                 if (p.level.GetTile(x, (ushort)(y + 1), z) == oldType)
-                    FloodFill(p, x, (ushort)(y + 1), z, oldType, fillType, bits, ref buffer, depth + 1);
+                    FloodFill(p, x, (ushort)(y + 1), z, oldType, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (!(fillType == SolidType.up || fillType == SolidType.layer)) { // y down
                 if (p.level.GetTile(x, (ushort)(y - 1), z) == oldType)
-                    FloodFill(p, x, (ushort)(y - 1), z, oldType, fillType, bits, ref buffer, depth + 1);
+                    FloodFill(p, x, (ushort)(y - 1), z, oldType, fillType, bits, buffer, origins, depth + 1);
             }
         }
-
-        public struct Pos { public ushort x, y, z; }
         
         public override void Help(Player p) {
             Player.SendMessage(p, "/fill [block] [type] - Fills the area specified with [block].");
