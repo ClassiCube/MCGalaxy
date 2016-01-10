@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
                 string title = ":" + grp.color + GetPlural(grp.trueName) + ":";
                 Section rankSec = MakeSection(grp, title);                
                 
-                foreach (Player pl in Player.players) {                    
+                foreach (Player pl in Player.players) {
                     if (pl.group != grp) continue;
                     if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
                         string name = Chat.StripColours(pl.DisplayName);
