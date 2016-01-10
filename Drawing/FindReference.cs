@@ -17,22 +17,17 @@
  */
 using System.Collections.Generic;
 
-namespace MCGalaxy
-{
-    internal static class FindReference
-    {
-        public static ushort writeLetter(Player p, char c, ushort x, ushort y, ushort z, byte b, int direction) {
-            return writeLetter(p.level, p, c, x, y, z, b, direction);
-        }
+namespace MCGalaxy {
+    
+    internal static class FindReference {
         
-        public static ushort writeLetter(Level l, Player p, char c, ushort x, ushort y, ushort z, byte b, int direction)
-        {
+        public static ushort WriteLetter(Level l, Player p, char c, ushort x, ushort y, ushort z, byte type, byte extType, int dir) {
             if( (int)c >= 256 || letters[(int)c] == null ) {
                 Player.SendMessage(p, "\"" + c + "\" is not currently supported, replacing with space.");
-                if (direction == 0) x += 4; 
-                else if (direction == 1) x -= 4;
-                else if (direction == 2) z += 4; 
-                else if (direction == 3) z -= 4;
+                if (dir == 0) x += 4; 
+                else if (dir == 1) x -= 4;
+                else if (dir == 2) z += 4; 
+                else if (dir == 3) z -= 4;
             } else {
                 byte[] flags = letters[(int)c];
                 for( int i = 0; i < flags.Length; i++ ) {
@@ -40,20 +35,21 @@ namespace MCGalaxy
                     for (int j = 0; j < 8; j++) {
                         if ((yUsed & (1 << j)) == 0) continue;
                         
-                        placeBlock(l, p, x, (ushort)(y + j), z, b);
+                        PlaceBlock(l, p, x, (ushort)(y + j), z, type, extType);
                     }
                     
-                    if (direction == 0) x++; 
-                    else if (direction == 1) x--;
-                    else if (direction == 2) z++;
-                    else if (direction == 3) z--;
+                    if (dir == 0) x++; 
+                    else if (dir == 1) x--;
+                    else if (dir == 2) z++;
+                    else if (dir == 3) z--;
                 }
             }
 
-            if (direction == 0) return (ushort)(x + 1);
-            else if (direction == 1) return (ushort)(x - 1);
-            else if (direction == 2) return (ushort)(z + 1);
-            else return (ushort)(z - 1);
+            if (dir == 0) return (ushort)(x + 1);
+            else if (dir == 1) return (ushort)(x - 1);
+            else if (dir == 2) return (ushort)(z + 1);
+            else if (dir == 3) return (ushort)(z - 1);
+            return 0;
         }
 
         public static List<ColorBlock> popRefCol(byte popType)
@@ -488,11 +484,11 @@ namespace MCGalaxy
             return refCol;
         }
 
-        public static void placeBlock(Level l, Player p, ushort x, ushort y, ushort z, byte type) {
+        public static void PlaceBlock(Level l, Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (p == null)
-                l.Blockchange(x, y, z, type);
+                l.Blockchange(x, y, z, type, extType);
             else
-                l.Blockchange(p, x, y, z, type);
+                l.Blockchange(p, x, y, z, type, extType);
         }
 
         public struct ColorBlock
