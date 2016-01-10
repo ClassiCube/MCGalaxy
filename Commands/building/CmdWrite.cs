@@ -50,9 +50,9 @@ namespace MCGalaxy.Commands
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
-            type = p.bindings[type];
+        
+        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        	type = type < 128 ? p.bindings[type] : type;
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands
                 cur = cpos.x;
                 int dir = x > cpos.x ? 0 : 1;
                 foreach (char c in cpos.givenMessage)
-                	cur = FindReference.writeLetter(p, c, cur, cpos.y, cpos.z, type, 0);
+                	cur = FindReference.writeLetter(p, c, cur, cpos.y, cpos.z, type, dir);
             } else {
                 cur = cpos.z;
                 int dir = z > cpos.z ? 2 : 3;
@@ -71,13 +71,11 @@ namespace MCGalaxy.Commands
                 	cur = FindReference.writeLetter(p, c, cpos.x, cpos.y, cur, type, dir);
             }
 
-            if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            if (p.staticCommands) 
+            	p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-
-        struct CatchPos
-        {
-            public ushort x, y, z; public string givenMessage;
-        }
+        
+        struct CatchPos { public ushort x, y, z; public string givenMessage; }
 
     }
 }

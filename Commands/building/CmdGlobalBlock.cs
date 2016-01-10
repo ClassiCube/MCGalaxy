@@ -89,7 +89,8 @@ namespace MCGalaxy.Commands {
                 }
             }
             
-            bd = new BlockDefinition();                    
+            bd = new BlockDefinition();     
+            bd.BlockID = (byte)targetId;
             Player.SendMessage(p, "Type '/gb abort' at anytime to abort the creation process.");
             Player.SendMessage(p, "Type '/gb revert' to go back a step in the creation process.");
             Player.SendMessage(p, "Use '/gb <arg>' to enter arguments for the creation process.");
