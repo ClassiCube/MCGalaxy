@@ -80,6 +80,7 @@ namespace MCGalaxy {
                     SendDefineBlock(pl, def);
                 pl.SendSetBlockPermission(def.BlockID, 1, 1);
             }
+            SaveGlobal("blocks.json");
         }
         
         public static void RemoveGlobal(BlockDefinition def) {

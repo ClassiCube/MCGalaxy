@@ -28,6 +28,14 @@ namespace MCGalaxy {
         public byte[][] CustomBlocks;
         public int ChunksX, ChunksY, ChunksZ;
         
+        public bool HasCustomBlocks {
+            get {
+                for (int i = 0; i < CustomBlocks.Length; i++)
+                    if (CustomBlocks[i] != null) return true;
+                return false;
+            }
+        }
+        
         public byte GetTile(ushort x, ushort y, ushort z) {
             int index = PosToInt(x, y, z);
             if (index < 0 || blocks == null) return Block.Zero;

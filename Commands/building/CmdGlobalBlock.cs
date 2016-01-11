@@ -31,13 +31,14 @@ namespace MCGalaxy.Commands {
 
         int step = 0;
         BlockDefinition bd;
+        static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
-            string[] parts = message.Split(' ');
-            for (int i = 0; i < parts.Length; i++)
+            string[] parts = message.Split(trimChars, 4);
+            for (int i = 0; i < Math.Min(parts.Length, 3); i++)
                 parts[i] = parts[i].ToLower();
             
-            if (message == "") { 
+            if (message == "") {
                 if (bd != null)
                     SendStepHelp(p, step);
                 else
@@ -58,6 +59,8 @@ namespace MCGalaxy.Commands {
                 case "abort":
                     Player.SendMessage(p, "Aborted the custom block creation process.");
                     bd = null; break;
+                case "edit":
+                    EditHandler(p, parts); break;
                     
                 default:
                     if (bd != null)
@@ -89,7 +92,7 @@ namespace MCGalaxy.Commands {
                 }
             }
             
-            bd = new BlockDefinition();     
+            bd = new BlockDefinition();
             bd.BlockID = (byte)targetId;
             Player.SendMessage(p, "Type '/gb abort' at anytime to abort the creation process.");
             Player.SendMessage(p, "Type '/gb revert' to go back a step in the creation process.");
@@ -132,11 +135,11 @@ namespace MCGalaxy.Commands {
         }
         
         void RemoveHandler(Player p, string[] parts) {
-            if (parts.Length < 2) { Help(p); return; }
+            if (parts.Length <= 1) { Help(p); return; }
             int blockID;
             if (!CheckBlockId(p, parts[1], out blockID)) return;
             
-            BlockDefinition def = BlockDefinition.GlobalDefinitions[(byte)blockID];
+            BlockDefinition def = BlockDefinition.GlobalDefinitions[blockID];
             if (def == null) {
                 Player.SendMessage(p, "There is no globally defined custom block with that block id.");
                 Player.SendMessage(p, "Use \"%T/gb list\" %Sto see a list of global custom blocks.");
@@ -148,7 +151,7 @@ namespace MCGalaxy.Commands {
         }
         
         void DefineBlockStep(Player p, string value) {
-            string opt = value.ToLower();            
+            string opt = value.ToLower();
             if (opt == "revert" && step > 2) {
                 step--;
                 SendStepHelp(p, step); return;
@@ -219,7 +222,7 @@ namespace MCGalaxy.Commands {
             } else if (step == 19) {
                 if (Block.Byte(value) == Block.Zero) {
                     SendStepHelp(p, step); return;
-                }                
+                }
                 bd.FallBack = Block.Byte(value);
                 
                 // in case the list is modified before we finish the command.
@@ -227,18 +230,153 @@ namespace MCGalaxy.Commands {
                     bd.BlockID = GetFreeId();
                     if (bd.BlockID == Block.Zero) {
                         Player.SendMessage(p, "There are no custom block ids left, " +
-                                       "you must /gb remove a custom block first.");
+                                           "you must /gb remove a custom block first.");
                         return;
                     }
                 }
                 
                 Player.SendMessage(p, "Created a new custom block " + bd.Name + "(" + bd.BlockID + ")");
                 BlockDefinition.AddGlobal(bd);
-                BlockDefinition.SaveGlobal("blocks.json");
                 bd = null;
                 return;
             }
             SendStepHelp(p, step);
+        }
+        
+        bool EditByte(Player p, string arg, string propName, ref byte target) {
+            return EditByte(p, arg, propName, ref target, -1, 0, 0, 255);
+        }
+        
+        bool EditByte(Player p, string value, string propName, ref byte target,
+                      int step, int offset, byte min, byte max) {
+            int temp = 0;
+            if (!int.TryParse(value, out temp) || temp < min || temp > max) {
+                Player.SendMessage(p, propName + " must be an integer between " + min + " and " + max + ".");
+                if (step != -1) SendEditHelp(p, step, offset);
+                return false;
+            }
+            target = (byte)temp;
+            return true;
+        }
+        
+        void EditHandler(Player p, string[] parts) {
+            if (parts.Length <= 3) {
+                if(parts.Length == 1)
+                    Player.SendMessage(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
+                                       "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max");
+                else
+                    Help(p);
+                return;
+            }
+            int blockId;
+            if (!CheckBlockId(p, parts[1], out blockId));
+            
+            BlockDefinition def = BlockDefinition.GlobalDefinitions[blockId];
+            if (def == null) {
+                Player.SendMessage(p, "There is no globally defined custom block with that block id.");
+                Player.SendMessage(p, "Use \"%T/gb list\" %Sto see a list of global custom blocks.");
+                return;
+            }
+            string value = parts[3];
+            float fTemp;
+            byte tempX, tempY, tempZ;
+            
+            switch (parts[2].ToLower()) {
+                case "name":
+                    def.Name = value; break;
+                case "collide":
+                    if( !(value == "0" || value == "1" || value == "2")) {
+                        SendEditHelp(p, 3, 0); return;
+                    }
+                    def.CollideType = byte.Parse(value); break;
+                case "speed":
+                    if (!float.TryParse(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {
+                        SendEditHelp(p, 4, 0); return;
+                    }
+                    def.Speed = fTemp; break;
+                case "top":
+                case "toptex":
+                    if (!EditByte(p, value, "Top texture", ref def.TopTex)) return;
+                    break;
+                case "side":
+                case "sidetex":
+                    if (!EditByte(p, value, "Side texture", ref def.SideTex)) return;
+                    break;
+                case "bottom":
+                case "bottomtex":
+                    if (!EditByte(p, value, "Bottom texture", ref def.BottomTex)) return;
+                    break;
+                case "light":
+                case "blockslight":
+                    if( !(value == "0" || value == "1")) {
+                        SendEditHelp(p, 8, 0); return;
+                    }
+                    def.BlocksLight = value == "0"; break;
+                case "sound":
+                case "walksound":
+                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, 9, 1, 0, 11)) return;
+                    break;
+                case "bright":
+                case "fullbright":
+                    if( !(value == "0" || value == "1")) {
+                        SendEditHelp(p, 10, 0); return;
+                    }
+                    def.FullBright = value != "0"; break;
+                case "shape":
+                    if( !(value == "0" || value == "1")) {
+                        SendEditHelp(p, 12, 0); return;
+                    }
+                    def.Shape = value == "0" ? (byte)0 : def.MaxY; break;
+                case "draw":
+                case "blockdraw":
+                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 11, 1, 0, 3)) return;
+                    break;
+                case "min":
+                case "mincoords":
+                    if (!ParseCoords(value, out tempX, out tempY, out tempZ)) {
+                        SendEditHelp(p, 13, 0); return;
+                    }
+                    def.MinX = tempX; def.MinY = tempY; def.MinZ = tempZ;
+                    break;
+                case "max":
+                case "maxcoords":
+                    if (!ParseCoords(value, out tempX, out tempY, out tempZ)) {
+                        SendEditHelp(p, 14, 0); return;
+                    }
+                    def.MaxX = tempX; def.MaxY = tempY; def.MaxZ = tempZ; def.Shape = def.MaxY;
+                    break;
+                case "density":
+                case "fogdensity":
+                    if (!EditByte(p, value, "Fog density", ref def.FogDensity)) return;
+                    break;
+                case "red":
+                case "fogred":
+                    if (!EditByte(p, value, "Fog red", ref def.FogR)) return;
+                    break;
+                case "green":
+                case "foggreen":
+                    if (!EditByte(p, value, "Fog green", ref def.FogG)) return;
+                    break;
+                case "blue":
+                case "fogblue":
+                    if (!EditByte(p, value, "Fog blue", ref def.FogB)) return;
+                    break;
+                case "fallback":
+                case "fallbackid":
+                case "fallbackblock":
+                    tempX = Block.Byte(value);
+                    if (tempX == Block.Zero) {
+                        Player.SendMessage(p, "'" + value + "' is not a valid standard tile."); return;
+                    }
+                    def.FallBack = tempX; break;
+            }
+            
+            BlockDefinition.AddGlobal(def);
+            foreach (Player pl in Player.players) {
+                if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
+                if (pl.level == null || !pl.level.HasCustomBlocks) continue;
+                Command.all.Find("reveal").Use(p, pl.name);
+            }
         }
         
         static bool ParseCoords(string parts, out byte x, out byte y, out byte z) {
@@ -256,19 +394,19 @@ namespace MCGalaxy.Commands {
             null, // step 0
             null, // step 1
             new[] { "Type the name of this block." },
-            new[] { "Type \"0\" if this block is walk-through.", "Type \"1\" if this block is swim-through.",
-                "Type \"2\" if this block is solid.",
+            new[] { "Type '0' if this block is walk-through.", "Type '1' if this block is swim-through.",
+                "Type '2' if this block is solid.",
             },
-            new[] { "Type a number between \"0.25\" (0.25% speed) and \"3.96\" (396% speed).",
+            new[] { "Type a number between '0.25' (0.25% speed) and '3.96' (3.96% speed).",
                 "This speed is used inside or swimming in the block, or when you are walking on it.",
             },
-            new[] { "Type a number between \"0\" and \"255\" to identify which texture tile to use for the top of the block.",
+            new[] { "Type a number between '0' and '255' to identify which texture tile to use for the top of the block.",
                 "Textures tile numbers are left to right in terrain.png (The file the textures are located).",
             },
-            new[] { "Type a number between \"0\" and \"255\" to identify which texture tile to use for the sides of the block.",
+            new[] { "Type a number between '0' and '255' to identify which texture tile to use for the sides of the block.",
                 "Textures tile numbers are left to right in terrain.png (The file the textures are located).",
             },
-            new[] { "Type a number between \"0\" and \"255\" to identify which texture tile to use for the bottom of the block.",
+            new[] { "Type a number between '0' and '255' to identify which texture tile to use for the bottom of the block.",
                 "Textures tile numbers are left to right in terrain.png (The file the textures are located).",
             },
             new[] { "Type '0' if this block blocks light, otherwise '1' if it doesn't" },
@@ -301,6 +439,12 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%f--------------------------");
         }
         
+        static void SendEditHelp(Player p, int step, int offset) {
+            string[] help = stepsHelp[step];
+            for (int i = offset; i < help.Length; i++)
+                Player.SendMessage(p, help[i].Replace("Type", "Use"));
+        }
+        
         static bool CheckBlockId(Player p, string arg, out int blockId) {
             if (!int.TryParse(arg, out blockId)) {
                 Player.SendMessage(p, "Provided block id is not a number."); return false;
@@ -312,10 +456,12 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/globalblock <add/remove/list>");
+            Player.SendMessage(p, "%T/globalblock <add/remove/list/edit>");
             Player.SendMessage(p, "%H   /gb add [id] - begins the creation a new custom block.");
             Player.SendMessage(p, "%H   /gb remove id - removes the custom block with the given id.");
             Player.SendMessage(p, "%H   /gb list [offset] - lists all custom blocks.");
+            Player.SendMessage(p, "%H   /gb edit id property value - edits the given property of the custom block with the given id.");
+            Player.SendMessage(p, "%HTo see the list of editable properties, type /gb edit.");
         }
     }
 }
