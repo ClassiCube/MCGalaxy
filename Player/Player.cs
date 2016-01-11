@@ -594,51 +594,48 @@ namespace MCGalaxy {
                     return;
                 LoadIgnores();
                 // ban check
-                if (!isDev && !isMod)
+                if (Server.bannedIP.Contains(ip))
                 {
-                    if (Server.bannedIP.Contains(ip))
+                    if (Server.useWhitelist)
                     {
-                        if (Server.useWhitelist)
-                        {
-                            if (!onWhitelist)
-                            {
-                                Kick(Server.customBanMessage);
-                                return;
-                            }
-                        }
-                        else
+                        if (!onWhitelist)
                         {
                             Kick(Server.customBanMessage);
                             return;
                         }
                     }
-                    if (Server.omniban.CheckPlayer(this)) { Kick(Server.omniban.kickMsg); return; } //deprecated
-                    if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Banned))
+                    else
                     {
-                        if (Server.useWhitelist)
+                        Kick(Server.customBanMessage);
+                        return;
+                    }
+                }
+                if (Server.omniban.CheckPlayer(this)) { Kick(Server.omniban.kickMsg); return; } //deprecated
+                if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Banned))
+                {
+                    if (Server.useWhitelist)
+                    {
+                        if (!onWhitelist)
                         {
-                            if (!onWhitelist)
-                            {
-                                Kick(Server.customBanMessage);
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            if (Ban.Isbanned(name))
-                            {
-                                string[] data = Ban.Getbandata(name);
-                                Kick("You were banned for \"" + data[1] + "\" by " + data[0]);
-                            }
-                            else
-                                Kick(Server.customBanMessage);
+                            Kick(Server.customBanMessage);
                             return;
                         }
+                    }
+                    else
+                    {
+                        if (Ban.Isbanned(name))
+                        {
+                            string[] data = Ban.Getbandata(name);
+                            Kick("You were banned for \"" + data[1] + "\" by " + data[0]);
+                        }
+                        else
+                            Kick(Server.customBanMessage);
+                        return;
                     }
                 }
 
                 //server maxplayer check
-                if (!isDev && !isMod && !VIP.Find(this))
+                if (!VIP.Find(this))
                 {
                     // Check to see how many guests we have
                     if (Player.players.Count >= Server.players && !IPInPrivateRange(ip)) { Kick("Server full!"); return; }
