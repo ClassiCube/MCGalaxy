@@ -93,6 +93,7 @@ namespace MCGalaxy
         public bool ai = true;
         public bool backedup;
         public List<BlockPos> blockCache = new List<BlockPos>();
+        public bool Buildable = true, Deletable = true;
         
         public byte weather;
         public string textureUrl = "";
@@ -702,6 +703,14 @@ namespace MCGalaxy
             {
                 pl.SendMessage(message);
             }
+        }
+        
+        public void UpdateBlockPermissions() {
+        	foreach (Player p in Player.players) {
+        		if (p.level != this) continue;
+        		if (!p.HasCpeExt(CpeExt.BlockPermissions)) continue;
+        		p.SendCurrentBlockPermissions();
+        	}
         }
 
         public void setPhysics(int newValue)

@@ -74,7 +74,7 @@ namespace MCGalaxy {
             }
         }
         
-        public bool hasCpe = false, finishedLogin = false;
+        public bool hasCpe = false, hasCustomBlocks = false, finishedLogin = false;
         public string appName;
         public int extensionCount;
         public List<string> extensions = new List<string>();
@@ -326,7 +326,7 @@ namespace MCGalaxy {
             try { 
                 byte[] buffer = new byte[level.blocks.Length + 4];
                 NetUtils.WriteI32(level.blocks.Length, buffer, 0);
-                if (hasCpe) {
+                if (hasCustomBlocks) {
                 	for (int i = 0; i < level.blocks.Length; ++i) {
                 		byte block = level.blocks[i];
                 		if (block == Block.custom_block) {
@@ -399,6 +399,9 @@ namespace MCGalaxy {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
+            
+            if (HasCpeExt(CpeExt.BlockPermissions))
+                SendCurrentBlockPermissions();
             return success;
         }  
         
@@ -466,7 +469,7 @@ namespace MCGalaxy {
             		buffer[7] = level.GetExtTile(x, y, z);
             	else
             		buffer[7] = BlockDefinition.Fallback(level.GetExtTile(x, y, z));
-            } else if (hasCpe) {
+            } else if (hasCustomBlocks) {
             	buffer[7] = Block.Convert(type);
             } else {
             	buffer[7] = Block.Convert(Block.ConvertCPE(type));
@@ -490,7 +493,7 @@ namespace MCGalaxy {
             		buffer[7] = extType;
             	else
             		buffer[7] = BlockDefinition.Fallback(extType);
-            } else if (hasCpe) {
+            } else if (hasCustomBlocks) {
             	buffer[7] = Block.Convert(type);
             } else {
             	buffer[7] = Block.Convert(Block.ConvertCPE(type));
@@ -612,12 +615,12 @@ namespace MCGalaxy {
             SendRaw(Opcode.CpeRemoveSelection, id);
         }
         
-        public void SendSetBlockPermission( byte type, byte canplace, byte candelete ) {
+        public void SendSetBlockPermission( byte type, bool canplace, bool candelete ) {
             byte[] buffer = new byte[4];
             buffer[0] = Opcode.CpeSetBlockPermission;
             buffer[1] = type;
-            buffer[2] = canplace;
-            buffer[3] = candelete;
+            buffer[2] = canplace ? (byte)1 : (byte)0;
+            buffer[3] = candelete ? (byte)1 : (byte)0;
             SendRaw(buffer);
         }
         

@@ -45,33 +45,35 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("#Level properties for " + level.name);
             writer.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
             writer.WriteLine("Theme = " + level.theme);
-            writer.WriteLine("Physics = " + level.physics.ToString());
-            writer.WriteLine("Physics speed = " + level.speedPhysics.ToString());
-            writer.WriteLine("Physics overload = " + level.overload.ToString());
-            writer.WriteLine("Finite mode = " + level.finite.ToString());
-            writer.WriteLine("Animal AI = " + level.ai.ToString());
-            writer.WriteLine("Edge water = " + level.edgeWater.ToString());
-            writer.WriteLine("Survival death = " + level.Death.ToString());
-            writer.WriteLine("Fall = " + level.fall.ToString());
-            writer.WriteLine("Drown = " + level.drown.ToString());
+            writer.WriteLine("Physics = " + level.physics);
+            writer.WriteLine("Physics speed = " + level.speedPhysics);
+            writer.WriteLine("Physics overload = " + level.overload);
+            writer.WriteLine("Finite mode = " + level.finite);
+            writer.WriteLine("Animal AI = " + level.ai);
+            writer.WriteLine("Edge water = " + level.edgeWater);
+            writer.WriteLine("Survival death = " + level.Death);
+            writer.WriteLine("Fall = " + level.fall);
+            writer.WriteLine("Drown = " + level.drown);
             writer.WriteLine("MOTD = " + level.motd);
-            writer.WriteLine("JailX = " + level.jailx.ToString());
-            writer.WriteLine("JailY = " + level.jaily.ToString());
-            writer.WriteLine("JailZ = " + level.jailz.ToString());
-            writer.WriteLine("Unload = " + level.unload.ToString());
-            writer.WriteLine("WorldChat = " + level.worldChat.ToString());
+            writer.WriteLine("JailX = " + level.jailx);
+            writer.WriteLine("JailY = " + level.jaily);
+            writer.WriteLine("JailZ = " + level.jailz);
+            writer.WriteLine("Unload = " + level.unload);
+            writer.WriteLine("WorldChat = " + level.worldChat);
             
             writer.WriteLine("PerBuild = " + GetName(level.permissionbuild));
             writer.WriteLine("PerVisit = " + GetName(level.permissionvisit));
             writer.WriteLine("PerBuildMax = " + GetName(level.perbuildmax));
             writer.WriteLine("PerVisitMax = " + GetName(level.pervisitmax));
+            writer.WriteLine("Buildable = " + level.Buildable);
+            writer.WriteLine("Deletable = " + level.Deletable);
             
-            writer.WriteLine("Guns = " + level.guns.ToString());
-            writer.WriteLine("LoadOnGoto = " + level.loadOnGoto.ToString());
-            writer.WriteLine("LeafDecay = " + level.leafDecay.ToString());
-            writer.WriteLine("RandomFlow = " + level.randomFlow.ToString());
-            writer.WriteLine("GrowTrees = " + level.growTrees.ToString());
-            writer.WriteLine("Weather = " + level.weather.ToString());
+            writer.WriteLine("Guns = " + level.guns);
+            writer.WriteLine("LoadOnGoto = " + level.loadOnGoto);
+            writer.WriteLine("LeafDecay = " + level.leafDecay);
+            writer.WriteLine("RandomFlow = " + level.randomFlow);
+            writer.WriteLine("GrowTrees = " + level.growTrees);
+            writer.WriteLine("Weather = " + level.weather);
             writer.WriteLine("Texture = " + level.textureUrl);
         }
         
@@ -83,19 +85,19 @@ namespace MCGalaxy.Levels.IO {
         
         static void WriteEnvProperties(Level level, StreamWriter writer) {
             if(level.CloudColor != null)
-                writer.WriteLine("CloudColor = " + level.CloudColor.ToString());
+                writer.WriteLine("CloudColor = " + level.CloudColor);
             if (level.SkyColor != null)
-                writer.WriteLine("SkyColor = " + level.SkyColor.ToString());
+                writer.WriteLine("SkyColor = " + level.SkyColor);
             if (level.LightColor != null)
-                writer.WriteLine("LightColor = " + level.LightColor.ToString());
+                writer.WriteLine("LightColor = " + level.LightColor);
             if (level.ShadowColor != null)
-                writer.WriteLine("ShadowColor = " + level.ShadowColor.ToString());
+                writer.WriteLine("ShadowColor = " + level.ShadowColor);
             if (level.FogColor != null)
-                writer.WriteLine("FogColor = " + level.FogColor.ToString());
+                writer.WriteLine("FogColor = " + level.FogColor);
             
-            writer.WriteLine("EdgeLevel = " + level.EdgeLevel.ToString());
-            writer.WriteLine("EdgeBlock = " + level.EdgeBlock.ToString());
-            writer.WriteLine("HorizonBlock = " + level.HorizonBlock.ToString());
+            writer.WriteLine("EdgeLevel = " + level.EdgeLevel);
+            writer.WriteLine("EdgeBlock = " + level.EdgeBlock);
+            writer.WriteLine("HorizonBlock = " + level.HorizonBlock);
         }
         
         
@@ -146,86 +148,63 @@ namespace MCGalaxy.Levels.IO {
             switch (key)
             {
                 case "theme":
-                    level.theme = value;
-                    break;
+                    level.theme = value; break;
                 case "physics":
-                    level.setPhysics(int.Parse(value));
-                    break;
+                    level.setPhysics(int.Parse(value)); break;
                 case "physics speed":
-                    level.speedPhysics = int.Parse(value);
-                    break;
+                    level.speedPhysics = int.Parse(value); break;
                 case "physics overload":
-                    level.overload = int.Parse(value);
-                    break;
+                    level.overload = int.Parse(value); break;
                 case "finite mode":
-                    level.finite = bool.Parse(value);
-                    break;
+                    level.finite = bool.Parse(value); break;
                 case "animal ai":
-                    level.ai = bool.Parse(value);
-                    break;
+                    level.ai = bool.Parse(value); break;
                 case "edge water":
-                    level.edgeWater = bool.Parse(value);
-                    break;
+                    level.edgeWater = bool.Parse(value); break;
                 case "survival death":
-                    level.Death = bool.Parse(value);
-                    break;
+                    level.Death = bool.Parse(value); break;
                 case "fall":
-                    level.fall = int.Parse(value);
-                    break;
+                    level.fall = int.Parse(value); break;
                 case "drown":
-                    level.drown = int.Parse(value);
-                    break;
+                    level.drown = int.Parse(value); break;
                 case "motd":
-                    level.motd = value;
-                    break;
+                    level.motd = value; break;
                 case "jailx":
-                    level.jailx = ushort.Parse(value);
-                    break;
+                    level.jailx = ushort.Parse(value); break;
                 case "jaily":
-                    level.jaily = ushort.Parse(value);
-                    break;
+                    level.jaily = ushort.Parse(value); break;
                 case "jailz":
-                    level.jailz = ushort.Parse(value);
-                    break;
+                    level.jailz = ushort.Parse(value); break;
                 case "unload":
-                    level.unload = bool.Parse(value);
-                    break;
+                    level.unload = bool.Parse(value); break;
                 case "worldchat":
-                    level.worldChat = bool.Parse(value);
-                    break;
+                    level.worldChat = bool.Parse(value); break;
                 case "perbuild":
-                    level.permissionbuild = GetPerm(value);
-                    break;
+                    level.permissionbuild = GetPerm(value); break;
                 case "pervisit":
-                    level.permissionvisit = GetPerm(value);
-                    break;
+                    level.permissionvisit = GetPerm(value); break;
                 case "perbuildmax":
-                    level.perbuildmax = GetPerm(value);
-                    break;
+                    level.perbuildmax = GetPerm(value); break;
                 case "pervisitmax":
-                    level.pervisitmax = GetPerm(value);
-                    break;
+                    level.pervisitmax = GetPerm(value); break;
                 case "guns":
-                    level.guns = bool.Parse(value);
-                    break;
+                    level.guns = bool.Parse(value); break;
                 case "loadongoto":
-                    level.loadOnGoto = bool.Parse(value);
-                    break;
+                    level.loadOnGoto = bool.Parse(value); break;
                 case "leafdecay":
-                    level.leafDecay = bool.Parse(value);
-                    break;
+                    level.leafDecay = bool.Parse(value); break;
                 case "randomflow":
-                    level.randomFlow = bool.Parse(value);
-                    break;
+                    level.randomFlow = bool.Parse(value); break;
                 case "growtrees":
-                    level.growTrees = bool.Parse(value);
-                    break;
+                    level.growTrees = bool.Parse(value); break;
                 case "weather":
-                    level.weather = byte.Parse(value);
-                    break;
+                    level.weather = byte.Parse(value); break;
                 case "texture":
-                    level.textureUrl = value;
-                    break;
+                    level.textureUrl = value; break;
+                case "buildable":
+                    level.Buildable = bool.Parse(value); break;
+                case "deletable":
+                    level.Deletable = bool.Parse(value); break;
             }
         }
         

@@ -50,6 +50,7 @@ namespace MCGalaxy
                 case CpeExt.CustomBlocks:
                     CustomBlocks = version;
                     if (version == 1) SendCustomBlockSupportLevel(1);
+                    hasCustomBlocks = true;
                     break;
                 case CpeExt.HeldBlock:
                     HeldBlock = version; break;
@@ -138,8 +139,7 @@ namespace MCGalaxy
         }
 
         public bool HasCpeExt(string Extension, int version = 1) {
-            if(!hasCpe)
-                return false;
+            if (!hasCpe) return false;
             switch (Extension)
             {
                     case CpeExt.ClickDistance: return ClickDistance == version;
@@ -199,6 +199,24 @@ namespace MCGalaxy
             } catch {
                 SendEnvColor(type, -1, -1, -1);
             }
+        }
+        
+        public void SendCurrentBlockPermissions() {
+        	byte count = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
+        	for (byte i = 0; i < count; i++) {
+        		bool canPlace = Block.canPlace(this, i);
+        		bool canDelete = canPlace;
+        		
+        		if (!level.Buildable) canPlace = false;
+        		if (!level.Deletable) canDelete = false;
+        		SendSetBlockPermission(i, canPlace, canDelete);
+        	}
+        	
+        	if (!HasCpeExt(CpeExt.BlockDefinitions)) return;
+        	for (int i = count; i < 256; i++) {
+        		if (BlockDefinition.GlobalDefinitions[i] == null) continue;
+        		SendSetBlockPermission((byte)i, level.Buildable, level.Deletable);
+        	}
         }
     }
     

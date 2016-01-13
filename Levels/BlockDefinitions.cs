@@ -72,13 +72,14 @@ namespace MCGalaxy {
         public static void AddGlobal(BlockDefinition def) {
             GlobalDefinitions[def.BlockID] = def;
             foreach (Player pl in Player.players) {
-                if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
-                    
+                if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;                
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
                     SendDefineBlockExt(pl, def);
                 else
                     SendDefineBlock(pl, def);
-                pl.SendSetBlockPermission(def.BlockID, 1, 1);
+                
+                if (pl.HasCpeExt(CpeExt.BlockPermissions))
+                    pl.SendSetBlockPermission(def.BlockID, pl.level.Buildable, pl.level.Deletable);
             }
             SaveGlobal("blocks.json");
         }
@@ -96,13 +97,14 @@ namespace MCGalaxy {
             if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) return;
             for (int i = 1; i < GlobalDefinitions.Length; i++) {
                 BlockDefinition def = GlobalDefinitions[i];
-                if (def == null) continue;
-                
+                if (def == null) continue;              
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
                     SendDefineBlockExt(pl, def);
                 else
                     SendDefineBlock(pl, def);
-                pl.SendSetBlockPermission(def.BlockID, 1, 1);
+                
+                if (pl.HasCpeExt(CpeExt.BlockPermissions))
+                    pl.SendSetBlockPermission(def.BlockID, pl.level.Buildable, pl.level.Deletable);
             }
         }
         

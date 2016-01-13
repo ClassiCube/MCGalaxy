@@ -23,8 +23,10 @@ namespace MCGalaxy
 {
     public sealed class Block
     {
-    	public const byte CpeCount = 66;
-    	public const byte CpeMaxBlock = 65;
+    	public const byte OriginalMaxBlock = obsidian;
+    	public const byte OriginalCount = OriginalMaxBlock + 1;
+    	public const byte CpeMaxBlock = stonebrick;
+    	public const byte CpeCount = CpeMaxBlock + 1;
     	
         public const byte air = (byte)0;
         public const byte rock = (byte)1;

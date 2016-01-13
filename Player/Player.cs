@@ -691,8 +691,6 @@ namespace MCGalaxy {
                     SendExtEntry(CpeExt.BlockDefinitions, 1);
                     
                     SendExtEntry(CpeExt.BlockDefinitionsExt, 1);
-                } else {
-                    CompleteLoginProcess();
                 }
                 
                 try { left.Remove(name.ToLower()); }
@@ -702,6 +700,9 @@ namespace MCGalaxy {
                 Loading = true;
                 if (disconnected) return;             
                 id = FreeId();
+                
+                if (type != 0x42)
+                	 CompleteLoginProcess();
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
@@ -1070,6 +1071,14 @@ namespace MCGalaxy {
                 byte type = message[7];
                 byte extType = type;
                 
+                if ((action == 0 || type == 0) && !level.Deletable) {
+                	SendMessage("You cannot currently delete blocks in this level.");
+                	RevertBlock(x, y, z); return;
+                } else if (action == 1 && !level.Buildable) {
+                	SendMessage("You cannot currently place blocks in this level.");
+                	RevertBlock(x, y, z); return;
+                }
+                
                 if (type >= Block.CpeCount) {
                 	if (!HasCpeExt(CpeExt.BlockDefinitions) 
                 	    || BlockDefinition.GlobalDefinitions[type] == null) {
@@ -1114,7 +1123,7 @@ namespace MCGalaxy {
 
             if ( !deleteMode ) {
                 string info = level.foundInfo(x, y, z);
-                if ( info.Contains("wait") ) { return; }
+                if ( info.Contains("wait") ) return;
             }
 
             if ( !canBuild ) {
