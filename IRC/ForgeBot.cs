@@ -135,6 +135,7 @@ namespace MCGalaxy {
                 if (Server.guestLeaveNotify == false && p.group.Permission <= LevelPermission.Guest) {
                     return;
                 }
+                if (!p.hidden)
             connection.Sender.PublicMessage(channel, p.name + " left the game (" + reason + ")");
         }
 
