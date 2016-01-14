@@ -2461,6 +2461,8 @@ return;
             if ( !global )
                 //message = message.Replace("%", "&");
                 message = Chat.EscapeColours(message);
+            else
+            	message = message.Replace("%G", Server.GlobalChatColor);
             players.ForEach(delegate(Player p) {
                 if ( p.level.worldChat && p.Chatroom == null && ( !global || !p.muteGlobal ) ) {
                     Player.SendMessage(p, message, !global);
