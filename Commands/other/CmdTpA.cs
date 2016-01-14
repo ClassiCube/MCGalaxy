@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands
                     while (who.Loading) { Thread.Sleep(250); }
                 }
 
-                unchecked { who.SendPos((byte)-1, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0); }
+                who.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
             }
         }
         public override void Help(Player p)

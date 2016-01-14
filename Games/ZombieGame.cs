@@ -151,7 +151,7 @@ namespace MCGalaxy
             Player.GlobalMessage(player.color + player.name + Server.DefaultColor + " started the infection!");
             player.infected = true;
             player.color = c.red;
-            Player.GlobalDie(player, false);
+            Player.GlobalDespawn(player, false);
             Player.GlobalSpawn(player, player.pos[0], player.pos[1], player.pos[2], player.rot[0], player.rot[1], false);
 
             Server.zombieRound = true;
@@ -184,7 +184,7 @@ namespace MCGalaxy
                     if (player1.color != c.red)
                     {
                         player1.color = c.red;
-                        Player.GlobalDie(player1, false);
+                        Player.GlobalDespawn(player1, false);
                         Player.GlobalSpawn(player1, player1.pos[0], player1.pos[1], player1.pos[2], player1.rot[0], player1.rot[1], false);
                     }
                     alive.ForEach(delegate(Player player2)
@@ -192,7 +192,7 @@ namespace MCGalaxy
                         if (player2.color != player2.group.color)
                         {
                             player2.color = player2.group.color;
-                            Player.GlobalDie(player2, false);
+                            Player.GlobalDespawn(player2, false);
                             Player.GlobalSpawn(player2, player2.pos[0], player2.pos[1], player2.pos[2], player2.rot[0], player2.rot[1], false);
                         }
                         if (player2.pos[0] / 32 == player1.pos[0] / 32 || player2.pos[0] / 32 == player1.pos[0] / 32 + 1 || player2.pos[0] / 32 == player1.pos[0] / 32 - 1)
@@ -239,7 +239,7 @@ namespace MCGalaxy
                                         }
                                         player2.color = c.red;
                                         player1.playersInfected = player1.playersInfected++;
-                                        Player.GlobalDie(player2, false);
+                                        Player.GlobalDespawn(player2, false);
                                         Player.GlobalSpawn(player2, player2.pos[0], player2.pos[1], player2.pos[2], player2.rot[0], player2.rot[1], false);
                                         Thread.Sleep(500);
                                     }
@@ -319,7 +319,7 @@ namespace MCGalaxy
             {
                 if (!winners.CheckIfInsideBlock() && aliveCount == 0 && winners.level.name == currentLevelName)
                 {
-                    Player.GlobalDie(winners, false);
+                    Player.GlobalDespawn(winners, false);
                     Player.GlobalSpawn(winners, winners.pos[0], winners.pos[1], winners.pos[2], winners.rot[0], winners.rot[1], false);
                     Random random2 = new Random();
                     int randomInt = 0;
@@ -338,7 +338,7 @@ namespace MCGalaxy
                 }
                 else if (!winners.CheckIfInsideBlock() && (aliveCount == 1 && !winners.infected) && winners.level.name == currentLevelName)
                 {
-                    Player.GlobalDie(winners, false);
+                    Player.GlobalDespawn(winners, false);
                     Player.GlobalSpawn(winners, winners.pos[0], winners.pos[1], winners.pos[2], winners.rot[0], winners.rot[1], false);
                     Random random2 = new Random();
                     int randomInt = 0;
@@ -358,7 +358,7 @@ namespace MCGalaxy
             {
                 player.infected = false;
                 player.color = player.group.color;
-                Player.GlobalDie(player, false);
+                Player.GlobalDespawn(player, false);
                 Player.GlobalSpawn(player, player.pos[0], player.pos[1], player.pos[2], player.rot[0], player.rot[1], false);
                 if (player.level.name == currentLevelName)
                 {
@@ -493,7 +493,7 @@ namespace MCGalaxy
                 }
                 Player.GlobalMessage(alive[firstinfect].color + alive[firstinfect].name + Server.DefaultColor + " continued the infection!");
                 alive[firstinfect].color = c.red;
-                Player.GlobalDie(alive[firstinfect], false);
+                Player.GlobalDespawn(alive[firstinfect], false);
                 Player.GlobalSpawn(alive[firstinfect], alive[firstinfect].pos[0], alive[firstinfect].pos[1], alive[firstinfect].pos[2], alive[firstinfect].rot[0], alive[firstinfect].rot[1], false);
                 infectd.Add(alive[firstinfect]);
                 alive.Remove(alive[firstinfect]);
@@ -534,7 +534,7 @@ namespace MCGalaxy
             alive.Remove(p);
             p.infected = true;
             p.color = c.red;
-            Player.GlobalDie(p, false);
+            Player.GlobalDespawn(p, false);
             Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
             aliveCount = alive.Count;
         }
@@ -547,7 +547,7 @@ namespace MCGalaxy
             alive.Add(p);
             p.infected = false;
             p.color = p.group.color;
-            Player.GlobalDie(p, false);
+            Player.GlobalDespawn(p, false);
             Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
             aliveCount = alive.Count;
         }

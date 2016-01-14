@@ -92,7 +92,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdFakePay()), "fake troll pay " + Server.moneys);
             new CommandKeywords((new CmdFakeRank()), "rank mod fake troll");
             new CommandKeywords((new CmdFaq()), "freq ask question");
-            new CommandKeywords((new CmdFetch()), "summon move");
             new CommandKeywords((new CmdFill()), "cuboid edit");
             new CommandKeywords((new CmdFixGrass()), "grass fix");
             new CommandKeywords((new CmdFlipHead()), "head fix flip troll");

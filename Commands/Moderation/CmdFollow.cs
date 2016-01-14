@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands
                 who = Player.Find(message);
                 p.following = who.name;
                 Player.SendMessage(p, "Following " + who.color + who.DisplayName + Server.DefaultColor + ". Use \"/follow\" to stop.");
-                p.SendDie(who.id);
+                p.SendDespawn(who.id);
             }
             catch (Exception e) { Server.ErrorLog(e); Player.SendMessage(p, "Error occured"); }
         }

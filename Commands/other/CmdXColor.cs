@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
                 Player.GlobalChat(p, p.color + "*" + p.DisplayName + Server.DefaultColor + "'s color reverted to " + p.group.color + "their group's default" + Server.DefaultColor + ".", false);
                 p.color = p.group.color;
 
-                Player.GlobalDie(p, false);
+                Player.GlobalDespawn(p, false);
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
                 p.SetPrefix();
                 return;
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
                 Player.GlobalChat(p, p.color + "*" + p.DisplayName + Server.DefaultColor + "'s color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
                 p.color = color;
 
-                Player.GlobalDie(p, false);
+                Player.GlobalDespawn(p, false);
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
                 p.SetPrefix();
             }

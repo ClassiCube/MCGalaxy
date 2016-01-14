@@ -146,7 +146,7 @@ namespace MCGalaxy.Commands
                             Command.all.Find("goto").Use(p, lvl.name);
                             while (p.Loading) { Thread.Sleep(250); }
                         }
-                        unchecked { p.SendPos((byte)-1, w.x, w.y, w.z, w.rotx, w.roty); }
+                        p.SendPos(0xFF, w.x, w.y, w.z, w.rotx, w.roty);
                         return;
                     }
                     else

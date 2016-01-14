@@ -67,11 +67,11 @@ namespace MCGalaxy.Commands {
         
         void ReloadMap(Player p, Player who) {
             who.Loading = true;
-            foreach (Player pl in Player.players.ToArray()) if (who.level == pl.level && who != pl) who.SendDie(pl.id);
-            foreach (PlayerBot b in PlayerBot.playerbots.ToArray()) if (who.level == b.level) who.SendDie(b.id);
+            foreach (Player pl in Player.players.ToArray()) if (who.level == pl.level && who != pl) who.SendDespawn(pl.id);
+            foreach (PlayerBot b in PlayerBot.playerbots.ToArray()) if (who.level == b.level) who.SendDespawn(b.id);
 
             ushort x = who.pos[0], y = who.pos[1], z = who.pos[2];
-            Player.GlobalDie(who, true);
+            Player.GlobalDespawn(who, true);
             who.SendUserMOTD(); who.SendMap();
 
             if (!who.hidden)

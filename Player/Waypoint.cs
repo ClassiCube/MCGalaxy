@@ -54,7 +54,7 @@ namespace MCGalaxy {
                     Command.all.Find("goto").Use(p, lvl.name);
                     while ( p.Loading ) { Thread.Sleep(250); }
                 }
-                unchecked { p.SendPos((byte)-1, wp.x, wp.y, wp.z, wp.rotx, wp.roty); }
+                p.SendPos(0xFF, wp.x, wp.y, wp.z, wp.rotx, wp.roty);
                 Player.SendMessage(p, "Sent you to waypoint");
             }
             else { Player.SendMessage(p, "The map that that waypoint is on isn't loaded right now (" + wp.lvlname + ")"); return; }

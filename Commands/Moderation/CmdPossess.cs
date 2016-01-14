@@ -144,7 +144,7 @@ namespace MCGalaxy.Commands
                     {
                         return;
                     }
-                    p.SendDie(who.id);
+                    p.SendDespawn(who.id);
                     who.canBuild = false;
                     Player.SendMessage(p, "Successfully possessed " + who.color + who.name + Server.DefaultColor + ".");
                 }

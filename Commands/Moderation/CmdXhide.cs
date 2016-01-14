@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
             p.hidden = !p.hidden;
             if (p.hidden)
             {
-                Player.GlobalDie(p, true);
+                Player.GlobalDespawn(p, true);
                 Player.GlobalChat(p, "&c- " + p.color + p.prefix + p.DisplayName + Server.DefaultColor + " " + 
                                   (File.Exists("text/logout/" + p.name + ".txt") ? CP437Reader.ReadAllText("text/logout/" + p.name + ".txt") : "Disconnected."), false);
                 Server.IRC.Say(p.name + " left the game (Disconnected.)");

@@ -107,9 +107,9 @@ namespace MCGalaxy
             }
             mapon.ChatLevel("Countdown is about to start!!");
             mapon.permissionbuild = LevelPermission.Nobody;
-            ushort x1 = (ushort)((15.5) * 32);
-            ushort y1 = (ushort)((30) * 32);
-            ushort z1 = (ushort)((15.5) * 32);
+            ushort x1 = (ushort)(15.5 * 32);
+            ushort y1 = (ushort)(30 * 32);
+            ushort z1 = (ushort)(15.5 * 32);
             foreach (Player player in players)
             {
                 if (player.level != mapon)
@@ -120,10 +120,7 @@ namespace MCGalaxy
                     // Sleep for a bit while they load
                     while (player.Loading) { Thread.Sleep(250); }
                 }
-                unchecked
-                {
-                    player.SendSpawn((byte)-1, player.name, x1, y1, z1, (byte)0, (byte)0);
-                }
+                player.SendSpawn(0xFF, player.name, x1, y1, z1, (byte)0, (byte)0);
             }
             {
                 CountdownGame.squaresleft.Clear();

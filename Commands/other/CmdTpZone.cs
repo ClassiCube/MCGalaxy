@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
                 }
 
                 Level.Zone zone = p.level.ZoneList[zoneID];
-                unchecked { p.SendPos((byte)-1, (ushort)(zone.bigX * 32 + 16), (ushort)(zone.bigY * 32 + 32), (ushort)(zone.bigZ * 32 + 16), p.rot[0], p.rot[1]); }
+                p.SendPos(0xFF, (ushort)(zone.bigX * 32 + 16), (ushort)(zone.bigY * 32 + 32), (ushort)(zone.bigZ * 32 + 16), p.rot[0], p.rot[1]);
 
                 Player.SendMessage(p, "Teleported to zone &c" + zoneID + " &b(" +
                     zone.bigX + ", " + zone.bigY + ", " + zone.bigZ + ") &f" +

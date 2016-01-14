@@ -1647,12 +1647,7 @@ namespace MCGalaxy.Gui
             ushort x = (ushort)((0.5 + p.level.spawnx) * 32);
             ushort y = (ushort)((1 + p.level.spawny) * 32);
             ushort z = (ushort)((0.5 + p.level.spawnz) * 32);
-            unchecked
-            {
-                p.SendPos((byte)-1, x, y, z,
-                            p.level.rotx,
-                            p.level.roty);
-            }
+            p.SendPos(0xFF, x, y, z, p.level.rotx, p.level.roty);
             PlayersTextBox.AppendTextAndScroll("Sent player to spawn");
         }
 

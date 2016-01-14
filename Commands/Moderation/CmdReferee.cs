@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             {
                 p.referee = false;
                 LevelPermission perm = Group.findPlayerGroup(name).Permission;
-                Player.GlobalDie(p, false);
+                Player.GlobalDespawn(p, false);
                 Player.GlobalChat(p, p.color + p.name + Server.DefaultColor + " is no longer a referee", false);
                 if (Server.zombie.GameInProgess())
                 {
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player.GlobalDie(p, false);
+                    Player.GlobalDespawn(p, false);
                     Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
                     ZombieGame.infectd.Remove(p);
                     ZombieGame.alive.Add(p);
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
             {
                 p.referee = true;
                 Player.GlobalChat(p, p.color + p.name + Server.DefaultColor + " is now a referee", false);
-                Player.GlobalDie(p, false);
+                Player.GlobalDespawn(p, false);
                 if (Server.zombie.GameInProgess())
                 {
                     p.color = p.group.color;

@@ -299,13 +299,10 @@ namespace MCGalaxy.Commands
                     while (p.Loading) { Thread.Sleep(250); }
                     p.level.permissionbuild = LevelPermission.Nobody;
                     p.level.motd = "Welcome to the Countdown map!!!! -hax";
-                    ushort x = System.Convert.ToUInt16(8);
-                    ushort y = System.Convert.ToUInt16(23);
-                    ushort z = System.Convert.ToUInt16(17);
-                    x *= 32; x += 16;
-                    y *= 32; y += 32;
-                    z *= 32; z += 16;
-                    unchecked { p.SendPos((byte)-1, x, y, z, p.rot[0], p.rot[1]); }
+                    const ushort x = 8 * 32 + 16;
+                    const ushort y = 23 * 32 + 32;
+                    const ushort z = 17 * 32 + 16;
+                    p.SendPos(0xFF, x, y, z, p.rot[0], p.rot[1]);
                 }
 
                 else if (par0 == "enable")

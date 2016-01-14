@@ -280,7 +280,7 @@ namespace MCGalaxy.Commands
                 if (bp.ending == -1)
                     try
                     {
-                        unchecked { p.SendPos((byte)-1, (ushort)(previous[previous.Count - 3].x * 32), (ushort)(previous[previous.Count - 3].y * 32 + 32), (ushort)(previous[previous.Count - 3].z * 32), p.rot[0], p.rot[1]); }
+                        p.SendPos(0xFF, (ushort)(previous[previous.Count - 3].x * 32), (ushort)(previous[previous.Count - 3].y * 32 + 32), (ushort)(previous[previous.Count - 3].z * 32), p.rot[0], p.rot[1]);
                     } catch { }
                 if (bp.ending == 3) Thread.Sleep(400);
 

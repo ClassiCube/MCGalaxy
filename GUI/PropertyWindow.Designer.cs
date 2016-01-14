@@ -251,7 +251,6 @@ namespace MCGalaxy.Gui
             this.chkRestart = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -436,7 +435,6 @@ namespace MCGalaxy.Gui
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ( (System.ComponentModel.ISupportInitialize) ( this.pictureBox1 ) ).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox17.SuspendLayout();
             ( (System.ComponentModel.ISupportInitialize) ( this.updateTimeNumeric ) ).BeginInit();
@@ -2534,7 +2532,6 @@ namespace MCGalaxy.Gui
             this.tabPage1.Controls.Add( this.groupBox4 );
             this.tabPage1.Controls.Add( this.groupBox2 );
             this.tabPage1.Controls.Add( this.groupBox3 );
-            this.tabPage1.Controls.Add( this.pictureBox1 );
             this.tabPage1.Controls.Add( this.groupBox1 );
             this.tabPage1.Controls.Add( this.groupBox17 );
             this.tabPage1.Controls.Add( this.groupBox6 );
@@ -2758,16 +2755,6 @@ namespace MCGalaxy.Gui
             this.label7.Size = new System.Drawing.Size( 39, 13 );
             this.label7.TabIndex = 3;
             this.label7.Text = "Depth:";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point( 417, 35 );
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size( 68, 68 );
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 27;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler( this.pictureBox1_Click );
             // 
             // groupBox1
             // 
@@ -4529,7 +4516,6 @@ namespace MCGalaxy.Gui
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout( false );
             this.groupBox3.PerformLayout();
-            ( (System.ComponentModel.ISupportInitialize) ( this.pictureBox1 ) ).EndInit();
             this.groupBox1.ResumeLayout( false );
             this.groupBox1.PerformLayout();
             this.groupBox17.ResumeLayout( false );
@@ -4733,7 +4719,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox grpIRC;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox3;

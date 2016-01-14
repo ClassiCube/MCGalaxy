@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
                     x *= 32; x += 16;
                     y *= 32; y += 32;
                     z *= 32; z += 16;
-                    unchecked { who.SendPos((byte)-1, x, y, z, p.rot[0], p.rot[1]); }
+                    who.SendPos(0xFF, x, y, z, p.rot[0], p.rot[1]);
                     if (p != who) Player.SendMessage(p, "Moved " + who.color + who.name);
                 }
                 catch { Player.SendMessage(p, "Invalid co-ordinates"); }

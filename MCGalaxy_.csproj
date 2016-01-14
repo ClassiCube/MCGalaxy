@@ -256,7 +256,6 @@
     <Compile Include="Commands\Moderation\CmdDemote.cs" />
     <Compile Include="Commands\Moderation\CmdEndRound.cs" />
     <Compile Include="Commands\Moderation\CmdExplode.cs" />
-    <Compile Include="Commands\Moderation\CmdFetch.cs" />
     <Compile Include="Commands\Moderation\CmdFollow.cs" />
     <Compile Include="Commands\Moderation\CmdFreeze.cs" />
     <Compile Include="Commands\Moderation\CmdGcbanlistupdate.cs" />

@@ -1456,7 +1456,7 @@ namespace MCGalaxy {
                 return;
             /*if (CheckIfInsideBlock())
 {
-unchecked { this.SendPos((byte)-1, (ushort)(clippos[0] - 18), (ushort)(clippos[1] - 18), (ushort)(clippos[2] - 18), cliprot[0], cliprot[1]); }
+this.SendPos(0xFF, (ushort)(clippos[0] - 18), (ushort)(clippos[1] - 18), (ushort)(clippos[2] - 18), cliprot[0], cliprot[1]);
 return;
 }*/
             byte thisid = message[0];
@@ -1477,7 +1477,7 @@ return;
                 pos = new ushort[3] { x, y, z };
                 rot = new byte[2] { rotx, roty };
                 if ( countdowntempx != NetUtils.ReadU16(message, 1) || countdowntempz != NetUtils.ReadU16(message, 5) ) {
-                    unchecked { this.SendPos((byte)-1, pos[0], pos[1], pos[2], rot[0], rot[1]); }
+                    this.SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
                 }
             } else {
                 ushort x = NetUtils.ReadU16(message, 1);
@@ -1486,11 +1486,11 @@ return;
 
                 if ( !this.referee && Server.noRespawn && Server.ZombieModeOn ) {
                     if ( this.pos[0] >= x + 70 || this.pos[0] <= x - 70 ) {
-                        unchecked { SendPos((byte)-1, pos[0], pos[1], pos[2], rot[0], rot[1]); }
+                        SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
                         return;
                     }
                     if ( this.pos[2] >= z + 70 || this.pos[2] <= z - 70 ) {
-                        unchecked { SendPos((byte)-1, pos[0], pos[1], pos[2], rot[0], rot[1]); }
+                        SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
                         return;
                     }
                 }
@@ -1506,7 +1506,7 @@ return;
                     PlayerRotate(this, rot);
                 PlayerRotateEvent.Call(this, rot);
                 if ( cancelmove ) {
-                    unchecked { SendPos((byte)-1, pos[0], pos[1], pos[2], rot[0], rot[1]); }
+                    SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
                     return;
                 }
                 byte rotx = message[7];
@@ -2233,6 +2233,7 @@ return;
                         case "colour": cmd = "color"; break;
                         case "materials": cmd = "blocks"; break;
                         case "zz": cmd = "static"; message = "cuboid"; break;
+                        case "fetch": cmd = "summon"; break;
 
                         default: retry = false; break; //Unknown command, then
                     }
@@ -2506,16 +2507,16 @@ return;
                     {
                         p.pos = new ushort[3] { x, y, z }; p.rot = new byte[2] { rotx, roty };
                         p.oldpos = p.pos; p.basepos = p.pos; p.oldrot = p.rot;
-                        unchecked { p.SendSpawn((byte)-1, from.color + from.name + possession, x, y, z, rotx, roty); }
+                        p.SendSpawn(0xFF, from.color + from.name + possession, x, y, z, rotx, roty);
                     }
                 }
             });
         }
-        public static void GlobalDie(Player from, bool self) {
+        public static void GlobalDespawn(Player from, bool self) {
             players.ForEach(delegate(Player p) {
                 if ( p.level != from.level || ( from.hidden && !self ) ) { return; }
-                if ( p != from ) { p.SendDie(from.id); }
-                else if ( self ) { p.SendDie(255); }
+                if ( p != from ) { p.SendDespawn(from.id); }
+                else if ( self ) { p.SendDespawn(255); }
             });
         }
 
@@ -2527,7 +2528,7 @@ return;
                 }
                 marker = " (" + controller.color + controller.name + color + ")";
             }
-            GlobalDie(this, true);
+            GlobalDespawn(this, true);
             GlobalSpawn(this, pos[0], pos[1], pos[2], rot[0], rot[1], true, marker);
             return true;
         }
@@ -2633,7 +2634,7 @@ return;
                         tntwarsgame.SendAllPlayersMessage("TNT Wars: " + color + name + Server.DefaultColor + " has left TNT Wars!");
                     }
 
-                    GlobalDie(this, false);
+                    GlobalDespawn(this, false);
                     if ( kickString == "Disconnected." || kickString.IndexOf("Server shutdown") != -1 || kickString == Server.customShutdownMessage ) {
                         if ( !Directory.Exists("text/logout") ) {
                             Directory.CreateDirectory("text/logout");
@@ -2829,7 +2830,7 @@ foreach (Player p in players)
 if (p.id == i) { goto Next; }
 } return i;
 Next: continue;
-} unchecked { return (byte)-1; }*/
+} unchecked { return 0xFF; }*/
 
             for ( byte i = 0; i < 255; i++ ) {
                 bool used = players.Any(p => p.id == i);

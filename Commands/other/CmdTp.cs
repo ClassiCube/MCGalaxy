@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands
                             while (who.Loading) { }
                         }
                         while (p.Loading) { }  //Wait for player to spawn in new map
-                        unchecked { p.SendPos((byte)-1, who.pos[0], who.pos[1], who.pos[2], who.rot[0], 0); }
+                        p.SendPos(0xFF, who.pos[0], who.pos[1], who.pos[2], who.rot[0], 0);
                     }
                     return;
                 }
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands
                         while (who.Loading) { }
                     }
                     while (p.Loading) { }  //Wait for player to spawn in new map
-                    unchecked { p.SendPos((byte)-1, who.pos[0], who.pos[1], who.pos[2], who.rot[0], 0); }
+                    p.SendPos(0xFF, who.pos[0], who.pos[1], who.pos[2], who.rot[0], 0);
                 }
             }
         }

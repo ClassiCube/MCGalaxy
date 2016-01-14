@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
                     {
                         if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission)
                         {
-                            unchecked { pl.SendPos((byte)-1, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0); }
+                            pl.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
                             pl.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
                         }
                     }
@@ -63,14 +63,13 @@ namespace MCGalaxy.Commands
             if (p.level != who.level)
             {
                 Player.SendMessage(p, who.DisplayName + " is in a different Level. Forcefetching has started!");
-                Level where = p.level;
-                Command.all.Find("goto").Use(who, where.name);
+                Command.all.Find("goto").Use(who, p.level.name);
                 Thread.Sleep(1000);
                 // Sleep for a bit while they load
                 while (who.Loading) { Thread.Sleep(250); }
             }
 
-            unchecked { who.SendPos((byte)-1, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0); }
+            who.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
             who.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
         }
         public override void Help(Player p)

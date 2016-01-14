@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                     Player.GlobalChat(who, who.color + "*" + Name(who.DisplayName) + " color reverted to " + who.group.color + "their group's default" + Server.DefaultColor + ".", false);
                     who.color = who.group.color;
 
-                    Player.GlobalDie(who, false);
+                    Player.GlobalDespawn(who, false);
                     Player.GlobalSpawn(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1], false);
                     who.SetPrefix();
                     return;
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands {
                     }
                     who.color = color;
 
-                    Player.GlobalDie(who, false);
+                    Player.GlobalDespawn(who, false);
                     Player.GlobalSpawn(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1], false);
                     who.SetPrefix();
                 }
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands {
                         Player.GlobalChat(p, p.color + "*" + Name(p.DisplayName) + " color reverted to " + p.group.color + "their group's default" + Server.DefaultColor + ".", false);
                         p.color = p.group.color;
 
-                        Player.GlobalDie(p, false);
+                        Player.GlobalDespawn(p, false);
                         Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
                         p.SetPrefix();
                         return;
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands {
                         Player.GlobalChat(p, p.color + "*" + Name(p.DisplayName) + " color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
                         p.color = color;
 
-                        Player.GlobalDie(p, false);
+                        Player.GlobalDespawn(p, false);
                         Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
                         p.SetPrefix();
                     }

@@ -1413,28 +1413,6 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             }*/
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e) {
-            try {
-                if ( !Directory.Exists("extra/images") )
-                    Directory.CreateDirectory("extra/images");
-                if ( !File.Exists( "extra/images/mcpony.png" ) ) {
-                    using ( WebClient WEB = new WebClient () ) {
-                        WEB.DownloadFileAsync ( new Uri ( "http://comingsoon.tk/uploads/images/mcpony.png" ), "extra/images/mcpony.png" );
-                        WEB.DownloadFileCompleted += ( ea, args ) => {
-                                                         if ( File.Exists ( "extra/images/mcpony.png" ) ) {
-                                                             Image img = Image.FromFile ( "extra/images/mcpony.png" );
-                                                             pictureBox1.Image = img;
-                                                         }
-                                                     };
-                    }
-                } else {
-                    Image img = Image.FromFile( "extra/images/mcpony.png" );
-                    pictureBox1.Image = img;
-                }
-            }
-            catch { }
-        }
-
         private void cmbGlobalChatColor_SelectedIndexChanged(object sender, EventArgs e) {
             lblGlobalChatColor.BackColor = Color.FromName(cmbGlobalChatColor.Items[cmbGlobalChatColor.SelectedIndex].ToString());
         }

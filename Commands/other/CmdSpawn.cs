@@ -54,13 +54,9 @@ namespace MCGalaxy.Commands
                     return;
                 }
             }
-            unchecked
-            {
-                p.SendPos((byte)-1, x, y, z,
-                            p.level.rotx,
-                            p.level.roty);
-            }
+            p.SendPos(0xFF, x, y, z, p.level.rotx, p.level.roty);
         }
+        
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/spawn - Teleports yourself to the spawn location.");

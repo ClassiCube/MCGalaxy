@@ -93,7 +93,6 @@ namespace MCGalaxy
             all.Add(new CmdFakePay());
             all.Add(new CmdFakeRank());
             all.Add(new CmdFaq());
-            all.Add(new CmdFetch());
             all.Add(new CmdFill());
             all.Add(new CmdFixGrass());
             all.Add(new CmdFlipHead());

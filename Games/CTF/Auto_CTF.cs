@@ -101,10 +101,10 @@ namespace MCGalaxy
                     yy = (ushort)(rand.Next(0, mainlevel.Height));
                     zz = (ushort)(rand.Next(0, mainlevel.Length));
                 }
-                unchecked { p1.SendPos((byte)-1, (ushort)(xx * 32), (ushort)(yy * 32), (ushort)(zz * 32), p1.rot[0], p1.rot[1]); }
+                p1.SendPos(0xFF, (ushort)(xx * 32), (ushort)(yy * 32), (ushort)(zz * 32), p1.rot[0], p1.rot[1]);
             }
             else
-                unchecked { p1.SendPos((byte)-1, spawnx, spawny, spawnz, p1.rot[0], p1.rot[1]); }
+                p1.SendPos(0xFF, spawnx, spawny, spawnz, p1.rot[0], p1.rot[1]);
 
         }
         public Base(ushort x, ushort y, ushort z, Teams team)

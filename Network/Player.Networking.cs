@@ -450,7 +450,7 @@ namespace MCGalaxy {
         }
         
         //TODO: Figure a way to SendPos without changing rotation
-        public void SendDie(byte id) { 
+        public void SendDespawn(byte id) { 
         	SendRaw(Opcode.RemoveEntity, id); 
         }
         

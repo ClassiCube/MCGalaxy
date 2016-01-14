@@ -48,7 +48,7 @@ namespace MCGalaxy
                             if (who.group.Permission >= p.group.Permission) { Player.SendMessage(p, "Cannot jail someone of equal or greater rank."); return; }
                             Player.SendMessage(p, "You jailed " + who.DisplayName);
                         }
-                        Player.GlobalDie(who, false);
+                        Player.GlobalDespawn(who, false);
                         who.jailed = true;
                         Player.GlobalSpawn(who, who.level.jailx, who.level.jaily, who.level.jailz, who.level.jailrotx, who.level.jailroty, true);
                         if (!File.Exists("ranks/jailed.txt")) File.Create("ranks/jailed.txt").Close();

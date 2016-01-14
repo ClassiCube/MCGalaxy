@@ -54,10 +54,10 @@ namespace MCGalaxy.Commands
                         {
 
                             p.Loading = true;
-                            foreach (Player pl in Player.players) if (p.level == pl.level && p != pl) p.SendDie(pl.id);
-                            foreach (PlayerBot b in PlayerBot.playerbots) if (p.level == b.level) p.SendDie(b.id);
+                            foreach (Player pl in Player.players) if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
+                            foreach (PlayerBot b in PlayerBot.playerbots) if (p.level == b.level) p.SendDespawn(b.id);
 
-                            Player.GlobalDie(p, true);
+                            Player.GlobalDespawn(p, true);
                             p.level = foundLevel; p.SendUserMOTD(); p.SendMap();
 
                             GC.Collect();
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
                             ushort z = (ushort)((0.5 + foundLevel.spawnz) * 32);
 
                             if (!p.hidden) Player.GlobalSpawn(p, x, y, z, foundLevel.rotx, foundLevel.roty, true, "");
-                            else unchecked { p.SendPos((byte)-1, x, y, z, foundLevel.rotx, foundLevel.roty); }
+                            else p.SendPos(0xFF, x, y, z, foundLevel.rotx, foundLevel.roty);
 
                             foreach (Player pl in Player.players)
                                 if (pl.level == p.level && p != pl && !pl.hidden)

@@ -407,7 +407,7 @@ namespace MCGalaxy
             Player.players.ForEach(delegate(Player p)
             {
                 if (p.level != level) { return; }
-                p.SendDie(id);
+                p.SendDespawn(id);
             });
             playerbots.Remove(this);        //dont know if this is allowed really calling itself to kind of die
         }

@@ -43,7 +43,7 @@ namespace MCGalaxy
             {
                 if (p.team != null) { p.team.RemoveMember(p); }
                 p.team = this;
-                Player.GlobalDie(p, false);
+                Player.GlobalDespawn(p, false);
                 //p.CTFtempcolor = p.color;
                 //p.CTFtempprefix = p.prefix;
                 p.color = "&" + color;
@@ -61,7 +61,7 @@ namespace MCGalaxy
             if (p.team == this)
             {
                 p.team = null;
-                Player.GlobalDie(p, false);
+                Player.GlobalDespawn(p, false);
                 //p.color = p.CTFtempcolor;
                 //p.prefix = p.CTFtempprefix;
                 //p.carryingFlag = false;
@@ -89,10 +89,7 @@ namespace MCGalaxy
                 ushort y1 = (ushort)((1 + y) * 32);
                 ushort z1 = (ushort)((0.5 + z) * 32);
                 rotx = spawns[rnd].rotx;
-                unchecked
-                {
-                    p.SendSpawn((byte)-1, p.name, x1, y1, z1, (byte)rotx, 0);
-                }
+                p.SendSpawn((byte)0xFF, p.name, x1, y1, z1, (byte)rotx, 0);
                 //p.health = 100;
             }
             else
@@ -102,11 +99,7 @@ namespace MCGalaxy
                 ushort z = (ushort)((0.5 + mapOn.spawnz) * 32);
                 ushort rotx = mapOn.rotx;
                 ushort roty = mapOn.roty;
-
-                unchecked
-                {
-                    p.SendSpawn((byte)-1, p.name, x, y, z, (byte)rotx, (byte)roty);
-                }
+                p.SendSpawn(0xFF, p.name, x, y, z, (byte)rotx, (byte)roty);
             }
             //p.spawning = false;
         }

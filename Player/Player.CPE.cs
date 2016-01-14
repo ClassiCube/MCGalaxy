@@ -88,7 +88,7 @@ namespace MCGalaxy
                                 if (HasExtension("ChangeModel"))
                                 {
                                     if (p == this)
-                                        unchecked { SendChangeModel((byte)-1, model); }
+                                        SendChangeModel(0xFF, model);
                                     else SendChangeModel(p.id, p.model);
                                 }
                             }

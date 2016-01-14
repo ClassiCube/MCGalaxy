@@ -119,7 +119,7 @@ namespace MCGalaxy.Commands
                     who.color = who.group.color;
                 who.SetPrefix();
 
-                Player.GlobalDie(who, false);
+                Player.GlobalDespawn(who, false);
 
                 who.SendMessage("You are now ranked " + newRank.color + newRank.name + Server.DefaultColor + ", type /help for your new set of commands.");
                 who.SendUserType(Block.canPlace(who.group.Permission, Block.blackrock));

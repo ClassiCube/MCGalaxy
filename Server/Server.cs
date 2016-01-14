@@ -937,7 +937,7 @@ namespace MCGalaxy
 
                                 if (p.frozen)
                                 {
-                                    unchecked { p.SendPos((byte)-1, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); } continue;
+                                    p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); continue;
                                 }
                                 else if (p.following != "")
                                 {
@@ -957,11 +957,11 @@ namespace MCGalaxy
                                     }
                                     if (p.canBuild)
                                     {
-                                        unchecked { p.SendPos((byte)-1, who.pos[0], (ushort)(who.pos[1] - 16), who.pos[2], who.rot[0], who.rot[1]); }
+                                        p.SendPos(0xFF, who.pos[0], (ushort)(who.pos[1] - 16), who.pos[2], who.rot[0], who.rot[1]);
                                     }
                                     else
                                     {
-                                        unchecked { p.SendPos((byte)-1, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]); }
+                                       p.SendPos(0xFF, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
                                     }
                                 }
                                 else if (p.possess != "")

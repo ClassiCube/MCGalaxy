@@ -64,7 +64,8 @@ namespace MCGalaxy.Commands
         {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            unchecked { if (cpos.type != (byte)-1) { type = cpos.type; } }
+            if (cpos.type != Block.Zero) 
+                type = cpos.type;
             List<Pos> buffer = new List<Pos>();
             Pos pos;
 

@@ -104,9 +104,8 @@ namespace MCGalaxy.Commands
                     who.level.ChatLevel(who.color + who.DisplayName + Server.DefaultColor + " was slapped sky high by " + "the Console.");
                 }
                 foundHeight = 1000;
-            }
-            
-            unchecked { who.SendPos((byte)-1, who.pos[0], (ushort)(foundHeight * 32), who.pos[2], who.rot[0], who.rot[1]); }
+            }         
+            who.SendPos(0xFF, who.pos[0], (ushort)(foundHeight * 32), who.pos[2], who.rot[0], who.rot[1]);
         }
         public override void Help(Player p)
         {

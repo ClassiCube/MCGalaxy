@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
 			{
 				who.DisplayName = who.name;
 				Player.GlobalChat(who, who.color + who.prefix + who.DisplayName + "&g has reverted their nick to their original name.", false);
-				Player.GlobalDie(p, false);
+				Player.GlobalDespawn(p, false);
 				Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
 				return;
 			}
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
 
 			if (newName != "") Player.GlobalChat(who, who.color + who.DisplayName + "&g has changed their nick to " + newName + "&g.", false);
 			who.DisplayName = newName;
-			Player.GlobalDie(who, false);
+			Player.GlobalDespawn(who, false);
 			Player.GlobalSpawn(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1], false);
             PlayerDB.Save(who);
 		}
