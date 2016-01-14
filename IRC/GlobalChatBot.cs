@@ -17,7 +17,9 @@
 */
 using System;
 using System.Net;
+using System.Text;
 using Sharkbite.Irc;
+
 namespace MCGalaxy
 {
     public sealed class GlobalChatBot
@@ -43,7 +45,7 @@ namespace MCGalaxy
             server = "irc.geekshed.net";
            	channel = "#MCGalaxy";
             this.nick = nick.Replace(" ", "");
-            connection = new Connection(new ConnectionArgs(nick, server), false, false);
+            connection = new Connection(new UTF8Encoding(false), new ConnectionArgs(nick, server), false, false);
 
             if (Server.UseGlobalChat)
             {
@@ -241,6 +243,7 @@ namespace MCGalaxy
 
         void Listener_OnPublic(UserInfo user, string channel, string message)
         {
+        	message = CP437Reader.ConvertLine(message);
             //string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
             //string msg = message;
             RemoveVariables(ref message);

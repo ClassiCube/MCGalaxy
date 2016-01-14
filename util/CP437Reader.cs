@@ -60,7 +60,7 @@ namespace MCGalaxy {
             }
         }
         
-        static unsafe string ConvertLine(string line) {
+        public static unsafe string ConvertLine(string line) {
             fixed (char* ptr = line) {
                 for (int i = 0; i < line.Length; i++)
                     ptr[i] = ConvertChar(ptr[i]);
@@ -77,7 +77,7 @@ namespace MCGalaxy {
             } else if ((cpIndex = FullCP437Handler.ExtendedCharReplacements.IndexOf(c)) >= 0 ) {
                 return (char)(cpIndex + 127);
             }
-            return c;
+            return '?';
         }
     }
 }

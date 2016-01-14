@@ -47,7 +47,7 @@ namespace MCGalaxy {
 
                 ConnectionArgs con = new ConnectionArgs(nick, server);
                 con.Port = Server.ircPort;
-                connection = new Connection(con, false, false);
+                connection = new Connection(new UTF8Encoding(false), con, false, false);
 
                 // Regster events for outgoing
                 Player.PlayerChat += new Player.OnPlayerChat(Player_PlayerChat);
@@ -92,11 +92,10 @@ namespace MCGalaxy {
 
             if(String.IsNullOrEmpty(message.Trim()))
                 message = ".";
+            message = CP437Writer.ConvertFromRaw(message);
 
-            if (color) {
+            if (color)
                 message = c.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
-            }
-
             connection.Sender.PublicMessage(opchat ? opchannel : channel, message);
         }
         
@@ -177,6 +176,7 @@ namespace MCGalaxy {
         }
 
         void Listener_OnPublic(UserInfo user, string channel, string message) {
+        	message = CP437Reader.ConvertLine(message);
             string[] parts = message.Split(new char[] { ' ' }, 3);
             //string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
             // Allowed chars are any ASCII char between 20h/32 and 7Ah/122 inclusive, except for 26h/38 (&) and 60h/96 (`)
