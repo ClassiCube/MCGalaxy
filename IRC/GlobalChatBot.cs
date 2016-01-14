@@ -326,7 +326,7 @@ namespace MCGalaxy
                 if(GUI.GuiEvent != null)
                 GUI.GuiEvents.GlobalChatEvent(this, "> " + user.Nick + ": " + message); }
             catch { Server.s.Log(">[Global] " + user.Nick + ": " + message); }*/
-            Player.GlobalMessage(String.Format("%G>[Global] {0}: &f{1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message), true);
+            Player.GlobalMessage(String.Format("%g>[Global] {0}: &f{1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message), true);
         }
 
         void Listener_OnRegistered()
