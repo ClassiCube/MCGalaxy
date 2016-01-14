@@ -286,27 +286,14 @@ namespace MCGalaxy
                 }
             }
 
-            if (GroupList.Find(grp => grp.Permission == LevelPermission.Banned) == null) GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
-            if (GroupList.Find(grp => grp.Permission == LevelPermission.Guest) == null) GroupList.Add(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', String.Empty, "guest.txt"));
-            if (GroupList.Find(grp => grp.Permission == LevelPermission.Builder) == null) GroupList.Add(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', String.Empty, "builders.txt"));
-            if (GroupList.Find(grp => grp.Permission == LevelPermission.AdvBuilder) == null) GroupList.Add(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', String.Empty, "advbuilders.txt"));
-            if (GroupList.Find(grp => grp.Permission == LevelPermission.Operator) == null) GroupList.Add(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', String.Empty, "operators.txt"));
-            if (GroupList.Find(grp => grp.Permission == LevelPermission.Admin) == null) GroupList.Add(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', String.Empty, "uberOps.txt"));
-            GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));
-
-            bool swap = true; Group storedGroup;
-            while (swap)
-            {
-                swap = false;
-                for (int i = 0; i < GroupList.Count - 1; i++)
-                    if (GroupList[i].Permission > GroupList[i + 1].Permission)
-                    {
-                        swap = true;
-                        storedGroup = GroupList[i];
-                        GroupList[i] = GroupList[i + 1];
-                        GroupList[i + 1] = storedGroup;
-                    }
-            }
+            if (findPerm(LevelPermission.Banned) == null) GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
+            if (findPerm(LevelPermission.Guest) == null) GroupList.Add(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', String.Empty, "guest.txt"));
+            if (findPerm(LevelPermission.Builder) == null) GroupList.Add(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', String.Empty, "builders.txt"));
+            if (findPerm(LevelPermission.AdvBuilder) == null) GroupList.Add(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', String.Empty, "advbuilders.txt"));
+            if (findPerm(LevelPermission.Operator) == null) GroupList.Add(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', String.Empty, "operators.txt"));
+            if (findPerm(LevelPermission.Admin) == null) GroupList.Add(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', String.Empty, "uberOps.txt"));
+            GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));            
+            GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
             if (Group.Find(Server.defaultRank) != null) standard = Group.Find(Server.defaultRank);
             else standard = Group.findPerm(LevelPermission.Guest);
@@ -406,7 +393,7 @@ namespace MCGalaxy
             if (name == "super" || (name == "admin" && !Group.Exists("admin"))) name = "superop";
             if (name == "noone") name = "nobody";
 
-            return GroupList.FirstOrDefault(gr => gr.name == name.ToLower());
+            return GroupList.Find(gr => gr.name == name.ToLower());
         }
         /// <summary>
         /// Find the group with the permission /Perm/
@@ -415,7 +402,7 @@ namespace MCGalaxy
         /// <returns>The group object with that level permission</returns>
         public static Group findPerm(LevelPermission Perm)
         {
-            return GroupList.FirstOrDefault(grp => grp.Permission == Perm);
+            return GroupList.Find(grp => grp.Permission == Perm);
         }
 
         /// <summary>
@@ -425,7 +412,7 @@ namespace MCGalaxy
         /// <returns>The group object with that level permission</returns>
         public static Group findPermInt(int Perm)
         {
-            return GroupList.FirstOrDefault(grp => (int)grp.Permission == Perm);
+            return GroupList.Find(grp => (int)grp.Permission == Perm);
         }
 
         /// <summary>

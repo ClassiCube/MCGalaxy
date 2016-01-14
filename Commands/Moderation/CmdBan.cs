@@ -113,8 +113,8 @@ namespace MCGalaxy.Commands {
                     who.group.playerList.Save();
 
                     if (p != null) {
-                        if (stealth) Chat.GlobalMessageOps(who.color + who.name + Server.DefaultColor + " was STEALTH &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + "!");
-                        else Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + "!");
+                        if (stealth) Chat.GlobalMessageOps(who.color + who.name + Server.DefaultColor + " was STEALTH &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + ".");
+                        else Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + ".");
                     } else {
                         if (stealth) Chat.GlobalMessageOps(who.color + who.name + Server.DefaultColor + " was STEALTH &8banned" + Server.DefaultColor + " by console.");
                         else Player.GlobalMessage(who.color + who.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by console.");

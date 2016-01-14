@@ -49,9 +49,10 @@ namespace MCGalaxy.Commands
          if (Group.GroupList.Contains(grp))
          {
              
-             if (grp.name == "banned")
+             if (grp.Permission == LevelPermission.Banned)
              {
-                 Player.GlobalMessage(plr.color + plr.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + p.color + p.DisplayName + Server.DefaultColor + "!");
+             	 string banner = p == null ? "console" : p.color + p.DisplayName + Server.DefaultColor;
+                 Player.GlobalMessage(plr.color + plr.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + banner + ".");
              }
              else
              {
