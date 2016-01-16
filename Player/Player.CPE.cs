@@ -106,7 +106,6 @@ namespace MCGalaxy
                         }
                         break;*/
                 case CpeExt.EnvColors:
-                    SendCurrentEnvColors();
                     EnvColors = version; break;
                 case CpeExt.SelectionCuboid:
                     SelectionCuboid = version; break;
@@ -116,10 +115,8 @@ namespace MCGalaxy
                     UpdateModels();
                     ChangeModel = version; break;
                 case CpeExt.EnvMapAppearance:
-                    SendCurrentMapAppearance();
                     EnvMapAppearance = version; break;
                 case CpeExt.EnvWeatherType:
-                    SendSetMapWeather(level.weather);
                     EnvWeatherType = version; break;
                 case CpeExt.HackControl:
                     HackControl = version; break;
@@ -180,8 +177,15 @@ namespace MCGalaxy
         }
         
         public void SendCurrentMapAppearance() {
-            string url = level.textureUrl == "" ? Server.defaultTextureUrl : level.textureUrl;
-            SendSetMapAppearance(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+            if (EnvMapAppearance == 2) {
+                string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
+                if (url == "") 
+                    url = Server.defaultTexturePackUrl == "" ? Server.defaultTerrainUrl : Server.defaultTexturePackUrl;
+                SendSetMapAppearanceV2(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel, level.CloudsHeight);
+            } else {
+                string url = level.terrainUrl == "" ? Server.defaultTerrainUrl : level.terrainUrl;
+                SendSetMapAppearance(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+            }
         }
         
         public void SendCurrentEnvColors() {
@@ -202,21 +206,21 @@ namespace MCGalaxy
         }
         
         public void SendCurrentBlockPermissions() {
-        	byte count = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
-        	for (byte i = 0; i < count; i++) {
-        		bool canPlace = Block.canPlace(this, i);
-        		bool canDelete = canPlace;
-        		
-        		if (!level.Buildable) canPlace = false;
-        		if (!level.Deletable) canDelete = false;
-        		SendSetBlockPermission(i, canPlace, canDelete);
-        	}
-        	
-        	if (!HasCpeExt(CpeExt.BlockDefinitions)) return;
-        	for (int i = count; i < 256; i++) {
-        		if (BlockDefinition.GlobalDefinitions[i] == null) continue;
-        		SendSetBlockPermission((byte)i, level.Buildable, level.Deletable);
-        	}
+            byte count = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
+            for (byte i = 0; i < count; i++) {
+                bool canPlace = Block.canPlace(this, i);
+                bool canDelete = canPlace;
+                
+                if (!level.Buildable) canPlace = false;
+                if (!level.Deletable) canDelete = false;
+                SendSetBlockPermission(i, canPlace, canDelete);
+            }
+            
+            if (!HasCpeExt(CpeExt.BlockDefinitions)) return;
+            for (int i = count; i < 256; i++) {
+                if (BlockDefinition.GlobalDefinitions[i] == null) continue;
+                SendSetBlockPermission((byte)i, level.Buildable, level.Deletable);
+            }
         }
     }
     

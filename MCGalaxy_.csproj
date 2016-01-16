@@ -375,7 +375,6 @@
     <Compile Include="Commands\Other\CmdTake.cs" />
     <Compile Include="Commands\Other\CmdTColor.cs" />
     <Compile Include="Commands\Other\CmdText.cs" />
-    <Compile Include="Commands\Other\CmdTexture.cs" />
     <Compile Include="Commands\Other\CmdTimer.cs" />
     <Compile Include="Commands\Other\CmdTitle.cs" />
     <Compile Include="Commands\Other\CmdTnt.cs" />
@@ -413,6 +412,7 @@
     <Compile Include="Commands\World\CmdRestore.cs" />
     <Compile Include="Commands\World\CmdSave.cs" />
     <Compile Include="Commands\World\CmdSetspawn.cs" />
+    <Compile Include="Commands\World\CmdTexture.cs" />
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\CmdUnlock.cs" />

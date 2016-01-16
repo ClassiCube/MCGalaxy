@@ -74,7 +74,8 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("RandomFlow = " + level.randomFlow);
             writer.WriteLine("GrowTrees = " + level.growTrees);
             writer.WriteLine("Weather = " + level.weather);
-            writer.WriteLine("Texture = " + level.textureUrl);
+            writer.WriteLine("Texture = " + level.terrainUrl);
+            writer.WriteLine("TexturePack = " + level.texturePackUrl);
         }
         
         static string GetName(LevelPermission perm) {
@@ -96,6 +97,7 @@ namespace MCGalaxy.Levels.IO {
                 writer.WriteLine("FogColor = " + level.FogColor);
             
             writer.WriteLine("EdgeLevel = " + level.EdgeLevel);
+            writer.WriteLine("CloudsHeight = " + level.CloudsHeight);
             writer.WriteLine("EdgeBlock = " + level.EdgeBlock);
             writer.WriteLine("HorizonBlock = " + level.HorizonBlock);
         }
@@ -137,6 +139,7 @@ namespace MCGalaxy.Levels.IO {
                             case "lightcolor": level.LightColor = value; break;
                             case "edgeblock": level.EdgeBlock = byte.Parse(value); break;
                             case "edgelevel": level.EdgeLevel = short.Parse(value); break;
+                            case "cloudsheight": level.CloudsHeight = short.Parse(value); break;
                             case "horizonblock": level.HorizonBlock = byte.Parse(value); break;
                     }
                 } catch {
@@ -200,7 +203,9 @@ namespace MCGalaxy.Levels.IO {
                 case "weather":
                     level.weather = byte.Parse(value); break;
                 case "texture":
-                    level.textureUrl = value; break;
+                    level.terrainUrl = value; break;
+                case "texturepack":
+                    level.texturePackUrl = value; break; 
                 case "buildable":
                     level.Buildable = bool.Parse(value); break;
                 case "deletable":

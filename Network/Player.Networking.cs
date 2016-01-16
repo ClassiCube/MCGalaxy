@@ -82,6 +82,11 @@ namespace MCGalaxy {
         void HandleExtInfo( byte[] message ) {
             appName = enc.GetString( message, 0, 64 ).Trim();
             extensionCount = message[65];
+            // NOTE: Workaround as ClassiCube violates the CPE specification here.
+            // If server sends version 2, the client should reply with version 1.
+            // Except ClassiCube just doesn't reply at all if server sends version 2.
+            if (appName == "ClassiCube Client")
+                EnvMapAppearance = 1;
         }
 
         void HandleExtEntry( byte[] message ) {
@@ -384,7 +389,7 @@ namespace MCGalaxy {
                     SendSetMapWeather(level.weather);
                 if (HasCpeExt(CpeExt.EnvColors))
                 	SendCurrentEnvColors();
-                if (HasCpeExt(CpeExt.EnvMapAppearance))
+                if (HasCpeExt(CpeExt.EnvMapAppearance) || HasCpeExt(CpeExt.EnvMapAppearance, 2))
                 	SendCurrentMapAppearance();
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
@@ -636,9 +641,22 @@ namespace MCGalaxy {
         	byte[] buffer = new byte[69];
         	buffer[0] = Opcode.CpeEnvSetMapApperance;
             NetUtils.WriteAscii(url, buffer, 1);
+            Server.s.Log(url + "," + ((char)buffer[1]));
             buffer[65] = sideblock;
             buffer[66] = edgeblock;
             NetUtils.WriteI16(sidelevel, buffer, 67);
+            SendRaw(buffer);
+        }
+        
+        public void SendSetMapAppearanceV2( string url, byte sideblock, byte edgeblock, short sidelevel, short cloudHeight) {
+        	byte[] buffer = new byte[73];
+        	buffer[0] = Opcode.CpeEnvSetMapApperance;
+            NetUtils.WriteAscii(url, buffer, 1);
+            buffer[65] = sideblock;
+            buffer[66] = edgeblock;
+            NetUtils.WriteI16(sidelevel, buffer, 67);
+            NetUtils.WriteI16(cloudHeight, buffer, 69);
+            // TODO: allow changing max view distance
             SendRaw(buffer);
         }
         

@@ -353,7 +353,7 @@ namespace MCGalaxy
         public static bool guestLimitNotify = false;
         public static bool guestJoinNotify = true;
         public static bool guestLeaveNotify = true;
-        public static string defaultTextureUrl = "";
+        public static string defaultTerrainUrl = "", defaultTexturePackUrl = "";
 
         public static bool flipHead = false;
 

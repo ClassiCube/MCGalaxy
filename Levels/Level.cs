@@ -96,7 +96,7 @@ namespace MCGalaxy
         public bool Buildable = true, Deletable = true;
         
         public byte weather;
-        public string textureUrl = "";
+        public string terrainUrl = "", texturePackUrl = "";
 
         public bool cancelsave1;
         public bool cancelunload;
@@ -141,6 +141,8 @@ namespace MCGalaxy
 
         /// <summary> Elevation of the "ocean" that surrounds maps. Set to -1 to use client default (halfway up the map). </summary>
         public short EdgeLevel = -1;
+        
+        public short CloudsHeight = -1;
 
         /// <summary> The block which will be displayed on the horizon. </summary>
         public byte HorizonBlock = Block.water;
@@ -213,6 +215,7 @@ namespace MCGalaxy
                 Length = 16;
 
             name = n;
+            CloudsHeight = (short)(y + 2);
             blocks = new byte[Width * Height * Length];
             ChunksX = (Width + 15) >> 4;
             ChunksY = (Height + 15) >> 4;

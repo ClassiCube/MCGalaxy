@@ -29,11 +29,11 @@ namespace MCGalaxy.Commands {
         public CmdEnvironment() { }
 
         public override void Use(Player p, string message) {
-        	message = message.ToLower();
-        	if (message == "l preset" || message == "level preset") {
-        		SendPresetsMessage(p);
-        		return;
-        	}
+            message = message.ToLower();
+            if (message == "l preset" || message == "level preset") {
+                SendPresetsMessage(p);
+                return;
+            }
             string[] args = null;
             if (message == "" || (args = message.Split(' ')).Length < 3) {
                 Help(p); return;
@@ -55,61 +55,57 @@ namespace MCGalaxy.Commands {
         
         void Handle(Player p, string group, string variable, string value) {
             bool level = group == "l";
+            Level lvl = p.level;
+            
             switch (variable) {
                 case "fog":
-                    SetEnvColour(p, value, 2, "fog", ref p.level.FogColor, level);
-                    break;
+                    SetEnvColour(p, value, 2, "fog", ref lvl.FogColor, level); break;
                 case "cloud":
                 case "clouds":
-                    SetEnvColour(p, value, 1, "cloud", ref p.level.CloudColor, level);
-                    break;
+                    SetEnvColour(p, value, 1, "cloud", ref lvl.CloudColor, level); break;
                 case "sky":
-                    SetEnvColour(p, value, 0, "sky", ref p.level.SkyColor, level);
-                    break;
+                    SetEnvColour(p, value, 0, "sky", ref lvl.SkyColor, level); break;
                 case "dark":
                 case "shadow":
-                    SetEnvColour(p, value, 3, "shadow", ref p.level.ShadowColor, level);
-                    break;
+                    SetEnvColour(p, value, 3, "shadow", ref lvl.ShadowColor, level); break;
                 case "sun":
                 case "light":
                 case "sunlight":
-                    SetEnvColour(p, value, 4, "sunlight", ref p.level.LightColor, level);
-                    break;
+                    SetEnvColour(p, value, 4, "sunlight", ref lvl.LightColor, level); break;
                 case "weather":
-                    SetEnvWeather(p, value, ref p.level.weather, level);
-                    break;
-                    
+                    SetEnvWeather(p, value, ref lvl.weather, level); break;
+                case "cloudsheight":
+                case "cloudheight":
+                    if (!level) {
+                        p.SendMessage("This feature is not available for 'player' target"); return;
+                    }
+                    SetEnvMapAppearanceS(p, value, "clouds height", (short)(lvl.height + 2), ref lvl.CloudsHeight); break;
+                case "waterlevel":
+                case "edgelevel":
                 case "level":
                     if (!level) {
-                        p.SendMessage("This feature is not available for 'player' target");
-                        return;
+                        p.SendMessage("This feature is not available for 'player' target"); return;
                     }
-                    byte ignored = 0;
-                    SetEnvMapAppearance(p, value, "water level", false, 0, ref ignored );
-                    break;
+                    SetEnvMapAppearanceS(p, value, "water level", (short)(lvl.height / 2), ref lvl.EdgeLevel); break;
                 case "horizon":
                 case "edge":
                 case "water":
                     if (!level) {
                         p.SendMessage("This feature is not available for 'player' target"); return;
                     }
-                    SetEnvMapAppearance(p, value, "edge block", true, Block.waterstill, ref p.level.HorizonBlock);
-                    break;
+                    SetEnvMapAppearance(p, value, "edge block", Block.waterstill, ref lvl.HorizonBlock); break;
                 case "side":
                 case "border":
                 case "bedrock":
                     if (!level) {
                         p.SendMessage("This feature is not available for 'player' target"); return;
                     }
-                    SetEnvMapAppearance(p, value, "sides block", true, Block.blackrock, ref p.level.EdgeBlock);
-                    break;
+                    SetEnvMapAppearance(p, value, "sides block", Block.blackrock, ref lvl.EdgeBlock); break;
                 case "preset":
-                    if (!SetPreset(p, value, level))
-                        return;
+                    if (!SetPreset(p, value, level)) return;
                     break;
                 default:
-                    Help(p);
-                    return;
+                    Help(p); return;
             }
             
             if (level)
@@ -178,12 +174,11 @@ namespace MCGalaxy.Commands {
                 }
                 
                 if (weather > 2) {
-                    p.SendMessage("Please use a valid integer (0,1,2) or string (sun,rain,snow)");
-                    return;
+                    p.SendMessage("Please use a valid integer (0,1,2) or string (sun,rain,snow)"); return;
                 }
             }
             
-            if( level )
+            if (level)
                 p.level.weather = weather;
             string weatherType = weather == 0 ? "&sSun" : (weather == 1 ? "&1Rain" : "&fSnow");
             p.SendMessage(string.Format("&aSet weather for {0}&a to {1} ({2}&a)", target, weather, weatherType));
@@ -191,33 +186,39 @@ namespace MCGalaxy.Commands {
             // Send the changed colour to all players affected by the command.
             if (level) {
                 foreach (Player pl in Player.players) {
-                    if (pl.level == p.level && pl.HasCpeExt(CpeExt.EnvWeatherType)) {
+                    if (pl.level == p.level && pl.HasCpeExt(CpeExt.EnvWeatherType))
                         pl.SendSetMapWeather(weather);
-                    }
                 }
             } else if (p.HasCpeExt(CpeExt.EnvWeatherType)) {
                 p.SendSetMapWeather(weather);
             }
         }
         
-        void SetEnvMapAppearance(Player p, string value, string variable,
-                                 bool block, byte defValue, ref byte modifyBlock) {
+        void SetEnvMapAppearance(Player p, string value, string variable, byte defValue, ref byte target) {
             if (IsResetString(value)) {
                 p.SendMessage(string.Format("Reset {0} for {0}&S to normal", variable, p.level.name));
-                if( block )
-                    modifyBlock = defValue;
-                else
-                    p.level.EdgeLevel = (short)(p.level.Height / 2);
+                target = defValue;
             } else {
-                if (block && !CheckBlock(p, value, variable, ref modifyBlock))
-                    return;
-                if( !block && !CheckShort(p, value, variable, ref p.level.EdgeLevel))
-                    return;
+                if (!CheckBlock(p, value, variable, ref target)) return;
             }
-            
+            SendCurrentMapAppearance(p.level);
+        }
+        
+        void SetEnvMapAppearanceS(Player p, string value, string variable, short defValue, ref short target) {
+            if (IsResetString(value)) {
+                p.SendMessage(string.Format("Reset {0} for {0}&S to normal", variable, p.level.name));
+                target = defValue;
+            } else {
+                if (!CheckShort(p, value, variable, ref target)) return;
+            }
+            SendCurrentMapAppearance(p.level);
+        }
+        
+        void SendCurrentMapAppearance(Level lvl) {
             foreach (Player pl in Player.players) {
-                if (pl.HasCpeExt(CpeExt.EnvMapAppearance) && pl.level == p.level)
-        			pl.SendCurrentMapAppearance();
+                bool hasExt = pl.HasCpeExt(CpeExt.EnvMapAppearance) || pl.HasCpeExt(CpeExt.EnvMapAppearance, 2);
+                if (hasExt && pl.level == lvl)
+                    pl.SendCurrentMapAppearance();
             }
         }
         
@@ -292,7 +293,7 @@ namespace MCGalaxy.Commands {
                 }
                 return true;
             } else {
-            	SendPresetsMessage(p);
+                SendPresetsMessage(p);
                 return false;
             }
         }
@@ -328,16 +329,16 @@ namespace MCGalaxy.Commands {
         }
         
         static void SendPresetsMessage(Player p) {
-        	 p.SendMessage("/env l preset [type] -- Uses an env preset on your map");
+             p.SendMessage("/env l preset [type] -- Uses an env preset on your map");
              p.SendMessage("Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
         }
         
         public override void Help(Player p) {
-            p.SendMessage("%T/env [target] [variable] [value]");
-            p.SendMessage("%H  Valid targets: player or p, level or l");
-            p.SendMessage("%H  Valid variables: fog, cloud, sky, sun, shadow, weather");
-            p.SendMessage("%H     level only variables: level, horizon, border, preset");
-            p.SendMessage("%HUsing 'normal' as a value will reset the variable");
+            Player.SendMessage(p, "%T/env [target] [variable] [value]");
+            Player.SendMessage(p, "%H  Valid targets: player or p, level or l");
+            Player.SendMessage(p, "%H  Valid variables: fog, cloud, sky, sun, shadow, weather");
+            Player.SendMessage(p, "%H    level only: level, cloudsheight, horizon, border, preset");
+            Player.SendMessage(p, "%HUsing 'normal' as a value will reset the variable");
         }
     }
 }

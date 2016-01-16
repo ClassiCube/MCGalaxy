@@ -54,10 +54,10 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "No backups for this map exist yet.");
             }
             
-            if (lvl.textureUrl != "") {
-                Player.SendMessage(p, "TexturePack: %b" + lvl.textureUrl);
-            } else if (lvl == Server.mainLevel && Server.defaultTextureUrl != "") {
-                Player.SendMessage(p, "TexturePack: " + Server.defaultTextureUrl);
+            if (lvl.terrainUrl != "") {
+                Player.SendMessage(p, "TexturePack: %b" + lvl.terrainUrl);
+            } else if (lvl == Server.mainLevel && Server.defaultTerrainUrl != "") {
+                Player.SendMessage(p, "TexturePack: " + Server.defaultTerrainUrl);
             } else {
                 Player.SendMessage(p, "No textures for this map exist yet.");
             }

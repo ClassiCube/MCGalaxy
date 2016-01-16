@@ -88,16 +88,16 @@ namespace MCGalaxy {
 								catch { Server.s.Log("port invalid! setting to default."); }
 								break;
 							case "verify-names":
-								Server.verify = ( value.ToLower() == "true" ) ? true : false;
+								Server.verify = value.ToLower() == "true";
 								break;
 							case "public":
-								Server.pub = ( value.ToLower() == "true" ) ? true : false;
+								Server.pub = value.ToLower() == "true";
 								break;
 							case "world-chat":
-								Server.worldChat = ( value.ToLower() == "true" ) ? true : false;
+								Server.worldChat = value.ToLower() == "true";
 								break;
 							//case "guest-goto":
-							//    Server.guestGoto = (value.ToLower() == "true") ? true : false;
+							//    Server.guestGoto = value.ToLower() == "true";
 							//    break;
 							case "max-players":
 								try {
@@ -140,10 +140,10 @@ namespace MCGalaxy {
 								}
 								break;
 							case "irc":
-								Server.irc = ( value.ToLower() == "true" ) ? true : false;
+								Server.irc = value.ToLower() == "true";
 								break;
 							case "irc-colorsenable":
-								Server.ircColorsEnable = ( value.ToLower() == "true" ) ? true : false;
+								Server.ircColorsEnable = value.ToLower() == "true";
 								break;
 							case "irc-server":
 								Server.ircServer = value;
@@ -188,7 +188,7 @@ namespace MCGalaxy {
 
 
 							case "report-back":
-								Server.reportBack = ( value.ToLower() == "true" ) ? true : false;
+								Server.reportBack = value.ToLower() == "true";
 								break;
 							case "backup-time":
 								if ( Convert.ToInt32(value) > 1 ) { Server.backupInterval = Convert.ToInt32(value); }
@@ -197,20 +197,14 @@ namespace MCGalaxy {
 								if ( !value.Contains("System.Windows.Forms.TextBox, Text:") )
 									Server.backupLocation = value;
 								break;
-
-							//case "console-only": // Never used
-							//    Server.console = (value.ToLower() == "true") ? true : false;
-							//    break;
-
 							case "physicsrestart":
-								Server.physicsRestart = ( value.ToLower() == "true" ) ? true : false;
+								Server.physicsRestart = value.ToLower() == "true";
 								break;
 							case "deathcount":
-								Server.deathcount = ( value.ToLower() == "true" ) ? true : false;
+								Server.deathcount = value.ToLower() == "true";
 								break;
-
 							case "usemysql":
-								Server.useMySQL = ( value.ToLower() == "true" ) ? true : false;
+								Server.useMySQL = value.ToLower() == "true";
 								break;
 							case "host":
 								Server.MySQLHost = value;
@@ -354,13 +348,13 @@ namespace MCGalaxy {
 								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
 								break;
 							case "auto-update":
-								Server.autoupdate = ( value.ToLower() == "true" ) ? true : false;
+								Server.autoupdate = value.ToLower() == "true";
 								break;
 							case "use-beta-version":
-								Server.DownloadBeta = (value.ToLower() == "true") ? true : false;
+								Server.DownloadBeta = value.ToLower() == "true";
 								break;
 							case "in-game-update-notify":
-								Server.notifyPlayers = ( value.ToLower() == "true" ) ? true : false;
+								Server.notifyPlayers = value.ToLower() == "true";
 								break;
 							case "update-countdown":
 								try { Server.restartcountdown = Convert.ToInt32(value).ToString(); }
@@ -383,13 +377,13 @@ namespace MCGalaxy {
 								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
 								break;
 							case "use-whitelist":
-								Server.useWhitelist = ( value.ToLower() == "true" ) ? true : false;
+								Server.useWhitelist = value.ToLower() == "true";
 								break;
 							case "premium-only":
-								Server.PremiumPlayersOnly = ( value.ToLower() == "true" ) ? true : false;
+								Server.PremiumPlayersOnly = value.ToLower() == "true";
 								break;
 							case "allow-tp-to-higher-ranks":
-								Server.higherranktp = ( value.ToLower() == "true" ) ? true : false;
+								Server.higherranktp = value.ToLower() == "true";
 								break;
 							case "agree-to-rules-on-entry":
 								try { Server.agreetorulesonentry = bool.Parse(value); }
@@ -405,13 +399,15 @@ namespace MCGalaxy {
 								break;
                             case "default-texture-url":
                                 if (!value.StartsWith("http://") && !value.StartsWith("https://"))
-                                {
-                                    Server.defaultTextureUrl = "";
-                                }
+                                    Server.defaultTerrainUrl = "";
                                 else
-                                {
-                                    Server.defaultTextureUrl = value;
-                                }
+                                    Server.defaultTerrainUrl = value;
+                                break;
+                            case "default-texture-pack-url":
+                                if (!value.StartsWith("http://") && !value.StartsWith("https://"))
+                                    Server.defaultTexturePackUrl = "";
+                                else
+                                    Server.defaultTexturePackUrl = value;
                                 break;
 							case "dollar-before-dollar":
 								try { Server.dollardollardollar = bool.Parse(value); }
@@ -772,7 +768,8 @@ namespace MCGalaxy {
 			w.WriteLine("restart-on-error = " + Server.restartOnError);
             w.WriteLine("menu-style = " + Server.menustyle.ToString());
 			w.WriteLine("main-name = " + Server.level);
-            w.WriteLine("default-texture-url = " + Server.defaultTextureUrl);
+            w.WriteLine("default-texture-url = " + Server.defaultTerrainUrl);
+            w.WriteLine("default-texture-pack-url = " + Server.defaultTexturePackUrl);
 			//w.WriteLine("guest-goto = " + Server.guestGoto);
 			w.WriteLine();
 			w.WriteLine("# irc bot options");

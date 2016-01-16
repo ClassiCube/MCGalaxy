@@ -680,7 +680,7 @@ namespace MCGalaxy {
                     
                     SendExtEntry(CpeExt.BlockPermissions, 1);
                     SendExtEntry(CpeExt.ChangeModel, 1);
-                    SendExtEntry(CpeExt.EnvMapAppearance, 1);
+                    SendExtEntry(CpeExt.EnvMapAppearance, 2);
                     
                     SendExtEntry(CpeExt.EnvWeatherType, 1);
                     SendExtEntry(CpeExt.HackControl, 1);
