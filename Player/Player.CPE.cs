@@ -181,7 +181,8 @@ namespace MCGalaxy
                 string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
                 if (url == "") 
                     url = Server.defaultTexturePackUrl == "" ? Server.defaultTerrainUrl : Server.defaultTexturePackUrl;
-                SendSetMapAppearanceV2(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel, level.CloudsHeight);
+                SendSetMapAppearanceV2(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel, 
+                                       level.CloudsHeight, level.MaxFogDistance);
             } else {
                 string url = level.terrainUrl == "" ? Server.defaultTerrainUrl : level.terrainUrl;
                 SendSetMapAppearance(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);

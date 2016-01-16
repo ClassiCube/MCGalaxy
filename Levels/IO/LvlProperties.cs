@@ -98,6 +98,7 @@ namespace MCGalaxy.Levels.IO {
             
             writer.WriteLine("EdgeLevel = " + level.EdgeLevel);
             writer.WriteLine("CloudsHeight = " + level.CloudsHeight);
+            writer.WriteLine("MaxFog = " + level.MaxFogDistance);
             writer.WriteLine("EdgeBlock = " + level.EdgeBlock);
             writer.WriteLine("HorizonBlock = " + level.HorizonBlock);
         }
@@ -140,6 +141,7 @@ namespace MCGalaxy.Levels.IO {
                             case "edgeblock": level.EdgeBlock = byte.Parse(value); break;
                             case "edgelevel": level.EdgeLevel = short.Parse(value); break;
                             case "cloudsheight": level.CloudsHeight = short.Parse(value); break;
+                            case "maxfog": level.MaxFogDistance = short.Parse(value); break;
                             case "horizonblock": level.HorizonBlock = byte.Parse(value); break;
                     }
                 } catch {

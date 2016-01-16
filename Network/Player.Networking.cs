@@ -641,14 +641,14 @@ namespace MCGalaxy {
         	byte[] buffer = new byte[69];
         	buffer[0] = Opcode.CpeEnvSetMapApperance;
             NetUtils.WriteAscii(url, buffer, 1);
-            Server.s.Log(url + "," + ((char)buffer[1]));
             buffer[65] = sideblock;
             buffer[66] = edgeblock;
             NetUtils.WriteI16(sidelevel, buffer, 67);
             SendRaw(buffer);
         }
         
-        public void SendSetMapAppearanceV2( string url, byte sideblock, byte edgeblock, short sidelevel, short cloudHeight) {
+        public void SendSetMapAppearanceV2( string url, byte sideblock, byte edgeblock, short sidelevel, 
+                                           short cloudHeight, short maxFog ) {
         	byte[] buffer = new byte[73];
         	buffer[0] = Opcode.CpeEnvSetMapApperance;
             NetUtils.WriteAscii(url, buffer, 1);
@@ -656,7 +656,7 @@ namespace MCGalaxy {
             buffer[66] = edgeblock;
             NetUtils.WriteI16(sidelevel, buffer, 67);
             NetUtils.WriteI16(cloudHeight, buffer, 69);
-            // TODO: allow changing max view distance
+            NetUtils.WriteI16(maxFog, buffer, 71);
             SendRaw(buffer);
         }
         

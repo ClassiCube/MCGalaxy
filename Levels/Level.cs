@@ -139,10 +139,14 @@ namespace MCGalaxy
         /// <summary> Color of the blocks in the light (RGB packed into an int). Set to -1 to use client defaults. </summary>
         public string LightColor = null;
 
-        /// <summary> Elevation of the "ocean" that surrounds maps. Set to -1 to use client default (halfway up the map). </summary>
-        public short EdgeLevel = -1;
+        /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
+        public short EdgeLevel;
         
-        public short CloudsHeight = -1;
+        /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
+        public short CloudsHeight;
+        
+        /// <summary> Max fog distance the client can see. Default is 0, meaning use the client-side defined maximum fog distance. </summary>
+        public short MaxFogDistance;
 
         /// <summary> The block which will be displayed on the horizon. </summary>
         public byte HorizonBlock = Block.water;
@@ -215,6 +219,7 @@ namespace MCGalaxy
                 Length = 16;
 
             name = n;
+            EdgeLevel = (short)(y / 2);
             CloudsHeight = (short)(y + 2);
             blocks = new byte[Width * Height * Length];
             ChunksX = (Width + 15) >> 4;

@@ -65,12 +65,10 @@ namespace MCGalaxy.Commands {
             const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
             Player.SendMessage(p, String.Format(format, Color(lvl.FogColor), Color(lvl.SkyColor), Color(lvl.CloudColor),
                                                 Color(lvl.LightColor), Color(lvl.ShadowColor)));
-            if (lvl.EdgeLevel != -1) { Player.SendMessage(p, "Water Level: %b" + lvl.EdgeLevel.ToString()); }
-            else { Player.SendMessage(p, "Water Level: %bdefault"); }
-            if (lvl.EdgeBlock != Block.blackrock) { Player.SendMessage(p, "Edge Block: %b" + lvl.EdgeBlock.ToString()); }
-            else { Player.SendMessage(p, "Edge Block: %bdefault"); }
-            if (lvl.HorizonBlock != Block.water) { Player.SendMessage(p, "Horizon Block: %b" + lvl.HorizonBlock.ToString()); }
-            else { Player.SendMessage(p, "Horizon Block: %bdefault"); }
+            
+            Player.SendMessage(p, "Water Level: %b" + lvl.EdgeLevel + "%S, Clouds height: %b" + lvl.CloudsHeight
+                               + "%S, Max fog distance: %b" + lvl.MaxFogDistance);
+            Player.SendMessage(p, "Edge Block: %b" + lvl.EdgeBlock + "%S, Horizon Block: %b" + lvl.HorizonBlock);
         }
         
         static string Color(string src) {
