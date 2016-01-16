@@ -85,7 +85,7 @@ namespace MCGalaxy {
         public bool disconnected = false;
         public string time;
         public string name;
-		public string DisplayName;
+        public string DisplayName;
         public string SkinName;
         public string realName;
         public int warn = 0;
@@ -231,9 +231,9 @@ namespace MCGalaxy {
         public bool spawned = false;
 
         public bool Mojangaccount {
-        	get {
-        		return truename.Contains('@');
-        	}
+            get {
+                return truename.Contains('@');
+            }
         }
 
         //Undo
@@ -250,11 +250,9 @@ namespace MCGalaxy {
         //Block Change variable holding
         public int[] BcVar;
 
-
         //Movement
-        public ushort oldBlock = 0;
-        public ushort deathCount = 0;
-        public byte deathBlock;
+        public int oldIndex = -1, oldFallY = 10000;
+        public int fallCount = 0, drownCount = 0;
 
         //Games
         public DateTime lastDeath = DateTime.Now;
@@ -428,10 +426,10 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
             }
             try {
-            	SaveUndo();
+                SaveUndo();
             } catch (Exception e) {
-            	Server.s.Log("Error saving undo data.");
-            	Server.ErrorLog(e);
+                Server.s.Log("Error saving undo data.");
+                Server.ErrorLog(e);
             }
         }
 
@@ -463,15 +461,15 @@ namespace MCGalaxy {
                             goto default;
                         length = 65;
                         break; // chat
-					case 16:
-						length = 66;
-						break;
-					case 17:
-						length = 68;
-						break;
-					case 19:
-						length = 1;
-						break;
+                    case 16:
+                        length = 66;
+                        break;
+                    case 17:
+                        length = 68;
+                        break;
+                    case 19:
+                        length = 1;
+                        break;
                     default:
                         if (!dontmindme)
                             Kick("Unhandled message id \"" + msg + "\"!");
@@ -493,7 +491,7 @@ namespace MCGalaxy {
                         case 0:
                             HandleLogin(message);
                             lock (pendingLock)
-                            	pendingNames.Remove(truename);
+                                pendingNames.Remove(truename);
                             break;
                         case 5:
                             if (!loggedIn)
@@ -510,15 +508,15 @@ namespace MCGalaxy {
                                 break;
                             HandleChat(message);
                             break;
-						case 16:
-							HandleExtInfo( message );
-							break;
-						case 17:
-							HandleExtEntry( message );
-							break;
-						case 19:
-							HandleCustomBlockSupportLevel( message );
-							break;
+                        case 16:
+                            HandleExtInfo( message );
+                            break;
+                        case 17:
+                            HandleExtEntry( message );
+                            break;
+                        case 19:
+                            HandleCustomBlockSupportLevel( message );
+                            break;
                     }
                     //thread.Start((object)message);
                     if (buffer.Length > 0)
@@ -531,7 +529,7 @@ namespace MCGalaxy {
             }
             return buffer;
         }
-		
+        
         #region Login
         
         void HandleLogin(byte[] message)
@@ -702,7 +700,7 @@ namespace MCGalaxy {
                 id = FreeId();
                 
                 if (type != 0x42)
-                	 CompleteLoginProcess();
+                     CompleteLoginProcess();
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
@@ -1072,20 +1070,20 @@ namespace MCGalaxy {
                 byte extType = type;
                 
                 if ((action == 0 || type == 0) && !level.Deletable) {
-                	SendMessage("You cannot currently delete blocks in this level.");
-                	RevertBlock(x, y, z); return;
+                    SendMessage("You cannot currently delete blocks in this level.");
+                    RevertBlock(x, y, z); return;
                 } else if (action == 1 && !level.Buildable) {
-                	SendMessage("You cannot currently place blocks in this level.");
-                	RevertBlock(x, y, z); return;
+                    SendMessage("You cannot currently place blocks in this level.");
+                    RevertBlock(x, y, z); return;
                 }
                 
                 if (type >= Block.CpeCount) {
-                	if (!HasCpeExt(CpeExt.BlockDefinitions) 
-                	    || BlockDefinition.GlobalDefinitions[type] == null) {
-                		Kick("Unknown block type!"); return;
-                	}
-                	extType = type;
-                	type = Block.custom_block;
+                    if (!HasCpeExt(CpeExt.BlockDefinitions) 
+                        || BlockDefinition.GlobalDefinitions[type] == null) {
+                        Kick("Unknown block type!"); return;
+                    }
+                    extType = type;
+                    type = Block.custom_block;
                 }
 
                 if ( action == 1 && Server.ZombieModeOn && Server.noPillaring ) {
@@ -1101,7 +1099,7 @@ namespace MCGalaxy {
                         if ( blocksStacked == 4 ) {
                             Command.all.Find("kick").Use(null, name + " No pillaring allowed!");
                         }
-                	}
+                    }
                 }
                 lastYblock = y; lastXblock = x; lastZblock = z;
                 ManualChange(x, y, z, action, type, extType);
@@ -1127,12 +1125,12 @@ namespace MCGalaxy {
             }
 
             if ( !canBuild ) {
-            	RevertBlock(x, y, z); return;
+                RevertBlock(x, y, z); return;
             }
 
             if ( Server.verifyadmins && adminpen ) {
-            	SendMessage("&cYou must use &a/pass [Password]&c to verify!");
-            	RevertBlock(x, y, z); return;
+                SendMessage("&cYou must use &a/pass [Password]&c to verify!");
+                RevertBlock(x, y, z); return;
             }
 
             if ( Server.ZombieModeOn && ( action == 1 || ( action == 0 && this.painting ) ) ) {
@@ -1186,12 +1184,12 @@ namespace MCGalaxy {
             if ( group.Permission == LevelPermission.Banned ) return;
             if ( group.Permission == LevelPermission.Guest ) {
                 int Diff = Math.Abs((pos[0] / 32) - x) + Math.Abs((pos[1] / 32) - y) 
-                	+ Math.Abs((pos[2] / 32) - z);
+                    + Math.Abs((pos[2] / 32) - z);
 
                 if ((Diff > ReachDistance + 4) && lastCMD != "click") {
-                	Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
-                	SendMessage("You can't build that far away.");
-                	RevertBlock(x, y, z); return;
+                    Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
+                    SendMessage("You can't build that far away.");
+                    RevertBlock(x, y, z); return;
                 }
             }
 
@@ -1217,9 +1215,9 @@ namespace MCGalaxy {
             //Ignores updating blocks that are the same and send block only to the player
             byte newBlock = (painting || action == 1) ? type : (byte)0;
             if (b == newBlock && (painting || oldType != type)) {
-            	if (b != Block.custom_block || extType == level.GetExtTile(x, y, z)) {
-            		RevertBlock(x, y, z); return;
-            	}
+                if (b != Block.custom_block || extType == level.GetExtTile(x, y, z)) {
+                    RevertBlock(x, y, z); return;
+                }
             }
             //else
             if ( !painting && action == 0 ) {
@@ -1306,9 +1304,9 @@ namespace MCGalaxy {
             if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return; }
             if ( Block.DoorAirs(b) != 0 ) {
                 if ( level.physics != 0 ) 
-                	level.Blockchange(x, y, z, Block.DoorAirs(b));
+                    level.Blockchange(x, y, z, Block.DoorAirs(b));
                 else 
-                	RevertBlock(x, y, z);
+                    RevertBlock(x, y, z);
                 return;
             }
             if ( Block.odoor(b) != Block.Zero ) {
@@ -1375,10 +1373,10 @@ namespace MCGalaxy {
                     break;
                 case Block.firework:
                     if ( level.physics == 5 ) {
-                    	RevertBlock(x, y, z); return;
+                        RevertBlock(x, y, z); return;
                     }
                     if ( level.physics != 0 ) {
-                    	Random rand = new Random();
+                        Random rand = new Random();
                         int mx = rand.Next(0, 2); int mz = rand.Next(0, 2);
                         byte b1 = level.GetTile((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 ));
                         byte b2 = level.GetTile((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 ));
@@ -1400,7 +1398,7 @@ namespace MCGalaxy {
                     break;
             }
             if ( (level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)( y - 1 ), z) == Block.dirt ) 
-            	level.Blockchange(this, x, (ushort)( y - 1 ), z, Block.grass);
+                level.Blockchange(this, x, (ushort)( y - 1 ), z, Block.grass);
         }
 
         public void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -1463,7 +1461,7 @@ return;
 
             if ( this.incountdown && CountdownGame.gamestatus == CountdownGameStatus.InProgress && CountdownGame.freezemode ) {
                 if ( this.countdownsettemps ) {
-            		countdowntempx = NetUtils.ReadU16(message, 1);
+                    countdowntempx = NetUtils.ReadU16(message, 1);
                     Thread.Sleep(100);
                     countdowntempz = NetUtils.ReadU16(message, 5);
                     Thread.Sleep(100);
@@ -1521,49 +1519,62 @@ cliprot = rot;
             }
         }
 
-        public void RealDeath(ushort x, ushort y, ushort z) {
-            byte b = level.GetTile(x, (ushort)( y - 2 ), z);
-            byte b1 = level.GetTile(x, y, z);
-            if ( oldBlock != (ushort)( x + y + z ) ) {
-                if ( Block.Convert(b) == Block.air ) {
-                    deathCount++;
-                    deathBlock = Block.air;
+        internal void CheckSurvival(ushort x, ushort y, ushort z) {
+            byte bFeet = GetSurvivalBlock(x, (ushort)(y - 2), z);
+            byte bHead = GetSurvivalBlock(x, y, z);
+            if (level.PosToInt(x, y, z) != oldIndex || y != oldFallY) {
+                byte conv = Block.Convert(bFeet);
+                if (conv == Block.air) {
+                    if (y < oldFallY)
+                        fallCount++;
+                    else if (y > oldFallY) // flying up, for example
+                        fallCount = 0;
+                    oldFallY = y;
+                    drownCount = 0;
                     return;
-                }
-                else {
-                    if ( deathCount > level.fall && deathBlock == Block.air ) {
-                        HandleDeath(deathBlock);
-                        deathCount = 0;
-                    }
-                    else if ( deathBlock != Block.water ) {
-                        deathCount = 0;
-                    }
+                } else if (!(conv == Block.water || conv == Block.waterstill ||
+                             conv == Block.lava || conv == Block.lavastill)) {
+                    if (fallCount > level.fall)
+                        HandleDeath(Block.air, null, false, true);
+                    fallCount = 0;
+                    drownCount = 0;
+                    return;
                 }
             }
 
-            switch ( Block.Convert(b1) ) {
+            switch (Block.Convert(bHead)) {
                 case Block.water:
                 case Block.waterstill:
                 case Block.lava:
                 case Block.lavastill:
-                    deathCount++;
-                    deathBlock = Block.water;
-                    if ( deathCount > level.drown * 200 ) {
-                        HandleDeath(deathBlock);
-                        deathCount = 0;
+                    fallCount = 0;
+                    drownCount++;
+                    if (drownCount > level.drown * (100/3)) {
+                        HandleDeath(Block.water);
+                        drownCount = 0;
                     }
                     break;
+                case Block.air:
+                    drownCount = 0;
+                    break;
                 default:
-                    deathCount = 0;
+                    fallCount = 0;
+                    drownCount = 0;
                     break;
             }
+        }
+        
+        byte GetSurvivalBlock(ushort x, ushort y, ushort z) {
+            if (y >= ushort.MaxValue - 512) return Block.blackrock;
+            if (y >= level.Height) return Block.air;
+            return level.GetTile(x, y, z);
         }
 
         public void CheckBlock(ushort x, ushort y, ushort z) {
             y = (ushort)Math.Round((decimal)( ( ( y * 32 ) + 4 ) / 32 ));
 
             byte b = this.level.GetTile(x, y, z);
-            byte b1 = this.level.GetTile(x, (ushort)( (int)y - 1 ), z);
+            byte b1 = this.level.GetTile(x, (ushort)( y - 1 ), z);
 
             if ( Block.Mover(b) || Block.Mover(b1) ) {
                 if ( Block.DoorAirs(b) != 0 )
@@ -1571,7 +1582,7 @@ cliprot = rot;
                 if ( Block.DoorAirs(b1) != 0 )
                     level.Blockchange(x, (ushort)( y - 1 ), z, Block.DoorAirs(b1));
 
-                if ( ( x + y + z ) != oldBlock ) {
+                if ( level.PosToInt( x, y, z ) != oldIndex ) {
                     if ( b == Block.air_portal || b == Block.water_portal || b == Block.lava_portal ) {
                         HandlePortal(this, x, y, z, b);
                     }
@@ -1591,7 +1602,7 @@ cliprot = rot;
             else if ( Block.Death(b) ) HandleDeath(b); else if ( Block.Death(b1) ) HandleDeath(b1);
         }
 
-        public void HandleDeath(byte b, string customMessage = "", bool explode = false) {
+        public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
             ushort x = (ushort)( pos[0] / 32 );
             ushort y = (ushort)( pos[1] / 32 );
             ushort z = (ushort)( pos[2] / 32 );
@@ -1602,7 +1613,7 @@ cliprot = rot;
             OnPlayerDeathEvent.Call(this, b);
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) )
                 return;
-            if ( lastDeath.AddSeconds(2) < DateTime.Now ) {
+            if ( immediate || lastDeath.AddSeconds(2) < DateTime.Now ) {
 
                 if ( level.Killer && !invincible && !hidden ) {
 
@@ -1717,11 +1728,11 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 
                 // handles the /womid client message, which displays the WoM vrersion
                 if ( text.Truncate(6) == "/womid" ) {
-                	string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
-                	Player.GlobalMessage(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
-                	Player.GlobalMessage(c.red + "[INFO] %fVersion: " + version);
-                	Server.s.Log(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
-                	Server.s.Log(c.red + "[INFO] %fVersion: " + version);
+                    string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
+                    Player.GlobalMessage(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
+                    Player.GlobalMessage(c.red + "[INFO] %fVersion: " + version);
+                    Server.s.Log(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
+                    Server.s.Log(c.red + "[INFO] %fVersion: " + version);
                     UsingWom = true;
                     WoMVersion = version.Split('-')[1];
                     SendWomUsers();
@@ -1729,8 +1740,8 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 }
                 
                 if( HasCpeExt(CpeExt.LongerMessages) && continued != 0 ) {
-                	storedMessage += text;
-                	return;
+                    storedMessage += text;
+                    return;
                 }
 
                 if ( storedMessage != "" ) {
@@ -2462,7 +2473,7 @@ return;
                 //message = message.Replace("%", "&");
                 message = Chat.EscapeColours(message);
             else
-            	message = message.Replace("%G", Server.GlobalChatColor);
+                message = message.Replace("%G", Server.GlobalChatColor);
             players.ForEach(delegate(Player p) {
                 if ( p.level.worldChat && p.Chatroom == null && ( !global || !p.muteGlobal ) ) {
                     Player.SendMessage(p, message, !global);
@@ -2536,11 +2547,11 @@ return;
         }
 
         public static void GlobalUpdate() { 
-        	players.ForEach(
-        		delegate(Player p) {
-        			if ( !p.hidden ) 
-        				p.UpdatePosition();
-        		});
+            players.ForEach(
+                delegate(Player p) {
+                    if ( !p.hidden ) 
+                        p.UpdatePosition();
+                });
         }
         #endregion
         #region == DISCONNECTING ==
@@ -2645,24 +2656,24 @@ return;
                             CP437Writer.WriteAllText("text/logout/" + name + ".txt", "Disconnected.");
                         }
                         if ( !hidden ) {
-                    		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + 
-                    			CP437Reader.ReadAllText("text/logout/" + name + ".txt");
-                    		if ((Server.guestLeaveNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
-                    		{
+                            string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + 
+                                CP437Reader.ReadAllText("text/logout/" + name + ".txt");
+                            if ((Server.guestLeaveNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
+                            {
                                 Player.players.ForEach(delegate(Player p1)
-									                       {
-									                       	if (p1.UsingWom)
-									                       	{
-									                       		byte[] buffer = new byte[65];
-									                       		string partMsg = "^detail.user.part=" + color + name + c.white;
-									                       		NetUtils.WriteAscii(partMsg, buffer, 1);
-									                       		p1.SendRaw(Opcode.Message, buffer);
-									                       		buffer = null;
-									                       	}
-									                       	else
-									                       		Player.SendMessage(p1, leavem);
-									                       });
-                    		}
+                                                           {
+                                                               if (p1.UsingWom)
+                                                               {
+                                                                   byte[] buffer = new byte[65];
+                                                                   string partMsg = "^detail.user.part=" + color + name + c.white;
+                                                                   NetUtils.WriteAscii(partMsg, buffer, 1);
+                                                                   p1.SendRaw(Opcode.Message, buffer);
+                                                                   buffer = null;
+                                                               }
+                                                               else
+                                                                   Player.SendMessage(p1, leavem);
+                                                           });
+                            }
                         }
                         //IRCBot.Say(name + " left the game.");
                         Server.s.Log(name + " disconnected.");
@@ -2723,11 +2734,11 @@ level.Unload();
         public void SaveUndo() { SaveUndo(this); }
         
         public static void SaveUndo(Player p) {
-        	try {
-        		UndoFile.SaveUndo(p);
-        	} catch (Exception e) { 
-        		Server.s.Log("Error saving undo data for " + p.name + "!"); Server.ErrorLog(e); 
-        	}
+            try {
+                UndoFile.SaveUndo(p);
+            } catch (Exception e) { 
+                Server.s.Log("Error saving undo data for " + p.name + "!"); Server.ErrorLog(e); 
+            }
         }
 
         public void Dispose() {
@@ -2735,7 +2746,7 @@ level.Unload();
             if ( connections.Contains(this) ) connections.Remove(this);
             Extras.Clear();
             if (CopyBuffer != null)
-            	CopyBuffer.Clear();
+                CopyBuffer.Clear();
             RedoBuffer.Clear();
             UndoBuffer.Clear();
             spamBlockLog.Clear();
@@ -2941,8 +2952,8 @@ Next: continue;
         #endregion
 
         public void RevertBlock(ushort x, ushort y, ushort z) {
-        	byte b = level.GetTile(x, y, z);
-			SendBlockchange(x, y, z, b);
+            byte b = level.GetTile(x, y, z);
+            SendBlockchange(x, y, z, b);
         }
         
         bool CheckBlockSpam() {
@@ -3038,10 +3049,10 @@ Next: continue;
             if (!File.Exists(path)) File.Create(path).Dispose();
             try
             {
-            	using (CP437Writer sw = new CP437Writer(path, true)) {
-            		 sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + 
-            		             Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
-            	}
+                using (CP437Writer sw = new CP437Writer(path, true)) {
+                     sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + 
+                                 Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
+                }
             }
             catch { Server.s.Log("Error saving RankReason!"); }
         }

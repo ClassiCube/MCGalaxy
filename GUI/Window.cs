@@ -1024,7 +1024,7 @@ namespace MCGalaxy.Gui
                     RankTxt.Text = p.group.name;
                     StatusTxt.Text = Player.CheckPlayerStatus(p);
                     IPtxt.Text = p.ip;
-                    DeathsTxt.Text = p.deathCount.ToString();
+                    DeathsTxt.Text = p.fallCount.ToString();
                     Blockstxt.Text = p.overallBlocks.ToString();
                     TimesLoggedInTxt.Text = p.totalLogins.ToString();
                     LoggedinForTxt.Text = Convert.ToDateTime(DateTime.Now.Subtract(p.timeLogged).ToString()).ToString("HH:mm:ss");

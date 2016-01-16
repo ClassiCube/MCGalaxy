@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands
                     case "killer":
                         SetBool(p, lvl, ref lvl.Killer, "Killer blocks: "); break;
                     case "fall": lvl.fall = int.Parse(message.Split(' ')[1]); lvl.ChatLevel("Fall distance: &b" + lvl.fall); break;
-                    case "drown": lvl.drown = int.Parse(message.Split(' ')[1]) * 10; lvl.ChatLevel("Drown time: &b" + (lvl.drown / 10)); break;
+                    case "drown": lvl.drown = int.Parse(message.Split(' ')[1]); lvl.ChatLevel("Drown time: &b" + ((float)lvl.drown / 10)); break;
                     case "unload":
                         SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
                     case "rp":
@@ -184,7 +184,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "MOTD will set a custom motd for the map. (leave blank to reset)");
             Player.SendMessage(p, "Death will allow survival-style dying (falling, drowning)");
             Player.SendMessage(p, "Fall/drown set the distance/time before dying from each.");
-            Player.SendMessage(p, "Drowning value is 15 for one second of air.");
+            Player.SendMessage(p, "Drowning value is 10 for one second of air.");
             Player.SendMessage(p, "Killer turns killer blocks on and off.");
             Player.SendMessage(p, "Unload sets whether the map unloads when no one's there.");
             Player.SendMessage(p, "Load on /goto sets whether the map can be loaded when some uses /goto. Only works if the load on /goto server option is enabled.");

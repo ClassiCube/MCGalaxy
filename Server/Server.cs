@@ -976,10 +976,9 @@ namespace MCGalaxy
                                 z = (ushort)(p.pos[2] / 32);
 
                                 if (p.level.Death)
-                                    p.RealDeath(x, y, z);
+                                    p.CheckSurvival(x, y, z);
                                 p.CheckBlock(x, y, z);
-
-                                p.oldBlock = (ushort)(x + y + z);
+                                p.oldIndex = p.level.PosToInt(x, y, z);
                             }
                             catch (Exception e) { Server.ErrorLog(e); }
                         }
