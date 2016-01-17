@@ -40,10 +40,10 @@ namespace MCGalaxy.Commands {
                 p.SendMessage("Please use http:// or https:// in front of your URL"); return;
             }
             
-            if ((scope == "global" || scope == "level") && !url.EndsWith(".png")) {
+            if ((scope == "global" || scope == "level") && !(url == "" || url.EndsWith(".png"))) {
                 p.SendMessage("The terrain URL must end in a .png"); return;
             }
-            if ((scope == "globalzip" || scope == "levelzip") && !url.EndsWith(".zip")) {
+            if ((scope == "globalzip" || scope == "levelzip") && !(url == "" || url.EndsWith(".zip"))) {
                 p.SendMessage("The texture pack URL must end in a .zip"); return;
             }
             
