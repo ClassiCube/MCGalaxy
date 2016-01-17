@@ -1,3 +1,79 @@
+v1.8.0.0
+- Fixed /undo from console and IRC not doing anything after restart.
+- /texture with a scope without a url will output the current url for that scope.
+- Fixed not being able to whisper from console.
+- Fixed /portal show not working.
+- Fixed 'survival' mode not working properly.
+- Implemented EnvMapAppearance version 2, allowing usage of .zip texture packs, changing of cloud height, and limiting to a max fog distance.
+- Fixed cases where some IRC colour codes were not being converted.
+- Fixed code page 437 characters not working with IRC.
+- Add 'buildable' and 'deleteable' properties to maps, allowing building/deleting to be disabled client side.
+- Fixed IRC announcing secondary disconnect of hidden players.
+- Added /pclients command which outputs which clients the players are using.
+- Implemented BlockDefinitions, with a /gb command to go with it.
+- Removed 'GrieferStone' and old 'Anti-tunneling' code.
+- Fix guns not being disabled on maps that didn't allow guns.
+- Implement a new undo binary file format that is much more efficient space and parsing wise.
+- Removed /quick.
+- Removed the old and broken translation stuff.
+- Fixed some .x IRC commands crashing the server.
+- Fixed /players <rankname> not working.
+- Fixed global chat not working.
+- Implemented CPE LongerMessages extension.
+- Added /reach, allowing players to place/delete blocks further away.
+- Removed /megaboid, removed old MCForge protection code.
+- Fixed /spin not working on recent mono versions.
+- Optimised /copy and /paste to be much more memory efficient.
+- Created /tpa and /hug commands.
+- Implemented CPE CPFull437 extension, allowing usage of all code page 437 characters in chat, commands, and messages.
+- Begun work on BlockDefinitions.
+- Updated help for /env to be more visually nice.
+- DisplayName is used in most places instead of name.
+- Fixed some cases of hidden players being revealed.
+- Added /mark command that 'marks' the current position as a coordinate for selections/cuboids etc.
+- Added /os block, unblock, kickall, kick, and blacklist.
+- /ranks show ranks logs for a player.
+- Added /promote and /demote which also show rank reasons.
+- Prevent hidden players interacting with killer blocks.
+- Added an 'empty' map generation type.
+- Prevent slapping of hidden players.
+- Fix /freeze not working with console.
+- Added /xmodel.
+v1.7.3.0
+- Show env properties in /mapinfo.
+- Add more os commands: weather, env, texture, motd, pervisit, allowguns
+- Cannot set pervisit to higher than own rank.
+- Reintroduced emotes.
+- Fixed model not changing your own player model until reload.
+- Removed Global Chat banlist update.
+- Removed ability to change global change nick.
+- No message causes current level to be used for /unload.
+- Show level texture in /mapinfo, fix level.properties not saving.
+- Created a new /help menu layout.
+- Fixed /scinema error.
+- Created /xnick, /xtitle, /xtcolor, /xcolor.
+- Made warnings visible in IRC/GUI.
+- Temp fix for MCGalaxy-protection-levl.
+- Use /tcolor (or normal color if no title color) for both brakcers in player title.
+- Adminchat should be turned on when using /xhide.
+- Hidden players should not be announced as AFK.
+- prevent /hackrank being used to spam.
+v1.7.0.0
+- Add an api for localhost.
+- Made /reloadcontrollers, not exposed though.
+- Fix commands not working on console.
+- Allow saving own map with /os map save.
+- Fixed /env save issue.
+
+v1.6.0.0
+- Added /quit.
+- Added /env.
+v1.5.1.2
+- Fix IRC commands and colors.
+v1.5.0.7
+ - IRC color codes supported.
+ - /whonick added.
+ - Implemented EnvMapAppearance.
 v1.0.3.1
  - Fixed aliases (hopefully)
 v1.0.0.2

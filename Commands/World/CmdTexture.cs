@@ -30,10 +30,23 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
-            if (args.Length != 2) { Help(p); return; }
             string scope = args[0].ToLower();
-            string url = args[1];
             
+            if (args.Length == 1) {
+            	if (scope == "level")
+            		Player.SendMessage(p, "Level terrain: " + GetPath(p.level.terrainUrl));
+            	else if (scope == "levelzip")
+                    Player.SendMessage(p, "Level tex pack: " + GetPath(p.level.texturePackUrl));
+                else if (scope == "global")
+            		Player.SendMessage(p, "Global terrain: " + GetPath(Server.defaultTerrainUrl));
+            	else if (scope == "globalzip")
+            		Player.SendMessage(p, "Global tex pack: " + GetPath(Server.defaultTexturePackUrl));
+            	else
+            		Help(p);
+            	return; 
+            }
+            
+            string url = args[1];            
             if (url.ToLower() == "normal" || url.ToLower() == "reset") {
                 url = "";
             } else if (!(url.StartsWith("http://") || url.StartsWith("https://"))) {
@@ -64,6 +77,10 @@ namespace MCGalaxy.Commands {
                 p.SendMessage("Set level's texture pack to " + args[1]);
                 UpdateLevel(p, true);
             }
+        }
+        
+        static string GetPath(string url) {
+        	return url == "" ? "(none)" : url;
         }
         
         void UpdateGlobally(Player p, bool zip) {

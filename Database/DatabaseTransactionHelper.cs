@@ -39,7 +39,7 @@ namespace MCGalaxy
                 }
             }
 
-            public abstract void Execute(string query);
+            public abstract bool Execute(string query);
 
             public abstract void Commit();
 

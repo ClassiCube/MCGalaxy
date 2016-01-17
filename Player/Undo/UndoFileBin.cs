@@ -80,6 +80,7 @@ namespace MCGalaxy.Util {
             List<ChunkHeader> list = new List<ChunkHeader>();
             DateTime now = DateTime.Now;
             Player.UndoPos Pos;
+            bool isPlayer = p != null && p.group.Permission < LevelPermission.Nobody;
             
             using (Stream fs = File.OpenRead(path))
                 using (BinaryReader r = new BinaryReader(fs))
@@ -90,7 +91,7 @@ namespace MCGalaxy.Util {
                     Level lvl;
                     if (!CheckChunk(chunk, now, seconds, p, out lvl))
                         return false;
-                    if (lvl == null || lvl != p.level) continue;
+                    if (lvl == null || (isPlayer && lvl != p.level)) continue;
                     
                     Pos.mapName = chunk.LevelName;
                     fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
@@ -113,7 +114,7 @@ namespace MCGalaxy.Util {
                             Pos.newtype = oldType; Pos.newExtType = oldExtType;
                             Pos.extType = newExtType; Pos.timePlaced = now;
                             lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true, "", Pos.newExtType);
-                            if (p != null)
+                            if (isPlayer)
                                 p.RedoBuffer.Add(Pos);
                         }
                     }

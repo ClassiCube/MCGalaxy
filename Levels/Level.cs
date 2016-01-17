@@ -356,9 +356,11 @@ namespace MCGalaxy
                 {
                     int deleted = bP.deleted ? 1 : 0;
                     IntToPos(bP.index, out x, out y, out z);
-                    transaction.Execute(String.Format(template, bP.name,
+                    if (!transaction.Execute(String.Format(template, bP.name,
                                                       bP.TimePerformed.ToString("yyyy-MM-dd HH:mm:ss"),
-                                                      x, y, z, bP.type, deleted));
+                                                      x, y, z, bP.type, deleted))) {
+                    	
+                    }
                 }
                 transaction.Commit();
             }
