@@ -470,26 +470,12 @@ namespace MCGalaxy.Gui
             {
                 string text = txtInput.Text.Trim();
                 if (String.IsNullOrEmpty(text)) return;
-                switch (text[0])
-                {
-                    case '#':
-                        text = text.Remove(0, 1);
-                        MCGalaxy.Chat.GlobalMessageOps(text);
-                        Server.s.OpLog("(OPs): Console: " + text);
-                        Server.IRC.Say("Console: " + text, true);
-                        break;
-                    case '+':
-                        text = text.Remove(0, 1);
-                        MCGalaxy.Chat.GlobalMessageAdmins(text);
-                        Server.s.AdminLog("(Admins): Console: " + text);
-                        Server.IRC.Say("Console: " + text, true);
-                        break;
-                    default:
-                        Player.GlobalMessage("Console [&a" + Server.ZallState + Server.DefaultColor + "]:&f " + text);
-                        Server.IRC.Say("Console [" + Server.ZallState + "]: " + text);
-                        WriteLine("<CONSOLE> " + text);
-                        break;
-                }
+                if (MCGalaxy.Chat.HandleModes(null, text))
+                	return;
+                
+                Player.GlobalMessage("Console [&a" + Server.ZallState + Server.DefaultColor + "]:&f " + text);
+                Server.IRC.Say("Console [" + Server.ZallState + "]: " + text);
+                WriteLine("<CONSOLE> " + text);
                 txtInput.Clear();
             }
         }

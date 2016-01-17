@@ -128,7 +128,6 @@ namespace MCGalaxy.Commands {
             if (p.showPortals) {
                 for (int i = 0; i < Portals.Rows.Count; i++) {
                     DataRow row = Portals.Rows[i];
-                    Server.s.Log( row["EntryX"].GetType().ToString() );
                     if (row["ExitMap"].ToString() == p.level.name)
                         p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), Block.red);
                     p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.green);

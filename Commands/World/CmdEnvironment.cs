@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             message = message.ToLower();
-            if (message == "l preset" || message == "level preset" || message == "") {
+            if (message == "preset" || message == "l preset" || message == "level preset") {
                 SendPresetsMessage(p);
                 return;
             }

@@ -263,7 +263,8 @@ namespace MCGalaxy.Commands {
             if (parts.Length <= 3) {
                 if(parts.Length == 1)
                     Player.SendMessage(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
-                                       "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max");
+                                       "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
+                                       "fogdensity, fogred, foggreen, fogblue, fallback");
                 else
                     Help(p);
                 return;
