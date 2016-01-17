@@ -176,6 +176,7 @@ namespace MCGalaxy {
         }
 
         void Listener_OnPublic(UserInfo user, string channel, string message) {
+        	message = c.IrcToMinecraftColors(message);
         	message = CP437Reader.ConvertLine(message);
             string[] parts = message.Split(new char[] { ' ' }, 3);
             //string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
@@ -229,7 +230,6 @@ namespace MCGalaxy {
                     }
                 }
             }
-            message = c.IrcToMinecraftColors(message);
 
             if(String.IsNullOrEmpty(message.Trim()))
                 message = ".";
