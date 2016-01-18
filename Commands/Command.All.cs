@@ -209,7 +209,6 @@ namespace MCGalaxy
             all.Add(new CmdRainbow());
             all.Add(new CmdRankInfo());
             all.Add(new CmdRankMsg());
-            all.Add(new CmdRanks());
             all.Add(new CmdReachDistance());
             all.Add(new CmdRedo());
             all.Add(new CmdReload());

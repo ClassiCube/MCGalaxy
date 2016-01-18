@@ -6,22 +6,22 @@ namespace MCGalaxy.Commands {
 
         public override string name { get { return "promote"; } }
         public override string shortcut { get { return "pr"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdPromote() { }
+        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             string promoter = (p == null) ? "&a<CONSOLE>" : p.color + p.name;
-            string[] args = message.Split( new char[] { ' ' }, 2 );
+            string[] args = message.Split( trimChars, 2 );
             Player target = null;
             
             if (args.Length == 0 || (target = Player.Find(args[0])) == null) {
-                Help(p); 
-                return;
+                Help(p);  return;
             }
             
-            string reason = args.Length == 1 ? "Unknown" : args[1];    
+            string reason = args.Length == 1 ? Server.customPromoteMessage : args[1];    
             Group next = null;
             int index = Group.GroupList.IndexOf(target.group);
             if (index < Group.GroupList.Count - 1) {
@@ -31,8 +31,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (next != null) {
-                Command.all.Find("setrank").Use(p, target.name + " " + next.name + " " + Server.customPromoteMessage);
-                target.RankReason(DateTime.Now, "&a[PROMOTED]", next.name, reason, promoter);
+                Command.all.Find("setrank").Use(p, target.name + " " + next.name + " " + reason);
             } else {
                 Player.SendMessage(p, "No higher ranks exist");
             }

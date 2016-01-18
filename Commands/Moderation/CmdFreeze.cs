@@ -33,8 +33,8 @@ namespace MCGalaxy.Commands
             if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
             else if (who == p) { Player.SendMessage(p, "Cannot freeze yourself."); return; }
             else if (p != null) { if (who.group.Permission >= p.group.Permission) { Player.SendMessage(p, "Cannot freeze someone of equal or greater rank."); return; } }
-            string frozenby;
-            frozenby = (p == null) ? "<CONSOLE>" : p.color + p.DisplayName;
+            string frozenby = (p == null) ? "<CONSOLE>" : p.color + p.DisplayName;
+            
             if (!who.frozen)
             {
                 who.frozen = true;

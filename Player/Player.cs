@@ -2194,6 +2194,7 @@ return;
                         case "materials": cmd = "blocks"; break;
                         case "zz": cmd = "static"; message = "cuboid"; break;
                         case "fetch": cmd = "summon"; break;
+                        case "ranks": cmd = "help"; message = "ranks"; break;
 
                         default: retry = false; break; //Unknown command, then
                     }
@@ -2955,22 +2956,6 @@ Next: continue;
                 }
                 CurrentAmountOfTnt -= 1;
             }).Start();
-        }
-        
-        public void RankReason(DateTime when, string type, string group, string reason, string assigner)
-        {
-            if (!Directory.Exists("ranks/reasons")) Directory.CreateDirectory("ranks/reasons");
-            string path = "ranks/reasons/" + this.name + ".txt"; 
-
-            if (!File.Exists(path)) File.Create(path).Dispose();
-            try
-            {
-                using (CP437Writer sw = new CP437Writer(path, true)) {
-                     sw.WriteLine(Server.DefaultColor + "[" + when.Day + "." + when.Month + "." + when.Year + "] " + type + 
-                                 Server.DefaultColor + " - " + GetColor(this.name) + group + Server.DefaultColor + " : \"" + reason + "\" by " + GetColor(assigner) + assigner);
-                }
-            }
-            catch { Server.s.Log("Error saving RankReason!"); }
         }
         
         public static bool BlacklistCheck(string name, string foundLevel)

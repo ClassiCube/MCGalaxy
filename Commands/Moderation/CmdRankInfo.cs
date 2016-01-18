@@ -17,63 +17,52 @@
 */
 using System;
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdRankInfo : Command
-    {
+
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdRankInfo : Command {
+		
         public override string name { get { return "rankinfo"; } }
         public override string shortcut { get { return "ri"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdRankInfo() { }
 
-        public override void Use(Player p, string message)
-        {
-            string alltext = CP437Reader.ReadAllText("text/rankinfo.txt");
-            if (message == "")
-            {
-                Help(p);
-                Player.SendMessage(p, "&cYou need to enter a player!");
-                return;
-            }
-            Player who2 = Player.Find(message);
-            if (who2 == null)
-            {
-                Player.SendMessage(p, "&cPlayer &e" + message + " &cHas not been found!");
-                return;
-            }
-            if (!alltext.Contains(message))
-            {
-                Player.SendMessage(p, "&cPlayer &a" + message + "&c has not been ranked yet!");
-                return;
-            }
+        public override void Use(Player p, string message) {
+            if (message == "") { Help(p); return; }
+            Player who = Player.Find(message);
+            string target = who == null ? message : who.name;
 
-            foreach (string line3 in CP437Reader.ReadAllLines("text/rankinfo.txt"))
-            {
-                if (!line3.Contains(message))
-                    continue;
-                string newrank = line3.Split(' ')[7];
-                string oldrank = line3.Split(' ')[8];
-                string assigner = line3.Split(' ')[1];
-                Group newrankcolor = Group.Find(newrank);
-                Group oldrankcolor = Group.Find(oldrank);
-                int minutes = Convert.ToInt32(line3.Split(' ')[2]);
-                int hours = Convert.ToInt32(line3.Split(' ')[3]);
-                int days = Convert.ToInt32(line3.Split(' ')[4]);
-                int months = Convert.ToInt32(line3.Split(' ')[5]);
-                int years = Convert.ToInt32(line3.Split(' ')[6]);
-                var ExpireDate = new DateTime(years, months, days, hours, minutes, 0);
-                Player.SendMessage(p, "&1Rank Information of " + message);
-                Player.SendMessage(p, "&aNew rank: " + newrankcolor.color + newrank);
-                Player.SendMessage(p, "&aOld Rank: " + oldrankcolor.color + oldrank);
-                Player.SendMessage(p, "&aDate of assignment: " + ExpireDate.ToString());
-                Player.SendMessage(p, "&aRanked by: " + assigner);
+            Player.SendMessage(p, "&1Rank Information of " + target);
+            bool found = false;
+            foreach (string line in File.ReadAllLines("text/rankinfo.txt")) {
+                if (!line.Contains(target))
+                    continue;               
+                string[] parts = line.Split(' ');
+                if (parts[0] != target) continue;
+                
+                Group newRank = Group.Find(parts[7]), oldRank = Group.Find(parts[8]);
+                int minutes = Convert.ToInt32(parts[2]), hours = Convert.ToInt32(parts[3]);
+                int days = Convert.ToInt32(parts[4]), months = Convert.ToInt32(parts[5]);
+                int years = Convert.ToInt32(parts[6]);
+                DateTime timeRanked = new DateTime(years, months, days, hours, minutes, 0);
+                string reason = parts.Length <= 9 ? null :
+                	CP437Reader.ConvertLine(parts[9].Replace("%20", " "));
+               
+                Player.SendMessage(p, "&aRank changed from: " + newRank.color + newRank.name 
+                                   + " &ato " + oldRank.color + oldRank.name);
+                Player.SendMessage(p, "&aRanked by: %S" + parts[1] + " &aon %S" + timeRanked);
+                if (reason != null)
+                	Player.SendMessage(p, "&aRank reason: %S" + reason);
+                found = true;
             }
+            if (!found)
+                Player.SendMessage(p, "&cPlayer &a" + target + "&c has not been ranked yet.");
         }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "/rankinfo - Returns the information available about someones ranking");
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "/rankinfo [player] - Returns details about that person's rankings.");
         }
     }
 }
