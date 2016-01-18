@@ -14,102 +14,72 @@
 	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy
-{
-	public static class Ban
-	{
-		/// <summary>
-		/// with Ban you can check the info about someone's ban, find out if there's info about someone, and add / remove someone to the baninfo (NOT THE BANNED.TXT !)
-		/// </summary>
-		/// <param name="p">The player who executed the command</param>
-		/// <param name="who">The player that's banned</param>
-		/// <param name="reason">The reason for the ban</param>
-		/// <param name="stealth">bool, to check if the ban is a stealth ban.</param>
-		/// <param name="oldrank">The rank the who player used to have.</param>
-		public static void Banplayer(Player p, string who, string reason, bool stealth, string oldrank)
-		{
-			// Getting date and time.
+namespace MCGalaxy {
+	
+	/// <summary> Can check the info about someone's ban, find out if there's info about someone,
+	/// and add / remove someone to the baninfo (NOT THE BANNED.TXT !) </summary>
+	public static class Ban {
+		
+		/// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
+		public static void BanPlayer(Player p, string who, string reason, bool stealth, string oldrank) {
 			string dayname = DateTime.Now.DayOfWeek.ToString();
 			string daynumber = DateTime.Now.Day.ToString();
 			string month = DateTime.Now.Month.ToString();
 			string year = DateTime.Now.Year.ToString();
 			string hour = DateTime.Now.Hour.ToString();
 			string minute = DateTime.Now.Minute.ToString();
-			// Creating date + time string that looks nice to read:
 			string datetime = dayname + "%20" + daynumber + "%20" + month + "%20" + year + ",%20at%20" + hour + ":" + minute;
-			// checking if p = player or console
-			string player;
-			if (p == null) player = "Console";
-			else player = p.name.ToLower();
-			// Checking stealth
-			string stealthn;
-			if (stealth) stealthn = "true";
-			else stealthn = "false";
-			if (reason == "") reason = "&c-";
-			Write(player, who.ToLower(), reason, stealthn, datetime, oldrank);
+			
+			string player = p == null ? "(console)" : p.name.ToLower();
+			AddEntry(player, who.ToLower(), reason, stealth.ToString(), datetime, oldrank);
 		}
-		static void Write(string pl, string whol, string reasonl, string stealthstr, string datetimel, string oldrankl)
-		{
+		
+		static void AddEntry(string pl, string who, string reason, string stealth, string datetime, string oldrank) {
 			if (!File.Exists("text/bans.txt"))
-			{
 				File.CreateText("text/bans.txt").Close();
-			}
-			File.AppendAllText("text/bans.txt", pl + " " + whol + " " + reasonl + " " + stealthstr + " " + datetimel + " " + oldrankl + "\r\n");
+			
+			reason = CP437Writer.ConvertFromRaw(reason);
+			File.AppendAllText("text/bans.txt", pl + " " + who + " " + reason + " " + stealth + " " + datetime + " " + oldrank + "\r\n");
 		}
-        /// <summary>
-        /// Checks if there's a ban record found with the specified username
-        /// </summary>
-        /// <param name="who">the Player's username to check</param>
-        /// <returns>if the player is banned</returns>
-		public static bool Isbanned(string who)
-		{
+		
+		/// <summary> Returns whether the given user is banned. </summary>
+		public static bool IsBanned(string who) {
 			who = who.ToLower();
 			foreach (string line in File.ReadAllLines("text/bans.txt"))
-			{
 				if (line.Split(' ')[1] == who) return true;
-			}
 			return false;
 		}
-        /// <summary>
-        /// Gives info about the ban
-        /// </summary>
-        /// <param name="who">the username to check</param>
-        /// <returns>A string array with { banned by, ban reason, stealth ban, date and time, previous rank } or if not found {"","","","",""}</returns>
-		public static string[] Getbandata(string who)
-		{
+		
+		/// <summary> Gives info about the ban of user, as a string array of
+		/// { banned by, ban reason, stealth ban, date and time, previous rank }. </summary>
+		public static string[] GetBanData(string who) {
 			who = who.ToLower();
 			string bannedby = "", reason = "", timedate = "", oldrank = "", stealth = "";
-			foreach (string line in File.ReadAllLines("text/bans.txt"))
-			{
-				if (line.Split(' ')[1] == who)
-				{
-					bannedby = line.Split(' ')[0];
-					reason = line.Split(' ')[2];
-					stealth = line.Split(' ')[3];
-					timedate = line.Split(' ')[4];
-					oldrank = line.Split(' ')[5];
+			foreach (string line in File.ReadAllLines("text/bans.txt")) {
+				string[] parts = line.Split(' ');
+				if (parts[1] == who) {
+					bannedby = parts[0];
+					reason = CP437Reader.ConvertLine(parts[2]);
+					stealth = parts[3];
+					timedate = parts[4];
+					oldrank = parts[5];
 				}
 			}
-			string[] end = { bannedby, reason, timedate, oldrank, stealth };
-			return end;
+			return new[] { bannedby, reason, timedate, oldrank, stealth };
 		}
-        /// <summary>
-        /// Unbans a user
-        /// </summary>
-        /// <param name="name">username to unban</param>
-        /// <returns>If the unban was successfull or not</returns>
-		public static bool Deleteban(string name)
-		{
+		
+		/// <summary> Unbans the given user, returning whether the player was originally banned.
+		public static bool DeleteBan(string name) {
 			name = name.ToLower();
 			bool success = false;
 			StringBuilder sb = new StringBuilder();
-			foreach (string line in File.ReadAllLines("text/bans.txt"))
-			{
+			
+			foreach (string line in File.ReadAllLines("text/bans.txt")) {
 				if (line.Split(' ')[1] != name)
 					sb.Append(line + "\r\n");
 				else
@@ -118,48 +88,29 @@ namespace MCGalaxy
 			File.WriteAllText("text/bans.txt", sb.ToString());
 			return success;
 		}
-        /// <summary>
-        /// Change the banreason for a specific player
-        /// </summary>
-        /// <param name="who">The username to edit the ban reason from</param>
-        /// <param name="reason">The new banreason</param>
-        /// <returns>empty string if succesfull, otherwise error message</returns>
-		public static string Editreason(string who, string reason)
-		{
+		
+		/// <summary> Change the ban reason for the given user. </summary>
+		public static string EditReason(string who, string reason) {
 			who = who.ToLower();
 			bool found = false;
-			string endproduct = "";
-			if (Isbanned(who))
-			{
-				foreach (string line in File.ReadAllLines("text/bans.txt"))
-				{
-					if (line.Split(' ')[1] == who)
-					{
-						string replacethis = line.Split(' ')[2];
-						string oldline = line;
-						string newline = oldline.Replace(replacethis, reason);
-						endproduct = endproduct + newline + "\r\n";
-						found = true;
-					}
-					else
-					{
-						endproduct = endproduct + line + "\r\n";
-					}
-				}
-				if (found)
-				{
-					File.WriteAllText("text/bans.txt", endproduct);
-					return "";
-				}
-				else
-				{
-					return "Couldn't find baninfo about this player!";
+			StringBuilder sb = new StringBuilder();
+			
+			foreach (string line in File.ReadAllLines("text/bans.txt")) {
+				string[] parts = line.Split(' ');
+				if (parts[1] == who) {
+					parts[2] = CP437Writer.ConvertFromRaw(reason);				
+					found = true;
+					sb.Append(String.Join(" ", parts) + "\r\n");
+				} else {
+					sb.Append(line + "\r\n");
 				}
 			}
-			else
-			{
-				return "This player isn't banned!";
+			
+			if (found) {
+				File.WriteAllText("text/bans.txt", sb.ToString());
+				return "";
 			}
+			return "This player isn't banned!";
 		}
 	}
 }

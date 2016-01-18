@@ -15,39 +15,30 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdBanEdit : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdBanEdit : Command {
+		
         public override string name { get { return "banedit"; } }
         public override string shortcut { get { return "be"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdBanEdit() { }
+        static char[] trimChars = { ' ' };
 
-        public override void Use(Player p, string message)
-        {
-            if (message.Split(' ').Length < 2) { Help(p); return; }
-            if (message.Split(' ')[1].Length == 1)
-            {
-                Help(p); return;
-            }
-            string username = message.Split(' ')[0];
-            string creason = message;
-            string reason = creason.Remove(0, username.Length + 1).Replace(" ", "%20");
-            string errormessage = Ban.Editreason(username, reason);
-            if (errormessage != "")
-            {
-                Player.SendMessage(p, errormessage);
-            }
+        public override void Use(Player p, string message) {
+        	string[] args = message.Split(trimChars, 2);
+            if (args.Length < 2) { Help(p); return; }
+
+            string err = Ban.EditReason(args[0], args[1].Replace(" ", "%20"));
+            if (err != "")
+                Player.SendMessage(p, err);
             else
-            {
-                Player.SendMessage(p, "Succesfully edited baninfo about &0" + username + Server.DefaultColor + " to: &2" + reason.Replace("%20", " "));
-            }
+            	Player.SendMessage(p, "Succesfully edited baninfo about &0" + args[0] + " %Sto: &2" + args[1]);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/banedit <username> <reason> - Edits reason of ban for the user.");
         }
     }

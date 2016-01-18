@@ -620,9 +620,9 @@ namespace MCGalaxy {
                     }
                     else
                     {
-                        if (Ban.Isbanned(name))
+                        if (Ban.IsBanned(name))
                         {
-                            string[] data = Ban.Getbandata(name);
+                            string[] data = Ban.GetBanData(name);
                             Kick("You were banned for \"" + data[1] + "\" by " + data[0]);
                         }
                         else

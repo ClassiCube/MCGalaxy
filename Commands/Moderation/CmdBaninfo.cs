@@ -33,9 +33,9 @@ namespace MCGalaxy.Commands
             if (message.Length <= 3) { Help(p); }
             else
             {
-                if (Ban.Isbanned(message))
+                if (Ban.IsBanned(message))
                 {
-                    data = Ban.Getbandata(message);
+                    data = Ban.GetBanData(message);
                     // string[] end = { bannedby, reason, timedate, oldrank, stealth };
                     // usefull to know :-)
                     string reason = data[1].Replace("%20", " ");
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "&9Stealth banned: " + stealth);
                 }
                 else if (!Group.findPerm(LevelPermission.Banned).playerList.Contains(message)) Player.SendMessage(p, "That player isn't banned");
-                else if (!Ban.Isbanned(message)) Player.SendMessage(p, "Couldn't find ban info about " + message + ".");
+                else if (!Ban.IsBanned(message)) Player.SendMessage(p, "Couldn't find ban info about " + message + ".");
             }
         }
         public override void Help(Player p)

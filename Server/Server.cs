@@ -1024,11 +1024,11 @@ namespace MCGalaxy
                 if (whois.rank.Contains("banned"))
                     whois.banned = true;
                 else
-                    whois.banned = Ban.Isbanned(p);
+                    whois.banned = Ban.IsBanned(p);
                 string[] bandata;
                 if (whois.banned)
                 {
-                    bandata = Ban.Getbandata(p);
+                    bandata = Ban.GetBanData(p);
                     whois.banned_by = bandata[0];
                     whois.ban_reason = bandata[1].Replace("%20", " ");
                     whois.banned_time = bandata[2].Replace("%20", " ");

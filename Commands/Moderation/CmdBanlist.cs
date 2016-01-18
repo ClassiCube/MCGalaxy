@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             string endresult = "";
             foreach (string line in File.ReadAllLines("ranks/banned.txt"))
             {
-                if (Ban.Isbanned(line))
+                if (Ban.IsBanned(line))
                 {
                     endresult = endresult + "&a" + line + Server.DefaultColor + ", ";
                 }

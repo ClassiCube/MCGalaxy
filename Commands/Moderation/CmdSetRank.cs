@@ -129,15 +129,7 @@ namespace MCGalaxy.Commands
                 string day = DateTime.Now.Day.ToString();
                 string hour = DateTime.Now.Hour.ToString();
                 string minute = DateTime.Now.Minute.ToString();
-                string assigner;
-                if (p == null)
-                {
-                    assigner = "Console";
-                }
-                else
-                {
-                    assigner = p.name;
-                }
+                string assigner = p == null ? "(console)" : p.name;
                 string allrankinfos = "";
                 foreach (string line in File.ReadAllLines("text/rankinfo.txt"))
                 {
