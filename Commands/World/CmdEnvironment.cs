@@ -308,7 +308,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/env [variable] [value]");
             Player.SendMessage(p, "%H  Valid variables: fog, cloud, sky, sun, shadow, weather");
-            Player.SendMessage(p, "%H    level, cloudsheight, maxfog, horizon, border, preset");
+            Player.SendMessage(p, "%H    level, cloudheight, maxfog, horizon, border, preset");
             Player.SendMessage(p, "%HUsing 'normal' as a value will reset the variable");
         }
     }
