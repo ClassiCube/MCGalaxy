@@ -41,19 +41,12 @@ namespace MCGalaxy.Commands
             }
 
             if (message.IndexOf("'") != -1) { Player.SendMessage(p, "Cannot parse request."); return; }
-			string syntax;
-            string FoundRank = Group.findPlayer(message.ToLower());
+            string syntax = Server.useMySQL ? "SELECT * FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
+            	"SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";           
             Database.AddParams("@Name", message);
-            if (Server.useMySQL)
-            {
-                syntax = "SELECT * FROM Players WHERE Name=@Name COLLATE utf8_general_ci";
-            }
-            else
-            {
-                syntax = "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
-            }
-
             DataTable playerDb = Database.fillData(syntax);
+            
+            string FoundRank = Group.findPlayer(message.ToLower());
             if (playerDb.Rows.Count == 0) { Player.SendMessage(p, Group.Find(FoundRank).color + message + Server.DefaultColor + " has the rank of " + Group.Find(FoundRank).color + FoundRank); return; }
             string title = playerDb.Rows[0]["Title"].ToString();
             string color = c.Parse(playerDb.Rows[0]["color"].ToString().Trim());

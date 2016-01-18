@@ -633,35 +633,24 @@ namespace MCGalaxy
                 if (useMySQL)
                 {
                     // Check if the color column exists.
-                    DataTable colorExists = MySQL.fillData("SHOW COLUMNS FROM Players WHERE `Field`='color'");
-
+                    DataTable colorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='color'");
                     if (colorExists.Rows.Count == 0)
-                    {
-                        MySQL.executeQuery("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
-                        //else SQLite.executeQuery("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
-                    }
+                        Database.executeQuery("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
                     colorExists.Dispose();
 
-                    // Check if the title color column exists.
-                    DataTable tcolorExists = MySQL.fillData("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
-
+                    DataTable tcolorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
                     if (tcolorExists.Rows.Count == 0)
-                    {
-                        MySQL.executeQuery("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
-                        // else SQLite.executeQuery("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
-                    }
+                        Database.executeQuery("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
                     tcolorExists.Dispose();
 
-                    DataTable timespent = MySQL.fillData("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
-
+                    DataTable timespent = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
                     if (timespent.Rows.Count == 0)
-                        MySQL.executeQuery("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked"); //else SQLite.executeQuery("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked");
+                        Database.executeQuery("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked");
                     timespent.Dispose();
 
-                    DataTable totalCuboided = MySQL.fillData("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
-
+                    DataTable totalCuboided = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
                     if (totalCuboided.Rows.Count == 0)
-                        MySQL.executeQuery("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks"); //else SQLite.executeQuery("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks");
+                        Database.executeQuery("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks"); 
                     totalCuboided.Dispose();
                 }
             }

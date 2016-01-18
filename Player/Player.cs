@@ -408,10 +408,7 @@ namespace MCGalaxy {
                 cancelmysql = false;
                 return;
             }
-            if ( !Server.useMySQL )
-                SQLite.executeQuery(commandString);
-            else
-                MySQL.executeQuery(commandString);
+            Database.executeQuery(commandString);
 
             try {
                 if ( !smileySaved ) {

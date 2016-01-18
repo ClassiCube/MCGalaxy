@@ -45,9 +45,9 @@ namespace MCGalaxy.Commands {
 			}
 			
 			if ( Server.useMySQL ) 
-				MySQL.executeQuery("TRUNCATE TABLE `Block" + lvl.name + "`"); 
+				Database.executeQuery("TRUNCATE TABLE `Block" + lvl.name + "`"); 
 			else 
-				SQLite.executeQuery("DELETE FROM `Block" + lvl.name + "`");
+				Database.executeQuery("DELETE FROM `Block" + lvl.name + "`");
 			Player.SendMessage(p, "Cleared &cALL" + Server.DefaultColor + " recorded block changes for: &d" + lvl.name);
 		}
 		

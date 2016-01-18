@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands
             try
             {
                 //safe against SQL injections because no user input is given here
-                if (Server.useMySQL) MySQL.executeQuery("CREATE TABLE if not exists `Inbox" + p.name + "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));"); else SQLite.executeQuery("CREATE TABLE if not exists `Inbox" + p.name + "` (PlayerFrom TEXT, TimeSent DATETIME, Contents TEXT);");
+                if (Server.useMySQL) Database.executeQuery("CREATE TABLE if not exists `Inbox" + p.name + "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));"); 
+                else Database.executeQuery("CREATE TABLE if not exists `Inbox" + p.name + "` (PlayerFrom TEXT, TimeSent DATETIME, Contents TEXT);");
                 if (message == "")
                 {
                     //safe against SQL injections because no user input is given here

@@ -398,7 +398,8 @@ namespace MCGalaxy.Commands {
                                             try {
                                                 //safe against SQL injections, but will be replaced soon by a new feature
                                                 //DB
-                                                if (Server.useMySQL) MySQL.executeQuery("INSERT INTO `Zone" + level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES (0,0,0," + (level.Width - 1) + "," + (level.Height - 1) + "," + (level.Length - 1) + ",'" + p.name + "')"); else SQLite.executeQuery("INSERT INTO `Zone" + level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES (0,0,0," + (level.Width - 1) + "," + (level.Height - 1) + "," + (level.Length - 1) + ",'" + p.name + "')"); //CHECK!!!!
+                                                Database.executeQuery("INSERT INTO `Zone" + level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES " +
+                                                                      "(0,0,0," + (level.Width - 1) + "," + (level.Height - 1) + "," + (level.Length - 1) + ",'" + p.name + "')");
                                                 //DB
                                                 Player.SendMessage(p, "%aZoning Succesful");
                                                 return;
