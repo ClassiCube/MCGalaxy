@@ -247,35 +247,12 @@ namespace MCGalaxy_.Gui
                     }
 
                 talk:
-                    if (s[0] == '@')
-                    {
-                        s = s.Remove(0, 1);
-                        int spacePos = s.IndexOf(' ');
-                        if (spacePos == -1) { Console.WriteLine("No message entered."); continue; }
-                        Player pl = Player.Find(s.Substring(0, spacePos));
-                        if (pl == null) { Console.WriteLine("Player not found."); continue; }
-                        msg = String.Format("&9[>] {0}Console [&a{1}{0}]: &f{2}", Server.DefaultColor, Server.ZallState, s.Substring(spacePos + 1));
-                        Player.SendMessage(pl, msg);
-                    }
-                    else if (s[0] == '#')
-                    {
-                        msg = String.Format("To Ops -{0}Console [&a{1}{0}]&f- {2}", Server.DefaultColor, Server.ZallState, s);
-                        Chat.GlobalMessageOps(msg);
-                        Server.IRC.Say(msg, true);
-                    }
-                    else if (s[0] == '+')
-                    {
-                        msg = String.Format("To Admins -{0}Console [&a{1}{0}]&f- {2}", Server.DefaultColor, Server.ZallState, s);
-                        Chat.GlobalMessageAdmins(msg);
-                        Server.IRC.Say(msg, true);
-                    }
-                    else
-                    {
+                    if (!Chat.HandleModes(null, s)) {
                         msg = String.Format("{0}Console [&a{1}{0}]: &f{2}", Server.DefaultColor, Server.ZallState, s);
                         Player.GlobalMessage(msg);
                         Server.IRC.Say(msg);
+                        WriteToConsole(msg);
                     }
-                    WriteToConsole(msg);
                 }
                 catch (Exception ex)
                 {

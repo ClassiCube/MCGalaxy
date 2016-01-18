@@ -397,7 +397,7 @@ namespace MCGalaxy {
                 ", totalLogin=" + totalLogins +
                 ", totalDeaths=" + overallDeath +
                 ", Money=" + money +
-                ", totalBlocks=" + overallBlocks + " + " + loginBlocks +
+                ", totalBlocks=" + overallBlocks +
                 ", totalKicked=" + totalKicked +
                 ", TimeSpent='" + time +
                 "' WHERE Name='" + name + "'";

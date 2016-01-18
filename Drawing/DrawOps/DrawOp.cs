@@ -80,6 +80,8 @@ namespace MCGalaxy {
                     if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
                     	return;
                     p.level.SetTile(x, y, z, type, p, extType);
+                    p.loginBlocks++;
+                    p.overallBlocks++;
                     break;
             }
         }
