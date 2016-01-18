@@ -40,8 +40,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%a/setspawn");
-            Player.SendMessage(p, "%eSets the default spawn location of the map you are currently located in.");  
+            Player.SendMessage(p, "%T/setspawn");
+            Player.SendMessage(p, "%HSets the default spawn location of the map you are currently located in.");  
         }
     }
 }

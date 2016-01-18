@@ -73,8 +73,11 @@ namespace MCGalaxy.Commands {
                     try { File.Delete("levels/level properties/" + message); } catch { }
 
                     //safe against SQL injections because the levelname (message) is first being checked if it exists
-                    Database.executeQuery("DROP TABLE Block" + message + ", Portals" + message + ", Messages" + message + " Zone" + message + "");
-
+                    Database.executeQuery("DROP TABLE `Block" + message + "`");
+                    Database.executeQuery("DROP TABLE `Portals" + message + "`");
+                    Database.executeQuery("DROP TABLE `Messages" + message + "`");
+                    Database.executeQuery("DROP TABLE `Zone" + message + "`");                    
+                    
                     Player.GlobalMessage("Level " + message + " was deleted.");
                 } else {
                     Player.SendMessage(p, "Could not find specified level.");

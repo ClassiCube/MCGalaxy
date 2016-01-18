@@ -421,6 +421,9 @@
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
     <Compile Include="Player\Chat.cs" />
+    <Compile Include="Player\Group\Group.cs" />
+    <Compile Include="Player\Group\GroupCommands.cs" />
+    <Compile Include="Player\Group\GroupProperties.cs" />
     <Compile Include="Player\Waypoint.cs" />
     <Compile Include="Player\Player.Timers.cs" />
     <Compile Include="Player\Undo\UndoFile.cs" />
@@ -528,7 +531,6 @@
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Database\MySQL.cs" />
     <Compile Include="Player\Team.cs" />
-    <Compile Include="Player\Group.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Server\Extra\Heart.cs" />
     <Compile Include="Levels\RealisticMapGen.cs" />
@@ -706,6 +708,7 @@
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Levels\IO" />
     <Folder Include="Levels\Physics" />
+    <Folder Include="Player\Group" />
     <Folder Include="Player\Undo" />
     <Folder Include="Plugins" />
     <Folder Include="Plugins\Events" />

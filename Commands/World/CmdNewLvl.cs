@@ -70,6 +70,7 @@ namespace MCGalaxy.Commands
 
             try {
                 using (Level lvl = new Level(name, x, y, z, args[4], seed, useSeed)) {
+                    Level.CreateLeveldb(name);
                     lvl.Save(true);
                     lvl.Dispose();
                 }

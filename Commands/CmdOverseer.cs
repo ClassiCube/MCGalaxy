@@ -56,9 +56,6 @@ namespace MCGalaxy.Commands
                     if (!byte.TryParse(arg, out mapNum)) {
                         Help(p); return;
                     }
-                    if (mapNum > p.group.OverseerMaps) {
-                        p.SendMessage("Your rank does not allow you to have more than " + p.group.OverseerMaps + "."); return;
-                    }
                     mapname = p.name.ToLower() + arg;
                 }
                 if (!Server.levels.Any(l => l.name == mapname))
