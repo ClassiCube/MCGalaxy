@@ -42,16 +42,19 @@ namespace MCGalaxy.Commands
 			{
 				case "90":
 				case "y":
-					p.CopyBuffer = RotateY(p.CopyBuffer);
-					goto case "m";
+					p.CopyBuffer = RotateY(p.CopyBuffer); break;
 				case "180":
 					FlipX(p.CopyBuffer); FlipZ(p.CopyBuffer); break;
 				case "upsidedown":
 				case "u":
+				case "mirrory":
 					FlipY(p.CopyBuffer); break;
 				case "mirror":
 				case "m":
+				case "mirrorx":
 					FlipX(p.CopyBuffer); break;
+				case "mirrorz":
+					FlipZ(p.CopyBuffer); break;
 				case "z":
 					p.CopyBuffer = RotateZ(p.CopyBuffer); break;
 				case "x":
@@ -68,12 +71,12 @@ namespace MCGalaxy.Commands
 			CopyState newState = new CopyState(state.X, state.Y, state.Z,
 			                                   state.Width, state.Length, state.Height);
 			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
-			int newMaxY = newState.Height - 1;
+			int oldMaxZ = state.Length - 1;
 			
 			for (int i = 0; i < blocks.Length; i++) {
 				ushort x, y, z;
 				state.GetCoords(i, out x, out y, out z);
-				newState.Set(x, newMaxY - z, y, blocks[i], extBlocks[i]);
+				newState.Set(x, oldMaxZ - z, y, blocks[i], extBlocks[i]);
 			}
 			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
@@ -83,11 +86,12 @@ namespace MCGalaxy.Commands
 			CopyState newState = new CopyState(state.X, state.Y, state.Z,
 			                                   state.Length, state.Height, state.Width);
 			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
+			int oldMaxZ = state.Length - 1;
 			
 			for (int i = 0; i < blocks.Length; i++) {
 				ushort x, y, z;
 				state.GetCoords(i, out x, out y, out z);
-				newState.Set(z, y, x, blocks[i], extBlocks[i]);
+				newState.Set(oldMaxZ - z, y, x, blocks[i], extBlocks[i]);
 			}
 			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
@@ -97,12 +101,12 @@ namespace MCGalaxy.Commands
 			CopyState newState = new CopyState(state.X, state.Y, state.Z,
 			                                   state.Height, state.Width, state.Length);
 			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
-			int newMaxY = newState.Height - 1;
+			int oldMaxX = state.Width - 1;
 			
 			for (int i = 0; i < blocks.Length; i++) {
 				ushort x, y, z;
 				state.GetCoords(i, out x, out y, out z);
-				newState.Set(y, newMaxY - x, z, blocks[i], extBlocks[i]);
+				newState.Set(y, oldMaxX - x, z, blocks[i], extBlocks[i]);
 			}
 			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
 			return newState;
@@ -142,7 +146,7 @@ namespace MCGalaxy.Commands
 		}
 		
 		void FlipZ(CopyState state) {
-			int midZ = state.Width / 2, maxZ = state.Length - 1;
+			int midZ = state.Length / 2, maxZ = state.Length - 1;
 			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
 			
 			for (int y = 0; y < state.Height; y++) {			
@@ -164,8 +168,9 @@ namespace MCGalaxy.Commands
 		}
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "/spin <y/180/mirror/upsidedown> - Spins the copied object.");
-			Player.SendMessage(p, "Shotcuts: m for mirror, u for upside down, x for spin 90 on x, y for spin 90 on y, z for spin 90 on z.");
+			Player.SendMessage(p, "/spin <x/y/z/180/mirrorx/mirrory/mirrorz> - Spins the copied object.");
+			Player.SendMessage(p, "Shortcuts: u for upside down (mirror on y), m for mirror on z");
+			Player.SendMessage(p, "x for spin 90 on x, y for spin 90 on y, z for spin 90 on z.");
 		}
 	}
 }
