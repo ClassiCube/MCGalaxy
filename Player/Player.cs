@@ -228,6 +228,10 @@ namespace MCGalaxy {
         //Center
         public int[] centerstart = new int[3] { 0, 0, 0 };
         public int[] centerend = new int[3] { 0, 0, 0 };
+        
+        // GlobalBlock
+        internal int gbStep = 0;
+        internal BlockDefinition gbBlock;
 
         public string model = "humanoid";
         public bool spawned = false;

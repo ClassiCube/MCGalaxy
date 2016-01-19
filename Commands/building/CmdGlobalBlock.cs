@@ -28,9 +28,6 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdGlobalBlock() { }
-
-        int step = 0;
-        BlockDefinition bd;
         static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
@@ -39,8 +36,8 @@ namespace MCGalaxy.Commands {
                 parts[i] = parts[i].ToLower();
             
             if (message == "") {
-                if (bd != null)
-                    SendStepHelp(p, step);
+                if (GetBD(p) != null)
+                    SendStepHelp(p, GetStep(p));
                 else
                     Help(p);
                 return;
@@ -58,12 +55,11 @@ namespace MCGalaxy.Commands {
                     ListHandler(p, parts); break;
                 case "abort":
                     Player.SendMessage(p, "Aborted the custom block creation process.");
-                    bd = null; break;
+                    SetBD(p, null); break;
                 case "edit":
-                    EditHandler(p, parts); break;
-                    
+                    EditHandler(p, parts); break;                   
                 default:
-                    if (bd != null)
+                    if (GetBD(p) != null)
                         DefineBlockStep(p, message);
                     else
                         Help(p);
@@ -92,14 +88,14 @@ namespace MCGalaxy.Commands {
                 }
             }
             
-            bd = new BlockDefinition();
-            bd.BlockID = (byte)targetId;
+            SetBD(p, new BlockDefinition());
+            GetBD(p).BlockID = (byte)targetId;
             Player.SendMessage(p, "Type '/gb abort' at anytime to abort the creation process.");
             Player.SendMessage(p, "Type '/gb revert' to go back a step in the creation process.");
             Player.SendMessage(p, "Use '/gb <arg>' to enter arguments for the creation process.");
             Player.SendMessage(p, "%f----------------------------------------------------------");
-            step = 2;
-            SendStepHelp(p, step);
+            SetStep(p, 2);
+            SendStepHelp(p, GetStep(p));
         }
         
         byte GetFreeId() {
@@ -152,10 +148,13 @@ namespace MCGalaxy.Commands {
         
         void DefineBlockStep(Player p, string value) {
             string opt = value.ToLower();
+            int step = GetStep(p);
             if (opt == "revert" && step > 2) {
                 step--;
-                SendStepHelp(p, step); return;
+                SendStepHelp(p, step); 
+                SetStep(p, step); return;
             }
+            BlockDefinition bd = GetBD(p);
             
             if (step == 2) {
                 bd.Name = value;
@@ -237,10 +236,12 @@ namespace MCGalaxy.Commands {
                 
                 Player.SendMessage(p, "Created a new custom block " + bd.Name + "(" + bd.BlockID + ")");
                 BlockDefinition.AddGlobal(bd);
-                bd = null;
+                SetBD(p, null);
+                SetStep(p, 0);
                 return;
             }
             SendStepHelp(p, step);
+            SetStep(p, step);
         }
         
         bool EditByte(Player p, string arg, string propName, ref byte target) {
@@ -454,6 +455,23 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Block id must be between 1-254"); return false;
             }
             return true;
+        }
+        
+        static BlockDefinition consoleBD;
+        static int consoleStep = 0;
+        
+        static BlockDefinition GetBD(Player p) { return p == null ? consoleBD : p.gbBlock; }
+        
+        static void SetBD(Player p, BlockDefinition bd) {
+            if (p == null) consoleBD = bd;
+            else p.gbBlock = bd;
+        }
+            
+        static int GetStep(Player p) { return p == null ? consoleStep : p.gbStep; }
+        
+        static void SetStep(Player p, int step) {
+            if (p == null) consoleStep = step;
+            else p.gbStep = step;
         }
         
         public override void Help(Player p) {
