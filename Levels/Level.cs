@@ -372,20 +372,17 @@ namespace MCGalaxy
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
 
-        public static Level Find(string levelName)
-        {
-            Level tempLevel = null;
-            bool returnNull = false;
-
-            foreach (Level level in Server.levels)
-            {
-                if (level.name.ToLower() == levelName) return level;
-                else { continue; }
-                if (tempLevel == null) tempLevel = level;
-                else returnNull = true;
+        public static Level Find(string name) {
+        	name = name.ToLower();
+            Level match = null; int matches = 0;
+            
+            foreach (Level level in Server.levels) {
+                if (level.name.ToLower() == name) return level;
+                if (level.name.ToLower().Contains(name)) {
+                	match = level; matches++;
+                }
             }
-
-            return returnNull ? null : tempLevel;
+            return matches == 1 ? match : null;
         }
 
         public static Level FindExact(string levelName)

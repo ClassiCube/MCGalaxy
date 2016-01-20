@@ -96,22 +96,16 @@ namespace MCGalaxy
         {
             List<Plugin> tempList = new List<Plugin>();
             tempList.AddRange(all);
-            Plugin tempPlayer = null; bool returnNull = false;
+            Plugin match = null; int matches = 0;
+            name = name.ToLower();
 
-            foreach (Plugin p in tempList)
-            {
-                if (p.name.ToLower() == name.ToLower()) return p;
-                if (p.name.ToLower().IndexOf(name.ToLower()) != -1)
-                {
-                    if (tempPlayer == null) tempPlayer = p;
-                    else returnNull = true;
-
+            foreach (Plugin p in tempList) {
+                if (p.name.ToLower() == name) return p;
+                if (p.name.ToLower().Contains(name)) {
+                	match = p; matches++;
                 }
             }
-
-            if (returnNull) return null;
-            if (tempPlayer != null) return tempPlayer;
-            return null;
+            return matches == 1 ? match : null;
         }
         #endregion
 

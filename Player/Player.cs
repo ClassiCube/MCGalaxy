@@ -2693,43 +2693,37 @@ catch { }*/
         public static bool Exists(byte id) {
             foreach ( Player p in players ) { if ( p.id == id ) { return true; } } return false;
         }
+        
         public static Player Find(string name) {
             List<Player> tempList = new List<Player>();
             tempList.AddRange(players);
-            Player tempPlayer = null; bool returnNull = false;
+            Player match = null; int matches = 0;
+            name = name.ToLower();
 
-            foreach ( Player p in tempList ) {
-                if ( p.name.ToLower() == name.ToLower() ) return p;
-                if ( p.name.ToLower().IndexOf(name.ToLower()) != -1 ) {
-                    if ( tempPlayer == null ) tempPlayer = p;
-                    else returnNull = true;
+            foreach (Player p in tempList) {
+                if (p.name.ToLower() == name) return p;
+                if (p.name.ToLower().Contains(name)) {
+                	match = p; matches++;
                 }
             }
-
-            if ( returnNull ) return null;
-            if ( tempPlayer != null ) return tempPlayer;
-            return null;
+            return matches == 1 ? match : null;
         }
-        public static Player FindNick(string nick)
-        {
+        
+        public static Player FindNick(string nick) {
             List<Player> tempList = new List<Player>();
             tempList.AddRange(players);
-            Player tempPlayer = null; bool returnNull = false;
+            Player match = null; int matches = 0;
+            nick = nick.ToLower();
 
-            foreach (Player p in tempList)
-            {
-                if (p.DisplayName.ToLower() == nick.ToLower()) return p;
-                if (p.DisplayName.ToLower().IndexOf(nick.ToLower()) != -1)
-                {
-                    if (tempPlayer == null) tempPlayer = p;
-                    else returnNull = true;
+            foreach (Player p in tempList) {
+                if (p.DisplayName.ToLower() == nick) return p;
+                if (p.DisplayName.ToLower().Contains(nick)) {
+                	match = p; matches++;
                 }
             }
-
-            if (returnNull) return null;
-            if (tempPlayer != null) return tempPlayer;
-            return null;
+            return matches == 1 ? match : null;
         }
+        
         public static Group GetGroup(string name) {
             return Group.findPlayerGroup(name);
         }

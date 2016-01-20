@@ -442,23 +442,17 @@ namespace MCGalaxy
             return 0xFF;
         }
         
-        public static PlayerBot Find(string name)
-        {
-            PlayerBot tempPlayer = null; bool returnNull = false;
+        public static PlayerBot Find(string name) {
+            PlayerBot match = null; int matches = 0;
+            name = name.ToLower();
 
-            foreach (PlayerBot pB in PlayerBot.playerbots)
-            {
-                if (pB.name.ToLower() == name.ToLower()) return pB;
-                if (pB.name.ToLower().IndexOf(name.ToLower()) != -1)
-                {
-                    if (tempPlayer == null) tempPlayer = pB;
-                    else returnNull = true;
+            foreach (PlayerBot pB in PlayerBot.playerbots) {
+                if (pB.name.ToLower() == name) return pB;
+                if (pB.name.ToLower().Contains(name)) {
+                	match = pB; matches++;
                 }
             }
-
-            if (returnNull) return null;
-            if (tempPlayer != null) return tempPlayer;
-            return null;
+            return matches == 1 ? match : null;
         }
         
         public static bool ValidName(string name)
