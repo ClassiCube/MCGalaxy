@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
                 p.SendMessage("The player is not online.");
                 return;
             }
-            p.SendMessage("This player's real usernamename is " + Player.FindNick(message).name);
+            p.SendMessage("This player's real username is " + Player.FindNick(message).name);
         }
         public override void Help(Player p)
         {
