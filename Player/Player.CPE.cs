@@ -40,6 +40,7 @@ namespace MCGalaxy
         public int FullCP437 = 0;
         public int BlockDefinitions = 0;
         public int BlockDefinitionsExt = 0;
+        public int TextColors = 0;
 
         public void AddExtension(string Extension, int version)
         {
@@ -132,6 +133,9 @@ namespace MCGalaxy
                     BlockDefinitions = version; break;
                 case CpeExt.BlockDefinitionsExt:
                     BlockDefinitionsExt = version; break;
+                case CpeExt.TextColors:
+                    hasTextColors = true;
+                    TextColors = version; break;
             }
         }
 
@@ -249,5 +253,6 @@ namespace MCGalaxy
         public const string FullCP437 = "FullCP437";
         public const string BlockDefinitions = "BlockDefinitions";
         public const string BlockDefinitionsExt = "BlockDefinitionsExt";
+        public const string TextColors = "TextColors";
     }
 }

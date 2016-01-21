@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -118,7 +119,7 @@ namespace MCGalaxy {
             }
         }
         
-        public static bool IsValidColor(char c) {
+        public static bool IsStandardColor(char c) {
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
 
@@ -144,15 +145,21 @@ namespace MCGalaxy {
         }
         
         public static bool Map(ref char color) {
-            if (IsValidColor(color)) return true;
+            if (IsStandardColor(color)) return true;
             if (color == 's' || color == 'S') { color = Server.DefaultColor[1]; return true; }
             if (color == 'h' || color == 'H') { color = 'e'; return true; }
             if (color == 't' || color == 'T') { color = 'a'; return true; }
             if (color == 'i' || color == 'I') { color = Server.IRCColour[1]; return true; }
             if (color == 'g' || color == 'G') { color = Server.GlobalChatColor[1]; return true; }
             if (color == 'r' || color == 'R') { color = 'f'; return true; }
-            return false;
+            
+            return GetFallback(color) != '\0';
         }
+		public static CustomColor[] ExtColors = new CustomColor[256];
+		
+		public static char GetFallback(char c) {
+			return (int)c >= 256 ? '\0' : ExtColors[c].Fallback;
+		}
         
         public static string StripColours(string value) {
             if (value.IndexOf('%') == -1)
@@ -304,4 +311,9 @@ namespace MCGalaxy {
             Player.SendMessage(who, "&9[>] " + fullName + ": &f" + message);
         }
     }
+	
+	public struct CustomColor {
+		public char Code, Fallback;
+		public byte R, G, B, A;
+	}
 }

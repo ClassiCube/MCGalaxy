@@ -282,11 +282,8 @@ namespace MCGalaxy.Commands {
         
         static bool IsValidHex(string hex) {
             for (int i = 0; i < hex.Length; i++) {
-                char ch = hex[i];
-                if (ch < '0' || ch > '9' && ch < 'A' || ch > 'F' &&
-                    ch < 'a' || ch > 'f') {
+        		if (!Chat.IsStandardColor(hex[i]))
                     return false;
-                }
             }
             return true;
         }

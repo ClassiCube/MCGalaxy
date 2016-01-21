@@ -57,14 +57,11 @@ namespace MCGalaxy.Commands {
                     if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this)) {
                         switch (par1) {
                             case "apply":
-                                if (p != null) {
-                                    if (p.name == Server.server_owner) {
-                                        Economy.Load();
-                                        Player.SendMessage(p, "%aApplied changes");
-                                    } else Player.SendMessage(p, "%cThis command is only usable by the server owner: %6" + Server.server_owner);
-                                } else { //console fix
+                                if (p == null || p.name == Server.server_owner) {
                                     Economy.Load();
                                     Player.SendMessage(p, "%aApplied changes");
+                                } else {
+                                    Player.SendMessage(p, "%cThis command is only usable by the server owner: %6" + Server.server_owner);
                                 }
                                 return;
                             case "maps":

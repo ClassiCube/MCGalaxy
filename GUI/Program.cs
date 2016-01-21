@@ -174,12 +174,9 @@ namespace MCGalaxy_.Gui
             }
         }
 
-        private static ConsoleColor GetColor(char c)
-        {
+        private static ConsoleColor GetColor(char c) {
         	Chat.Map(ref c);
-            switch (c)
-            {
-                case 'e': return ConsoleColor.Yellow;
+            switch (c) {             
                 case '0': return ConsoleColor.Black;
                 case '1': return ConsoleColor.DarkBlue;
                 case '2': return ConsoleColor.DarkGreen;
@@ -190,13 +187,15 @@ namespace MCGalaxy_.Gui
                 case '6': return ConsoleColor.DarkYellow;
                 case '8': return ConsoleColor.DarkGray;
                 case '9': return ConsoleColor.Blue;
-                case 'a': return ConsoleColor.Green;
-                case 'b': return ConsoleColor.Cyan;
-                case 'c': return ConsoleColor.Red;
-                case 'd': return ConsoleColor.Magenta;
-                //Dont need f, it will default to white.
+                case 'a': case 'A': return ConsoleColor.Green;
+                case 'b': case 'B': return ConsoleColor.Cyan;
+                case 'c': case 'C': return ConsoleColor.Red;
+                case 'd': case 'D': return ConsoleColor.Magenta;
+                case 'e': case 'E': return ConsoleColor.Yellow;
+                case 'f': case 'F': return ConsoleColor.White;
                 default:
-                    return ConsoleColor.White;
+                    char fallback = Chat.GetFallback(c);
+                    return fallback == '\0' ? ConsoleColor.White : GetColor(fallback);
             }
         }
 
@@ -542,7 +541,7 @@ namespace MCGalaxy_.Gui
             catch (Exception e) { Server.ErrorLog(e); }
         }
 
-        static public void ExitProgram(bool AutoRestart)
+        public static void ExitProgram(bool AutoRestart)
         {
             Server.restarting = AutoRestart;
             Server.shuttingDown = true;
@@ -591,7 +590,7 @@ namespace MCGalaxy_.Gui
             })).Start();
         }
 
-        static public void saveAll(bool restarting)
+        public static void saveAll(bool restarting)
         {
             try
             {

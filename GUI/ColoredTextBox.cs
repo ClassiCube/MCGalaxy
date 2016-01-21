@@ -172,7 +172,7 @@ namespace MCGalaxy.Gui.Components {
                 string split = messagesSplit[i];
                 if ( String.IsNullOrEmpty(split.Trim()) )
                     continue;
-                Color? color = GetDimColorFromChar(split[0]);
+                Color? color = GetColor(split[0]);
                 Append(color != null ? split.Substring(1) : split, color ?? foreColor, BackColor);
             }
 
@@ -373,7 +373,7 @@ namespace MCGalaxy.Gui.Components {
         #endregion
         
         /// <summary> Gets a color from a char. </summary>
-        public static Color? GetDimColorFromChar( char c ) {
+        public static Color? GetColor( char c ) {
         	Chat.Map( ref c );
             switch ( c ) {
                 case '0': return Color.Black;
@@ -392,9 +392,10 @@ namespace MCGalaxy.Gui.Components {
                 case 'd': return Color.FromArgb( 255, 225, 34, 225 );
                 case 'e': return Color.FromArgb( 255, 225, 225, 34 );
                 case 'f': return Color.Black;
-                default: return null;
+                default:
+                    char fallback = Chat.GetFallback(c);
+                    return fallback == '\0' ? null : GetColor(fallback);
             }
         }
-
     }
 }

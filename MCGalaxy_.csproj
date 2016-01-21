@@ -136,6 +136,7 @@
     <Compile Include="Commands\Building\CmdWrite.cs" />
     <Compile Include="Commands\building\DrawCmd.cs" />
     <Compile Include="Commands\building\ReplaceCmd.cs" />
+    <Compile Include="Commands\Chat\Class1.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
     <Compile Include="Commands\Chat\CmdChatRoom.cs" />
     <Compile Include="Commands\Chat\CmdGcaccept.cs" />

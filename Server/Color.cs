@@ -121,6 +121,12 @@ namespace MCGalaxy {
             input = Chat.EscapeColours(input);
             StringBuilder sb = new StringBuilder(input);
             
+            for (int i = 0; i < 128; i++) {
+            	CustomColor col = Chat.ExtColors[i];
+            	if (col.Fallback == '\0') continue;
+            	sb.Replace("&" + col.Code, "&" + col.Fallback);
+            }
+            
             foreach (var kvp in ircColors)
                 sb.Replace(kvp.Key, kvp.Value);
             return sb.ToString();

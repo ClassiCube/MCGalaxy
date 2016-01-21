@@ -74,7 +74,7 @@ namespace MCGalaxy {
             }
         }
         
-        public bool hasCpe = false, hasCustomBlocks = false, finishedLogin = false;
+        public bool hasCpe = false, hasCustomBlocks = false, hasTextColors, finishedLogin = false;
         public string appName;
         public int extensionCount;
         public List<string> extensions = new List<string>();
@@ -218,15 +218,14 @@ namespace MCGalaxy {
             	message = Chat.EscapeColours(message);
             StringBuilder sb = new StringBuilder(message);
 
-            if (colorParse) {                
-                // Begin fix to replace all invalid color codes typed in console or chat with "."
-                for ( char ch = '\0'; ch <= '/'; ch++ ) // Characters that cause clients to disconnect
-                    sb.Replace("&" + ch, String.Empty);
-                for ( char ch = ':'; ch <= '`'; ch++ ) // Characters that cause clients to disconnect
-                    sb.Replace("&" + ch, String.Empty);
-                for ( char ch = 'g'; ch <= '\u007F'; ch++ ) // Characters that cause clients to disconnect
-                    sb.Replace("&" + ch, String.Empty);
-                // End fix
+            if (colorParse) {
+            	for (int i = 0; i < 128; i++) {
+            		if (Chat.IsStandardColor((char)i)) continue;
+            		CustomColor col = Chat.ExtColors[i];
+            		
+            		if (col.Fallback == '\0' || !hasTextColors)
+            			sb.Replace("&" + (char)i, "");
+            	}
             }
             
             Chat.ApplyDollarTokens(sb, this, colorParse);
