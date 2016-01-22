@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
             }
             
             foreach (Player pl in Player.players) {
-                if (pl.level != p.level || p == pl || pl.hidden ||pl.referee)
+                if (pl.level != p.level || p == pl || pl.hidden || pl.referee)
                     continue;
                 
                 string name = null;

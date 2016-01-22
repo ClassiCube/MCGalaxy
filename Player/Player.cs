@@ -2057,8 +2057,6 @@ return;
                     else {
                         SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                     }
-                    if ( OnBecomeBrony != null )
-                        OnBecomeBrony(this);
                     return;
                 }
                 if ( cmd.ToLower() == "rainbowdashlikescoolthings" ) {
@@ -2069,8 +2067,6 @@ return;
                     else {
                         SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                     }
-                    if ( OnSonicRainboom != null )
-                        OnSonicRainboom(this);
                     return;
                 }
 
@@ -2408,30 +2404,19 @@ return;
             {
                 if (p.Loading && p != from) { return; }
                 if (p.level != from.level || (from.hidden && !self)) { return; }
+                
                 if (p != from)
                 {
-                    if (Server.ZombieModeOn && !p.aka)
-                    {
-                        if (from.infected)
-                        {
+                    if (Server.ZombieModeOn && !p.aka) {
+                        if (from.infected) {
                             if (Server.ZombieName != "")
                                 p.SendSpawn(from.id, c.red + Server.ZombieName + possession, x, y, z, rotx, roty);
                             else
                                 p.SendSpawn(from.id, c.red + from.name + possession, x, y, z, rotx, roty);
-                            return;
-                        }
-                        else if (from.referee)
-                        {
-                            return;
-                        }
-                        else
-                        {
+                        } else if (!from.referee) {
                             p.SendSpawn(from.id, from.color + from.name + possession, x, y, z, rotx, roty);
-                            return;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         p.SendSpawn(from.id, from.color + from.name + possession, x, y, z, rotx, roty);
                     }
                 }

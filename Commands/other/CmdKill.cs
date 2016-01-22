@@ -1,20 +1,20 @@
 /*
-	Copyright 2011 MCGalaxy
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2011 MCGalaxy
+        
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 namespace MCGalaxy.Commands
 {
     public sealed class CmdKill : Command
@@ -25,84 +25,38 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdKill() { }
+        static char[] trimChars = { ' ' };
 
-        public override void Use(Player p, string message)
-        {
-            if (message == "") { Help(p); return; }
+        public override void Use(Player p, string message) {
+            if (message == "") { Help(p); return; }         
+            bool explode = false;
+            string deathMessage;
+            string killer = p == null ? "(console)" : p.color + p.DisplayName;
+            string[] args = message.Split(trimChars, 2);
+            
+            Player who = Player.Find(args[0]);
+            if (args.Length >= 2) {
+                if(args[1].ToLower() == "explode") {
+                    deathMessage = " was exploded by " + killer;
+                    explode = true;
+                } else {
+                    deathMessage = " " + args[1];
+                }
+            } else {
+                deathMessage = " was killed by " + killer;
+            }           
 
-            Player who; string killMsg; int killMethod = 0;
-            if (message.IndexOf(' ') == -1)
-            {
-                who = Player.Find(message);
+            if (who == null) {
                 if (p != null)
-                {
-                    killMsg = " was killed by " + p.color + p.DisplayName;
-                }
-                else
-                {
-                    killMsg = " was killed by " + "the Console.";
-                }
-            }
-            else
-            {
-                who = Player.Find(message.Split(' ')[0]);
-                message = message.Substring(message.IndexOf(' ') + 1);
-
-                if (message.IndexOf(' ') == -1)
-                {
-                    if (message.ToLower() == "explode")
-                    {
-                        if (p != null)
-                        {
-                            killMsg = " was exploded by " + p.color + p.DisplayName;
-                        }
-                        else
-                        {
-                            killMsg = " was exploded by the Console.";
-                        }
-                        killMethod = 1;
-                    }
-                    else
-                    {
-                        killMsg = " " + message;
-                    }
-                }
-                else
-                {
-                    if (message.Split(' ')[0].ToLower() == "explode")
-                    {
-                        killMethod = 1;
-                        message = message.Substring(message.IndexOf(' ') + 1);
-                    }
-
-                    killMsg = " " + message;
-                }
+                    p.HandleDeath(Block.rock, " killed themselves in their confusion");
+                Player.SendMessage(p, "Could not find player"); return;
             }
 
-            if (who == null)
-            {
-                if (p != null)
-                {
-                    p.HandleDeath(Block.rock, " killed itself in its confusion");
-                }
-                Player.SendMessage(p, "Could not find player");
-                return;
+            if (p != null && who.group.Permission > p.group.Permission) {
+                p.HandleDeath(Block.rock, " was killed by " + who.color + who.DisplayName);
+                Player.SendMessage(p, "Cannot kill someone of higher rank"); return;
             }
-
-            if (p != null)
-            {
-                if (who.group.Permission > p.group.Permission)
-                {
-                    p.HandleDeath(Block.rock, " was killed by " + who.color + who.DisplayName);
-                    Player.SendMessage(p, "Cannot kill someone of higher rank");
-                    return;
-                }
-            }
-
-            if (killMethod == 1)
-                who.HandleDeath(Block.rock, killMsg, true);
-            else
-                who.HandleDeath(Block.rock, killMsg);
+            who.HandleDeath(Block.rock, deathMessage, explode);
         }
         public override void Help(Player p)
         {
