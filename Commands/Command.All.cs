@@ -75,6 +75,7 @@ namespace MCGalaxy
             all.Add(new CmdCrashServer());
             all.Add(new CmdCTF());
             all.Add(new CmdCuboid());
+            all.Add(new CmdCustomColors());
             all.Add(new CmdDelete());
             all.Add(new CmdDeleteLvl());
             all.Add(new CmdDelTempRank());
@@ -168,7 +169,7 @@ namespace MCGalaxy
             all.Add(new CmdMute());
             all.Add(new CmdNewLvl());
             all.Add(new CmdNews());
-            all.Add (new CmdNick ());
+            all.Add(new CmdNick());
             all.Add(new CmdOHide());
             all.Add(new CmdOpChat());
             all.Add(new CmdOpRules());

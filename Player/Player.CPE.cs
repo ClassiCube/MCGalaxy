@@ -135,7 +135,12 @@ namespace MCGalaxy
                     BlockDefinitionsExt = version; break;
                 case CpeExt.TextColors:
                     hasTextColors = true;
-                    TextColors = version; break;
+                    TextColors = version;
+                    
+                    for (int i = 0; i < Chat.ExtColors.Length; i++) {
+                        if (Chat.ExtColors[i].Undefined) continue;
+                        Chat.SendSetTextColor(this, Chat.ExtColors[i]);
+                    } break;
             }
         }
 
@@ -161,6 +166,7 @@ namespace MCGalaxy
                     case CpeExt.FullCP437: return FullCP437 == version;
                     case CpeExt.BlockDefinitions: return BlockDefinitions == version;
                     case CpeExt.BlockDefinitionsExt: return BlockDefinitionsExt == version;
+                    case CpeExt.TextColors: return TextColors == version;
                     default: return false;
             }
         }

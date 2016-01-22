@@ -2196,7 +2196,7 @@ return;
                         case "mapload": cmd = "load"; break;
                         case "colour": cmd = "color"; break;
                         case "materials": cmd = "blocks"; break;
-                        case "zz": cmd = "static"; message = "cuboid"; break;
+                        case "zz": cmd = "static"; message = "cuboid " + message; break;
                         case "fetch": cmd = "summon"; break;
                         case "ranks": cmd = "help"; message = "ranks"; break;
 

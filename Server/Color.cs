@@ -123,7 +123,7 @@ namespace MCGalaxy {
             
             for (int i = 0; i < 128; i++) {
             	CustomColor col = Chat.ExtColors[i];
-            	if (col.Fallback == '\0') continue;
+            	if (col.Undefined) continue;
             	sb.Replace("&" + col.Code, "&" + col.Fallback);
             }
             

@@ -1057,6 +1057,7 @@ namespace MCGalaxy
             ProfanityFilter.Init();
             Alias.Load();
             BlockDefinition.LoadGlobal("blocks.json");
+            Chat.LoadExtColors();
         }
 
         public static void Setup()

@@ -48,6 +48,7 @@ namespace MCGalaxy.Commands
 
             Player.SendMessage(p, playerNames);
             playerDb.Dispose();
+            System.Math.Sign(System.Convert.ToInt32(0));
         }
         public override void Help(Player p)
         {

@@ -223,7 +223,7 @@ namespace MCGalaxy {
             		if (Chat.IsStandardColor((char)i)) continue;
             		CustomColor col = Chat.ExtColors[i];
             		
-            		if (col.Fallback == '\0' || !hasTextColors)
+            		if (col.Undefined || !hasTextColors)
             			sb.Replace("&" + (char)i, "");
             	}
             }

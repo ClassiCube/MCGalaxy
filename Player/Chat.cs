@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -151,15 +152,9 @@ namespace MCGalaxy {
             if (color == 't' || color == 'T') { color = 'a'; return true; }
             if (color == 'i' || color == 'I') { color = Server.IRCColour[1]; return true; }
             if (color == 'g' || color == 'G') { color = Server.GlobalChatColor[1]; return true; }
-            if (color == 'r' || color == 'R') { color = 'f'; return true; }
-            
+            if (color == 'r' || color == 'R') { color = 'f'; return true; }            
             return GetFallback(color) != '\0';
-        }
-		public static CustomColor[] ExtColors = new CustomColor[256];
-		
-		public static char GetFallback(char c) {
-			return (int)c >= 256 ? '\0' : ExtColors[c].Fallback;
-		}
+        }		
         
         public static string StripColours(string value) {
             if (value.IndexOf('%') == -1)
@@ -310,10 +305,70 @@ namespace MCGalaxy {
             Player.SendMessage(p, Server.DefaultColor + "[<] " + who.FullName + ": &f" + message);
             Player.SendMessage(who, "&9[>] " + fullName + ": &f" + message);
         }
+		
+        public static CustomColor[] ExtColors = new CustomColor[256];
+        
+        public static char GetFallback(char c) {
+            return (int)c >= 256 ? '\0' : ExtColors[c].Fallback;
+        }
+        
+        public static void AddExtColor(CustomColor col) { SetExtCol(col); }
+        
+        public static void RemoveExtColor(char code) {
+            CustomColor col = default(CustomColor);
+            col.Code = code;
+            SetExtCol(col);
+        }
+        
+        static void SetExtCol(CustomColor col) {
+            ExtColors[col.Code] = col;
+            foreach (Player p in Player.players) {
+                if (!p.HasCpeExt(CpeExt.TextColors)) continue;
+                SendSetTextColor(p, col);
+            }
+            SaveExtColors();
+        }
+        
+        internal static void SendSetTextColor(Player p, CustomColor col) {
+            byte[] buffer = new byte[6];
+            buffer[0] = Opcode.CpeSetTextColor;
+            buffer[1] = col.R; buffer[2] = col.G; buffer[3] = col.B; buffer[4] = col.A; 
+            buffer[5] = (byte)col.Code;
+            p.SendRaw(buffer);
+        }
+        
+        internal static void SaveExtColors() {
+            using (StreamWriter w = new StreamWriter("text/colors.txt")) {
+                foreach (CustomColor col in ExtColors) {
+                    if (col.Undefined) continue;
+                    w.Write(col.Code + " " + col.Fallback + " " + 
+                            col.R + " " + col.G + " " + col.B + " " + col.A);              
+                }
+            }
+        }
+        
+        internal static void LoadExtColors() {
+            if (!File.Exists("text/colors.txt")) return;
+            string[] lines = File.ReadAllLines("text/colors.txt");
+            CustomColor col = default(CustomColor);
+            
+            for (int i = 0; i < lines.Length; i++) {
+                string[] parts = lines[i].Split(' ');
+                if (parts.Length != 6) continue;
+                col.Code = parts[0][0]; col.Fallback = parts[1][0];
+                
+                if (!Byte.TryParse(parts[2], out col.R) || !Byte.TryParse(parts[3], out col.G) ||
+                    !Byte.TryParse(parts[4], out col.B) || !Byte.TryParse(parts[5], out col.A))
+                    continue;
+                ExtColors[col.Code] = col;
+            }
+        }
     }
-	
-	public struct CustomColor {
-		public char Code, Fallback;
-		public byte R, G, B, A;
-	}
+    
+    public struct CustomColor {
+        public char Code, Fallback;
+        public byte R, G, B, A;
+        
+        public bool Undefined { get { return Fallback == '\0'; } }
+    }
 }

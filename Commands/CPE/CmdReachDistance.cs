@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
 			
 			float dist;
 			if( !float.TryParse(message, out dist)) {
-				Player.SendMessage(p, "\"" + message + "\", is not a valid distance.");
+				Player.SendMessage(p, "\"" + message + "\", is not a valid distance."); return;
 			}
 			int packedDist = (int)(dist * 32);
 			if (packedDist < 0) packedDist = 160;
