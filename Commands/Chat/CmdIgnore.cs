@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (p == null) { Player.SendMessage(p, "This command can only be used in-game!"); return; }
+            if (p == null) { MessageInGameOnly(p); return; }
             if (message.Split(' ')[0] == "all")
             {
                 p.ignoreglobal = !p.ignoreglobal;

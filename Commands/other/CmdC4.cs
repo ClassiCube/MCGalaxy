@@ -26,28 +26,19 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdC4() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (p != null)
-            {
-                if (p.level.physics >= 1 && p.level.physics < 5)
-                {
-                    sbyte numb = Level.C4.NextCircuit(p.level);
-                    Level.C4.C4s c4 = new Level.C4.C4s(numb);
-                    p.level.C4list.Add(c4);
-                    p.c4circuitNumber = numb;
-                    Player.SendMessage(p, "Place any block for c4 and place a " + c.red + "red" + Server.DefaultColor + " block for the detonator!");
-                    p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
-                    return;
-                }
-                else
-                {
-                    Player.SendMessage(p, "To use c4, the physics level must be 1, 2, 3 or 4");
-                    return;
-                }
+        public override void Use(Player p, string message) {
+        	if (p == null) { MessageInGameOnly(p); return; }
+        	
+            if (p.level.physics >= 1 && p.level.physics < 5) {
+                sbyte numb = Level.C4.NextCircuit(p.level);
+                Level.C4.C4s c4 = new Level.C4.C4s(numb);
+                p.level.C4list.Add(c4);
+                p.c4circuitNumber = numb;
+                Player.SendMessage(p, "Place any block for c4 and place a " + c.red + "red" + Server.DefaultColor + " block for the detonator!");
+                p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            } else {
+                Player.SendMessage(p, "To use c4, the physics level must be 1, 2, 3 or 4");
             }
-            Player.SendMessage(p, "This command can only be used in-game!");
-            return;
         }
         public override void Help(Player p)
         {

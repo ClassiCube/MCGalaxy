@@ -28,18 +28,12 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (p == null)
-            {
-                Player.SendMessage(p, "This command can only be used in-game");
-                return;
-            }
-            else
-            {
-                int click1 = (ushort)(p.pos[0] / 32);
-                int click2 = (ushort)((p.pos[1] / 32) - 1);
-                int click3 = (ushort)(p.pos[2] / 32);
-                Command.all.Find("click").Use(p, click1 + " " + click2 + " " + click3);
-            }
+            if (p == null) { MessageInGameOnly(p); return; }
+            
+            int x = (ushort)(p.pos[0] / 32);
+            int y = (ushort)((p.pos[1] / 32) - 1);
+            int z = (ushort)(p.pos[2] / 32);
+            Command.all.Find("click").Use(p, x + " " + y + " " + z);
         }
         public override void Help(Player p)
         {

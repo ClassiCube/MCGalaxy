@@ -37,18 +37,13 @@ namespace MCGalaxy
 		public static CommandList all = new CommandList();
 		public static CommandList core = new CommandList();
 		
-		/// <summary>
-		/// Add a command to the server
-		/// </summary>
-		/// <param name="command">The command to add</param>
-		public void AddCommand(Command command)
-		{
-			all.Add(command);
-		}
-		
 		protected static void RevertAndClearState(Player p, ushort x, ushort y, ushort z) {
 			p.ClearBlockchange();
 			p.RevertBlock(x, y, z);
+		}
+		
+		protected void MessageInGameOnly(Player p) {
+			Player.SendMessage(p, "/" + name + " can only be used in-game.");
 		}
 	}
 	

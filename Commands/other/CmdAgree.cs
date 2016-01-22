@@ -32,14 +32,10 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
+        	if (p == null) { MessageInGameOnly(p); return; }
             if (Server.agreetorulesonentry == false)
             {
                 Player.SendMessage(p, "This command can only be used if agree-to-rules-on-entry is enabled!");
-                return;
-            }
-            if (p == null)
-            {
-                Player.SendMessage(p, "This command can only be used in-game");
                 return;
             }
             //If someone is ranked before agreeing to the rules they are locked and cannot use any commands unless demoted back to guest

@@ -27,10 +27,9 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
         public override void Use(Player p, string message) {
-            if (p == null) {
-                Server.s.Log("This command can only be used in-game."); return;
-            }
+            if (p == null) { MessageInGameOnly(p); return; }
             string[] parts = message.ToLower().Split(' ');
+            
             if (parts.Length == 0) {
                 if (Server.Chatrooms.Count == 0) {
                     Player.SendMessage(p, "There are currently no rooms");

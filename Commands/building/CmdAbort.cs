@@ -28,28 +28,24 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (p != null)
+        	if (p == null) { MessageInGameOnly(p); return; }
+            p.ClearBlockchange();
+            p.painting = false;
+            p.BlockAction = 0;
+            p.cmdTimer = false;
+            p.staticCommands = false;
+            p.deleteMode = false;
+            p.ZoneCheck = false;
+            p.modeType = 0;
+            p.aiming = false;
+            p.onTrain = false;
+            p.isFlying = false;
+            try
             {
-                p.ClearBlockchange();
-                p.painting = false;
-                p.BlockAction = 0;
-                p.cmdTimer = false;
-                p.staticCommands = false;
-                p.deleteMode = false;
-                p.ZoneCheck = false;
-                p.modeType = 0;
-                p.aiming = false;
-                p.onTrain = false;
-                p.isFlying = false;
-                try
-                {
-                    p.level.blockqueue.RemoveAll(b => b.p == p);
-                }
-                finally { BlockQueue.resume(); }
-                Player.SendMessage(p, "Every toggle or action was aborted.");
-                return;
+                p.level.blockqueue.RemoveAll(b => b.p == p);
             }
-            Player.SendMessage(p, "This command can only be used in-game!");
+            finally { BlockQueue.resume(); }
+            Player.SendMessage(p, "Every toggle or action was aborted.");
         }
         public override void Help(Player p)
         {

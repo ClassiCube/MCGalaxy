@@ -32,16 +32,9 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (p == null)
-            {
-                Player.SendMessage(p, "This command can not be used in console!");
-                return;
-            }
-            if (message == "")
-            {
-                Help(p);
-                return;
-            }
+            if (p == null) { MessageInGameOnly(p); return; }
+            if (message == "") { Help(p); return; }
+            
             int length = message.Split(' ').Length;
             try
             {

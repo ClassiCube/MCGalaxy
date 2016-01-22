@@ -31,26 +31,22 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            if (p == null) {
-                Player.SendMessage(p, "This command can only be used in-game!"); return;
-            }
-                try
-                {
-                    if (message.ToLower() == "all")
-                    {
-                    	PlayerBot.RemoveAllFromLevel(p.level);
-                    }
-                    else
-                    {
-                        PlayerBot who = PlayerBot.Find(message);
-                        if (who == null) { Player.SendMessage(p, "There is no bot " + who + "!"); return; }
-                        if (p.level != who.level) { Player.SendMessage(p, who.name + " is in a different level."); return; }
-                        PlayerBot.Remove(who);
-                        Player.SendMessage(p, "Removed bot.");
-                    }
+            if (p == null) { MessageInGameOnly(p); return; }
+            
+            try
+            {
+                if (message.ToLower() == "all") {
+                    PlayerBot.RemoveAllFromLevel(p.level);
+                } else {
+                    PlayerBot who = PlayerBot.Find(message);
+                    if (who == null) { Player.SendMessage(p, "There is no bot " + who + "!"); return; }
+                    if (p.level != who.level) { Player.SendMessage(p, who.name + " is in a different level."); return; }
+                    PlayerBot.Remove(who);
+                    Player.SendMessage(p, "Removed bot.");
                 }
-                catch (Exception e) { Server.ErrorLog(e); Player.SendMessage(p, "Error caught"); }
             }
+            catch (Exception e) { Server.ErrorLog(e); Player.SendMessage(p, "Error caught"); }
+        }
         
         public override void Help(Player p)
         {

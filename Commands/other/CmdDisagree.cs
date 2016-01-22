@@ -30,6 +30,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
+        	if (p == null) { MessageInGameOnly(p); return; }
             if (!Server.agreetorulesonentry)
             {
                 Player.SendMessage(p, "This command can only be used if agree-to-rules-on-entry is enabled in the console!");
@@ -38,11 +39,6 @@ namespace MCGalaxy.Commands
             if (p.group.Permission > LevelPermission.Guest)
             {
                 Player.SendMessage(p, "Your awesomeness prevents you from using this command");
-                return;
-            }
-            if (p == null)
-            {
-                Player.SendMessage(p, "This command can only be used in-game");
                 return;
             }
             p.Kick("If you don't agree with the rules, consider playing elsewhere.");

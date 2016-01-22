@@ -33,15 +33,11 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (p != null)
-            {
-                Player.SendMessage(p, "Break/build a block to display information.");
-                p.ClearBlockchange();
-                p.Blockchange += new Player.BlockchangeEventHandler(AboutBlockchange);
-                return;
-            }
-            Player.SendMessage(p, "This command can only be used in-game");
-            
+        	if (p == null) { MessageInGameOnly(p); return; }
+
+            Player.SendMessage(p, "Break/build a block to display information.");
+            p.ClearBlockchange();
+            p.Blockchange += new Player.BlockchangeEventHandler(AboutBlockchange);            
         }
         public override void Help(Player p)
         {

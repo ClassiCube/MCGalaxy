@@ -28,9 +28,7 @@ namespace MCGalaxy.Commands
         public CmdDraw() { }
 
         public override void Use(Player p, string message) {
-            if (p == null) {
-                Player.SendMessage(p, "This command can only be used in-game!"); return;
-            }
+            if (p == null) { MessageInGameOnly(p); return; }
             if (p.level.permissionbuild > p.group.Permission) {
                 p.SendMessage("You can not edit this map."); return;
             }

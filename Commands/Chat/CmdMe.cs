@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Player.SendMessage(p, "You"); return; }
-            if (p == null) { Player.SendMessage(p, "This command can only be used in-game!"); return; }
+            if (p == null) { MessageInGameOnly(p); return; }
 
             if (p.muted) { Player.SendMessage(p, "You are currently muted and cannot use this command."); return; }
             if (Server.chatmod && !p.voice) { Player.SendMessage(p, "Chat moderation is on, you cannot emote."); return; }

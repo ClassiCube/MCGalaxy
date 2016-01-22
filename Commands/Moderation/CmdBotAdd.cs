@@ -26,22 +26,16 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdBotAdd() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (p != null)
-            {
-                if (!Player.ValidName(message)) { Player.SendMessage(p, "bot name " + message + " not valid!"); return; }
-                PlayerBot bot = new PlayerBot(message, p.level, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
-                PlayerBot.Add(bot);
-                //who.SendMessage("You were summoned by " + p.color + p.name + "&e.");
-                return;
-            }
-            Player.SendMessage(p, "This command can only be used in-game");
+            if (p == null) { MessageInGameOnly(p); return; }
+            
+            if (!Player.ValidName(message)) { Player.SendMessage(p, "bot name " + message + " not valid!"); return; }
+            PlayerBot bot = new PlayerBot(message, p.level, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+            PlayerBot.Add(bot);
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/botadd <name> - Add a  new bot at your position.");
         }
     }

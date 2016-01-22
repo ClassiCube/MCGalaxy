@@ -27,12 +27,8 @@ namespace MCGalaxy.Commands {
 		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
 		public override void Use(Player p, string message) {
-			if (p == null) {
-				Player.SendMessage(p, "This command cannot be used from console."); return;
-			}
-			if (message == "") {
-				Help(p); return;
-			}
+			if (p == null) { MessageInGameOnly(p); return; }
+			if (message == "") { Help(p); return; }
 			
 			float dist;
 			if( !float.TryParse(message, out dist)) {
