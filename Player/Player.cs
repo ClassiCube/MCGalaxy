@@ -2835,7 +2835,7 @@ Next: continue;
             }
             return lines;
         }
-        public static bool ValidName(string name, Player p = null) {
+        public static bool ValidName(string name) {
             string allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._+";
             return name.All(ch => allowedchars.IndexOf(ch) != -1);
         }

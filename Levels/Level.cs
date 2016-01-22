@@ -317,6 +317,7 @@ namespace MCGalaxy
 
             try
             {
+                PlayerBot.RemoveAllFromLevel(this);
                 //physChecker.Stop();
                 //physChecker.Dispose();
                 physThread.Abort();

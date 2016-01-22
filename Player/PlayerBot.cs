@@ -1,32 +1,33 @@
 /*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-namespace MCGalaxy
-{
-    public sealed class PlayerBot
-    {
+using System.Timers;
+
+namespace MCGalaxy {
+    
+    public sealed class PlayerBot {
+        
         public static List<PlayerBot> playerbots = new List<PlayerBot>(64);
 
-        public bool hunt = false;
-        public bool kill = false;
+        public bool hunt = false, kill = false;
 
         public string AIName = "";
         public string name;
@@ -46,319 +47,297 @@ namespace MCGalaxy
         bool jumping = false;
         int currentjump = 0;
 
-        public System.Timers.Timer botTimer = new System.Timers.Timer(100);
-        public System.Timers.Timer moveTimer = new System.Timers.Timer(100 / 24);
-        public System.Timers.Timer jumpTimer = new System.Timers.Timer(95);
+        System.Timers.Timer botTimer = new System.Timers.Timer(100);
+        System.Timers.Timer moveTimer = new System.Timers.Timer(100 / 24);
+        System.Timers.Timer jumpTimer = new System.Timers.Timer(95);
+        static readonly object botsLock = new object();
 
         #region == constructors ==
-        public PlayerBot(string n, Level l)
-        {
-            Server.s.Log("adding " + n + " bot");
+        public PlayerBot(string n, Level lvl, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             name = n;
             color = "&1";
             id = FreeId();
+            
+            level = lvl;
+            SetPos(x, y, z, rotx, roty);
 
-            level = l;
-            ushort x = (ushort)((0.5 + level.spawnx) * 32);
-            ushort y = (ushort)((1 + level.spawny) * 32);
-            ushort z = (ushort)((0.5 + level.spawnz) * 32);
-            pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
-            GlobalSpawn();
+            botTimer.Elapsed += BotTimerFunc;
+            botTimer.Start();
+            moveTimer.Elapsed += MoveTimerFunc;
+            moveTimer.Start();
         }
-        public PlayerBot(string n, Level l, ushort x, ushort y, ushort z, byte rotx, byte roty)
-        {
-            name = n;
-            color = "&1";
-            id = FreeId();
+        
+        void BotTimerFunc(object sender, ElapsedEventArgs e) {
+            int currentNum, foundNum = (32 * 75);
+            Random rand = new Random();
+            ushort x = (ushort)Math.Round((decimal)pos[0] / 32);
+            ushort y = (ushort)((pos[1] - 33) / 32);
+            ushort z = (ushort)Math.Round((decimal)pos[2] / 32);
 
-            level = l;
-            pos = new ushort[3] { x, y, z }; rot = new byte[2] { rotx, roty };
-            GlobalSpawn();
-
-            foreach (Player p in Player.players)
+            if (kill)
             {
-                if (p.level == level)
+                foreach (Player p in Player.players)
                 {
-                    Player.SendMessage(p, color + name + Server.DefaultColor + ", the bot, has been added.");
-                }
-            }
-
-            botTimer.Elapsed += delegate
-            {
-                int currentNum, foundNum = (32 * 75);
-                Random rand = new Random();
-
-                x = (ushort)Math.Round((decimal)pos[0] / (decimal)32);
-                y = (ushort)((pos[1] - 33) / 32);
-                z = (ushort)Math.Round((decimal)pos[2] / (decimal)32);
-
-                if (kill)
-                {
-                    foreach (Player p in Player.players)
+                    if ((ushort)(p.pos[0] / 32) == x)
                     {
-                        if ((ushort)(p.pos[0] / 32) == x)
+                        if (Math.Abs((ushort)(p.pos[1] / 32) - y) < 2)
                         {
-                            if (Math.Abs((ushort)(p.pos[1] / 32) - y) < 2)
+                            if ((ushort)(p.pos[2] / 32) == z)
                             {
-                                if ((ushort)(p.pos[2] / 32) == z)
-                                {
-                                    p.HandleDeath(Block.Zero);
-                                }
+                                p.HandleDeath(Block.Zero);
                             }
                         }
                     }
                 }
+            }
 
-                if (Waypoints.Count < 1)
-                {
-                    if (hunt)
-                        Player.players.ForEach(delegate(Player p)
-                        {
-                            if (p.level == level && !p.invincible)
-                            {
-                                currentNum = Math.Abs(p.pos[0] - pos[0]) + Math.Abs(p.pos[1] - pos[1]) + Math.Abs(p.pos[2] - pos[2]);
-                                if (currentNum < foundNum)
-                                {
-                                    foundNum = currentNum;
-                                    foundPos = p.pos;
-                                    foundRot = p.rot;
-                                    movement = true;
-                                    rot[1] = (byte)(255 - foundRot[1]);
-                                    if (foundRot[0] < 128) rot[0] = (byte)(foundRot[0] + 128);
-                                    else rot[0] = (byte)(foundRot[0] - 128);
-                                }
-                            }
-                        });
-                }
-                else
-                {
-                    bool skip = false;
-                    movement = false;
+            if (Waypoints.Count == 0)
+            {
+                if (hunt)
+                    Player.players.ForEach(delegate(Player p)
+                                           {
+                                               if (p.level == level && !p.invincible)
+                                               {
+                                                   currentNum = Math.Abs(p.pos[0] - pos[0]) + Math.Abs(p.pos[1] - pos[1]) + Math.Abs(p.pos[2] - pos[2]);
+                                                   if (currentNum < foundNum)
+                                                   {
+                                                       foundNum = currentNum;
+                                                       foundPos = p.pos;
+                                                       foundRot = p.rot;
+                                                       movement = true;
+                                                       rot[1] = (byte)(255 - foundRot[1]);
+                                                       if (foundRot[0] < 128) rot[0] = (byte)(foundRot[0] + 128);
+                                                       else rot[0] = (byte)(foundRot[0] - 128);
+                                                   }
+                                               }
+                                           });
+            }
+            else
+            {
+                bool skip = false;
+                movement = false;
 
                 retry: switch (Waypoints[currentPoint].type)
-                    {
-                        case "walk":
-                            foundPos[0] = Waypoints[currentPoint].x;
-                            foundPos[1] = Waypoints[currentPoint].y;
-                            foundPos[2] = Waypoints[currentPoint].z;
-                            movement = true;
+                {
+                    case "walk":
+                        foundPos[0] = Waypoints[currentPoint].x;
+                        foundPos[1] = Waypoints[currentPoint].y;
+                        foundPos[2] = Waypoints[currentPoint].z;
+                        movement = true;
 
-                            if ((ushort)(pos[0] / 32) == (ushort)(Waypoints[currentPoint].x / 32))
+                        if ((ushort)(pos[0] / 32) == (ushort)(Waypoints[currentPoint].x / 32))
+                        {
+                            if ((ushort)(pos[2] / 32) == (ushort)(Waypoints[currentPoint].z / 32))
                             {
-                                if ((ushort)(pos[2] / 32) == (ushort)(Waypoints[currentPoint].z / 32))
-                                {
-                                    rot[0] = Waypoints[currentPoint].rotx;
-                                    rot[1] = Waypoints[currentPoint].roty;
-                                    currentPoint++;
-                                    movement = false;
+                                rot[0] = Waypoints[currentPoint].rotx;
+                                rot[1] = Waypoints[currentPoint].roty;
+                                currentPoint++;
+                                movement = false;
 
-                                    if (currentPoint == Waypoints.Count) currentPoint = 0;
-                                    if (!skip) { skip = true; goto retry; }
-                                }
+                                if (currentPoint == Waypoints.Count) currentPoint = 0;
+                                if (!skip) { skip = true; goto retry; }
                             }
-                            break;
-                        case "teleport":
-                            pos[0] = Waypoints[currentPoint].x;
-                            pos[1] = Waypoints[currentPoint].y;
-                            pos[2] = Waypoints[currentPoint].z;
-                            rot[0] = Waypoints[currentPoint].rotx;
-                            rot[1] = Waypoints[currentPoint].roty;
-                            currentPoint++;
-                            if (currentPoint == Waypoints.Count) currentPoint = 0;
-                            return;
-                        case "wait":
-                            if (countdown != 0)
+                        }
+                        break;
+                    case "teleport":
+                        pos[0] = Waypoints[currentPoint].x;
+                        pos[1] = Waypoints[currentPoint].y;
+                        pos[2] = Waypoints[currentPoint].z;
+                        rot[0] = Waypoints[currentPoint].rotx;
+                        rot[1] = Waypoints[currentPoint].roty;
+                        currentPoint++;
+                        if (currentPoint == Waypoints.Count) currentPoint = 0;
+                        return;
+                    case "wait":
+                        if (countdown != 0)
+                        {
+                            countdown--;
+                            if (countdown == 0)
                             {
-                                countdown--;
-                                if (countdown == 0)
-                                {
-                                    currentPoint++;
-                                    if (currentPoint == Waypoints.Count) currentPoint = 0;
-                                    if (!skip) { skip = true; goto retry; }
-                                }
+                                currentPoint++;
+                                if (currentPoint == Waypoints.Count) currentPoint = 0;
+                                if (!skip) { skip = true; goto retry; }
                             }
-                            else
-                            {
-                                countdown = Waypoints[currentPoint].seconds;
-                            }
-                            return;
-                        case "nod":
-                            if (countdown != 0)
-                            {
-                                countdown--;
+                        }
+                        else
+                        {
+                            countdown = Waypoints[currentPoint].seconds;
+                        }
+                        return;
+                    case "nod":
+                        if (countdown != 0)
+                        {
+                            countdown--;
 
-                                if (nodUp)
-                                {
-                                    if (rot[1] > 32 && rot[1] < 128) nodUp = !nodUp;
-                                    else
-                                    {
-                                        if (rot[1] + (byte)Waypoints[currentPoint].rotspeed > 255) rot[1] = 0;
-                                        else rot[1] += (byte)Waypoints[currentPoint].rotspeed;
-                                    }
-                                }
+                            if (nodUp)
+                            {
+                                if (rot[1] > 32 && rot[1] < 128) nodUp = !nodUp;
                                 else
                                 {
-                                    if (rot[1] > 128 && rot[1] < 224) nodUp = !nodUp;
-                                    else
-                                    {
-                                        if (rot[1] - (byte)Waypoints[currentPoint].rotspeed < 0) rot[1] = 255;
-                                        else rot[1] -= (byte)Waypoints[currentPoint].rotspeed;
-                                    }
-                                }
-
-                                if (countdown == 0)
-                                {
-                                    currentPoint++;
-                                    if (currentPoint == Waypoints.Count) currentPoint = 0;
-                                    if (!skip) { skip = true; goto retry; }
+                                    if (rot[1] + (byte)Waypoints[currentPoint].rotspeed > 255) rot[1] = 0;
+                                    else rot[1] += (byte)Waypoints[currentPoint].rotspeed;
                                 }
                             }
                             else
                             {
-                                countdown = Waypoints[currentPoint].seconds;
-                            }
-                            return;
-                        case "spin":
-                            if (countdown != 0)
-                            {
-                                countdown--;
-
-                                if (rot[0] + (byte)Waypoints[currentPoint].rotspeed > 255) rot[0] = 0;
-                                else if (rot[0] + (byte)Waypoints[currentPoint].rotspeed < 0) rot[0] = 255;
-                                else rot[0] += (byte)Waypoints[currentPoint].rotspeed;
-
-                                if (countdown == 0)
+                                if (rot[1] > 128 && rot[1] < 224) nodUp = !nodUp;
+                                else
                                 {
-                                    currentPoint++;
-                                    if (currentPoint == Waypoints.Count) currentPoint = 0;
-                                    if (!skip) { skip = true; goto retry; }
+                                    if (rot[1] - (byte)Waypoints[currentPoint].rotspeed < 0) rot[1] = 255;
+                                    else rot[1] -= (byte)Waypoints[currentPoint].rotspeed;
                                 }
                             }
-                            else
-                            {
-                                countdown = Waypoints[currentPoint].seconds;
-                            }
-                            return;
-                        case "speed":
-                            movementSpeed = (int)Math.Round((decimal)((decimal)24 / (decimal)100 * (decimal)Waypoints[currentPoint].seconds));
-                            if (movementSpeed == 0) movementSpeed = 1;
 
-                            currentPoint++;
-                            if (currentPoint == Waypoints.Count) currentPoint = 0;
-                            if (!skip) { skip = true; goto retry; }
-                            return;
-                        case "reset":
-                            currentPoint = 0;
-                            return;
-                        case "remove":
-                            removeBot();
-                            return;
-                        case "linkscript":
-                            if (File.Exists("bots/" + Waypoints[currentPoint].newscript))
+                            if (countdown == 0)
                             {
-                                Command.all.Find("botset").Use(null, this.name + " " + Waypoints[currentPoint].newscript);
-                                return;
+                                currentPoint++;
+                                if (currentPoint == Waypoints.Count) currentPoint = 0;
+                                if (!skip) { skip = true; goto retry; }
                             }
+                        }
+                        else
+                        {
+                            countdown = Waypoints[currentPoint].seconds;
+                        }
+                        return;
+                    case "spin":
+                        if (countdown != 0)
+                        {
+                            countdown--;
 
-                            currentPoint++;
-                            if (currentPoint == Waypoints.Count) currentPoint = 0;
-                            if (!skip) { skip = true; goto retry; }
-                            return;
-                        case "jump":
-                            jumpTimer.Elapsed += delegate
+                            if (rot[0] + (byte)Waypoints[currentPoint].rotspeed > 255) rot[0] = 0;
+                            else if (rot[0] + (byte)Waypoints[currentPoint].rotspeed < 0) rot[0] = 255;
+                            else rot[0] += (byte)Waypoints[currentPoint].rotspeed;
+
+                            if (countdown == 0)
                             {
-                                currentjump++;
-                                switch (currentjump)
-                                {
-                                    case 1:
+                                currentPoint++;
+                                if (currentPoint == Waypoints.Count) currentPoint = 0;
+                                if (!skip) { skip = true; goto retry; }
+                            }
+                        }
+                        else
+                        {
+                            countdown = Waypoints[currentPoint].seconds;
+                        }
+                        return;
+                    case "speed":
+                        movementSpeed = (int)Math.Round((decimal)((decimal)24 / (decimal)100 * (decimal)Waypoints[currentPoint].seconds));
+                        if (movementSpeed == 0) movementSpeed = 1;
+
+                        currentPoint++;
+                        if (currentPoint == Waypoints.Count) currentPoint = 0;
+                        if (!skip) { skip = true; goto retry; }
+                        return;
+                    case "reset":
+                        currentPoint = 0;
+                        return;
+                    case "remove":
+                        PlayerBot.Remove(this);
+                        return;
+                    case "linkscript":
+                        if (File.Exists("bots/" + Waypoints[currentPoint].newscript))
+                        {
+                            Command.all.Find("botset").Use(null, this.name + " " + Waypoints[currentPoint].newscript);
+                            return;
+                        }
+
+                        currentPoint++;
+                        if (currentPoint == Waypoints.Count) currentPoint = 0;
+                        if (!skip) { skip = true; goto retry; }
+                        return;
+                    case "jump":
+                        jumpTimer.Elapsed += delegate
+                        {
+                            currentjump++;
+                            switch (currentjump)
+                            {
+                                case 1:
                                     case 2: pos[1] += 24; break;
                                     case 3: break;
                                     case 4: pos[1] -= 24; break;
                                     case 5: pos[1] -= 24; jumping = false; currentjump = 0; jumpTimer.Stop(); break;
-                                }
-                            };
-                            jumpTimer.Start();
+                            }
+                        };
+                        jumpTimer.Start();
 
-                            currentPoint++;
-                            if (currentPoint == Waypoints.Count) currentPoint = 0;
-                            if (!skip) { skip = true; goto retry; }
-                            break;
-                    }
-
-                    if (currentPoint == Waypoints.Count) currentPoint = 0;
+                        currentPoint++;
+                        if (currentPoint == Waypoints.Count) currentPoint = 0;
+                        if (!skip) { skip = true; goto retry; }
+                        break;
                 }
 
-                if (!movement)
-                {
-                    if (rot[0] < 245) rot[0] += 8;
-                    else rot[0] = 0;
+                if (currentPoint == Waypoints.Count) currentPoint = 0;
+            }
 
-                    if (rot[1] > 32 && rot[1] < 64) rot[1] = 224;
-                    else if (rot[1] > 250) rot[1] = 0;
-                    else rot[1] += 4;
-                }
-            };
-
-            botTimer.Start();
-
-            moveTimer.Elapsed += delegate
+            if (!movement)
             {
-                moveTimer.Interval = Server.updateTimer.Interval / movementSpeed;
-                if (!movement) return;
-                int newNum; Random rand = new Random();
+                if (rot[0] < 245) rot[0] += 8;
+                else rot[0] = 0;
 
-                if ((pos[1] - 19) % 32 != 0 && !jumping)
-                {
-                    pos[1] = (ushort)((pos[1] + 19) - (pos[1] % 32));
-                }
+                if (rot[1] > 32 && rot[1] < 64) rot[1] = 224;
+                else if (rot[1] > 250) rot[1] = 0;
+                else rot[1] += 4;
+            }
+        }
+        
+        void MoveTimerFunc(object sender, ElapsedEventArgs e) {
+            moveTimer.Interval = Server.updateTimer.Interval / movementSpeed;
+            if (!movement) return;
+            int newNum; Random rand = new Random();
 
-                x = (ushort)Math.Round((decimal)(pos[0] - 16) / (decimal)32);
-                y = (ushort)((pos[1] - 64) / 32);
-                z = (ushort)Math.Round((decimal)(pos[2] - 16) / (decimal)32);
+            if ((pos[1] - 19) % 32 != 0 && !jumping)
+            {
+                pos[1] = (ushort)((pos[1] + 19) - (pos[1] % 32));
+            }
 
-                byte b = Block.Convert(level.GetTile(x, y, z));
-                byte b1, b2, b3;//, b4;
+            ushort x = (ushort)Math.Round((decimal)(pos[0] - 16) / 32);
+            ushort y = (ushort)((pos[1] - 64) / 32);
+            ushort z = (ushort)Math.Round((decimal)(pos[2] - 16) / 32);
 
-                if (Block.Walkthrough(b) && !jumping)
-                {
-                    pos[1] = (ushort)(pos[1] - 32);
-                }
+            byte b = Block.Convert(level.GetTile(x, y, z));
+            byte b1, b2, b3;//, b4;
 
-                y = (ushort)((pos[1] - 64) / 32);   //Block below feet
+            if (Block.Walkthrough(b) && !jumping)
+            {
+                pos[1] = (ushort)(pos[1] - 32);
+            }
 
-                newNum = level.PosToInt((ushort)(x + Math.Sign(foundPos[0] - pos[0])), y, (ushort)(z + Math.Sign(foundPos[2] - pos[2])));
-                b = Block.Convert(level.GetTile(newNum));
-                b1 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 1, 0)));
-                b2 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 2, 0)));
-                b3 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 3, 0)));
+            y = (ushort)((pos[1] - 64) / 32);   //Block below feet
 
-                if (Block.Walkthrough(b2) && Block.Walkthrough(b3) && !Block.Walkthrough(b1))
-                {     //Get ready to go up step
-                    pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
-                    pos[1] += (ushort)32;
-                    pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
-                }
-                else if (Block.Walkthrough(b1) && Block.Walkthrough(b2))
-                {                        //Stay on current level
-                    pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
-                    pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
-                }
-                else if (Block.Walkthrough(b) && Block.Walkthrough(b1))
-                {                         //Drop a level
-                    pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
-                    pos[1] -= (ushort)32;
-                    pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
-                }
+            newNum = level.PosToInt((ushort)(x + Math.Sign(foundPos[0] - pos[0])), y, (ushort)(z + Math.Sign(foundPos[2] - pos[2])));
+            b = Block.Convert(level.GetTile(newNum));
+            b1 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 1, 0)));
+            b2 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 2, 0)));
+            b3 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 3, 0)));
 
-                x = (ushort)Math.Round((decimal)(pos[0] - 16) / (decimal)32);
-                y = (ushort)((pos[1] - 64) / 32);
-                z = (ushort)Math.Round((decimal)(pos[2] - 16) / (decimal)32);
+            if (Block.Walkthrough(b2) && Block.Walkthrough(b3) && !Block.Walkthrough(b1))
+            {     //Get ready to go up step
+                pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
+                pos[1] += (ushort)32;
+                pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
+            }
+            else if (Block.Walkthrough(b1) && Block.Walkthrough(b2))
+            {                        //Stay on current level
+                pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
+                pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
+            }
+            else if (Block.Walkthrough(b) && Block.Walkthrough(b1))
+            {                         //Drop a level
+                pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
+                pos[1] -= (ushort)32;
+                pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
+            }
 
-                b1 = Block.Convert(level.GetTile(x, (ushort)(y + 1), z));
-                b2 = Block.Convert(level.GetTile(x, (ushort)(y + 2), z));
-                b3 = Block.Convert(level.GetTile(x, y, z));
+            x = (ushort)Math.Round((decimal)(pos[0] - 16) / (decimal)32);
+            y = (ushort)((pos[1] - 64) / 32);
+            z = (ushort)Math.Round((decimal)(pos[2] - 16) / (decimal)32);
 
-                /*
+            b1 = Block.Convert(level.GetTile(x, (ushort)(y + 1), z));
+            b2 = Block.Convert(level.GetTile(x, (ushort)(y + 2), z));
+            b3 = Block.Convert(level.GetTile(x, y, z));
+
+            /*
                 if ((ushort)(foundPos[1] / 32) > y) {
                     if (b1 == Block.water || b1 == Block.waterstill || b1 == Block.lava || b1 == Block.lavastill) {
                         if (Block.Walkthrough(b2)) {
@@ -372,60 +351,77 @@ namespace MCGalaxy
                         pos[1] = (ushort)(pos[1] + (Math.Sign(foundPos[1] - pos[1])));
                     }
                 }*/
-            };
-            moveTimer.Start();
         }
         #endregion
 
-        #region ==Input ==
-        public void SetPos(ushort x, ushort y, ushort z, byte rotx, byte roty)
-        {
+        public void SetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
         }
-        #endregion
-
-        public void removeBot()
-        {
-            this.botTimer.Stop();
-            GlobalDie();
-            PlayerBot.playerbots.Remove(this);
+        
+        public static void Add(PlayerBot bot) {
+            lock (botsLock)
+                playerbots.Add(bot);        
+            bot.GlobalSpawn();
+            
+            foreach (Player p in Player.players) {
+                if (p.level == bot.level)
+                    Player.SendMessage(p, bot.color + bot.name + "%S, the bot, has been added.");
+            }
         }
 
-        public void GlobalSpawn()
-        {
-            Player.players.ForEach(delegate(Player p)   //bots dont need to be informed of other bots here
-            {
-                if (p.level == level)
-                	p.SendSpawn(id, color + name, pos[0], pos[1], pos[2], rot[0], rot[1]);
-            });
+        public static void Remove(PlayerBot bot) {
+            lock (botsLock)
+                playerbots.Remove(bot);
+            bot.GlobalDespawn();    
+            
+            bot.botTimer.Stop();
+            bot.moveTimer.Stop();
+            bot.jumpTimer.Stop();
+        }
+        
+        public static void RemoveAllFromLevel(Level lvl) {
+            lock (botsLock)
+                RemoveAll(lvl);
+        }
+        
+        static void RemoveAll(Level lvl) {
+            for (int i = 0; i < PlayerBot.playerbots.Count; i++) {
+                PlayerBot bot = PlayerBot.playerbots[i];
+                if (PlayerBot.playerbots[i].level == lvl) {
+                    Remove(bot);
+                    i--;
+                }
+            }
         }
 
-        public void GlobalDie()
-        {
-            Server.s.Log("removing " + name + " bot");
-            Player.players.ForEach(delegate(Player p)
-            {
-                if (p.level != level) { return; }
-                p.SendDespawn(id);
-            });
-            playerbots.Remove(this);        //dont know if this is allowed really calling itself to kind of die
+        public void GlobalSpawn() {
+            Player.players.ForEach(p => {
+                                       if (p.level == level)
+                                           p.SendSpawn(id, color + name, pos[0], pos[1], pos[2], rot[0], rot[1]);
+                                   });
         }
 
-        public void Update()  {
+        public void GlobalDespawn() {
+            Player.players.ForEach(p => {
+                                       if (p.level == level)
+                                           p.SendDespawn(id);
+                                   });
         }
+
+        public void Update() { }
 
         void UpdatePosition() {
-        	byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, rot[1], true);
-        	oldpos = pos; oldrot = rot;
-        	if (packet == null) return;
-        	
-        	try {
-        		foreach (Player p in Player.players) {
-        			if (p.level == level)
-        				p.SendRaw(packet);
-        		}
-        	} catch { }
+            byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, rot[1], true);
+            oldpos = pos; oldrot = rot;
+            if (packet == null) return;
+            
+            try {
+                foreach (Player p in Player.players) {
+                    if (p.level == level)
+                        p.SendRaw(packet);
+                }
+            } catch { }
         }
 
         #region == Misc ==
@@ -437,7 +433,7 @@ namespace MCGalaxy
                 {
                     if (b.id == i) { goto Next; }
                 } return i;
-            Next: continue;
+                Next: continue;
             }
             return 0xFF;
         }
@@ -449,35 +445,24 @@ namespace MCGalaxy
             foreach (PlayerBot pB in PlayerBot.playerbots) {
                 if (pB.name.ToLower() == name) return pB;
                 if (pB.name.ToLower().Contains(name)) {
-                	match = pB; matches++;
+                    match = pB; matches++;
                 }
             }
             return matches == 1 ? match : null;
         }
-        
-        public static bool ValidName(string name)
-        {
-            string allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890_";
-            foreach (char ch in name) { if (allowedchars.IndexOf(ch) == -1) { return false; } } return true;
-        }
         #endregion
 
-        #region Global ==
-        public static void GlobalUpdatePosition()
-        {
+        public static void GlobalUpdatePosition() {
             playerbots.ForEach(
-        		delegate(PlayerBot b) { b.UpdatePosition(); }
-        	);
+                delegate(PlayerBot b) { b.UpdatePosition(); }
+            );
         }
         
-        public static void GlobalUpdate()
-        {
-            while (true)
-            {
+        public static void GlobalUpdate() {
+            while (true) {
                 Thread.Sleep(100);
                 playerbots.ForEach(delegate(PlayerBot b) { b.Update(); });
             }
         }
-        #endregion
     }
 }

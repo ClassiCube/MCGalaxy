@@ -31,8 +31,9 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             if (p != null)
             {
-                if (!PlayerBot.ValidName(message)) { Player.SendMessage(p, "bot name " + message + " not valid!"); return; }
-                PlayerBot.playerbots.Add(new PlayerBot(message, p.level, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0));
+                if (!Player.ValidName(message)) { Player.SendMessage(p, "bot name " + message + " not valid!"); return; }
+                PlayerBot bot = new PlayerBot(message, p.level, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+                PlayerBot.Add(bot);
                 //who.SendMessage("You were summoned by " + p.color + p.name + "&e.");
                 return;
             }
