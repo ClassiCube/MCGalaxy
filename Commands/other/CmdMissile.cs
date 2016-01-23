@@ -176,21 +176,18 @@ namespace MCGalaxy.Commands
 
 			Thread gunThread = new Thread(new ThreadStart(delegate
 			{
-				ushort startX = (ushort)(p.pos[0] / 32);
-				ushort startY = (ushort)(p.pos[1] / 32);
-				ushort startZ = (ushort)(p.pos[2] / 32);
-				pos.x = startX;
-				pos.y = startY;
-				pos.z = startZ;
+				pos.x = (ushort)(p.pos[0] / 32);
+				pos.y = (ushort)(p.pos[1] / 32);
+				pos.z = (ushort)(p.pos[2] / 32);
 
 				int total = 0;
 				List<FillPos> buffer = new List<FillPos>(2);
 
 				while (true)
 				{
-					startX = (ushort)(p.pos[0] / 32);
-					startY = (ushort)(p.pos[1] / 32);
-					startZ = (ushort)(p.pos[2] / 32);
+					ushort startX = (ushort)(p.pos[0] / 32);
+					ushort startY = (ushort)(p.pos[1] / 32);
+					ushort startZ = (ushort)(p.pos[2] / 32);
 
 					total++;
 					double a = Math.Sin(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
@@ -348,7 +345,7 @@ namespace MCGalaxy.Commands
 						if (previous.Count > 12)
 						{
 							p.level.Blockchange(previous[0].x, previous[0].y, previous[0].z, Block.air);
-							previous.Remove(previous[0]);
+							previous.RemoveAt(0);
 						}
 						Thread.Sleep(100);
 					}

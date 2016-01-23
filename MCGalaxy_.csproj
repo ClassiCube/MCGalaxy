@@ -170,6 +170,7 @@
     <Compile Include="Commands\Economy\CmdGive.cs" />
     <Compile Include="Commands\Economy\CmdMoney.cs" />
     <Compile Include="Commands\Economy\CmdPay.cs" />
+    <Compile Include="Commands\Fun\CmdAlive.cs" />
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
     <Compile Include="Commands\Fun\CmdCtf.cs" />
     <Compile Include="Commands\Fun\CmdDisinfect.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Commands\Fun\CmdInfect.cs" />
     <Compile Include="Commands\Fun\CmdInfected.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
+    <Compile Include="Commands\Fun\CmdQueue.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
     <Compile Include="Commands\Fun\CmdZombieGame.cs" />
     <Compile Include="Commands\Fun\CmdZombieSpawn.cs" />
@@ -219,7 +221,6 @@
     <Compile Include="Commands\Information\CmdWhoNick.cs" />
     <Compile Include="Commands\Information\CmdWhowas.cs" />
     <Compile Include="Commands\Moderation\CmdAka.cs" />
-    <Compile Include="Commands\Moderation\CmdAlive.cs" />
     <Compile Include="Commands\Moderation\CmdAllowGuns.cs" />
     <Compile Include="Commands\Moderation\CmdBan.cs" />
     <Compile Include="Commands\Moderation\CmdBanEdit.cs" />
@@ -264,7 +265,6 @@
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
     <Compile Include="Commands\Moderation\CmdPromote.cs" />
     <Compile Include="Commands\Moderation\CmdPUnload.cs" />
-    <Compile Include="Commands\Moderation\CmdQueue.cs" />
     <Compile Include="Commands\Moderation\CmdRankInfo.cs" />
     <Compile Include="Commands\Moderation\CmdReferee.cs" />
     <Compile Include="Commands\Moderation\CmdReloadControllers.cs" />
