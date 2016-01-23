@@ -338,10 +338,8 @@ namespace MCGalaxy
 
         public void saveChanges()
         {
-            //if (!Server.useMySQL) return;
             if (blockCache.Count == 0) return;
             List<BlockPos> tempCache = blockCache;
-            blockCache = new List<BlockPos>();
             ushort x, y, z;
 
             string template = "INSERT INTO `Block" + name +
@@ -349,19 +347,21 @@ namespace MCGalaxy
             DatabaseTransactionHelper transaction = DatabaseTransactionHelper.Create();
             using (transaction)
             {
-                foreach (BlockPos bP in tempCache)
-                {
+                for (int i = 0; i < tempCache.Count; i++ ) {
+                    BlockPos bP = tempCache[i];
                     int deleted = bP.deleted ? 1 : 0;
                     IntToPos(bP.index, out x, out y, out z);
-                    if (!transaction.Execute(String.Format(template, bP.name,
-                                                      bP.TimePerformed.ToString("yyyy-MM-dd HH:mm:ss"),
-                                                      x, y, z, bP.type, deleted))) {
-                    	
+                    string query = String.Format(template, bP.name,
+                                                 bP.TimePerformed.ToString("yyyy-MM-dd HH:mm:ss"),
+                                                 x, y, z, bP.type, deleted);
+                    if (!transaction.Execute(query)) {
+                        transaction.Rollback(); return;
                     }
                 }
                 transaction.Commit();
             }
             tempCache.Clear();
+            blockCache = new List<BlockPos>();            
         }
 
         public bool InBound(ushort x, ushort y, ushort z)

@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -24,6 +25,8 @@ using MySql.Data.MySqlClient;
 namespace MCGalaxy.SQL {
     
     public abstract class DatabaseTransactionHelper : IDisposable {
+        protected IDbConnection connection;
+        protected IDbTransaction transaction;
 
         public static DatabaseTransactionHelper Create() {
             if (Server.useMySQL)
@@ -34,8 +37,32 @@ namespace MCGalaxy.SQL {
 
         public abstract bool Execute(string query);
 
-        public abstract void Commit();
-
-        public abstract void Dispose();
+        public void Commit() {
+            try {
+                transaction.Commit();
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                Rollback();
+            } finally {
+                connection.Close();
+            }
+        }
+        
+        public bool Rollback() {
+            try {
+                transaction.Rollback();
+                return true;
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                return false;
+            }
+        }
+        
+        public void Dispose() {
+            transaction.Dispose();
+            connection.Dispose();
+            transaction = null;
+            connection = null;
+        }
     }
 }

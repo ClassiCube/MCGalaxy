@@ -24,8 +24,6 @@ using MySql.Data.MySqlClient;
 namespace MCGalaxy.SQL {
     
     public sealed class MySQLTransactionHelper : DatabaseTransactionHelper {
-        private MySqlConnection connection = null;
-        private MySqlTransaction transaction = null;
 
         public MySQLTransactionHelper(){
             Init(MySQL.connString);
@@ -58,7 +56,8 @@ namespace MCGalaxy.SQL {
 
         public override bool Execute(string query) {
             try {
-                using (MySqlCommand cmd = new MySqlCommand(query, connection, transaction)) {
+                using (MySqlCommand cmd = new MySqlCommand(
+                    query, (MySqlConnection)connection, (MySqlTransaction)transaction)) {
                     cmd.ExecuteNonQuery();
                 }
             } catch (Exception e) {
@@ -67,28 +66,6 @@ namespace MCGalaxy.SQL {
                 return false;
             }
             return true;
-        }
-
-        public override void Commit() {
-            try {
-                transaction.Commit();
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                try {
-                    transaction.Rollback();
-                } catch (Exception ex2) {
-                    Server.ErrorLog(ex2);
-                }
-            } finally {
-                connection.Close();
-            }
-        }
-
-        public override void Dispose() {
-            transaction.Dispose();
-            connection.Dispose();
-            transaction = null;
-            connection = null;
         }
     }
 }

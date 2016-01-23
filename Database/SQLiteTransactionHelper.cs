@@ -21,8 +21,6 @@ using System.Data.SQLite;
 namespace MCGalaxy.SQL {
 
     public sealed class SQLiteTransactionHelper : DatabaseTransactionHelper {
-        private SQLiteConnection connection = null;
-        private SQLiteTransaction transaction = null;
 
         private SQLiteTransactionHelper() {
             Init(SQLite.connString);
@@ -54,7 +52,8 @@ namespace MCGalaxy.SQL {
 
         public override bool Execute(string query) {
             try {
-                using (SQLiteCommand cmd = new SQLiteCommand(query, connection, transaction)) {
+                using (SQLiteCommand cmd = new SQLiteCommand(
+                    query, (SQLiteConnection)connection, (SQLiteTransaction)transaction)) {
                     cmd.ExecuteNonQuery();
                 }
             } catch (Exception e) {
@@ -63,28 +62,6 @@ namespace MCGalaxy.SQL {
                 return false;
             }
             return true;
-        }
-
-        public override void Commit() {
-            try {
-                transaction.Commit();
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                try {
-                    transaction.Rollback();
-                } catch (Exception ex2) {
-                    Server.ErrorLog(ex2);
-                }
-            } finally {
-                connection.Close();
-            }
-        }
-
-        public override void Dispose() {
-            transaction.Dispose();
-            connection.Dispose();
-            transaction = null;
-            connection = null;
         }
     }
 }
