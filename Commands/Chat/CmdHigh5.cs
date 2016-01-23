@@ -23,33 +23,24 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "high5"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdHigh5() { }
-        public override void Use(Player p, string message)
-        {
-            if (message == "")
-            {
-                Help(p);
-				return;
-            }
-            Player player1 = Player.Find(message);
-            if (player1 == null || player1.hidden)
-            {
-                Player.SendMessage(p, "Could not find player specified.");
-				return;
+        
+        public override void Use(Player p, string message) {
+            if (message == "") { Help(p); return; }
+            Player who = Player.Find(message);
+            if (who == null || who.hidden) {
+                Player.SendMessage(p, "Could not find player specified."); return;
             }
 
-			string giver = (p == null) ? "The Console" : p.DisplayName;
-			string color = (p == null) ? "" : p.color;
-            Player.SendMessage(player1, giver + " just highfived you");
-            Player.GlobalMessage(color + giver + " " + Server.DefaultColor + "just highfived " + player1.color + player1.DisplayName);
+			string giver = (p == null) ? "(console)" : p.color + p.DisplayName;
+            Player.SendMessage(who, giver + " just highfived you");
+            Player.GlobalMessage(giver + " %Sjust highfived " + who.color + who.DisplayName);
         }
 
-        // This one controls what happens when you use /help [commandname].
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/high5 <player> - High five someone :D");
         }
     }

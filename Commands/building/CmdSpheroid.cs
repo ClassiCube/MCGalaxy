@@ -39,11 +39,8 @@ namespace MCGalaxy.Commands {
                 case SolidType.vertical:
                     drawOp = new CylinderDrawOp(); break;
             }
-            
-            ushort x1 = Math.Min(cpos.x, x), x2 = Math.Max(cpos.x, x);
-            ushort y1 = Math.Min(cpos.y, y), y2 = Math.Max(cpos.y, y);
-            ushort z1 = Math.Min(cpos.z, z), z2 = Math.Max(cpos.z, z);            
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, x1, y1, z1, x2, y2, z2))
+                      
+            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

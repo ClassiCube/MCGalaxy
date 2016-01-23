@@ -27,6 +27,8 @@ namespace MCGalaxy {
         protected const int reloadLimit = 10000;
         protected int method;
         
+        public virtual bool MinMaxCoords { get { return true; } }
+        
         public abstract string Name { get; }
         
         public abstract int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2);
@@ -91,6 +93,13 @@ namespace MCGalaxy {
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                            ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int affected = 0;
+            if (op.MinMaxCoords) {
+            	ushort xx1 = x1, yy1 = y1, zz1 = z1, xx2 = x2, yy2 = y2, zz2 = z2;
+            	x1 = Math.Min(xx1, xx2); x2 = Math.Max(xx1, xx2);
+            	y1 = Math.Min(yy1, yy2); y2 = Math.Max(yy1, yy2);
+            	z1 = Math.Min(zz1, zz2); z2 = Math.Max(zz1, zz2);
+            }
+            
             if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
                 return false;
             Player.SendMessage(p, op.Name + ": affecting up to an estimated " + affected + " blocks");

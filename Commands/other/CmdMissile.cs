@@ -184,6 +184,7 @@ namespace MCGalaxy.Commands
 				pos.z = startZ;
 
 				int total = 0;
+				List<FillPos> buffer = new List<FillPos>(2);
 
 				while (true)
 				{
@@ -198,7 +199,7 @@ namespace MCGalaxy.Commands
 
 					CatchPos lookedAt;
 					int i;
-					for (i = 1; true; i++)
+					for (i = 1; ; i++)
 					{
 						lookedAt.x = (ushort)Math.Round(startX + (double)(a * i));
 						lookedAt.y = (ushort)Math.Round(startY + (double)(c * i));
@@ -266,7 +267,7 @@ namespace MCGalaxy.Commands
 					lookedAt.y = (ushort)Math.Round(startY + (double)(c * (i - 1)));
 					lookedAt.z = (ushort)Math.Round(startZ + (double)(b * (i - 1)));
 
-					findNext(lookedAt, ref pos);
+					FindNext(lookedAt, ref pos, buffer);
 
 					by = p.level.GetTile(pos.x, pos.y, pos.z);
 					if (total > 3)
@@ -361,100 +362,22 @@ namespace MCGalaxy.Commands
 			}));
 			gunThread.Name = "MCG_Missile";
 			gunThread.Start();
-		}
-		public override void Help(Player p)
-		{
-			Player.SendMessage(p, "/missile [at end] - Allows you to fire missiles at people");
-			Player.SendMessage(p, "Available [at end] values: &cexplode, destroy");
-			Player.SendMessage(p, "Differs from /gun in that the missile is guided");
-		}
+		}	
 
 		struct CatchPos { public ushort x, y, z; }
 		struct Pos { public ushort x, y, z; public int ending; }
 
-		void findNext(CatchPos lookedAt, ref CatchPos pos)
-		{
-			int dx, dy, dz, l, m, n, x_inc, y_inc, z_inc, err_1, err_2, dx2, dy2, dz2;
-			int[] pixel = new int[3];
-
-			pixel[0] = pos.x; pixel[1] = pos.y; pixel[2] = pos.z;
-			dx = lookedAt.x - pos.x; dy = lookedAt.y - pos.y; dz = lookedAt.z - pos.z;
-
-			x_inc = (dx < 0) ? -1 : 1; l = Math.Abs(dx);
-			y_inc = (dy < 0) ? -1 : 1; m = Math.Abs(dy);
-			z_inc = (dz < 0) ? -1 : 1; n = Math.Abs(dz);
-
-			dx2 = l << 1; dy2 = m << 1; dz2 = n << 1;
-
-			if ((l >= m) && (l >= n))
-			{
-				err_1 = dy2 - l;
-				err_2 = dz2 - l;
-
-				pixel[0] += x_inc;
-				if (err_1 > 0)
-				{
-					pixel[1] += y_inc;
-					err_1 -= dx2;
-				}
-				if (err_2 > 0)
-				{
-					pixel[2] += z_inc;
-					err_2 -= dx2;
-				}
-				err_1 += dy2;
-				err_2 += dz2;
-
-				pos.x = (ushort)pixel[0];
-				pos.y = (ushort)pixel[1];
-				pos.z = (ushort)pixel[2];
-			}
-			else if ((m >= l) && (m >= n))
-			{
-				err_1 = dx2 - m;
-				err_2 = dz2 - m;
-
-				pixel[1] += y_inc;
-				if (err_1 > 0)
-				{
-					pixel[0] += x_inc;
-					err_1 -= dy2;
-				}
-				if (err_2 > 0)
-				{
-					pixel[2] += z_inc;
-					err_2 -= dy2;
-				}
-				err_1 += dx2;
-				err_2 += dz2;
-
-				pos.x = (ushort)pixel[0];
-				pos.y = (ushort)pixel[1];
-				pos.z = (ushort)pixel[2];
-			}
-			else
-			{
-				err_1 = dy2 - n;
-				err_2 = dx2 - n;
-
-				pixel[2] += z_inc;
-				if (err_1 > 0)
-				{
-					pixel[1] += y_inc;
-					err_1 -= dz2;
-				}
-				if (err_2 > 0)
-				{
-					pixel[0] += x_inc;
-					err_2 -= dz2;
-				}
-				err_1 += dy2;
-				err_2 += dx2;
-
-				pos.x = (ushort)pixel[0];
-				pos.y = (ushort)pixel[1];
-				pos.z = (ushort)pixel[2];
-			}
+		void FindNext(CatchPos lookedAt, ref CatchPos pos, List<FillPos> buffer) {
+			LineDrawOp.DrawLine(pos.x, pos.y, pos.z, 2, lookedAt.x, lookedAt.y, lookedAt.z, buffer);			
+			FillPos end = buffer[buffer.Count - 1];
+			pos.x = end.X; pos.y = end.Y; pos.z = end.Z;
+			buffer.Clear();
+		}
+		
+		public override void Help(Player p) {
+			Player.SendMessage(p, "/missile [at end] - Allows you to fire missiles at people");
+			Player.SendMessage(p, "Available [at end] values: &cexplode, destroy");
+			Player.SendMessage(p, "Differs from /gun in that the missile is guided");
 		}
 	}
 }

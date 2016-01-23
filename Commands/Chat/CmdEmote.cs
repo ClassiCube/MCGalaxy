@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "emote"; } }
         public override string shortcut { get { return "<3"; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdEmote() { }

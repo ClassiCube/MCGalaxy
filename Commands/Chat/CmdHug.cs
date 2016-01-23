@@ -23,22 +23,22 @@ namespace MCGalaxy
     {
         public override string name { get { return "hug"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public override void Use(Player p, string message)
-        {
+        
+        public override void Use(Player p, string message) {
+            if (message == "") { Help(p); return; }
             Player who = Player.Find(message);
-            if (who == null || who.hidden) { Player.SendMessage(p, "Could not find specified player!"); return; }
-            else
-            {
-                string msg = String.Format("the {0}Console [&a{1}{0}]", Server.DefaultColor, Server.ZallState);
-                string giver = (p == null) ? msg : p.color + p.DisplayName;
-                Player.GlobalMessage(who.color + who.DisplayName + Server.DefaultColor + " was hugged by " + giver);
+            if (who == null || who.hidden) {
+                Player.SendMessage(p, "Could not find player specified."); return;
             }
+            
+            string giver = (p == null) ? "(console)" : p.color + p.DisplayName;
+            Player.GlobalMessage(who.color + who.DisplayName + " %Swas hugged by " + giver);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/hug <player> - hugs the given player");
         }
     }

@@ -53,92 +53,31 @@ namespace MCGalaxy.Commands {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
-            List<Pos> buffer = new List<Pos>();
-            Pos pos = new Pos();
 
             if (cpos.solid == SolidType.straight) { 
-                int xdif = Math.Abs(cpos.x - x);
-                int ydif = Math.Abs(cpos.y - y);
-                int zdif = Math.Abs(cpos.z - z);
+                int dx = Math.Abs(cpos.x - x);
+                int dy = Math.Abs(cpos.y - y);
+                int dz = Math.Abs(cpos.z - z);
 
-                if (xdif > ydif && xdif > zdif) {
+                if (dx > dy && dx > dz) {
                     y = cpos.y; z = cpos.z;
-                } else if (ydif > xdif && ydif > zdif) {
+                } else if (dy > dx && dy > dz) {
                     x = cpos.x; z = cpos.z;
-                } else if (zdif > ydif && zdif > xdif) {
+                } else if (dz > dy && dz > dx) {
                     y = cpos.y; x = cpos.x;
                 }
             }
-
-            Line lx, ly, lz;
-            int[] pixel = { cpos.x, cpos.y, cpos.z };        
-            int dx = x - cpos.x, dy = y - cpos.y, dz = z - cpos.z;
-            lx.inc = Math.Sign(dx); ly.inc = Math.Sign(dy); lz.inc = Math.Sign(dz);
-
-            int xLen = Math.Abs(dx), yLen = Math.Abs(dy), zLen = Math.Abs(dz);
-            lx.dx2 = xLen << 1; ly.dx2 = yLen << 1; lz.dx2 = zLen << 1;
-            lx.index = 0; ly.index = 1; lz.index = 2;
-
-            if (xLen >= yLen && xLen >= zLen)
-                DoLine(ly, lz, lx, xLen, pixel, buffer);
-            else if (yLen >= xLen && yLen >= zLen)
-                DoLine(lx, lz, ly, yLen, pixel, buffer);
-            else
-                DoLine(ly, lx, lz, zLen, pixel, buffer);
-
-            pos.x = (ushort)pixel[0]; pos.y = (ushort)pixel[1]; pos.z = (ushort)pixel[2];
-            buffer.Add(pos);
-            int maxLen = cpos.data == null ? int.MaxValue : (ushort)cpos.data;
-
-            int count = Math.Min(buffer.Count, maxLen);
-            if (cpos.solid == SolidType.walls)
-                count *= Math.Abs(cpos.y - y);
-
-            if (count > p.group.maxBlocks) {
-                Player.SendMessage(p, "You tried to draw " + count + " blocks at once.");
-                Player.SendMessage(p, "You are limited to " + p.group.maxBlocks);
+            
+            LineDrawOp drawOp = new LineDrawOp();
+            drawOp.WallsMode = cpos.solid == SolidType.walls;
+            if (cpos.data != null)
+                drawOp.MaxLength = (ushort)cpos.data;
+            Brush brush = new SolidBrush(cpos.type, cpos.extType);
+                      
+            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
-            }
-
-            for (int i = 0; i < maxLen && i < buffer.Count; i++) {
-                pos = buffer[i];
-                if (cpos.solid == SolidType.walls) {
-                    for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); yy++) {
-                        p.level.Blockchange(p, pos.x, yy, pos.z, type, extType);
-                    }
-                } else {
-                    p.level.Blockchange(p, pos.x, pos.y, pos.z, type, extType);
-                }
-            }
-
-            count = Math.Min(maxLen, buffer.Count);
-            Player.SendMessage(p, "Line was " + count + " blocks long.");
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
-        }
-        
-        struct Line { public int dx2, inc, index; }
-        
-        struct Pos { public ushort x, y, z; }
-        
-        static void DoLine(Line l1, Line l2, Line l3, int len, int[] pixel, List<Pos> buffer) {
-            int err_1 = l1.dx2 - len, err_2 = l2.dx2 - len;
-            Pos pos;
-            for (int i = 0; i < len; i++) {
-                pos.x = (ushort)pixel[0]; pos.y = (ushort)pixel[1]; pos.z = (ushort)pixel[2];
-                buffer.Add(pos);
-
-                if (err_1 > 0) {
-                    pixel[l1.index] += l1.inc;
-                    err_1 -= l3.dx2;
-                }
-                if (err_2 > 0) {
-                    pixel[l2.index] += l2.inc;
-                    err_2 -= l3.dx2;
-                }
-                err_1 += l1.dx2; err_2 += l2.dx2;
-                pixel[l3.index] += l3.inc;
-            }
         }
         
         public override void Help(Player p) {

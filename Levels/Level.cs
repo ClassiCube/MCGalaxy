@@ -680,35 +680,16 @@ namespace MCGalaxy
             return true;
         }
 
-        public void ChatLevel(string message)
-        {
-            foreach (Player pl in Player.players.Where(pl => pl.level == this))
-            {
-                pl.SendMessage(message);
-            }
-        }
+        public void ChatLevel(string message) { ChatLevel(message, LevelPermission.Banned); }
 
-        public void ChatLevelOps(string message)
-        {
-            foreach (
-                Player pl in
-                Player.players.Where(
-                    pl =>
-                    pl.level == this &&
-                    pl.group.Permission >= Server.opchatperm))
-            {
-                pl.SendMessage(message);
-            }
-        }
+        public void ChatLevelOps(string message) { ChatLevel(message, Server.opchatperm); }
 
-        public void ChatLevelAdmins(string message)
-        {
-            foreach (
-                Player pl in
-                Player.players.Where(
-                    pl => pl.level == this &&
-                    pl.group.Permission >= Server.adminchatperm))
-            {
+        public void ChatLevelAdmins(string message) { ChatLevel(message, Server.adminchatperm); }
+        
+        public void ChatLevel(string message, LevelPermission minPerm) {
+            foreach (Player pl in Player.players) {
+            	if (pl.level != this) continue;
+            	if (pl.group.Permission < minPerm) continue;
                 pl.SendMessage(message);
             }
         }

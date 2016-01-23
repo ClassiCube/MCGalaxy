@@ -44,14 +44,11 @@ namespace MCGalaxy.Commands {
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            ushort x1 = Math.Min(cpos.x, x), x2 = Math.Max(cpos.x, x);
-            ushort y1 = Math.Min(cpos.y, y), y2 = Math.Max(cpos.y, y);
-            ushort z1 = Math.Min(cpos.z, z), z2 = Math.Max(cpos.z, z);
             ReplaceNotDrawOp drawOp = new ReplaceNotDrawOp();
             drawOp.ToReplace = toAffect;
             drawOp.Target = target;
             
-            if (!DrawOp.DoDrawOp(drawOp, null, p, x1, y1, z1, x2, y2, z2))
+            if (!DrawOp.DoDrawOp(drawOp, null, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
