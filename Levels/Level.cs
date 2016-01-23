@@ -75,7 +75,7 @@ namespace MCGalaxy
         internal readonly List<Check> ListCheck = new List<Check>(); //A list of blocks that need to be updated
         internal readonly List<Update> ListUpdate = new List<Update>(); //A list of block to change after calculation
 
-        private readonly Dictionary<int, sbyte> leaves = new Dictionary<int, sbyte>();
+        internal readonly Dictionary<int, sbyte> leaves = new Dictionary<int, sbyte>();
         // Holds block state for leaf decay
 
         internal readonly Dictionary<int, bool[]> liquids = new Dictionary<int, bool[]>();
@@ -927,8 +927,7 @@ namespace MCGalaxy
                         //Check block above
                     }
 
-                    if (!leafDecay)
-                    {
+                    if (!leafDecay) {
                         C.time = 255;
                         leaves.Clear();
                         break;
@@ -938,7 +937,8 @@ namespace MCGalaxy
                         if (rand.Next(10) == 0) C.time++;
                         break;
                     }
-                    if (PhysLeaf(C.b)) AddUpdate(C.b, 0);
+                    if (SimplePhysics.DoLeafDecay(this, C)) 
+                    	AddUpdate(C.b, 0);
                     C.time = 255;
                     break;
 
@@ -1619,105 +1619,6 @@ namespace MCGalaxy
                     return;
                 }
             }
-        }
-
-        //================================================================================================================
-        private bool PhysLeaf(int b)
-        {
-            byte type, dist = 4;
-            int i, xx, yy, zz;
-            ushort x, y, z;
-            IntToPos(b, out x, out y, out z);
-
-            for (xx = -dist; xx <= dist; xx++)
-            {
-                for (yy = -dist; yy <= dist; yy++)
-                {
-                    for (zz = -dist; zz <= dist; zz++)
-                    {
-                        type = GetTile((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz));
-                        if (type == Block.trunk)
-                            leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz))] = 0;
-                        else if (type == Block.leaf)
-                            leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz))] = -2;
-                        else
-                            leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz))] = -1;
-                    }
-                }
-            }
-
-            for (i = 1; i <= dist; i++)
-            {
-                for (xx = -dist; xx <= dist; xx++)
-                {
-                    for (yy = -dist; yy <= dist; yy++)
-                    {
-                        for (zz = -dist; zz <= dist; zz++)
-                        {
-                            try
-                            {
-                                if (leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz))] == i - 1)
-                                {
-                                    if (
-                                        leaves.ContainsKey(PosToInt((ushort)(x + xx - 1), (ushort)(y + yy),
-                                                                    (ushort)(z + zz))) &&
-                                        leaves[PosToInt((ushort)(x + xx - 1), (ushort)(y + yy), (ushort)(z + zz))] ==
-                                        -2)
-                                        leaves[PosToInt((ushort)(x + xx - 1), (ushort)(y + yy), (ushort)(z + zz))] =
-                                            (sbyte)i;
-
-                                    if (
-                                        leaves.ContainsKey(PosToInt((ushort)(x + xx + 1), (ushort)(y + yy),
-                                                                    (ushort)(z + zz))) &&
-                                        leaves[PosToInt((ushort)(x + xx + 1), (ushort)(y + yy), (ushort)(z + zz))] ==
-                                        -2)
-                                        leaves[PosToInt((ushort)(x + xx + 1), (ushort)(y + yy), (ushort)(z + zz))] =
-                                            (sbyte)i;
-
-                                    if (
-                                        leaves.ContainsKey(PosToInt((ushort)(x + xx), (ushort)(y + yy - 1),
-                                                                    (ushort)(z + zz))) &&
-                                        leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy - 1), (ushort)(z + zz))] ==
-                                        -2)
-                                        leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy - 1), (ushort)(z + zz))] =
-                                            (sbyte)i;
-
-                                    if (
-                                        leaves.ContainsKey(PosToInt((ushort)(x + xx), (ushort)(y + yy + 1),
-                                                                    (ushort)(z + zz))) &&
-                                        leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy + 1), (ushort)(z + zz))] ==
-                                        -2)
-                                        leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy + 1), (ushort)(z + zz))] =
-                                            (sbyte)i;
-
-                                    if (
-                                        leaves.ContainsKey(PosToInt((ushort)(x + xx), (ushort)(y + yy),
-                                                                    (ushort)(z + zz - 1))) &&
-                                        leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz - 1))] ==
-                                        -2)
-                                        leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz - 1))] =
-                                            (sbyte)i;
-
-                                    if (
-                                        leaves.ContainsKey(PosToInt((ushort)(x + xx), (ushort)(y + yy),
-                                                                    (ushort)(z + zz + 1))) &&
-                                        leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz + 1))] ==
-                                        -2)
-                                        leaves[PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz + 1))] =
-                                            (sbyte)i;
-                                }
-                            }
-                            catch
-                            {
-                                Server.s.Log("Leaf decay error!");
-                            }
-                        }
-                    }
-                }
-            }
-
-            //Server.s.Log((leaves[b] < 0).ToString()); // This is a debug line that spams the console to hell!
-            return leaves[b] < 0;
         }
 
         //================================================================================================================
