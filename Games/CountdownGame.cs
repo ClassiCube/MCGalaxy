@@ -38,8 +38,6 @@ namespace MCGalaxy
 
         public static CountdownGameStatus gamestatus = CountdownGameStatus.Disabled;
 
-        //private static ushort[] x; // this is useless?
-
         public static void GameStart(Player p)
         {
             switch (gamestatus)

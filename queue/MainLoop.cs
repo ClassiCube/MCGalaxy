@@ -181,11 +181,6 @@ namespace MonoTorrent.Client
 
         private void Queue(DelegateTask task)
         {
-            Queue(task, Priority.Normal);
-        }
-
-        private void Queue(DelegateTask task, Priority priority)
-        {
             lock (tasks)
             {
                 tasks.Enqueue(task);
@@ -237,7 +232,7 @@ namespace MonoTorrent.Client
             if (Thread.CurrentThread == thread)
                 t.Execute();
             else
-                Queue(t, Priority.Highest);
+                Queue(t);
 
             t.WaitHandle.WaitOne();
 

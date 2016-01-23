@@ -618,8 +618,6 @@
     <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="Queue\Cache.cs" />
-    <Compile Include="Queue\Check.cs" />
-    <Compile Include="Queue\Enums.cs" />
     <Compile Include="Queue\ICacheable.cs" />
     <Compile Include="Queue\MainLoop.cs" />
     <Compile Include="Queue\TorrentException.cs" />
