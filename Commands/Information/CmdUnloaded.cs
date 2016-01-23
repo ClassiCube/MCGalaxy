@@ -34,7 +34,6 @@ namespace MCGalaxy.Commands
             try
             {
                 List<string> levels = new List<string>(Server.levels.Count);
-
                 string unloadedLevels = ""; int currentNum = 0; int maxMaps = 0;
 
                 if (message != "")
@@ -58,7 +57,7 @@ namespace MCGalaxy.Commands
                         if (!levels.Contains(file.Name.Replace(".lvl", "").ToLower()))
                         {
                             string level = file.Name.Replace(".lvl", "");
-                            string visit = GetLoadOnGoto(level) && p.group.Permission >= GetPerVisitPermission(level) ? "%aYes" : "%cNo";
+                            string visit = GetLoadOnGoto(level) && (p == null || p.group.Permission >= GetPerVisitPermission(level)) ? "%aYes" : "%cNo";
                             unloadedLevels += ", " + Group.findPerm(GetPerBuildPermission(level)).color + level + " &b[" + visit + "&b]";
                         }
                     }
@@ -81,7 +80,7 @@ namespace MCGalaxy.Commands
                         if (!levels.Contains(fi[i].Name.Replace(".lvl", "").ToLower()))
                         {
                             string level = fi[i].Name.Replace(".lvl", "");
-                            string visit = GetLoadOnGoto(level) && p.group.Permission >= GetPerVisitPermission(level) ? "%aYes" : "%cNo";
+                            string visit = GetLoadOnGoto(level) && (p == null || p.group.Permission >= GetPerVisitPermission(level)) ? "%aYes" : "%cNo";
                             unloadedLevels += ", " + Group.findPerm(GetPerBuildPermission(level)).color + level + " &b[" + visit + "&b]";
                         }
                     }

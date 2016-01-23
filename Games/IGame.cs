@@ -21,5 +21,6 @@ namespace MCGalaxy.Games {
 
 	public abstract class IGame {
 		
+		
 	}
 }
