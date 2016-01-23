@@ -23,7 +23,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading;
-using MCGalaxy.Levels.Textures;
 using MCGalaxy.SQL;
 using Timer = System.Timers.Timer;
 using MCGalaxy.BlockPhysics;
@@ -193,7 +192,6 @@ namespace MCGalaxy
         public ushort spawnx, spawny, spawnz;
 
         public int speedPhysics = 250;
-        public LevelTextures textures;
 
         public string theme = "Normal";
         public bool unload = true;
@@ -234,8 +232,6 @@ namespace MCGalaxy
             spawnz = (ushort)(Length / 2);
             rotx = 0;
             roty = 0;
-            if (loadTexturesConfig)
-                textures = new LevelTextures(this);
             //season = new SeasonsCore(this);
         }
 

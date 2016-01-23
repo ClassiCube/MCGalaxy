@@ -66,7 +66,6 @@ namespace MCGalaxy
         public static ForgeBot IRC;
         public static GlobalChatBot GlobalChat;
         public static Thread locationChecker;
-        public static bool UseTextures = false;
         public static Thread blockThread;
         public static bool IgnoreOmnibans = false;
         //public static List<MySql.Data.MySqlClient.MySqlCommand> mySQLCommands = new List<MySql.Data.MySqlClient.MySqlCommand>();
@@ -691,14 +690,6 @@ namespace MCGalaxy
                                 mainLevel.Save();
                                 Level.CreateLeveldb(level);
                             }
-                        }
-                        //Wom Textures
-                        if (UseTextures)
-                        {
-                            mainLevel.textures.sendwomid = true;
-                            mainLevel.textures.enabled = true;
-                            mainLevel.textures.MOTD = motd;
-                            mainLevel.textures.CreateCFG();
                         }
                     }
                     else

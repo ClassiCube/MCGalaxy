@@ -245,7 +245,6 @@ namespace MCGalaxy.Gui
             this.label22 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label30 = new System.Windows.Forms.Label();
-            this.txechx = new System.Windows.Forms.CheckBox();
             this.editTxtsBt = new System.Windows.Forms.Button();
             this.txtHost = new System.Windows.Forms.TextBox();
             this.chkRestart = new System.Windows.Forms.CheckBox();
@@ -2667,7 +2666,6 @@ namespace MCGalaxy.Gui
             this.groupBox2.AutoSize = true;
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add( this.label30 );
-            this.groupBox2.Controls.Add( this.txechx );
             this.groupBox2.Controls.Add( this.editTxtsBt );
             this.groupBox2.Controls.Add( this.txtHost );
             this.groupBox2.Controls.Add( this.chkRestart );
@@ -2689,18 +2687,6 @@ namespace MCGalaxy.Gui
             this.label30.Size = new System.Drawing.Size( 75, 13 );
             this.label30.TabIndex = 3;
             this.label30.Text = "Console State:";
-            // 
-            // txechx
-            // 
-            this.txechx.Appearance = System.Windows.Forms.Appearance.Button;
-            this.txechx.AutoSize = true;
-            this.txechx.Location = new System.Drawing.Point( 268, 49 );
-            this.txechx.Name = "txechx";
-            this.txechx.Size = new System.Drawing.Size( 77, 23 );
-            this.txechx.TabIndex = 44;
-            this.txechx.Text = "Use Textures";
-            this.txechx.UseVisualStyleBackColor = true;
-            this.txechx.CheckedChanged += new System.EventHandler( this.txechx_CheckedChanged );
             // 
             // editTxtsBt
             // 
@@ -4927,7 +4913,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ListBox TntWrsMpsList;
         private System.Windows.Forms.Button TntWrsDiffSlctBt;
         private System.Windows.Forms.CheckBox TntWrsStreaksChck;
-        private System.Windows.Forms.CheckBox txechx;
         private System.Windows.Forms.CheckBox chkIgnoreOmnibans;
         private System.Windows.Forms.Button buttonEco;
         private System.Windows.Forms.Label label92;

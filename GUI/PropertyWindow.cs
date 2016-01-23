@@ -133,7 +133,6 @@ namespace MCGalaxy.Gui {
             //Load server stuff
             LoadProp("properties/server.properties");
             LoadRanks();
-            txechx.Checked = Server.UseTextures;
             try {
                 LoadCommands();
                 LoadBlocks();
@@ -2216,9 +2215,6 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             msg += Environment.NewLine;
             msg += "Extreme (1 Hit to die, TNT has short delay, big explosion and team kills are on)";
             MessageBox.Show(msg, "Difficulty");
-        }
-        private void txechx_CheckedChanged(object sender, EventArgs e) {
-            Server.UseTextures = txechx.Checked;
         }
 
         

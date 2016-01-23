@@ -444,7 +444,6 @@ namespace MCGalaxy {
                 switch (msg) {
                     //For wom
                     case (byte)'G':
-                        level.textures.ServeCfg(this, buffer);
                         return new byte[1];
                     case 0:
                         length = 130;
@@ -852,23 +851,9 @@ namespace MCGalaxy {
             string joinm = "&a+ " + this.FullName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
             if (group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
             {
-                if ((Server.guestJoinNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
+                if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest)
                 {
-                    Player.players.ForEach(p1 =>
-                                           {
-                                               if (p1.UsingWom)
-                                               {
-                                                   byte[] buffer = new byte[65];
-                                                   string joinMsg = "^detail.user.join=" + color + name + c.white;
-                                                   NetUtils.WriteAscii(joinMsg, buffer, 1);
-                                                   p1.SendRaw(Opcode.Message, buffer);
-                                                   buffer = null;
-                                               }
-                                               else
-                                               {
-                                                   Player.SendMessage(p1, joinm);
-                                               }
-                                           });
+                	Player.players.ForEach(p1 => Player.SendMessage(p1, joinm));
                 }
             }
             if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
@@ -1738,7 +1723,6 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     Server.s.Log(c.red + "[INFO] %fVersion: " + version);
                     UsingWom = true;
                     WoMVersion = version.Split('-')[1];
-                    SendWomUsers();
                     return;
                 }
                 
@@ -2564,21 +2548,9 @@ return;
                         if ( !hidden ) {
                             string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + 
                                 CP437Reader.ReadAllText("text/logout/" + name + ".txt");
-                            if ((Server.guestLeaveNotify && this.group.Permission <= LevelPermission.Guest) || this.group.Permission > LevelPermission.Guest)
+                            if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest)
                             {
-                                Player.players.ForEach(delegate(Player p1)
-                                                           {
-                                                               if (p1.UsingWom)
-                                                               {
-                                                                   byte[] buffer = new byte[65];
-                                                                   string partMsg = "^detail.user.part=" + color + name + c.white;
-                                                                   NetUtils.WriteAscii(partMsg, buffer, 1);
-                                                                   p1.SendRaw(Opcode.Message, buffer);
-                                                                   buffer = null;
-                                                               }
-                                                               else
-                                                                   Player.SendMessage(p1, leavem);
-                                                           });
+                                Player.players.ForEach(p1 => Player.SendMessage(p1, leavem));
                             }
                         }
                         //IRCBot.Say(name + " left the game.");

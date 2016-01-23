@@ -18,7 +18,7 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "playerblock"; } }
         public override string shortcut { get { return "pblock"; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdPlayerBlock() { }

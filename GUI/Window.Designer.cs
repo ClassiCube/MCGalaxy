@@ -150,7 +150,6 @@ namespace MCGalaxy.Gui
             this.UnloadedList = new System.Windows.Forms.ListBox();
             this.ldmapbt = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.WoM = new System.Windows.Forms.Button();
             this.TreeGrowChk = new System.Windows.Forms.CheckBox();
             this.label39 = new System.Windows.Forms.Label();
             this.leafDecayChk = new System.Windows.Forms.CheckBox();
@@ -1119,7 +1118,6 @@ namespace MCGalaxy.Gui
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.WoM);
             this.panel2.Controls.Add(this.TreeGrowChk);
             this.panel2.Controls.Add(this.label39);
             this.panel2.Controls.Add(this.leafDecayChk);
@@ -1161,17 +1159,6 @@ namespace MCGalaxy.Gui
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(372, 207);
             this.panel2.TabIndex = 48;
-            // 
-            // WoM
-            // 
-            this.WoM.Enabled = false;
-            this.WoM.Location = new System.Drawing.Point(97, 84);
-            this.WoM.Name = "WoM";
-            this.WoM.Size = new System.Drawing.Size(97, 23);
-            this.WoM.TabIndex = 49;
-            this.WoM.Text = "Wom Textures";
-            this.WoM.UseVisualStyleBackColor = true;
-            this.WoM.Click += new System.EventHandler(this.button1_Click);
             // 
             // TreeGrowChk
             // 
@@ -2711,7 +2698,6 @@ namespace MCGalaxy.Gui
         private Label label40;
         private AutoScrollTextBox txtGlobalLog;
         private TextBox txtGlobalInput;
-        private Button WoM;
         private Components.ColoredTextBox txtLog;
         private ContextMenuStrip txtLogMenuStrip;
         private ToolStripMenuItem nightModeToolStripMenuItem;

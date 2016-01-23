@@ -179,7 +179,9 @@
     <Compile Include="Commands\Fun\CmdInfect.cs" />
     <Compile Include="Commands\Fun\CmdInfected.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
+    <Compile Include="Commands\Fun\CmdPlayerBlock.cs" />
     <Compile Include="Commands\Fun\CmdQueue.cs" />
+    <Compile Include="Commands\Fun\CmdSlap.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
     <Compile Include="Commands\Fun\CmdZombieGame.cs" />
     <Compile Include="Commands\Fun\CmdZombieSpawn.cs" />
@@ -329,7 +331,6 @@
     <Compile Include="Commands\Other\CmdNick.cs" />
     <Compile Include="Commands\Other\CmdPass.cs" />
     <Compile Include="Commands\Other\CmdpCinema.cs" />
-    <Compile Include="Commands\Other\CmdPlayerBlock.cs" />
     <Compile Include="Commands\Other\CmdQuit.cs" />
     <Compile Include="Commands\Other\CmdRagequit.cs" />
     <Compile Include="Commands\Other\CmdRainbow.cs" />
@@ -345,7 +346,6 @@
     <Compile Include="Commands\Other\CmdSendCmd.cs" />
     <Compile Include="Commands\Other\CmdServer.cs" />
     <Compile Include="Commands\Other\CmdSetPass.cs" />
-    <Compile Include="Commands\Other\CmdSlap.cs" />
     <Compile Include="Commands\Other\CmdSpawn.cs" />
     <Compile Include="Commands\Other\CmdSummon.cs" />
     <Compile Include="Commands\Other\CmdTake.cs" />
@@ -477,16 +477,9 @@
     <Compile Include="GUI\PortTools.Designer.cs">
       <DependentUpon>PortTools.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Textures.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Textures.Designer.cs">
-      <DependentUpon>Textures.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Win32\Margins.cs" />
     <Compile Include="GUI\Win32\Natives.cs" />
     <Compile Include="GUI\Win32\RECT.cs" />
-    <Compile Include="Levels\Texture_Settings.cs" />
     <Compile Include="Database\DatabaseTransactionHelper.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Server\Extra\Awards.cs" />
@@ -573,9 +566,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Textures.resx">
-      <DependentUpon>Textures.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PropertyWindow.resx">
       <DependentUpon>PropertyWindow.cs</DependentUpon>

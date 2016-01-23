@@ -109,21 +109,6 @@ namespace MCGalaxy {
         void HandleCustomBlockSupportLevel( byte[] message ) {
             customBlockSupportLevel = message[0];
         }
-
-        void SendWomUsers() {
-            Player.players.ForEach(
-                delegate(Player p)
-                {
-                    if (p != this)
-                    {
-                        byte[] buffer = new byte[65];
-                        string hereMsg = "^detail.user.here=" + p.color + p.name;
-                        NetUtils.WriteAscii(hereMsg, buffer, 1);
-                        SendRaw(Opcode.Message, buffer);
-                        buffer = null;
-                    }
-                });
-        }
         
         char[] characters = new char[64];
         string GetString( byte[] data, int offset ) {
@@ -277,15 +262,10 @@ namespace MCGalaxy {
             buffer[0] = (byte)8;
             NetUtils.WriteAscii(Server.name, buffer, 1);
 
-            if ( Server.UseTextures ) {
-            	string msg = "&0cfg=" + (IsLocalIpAddress(ip) ? ip : Server.IP) + ":" + Server.port + "/" + level.name + "~motd";
-            	NetUtils.WriteAscii(msg, buffer, 65);
-            } else {
-                if ( !String.IsNullOrEmpty(group.MOTD) ) 
-                	NetUtils.WriteAscii(group.MOTD, buffer, 65);
-                else 
-                	NetUtils.WriteAscii(Server.motd, buffer, 65);
-            }
+            if ( !String.IsNullOrEmpty(group.MOTD) )
+                NetUtils.WriteAscii(group.MOTD, buffer, 65);
+            else
+                NetUtils.WriteAscii(Server.motd, buffer, 65);
 
             bool canPlace = Block.canPlace(this, Block.blackrock);
             buffer[129] = canPlace ? (byte)100 : (byte)0;
@@ -298,11 +278,7 @@ namespace MCGalaxy {
         public void SendUserMOTD() {
             byte[] buffer = new byte[130];
             buffer[0] = Server.version;
-            if ( UsingWom && ( level.textures.enabled || level.motd == "texture" ) && group.Permission >= level.textures.LowestRank.Permission ) { 
-            	NetUtils.WriteAscii(Server.name, buffer, 1);
-            	string womMsg = "&0cfg=" + ( IsLocalIpAddress(ip) ? ip : Server.IP ) + ":" + Server.port + "/" + level.name;
-            	NetUtils.WriteAscii(womMsg, buffer, 65);
-            }
+
             if (level.motd == "ignore") {
                 NetUtils.WriteAscii(Server.name, buffer, 1);
                 if (!String.IsNullOrEmpty(group.MOTD) ) 

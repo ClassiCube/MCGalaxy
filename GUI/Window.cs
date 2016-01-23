@@ -799,8 +799,6 @@ namespace MCGalaxy.Gui
                 SurvivalStyleDeathchk.Checked = l.Death;
                 finitechk.Checked = l.finite;
                 edgewaterchk.Checked = l.edgeWater;
-                if (Server.UseTextures)
-                    WoM.Enabled = true;
                 Aicombo.SelectedItem = l.ai ? "Hunt" : "Flee";
                 Gunschk.Checked = l.guns;
                 Fallnumeric.Value = l.fall;
@@ -826,8 +824,6 @@ namespace MCGalaxy.Gui
                     }
                 }
             }
-            else
-                WoM.Enabled = false;
             UpdateMapList();
         }
 
@@ -1898,23 +1894,6 @@ namespace MCGalaxy.Gui
                 return;
             }
             txtGlobalLog.AppendTextAndScroll(message);
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //Prevent derpy from getting in here..
-            if (!Server.UseTextures)
-            {
-                WoM.Enabled = false;
-                return;
-            }
-            if (GetSelectedLevelTab() == null) return;
-            var textures = new GUI.Textures { l = GetSelectedLevelTab() };
-            textures.Show();
-            textures.FormClosing += delegate
-            {
-                textures.Dispose();
-            };
         }
 
         #region Colored Reader Context Menu
