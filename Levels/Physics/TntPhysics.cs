@@ -72,7 +72,7 @@ namespace MCGalaxy.BlockPhysics {
                                     ? Block.air : Block.lavastill);
                     return;
                 }
-                if (C.p.TntWarsKillStreak >= TntWarsGame.Properties.DefaultStreakTwoAmount 
+                if (C.p.TntWarsKillStreak >= TntWarsGame.Properties.DefaultStreakTwoAmount
                     && TntWarsGame.GetTntWarsGame(C.p).Streaks) {
                     power++;
                 }
@@ -99,6 +99,48 @@ namespace MCGalaxy.BlockPhysics {
                         return;
                     }
                     lvl.MakeExplosion(x, y, z, 0);
+                }
+            }
+        }
+        
+        public static void MakeExplosion(Level lvl, ushort x, ushort y, ushort z, int size,
+                                         bool force = false, TntWarsGame game = null) {
+            Random rand = new Random();
+            if ((lvl.physics < 2 || lvl.physics == 5) && !force) return;
+            lvl.AddUpdate(lvl.PosToInt(x, y, z), Block.tntexplosion, true);
+
+            Explode(lvl, x, y, z, size + 1, rand, -1, game);
+            Explode(lvl, x, y, z, size + 2, rand, 7, game);
+            Explode(lvl, x, y, z, size + 3, rand, 3, game);
+        }
+        
+        static void Explode(Level lvl, ushort x, ushort y, ushort z, 
+                     int size, Random rand, int prob, TntWarsGame game) {
+            for (int xx = (x - size); xx <= (x + size ); ++xx)
+                for (int yy = (y - size ); yy <= (y + size); ++yy)
+                    for (int zz = (z - size); zz <= (z + size); ++zz)
+            {
+                int index = lvl.PosToInt((ushort)xx, (ushort)yy, (ushort)zz);
+                if (index < 0) continue;
+                byte b = lvl.blocks[index];
+                
+                bool doDestroy = prob < 0 || rand.Next(1, 10) < prob;
+                if (doDestroy && Block.Convert(b) != Block.tnt) {
+                    if (game != null && b != Block.air) {
+                        if (game.InZone((ushort)xx, (ushort)yy, (ushort)zz, false))
+                            continue;
+                    }
+                    
+                    if (rand.Next(1, 11) <= 4)
+                        lvl.AddUpdate(index, Block.tntexplosion);
+                    else if (rand.Next(1, 11) <= 8)
+                        lvl.AddUpdate(index, Block.air);
+                    else
+                        lvl.AddCheck(index, "drop 50 dissipate 8");
+                } else if (b == Block.tnt) {
+                    lvl.AddUpdate(index, Block.smalltnt);
+                } else if (b == Block.smalltnt || b == Block.bigtnt || b == Block.nuketnt) {
+                    lvl.AddCheck(index);
                 }
             }
         }
