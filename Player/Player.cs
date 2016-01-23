@@ -445,31 +445,31 @@ namespace MCGalaxy {
                     //For wom
                     case (byte)'G':
                         return new byte[1];
-                    case 0:
+                    case Opcode.Handshake:
                         length = 130;
-                        break; // login
-                    case 5:
+                        break;
+                    case Opcode.SetBlockClient:
                         if (!loggedIn)
                             goto default;
                         length = 8;
-                        break; // blockchange
-                    case 8:
+                        break;
+                    case Opcode.EntityTeleport:
                         if (!loggedIn)
                             goto default;
                         length = 9;
-                        break; // input
-                    case 13:
+                        break;
+                    case Opcode.Message:
                         if (!loggedIn)
                             goto default;
                         length = 65;
-                        break; // chat
-                    case 16:
+                        break;
+                    case Opcode.CpeExtInfo:
                         length = 66;
                         break;
-                    case 17:
+                    case Opcode.CpeExtEntry:
                         length = 68;
                         break;
-                    case 19:
+                    case Opcode.CpeCustomBlockSupportLevel:
                         length = 1;
                         break;
                     default:
@@ -488,35 +488,34 @@ namespace MCGalaxy {
 
                     buffer = tempbuffer;
 
-                    // Thread thread = null;
                     switch (msg) {
-                        case 0:
+                    	case Opcode.Handshake:
                             HandleLogin(message);
                             lock (pendingLock)
                                 pendingNames.Remove(truename);
                             break;
-                        case 5:
+                    	case Opcode.SetBlockClient:
                             if (!loggedIn)
                                 break;
                             HandleBlockchange(message);
                             break;
-                        case 8:
+                    	case Opcode.EntityTeleport:
                             if (!loggedIn)
                                 break;
                             HandleInput(message);
                             break;
-                        case 13:
+                    	case Opcode.Message:
                             if (!loggedIn)
                                 break;
                             HandleChat(message);
                             break;
-                        case 16:
+                    	case Opcode.CpeExtInfo:
                             HandleExtInfo( message );
                             break;
-                        case 17:
+                    	case Opcode.CpeExtEntry:
                             HandleExtEntry( message );
                             break;
-                        case 19:
+                    	case Opcode.CpeCustomBlockSupportLevel:
                             HandleCustomBlockSupportLevel( message );
                             break;
                     }
@@ -1068,7 +1067,7 @@ namespace MCGalaxy {
                 if (type >= Block.CpeCount) {
                     if (!HasCpeExt(CpeExt.BlockDefinitions) 
                         || BlockDefinition.GlobalDefinitions[type] == null) {
-                        Kick("Unknown block type!"); return;
+                        SendMessage("Invalid block type: " + type); return;
                     }
                     extType = type;
                     type = Block.custom_block;
@@ -1089,7 +1088,7 @@ namespace MCGalaxy {
                         }
                     }
                 }
-                lastYblock = y; lastXblock = x; lastZblock = z;
+                lastXblock = x; lastYblock = y; lastZblock = z;
                 ManualChange(x, y, z, action, type, extType);
             } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?

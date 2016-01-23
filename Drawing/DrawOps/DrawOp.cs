@@ -25,7 +25,7 @@ namespace MCGalaxy {
         public int TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
         
         protected const int reloadLimit = 10000;
-        protected int method;
+        protected internal int method;
         
         public virtual bool MinMaxCoords { get { return true; } }
         
@@ -88,7 +88,7 @@ namespace MCGalaxy {
             }
         }
         
-        const int MethodBlockQueue = 0, MethodBlockChange = 1, MethodSetTile = 2;
+        internal const int MethodBlockQueue = 0, MethodBlockChange = 1, MethodSetTile = 2;
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                            ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {

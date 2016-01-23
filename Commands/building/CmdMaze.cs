@@ -1,19 +1,19 @@
 /*
-	Copyright 2011 MCGalaxy
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCGalaxy
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections;
@@ -49,14 +49,14 @@ namespace MCGalaxy.Commands
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
-            RevertAndClearState(p, x, y, z);;
+            RevertAndClearState(p, x, y, z);
             p.blockchangeObject = new CatchPos(x, y, z);
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
-            Player.SendMessage(p, "Generating maze... this could take a while");
+            
             CatchPos first = (CatchPos)p.blockchangeObject;
             int width = Math.Max(x, first.X) - Math.Min(x, first.X);
             if (width % 2 != 0) { width++;x--; }
@@ -64,6 +64,11 @@ namespace MCGalaxy.Commands
             int height = Math.Max(z, first.Z) - Math.Min(z, first.Z);
             if (height % 2 != 0) { height++;z--; }
             height -= 2;
+            
+            if (width < 0 || height < 0) {
+                Player.SendMessage(p, "The corners of the maze need to be further apart."); return;
+            }            
+            Player.SendMessage(p, "Generating maze... this could take a while");
             //substract 2 cause we will just make the inner. the outer wall is made seperately
             wall = new bool[width+1, height+1];//+1 cause we begin at 0 so we need one object more
             for (int w = 0; w <= width; w++)
@@ -108,31 +113,32 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Maze is generated. now painting...");
             //seems to be there are no more moves possible
             //paint that shit :P
-            ushort minx = Math.Min(x, first.X);
-            ushort minz = Math.Min(z, first.Z);
-            ushort maxx = Math.Max(x, first.X);
-            maxx++;
-            ushort maxz = Math.Max(z, first.Z);
-            maxz++;
+            ushort minX = Math.Min(x, first.X);
+            ushort minZ = Math.Min(z, first.Z);
+            ushort maxX = Math.Max(x, first.X);
+            maxX++;
+            ushort maxZ = Math.Max(z, first.Z);
+            maxZ++;
             for (ushort xx = 0; xx <= width; xx++)
             {
                 for (ushort zz = 0; zz <= height; zz++)
                 {
                     if (wall[xx, zz])
                     {
-                        p.level.Blockchange(p, (ushort)(xx + minx+1), y, (ushort)(zz + minz+1), Block.staircasefull);
-                        p.level.Blockchange(p, (ushort)(xx + minx+1), (ushort)(y + 1), (ushort)(zz + minz+1), Block.leaf);
-                        p.level.Blockchange(p, (ushort)(xx + minx+1), (ushort)(y + 2), (ushort)(zz + minz+1), Block.leaf);
+                        p.level.Blockchange(p, (ushort)(xx + minX+1), y, (ushort)(zz + minZ+1), Block.staircasefull);
+                        p.level.Blockchange(p, (ushort)(xx + minX+1), (ushort)(y + 1), (ushort)(zz + minZ+1), Block.leaf);
+                        p.level.Blockchange(p, (ushort)(xx + minX+1), (ushort)(y + 2), (ushort)(zz + minZ+1), Block.leaf);
                     }
                 }
             }
-            p.ignorePermission = true;
-            Command.all.Find("cuboid").Use(p, "walls");
-            p.ManualChange(minx, y, minz, 0, Block.staircasefull);
-            p.ManualChange(maxx, y, maxz, 0, Block.staircasefull);
-            Command.all.Find("cuboid").Use(p, "walls");
-            p.ManualChange(minx, (ushort)(y + 1), minz, 0, Block.leaf);
-            p.ManualChange(maxx, (ushort)(y + 2), maxz, 0, Block.leaf);
+            CuboidWallsDrawOp drawOp = new CuboidWallsDrawOp();
+            drawOp.method = DrawOp.MethodBlockChange;
+            
+            SolidBrush brush = new SolidBrush(Block.staircasefull, 0);      
+            drawOp.Perform(minX, y, minZ, maxX, y, maxZ, p, p.level, brush);
+            brush = new SolidBrush(Block.leaf, 0);
+            drawOp.Perform(minX, (ushort)(y + 1), minZ, maxX, (ushort)(y + 2), maxZ, p, p.level, brush);
+            
             Player.SendMessage(p, "Maze painted. Build your entrance and exit yourself");
             randomizer = 0;
         }
