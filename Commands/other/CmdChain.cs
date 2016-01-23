@@ -27,12 +27,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdChain() { }
-        // Fields
-        public int x;
-        public int y;
-        public int z;
 
-        // Methods
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/chain - Shoots a chain of brown mushrooms and grabs a block and brings it back to the start.");

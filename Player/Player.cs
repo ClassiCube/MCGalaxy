@@ -2029,9 +2029,6 @@ return;
                     }
                 }
 
-                if ( cmd.ToLower() == "care" ) { SendMessage("Dmitchell94 now loves you with all his heart."); return; }
-                if ( cmd.ToLower() == "facepalm" ) { SendMessage("Fenderrock87's bot army just simultaneously facepalm'd at your use of this command."); return; }
-                if ( cmd.ToLower() == "alpaca" ) { SendMessage("Leitrean's Alpaca Army just raped your woman and pillaged your villages!"); return; }
                 //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
                 if ( cmd.ToLower() == "pony" ) {
                     if ( ponycount < 2 ) {

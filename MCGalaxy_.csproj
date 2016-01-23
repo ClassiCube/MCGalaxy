@@ -628,7 +628,6 @@
     <Compile Include="Util\MathHelper.cs" />
     <Compile Include="Util\MCForgeScripter.cs" />
     <Compile Include="Util\SCOGenerator.cs" />
-    <Compile Include="Util\Serializer.cs" />
     <EmbeddedResource Include="properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
