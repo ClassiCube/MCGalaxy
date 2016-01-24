@@ -1072,23 +1072,6 @@ namespace MCGalaxy {
                     extType = type;
                     type = Block.custom_block;
                 }
-
-                if ( action == 1 && Server.ZombieModeOn && Server.noPillaring ) {
-                    if ( !referee ) {
-                        if ( lastYblock == y - 1 && lastXblock == x && lastZblock == z ) {
-                            blocksStacked++;
-                        } else {
-                            blocksStacked = 0;
-                        }
-                        if ( blocksStacked == 2 ) {
-                            SendMessage("You are pillaring! Stop before you get kicked!");
-                        }
-                        if ( blocksStacked == 4 ) {
-                            Command.all.Find("kick").Use(null, name + " No pillaring allowed!");
-                        }
-                    }
-                }
-                lastXblock = x; lastYblock = y; lastZblock = z;
                 ManualChange(x, y, z, action, type, extType);
             } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
@@ -1120,23 +1103,8 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if ( Server.ZombieModeOn && ( action == 1 || ( action == 0 && this.painting ) ) ) {
-                if ( Server.zombie != null && this.level.name == Server.zombie.currentLevelName ) {
-                    if ( blockCount == 0 ) {
-                        if ( !referee ) {
-                            SendMessage("You have no blocks left.");
-                            RevertBlock(x, y, z); return;
-                        }
-                    }
-
-                    if ( !referee ) {
-                        blockCount--;
-                        if ( blockCount == 40 || blockCount == 30 || blockCount == 20 || blockCount <= 10 && blockCount >= 0 ) {
-                            SendMessage("Blocks Left: " + c.maroon + blockCount + Server.DefaultColor);
-                        }
-                    }
-                }
-            }
+            if (Server.ZombieModeOn && Server.zombie != null 
+                && Server.zombie.HandlesManualChange(this, x, y, z, action, type, b)) return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
                 SendMessage("You are out of the round, and cannot build.");

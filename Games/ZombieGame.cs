@@ -26,7 +26,7 @@ using System.Timers;
 
 namespace MCGalaxy
 {
-    public sealed class ZombieGame
+    public sealed partial class ZombieGame
     {
         public int amountOfRounds = 0;
         public int limitRounds = 0;

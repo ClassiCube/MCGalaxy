@@ -17,10 +17,13 @@
  */
 using System;
 
-namespace MCGalaxy.Games {
+namespace MCGalaxy {
 
-	public abstract class IGame {
-		
-		
-	}
+    public abstract class IGame {
+        
+        public virtual bool HandlesManualChange(Player p, ushort x, ushort y, ushort z, 
+                                                byte action, byte tile, byte b) {
+            return false;
+        }
+    }
 }
