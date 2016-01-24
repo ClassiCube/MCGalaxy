@@ -640,15 +640,14 @@ namespace MCGalaxy {
         }
         
         void SendHackControl( byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning, 
-                             byte allowthirdperson, byte allowchangingweather, short maxjumpheight ) {
+                             byte allowthirdperson, short maxjumpheight ) {
             byte[] buffer = new byte[7];
             buffer[0] = allowflying;
             buffer[1] = allownoclip;
             buffer[2] = allowspeeding;
             buffer[3] = allowrespawning;
             buffer[4] = allowthirdperson;
-            buffer[5] = allowchangingweather;
-            NetUtils.WriteI16(maxjumpheight, buffer, 6);
+            NetUtils.WriteI16(maxjumpheight, buffer, 5);
             SendRaw( Opcode.CpeHackControl, buffer );
         }
         

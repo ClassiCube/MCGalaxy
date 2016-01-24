@@ -170,6 +170,7 @@
     <Compile Include="Commands\Economy\CmdGive.cs" />
     <Compile Include="Commands\Economy\CmdMoney.cs" />
     <Compile Include="Commands\Economy\CmdPay.cs" />
+    <Compile Include="Commands\Fun\CmdAka.cs" />
     <Compile Include="Commands\Fun\CmdAlive.cs" />
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
     <Compile Include="Commands\Fun\CmdCtf.cs" />
@@ -222,7 +223,6 @@
     <Compile Include="Commands\Information\CmdWhois.cs" />
     <Compile Include="Commands\Information\CmdWhoNick.cs" />
     <Compile Include="Commands\Information\CmdWhowas.cs" />
-    <Compile Include="Commands\Moderation\CmdAka.cs" />
     <Compile Include="Commands\Moderation\CmdAllowGuns.cs" />
     <Compile Include="Commands\Moderation\CmdBan.cs" />
     <Compile Include="Commands\Moderation\CmdBanEdit.cs" />

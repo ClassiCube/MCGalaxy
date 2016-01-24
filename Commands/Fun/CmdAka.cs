@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "aka"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdAka() { }
