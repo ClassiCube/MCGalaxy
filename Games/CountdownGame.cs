@@ -1,20 +1,20 @@
 /*
-	Copyright 2011 MCGalaxy
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2011 MCGalaxy
+        
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,44 +64,34 @@ namespace MCGalaxy
                     break;
             }
             {
-                {
-                    mapon.Blockchange(15, 27, 16, Block.glass);
-                    mapon.Blockchange(16, 27, 15, Block.glass);
-                    mapon.Blockchange(16, 27, 16, Block.glass);
-                    mapon.Blockchange(15, 27, 15, Block.glass);
-                }
-                {
+                    ChangeSquare(15, 27, 15, Block.glass);
                     {
-                        mapon.Blockchange(15, 18, 14, Block.glass);
-                        mapon.Blockchange(16, 18, 14, Block.glass);
-                        mapon.Blockchange(15, 17, 14, Block.glass);
-                        mapon.Blockchange(16, 17, 14, Block.glass);
+                        {
+                            mapon.Blockchange(15, 18, 14, Block.glass);
+                            mapon.Blockchange(16, 18, 14, Block.glass);
+                            mapon.Blockchange(15, 17, 14, Block.glass);
+                            mapon.Blockchange(16, 17, 14, Block.glass);
+                        }
+                        {
+                            mapon.Blockchange(14, 17, 15, Block.glass);
+                            mapon.Blockchange(14, 18, 16, Block.glass);
+                            mapon.Blockchange(14, 17, 16, Block.glass);
+                            mapon.Blockchange(14, 18, 15, Block.glass);
+                        }
+                        {
+                            mapon.Blockchange(15, 17, 17, Block.glass);
+                            mapon.Blockchange(16, 18, 17, Block.glass);
+                            mapon.Blockchange(15, 18, 17, Block.glass);
+                            mapon.Blockchange(16, 17, 17, Block.glass);
+                        }
+                        {
+                            mapon.Blockchange(17, 17, 16, Block.glass);
+                            mapon.Blockchange(17, 18, 15, Block.glass);
+                            mapon.Blockchange(17, 18, 16, Block.glass);
+                            mapon.Blockchange(17, 17, 15, Block.glass);
+                        }
                     }
-                    {
-                        mapon.Blockchange(14, 17, 15, Block.glass);
-                        mapon.Blockchange(14, 18, 16, Block.glass);
-                        mapon.Blockchange(14, 17, 16, Block.glass);
-                        mapon.Blockchange(14, 18, 15, Block.glass);
-                    }
-                    {
-                        mapon.Blockchange(15, 17, 17, Block.glass);
-                        mapon.Blockchange(16, 18, 17, Block.glass);
-                        mapon.Blockchange(15, 18, 17, Block.glass);
-                        mapon.Blockchange(16, 17, 17, Block.glass);
-                    }
-                    {
-                        mapon.Blockchange(17, 17, 16, Block.glass);
-                        mapon.Blockchange(17, 18, 15, Block.glass);
-                        mapon.Blockchange(17, 18, 16, Block.glass);
-                        mapon.Blockchange(17, 17, 15, Block.glass);
-                    }
-                }
-                {
-                    mapon.Blockchange(16, 16, 15, Block.glass);
-                    mapon.Blockchange(15, 16, 16, Block.glass);
-                    mapon.Blockchange(15, 16, 15, Block.glass);
-                    mapon.Blockchange(16, 16, 16, Block.glass);
-                }
+                    ChangeSquare(15, 16, 15, Block.glass);
             }
             mapon.ChatLevel("Countdown is about to start!!");
             mapon.permissionbuild = LevelPermission.Nobody;
@@ -289,43 +279,25 @@ namespace MCGalaxy
                 }
             }
         }
-
-        public static void RemoveSquare(string square)
-        {
+        
+        static void RemoveSquare(string square) {
             int column = int.Parse(square.Split(':')[0]);
             int row = int.Parse(square.Split(':')[1]);
             ushort x1 = (ushort)(27 - (row * 3));
-            ushort x2 = (ushort)(28 - (row * 3));
+            ushort x2 = (ushort)(x1 + 1);
             ushort y = 4;
             ushort z1 = (ushort)(27 - (column * 3));
-            ushort z2 = (ushort)(28 - (column * 3));
+            ushort z2 = (ushort)(z1 + 1);
+            
             {
-                { //3
-                    mapon.Blockchange(x1, y, z1, Block.yellow);
-                    mapon.Blockchange(x2, y, z1, Block.yellow);
-                    mapon.Blockchange(x2, y, z2, Block.yellow);
-                    mapon.Blockchange(x1, y, z2, Block.yellow);
-                }
+                ChangeSquare(x1, y, z1, Block.yellow);
                 Thread.Sleep(speed);
-                { //2
-                    mapon.Blockchange(x1, y, z1, Block.orange);
-                    mapon.Blockchange(x2, y, z1, Block.orange);
-                    mapon.Blockchange(x2, y, z2, Block.orange);
-                    mapon.Blockchange(x1, y, z2, Block.orange);
-                }
+                ChangeSquare(x1, y, z1, Block.orange);
                 Thread.Sleep(speed);
-                { //1
-                    mapon.Blockchange(x1, y, z1, Block.red);
-                    mapon.Blockchange(x2, y, z1, Block.red);
-                    mapon.Blockchange(x2, y, z2, Block.red);
-                    mapon.Blockchange(x1, y, z2, Block.red);
-                }
+                ChangeSquare(x1, y, z1, Block.red);
                 Thread.Sleep(speed);
                 { //poof
-                    mapon.Blockchange(x1, y, z1, Block.air);
-                    mapon.Blockchange(x2, y, z1, Block.air);
-                    mapon.Blockchange(x2, y, z2, Block.air);
-                    mapon.Blockchange(x1, y, z2, Block.air);
+                    ChangeSquare(x1, y, z1, Block.air);
                     { //beneath this is checking the glass next to the square
                         bool up = false;
                         bool left = false;
@@ -380,7 +352,14 @@ namespace MCGalaxy
             }
         }
 
-        public static void PopulateSquaresLeft()
+        static void ChangeSquare(ushort x, ushort y, ushort z, byte block) {
+            mapon.Blockchange(x, y, z, block);
+            mapon.Blockchange((ushort)(x + 1), y, z, block);
+            mapon.Blockchange(x, y, (ushort)(z + 1), block);
+            mapon.Blockchange((ushort)(x + 1), y, (ushort)(z + 1), block);            
+        }
+        
+        static void PopulateSquaresLeft()
         {
             int column = 1;
             int row = 1;
@@ -396,7 +375,7 @@ namespace MCGalaxy
             }
         }
 
-        public static void AfterStart()
+        static void AfterStart()
         {
             {
                 {
@@ -475,7 +454,7 @@ namespace MCGalaxy
             playersleftlist.Remove(p);
             switch (playersleft)
             {
-                case 1:        
+                case 1:
                     mapon.ChatLevel(playersleftlist.Last().color + playersleftlist.Last().name + Server.DefaultColor + " is the winner!!");
                     End(playersleftlist.Last());
                     break;

@@ -401,7 +401,8 @@
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Games\IGame.cs" />
-    <Compile Include="Games\ZombieGame.Game.cs" />
+    <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
+    <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
@@ -554,7 +555,6 @@
     </Compile>
     <Compile Include="Player\VIP.cs" />
     <Compile Include="Server\Extra\Warp.cs" />
-    <Compile Include="Games\ZombieGame.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="API\WhoWas.cs" />
     <Compile Include="util\SparseBitSet.cs" />
@@ -697,6 +697,7 @@
     <Folder Include="Commands\World" />
     <Folder Include="Commands\Other" />
     <Folder Include="Drawing\DrawOps" />
+    <Folder Include="Games\ZombieSurvival" />
     <Folder Include="Levels\IO" />
     <Folder Include="Levels\Physics" />
     <Folder Include="Player\Group" />

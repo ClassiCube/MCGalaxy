@@ -900,38 +900,28 @@ namespace MCGalaxy {
 
             Server.s.Log(name + " [" + ip + "] has joined the server.");
 
-            if (Server.zombie.ZombieStatus() != 0) { Player.SendMessage(this, "There is a Zombie Survival game currently in-progress! Join it by typing /g " + Server.zombie.currentLevelName); }
-            {
-                try
-                {
-                    ushort x = (ushort)((0.5 + level.spawnx) * 32);
-                    ushort y = (ushort)((1 + level.spawny) * 32);
-                    ushort z = (ushort)((0.5 + level.spawnz) * 32);
-                    pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
+            Server.zombie.PlayerJoinedServer(this);
+            try {
+                ushort x = (ushort)((0.5 + level.spawnx) * 32);
+                ushort y = (ushort)((1 + level.spawny) * 32);
+                ushort z = (ushort)((0.5 + level.spawnz) * 32);
+                pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
 
-                    GlobalSpawn(this, x, y, z, rot[0], rot[1], true);
-                    foreach (Player p in players)
-                    {
-                        if (p.level == level && p != this && !p.hidden)
-                        {
-                            SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
-                        }
-                        if (HasCpeExt(CpeExt.ChangeModel))
-                        {
-                            SendChangeModel(p.id, p.model);
-                        }
-                    }
-                    foreach (PlayerBot pB in PlayerBot.playerbots)
-                    {
-                        if (pB.level == level)
-                            SendSpawn(pB.id, pB.color + pB.name, pB.pos[0], pB.pos[1], pB.pos[2], pB.rot[0], pB.rot[1]);
-                    }
+                GlobalSpawn(this, x, y, z, rot[0], rot[1], true);
+                foreach (Player p in players) {
+                    if (p.level == level && p != this && !p.hidden)
+                        SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+                    if (HasCpeExt(CpeExt.ChangeModel))
+                        SendChangeModel(p.id, p.model);
                 }
-                catch (Exception e)
-                {
-                    Server.ErrorLog(e);
-                    Server.s.Log("Error spawning player \"" + name + "\"");
+                
+                foreach (PlayerBot pB in PlayerBot.playerbots) {
+                    if (pB.level == level)
+                        SendSpawn(pB.id, pB.color + pB.name, pB.pos[0], pB.pos[1], pB.pos[2], pB.rot[0], pB.rot[1]);
                 }
+            } catch (Exception e) {
+                Server.ErrorLog(e);
+                Server.s.Log("Error spawning player \"" + name + "\"");
             }
             Loading = false;
         }
