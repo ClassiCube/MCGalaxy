@@ -25,5 +25,17 @@ namespace MCGalaxy {
                                                 byte action, byte tile, byte b) {
             return false;
         }
+        
+        public virtual bool HandlesChatMessage(Player p, string message) {
+            return false;
+        }
+        
+        public virtual void PlayerJoinedServer(Player p) { }
+        
+        public virtual void PlayerLeftServer(Player p) { }
+        
+        public virtual void PlayerJoinedGame(Player p) { }
+        
+        public virtual void PlayerLeftGame(Player p) { }
     }
 }

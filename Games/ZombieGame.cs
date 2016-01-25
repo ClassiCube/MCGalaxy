@@ -432,7 +432,7 @@ namespace MCGalaxy
                     if (initialChangeLevel)
                     {
                         Server.votingforlevel = true;
-                        Player.GlobalMessage(" " + c.black + "Level Vote: " + Server.DefaultColor + selectedLevel1 + ", " + selectedLevel2 + " or random " + "(" + c.lime + "1" + Server.DefaultColor + "/" + c.red + "2" + Server.DefaultColor + "/" + c.blue + "3" + Server.DefaultColor + ")");
+                        Player.GlobalMessage(" " + c.black + "Level Vote: " + Server.DefaultColor + selectedLevel1 + ", " + selectedLevel2 + " or random " + "(" + c.lime + "1%S/" + c.red + "2%S/" + c.blue + "3%S)");
                         System.Threading.Thread.Sleep(15000);
                         Server.votingforlevel = false;
                     }

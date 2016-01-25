@@ -2177,82 +2177,25 @@ return;
                     SendMessage(from, "Your vote for &5" + message.ToLower().Capitalize() + Server.DefaultColor + " has been placed. Thanks!");
                     Server.lava.map.ChatLevelOps(from.name + " voted for &5" + message.ToLower().Capitalize() + Server.DefaultColor + ".");
                     return;
-                }
-                else {
+                } else {
                     SendMessage(from, "&cYou already voted!");
                     return;
                 }
             }
 
-            if ( Server.voting ) {
-                if ( message.ToLower() == "yes" || message.ToLower() == "ye" || message.ToLower() == "y" ) {
-                    if ( !from.voted ) {
-                        Server.YesVotes++;
-                        SendMessage(from, c.red + "Thanks For Voting!");
-                        from.voted = true;
-                        return;
-                    }
-                    else if ( !from.voice ) {
-                        from.SendMessage("Chat moderation is on while voting is on!");
-                        return;
-                    }
-                }
-                else if ( message.ToLower() == "no" || message.ToLower() == "n" ) {
-                    if ( !from.voted ) {
-                        Server.NoVotes++;
-                        SendMessage(from, c.red + "Thanks For Voting!");
-                        from.voted = true;
-                        return;
-                    }
-                    else if ( !from.voice ) {
-                        from.SendMessage("Chat moderation is on while voting is on!");
-                        return;
-                    }
+            if (Server.voting) {
+            	string test = message.ToLower();
+            	if (CheckVote(test, from, "y", "yes", ref Server.YesVotes) ||
+            	    CheckVote(test, from, "n", "no", ref Server.NoVotes)) return;
+            	
+            	if (!from.voice && (test == "y" || test == "n" || test == "yes" || test == "no")) {
+            		from.SendMessage("Chat moderation is on while voting is on!"); return;
                 }
             }
 
-            if ( Server.votingforlevel ) {
-                if ( message.ToLower() == "1" || message.ToLower() == "one" ) {
-                    if ( !from.voted ) {
-                        Server.Level1Vote++;
-                        SendMessage(from, c.red + "Thanks For Voting!");
-                        from.voted = true;
-                        return;
-                    }
-                    else if ( !from.voice ) {
-                        from.SendMessage("Chat moderation is on while voting is on!");
-                        return;
-                    }
-                }
-                else if ( message.ToLower() == "2" || message.ToLower() == "two" ) {
-                    if ( !from.voted ) {
-                        Server.Level2Vote++;
-                        SendMessage(from, c.red + "Thanks For Voting!");
-                        from.voted = true;
-                        return;
-                    }
-                    else if ( !from.voice ) {
-                        from.SendMessage("Chat moderation is on while voting is on!");
-                        return;
-                    }
-                }
-                else if ( message.ToLower() == "3" || message.ToLower() == "random" || message.ToLower() == "rand" ) {
-                    if ( !from.voted ) {
-                        Server.Level3Vote++;
-                        SendMessage(from, c.red + "Thanks For Voting!");
-                        from.voted = true;
-                        return;
-                    }
-                    else if ( !from.voice ) {
-                        from.SendMessage("Chat moderation is on while voting is on!");
-                        return;
-                    }
-                }
-                else if ( !from.voice ) {
-                    from.SendMessage("Chat moderation is on while voting is on!");
-                    return;
-                }
-            }
+            if (Server.votingforlevel && Server.zombie.HandlesChatMessage(from, message))
+            	return;
+            
             if (Last50Chat.Count() == 50)
                 Last50Chat.RemoveAt(0);
             var chatmessage = new ChatMessage();
@@ -2564,7 +2507,7 @@ level.Unload();
                     Server.s.Log(ip + " disconnected.");
                 }
 
-                Server.zombie.InfectedPlayerDC();
+                Server.zombie.PlayerLeftServer(this);
 
             }
             catch ( Exception e ) { Server.ErrorLog(e); }
@@ -2912,6 +2855,16 @@ Next: continue;
                 replacement2 = Regex.Replace(direction2, @"\n", "");
             }
             return replacement + "/" + replacement2;
+        }
+        
+        internal static bool CheckVote(string message, Player p, string a, string b, ref int totalVotes) {
+            if (!p.voted && (message == a || message == b)) {
+                totalVotes++;
+                p.SendMessage(c.red + "Thanks for voting!");
+                p.voted = true;
+                return true;
+            }
+            return false;
         }
     }
 }
