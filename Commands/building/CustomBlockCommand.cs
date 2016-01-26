@@ -1,7 +1,7 @@
-/*
+﻿/*
     Copyright 2015 MCGalaxy
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -20,17 +20,11 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdGlobalBlock : Command {
-        
-        public override string name { get { return "globalblock"; } }
-        public override string shortcut { get { return "gb"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdGlobalBlock() { }
-        static char[] trimChars = {' '};
+    public abstract class CustomBlockCommand : Command {
 
-        public override void Use(Player p, string message) {
+        static char[] trimChars = {' '};
+        
+        protected void Execute(Player p, string message, bool global) {
             string[] parts = message.Split(trimChars, 4);
             for (int i = 0; i < Math.Min(parts.Length, 3); i++)
                 parts[i] = parts[i].ToLower();
@@ -46,70 +40,66 @@ namespace MCGalaxy.Commands {
             switch (parts[0]) {
                 case "add":
                 case "create":
-                    AddHandler(p, parts); break;
+                    AddHandler(p, parts, global); break;
                 case "delete":
                 case "remove":
-                    RemoveHandler(p, parts); break;
+                    RemoveHandler(p, parts, global); break;
                 case "list":
                 case "ids":
-                    ListHandler(p, parts); break;
+                    ListHandler(p, parts, global); break;
                 case "abort":
                     Player.SendMessage(p, "Aborted the custom block creation process.");
                     SetBD(p, null); break;
                 case "edit":
-                    EditHandler(p, parts); break;                   
+                    EditHandler(p, parts, global); break;
                 default:
                     if (GetBD(p) != null)
-                        DefineBlockStep(p, message);
+                        DefineBlockStep(p, message, global);
                     else
                         Help(p);
                     break;
             }
         }
         
-        int targetId;
-        void AddHandler(Player p, string[] parts) {
+        void AddHandler(Player p, string[] parts, bool global) {
+            string cmd = global ? "/gb" : "/lb";
+            int targetId;
             if (parts.Length >= 2 ) {
                 string id = parts[1];
                 if (!CheckBlockId(p, id, out targetId)) return;
-                BlockDefinition def = BlockDefinition.GlobalDefinitions[targetId];
+                BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+                BlockDefinition def = defs[targetId];
                 
                 if (def != null) {
                     Player.SendMessage(p, "There is already a custom block with the id " + id +
-                                       ", you must either use a different id or use \"/gb remove " + id + "\"");
+                                       ", you must either use a different id or use \"" + cmd + " remove " + id + "\"");
                     return;
                 }
             } else {
-                targetId = GetFreeId();
+                targetId = GetFreeId(global, p == null ? null : p.level);
                 if (targetId == Block.Zero) {
                     Player.SendMessage(p, "There are no custom block ids left, " +
-                                       "you must /gb remove a custom block first.");
+                                       "you must " + cmd +" remove a custom block first.");
                     return;
                 }
             }
             
             SetBD(p, new BlockDefinition());
             GetBD(p).BlockID = (byte)targetId;
-            Player.SendMessage(p, "Type '/gb abort' at anytime to abort the creation process.");
-            Player.SendMessage(p, "Type '/gb revert' to go back a step in the creation process.");
-            Player.SendMessage(p, "Use '/gb <arg>' to enter arguments for the creation process.");
+            SetTargetId(p, targetId);
+            Player.SendMessage(p, "Type '" + cmd + " abort' at anytime to abort the creation process.");
+            Player.SendMessage(p, "Type '" + cmd + " revert' to go back a step in the creation process.");
+            Player.SendMessage(p, "Use '" + cmd + " <arg>' to enter arguments for the creation process.");
             Player.SendMessage(p, "%f----------------------------------------------------------");
             SetStep(p, 2);
             SendStepHelp(p, GetStep(p));
         }
         
-        byte GetFreeId() {
-            for (int i = 70; i < 255; i++) {
-                if (BlockDefinition.GlobalDefinitions[i] == null)
-                    return (byte)i;
-            }
-            return Block.Zero;
-        }
-        
-        void ListHandler(Player p, string[] parts) {
+        void ListHandler(Player p, string[] parts, bool global) {
             int offset = 0, index = 0, count = 0;
             if (parts.Length > 1) int.TryParse(parts[1], out offset);
-            BlockDefinition[] defs = BlockDefinition.GlobalDefinitions;
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            string cmd = global ? "/gb" : "/lb";
             
             for( int i = 1; i < 256; i++ ) {
                 BlockDefinition def = defs[i];
@@ -121,8 +111,8 @@ namespace MCGalaxy.Commands {
                     Player.SendMessage(p, String.Format(format, def.BlockID, def.Name));
                     
                     if (count >= 8) {
-                        const string helpFormat = "To see the next set of custom blocks, type %T/gb list {0}";
-                        Player.SendMessage(p, String.Format(helpFormat, offset + 8));
+                        const string helpFormat = "To see the next set of custom blocks, type %T{1} list {0}";
+                        Player.SendMessage(p, String.Format(helpFormat, offset + 8, cmd));
                         return;
                     }
                 }
@@ -130,28 +120,28 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        void RemoveHandler(Player p, string[] parts) {
+        void RemoveHandler(Player p, string[] parts, bool global) {
             if (parts.Length <= 1) { Help(p); return; }
             int blockID;
             if (!CheckBlockId(p, parts[1], out blockID)) return;
             
-            BlockDefinition def = BlockDefinition.GlobalDefinitions[blockID];
-            if (def == null) {
-                Player.SendMessage(p, "There is no globally defined custom block with that block id.");
-                Player.SendMessage(p, "Use \"%T/gb list\" %Sto see a list of global custom blocks.");
-                return;
-            }
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition def = defs[blockID];
+            if (def == null) { MessageNoBlock(p, global); return; }
             
-            BlockDefinition.RemoveGlobal(def);
-            BlockDefinition.SaveGlobal();
+            BlockDefinition.Remove(def, defs, p == null ? null : p.level);
+            BlockDefinition globalDef = BlockDefinition.GlobalDefs[blockID];
+            if (!global && globalDef != null) {
+                BlockDefinition.Add(globalDef, defs, p == null ? null : p.level);
+            }
         }
         
-        void DefineBlockStep(Player p, string value) {
+        void DefineBlockStep(Player p, string value, bool global) {
             string opt = value.ToLower();
             int step = GetStep(p);
             if (opt == "revert" && step > 2) {
                 step--;
-                SendStepHelp(p, step); 
+                SendStepHelp(p, step);
                 SetStep(p, step); return;
             }
             BlockDefinition bd = GetBD(p);
@@ -223,19 +213,22 @@ namespace MCGalaxy.Commands {
                     SendStepHelp(p, step); return;
                 }
                 bd.FallBack = Block.Byte(value);
+                BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+                BlockDefinition def = defs[bd.BlockID];
                 
                 // in case the list is modified before we finish the command.
-                if (BlockDefinition.GlobalDefinitions[bd.BlockID] != null) {
-                    bd.BlockID = GetFreeId();
+                if (def != null) {
+                    bd.BlockID = GetFreeId(global, p == null ? null : p.level);
                     if (bd.BlockID == Block.Zero) {
+                        string cmd = global ? "/gb" : "/lb";
                         Player.SendMessage(p, "There are no custom block ids left, " +
-                                           "you must /gb remove a custom block first.");
+                                           "you must " + cmd + " remove a custom block first.");
                         return;
                     }
                 }
                 
                 Player.SendMessage(p, "Created a new custom block " + bd.Name + "(" + bd.BlockID + ")");
-                BlockDefinition.AddGlobal(bd);
+                BlockDefinition.Add(bd, defs, p == null ? null : p.level);
                 SetBD(p, null);
                 SetStep(p, 0);
                 return;
@@ -244,23 +237,7 @@ namespace MCGalaxy.Commands {
             SetStep(p, step);
         }
         
-        bool EditByte(Player p, string arg, string propName, ref byte target) {
-            return EditByte(p, arg, propName, ref target, -1, 0, 0, 255);
-        }
-        
-        bool EditByte(Player p, string value, string propName, ref byte target,
-                      int step, int offset, byte min, byte max) {
-            int temp = 0;
-            if (!int.TryParse(value, out temp) || temp < min || temp > max) {
-                Player.SendMessage(p, propName + " must be an integer between " + min + " and " + max + ".");
-                if (step != -1) SendEditHelp(p, step, offset);
-                return false;
-            }
-            target = (byte)temp;
-            return true;
-        }
-        
-        void EditHandler(Player p, string[] parts) {
+        void EditHandler(Player p, string[] parts, bool global) {
             if (parts.Length <= 3) {
                 if(parts.Length == 1)
                     Player.SendMessage(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
@@ -271,14 +248,11 @@ namespace MCGalaxy.Commands {
                 return;
             }
             int blockId;
-            if (!CheckBlockId(p, parts[1], out blockId));
+            if (!CheckBlockId(p, parts[1], out blockId)) return; 
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition def = defs[blockId];
+            if (def == null) { MessageNoBlock(p, global); return; }
             
-            BlockDefinition def = BlockDefinition.GlobalDefinitions[blockId];
-            if (def == null) {
-                Player.SendMessage(p, "There is no globally defined custom block with that block id.");
-                Player.SendMessage(p, "Use \"%T/gb list\" %Sto see a list of global custom blocks.");
-                return;
-            }
             string value = parts[3];
             float fTemp;
             byte tempX, tempY, tempZ;
@@ -373,12 +347,45 @@ namespace MCGalaxy.Commands {
                     def.FallBack = tempX; break;
             }
             
-            BlockDefinition.AddGlobal(def);
+            BlockDefinition.Add(def, defs, p == null ? null : p.level);
             foreach (Player pl in Player.players) {
                 if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
                 if (pl.level == null || !pl.level.HasCustomBlocks) continue;
+                if (!global && p.level != pl.level) continue;
+                
                 Command.all.Find("reveal").Use(p, pl.name);
             }
+        }
+        
+        static byte GetFreeId(bool global, Level lvl) {
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
+            for (int i = 70; i < 255; i++) {
+                if (defs[i] == null) return (byte)i;
+            }
+            return Block.Zero;
+        }
+        
+        static void MessageNoBlock(Player p, bool global) {
+            string scope = global ? "global" : "level";
+            string cmd = global ? "/gb" : "/lb";
+            Player.SendMessage(p, "There is no " + scope + " custom block with that block id.");
+            Player.SendMessage(p, "Type \"%T" + cmd +" list\" %Sto see a list of " + scope + " custom blocks.");
+        }
+        
+        static bool EditByte(Player p, string arg, string propName, ref byte target) {
+            return EditByte(p, arg, propName, ref target, -1, 0, 0, 255);
+        }
+        
+        static bool EditByte(Player p, string value, string propName, ref byte target,
+                             int step, int offset, byte min, byte max) {
+            int temp = 0;
+            if (!int.TryParse(value, out temp) || temp < min || temp > max) {
+                Player.SendMessage(p, propName + " must be an integer between " + min + " and " + max + ".");
+                if (step != -1) SendEditHelp(p, step, offset);
+                return false;
+            }
+            target = (byte)temp;
+            return true;
         }
         
         static bool ParseCoords(string parts, out byte x, out byte y, out byte z) {
@@ -459,28 +466,69 @@ namespace MCGalaxy.Commands {
         
         static BlockDefinition consoleBD;
         static int consoleStep = 0;
+        static int consoleTargetId;
         
-        static BlockDefinition GetBD(Player p) { return p == null ? consoleBD : p.gbBlock; }
+        static BlockDefinition GetBD(Player p) { return p == null ? consoleBD : p.bdBlock; }
         
         static void SetBD(Player p, BlockDefinition bd) {
             if (p == null) consoleBD = bd;
-            else p.gbBlock = bd;
+            else p.bdBlock = bd;
         }
-            
-        static int GetStep(Player p) { return p == null ? consoleStep : p.gbStep; }
+        
+        static void SetTargetId(Player p, int targetId) {
+            if (p == null) consoleTargetId = targetId;
+            else p.bdTargetId = targetId;
+        }
+        
+        static int GetStep(Player p) { return p == null ? consoleStep : p.bdStep; }
         
         static void SetStep(Player p, int step) {
             if (p == null) consoleStep = step;
-            else p.gbStep = step;
+            else p.bdStep = step;
         }
         
-        public override void Help(Player p) {
-            Player.SendMessage(p, "%T/globalblock <add/remove/list/edit>");
-            Player.SendMessage(p, "%H   /gb add [id] - begins the creation a new custom block.");
-            Player.SendMessage(p, "%H   /gb remove id - removes the custom block with the given id.");
-            Player.SendMessage(p, "%H   /gb list [offset] - lists all custom blocks.");
-            Player.SendMessage(p, "%H   /gb edit id property value - edits the given property of the custom block with the given id.");
-            Player.SendMessage(p, "%HTo see the list of editable properties, type /gb edit.");
+        protected static void Help(Player p, bool global) {
+            string fullCmd = global ? "/globalblock" : "/levelblock";
+            string cmd = global ? "/gb" : "/lb";
+            
+            Player.SendMessage(p, "%T" + fullCmd + " <add/remove/list/edit>");
+            Player.SendMessage(p, "%H   " + cmd + " add [id] - begins the creation a new custom block.");
+            Player.SendMessage(p, "%H   " + cmd + " remove id - removes the custom block with the given id.");
+            Player.SendMessage(p, "%H   " + cmd + " list [offset] - lists all custom blocks.");
+            Player.SendMessage(p, "%H   " + cmd + " edit id property value - edits the given property of the custom block with the given id.");
+            Player.SendMessage(p, "%HTo see the list of editable properties, type " + cmd + " edit.");
         }
+    }
+    
+    public sealed class CmdGlobalBlock : CustomBlockCommand {
+        
+        public override string name { get { return "globalblock"; } }
+        public override string shortcut { get { return "gb"; } }
+        public override string type { get { return CommandTypes.Building; } }
+        public override bool museumUsable { get { return true; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public CmdGlobalBlock() { }
+
+        public override void Use(Player p, string message) {
+            Execute(p, message, true);
+        }
+        
+        public override void Help(Player p) { Help(p, true); }
+    }
+    
+    public sealed class CmdLevelBlock : CustomBlockCommand {
+        
+        public override string name { get { return "levelblock"; } }
+        public override string shortcut { get { return "lb"; } }
+        public override string type { get { return CommandTypes.Building; } }
+        public override bool museumUsable { get { return true; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public CmdLevelBlock() { }
+
+        public override void Use(Player p, string message) {
+            Execute(p, message, false);
+        }
+        
+        public override void Help(Player p) { Help(p, false); }
     }
 }

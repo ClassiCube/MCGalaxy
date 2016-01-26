@@ -234,7 +234,7 @@ namespace MCGalaxy
             
             if (!HasCpeExt(CpeExt.BlockDefinitions)) return;
             for (int i = count; i < 256; i++) {
-                if (BlockDefinition.GlobalDefinitions[i] == null) continue;
+                if (level.CustomBlockDefs[i] == null) continue;
                 SendSetBlockPermission((byte)i, level.Buildable, level.Deletable);
             }
         }

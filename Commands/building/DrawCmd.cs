@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands {
             extType = 0;
             if (type == Block.Zero) {
             	// try treat as a block definition id.
-            	type = BlockDefinition.GetBlock(msg);
+            	type = BlockDefinition.GetBlock(msg, p);
             	if (type == Block.Zero) {
             		Player.SendMessage(p, "There is no block \"" + msg + "\".");
             		return Block.Zero;

@@ -36,26 +36,20 @@ namespace MCGalaxy {
         public bool FullBright;
         public byte Shape;
         public byte BlockDraw;
-        public byte FogDensity,FogR, FogG, FogB;  
-        public byte FallBack;        
+        public byte FogDensity,FogR, FogG, FogB;
+        public byte FallBack;
         // BlockDefinitionsExt fields
         public byte MinX, MinY, MinZ;
         public byte MaxX, MaxY, MaxZ;
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
-        public static BlockDefinition[] GlobalDefinitions = new BlockDefinition[256];
+        public static BlockDefinition[] GlobalDefs;
         
         public static void LoadGlobal() {
-            try {
-                if (File.Exists(GlobalPath)) {
-                    string json = File.ReadAllText(GlobalPath);
-                    GlobalDefinitions = JsonConvert.DeserializeObject<BlockDefinition[]>(json);
-                }
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                GlobalDefinitions = new BlockDefinition[256];
-            }
-
+            GlobalDefs = Load(true, null);
+            GlobalDefs[0] = new BlockDefinition();
+            GlobalDefs[0].Name = "Air fallback";
+            
             try {
                 if (File.Exists(GlobalBackupPath))
                     File.Delete(GlobalBackupPath);
@@ -63,25 +57,52 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
+            Save(true, null);
+        }
+        
+        static BlockDefinition[] Load(bool global, Level lvl) {
+            BlockDefinition[] defs = new BlockDefinition[256];
+            string path = global ? GlobalPath : "blockdefs/" + lvl.name;
+            try {
+                if (File.Exists(GlobalPath)) {
+                    string json = File.ReadAllText(GlobalPath);
+                    defs = JsonConvert.DeserializeObject<BlockDefinition[]>(json);
+                }
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                defs = new BlockDefinition[256];
+            }
             
             for (int i = 0; i < 256; i++) {
-                if (GlobalDefinitions[i] != null && GlobalDefinitions[i].Name == null)
-                    GlobalDefinitions[i] = null;
-            }            
-            GlobalDefinitions[0] = new BlockDefinition();
-            GlobalDefinitions[0].Name = "Air fallback";
-            SaveGlobal();
+                if (defs[i] != null && defs[i].Name == null)
+                    defs[i] = null;
+            }
+            return defs;
         }
         
-        public static void SaveGlobal()  {
-            string json = JsonConvert.SerializeObject(GlobalDefinitions);
-            File.WriteAllText(GlobalPath, json);
+        static void Save(bool global, Level lvl) {
+            BlockDefinition[] defs = global ? GlobalDefs : lvl.CustomBlockDefs;
+            string json = JsonConvert.SerializeObject(defs);
+            string path = global ? GlobalPath : "blockdefs/" + lvl.name;
+            File.WriteAllText(path, json);
         }
         
-        public static void AddGlobal(BlockDefinition def) {
-            GlobalDefinitions[def.BlockID] = def;
+        public static void Add(BlockDefinition def, BlockDefinition[] defs, Level level) {
+            byte id = def.BlockID;
+            bool global = defs == GlobalDefs; 
+            if (global) {
+            	foreach (Level lvl in Server.levels) {
+            		if (lvl.CustomBlockDefs[id] == null)
+            			lvl.CustomBlockDefs[id] = def;
+            	}
+            }
+            defs[id] = def;
+            
             foreach (Player pl in Player.players) {
-                if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;                
+                if (!global && pl.level != level) continue;
+                if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
+                if (global && pl.level.CustomBlockDefs[id] != GlobalDefs[id]) continue;
+                
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
                     SendDefineBlockExt(pl, def);
                 else
@@ -90,23 +111,33 @@ namespace MCGalaxy {
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
                     pl.SendSetBlockPermission(def.BlockID, pl.level.Buildable, pl.level.Deletable);
             }
-            SaveGlobal();
+            Save(global, level);
         }
         
-        public static void RemoveGlobal(BlockDefinition def) {
-            GlobalDefinitions[def.BlockID] = null;
-            foreach (Player p in Player.players) {
-                if (p.HasCpeExt(CpeExt.BlockDefinitions))
-                    p.SendRaw(Opcode.CpeRemoveBlockDefinition, def.BlockID);
+        public static void Remove(BlockDefinition def, BlockDefinition[] defs, Level level) {
+        	byte id = def.BlockID;
+            bool global = defs == GlobalDefs;
+            if (global) {
+            	foreach (Level lvl in Server.levels) {
+            		if (lvl.CustomBlockDefs[id] == GlobalDefs[id])
+            			lvl.CustomBlockDefs[id] = null;
+            	}
             }
-            SaveGlobal();
+            defs[id] = null;
+            
+            foreach (Player pl in Player.players) {
+                if (!global && pl.level != level) continue;
+                if (pl.HasCpeExt(CpeExt.BlockDefinitions))
+                    pl.SendRaw(Opcode.CpeRemoveBlockDefinition, id);
+            }
+            Save(global, level);
         }
         
-        public static void SendAll(Player pl) {
-            if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) return;
-            for (int i = 1; i < GlobalDefinitions.Length; i++) {
-                BlockDefinition def = GlobalDefinitions[i];
-                if (def == null) continue;              
+        internal static void SendLevelCustomBlocks(Player pl) {
+            BlockDefinition[] defs = pl.level.CustomBlockDefs;
+            for (int i = 1; i < defs.Length; i++) {
+                BlockDefinition def = defs[i];
+                if (def == null) continue;
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
                     SendDefineBlockExt(pl, def);
                 else
@@ -117,9 +148,10 @@ namespace MCGalaxy {
             }
         }
         
-        public static byte GetBlock(string msg) {
-             for (int i = 1; i < 255; i++) {
-                BlockDefinition def = GlobalDefinitions[i];
+        public static byte GetBlock(string msg, Player p) {
+            BlockDefinition[] defs = p.level.CustomBlockDefs;
+            for (int i = 1; i < 255; i++) {
+                BlockDefinition def = defs[i];
                 if (def == null) continue;
                 
                 if (def.Name.Replace(" ", "").Equals(msg, StringComparison.OrdinalIgnoreCase))
@@ -127,14 +159,9 @@ namespace MCGalaxy {
             }
             
             byte type;
-            if (!byte.TryParse(msg, out type) || BlockDefinition.GlobalDefinitions[type] == null)
+            if (!byte.TryParse(msg, out type) || defs[type] == null)
                 return Block.Zero;
             return type;
-        }
-        
-        public static byte Fallback(byte tile) {
-            BlockDefinition def = GlobalDefinitions[tile];
-            return def == null ? Block.air : def.FallBack;
         }
         
         static void SendDefineBlock(Player p, BlockDefinition def) {

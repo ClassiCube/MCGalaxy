@@ -74,7 +74,7 @@ namespace MCGalaxy {
             }
         }
         
-        public bool hasCpe = false, hasCustomBlocks = false, hasTextColors, finishedLogin = false;
+        public bool hasCpe = false, hasCustomBlocks = false, hasTextColors, finishedCpeLogin = false;
         public string appName;
         public int extensionCount;
         public List<string> extensions = new List<string>();
@@ -90,20 +90,12 @@ namespace MCGalaxy {
         }
 
         void HandleExtEntry( byte[] message ) {
-            AddExtension(enc.GetString(message, 0, 64).Trim(), NTHO_Int(message, 64));
+            AddExtension(enc.GetString(message, 0, 64).Trim(), NetUtils.ReadI32(message, 64));
             extensionCount--;
-            if (extensionCount <= 0 && !finishedLogin) {
-            	if (HasCpeExt(CpeExt.BlockDefinitions) || HasCpeExt(CpeExt.BlockDefinitionsExt))
-            		BlockDefinition.SendAll(this);
+            if (extensionCount <= 0 && !finishedCpeLogin) {
             	CompleteLoginProcess();
-            	finishedLogin = true;
+            	finishedCpeLogin = true;
             }
-        }
-        public static int NTHO_Int(byte[] x, int offset)
-        {
-            byte[] y = new byte[4];
-            Buffer.BlockCopy(x, offset, y, 0, 4); Array.Reverse(y);
-            return BitConverter.ToInt32(y, 0);
         }
 
         void HandleCustomBlockSupportLevel( byte[] message ) {
@@ -317,7 +309,7 @@ namespace MCGalaxy {
                 			if (hasBlockDefinitions)
                 				buffer[i + 4] = level.GetExtTile(i);
                 			else
-                				buffer[i + 4] = BlockDefinition.Fallback(level.GetExtTile(i));
+                				buffer[i + 4] = level.GetFallbackExtTile(i);
                 		} else {
                 			buffer[i + 4] = Block.Convert(block);
                 		}
@@ -329,8 +321,7 @@ namespace MCGalaxy {
                 			if (hasBlockDefinitions)
                 				buffer[i + 4] = Block.ConvertCPE(level.GetExtTile(i));
                 			else
-                				buffer[i + 4] = Block.ConvertCPE(
-                					BlockDefinition.Fallback(level.GetExtTile(i)));
+                				buffer[i + 4] = Block.ConvertCPE(level.GetFallbackExtTile(i));
                 		} else {
                 			buffer[i + 4] = Block.Convert(Block.ConvertCPE(level.blocks[i]));
                 		}
@@ -370,6 +361,8 @@ namespace MCGalaxy {
                 	SendCurrentEnvColors();
                 if (HasCpeExt(CpeExt.EnvMapAppearance) || HasCpeExt(CpeExt.EnvMapAppearance, 2))
                 	SendCurrentMapAppearance();
+                if (HasCpeExt(CpeExt.BlockDefinitions))
+            		BlockDefinition.SendLevelCustomBlocks(this);
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
                 if (!level.guns)
@@ -452,7 +445,7 @@ namespace MCGalaxy {
             	if (HasCpeExt(CpeExt.BlockDefinitions))
             		buffer[7] = level.GetExtTile(x, y, z);
             	else
-            		buffer[7] = BlockDefinition.Fallback(level.GetExtTile(x, y, z));
+            		buffer[7] = level.GetFallbackExtTile(x, y, z);
             } else if (hasCustomBlocks) {
             	buffer[7] = Block.Convert(type);
             } else {
@@ -476,7 +469,7 @@ namespace MCGalaxy {
             	if (HasCpeExt(CpeExt.BlockDefinitions))
             		buffer[7] = extType;
             	else
-            		buffer[7] = BlockDefinition.Fallback(extType);
+            		buffer[7] = level.GetFallback(extType);
             } else if (hasCustomBlocks) {
             	buffer[7] = Block.Convert(type);
             } else {

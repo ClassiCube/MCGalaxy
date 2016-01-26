@@ -68,6 +68,23 @@ namespace MCGalaxy {
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
+        public byte GetFallbackExtTile(ushort x, ushort y, ushort z) {
+            byte tile = GetExtTile(x, y, z);
+            BlockDefinition def = CustomBlockDefs[tile];
+            return def == null ? Block.air : def.FallBack;
+        }
+        
+        public byte GetFallbackExtTile(int index) {
+            byte tile = GetExtTile(index);
+            BlockDefinition def = CustomBlockDefs[tile];
+            return def == null ? Block.air : def.FallBack;
+        }
+        
+        public byte GetFallback(byte extType) {
+            BlockDefinition def = CustomBlockDefs[extType];
+            return def == null ? Block.air : def.FallBack;
+        }
+        
         public void SetTile(int b, byte type) {
             if (blocks == null || b < 0 || b >= blocks.Length) return;
             blocks[b] = type;

@@ -98,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Building\CmdAbort.cs" />
-    <Compile Include="Commands\building\CmdGlobalBlock.cs" />
     <Compile Include="Commands\Building\CmdBind.cs" />
     <Compile Include="Commands\Building\CmdCenter.cs" />
     <Compile Include="Commands\Building\CmdClick.cs" />
@@ -134,6 +133,7 @@
     <Compile Include="Commands\Building\CmdTree.cs" />
     <Compile Include="Commands\Building\CmdUndo.cs" />
     <Compile Include="Commands\Building\CmdWrite.cs" />
+    <Compile Include="Commands\building\CustomBlockCommand.cs" />
     <Compile Include="Commands\building\DrawCmd.cs" />
     <Compile Include="Commands\building\ReplaceCmd.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />

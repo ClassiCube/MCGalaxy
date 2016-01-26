@@ -230,8 +230,9 @@ namespace MCGalaxy {
         public int[] centerend = new int[3] { 0, 0, 0 };
         
         // GlobalBlock
-        internal int gbStep = 0;
-        internal BlockDefinition gbBlock;
+        internal int bdStep = 0;
+        internal int bdTargetId = 0;
+        internal BlockDefinition bdBlock;
 
         public string model = "humanoid";
         public bool spawned = false;
@@ -1055,8 +1056,7 @@ namespace MCGalaxy {
                 }
                 
                 if (type >= Block.CpeCount) {
-                    if (!HasCpeExt(CpeExt.BlockDefinitions) 
-                        || BlockDefinition.GlobalDefinitions[type] == null) {
+                    if (!HasCpeExt(CpeExt.BlockDefinitions) || level.CustomBlockDefs[type] == null) {
                         SendMessage("Invalid block type: " + type); return;
                     }
                     extType = type;

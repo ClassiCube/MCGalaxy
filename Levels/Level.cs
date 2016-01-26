@@ -152,6 +152,9 @@ namespace MCGalaxy
 
         /// <summary> The block which will be displayed on the edge of the map. </summary>
         public byte EdgeBlock = Block.blackrock;
+        
+        public BlockDefinition[] CustomBlockDefs;
+        
         public ushort jailx, jaily, jailz;
         public int lastCheck;
         public int lastUpdate;
@@ -216,6 +219,9 @@ namespace MCGalaxy
             if (Length < 16)
                 Length = 16;
 
+            CustomBlockDefs = new BlockDefinition[256];
+            for (int i = 0; i < CustomBlockDefs.Length; i++)
+            	CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
             name = n;
             EdgeLevel = (short)(y / 2);
             CloudsHeight = (short)(y + 2);
