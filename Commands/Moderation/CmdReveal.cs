@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands {
 
             ushort x = who.pos[0], y = who.pos[1], z = who.pos[2];
             Player.GlobalDespawn(who, true);
-            who.SendUserMOTD(); who.SendMap();
+            who.SendUserMOTD(); who.SendMap(who.level);
 
             if (!who.hidden)
                 Player.GlobalSpawn(who, x, y, z, who.level.rotx, who.level.roty, true);

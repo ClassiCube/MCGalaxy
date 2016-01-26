@@ -292,9 +292,9 @@ namespace MCGalaxy {
             SendRaw(Opcode.Handshake, buffer);
         }
 
-        public void SendMap() { SendRawMap(level); }
+        public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
         
-        public bool SendRawMap(Level level) {
+        public bool SendRawMap(Level oldLevel, Level level) {
             if ( level.blocks == null ) return false;
             bool success = true;
             bool hasBlockDefinitions = HasCpeExt(CpeExt.BlockDefinitions);
@@ -361,8 +361,12 @@ namespace MCGalaxy {
                 	SendCurrentEnvColors();
                 if (HasCpeExt(CpeExt.EnvMapAppearance) || HasCpeExt(CpeExt.EnvMapAppearance, 2))
                 	SendCurrentMapAppearance();
-                if (HasCpeExt(CpeExt.BlockDefinitions))
-            		BlockDefinition.SendLevelCustomBlocks(this);
+                if (HasCpeExt(CpeExt.BlockDefinitions)) {
+                    if (oldLevel != null && oldLevel != level)
+                        RemoveOldLevelCustomBlocks(oldLevel);
+                    BlockDefinition.SendLevelCustomBlocks(this);
+                }
+                
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
                 if (!level.guns)
@@ -380,7 +384,16 @@ namespace MCGalaxy {
             if (HasCpeExt(CpeExt.BlockPermissions))
                 SendCurrentBlockPermissions();
             return success;
-        }  
+        }
+        
+        void RemoveOldLevelCustomBlocks(Level oldLevel) {
+        	BlockDefinition[] defs = oldLevel.CustomBlockDefs;
+        	for (int i = Block.CpeCount; i < 256; i++) {
+        		BlockDefinition def = defs[i];
+        		if (def == null || def == BlockDefinition.GlobalDefs[i]) continue;
+        		SendRaw(Opcode.CpeRemoveBlockDefinition, (byte)i);
+        	}
+        }
         
         public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             byte[] buffer = new byte[74];

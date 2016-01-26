@@ -554,7 +554,7 @@ namespace MCGalaxy
             {
                 try
                 {
-                    Level level = LvlFile.Load(givenName,path);
+                    Level level = LvlFile.Load(givenName, path);
                     level.permissionbuild = LevelPermission.Builder;
                     level.setPhysics(phys);
                     //level.textures = new LevelTextures(level);
@@ -630,6 +630,12 @@ namespace MCGalaxy
                         LvlProperties.Load(level, "levels/level properties/" + level.name);
                     } catch (Exception e) {
                         Server.ErrorLog(e);
+                    }
+                    
+                    BlockDefinition[] defs = BlockDefinition.Load(false, level);
+                    for (int i = 0; i < defs.Length; i++) {
+                        if (defs[i] == null) continue;
+                        level.CustomBlockDefs[i] = defs[i];
                     }
 
                     Server.s.Log(string.Format("Level \"{0}\" loaded.", level.name));

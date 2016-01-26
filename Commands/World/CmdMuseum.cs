@@ -63,9 +63,10 @@ namespace MCGalaxy.Commands
 
 					Player.GlobalDespawn(p, true);
 
+					Level oldLevel = p.level;
 					p.level = level;
 					p.SendMotd();
-					if (!p.SendRawMap(level))
+					if (!p.SendRawMap(oldLevel, level))
 						return;
 
 					ushort x = (ushort)((0.5 + level.spawnx) * 32);

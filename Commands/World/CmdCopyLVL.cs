@@ -60,7 +60,8 @@ namespace MCGalaxy.Commands
             try {
                 File.Copy("levels/" + msg1 + ".lvl", "levels/" + msg2 + ".lvl");
                 File.Copy("levels/level properties/" + msg1 + ".properties", "levels/level properties/" + msg1 + ".properties", false);
-
+                if (File.Exists("blockdefs/lvl_" + msg1 + ".json"))
+                    File.Copy("blockdefs/lvl_" + msg1 + ".json", "blockdefs/lvl_" + msg2 + ".json");
             } catch (System.IO.FileNotFoundException) {
                 Player.SendMessage(p, msg2 + " does not exist!");
                 return;

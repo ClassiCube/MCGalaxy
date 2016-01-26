@@ -60,12 +60,12 @@ namespace MCGalaxy {
             Save(true, null);
         }
         
-        static BlockDefinition[] Load(bool global, Level lvl) {
+        internal static BlockDefinition[] Load(bool global, Level lvl) {
             BlockDefinition[] defs = new BlockDefinition[256];
-            string path = global ? GlobalPath : "blockdefs/" + lvl.name;
+            string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.name + ".json";
             try {
-                if (File.Exists(GlobalPath)) {
-                    string json = File.ReadAllText(GlobalPath);
+                if (File.Exists(path)) {
+                    string json = File.ReadAllText(path);
                     defs = JsonConvert.DeserializeObject<BlockDefinition[]>(json);
                 }
             } catch (Exception ex) {
@@ -82,8 +82,16 @@ namespace MCGalaxy {
         
         static void Save(bool global, Level lvl) {
             BlockDefinition[] defs = global ? GlobalDefs : lvl.CustomBlockDefs;
+            // We don't want to save global blocks in the level's custom blocks list
+            if (!global) {
+                BlockDefinition[] realDefs = new BlockDefinition[256];
+                for (int i = 0; i < 256; i++)
+                    realDefs[i] = defs[i] == GlobalDefs[i] ? null : defs[i];
+                defs = realDefs;
+            }
+           
             string json = JsonConvert.SerializeObject(defs);
-            string path = global ? GlobalPath : "blockdefs/" + lvl.name;
+            string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.name + ".json";
             File.WriteAllText(path, json);
         }
         
@@ -127,6 +135,8 @@ namespace MCGalaxy {
             
             foreach (Player pl in Player.players) {
                 if (!global && pl.level != level) continue;
+                if (global && pl.level.CustomBlockDefs[id] != null) continue;
+                
                 if (pl.HasCpeExt(CpeExt.BlockDefinitions))
                     pl.SendRaw(Opcode.CpeRemoveBlockDefinition, id);
             }

@@ -61,6 +61,11 @@ namespace MCGalaxy.Commands
                     File.Move("levels/level properties/" + foundLevel.name, "levels/level properties/" + newName + ".properties");
                 }
                 catch { }
+                
+                try {
+                    if (File.Exists("blockdefs/lvl_" + foundLevel.name + ".json"))
+                        File.Move("blockdefs/lvl_" + foundLevel.name + ".json", "blockdefs/lvl_" + newName + ".json");
+                } catch {}
 
                 //Move and rename backups
                 try

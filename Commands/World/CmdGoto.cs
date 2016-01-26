@@ -58,7 +58,8 @@ namespace MCGalaxy.Commands
                             foreach (PlayerBot b in PlayerBot.playerbots) if (p.level == b.level) p.SendDespawn(b.id);
 
                             Player.GlobalDespawn(p, true);
-                            p.level = foundLevel; p.SendUserMOTD(); p.SendMap();
+                            Level oldLevel = p.level;
+                            p.level = foundLevel; p.SendUserMOTD(); p.SendMap(oldLevel);
 
                             GC.Collect();
 

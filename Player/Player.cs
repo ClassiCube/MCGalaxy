@@ -765,7 +765,7 @@ namespace MCGalaxy {
         void CompleteLoginProcess() {
             try {
                 SendMotd();
-                SendMap();
+                SendMap(null);
                 if (disconnected) return;
                 loggedIn = true;
 
@@ -1057,7 +1057,8 @@ namespace MCGalaxy {
                 
                 if (type >= Block.CpeCount) {
                     if (!HasCpeExt(CpeExt.BlockDefinitions) || level.CustomBlockDefs[type] == null) {
-                        SendMessage("Invalid block type: " + type); return;
+                        SendMessage("Invalid block type: " + type); 
+                        RevertBlock(x, y, z); return;
                     }
                     extType = type;
                     type = Block.custom_block;

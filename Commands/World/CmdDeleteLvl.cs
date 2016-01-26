@@ -71,6 +71,10 @@ namespace MCGalaxy.Commands {
 
                     try { File.Delete("levels/level properties/" + message + ".properties"); } catch { }
                     try { File.Delete("levels/level properties/" + message); } catch { }
+                    try {
+                        if (File.Exists("blockdefs/lvl_" + message + ".json"))
+                            File.Delete("blockdefs/lvl_" + message + ".json");
+                    } catch {}
 
                     //safe against SQL injections because the levelname (message) is first being checked if it exists
                     Database.executeQuery("DROP TABLE `Block" + message + "`");

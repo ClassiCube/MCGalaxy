@@ -149,6 +149,7 @@ namespace MCGalaxy
             all.Add(new CmdLoginMessage());
             all.Add(new CmdLogoutMessage());
             all.Add(new CmdLowlag());
+            all.Add(new CmdLevelBlock());
             all.Add(new CmdMain());
             all.Add(new CmdMap());
             all.Add(new CmdMapInfo());

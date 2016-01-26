@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
 
             Player.GlobalDespawn(p, true);
             p.SendUserMOTD();
-            p.SendMap();
+            p.SendMap(p.level);
 
             if (!p.hidden) {
                 Player.GlobalDespawn(p, false);

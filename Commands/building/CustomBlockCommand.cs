@@ -66,9 +66,10 @@ namespace MCGalaxy.Commands {
             int targetId;
             if (parts.Length >= 2 ) {
                 string id = parts[1];
-                if (!CheckBlockId(p, id, out targetId)) return;
+                if (!CheckBlockId(p, id, global, out targetId)) return;
                 BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
                 BlockDefinition def = defs[targetId];
+                if (!global && def == BlockDefinition.GlobalDefs[targetId]) def = null;
                 
                 if (def != null) {
                     Player.SendMessage(p, "There is already a custom block with the id " + id +
@@ -100,10 +101,10 @@ namespace MCGalaxy.Commands {
             if (parts.Length > 1) int.TryParse(parts[1], out offset);
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             string cmd = global ? "/gb" : "/lb";
-            
             for( int i = 1; i < 256; i++ ) {
                 BlockDefinition def = defs[i];
-                if (def == null) continue;
+                if (def == null) continue;                
+                if (!global && def == BlockDefinition.GlobalDefs[i]) continue;
                 
                 if (index >= offset) {
                     count++;
@@ -122,15 +123,16 @@ namespace MCGalaxy.Commands {
         
         void RemoveHandler(Player p, string[] parts, bool global) {
             if (parts.Length <= 1) { Help(p); return; }
-            int blockID;
-            if (!CheckBlockId(p, parts[1], out blockID)) return;
+            int blockId;
+            if (!CheckBlockId(p, parts[1], global, out blockId)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            BlockDefinition def = defs[blockID];
+            BlockDefinition def = defs[blockId];
+            if (!global && def == BlockDefinition.GlobalDefs[blockId]) def = null;
             if (def == null) { MessageNoBlock(p, global); return; }
             
             BlockDefinition.Remove(def, defs, p == null ? null : p.level);
-            BlockDefinition globalDef = BlockDefinition.GlobalDefs[blockID];
+            BlockDefinition globalDef = BlockDefinition.GlobalDefs[blockId];
             if (!global && globalDef != null) {
                 BlockDefinition.Add(globalDef, defs, p == null ? null : p.level);
             }
@@ -215,6 +217,7 @@ namespace MCGalaxy.Commands {
                 bd.FallBack = Block.Byte(value);
                 BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
                 BlockDefinition def = defs[bd.BlockID];
+                if (!global && def == BlockDefinition.GlobalDefs[bd.BlockID]) def = null;
                 
                 // in case the list is modified before we finish the command.
                 if (def != null) {
@@ -223,6 +226,8 @@ namespace MCGalaxy.Commands {
                         string cmd = global ? "/gb" : "/lb";
                         Player.SendMessage(p, "There are no custom block ids left, " +
                                            "you must " + cmd + " remove a custom block first.");
+                        if (!global)
+                            Player.SendMessage(p, "You may also manually specify the same existing id of a global custom block.");
                         return;
                     }
                 }
@@ -248,7 +253,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             int blockId;
-            if (!CheckBlockId(p, parts[1], out blockId)) return; 
+            if (!CheckBlockId(p, parts[1], global, out blockId)) return; 
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[blockId];
             if (def == null) { MessageNoBlock(p, global); return; }
@@ -454,12 +459,15 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, help[i].Replace("Type", "Use"));
         }
         
-        static bool CheckBlockId(Player p, string arg, out int blockId) {
+        static bool CheckBlockId(Player p, string arg, bool global, out int blockId) {
             if (!int.TryParse(arg, out blockId)) {
                 Player.SendMessage(p, "Provided block id is not a number."); return false;
             }
             if (blockId <= 0 || blockId >= 255) {
                 Player.SendMessage(p, "Block id must be between 1-254"); return false;
+            }
+            if (!global && blockId < Block.CpeCount) {
+                Player.SendMessage(p, "You can only redefine standard blocks with /gb."); return false;
             }
             return true;
         }
