@@ -49,8 +49,11 @@ namespace MCGalaxy.Commands
             try
             {
                 File.Move("levels/" + foundLevel.name + ".lvl", "levels/" + newName + ".lvl");
-                File.Move("levels/" + foundLevel.name + ".lvl.backup", "levels/" + newName + ".lvl.backup");
-
+                try
+                {
+                    File.Move("levels/" + foundLevel.name + ".lvl.backup", "levels/" + newName + ".lvl.backup");
+                } catch { }
+                
                 try
                 {
                     File.Move("levels/level properties/" + foundLevel.name + ".properties", "levels/level properties/" + newName + ".properties");
