@@ -218,6 +218,8 @@ namespace MCGalaxy
 
         // Lava Survival
         public static LavaSurvival lava;
+        
+        public static CountdownGame Countdown;
 
         // OmniBan
         public static OmniBan omniban;
@@ -577,10 +579,9 @@ namespace MCGalaxy
             }
 
 
-            // LavaSurvival constructed here...
             lava = new LavaSurvival();
-
             zombie = new ZombieGame();
+            Countdown = new CountdownGame();
 
             LoadAllSettings();
 
@@ -1158,7 +1159,7 @@ namespace MCGalaxy
 
         public void Log(string message, bool systemMsg = false)
         {
-        	message = CP437Writer.ConvertFromRaw(message);
+        	message = CP437Writer.ConvertToUnicode(message);
             if (ServerLog != null)
             {
                 ServerLog(message);
@@ -1186,7 +1187,7 @@ namespace MCGalaxy
         }
         public void OpLog(string message, bool systemMsg = false)
         {
-        	message = CP437Writer.ConvertFromRaw(message);
+        	message = CP437Writer.ConvertToUnicode(message);
             if (ServerOpLog != null)
             {
                 OpLog(message);
@@ -1213,7 +1214,7 @@ namespace MCGalaxy
 
         public void AdminLog(string message, bool systemMsg = false)
         {
-        	message = CP437Writer.ConvertFromRaw(message);
+        	message = CP437Writer.ConvertToUnicode(message);
             if (ServerAdminLog != null)
             {
                 ServerAdminLog(message);
@@ -1246,7 +1247,7 @@ namespace MCGalaxy
 
         public void CommandUsed(string message)
         {
-        	message = CP437Writer.ConvertFromRaw(message);
+        	message = CP437Writer.ConvertToUnicode(message);
             if (OnCommand != null) OnCommand(DateTime.Now.ToString("(HH:mm:ss) ") + message);
             Logger.Write(DateTime.Now.ToString("(HH:mm:ss) ") + message + Environment.NewLine);
         }

@@ -26,6 +26,11 @@ namespace MCGalaxy {
             return false;
         }
         
+        public virtual bool HandlesMovement(Player p, ushort x, ushort y, ushort z, 
+                                                byte rotX, byte rotY) {
+            return false;
+        }
+        
         public virtual bool HandlesChatMessage(Player p, string message) {
             return false;
         }

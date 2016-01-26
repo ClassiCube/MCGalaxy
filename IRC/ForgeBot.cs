@@ -92,7 +92,7 @@ namespace MCGalaxy {
 
             if(String.IsNullOrEmpty(message.Trim()))
                 message = ".";
-            message = CP437Writer.ConvertFromRaw(message);
+            message = CP437Writer.ConvertToUnicode(message);
 
             if (color)
                 message = c.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
@@ -177,7 +177,7 @@ namespace MCGalaxy {
 
         void Listener_OnPublic(UserInfo user, string channel, string message) {
         	message = c.IrcToMinecraftColors(message);
-        	message = CP437Reader.ConvertLine(message);
+        	message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.Split(new char[] { ' ' }, 3);
             //string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
             // Allowed chars are any ASCII char between 20h/32 and 7Ah/122 inclusive, except for 26h/38 (&) and 60h/96 (`)

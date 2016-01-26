@@ -243,7 +243,7 @@ namespace MCGalaxy
 
         void Listener_OnPublic(UserInfo user, string channel, string message)
         {
-        	message = CP437Reader.ConvertLine(message);
+        	message = CP437Reader.ConvertToRaw(message);
             //string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
             //string msg = message;
             RemoveVariables(ref message);

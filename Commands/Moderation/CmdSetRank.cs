@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands
             string line = name + " " + assigner + " " + minute + " " + hour + " " + day + " " + month
             	+ " " + year + " " + newRank.name + " " + group.name + " " + reason.Replace(" ", "%20");
             using (StreamWriter sw = File.AppendText("text/rankinfo.txt"))
-                sw.WriteLine(CP437Writer.ConvertFromRaw(line));
+                sw.WriteLine(CP437Writer.ConvertToUnicode(line));
             return true;
         }
         

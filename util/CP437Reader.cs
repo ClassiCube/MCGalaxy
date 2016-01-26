@@ -32,7 +32,7 @@ namespace MCGalaxy {
             if (line == null) return null;
             if (line.Length == 0) return "";
             
-            return ConvertLine(line);
+            return ConvertToRaw(line);
         }
         
         public override string ReadToEnd() {
@@ -40,7 +40,7 @@ namespace MCGalaxy {
             if (line == null) return null;
             if (line.Length == 0) return "";
             
-            return ConvertLine(line);
+            return ConvertToRaw(line);
         }
         
         public static List<string> ReadAllLines(string file) {
@@ -60,7 +60,7 @@ namespace MCGalaxy {
             }
         }
         
-        public static unsafe string ConvertLine(string line) {
+        public static unsafe string ConvertToRaw(string line) {
             fixed (char* ptr = line) {
                 for (int i = 0; i < line.Length; i++)
                     ptr[i] = ConvertChar(ptr[i]);

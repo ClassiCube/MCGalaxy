@@ -63,7 +63,7 @@ namespace MCGalaxy {
                 writer.Write(text);
         }
         
-        public static string ConvertFromRaw(string text) {
+        public static string ConvertToUnicode(string text) {
         	if (text == null) return null;
         	if (text.Length == 0) return "";
         	

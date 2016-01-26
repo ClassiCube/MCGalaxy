@@ -23,22 +23,22 @@ namespace MCGalaxy
 {
     public sealed class CountdownGame
     {
-        public static List<Player> players = new List<Player>();
-        public static List<Player> playersleftlist = new List<Player>();
-        public static List<string> squaresleft = new List<string>();
-        public static Level mapon;
+        public List<Player> players = new List<Player>();
+        public List<Player> playersleftlist = new List<Player>();
+        public List<string> squaresleft = new List<string>();
+        public Level mapon;
 
-        public static int playersleft;
-        public static int speed;
+        public int playersleft;
+        public int speed;
 
-        public static bool freezemode = false;
-        public static bool cancel = false;
+        public bool freezemode = false;
+        public bool cancel = false;
 
-        public static string speedtype;
+        public string speedtype;
 
-        public static CountdownGameStatus gamestatus = CountdownGameStatus.Disabled;
+        public CountdownGameStatus gamestatus = CountdownGameStatus.Disabled;
 
-        public static void GameStart(Player p)
+        public void GameStart(Player p)
         {
             switch (gamestatus)
             {
@@ -111,35 +111,22 @@ namespace MCGalaxy
                 player.SendSpawn(0xFF, player.name, x1, y1, z1, (byte)0, (byte)0);
             }
             {
-                CountdownGame.squaresleft.Clear();
+                squaresleft.Clear();
                 PopulateSquaresLeft();
                 if (freezemode)
-                {
                     mapon.ChatLevel("Countdown starting with difficulty " + speedtype + " and mode freeze in:");
-                }
                 else
-                {
                     mapon.ChatLevel("Countdown starting with difficulty " + speedtype + " and mode normal in:");
-                }
+                
                 Thread.Sleep(2000);
                 mapon.ChatLevel("-----&b5" + Server.DefaultColor + "-----");
-                {
-                    mapon.Blockchange(16, 16, 15, Block.air);
-                    mapon.Blockchange(15, 16, 16, Block.air);
-                    mapon.Blockchange(15, 16, 15, Block.air);
-                    mapon.Blockchange(16, 16, 16, Block.air);
-                }
+                ChangeSquare(15, 16, 15, Block.air);
                 Thread.Sleep(1000);
                 mapon.ChatLevel("-----&b4" + Server.DefaultColor + "-----");
                 Thread.Sleep(1000);
                 mapon.ChatLevel("-----&b3" + Server.DefaultColor + "-----");
                 Thread.Sleep(1000);
-                {
-                    mapon.Blockchange(15, 27, 16, Block.air);
-                    mapon.Blockchange(16, 27, 15, Block.air);
-                    mapon.Blockchange(16, 27, 16, Block.air);
-                    mapon.Blockchange(15, 27, 15, Block.air);
-                }
+                ChangeSquare(15, 27, 15, Block.air);
                 mapon.ChatLevel("-----&b2" + Server.DefaultColor + "-----");
                 Thread.Sleep(1000);
                 mapon.ChatLevel("-----&b1" + Server.DefaultColor + "-----");
@@ -158,7 +145,7 @@ namespace MCGalaxy
             Play();
         }
 
-        public static void Play()
+        public void Play()
         {
             if (freezemode == false)
             {
@@ -280,7 +267,7 @@ namespace MCGalaxy
             }
         }
         
-        static void RemoveSquare(string square) {
+        void RemoveSquare(string square) {
             int column = int.Parse(square.Split(':')[0]);
             int row = int.Parse(square.Split(':')[1]);
             ushort x1 = (ushort)(27 - (row * 3));
@@ -352,14 +339,14 @@ namespace MCGalaxy
             }
         }
 
-        static void ChangeSquare(ushort x, ushort y, ushort z, byte block) {
+        void ChangeSquare(ushort x, ushort y, ushort z, byte block) {
             mapon.Blockchange(x, y, z, block);
             mapon.Blockchange((ushort)(x + 1), y, z, block);
             mapon.Blockchange(x, y, (ushort)(z + 1), block);
             mapon.Blockchange((ushort)(x + 1), y, (ushort)(z + 1), block);            
         }
         
-        static void PopulateSquaresLeft()
+        void PopulateSquaresLeft()
         {
             int column = 1;
             int row = 1;
@@ -375,7 +362,7 @@ namespace MCGalaxy
             }
         }
 
-        static void AfterStart()
+        void AfterStart()
         {
             {
                 {
@@ -445,7 +432,7 @@ namespace MCGalaxy
             }
         }
 
-        public static void Death(Player p)
+        public void Death(Player p)
         {
             playersleft = playersleft - 1;
 
@@ -476,7 +463,7 @@ namespace MCGalaxy
             }
         }
 
-        public static void PlayerLeft(Player p)
+        public void PlayerLeft(Player p)
         {
             playersleft = playersleft - 1;
 
@@ -508,9 +495,9 @@ namespace MCGalaxy
             }
         }
 
-        public static void End(Player winner)
+        public void End(Player winner)
         {
-            CountdownGame.squaresleft.Clear();
+            squaresleft.Clear();
             if (winner != null)
             {
                 winner.SendMessage("Congratulations!! You won!!!");
@@ -520,31 +507,31 @@ namespace MCGalaxy
             {
                 Command.all.Find("spawn").Use(winner, "");
             }
-            CountdownGame.playersleftlist.Clear();
+            playersleftlist.Clear();
             if (winner != null)
             {
                 winner.incountdown = false;
             }
             if (winner == null)
             {
-                foreach (Player pl in CountdownGame.players)
+                foreach (Player pl in players)
                 {
                     Player.SendMessage(pl, "The countdown game was canceled!");
                     Command.all.Find("spawn").Use(pl, "");
                 }
                 Player.GlobalMessage("The countdown game was canceled!!");
-                CountdownGame.gamestatus = CountdownGameStatus.Enabled;
-                CountdownGame.playersleft = 0;
-                CountdownGame.playersleftlist.Clear();
-                CountdownGame.players.Clear();
-                CountdownGame.squaresleft.Clear();
-                CountdownGame.Reset(null, true);
-                CountdownGame.cancel = false;
+                gamestatus = CountdownGameStatus.Enabled;
+                playersleft = 0;
+                playersleftlist.Clear();
+                players.Clear();
+                squaresleft.Clear();
+                Reset(null, true);
+                cancel = false;
                 return;
             }
         }
 
-        public static void Reset(Player p, bool all)
+        public void Reset(Player p, bool all)
         {
             if (gamestatus == CountdownGameStatus.Enabled || gamestatus == CountdownGameStatus.Finished || gamestatus == CountdownGameStatus.Disabled)
             {
@@ -552,11 +539,11 @@ namespace MCGalaxy
                     if (all)
                     {
                         { //clean variables
-                            CountdownGame.gamestatus = CountdownGameStatus.Disabled;
-                            CountdownGame.playersleft = 0;
-                            CountdownGame.playersleftlist.Clear();
-                            CountdownGame.squaresleft.Clear();
-                            CountdownGame.speed = 750;
+                            gamestatus = CountdownGameStatus.Disabled;
+                            playersleft = 0;
+                            playersleftlist.Clear();
+                            squaresleft.Clear();
+                            speed = 750;
                         }
                     }
                     { //top part of map tube thingy
@@ -711,9 +698,9 @@ namespace MCGalaxy
                         }
                     }
                     gamestatus = CountdownGameStatus.Enabled;
-                    CountdownGame.playersleft = 0;
-                    CountdownGame.playersleftlist.Clear();
-                    CountdownGame.players.Clear();
+                    playersleft = 0;
+                    playersleftlist.Clear();
+                    players.Clear();
                     foreach (Player pl in Player.players)
                     {
                         pl.playerofcountdown = false;
@@ -743,7 +730,7 @@ namespace MCGalaxy
             }
         }
 
-        public static void MessagePlayers(string message)
+        public void MessagePlayers(string message)
         {
             foreach (Player pl in Player.players)
             {

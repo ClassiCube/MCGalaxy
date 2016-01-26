@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
                 int years = Convert.ToInt32(parts[6]);
                 DateTime timeRanked = new DateTime(years, months, days, hours, minutes, 0);
                 string reason = parts.Length <= 9 ? null :
-                	CP437Reader.ConvertLine(parts[9].Replace("%20", " "));
+                	CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));
                
                 Player.SendMessage(p, "&aRank changed from: " + newRank.color + newRank.name 
                                    + " &ato " + oldRank.color + oldRank.name);

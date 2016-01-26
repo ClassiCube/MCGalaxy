@@ -502,7 +502,7 @@ namespace MCGalaxy {
                     	case Opcode.EntityTeleport:
                             if (!loggedIn)
                                 break;
-                            HandleInput(message);
+                            HandleMovement(message);
                             break;
                     	case Opcode.Message:
                             if (!loggedIn)
@@ -1093,8 +1093,8 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if (Server.ZombieModeOn && Server.zombie != null 
-                && Server.zombie.HandlesManualChange(this, x, y, z, action, type, b)) return;
+            if (Server.ZombieModeOn && Server.zombie.HandlesManualChange(this, x, y, z, action, type, b)) 
+                return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
                 SendMessage("You are out of the round, and cannot build.");
@@ -1394,7 +1394,7 @@ namespace MCGalaxy {
             }
         }
 
-        void HandleInput(byte[] message) {
+        void HandleMovement(byte[] message) {
             if ( !loggedIn || trainGrab || following != "" || frozen )
                 return;
             /*if (CheckIfInsideBlock())
@@ -1404,7 +1404,7 @@ return;
 }*/
             byte thisid = message[0];
 
-            if ( this.incountdown && CountdownGame.gamestatus == CountdownGameStatus.InProgress && CountdownGame.freezemode ) {
+            if ( this.incountdown && Server.Countdown.gamestatus == CountdownGameStatus.InProgress && Server.Countdown.freezemode ) {
                 if ( this.countdownsettemps ) {
                     countdowntempx = NetUtils.ReadU16(message, 1);
                     Thread.Sleep(100);
@@ -1426,17 +1426,11 @@ return;
                 ushort x = NetUtils.ReadU16(message, 1);
                 ushort y = NetUtils.ReadU16(message, 3);
                 ushort z = NetUtils.ReadU16(message, 5);
+                byte rotx = message[7];
+                byte roty = message[8];
 
-                if ( !this.referee && Server.noRespawn && Server.ZombieModeOn ) {
-                    if ( this.pos[0] >= x + 70 || this.pos[0] <= x - 70 ) {
-                        SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
-                        return;
-                    }
-                    if ( this.pos[2] >= z + 70 || this.pos[2] <= z - 70 ) {
-                        SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
-                        return;
-                    }
-                }
+                if (Server.ZombieModeOn && Server.zombie.HandlesMovement(this, x, y, z, rotx, roty))
+                    return;
                 if ( OnMove != null )
                     OnMove(this, x, y, z);
                 if ( PlayerMove != null )
@@ -1452,8 +1446,7 @@ return;
                     SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
                     return;
                 }
-                byte rotx = message[7];
-                byte roty = message[8];
+               
                 pos = new ushort[3] { x, y, z };
                 rot = new byte[2] { rotx, roty };
                 /*if (!CheckIfInsideBlock())
@@ -1600,8 +1593,8 @@ cliprot = rot;
                         team.SpawnPlayer(this);
                         //this.health = 100;
                     }
-                    else if ( CountdownGame.playersleftlist.Contains(this) ) {
-                        CountdownGame.Death(this);
+                    else if ( Server.Countdown.playersleftlist.Contains(this) ) {
+                        Server.Countdown.Death(this);
                         Command.all.Find("spawn").Use(this, "");
                     }
                     else if ( PlayingTntWars ) {
@@ -2421,11 +2414,11 @@ return;
                         team.RemoveMember(this);
                     }
 
-                    if ( CountdownGame.players.Contains(this) ) {
-                        if ( CountdownGame.playersleftlist.Contains(this) ) {
-                            CountdownGame.PlayerLeft(this);
+                    if ( Server.Countdown.players.Contains(this) ) {
+                        if ( Server.Countdown.playersleftlist.Contains(this) ) {
+                            Server.Countdown.PlayerLeft(this);
                         }
-                        CountdownGame.players.Remove(this);
+                        Server.Countdown.players.Remove(this);
                     }
 
                     TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);

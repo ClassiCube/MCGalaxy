@@ -50,8 +50,22 @@ namespace MCGalaxy {
                 }
 
                 p.blockCount--;
-                if ((p.blockCount % 10) == 0 || (p.blockCount >= 0 && p.blockCount <= 10)) {
+                if ((p.blockCount % 10) == 0 || (p.blockCount >= 0 && p.blockCount <= 10))
                     p.SendMessage("Blocks Left: " + c.maroon + p.blockCount);
+            }
+            return false;
+        }
+        
+        public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z, 
+                                             byte rotX, byte rotY) {
+            if (!p.referee && Server.noRespawn) {
+                if (p.pos[0] >= x + 70 || p.pos[0] <= x - 70 ) {
+                    p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+                    return true;
+                }
+                if (p.pos[2] >= z + 70 || p.pos[2] <= z - 70) {
+                    p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+                    return true;
                 }
             }
             return false;

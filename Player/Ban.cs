@@ -43,7 +43,7 @@ namespace MCGalaxy {
 			if (!File.Exists("text/bans.txt"))
 				File.CreateText("text/bans.txt").Close();
 			
-			reason = CP437Writer.ConvertFromRaw(reason);
+			reason = CP437Writer.ConvertToUnicode(reason);
 			File.AppendAllText("text/bans.txt", pl + " " + who + " " + reason + " " + stealth + " " + datetime + " " + oldrank + "\r\n");
 		}
 		
@@ -64,7 +64,7 @@ namespace MCGalaxy {
 				string[] parts = line.Split(' ');
 				if (parts[1] == who) {
 					bannedby = parts[0];
-					reason = CP437Reader.ConvertLine(parts[2]);
+					reason = CP437Reader.ConvertToRaw(parts[2]);
 					stealth = parts[3];
 					timedate = parts[4];
 					oldrank = parts[5];
@@ -98,7 +98,7 @@ namespace MCGalaxy {
 			foreach (string line in File.ReadAllLines("text/bans.txt")) {
 				string[] parts = line.Split(' ');
 				if (parts[1] == who) {
-					parts[2] = CP437Writer.ConvertFromRaw(reason);				
+					parts[2] = CP437Writer.ConvertToUnicode(reason);				
 					found = true;
 					sb.Append(String.Join(" ", parts) + "\r\n");
 				} else {
