@@ -115,8 +115,8 @@ namespace MCGalaxy.Commands {
                 
                 if (index >= offset) {
                     count++;
-                    const string format = "%{0} displays as {1}, and falls back to {2}";
-                    Player.SendMessage(p, String.Format(format, col.Code, Hex(col), col.Fallback), false);
+                    const string format = "%{0} displays as &{0}{1}{3}, and falls back to {2}.";
+                    Player.SendMessage(p, String.Format(format, col.Code, Hex(col), col.Fallback, Server.DefaultColor), false);
                     
                     if (count >= 8) {
                         const string helpFormat = "To see the next set of custom colors, type %T/ccols list {0}";

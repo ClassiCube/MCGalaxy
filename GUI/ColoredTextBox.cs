@@ -394,7 +394,10 @@ namespace MCGalaxy.Gui.Components {
                 case 'f': return Color.Black;
                 default:
                     char fallback = Chat.GetFallback(c);
-                    return fallback == '\0' ? null : GetColor(fallback);
+                    if (fallback == '\0') return null;
+                    
+                    CustomColor col = Chat.ExtColors[c];
+                    return Color.FromArgb(col.R, col.G, col.B);
             }
         }
     }

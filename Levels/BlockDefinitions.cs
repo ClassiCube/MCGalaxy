@@ -41,32 +41,41 @@ namespace MCGalaxy {
         // BlockDefinitionsExt fields
         public byte MinX, MinY, MinZ;
         public byte MaxX, MaxY, MaxZ;
+        public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
         public static BlockDefinition[] GlobalDefinitions = new BlockDefinition[256];
         
-        public static void LoadGlobal(string path) {
+        public static void LoadGlobal() {
             try {
-                if (File.Exists(path)) {
-                    string json = File.ReadAllText(path);
+                if (File.Exists(GlobalPath)) {
+                    string json = File.ReadAllText(GlobalPath);
                     GlobalDefinitions = JsonConvert.DeserializeObject<BlockDefinition[]>(json);
                 }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 GlobalDefinitions = new BlockDefinition[256];
-            }            
+            }
+
+            try {
+                if (File.Exists(GlobalBackupPath))
+                    File.Delete(GlobalBackupPath);
+                File.Copy(GlobalPath, GlobalBackupPath);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
+            
             for (int i = 0; i < 256; i++) {
                 if (GlobalDefinitions[i] != null && GlobalDefinitions[i].Name == null)
                     GlobalDefinitions[i] = null;
-            }
-            
+            }            
             GlobalDefinitions[0] = new BlockDefinition();
             GlobalDefinitions[0].Name = "Air fallback";
-            SaveGlobal("blocks.json");
+            SaveGlobal();
         }
         
-        public static void SaveGlobal(string path)  {
+        public static void SaveGlobal()  {
             string json = JsonConvert.SerializeObject(GlobalDefinitions);
-            File.WriteAllText(path, json);
+            File.WriteAllText(GlobalPath, json);
         }
         
         public static void AddGlobal(BlockDefinition def) {
@@ -81,7 +90,7 @@ namespace MCGalaxy {
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
                     pl.SendSetBlockPermission(def.BlockID, pl.level.Buildable, pl.level.Deletable);
             }
-            SaveGlobal("blocks.json");
+            SaveGlobal();
         }
         
         public static void RemoveGlobal(BlockDefinition def) {
@@ -90,7 +99,7 @@ namespace MCGalaxy {
                 if (p.HasCpeExt(CpeExt.BlockDefinitions))
                     p.SendRaw(Opcode.CpeRemoveBlockDefinition, def.BlockID);
             }
-            SaveGlobal("blocks.json");
+            SaveGlobal();
         }
         
         public static void SendAll(Player pl) {

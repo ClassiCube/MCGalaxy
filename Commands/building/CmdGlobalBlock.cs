@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands {
             }
             
             BlockDefinition.RemoveGlobal(def);
-            BlockDefinition.SaveGlobal("blocks.json");
+            BlockDefinition.SaveGlobal();
         }
         
         void DefineBlockStep(Player p, string value) {

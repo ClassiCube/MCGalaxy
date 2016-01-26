@@ -207,9 +207,13 @@ namespace MCGalaxy {
             	for (int i = 0; i < 128; i++) {
             		if (Chat.IsStandardColor((char)i)) continue;
             		CustomColor col = Chat.ExtColors[i];
-            		
-            		if (col.Undefined || !hasTextColors)
-            			sb.Replace("&" + (char)i, "");
+                    
+                    if (col.Undefined) {
+                        sb.Replace("&" + (char)i, ""); continue;
+                    }
+                    if (!hasTextColors) {
+                        sb.Replace("&" + (char)i, "&" + col.Fallback); continue;
+                    }
             	}
             }
             

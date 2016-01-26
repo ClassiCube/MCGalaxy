@@ -518,12 +518,14 @@ namespace MCGalaxy
             if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");
             if (!Directory.Exists("extra/undo")) Directory.CreateDirectory("extra/undo");
             if (!Directory.Exists("extra/undoPrevious")) Directory.CreateDirectory("extra/undoPrevious");
-            if (!Directory.Exists("extra/copy/")) { Directory.CreateDirectory("extra/copy/"); }
-            if (!Directory.Exists("extra/copyBackup/")) { Directory.CreateDirectory("extra/copyBackup/"); }
-            if (!Directory.Exists("extra/Waypoints")) { Directory.CreateDirectory("extra/Waypoints"); }
+            if (!Directory.Exists("extra/copy/")) Directory.CreateDirectory("extra/copy/");
+            if (!Directory.Exists("extra/copyBackup/")) Directory.CreateDirectory("extra/copyBackup/");
+            if (!Directory.Exists("extra/Waypoints")) Directory.CreateDirectory("extra/Waypoints");
+            if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
 
             try
             {
+                if (File.Exists("blocks.json")) File.Move("blocks.json", "blockdefs/global.json");
                 if (File.Exists("server.properties")) File.Move("server.properties", "properties/server.properties");
                 if (File.Exists("rules.txt")) File.Move("rules.txt", "text/rules.txt");
                 if (File.Exists("welcome.txt")) File.Move("welcome.txt", "text/welcome.txt");
@@ -1048,7 +1050,7 @@ namespace MCGalaxy
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Alias.Load();
-            BlockDefinition.LoadGlobal("blocks.json");
+            BlockDefinition.LoadGlobal();
             Chat.LoadExtColors();
         }
 
