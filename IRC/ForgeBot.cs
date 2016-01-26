@@ -36,6 +36,7 @@ namespace MCGalaxy {
         private byte retries = 0;
         public string usedCmd = "";
         Dictionary<string, List<string>> users = new Dictionary<string, List<string>>();
+        static char[] trimChars = { ' ' };
         
         public ForgeBot(string channel, string opchannel, string nick, string server) {
             this.channel = channel.Trim(); this.opchannel = opchannel.Trim(); this.nick = nick.Replace(" ", ""); this.server = server;
@@ -89,19 +90,24 @@ namespace MCGalaxy {
 
         public void Say(string message, bool opchat = false, bool color = true) {
             if (!Server.irc || !IsConnected()) return;
-
-            if(String.IsNullOrEmpty(message.Trim()))
+            message = ConvertMessage(message, color);
+            connection.Sender.PublicMessage(opchat ? opchannel : channel, message);
+        }
+        
+        public void Pm(string user, string message, bool color = true) {
+            if (!Server.irc || !IsConnected()) return;
+            message = ConvertMessage(message, color);
+            connection.Sender.PrivateMessage(user, message);
+        }
+        
+        static string ConvertMessage(string message, bool color) {
+            if (String.IsNullOrEmpty(message.Trim()))
                 message = ".";
             message = CP437Writer.ConvertToUnicode(message);
 
             if (color)
                 message = c.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
-            connection.Sender.PublicMessage(opchat ? opchannel : channel, message);
-        }
-        
-        public void Pm(string user, string message) {
-            if (Server.irc && IsConnected())
-                connection.Sender.PrivateMessage(user, message);
+            return message;
         }
         
         public void Reset() {
@@ -159,6 +165,19 @@ namespace MCGalaxy {
         }
 
         void Listener_OnPrivate(UserInfo user, string message) {
+            message = c.IrcToMinecraftColors(message);
+            message = CP437Reader.ConvertToRaw(message);
+            string[] parts = message.Split(trimChars, 3);
+            string ircCmd = parts[0].ToLower();
+            if (ircCmd == ".who" || ircCmd == ".players") {
+                try {
+                    CmdPlayers.DisplayPlayers(null, "", text => Pm(user.Nick, text));
+                } catch (Exception e) {
+                    Server.ErrorLog(e);
+                }
+                return;
+            }
+            
             if (!Server.ircControllers.Contains(user.Nick)) { Pm(user.Nick, "You are not an IRC controller!"); return; }
             if (message.Split(' ')[0] == "resetbot" || banCmd.Contains(message.Split(' ')[0])) { Pm(user.Nick, "You cannot use this command from IRC!"); return; }
             if (Player.CommandHasBadColourCodes(null, message)) { Pm(user.Nick, "Your command had invalid color codes!"); return; }
@@ -178,18 +197,17 @@ namespace MCGalaxy {
         void Listener_OnPublic(UserInfo user, string channel, string message) {
         	message = c.IrcToMinecraftColors(message);
         	message = CP437Reader.ConvertToRaw(message);
-            string[] parts = message.Split(new char[] { ' ' }, 3);
-            //string allowedchars = "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./!@#$%^*()_+QWERTYUIOPASDFGHJKL:\"ZXCVBNM<>? ";
-            // Allowed chars are any ASCII char between 20h/32 and 7Ah/122 inclusive, except for 26h/38 (&) and 60h/96 (`)
-            string ircCommand = parts[0].ToLower();
-            if (ircCommand == ".who" || ircCommand == ".players") {
+            string[] parts = message.Split(trimChars, 3);
+            string ircCmd = parts[0].ToLower();
+            if (ircCmd == ".who" || ircCmd == ".players") {
                 try {
-                    CmdPlayers.DisplayPlayers(null, "", text => Server.IRC.Say(text, false, true));
+                    CmdPlayers.DisplayPlayers(null, "", text => Say(text, false, true));
                 } catch (Exception e) {
                     Server.ErrorLog(e);
                 }
             }
-            if (ircCommand == ".x") {
+            
+            if (ircCmd == ".x") {
                 if (Server.ircControllers.Contains(user.Nick))
                 {
                     List<string> chanNicks;
