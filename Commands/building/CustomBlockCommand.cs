@@ -256,6 +256,7 @@ namespace MCGalaxy.Commands {
             if (!CheckBlockId(p, parts[1], global, out blockId)) return; 
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[blockId];
+            if (!global && def == BlockDefinition.GlobalDefs[blockId]) def = null;
             if (def == null) { MessageNoBlock(p, global); return; }
             
             string value = parts[3];
