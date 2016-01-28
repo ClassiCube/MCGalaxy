@@ -192,13 +192,13 @@ namespace MCGalaxy {
         
         public void SendMessage(byte id, string message, bool colorParse = true) {
             if (colorParse)
-            	message = Chat.EscapeColours(message);
+            	message = Colors.EscapeColors(message);
             StringBuilder sb = new StringBuilder(message);
 
             if (colorParse) {
             	for (int i = 0; i < 128; i++) {
-            		if (Chat.IsStandardColor((char)i)) continue;
-            		CustomColor col = Chat.ExtColors[i];
+            		if (Colors.IsStandardColor((char)i)) continue;
+            		CustomColor col = Colors.ExtColors[i];
                     
                     if (col.Undefined) {
                         sb.Replace("&" + (char)i, ""); continue;

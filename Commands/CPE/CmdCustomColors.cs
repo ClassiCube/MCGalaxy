@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
             if (args.Length < 4) { Help(p); return; }
             
             char code = args[1][0];
-            if (Chat.IsStandardColor(code)) {
+            if (Colors.IsStandardColor(code)) {
                 Player.SendMessage(p, code + " is a standard color code, and thus cannot be removed."); return;
             }
             if (code <= ' ' || code > '~' || code == '%' || code == '&') {
@@ -61,18 +61,24 @@ namespace MCGalaxy.Commands {
             }
             
             char code2 = code;
-            if (Chat.Map(ref code2)) {
+            if (Colors.MapColor(ref code2)) {
                 Player.SendMessage(p, "There is already a custom or server defined color with the code " + code +
                                    ", you must either use a different code or use \"/ccols remove " + code + "\"");
                 return;
             }
             
-            char fallback = args[2][0];
-            if (!Chat.IsStandardColor(fallback)) {
+            string name = args[2];
+            if (Colors.Parse(name) != "") {
+            	Player.SendMessage(p, "There is already an existing standard or " +
+            	                   "custom color with the name\"" + name + "\"."); return;
+            }
+            
+            char fallback = args[3][0];
+            if (!Colors.IsStandardColor(fallback)) {
                 Player.SendMessage(p, fallback + " must be a standard color code."); return;
             }
             
-            string hex = args[3];
+            string hex = args[4];
             if (hex.Length > 0 && hex[0] == '#')
                 hex = hex.Substring(1);
             if (hex.Length != 6 || !IsValidHex(hex)) {
@@ -81,9 +87,10 @@ namespace MCGalaxy.Commands {
             
             CustomColor col = default(CustomColor);
             col.Code = code; col.Fallback = fallback; col.A = 255;
+            col.Name = name;
             Color rgb = ColorTranslator.FromHtml("#" + hex);
             col.R = rgb.R; col.G = rgb.G; col.B = rgb.B;
-            Chat.AddExtColor(col);
+            Colors.AddExtColor(col);
             Player.SendMessage(p, "Successfully added a custom color.");
         }
         
@@ -91,23 +98,23 @@ namespace MCGalaxy.Commands {
             if (args.Length < 2) { Help(p); return; }
             
             char code = args[1][0];
-            if (Chat.IsStandardColor(code)) {
+            if (Colors.IsStandardColor(code)) {
                 Player.SendMessage(p, code + " is a standard color, and thus cannot be removed."); return;
             }
             
-            if ((int)code >= 256 || Chat.ExtColors[code].Undefined) {
+            if ((int)code >= 256 || Colors.ExtColors[code].Undefined) {
                 Player.SendMessage(p, "There is no custom color with the code " + code + ".");
                 Player.SendMessage(p, "Use \"%T/ccols list\" %Sto see a list of custom colors.");
                 return;
             }
-            Chat.RemoveExtColor(code);
+            Colors.RemoveExtColor(code);
             Player.SendMessage(p, "Successfully removed a custom color.");
         }
         
         void ListHandler(Player p, string[] args) {
             int offset = 0, index = 0, count = 0;
             if (args.Length > 1) int.TryParse(args[1], out offset);
-            CustomColor[] cols = Chat.ExtColors;
+            CustomColor[] cols = Colors.ExtColors;
             
             for( int i = 0; i < cols.Length; i++ ) {
                 CustomColor col = cols[i];
@@ -115,8 +122,8 @@ namespace MCGalaxy.Commands {
                 
                 if (index >= offset) {
                     count++;
-                    const string format = "%{0} displays as &{0}{1}{3}, and falls back to {2}.";
-                    Player.SendMessage(p, String.Format(format, col.Code, Hex(col), col.Fallback, Server.DefaultColor), false);
+                    const string format = "{0} - %{1} displays as &{1}{2}{4}, and falls back to {3}.";
+                    Player.SendMessage(p, String.Format(format, col.Name, col.Code, Hex(col), col.Fallback, Server.DefaultColor), false);
                     
                     if (count >= 8) {
                         const string helpFormat = "To see the next set of custom colors, type %T/ccols list {0}";
@@ -130,7 +137,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/ccols <add/remove/list>");
-            Player.SendMessage(p, "%H/ccols add [code] [fallback] [hex]");
+            Player.SendMessage(p, "%H/ccols add [code] [name] [fallback] [hex]");
             Player.SendMessage(p, "%H   code is in ASCII. You cannot replace the standard color codes.");
             Player.SendMessage(p, "%H   fallback is the standard color code shown to non-supporting clients.");
             Player.SendMessage(p, "%H/ccols remove [code]");
@@ -139,7 +146,7 @@ namespace MCGalaxy.Commands {
         
         static bool IsValidHex(string hex) {
             for (int i = 0; i < hex.Length; i++) {
-                if (!Chat.IsStandardColor(hex[i])) return false;
+                if (!Colors.IsStandardColor(hex[i])) return false;
             }
             return true;
         }

@@ -175,7 +175,7 @@ namespace MCGalaxy_.Gui
         }
 
         private static ConsoleColor GetColor(char c) {
-        	Chat.Map(ref c);
+        	Colors.MapColor(ref c);
             switch (c) {             
                 case '0': return ConsoleColor.Black;
                 case '1': return ConsoleColor.DarkBlue;
@@ -194,7 +194,7 @@ namespace MCGalaxy_.Gui
                 case 'e': case 'E': return ConsoleColor.Yellow;
                 case 'f': case 'F': return ConsoleColor.White;
                 default:
-                    char fallback = Chat.GetFallback(c);
+                    char fallback = Colors.GetFallback(c);
                     return fallback == '\0' ? ConsoleColor.White : GetColor(fallback);
             }
         }

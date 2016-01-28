@@ -416,7 +416,7 @@ namespace MCGalaxy.Commands {
                             }
                             if (!par2.StartsWith("&") || !par2.StartsWith("%")) {
                             	par2 = Colors.Parse(par2);
-                            	if (par2 == null) {
+                            	if (par2 == "") {
                             		Player.SendMessage(p, "%cThat wasn't a color");
                             		return;
                                 }
@@ -447,7 +447,7 @@ namespace MCGalaxy.Commands {
                             }
                             if (!par2.StartsWith("&") || !par2.StartsWith("%")) {
                                 par2 = Colors.Parse(par2);
-                            	if (par2 == null) {
+                            	if (par2 == "") {
                             		Player.SendMessage(p, "%cThat wasn't a color");
                             		return;
                                 }

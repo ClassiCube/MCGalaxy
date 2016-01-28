@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
             cpos.message = cpos.message.Replace("'", "\\'");
-            cpos.message = Chat.EscapeColours(cpos.message);
+            cpos.message = Colors.EscapeColors(cpos.message);
             //safe against SQL injections because no user input is given here
             DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
             Database.AddParams("@Message", cpos.message);

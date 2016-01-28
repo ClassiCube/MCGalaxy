@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
                 foreach (Player pl in Player.players) {
                     if (pl.group != grp) continue;
                     if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
-                        string name = Chat.StripColours(pl.DisplayName);
+                        string name = Colors.StripColours(pl.DisplayName);
                         if (Server.afkset.Contains(pl.name)) name += "-afk";
                         if (pl.muted) name += "[muted]";
                         rankSec.Append(pl, name);
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands
             foreach (Player pl in Player.players) {
                 if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
                     totalPlayers++;
-                    string name = Chat.StripColours(pl.DisplayName);
+                    string name = Colors.StripColours(pl.DisplayName);
 
                     if (Server.afkset.Contains(pl.name)) name += "-afk";
                     if (pl.muted) name += "[muted]";

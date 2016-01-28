@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (String.IsNullOrEmpty(message.Trim())) { Help(p); return; }
-            message = Chat.EscapeColours(message);
+            message = Colors.EscapeColors(message);
             string name = "";
             if (message[0] == '@') {
                 message = message.Remove(0, 1).Trim();

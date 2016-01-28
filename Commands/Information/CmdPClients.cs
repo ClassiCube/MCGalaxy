@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
                 StringBuilder builder = new StringBuilder();
                 List<Player> players = kvp.Value;
                 for (int i = 0; i < players.Count; i++) {
-                    string name = Chat.StripColours(players[i].DisplayName);
+                    string name = Colors.StripColours(players[i].DisplayName);
                     builder.Append(name);
                     if (i < players.Count - 1)
                         builder.Append(", ");

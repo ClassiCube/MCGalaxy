@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
 
 		public override void Use(Player p, string message)
 		{
-			message = Chat.EscapeColours(message);
+			message = Colors.EscapeColors(message);
 			if (message == "") message = p.name;
 
 			string originalName = message.ToLower();

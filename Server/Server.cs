@@ -1038,6 +1038,8 @@ namespace MCGalaxy
         }
         public static void LoadAllSettings()
         {
+            Colors.LoadExtColors();
+            BlockDefinition.LoadGlobal();
             SrvProperties.Load("properties/server.properties");
             Updater.Load("properties/update.properties");
             Group.InitAll();
@@ -1050,8 +1052,6 @@ namespace MCGalaxy
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Alias.Load();
-            BlockDefinition.LoadGlobal();
-            Chat.LoadExtColors();
         }
 
         public static void Setup()

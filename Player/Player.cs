@@ -2270,7 +2270,7 @@ return;
         public static void GlobalMessage(string message, bool global) {
             if ( !global )
                 //message = message.Replace("%", "&");
-                message = Chat.EscapeColours(message);
+                message = Colors.EscapeColors(message);
             else
                 message = message.Replace("%G", Server.GlobalChatColor);
             players.ForEach(delegate(Player p) {

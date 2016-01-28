@@ -374,7 +374,7 @@ namespace MCGalaxy.Gui.Components {
         
         /// <summary> Gets a color from a char. </summary>
         public static Color? GetColor( char c ) {
-        	Chat.Map( ref c );
+        	Colors.MapColor( ref c );
             switch ( c ) {
                 case '0': return Color.Black;
                 case '1': return Color.FromArgb( 255, 0, 0, 161 );
@@ -393,10 +393,10 @@ namespace MCGalaxy.Gui.Components {
                 case 'e': return Color.FromArgb( 255, 225, 225, 34 );
                 case 'f': return Color.Black;
                 default:
-                    char fallback = Chat.GetFallback(c);
+                    char fallback = Colors.GetFallback(c);
                     if (fallback == '\0') return null;
                     
-                    CustomColor col = Chat.ExtColors[c];
+                    CustomColor col = Colors.ExtColors[c];
                     return Color.FromArgb(col.R, col.G, col.B);
             }
         }

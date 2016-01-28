@@ -137,9 +137,9 @@ namespace MCGalaxy
                     hasTextColors = true;
                     TextColors = version;
                     
-                    for (int i = 0; i < Chat.ExtColors.Length; i++) {
-                        if (Chat.ExtColors[i].Undefined) continue;
-                        Chat.SendSetTextColor(this, Chat.ExtColors[i]);
+                    for (int i = 0; i < Colors.ExtColors.Length; i++) {
+                        if (Colors.ExtColors[i].Undefined) continue;
+                        Colors.SendSetTextColor(this, Colors.ExtColors[i]);
                     } break;
             }
         }

@@ -120,63 +120,10 @@ namespace MCGalaxy {
             }
         }
         
-        public static bool IsStandardColor(char c) {
-            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
-        }
-
-        public static string EscapeColours(string value) {
-            if (value.IndexOf('%') == -1)
-                return value;
-            char[] chars = new char[value.Length];
-            
-            for (int i = 0; i < value.Length; i++ ) {
-                char c = value[i];
-                bool validCode = c == '%' && i < value.Length - 1;
-                if (!validCode) { chars[i] = c; continue; }
-                
-                char color = value[i + 1];
-                if (Map(ref color)) {
-                    chars[i] = '&';
-                    chars[i + 1] = color;
-                    i++; continue;
-                }
-                chars[i] = '%';
-            }
-            return new string(chars);
-        }
-        
-        public static bool Map(ref char color) {
-            if (IsStandardColor(color)) return true;
-            if (color == 's' || color == 'S') { color = Server.DefaultColor[1]; return true; }
-            if (color == 'h' || color == 'H') { color = 'e'; return true; }
-            if (color == 't' || color == 'T') { color = 'a'; return true; }
-            if (color == 'i' || color == 'I') { color = Server.IRCColour[1]; return true; }
-            if (color == 'g' || color == 'G') { color = Server.GlobalChatColor[1]; return true; }
-            if (color == 'r' || color == 'R') { color = 'f'; return true; }            
-            return GetFallback(color) != '\0';
-        }		
-        
-        public static string StripColours(string value) {
-            if (value.IndexOf('%') == -1)
-                return value;
-            char[] output = new char[value.Length];
-            int usedChars = 0;
-            
-            for (int i = 0; i < value.Length; i++) {
-                char token = value[i];
-                if( token == '%' ) {
-                    i++; // Skip over the following colour code.
-                } else {
-                    output[usedChars++] = token;
-                }
-            }
-            return new string(output, 0, usedChars);
-        }
-        
         public static void ApplyDollarTokens(StringBuilder sb, Player p, bool colorParse) {
             if (p.DisplayName != null) {
                 string prefix = Server.dollardollardollar ? "$" : "";
-                sb.Replace("$name", prefix + Chat.StripColours(p.DisplayName));
+                sb.Replace("$name", prefix + Colors.StripColours(p.DisplayName));
             }
             sb.Replace("$date", DateTime.Now.ToString("yyyy-MM-dd"));
             sb.Replace("$time", DateTime.Now.ToString("HH:mm:ss"));
@@ -305,70 +252,5 @@ namespace MCGalaxy {
             Player.SendMessage(p, Server.DefaultColor + "[<] " + who.FullName + ": &f" + message);
             Player.SendMessage(who, "&9[>] " + fullName + ": &f" + message);
         }
-		
-        public static CustomColor[] ExtColors = new CustomColor[256];
-        
-        public static char GetFallback(char c) {
-            return (int)c >= 256 ? '\0' : ExtColors[c].Fallback;
-        }
-        
-        public static void AddExtColor(CustomColor col) { SetExtCol(col); }
-        
-        public static void RemoveExtColor(char code) {
-            CustomColor col = default(CustomColor);
-            col.Code = code;
-            SetExtCol(col);
-        }
-        
-        static void SetExtCol(CustomColor col) {
-            ExtColors[col.Code] = col;
-            foreach (Player p in Player.players) {
-                if (!p.HasCpeExt(CpeExt.TextColors)) continue;
-                SendSetTextColor(p, col);
-            }
-            SaveExtColors();
-        }
-        
-        internal static void SendSetTextColor(Player p, CustomColor col) {
-            byte[] buffer = new byte[6];
-            buffer[0] = Opcode.CpeSetTextColor;
-            buffer[1] = col.R; buffer[2] = col.G; buffer[3] = col.B; buffer[4] = col.A; 
-            buffer[5] = (byte)col.Code;
-            p.SendRaw(buffer);
-        }
-        
-        internal static void SaveExtColors() {
-            using (StreamWriter w = new StreamWriter("text/colors.txt")) {
-                foreach (CustomColor col in ExtColors) {
-                    if (col.Undefined) continue;
-                    w.Write(col.Code + " " + col.Fallback + " " + 
-                            col.R + " " + col.G + " " + col.B + " " + col.A);              
-                }
-            }
-        }
-        
-        internal static void LoadExtColors() {
-            if (!File.Exists("text/colors.txt")) return;
-            string[] lines = File.ReadAllLines("text/colors.txt");
-            CustomColor col = default(CustomColor);
-            
-            for (int i = 0; i < lines.Length; i++) {
-                string[] parts = lines[i].Split(' ');
-                if (parts.Length != 6) continue;
-                col.Code = parts[0][0]; col.Fallback = parts[1][0];
-                
-                if (!Byte.TryParse(parts[2], out col.R) || !Byte.TryParse(parts[3], out col.G) ||
-                    !Byte.TryParse(parts[4], out col.B) || !Byte.TryParse(parts[5], out col.A))
-                    continue;
-                ExtColors[col.Code] = col;
-            }
-        }
-    }
-    
-    public struct CustomColor {
-        public char Code, Fallback;
-        public byte R, G, B, A;
-        
-        public bool Undefined { get { return Fallback == '\0'; } }
     }
 }
