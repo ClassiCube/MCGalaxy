@@ -184,7 +184,7 @@ namespace MCGalaxy.Commands {
                 }
             } else if (step == 11) {
                 bool result = byte.TryParse(value, out bd.BlockDraw);
-                if (result && bd.BlockDraw >= 0 && bd.BlockDraw <= 3)
+                if (result && bd.BlockDraw >= 0 && bd.BlockDraw <= 4)
                     step++;
             } else if (step == 12) {
                 if (value == "0" || value == "1") {
@@ -311,7 +311,7 @@ namespace MCGalaxy.Commands {
                     def.Shape = value == "0" ? (byte)0 : def.MaxY; break;
                 case "draw":
                 case "blockdraw":
-                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 11, 1, 0, 3)) return;
+                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 11, 1, 0, 4)) return;
                     break;
                 case "min":
                 case "mincoords":
@@ -431,7 +431,7 @@ namespace MCGalaxy.Commands {
             },
             new[] { "Type '0' if the block should be darkened when in shadow, '1' if not(e.g lava)." },
             new[] { "Define the block's draw method.", "0 = Opaque, 1 = Transparent (Like glass)",
-                "2 = Transparent (Like leaves), 3 = Translucent (Like ice)",
+                "2 = Transparent (Like leaves), 3 = Translucent (Like ice), 4 = Gas (Like air)",
             },
             new[] { "Type '0' if the block is treated as a sprite(e.g roses), '1' if not." },
             new[] { "Enter the three minimum coordinates of the cube in pixels (separated by spaces). There are 16 pixels per block." },

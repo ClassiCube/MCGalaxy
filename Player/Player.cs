@@ -1241,8 +1241,10 @@ namespace MCGalaxy {
                     Blockchange(this, x, y, z, Block.air, 0);
                 }
                 Messages.Dispose();
-            }
-            catch { Player.SendMessage(p, "No message was stored."); return; }
+            } catch { 
+        	    Player.SendMessage(p, "No message was stored.");
+        	    RevertBlock(x, y, z); return;
+        	}
         }
 
         private void DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {

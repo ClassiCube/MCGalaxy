@@ -363,7 +363,6 @@
     <Compile Include="Commands\Other\CmdWaypoint.cs" />
     <Compile Include="Commands\Other\CmdXColor.cs" />
     <Compile Include="Commands\Other\CmdXJail.cs" />
-    <Compile Include="Commands\Other\CmdXNick.cs" />
     <Compile Include="Commands\Other\CmdXspawn.cs" />
     <Compile Include="Commands\Other\CmdXTColor.cs" />
     <Compile Include="Commands\Other\CmdXTitle.cs" />

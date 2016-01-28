@@ -50,8 +50,8 @@ namespace MCGalaxy.Commands {
                 string reason = parts.Length <= 9 ? null :
                 	CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));
                
-                Player.SendMessage(p, "&aRank changed from: " + newRank.color + newRank.name 
-                                   + " &ato " + oldRank.color + oldRank.name);
+                Player.SendMessage(p, "&aRank changed from: " + oldRank.color + oldRank.name 
+                                   + " &ato " + newRank.color + newRank.name);
                 Player.SendMessage(p, "&aRanked by: %S" + parts[1] + " &aon %S" + timeRanked);
                 if (reason != null)
                 	Player.SendMessage(p, "&aRank reason: %S" + reason);
