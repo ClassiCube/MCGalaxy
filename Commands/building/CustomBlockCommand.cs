@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands {
                 parts[i] = parts[i].ToLower();
             
             if (message == "") {
-                if (GetBD(p) != null)
-                    SendStepHelp(p, GetStep(p));
+                if (GetBD(p, global) != null)
+                    SendStepHelp(p, GetStep(p, global));
                 else
                     Help(p);
                 return;
@@ -49,11 +49,11 @@ namespace MCGalaxy.Commands {
                     ListHandler(p, parts, global); break;
                 case "abort":
                     Player.SendMessage(p, "Aborted the custom block creation process.");
-                    SetBD(p, null); break;
+                    SetBD(p, global, null); break;
                 case "edit":
                     EditHandler(p, parts, global); break;
                 default:
-                    if (GetBD(p) != null)
+                    if (GetBD(p, global) != null)
                         DefineBlockStep(p, message, global);
                     else
                         Help(p);
@@ -85,15 +85,15 @@ namespace MCGalaxy.Commands {
                 }
             }
             
-            SetBD(p, new BlockDefinition());
-            GetBD(p).BlockID = (byte)targetId;
-            SetTargetId(p, targetId);
+            SetBD(p, global, new BlockDefinition());
+            GetBD(p, global).BlockID = (byte)targetId;
+            SetTargetId(p, global, targetId);
             Player.SendMessage(p, "Type '" + cmd + " abort' at anytime to abort the creation process.");
             Player.SendMessage(p, "Type '" + cmd + " revert' to go back a step in the creation process.");
             Player.SendMessage(p, "Use '" + cmd + " <arg>' to enter arguments for the creation process.");
             Player.SendMessage(p, "%f----------------------------------------------------------");
-            SetStep(p, 2);
-            SendStepHelp(p, GetStep(p));
+            SetStep(p, global, 2);
+            SendStepHelp(p, GetStep(p, global));
         }
         
         void ListHandler(Player p, string[] parts, bool global) {
@@ -140,13 +140,13 @@ namespace MCGalaxy.Commands {
         
         void DefineBlockStep(Player p, string value, bool global) {
             string opt = value.ToLower();
-            int step = GetStep(p);
+            int step = GetStep(p, global);
             if (opt == "revert" && step > 2) {
                 step--;
                 SendStepHelp(p, step);
-                SetStep(p, step); return;
+                SetStep(p, global, step); return;
             }
-            BlockDefinition bd = GetBD(p);
+            BlockDefinition bd = GetBD(p, global);
             
             if (step == 2) {
                 bd.Name = value;
@@ -234,17 +234,17 @@ namespace MCGalaxy.Commands {
                 
                 Player.SendMessage(p, "Created a new custom block " + bd.Name + "(" + bd.BlockID + ")");
                 BlockDefinition.Add(bd, defs, p == null ? null : p.level);
-                SetBD(p, null);
-                SetStep(p, 0);
+                SetBD(p, global, null);
+                SetStep(p, global, 0);
                 return;
             }
             SendStepHelp(p, step);
-            SetStep(p, step);
+            SetStep(p, global, step);
         }
         
         void EditHandler(Player p, string[] parts, bool global) {
             if (parts.Length <= 3) {
-                if(parts.Length == 1)
+                if (parts.Length == 1)
                     Player.SendMessage(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
                                        "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
                                        "fogdensity, fogred, foggreen, fogblue, fallback");
@@ -474,26 +474,32 @@ namespace MCGalaxy.Commands {
         }
         
         static BlockDefinition consoleBD;
-        static int consoleStep = 0;
-        static int consoleTargetId;
+        static int consoleStep, consoleTargetId;
         
-        static BlockDefinition GetBD(Player p) { return p == null ? consoleBD : p.bdBlock; }
+        static BlockDefinition GetBD(Player p, bool global) { 
+            return p == null ? consoleBD : (global ? p.gbBlock : p.lbBlock);
+        }
         
-        static void SetBD(Player p, BlockDefinition bd) {
+        static int GetStep(Player p, bool global) { 
+            return p == null ? consoleStep : (global ? p.gbStep : p.lbStep);
+        }
+        
+        static void SetBD(Player p, bool global, BlockDefinition bd) {
             if (p == null) consoleBD = bd;
-            else p.bdBlock = bd;
+            else if (global) p.gbBlock = bd;
+            else p.lbBlock = bd;
         }
         
-        static void SetTargetId(Player p, int targetId) {
+        static void SetTargetId(Player p, bool global, int targetId) {
             if (p == null) consoleTargetId = targetId;
-            else p.bdTargetId = targetId;
+            else if (global) p.gbTargetId = targetId;
+            else p.lbTargetId = targetId;
         }
         
-        static int GetStep(Player p) { return p == null ? consoleStep : p.bdStep; }
-        
-        static void SetStep(Player p, int step) {
+        static void SetStep(Player p, bool global, int step) {
             if (p == null) consoleStep = step;
-            else p.bdStep = step;
+            else if (global) p.gbStep = step;
+            else p.lbStep = step;
         }
         
         protected static void Help(Player p, bool global) {
@@ -535,6 +541,7 @@ namespace MCGalaxy.Commands {
         public CmdLevelBlock() { }
 
         public override void Use(Player p, string message) {
+            if (p == null) { MessageInGameOnly(p); return; }
             Execute(p, message, false);
         }
         

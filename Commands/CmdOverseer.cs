@@ -28,13 +28,13 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdOverseer() { }
+        static char[] trimChars = { ' ' };
         
         public override void Use(Player p, string message) {
             if (p.group.OverseerMaps == 0)
                 p.SendMessage("Your rank is set to have 0 overseer maps. Therefore, you may not use overseer.");
-            if (message == "") {
-                Help(p); return;
-            }
+            if (message == "") { Help(p); return; }
+            
             string[] parts = message.Split(' ');        
             string cmd = parts[0].ToUpper();
             string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
             byte mapNum = 0;
             
             bool mapOnly = cmd == "SPAWN" || cmd == "PRESET" || cmd == "WEATHER" || cmd == "ENV" ||
-                cmd == "KICK" || cmd == "KICKALL" || cmd == "ZONE";
+                cmd == "KICK" || cmd == "KICKALL" || cmd == "ZONE" || cmd == "LB" || cmd == "LEVELBLOCK";
             if (mapOnly && !p.level.name.ToUpper().StartsWith(p.name.ToUpper())) {
                 Player.SendMessage(p, "You may only perform that action on your own map.");
                 return;
@@ -61,6 +61,10 @@ namespace MCGalaxy.Commands
                 if (!Server.levels.Any(l => l.name == mapname))
                     Command.all.Find("load").Use(p, mapname);
                 Command.all.Find("goto").Use(p, mapname);
+            } else if (cmd == "LB" || cmd == "LEVELBLOCK") {
+                string[] lbArgs = message.Split(trimChars, 2);
+                string lbArg = lbArgs.Length > 1 ? lbArgs[1] : "";
+                Command.all.Find("levelblock").Use(p, lbArg);
             } else if (cmd == "SPAWN") {
                 Command.all.Find("setspawn").Use(p, "");
             } else if (cmd == "PRESET") {
@@ -381,7 +385,8 @@ namespace MCGalaxy.Commands
         public override void Help(Player p) {
             Player.SendMessage(p, "/os [command string] - sends command to The Overseer");
             Player.SendMessage(p, "Accepted commands:");
-            Player.SendMessage(p, "go, map, spawn, zone, kick, kickall, env, weather, preset");
+            Player.SendMessage(p, "go, map, spawn, zone, kick, kickall, env, " +
+                               "weather, preset, levelblock/lb");
         }
     }
 }
