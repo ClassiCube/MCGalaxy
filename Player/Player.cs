@@ -1215,6 +1215,7 @@ namespace MCGalaxy {
         }
 
 
+        static char[] trimChars = { ' '};
         public void HandleMsgBlock(Player p, ushort x, ushort y, ushort z, byte b) {
             try {
                 //safe against SQL injections because no user input is given here
@@ -1223,17 +1224,14 @@ namespace MCGalaxy {
                 int LastMsg = Messages.Rows.Count - 1;
                 if ( LastMsg > -1 ) {
                     string message = Messages.Rows[LastMsg]["Message"].ToString().Trim();
+                    message = message.Replace("\\'", "\'");
                     if ( message != prevMsg || Server.repeatMessage ) {
                         if ( message.StartsWith("/") ) {
-                            List<string> Message = message.Remove(0, 1).Split(' ').ToList();
-                            string command = Message[0];
-                            Message.RemoveAt(0);
-                            string args = string.Join(" ", Message.ToArray());
-                            HandleCommand(command, args);
-                        }
-                        else
+                    	    string[] parts = message.Remove(0, 1).Split(trimChars, 2);
+                            HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
+                    	} else {
                             Player.SendMessage(p, message);
-
+                        }
                         prevMsg = message;
                     }
                     SendBlockchange(x, y, z, b);
