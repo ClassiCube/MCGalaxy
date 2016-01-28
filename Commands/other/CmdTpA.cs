@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
                 //Lies
                 Player.SendMessage(p, "---------------------------------------------------------");
                 Player.SendMessage(p, "Your teleport request has been sent to " + who.color + who.DisplayName);
-                Player.SendMessage(p, "This request will timeout after " + c.aqua + "90" + Server.DefaultColor + " seconds.");
+                Player.SendMessage(p, "This request will timeout after " + Colors.aqua + "90" + Server.DefaultColor + " seconds.");
                 Player.SendMessage(p, "---------------------------------------------------------");
                 return;
             }
@@ -45,12 +45,12 @@ namespace MCGalaxy.Commands {
 
             Player.SendMessage(p, "---------------------------------------------------------");
             Player.SendMessage(p, "Your teleport request has been sent to " + who.color + who.DisplayName);
-            Player.SendMessage(p, "This request will timeout after " + c.aqua + "90" + Server.DefaultColor + " seconds.");
+            Player.SendMessage(p, "This request will timeout after " + Colors.aqua + "90" + Server.DefaultColor + " seconds.");
             Player.SendMessage(p, "---------------------------------------------------------");
             Player.SendMessage(who, "---------------------------------------------------------");
             Player.SendMessage(who, p.color + p.DisplayName + Server.DefaultColor + " would like to teleport to you!");
-            Player.SendMessage(who, "Type " + c.green + "/tpaccept " + Server.DefaultColor + "or " + c.maroon + "/tpdeny" + Server.DefaultColor + "!");
-            Player.SendMessage(who, "This request will timeout after " + c.aqua + "90" + Server.DefaultColor + " seconds.");
+            Player.SendMessage(who, "Type " + Colors.green + "/tpaccept " + Server.DefaultColor + "or " + Colors.maroon + "/tpdeny" + Server.DefaultColor + "!");
+            Player.SendMessage(who, "This request will timeout after " + Colors.aqua + "90" + Server.DefaultColor + " seconds.");
             Player.SendMessage(who, "---------------------------------------------------------");
             who.senderName = p.DisplayName;
             who.Request = true;

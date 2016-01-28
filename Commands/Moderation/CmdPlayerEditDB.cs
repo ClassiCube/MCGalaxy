@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
 
             if (split.Length == 1) 
             { 
-                Player.SendMessage(p, c.red + "You must specify a type.");
+                Player.SendMessage(p, Colors.red + "You must specify a type.");
                 Player.SendMessage(p, "Valid Types: FirstLogin, LastLogin, TotalLogins, Title, TotalDeaths, Money, " +
                     "TotalBlocks, TotalCuboid, TotalKicked, TimeSpent, Color, TitleColor ");
                 return; 
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
             {
                 if (split.Length < 2)
                 {
-                    Player.SendMessage(p, c.red + "Invalid type.");
+                    Player.SendMessage(p, Colors.red + "Invalid type.");
                     Player.SendMessage(p, "Valid Types: FirstLogin, LastLogin, TotalLogins, Title, TotalDeaths, Money, " +
                         "TotalBlocks, TotalCuboid, TotalKicked, TimeSpent, Color, TitleColor ");
                     return;
@@ -364,7 +364,7 @@ namespace MCGalaxy.Commands
                             string titleMsg = "";
                             color = split[2];
                             if (color == "null") { query = "UPDATE Players SET color='' WHERE Name=@Name"; }
-                            string trueColor = c.Parse(color);
+                            string trueColor = Colors.Parse(color);
                             if (trueColor == "" && color != "null") { Player.SendMessage(p, "There is no color \"" + color + "\"."); return; }
                             else
                             {
@@ -397,7 +397,7 @@ namespace MCGalaxy.Commands
                             string titleMsg = "";
                             titleColor = split[2];
                             if (titleColor == "null") { query = "UPDATE Players SET title_color='' WHERE Name=@Name"; }
-                            string trueTitleColor = c.Parse(titleColor);
+                            string trueTitleColor = Colors.Parse(titleColor);
                             if (trueTitleColor == "" && titleColor != "null") { Player.SendMessage(p, "There is no color \"" + titleColor + "\"."); return; }
                             else
                             {
@@ -420,7 +420,7 @@ namespace MCGalaxy.Commands
                         break;
                     default:
                         {
-                            Player.SendMessage(p, c.red + "Invalid type.");
+                            Player.SendMessage(p, Colors.red + "Invalid type.");
                             Player.SendMessage(p, "Valid Types: FirstLogin, LastLogin, TotalLogins, Title, TotalDeaths, Money, " +
                                 "TotalBlocks, TotalCuboid, TotalKicked, TimeSpent, Color, TitleColor ");
                         }

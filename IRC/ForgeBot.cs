@@ -106,7 +106,7 @@ namespace MCGalaxy {
             message = CP437Writer.ConvertToUnicode(message);
 
             if (color)
-                message = c.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
+                message = Colors.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
             return message;
         }
         
@@ -165,7 +165,7 @@ namespace MCGalaxy {
         }
 
         void Listener_OnPrivate(UserInfo user, string message) {
-            message = c.IrcToMinecraftColors(message);
+            message = Colors.IrcToMinecraftColors(message);
             message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.Split(trimChars, 3);
             string ircCmd = parts[0].ToLower();
@@ -195,7 +195,7 @@ namespace MCGalaxy {
         }
 
         void Listener_OnPublic(UserInfo user, string channel, string message) {
-        	message = c.IrcToMinecraftColors(message);
+        	message = Colors.IrcToMinecraftColors(message);
         	message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.Split(trimChars, 3);
             string ircCmd = parts[0].ToLower();

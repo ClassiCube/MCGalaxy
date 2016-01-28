@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player.SendMessage(p, "Players who are " + c.green + "alive " + Server.DefaultColor + "are:");
+                Player.SendMessage(p, "Players who are " + Colors.green + "alive " + Server.DefaultColor + "are:");
                 string playerstring = "";
                 ZombieGame.alive.ForEach(delegate(Player player)
                 {

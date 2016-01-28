@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
             
             if (hackrank)
             {
-            	Player.SendMessage(p, c.red + "You have already hacked a rank!");
+            	Player.SendMessage(p, Colors.red + "You have already hacked a rank!");
             	return;
             }
 			

@@ -133,7 +133,7 @@ namespace MCGalaxy
             }
             if (playerscountminusref < 2)
             {
-                Player.GlobalMessage(c.red + "ERROR: Need more than 2 players to play");
+                Player.GlobalMessage(Colors.red + "ERROR: Need more than 2 players to play");
                 goto GoBack;
             }
 
@@ -150,7 +150,7 @@ namespace MCGalaxy
 
             Player.GlobalMessage(player.color + player.name + Server.DefaultColor + " started the infection!");
             player.infected = true;
-            player.color = c.red;
+            player.color = Colors.red;
             Player.GlobalDespawn(player, false);
             Player.GlobalSpawn(player, player.pos[0], player.pos[1], player.pos[2], player.rot[0], player.rot[1], false);
 
@@ -181,9 +181,9 @@ namespace MCGalaxy
                 aliveCount = alive.Count;
                 infectd.ForEach(delegate(Player player1)
                 {
-                    if (player1.color != c.red)
+                    if (player1.color != Colors.red)
                     {
-                        player1.color = c.red;
+                        player1.color = Colors.red;
                         Player.GlobalDespawn(player1, false);
                         Player.GlobalSpawn(player1, player1.pos[0], player1.pos[1], player1.pos[2], player1.rot[0], player1.rot[1], false);
                     }
@@ -227,17 +227,17 @@ namespace MCGalaxy
                                         int cazzar = random.Next(0, infectMessages.Length);
                                         if (infectMessages2[cazzar] == "")
                                         {
-                                            Player.GlobalMessage(c.red + player1.name + c.yellow + infectMessages[cazzar] + c.red + player2.name);
+                                            Player.GlobalMessage(Colors.red + player1.name + Colors.yellow + infectMessages[cazzar] + Colors.red + player2.name);
                                         }
                                         else if (infectMessages[cazzar] == "")
                                         {
-                                            Player.GlobalMessage(c.red + player2.name + c.yellow + infectMessages2[cazzar]);
+                                            Player.GlobalMessage(Colors.red + player2.name + Colors.yellow + infectMessages2[cazzar]);
                                         }
                                         else
                                         {
-                                            Player.GlobalMessage(c.red + player1.name + c.yellow + infectMessages[cazzar] + c.red + player2.name + c.yellow + infectMessages2[cazzar]);
+                                            Player.GlobalMessage(Colors.red + player1.name + Colors.yellow + infectMessages[cazzar] + Colors.red + player2.name + Colors.yellow + infectMessages2[cazzar]);
                                         }
-                                        player2.color = c.red;
+                                        player2.color = Colors.red;
                                         player1.playersInfected = player1.playersInfected++;
                                         Player.GlobalDespawn(player2, false);
                                         Player.GlobalSpawn(player2, player2.pos[0], player2.pos[1], player2.pos[2], player2.rot[0], player2.rot[1], false);
@@ -276,11 +276,11 @@ namespace MCGalaxy
         {
             Server.zombieRound = false; amountOfMilliseconds = 0;
             if (Server.gameStatus == 0) return;
-            Player.GlobalMessage(c.lime + "The game has ended!");
+            Player.GlobalMessage(Colors.lime + "The game has ended!");
             if(aliveCount == 0)
-                Player.GlobalMessage(c.maroon + "Zombies have won this round.");
+                Player.GlobalMessage(Colors.maroon + "Zombies have won this round.");
             else
-                Player.GlobalMessage(c.green + "Congratulations to our survivor(s)");
+                Player.GlobalMessage(Colors.green + "Congratulations to our survivor(s)");
             timer.Enabled = false;
             string playersString = "";
             if (aliveCount == 0)
@@ -295,7 +295,7 @@ namespace MCGalaxy
                         if (winners.level.name == currentLevelName)
                         {
                             winners.color = winners.group.color;
-                            playersString += winners.group.color + winners.name + c.white + ", ";
+                            playersString += winners.group.color + winners.name + Colors.white + ", ";
                         }
                     }
                 }
@@ -310,7 +310,7 @@ namespace MCGalaxy
                     if (winners.level.name == currentLevelName)
                     {
                         winners.color = winners.group.color;
-                        playersString += winners.group.color + winners.name + c.white + ", ";
+                        playersString += winners.group.color + winners.name + Colors.white + ", ";
                     }
                 });
             }
@@ -331,7 +331,7 @@ namespace MCGalaxy
                     {
                         randomInt = random2.Next(1, 5);
                     }
-                    Player.SendMessage(winners, c.gold + "You gained " + randomInt + " " + Server.moneys);
+                    Player.SendMessage(winners, Colors.gold + "You gained " + randomInt + " " + Server.moneys);
                     winners.blockCount = 50;
                     winners.playersInfected = 0;
                     winners.money = winners.money + randomInt;
@@ -343,7 +343,7 @@ namespace MCGalaxy
                     Random random2 = new Random();
                     int randomInt = 0;
                     randomInt = random2.Next(1, 15);
-                    Player.SendMessage(winners, c.gold + "You gained " + randomInt + " " + Server.moneys);
+                    Player.SendMessage(winners, Colors.gold + "You gained " + randomInt + " " + Server.moneys);
                     winners.blockCount = 50;
                     winners.playersInfected = 0;
                     winners.money = winners.money + randomInt;
@@ -432,7 +432,8 @@ namespace MCGalaxy
                     if (initialChangeLevel)
                     {
                         Server.votingforlevel = true;
-                        Player.GlobalMessage(" " + c.black + "Level Vote: " + Server.DefaultColor + selectedLevel1 + ", " + selectedLevel2 + " or random " + "(" + c.lime + "1%S/" + c.red + "2%S/" + c.blue + "3%S)");
+                        Player.GlobalMessage(" " + Colors.black + "Level Vote: " + Server.DefaultColor + selectedLevel1 + ", " + selectedLevel2 + 
+                                             " or random " + "(" + Colors.lime + "1%S/" + Colors.red + "2%S/" + Colors.blue + "3%S)");
                         System.Threading.Thread.Sleep(15000);
                         Server.votingforlevel = false;
                     }
@@ -492,7 +493,7 @@ namespace MCGalaxy
                     }
                 }
                 Player.GlobalMessage(alive[firstinfect].color + alive[firstinfect].name + Server.DefaultColor + " continued the infection!");
-                alive[firstinfect].color = c.red;
+                alive[firstinfect].color = Colors.red;
                 Player.GlobalDespawn(alive[firstinfect], false);
                 Player.GlobalSpawn(alive[firstinfect], alive[firstinfect].pos[0], alive[firstinfect].pos[1], alive[firstinfect].pos[2], alive[firstinfect].rot[0], alive[firstinfect].rot[1], false);
                 infectd.Add(alive[firstinfect]);
@@ -533,7 +534,7 @@ namespace MCGalaxy
             infectd.Add(p);
             alive.Remove(p);
             p.infected = true;
-            p.color = c.red;
+            p.color = Colors.red;
             Player.GlobalDespawn(p, false);
             Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
             aliveCount = alive.Count;
@@ -559,7 +560,7 @@ namespace MCGalaxy
             Server.queLevel = false;
             Server.nextLevel = "";
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
-            Player.GlobalMessage("The next map has been chosen - " + c.red + next.ToLower());
+            Player.GlobalMessage("The next map has been chosen - " + Colors.red + next.ToLower());
             Player.GlobalMessage("Please wait while you are transfered.");
             String oldLevel = Server.mainLevel.name;
             if (changeMainLevel)

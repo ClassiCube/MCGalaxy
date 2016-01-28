@@ -36,12 +36,12 @@ namespace MCGalaxy.Commands
             who = Player.Find(message);
             if (who == null)
             {
-                Player.SendMessage(p, c.red + "Could not find player " + message + " ...searching in database");
+                Player.SendMessage(p, Colors.red + "Could not find player " + message + " ...searching in database");
                 Database.AddParams("@Name", message);
                 DataTable playerDb = Database.fillData("SELECT * FROM Players WHERE Name=@Name");
                 if (playerDb.Rows.Count == 0)
                 {
-                    Player.SendMessage(p, c.red + "Could not find player at all");
+                    Player.SendMessage(p, Colors.red + "Could not find player at all");
                     return;
                 }
                 else
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
                 searchip = who.ip;
             if (Player.IPInPrivateRange(searchip))
             {
-                Player.SendMessage(p, c.red + "Player has an internal IP, cannot trace");
+                Player.SendMessage(p, Colors.red + "Player has an internal IP, cannot trace");
                 return;
             }
             if (who != null)
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
             else
                 name = message;
                 
-            Player.SendMessage(p, c.lime + "The IP of " + c.aqua + name + c.lime + " has been traced to: " + c.aqua + Player.GetIPLocation(searchip));
+            Player.SendMessage(p, Colors.lime + "The IP of " + Colors.aqua + name + Colors.lime + " has been traced to: " + Colors.aqua + Player.GetIPLocation(searchip));
         }
         public override void Help(Player p)
         {

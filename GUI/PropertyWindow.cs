@@ -403,19 +403,19 @@ namespace MCGalaxy.Gui {
                             break;
 
                         case "defaultcolor":
-                            color = c.Parse(value);
+                            color = Colors.Parse(value);
 
                             if ( color == "" ) {
-                                color = c.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+                                color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
                             }
-                            cmbDefaultColour.SelectedIndex = cmbDefaultColour.Items.IndexOf(c.Name(color)); break;
+                            cmbDefaultColour.SelectedIndex = cmbDefaultColour.Items.IndexOf(Colors.Name(color)); break;
 
                         case "irc-color":
-                            color = c.Parse(value);
+                            color = Colors.Parse(value);
                             if ( color == "" ) {
-                                color = c.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+                                color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
                             }
-                            cmbIRCColour.SelectedIndex = cmbIRCColour.Items.IndexOf(c.Name(color)); break;
+                            cmbIRCColour.SelectedIndex = cmbIRCColour.Items.IndexOf(Colors.Name(color)); break;
                         case "default-rank":
                             try {
                                 if ( cmbDefaultRank.Items.IndexOf(value.ToLower()) != -1 )
@@ -626,11 +626,11 @@ namespace MCGalaxy.Gui {
                             break;
 
                         case "global-chat-color":
-                            color = c.Parse(value);
+                            color = Colors.Parse(value);
                             if ( color == "" ) {
-                                color = c.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+                                color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
                             }
-                            cmbGlobalChatColor.SelectedIndex = cmbGlobalChatColor.Items.IndexOf(c.Name(color)); break;
+                            cmbGlobalChatColor.SelectedIndex = cmbGlobalChatColor.Items.IndexOf(Colors.Name(color)); break;
                         case "premium-only":
                             chkPrmOnly.Checked = value.ToLower() == "true";
                             break;
@@ -918,7 +918,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         #region rankTab
         private void cmbColor_SelectedIndexChanged(object sender, EventArgs e) {
             lblColor.BackColor = Color.FromName(cmbColor.Items[cmbColor.SelectedIndex].ToString());
-            storedRanks[listRanks.SelectedIndex].color = c.Parse(cmbColor.Items[cmbColor.SelectedIndex].ToString());
+            storedRanks[listRanks.SelectedIndex].color = Colors.Parse(cmbColor.Items[cmbColor.SelectedIndex].ToString());
         }
 
         bool skip = false;
@@ -931,7 +931,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             txtPermission.Text = ( (int)foundRank.Permission ).ToString();
             txtLimit.Text = foundRank.maxBlocks.ToString();
             txtMaxUndo.Text = foundRank.maxUndo.ToString();
-            cmbColor.SelectedIndex = cmbColor.Items.IndexOf(c.Name(foundRank.color));
+            cmbColor.SelectedIndex = cmbColor.Items.IndexOf(Colors.Name(foundRank.color));
             txtGrpMOTD.Text = String.IsNullOrEmpty(foundRank.MOTD) ? String.Empty : foundRank.MOTD;
             txtFileName.Text = foundRank.fileName;
         }
@@ -2093,10 +2093,10 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                             {
                                 string mesg = pl.p.color + pl.p.name + Server.DefaultColor + " " + "is now";
                                 if ( pl.Red ) {
-                                    mesg += " on the " + c.red + "red team";
+                                    mesg += " on the " + Colors.red + "red team";
                                 }
                                 if ( pl.Blue ) {
-                                    mesg += " on the " + c.blue + "blue team";
+                                    mesg += " on the " + Colors.blue + "blue team";
                                 }
                                 if ( pl.spec ) {
                                     mesg += Server.DefaultColor + " (as a spectator)";

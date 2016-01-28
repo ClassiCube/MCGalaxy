@@ -46,20 +46,20 @@ namespace MCGalaxy.Commands {
                     who.SetPrefix();
                     return;
                 }
-                string color = c.Parse(message.Substring(pos + 1));
+                string color = Colors.Parse(message.Substring(pos + 1));
                 if ( color == "" ) { Player.SendMessage(p, "There is no color \"" + message + "\"."); }
                 else if ( color == who.color ) { Player.SendMessage(p, who.DisplayName + " already has that color."); }
                 else {
                     //Player.GlobalChat(who, p.color + "*" + p.name + "&e changed " + who.color + Name(who.name) +
                     //                  " color to " + color +
                     //                  c.Name(color) + "&e.", false);
-                    Database.AddParams("@Color", c.Name(color));
+                    Database.AddParams("@Color", Colors.Name(color));
                     Database.AddParams("@Name", who.name);
                     Database.executeQuery("UPDATE Players SET color = @Color WHERE name = @Name");
 
-                    Player.GlobalChat(who, who.color + "*" + Name(who.DisplayName) + " color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
+                    Player.GlobalChat(who, who.color + "*" + Name(who.DisplayName) + " color changed to " + color + Colors.Name(color) + Server.DefaultColor + ".", false);
                     if ( p == null ) {
-                        Player.SendMessage(p, "*" + Name(who.DisplayName) + " color was changed to " + c.Name(color) + ".");
+                        Player.SendMessage(p, "*" + Name(who.DisplayName) + " color was changed to " + Colors.Name(color) + ".");
                     }
                     who.color = color;
 
@@ -82,15 +82,15 @@ namespace MCGalaxy.Commands {
                         p.SetPrefix();
                         return;
                     }
-                    string color = c.Parse(message);
+                    string color = Colors.Parse(message);
                     if ( color == "" ) { Player.SendMessage(p, "There is no color \"" + message + "\"."); }
                     else if ( color == p.color ) { Player.SendMessage(p, "You already have that color."); }
                     else {
-                        Database.AddParams("@Color", c.Name(color));
+                        Database.AddParams("@Color", Colors.Name(color));
                         Database.AddParams("@Name", p.name);
                         Database.executeQuery("UPDATE Players SET color = @Color WHERE name = @Name");
 
-                        Player.GlobalChat(p, p.color + "*" + Name(p.DisplayName) + " color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
+                        Player.GlobalChat(p, p.color + "*" + Name(p.DisplayName) + " color changed to " + color + Colors.Name(color) + Server.DefaultColor + ".", false);
                         p.color = color;
 
                         Player.GlobalDespawn(p, false);

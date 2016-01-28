@@ -112,8 +112,8 @@ namespace MCGalaxy
                 BackupNumber = lvl.Backup(true);
                 if (BackupNumber <= 0)
                 {
-                    SendAllPlayersMessage(c.red + "Backing up Level for TNT Wars failed, Stopping game");
-                    Chat.GlobalMessageOps(c.red + "Backing up Level for TNT Wars failed, Stopping game");
+                    SendAllPlayersMessage(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
+                    Chat.GlobalMessageOps(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
                     GameStatus = TntWarsGameStatus.Finished;
                     return;
                 }
@@ -200,92 +200,92 @@ namespace MCGalaxy
             }
             string teamkillling = "Disabled";
             if (TeamKills) teamkillling = "Enabled";
-            Player.GlobalMessage(c.red + "TNT Wars " + Server.DefaultColor + "on '" + lvl.name + "' has started " + c.teal + Gamemode + Server.DefaultColor + " with a difficulty of " + c.teal + Difficulty + Server.DefaultColor + " (" + c.teal + HitsToDie + Server.DefaultColor + " hits to die, a " + c.teal + explosiontime + Server.DefaultColor + " explosion delay and with a " + c.teal + explosionsize + Server.DefaultColor + " explosion size)" + ", team killing is " + c.teal + teamkillling + Server.DefaultColor + " and you can place " + c.teal + TntPerPlayerAtATime.ToString() + Server.DefaultColor + " TNT at a time and there is a score limit of " + c.teal + ScoreLimit.ToString() + Server.DefaultColor + "!!");
+            Player.GlobalMessage(Colors.red + "TNT Wars " + Server.DefaultColor + "on '" + lvl.name + "' has started " + Colors.teal + Gamemode + Server.DefaultColor + " with a difficulty of " + Colors.teal + Difficulty + Server.DefaultColor + " (" + Colors.teal + HitsToDie + Server.DefaultColor + " hits to die, a " + Colors.teal + explosiontime + Server.DefaultColor + " explosion delay and with a " + Colors.teal + explosionsize + Server.DefaultColor + " explosion size)" + ", team killing is " + Colors.teal + teamkillling + Server.DefaultColor + " and you can place " + Colors.teal + TntPerPlayerAtATime.ToString() + Server.DefaultColor + " TNT at a time and there is a score limit of " + Colors.teal + ScoreLimit.ToString() + Server.DefaultColor + "!!");
             if (GameMode == TntWarsGameMode.TDM) SendAllPlayersMessage("TNT Wars: Start your message with ':' to send it as a team chat!");
             //GracePeriod
             if (GracePeriod) //Check This Grace Stuff
             {
                 GameStatus = TntWarsGameStatus.GracePeriod;
                 int GracePeriodSecsRemaining = GracePeriodSecs;
-                SendAllPlayersMessage("TNT Wars: Grace Period of " + c.lime + GracePeriodSecsRemaining.ToString() + Server.DefaultColor + " seconds");
+                SendAllPlayersMessage("TNT Wars: Grace Period of " + Colors.lime + GracePeriodSecsRemaining.ToString() + Server.DefaultColor + " seconds");
                 while (GracePeriodSecsRemaining > 0)
                 {
                     switch (GracePeriodSecsRemaining)
                     {
                         case 300:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "5" + Server.DefaultColor + " minutes remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "5" + Server.DefaultColor + " minutes remaining!");
                             break;
 
                         case 240:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "4" + Server.DefaultColor + " minutes remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "4" + Server.DefaultColor + " minutes remaining!");
                             break;
 
                         case 180:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "3" + Server.DefaultColor + " minutes remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "3" + Server.DefaultColor + " minutes remaining!");
                             break;
 
                         case 120:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "2" + Server.DefaultColor + " minutes remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "2" + Server.DefaultColor + " minutes remaining!");
                             break;
 
                         case 90:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "1" + Server.DefaultColor + " minute and " + c.teal + "30" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "1" + Server.DefaultColor + " minute and " + Colors.teal + "30" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 60:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "1" + Server.DefaultColor + " minute remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "1" + Server.DefaultColor + " minute remaining!");
                             break;
 
                         case 45:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "45" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "45" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 30:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "30" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "30" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 15:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "15" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "15" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 10:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "10" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "10" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 9:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "9" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "9" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 8:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "8" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "8" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 7:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "7" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "7" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 6:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "6" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "6" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 5:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "5" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "5" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 4:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "4" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "4" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 3:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "3" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "3" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 2:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "2" + Server.DefaultColor + " seconds remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "2" + Server.DefaultColor + " seconds remaining!");
                             break;
 
                         case 1:
-                            SendAllPlayersMessage("TNT Wars: " + c.teal + "1" + Server.DefaultColor + " second remaining!");
+                            SendAllPlayersMessage("TNT Wars: " + Colors.teal + "1" + Server.DefaultColor + " second remaining!");
                             break;
                     }
                                 
@@ -293,9 +293,9 @@ namespace MCGalaxy
                     GracePeriodSecsRemaining -= 1;
                 }
                 SendAllPlayersMessage("TNT Wars: Grace Period is over!!!!!");
-                SendAllPlayersMessage("TNT Wars: You may now place " + c.red + "TNT");
+                SendAllPlayersMessage("TNT Wars: You may now place " + Colors.red + "TNT");
             }
-            SendAllPlayersMessage("TNT Wars: " + c.white + "The Game Has Started!!!!!");
+            SendAllPlayersMessage("TNT Wars: " + Colors.white + "The Game Has Started!!!!!");
             GameStatus = TntWarsGameStatus.InProgress;
             foreach (player p in Players)
             {
@@ -350,21 +350,21 @@ namespace MCGalaxy
             //Message about winners etc.
             if (Players.Count <= 1)
             {
-                Player.GlobalMessage(c.red + "TNT Wars " + Server.DefaultColor + "has ended because there are no longer enough players!");
+                Player.GlobalMessage(Colors.red + "TNT Wars " + Server.DefaultColor + "has ended because there are no longer enough players!");
             }
             else
             {
-                Player.GlobalMessage(c.red + "TNT Wars" + Server.DefaultColor + " has ended!!");
+                Player.GlobalMessage(Colors.red + "TNT Wars" + Server.DefaultColor + " has ended!!");
             }
             if (GameMode == TntWarsGameMode.TDM)
             {
                 if (RedScore >= BlueScore)
                 {
-                    Player.GlobalMessage("TNT Wars: Team " + c.red + "Red " + Server.DefaultColor + "won " + c.red + "TNT Wars " + Server.DefaultColor + "by " + (RedScore - BlueScore).ToString() + " points!");
+                    Player.GlobalMessage("TNT Wars: Team " + Colors.red + "Red " + Server.DefaultColor + "won " + Colors.red + "TNT Wars " + Server.DefaultColor + "by " + (RedScore - BlueScore).ToString() + " points!");
                 }
                 if (BlueScore >= RedScore)
                 {
-                    Player.GlobalMessage("TNT Wars: Team " + c.blue + "Blue " + Server.DefaultColor + "won " + c.red + "TNT Wars " + Server.DefaultColor + "by " + (BlueScore - RedScore).ToString() + " points!");
+                    Player.GlobalMessage("TNT Wars: Team " + Colors.blue + "Blue " + Server.DefaultColor + "won " + Colors.red + "TNT Wars " + Server.DefaultColor + "by " + (BlueScore - RedScore).ToString() + " points!");
                 }
                 try
                 {
@@ -388,19 +388,19 @@ namespace MCGalaxy
                 {
                     if (count == 1)
                     {
-                        Player.GlobalMessage(c.red + "TNT Wars " + Server.DefaultColor + "1st Place: " + pl.p.color + pl.p.name + Server.DefaultColor + " with a score of " + pl.p.color + pl.Score);
+                        Player.GlobalMessage(Colors.red + "TNT Wars " + Server.DefaultColor + "1st Place: " + pl.p.color + pl.p.name + Server.DefaultColor + " with a score of " + pl.p.color + pl.Score);
                     }
                     else if (count == 2)
                     {
-                        SendAllPlayersMessage(c.red + "TNT Wars " + Server.DefaultColor + "2nd Place: " + pl.p.color + pl.p.name + Server.DefaultColor + " with a score of " + pl.p.color + pl.Score);
+                        SendAllPlayersMessage(Colors.red + "TNT Wars " + Server.DefaultColor + "2nd Place: " + pl.p.color + pl.p.name + Server.DefaultColor + " with a score of " + pl.p.color + pl.Score);
                     }
                     else if (count == 3)
                     {
-                        SendAllPlayersMessage(c.red + "TNT Wars " + Server.DefaultColor + "3rd Place: " + pl.p.color + pl.p.name + Server.DefaultColor + " with a score of " + pl.p.color + pl.Score);
+                        SendAllPlayersMessage(Colors.red + "TNT Wars " + Server.DefaultColor + "3rd Place: " + pl.p.color + pl.p.name + Server.DefaultColor + " with a score of " + pl.p.color + pl.Score);
                     }
                     else if (count >= 4)
                     {
-                        SendAllPlayersMessage(c.red + "TNT Wars " + Server.DefaultColor + count.ToString() + "th Place: " + pl.p.color + pl.p.name + Server.DefaultColor + " with a score of " + pl.p.color + pl.Score);
+                        SendAllPlayersMessage(Colors.red + "TNT Wars " + Server.DefaultColor + count.ToString() + "th Place: " + pl.p.color + pl.p.name + Server.DefaultColor + " with a score of " + pl.p.color + pl.Score);
                     }
                     if (count >= PlayingPlayers())
                     {
@@ -660,8 +660,8 @@ namespace MCGalaxy
                 if (TotalTeamScores)
                 {
                     SendAllPlayersMessage("TNT Wars Scores:");
-                    SendAllPlayersMessage(c.red + "RED: " + c.white + RedScore + " " + c.red + "(" + (ScoreLimit - RedScore).ToString() + " needed)");
-                    SendAllPlayersMessage(c.blue + "BLUE: " + c.white + BlueScore + " " + c.red + "(" + (ScoreLimit - BlueScore).ToString() + " needed)");
+                    SendAllPlayersMessage(Colors.red + "RED: " + Colors.white + RedScore + " " + Colors.red + "(" + (ScoreLimit - RedScore).ToString() + " needed)");
+                    SendAllPlayersMessage(Colors.blue + "BLUE: " + Colors.white + BlueScore + " " + Colors.red + "(" + (ScoreLimit - BlueScore).ToString() + " needed)");
                     Thread.Sleep(1000);
                 }
                 if (TopScores)
@@ -694,7 +694,7 @@ namespace MCGalaxy
                 {
                     foreach (player p in Players.Where(p => !p.spec))
                     {
-                        Player.SendMessage(p.p, "TNT Wars: Your Score: " + c.white + p.Score.ToString());
+                        Player.SendMessage(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score.ToString());
                     }
                     Thread.Sleep(1000);
                 }
@@ -784,9 +784,9 @@ namespace MCGalaxy
                 else
                 {
                     p.p.title = "TNT Wars";
-                    p.p.titlecolor = c.white;
-                    if (p.Red) p.p.color = c.red;
-                    if (p.Blue) p.p.color = c.blue;
+                    p.p.titlecolor = Colors.white;
+                    if (p.Red) p.p.color = Colors.red;
+                    if (p.Blue) p.p.color = Colors.blue;
                     p.p.SetPrefix();
                 }
             }

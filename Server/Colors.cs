@@ -22,7 +22,7 @@ using System.Text.RegularExpressions;
 
 namespace MCGalaxy {
     
-    public static class c {
+    public static class Colors {
         
         public const string black = "&0";
         public const string navy = "&1";

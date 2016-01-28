@@ -415,23 +415,23 @@ namespace MCGalaxy.Commands {
                                 return;
                             }
                             if (!par2.StartsWith("&") || !par2.StartsWith("%")) {
-                            	par2 = c.Parse(par2);
+                            	par2 = Colors.Parse(par2);
                             	if (par2 == null) {
                             		Player.SendMessage(p, "%cThat wasn't a color");
                             		return;
                                 }
                             }
                             if (par2 == p.color) {
-                                Player.SendMessage(p, "%cYou already have a " + par2 + c.Name(par2) + "%c color");
+                                Player.SendMessage(p, "%cYou already have a " + par2 + Colors.Name(par2) + "%c color");
                                 return;
                             } else {
-                                Command.all.Find("color").Use(null, p.name + " " + c.Name(par2));
+                                Command.all.Find("color").Use(null, p.name + " " + Colors.Name(par2));
                                 p.money = p.money - Economy.Settings.ColorPrice;
                                 ecos.money = p.money;
                                 ecos.totalSpent += Economy.Settings.ColorPrice;
-                                ecos.purchase = "%3Color: " + par2 + c.Name(par2) + "%3 - Price: %f" + Economy.Settings.ColorPrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+                                ecos.purchase = "%3Color: " + par2 + Colors.Name(par2) + "%3 - Price: %f" + Economy.Settings.ColorPrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
                                 Economy.UpdateEcoStats(ecos);
-                                Player.SendMessage(p, "%aYour color has been successfully changed to " + par2 + c.Name(par2));
+                                Player.SendMessage(p, "%aYour color has been successfully changed to " + par2 + Colors.Name(par2));
                                 Player.SendMessage(p, "%aYour balance is now %f" + p.money.ToString() + " %3" + Server.moneys);
                                 return;
                             }
@@ -446,23 +446,23 @@ namespace MCGalaxy.Commands {
                                 return;
                             }
                             if (!par2.StartsWith("&") || !par2.StartsWith("%")) {
-                                par2 = c.Parse(par2);
+                                par2 = Colors.Parse(par2);
                             	if (par2 == null) {
                             		Player.SendMessage(p, "%cThat wasn't a color");
                             		return;
                                 }
                             }
                             if (par2 == p.titlecolor) {
-                                Player.SendMessage(p, "%cYou already have a " + par2 + c.Name(par2) + "%c titlecolor");
+                                Player.SendMessage(p, "%cYou already have a " + par2 + Colors.Name(par2) + "%c titlecolor");
                                 return;
                             } else {
-                                Command.all.Find("tcolor").Use(null, p.name + " " + c.Name(par2));
+                                Command.all.Find("tcolor").Use(null, p.name + " " + Colors.Name(par2));
                                 p.money = p.money - Economy.Settings.TColorPrice;
                                 ecos.money = p.money;
                                 ecos.totalSpent += Economy.Settings.TColorPrice;
-                                ecos.purchase = "%3Titlecolor: " + par2 + c.Name(par2) + "%3 - Price: %f" + Economy.Settings.TColorPrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+                                ecos.purchase = "%3Titlecolor: " + par2 + Colors.Name(par2) + "%3 - Price: %f" + Economy.Settings.TColorPrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
                                 Economy.UpdateEcoStats(ecos);
-                                Player.SendMessage(p, "%aYour titlecolor has been successfully changed to " + par2 + c.Name(par2));
+                                Player.SendMessage(p, "%aYour titlecolor has been successfully changed to " + par2 + Colors.Name(par2));
                                 Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
                                 return;
                             }

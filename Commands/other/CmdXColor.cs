@@ -41,16 +41,16 @@ namespace MCGalaxy.Commands
                 p.SetPrefix();
                 return;
             }
-            string color = c.Parse(message);
+            string color = Colors.Parse(message);
             if (color == "") { Player.SendMessage(p, "There is no color \"" + message + "\"."); }
             else if (color == p.color) { Player.SendMessage(p, "You already have that color."); }
             else
             {
-                Database.AddParams("@Color", c.Name(color));
+                Database.AddParams("@Color", Colors.Name(color));
                 Database.AddParams("@Name", p.name);
                 Database.executeQuery("UPDATE Players SET color = @Color WHERE name = @Name");
 
-                Player.GlobalChat(p, p.color + "*" + p.DisplayName + Server.DefaultColor + "'s color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
+                Player.GlobalChat(p, p.color + "*" + p.DisplayName + Server.DefaultColor + "'s color changed to " + color + Colors.Name(color) + Server.DefaultColor + ".", false);
                 p.color = color;
 
                 Player.GlobalDespawn(p, false);

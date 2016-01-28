@@ -226,16 +226,16 @@ namespace MCGalaxy {
 								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
 								break;
 							case "defaultcolor":
-								color = c.Parse(value);
+								color = Colors.Parse(value);
 								if ( color == "" ) {
-									color = c.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+									color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
 								}
 								Server.DefaultColor = color;
 								break;
 							case "irc-color":
-								color = c.Parse(value);
+								color = Colors.Parse(value);
 								if ( color == "" ) {
-									color = c.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+									color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
 								}
 								Server.IRCColour = color;
 								break;
@@ -543,9 +543,9 @@ namespace MCGalaxy {
 								break;
 
 							case "global-chat-color":
-								color = c.Parse(value);
+								color = Colors.Parse(value);
 								if ( color == "" ) {
-									color = c.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+									color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
 								}
 								Server.GlobalChatColor = color;
 								break;

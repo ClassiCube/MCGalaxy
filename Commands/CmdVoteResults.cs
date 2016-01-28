@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
             if (message == "") { who = p; message = p.name; } else { who = Player.Find(message); }
             if (Server.YesVotes >= 1 || Server.NoVotes >= 1)
             {
-                p.SendMessage(c.green + "Y: " + Server.YesVotes + c.red + " N: " + Server.NoVotes);
+                p.SendMessage(Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
                 return;
             }
             else

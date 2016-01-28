@@ -58,12 +58,12 @@ namespace MCGalaxy.Commands
 				case "l":
 					if (TntWarsGame.GameList.Count <= 0)
 					{
-						Player.SendMessage(p, "There aren't any " + c.red + "TNT Wars " + Server.DefaultColor + "currently running!");
+						Player.SendMessage(p, "There aren't any " + Colors.red + "TNT Wars " + Server.DefaultColor + "currently running!");
 						return;
 					}
 					else
 					{
-						Player.SendMessage(p, "Currently running " + c.red + "TNT Wars" + Server.DefaultColor + ":");
+						Player.SendMessage(p, "Currently running " + Colors.red + "TNT Wars" + Server.DefaultColor + ":");
 						foreach (TntWarsGame T in TntWarsGame.GameList)
 						{
 							string msg = "";
@@ -210,11 +210,11 @@ namespace MCGalaxy.Commands
 							string msg = p.color + p.name + Server.DefaultColor + " " + "joined TNT Wars on '" + it.lvl.name + "'";
 							if (pl.Red)
 							{
-								msg += " on the " + c.red + "red team";
+								msg += " on the " + Colors.red + "red team";
 							}
 							if (pl.Blue)
 							{
-								msg += " on the " + c.blue + "blue team";
+								msg += " on the " + Colors.blue + "blue team";
 							}
 							if (pl.spec)
 							{
@@ -388,8 +388,8 @@ namespace MCGalaxy.Commands
 								if (tntwrs.GameMode == TntWarsGame.TntWarsGameMode.TDM)
 								{
 									Player.SendMessage(p, "TNT Wars Scores:");
-									Player.SendMessage(p, c.red + "RED: " + c.white + tntwrs.RedScore + " " + c.red + "(" + (tntwrs.ScoreLimit - tntwrs.RedScore).ToString() + " needed)");
-									Player.SendMessage(p, c.blue + "BLUE: " + c.white + tntwrs.BlueScore + " " + c.red + "(" + (tntwrs.ScoreLimit - tntwrs.BlueScore).ToString() + " needed)");
+									Player.SendMessage(p, Colors.red + "RED: " + Colors.white + tntwrs.RedScore + " " + Colors.red + "(" + (tntwrs.ScoreLimit - tntwrs.RedScore).ToString() + " needed)");
+									Player.SendMessage(p, Colors.blue + "BLUE: " + Colors.white + tntwrs.BlueScore + " " + Colors.red + "(" + (tntwrs.ScoreLimit - tntwrs.BlueScore).ToString() + " needed)");
 								}
 								else
 								{
@@ -409,7 +409,7 @@ namespace MCGalaxy.Commands
 						default:
 							if (tntwrs.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress)
 							{
-								Player.SendMessage(p, "TNT Wars: Your Score: " + c.white + TntWarsGame.GetTntWarsGame(p).FindPlayer(p).Score);
+								Player.SendMessage(p, "TNT Wars: Your Score: " + Colors.white + TntWarsGame.GetTntWarsGame(p).FindPlayer(p).Score);
 							}
 							else
 							{
@@ -430,13 +430,13 @@ namespace MCGalaxy.Commands
 						if (TntWarsGame.GetTntWarsGame(p).GameMode == TntWarsGame.TntWarsGameMode.TDM)
 						{
 							if (pl.Red && pl.spec)
-								Player.SendMessage(p, pl.p.color + pl.p.name + Server.DefaultColor + " - " + c.red + "RED" + Server.DefaultColor + " (spectator)");
+								Player.SendMessage(p, pl.p.color + pl.p.name + Server.DefaultColor + " - " + Colors.red + "RED" + Server.DefaultColor + " (spectator)");
 							else if (pl.Blue && pl.spec)
-								Player.SendMessage(p, pl.p.color + pl.p.name + Server.DefaultColor + " - " + c.blue + "BLUE" + Server.DefaultColor + " (spectator)");
+								Player.SendMessage(p, pl.p.color + pl.p.name + Server.DefaultColor + " - " + Colors.blue + "BLUE" + Server.DefaultColor + " (spectator)");
 							else if (pl.Red)
-								Player.SendMessage(p, pl.p.color + pl.p.name + Server.DefaultColor + " - " + c.red + "RED" + Server.DefaultColor);
+								Player.SendMessage(p, pl.p.color + pl.p.name + Server.DefaultColor + " - " + Colors.red + "RED" + Server.DefaultColor);
 							else if (pl.Blue)
-								Player.SendMessage(p, pl.p.color + pl.p.name + Server.DefaultColor + " - " + c.blue + "BLUE" + Server.DefaultColor);
+								Player.SendMessage(p, pl.p.color + pl.p.name + Server.DefaultColor + " - " + Colors.blue + "BLUE" + Server.DefaultColor);
 						}
 						else
 						{
@@ -647,7 +647,7 @@ namespace MCGalaxy.Commands
                                         it.RedSpawn[2] = (ushort)(p.pos[2] / 32);
                                         it.RedSpawn[3] = p.rot[0];
                                         it.RedSpawn[4] = p.rot[1];
-                                        Player.SendMessage(p, "TNT Wars: Set " + c.red + "Red" + Server.DefaultColor + " spawn");
+                                        Player.SendMessage(p, "TNT Wars: Set " + Colors.red + "Red" + Server.DefaultColor + " spawn");
                                         break;
 
                                     case "blue":
@@ -659,7 +659,7 @@ namespace MCGalaxy.Commands
                                         it.BlueSpawn[2] = (ushort)(p.pos[2] / 32);
                                         it.BlueSpawn[3] = p.rot[0];
                                         it.BlueSpawn[4] = p.rot[1];
-                                        Player.SendMessage(p, "TNT Wars: Set " + c.blue + "Blue" + Server.DefaultColor + " spawn");
+                                        Player.SendMessage(p, "TNT Wars: Set " + Colors.blue + "Blue" + Server.DefaultColor + " spawn");
                                         break;
                                 }
                                 break;
@@ -885,11 +885,11 @@ namespace MCGalaxy.Commands
                                                     string mesg = pl.p.color + pl.p.name + Server.DefaultColor + " " + "is now";
                                                     if (pl.Red)
                                                     {
-                                                        mesg += " on the " + c.red + "red team";
+                                                        mesg += " on the " + Colors.red + "red team";
                                                     }
                                                     if (pl.Blue)
                                                     {
-                                                        mesg += " on the " + c.blue + "blue team";
+                                                        mesg += " on the " + Colors.blue + "blue team";
                                                     }
                                                     if (pl.spec)
                                                     {
@@ -1004,11 +1004,11 @@ namespace MCGalaxy.Commands
                                                     string mesg = p.color + p.name + Server.DefaultColor + " " + "is now";
                                                     if (pl.Red)
                                                     {
-                                                        mesg += " on the " + c.red + "red team";
+                                                        mesg += " on the " + Colors.red + "red team";
                                                     }
                                                     if (pl.Blue)
                                                     {
-                                                        mesg += " on the " + c.blue + "blue team";
+                                                        mesg += " on the " + Colors.blue + "blue team";
                                                     }
                                                     if (pl.spec)
                                                     {
@@ -1750,43 +1750,43 @@ namespace MCGalaxy.Commands
                             case "c":
                                 Player.SendMessage(p, "TNT Wars: Current Setup:");
                                 //1
-                                if (it.lvl == null) { Player.SendMessage(p, "Level: " + c.red + "NONE"); }
-                                else { Player.SendMessage(p, "Level: " + c.green + it.lvl.name); }
+                                if (it.lvl == null) { Player.SendMessage(p, "Level: " + Colors.red + "NONE"); }
+                                else { Player.SendMessage(p, "Level: " + Colors.green + it.lvl.name); }
                                 //2
-                                if (it.GameMode == TntWarsGame.TntWarsGameMode.FFA) { Player.SendMessage(p, "Gamemode: " + c.green + "FFA"); }
-                                if (it.GameMode == TntWarsGame.TntWarsGameMode.TDM) { Player.SendMessage(p, "Gamemode: " + c.green + "TDM"); }
+                                if (it.GameMode == TntWarsGame.TntWarsGameMode.FFA) { Player.SendMessage(p, "Gamemode: " + Colors.green + "FFA"); }
+                                if (it.GameMode == TntWarsGame.TntWarsGameMode.TDM) { Player.SendMessage(p, "Gamemode: " + Colors.green + "TDM"); }
                                 //3
-                                if (it.GameDifficulty == TntWarsGame.TntWarsDifficulty.Easy) { Player.SendMessage(p, "Game difficulty: " + c.green + "Easy"); }
-                                if (it.GameDifficulty == TntWarsGame.TntWarsDifficulty.Normal) { Player.SendMessage(p, "Game difficulty: " + c.green + "Normal"); }
-                                if (it.GameDifficulty == TntWarsGame.TntWarsDifficulty.Hard) { Player.SendMessage(p, "Game difficulty: " + c.green + "Hard"); }
-                                if (it.GameDifficulty == TntWarsGame.TntWarsDifficulty.Extreme) { Player.SendMessage(p, "Game difficulty: " + c.green + "Extreme"); }
+                                if (it.GameDifficulty == TntWarsGame.TntWarsDifficulty.Easy) { Player.SendMessage(p, "Game difficulty: " + Colors.green + "Easy"); }
+                                if (it.GameDifficulty == TntWarsGame.TntWarsDifficulty.Normal) { Player.SendMessage(p, "Game difficulty: " + Colors.green + "Normal"); }
+                                if (it.GameDifficulty == TntWarsGame.TntWarsDifficulty.Hard) { Player.SendMessage(p, "Game difficulty: " + Colors.green + "Hard"); }
+                                if (it.GameDifficulty == TntWarsGame.TntWarsDifficulty.Extreme) { Player.SendMessage(p, "Game difficulty: " + Colors.green + "Extreme"); }
                                 //4
-                                if (it.TntPerPlayerAtATime >= 1) { Player.SendMessage(p, "TNT per player at a time: " + c.green + it.TntPerPlayerAtATime.ToString()); }
-                                else if (it.TntPerPlayerAtATime == 0) { Player.SendMessage(p, "TNT per player at a time: " + c.green + "unlimited"); }
+                                if (it.TntPerPlayerAtATime >= 1) { Player.SendMessage(p, "TNT per player at a time: " + Colors.green + it.TntPerPlayerAtATime.ToString()); }
+                                else if (it.TntPerPlayerAtATime == 0) { Player.SendMessage(p, "TNT per player at a time: " + Colors.green + "unlimited"); }
                                 //5
-                                if (it.GracePeriod) { Player.SendMessage(p, "Grace period: " + c.green + "enabled"); }
-                                if (!it.GracePeriod) { Player.SendMessage(p, "Grace period: " + c.green + "disabled"); }
+                                if (it.GracePeriod) { Player.SendMessage(p, "Grace period: " + Colors.green + "enabled"); }
+                                if (!it.GracePeriod) { Player.SendMessage(p, "Grace period: " + Colors.green + "disabled"); }
                                 //6
-                                Player.SendMessage(p, "Grace period time: " + c.green + it.GracePeriodSecs.ToString() + " seconds");
+                                Player.SendMessage(p, "Grace period time: " + Colors.green + it.GracePeriodSecs.ToString() + " seconds");
                                 //7
-                                if (it.BalanceTeams) { Player.SendMessage(p, "Balance teams: " + c.green + "enabled"); }
-                                if (!it.BalanceTeams) { Player.SendMessage(p, "Balance teams: " + c.green + "disabled"); }
+                                if (it.BalanceTeams) { Player.SendMessage(p, "Balance teams: " + Colors.green + "enabled"); }
+                                if (!it.BalanceTeams) { Player.SendMessage(p, "Balance teams: " + Colors.green + "disabled"); }
                                 //8
-                                Player.SendMessage(p, "Score limit: " + c.green + it.ScoreLimit.ToString() + " points");
+                                Player.SendMessage(p, "Score limit: " + Colors.green + it.ScoreLimit.ToString() + " points");
                                 //9
-                                if (it.Streaks) { Player.SendMessage(p, "Streaks: " + c.green + "enabled"); }
-                                if (!it.Streaks) { Player.SendMessage(p, "Streaks: " + c.green + "disabled"); }
+                                if (it.Streaks) { Player.SendMessage(p, "Streaks: " + Colors.green + "enabled"); }
+                                if (!it.Streaks) { Player.SendMessage(p, "Streaks: " + Colors.green + "disabled"); }
                                 //10
-                                if (it.MultiKillBonus == 0) { Player.SendMessage(p, "Multikill bonus: " + c.green + "disabled"); }
-                                if (it.MultiKillBonus != 0) { Player.SendMessage(p, "Multikill bonus: " + c.green + "enabled"); }
+                                if (it.MultiKillBonus == 0) { Player.SendMessage(p, "Multikill bonus: " + Colors.green + "disabled"); }
+                                if (it.MultiKillBonus != 0) { Player.SendMessage(p, "Multikill bonus: " + Colors.green + "enabled"); }
                                 //11
-                                Player.SendMessage(p, "Score per kill: " + c.green + it.ScorePerKill.ToString() + " points");
+                                Player.SendMessage(p, "Score per kill: " + Colors.green + it.ScorePerKill.ToString() + " points");
                                 //12
-                                if (it.ScorePerAssist == 0) { Player.SendMessage(p, "Assists: " + c.green + "disabled"); }
-                                if (it.ScorePerAssist != 0) { Player.SendMessage(p, "Assists : " + c.green + "enabled (at " + it.ScorePerAssist.ToString() + " points)"); }
+                                if (it.ScorePerAssist == 0) { Player.SendMessage(p, "Assists: " + Colors.green + "disabled"); }
+                                if (it.ScorePerAssist != 0) { Player.SendMessage(p, "Assists : " + Colors.green + "enabled (at " + it.ScorePerAssist.ToString() + " points)"); }
                                 //13
-                                if (it.TeamKills) { Player.SendMessage(p, "Team killing: " + c.green + "enabled"); }
-                                if (!it.TeamKills) { Player.SendMessage(p, "Team killing: " + c.green + "disabled"); }
+                                if (it.TeamKills) { Player.SendMessage(p, "Team killing: " + Colors.green + "enabled"); }
+                                if (!it.TeamKills) { Player.SendMessage(p, "Team killing: " + Colors.green + "disabled"); }
                                 //14
                                 it.CheckAllSetUp(p);
                                 //15

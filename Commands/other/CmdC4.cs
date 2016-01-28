@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
                 Level.C4.C4s c4 = new Level.C4.C4s(numb);
                 p.level.C4list.Add(c4);
                 p.c4circuitNumber = numb;
-                Player.SendMessage(p, "Place any block for c4 and place a " + c.red + "red" + Server.DefaultColor + " block for the detonator!");
+                Player.SendMessage(p, "Place any block for c4 and place a " + Colors.red + "red" + Server.DefaultColor + " block for the detonator!");
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
             } else {
                 Player.SendMessage(p, "To use c4, the physics level must be 1, 2, 3 or 4");

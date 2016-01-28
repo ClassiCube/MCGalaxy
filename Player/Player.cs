@@ -371,7 +371,7 @@ namespace MCGalaxy {
 
         //This is so that plugin devs can declare a player without needing a socket..
         //They would still have to do p.Dispose()..
-        public Player(string playername) { name = playername; if (playername == "IRC") { group = Group.Find("nobody"); color = c.lime; } }
+        public Player(string playername) { name = playername; if (playername == "IRC") { group = Group.Find("nobody"); color = Colors.lime; } }
 
         public Player(Socket s) {
             try {
@@ -964,12 +964,12 @@ namespace MCGalaxy {
             }
             
             if (row["title_color"].ToString().Trim() != "")
-                titlecolor = c.Parse(row["title_color"].ToString().Trim());
+                titlecolor = Colors.Parse(row["title_color"].ToString().Trim());
             else
                 titlecolor = "";
             
             if (row["color"].ToString().Trim() != "")
-                color = c.Parse(row["color"].ToString().Trim());
+                color = Colors.Parse(row["color"].ToString().Trim());
             else
                 color = group.color;
             
@@ -1028,7 +1028,9 @@ namespace MCGalaxy {
         #endregion
         
         public void SetPrefix() { 
-            string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", c.Parse("blue"), color) : isMod ? string.Format("{1}[{0}Mod{1}] ", c.Parse("lime"), color) : isGCMod ? string.Format("{1}[{0}GCMod{1}] ", c.Parse("gold"), color) : "";
+            string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", Colors.blue, color) : 
+        	    isMod ? string.Format("{1}[{0}Mod{1}] ", Colors.lime, color) 
+        	    : isGCMod ? string.Format("{1}[{0}GCMod{1}] ", Colors.gold, color) : "";
             //prefix = ( title == "" ) ? "" : ( titlecolor == "" ) ? color + "[" + title + color + "] " : titlecolor + "[" + titlecolor + title + titlecolor + "] " + color;
             prefix = ( title == "" ) ? "" : ( titlecolor == "" ) ? color + "[" + title + "] " : color + "[" + titlecolor + title + color + "] ";
             prefix = viptitle + prefix;
@@ -1673,10 +1675,10 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 // handles the /womid client message, which displays the WoM vrersion
                 if ( text.Truncate(6) == "/womid" ) {
                     string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
-                    Player.GlobalMessage(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
-                    Player.GlobalMessage(c.red + "[INFO] %fVersion: " + version);
-                    Server.s.Log(c.red + "[INFO] " + color + DisplayName + "%f is using wom client");
-                    Server.s.Log(c.red + "[INFO] %fVersion: " + version);
+                    Player.GlobalMessage(Colors.red + "[INFO] " + color + DisplayName + "%f is using wom client");
+                    Player.GlobalMessage(Colors.red + "[INFO] %fVersion: " + version);
+                    Server.s.Log(Colors.red + "[INFO] " + color + DisplayName + "%f is using wom client");
+                    Server.s.Log(Colors.red + "[INFO] %fVersion: " + version);
                     UsingWom = true;
                     WoMVersion = version.Split('-')[1];
                     return;
@@ -1697,13 +1699,13 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if (text.EndsWith(">"))
                 {
                     storedMessage += text.Replace(">", "|>|");
-                    SendMessage(c.teal + "Partial message: " + c.white + storedMessage.Replace("|>|", " ").Replace("|<|", ""));
+                    SendMessage(Colors.teal + "Partial message: " + Colors.white + storedMessage.Replace("|>|", " ").Replace("|<|", ""));
                     return;
                 }
                 if (text.EndsWith("<"))
                 {
                     storedMessage += text.Replace("<", "|<|");
-                    SendMessage(c.teal + "Partial message: " + c.white + storedMessage.Replace("|<|", "").Replace("|>|", " "));
+                    SendMessage(Colors.teal + "Partial message: " + Colors.white + storedMessage.Replace("|<|", "").Replace("|>|", " "));
                     return;
                 }
 
@@ -1839,8 +1841,8 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                         if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
                             TntWarsGame.player pl = it.FindPlayer(this);
                             foreach ( TntWarsGame.player p in it.Players ) {
-                                if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + c.red + "-" + color + name + c.red + "- " + Server.DefaultColor + newtext);
-                                if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + c.blue + "-" + color + name + c.blue + "- " + Server.DefaultColor + newtext);
+                                if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + Server.DefaultColor + newtext);
+                                if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + Server.DefaultColor + newtext);
                             }
                             Server.s.Log("[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
                             return;
@@ -2197,7 +2199,7 @@ return;
             if ( showname ) {
                 String referee = "";
                 if ( from.referee ) {
-                    referee = c.green + "[Referee] ";
+                    referee = Colors.green + "[Referee] ";
                 }
                 message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             }
@@ -2290,9 +2292,9 @@ return;
                     if (Server.ZombieModeOn && !p.aka) {
                         if (from.infected) {
                             if (Server.ZombieName != "")
-                                p.SendSpawn(from.id, c.red + Server.ZombieName + possession, x, y, z, rotx, roty);
+                                p.SendSpawn(from.id, Colors.red + Server.ZombieName + possession, x, y, z, rotx, roty);
                             else
-                                p.SendSpawn(from.id, c.red + from.name + possession, x, y, z, rotx, roty);
+                                p.SendSpawn(from.id, Colors.red + from.name + possession, x, y, z, rotx, roty);
                         } else if (!from.referee) {
                             p.SendSpawn(from.id, from.color + from.name + possession, x, y, z, rotx, roty);
                         }
@@ -2592,8 +2594,8 @@ catch { }*/
                 else {
                     offPlayer.name = playerDB.Rows[0]["Name"].ToString().Trim();
                     offPlayer.title = playerDB.Rows[0]["Title"].ToString().Trim();
-                    offPlayer.titleColor = c.Parse(playerDB.Rows[0]["title_color"].ToString().Trim());
-                    offPlayer.color = c.Parse(playerDB.Rows[0]["color"].ToString().Trim());
+                    offPlayer.titleColor = Colors.Parse(playerDB.Rows[0]["title_color"].ToString().Trim());
+                    offPlayer.color = Colors.Parse(playerDB.Rows[0]["color"].ToString().Trim());
                     offPlayer.money = int.Parse(playerDB.Rows[0]["Money"].ToString());
                     if (offPlayer.color == "") { offPlayer.color = GetGroup(offPlayer.name).color; }
                 }
@@ -2730,7 +2732,7 @@ Next: continue;
                 double spamTimer = DateTime.Now.Subtract(oldestTime).TotalSeconds;
                 if ( spamTimer < spamBlockTimer && !ignoreGrief ) {
                     this.Kick("You were kicked by antigrief system. Slow down.");
-                    SendMessage(c.red + DisplayName + " was kicked for suspected griefing.");
+                    SendMessage(Colors.red + DisplayName + " was kicked for suspected griefing.");
                     Server.s.Log(name + " was kicked for block spam (" + spamBlockCount + " blocks in " + spamTimer + " seconds)");
                     return true;
                 }
@@ -2849,7 +2851,7 @@ Next: continue;
         internal static bool CheckVote(string message, Player p, string a, string b, ref int totalVotes) {
             if (!p.voted && (message == a || message == b)) {
                 totalVotes++;
-                p.SendMessage(c.red + "Thanks for voting!");
+                p.SendMessage(Colors.red + "Thanks for voting!");
                 p.voted = true;
                 return true;
             }

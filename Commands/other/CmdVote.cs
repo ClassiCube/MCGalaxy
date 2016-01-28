@@ -32,11 +32,11 @@ namespace MCGalaxy.Commands
             if (!Server.voting) {
                 Server.voting = true;
                 Server.NoVotes = 0; Server.YesVotes = 0;
-                Player.GlobalMessage(c.green + " VOTE: %S" + message + "%S(" + c.green + "Yes" + " %S/ " + c.red + "No" + "%S)");
+                Player.GlobalMessage(Colors.green + " VOTE: %S" + message + "%S(" + Colors.green + "Yes" + " %S/ " + Colors.red + "No" + "%S)");
                 System.Threading.Thread.Sleep(15000);
                 
                 Server.voting = false;
-                Player.GlobalMessage("The votes are in! " + c.green + "Y: " + Server.YesVotes + c.red + " N: " + Server.NoVotes);
+                Player.GlobalMessage("The votes are in! " + Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
                 Player.players.ForEach(pl => pl.voted = false);
             }  else{
                 p.SendMessage("A vote is in progress!");

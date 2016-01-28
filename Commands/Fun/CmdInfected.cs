@@ -35,11 +35,11 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player.SendMessage(p, "Players who are " + c.red + "infected " + Server.DefaultColor + "are:");
+                Player.SendMessage(p, "Players who are " + Colors.red + "infected " + Server.DefaultColor + "are:");
                 string playerstring = "";
                 ZombieGame.infectd.ForEach(delegate(Player player)
                 {
-                    playerstring = playerstring + c.red + player.DisplayName + Server.DefaultColor + ", ";
+                    playerstring = playerstring + Colors.red + player.DisplayName + Server.DefaultColor + ", ";
                 });
                 Player.SendMessage(p, playerstring);
             }

@@ -52,15 +52,15 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                string color = c.Parse(args[1]);
+                string color = Colors.Parse(args[1]);
                 if (color == "") { Player.SendMessage(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.titlecolor) { Player.SendMessage(p, who.DisplayName + " already has that title color."); return; }
                 else
                 {
-                    Database.AddParams("@Color", c.Name(color));
+                    Database.AddParams("@Color", Colors.Name(color));
                     Database.AddParams("@Name", who.name);
                     Database.executeQuery("UPDATE Players SET title_color = @Color WHERE Name = @Name");
-                    Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " had their title color changed to " + color + c.Name(color) + Server.DefaultColor + ".", false);
+                    Player.GlobalChat(who, who.color + who.DisplayName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);
                     who.titlecolor = color;
                     who.SetPrefix();
                 }

@@ -509,7 +509,7 @@
     <Compile Include="Database\SQLite.cs" />
     <Compile Include="Database\SQLiteTransactionHelper.cs" />
     <Compile Include="Drawing\FindReference.cs" />
-    <Compile Include="Server\Color.cs" />
+    <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Levels\LevelCollection.cs" />
     <Compile Include="Player\PlayerCollection.cs" />

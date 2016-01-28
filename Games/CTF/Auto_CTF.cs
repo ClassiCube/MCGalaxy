@@ -39,7 +39,7 @@ namespace MCGalaxy
         /// <param name="color">The color code that the team will have</param>
         public Teams(string color)
         {
-            this.color = c.Parse(color);
+            this.color = Colors.Parse(color);
             members = new List<Player>();
         }
         /// <summary>
@@ -597,8 +597,8 @@ namespace MCGalaxy
                                 GetPlayer(p).blue = false;
                             }
                             redteam.Add(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("red") + "joined the RED Team");
-                            Player.SendMessage(p, c.Parse("red") + "You are now on the red team!");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
+                            Player.SendMessage(p, Colors.red + "You are now on the red team!");
                         }
                         else if (redteam.members.Count > blueteam.members.Count)
                         {
@@ -610,8 +610,8 @@ namespace MCGalaxy
                                 GetPlayer(p).blue = true;
                             }
                             blueteam.Add(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("blue") + "joined the BLUE Team");
-                            Player.SendMessage(p, c.Parse("blue") + "You are now on the blue team!");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
+                            Player.SendMessage(p, Colors.blue + "You are now on the blue team!");
                         }
                         else if (new Random().Next(2) == 0)
                         {
@@ -623,8 +623,8 @@ namespace MCGalaxy
                                 GetPlayer(p).blue = false;
                             }
                             redteam.Add(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("red") + "joined the RED Team");
-                            Player.SendMessage(p, c.Parse("red") + "You are now on the red team!");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
+                            Player.SendMessage(p, Colors.red + "You are now on the red team!");
                         }
                         else
                         {
@@ -636,8 +636,8 @@ namespace MCGalaxy
                                 GetPlayer(p).blue = true;
                             }
                             blueteam.Add(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + c.Parse("blue") + "joined the BLUE Team");
-                            Player.SendMessage(p, c.Parse("blue") + "You are now on the blue team!");
+                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
+                            Player.SendMessage(p, Colors.blue + "You are now on the blue team!");
                         }
                     }
                     else if (message != "ctf" && p.level == mainlevel)

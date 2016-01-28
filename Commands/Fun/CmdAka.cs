@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands
                 
                 string name = null;
                 if (pl.infected && showInfected) {
-                    name = Server.ZombieName != "" ? c.red + Server.ZombieName : c.red + pl.name;
+                    name = Server.ZombieName != "" ? Colors.red + Server.ZombieName : Colors.red + pl.name;
                 } else {
                     name = pl.color + pl.name;
                 }

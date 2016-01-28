@@ -51,7 +51,7 @@ namespace MCGalaxy {
 
                 p.blockCount--;
                 if ((p.blockCount % 10) == 0 || (p.blockCount >= 0 && p.blockCount <= 10))
-                    p.SendMessage("Blocks Left: " + c.maroon + p.blockCount);
+                    p.SendMessage("Blocks Left: " + Colors.maroon + p.blockCount);
             }
             return false;
         }

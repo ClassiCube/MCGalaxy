@@ -49,9 +49,9 @@ namespace MCGalaxy.Commands
             string FoundRank = Group.findPlayer(message.ToLower());
             if (playerDb.Rows.Count == 0) { Player.SendMessage(p, Group.Find(FoundRank).color + message + Server.DefaultColor + " has the rank of " + Group.Find(FoundRank).color + FoundRank); return; }
             string title = playerDb.Rows[0]["Title"].ToString();
-            string color = c.Parse(playerDb.Rows[0]["color"].ToString().Trim());
+            string color = Colors.Parse(playerDb.Rows[0]["color"].ToString().Trim());
             if (color == "" || color == null || String.IsNullOrEmpty(color)) color = Group.Find(FoundRank).color;
-            string tcolor = c.Parse(playerDb.Rows[0]["title_color"].ToString().Trim());
+            string tcolor = Colors.Parse(playerDb.Rows[0]["title_color"].ToString().Trim());
             if (title == "" || title == null || String.IsNullOrEmpty(title))
                 Player.SendMessage(p, color + message + Server.DefaultColor + " has :");
             else
