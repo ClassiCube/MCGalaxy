@@ -1353,8 +1353,14 @@ namespace MCGalaxy {
                     if ( level.physics == 0 || level.physics == 5 ) {
                         switch ( type ) {
                             case Block.dirt: //instant dirt to grass
-                                if ( Block.LightPass(level.GetTile(x, (ushort)( y + 1 ), z)) ) level.Blockchange(this, x, y, z, (byte)( Block.grass ));
-                                else level.Blockchange(this, x, y, z, (byte)( Block.dirt ));
+            				    byte above = level.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
+                                if (type == Block.custom_block)
+                    	            extAbove = level.GetExtTile(x, (ushort)(y + 1), z);
+                                
+                                if (Block.LightPass(above, extAbove, level.CustomBlockDefs)) 
+                                	level.Blockchange(this, x, y, z, (byte)Block.grass);
+                                else
+                                	level.Blockchange(this, x, y, z, (byte)Block.dirt);
                                 break;
                             case Block.staircasestep: //stair handler
                                 if ( level.GetTile(x, (ushort)( y - 1 ), z) == Block.staircasestep ) {

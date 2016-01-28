@@ -343,7 +343,8 @@ namespace MCGalaxy {
                     Player.GlobalBlockchange(this, x, y, z, type, extType);
 
                 errorLocation = "Growing grass";
-                if (GetTile(x, (ushort)(y - 1), z) == Block.grass && GrassDestroy && !Block.LightPass(type)) {
+                if (GetTile(x, (ushort)(y - 1), z) == Block.grass && GrassDestroy 
+                    && !Block.LightPass(type, extType, CustomBlockDefs)) {
                     Blockchange(p, x, (ushort)(y - 1), z, Block.dirt);
                 }
 

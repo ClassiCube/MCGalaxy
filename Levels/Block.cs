@@ -945,10 +945,8 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool LightPass(byte type)
-        {
-            switch (Convert(type))
-            {
+        public static bool LightPass(byte type, byte extType, BlockDefinition[] defs) {
+            switch (Convert(type)) {
                 case Block.air:
                 case Block.glass:
                 case Block.leaf:
@@ -957,9 +955,11 @@ namespace MCGalaxy
                 case Block.mushroom:
                 case Block.redmushroom:
                 case Block.shrub:
-            	case Block.rope:
+                case Block.rope:
                     return true;
-
+                case Block.custom_block:
+                    BlockDefinition def = defs[extType];
+                    return def == null ? false : !def.BlocksLight;
                 default:
                     return false;
             }

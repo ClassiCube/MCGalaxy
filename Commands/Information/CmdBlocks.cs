@@ -94,7 +94,8 @@ namespace MCGalaxy.Commands
                             Player.SendMessage(p, "&bComplex information for \"" + message + "\":");
                             Player.SendMessage(p, "&cBlock will appear as a \"" + Block.Name(Block.Convert(b)) + "\" block");
 
-                            if (Block.LightPass(b)) Player.SendMessage(p, "Block will allow light through");
+                            if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs)) 
+                            	Player.SendMessage(p, "Block will allow light through");
                             if (Block.Physics(b)) Player.SendMessage(p, "Block affects physics in some way"); //AFFECT!
                             else Player.SendMessage(p, "Block will not affect physics in any way"); //It's AFFECT!
                             if (Block.NeedRestart(b)) Player.SendMessage(p, "The block's physics will auto-start");

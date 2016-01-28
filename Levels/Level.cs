@@ -907,18 +907,18 @@ namespace MCGalaxy
                     AirPhysics.DoAir(this, C, rand);
                     break;
                 case Block.dirt: //Dirt
-                    if (!GrassGrow)
-                    {
-                        C.time = 255;
-                        break;
+                    if (!GrassGrow) {
+                        C.time = 255;  break;
                     }
 
                     if (C.time > 20)
                     {
-                        if (Block.LightPass(GetTile(x, (ushort)(y + 1), z)))
-                        {
+                        byte type = GetTile(x, (ushort)(y + 1), z), extType = 0;
+                        if (type == Block.custom_block)
+                    	    extType = GetExtTile(x, (ushort)(y + 1), z);
+                    	
+                        if (Block.LightPass(type, extType, CustomBlockDefs))
                             AddUpdate(C.b, Block.grass);
-                        }
                         C.time = 255;
                     }
                     else
