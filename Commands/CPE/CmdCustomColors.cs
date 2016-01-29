@@ -63,14 +63,14 @@ namespace MCGalaxy.Commands {
             char code2 = code;
             if (Colors.MapColor(ref code2)) {
                 Player.SendMessage(p, "There is already a custom or server defined color with the code " + code +
-                                   ", you must either use a different code or use \"/ccols remove " + code + "\"");
+                                   ", you must either use a different code or use \"%T/ccols remove " + code + "%S\"");
                 return;
             }
             
             string name = args[2];
             if (Colors.Parse(name) != "") {
             	Player.SendMessage(p, "There is already an existing standard or " +
-            	                   "custom color with the name\"" + name + "\"."); return;
+            	                   "custom color with the name \"" + name + "\"."); return;
             }
             
             char fallback = args[3][0];

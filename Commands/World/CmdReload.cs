@@ -16,10 +16,10 @@
     permissions and limitations under the Licenses.
  */
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdReload : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdReload : Command {
+		
         public override string name { get { return "reload"; } }
         public override string shortcut { get { return "rd"; } }
         public override string type { get { return CommandTypes.World; } }
@@ -27,21 +27,17 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdReload() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (p == null && message == "") {
-                Player.SendMessage(p, "You must give a level name when running the command from console.");
-                return;
+                Player.SendMessage(p, "You must give a level name when running the command from console."); return;
             }
             
             string name = message == "" ? p.level.name : message;
             if (!File.Exists("levels/" + name + ".lvl")) {
-                Player.SendMessage(p, "The given level \"" + name + "\" does not exist.");
-                return;
+                Player.SendMessage(p, "The given level \"" + name + "\" does not exist."); return;
             }
             if (Server.mainLevel.name == name) {
-                Player.SendMessage(p, "You cannot reload the main level.");
-                return;
+                Player.SendMessage(p, "You cannot reload the main level."); return;
             }
             
             foreach (Player pl in Player.players) {
