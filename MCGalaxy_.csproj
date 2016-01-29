@@ -361,11 +361,8 @@
     <Compile Include="Commands\Other\CmdVote.cs" />
     <Compile Include="Commands\Other\CmdWarp.cs" />
     <Compile Include="Commands\Other\CmdWaypoint.cs" />
-    <Compile Include="Commands\Other\CmdXColor.cs" />
     <Compile Include="Commands\Other\CmdXJail.cs" />
     <Compile Include="Commands\Other\CmdXspawn.cs" />
-    <Compile Include="Commands\Other\CmdXTColor.cs" />
-    <Compile Include="Commands\Other\CmdXTitle.cs" />
     <Compile Include="Commands\Other\CmdXundo.cs" />
     <Compile Include="Commands\World\CmdClearBlockChanges.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
