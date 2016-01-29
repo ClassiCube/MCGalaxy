@@ -51,6 +51,7 @@ namespace MCGalaxy.Commands
                         p.SendMessage("Added the map settings Directory within 'text/lockdown'!");
                     }
 
+                    param[1] = param[1].ToLower();
                     string filepath = "text/lockdown/map/" + param[1] + "";
                     bool mapIsLockedDown = File.Exists(filepath);
 
