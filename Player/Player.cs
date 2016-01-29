@@ -2306,12 +2306,9 @@ return;
                 }
                 else if (self)
                 {
-                    if (!p.ignorePermission)
-                    {
-                        p.pos = new ushort[3] { x, y, z }; p.rot = new byte[2] { rotx, roty };
-                        p.oldpos = p.pos; p.basepos = p.pos; p.oldrot = p.rot;
-                        p.SendSpawn(0xFF, from.color + from.name + possession, x, y, z, rotx, roty);
-                    }
+                    p.pos = new ushort[3] { x, y, z }; p.rot = new byte[2] { rotx, roty };
+                    p.oldpos = p.pos; p.basepos = p.pos; p.oldrot = p.rot;
+                    p.SendSpawn(0xFF, from.color + from.name + possession, x, y, z, rotx, roty);
                 }
             });
         }

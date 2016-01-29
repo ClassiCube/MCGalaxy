@@ -258,10 +258,10 @@ namespace MCGalaxy.Commands {
                 p.level.LightColor = preset.Sun;
                 
                 if (CaselessEquals( value, "normal")) {
-                    Command.all.Find("env").Use(p, "l weather 0");
-                    Command.all.Find("env").Use(p, "l water normal");
-                    Command.all.Find("env").Use(p, "l bedrock normal");
-                    Command.all.Find("env").Use(p, "l level normal");
+                    Command.all.Find("env").Use(p, "weather 0");
+                    Command.all.Find("env").Use(p, "water normal");
+                    Command.all.Find("env").Use(p, "bedrock normal");
+                    Command.all.Find("env").Use(p, "level normal");
                 }
                 return true;
             } else {

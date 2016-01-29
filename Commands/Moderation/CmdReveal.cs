@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
 
                 foreach (Player who in Player.players.ToArray()) {
                     if (who.level == lvl)
-                        ReloadMap(p, who);
+                        ReloadMap(p, who, true);
                 }
             } else {
                 Player who = Player.Find(parts[0]);
@@ -59,13 +59,13 @@ namespace MCGalaxy.Commands {
                 } else if (who.group.Permission > p.group.Permission && p != who) { 
                     Player.SendMessage(p, "Cannot reload the map of someone higher than you."); return; 
                 }        
-                ReloadMap(p, who);        
+                ReloadMap(p, who, true);        
             }
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
         
-        void ReloadMap(Player p, Player who) {
+        internal static void ReloadMap(Player p, Player who, bool showMessage) {
             who.Loading = true;
             foreach (Player pl in Player.players.ToArray()) if (who.level == pl.level && who != pl) who.SendDespawn(pl.id);
             foreach (PlayerBot b in PlayerBot.playerbots.ToArray()) if (who.level == b.level) who.SendDespawn(b.id);
@@ -89,6 +89,7 @@ namespace MCGalaxy.Commands {
 
             who.Loading = false;
 
+            if (!showMessage) return;
             if (p != null && !p.hidden) { who.SendMessage("&bMap reloaded by " + p.name); }
             if (p != null && p.hidden) { who.SendMessage("&bMap reloaded"); }
             Player.SendMessage(p, "&4Finished reloading for " + who.name);

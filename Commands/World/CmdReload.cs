@@ -15,7 +15,9 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System.Collections.Generic;
 using System.IO;
+
 namespace MCGalaxy.Commands {
 	
     public sealed class CmdReload : Command {
@@ -42,21 +44,13 @@ namespace MCGalaxy.Commands {
             
             foreach (Player pl in Player.players) {
                 if (pl.level.name.ToLower() != name.ToLower()) continue;
-                
-                if (p != null)
-                    p.ignorePermission = true;
-                Command.all.Find("unload").Use(p, name);
-                Command.all.Find("load").Use(p, name);
-                Command.all.Find("goto").Use(pl, name);
+                CmdReveal.ReloadMap(p, pl, false);
             }
             
             Player.GlobalMessage("&cThe map, " + name + " has been reloaded!");
             Server.IRC.Say("The map, " + name + " has been reloaded.");
             string src = p == null ? "the console" : p.name;
             Server.s.Log("The map " + name + " was reloaded by " + src);
-            if (p != null )
-                p.ignorePermission = false;
-            return;
         }
         
         public override void Help(Player p) {
