@@ -246,6 +246,7 @@
     <Compile Include="Commands\Moderation\CmdHacks.cs" />
     <Compile Include="Commands\Moderation\CmdHide.cs" />
     <Compile Include="Commands\Moderation\CmdHighlight.cs" />
+    <Compile Include="Commands\Moderation\CmdIrcControllers.cs" />
     <Compile Include="Commands\Moderation\CmdJail.cs" />
     <Compile Include="Commands\Moderation\CmdJoker.cs" />
     <Compile Include="Commands\Moderation\CmdKick.cs" />
@@ -269,7 +270,6 @@
     <Compile Include="Commands\Moderation\CmdPUnload.cs" />
     <Compile Include="Commands\Moderation\CmdRankInfo.cs" />
     <Compile Include="Commands\Moderation\CmdReferee.cs" />
-    <Compile Include="Commands\Moderation\CmdReloadControllers.cs" />
     <Compile Include="Commands\Moderation\CmdRenameLvl.cs" />
     <Compile Include="Commands\Moderation\CmdResetBot.cs" />
     <Compile Include="Commands\Moderation\CmdRestart.cs" />

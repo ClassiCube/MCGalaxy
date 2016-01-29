@@ -132,6 +132,7 @@ namespace MCGalaxy
             all.Add(new CmdInfected());
             all.Add(new CmdInfo());
             all.Add(new CmdInvincible());
+            all.Add(new CmdIrcControllers());
             all.Add(new CmdJail());
             all.Add(new CmdJoker());
             all.Add(new CmdKick());

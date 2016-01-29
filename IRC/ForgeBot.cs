@@ -42,7 +42,10 @@ namespace MCGalaxy {
             this.channel = channel.Trim(); this.opchannel = opchannel.Trim(); this.nick = nick.Replace(" ", ""); this.server = server;
             banCmd = new List<string>();
             banCmd.Add("resetbot");
+            banCmd.Add("resetirc");
             banCmd.Add("oprules");
+            banCmd.Add("irccontrollers");
+            banCmd.Add("ircctrl");
             
             if (Server.irc) {
 
@@ -167,7 +170,7 @@ namespace MCGalaxy {
         void Listener_OnPrivate(UserInfo user, string message) {
             message = Colors.IrcToMinecraftColors(message);
             message = CP437Reader.ConvertToRaw(message);
-            string[] parts = message.Split(trimChars, 3);
+            string[] parts = message.Split(trimChars, 2);
             string ircCmd = parts[0].ToLower();
             if (ircCmd == ".who" || ircCmd == ".players") {
                 try {
@@ -179,14 +182,14 @@ namespace MCGalaxy {
             }
             
             if (!Server.ircControllers.Contains(user.Nick)) { Pm(user.Nick, "You are not an IRC controller!"); return; }
-            if (message.Split(' ')[0] == "resetbot" || banCmd.Contains(message.Split(' ')[0])) { Pm(user.Nick, "You cannot use this command from IRC!"); return; }
+            if (banCmd.Contains(ircCmd)) { Pm(user.Nick, "You cannot use this command from IRC!"); return; }
             if (Player.CommandHasBadColourCodes(null, message)) { Pm(user.Nick, "Your command had invalid color codes!"); return; }
 
-            Command cmd = Command.all.Find(message.Split(' ')[0]);
+            Command cmd = Command.all.Find(ircCmd);
             if (cmd != null) {
                 Server.s.Log("IRC Command: /" + message);
                 usedCmd = user.Nick;
-                try { cmd.Use(new Player("IRC"), message.Split(' ').Length > 1 ? message.Substring(message.IndexOf(' ')).Trim() : ""); }
+                try { cmd.Use(new Player("IRC"), parts.Length > 1 ? parts[1] : ""); }
                 catch { Pm(user.Nick, "Failed command!"); }
                 usedCmd = "";
             }
@@ -195,8 +198,8 @@ namespace MCGalaxy {
         }
 
         void Listener_OnPublic(UserInfo user, string channel, string message) {
-        	message = Colors.IrcToMinecraftColors(message);
-        	message = CP437Reader.ConvertToRaw(message);
+            message = Colors.IrcToMinecraftColors(message);
+            message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.Split(trimChars, 3);
             string ircCmd = parts[0].ToLower();
             if (ircCmd == ".who" || ircCmd == ".players") {
@@ -223,7 +226,7 @@ namespace MCGalaxy {
                         Server.IRC.Say("You must be at least a half-op on the channel to use commands from IRC."); return;
                     }
                     
-                    string cmdName = parts.Length >= 2 ? parts[1] : "";
+                    string cmdName = parts.Length >= 2 ? parts[1].ToLower() : "";
                     if (banCmd.Contains(cmdName)) { 
                         Server.IRC.Say("You are not allowed to use this command from IRC."); return; 
                     }
