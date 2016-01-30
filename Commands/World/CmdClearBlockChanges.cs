@@ -39,10 +39,6 @@ namespace MCGalaxy.Commands {
 					Player.SendMessage(p, "Could not find the entered level."); return; 
 				}
 			}
-
-			if (!Regex.IsMatch(lvl.name.ToLower(), @"^[a-z0-9]*?$")) {
-				Player.SendMessage(p, "Level name is not accepted"); return;
-			}
 			
 			if ( Server.useMySQL ) 
 				Database.executeQuery("TRUNCATE TABLE `Block" + lvl.name + "`"); 
