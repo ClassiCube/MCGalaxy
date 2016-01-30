@@ -29,8 +29,14 @@ namespace MCGalaxy {
             blocktimer.Elapsed += delegate {
                 if (started) return;
                 started = true;
-                Server.levels.ForEach(l => ProcessLevelBlocks(l));
-                started = false;
+                try {
+                    Server.levels.ForEach(l => ProcessLevelBlocks(l));
+                } catch (Exception ex) {
+                    Server.ErrorLog(ex);
+                    throw;
+                } finally {
+                    started = false;
+                }
             };
             blocktimer.Start();
         }
