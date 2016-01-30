@@ -401,6 +401,7 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Levels\Generator\MapGen.cs" />
     <Compile Include="Levels\Generator\NoiseGen.cs" />
+    <Compile Include="Levels\Generator\MapGenParams.cs" />
     <Compile Include="Levels\Generator\RealisticMapGen.cs" />
     <Compile Include="Levels\Generator\TreeGen.cs" />
     <Compile Include="Levels\IO\ConvertDAT.cs" />
