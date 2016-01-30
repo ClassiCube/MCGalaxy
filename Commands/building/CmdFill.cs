@@ -127,10 +127,13 @@ namespace MCGalaxy.Commands {
         
         bool CheckTile(Player p, ushort x, ushort y, ushort z, byte oldTile, byte oldExtTile) {
             byte tile = p.level.GetTile(x, y, z);
-            if (tile == oldTile && tile != Block.custom_block) return true;
-            
-            byte extTile = p.level.GetExtTile(x, y, z);
-            return extTile == oldExtTile;
+
+            if (tile == oldTile && tile == Block.custom_block) {
+                byte extTile = p.level.GetExtTile(x, y, z);
+                return extTile == oldExtTile;
+            } else {
+                return tile == oldTile;
+            }
         }
         
         public override void Help(Player p) {
