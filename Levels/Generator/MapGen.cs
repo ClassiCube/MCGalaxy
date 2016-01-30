@@ -43,6 +43,7 @@ namespace MCGalaxy {
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             byte[] blocks = lvl.blocks;
             int half = height / 2;
+            RealisticMapGen generator = new RealisticMapGen();
             
             switch (type)
             {
@@ -114,13 +115,13 @@ namespace MCGalaxy {
                         }
                         index++;
                     }
-                    Server.MapGen.GenerateMap(lvl, type, seed, useSeed); break;
+                    generator.GenerateMap(lvl, type, seed, useSeed); break;
                 case "island":
                 case "mountains":
                 case "ocean":
                 case "forest":
                 case "desert":
-                    Server.MapGen.GenerateMap(lvl, type, seed, useSeed); break;
+                    generator.GenerateMap(lvl, type, seed, useSeed); break;
             }
         }
     }

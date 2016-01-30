@@ -131,8 +131,6 @@ namespace MCGalaxy
         public static List<TempBan> tempBans = new List<TempBan>();
         public struct TempBan { public string name; public DateTime allowedJoin; }
 
-        public static RealisticMapGen MapGen;
-
         public static PerformanceCounter PCCounter = null;
         public static PerformanceCounter ProcessCounter = null;
 
@@ -667,7 +665,6 @@ namespace MCGalaxy
                 try
                 {
                     levels = new List<Level>(maps);
-                    MapGen = new RealisticMapGen();
 
                     if (File.Exists("levels/" + level + ".lvl"))
                     {

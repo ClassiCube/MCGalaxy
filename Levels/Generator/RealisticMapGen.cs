@@ -25,26 +25,21 @@ Ideas, concepts, and code were used from the following two sources:
 
 */
 using System;
-namespace MCGalaxy
-{
-    public sealed class RealisticMapGen
-    {
-        static bool Inuse = false;
-        static float[] terrain;
-        static float[] overlay;
-        static float[] overlay2;
-        static float divide;
+namespace MCGalaxy {
+	
+    public sealed class RealisticMapGen {
+		
+        float[] terrain;
+        float[] overlay;
+        float[] overlay2;
 
-        public bool GenerateMap(Level Lvl, string type, int seed = 0, bool useSeed = false)
-        {
+        public bool GenerateMap(Level Lvl, string type, int seed = 0, bool useSeed = false) {
             DateTime startTime = DateTime.Now;
 
             Server.s.Log("Attempting map gen");
-            if (Inuse) { Server.s.Log("Generator in use"); return false; }
             Random rand = useSeed ? new System.Random(seed) : new System.Random();
             try
             {
-                Inuse = true;
                 terrain = new float[Lvl.Width * Lvl.Length];  //hmm 
                 overlay = new float[Lvl.Width * Lvl.Length];
 
@@ -319,16 +314,8 @@ namespace MCGalaxy
             {
                 Server.ErrorLog(e);
                 Server.s.Log("Gen Fail");
-                Inuse = false;
                 return false;
             }
-
-            terrain = new float[0]; //Derp
-            overlay = new float[0]; //Derp
-            overlay2 = new float[0]; //Derp
-
-            Inuse = false;
-
             return true;
         }
 
@@ -475,74 +462,61 @@ namespace MCGalaxy
         }
 
         //Averages over 5 points
-        float GetAverage5(ushort x, ushort y, Level Lvl)
-        {
-            divide = 0.0f;
-            float temp = GetPixel(x, y, Lvl);
-            temp += GetPixel((ushort)(x + 1), y, Lvl);
-            temp += GetPixel((ushort)(x - 1), y, Lvl);
-            temp += GetPixel(x, (ushort)(y + 1), Lvl);
-            temp += GetPixel(x, (ushort)(y - 1), Lvl);
+        float GetAverage5(ushort x, ushort y, Level Lvl) {
+            int points = 0;
+            float sum = GetPixel(ref points, x, y, Lvl);
+            sum += GetPixel(ref points, (ushort)(x + 1), y, Lvl);
+            sum += GetPixel(ref points, (ushort)(x - 1), y, Lvl);
+            sum += GetPixel(ref points, x, (ushort)(y + 1), Lvl);
+            sum += GetPixel(ref points, x, (ushort)(y - 1), Lvl);
 
-            return temp / divide;
+            return sum / points;
         }
         //Averages over 9 points
-        float GetAverage9(ushort x, ushort y, Level Lvl)
-        {
-            divide = 0.0f;
-            float temp = GetPixel(x, y, Lvl);
-            temp += GetPixel((ushort)(x + 1), y, Lvl);
-            temp += GetPixel((ushort)(x - 1), y, Lvl);
-            temp += GetPixel(x, (ushort)(y + 1), Lvl);
-            temp += GetPixel(x, (ushort)(y - 1), Lvl);
+        float GetAverage9(ushort x, ushort y, Level Lvl) {
+            int points = 0;
+            float sum = GetPixel(ref points, x, y, Lvl);
+            sum += GetPixel(ref points, (ushort)(x + 1), y, Lvl);
+            sum += GetPixel(ref points, (ushort)(x - 1), y, Lvl);
+            sum += GetPixel(ref points, x, (ushort)(y + 1), Lvl);
+            sum += GetPixel(ref points, x, (ushort)(y - 1), Lvl);
 
-            temp += GetPixel((ushort)(x + 1), (ushort)(y + 1), Lvl);
-            temp += GetPixel((ushort)(x - 1), (ushort)(y + 1), Lvl);
-            temp += GetPixel((ushort)(x + 1), (ushort)(y - 1), Lvl);
-            temp += GetPixel((ushort)(x - 1), (ushort)(y - 1), Lvl);
+            sum += GetPixel(ref points, (ushort)(x + 1), (ushort)(y + 1), Lvl);
+            sum += GetPixel(ref points, (ushort)(x - 1), (ushort)(y + 1), Lvl);
+            sum += GetPixel(ref points, (ushort)(x + 1), (ushort)(y - 1), Lvl);
+            sum += GetPixel(ref points, (ushort)(x - 1), (ushort)(y - 1), Lvl);
 
-            return temp / divide;
+            return sum / points;
         }
 
-        //returns the valve of a x,y terrain coordinate
-        float GetPixel(ushort x, ushort y, Level Lvl)
-        {
-            if (x < 0) { return 0.0f; }
-            if (x >= Lvl.Width) { return 0.0f; }
-            if (y < 0) { return 0.0f; }
-            if (y >= Lvl.Length) { return 0.0f; }
-            divide += 1.0f;
+        //returns the value of a x,y terrain coordinate
+        float GetPixel(ref int points, ushort x, ushort y, Level Lvl) {
+            if (x < 0 || x >= Lvl.Width || y < 0 || y >= Lvl.Length)
+                return 0;
+            points++;
             return terrain[x + y * Lvl.Width];
         }
 
         //converts the height into a range
-        float Range(float input, float low, float high)
-        {
+        float Range(float input, float low, float high) {
             if (high <= low) { return low; }
             return low + (input * (high - low));
         }
 
         //Forces the edge of a map to slope lower for island map types
-        float NegateEdge(ushort x, ushort y, Level Lvl)
-        {
+        float NegateEdge(ushort x, ushort y, Level Lvl) {
             float tempx = 0.0f, tempy = 0.0f;
             float temp;
             if (x != 0) { tempx = ((float)x / (float)Lvl.Width) * 0.5f; }
             if (y != 0) { tempy = ((float)y / (float)Lvl.Length) * 0.5f; }
             tempx = Math.Abs(tempx - 0.25f);
             tempy = Math.Abs(tempy - 0.25f);
+            
             if (tempx > tempy)
-            {
                 temp = tempx - 0.15f;
-            }
             else
-            {
                 temp = tempy - 0.15f;
-            }
-
-            //s.Log("temp = " + temp.ToString());
-            if (temp > 0.0f) { return temp; }
-            return 0.0f;
+            return temp > 0 ? temp : 0;
         }
     }
 }
