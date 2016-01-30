@@ -328,6 +328,12 @@ namespace MCGalaxy {
                 	}
                 }
                 
+                if (HasCpeExt(CpeExt.BlockDefinitions)) {
+                    if (oldLevel != null && oldLevel != level)
+                        RemoveOldLevelCustomBlocks(oldLevel);
+                    BlockDefinition.SendLevelCustomBlocks(this);
+                }
+                
                 SendRaw(Opcode.LevelInitialise);
                 buffer = buffer.GZip();
                 int totalRead = 0;                
@@ -361,11 +367,6 @@ namespace MCGalaxy {
                 	SendCurrentEnvColors();
                 if (HasCpeExt(CpeExt.EnvMapAppearance) || HasCpeExt(CpeExt.EnvMapAppearance, 2))
                 	SendCurrentMapAppearance();
-                if (HasCpeExt(CpeExt.BlockDefinitions)) {
-                    if (oldLevel != null && oldLevel != level)
-                        RemoveOldLevelCustomBlocks(oldLevel);
-                    BlockDefinition.SendLevelCustomBlocks(this);
-                }
                 
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
