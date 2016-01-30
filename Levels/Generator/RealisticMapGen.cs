@@ -34,72 +34,55 @@ namespace MCGalaxy {
         float treeDens;
         short treeDist;
         Random rand;
-        ushort WaterLevel;
+        ushort LiquidLevel;
         MapGenParams genParams;
         
         public bool GenerateMap(Level Lvl, string type, int seed = 0, bool useSeed = false) {
             DateTime startTime = DateTime.UtcNow;
             Server.s.Log("Attempting map gen");
             rand = useSeed ? new System.Random(seed) : new System.Random();
+            if (!MapGenParams.Themes.TryGetValue(type, out genParams))
+                genParams = new MapGenParams();
+            
             try
             {
-                terrain = new float[Lvl.Width * Lvl.Length];  //hmm
+                terrain = new float[Lvl.Width * Lvl.Length];
                 overlay = new float[Lvl.Width * Lvl.Length];
-                if (type != "ocean")
-                    overlay2 = new float[Lvl.Width * Lvl.Length];
+                if (genParams.GenTrees) overlay2 = new float[Lvl.Width * Lvl.Length];
+                LiquidLevel = genParams.GetLiquidLevel(Lvl.height);
 
-                //float dispAux, pd;
-                WaterLevel = (ushort)(Lvl.Height / 2 + 2);
-
-                if (type == "ocean")
-                    WaterLevel = (ushort)(Lvl.Height * 0.85f);
-                else if (type == "desert")
-                    WaterLevel = 0;
-                else if (type == "hell")
-                    WaterLevel = 5;
-                //Generate the level
-                GenerateFault(terrain, Lvl, type, rand);
-
-                //APPLY FILTER to terrain
+                GenerateFault(terrain, Lvl, rand);
                 FilterAverage(Lvl);
-
-                //CREATE OVERLAY
-                //GenerateFault(overlay, Lvl, "overlay", rand);
                 Server.s.Log("Creating overlay");
                 GeneratePerlinNoise(overlay, Lvl, rand);
 
-                if (!type.Equals("ocean") && type != "desert")
-                {
+                if (genParams.GenerateOverlay2) {
                     Server.s.Log("Planning trees");
                     GeneratePerlinNoise(overlay2, Lvl, rand);
                 }
 
                 Server.s.Log("Converting height map, and applying overlays");
-                
-                genParams = null;
-                if (!MapGenParams.Themes.TryGetValue(type, out genParams))
-                    genParams = new MapGenParams();
                 float rangeLo = genParams.RangeLow;
                 float rangeHi = genParams.RangeHigh;
                 treeDens = genParams.TreeDens;
                 treeDist = genParams.TreeDist;
 
                 //loops though evey X/Z coordinate
-                for (int bb = 0; bb < terrain.Length; bb++) {
-                    ushort x = (ushort)(bb % Lvl.Width);
-                    ushort z = (ushort)(bb / Lvl.Width);
+                for (int index = 0; index < terrain.Length; index++) {
+                    ushort x = (ushort)(index % Lvl.Width);
+                    ushort z = (ushort)(index / Lvl.Width);
                     ushort y;
-                    if (type == "island") {
+                    if (genParams.FalloffEdges) {
                         float offset = NegateEdge(x, z, Lvl);
-                        y = Evaluate(Lvl, Range(terrain[bb], rangeLo - offset, rangeHi - offset));
+                        y = Evaluate(Lvl, Range(terrain[index], rangeLo - offset, rangeHi - offset));
                     } else {
-                        y = Evaluate(Lvl, Range(terrain[bb], rangeLo, rangeHi));
+                        y = Evaluate(Lvl, Range(terrain[index], rangeLo, rangeHi));
                     }
                     
-                    if (type != "hell")
-                        GenNonLavaColumn(x, y, z, Lvl, bb, type);
+                    if (!genParams.UseLavaLiquid)
+                        GenNonLavaColumn(x, y, z, Lvl, index);
                     else
-                        GenLavaColumn(x, y, z, Lvl, bb, type);
+                        GenLavaColumn(x, y, z, Lvl, index);
                 }
                 Server.s.Log("Total time was " + (DateTime.UtcNow - startTime).TotalSeconds.ToString() + " seconds.");
             } catch (Exception e) {
@@ -110,14 +93,14 @@ namespace MCGalaxy {
             return true;
         }
 
-        void GenNonLavaColumn(ushort x, ushort y, ushort z, Level Lvl, int bb, string type) {
-            if (y > WaterLevel) {
+        void GenNonLavaColumn(ushort x, ushort y, ushort z, Level Lvl, int index) {
+            if (y > LiquidLevel) {
                 for (ushort yy = 0; y - yy >= 0; yy++) {
-                    if (type == "desert") {
+                    if (genParams.SimpleColumns) {
                         Lvl.SetTile(x, (ushort)(y - yy), z, Block.sand);
-                    } else if (overlay[bb] < 0.72f) {
-                        if (type == "island") { //increase sand height for island
-                            if (y > WaterLevel + 2) {
+                    } else if (overlay[index] < 0.72f) {
+                        if (genParams.IslandColumns) { //increase sand height for island
+                            if (y > LiquidLevel + 2) {
                                 if (yy == 0) Lvl.SetTile(x, (ushort)(y - yy), z, Block.grass);     //top layer
                                 else if (yy < 3) Lvl.SetTile(x, (ushort)(y - yy), z, Block.dirt);  //next few
                                 else Lvl.SetTile(x, (ushort)(y - yy), z, Block.rock);              //ten rock it
@@ -134,7 +117,7 @@ namespace MCGalaxy {
                     }
                 }
 
-                if (genParams.HasFlowers && overlay[bb] < 0.25f) {
+                if (genParams.GenFlowers && overlay[index] < 0.25f) {
                     switch (rand.Next(12)) {
                         case 10:
                             Lvl.SetTile(x, (ushort)(y + 1), z, Block.redflower); break;
@@ -144,13 +127,12 @@ namespace MCGalaxy {
                             break;
                     }
                 }
-            
-                if (genParams.GenTrees && overlay[bb] < 0.65f && overlay2[bb] < treeDens) {
+                
+                if (genParams.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
                     if (Lvl.GetTile(x, (ushort)(y + 1), z) == Block.air) {
-                        if (Lvl.GetTile(x, y, z) == Block.grass || type == "desert")
-                        {
+                        if (Lvl.GetTile(x, y, z) == Block.grass || genParams.UseCactus) {
                             if (rand.Next(13) == 0 && !TreeGen.TreeCheck(Lvl, x, y, z, treeDist))
-                                if (type == "desert")
+                                if (genParams.UseCactus)
                                     TreeGen.AddCactus(Lvl, x, (ushort)(y + 1), z, rand);
                                 else
                                     TreeGen.AddTree(Lvl, x, (ushort)(y + 1), z, rand);
@@ -158,23 +140,23 @@ namespace MCGalaxy {
                     }
                 }
             } else { //Must be on/under the water line then
-                for (ushort yy = 0; WaterLevel - yy >= 0; yy++) {
-                    if (WaterLevel - yy > y) {
-                        Lvl.SetTile(x, (ushort)(WaterLevel - yy), z, Block.water);    //better fill the water above me
-                    } else if (WaterLevel - yy > y - 3) {
-                        byte block = overlay[bb] < 0.75f ? Block.sand : Block.gravel; // sand on top
-                        Lvl.SetTile(x, (ushort)(WaterLevel - yy), z, block);
+                for (ushort yy = 0; LiquidLevel - yy >= 0; yy++) {
+                    if (LiquidLevel - yy > y) {
+                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.water);    //better fill the water above me
+                    } else if (LiquidLevel - yy > y - 3) {
+                        byte block = overlay[index] < 0.75f ? Block.sand : Block.gravel; // sand on top
+                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, block);
                     } else {
-                        Lvl.SetTile(x, (ushort)(WaterLevel - yy), z, Block.rock);
+                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.rock);
                     }
                 }
             }
         }
         
-        void GenLavaColumn(ushort x, ushort y, ushort z, Level Lvl, int bb, string type) {
-            if (y > WaterLevel) {
+        void GenLavaColumn(ushort x, ushort y, ushort z, Level Lvl, int index) {
+            if (y > LiquidLevel) {
                 for (ushort yy = 0; y - yy >= 0; yy++) {
-                    if (y > (WaterLevel - 1)) {
+                    if (y > (LiquidLevel - 1)) {
                         if (yy == 0) Lvl.SetTile(x, (ushort)(y - yy), z, Block.rock);      //top layer
                         else if (yy < 3) Lvl.SetTile(x, (ushort)(y - yy), z, Block.rock);
                         else if (yy < 2) Lvl.SetTile(x, (ushort)(y - yy), z, Block.lava);//next few
@@ -183,7 +165,7 @@ namespace MCGalaxy {
                         Lvl.SetTile(x, (ushort)(y - yy), z, Block.lava);
                     }
                     
-                    if (overlay[bb] < 0.3f) {
+                    if (overlay[index] < 0.3f) {
                         switch (rand.Next(13)) {
                             case 9:
                             case 10:
@@ -198,140 +180,67 @@ namespace MCGalaxy {
                     Lvl.SetTile(x, (ushort)(y), z, (rand.Next(100) % 3 == 1 ? Block.darkgrey : Block.obsidian));
                 }
             } else {
-                for (ushort yy = 0; WaterLevel - yy >= 0; yy++) {
-                    if (WaterLevel - yy > y - 1) { 
-                        Lvl.SetTile(x, (ushort)(WaterLevel - yy), z, Block.lava); //better fill the water above me
-                    } else if (WaterLevel - yy > y - 3) {
-                        if (overlay[bb] < 0.9f) {
+                for (ushort yy = 0; LiquidLevel - yy >= 0; yy++) {
+                    if (LiquidLevel - yy > y - 1) {
+                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.lava); //better fill the water above me
+                    } else if (LiquidLevel - yy > y - 3) {
+                        if (overlay[index] < 0.9f) {
                             byte block = yy < yy ? Block.lava : Block.rock;
                             Lvl.SetTile(x, (ushort)(y - yy), z, block);
                         } else {
-                            Lvl.SetTile(x, (ushort)(WaterLevel - yy), (ushort)(z - 5), Block.lava);  //killer lava
+                            Lvl.SetTile(x, (ushort)(LiquidLevel - yy), (ushort)(z - 5), Block.lava);  //killer lava
                         }
                     } else {
-                        Lvl.SetTile(x, (ushort)(WaterLevel - yy), z, Block.stone); //and just make the rest cobblestone
+                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.stone); //and just make the rest cobblestone
                     }
                 }
             }
         }
         
         
-        //condensed fault generator
-        #region ==FaultGen==
-        void GenerateFault(float[] array, Level Lvl, string type, Random rand)
-        {
-            float startheight = 0.5f;
-            float dispAux;
-            ushort i, j, k, halfX, halfZ;
-            float a, b, c, w, d;
+        void GenerateFault(float[] array, Level Lvl, Random rand) {
+            float baseHeight = genParams.StartHeight;
+            float dispMax = genParams.DisplacementMax;
+            float dispStep = genParams.DisplacementStep;
 
-            float DispMax, DispMin, DispChange;
-            DispMax = 0.01f;
-            DispChange = -0.0025f;
-            if (type.Equals("mountains"))
-            {
-                DispMax = 0.02f;
-                startheight = 0.6f;
-            }
-            else if (type.Equals("hell"))
-            {
-                DispMax = 0.02f;
-                startheight = 0.04f;
-            }
-            else if (type.Equals("overlay"))
-            {
-                DispMax = 0.02f;
-                DispChange = -0.01f;
-            }
+            for (int i = 0; i < array.Length; i++)
+                array[i] = baseHeight;
+            float disp = dispMax;
+            
+            ushort halfX = (ushort)(Lvl.Width / 2), halfZ = (ushort)(Lvl.Length / 2);
+            float d = (float)Math.Sqrt(halfX * halfX + halfZ * halfZ);
+            int numIterations = Lvl.Width + Lvl.Length;
+            Server.s.Log("Iterations = " + numIterations);
+            
+            for (int iter = 0; iter < numIterations; iter++) {            
+                float theta = (float)(rand.NextDouble() * 360);
+                float cosPhi = (float)Math.Cos(theta);
+                float sinPhi = (float)Math.Sin(theta);
+                float c = ((float)rand.NextDouble()) * 2 * d - d;
 
-            for (int x = 0; x < array.Length; x++)
-            {
-                array[x] = startheight;
-                //overlay[x] = 0.5f;
-            }
-            DispMin = -DispMax;
-            float disp = DispMax;
-            //if (terrainHeights == NULL)
-            //    return (TERRAIN_ERROR_NOT_INITIALISED);
-
-
-            halfX = (ushort)(Lvl.Width / 2);
-            halfZ = (ushort)(Lvl.Length / 2);
-            int numIterations = (int)((Lvl.Width + Lvl.Length));
-            Server.s.Log("Iterations = " + numIterations.ToString());
-            for (k = 0; k < numIterations; k++)
-            {
-                //s.Log("itteration " + k.ToString());
-                d = (float)Math.Sqrt(halfX * halfX + halfZ * halfZ);
-                w = (float)(rand.NextDouble() * 360);
-                //w = (float)(rand.NextDouble()*90);
-                a = (float)Math.Cos(w);
-                b = (float)Math.Sin(w);
-
-                c = ((float)rand.NextDouble()) * 2 * d - d;
-                //c = ((float)rand.NextDouble() / 1) * 2 * d - d;
-                //float disp = (float)(rand.NextDouble()* 0.02f - 0.01f);
-                //iterationsDone++;
-                //if (iterationsDone < itMinDisp)
-                //    disp = maxDisp + (iterationsDone / (itMinDisp + 0.0)) * (minDisp - maxDisp);
-                //else
-                //    disp = minDisp;
-                for (i = 0; i < Lvl.Length; i++)
+                int index = 0;
+                for (ushort z = 0; z < Lvl.Length; z++)
+                    for (ushort x = 0; x < Lvl.Width; x++)
                 {
-                    for (j = 0; j < Lvl.Width; j++)
-                    {
-                        //switch (terrainFunction)
-                        //{
-                        //case STEP:
-                        if ((i - halfZ) * a + (j - halfX) * b + c > 0)
-                            dispAux = disp;
-                        else
-                            dispAux = -disp;
-                        //    break;
-                        /*case SIN:
-                            pd = ((i - halfZ) * a + (j - halfX) * b + c) / terrainWaveSize;
-                            if (pd > 1.57) pd = 1.57;
-                            else if (pd < 0) pd = 0;
-                            dispAux = -disp / 2 + sin(pd) * disp;
-                            break;
-                        case COS:
-                            pd = ((i - halfZ) * a + (j - halfX) * b + c) / terrainWaveSize;
-                            if (pd > 3.14) pd = 3.14;
-                            else if (pd < -3.14) pd = -3.14;
-                            dispAux = disp - (terrainWaveSize / (terrainGridWidth + 0.0)) + cos(pd) * disp;
-                            break;
-                    }*/
-                        //s.Log("adding " + dispAux.ToString());
-                        AddTerrainHeight(array, j, i, Lvl.Width, dispAux);
-                        //terrainHeights[i * terrainGridWidth + j] += dispAux;
-                    }
+                    bool pos = (z - halfZ) * cosPhi + (x - halfX) * sinPhi + c > 0;
+                    float sum = array[index] + (pos ? disp : -disp);
+                    if (sum > 1) sum = 1;
+                    if (sum < 0) sum = 0;
+                    array[index] = sum;
+                    index++;
                 }
-
-                disp += DispChange;
-                if (disp < DispMin) { disp = DispMax; }
+                disp += dispStep;
+                if (disp < -dispMax) 
+                    disp = dispMax;
             }
         }
-        #endregion
 
         void GeneratePerlinNoise(float[] array, Level Lvl, Random rand) {
             NoiseGen.GenerateNormalized(array, 0.7f, 8, Lvl.Width, Lvl.Length, rand.Next(), 64);
         }
 
-        void AddTerrainHeight(float[] array, ushort x, ushort y, ushort width, float height)
-        {
-            int temp = x + y * width;
-            if (temp < 0) return;
-            if (temp > array.Length) return;
-
-            array[temp] += height;
-
-            if (array[temp] > 1.0f) array[temp] = 1.0f;
-            if (array[temp] < 0.0f) array[temp] = 0.0f;
-        }
-
         //converts the float into a ushort for map height
-        ushort Evaluate(Level lvl, float height)
-        {
+        ushort Evaluate(Level lvl, float height) {
             ushort y = (ushort)(height * lvl.Height);
             if (y < 0) return 0;
             if (y > lvl.Height - 1) return (ushort)(lvl.Height - 1);
@@ -339,23 +248,18 @@ namespace MCGalaxy {
         }
 
         //applys the average filter
-        void FilterAverage(Level Lvl)
-        {
+        void FilterAverage(Level Lvl) {
             Server.s.Log("Applying average filtering");
-
             float[] filtered = new float[terrain.Length];
 
-            for (int bb = 0; bb < terrain.Length; bb++)
-            {
-                ushort x = (ushort)(bb % Lvl.Width);
-                ushort y = (ushort)(bb / Lvl.Width);
-                filtered[bb] = GetAverage9(x, y, Lvl);
+            for (int index = 0; index < terrain.Length; index++) {
+                ushort x = (ushort)(index % Lvl.Width);
+                ushort y = (ushort)(index / Lvl.Width);
+                filtered[index] = GetAverage9(x, y, Lvl);
             }
 
             for (int bb = 0; bb < terrain.Length; bb++)
-            {
                 terrain[bb] = filtered[bb];
-            }
         }
 
         //Averages over 5 points

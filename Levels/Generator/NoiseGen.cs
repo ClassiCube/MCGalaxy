@@ -83,21 +83,17 @@ namespace MCGalaxy {
         }
 
         static float InterpolatedNoise(float x, float y, int seed) {
-            int wholePartX = (int)x;
-            float fractionPartX = x - wholePartX;
+            int wholeX = (int)x, wholeY = (int)y;
+            float fracX = x - wholeX, fracY = y - wholeY;
 
-            int wholePartY = (int)y;
-            float fractionPartY = y - wholePartY;
+            float v1 = SmoothNoise(wholeX, wholeY, seed);
+            float v2 = SmoothNoise(wholeX + 1, wholeY, seed);
+            float v3 = SmoothNoise(wholeX, wholeY + 1, seed);
+            float v4 = SmoothNoise(wholeX + 1, wholeY + 1, seed);
 
-            float v1 = SmoothNoise(wholePartX, wholePartY, seed);
-            float v2 = SmoothNoise(wholePartX + 1, wholePartY, seed);
-            float v3 = SmoothNoise(wholePartX, wholePartY + 1, seed);
-            float v4 = SmoothNoise(wholePartX + 1, wholePartY + 1, seed);
-
-            float i1 = Interpolate(v1, v2, fractionPartX);
-            float i2 = Interpolate(v3, v4, fractionPartX);
-
-            return Interpolate(i1, i2, fractionPartY);
+            float i1 = Interpolate(v1, v2, fracX);
+            float i2 = Interpolate(v3, v4, fracX);
+            return Interpolate(i1, i2, fracY);
         }
     }
 }
