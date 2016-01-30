@@ -49,21 +49,30 @@ namespace MCGalaxy.Commands {
         protected override void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            byte oldType = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, oldType);
+            byte oldType = p.level.GetTile(x, y, z), oldExtType = 0;
+            if (oldType == Block.custom_block)
+                oldExtType = p.level.GetExtTile(x, y, z);
+            p.RevertBlock(x, y, z);
             GetRealBlock(type, extType, p, ref cpos);
 
-            if (cpos.type == oldType) { Player.SendMessage(p, "Cannot fill with the same type."); return; }
+            if (cpos.type == oldType) {
+                if (cpos.type != Block.custom_block) {
+                    Player.SendMessage(p, "Cannot fill with the same type."); return;
+                }
+                if (cpos.extType == oldExtType) {
+                    Player.SendMessage(p, "Cannot fill with the same type."); return;
+                }
+            }
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { Player.SendMessage(p, "Cannot fill with that."); return; }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
             List<FillPos> buffer = new List<FillPos>(), origins = new List<FillPos>();
-            FloodFill(p, x, y, z, oldType, cpos.solid, bits, buffer, origins, 0);
+            FloodFill(p, x, y, z, oldType, oldExtType, cpos.solid, bits, buffer, origins, 0);
 
             int totalFill = origins.Count;
             for (int i = 0; i < totalFill; i++) {
                 FillPos pos = origins[i];
-                FloodFill(p, pos.X, pos.Y, pos.Z, oldType, cpos.solid, bits, buffer, origins, 0);
+                FloodFill(p, pos.X, pos.Y, pos.Z, oldType, oldExtType, cpos.solid, bits, buffer, origins, 0);
                 totalFill = origins.Count;
             }
             
@@ -71,7 +80,7 @@ namespace MCGalaxy.Commands {
             drawOp.Positions = buffer;
             SolidBrush brush = new SolidBrush(cpos.type, cpos.extType);
             if (!DrawOp.DoDrawOp(drawOp, brush, p, 0, 0, 0, 0, 0, 0))
-            	return;
+                return;
             bits.Clear();
             drawOp.Positions = null;           
 
@@ -81,7 +90,7 @@ namespace MCGalaxy.Commands {
         
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
 
-        void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, SolidType fillType,
+        void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, byte oldExtType, SolidType fillType,
                        SparseBitSet bits, List<FillPos> buffer, List<FillPos> origins, int depth) {
             FillPos pos;
             pos.X = x; pos.Y = y; pos.Z = z;
@@ -92,28 +101,36 @@ namespace MCGalaxy.Commands {
             buffer.Add(pos);
 
             if (fillType != SolidType.verticalX) { // x
-                if (p.level.GetTile((ushort)(x + 1), y, z) == oldType)
-                    FloodFill(p, (ushort)(x + 1), y, z, oldType, fillType, bits, buffer, origins, depth + 1);
-                if (p.level.GetTile((ushort)(x - 1), y, z) == oldType)
-                    FloodFill(p, (ushort)(x - 1), y, z, oldType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, (ushort)(x + 1), y, z, oldType, oldExtType))
+                    FloodFill(p, (ushort)(x + 1), y, z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, (ushort)(x - 1), y, z, oldType, oldExtType))
+                    FloodFill(p, (ushort)(x - 1), y, z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (fillType != SolidType.verticalZ) { // z
-                if (p.level.GetTile(x, y, (ushort)(z + 1)) == oldType)
-                    FloodFill(p, x, y, (ushort)(z + 1), oldType, fillType, bits, buffer, origins, depth + 1);
-                if (p.level.GetTile(x, y, (ushort)(z - 1)) == oldType)
-                    FloodFill(p, x, y, (ushort)(z - 1), oldType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, x, y, (ushort)(z + 1), oldType, oldExtType))
+                    FloodFill(p, x, y, (ushort)(z + 1), oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, x, y, (ushort)(z - 1), oldType, oldExtType))
+                    FloodFill(p, x, y, (ushort)(z - 1), oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (!(fillType == SolidType.down || fillType == SolidType.layer)) { // y up
-                if (p.level.GetTile(x, (ushort)(y + 1), z) == oldType)
-                    FloodFill(p, x, (ushort)(y + 1), z, oldType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, x, (ushort)(y + 1), z, oldType, oldExtType))
+                    FloodFill(p, x, (ushort)(y + 1), z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (!(fillType == SolidType.up || fillType == SolidType.layer)) { // y down
-                if (p.level.GetTile(x, (ushort)(y - 1), z) == oldType)
-                    FloodFill(p, x, (ushort)(y - 1), z, oldType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, x, (ushort)(y - 1), z, oldType, oldExtType))
+                    FloodFill(p, x, (ushort)(y - 1), z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
             }
+        }
+        
+        bool CheckTile(Player p, ushort x, ushort y, ushort z, byte oldTile, byte oldExtTile) {
+            byte tile = p.level.GetTile(x, y, z);
+            if (tile == oldTile && tile != Block.custom_block) return true;
+            
+            byte extTile = p.level.GetExtTile(x, y, z);
+            return extTile == oldExtTile;
         }
         
         public override void Help(Player p) {
