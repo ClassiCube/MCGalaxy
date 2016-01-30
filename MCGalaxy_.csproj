@@ -399,11 +399,14 @@
     <Compile Include="Games\IGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
+    <Compile Include="Levels\Generator\MapGen.cs" />
+    <Compile Include="Levels\Generator\NoiseGen.cs" />
+    <Compile Include="Levels\Generator\RealisticMapGen.cs" />
+    <Compile Include="Levels\Generator\TreeGen.cs" />
     <Compile Include="Levels\IO\ConvertDAT.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
-    <Compile Include="Levels\MapGen.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\AirPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
@@ -527,7 +530,6 @@
     <Compile Include="Player\Team.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Server\Extra\Heart.cs" />
-    <Compile Include="Levels\RealisticMapGen.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\PlayerBot.cs" />
@@ -695,6 +697,7 @@
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Games\ZombieSurvival" />
     <Folder Include="Levels\IO" />
+    <Folder Include="Levels\Generator" />
     <Folder Include="Levels\Physics" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\Undo" />

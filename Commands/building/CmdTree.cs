@@ -49,32 +49,32 @@ namespace MCGalaxy.Commands
 
         void AddTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
-            Server.MapGen.AddTree(p.level, x, y, z, p.random, true, true, p);
+            TreeGen.AddTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
         void AddNotchTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
-            Server.MapGen.AddNotchTree(p.level, x, y, z, p.random, true, true, p);
+            TreeGen.AddNotchTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
         void AddNotchBigTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
-            Server.MapGen.AddNotchBigTree(p.level, x, y, z, p.random, true, true, p);
+            TreeGen.AddNotchBigTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
         void AddNotchPineTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
-            Server.MapGen.AddNotchPineTree(p.level, x, y, z, p.random, true, true, p);
+            TreeGen.AddNotchPineTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
         void AddNotchSwampTree(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
-            Server.MapGen.AddNotchSwampTree(p.level, x, y, z, p.random, true, true, p);
+            TreeGen.AddNotchSwampTree(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
         void AddCactus(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
-            Server.MapGen.AddCactus(p.level, x, y, z, p.random, true, true, p);
+            TreeGen.AddCactus(p.level, x, y, z, p.random, true, true, p);
             if (!p.staticCommands) p.ClearBlockchange();
         }
 

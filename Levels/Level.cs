@@ -976,7 +976,7 @@ namespace MCGalaxy
                         if (rand.Next(20) == 0) C.time++;
                         break;
                     }
-                    Server.MapGen.AddTree(this, x, y, z, rand, true, false);
+                    TreeGen.AddTree(this, x, y, z, rand, true, false);
                     C.time = 255;
                     break;
 
