@@ -187,7 +187,7 @@ namespace MCGalaxy {
 
             Command cmd = Command.all.Find(ircCmd);
             if (cmd != null) {
-                Server.s.Log("IRC Command: /" + message);
+                Server.s.Log("IRC Command: /" + message + " (by " + user.Nick + ")");
                 usedCmd = user.Nick;
                 string args = parts.Length > 1 ? parts[1] : "";
                 try {
@@ -224,7 +224,7 @@ namespace MCGalaxy {
 
                 Command cmd = Command.all.Find(cmdName);
                 if (cmdName != "" && cmd != null) {
-                    Server.s.Log("IRC Command: /" + message.Replace(".x ", ""));
+                    Server.s.Log("IRC Command: /" + message.Replace(".x ", "") + " (by " + user.Nick + ")");
                     usedCmd = "";
                     string args = parts.Length > 2 ? parts[2] : "";
                     try {
