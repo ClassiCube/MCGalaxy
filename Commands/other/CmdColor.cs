@@ -35,29 +35,28 @@ namespace MCGalaxy.Commands {
             if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
             if (p != null && who.group.Permission > p.group.Permission) {
                 Player.SendMessage(p, "Cannot change the color of someone of greater rank"); return;
-            }
-            
+            }     
             
             if (args.Length == 1) {
                 Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " had their color removed.", false);
-                p.color = p.group.color;
+                who.color = who.group.color;
                 
-                Database.AddParams("@Name", p.name);
+                Database.AddParams("@Name", who.name);
                 Database.executeQuery("UPDATE Players SET color = '' WHERE name = @Name");
             } else {
             	string color = Colors.Parse(args[1]);
                 if (color == "") { Player.SendMessage(p, "There is no color \"" + message + "\"."); return; }
-                else if (color == p.color) { Player.SendMessage(p, who.DisplayName + " already has that color."); return; }
+                else if (color == who.color) { Player.SendMessage(p, p.DisplayName + " already has that color."); return; }
                 Player.GlobalChat(who, who.color + who.DisplayName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
-                p.color = color;
+                who.color = color;
                 
                 Database.AddParams("@Color", Colors.Name(color));
-                Database.AddParams("@Name", p.name);
+                Database.AddParams("@Name", who.name);
                 Database.executeQuery("UPDATE Players SET color = @Color WHERE name = @Name");
             }
-            Player.GlobalDespawn(p, false);
-            Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
-            p.SetPrefix();
+            Player.GlobalDespawn(who, false);
+            Player.GlobalSpawn(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1], false);
+            who.SetPrefix();
         }
         
         public override void Help(Player p) {
