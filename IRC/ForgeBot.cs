@@ -181,16 +181,22 @@ namespace MCGalaxy {
                 return;
             }
             
-            if (!Server.ircControllers.Contains(user.Nick)) { Pm(user.Nick, "You are not an IRC controller!"); return; }
-            if (banCmd.Contains(ircCmd)) { Pm(user.Nick, "You cannot use this command from IRC!"); return; }
-            if (Player.CommandHasBadColourCodes(null, message)) { Pm(user.Nick, "Your command had invalid color codes!"); return; }
+            string error;
+            if (!CheckUserAndCommand(user, ircCmd, message, out error)) {
+                if (error != null) Pm(user.Nick, error);
+                return;
+            }
 
             Command cmd = Command.all.Find(ircCmd);
             if (cmd != null) {
                 Server.s.Log("IRC Command: /" + message);
                 usedCmd = user.Nick;
-                try { cmd.Use(new Player("IRC"), parts.Length > 1 ? parts[1] : ""); }
-                catch { Pm(user.Nick, "Failed command!"); }
+                string args = parts.Length > 1 ? parts[1] : "";
+                try {
+                    cmd.Use(new Player("IRC"), args);
+                } catch (Exception e) {
+                    Pm(user.Nick, "CMD Error: " + e.ToString());
+                }
                 usedCmd = "";
             }
             else
@@ -211,48 +217,30 @@ namespace MCGalaxy {
             }
             
             if (ircCmd == ".x") {
-                if (Server.ircControllers.Contains(user.Nick))
-                {
-                    List<string> chanNicks;
-                    if (!users.TryGetValue(channel, out chanNicks))
-                        return;
-                    int index = GetNickIndex(user.Nick, chanNicks);
-                    if (index < 0) {
-                        Server.IRC.Say("You are not on the bot's list of " +
-                                       "users for some reason, please leave and rejoin."); return;
-                    }
-                    string prefix = GetPrefix(chanNicks[index]);
-                    if (prefix == "" || prefix == "+") {
-                        Server.IRC.Say("You must be at least a half-op on the channel to use commands from IRC."); return;
-                    }
-                    
-                    string cmdName = parts.Length >= 2 ? parts[1].ToLower() : "";
-                    if (banCmd.Contains(cmdName)) { 
-                        Server.IRC.Say("You are not allowed to use this command from IRC."); return; 
-                    }
-                    if (Player.CommandHasBadColourCodes(null, message)) { 
-                        Server.IRC.Say("Your command had invalid color codes!"); return;
-                    }
+                string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
+                string error;
+                if (!CheckUserAndCommand(user, cmdName, message, out error)) {
+                    if (error != null) Server.IRC.Say(error);
+                    return;
+                }
 
-                    Command cmd = Command.all.Find(cmdName);
-                    if (cmdName != "" && cmd != null)
-                    {
-                        Server.s.Log("IRC Command: /" + message.Replace(".x ", ""));
-                        usedCmd = user.Nick;
-                        string args = parts.Length >= 3 ? parts[2] : "";
-                        try {
-                            cmd.Use(new Player("IRC"), args);
-                        } catch (Exception e) {
-                            Server.IRC.Say("CMD Error: " + e.ToString());
-                        }
-                        usedCmd = "";
-                    } else {
-                        Server.IRC.Say("Unknown command!");
+                Command cmd = Command.all.Find(cmdName);
+                if (cmdName != "" && cmd != null) {
+                    Server.s.Log("IRC Command: /" + message.Replace(".x ", ""));
+                    usedCmd = "";
+                    string args = parts.Length > 2 ? parts[2] : "";
+                    try {
+                        cmd.Use(new Player("IRC"), args);
+                    } catch (Exception e) {
+                        Server.IRC.Say("CMD Error: " + e.ToString());
                     }
+                    usedCmd = "";
+                } else {
+                    Server.IRC.Say("Unknown command!");
                 }
             }
 
-            if(String.IsNullOrEmpty(message.Trim()))
+            if (String.IsNullOrEmpty(message.Trim()))
                 message = ".";
 
             if (channel.ToLower() == opchannel.ToLower()) {
@@ -264,6 +252,32 @@ namespace MCGalaxy {
             }
         }
 
+        bool CheckUserAndCommand(UserInfo user, string cmdName, string message, out string error) {
+        	List<string> chanNicks;
+        	error = null;
+        	if (!Server.ircControllers.Contains(user.Nick))
+                return false;
+        	if (!users.TryGetValue(channel, out chanNicks))
+        		return false;
+        	
+        	int index = GetNickIndex(user.Nick, chanNicks);
+        	if (index < 0) {
+        		error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
+        	}
+        	string prefix = GetPrefix(chanNicks[index]);
+        	if (prefix == "" || prefix == "+") {
+        		error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
+        	}
+        	
+        	if (banCmd.Contains(cmdName)) {
+        		error = "You are not allowed to use this command from IRC."; return false;
+        	}
+        	if (Player.CommandHasBadColourCodes(null, message)) {
+        		error = "Your command had invalid color codes."; return false;
+        	}
+        	return true;
+        }
+        
         void Listener_OnRegistered() {
             Server.s.Log("Connected to IRC!");
             reset = false;

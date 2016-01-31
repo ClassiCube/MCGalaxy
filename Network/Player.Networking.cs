@@ -156,30 +156,23 @@ namespace MCGalaxy {
         }
 
         public static void SendMessage(Player p, string message) {
-            if ( p == null ) { Server.s.Log(message); return; }
-            if (p.name == "IRC")
-            {
-                Server.IRC.Say(message, false, true);
-            }
             SendMessage(p, message, true);
         }
         
         public static void SendMessage(Player p, string message, bool colorParse) {
-            if ( p == null ) {
-                if ( storeHelp ) {
+            if (p == null) {
+                if (storeHelp)
                     storedHelp += message + "\r\n";
-                }
-                else {
-                    if ( !Server.irc || String.IsNullOrEmpty(Server.IRC.usedCmd) )
-                        Server.s.Log(message);
-                    else
-                        Server.IRC.Pm(Server.IRC.usedCmd, message);
-                    //IRCBot.Say(message, true);
-                }
-                return;
+                else
+                    Server.s.Log(message);
+            } else if (p.name == "IRC") {
+                if (String.IsNullOrEmpty(Server.IRC.usedCmd))
+                    Server.IRC.Say(message, false, true);
+                else
+                    Server.IRC.Pm(Server.IRC.usedCmd, message);
+            } else {
+                p.SendMessage(0, Server.DefaultColor + message, colorParse);
             }
-            
-            p.SendMessage(0, Server.DefaultColor + message, colorParse);
         }
         
         public void SendMessage(string message) {
