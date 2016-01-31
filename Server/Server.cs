@@ -390,105 +390,38 @@ namespace MCGalaxy
                 ConsoleCommand(cmd, message);
             return cancelcommand;
         }
-        public void Start()
-        {
-
+        
+        void CheckFile(string file) {
+            if (File.Exists(file)) return;
+            
+            Log(file + " doesn't exist, Downloading");
+            try {
+                using (WebClient web = new WebClient())
+                    web.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/" + file + "?raw=true", file);
+                if (File.Exists(file))
+                    Log(file + " download succesful!");
+            } catch {
+                Log("Downloading " + file + " failed, please try again later");
+            }
+        }
+        
+        public void Start() {
             shuttingDown = false;
             Log("Starting Server");
-            {
-                try
-                {
-                    if (File.Exists("Restarter.exe"))
-                    {
-                        File.Delete("Restarter.exe");
-                    }
-                }
-                catch { }
-                try
-                {
-                    if (File.Exists("Restarter.pdb"))
-                    {
-                        File.Delete("Restarter.pdb");
-                    }
-                }
-                catch { }
-                if (!File.Exists("MySql.Data.dll"))
-                {
-                    Log("MySql.Data.dll doesn't exist, Downloading");
-                    try
-                    {
-                        using (WebClient WEB = new WebClient())
-                        {
-                            WEB.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/MySql.Data.dll?raw=true", "MySql.Data.dll");
-                        }
-                        if (File.Exists("MySql.Data.dll"))
-                        {
-                            Log("MySql.Data.dll download succesful!");
-                        }
-                    }
-                    catch
-                    {
-                        Log("Downloading MySql.Data.dll failed, please try again later");
-                    }
-                }
-                if (!File.Exists("System.Data.SQLite.dll"))
-                {
-                    Log("System.Data.SQLite.dll doesn't exist, Downloading");
-                    try
-                    {
-                        using (WebClient WEB = new WebClient())
-                        {
-                            WEB.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/System.Data.SQLite.dll?raw=true", "System.Data.SQLite.dll");
-                        }
-                        if (File.Exists("System.Data.SQLite.dll"))
-                        {
-                            Log("System.Data.SQLite.dll download succesful!");
-                        }
-                    }
-                    catch
-                    {
-                        Log("Downloading System.Data.SQLite.dll failed, please try again later");
-                    }
-                }
-                if (!File.Exists("sqlite3.dll"))
-                {
-                    Log("sqlite3.dll doesn't exist, Downloading");
-                    try
-                    {
-                        using (WebClient WEB = new WebClient())
-                        {
-                            WEB.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/sqlite3.dll?raw=true", "sqlite3.dll");
-                        }
-                        if (File.Exists("sqlite3.dll"))
-                        {
-                            Log("sqlite3.dll download succesful!");
-                        }
-                    }
-                    catch
-                    {
-                        Log("Downloading sqlite3.dll failed, please try again later");
-                    }
-                }
-                if (!File.Exists("Newtonsoft.Json.dll"))
-                {
-                	Log("Newtonsoft.Json.dll doesn't exist, Downloading");
-                	try
-                	{
-                		using (WebClient WEB = new WebClient())
-                		{
-                            WEB.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/Newtonsoft.Json/Newtonsoft.Json.dll?raw=true", "Newtonsoft.Json.dll");
-                		}
-                		if (File.Exists("Newtonsoft.Json.dll"))
-                		{
-                			Log("Newtonsoft.Json.dll download successful!");
-                		}
-                	}
-                	catch
-                	{
-                		Log("Download Newtonsoft.Json.dll failed, please try again later");
-                	}
-                }
-            }
+            try {
+                if (File.Exists("Restarter.exe"))
+                    File.Delete("Restarter.exe");
+            } catch { }
+            try {
+                if (File.Exists("Restarter.pdb"))
+                    File.Delete("Restarter.pdb");
+            } catch { }
+            
+            CheckFile("MySql.Data.dll");
+            CheckFile("System.Data.SQLite.dll");
+            CheckFile("sqlite3.dll");
+            CheckFile("Newtonsoft.Json.dll");
+
             //UpdateGlobalSettings();
             if (!Directory.Exists("properties")) Directory.CreateDirectory("properties");
             if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");

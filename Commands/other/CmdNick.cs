@@ -71,7 +71,8 @@ namespace MCGalaxy.Commands {
         public CmdXNick() { }
 
         public override void Use(Player p, string message) {
-        	Command.all.Find("nick").Use(p, p.name + " " + message);
+            if (message != "") message = " " + message;
+        	Command.all.Find("nick").Use(p, p.name + message);
         }
         
         public override void Help(Player p) {

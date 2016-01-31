@@ -140,18 +140,16 @@ namespace MCGalaxy {
         
         void Player_PlayerDisconnect(Player p, string reason) {
             if (Server.irc && IsConnected())
-                if (Server.guestLeaveNotify == false && p.group.Permission <= LevelPermission.Guest) {
+                if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest)
                     return;
-                }
-                if (!p.hidden)
-            connection.Sender.PublicMessage(channel, p.name + " left the game (" + reason + ")");
+            if (!p.hidden)
+                connection.Sender.PublicMessage(channel, p.name + " left the game (" + reason + ")");
         }
 
         void Player_PlayerConnect(Player p) {
             if (Server.irc && IsConnected())
-                if (Server.guestJoinNotify == false && p.group.Permission <= LevelPermission.Guest) {
+                if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest)
                     return;
-                }
             connection.Sender.PublicMessage(channel, p.name + " joined the game");
         }
 

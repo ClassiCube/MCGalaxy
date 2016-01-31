@@ -77,7 +77,8 @@ namespace MCGalaxy.Commands {
         public CmdXColor() { }
 
         public override void Use(Player p, string message) {
-            Command.all.Find("color").Use(p, p.name + " " + message);
+            if (message != "") message = " " + message;
+            Command.all.Find("color").Use(p, p.name + message);
         }
 
         public override void Help(Player p) {
