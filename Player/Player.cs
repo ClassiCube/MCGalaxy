@@ -2675,16 +2675,14 @@ Next: continue;
                 if ( index != -1 ) {
                     if ( index < lines[lines.Count - 1].Length - 1 ) {
                         char next = lines[lines.Count - 1][index + 1];
-                        if ( "0123456789abcdef".IndexOf(next) != -1 ) { color = "&" + next; }
+                        if ( Colors.MapColor(ref next) ) color = "&" + next;
                         if ( index == lines[lines.Count - 1].Length - 1 ) {
                             lines[lines.Count - 1] = lines[lines.Count - 1].Substring(0, lines[lines.Count - 1].Length - 2);
                         }
                     }
                     else if ( message.Length != 0 ) {
                         char next = message[0];
-                        if ( "0123456789abcdef".IndexOf(next) != -1 ) {
-                            color = "&" + next;
-                        }
+                        if ( Colors.MapColor(ref next) ) color = "&" + next;
                         lines[lines.Count - 1] = lines[lines.Count - 1].Substring(0, lines[lines.Count - 1].Length - 1);
                         message = message.Substring(1);
                     }
