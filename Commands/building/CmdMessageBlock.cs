@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands {
             foreach (Command com in Command.all.commands) {
                 if (com.defaultRank <= p.group.Permission && !com.type.Contains("mod")) continue;
                 
-                if (CaselessStarts(cpos.message, "/" + com.name)) {
+                if (IsCommand(cpos.message, "/" + com.name)) {
                     p.SendMessage("You cannot use that command in a messageblock."); return;
                 }
-                if (com.shortcut != "" && CaselessStarts(cpos.message, "/" + com.shortcut)) {
+                if (com.shortcut != "" && IsCommand(cpos.message, "/" + com.shortcut)) {
                     p.SendMessage("You cannot use that command in a messageblock."); return;
                 }
             }
@@ -63,6 +63,11 @@ namespace MCGalaxy.Commands {
             p.blockchangeObject = cpos;
             Player.SendMessage(p, "Place where you wish the message block to go."); p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+        }
+        
+        bool IsCommand(string message, string cmd) {
+            return message.Equals(cmd, StringComparison.OrdinalIgnoreCase) ||
+                message.StartsWith(cmd + " ", StringComparison.OrdinalIgnoreCase);
         }
 
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -90,10 +95,6 @@ namespace MCGalaxy.Commands {
         }
 
         struct CatchPos { public string message; public byte type; }
-        
-        static bool CaselessStarts(string a, string b) {
-            return a.StartsWith(b, StringComparison.OrdinalIgnoreCase);
-        }
 
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
