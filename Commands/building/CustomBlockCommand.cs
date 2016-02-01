@@ -86,6 +86,7 @@ namespace MCGalaxy.Commands {
             }
             
             SetBD(p, global, new BlockDefinition());
+            GetBD(p, global).Version2 = true;
             GetBD(p, global).BlockID = (byte)targetId;
             SetTargetId(p, global, targetId);
             Player.SendMessage(p, "Type '" + cmd + " abort' at anytime to abort the creation process.");
@@ -163,8 +164,11 @@ namespace MCGalaxy.Commands {
                 if (byte.TryParse(value, out bd.TopTex))
                     step++;
             } else if (step == 6) {
-                if (byte.TryParse(value, out bd.SideTex))
+            	if (byte.TryParse(value, out bd.SideTex)) {
+                    bd.LeftTex = bd.SideTex; bd.RightTex = bd.SideTex;
+                    bd.FrontTex = bd.FrontTex; bd.BackTex = bd.BackTex;
                     step++;
+                }
             } else if (step == 7) {
                 if (byte.TryParse(value, out bd.BottomTex))
                     step++;
@@ -247,7 +251,7 @@ namespace MCGalaxy.Commands {
                 if (parts.Length == 1)
                     Player.SendMessage(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
                                        "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
-                                       "fogdensity, fogred, foggreen, fogblue, fallback");
+                                       "fogdensity, fogred, foggreen, fogblue, fallback, lefttex, righttex, fronttex, backtex");
                 else
                     Help(p);
                 return;
@@ -283,7 +287,25 @@ namespace MCGalaxy.Commands {
                 case "side":
                 case "sidetex":
                     if (!EditByte(p, value, "Side texture", ref def.SideTex)) return;
+                    def.LeftTex = def.SideTex; def.RightTex = def.SideTex;
+                    def.FrontTex = def.SideTex; def.BackTex = def.SideTex;
                     break;
+                case "left":
+                case "lefttex":
+                    if (!EditByte(p, value, "Left texture", ref def.LeftTex)) return;
+                    break;
+                case "right":
+                case "righttex":
+                    if (!EditByte(p, value, "Right texture", ref def.RightTex)) return;
+                    break;
+                case "front":
+                case "fronttex":
+                    if (!EditByte(p, value, "Front texture", ref def.FrontTex)) return;
+                    break;
+                case "back":
+                case "backtex":
+                    if (!EditByte(p, value, "Back texture", ref def.BackTex)) return;
+                    break;                    
                 case "bottom":
                 case "bottomtex":
                     if (!EditByte(p, value, "Bottom texture", ref def.BottomTex)) return;

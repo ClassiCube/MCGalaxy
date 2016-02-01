@@ -691,7 +691,7 @@ namespace MCGalaxy {
                     SendExtEntry(CpeExt.LongerMessages, 1);
                     SendExtEntry(CpeExt.BlockDefinitions, 1);
                     
-                    SendExtEntry(CpeExt.BlockDefinitionsExt, 1);
+                    SendExtEntry(CpeExt.BlockDefinitionsExt, 2);
                 }
                 
                 try { left.Remove(name.ToLower()); }
