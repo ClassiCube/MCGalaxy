@@ -373,6 +373,8 @@ namespace MCGalaxy.Commands {
                         Player.SendMessage(p, "'" + value + "' is not a valid standard tile."); return;
                     }
                     def.FallBack = tempX; break;
+                default:
+                    Player.SendMessage(p, "Unrecognised property: " + parts[2]; return;
             }
             
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
