@@ -186,7 +186,6 @@ namespace MCGalaxy
             all.Add(new CmdPatrol());
             all.Add(new CmdPause());
             all.Add(new CmdPay());
-            all.Add(new CmdPlayerBlock());
             all.Add(new CmdpCinema());
             all.Add(new CmdpCinema2());
             all.Add(new CmdPClients());

@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands
                 case "reset":  //made so ONLY the owner or console can use this command.
                     if (p != null && !Server.server_owner.ToLower().Equals(p.name.ToLower()) || Server.server_owner.Equals("Notch"))
                     {
-                        p.SendMessage("Sorry.  You must be the Server Owner or Console to reset the server.");
+                        Player.SendMessage(p, "Sorry. You must be the Server Owner or Console to reset the server.");
                         return;
                     }
                     //restting to default properties is dangerous... but recoverable.

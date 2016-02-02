@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            p.SendMessage("/replaceall [block,block2,...] [new] - Replaces all of [block] with [new] in a map");
-            p.SendMessage("If more than one block is specified, they will all be replaced.");
+            Player.SendMessage(p, "/replaceall [block,block2,...] [new] - Replaces all of [block] with [new] in a map");
+            Player.SendMessage(p, "If more than one block is specified, they will all be replaced.");
         }
     }
 }

@@ -180,7 +180,6 @@
     <Compile Include="Commands\Fun\CmdInfect.cs" />
     <Compile Include="Commands\Fun\CmdInfected.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
-    <Compile Include="Commands\Fun\CmdPlayerBlock.cs" />
     <Compile Include="Commands\Fun\CmdQueue.cs" />
     <Compile Include="Commands\Fun\CmdSlap.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />

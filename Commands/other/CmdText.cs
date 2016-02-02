@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
         {
             if (message.ToLower() == "superops" || message.ToLower() == "ops" || message.ToLower() == "advbuilders" || message.ToLower() == "builders")
             {
-                p.SendMessage("You cannot try to promote yourself with /text! You have been reported to all Ops!");
+                Player.SendMessage(p, "You cannot try to promote yourself with /text! You have been reported to all Ops!");
                 Chat.GlobalMessageOps(p.color + p.DisplayName + Server.DefaultColor + " tried to promote themselves by using /text!!");
                 Server.s.Log(p.name + " tried to promote themselves using /text!!");
                 return;
@@ -59,12 +59,12 @@ namespace MCGalaxy.Commands
                     if (File.Exists("extra/text/" + filename))
                     {
                         File.Delete("extra/text/" + filename);
-                        p.SendMessage("Deleted file: " + filename);
+                        Player.SendMessage(p, "Deleted file: " + filename);
                         return;
                     }
                     else
                     {
-                        p.SendMessage("Could not find file: " + filename);
+                        Player.SendMessage(p, "Could not find file: " + filename);
                         return;
                     }
                 }
@@ -99,16 +99,16 @@ namespace MCGalaxy.Commands
                         contents = " " + contents;
 
                     File.AppendAllText(path, contents);
-                    p.SendMessage("Added text to: " + filename);
+                    Player.SendMessage(p, "Added text to: " + filename);
                 }
             } catch { Help(p); }
         }
         public override void Help(Player p)
         {
-            p.SendMessage("/text [file] [rank] [message] - Makes a /view-able text");
-            p.SendMessage("The [rank] entered is the minimum rank to view the file");
-            p.SendMessage("The [message] is entered into the text file");
-            p.SendMessage("If the file already exists, text will be added to the end");
+            Player.SendMessage(p, "/text [file] [rank] [message] - Makes a /view-able text");
+            Player.SendMessage(p, "The [rank] entered is the minimum rank to view the file");
+            Player.SendMessage(p, "The [message] is entered into the text file");
+            Player.SendMessage(p, "If the file already exists, text will be added to the end");
         }
 
         private string SanitizeFileName(string filename)

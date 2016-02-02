@@ -57,8 +57,8 @@ namespace MCGalaxy.Commands {
         struct CatchPos { public ushort x, y, z; }
         
         public override void Help(Player p) {
-            p.SendMessage("/rn [block,block2,...] [new] - replace everything but [block] with [new] inside a selected cuboid");
-            p.SendMessage("If multiple [block]s are specified they will all be ignored.");
+            Player.SendMessage(p, "/rn [block,block2,...] [new] - replace everything but [block] with [new] inside a selected cuboid");
+            Player.SendMessage(p, "If multiple [block]s are specified they will all be ignored.");
         }
     }
 }

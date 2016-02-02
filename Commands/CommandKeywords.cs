@@ -166,7 +166,7 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdPatrol()), "teleport random");
             new CommandKeywords((new CmdPause()), "physics reset");
             new CommandKeywords((new CmdPay()), "money give " + Server.moneys);
-            new CommandKeywords((new CmdPlayerBlock()), "player block limit mod edit");
+            new CommandKeywords((new CmdPlayerEditDB()), "player block limit mod edit");
             new CommandKeywords((new CmdpCinema()), "cinema gif");
             new CommandKeywords((new CmdpCinema2()), "cinema gif");
             new CommandKeywords((new CmdPCount()), "player online total number count");

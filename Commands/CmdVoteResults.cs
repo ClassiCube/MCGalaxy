@@ -31,12 +31,12 @@ namespace MCGalaxy.Commands
             if (message == "") { who = p; message = p.name; } else { who = Player.Find(message); }
             if (Server.YesVotes >= 1 || Server.NoVotes >= 1)
             {
-                p.SendMessage(Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
+                Player.SendMessage(p, Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
                 return;
             }
             else
             {
-                p.SendMessage("There hasn't been a vote yet!");
+                Player.SendMessage(p, "There hasn't been a vote yet!");
             }
         }
         public override void Help(Player p)

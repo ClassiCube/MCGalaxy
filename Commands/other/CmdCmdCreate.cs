@@ -41,7 +41,9 @@ namespace MCGalaxy.Commands
 
             if (name.Length == 1)
             {
-                if (File.Exists("extra/commands/source/Cmd" + message + ".cs")) { p.SendMessage("File Cmd" + message + ".cs already exists.  Choose another name."); return; }
+                if (File.Exists("extra/commands/source/Cmd" + message + ".cs")) { 
+                    Player.SendMessage(p, "File Cmd" + message + ".cs already exists.  Choose another name."); return; 
+                }
                 try
                 {
                     Scripting.CreateNew(message);
@@ -58,7 +60,9 @@ namespace MCGalaxy.Commands
 
             if (name[1] == "vb")
             {
-                if (File.Exists("extra/commands/source/Cmd" + name[0] + ".vb")) { p.SendMessage("File Cmd" + name[0] + ".vb already exists.  Choose another name."); return; }
+                if (File.Exists("extra/commands/source/Cmd" + name[0] + ".vb")) { 
+                    Player.SendMessage(p, "File Cmd" + name[0] + ".vb already exists.  Choose another name."); return; 
+                }
                 try
                 {
                     ScriptingVB.CreateNew(name[0]);

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
 
-            if (Server.voteKickInProgress) { p.SendMessage("Please wait for the current vote to finish!"); return; }
+            if (Server.voteKickInProgress) { Player.SendMessage(p, "Please wait for the current vote to finish!"); return; }
 
             Player who = Player.Find(message);
             if (who == null)
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            p.SendMessage("/votekick <player> - Calls a 30sec vote to kick <player>");
+            Player.SendMessage(p, "/votekick <player> - Calls a 30sec vote to kick <player>");
         }
     }
 }

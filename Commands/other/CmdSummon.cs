@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            if (p == null) { Player.SendMessage(p, "You cannot use this command from the console"); return; }
+            if (p == null) { MessageInGameOnly(p); return; }
             if (message.ToLower() == "all")
             {
                 try

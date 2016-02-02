@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
         
         public override void Help(Player p)
         {
-            p.SendMessage("/whoip <ip address> - Displays players associated with a given IP address.");
+            Player.SendMessage(p, "/whoip <ip address> - Displays players associated with a given IP address.");
         }
     }
 }

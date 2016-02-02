@@ -169,7 +169,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            p.SendMessage("/draw <shape> <height> <baseradius> - Draw an object in game- Valid Types cones, spheres, and pyramids, hspheres (hollow sphere), and hpyramids (hollow pyramid)");
+            Player.SendMessage(p, "/draw <shape> <height> <baseradius> - Draw an object in game- " +
+        	                   "Valid Types cones, spheres, and pyramids, hspheres (hollow sphere), and hpyramids (hollow pyramid)");
         }
     }
 }

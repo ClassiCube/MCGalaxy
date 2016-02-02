@@ -374,7 +374,7 @@ namespace MCGalaxy.Commands {
                     }
                     def.FallBack = tempX; break;
                 default:
-                    Player.SendMessage(p, "Unrecognised property: " + parts[2]; return;
+                    Player.SendMessage(p, "Unrecognised property: " + parts[2]); return;
             }
             
             BlockDefinition.Add(def, defs, p == null ? null : p.level);

@@ -43,10 +43,10 @@ namespace MCGalaxy.Commands
         {
             if (!Directory.Exists("text/lockdown"))
             {
-                p.SendMessage("Could not locate the folder creating one now.");
+                Player.SendMessage(p, "Could not locate the folder creating one now.");
                 Directory.CreateDirectory("text/lockdown");
                 Directory.CreateDirectory("text/lockdown/map");
-                p.SendMessage("Added the settings for the command.");
+                Player.SendMessage(p, "Added the settings for the command.");
             }
             string[] param = message.Split(' ');
             if (param.Length == 2 && (param[0] == "map" || param[0] == "player"))
