@@ -28,6 +28,7 @@ namespace MCGalaxy.Drawing {
 		public int Width, Height, Length;
 		
 		const int identifier = 0x434F5059; // 'COPY'
+		const int identifierC = 0x434F5043; // 'COPC' (Copy compressed)
 		
 		public int Volume {
 			get { return Width * Height * Length; }
@@ -74,24 +75,38 @@ namespace MCGalaxy.Drawing {
 		
 		public void SaveTo(Stream stream) {
 			BinaryWriter w = new BinaryWriter(stream);
-			w.Write(identifier);
-			
+			w.Write(identifierC);			
 			w.Write(X); w.Write(Y); w.Write(Z);
 			w.Write(Width); w.Write(Height); w.Write(Length);
-			w.Write(Blocks);
-			w.Write(ExtBlocks);
+			
+			byte[] blocks = Blocks.GZip();
+			w.Write(blocks.Length);
+			w.Write(blocks);
+			blocks = ExtBlocks.GZip();
+			w.Write(blocks.Length);
+			w.Write(blocks);
+			
 			w.Write(OriginX); w.Write(OriginY); w.Write(OriginZ);
 		}
 		
 		public void LoadFrom(Stream stream) {
 			BinaryReader r = new BinaryReader(stream);
-			if (r.ReadInt32() != identifier)
+			int header = r.ReadInt32();
+			if (!(header == identifier || header == identifierC))
 				throw new InvalidDataException("invalid identifier");
 			
 			X = r.ReadInt32(); Y = r.ReadInt32(); Z = r.ReadInt32();
 			Width = r.ReadInt32(); Height = r.ReadInt32(); Length = r.ReadInt32();
-			Blocks = r.ReadBytes(Width * Height * Length);
-			ExtBlocks = r.ReadBytes(Width * Height * Length);
+			if (header == identifier) {
+				Blocks = r.ReadBytes(Width * Height * Length);
+				ExtBlocks = r.ReadBytes(Width * Height * Length);
+			} else {
+				int uncompressedLen = Width * Height * Length;
+				int blocksLen = r.ReadInt32();
+				Blocks = r.ReadBytes(blocksLen).Decompress(uncompressedLen);
+				blocksLen = r.ReadInt32();
+				ExtBlocks = r.ReadBytes(blocksLen).Decompress(uncompressedLen);
+			}
 			OriginX = r.ReadInt32(); OriginY = r.ReadInt32(); OriginZ = r.ReadInt32();
 		}
 		

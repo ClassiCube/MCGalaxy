@@ -554,7 +554,11 @@ namespace MCGalaxy {
 								try { Server.totalUndo = int.Parse(value); }
 								catch { Server.s.Log("Invalid " + key + ". Using default"); }
 								break;
-
+							case "phys-max-undo":
+								try { Server.physUndo = int.Parse(value); }
+								catch { Server.s.Log("Invalid " + key + ". Using default"); Server.physUndo = 20000; }
+								break;
+								
 							case "review-view-perm":
 								try {
 									sbyte parsed = sbyte.Parse(value);
@@ -820,7 +824,8 @@ namespace MCGalaxy {
 			w.WriteLine("guest-limit-notify = " + Server.guestLimitNotify.ToString().ToLower());
 			w.WriteLine("guest-join-notify = " + Server.guestJoinNotify.ToString().ToLower());
 			w.WriteLine("guest-leave-notify = " + Server.guestLeaveNotify.ToString().ToLower());
-			w.WriteLine("total-undo = " + Server.totalUndo.ToString());
+			w.WriteLine("total-undo = " + Server.totalUndo);
+			w.WriteLine("physics-undo-max = " + Server.physUndo);
 			w.WriteLine();
 			w.WriteLine("# backup options");
 			w.WriteLine("backup-time = " + Server.backupInterval.ToString());

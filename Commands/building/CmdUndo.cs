@@ -133,18 +133,22 @@ namespace MCGalaxy.Commands
             Command.all.Find("physics").Use(p, "0");
 
             if (p.level.UndoBuffer.Count != Server.physUndo) {
-                for (int i = p.level.currentUndo; i >= 0; i--) {
+            	int count = p.level.currentUndo;
+                for (int i = count; i >= 0; i--) {
                     try {
-                        Level.UndoPos uP = p.level.UndoBuffer[i];
-                        if (!CheckBlockPhysics(p, seconds, uP)) break;
+                        if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
                     } catch { }
                 }
             } else {
-                for (int i = p.level.currentUndo; i != p.level.currentUndo + 1; i--) {
+            	int count = p.level.currentUndo;
+                for (int i = count; i >= 0; i--) {
                     try {
-                        if (i < 0)  i = p.level.UndoBuffer.Count - 1;
-                        Level.UndoPos uP = p.level.UndoBuffer[i];
-                        if (!CheckBlockPhysics(p, seconds, uP)) break;
+                        if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
+                    } catch { }
+                }
+            	for (int i = p.level.UndoBuffer.Count - 1; i > count; i--) {
+                    try {
+                        if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
                     } catch { }
                 }
             }
@@ -174,14 +178,17 @@ namespace MCGalaxy.Commands
             return true;
         }
         
-        bool CheckBlockPhysics(Player p, long seconds, Level.UndoPos undo) {
+        bool CheckBlockPhysics(Player p, long seconds, int i, Level.UndoPos undo) {
             byte b = p.level.GetTile(undo.location);
             if (undo.timePerformed.AddSeconds(seconds) < DateTime.Now)
                 return false;
             
             if (b == undo.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                 ushort x, y, z;
-                p.level.IntToPos(undo.location, out x, out y, out z);                
+                int undoIndex = p.level.currentUndo;
+                p.level.currentUndo = i;
+                p.level.IntToPos(undo.location, out x, out y, out z);
+                p.level.currentUndo = undoIndex;
                 p.level.Blockchange(x, y, z, undo.oldType, true, "", undo.oldExtType);
             }
             return true;
