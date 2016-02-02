@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
             string[] parts = message.Split(' ');
             bool undoPhysics = parts[0].ToLower() == "physics";
             Player who = undoPhysics ? null : Player.Find(parts[0]);
-            long seconds = GetSeconds(p, who, parts.Length > 1 ? parts[1] : "1800");
+            long seconds = GetSeconds(p, who, parts.Length > 1 ? parts[1] : "30");
             
             if (parts.Length > 1 && parts[1].ToLower() == "update") {
                 UndoFile.UpgradePlayerUndoFiles(parts[0]);
@@ -199,7 +199,7 @@ namespace MCGalaxy.Commands
             if (p == null || (p.group.maxUndo <= 500000 || p.group.maxUndo == 0))
                 Player.SendMessage(p, "/undo [player] all - &cWill undo 68 years, 18 days, 15 hours, 28 minutes, 31 seconds for [player]");
             if (p == null || (p.group.maxUndo <= 1800 || p.group.maxUndo == 0))
-                Player.SendMessage(p, "/undo [player] 0 - &cWill undo 30 minutes");
+                Player.SendMessage(p, "/undo [player] - &cWill undo 30 minutes");
             Player.SendMessage(p, "/undo physics [seconds] - Undoes the physics for the current map");
         }
     }
