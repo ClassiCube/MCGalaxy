@@ -113,9 +113,8 @@ namespace MCGalaxy.Util {
                             
                             Pos.newtype = oldType; Pos.newExtType = oldExtType;
                             Pos.extType = newExtType; Pos.timePlaced = now;
-                            lvl.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true, "", Pos.newExtType);
-                            if (isPlayer)
-                                p.RedoBuffer.Add(Pos);
+                            lvl.Blockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, Pos.newExtType);
+                            if (p != null) p.RedoBuffer.Add(Pos);
                         }
                     }
                 }

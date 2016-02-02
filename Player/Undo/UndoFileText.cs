@@ -65,6 +65,7 @@ namespace MCGalaxy.Util {
             Player.UndoPos Pos;
             Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
+            
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
                 try {
@@ -79,16 +80,14 @@ namespace MCGalaxy.Util {
                     Pos.z = Convert.ToUInt16(lines[(i * 7) - 4]);
                     Pos.type = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
 
-                    if (Pos.type == Convert.ToByte(lines[(i * 7) - 1]) ||
-                        Block.Convert(Pos.type) == Block.water || Block.Convert(Pos.type) == Block.lava ||
-                        Pos.type == Block.grass) {
+                    if (Pos.type == Convert.ToByte(lines[(i * 7) - 1]) || Block.Convert(Pos.type) == Block.water || 
+                        Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
                         
                         Pos.newtype = Convert.ToByte(lines[(i * 7) - 2]);
                         Pos.timePlaced = DateTime.Now;
 
-                        foundLevel.Blockchange(Pos.x, Pos.y, Pos.z, Pos.newtype, true);
-                        if (p != null)
-                            p.RedoBuffer.Add(Pos);
+                        foundLevel.Blockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, 0);
+                        if (p != null) p.RedoBuffer.Add(Pos);
                     }
                 } catch {
                 }
