@@ -111,11 +111,11 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.liquids.TryGetValue(C.b, out blocked);
                 lvl.AddUpdate(C.b, Block.air);
                 
-                if (C.extraInfo.IndexOf("wait") == -1)
+                if (((string)C.data).IndexOf("wait") == -1)
                     C.time = 255;
             }
 
-            if (C.extraInfo.IndexOf("wait") == -1 && blocked != null)
+            if (((string)C.data).IndexOf("wait") == -1 && blocked != null)
                 if (blocked[0] && blocked[1] && blocked[2] && blocked[3] && blocked[4])
             {
                 lvl.liquids.Remove(C.b);
@@ -142,7 +142,7 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(C.b, Block.air);
             }
 
-            if (C.extraInfo.IndexOf("wait") == -1)
+            if (((string)C.data).IndexOf("wait") == -1)
                 C.time = 255;
         }
         
@@ -224,11 +224,11 @@ namespace MCGalaxy.BlockPhysics {
             } else { //was placed near sponge
                 lvl.liquids.TryGetValue(C.b, out blocked);
                 lvl.AddUpdate(C.b, Block.air);
-                if (!checkWait || C.extraInfo.IndexOf("wait") == -1)
+                if (!checkWait || ((string)C.data).IndexOf("wait") == -1)
                     C.time = 255;
             }
 
-            if (blocked != null && (!checkWait || C.extraInfo.IndexOf("wait") == -1))
+            if (blocked != null && (!checkWait || ((string)C.data).IndexOf("wait") == -1))
                 if (blocked[0] && blocked[1] && blocked[2] && blocked[3] && blocked[4])
             {
                 lvl.liquids.Remove(C.b);
@@ -252,7 +252,7 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(C.b, Block.air);
             }
 
-            if (!checkWait || C.extraInfo.IndexOf("wait") == -1)
+            if (!checkWait || ((string)C.data).IndexOf("wait") == -1)
                 C.time = 255;
         }
         

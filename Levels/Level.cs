@@ -792,13 +792,13 @@ namespace MCGalaxy
         #region ==Physics==
 
         public string foundInfo(ushort x, ushort y, ushort z) {
-            Check foundCheck = null;
+            Check found = null;
             try {
-                foundCheck = ListCheck.Find(Check => Check.b == PosToInt(x, y, z));
+                found = ListCheck.Find(Check => Check.b == PosToInt(x, y, z));
             } catch {
             }
-            if (foundCheck != null)
-                return foundCheck.extraInfo;
+            if (found != null)
+            	return (found.data is string) ? (string)found.data : "";
             return "";
         }
 
@@ -812,13 +812,16 @@ namespace MCGalaxy
                         delegate(Check C)
                         {
                             try {
+                        		string info = C.data as string;
+                        		if (info == null) info = "";
                                 IntToPos(C.b, out x, out y, out z);
-                                if (PhysicsUpdate != null)
-                                    PhysicsUpdate(x, y, z, C.time, C.extraInfo, this);
                                 
-                                if (C.extraInfo == "" || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
+                                if (PhysicsUpdate != null)
+                                    PhysicsUpdate(x, y, z, C.time, info, this);                                
+                                if (info == "" || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
                                     DoorPhysics.Do(this, C);
-                            } catch {
+                        	} catch(Exception ex) {
+                        		Server.ErrorLog(ex);
                                 ListCheck.Remove(C);
                             }
                         });
@@ -829,14 +832,16 @@ namespace MCGalaxy
                         {
                             try {
                                 IntToPos(C.b, out x, out y, out z);
-                                string foundInfo = C.extraInfo;
+                                string info = C.data as string;
+                        		if (info == null) info = "";
+                        		
                                 if (PhysicsUpdate != null)
-                                    PhysicsUpdate(x, y, z, C.time, C.extraInfo, this);
-                                OnPhysicsUpdateEvent.Call(x, y, z, C.time, C.extraInfo, this);
-                                
-                                if (C.extraInfo == "" || ExtraInfoPhysics.DoComplex(this, C, rand))
+                                    PhysicsUpdate(x, y, z, C.time, info, this);
+                                OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);                                
+                                if (info == "" || ExtraInfoPhysics.DoComplex(this, C, rand))
                                     DoNormalPhysics(x, y, z, rand, C);
-                            } catch {
+                        	} catch(Exception ex) {
+                        		Server.ErrorLog(ex);
                                 ListCheck.Remove(C);
                             }
                         });
@@ -848,8 +853,11 @@ namespace MCGalaxy
                     delegate(Update C)
                     {
                         try {
-                            Blockchange(C.b, C.type, false, C.extraInfo);
-                        } catch {
+                    	    string info = C.data as string;
+                            if (info == null) info = "";
+                            Blockchange(C.b, C.type, false, info);
+                    	} catch(Exception ex) {
+                    		Server.ErrorLog(ex);
                             Server.s.Log("Phys update issue");
                         }
                     });
@@ -1087,7 +1095,7 @@ namespace MCGalaxy
                         GetTile(IntOffset(C.b, 1, 0, 0)) != Block.snake ||
                         GetTile(IntOffset(C.b, 0, 0, 1)) != Block.snake ||
                         GetTile(IntOffset(C.b, 0, 0, -1)) != Block.snake)
-                        C.extraInfo = "revert 0";
+                        C.data = "revert 0";
                     break;
                 case Block.snake:
                     SnakePhysics.Do(this, C, rand);
@@ -1118,7 +1126,7 @@ namespace MCGalaxy
                 case Block.zombiehead:
                     if (GetTile(IntOffset(C.b, 0, -1, 0)) != Block.zombiebody &&
                         GetTile(IntOffset(C.b, 0, -1, 0)) != Block.creeper)
-                        C.extraInfo = "revert 0";
+                        C.data = "revert 0";
                     break;
                 case Block.zombiebody:
                 case Block.creeper:
@@ -1126,24 +1134,24 @@ namespace MCGalaxy
                     break;
 
                 case Block.c4:
-                    C4.C4s c4 = C4.Find(this, C.p.c4circuitNumber);
-                    if (c4 != null)
-                    {
-                        C4.C4s.OneC4 one = new C4.C4s.OneC4(x, y, z);
-                        c4.list.Add(one);
+                    Server.s.Log("Processing C4");
+                    C4.C4s c4 = C4.Find(this, ((Player)C.data).c4circuitNumber);
+                    if (c4 != null) {
+                        FillPos pos; pos.X = x; pos.Y = y; pos.Z = z;
+                        c4.list.Add(pos);
                     }
                     C.time = 255;
                     break;
 
                 case Block.c4det:
-                    C4.C4s c = C4.Find(this, C.p.c4circuitNumber);
-                    if (c != null)
-                    {
+                    Server.s.Log("Processing C4 det");
+                    C4.C4s c = C4.Find(this, ((Player)C.data).c4circuitNumber);
+                    if (c != null) {
                         c.detenator[0] = x;
                         c.detenator[1] = y;
                         c.detenator[2] = z;
                     }
-                    C.p.c4circuitNumber = -1;
+                    ((Player)C.data).c4circuitNumber = -1;
                     C.time = 255;
                     break;
 
@@ -1153,13 +1161,18 @@ namespace MCGalaxy
             }
         }
 
-        public void AddCheck(int b, string extraInfo = "", bool overRide = false, MCGalaxy.Player Placer = null)
+        public void AddCheck(int b, bool overRide = false)
+        {
+        	AddCheck(b, overRide, "");
+        }
+        
+        public void AddCheck(int b, bool overRide, object data)
         {
             try
             {
                 if (!ListCheck.Exists(Check => Check.b == b))
                 {
-                    ListCheck.Add(new Check(b, extraInfo, Placer)); //Adds block to list to be updated
+                    ListCheck.Add(new Check(b, data)); //Adds block to list to be updated
                 }
                 else
                 {
@@ -1169,7 +1182,7 @@ namespace MCGalaxy
                         {
                             if (C2.b == b)
                             {
-                                C2.extraInfo = extraInfo; //Dont need to check physics here because if the list is active, then physics is active :)
+                                C2.data = data; //Dont need to check physics here because if the list is active, then physics is active :)
                                 return;
                             }
                         }
@@ -1185,7 +1198,12 @@ namespace MCGalaxy
             }
         }
 
-        internal bool AddUpdate(int b, int type, bool overRide = false, string extraInfo = "")
+        internal bool AddUpdate(int b, int type, bool overRide = false)
+        {
+        	return AddUpdate(b, type, overRide, "");
+        }
+        
+        internal bool AddUpdate(int b, int type, bool overRide, object data)
         {
             try
             {
@@ -1193,14 +1211,17 @@ namespace MCGalaxy
                 {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
-                    AddCheck(b, extraInfo, true); //Dont need to check physics here....AddCheck will do that
-                    Blockchange(x, y, z, (byte)type, true, extraInfo);
+                    AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
+                    
+                    string info = data as string;
+                    if (info == null) info = "";
+                    Blockchange(x, y, z, (byte)type, true, info);
                     return true;
                 }
 
                 if (!ListUpdate.Exists(Update => Update.b == b))
                 {
-                    ListUpdate.Add(new Update(b, (byte)type, extraInfo));
+                    ListUpdate.Add(new Update(b, (byte)type, data));
                     if (!physicssate && physics > 0)
                         StartPhysics();
                     return true;
@@ -1210,7 +1231,7 @@ namespace MCGalaxy
                     if (type == 12 || type == 13)
                     {
                         ListUpdate.RemoveAll(Update => Update.b == b);
-                        ListUpdate.Add(new Update(b, (byte)type, extraInfo));
+                        ListUpdate.Add(new Update(b, (byte)type, data));
                         if (!physicssate && physics > 0)
                             StartPhysics();
                         return true;
@@ -1262,14 +1283,15 @@ namespace MCGalaxy
 
                                   try
                                   {
-                                      if (C.extraInfo.Contains("revert"))
+                                  	  string info = C.data as string;
+                                      if (info != null && info.Contains("revert"))
                                       {
                                           int i = 0;
-                                          foreach (string s in C.extraInfo.Split(' '))
+                                          foreach (string s in info.Split(' '))
                                           {
                                               if (s == "revert")
                                               {
-                                                  Blockchange(x, y, z, Byte.Parse(C.extraInfo.Split(' ')[i + 1]), true);
+                                                  Blockchange(x, y, z, Byte.Parse(info.Split(' ')[i + 1]), true);
                                                   break;
                                               }
                                               i++;
@@ -1643,9 +1665,9 @@ namespace MCGalaxy
                     {
                         if (c4.detenator[0] == detenator[0] && c4.detenator[1] == detenator[1] && c4.detenator[2] == detenator[2])
                         {
-                            foreach (C4s.OneC4 c in c4.list)
+                            foreach (FillPos c in c4.list)
                             {
-                                lvl.MakeExplosion(c.pos[0], c.pos[1], c.pos[2], 0);
+                                lvl.MakeExplosion(c.X, c.Y, c.Z, 0);
                             }
                             lvl.C4list.Remove(c4);
                         }
@@ -1677,21 +1699,12 @@ namespace MCGalaxy
             {
                 public sbyte CircuitNumb;
                 public ushort[] detenator;
-                public List<OneC4> list;
-                public class OneC4
-                {
-                    public ushort[] pos = new ushort[3];
-                    public OneC4(ushort x, ushort y, ushort z)
-                    {
-                        pos[0] = x;
-                        pos[1] = y;
-                        pos[2] = z;
-                    }
-                }
+                public List<FillPos> list;
+
                 public C4s(sbyte num)
                 {
                     CircuitNumb = num;
-                    list = new List<OneC4>();
+                    list = new List<FillPos>();
                     detenator = new ushort[3];
                 }
             }
@@ -1700,33 +1713,39 @@ namespace MCGalaxy
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
-public class Check
-{
+public class Check {
     public int b;
-    public string extraInfo = "";
     public byte time;
-    public MCGalaxy.Player p;
+    public object data;
 
-    public Check(int b, string extraInfo = "", MCGalaxy.Player placer = null)
-    {
+    public Check(int b, object data) {
         this.b = b;
         time = 0;
-        this.extraInfo = extraInfo;
-        p = placer;
+        this.data = data;
+    }
+    
+    public Check(int b, string extraInfo = "") {
+        this.b = b;
+        time = 0;
+        this.data = extraInfo;
     }
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
-public class Update
-{
+public class Update {
     public int b;
-    public string extraInfo = "";
+    public object data;
     public byte type;
 
-    public Update(int b, byte type, string extraInfo = "")
-    {
+    public Update(int b, byte type) {
         this.b = b;
         this.type = type;
-        this.extraInfo = extraInfo;
+        this.data = "";
+    }
+    
+    public Update(int b, byte type, object data) {
+        this.b = b;
+        this.type = type;
+        this.data = data;
     }
 }

@@ -51,19 +51,17 @@ namespace MCGalaxy.BlockPhysics {
         public static void DoSmallTnt(Level lvl, Check C, Random rand) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-
-            if (C.p != null && C.p.PlayingTntWars) {
+            Player p = C.data as Player;
+            if (p != null && p.PlayingTntWars) {
                 int power = 2, threshold = 3;
-                switch (TntWarsGame.GetTntWarsGame(C.p).GameDifficulty) {
+                TntWarsGame game = TntWarsGame.GetTntWarsGame(p);
+                switch (game.GameDifficulty) {
                     case TntWarsGame.TntWarsDifficulty.Easy:
-                        threshold = 7;
-                        break;
+                        threshold = 7; break;
                     case TntWarsGame.TntWarsDifficulty.Normal:
-                        threshold = 5;
-                        break;
+                        threshold = 5; break;
                     case TntWarsGame.TntWarsDifficulty.Extreme:
-                        power = 3;
-                        break;
+                        power = 3; break;
                 }
                 
                 if (C.time < threshold) {
@@ -72,22 +70,20 @@ namespace MCGalaxy.BlockPhysics {
                                     ? Block.air : Block.lavastill);
                     return;
                 }
-                if (C.p.TntWarsKillStreak >= TntWarsGame.Properties.DefaultStreakTwoAmount
-                    && TntWarsGame.GetTntWarsGame(C.p).Streaks) {
+                if (p.TntWarsKillStreak >= TntWarsGame.Properties.DefaultStreakTwoAmount && game.Streaks)
                     power++;
-                }
-                lvl.MakeExplosion(x, y, z, power - 2, true, TntWarsGame.GetTntWarsGame(C.p));
+                lvl.MakeExplosion(x, y, z, power - 2, true, game);
                 
                 List<Player> Killed = new List<Player>();
                 PlayerInfo.players.ForEach(
                     delegate(Player p1)
                     {
-                        if (p1.level == lvl && p1.PlayingTntWars && p1 != C.p
+                        if (p1.level == lvl && p1.PlayingTntWars && p1 != p
                             && Math.Abs((int)(p1.pos[0] / 32) - x) + Math.Abs((int)(p1.pos[1] / 32) - y) + Math.Abs((int)(p1.pos[2] / 32) - z) < ((power * 3) + 1)) {
                             Killed.Add(p1);
                         }
                     });
-                TntWarsGame.GetTntWarsGame(C.p).HandleKill(C.p, Killed);
+                game.HandleKill(p, Killed);
             } else {
                 if (lvl.physics < 3) {
                     lvl.Blockchange(x, y, z, Block.air);
@@ -136,7 +132,7 @@ namespace MCGalaxy.BlockPhysics {
                     else if (rand.Next(1, 11) <= 8)
                         lvl.AddUpdate(index, Block.air);
                     else
-                        lvl.AddCheck(index, "drop 50 dissipate 8");
+                        lvl.AddCheck(index, false, "drop 50 dissipate 8");
                 } else if (b == Block.tnt) {
                     lvl.AddUpdate(index, Block.smalltnt);
                 } else if (b == Block.smalltnt || b == Block.bigtnt || b == Block.nuketnt) {

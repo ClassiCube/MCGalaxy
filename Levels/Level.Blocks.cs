@@ -349,8 +349,8 @@ namespace MCGalaxy {
                 }
 
                 errorLocation = "Adding physics";
-                if (p.PlayingTntWars && type == Block.smalltnt) AddCheck(PosToInt(x, y, z), "", false, p);
-                if (physics > 0) if (Block.Physics(type)) AddCheck(PosToInt(x, y, z), "", false, p);
+                if (p.PlayingTntWars && type == Block.smalltnt) AddCheck(PosToInt(x, y, z), false, p);
+                if (physics > 0) if (Block.Physics(type)) AddCheck(PosToInt(x, y, z), false, p);
 
                 changed = true;
                 backedup = false;
@@ -419,7 +419,7 @@ namespace MCGalaxy {
                     Player.GlobalBlockchange(this, b, type, extType);
                 
                 if (physics > 0 && ((Block.Physics(type) || extraInfo != "")))
-                    AddCheck(b, extraInfo);
+                    AddCheck(b, false, extraInfo);
             } catch {
                 blocks[b] = type;
             }

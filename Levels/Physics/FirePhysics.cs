@@ -100,10 +100,10 @@ namespace MCGalaxy.BlockPhysics {
 				int dropType = rand.Next(1, 10);
 				if (dropType <= 2) {
 					lvl.AddUpdate(C.b, Block.coal);
-					C.extraInfo = "drop 63 dissipate 10";
+					C.data = "drop 63 dissipate 10";
 				} else if (dropType <= 4) {
 					lvl.AddUpdate(C.b, Block.obsidian);
-					C.extraInfo = "drop 63 dissipate 10";
+					C.data = "drop 63 dissipate 10";
 				} else if (dropType <= 8)
 					lvl.AddUpdate(C.b, Block.air);
 				else

@@ -154,7 +154,7 @@ namespace MCGalaxy.Commands
 
             foreach (CatchPos pos1 in buffer)
             {
-                p.level.AddCheck(p.level.PosToInt(pos1.x, pos1.y, pos1.z), pos1.extraInfo, true);
+                p.level.AddCheck(p.level.PosToInt(pos1.x, pos1.y, pos1.z), true, pos1.extraInfo);
             }
 
             Player.SendMessage(p, "Activated " + buffer.Count + " blocks.");

@@ -45,7 +45,7 @@ namespace MCGalaxy.BlockPhysics {
                     lvl.AddUpdate(C.b, Block.water);
             }
 
-            if (!C.extraInfo.Contains("wait"))
+            if (!(C.data is string) || !((string)C.data).Contains("wait"))
                 C.time = 255;
         }
         

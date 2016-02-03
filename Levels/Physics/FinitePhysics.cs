@@ -29,12 +29,12 @@ namespace MCGalaxy.BlockPhysics {
 			
 			byte tileBelow = lvl.GetTile(x, (ushort)(y - 1), z);
 			if (tileBelow == Block.air) {
-				lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b], false, C.extraInfo);
+				lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b], false, C.data);
 				lvl.AddUpdate(C.b, Block.air);
-				C.extraInfo = "";
+				C.data = "";
 			} else if (tileBelow == Block.waterstill || tileBelow == Block.lavastill) {
 				lvl.AddUpdate(C.b, Block.air);
-				C.extraInfo = "";
+				C.data = "";
 			} else {
 				const int count = 25;
 				int* indices = stackalloc int[count];
@@ -66,10 +66,10 @@ namespace MCGalaxy.BlockPhysics {
 
 						int index = lvl.PosToInt(posX, y, posZ);
 						if (index >= 0 && lvl.blocks[index] == Block.air &&
-						    lvl.AddUpdate(index, lvl.blocks[C.b], false, C.extraInfo))
+						    lvl.AddUpdate(index, lvl.blocks[C.b], false, C.data))
 						{
 							lvl.AddUpdate(C.b, Block.air);
-							C.extraInfo = "";
+							C.data = "";
 							return;
 						}
 					}

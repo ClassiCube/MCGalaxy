@@ -23,12 +23,14 @@ namespace MCGalaxy.BlockPhysics {
     public static class ExtraInfoPhysics {
         
         public static bool DoDoorsOnly(Level lvl, Check C, Random rand) {
-            if (!C.extraInfo.Contains("wait") && lvl.blocks[C.b] == Block.air)
-                C.extraInfo = "";
+		    string info = C.data as string;
+		    if (info == null) return true;
+            if (!info.Contains("wait") && lvl.blocks[C.b] == Block.air)
+                C.data = "";
 
             bool wait = false, door = false;
             int waitTime = 0;
-            string[] parts = C.extraInfo.Split(' ');
+            string[] parts = info.Split(' ');
             for (int i = 0; i < parts.Length; i++) {
                 if (i % 2 != 0) continue;
                 
@@ -54,10 +56,10 @@ namespace MCGalaxy.BlockPhysics {
             }
 
             if (C.time > waitTime) {
-                int waitIndex = C.extraInfo.IndexOf("wait ");
-                C.extraInfo =
-                    C.extraInfo.Substring(0, waitIndex) +
-                    C.extraInfo.Substring(C.extraInfo.IndexOf(' ', waitIndex + 5) + 1);
+                int waitIndex = info.IndexOf("wait ");
+                C.data =
+                    info.Substring(0, waitIndex) +
+                    info.Substring(info.IndexOf(' ', waitIndex + 5) + 1);
                 return false;
             }
             C.time++;
@@ -75,12 +77,14 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static bool DoComplex(Level lvl, Check C, Random rand) {
-            if (!C.extraInfo.Contains("wait") && lvl.blocks[C.b] == Block.air)
-                C.extraInfo = "";
+		    string info = C.data as string;
+		    if (info == null) return true;			
+            if (!info.Contains("wait") && lvl.blocks[C.b] == Block.air)
+                C.data = "";
 
             bool wait = false, drop = false, dissipate = false, revert = false, door = false;
             int waitTime = 0, dropnum = 0, dissipatenum = 0; byte reverttype = 0;
-            string[] parts = C.extraInfo.Split(' ');
+            string[] parts = info.Split(' ');
             
             for (int i = 0; i < parts.Length; i++) {
                 if (i % 2 != 0) continue;
@@ -114,10 +118,10 @@ namespace MCGalaxy.BlockPhysics {
                 }
 
                 if (C.time > waitTime) {
-                    int waitIndex = C.extraInfo.IndexOf("wait ");
-                    C.extraInfo =
-                        C.extraInfo.Substring(0, waitIndex) +
-                        C.extraInfo.Substring(C.extraInfo.IndexOf(' ', waitIndex + 5) + 1);
+                    int waitIndex = info.IndexOf("wait ");
+                    C.data =
+                        info.Substring(0, waitIndex) +
+                        info.Substring(info.IndexOf(' ', waitIndex + 5) + 1);
                     DoOther(lvl, C, rand, revert, dissipate, drop, reverttype, dissipatenum, dropnum);
                     return false;
                 }
@@ -134,7 +138,7 @@ namespace MCGalaxy.BlockPhysics {
             lvl.IntToPos(C.b, out x, out y, out z);
             if (revert) {
                 lvl.AddUpdate(C.b, reverttype);
-                C.extraInfo = "";
+                C.data = "";
             }
             
             // Not setting drop = false can cause occasional leftover blocks, since C.extraInfo is emptied, so
@@ -142,10 +146,10 @@ namespace MCGalaxy.BlockPhysics {
             if (dissipate && rand.Next(1, 100) <= dissipatenum) {
                 if (!lvl.ListUpdate.Exists(Update => Update.b == C.b)) {
                     lvl.AddUpdate(C.b, Block.air);
-                    C.extraInfo = "";
+                    C.data = "";
                     drop = false;
                 } else {
-                    lvl.AddUpdate(C.b, lvl.blocks[C.b], false, C.extraInfo);
+                    lvl.AddUpdate(C.b, lvl.blocks[C.b], false, C.data);
                 }
             }
             
@@ -162,9 +166,9 @@ namespace MCGalaxy.BlockPhysics {
             if (!(below == Block.air || below == Block.lava || below == Block.water))
                 return;
             
-            if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], false, C.extraInfo)) {
+            if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], false, C.data)) {
                 lvl.AddUpdate(C.b, Block.air);
-                C.extraInfo = "";
+                C.data = "";
             }
         }
     }

@@ -88,7 +88,8 @@ namespace MCGalaxy.BlockPhysics {
                     break;
                 default:
                     //non special blocks are then ignored, maybe it would be better to avoid getting here and cutting down the list
-                    if (!C.extraInfo.Contains("wait")) C.time = 255;
+                    if (!(C.data is string) || !((string)C.data).Contains("wait"))
+                    	C.time = 255;
                     break;
             }
         }

@@ -40,7 +40,7 @@ namespace MCGalaxy.BlockPhysics {
                     if (unblocked) {
                         lvl.AddUpdate(bAbove, Block.firework, false);
                         lvl.AddUpdate(C.b, Block.lavastill, false, "wait 1 dissipate 100");
-                        C.extraInfo = "wait 1 dissipate 100";
+                        C.data = "wait 1 dissipate 100";
                         return;
                     }
                 }
