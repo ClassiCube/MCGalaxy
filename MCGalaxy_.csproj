@@ -398,6 +398,7 @@
     <Compile Include="Games\IGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
+    <Compile Include="GUI\LevelCollection.cs" />
     <Compile Include="Levels\Generator\MapGen.cs" />
     <Compile Include="Levels\Generator\NoiseGen.cs" />
     <Compile Include="Levels\Generator\MapGenParams.cs" />
@@ -407,6 +408,7 @@
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
+    <Compile Include="Levels\Level.Physics.cs" />
     <Compile Include="Levels\LevelInfo.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\AirPhysics.cs" />
@@ -512,7 +514,6 @@
     <Compile Include="Drawing\FindReference.cs" />
     <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Levels\LevelCollection.cs" />
     <Compile Include="Player\PlayerCollection.cs" />
     <Compile Include="GUI\PropertyWindow.cs">
       <SubType>Form</SubType>
