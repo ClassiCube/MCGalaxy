@@ -199,8 +199,7 @@ namespace MCGalaxy
 
         public List<C4.C4s> C4list = new List<C4.C4s>();
 
-        public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0,
-                     bool useSeed = false, bool loadTexturesConfig = true)
+        public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false)
         {
             //onLevelSave += null;
             Width = x;

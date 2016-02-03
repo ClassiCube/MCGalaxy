@@ -395,6 +395,8 @@
     <Compile Include="Drawing\DrawOps\ReplaceDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
+    <Compile Include="Games\Countdown\CountdownGame.cs" />
+    <Compile Include="Games\Countdown\CountdownMapGen.cs" />
     <Compile Include="Games\IGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
@@ -492,7 +494,6 @@
     <Compile Include="Server\Extra\Awards.cs" />
     <Compile Include="Games\CTF\Auto_CTF.cs" />
     <Compile Include="IRC\GlobalChatBot.cs" />
-    <Compile Include="Games\CountdownGame.cs" />
     <Compile Include="Server\Extra\Economy.cs" />
     <Compile Include="IRC\ForgeBot.cs" />
     <Compile Include="GUI\EditText.cs">
@@ -688,6 +689,7 @@
     <Folder Include="Commands\World" />
     <Folder Include="Commands\Other" />
     <Folder Include="Drawing\DrawOps" />
+    <Folder Include="Games\Countdown" />
     <Folder Include="Games\ZombieSurvival" />
     <Folder Include="Levels\IO" />
     <Folder Include="Levels\Generator" />

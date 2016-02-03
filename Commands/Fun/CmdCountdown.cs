@@ -279,19 +279,9 @@ namespace MCGalaxy.Commands
             {
                 if (par0 == "download")
                 {
-                    try
-                    {
-                        using (WebClient WEB = new WebClient())
-                        {
-                            WEB.DownloadFile("http://db.tt/R0x1MFS", "levels/countdown.lvl");
-                            Player.SendMessage(p, "Downloaded map, now loading map and sending you to it.");
-                        }
-                    }
-                    catch
-                    {
-                        Player.SendMessage(p, "Sorry, Downloading Failed. PLease try again later");
-                        return;
-                    }
+                    Level lvl = CountdownMapGen.Generate(32, 32, 32);
+                    lvl.Save();
+                    Player.SendMessage(p, "Downloaded map, now loading map and sending you to it.");
                     Command.all.Find("load").Use(p, "countdown");
                     Command.all.Find("goto").Use(p, "countdown");
                     Thread.Sleep(1000);
