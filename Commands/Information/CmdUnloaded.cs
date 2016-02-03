@@ -96,62 +96,28 @@ namespace MCGalaxy.Commands
             //Exception catching since it needs to be tested on Ocean Flatgrass
         }
 
-        private LevelPermission GetPerVisitPermission(string level) {
-            string location = "levels/level properties/" + level + ".properties";
-            LevelPermission lvlperm = LevelPermission.Guest;
-            try {
-                using (StreamReader reader = new StreamReader(location)) {
-                    string line;
-                    while ((line = reader.ReadLine()) != null) {
-                        if (line.Split()[0].ToLower() == "pervisit") {
-                            lvlperm = Group.Find(line.Split()[2]).Permission;
-                            break;
-                        }
-                    }
-                }
-            } catch { return LevelPermission.Guest; }
-
-            return lvlperm;
+        LevelPermission GetPerVisitPermission(string level) {
+            string value = LevelInfo.FindOfflineProperty(level, "pervisit");
+            if (value == null) return LevelPermission.Guest;
+            Group grp = Group.Find(value);
+            return grp == null ? LevelPermission.Guest : grp.Permission;
         }
 
-        private LevelPermission GetPerBuildPermission(string level) {
-            string location = "levels/level properties/" + level + ".properties";
-            LevelPermission lvlperm = LevelPermission.Guest;
-            try {
-                using (StreamReader reader = new StreamReader(location)) {
-                    string line;
-                    while ((line = reader.ReadLine()) != null) {
-                        if (line.Split()[0].ToLower() == "perbuild") {
-                            lvlperm = Group.Find(line.Split()[2]).Permission;
-                            break;
-                        }
-                    }
-                }
-            } catch { return LevelPermission.Guest; }
-
-            return lvlperm;
+        LevelPermission GetPerBuildPermission(string level) {
+            string value = LevelInfo.FindOfflineProperty(level, "perbuild");
+            if (value == null) return LevelPermission.Guest;
+            Group grp = Group.Find(value);
+            return grp == null ? LevelPermission.Guest : grp.Permission;
         }
 
-        private bool GetLoadOnGoto(string level) {
-            string location = "levels/level properties/" + level + ".properties";
-            bool loadOnGoto = false;
-            try {
-                using (StreamReader reader = new StreamReader(location)) {
-                    string line;
-                    while ((line = reader.ReadLine()) != null) {
-                        if (line.Split()[0].ToLower() == "loadongoto") {
-                            loadOnGoto = bool.Parse(line.Split()[2]);
-                            break;
-                        }
-                    }
-                }
-            } catch { return false; }
-
-            return loadOnGoto;
+        bool GetLoadOnGoto(string level) {
+            string value = LevelInfo.FindOfflineProperty(level, "loadongoto");
+            bool load;
+            if (!bool.TryParse(value, out load)) return true;
+            return load;
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "%f/unloaded " + Server.DefaultColor + "- Lists all unloaded levels and their accessible state.");
             Player.SendMessage(p, "%f/unloaded <1/2/3/..> " + Server.DefaultColor + "- Shows a compact list.");
         }

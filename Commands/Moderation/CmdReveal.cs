@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             
             Level lvl = null;
             if (parts.Length == 2) {
-                lvl = Level.Find(parts[1]);
+                lvl = LevelInfo.Find(parts[1]);
             } else if (p != null && p.level != null) {
                 lvl = p.level;
             }

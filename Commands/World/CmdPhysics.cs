@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
             }
             
             if (args.Length == 2) {
-                level = Level.Find(args[0].ToLower());
+                level = LevelInfo.Find(args[0].ToLower());
                 if (level == null) {
                     Player.SendMessage(p, "Could not find entered level."); return;
                 }

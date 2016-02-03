@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
 
             if (who == null)
             {
-                Level which = Level.Find(message);
+                Level which = LevelInfo.Find(message);
 
                 if (which == null)
                 {

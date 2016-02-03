@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -375,23 +375,11 @@ namespace MCGalaxy
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
 
-        public static Level Find(string name) {
-        	name = name.ToLower();
-            Level match = null; int matches = 0;
-            
-            foreach (Level level in Server.levels) {
-                if (level.name.ToLower() == name) return level;
-                if (level.name.ToLower().Contains(name)) {
-                	match = level; matches++;
-                }
-            }
-            return matches == 1 ? match : null;
-        }
+        [Obsolete]
+        public static Level Find(string name) { return LevelInfo.Find(name); }
 
-        public static Level FindExact(string levelName)
-        {
-            return Server.levels.Find(lvl => levelName.ToLower() == lvl.name.ToLower());
-        }
+        [Obsolete]
+        public static Level FindExact(string name) { return LevelInfo.FindExact(name); }
 
         public static void SaveSettings(Level level) {
             LvlProperties.Save(level, "levels/level properties/" + level.name);
@@ -652,40 +640,12 @@ namespace MCGalaxy
             return null;
         }
 
-        public static bool CheckLoadOnGoto(string givenName)
-        {
-            try
-            {
-                string foundLocation;
-                foundLocation = "levels/level properties/" + givenName + ".properties";
-                if (!File.Exists(foundLocation))
-                    foundLocation = "levels/level properties/" + givenName;
-                if (!File.Exists(foundLocation))
-                    return true;
-
-                foreach (string line in File.ReadAllLines(foundLocation))
-                {
-                    try
-                    {
-                        if (line[0] == '#') continue;
-                        string value = line.Substring(line.IndexOf(" = ") + 3);
-
-                        switch (line.Substring(0, line.IndexOf(" = ")).ToLower())
-                        {
-                            case "loadongoto":
-                                return bool.Parse(value);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Server.ErrorLog(e);
-                    }
-                }
-            }
-            catch
-            {
-            }
-            return true;
+        public static bool CheckLoadOnGoto(string givenName) {
+            string value = LevelInfo.FindOfflineProperty(givenName, "loadongoto");
+            if (value == null) return true;
+            bool load;
+            if (!bool.Parse(value)) return true;
+            return load;
         }
 
         public void ChatLevel(string message) { ChatLevel(message, LevelPermission.Banned); }

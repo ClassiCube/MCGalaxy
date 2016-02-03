@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
 
             if (message.IndexOf(' ') == -1)
             {
-                lvl = Level.Find(message);
+                lvl = LevelInfo.Find(message);
                 if (lvl == null)
                 {
                     if (p != null)
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                lvl = Level.Find(message.Split(' ')[0]);
+                lvl = LevelInfo.Find(message.Split(' ')[0]);
 
                 if (lvl == null || message.Split(' ')[0].ToLower() == "ps" || message.Split(' ')[0].ToLower() == "rp") lvl = p.level;
                 else message = message.Substring(message.IndexOf(' ') + 1);

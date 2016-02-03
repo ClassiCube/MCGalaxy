@@ -407,6 +407,7 @@
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
+    <Compile Include="Levels\LevelInfo.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\AirPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />

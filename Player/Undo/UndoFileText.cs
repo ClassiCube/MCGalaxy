@@ -71,7 +71,7 @@ namespace MCGalaxy.Util {
                 try {
                     // line format: mapName x y z date oldblock newblock
                     if (!InTime(lines[(i * 7) - 3], seconds)) return false;
-                    Level foundLevel = Level.FindExact(lines[(i * 7) - 7]);
+                    Level foundLevel = LevelInfo.FindExact(lines[(i * 7) - 7]);
                     if (foundLevel == null) continue;
                     
                     Pos.mapName = foundLevel.name;
@@ -104,7 +104,7 @@ namespace MCGalaxy.Util {
                 try {
                     // line format: mapName x y z date oldblock newblock
                     if (!InTime(lines[(i * 7) - 3], seconds)) return false;
-                    Level foundLevel = Level.FindExact(lines[(i * 7) - 7]);
+                    Level foundLevel = LevelInfo.FindExact(lines[(i * 7) - 7]);
                     if (foundLevel == null || foundLevel != p.level) continue;
                     
                     Pos.mapName = foundLevel.name;

@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            Level level = args.Length == 1 ? p.level : Level.Find(args[0]);
+            Level level = args.Length == 1 ? p.level : LevelInfo.Find(args[0]);
             if (level == null) {
                 Player.SendMessage(p, "There is no level \"" + args[0] + "\" loaded."); return;
             }

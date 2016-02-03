@@ -47,7 +47,7 @@ namespace MCGalaxy {
         public static void Goto(string waypoint, Player p) {
             if ( !Exists(waypoint, p) ) return;
             Waypoint wp = Find(waypoint, p);
-            Level lvl = Level.Find(wp.lvlname);
+            Level lvl = LevelInfo.Find(wp.lvlname);
             if ( wp == null ) return;
             if ( lvl != null ) {
                 if ( p.level != lvl ) {

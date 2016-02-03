@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
 
             for (int i = p.RedoBuffer.Count - 1; i >= 0; i--) {
                 Player.UndoPos Pos = p.RedoBuffer[i];
-                Level lvl = Level.FindExact(Pos.mapName);
+                Level lvl = LevelInfo.FindExact(Pos.mapName);
                 if (lvl == null)
                     continue;
                 

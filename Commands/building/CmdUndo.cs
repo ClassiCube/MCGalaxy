@@ -159,7 +159,7 @@ namespace MCGalaxy.Commands
         }
         
         bool CheckBlockPlayer(Player p, long seconds, Player.UndoPos undo, ref Level saveLevel) {
-            Level lvl = Level.FindExact(undo.mapName);
+            Level lvl = LevelInfo.FindExact(undo.mapName);
             saveLevel = lvl;
             byte b = lvl.GetTile(undo.x, undo.y, undo.z);
             if (undo.timePlaced.AddSeconds(seconds) < DateTime.Now)

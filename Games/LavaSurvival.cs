@@ -280,7 +280,7 @@ namespace MCGalaxy
             Level oldMap = null;
             if (active && map != null) oldMap = map;
             Command.all.Find("load").Use(null, name);
-            map = Level.Find(name);
+            map = LevelInfo.Find(name);
 
             if (map != null)
             {

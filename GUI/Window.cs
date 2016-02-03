@@ -986,7 +986,7 @@ namespace MCGalaxy.Gui
                 foreach (FileInfo file in fi)
                 {
                     name = file.Name.Replace(".lvl", "");
-                    if (Level.Find(name.ToLower()) == null)
+                    if (LevelInfo.Find(name.ToLower()) == null)
                         UnloadedList.Items.Add(name);
                 }
             });
@@ -1125,9 +1125,9 @@ namespace MCGalaxy.Gui
                             catch { }
                             foreach (Object obj in MapCombo.Items)
                             {
-                                if (Level.Find(obj.ToString()) != null)
+                                if (LevelInfo.Find(obj.ToString()) != null)
                                 {
-                                    if (p.level == Level.Find(obj.ToString()))
+                                    if (p.level == LevelInfo.Find(obj.ToString()))
                                     {
                                         MapCombo.SelectedItem = obj;
                                     }
@@ -1264,7 +1264,7 @@ namespace MCGalaxy.Gui
                 PlayersTextBox.AppendTextAndScroll("The player is already on that map");
                 return;
             }
-            if (!Server.levels.Contains(Level.Find(MapCombo.Text)))
+            if (!Server.levels.Contains(LevelInfo.Find(MapCombo.Text)))
             {
                 PlayersTextBox.AppendTextAndScroll("That map doesn't exist!!");
                 return;

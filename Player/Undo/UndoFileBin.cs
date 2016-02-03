@@ -173,7 +173,7 @@ namespace MCGalaxy.Util {
             if (time.AddSeconds(65536).AddSeconds(seconds) < now)
                 return false; // we can safely discard the entire chunk
             
-            lvl = Level.FindExact(chunk.LevelName);
+            lvl = LevelInfo.FindExact(chunk.LevelName);
             return true;
         }
         

@@ -32,12 +32,12 @@ namespace MCGalaxy.Commands {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }
 
-            Level lvl = Level.FindExact(message);
+            Level lvl = LevelInfo.FindExact(message);
             if (lvl != null) {
                 GoToLevel(p, lvl, message);
             } else if (Server.AutoLoad) {
                 if (!File.Exists("levels/" + message + ".lvl")) {
-                    lvl = Level.Find(message);
+                    lvl = LevelInfo.Find(message);
                     if (lvl == null) {
                         Player.SendMessage(p, "Level \"" + message + "\" doesn't exist! Did you mean...");
                         Command.all.Find("search").Use(p, "levels " + message);
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
                     }
                 } else if (Level.CheckLoadOnGoto(message)) {
                     Command.all.Find("load").Use(p, message);
-                    lvl = Level.Find(message);
+                    lvl = LevelInfo.Find(message);
                     if (lvl != null) {
                         GoToLevel(p, lvl, message);
                     }
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
                     }                
                 }
             } else {
-                lvl = Level.Find(message);
+                lvl = LevelInfo.Find(message);
                 if (lvl == null) {
                     Player.SendMessage(p, "There is no level \"" + message + "\" loaded. Did you mean..");
                     Command.all.Find("search").Use(p, "levels " + message);

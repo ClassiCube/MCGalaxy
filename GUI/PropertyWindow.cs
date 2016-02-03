@@ -1515,9 +1515,9 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 try { name = lsMapNoUse.Items[lsMapNoUse.SelectedIndex].ToString(); }
                 catch { return; }
 
-                if ( Level.Find(name) == null )
+                if ( LevelInfo.Find(name) == null )
                     Command.all.Find("load").Use(null, name);
-                Level level = Level.Find(name);
+                Level level = LevelInfo.Find(name);
                 if ( level == null ) return;
 
                 Server.lava.AddMap(name);
@@ -1550,9 +1550,9 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 try { name = lsMapUse.Items[lsMapUse.SelectedIndex].ToString(); }
                 catch { return; }
 
-                if ( Level.Find(name) == null )
+                if ( LevelInfo.Find(name) == null )
                     Command.all.Find("load").Use(null, name);
-                Level level = Level.Find(name);
+                Level level = LevelInfo.Find(name);
                 if ( level == null ) return;
 
                 Server.lava.RemoveMap(name);
@@ -1942,7 +1942,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                     return;
                 }
                 string[] split = slctd.Split(new string[] { " - " }, StringSplitOptions.None);
-                TntWarsGame.GuiLoaded = TntWarsGame.Find(Level.Find(split[0]));
+                TntWarsGame.GuiLoaded = TntWarsGame.Find(LevelInfo.Find(split[0]));
                 LoadTNTWarsTab(sender, e);
             }
             catch { }
@@ -1955,7 +1955,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         private void TntWrsCrtNwTntWrsBt_Click(object sender, EventArgs e) {
             TntWarsGame it = null;
             try {
-                it = new TntWarsGame(Level.Find(TntWrsMpsList.Items[TntWrsMpsList.SelectedIndex].ToString()));
+                it = new TntWarsGame(LevelInfo.Find(TntWrsMpsList.Items[TntWrsMpsList.SelectedIndex].ToString()));
             }
             catch { }
             if ( it == null ) return;

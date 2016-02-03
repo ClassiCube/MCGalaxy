@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
             if (param.Length == 2)     // /move name map
             {
                 Player who = PlayerInfo.Find(param[0]);
-                Level where = Level.Find(param[1]);
+                Level where = LevelInfo.Find(param[1]);
                 if (who == null) { Player.SendMessage(p, "Could not find player specified"); return; }
                 if (where == null) { Player.SendMessage(p, "Could not find level specified"); return; }
                 if (p != null && who.group.Permission > p.group.Permission) { Player.SendMessage(p, "Cannot move someone of greater rank"); return; }

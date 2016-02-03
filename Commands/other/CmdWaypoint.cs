@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Waypoints:");
                 foreach (Waypoint wp in p.Waypoints)
                 {
-                    if (Level.Find(wp.lvlname) != null)
+                    if (LevelInfo.Find(wp.lvlname) != null)
                     {
                         Player.SendMessage(p, wp.name + ":" + wp.lvlname);
                     }

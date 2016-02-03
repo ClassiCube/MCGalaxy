@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Warps:");
                 foreach (Warp.Wrp wr in Warp.Warps)
                 {
-                    if (Level.Find(wr.lvlname) != null)
+                    if (LevelInfo.Find(wr.lvlname) != null)
                     {
                         Player.SendMessage(p, wr.name + " : " + wr.lvlname);
                         Thread.Sleep(300); // I feel this is needed so that if there are a lot of warps, they do not immediatly go off the screen!
@@ -137,7 +137,7 @@ namespace MCGalaxy.Commands
                 {
                     Warp.Wrp w = new Warp.Wrp();
                     w = Warp.GetWarp(par0);
-                    Level lvl = Level.Find(w.lvlname);
+                    Level lvl = LevelInfo.Find(w.lvlname);
                     if (lvl != null)
                     {
                         if (p.level != lvl)

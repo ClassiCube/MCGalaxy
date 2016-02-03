@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message)
         {
-            Level lvl = message == "" ? p.level : Level.Find(message);
+            Level lvl = message == "" ? p.level : LevelInfo.Find(message);
             if (lvl == null) { Player.SendMessage(p, "Could not find specified level."); return; }
 
             Player.SendMessage(p, "&b" + lvl.name + Server.DefaultColor + ": Width=" + lvl.Width + " Height=" + lvl.Height + " Depth=" + lvl.Length);

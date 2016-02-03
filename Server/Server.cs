@@ -685,7 +685,7 @@ namespace MCGalaxy
                                 if (!key.Equals(mainLevel.name))
                                 {
                                     Command.all.Find("load").Use(null, key + " " + value);
-                                    Level l = Level.FindExact(key);
+                                    Level l = LevelInfo.FindExact(key);
                                 }
                                 else
                                 {

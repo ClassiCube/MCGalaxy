@@ -228,7 +228,7 @@ namespace MCGalaxy
                 File.Delete("levels/ctf.lvl");
             File.Copy("CTF/maps/" + mapname + ".lvl", "levels/ctf.lvl");
             Command.all.Find("load").Use(null, "ctf");
-            mainlevel = Level.Find("ctf");
+            mainlevel = LevelInfo.Find("ctf");
         }
         /// <summary>
         /// Create a new CTF object
@@ -272,7 +272,7 @@ namespace MCGalaxy
             tagging.Dispose();
             mainlevel = null;
             started = false;
-            if (Level.Find("ctf") != null)
+            if (LevelInfo.Find("ctf") != null)
                 Command.all.Find("unload").Use(null, "ctf");
         }
         void tagging_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -358,7 +358,7 @@ namespace MCGalaxy
         /// </summary>
         public void Start()
         {
-            if (Level.Find("ctf") != null)
+            if (LevelInfo.Find("ctf") != null)
             {
                 Command.all.Find("unload").Use(null, "ctf");
                 Thread.Sleep(1000);

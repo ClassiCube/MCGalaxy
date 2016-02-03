@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
                         l.Unload(true, true);
                 });
             } else {
-                Level level = Level.Find(name);
+                Level level = LevelInfo.Find(name);
                 if (level == null) {
                     Player.SendMessage(p, "There is no level \"" + name + "\" loaded.");
                 } else if (!level.Unload()) {

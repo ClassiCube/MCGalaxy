@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "" || message.Split().Length > 1) { Help(p); return; }
-            Level foundLevel = Level.Find(message);
+            Level foundLevel = LevelInfo.Find(message);
             if (foundLevel != null) {
                 if (foundLevel.permissionbuild > p.group.Permission) {
                     Player.SendMessage(p, "%cYou can't delete levels with a perbuild rank higher than yours!");

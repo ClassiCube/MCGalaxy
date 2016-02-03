@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands
                     try
                     {
                         Pos = who.UndoBuffer[CurrentPos];
-                        Level foundLevel = Level.Find(Pos.mapName);
+                        Level foundLevel = LevelInfo.Find(Pos.mapName);
                         if (foundLevel == p.level)
                         {
                             b = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands
                 {
                     if (Convert.ToDateTime(fileContent[(i * 7) + 4].Replace('&', ' ')).AddSeconds(seconds) >= DateTime.Now)
                     {
-                        Level foundLevel = Level.Find(fileContent[i * 7]);
+                        Level foundLevel = LevelInfo.Find(fileContent[i * 7]);
                         if (foundLevel != null && foundLevel == p.level)
                         {
                             Pos.mapName = foundLevel.name;

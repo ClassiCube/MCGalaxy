@@ -106,7 +106,7 @@ namespace MCGalaxy.Commands
 						}
 						else
 						{
-							Level lvl = Level.Find(text[1]);
+							Level lvl = LevelInfo.Find(text[1]);
 							if (lvl == null)
 							{
 								Player.SendMessage(p, "TNT Wars Error: Couldn't find level '" + text[1] + "'");
@@ -673,7 +673,7 @@ namespace MCGalaxy.Commands
                                 }
                                 else
                                 {
-                                    it.lvl = Level.Find(text[2]);
+                                    it.lvl = LevelInfo.Find(text[2]);
                                     if (it.lvl == null)
                                     {
                                         Player.SendMessage(p, "TNT Wars Error: '" + text[2] + "' is not a level!");

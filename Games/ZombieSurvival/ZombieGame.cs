@@ -418,7 +418,7 @@ namespace MCGalaxy
                     }
                     Level current = Server.mainLevel;
 
-                    if (Server.lastLevelVote1 == level || Server.lastLevelVote2 == level2 || Server.lastLevelVote1 == level2 || Server.lastLevelVote2 == level || current == Level.Find(level) || currentZombieLevel == level || current == Level.Find(level2) || currentZombieLevel == level2)
+                    if (Server.lastLevelVote1 == level || Server.lastLevelVote2 == level2 || Server.lastLevelVote1 == level2 || Server.lastLevelVote2 == level || current == LevelInfo.Find(level) || currentZombieLevel == level || current == LevelInfo.Find(level2) || currentZombieLevel == level2)
                         goto LevelChoice;
                     else if (selectedLevel1 == "") { selectedLevel1 = level; goto LevelChoice; }
                     else
@@ -565,7 +565,7 @@ namespace MCGalaxy
             String oldLevel = Server.mainLevel.name;
             if (changeMainLevel)
             {
-                Server.mainLevel = Level.Find(next.ToLower());
+                Server.mainLevel = LevelInfo.Find(next.ToLower());
                 PlayerInfo.players.ForEach(delegate(Player player)
                 {
                     if (player.level.name != next && player.level.name == currentLevelName)

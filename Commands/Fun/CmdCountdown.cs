@@ -312,7 +312,7 @@ namespace MCGalaxy.Commands
                         try
                         {
                             Command.all.Find("load").Use(null, "countdown");
-                            Server.Countdown.mapon = Level.FindExact("countdown");
+                            Server.Countdown.mapon = LevelInfo.FindExact("countdown");
                             Server.Countdown.gamestatus = CountdownGameStatus.Enabled;
                             Player.GlobalMessage("Countdown has been enabled!!");
                         }
