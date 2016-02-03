@@ -611,11 +611,6 @@
     <Compile Include="SharkBite.Thresher\TextColor.cs" />
     <Compile Include="SharkBite.Thresher\UserInfo.cs" />
     <Compile Include="SharkBite.Thresher\WhoisInfo.cs" />
-    <Compile Include="properties\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="util\CP437Reader.cs" />
     <Compile Include="util\CP437Writer.cs" />
     <Compile Include="Util\ExtrasCollection.cs" />
@@ -631,11 +626,6 @@
     <Compile Include="Util\MathHelper.cs" />
     <Compile Include="Util\MCForgeScripter.cs" />
     <Compile Include="Util\SCOGenerator.cs" />
-    <EmbeddedResource Include="properties\Resources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <Compile Include="Player\Player.CPE.cs" />
     <Compile Include="Database\PlayerDB.cs" />
   </ItemGroup>
