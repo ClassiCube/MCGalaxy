@@ -46,15 +46,8 @@ namespace MCGalaxy.Commands
                     if (p.canusereview)
                     {
                         Group gre = Group.findPerm(Server.reviewenter);
-                        if (gre == null)
-                        {
-                            Player.SendMessage(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
-                            Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
-                            Chat.GlobalMessageAdmins("The group permission that is messed up is: " + Server.reviewenter.ToString() + " (" + (int)Server.reviewenter + ")");
-                            return;
-                        }
-                        LevelPermission lpe = gre.Permission;
-                        if (p.group.Permission >= lpe)
+                        if (gre == null) { MessageNoPerm(p, Server.reviewenter); return; }
+                        if (p.group.Permission >= gre.Permission)
                         {
                             foreach (string testwho in Server.reviewlist)
                             {
@@ -128,17 +121,9 @@ namespace MCGalaxy.Commands
                         return;
                     }
                     Group grv = Group.findPerm(Server.reviewview);
+                    if (grv == null) { MessageNoPerm(p, Server.reviewview); return; }
 
-                    if (grv == null)
-                    {
-                        Player.SendMessage(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
-                        Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
-                        Chat.GlobalMessageAdmins("The group permission that is messed up is: " + Server.reviewview.ToString() + " (" + (int)Server.reviewview + ")");
-                        return;
-                    }
-
-                    LevelPermission lpv = grv.Permission;
-                    if (p.group.Permission >= lpv && p != null)
+                    if (p.group.Permission >= grv.Permission && p != null)
                     {
                         if (Server.reviewlist.Count != 0)
                         {
@@ -165,17 +150,9 @@ namespace MCGalaxy.Commands
                         return;
                     }
                     Group grl = Group.findPerm(Server.reviewleave);
+                    if (grl == null) { MessageNoPerm(p, Server.reviewleave); return; }
 
-                    if (grl == null)
-                    {
-                        Player.SendMessage(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
-                        Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
-                        Chat.GlobalMessageAdmins("The group permission that is messed up is: " + Server.reviewleave.ToString() + " (" + (int)Server.reviewleave + ")");
-                        return;
-                    }
-
-                    LevelPermission lpl = grl.Permission;
-                    if (p.group.Permission >= lpl)
+                    if (p.group.Permission >= grl.Permission)
                     {
                         bool leavetest = false;
                         foreach (string testwho2 in Server.reviewlist)
@@ -210,17 +187,9 @@ namespace MCGalaxy.Commands
                         return;
                     }
                     Group grn = Group.findPerm(Server.reviewnext);
+                    if (grn == null) { MessageNoPerm(p, Server.reviewnext); }
 
-                    if (grn == null)
-                    {
-                        Player.SendMessage(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
-                        Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
-                        Chat.GlobalMessageAdmins("The group permission that is messed up is: " + Server.reviewnext.ToString() + " (" + (int)Server.reviewnext + ")");
-                        return;
-                    }
-
-                    LevelPermission lpn = grn.Permission;
-                    if (p.group.Permission >= lpn)
+                    if (p.group.Permission >= grn.Permission)
                     {
                         if (Server.reviewlist.Count == 0)
                         {
@@ -260,39 +229,27 @@ namespace MCGalaxy.Commands
                     break;
 
                 case "clear":
-                    if (p == null)
-                    {
-                        Server.reviewlist.Clear();
-                        Player.SendMessage(p, "The review queue has been cleared");
-                        return;
-                    }
                     Group grc = Group.findPerm(Server.reviewclear);
+                    if (grc == null) { MessageNoPerm(p, Server.reviewclear); return; }
 
-                    if (grc == null)
-                    {
-                        Player.SendMessage(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
-                        Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
-                        Chat.GlobalMessageAdmins("The group permission that is messed up is: " + Server.reviewclear.ToString() + " (" + (int)Server.reviewclear + ")");
-                        return;
-                    }
-
-                    LevelPermission lpc = grc.Permission;
-                    if (p.group.Permission >= lpc)
-                    {
+                    if (p == null || p.group.Permission >= grc.Permission) {
                         Server.reviewlist.Clear();
                         Player.SendMessage(p, "The review queue has been cleared");
-                        return;
-                    }
-                    else
-                    {
-                        Player.SendMessage(p, "&cYou have no permission to clear the Review Queue!");
-                    }
-                    break;
-                default: Help(p); return;
+                    } else {
+                        Player.SendMessage(p, "&cYou do not have permission to clear the review queue.");
+                    } break;
+                default: 
+                    Help(p); return;
             }
         }
-        public override void Help(Player p)
-        {
+        
+        static void MessageNoPerm(Player p, LevelPermission perm) {
+            Player.SendMessage(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
+            Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
+            Chat.GlobalMessageAdmins("The group permission that is messed up is: " + perm + " (" + (int)perm+ ")");                      
+        }
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/review <enter/view/leave/next/clear> - Lets you enter, view, leave, or clear the reviewlist or teleport you to the next player in the review queue.");
         }
     }

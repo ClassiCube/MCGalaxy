@@ -644,7 +644,7 @@ namespace MCGalaxy
             string value = LevelInfo.FindOfflineProperty(givenName, "loadongoto");
             if (value == null) return true;
             bool load;
-            if (!bool.Parse(value)) return true;
+            if (!bool.TryParse(value, out load)) return true;
             return load;
         }
 
