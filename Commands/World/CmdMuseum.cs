@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands
 					level.jailrotx = level.rotx; level.jailroty = level.roty;
 
 					p.Loading = true;
-					foreach (Player pl in Player.players) if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
+					foreach (Player pl in PlayerInfo.players) if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
 					foreach (PlayerBot b in PlayerBot.playerbots) if (p.level == b.level) p.SendDespawn(b.id);
 
 					Player.GlobalDespawn(p, true);

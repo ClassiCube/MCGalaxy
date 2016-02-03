@@ -42,8 +42,8 @@ namespace MCGalaxy.Commands
                 int pos = message.IndexOf(' ');
                 string t = message.Substring(0, pos).ToLower();
                 string s = message.Substring(pos + 1).ToLower();
-                Player who = Player.Find(t);
-                Player who2 = Player.Find(s);
+                Player who = PlayerInfo.Find(t);
+                Player who2 = PlayerInfo.Find(s);
                 if (who == null)
                 {
                     if (who2 == null)

@@ -669,7 +669,7 @@ namespace MCGalaxy
                         }
                     }
                     gamestatus = CountdownGameStatus.Enabled;
-                    foreach (Player pl in Player.players)
+                    foreach (Player pl in PlayerInfo.players)
                     {
                         if (pl.playerofcountdown)
                         {
@@ -701,7 +701,7 @@ namespace MCGalaxy
                     playersleft = 0;
                     playersleftlist.Clear();
                     players.Clear();
-                    foreach (Player pl in Player.players)
+                    foreach (Player pl in PlayerInfo.players)
                     {
                         pl.playerofcountdown = false;
                         pl.incountdown = false;
@@ -732,7 +732,7 @@ namespace MCGalaxy
 
         public void MessagePlayers(string message)
         {
-            foreach (Player pl in Player.players)
+            foreach (Player pl in PlayerInfo.players)
             {
                 if (pl.playerofcountdown)
                 {

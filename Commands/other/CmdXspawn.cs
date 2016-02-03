@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
 		public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override void Use(Player p, string message)
         {
-            Player player = Player.Find(message.Split(' ')[0]);
+            Player player = PlayerInfo.Find(message.Split(' ')[0]);
             if (player == null)
             {
                 Player.SendMessage(p, "Error: " + player.color + player.name + Server.DefaultColor + " was not found");

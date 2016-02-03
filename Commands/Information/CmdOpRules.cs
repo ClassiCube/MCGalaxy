@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands
             Player who = null;
             if (message != "")
             {
-                who = Player.Find(message);
+                who = PlayerInfo.Find(message);
                  if (p.group.Permission < who.group.Permission) { Player.SendMessage(p, "You cant send /oprules to another player!"); return; }
             }
             else

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
                 message = message.Remove(0, 1).Trim();
             }
 
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
 
             if (who == null)
             {

@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
 			if (message == "") { Help(p); return; }
 			string[] parts = message.Split(trimChars, 2);
 			
-			Player who = Player.Find(parts[0]);
+			Player who = PlayerInfo.Find(parts[0]);
 			if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
 			if (p != null && who.group.Permission > p.group.Permission) {
 				Player.SendMessage(p, "Cannot change the nick of someone of greater rank"); return;

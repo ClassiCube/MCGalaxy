@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
 
             if (Server.voteKickInProgress) { Player.SendMessage(p, "Please wait for the current vote to finish!"); return; }
 
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             if (who == null)
             {
                 Player.SendMessage(p, "Could not find player specified!");
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
 
             // 1/3rd of the players must vote or nothing happens
             // Keep it at 0 to disable min number of votes
-            Server.voteKickVotesNeeded = 3; //(int)(Player.players.Count / 3) + 1;
+            Server.voteKickVotesNeeded = 3; //(int)(PlayerInfo.players.Count / 3) + 1;
             Server.voteKickInProgress = true;
 
             System.Timers.Timer voteTimer = new System.Timers.Timer(30000);
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands
                 int votesYes = 0;
                 int votesNo = 0;
 
-                Player.players.ForEach(delegate(Player pl)
+                PlayerInfo.players.ForEach(delegate(Player pl)
                 {
                     // Tally the votes
                     if (pl.voteKickChoice == VoteKickChoice.Yes) votesYes++;

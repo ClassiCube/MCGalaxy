@@ -38,7 +38,7 @@ namespace MCGalaxy
             }
             else
             {
-                Player who = Player.Find(message);
+                Player who = PlayerInfo.Find(message);
                 if (who != null)
                 {
                     if (!who.jailed)

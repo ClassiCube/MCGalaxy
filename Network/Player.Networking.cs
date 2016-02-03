@@ -662,7 +662,7 @@ namespace MCGalaxy {
         	if (packet == null) return;
         	
         	try {
-        		foreach (Player p in players) {
+        		foreach (Player p in PlayerInfo.players) {
         			if (p != this && p.level == level)
         				p.SendRaw(packet);
         		}

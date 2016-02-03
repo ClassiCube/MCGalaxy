@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
 
                 if (param[0] == "player")
                 {
-                    Player who = Player.Find(param[1]);
+                    Player who = PlayerInfo.Find(param[1]);
 
                     if (who == null)
                     {

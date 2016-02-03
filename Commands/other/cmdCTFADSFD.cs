@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands
                     else if (message.Split(' ')[1].ToLower() == "add")
                     {
                         if (message.Split(' ').Length < 4) { Help(p); return; }
-                        Player newPlayer = Player.Find(message.Split(' ')[2].ToLower());
+                        Player newPlayer = PlayerInfo.Find(message.Split(' ')[2].ToLower());
                         if (newPlayer == null) { Help(p); return; }
                         string color = c.Parse(message.Split(' ')[3].ToLower());
                         AddTeamMember(p, newPlayer, color);
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands
                     else if (message.Split(' ')[1].ToLower() == "remove")
                     {
                         if (message.Split(' ').Length < 3) { Help(p); return; }
-                        Player newPlayer = Player.Find(message.Split(' ')[2].ToLower());
+                        Player newPlayer = PlayerInfo.Find(message.Split(' ')[2].ToLower());
                         Team workTeam = newPlayer.level.teams.Find(team => team.color == newPlayer.onTeam);
                         workTeam.removePlayer(newPlayer);
                         if (newPlayer == null) { Help(p); return; }

@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands
         private static void SendEstimation(Player p)
         {
             Player.SendMessage(p, String.Format("{0} blocks every {1} milliseconds = {2} blocks per second.", BlockQueue.blockupdates, BlockQueue.time, BlockQueue.blockupdates * (1000 / BlockQueue.time)));
-            Player.SendMessage(p, String.Format("Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000, Player.players.Count, Player.players.Count * ((BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000)));
+            Player.SendMessage(p, String.Format("Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000, PlayerInfo.players.Count, PlayerInfo.players.Count * ((BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000)));
         }
         public override void Help(Player p)
         {

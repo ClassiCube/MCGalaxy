@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             if (Server.server_owner == "Notch" || Server.server_owner == "")
             {
                 Player.SendMessage(p, "Please tell the server owner to change the 'Server Owner' property.");

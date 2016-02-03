@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             {
                 if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this))
                 { Player.SendMessage(p, "You can't send the FAQ to another player!"); return; }
-                who = Player.Find(message);
+                who = PlayerInfo.Find(message);
             }
             else
             {

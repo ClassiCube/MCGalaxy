@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             string value = args[1];
             
             if (args[0] == "zombie") {
-                Player who = Player.Find(value);
+                Player who = PlayerInfo.Find(value);
                 if (who == null) {
                     p.SendMessage(value + " is not online.");
                 } else {

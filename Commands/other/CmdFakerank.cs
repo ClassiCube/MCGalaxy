@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
 	  
          if (message == ""){Help(p); return;}
 		 
-         Player plr = Player.Find(message.Split (' ')[0]);
+         Player plr = PlayerInfo.Find(message.Split (' ')[0]);
          Group grp = Group.Find(message.Split (' ')[1]);
 		 
          if (plr == null)

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
 		{
             if(message == "") { Help(p); return; }
 
-			Player pl = Player.Find(message);
+			Player pl = PlayerInfo.Find(message);
 			if (pl != null && !pl.hidden)
 			{
 				Player.SendMessage(p, pl.color + pl.name + Server.DefaultColor + " is currently online.");

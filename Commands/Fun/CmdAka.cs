@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             ushort x = p.pos[0], y = p.pos[1], z = p.pos[2];
 
             p.Loading = true;
-            foreach (Player pl in Player.players)
+            foreach (Player pl in PlayerInfo.players)
                 if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
             foreach (PlayerBot b in PlayerBot.playerbots)
                 if (p.level == b.level) p.SendDespawn(b.id);
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
                 p.SendPos(0xFF, x, y, z, p.level.rotx, p.level.roty);
             }
             
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in PlayerInfo.players) {
                 if (pl.level != p.level || p == pl || pl.hidden || pl.referee)
                     continue;
                 

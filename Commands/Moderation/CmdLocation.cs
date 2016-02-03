@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             Player who = null;
             string searchip = "";
             string name;
-            who = Player.Find(message);
+            who = PlayerInfo.Find(message);
             if (who == null)
             {
                 Player.SendMessage(p, Colors.red + "Could not find player " + message + " ...searching in database");

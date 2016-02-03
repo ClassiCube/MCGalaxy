@@ -842,11 +842,11 @@ namespace MCGalaxy
                     while (true)
                     {
                         Thread.Sleep(3);
-                        for (i = 0; i < Player.players.Count; i++)
+                        for (i = 0; i < PlayerInfo.players.Count; i++)
                         {
                             try
                             {
-                                p = Player.players[i];
+                                p = PlayerInfo.players[i];
 
                                 if (p.frozen)
                                 {
@@ -854,7 +854,7 @@ namespace MCGalaxy
                                 }
                                 else if (p.following != "")
                                 {
-                                    who = Player.Find(p.following);
+                                    who = PlayerInfo.Find(p.following);
                                     if (who == null || who.level != p.level)
                                     {
                                         p.following = "";
@@ -879,7 +879,7 @@ namespace MCGalaxy
                                 }
                                 else if (p.possess != "")
                                 {
-                                    who = Player.Find(p.possess);
+                                    who = PlayerInfo.Find(p.possess);
                                     if (who == null || who.level != p.level)
                                         p.possess = "";
                                 }
@@ -926,7 +926,7 @@ namespace MCGalaxy
                 string api = "";
                 API API = new API();
                 API.max_players = (int)Server.players;
-                API.players = Player.players.Select(mc => mc.name).ToArray();
+                API.players = PlayerInfo.players.Select(mc => mc.name).ToArray();
                 API.chat = Player.Last50Chat.ToArray();
                 api = JsonConvert.SerializeObject(API, Formatting.Indented);
                 return api;
@@ -1032,17 +1032,17 @@ namespace MCGalaxy
         public static void Exit(bool AutoRestart)
         {
             List<string> players = new List<string>();
-            foreach (Player p in Player.players) { p.save(); players.Add(p.name); }
+            foreach (Player p in PlayerInfo.players) { p.save(); players.Add(p.name); }
             foreach (string p in players)
             {
                 if (!AutoRestart)
-                    Player.Find(p).Kick(Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.");
+                    PlayerInfo.Find(p).Kick(Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.");
                 else
-                    Player.Find(p).Kick("Server restarted! Rejoin!");
+                    PlayerInfo.Find(p).Kick("Server restarted! Rejoin!");
             }
             APIServer.Stop();
             InfoServer.Stop();
-            //Player.players.ForEach(delegate(Player p) { p.Kick("Server shutdown. Rejoin in 10 seconds."); });
+            //PlayerInfo.players.ForEach(delegate(Player p) { p.Kick("Server shutdown. Rejoin in 10 seconds."); });
             Player.connections.ForEach(
             delegate(Player p)
             {
@@ -1076,7 +1076,7 @@ namespace MCGalaxy
 
         public void PlayerListUpdate()
         {
-            if (Server.s.OnPlayerListChange != null) Server.s.OnPlayerListChange(Player.players);
+            if (Server.s.OnPlayerListChange != null) Server.s.OnPlayerListChange(PlayerInfo.players);
         }
 
         public void FailBeat()

@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands
 
             if (seconds == 0) seconds = 5400;
 
-            who = Player.Find(message.Split(' ')[0]);
+            who = PlayerInfo.Find(message.Split(' ')[0]);
             if (who != null)
             {
                 message = who.name + " " + seconds;

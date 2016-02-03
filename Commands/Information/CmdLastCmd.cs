@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
         {
             if (message == "")
             {
-                foreach (Player pl in Player.players)
+                foreach (Player pl in PlayerInfo.players)
                 {
                     if (pl.lastCMD.Contains("setpass") || pl.lastCMD.Contains("pass"))
                     {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player who = Player.Find(message);
+                Player who = PlayerInfo.Find(message);
                 if (who == null || who.group.Permission > p.group.Permission && who.hidden) { Player.SendMessage(p, "Could not find player entered"); return; }
                 if (who.lastCMD.Contains("setpass") || who.lastCMD.Contains("pass"))
                 {

@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
             
             string[] parts = message.Split(' ');
             bool undoPhysics = parts[0].ToLower() == "physics";
-            Player who = undoPhysics ? null : Player.Find(parts[0]);
+            Player who = undoPhysics ? null : PlayerInfo.Find(parts[0]);
             long seconds = GetSeconds(p, who, parts.Length > 1 ? parts[1] : "30");
             
             if (parts.Length > 1 && parts[1].ToLower() == "update") {

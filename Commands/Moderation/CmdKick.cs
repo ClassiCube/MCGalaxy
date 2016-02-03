@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            Player who = Player.Find(message.Split(' ')[0]);
+            Player who = PlayerInfo.Find(message.Split(' ')[0]);
             if (who == null) { Player.SendMessage(p, "Could not find player specified."); return; }
             if (message.Split(' ').Length > 1)
                 message = message.Substring(message.IndexOf(' ') + 1);

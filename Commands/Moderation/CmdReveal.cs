@@ -48,12 +48,12 @@ namespace MCGalaxy.Commands {
                     Player.SendMessage(p, "Reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + "+"); return; 
                 }
 
-                foreach (Player who in Player.players.ToArray()) {
+                foreach (Player who in PlayerInfo.players.ToArray()) {
                     if (who.level == lvl)
                         ReloadMap(p, who, true);
                 }
             } else {
-                Player who = Player.Find(parts[0]);
+                Player who = PlayerInfo.Find(parts[0]);
                 if (who == null) { 
                     Player.SendMessage(p, "Could not find player."); return; 
                 } else if (who.group.Permission > p.group.Permission && p != who) { 
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
         
         internal static void ReloadMap(Player p, Player who, bool showMessage) {
             who.Loading = true;
-            foreach (Player pl in Player.players.ToArray()) if (who.level == pl.level && who != pl) who.SendDespawn(pl.id);
+            foreach (Player pl in PlayerInfo.players.ToArray()) if (who.level == pl.level && who != pl) who.SendDespawn(pl.id);
             foreach (PlayerBot b in PlayerBot.playerbots.ToArray()) if (who.level == b.level) who.SendDespawn(b.id);
 
             ushort x = who.pos[0], y = who.pos[1], z = who.pos[2];
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands {
             else
                 who.SendPos(0xFF, x, y, z, who.level.rotx, who.level.roty);
 
-            foreach (Player pl in Player.players.ToArray())
+            foreach (Player pl in PlayerInfo.players.ToArray())
                 if (pl.level == who.level && who != pl && !pl.hidden)
                     who.SendSpawn(pl.id, pl.color + pl.name, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);
 

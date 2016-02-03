@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
                     }
                     else
                     {
-                        Player player = Player.Find(message);
+                        Player player = PlayerInfo.Find(message);
 
                         if (player != null)
                         {

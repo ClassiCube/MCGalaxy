@@ -76,7 +76,7 @@ namespace MCGalaxy {
 
             if (kill)
             {
-                foreach (Player p in Player.players)
+                foreach (Player p in PlayerInfo.players)
                 {
                     if ((ushort)(p.pos[0] / 32) == x)
                     {
@@ -94,7 +94,7 @@ namespace MCGalaxy {
             if (Waypoints.Count == 0)
             {
                 if (hunt)
-                    Player.players.ForEach(delegate(Player p)
+                    PlayerInfo.players.ForEach(delegate(Player p)
                                            {
                                                if (p.level == level && !p.invincible)
                                                {
@@ -364,7 +364,7 @@ namespace MCGalaxy {
                 playerbots.Add(bot);        
             bot.GlobalSpawn();
             
-            foreach (Player p in Player.players) {
+            foreach (Player p in PlayerInfo.players) {
                 if (p.level == bot.level)
                     Player.SendMessage(p, bot.color + bot.name + "%S, the bot, has been added.");
             }
@@ -396,14 +396,14 @@ namespace MCGalaxy {
         }
 
         public void GlobalSpawn() {
-            Player.players.ForEach(p => {
+            PlayerInfo.players.ForEach(p => {
                                        if (p.level == level)
                                            p.SendSpawn(id, color + name, pos[0], pos[1], pos[2], rot[0], rot[1]);
                                    });
         }
 
         public void GlobalDespawn() {
-            Player.players.ForEach(p => {
+            PlayerInfo.players.ForEach(p => {
                                        if (p.level == level)
                                            p.SendDespawn(id);
                                    });
@@ -417,7 +417,7 @@ namespace MCGalaxy {
             if (packet == null) return;
             
             try {
-                foreach (Player p in Player.players) {
+                foreach (Player p in PlayerInfo.players) {
                     if (p.level == level)
                         p.SendRaw(packet);
                 }

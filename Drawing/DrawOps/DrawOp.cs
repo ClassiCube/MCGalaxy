@@ -107,7 +107,7 @@ namespace MCGalaxy {
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);
             if (needReveal) {
-                foreach (Player pl in Player.players) {
+                foreach (Player pl in PlayerInfo.players) {
                     if (pl.level.name.ToLower() == p.level.name.ToLower())
                         Command.all.Find("reveal").Use(p, pl.name);
                 }

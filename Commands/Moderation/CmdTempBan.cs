@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             if (message.IndexOf(' ') == -1) message = message + " 60";
 
-            Player who = Player.Find(message.Split(' ')[0]);
+            Player who = PlayerInfo.Find(message.Split(' ')[0]);
             if (who == null) { Player.SendMessage(p, "Could not find player"); return; }
             if (p != null && who.group.Permission >= p.group.Permission) { Player.SendMessage(p, "Cannot ban someone of the same rank"); return; }
             int minutes;

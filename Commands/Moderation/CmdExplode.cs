@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
             
             ushort x, y, z;
             if (args.Length == 1) {
-                Player who = Player.Find(message);
+                Player who = PlayerInfo.Find(message);
                 if (who == null || who.hidden) {
                     Player.SendMessage(p, "The specified player does not exist!"); return;
                 }                

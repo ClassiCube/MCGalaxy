@@ -26,7 +26,7 @@ namespace MCGalaxy {
             if (showname) {
                 message = "<Level>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if (p.level == from.level && p.Chatroom == null)
                         SendGlobalMessage(p, from, message);
@@ -38,7 +38,7 @@ namespace MCGalaxy {
             if ( showname ) {
                 message = "<GlobalChatRoom> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if ( p.Chatroom != null )
                         SendGlobalMessage(p, from, message);
@@ -52,12 +52,12 @@ namespace MCGalaxy {
             if ( showname ) {
                 message = "<ChatRoom: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if (p.Chatroom == chatroom)
                         SendGlobalMessage(p, from, message);
                 });
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if ( p.spyChatRooms.Contains(chatroom) && p.Chatroom != chatroom )
                         SendGlobalMessage(p, from, message);
@@ -69,7 +69,7 @@ namespace MCGalaxy {
             if ( showname ) {
                 message = "<World>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if ( p.level.worldChat && p.Chatroom == null )
                         SendGlobalMessage(p, from, message);
@@ -77,7 +77,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalMessageLevel(Level l, string message) {
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if ( p.level == l && p.Chatroom == null )
                         Player.SendMessage(p, message);
@@ -85,7 +85,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalMessageOps(string message) {
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if (p.group.Permission >= Server.opchatperm)
                         Player.SendMessage(p, message);
@@ -93,7 +93,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalMessageAdmins(string message) {
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if (p.group.Permission >= Server.adminchatperm)
                         Player.SendMessage(p, message);
@@ -212,7 +212,7 @@ namespace MCGalaxy {
         }
         
         static void HandleWhisper(Player p, string target, string message) {
-            Player who = Player.Find(target);
+            Player who = PlayerInfo.Find(target);
             if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
             if (who == p) { Player.SendMessage(p, "Trying to talk to yourself, huh?"); return; }
             

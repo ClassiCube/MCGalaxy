@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
                 Help(p);
             }
            
-            Player who = Player.Find(player);
+            Player who = PlayerInfo.Find(player);
             
             
             if (player == "") { Player.SendMessage(p, "&cYou have to enter a player!"); return; }          
@@ -91,7 +91,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "&cYou cannot assign yourself a temporary rank!");
                 return;
             }
-            Player who3 = Player.Find(player);
+            Player who3 = PlayerInfo.Find(player);
             if (who3.group.Permission >= p.group.Permission)
             {
                 Player.SendMessage(p, "Cannot change the temporary rank of someone equal or higher to yourself.");
@@ -142,7 +142,7 @@ namespace MCGalaxy.Commands
                     Group newgroup = Group.Find(rank);
                     Command.all.Find("setrank").Use(null, who.name + " " + newgroup.name);
                     Player.SendMessage(p, "Temporary rank (" + rank + ") is assigned succesfully to " + player + " for " + period + " hours");
-                    Player who2 = Player.Find(player);
+                    Player who2 = PlayerInfo.Find(player);
                     Player.SendMessage(who2, "Your Temporary rank (" + rank + ") is assigned succesfully for " + period + " hours");
                 }
             

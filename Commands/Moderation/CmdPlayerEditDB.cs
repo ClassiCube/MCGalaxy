@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
-            Player who = Player.Find(args[0]);
+            Player who = PlayerInfo.Find(args[0]);
             if (who == null) {
                 Database.AddParams("@Name", args[0]);
                 string syntax = Server.useMySQL ? "SELECT * FROM players WHERE Name=@Name COLLATE utf8_general_ci" :

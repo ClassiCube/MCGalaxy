@@ -246,7 +246,7 @@ namespace MCGalaxy.Commands
                         case "everyone":
 							if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
                             {
-                                foreach (Player who in Player.players)
+                                foreach (Player who in PlayerInfo.players)
                                 {
                                     Player.SendMessage(who, "TNT Wars Rules: (sent to all players by " + p.color + p.name + Server.DefaultColor + " )");
                                     Player.SendMessage(who, "The aim of the game is to blow up people using TNT!");
@@ -312,7 +312,7 @@ namespace MCGalaxy.Commands
 						default:
                             if (text[1] != null && (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
                             {
-                                Player who = Player.Find(text[1]);
+                                Player who = PlayerInfo.Find(text[1]);
                                 if (who != null)
                                 {
                                     Player.SendMessage(who, "TNT Wars Rules: (sent to you by " + p.color + p.name + Server.DefaultColor + " )");

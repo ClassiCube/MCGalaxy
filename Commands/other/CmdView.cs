@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands
                 Player who = null;
                 if (message.IndexOf(' ') != -1)
                 {
-                    who = Player.Find(message.Split(' ')[message.Split(' ').Length - 1]);
+                    who = PlayerInfo.Find(message.Split(' ')[message.Split(' ').Length - 1]);
                     if (who != null)
                         message = message.Substring(0, message.LastIndexOf(' '));
                 }

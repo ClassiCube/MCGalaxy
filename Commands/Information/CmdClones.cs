@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
 
 			string originalName = message.ToLower();
 
-			Player who = Player.Find(message);
+			Player who = PlayerInfo.Find(message);
 			if (who == null)
 			{
 				Player.SendMessage(p, "Could not find player. Searching Player DB.");

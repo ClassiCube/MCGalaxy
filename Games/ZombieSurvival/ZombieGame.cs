@@ -115,7 +115,7 @@ namespace MCGalaxy
             Thread.Sleep(1000); if (!Server.ZombieModeOn) { return; }
             Server.zombieRound = true;
             int playerscountminusref = 0; List<Player> players = new List<Player>();
-            foreach (Player playere in Player.players)
+            foreach (Player playere in PlayerInfo.players)
             {
                 if (playere.referee)
                 {
@@ -142,7 +142,7 @@ namespace MCGalaxy
             int firstinfect = random.Next(players.Count());
             Player player = null;
             if (Server.queZombie)
-                player = Player.Find(Server.nextZombie);
+                player = PlayerInfo.Find(Server.nextZombie);
             else
                 player = players[firstinfect];
 
@@ -163,7 +163,7 @@ namespace MCGalaxy
             timer.Elapsed += new ElapsedEventHandler(EndRound);
             timer.Enabled = true;
 
-            foreach (Player playaboi in Player.players)
+            foreach (Player playaboi in PlayerInfo.players)
             {
                 if(playaboi != player)
                 alive.Add(playaboi);
@@ -171,7 +171,7 @@ namespace MCGalaxy
 
             infectd.Clear();
             if (Server.queZombie)
-            infectd.Add(Player.Find(Server.nextZombie));
+            infectd.Add(PlayerInfo.Find(Server.nextZombie));
             else
             infectd.Add(player);
             aliveCount = alive.Count;
@@ -285,7 +285,7 @@ namespace MCGalaxy
             string playersString = "";
             if (aliveCount == 0)
             {
-                foreach (Player winners in Player.players)
+                foreach (Player winners in PlayerInfo.players)
                 {
                     if (winners.level.name == currentLevelName)
                     {
@@ -315,7 +315,7 @@ namespace MCGalaxy
                 });
             }
             Player.GlobalMessage(playersString);
-            foreach (Player winners in Player.players)
+            foreach (Player winners in PlayerInfo.players)
             {
                 if (!winners.CheckIfInsideBlock() && aliveCount == 0 && winners.level.name == currentLevelName)
                 {
@@ -354,7 +354,7 @@ namespace MCGalaxy
                 }
             }
             try {alive.Clear(); infectd.Clear(); } catch{ }
-            foreach (Player player in Player.players)
+            foreach (Player player in PlayerInfo.players)
             {
                 player.infected = false;
                 player.color = player.group.color;
@@ -461,7 +461,7 @@ namespace MCGalaxy
                         }
                         ChangeLevel(selectedLevel2, Server.ZombieOnlyServer);
                     }
-                    Player.players.ForEach(delegate(Player winners)
+                    PlayerInfo.players.ForEach(delegate(Player winners)
                     {
                         winners.voted = false;
                     });
@@ -566,7 +566,7 @@ namespace MCGalaxy
             if (changeMainLevel)
             {
                 Server.mainLevel = Level.Find(next.ToLower());
-                Player.players.ForEach(delegate(Player player)
+                PlayerInfo.players.ForEach(delegate(Player player)
                 {
                     if (player.level.name != next && player.level.name == currentLevelName)
                     {

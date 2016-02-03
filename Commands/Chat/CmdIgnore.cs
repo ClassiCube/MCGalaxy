@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
                 }
                 return;
             }
-            Player who = Player.Find(message.Split(' ')[0]);
+            Player who = PlayerInfo.Find(message.Split(' ')[0]);
             if (who == null)
             {
                 Player.SendMessage(p, "Could not find player specified!");

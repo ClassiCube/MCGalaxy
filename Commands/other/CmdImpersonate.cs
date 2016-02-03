@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
 			if ((message == "")) { this.Help(p); }
 			else
 			{
-				Player player = Player.Find(message.Split(' ')[0]);
+				Player player = PlayerInfo.Find(message.Split(' ')[0]);
 				if (player != null)
 				{
 					if (p == null) { this.SendIt(p, message, player); }

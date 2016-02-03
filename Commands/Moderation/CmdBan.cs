@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             string banReason = reason == "-" ? "" : " (" + reason + ")";
             if (reason == "-") reason = "&c-";    
             reason = reason.Replace(" ", "%20");
-            Player who = Player.Find(args[0]);
+            Player who = PlayerInfo.Find(args[0]);
             
             string target = who == null ? args[0] : who.name;
             if (!Player.ValidName(target)) {

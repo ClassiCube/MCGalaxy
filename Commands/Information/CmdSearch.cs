@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands
             if (type.ToLower().Contains("player"))
             {
                 string players = "";
-                foreach (Player who in Player.players)
+                foreach (Player who in PlayerInfo.players)
                 {
                     if (who.name.ToLower().Contains(keyword.ToLower()))
                     {

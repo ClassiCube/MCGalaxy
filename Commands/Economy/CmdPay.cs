@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             if (message.IndexOf(' ') == -1) { Help(p); return; }
             if (message.Split(' ').Length != 2) { Help(p); return; }
 
-            Player who = Player.Find(message.Split(' ')[0]);
+            Player who = PlayerInfo.Find(message.Split(' ')[0]);
             Economy.EcoStats payer;
             Economy.EcoStats receiver;
 
@@ -44,8 +44,8 @@ namespace MCGalaxy.Commands
 
             if (who == null)
             { //player is offline
-                Player.OfflinePlayer off = Player.FindOffline(message.Split()[0]);
-                if (off.name == "") { Player.SendMessage(p, "%cThe player %f" + message.Split()[0] + Server.DefaultColor + "(offline)%c does not exist or has never logged on to this server"); return; }
+                OfflinePlayer off = PlayerInfo.FindOffline(message.Split()[0]);
+                if (off == null) { Player.SendMessage(p, "%cThe player %f" + message.Split()[0] + Server.DefaultColor + "(offline)%c does not exist or has never logged on to this server"); return; }
 
                 payer = Economy.RetrieveEcoStats(p.name);
                 receiver = Economy.RetrieveEcoStats(message.Split()[0]);

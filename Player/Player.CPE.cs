@@ -62,7 +62,7 @@ namespace MCGalaxy
                         ExtPlayerList = version;
                         spawned = true;
                         if (version > 0)
-                            Player.players.ForEach(delegate(Player p)
+                            PlayerInfo.players.ForEach(delegate(Player p)
                             {
                                 if (p.HasExtension("ExtPlayerList", 2) && p != this)
                                 {
@@ -172,7 +172,7 @@ namespace MCGalaxy
         }
         
         public void UpdateModels() {
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 p =>
                 {
                     if (p.level == this.level)

@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright 2011 MCGalaxy
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -47,7 +47,7 @@ namespace MCGalaxy
         }
         public static void TRExpiryCheck()
         {
-            foreach (Player p in Player.players)
+            foreach (Player p in PlayerInfo.players)
             {
                 foreach (string line3 in File.ReadAllLines("text/tempranks.txt"))
                 {
@@ -60,7 +60,7 @@ namespace MCGalaxy
                         int days = Convert.ToInt32(line3.Split(' ')[6]);
                         int months = Convert.ToInt32(line3.Split(' ')[7]);
                         int years = Convert.ToInt32(line3.Split(' ')[8]);
-                        Player who = Player.Find(player);
+                        Player who = PlayerInfo.Find(player);
                         DateTime ExpireDate = new DateTime(years, months, days, hours, minutes, 0);
                         DateTime tocheck = ExpireDate.AddHours(Convert.ToDouble(period));
                         DateTime tochecknow = DateTime.Now;

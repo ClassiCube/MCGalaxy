@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
                     }
                     else
                     {
-                        Player who = Player.Find(p.possess);
+                        Player who = PlayerInfo.Find(p.possess);
                         if (who == null)
                         {
                             p.possess = "";
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
                 }
                 else if (message == p.possess)
                 {
-                    Player who = Player.Find(p.possess);
+                    Player who = PlayerInfo.Find(p.possess);
                     if (who == null)
                     {
                         p.possess = "";
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player who = Player.Find(message);
+                    Player who = PlayerInfo.Find(message);
                     if (who == null)
                     {
                         Player.SendMessage(p, "Could not find player.");
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands
                     }
                     if (p.possess != "")
                     {
-                        Player oldwho = Player.Find(p.possess);
+                        Player oldwho = PlayerInfo.Find(p.possess);
                         if (oldwho != null)
                         {
                             oldwho.following = "";

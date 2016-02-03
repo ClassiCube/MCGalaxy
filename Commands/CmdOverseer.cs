@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
             } else if (cmd == "ZONE") {
                 HandleZoneCommand(p, arg, arg2);
             } else if (cmd == "KICKALL") {
-                Player.players.ForEach(
+                PlayerInfo.players.ForEach(
                     delegate(Player pl)
                     {
                         if (pl.level == p.level && pl.name != p.name)
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands
                     return;
                 }
                 
-                Player kicked = Player.Find(arg);
+                Player kicked = PlayerInfo.Find(arg);
                 if (kicked == null) {
                     p.SendMessage("Error: Player not found.");
                 } else {
@@ -296,7 +296,7 @@ namespace MCGalaxy.Commands
                 if (value == "") {
                     Player.SendMessage(p, "You did not specify a name to blacklist from your map."); return;
                 }
-                Player blocked = Player.Find(value);
+                Player blocked = PlayerInfo.Find(value);
                 if (blocked.name.StartsWith(p.name)) { Player.SendMessage(p, "You can't blacklist yourself"); return; }
                 if (blocked == null) { Player.SendMessage(p, "Cannot find player."); return; }
                 

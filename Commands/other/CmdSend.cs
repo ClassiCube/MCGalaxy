@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
         {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
 
-            Player who = Player.Find(message.Split(' ')[0]);
+            Player who = PlayerInfo.Find(message.Split(' ')[0]);
 
             string whoTo, fromname;
             if (who != null) whoTo = who.name;

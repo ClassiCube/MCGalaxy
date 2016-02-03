@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             string name = "";
             if (message[0] == '@') {
                 message = message.Remove(0, 1).Trim();
-                Player who = Player.Find(message);
+                Player who = PlayerInfo.Find(message);
 
                 if (who == null) {
                     DataTable ip;
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands {
                     message = who.ip;
                 }
             } else {
-                Player who = Player.Find(message);
+                Player who = PlayerInfo.Find(message);
                 if (who != null) {
                     name = who.name.ToLower();
                     message = who.ip;
@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands {
 
             // Check if IP belongs to an op+
             // First get names of active ops+ with that ip
-            List<string> opNamesWithThatIP = (from pl in Player.players where (pl.ip == message && pl.@group.Permission >= LevelPermission.Operator) select pl.name).ToList();
+            List<string> opNamesWithThatIP = (from pl in PlayerInfo.players where (pl.ip == message && pl.@group.Permission >= LevelPermission.Operator) select pl.name).ToList();
             // Next, add names from the database
             Database.AddParams("@IP", message);
             DataTable dbnames = Database.fillData("SELECT Name FROM Players WHERE IP = @IP");
@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands {
             Server.bannedIP.Save("banned-ip.txt", false);
 
             /*
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in PlayerInfo.players) {
                 if (message == pl.ip) { pl.Kick("Kicked by ipban"); }
             }*/
         }

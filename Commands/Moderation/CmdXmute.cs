@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
             }
 
             var split = message.Split(' ');
-            Player muter = Player.Find(split[0]);
+            Player muter = PlayerInfo.Find(split[0]);
             if (muter == null)
             {
                 Player.SendMessage(p, "Player not found.");

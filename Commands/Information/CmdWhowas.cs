@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            Player pl = Player.Find(message);
+            Player pl = PlayerInfo.Find(message);
             if (pl != null && !pl.hidden)
             {
                 Player.SendMessage(p, pl.color + pl.name + Server.DefaultColor + " is online, using /whois instead.");

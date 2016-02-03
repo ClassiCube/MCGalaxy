@@ -131,7 +131,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (!canDeleteForce) {
-                foreach (Player pl in Player.players) {
+                foreach (Player pl in PlayerInfo.players) {
                     if (pl != p && pl.Chatroom == room) {
                         Player.SendMessage(p, "Sorry, someone else is in the chatroom");
                         return;
@@ -144,7 +144,7 @@ namespace MCGalaxy.Commands {
                 HandleLeave(p);
             Server.Chatrooms.Remove(room);
             
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in PlayerInfo.players) {
                 if (pl.Chatroom == room) {
                     pl.Chatroom = null;
                     Player.SendMessage(pl, "You left the chatroom '" + room + "' because it is being deleted");
@@ -199,7 +199,7 @@ namespace MCGalaxy.Commands {
             }
             
             string name = parts[1], room = parts[2];
-            Player pl = Player.Find(name);
+            Player pl = PlayerInfo.Find(name);
             if (pl == null) {
                 Player.SendMessage(p, "There is no online player with the name '" + name + "'");
                 return;
@@ -236,7 +236,7 @@ namespace MCGalaxy.Commands {
             }
             
             string name = parts[1];
-            Player pl = Player.Find(name);
+            Player pl = PlayerInfo.Find(name);
             if (pl == null) {
                 Player.SendMessage(p, "There is no online player with the name '" + name + "'");
                 return;
@@ -272,7 +272,7 @@ namespace MCGalaxy.Commands {
             string room = parts[0];
             if (Server.Chatrooms.Contains(room)) {
                 Player.SendMessage(p, "Players in room '" + room + "' :");
-                foreach (Player pl in Player.players) {
+                foreach (Player pl in PlayerInfo.players) {
                     if (pl.Chatroom == room)
                         Player.SendMessage(p, pl.color + pl.name);
                 }

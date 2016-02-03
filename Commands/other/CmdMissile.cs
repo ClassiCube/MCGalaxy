@@ -237,7 +237,7 @@ namespace MCGalaxy.Commands
 						}
 
 						bool comeInner = false;
-						foreach (Player pl in Player.players)
+						foreach (Player pl in PlayerInfo.players)
 						{
 							if (pl.level == p.level && pl != p)
 							{
@@ -308,7 +308,7 @@ namespace MCGalaxy.Commands
 						allBlocks.Add(pos);
 
 						bool comeOut = false;
-						foreach (Player pl in Player.players)
+						foreach (Player pl in PlayerInfo.players)
 						{
 							if (pl.level == p.level && pl != p)
 							{

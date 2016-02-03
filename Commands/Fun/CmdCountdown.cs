@@ -241,7 +241,7 @@ namespace MCGalaxy.Commands
                     }
                     else if (!String.IsNullOrEmpty(par2))
                     {
-                        Player who = Player.Find(par2);
+                        Player who = PlayerInfo.Find(par2);
                         if (who == null)
                         {
                             Player.SendMessage(p, "That wasn't an online player.");

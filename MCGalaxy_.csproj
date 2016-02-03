@@ -428,6 +428,7 @@
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupCommands.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
+    <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\Waypoint.cs" />
     <Compile Include="Player\Player.Timers.cs" />
     <Compile Include="Player\Undo\UndoFile.cs" />

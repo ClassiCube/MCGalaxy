@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
 			int i = 0;
 			for (i = 0; i < 20; i++)
 			{
-				Player.players.ForEach(delegate(Player p1) { BlankMessage(p1); });
+				PlayerInfo.players.ForEach(delegate(Player p1) { BlankMessage(p1); });
 			}
 			Player.GlobalMessage("%4Global Chat Cleared.");
 		}

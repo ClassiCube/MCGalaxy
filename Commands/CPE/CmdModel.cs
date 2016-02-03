@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands
 
             if (message.Split(' ').Length > 1)
             {
-                targetPlayer = Player.Find(message.Split(' ')[0].Trim());
+                targetPlayer = PlayerInfo.Find(message.Split(' ')[0].Trim());
                 if (targetPlayer == null)
                 {
                     Player.SendMessage(p, "Player \"" + message.Split(' ')[0].Trim() + "\" does not exist");
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
                 p.model = model;
             }
 
-            foreach (Player pl in Player.players)
+            foreach (Player pl in PlayerInfo.players)
             {
                 if (pl.level == targetPlayer.level && pl.HasCpeExt(CpeExt.ChangeModel))
                 {

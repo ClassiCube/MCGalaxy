@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
 			
 			var split = message.Split(' ');
 			
-            Player who = Player.Find(split[0]);
+            Player who = PlayerInfo.Find(split[0]);
 			if (who == null)
             {
                 Player.SendMessage(p, Server.DefaultColor + "Player not found!");

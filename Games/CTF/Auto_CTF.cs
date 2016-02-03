@@ -277,7 +277,7 @@ namespace MCGalaxy
         }
         void tagging_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Player.players.ForEach(delegate(Player p)
+            PlayerInfo.players.ForEach(delegate(Player p)
             {
                 if (p.level == mainlevel)
                 {
@@ -695,7 +695,7 @@ namespace MCGalaxy
                     {
                         if (blueteam.members.Contains(p))
                         {
-                            Player.players.ForEach(delegate(Player p1)
+                            PlayerInfo.players.ForEach(delegate(Player p1)
                             {
                                 if (blueteam.members.Contains(p1))
                                     Player.SendMessage(p1, "(Blue) " + p.color + p.name + ":&f " + message);
@@ -704,7 +704,7 @@ namespace MCGalaxy
                         }
                         if (redteam.members.Contains(p))
                         {
-                            Player.players.ForEach(delegate(Player p1)
+                            PlayerInfo.players.ForEach(delegate(Player p1)
                             {
                                 if (redteam.members.Contains(p1))
                                     Player.SendMessage(p1, "(Red) " + p.color + p.name + ":&f " + message);

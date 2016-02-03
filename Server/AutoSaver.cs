@@ -40,8 +40,8 @@ namespace MCGalaxy
                             Thread.Sleep(_interval);
                             Server.ml.Queue(delegate { Run(); });
 
-                          if (Player.players.Count <= 0) continue;
-                          string allCount = Player.players.Aggregate("", (current, pl) => current + (", " + pl.name));
+                          if (PlayerInfo.players.Count <= 0) continue;
+                          string allCount = PlayerInfo.players.Aggregate("", (current, pl) => current + (", " + pl.name));
                           try { Server.s.Log("!PLAYERS ONLINE: " + allCount.Remove(0, 2), true); }
                           catch { }
 
@@ -103,10 +103,10 @@ namespace MCGalaxy
 
             try
             {
-                if (Player.players.Count > 0)
+                if (PlayerInfo.players.Count > 0)
                 {
                     List<Player> tempList = new List<Player>();
-                    tempList.AddRange(Player.players);
+                    tempList.AddRange(PlayerInfo.players);
                     foreach (Player p in tempList) { p.save(); }
                     tempList.Clear();
                 }

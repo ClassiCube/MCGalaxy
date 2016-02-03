@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "" || message.Split(' ').Length > 2) { Help(p); return; }
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
 
             if (who == null)
             {

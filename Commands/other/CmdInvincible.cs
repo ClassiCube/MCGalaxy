@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             Player who;
             if (message != String.Empty)
             {
-                who = Player.Find(message);
+                who = PlayerInfo.Find(message);
             }
             else
             {

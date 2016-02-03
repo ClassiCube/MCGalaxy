@@ -31,12 +31,12 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            if (Player.FindNick(message) == null)
+            if (PlayerInfo.FindNick(message) == null)
             {
                 Player.SendMessage(p, "The player is not online.");
                 return;
             }
-            Player.SendMessage(p, "This player's real username is " + Player.FindNick(message).name);
+            Player.SendMessage(p, "This player's real username is " + PlayerInfo.FindNick(message).name);
         }
         
         public override void Help(Player p)

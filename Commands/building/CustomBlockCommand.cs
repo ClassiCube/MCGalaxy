@@ -378,7 +378,7 @@ namespace MCGalaxy.Commands {
             }
             
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in PlayerInfo.players) {
                 if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
                 if (pl.level == null || !pl.level.HasCustomBlocks) continue;
                 if (!global && p.level != pl.level) continue;

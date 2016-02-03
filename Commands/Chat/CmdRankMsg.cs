@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Could not find group specified!");
                 return;
             }
-            foreach (Player pl in Player.players)
+            foreach (Player pl in PlayerInfo.players)
             {
                 if (pl.group.name == findgroup.name)
                 {

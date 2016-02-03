@@ -30,7 +30,7 @@ namespace MCGalaxy.BlockPhysics {
 			ushort x, y, z;
 			lvl.IntToPos(C.b, out x, out y, out z);
 			
-			Player.players.ForEach(
+			PlayerInfo.players.ForEach(
 				delegate(Player p)
 				{
 					if (p.level == lvl && !p.invincible) {

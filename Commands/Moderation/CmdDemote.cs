@@ -17,7 +17,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(trimChars, 2);
             Player target = null;
             
-            if (args.Length == 0 || (target = Player.Find(args[0])) == null) {
+            if (args.Length == 0 || (target = PlayerInfo.Find(args[0])) == null) {
                 Help(p); return;
             }
             

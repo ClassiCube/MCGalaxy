@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             int number = message.Split(' ').Length;
             if (number != 1) { Help(p); return; }
 
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
 
             string error = "You are not allowed to undo this player";
 

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
             Block.BlockList[Block.BlockList.FindIndex(bL => bL.type == foundBlock)] = newBlock;
 
             Block.SaveBlocks(Block.BlockList);
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in PlayerInfo.players) {
                 if (!pl.HasCpeExt(CpeExt.BlockPermissions)) continue;
                 
                 int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;

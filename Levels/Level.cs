@@ -292,7 +292,7 @@ namespace MCGalaxy
                 cancelunload = false;
                 return false;
             }
-            Player.players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player pl) { if (pl.level == this) Command.all.Find("goto").Use(pl, Server.mainLevel.name); });
 
             if (changed && (!Server.ZombieModeOn || !Server.noLevelSaving))
@@ -442,7 +442,7 @@ namespace MCGalaxy
                     SaveSettings(this);
 
                     Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
-                                               Player.players.Count, Server.players));
+                                               PlayerInfo.players.Count, Server.players));
                     changed = false;
                 }
                 else
@@ -695,7 +695,7 @@ namespace MCGalaxy
         public void ChatLevelAdmins(string message) { ChatLevel(message, Server.adminchatperm); }
         
         public void ChatLevel(string message, LevelPermission minPerm) {
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in PlayerInfo.players) {
             	if (pl.level != this) continue;
             	if (pl.group.Permission < minPerm) continue;
                 pl.SendMessage(message);
@@ -703,7 +703,7 @@ namespace MCGalaxy
         }
         
         public void UpdateBlockPermissions() {
-        	foreach (Player p in Player.players) {
+        	foreach (Player p in PlayerInfo.players) {
         		if (p.level != this) continue;
         		if (!p.HasCpeExt(CpeExt.BlockPermissions)) continue;
         		p.SendCurrentBlockPermissions();
@@ -792,7 +792,7 @@ namespace MCGalaxy
                         }
                         else
                         {
-                            foreach (Player p in Player.players.Where(p => p.level == this))
+                            foreach (Player p in PlayerInfo.players.Where(p => p.level == this))
                             {
                                 Player.SendMessage(p, "Physics warning!");
                             }
@@ -826,7 +826,7 @@ namespace MCGalaxy
 
         public List<Player> getPlayers()
         {
-            return Player.players.Where(p => p.level == this).ToList();
+            return PlayerInfo.players.Where(p => p.level == this).ToList();
         }
 
         #region ==Physics==

@@ -544,7 +544,7 @@ namespace MCGalaxy.Commands {
                 case "amount":
                     Economy.EcoStats ecostats;
                     if (par1 != string.Empty && par1 != null && par1 != "") {
-                        Player who = Player.Find(par1); //is player online?
+                        Player who = PlayerInfo.Find(par1); //is player online?
                         if (who == null) { //player is offline
                             ecostats = Economy.RetrieveEcoStats(par1);
                             Player.SendMessage(p, "%3===Economy stats for: %f" + ecostats.playerName + "%7(offline)%3===");

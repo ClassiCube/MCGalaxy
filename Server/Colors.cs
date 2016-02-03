@@ -216,7 +216,7 @@ namespace MCGalaxy {
         
         static void SetExtCol(CustomColor col) {
             ExtColors[col.Code] = col;
-            foreach (Player p in Player.players) {
+            foreach (Player p in PlayerInfo.players) {
                 if (!p.HasCpeExt(CpeExt.TextColors)) continue;
                 SendSetTextColor(p, col);
             }

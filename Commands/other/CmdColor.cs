@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
             
-            Player who = Player.Find(args[0]);
+            Player who = PlayerInfo.Find(args[0]);
             if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
             if (p != null && who.group.Permission > p.group.Permission) {
                 Player.SendMessage(p, "Cannot change the color of someone of greater rank"); return;

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
         {
             if (message == "") { Help(p); return; }
 
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
 
             if (who == null)
             {
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    foreach (Player pl in Player.players)
+                    foreach (Player pl in PlayerInfo.players)
                     {
                         if (pl.level == which && pl.group.Permission < p.group.Permission)
                         {

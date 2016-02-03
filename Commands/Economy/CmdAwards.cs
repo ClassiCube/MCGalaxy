@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
                 if (message.Split(' ').Length == 2)
                 {
                     foundPlayer = message.Split(' ')[0];
-                    Player who = Player.Find(foundPlayer);
+                    Player who = PlayerInfo.Find(foundPlayer);
                     if (who != null) foundPlayer = who.name;
                     try
                     {
@@ -65,14 +65,14 @@ namespace MCGalaxy.Commands
                         catch
                         {
                             foundPlayer = message;
-                            Player who = Player.Find(foundPlayer);
+                            Player who = PlayerInfo.Find(foundPlayer);
                             if (who != null) foundPlayer = who.name;
                         }
                     }
                     else
                     {
                         foundPlayer = message;
-                        Player who = Player.Find(foundPlayer);
+                        Player who = PlayerInfo.Find(foundPlayer);
                         if (who != null) foundPlayer = who.name;
                     }
                 }

@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
                 return;
             }
             string alltempranks = "";
-           Player who = Player.Find(message);
+           Player who = PlayerInfo.Find(message);
            foreach (string line in File.ReadAllLines("text/tempranks.txt"))
            {
                if (line.Contains(message))

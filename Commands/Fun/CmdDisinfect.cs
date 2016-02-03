@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public CmdDisInfect() { }
         
         public override void Use(Player p, string message) {
-            Player who = message == "" ? p : Player.Find(message);
+            Player who = message == "" ? p : PlayerInfo.Find(message);
             if (who == null) {
                 Player.SendMessage(p, "There is no player \"" + message + "\"!"); return;
             }

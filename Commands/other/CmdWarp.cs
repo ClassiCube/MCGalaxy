@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
                     if (Warp.WarpExists(par1)) { Player.SendMessage(p, "Warp has already been created!!"); return; }
                     {
                         if (par2 == null) { Warp.AddWarp(par1, p); }
-                        else { Warp.AddWarp(par1, Player.Find(par2)); }
+                        else { Warp.AddWarp(par1, PlayerInfo.Find(par2)); }
                     }
                     {
                         if (Warp.WarpExists(par1))
@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands
                     if (!Warp.WarpExists(par1)) { Player.SendMessage(p, "Warp doesn't exist!!"); return; }
                     {
                         if (par2 == null) { Warp.MoveWarp(par1, p); }
-                        else { Warp.MoveWarp(par1, Player.Find(par2)); }
+                        else { Warp.MoveWarp(par1, PlayerInfo.Find(par2)); }
                     }
                     {
                         if (Warp.WarpExists(par1))

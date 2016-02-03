@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
             }
             if (number == 1)
             {
-                Player who = Player.Find(message);
+                Player who = PlayerInfo.Find(message);
                 if (who == null || (who.hidden && p.group.Permission < LevelPermission.Admin)) { Player.SendMessage(p, "There is no player \"" + message + "\"!"); return; }
                 if (p.level != who.level)
                 {

@@ -64,14 +64,14 @@ namespace MCGalaxy.Commands
                     }
                 }
 
-                Player who = Player.Find(message);
+                Player who = PlayerInfo.Find(message);
                 if (message == "" && p.following == "") {
                     Help(p);
                     return;
                 }
                 else if (message == "" && p.following != "" || message == p.following)
                 {
-                    who = Player.Find(p.following);
+                    who = PlayerInfo.Find(p.following);
                     p.following = "";
                     if (p.hidden)
                     {
@@ -105,10 +105,10 @@ namespace MCGalaxy.Commands
                 if (p.level != who.level) Command.all.Find("tp").Use(p, who.name);
                 if (p.following != "")
                 {
-                    who = Player.Find(p.following);
+                    who = PlayerInfo.Find(p.following);
                     p.SendSpawn(who.id, who.color + who.name, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
                 }
-                who = Player.Find(message);
+                who = PlayerInfo.Find(message);
                 p.following = who.name;
                 Player.SendMessage(p, "Following " + who.color + who.DisplayName + Server.DefaultColor + ". Use \"/follow\" to stop.");
                 p.SendDespawn(who.id);

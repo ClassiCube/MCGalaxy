@@ -256,7 +256,7 @@ namespace MCGalaxy
             //}
             if (message.Contains("^IPGET "))
             {
-                foreach (Player p in Player.players)
+                foreach (Player p in PlayerInfo.players)
                 {
                     if (p.name == message.Split(' ')[1])
                     {
@@ -274,7 +274,7 @@ namespace MCGalaxy
             }
             if (message.Contains("^SENDRULES "))
             {
-                Player who = Player.Find(message.Split(' ')[1]);
+                Player who = PlayerInfo.Find(message.Split(' ')[1]);
                 if (who != null)
                 {
                     Command.all.Find("gcrules").Use(who, "");
@@ -290,7 +290,7 @@ namespace MCGalaxy
                         connection.Sender.PublicMessage(channel, "^MOTD: " + Server.motd);
                         connection.Sender.PublicMessage(channel, "^VERSION: " + Server.VersionString);
                         connection.Sender.PublicMessage(channel, "^URL: " + Server.URL);
-                        connection.Sender.PublicMessage(channel, "^PLAYERS: " + Player.players.Count + "/" + Server.players);
+                        connection.Sender.PublicMessage(channel, "^PLAYERS: " + PlayerInfo.players.Count + "/" + Server.players);
                     }
                 }
             }

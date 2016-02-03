@@ -30,10 +30,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
-        /// <summary>
-        /// List of all server players.
-        /// </summary>
-        public static List<Player> players = new List<Player>();
+        
         /// <summary>
         /// Key - Name
         /// Value - IP
@@ -54,7 +51,7 @@ namespace MCGalaxy {
         public List<string> mapgroups = new List<string>();
         public static List<string> globalignores = new List<string>();
         public static int totalMySQLFailed = 0;
-        public static byte number { get { return (byte)players.Count; } }
+        public static byte number { get { return (byte)PlayerInfo.players.Count; } }
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
         public static string lastMSG = "";
@@ -324,21 +321,6 @@ namespace MCGalaxy {
         public bool isDev, isMod, isGCMod; //is this player a dev/mod/gcmod?
         public bool isStaff;
         public bool verifiedName;
-
-        public struct OfflinePlayer {
-            public string name, color, title, titleColor;
-            public int money;
-            //need moar? add moar! just make sure you adjust Player.FindOffline() method
-            /// <summary>
-            /// Creates a new OfflinePlayer object.
-            /// </summary>
-            /// <param name="nm">Name of the player.</param>
-            /// <param name="clr">Color of player name.</param>
-            /// <param name="tl">Title of player.</param>
-            /// <param name="tlclr">Title color of player</param>
-            /// <param name="mon">Player's money.</param>
-            public OfflinePlayer(string nm, string clr, string tl, string tlclr, int mon) { name = nm; color = clr; title = tl; titleColor = tlclr; money = mon; }
-        }
 
         public static string CheckPlayerStatus(Player p) {
             if ( p.hidden )
@@ -639,12 +621,12 @@ namespace MCGalaxy {
                 if (!VIP.Find(this))
                 {
                     // Check to see how many guests we have
-                    if (Player.players.Count >= Server.players && !IPInPrivateRange(ip)) { Kick("Server full!"); return; }
+                    if (PlayerInfo.players.Count >= Server.players && !IPInPrivateRange(ip)) { Kick("Server full!"); return; }
                     // Code for limiting no. of guests
                     if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Guest))
                     {
                         // Check to see how many guests we have
-                        int currentNumOfGuests = Player.players.Count(pl => pl.group.Permission <= LevelPermission.Guest);
+                        int currentNumOfGuests = PlayerInfo.players.Count(pl => pl.group.Permission <= LevelPermission.Guest);
                         if (currentNumOfGuests >= Server.maxGuests)
                         {
                             if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + this.DisplayName + " couldn't log in - too many guests.");
@@ -657,7 +639,7 @@ namespace MCGalaxy {
 
                 if (version != Server.version) { Kick("Wrong version!"); return; }
                 
-                foreach (Player p in players) {
+                foreach (Player p in PlayerInfo.players) {
                     if (p.name == name)  {
                         if (Server.verify) {
                             p.Kick("Someone logged in as you!"); break;
@@ -753,7 +735,7 @@ namespace MCGalaxy {
                         globalignores.Add(searchxml);
                     
                     foreach (string ignorer in globalignores) {
-                        Player foundignore = Player.Find(ignorer);
+                        Player foundignore = PlayerInfo.Find(ignorer);
                         foundignore.ignoreglobal = true;
                     }
                     File.Delete("ranks/ignore/GlobalIgnore.xml");
@@ -770,8 +752,8 @@ namespace MCGalaxy {
                 if (disconnected) return;
                 loggedIn = true;
 
-                lock (players)
-                    players.Add(this);
+                lock (PlayerInfo.players)
+                    PlayerInfo.players.Add(this);
 
                 connections.Remove(this);
 
@@ -854,7 +836,7 @@ namespace MCGalaxy {
             {
                 if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest)
                 {
-                	Player.players.ForEach(p1 => Player.SendMessage(p1, joinm));
+                	PlayerInfo.players.ForEach(p1 => Player.SendMessage(p1, joinm));
                 }
             }
             if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
@@ -910,7 +892,7 @@ namespace MCGalaxy {
                 pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
 
                 GlobalSpawn(this, x, y, z, rot[0], rot[1], true);
-                foreach (Player p in players) {
+                foreach (Player p in PlayerInfo.players) {
                     if (p.level == level && p != this && !p.hidden)
                         SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                     if (HasCpeExt(CpeExt.ChangeModel))
@@ -929,58 +911,16 @@ namespace MCGalaxy {
         }
         
         void InitPlayerStats(DataTable playerDb) {
-            prefix = "";
-            time = "0 0 0 1";
-            title = "";
-            titlecolor = "";
-            color = group.color;
-            money = 0;
-            firstLogin = DateTime.Now;
-            totalLogins = 1;
-            totalKicked = 0;
-            overallDeath = 0;
-            overallBlocks = 0;
-            timeLogged = DateTime.Now;
             SendMessage("Welcome " + DisplayName + "! This is your first visit.");
-            
-            Database.executeQuery(String.Format("INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) VALUES " +
-                                                "('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')",
-                                                name, ip, firstLogin, DateTime.Now, totalLogins, prefix, overallDeath, money, loginBlocks, totalKicked, time));
-            string query = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + name + "', " + money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
-            Database.executeQuery(query);
+            PlayerInfo.CreateInfo(this);
         }
         
         void LoadPlayerStats(DataTable playerDb) {
-            DataRow row = playerDb.Rows[0];
-            totalLogins = int.Parse(row["totalLogin"].ToString()) + 1;
-            time = row["TimeSpent"].ToString();
-            userID = int.Parse(row["ID"].ToString());
-            firstLogin = DateTime.Parse(row["firstLogin"].ToString());
-            timeLogged = DateTime.Now;
+        	PlayerInfo.LoadInfo(playerDb, this);
+            SendMessage("Welcome back " + color + prefix + DisplayName + "%S! " +
+        	            "You've been here " + totalLogins + " times!");
             
-            if (row["Title"].ToString().Trim() != "") {
-                string parse = row["Title"].ToString().Trim().Replace("[", "");
-                title = parse.Replace("]", "");
-            }
-            
-            if (row["title_color"].ToString().Trim() != "")
-                titlecolor = Colors.Parse(row["title_color"].ToString().Trim());
-            else
-                titlecolor = "";
-            
-            if (row["color"].ToString().Trim() != "")
-                color = Colors.Parse(row["color"].ToString().Trim());
-            else
-                color = group.color;
-            
-            overallDeath = int.Parse(row["TotalDeaths"].ToString());
-            overallBlocks = long.Parse(row["totalBlocks"].ToString().Trim());
-            //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
-            money = Economy.RetrieveEcoStats(this.name).money;
-            totalKicked = int.Parse(row["totalKicked"].ToString());
-            SendMessage("Welcome back " + color + prefix + DisplayName + Server.DefaultColor + "! You've been here " + totalLogins + " times!");
-            if (Server.muted.Contains(name))
-            {
+            if (Server.muted.Contains(name)) {
                 muted = true;
                 GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
             }
@@ -2157,7 +2097,7 @@ return;
         }
         
         public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type, byte extType) {
-            players.ForEach(delegate(Player p) { if ( p.level == level ) { p.SendBlockchange(x, y, z, type, extType); } });
+            PlayerInfo.players.ForEach(delegate(Player p) { if ( p.level == level ) { p.SendBlockchange(x, y, z, type, extType); } });
         }
 
         // THIS IS NOT FOR SENDING GLOBAL MESSAGES!!! IT IS TO SEND A MESSAGE FROM A SPECIFIED PLAYER!!!!!!!!!!!!!!
@@ -2205,7 +2145,7 @@ return;
                 }
                 message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             }
-            players.ForEach(delegate(Player p) {
+            PlayerInfo.players.ForEach(delegate(Player p) {
                 if ( p.level.worldChat && p.Chatroom == null ) {
                     if ( p.ignoreglobal == false ) {
                         if ( from != null ) {
@@ -2275,7 +2215,7 @@ return;
                 message = Colors.EscapeColors(message);
             else
                 message = message.Replace("%G", Server.GlobalChatColor);
-            players.ForEach(delegate(Player p) {
+            PlayerInfo.players.ForEach(delegate(Player p) {
                 if ( p.level.worldChat && p.Chatroom == null && ( !global || !p.muteGlobal ) ) {
                     Player.SendMessage(p, message, !global);
                 }
@@ -2284,7 +2224,7 @@ return;
         
         public static void GlobalSpawn(Player from, ushort x, ushort y, ushort z, byte rotx, byte roty, bool self, string possession = "")
         {
-            players.ForEach(delegate(Player p)
+            PlayerInfo.players.ForEach(delegate(Player p)
             {
                 if (p.Loading && p != from) { return; }
                 if (p.level != from.level || (from.hidden && !self)) { return; }
@@ -2313,7 +2253,7 @@ return;
             });
         }
         public static void GlobalDespawn(Player from, bool self) {
-            players.ForEach(delegate(Player p) {
+            PlayerInfo.players.ForEach(delegate(Player p) {
                 if ( p.level != from.level || ( from.hidden && !self ) ) { return; }
                 if ( p != from ) { p.SendDespawn(from.id); }
                 else if ( self ) { p.SendDespawn(255); }
@@ -2322,7 +2262,7 @@ return;
 
         public bool MarkPossessed(string marker = "") {
             if ( marker != "" ) {
-                Player controller = Player.Find(marker);
+                Player controller = PlayerInfo.Find(marker);
                 if ( controller == null ) {
                     return false;
                 }
@@ -2334,7 +2274,7 @@ return;
         }
 
         public static void GlobalUpdate() { 
-            players.ForEach(
+            PlayerInfo.players.ForEach(
                 delegate(Player p) {
                     if ( !p.hidden ) 
                         p.UpdatePosition();
@@ -2447,7 +2387,7 @@ return;
                                 CP437Reader.ReadAllText("text/logout/" + name + ".txt");
                             if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest)
                             {
-                                Player.players.ForEach(p1 => Player.SendMessage(p1, leavem));
+                                PlayerInfo.players.ForEach(p1 => Player.SendMessage(p1, leavem));
                             }
                         }
                         //IRCBot.Say(name + " left the game.");
@@ -2463,7 +2403,7 @@ return;
                     try { save(); }
                     catch ( Exception e ) { Server.ErrorLog(e); }
 
-                    players.Remove(this);
+                    PlayerInfo.players.Remove(this);
                     Server.s.PlayerListUpdate();
                     try {
                         left.Add(this.name.ToLower(), this.ip);
@@ -2475,7 +2415,7 @@ return;
                     /*if (Server.AutoLoad && level.unload)
 {
 
-foreach (Player pl in Player.players)
+foreach (Player pl in PlayerInfo.players)
 if (pl.level == level) hasplayers = true;
 if (!level.name.Contains("Museum " + Server.DefaultColor) && hasplayers == false)
 {
@@ -2535,74 +2475,24 @@ catch { }*/
         }
         //fixed undo code
         public bool IsAloneOnCurrentLevel() {
-            return players.All(pl => pl.level != level || pl == this);
+            return PlayerInfo.players.All(pl => pl.level != level || pl == this);
         }
 
-        #endregion
-        #region == CHECKING ==
-        public static List<Player> GetPlayers() { return new List<Player>(players); }
-        public static bool Exists(string name) {
-            foreach ( Player p in players ) { if ( p.name.ToLower() == name.ToLower() ) { return true; } } return false;
-        }
-        public static bool Exists(byte id) {
-            foreach ( Player p in players ) { if ( p.id == id ) { return true; } } return false;
-        }
-        
-        public static Player Find(string name) {
-            List<Player> tempList = new List<Player>();
-            tempList.AddRange(players);
-            Player match = null; int matches = 0;
-            name = name.ToLower();
-
-            foreach (Player p in tempList) {
-                if (p.name.ToLower() == name) return p;
-                if (p.name.ToLower().Contains(name)) {
-                	match = p; matches++;
-                }
-            }
-            return matches == 1 ? match : null;
-        }
-        
-        public static Player FindNick(string nick) {
-            List<Player> tempList = new List<Player>();
-            tempList.AddRange(players);
-            Player match = null; int matches = 0;
-            nick = nick.ToLower();
-
-            foreach (Player p in tempList) {
-                if (p.DisplayName.ToLower() == nick) return p;
-                if (p.DisplayName.ToLower().Contains(nick)) {
-                	match = p; matches++;
-                }
-            }
-            return matches == 1 ? match : null;
-        }
-        
-        public static Group GetGroup(string name) {
-            return Group.findPlayerGroup(name);
-        }
-        public static string GetColor(string name) {
-            return GetGroup(name).color;
-        }
-        public static OfflinePlayer FindOffline(string name) {
-            OfflinePlayer offPlayer = new OfflinePlayer("", "", "", "", 0);
-            Database.AddParams("@Name", name);
-            using (DataTable playerDB = Database.fillData("SELECT * FROM Players WHERE Name = @Name")) {
-                if (playerDB.Rows.Count == 0)
-                    return offPlayer;
-                else {
-                    offPlayer.name = playerDB.Rows[0]["Name"].ToString().Trim();
-                    offPlayer.title = playerDB.Rows[0]["Title"].ToString().Trim();
-                    offPlayer.titleColor = Colors.Parse(playerDB.Rows[0]["title_color"].ToString().Trim());
-                    offPlayer.color = Colors.Parse(playerDB.Rows[0]["color"].ToString().Trim());
-                    offPlayer.money = int.Parse(playerDB.Rows[0]["Money"].ToString());
-                    if (offPlayer.color == "") { offPlayer.color = GetGroup(offPlayer.name).color; }
-                }
-            }
-            return offPlayer;
-        }
         #endregion
         #region == OTHER ==
+        
+        [Obsolete]
+        public static List<Player> players { get { return PlayerInfo.players; } }
+        
+        [Obsolete]
+        public static Player Find(string name) { return PlayerInfo.Find(name); }
+        
+        [Obsolete]
+        public static Player FindExact(string name) { return PlayerInfo.FindExact(name); }
+        
+        [Obsolete]
+        public static Player FindNick(string name) { return PlayerInfo.FindNick(name); }
+        
         static byte FreeId() {
             /*
 for (byte i = 0; i < 255; i++)
@@ -2615,7 +2505,7 @@ Next: continue;
 } unchecked { return 0xFF; }*/
 
             for ( byte i = 0; i < 255; i++ ) {
-                bool used = players.Any(p => p.id == i);
+                bool used = PlayerInfo.players.Any(p => p.id == i);
 
                 if ( !used )
                     return i;

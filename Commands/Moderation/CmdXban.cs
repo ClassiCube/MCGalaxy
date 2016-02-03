@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
 
             string name = message.Split(' ')[0];
-            Player who = Player.Find(name);
+            Player who = PlayerInfo.Find(name);
             Command.all.Find("ban").Use(p, message);
             Command.all.Find("banip").Use(p, "@" + name);
             if (who != null)

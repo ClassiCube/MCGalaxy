@@ -527,8 +527,8 @@ namespace MCGalaxy_.Gui
                         if (Server.lava.active && Server.lava.HasMap(l.name)) l.saveChanges();
                         else l.Save();
 
-                if (Player.players != null && Player.players.Any())
-                    foreach (Player pl in Player.players) pl.save();
+                if (PlayerInfo.players != null && PlayerInfo.players.Any())
+                    foreach (Player pl in PlayerInfo.players) pl.save();
                 
                 if (!usingConsole)
                     Process.Start("Updater.exe", "securitycheck10934579068013978427893755755270374" + parent);
@@ -595,7 +595,7 @@ namespace MCGalaxy_.Gui
             try
             {
                 List<Player> kickList = new List<Player>();
-                kickList.AddRange(Player.players);
+                kickList.AddRange(PlayerInfo.players);
                 foreach (Player p in kickList)
                 {
                     if (restarting)

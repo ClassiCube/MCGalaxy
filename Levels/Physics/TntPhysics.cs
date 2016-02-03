@@ -79,7 +79,7 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.MakeExplosion(x, y, z, power - 2, true, TntWarsGame.GetTntWarsGame(C.p));
                 
                 List<Player> Killed = new List<Player>();
-                Player.players.ForEach(
+                PlayerInfo.players.ForEach(
                     delegate(Player p1)
                     {
                         if (p1.level == lvl && p1.PlayingTntWars && p1 != C.p

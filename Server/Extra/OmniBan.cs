@@ -84,7 +84,7 @@ namespace MCGalaxy
 			try
 			{
 				kickall:
-				foreach (Player p in Player.players)
+				foreach (Player p in PlayerInfo.players)
 					if (CheckPlayer(p))
 					{
 						p.Kick(kickMsg);

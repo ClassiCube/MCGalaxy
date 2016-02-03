@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             string[] args = message.Split(trimChars, 3);
             if (args.Length < 2) { Help(p); return; }
-            Player who = Player.Find(args[0]);
+            Player who = PlayerInfo.Find(args[0]);
             Group newRank = Group.Find(args[1]);
 
             string reason = args.Length > 2 ? args[2] : "Congratulations!";

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(trimChars, 2);
             if (args.Length < 2) { Help(p); return; }
             
-            Player target = Player.Find(args[0]);
+            Player target = PlayerInfo.Find(args[0]);
             string name = target != null ? target.name : args[0];
 
             if (!File.Exists("text/login/" + name + ".txt")) {

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             string target = who == null ? message : who.name;
 
             Player.SendMessage(p, "&1Rank Information of " + target);

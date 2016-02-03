@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
             if (split[0] == "add")
             {
                 if (split.Length < 2) { Help(p); return; }
-                Player pl = Player.Find(split[1]);
+                Player pl = PlayerInfo.Find(split[1]);
                 if (pl != null) split[1] = pl.name;
                 if (VIP.Find(split[1])) Player.SendMessage(p, (pl == null ? "" : pl.color) + split[1] + " is already a VIP!");
                 else
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
             else if (split[0] == "remove")
             {
                 if (split.Length < 2) { Help(p); return; }
-                Player pl = Player.Find(split[1]);
+                Player pl = PlayerInfo.Find(split[1]);
                 if (pl != null) split[1] = pl.name;
                 if (!VIP.Find(split[1])) Player.SendMessage(p, (pl == null ? "" : pl.color) + split[1] + " is not a VIP!");
                 else

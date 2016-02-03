@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             if (who == null || who.hidden) {
                 Player.SendMessage(p, "Could not find player specified."); return;
             }

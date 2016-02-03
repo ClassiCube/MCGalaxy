@@ -43,13 +43,13 @@ namespace MCGalaxy.Commands
             catch { Player.SendMessage(p, "%cInvalid amount"); return; }
             if (amountGiven < 0) { Player.SendMessage(p, "%cCannot give negative %3" + Server.moneys); return; }
 
-            Player who = Player.Find(message.Split(' ')[0]);
+            Player who = PlayerInfo.Find(message.Split(' ')[0]);
             Economy.EcoStats ecos;
 
             if (who == null)
             { //player is offline
-                Player.OfflinePlayer off = Player.FindOffline(message.Split()[0]);
-                if (off.name == "") { Player.SendMessage(p, "%cThe player %f" + message.Split()[0] + Server.DefaultColor + "(offline)%c does not exist or has never logged on to this server"); return; }
+                OfflinePlayer off = PlayerInfo.FindOffline(message.Split()[0]);
+                if (off == null) { Player.SendMessage(p, "%cThe player %f" + message.Split()[0] + Server.DefaultColor + "(offline)%c does not exist or has never logged on to this server"); return; }
 
                 ecos = Economy.RetrieveEcoStats(message.Split()[0]);
                 if (ReachedMax(p, ecos.money, amountGiven)) return;

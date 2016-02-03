@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Are you stupid? =S You can't use this in the console!");
                 return;
             }
-            List<string> getpatrol = (from pl in Player.players where (int) pl.@group.Permission <= CommandOtherPerms.GetPerm(this) select pl.name).ToList();
+            List<string> getpatrol = (from pl in PlayerInfo.players where (int) pl.@group.Permission <= CommandOtherPerms.GetPerm(this) select pl.name).ToList();
             if (getpatrol.Count <= 0)
             {
                 Player.SendMessage(p, "There must be at least one guest online to use this command!");
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands
             Random random = new Random();
             int index = random.Next(getpatrol.Count);
             string value = getpatrol[index];
-            Player who = Player.Find(value);
+            Player who = PlayerInfo.Find(value);
             Command.all.Find("tp").Use(p, who.name);
             Player.SendMessage(p, "You are now visiting " + who.color + who.name + "!");
         }

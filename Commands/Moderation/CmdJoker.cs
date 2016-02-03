@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands
                 Server.s.Log("Stealth joker attempted");
             }
 
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             if (who == null)
             {
                 Player.SendMessage(p, "Could not find player.");

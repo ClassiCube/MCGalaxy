@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
             }
             
             string foundPlayer = message.Split(' ')[0];
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             if (who != null) foundPlayer = who.name;
             string awardName = message.Substring(message.IndexOf(' ') + 1);
             if (!Awards.awardExists(awardName))

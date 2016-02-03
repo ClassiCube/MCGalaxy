@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "You can't send /rules to another player!");
                     return;
                 }
-                who = Player.Find(message);
+                who = PlayerInfo.Find(message);
             } else {
                 who = p;
             }

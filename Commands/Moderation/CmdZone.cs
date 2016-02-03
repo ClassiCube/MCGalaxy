@@ -106,7 +106,7 @@ namespace MCGalaxy.Commands
 
             if (message.Split(' ')[0].ToLower() == "add")
             {
-                Player foundPlayer = Player.Find(message.Split(' ')[1]);
+                Player foundPlayer = PlayerInfo.Find(message.Split(' ')[1]);
                 if (foundPlayer == null)
                     cpos.Owner = message.Split(' ')[1].ToString();
                 else

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             Player who = null;
-            if (message == "") { who = p; message = p.name; } else { who = Player.Find(message); }
+            if (message == "") { who = p; message = p.name; } else { who = PlayerInfo.Find(message); }
             if (who != null && !who.hidden)
             {
                 Player.SendMessage(p, who.color + who.name + Server.DefaultColor + " (" + who.DisplayName + ") " + Server.DefaultColor + " is on &b" + who.level.name);

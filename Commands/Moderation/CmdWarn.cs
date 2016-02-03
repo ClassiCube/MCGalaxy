@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
 
             if (message == "") { Help(p); return; }
 
-            Player who = Player.Find(message.Split(' ')[0]);
+            Player who = PlayerInfo.Find(message.Split(' ')[0]);
 
             // Make sure we have a valid player
             if (who == null)

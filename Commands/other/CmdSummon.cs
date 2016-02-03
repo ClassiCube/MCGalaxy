@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
             {
                 try
                 {
-                    foreach (Player pl in Player.players)
+                    foreach (Player pl in PlayerInfo.players)
                     {
                         if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission)
                         {
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             if (who == null || who.hidden) { Player.SendMessage(p, "There is no player \"" + message + "\"!"); return; }
             if (p.group.Permission < who.group.Permission)
             {

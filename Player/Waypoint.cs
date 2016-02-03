@@ -137,7 +137,7 @@ namespace MCGalaxy {
         }
 
         public static void Save() {
-            foreach ( Player p in Player.players ) {
+            foreach ( Player p in PlayerInfo.players ) {
                 if ( p.Waypoints.Count >= 1 ) {
                     using ( StreamWriter SW = new StreamWriter("extra/Waypoints/" + p.name + ".save") ) {
                         foreach ( Waypoint wp in p.Waypoints ) {

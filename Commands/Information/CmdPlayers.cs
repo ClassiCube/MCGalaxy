@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
                 string title = ":" + grp.color + GetPlural(grp.trueName) + ":";
                 Section rankSec = MakeSection(grp, title);                
                 
-                foreach (Player pl in Player.players) {
+                foreach (Player pl in PlayerInfo.players) {
                     if (pl.group != grp) continue;
                     if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
                         string name = Colors.StripColours(pl.DisplayName);
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands
             Section gcModsSec = MakeSection("#%6MCGalaxy GCMods:" + Server.DefaultColor);
             int totalPlayers = 0;
             
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in PlayerInfo.players) {
                 if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
                     totalPlayers++;
                     string name = Colors.StripColours(pl.DisplayName);

@@ -20,7 +20,7 @@ namespace MCGalaxy.Commands {
             int number = message.Split(' ').Length;
             if (number > 1) { Help(p); return; }
 
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             if (who == p) { Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You cannot send yourself a request!"); return; }
             if (who == null || (who.hidden && p.group.Permission < LevelPermission.Admin)) { Player.SendMessage(p, "There is no player \"" + message + "\"!"); return; }
             if (who.listignored.Contains(p.name))
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You do not have any pending teleport requests!"); return;
             }
             
-            Player who = Player.Find(p.senderName);
+            Player who = PlayerInfo.Find(p.senderName);
             p.Request = false;
             p.senderName = "";
             if (who == null) {
@@ -129,7 +129,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You do not have any pending teleport requests!"); return;
             }
             
-            Player who = Player.Find(p.senderName);
+            Player who = PlayerInfo.Find(p.senderName);
             p.Request = false;
             p.senderName = "";
             if (who == null) {

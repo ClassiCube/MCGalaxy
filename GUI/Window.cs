@@ -133,7 +133,7 @@ namespace MCGalaxy.Gui
             {
                 UpdateListTimer.Elapsed += delegate
                 {
-                    UpdateClientList(Player.players);
+                    UpdateClientList(PlayerInfo.players);
                     UpdateMapList("'");
                     Server.s.Log("Lists updated!");
                 }; UpdateListTimer.Start();
@@ -143,7 +143,7 @@ namespace MCGalaxy.Gui
             {
                 try
                 {
-                    UpdateClientList(Player.players);
+                    UpdateClientList(PlayerInfo.players);
                     UpdateMapList();
                 }
                 catch { } // needed for slower computers
@@ -337,14 +337,14 @@ namespace MCGalaxy.Gui
                 //dgvPlayers.SuspendLayout();
 
                 pc = new PlayerCollection(new PlayerListView());
-                Player.players.ForEach(p => pc.Add(p));
+                PlayerInfo.players.ForEach(p => pc.Add(p));
 
                 //dgvPlayers.Invalidate();
                 dgvPlayers.DataSource = pc;
                 // Reselect player
                 if (selected != null)
                 {
-                    foreach (Player t in Player.players)
+                    foreach (Player t in PlayerInfo.players)
                         for (int j = 0; j < dgvPlayers.Rows.Count; j++)
                             if (Equals(dgvPlayers.Rows[j].Cells[0].Value, selected))
                                 dgvPlayers.Rows[j].Selected = true;
@@ -995,7 +995,7 @@ namespace MCGalaxy.Gui
         #region playersTab
         private void LoadPLayerTabDetails(object sender, EventArgs e)
         {
-            Player p = Player.Find(PlyersListBox.Text);
+            Player p = PlayerInfo.Find(PlyersListBox.Text);
             if (p != null)
             {
                 PlayersTextBox.AppendTextAndScroll("==" + p.name + "==");
@@ -1154,7 +1154,7 @@ namespace MCGalaxy.Gui
 
         private void LoginBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1166,7 +1166,7 @@ namespace MCGalaxy.Gui
 
         private void LogoutBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1178,7 +1178,7 @@ namespace MCGalaxy.Gui
 
         private void TitleBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1190,7 +1190,7 @@ namespace MCGalaxy.Gui
 
         private void ColorBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1254,7 +1254,7 @@ namespace MCGalaxy.Gui
 
         private void MapBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1286,7 +1286,7 @@ namespace MCGalaxy.Gui
 
         private void UndoBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1313,7 +1313,7 @@ namespace MCGalaxy.Gui
 
         private void MessageBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1325,7 +1325,7 @@ namespace MCGalaxy.Gui
 
         private void ImpersonateORSendCmdBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1367,7 +1367,7 @@ namespace MCGalaxy.Gui
 
         private void PromoteBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1379,7 +1379,7 @@ namespace MCGalaxy.Gui
 
         private void DemoteBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1391,7 +1391,7 @@ namespace MCGalaxy.Gui
 
         private void HideBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1413,7 +1413,7 @@ namespace MCGalaxy.Gui
 
         private void SlapBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1424,7 +1424,7 @@ namespace MCGalaxy.Gui
 
         private void JokerBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1446,7 +1446,7 @@ namespace MCGalaxy.Gui
 
         private void FreezeBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1468,7 +1468,7 @@ namespace MCGalaxy.Gui
 
         private void MuteBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1490,7 +1490,7 @@ namespace MCGalaxy.Gui
 
         private void VoiceBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1512,7 +1512,7 @@ namespace MCGalaxy.Gui
 
         private void KillBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1524,7 +1524,7 @@ namespace MCGalaxy.Gui
 
         private void JailBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1546,7 +1546,7 @@ namespace MCGalaxy.Gui
 
         private void WarnBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1558,7 +1558,7 @@ namespace MCGalaxy.Gui
 
         private void KickBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1570,7 +1570,7 @@ namespace MCGalaxy.Gui
 
         private void BanBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1582,7 +1582,7 @@ namespace MCGalaxy.Gui
 
         private void IPBanBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1594,7 +1594,7 @@ namespace MCGalaxy.Gui
 
         private void SendRulesTxt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1620,7 +1620,7 @@ namespace MCGalaxy.Gui
 
         private void SpawnBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !Player.players.Contains(prpertiesofplyer))
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -1640,7 +1640,7 @@ namespace MCGalaxy.Gui
                 {
 
                     PlyersListBox.Items.Clear();
-                    foreach (Player p in Player.players)
+                    foreach (Player p in PlayerInfo.players)
                     {
                         PlyersListBox.Items.Add(p.name);
                     }

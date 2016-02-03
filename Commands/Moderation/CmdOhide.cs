@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
         {
             if (message == "") { Help(p); return; }
             message = message.Split(' ')[0];
-            Player who = Player.Find(message);
+            Player who = PlayerInfo.Find(message);
             if (who == null)
             {
                 Player.SendMessage(p, "Could not find player.");

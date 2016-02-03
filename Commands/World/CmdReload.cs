@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "You cannot reload the main level."); return;
             }
             
-            foreach (Player pl in Player.players) {
+            foreach (Player pl in PlayerInfo.players) {
                 if (pl.level.name.ToLower() != name.ToLower()) continue;
                 CmdReveal.ReloadMap(p, pl, false);
             }

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             int playerCount = 0;
             int hiddenCount = 0;
            
-            foreach (Player pl in Player.players)
+            foreach (Player pl in PlayerInfo.players)
             {
                 if (!pl.hidden || p == null || p.group.Permission > LevelPermission.AdvBuilder)
                 {

@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands
                             bool isopson = false;
                             try
                             {
-                                foreach (Player pl in Player.players)
+                                foreach (Player pl in PlayerInfo.players)
                                 {
                                     if (pl.group.Permission >= Server.opchatperm && !pl.hidden)
                                     {
@@ -194,7 +194,7 @@ namespace MCGalaxy.Commands
                         int toallplayerscount = 1;
                         foreach (string toallplayers in Server.reviewlist)
                         {
-                            Player tosend = Player.Find(toallplayers);
+                            Player tosend = PlayerInfo.Find(toallplayers);
                             Player.SendMessage(tosend, "The review queue has changed. Your now on spot " + toallplayerscount.ToString() + ".");
                             toallplayerscount++;
                         }
@@ -228,7 +228,7 @@ namespace MCGalaxy.Commands
                             return;
                         }
                         string[] user = Server.reviewlist.ToArray();
-                        Player who = Player.Find(user[0]);
+                        Player who = PlayerInfo.Find(user[0]);
                         if (who == null)
                         {
                             Player.SendMessage(p, "Player " + user[0] + " doesn't exist or is offline. " + user[0] + " has been removed from the review queue");
@@ -248,7 +248,7 @@ namespace MCGalaxy.Commands
                         int toallplayerscount = 0;
                         foreach (string toallplayers in Server.reviewlist)
                         {
-                            Player who2 = Player.Find(toallplayers);
+                            Player who2 = PlayerInfo.Find(toallplayers);
                             Player.SendMessage(who2, "The review queue has been rotated. you now have " + toallplayerscount.ToString() + " players waiting in front of you");
                             toallplayerscount++;
                         }

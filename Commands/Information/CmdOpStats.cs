@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
                 if (message != "")
                     spanStart = message.ToLower();
             } else {
-                target = Player.Find(args[0]);
+                target = PlayerInfo.Find(args[0]);
                 if (args.Length > 1 && ValidTimespan(args[1].ToLower()))
                     spanStart = args[1].ToLower();
             }

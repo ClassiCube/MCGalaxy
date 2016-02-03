@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
             int length = message.Split().Length;
             Player player = null;
             if (length >= 1)
-                player = Player.Find(message.Split(' ')[0]);
+                player = PlayerInfo.Find(message.Split(' ')[0]);
             else return;
             if (player == null)
             {

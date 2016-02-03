@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             Player who = null;
-            if (message == "") { who = p; message = p.name; } else { who = Player.Find(message); }
+            if (message == "") { who = p; message = p.name; } else { who = PlayerInfo.Find(message); }
             if (Server.zombie.GameInProgess())
             {
                 Server.zombie.HandOutRewards();

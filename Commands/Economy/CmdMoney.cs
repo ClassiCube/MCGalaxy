@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             }
             else if (message.Split().Length == 1)
             {
-                Player who = Player.Find(message);
+                Player who = PlayerInfo.Find(message);
                 if (who == null)
                 { //player is offline
                     Economy.EcoStats ecos = Economy.RetrieveEcoStats(message);

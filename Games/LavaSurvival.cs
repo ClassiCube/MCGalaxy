@@ -300,7 +300,7 @@ namespace MCGalaxy
                 sendingPlayers = true;
                 try
                 {
-                    Player.players.ForEach(delegate(Player pl)
+                    PlayerInfo.players.ForEach(delegate(Player pl)
                     {
                         if (pl.level == oldMap)
                         {
@@ -423,7 +423,7 @@ namespace MCGalaxy
             {
                 if (OnPlayerDeath != null)
                     OnPlayerDeath(p);
-                Player.players.ForEach(delegate(Player pl)
+                PlayerInfo.players.ForEach(delegate(Player pl)
                 {
                     if (pl != p && HasPlayer(pl))
                         Player.SendMessage(pl, p.color + p.name + " &4ran out of lives, and is out of the round!");
