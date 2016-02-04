@@ -125,23 +125,21 @@ namespace MCGalaxy {
         }
         
         [Obsolete]
-        public void SendRaw(int id, byte[] send) {
+        public void SendRaw(int id, byte[] send, bool sync = false) {
             byte[] buffer = new byte[send.Length + 1];
             buffer[0] = (byte)id;
             for ( int i = 0; i < send.Length; i++ )
                 buffer[i + 1] = send[i];
-            SendRaw(buffer);
+            SendRaw(buffer, sync);
             buffer = null;
         }
         
-         public void SendRaw(byte[] buffer) {
+         public void SendRaw(byte[] buffer, bool sync = false) {
             // Abort if socket has been closed
-            if ( socket == null || !socket.Connected )
-                return;
+            if (socket == null || !socket.Connected) return;
             
             try {
-                // must send ExtEntry and ExtInfo packets synchronously.
-                if (id == Opcode.CpeExtEntry || id == Opcode.CpeExtInfo)
+                if (sync)
                     socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
                 else
                     socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate(IAsyncResult result) { }, null);
@@ -485,11 +483,11 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
-        void SendKick(string message) {
+        void SendKick(string message, bool sync) {
         	byte[] buffer = new byte[65];
         	buffer[0] = Opcode.Kick;
         	NetUtils.WriteAscii(message, buffer, 1);
-        	SendRaw(buffer); 
+        	SendRaw(buffer, sync); 
         }
         
         void SendPing() { 
@@ -501,7 +499,7 @@ namespace MCGalaxy {
             buffer[0] = Opcode.CpeExtInfo;
             NetUtils.WriteAscii("MCGalaxy " + Server.Version, buffer, 1);
             NetUtils.WriteI16((short)count, buffer, 65);
-            SendRaw(buffer);
+            SendRaw(buffer, true);
         }
         
         void SendExtEntry( string name, int version ) {
@@ -509,7 +507,7 @@ namespace MCGalaxy {
         	buffer[0] = Opcode.CpeExtEntry;
             NetUtils.WriteAscii(name, buffer, 1);
             NetUtils.WriteI32(version, buffer, 65);
-            SendRaw(buffer);
+            SendRaw(buffer, true);
         }
         
        public void SendClickDistance( short distance ) {

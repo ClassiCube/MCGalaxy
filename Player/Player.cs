@@ -535,7 +535,7 @@ namespace MCGalaxy {
                     }
                     
                     if (altsCount > 1) {
-                        Kick("Already logged in!"); return;
+                        Kick("Already logged in!", true); return;
                     }
                 }
 
@@ -548,7 +548,7 @@ namespace MCGalaxy {
                     {
                         if (!IPInPrivateRange(ip))
                         {
-                            Kick("Login failed! Try again."); return;
+                            Kick("Login failed! Try again.", true); return;
                         }
                     }
                 }
@@ -557,19 +557,17 @@ namespace MCGalaxy {
                 name += "+";
                 byte type = message[129];
 
-                //Forge Protection Check
                 isDev = Server.Devs.Contains(name.ToLower());
                 isMod = Server.Mods.Contains(name.ToLower());
                 isGCMod = Server.GCmods.Contains(name.ToLower());
-                verifiedName = Server.verify ? true : false;
+                verifiedName = Server.verify;
 
-                try
-                {
+                try {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
                     if (tBan.allowedJoin < DateTime.Now) {
                         Server.tempBans.Remove(tBan);
                     } else {
-                        Kick("You're still banned (temporary ban)!");
+                        Kick("You're still banned (temporary ban)!", true);
                     }
                 } catch { }
 
@@ -577,42 +575,20 @@ namespace MCGalaxy {
                     return;
                 LoadIgnores();
                 // ban check
-                if (Server.bannedIP.Contains(ip))
-                {
-                    if (Server.useWhitelist)
-                    {
-                        if (!onWhitelist)
-                        {
-                            Kick(Server.customBanMessage);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        Kick(Server.customBanMessage);
-                        return;
-                    }
+                if (Server.bannedIP.Contains(ip) && (!Server.useWhitelist || !onWhitelist)) {
+                    Kick(Server.customBanMessage, true);
+                    return;
                 }
+                
                 if (Server.omniban.CheckPlayer(this)) { Kick(Server.omniban.kickMsg); return; } //deprecated
-                if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Banned))
-                {
-                    if (Server.useWhitelist)
-                    {
-                        if (!onWhitelist)
-                        {
-                            Kick(Server.customBanMessage);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        if (Ban.IsBanned(name))
-                        {
+                if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Banned)) {
+                    if (!Server.useWhitelist || !onWhitelist) {
+                        if (Ban.IsBanned(name)) {
                             string[] data = Ban.GetBanData(name);
-                            Kick("You were banned for \"" + data[1] + "\" by " + data[0]);
-                        }
-                        else
-                            Kick(Server.customBanMessage);
+                            Kick("You were banned for \"" + data[1] + "\" by " + data[0], true);
+                    	} else {
+                            Kick(Server.customBanMessage, true);
+                    	}
                         return;
                     }
                 }
@@ -631,20 +607,20 @@ namespace MCGalaxy {
                         {
                             if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + this.DisplayName + " couldn't log in - too many guests.");
                             Server.s.Log("Guest " + this.name + " couldn't log in - too many guests.");
-                            Kick("Server has reached max number of guests");
+                            Kick("Server has reached max number of guests", true);
                             return;
                         }
                     }
                 }
 
-                if (version != Server.version) { Kick("Wrong version!"); return; }
+                if (version != Server.version) { Kick("Wrong version!", true); return; }
                 
                 foreach (Player p in PlayerInfo.players) {
                     if (p.name == name)  {
                         if (Server.verify) {
                             p.Kick("Someone logged in as you!"); break;
                         } else { 
-                            Kick("Already logged in!"); return;
+                            Kick("Already logged in!", true); return;
                         }
                     }
                 }
@@ -2283,9 +2259,9 @@ return;
         #endregion
         #region == DISCONNECTING ==
         public void Disconnect() { leftGame(); }
-        public void Kick(string kickString) { leftGame(kickString); }
+        public void Kick(string kickString, bool sync = false) { leftGame(kickString, sync); }
 
-        public void leftGame(string kickString = "", bool skip = false) {
+        public void leftGame(string kickString = "", bool sync = false) {
 
             OnPlayerDisconnectEvent.Call(this, kickString);
 
@@ -2299,16 +2275,8 @@ return;
                 disconnected = true;
                 return;
             }
-            ////If player has been found in the reviewlist he will be removed
-            bool leavetest = false;
-            foreach ( string testwho2 in Server.reviewlist ) {
-                if ( testwho2 == name ) {
-                    leavetest = true;
-                }
-            }
-            if ( leavetest ) {
-                Server.reviewlist.Remove(name);
-            }
+            Server.reviewlist.Remove(name);
+            
             try {
  
                 if ( disconnected ) {
@@ -2350,7 +2318,7 @@ return;
 
                 if ( kickString == "" ) kickString = "Disconnected.";
 
-                SendKick(kickString);
+                SendKick(kickString, sync);
 
 
                 if ( loggedIn ) {
