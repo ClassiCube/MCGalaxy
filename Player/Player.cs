@@ -585,7 +585,7 @@ namespace MCGalaxy {
                     if (!Server.useWhitelist || !onWhitelist) {
                         if (Ban.IsBanned(name)) {
                             string[] data = Ban.GetBanData(name);
-                            Kick("You were banned for \"" + data[1] + "\" by " + data[0], true);
+                            Kick("Banned for \"" + data[1] + "\" by " + data[0], true);
                     	} else {
                             Kick(Server.customBanMessage, true);
                     	}

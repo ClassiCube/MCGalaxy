@@ -29,8 +29,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            string who = message.Split(' ')[0];
-            Command.all.Find("ban").Use(p, message.Split(' ')[0]);
+            Command.all.Find("ban").Use(p, message);
             Command.all.Find("kick").Use(p, message);
         }
         public override void Help(Player p)
