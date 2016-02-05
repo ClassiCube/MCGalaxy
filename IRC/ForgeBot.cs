@@ -123,33 +123,31 @@ namespace MCGalaxy {
         
         void Listener_OnJoin(UserInfo user, string channel) {
             connection.Sender.Names(channel);
-            doJoinLeaveMessage(user.Nick, "joined", channel);
+            DoJoinLeaveMessage(user.Nick, "joined", channel);
         }
         
         void Listener_OnPart(UserInfo user, string channel, string reason) {
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
             if (user.Nick == nick) return;
-            doJoinLeaveMessage(user.Nick, "left", channel);
+            DoJoinLeaveMessage(user.Nick, "left", channel);
         }
 
-        private void doJoinLeaveMessage(string who, string verb, string channel) {
+        void DoJoinLeaveMessage(string who, string verb, string channel) {
             Server.s.Log(String.Format("{0} has {1} channel {2}", who, verb, channel));
             Player.GlobalMessage(String.Format("%I[IRC] {0} has {1} the{2} channel", who, verb, (channel.ToLower() == opchannel.ToLower() ? " operator" : "")));
         }
         
         void Player_PlayerDisconnect(Player p, string reason) {
-            if (Server.irc && IsConnected())
-                if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest)
-                    return;
+        	if (!Server.irc || !IsConnected()) return;
+        	if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
             if (!p.hidden)
                 connection.Sender.PublicMessage(channel, p.name + " left the game (" + reason + ")");
         }
 
         void Player_PlayerConnect(Player p) {
-            if (Server.irc && IsConnected())
-                if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest)
-                    return;
+        	if (!Server.irc || !IsConnected()) return;
+            if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest) return;
             connection.Sender.PublicMessage(channel, p.name + " joined the game");
         }
 
