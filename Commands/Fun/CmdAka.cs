@@ -17,10 +17,10 @@
  */
 using System;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdAka : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdAka : Command {
+		
         public override string name { get { return "aka"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Games; } }
@@ -29,48 +29,20 @@ namespace MCGalaxy.Commands
         public CmdAka() { }
         
         public override void Use(Player p, string message) {
-            bool showInfected = p.aka;
-            p.aka = !p.aka;
-            ushort x = p.pos[0], y = p.pos[1], z = p.pos[2];
+            bool showInfected = p.aka; p.aka = !p.aka;
 
-            p.Loading = true;
-            foreach (Player pl in PlayerInfo.players)
-                if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
-            foreach (PlayerBot b in PlayerBot.playerbots)
-                if (p.level == b.level) p.SendDespawn(b.id);
-
-            Player.GlobalDespawn(p, true);
-            p.SendUserMOTD();
-            p.SendMap(p.level);
-
-            if (!p.hidden) {
-                Player.GlobalDespawn(p, false);
-                Player.GlobalSpawn(p, x, y, z, p.level.rotx, p.level.roty, true);
-            } else {
-                p.SendPos(0xFF, x, y, z, p.level.rotx, p.level.roty);
-            }
-            
             foreach (Player pl in PlayerInfo.players) {
-                if (pl.level != p.level || p == pl || pl.hidden || pl.referee)
-                    continue;
+                if (pl.level != p.level || p == pl || pl.hidden || pl.referee) continue;
                 
+                p.SendDespawn(pl.id);
                 string name = null;
                 if (pl.infected && showInfected) {
                     name = Server.ZombieName != "" ? Colors.red + Server.ZombieName : Colors.red + pl.name;
                 } else {
                     name = pl.color + pl.name;
                 }
-                p.SendSpawn(pl.id, name,
-                            pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);
+                p.SendSpawn(pl.id, name, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);
             }
-            
-            foreach (PlayerBot b in PlayerBot.playerbots)
-                if (b.level == p.level)
-                    p.SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
-
-            p.Loading = false;
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
         }
         
         public override void Help(Player p) {
