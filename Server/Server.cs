@@ -373,6 +373,7 @@ namespace MCGalaxy
         public static LevelPermission reviewnext = LevelPermission.Operator;
         public static LevelPermission reviewclear = LevelPermission.Operator;
 
+        public static int DrawReloadLimit = 10000;
         #endregion
 
         public static MainLoop ml;

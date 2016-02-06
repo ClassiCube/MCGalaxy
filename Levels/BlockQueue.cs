@@ -21,7 +21,7 @@ namespace MCGalaxy {
     public static class BlockQueue {
         
         public static int time { get { return (int)blocktimer.Interval; } set { blocktimer.Interval = value; } }
-        public static int blockupdates = 200;
+        public static int blockupdates = 250;
         static System.Timers.Timer blocktimer = new System.Timers.Timer(100);
         static bool started = false;
 

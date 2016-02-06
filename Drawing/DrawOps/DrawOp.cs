@@ -24,7 +24,6 @@ namespace MCGalaxy {
         public int TotalAffected; // blocks affected by the draw operation
         public int TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
         
-        protected const int reloadLimit = 10000;
         protected internal int method;
         
         public virtual bool MinMaxCoords { get { return true; } }
@@ -48,7 +47,7 @@ namespace MCGalaxy {
         }
         
         public virtual bool DetermineDrawOpMethod(Level lvl, int affected) {
-            if (affected > reloadLimit) {
+            if (affected > Server.DrawReloadLimit) {
                 method = MethodSetTile;
                 return true;
             } else {

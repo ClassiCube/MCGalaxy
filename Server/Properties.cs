@@ -558,6 +558,10 @@ namespace MCGalaxy {
 								try { Server.physUndo = int.Parse(value); }
 								catch { Server.s.Log("Invalid " + key + ". Using default"); Server.physUndo = 20000; }
 								break;
+							case "draw-reload-limit":
+								try { Server.DrawReloadLimit = int.Parse(value); }
+								catch { Server.s.Log("Invalid " + key + ". Using default"); Server.DrawReloadLimit = 10000; }
+								break;
 								
 							case "review-view-perm":
 								try {
@@ -628,8 +632,8 @@ namespace MCGalaxy {
 								catch {
 									Server.IgnoreOmnibans = false;
 								}
-
-							break;
+								break;
+								
                             case "menu-style":
                                 try { Server.menustyle = Convert.ToInt32(value); }
                                 catch { Server.s.Log("menu-style value invalid! setting to default."); }
@@ -826,6 +830,7 @@ namespace MCGalaxy {
 			w.WriteLine("guest-leave-notify = " + Server.guestLeaveNotify.ToString().ToLower());
 			w.WriteLine("total-undo = " + Server.totalUndo);
 			w.WriteLine("physics-undo-max = " + Server.physUndo);
+			w.WriteLine("draw-reload-limit = " + Server.DrawReloadLimit);
 			w.WriteLine();
 			w.WriteLine("# backup options");
 			w.WriteLine("backup-time = " + Server.backupInterval.ToString());

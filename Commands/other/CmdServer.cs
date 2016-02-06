@@ -257,6 +257,7 @@ namespace MCGalaxy.Commands
             Server.notifyOnJoinLeave = false;
             Server.repeatMessage = false;
             Server.globalignoreops = false;
+            Server.DrawReloadLimit = 10000;
 
             Server.checkUpdates = true;
 
