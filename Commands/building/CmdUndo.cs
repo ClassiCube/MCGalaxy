@@ -32,11 +32,13 @@ namespace MCGalaxy.Commands
         public CmdUndo() { }
 
         public override void Use(Player p, string message) {
-            if (p != null)
-                p.RedoBuffer.Clear();
+            if (p != null) p.RedoBuffer.Clear();
+            int ignored = 0;
             if (message == "") {
                 if (p == null) { Player.SendMessage(null, "Console doesn't have an undo buffer."); return; }
                 message = p.name.ToLower() + " 30";
+            } else if (p != null && int.TryParse(message, out ignored)) {
+                message = p.name.ToLower() + " " + message;
             }
             
             string[] parts = message.Split(' ');
@@ -133,20 +135,20 @@ namespace MCGalaxy.Commands
             Command.all.Find("physics").Use(p, "0");
 
             if (p.level.UndoBuffer.Count != Server.physUndo) {
-            	int count = p.level.currentUndo;
+                int count = p.level.currentUndo;
                 for (int i = count; i >= 0; i--) {
                     try {
                         if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
                     } catch { }
                 }
             } else {
-            	int count = p.level.currentUndo;
+                int count = p.level.currentUndo;
                 for (int i = count; i >= 0; i--) {
                     try {
                         if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
                     } catch { }
                 }
-            	for (int i = p.level.UndoBuffer.Count - 1; i > count; i--) {
+                for (int i = p.level.UndoBuffer.Count - 1; i > count; i--) {
                     try {
                         if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
                     } catch { }
