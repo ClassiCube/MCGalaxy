@@ -389,7 +389,7 @@ namespace MCGalaxy.Commands {
                                             if (level.permissionbuild > p.group.Permission) { level.permissionbuild = p.group.Permission; }
                                             if (level.permissionvisit > p.group.Permission) { level.permissionvisit = p.group.Permission; }
                                             Command.all.Find("goto").Use(p, p.name + "_" + par3);
-                                            while (p.Loading) { Thread.Sleep(250); }
+
                                             Player.SendMessage(p, "%aSuccessfully created your map: '%f" + p.name + "_" + par3 + "%a'");
                                             Player.SendMessage(p, "%aYour balance is now %f" + p.money.ToString() + " %3" + Server.moneys);
                                             try {

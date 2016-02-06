@@ -71,9 +71,9 @@ namespace MCGalaxy.Commands
                         if (who.Loading)
                         {
                             Player.SendMessage(p, "Waiting for " + who.color + who.DisplayName + Server.DefaultColor + " to spawn...");
-                            while (who.Loading) { }
+                            who.BlockUntilLoad(10);
                         }
-                        while (p.Loading) { }  //Wait for player to spawn in new map
+                        p.BlockUntilLoad(10);  //Wait for player to spawn in new map
                         p.SendPos(0xFF, who.pos[0], who.pos[1], who.pos[2], who.rot[0], 0);
                     }
                     return;
@@ -93,9 +93,9 @@ namespace MCGalaxy.Commands
                     if (who.Loading)
                     {
                         Player.SendMessage(p, "Waiting for " + who.color + who.DisplayName + Server.DefaultColor + " to spawn...");
-                        while (who.Loading) { }
+                        who.BlockUntilLoad(10);
                     }
-                    while (p.Loading) { }  //Wait for player to spawn in new map
+                    p.BlockUntilLoad(10);  //Wait for player to spawn in new map
                     p.SendPos(0xFF, who.pos[0], who.pos[1], who.pos[2], who.rot[0], 0);
                 }
             }

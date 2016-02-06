@@ -85,9 +85,7 @@ namespace MCGalaxy.Commands
                                 if (!player.muted) { mute.Use(p, message); }
                                 if (!player.frozen) { freeze.Use(p, message); }
                                 move.Use(p, message + " " + xjailMap);
-                                while (player.Loading)
-                                {
-                                }
+                                player.BlockUntilLoad(10);
                                 if (!player.jailed) { jail.Use(p, message); }
                                 Player.GlobalMessage(player.color + player.DisplayName + Server.DefaultColor + " was XJailed!");
                                 return;
@@ -100,9 +98,7 @@ namespace MCGalaxy.Commands
                                     readFile.Close();
                                     File.Delete(playerFile);
                                     move.Use(p, message + " " + playerMap);
-                                    while (player.Loading)
-                                    {
-                                    }
+                                    player.BlockUntilLoad(10);
                                     mute.Use(p, message);
                                     jail.Use(p, message);
                                     freeze.Use(p, message);

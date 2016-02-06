@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             if (who.Loading)
             {
                 Player.SendMessage(p, "Waiting for " + who.color + who.DisplayName + Server.DefaultColor + " to spawn...");
-                while (who.Loading) { }
+                who.BlockUntilLoad(10);
             }
 
             Player.SendMessage(p, "---------------------------------------------------------");
@@ -103,7 +103,6 @@ namespace MCGalaxy.Commands {
                 Level where = p.level;
                 Command.all.Find("goto").Use(who, where.name);
                 Thread.Sleep(1000);
-                while (who.Loading) { Thread.Sleep(250); }
             }
 
             who.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);

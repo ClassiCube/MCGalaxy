@@ -286,7 +286,7 @@ namespace MCGalaxy.Commands
                     Command.all.Find("goto").Use(p, "countdown");
                     Thread.Sleep(1000);
                     // Sleep for a bit while they load
-                    while (p.Loading) { Thread.Sleep(250); }
+
                     p.level.permissionbuild = LevelPermission.Nobody;
                     p.level.motd = "Welcome to the Countdown map!!!! -hax";
                     const ushort x = 8 * 32 + 16;

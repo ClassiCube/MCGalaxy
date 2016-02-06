@@ -572,7 +572,6 @@ namespace MCGalaxy
                     {
                         player.SendMessage("Going to the next map!");
                         Command.all.Find("goto").Use(player, next);
-                        while (player.Loading) { Thread.Sleep(890); }
                     }
                 });
                 Command.all.Find("unload").Use(null, oldLevel);

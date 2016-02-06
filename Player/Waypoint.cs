@@ -52,7 +52,6 @@ namespace MCGalaxy {
             if ( lvl != null ) {
                 if ( p.level != lvl ) {
                     Command.all.Find("goto").Use(p, lvl.name);
-                    while ( p.Loading ) { Thread.Sleep(250); }
                 }
                 p.SendPos(0xFF, wp.x, wp.y, wp.z, wp.rotx, wp.roty);
                 Player.SendMessage(p, "Sent you to waypoint");

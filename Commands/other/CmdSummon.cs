@@ -66,7 +66,6 @@ namespace MCGalaxy.Commands
                 Command.all.Find("goto").Use(who, p.level.name);
                 Thread.Sleep(1000);
                 // Sleep for a bit while they load
-                while (who.Loading) { Thread.Sleep(250); }
             }
 
             who.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);

@@ -106,7 +106,6 @@ namespace MCGalaxy
                     Command.all.Find("goto").Use(player, mapon.name);
                     Thread.Sleep(1000);
                     // Sleep for a bit while they load
-                    while (player.Loading) { Thread.Sleep(250); }
                 }
                 player.SendSpawn(0xFF, player.name, x1, y1, z1, (byte)0, (byte)0);
             }

@@ -30,8 +30,20 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            if (message == "") { Help(p); return; }
-
+            if (message == "") { Help(p); return; }            
+            if (p.usingGoto) { Player.SendMessage(p, "Cannot use /goto, already loading a map."); return; }
+            
+            p.usingGoto = true;
+            try {
+                HandleGoto(p, message);
+            } finally {
+                p.usingGoto = false;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+        }
+        
+        void HandleGoto(Player p, string message) {
             Level lvl = LevelInfo.FindExact(message);
             if (lvl != null) {
                 GoToLevel(p, lvl, message);
@@ -52,10 +64,10 @@ namespace MCGalaxy.Commands {
                     }
                 } else {
                     if (lvl == null) {
-                         Player.SendMessage(p, "Level \"" + message + "\" cannot be loaded using /goto!");
+                        Player.SendMessage(p, "Level \"" + message + "\" cannot be loaded using /goto!");
                     } else {
                         GoToLevel(p, lvl, message);
-                    }                
+                    }
                 }
             } else {
                 lvl = LevelInfo.Find(message);
@@ -66,8 +78,6 @@ namespace MCGalaxy.Commands {
                     GoToLevel(p, lvl, message);
                 }
             }
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
         }
         
         void GoToLevel(Player p, Level lvl, string message) {

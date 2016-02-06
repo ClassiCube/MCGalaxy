@@ -144,7 +144,6 @@ namespace MCGalaxy.Commands
                         {
                             if (lvl.permissionvisit > p.group.Permission) { Player.SendMessage(p, "Sorry, you aren't a high enough rank to visit the map that that warp is on."); return; }
                             Command.all.Find("goto").Use(p, lvl.name);
-                            while (p.Loading) { Thread.Sleep(250); }
                         }
                         p.SendPos(0xFF, w.x, w.y, w.z, w.rotx, w.roty);
                         return;

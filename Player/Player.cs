@@ -272,6 +272,7 @@ namespace MCGalaxy {
 
         public Level level = Server.mainLevel;
         public bool Loading = true; //True if player is loading a map.
+        internal bool usingGoto = false;
         public ushort[] lastClick = new ushort[] { 0, 0, 0 };
         public ushort[] beforeTeleportPos = new ushort[] { 0, 0, 0 };
         public string beforeTeleportMap = "";
@@ -1121,7 +1122,7 @@ namespace MCGalaxy {
                     }
                     else SendBlockchange(x, y, z, b);
 
-                    while ( p.Loading ) { } //Wait for player to spawn in new map
+                    p.BlockUntilLoad(10);
                     Command.all.Find("move").Use(this, this.name + " " + Portals.Rows[LastPortal]["ExitX"].ToString() + " " + Portals.Rows[LastPortal]["ExitY"].ToString() + " " + Portals.Rows[LastPortal]["ExitZ"].ToString());
                 }
                 else {
@@ -2576,6 +2577,10 @@ Next: continue;
         }
         #endregion
 
+        public void BlockUntilLoad(int sleep) {
+            while (Loading) 
+                Thread.Sleep(sleep);
+        }
         public void RevertBlock(ushort x, ushort y, ushort z) {
             byte b = level.GetTile(x, y, z);
             SendBlockchange(x, y, z, b);
