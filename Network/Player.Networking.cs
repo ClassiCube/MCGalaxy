@@ -286,9 +286,10 @@ namespace MCGalaxy {
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
         
         public bool SendRawMap(Level oldLevel, Level level) {
-            if ( level.blocks == null ) return false;
+            if (level.blocks == null) return false;
             bool success = true;
             bool hasBlockDefinitions = HasCpeExt(CpeExt.BlockDefinitions);
+            useCheckpointSpawn = false;
             
             try { 
                 byte[] buffer = new byte[level.blocks.Length + 4];

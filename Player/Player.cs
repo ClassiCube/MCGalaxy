@@ -164,9 +164,6 @@ namespace MCGalaxy {
         public bool ZoneCheck = false;
         public bool zoneDel = false;
 
-        public Thread commThread;
-        public bool commUse = false;
-
         public bool aiming;
         public bool isFlying = false;
 
@@ -176,7 +173,8 @@ namespace MCGalaxy {
         public bool voice = false;
         public string voicestring = "";
 
-        public int grieferStoneWarn = 0;
+        public bool useCheckpointSpawn = false;
+        public ushort checkpointX, checkpointY, checkpointZ;
 
         //CTF
         public Team team;
@@ -236,9 +234,7 @@ namespace MCGalaxy {
         public bool spawned = false;
 
         public bool Mojangaccount {
-            get {
-                return truename.Contains('@');
-            }
+            get { return truename.Contains('@'); }
         }
 
         //Undo
@@ -287,7 +283,6 @@ namespace MCGalaxy {
 
         // grief/spam detection
         public static int spamBlockCount = 200;
-        public bool isUsingOpenClassic = false;
         public static int spamBlockTimer = 5;
         Queue<DateTime> spamBlockLog = new Queue<DateTime>(spamBlockCount);
 
@@ -324,32 +319,21 @@ namespace MCGalaxy {
         public bool verifiedName;
 
         public static string CheckPlayerStatus(Player p) {
-            if ( p.hidden )
-                return "hidden";
-            if ( Server.afkset.Contains(p.name) )
-                return "afk";
+            if ( p.hidden ) return "hidden";
+            if ( Server.afkset.Contains(p.name) ) return "afk";
             return "active";
         }
+        
         public bool Readgcrules = false;
         public DateTime Timereadgcrules = DateTime.MinValue;
         public bool CheckIfInsideBlock() {
-            return CheckIfInsideBlock(this);
-        }
+            ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
+            byte head = level.GetTile(x, y, z);
+            byte feet = level.GetTile(x, (ushort)(y - 1), z);
 
-        public static bool CheckIfInsideBlock(Player p) {
-            ushort x, y, z;
-            x = (ushort)( p.pos[0] / 32 );
-            y = (ushort)( p.pos[1] / 32 );
-            y = (ushort)Math.Round((decimal)( ( ( y * 32 ) + 4 ) / 32 ));
-            z = (ushort)( p.pos[2] / 32 );
-
-            byte b = p.level.GetTile(x, y, z);
-            byte b1 = p.level.GetTile(x, (ushort)( y - 1 ), z);
-
-            if ( Block.Walkthrough(Block.Convert(b)) && Block.Walkthrough(Block.Convert(b1)) ) {
+            if (Block.Walkthrough(Block.Convert(head)) && Block.Walkthrough(Block.Convert(feet)))
                 return false;
-            }
-            return Block.Convert(b) != Block.Zero && Block.Convert(b) != Block.op_air;
+            return Block.Convert(head) != Block.Zero && Block.Convert(head) != Block.op_air;
         }
 
         //This is so that plugin devs can declare a player without needing a socket..
@@ -954,10 +938,8 @@ namespace MCGalaxy {
 
         void HandleBlockchange(byte[] message) {
             try {
-                if ( !loggedIn )
-                    return;
-                if ( CheckBlockSpam() )
-                    return;
+                if ( !loggedIn ) return;
+                if ( CheckBlockSpam() ) return;
                 
                 ushort x = NetUtils.ReadU16(message, 0);
                 ushort y = NetUtils.ReadU16(message, 2);
@@ -1101,7 +1083,7 @@ namespace MCGalaxy {
             }
         }
 
-        public void HandlePortal(Player p, ushort x, ushort y, ushort z, byte b) {
+        void HandlePortal(Player p, ushort x, ushort y, ushort z, byte b) {
             try {
                 //safe against SQL injections because no user input is given here
                 DataTable Portals = Database.fillData("SELECT * FROM `Portals" + level.name + "` WHERE EntryX=" + (int)x + " AND EntryY=" + (int)y + " AND EntryZ=" + (int)z);
@@ -1132,9 +1114,8 @@ namespace MCGalaxy {
             catch { Player.SendMessage(p, "Portal had no exit."); return; }
         }
 
-
         static char[] trimChars = { ' '};
-        public void HandleMsgBlock(Player p, ushort x, ushort y, ushort z, byte b) {
+        void HandleMsgBlock(Player p, ushort x, ushort y, ushort z, byte b) {
             try {
                 //safe against SQL injections because no user input is given here
                 DataTable Messages = Database.fillData("SELECT * FROM `Messages" + level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
@@ -1162,8 +1143,8 @@ namespace MCGalaxy {
         	    RevertBlock(x, y, z); return;
         	}
         }
-
-        private void DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
+        
+        void DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if ( deleteMode && b != Block.c4det ) { level.Blockchange(this, x, y, z, Block.air); return; }
 
             if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return; }
@@ -1266,7 +1247,7 @@ namespace MCGalaxy {
                 level.Blockchange(this, x, (ushort)( y - 1 ), z, Block.grass);
         }
 
-        public void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if ( Block.odoor(b) != Block.Zero ) { SendMessage("oDoor here!"); return; }
             switch ( BlockAction ) {
                 case 0: //normal
@@ -1434,42 +1415,45 @@ cliprot = rot;
             return level.GetTile(x, y, z);
         }
 
-        public void CheckBlock(ushort x, ushort y, ushort z) {
-            y = (ushort)Math.Round((decimal)( ( ( y * 32 ) + 4 ) / 32 ));
-
-            byte b = this.level.GetTile(x, y, z);
-            byte b1 = this.level.GetTile(x, (ushort)( y - 1 ), z);
+        internal void CheckBlock(ushort x, ushort y, ushort z) {
+            byte b = level.GetTile(x, y, z);
+            byte b1 = level.GetTile(x, (ushort)(y - 1), z);
 
             if ( Block.Mover(b) || Block.Mover(b1) ) {
                 if ( Block.DoorAirs(b) != 0 )
                     level.Blockchange(x, y, z, Block.DoorAirs(b));
                 if ( Block.DoorAirs(b1) != 0 )
-                    level.Blockchange(x, (ushort)( y - 1 ), z, Block.DoorAirs(b1));
+                    level.Blockchange(x, (ushort)(y - 1), z, Block.DoorAirs(b1));
 
                 if ( level.PosToInt( x, y, z ) != oldIndex ) {
                     if ( b == Block.air_portal || b == Block.water_portal || b == Block.lava_portal ) {
                         HandlePortal(this, x, y, z, b);
-                    }
-                    else if ( b1 == Block.air_portal || b1 == Block.water_portal || b1 == Block.lava_portal ) {
-                        HandlePortal(this, x, (ushort)( (int)y - 1 ), z, b1);
+                    } else if ( b1 == Block.air_portal || b1 == Block.water_portal || b1 == Block.lava_portal ) {
+                        HandlePortal(this, x, (ushort)(y - 1), z, b1);
                     }
 
                     if ( b == Block.MsgAir || b == Block.MsgWater || b == Block.MsgLava ) {
                         HandleMsgBlock(this, x, y, z, b);
-                    }
-                    else if ( b1 == Block.MsgAir || b1 == Block.MsgWater || b1 == Block.MsgLava ) {
-                        HandleMsgBlock(this, x, (ushort)( (int)y - 1 ), z, b1);
-                    }
+                    } else if ( b1 == Block.MsgAir || b1 == Block.MsgWater || b1 == Block.MsgLava ) {
+                        HandleMsgBlock(this, x, (ushort)(y - 1), z, b1);
+                	} else if ( b == Block.checkpoint ) {
+                		useCheckpointSpawn = true;
+                        checkpointX = x; checkpointY = y; checkpointZ = z;
+                        SendSpawn(0xFF, color + name, pos[0], (ushort)(pos[1] - 22), pos[2], rot[0], rot[1]);
+                	} else if ( b1 == Block.checkpoint ) {
+                		useCheckpointSpawn = true;
+                		checkpointX = x; checkpointY = (ushort)(y + 1); checkpointZ = z;
+                		SendSpawn(0xFF, color + name, pos[0], (ushort)(pos[1] - 22), pos[2], rot[0], rot[1]);
+                	}
                 }
             }
             if ( ( b == Block.tntexplosion || b1 == Block.tntexplosion ) && PlayingTntWars ) { }
-            else if ( Block.Death(b) ) HandleDeath(b); else if ( Block.Death(b1) ) HandleDeath(b1);
+            else if ( Block.Death(b) ) HandleDeath(b); 
+            else if ( Block.Death(b1) ) HandleDeath(b1);
         }
 
         public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
-            ushort x = (ushort)( pos[0] / 32 );
-            ushort y = (ushort)( pos[1] / 32 );
-            ushort z = (ushort)( pos[2] / 32 );
+            ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
             if ( OnDeath != null )
                 OnDeath(this, b);
             if ( PlayerDeath != null )
@@ -1477,6 +1461,7 @@ cliprot = rot;
             OnPlayerDeathEvent.Call(this, b);
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) )
                 return;
+            
             if ( immediate || lastDeath.AddSeconds(2) < DateTime.Now ) {
 
                 if ( level.Killer && !invincible && !hidden ) {
@@ -1997,7 +1982,7 @@ return;
                             }
                         } catch { }
 
-                        this.commThread = new Thread(new ThreadStart(delegate {
+                        Thread commThread = new Thread(new ThreadStart(delegate {
                             try {
                                 command.Use(this, message);
                             } catch (Exception e) {

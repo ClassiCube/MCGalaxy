@@ -250,6 +250,7 @@ namespace MCGalaxy
 
         public const byte magma = (byte)195;
         public const byte geyser = (byte)196;
+        public const byte checkpoint = (byte)197;
 
         public const byte air_flood = (byte)200;
         public const byte door_air = (byte)201;
@@ -479,7 +480,7 @@ namespace MCGalaxy
                     case smalltnt:
                     case tntexplosion:
                     case firework:
-
+                    case checkpoint:
                     case train:
 
                     case birdwhite:
@@ -885,6 +886,7 @@ namespace MCGalaxy
                 case Block.MsgLava:
 
                 case Block.flagbase:
+                case Block.checkpoint:
                     return true;
             }
             return false;
@@ -1334,14 +1336,15 @@ namespace MCGalaxy
                 case rockethead: return "rockethead";
                 case firework: return "firework";
 
-                case 190: return "hot_lava";
-                case 191: return "cold_water";
-                case 192: return "nerve_gas";
+                case Block.deathlava: return "hot_lava";
+                case Block.deathwater: return "cold_water";
+                case Block.deathair: return "nerve_gas";
                 case activedeathwater: return "active_cold_water";
                 case activedeathlava: return "active_hot_lava";
 
-                case 195: return "magma";
-                case 196: return "geyser";
+                case Block.magma: return "magma";
+                case Block.geyser: return "geyser";
+                case Block.checkpoint: return "checkpoint";
 
                 //Blocks after this are converted before saving
                 case 200: return "air_flood";
@@ -1433,9 +1436,9 @@ namespace MCGalaxy
                 case "11":
                 case "lava": return 11;
                 case "12":
-                case "sand": return 12;
+                case "sand": return sand;
                 case "13":
-                case "gravel": return 13;
+                case "gravel": return gravel;
                 case "14":
                 case "gold_ore": return 14;
                 case "15":
@@ -1661,11 +1664,11 @@ namespace MCGalaxy
                 case "odoor12": return odoor12;
                 case "odoor_red": return odoor8_air;
 
-                case "white_message": return 130;
-                case "black_message": return 131;
-                case "air_message": return 132;
-                case "water_message": return 133;
-                case "lava_message": return 134;
+                case "white_message": return MsgWhite;
+                case "black_message": return MsgBlack;
+                case "air_message": return MsgAir;
+                case "water_message": return MsgWater;
+                case "lava_message": return MsgLava;
 
                 case "waterfall": return 140;
                 case "lavafall": return 141;
@@ -1703,16 +1706,17 @@ namespace MCGalaxy
                 case "rockethead": return rockethead;
                 case "firework": return firework;
 
-                case "hot_lava": return 190;
-                case "cold_water": return 191;
-                case "nerve_gas": return 192;
+                case "hot_lava": return deathlava;
+                case "cold_water": return deathwater;
+                case "nerve_gas": return deathair;
                 case "acw":
                 case "active_cold_water": return activedeathwater;
                 case "ahl":
                 case "active_hot_lava": return activedeathlava;
 
-                case "magma": return 195;
-                case "geyser": return 196;
+                case "magma": return magma;
+                case "geyser": return geyser;
+                case "checkpoint": return checkpoint;
 
                 //Blocks after this are converted before saving
                 case "air_flood": return air_flood;
@@ -1923,6 +1927,7 @@ namespace MCGalaxy
 
                 case Block.magma: return Block.lava;
                 case Block.geyser: return Block.water;
+                case Block.checkpoint: return Block.air;
 
                 case air_flood:
                 case door_air:
