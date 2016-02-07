@@ -322,12 +322,6 @@ namespace MCGalaxy {
 				}
 			}
 
-			if (all) { //clean variables
-				gamestatus = CountdownGameStatus.Disabled;
-				playersleftlist.Clear();
-				squaresLeft.Clear();
-				speed = 750;
-			}
 			//top part of map tube thingy
 			Cuboid(15, 17, 14, 16, 18, 14, Block.air, mapon);
 			Cuboid(15, 17, 17, 16, 18, 17, Block.air, mapon);
@@ -363,9 +357,11 @@ namespace MCGalaxy {
 				if (gamestatus == CountdownGameStatus.Finished)
 					Player.SendMessage(p, "You do not need to re-enable it");
 				gamestatus = CountdownGameStatus.Enabled;
-				
 				playersleftlist.Clear();
 				players.Clear();
+				squaresLeft.Clear();
+				
+				speed = 750;				
 				foreach (Player pl in PlayerInfo.players) {
 					pl.playerofcountdown = false;
 					pl.incountdown = false;
