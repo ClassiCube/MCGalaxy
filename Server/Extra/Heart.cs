@@ -100,7 +100,6 @@ namespace MCGalaxy {
             
             if(!CanBeat)
                 return;
-            return;
 
             byte[] data = Encoding.ASCII.GetBytes(beat.Prepare());
 
