@@ -30,6 +30,7 @@ namespace MCGalaxy {
         
         public bool HasCustomBlocks {
             get {
+                if (CustomBlocks == null) return false;
                 for (int i = 0; i < CustomBlocks.Length; i++)
                     if (CustomBlocks[i] != null) return true;
                 return false;

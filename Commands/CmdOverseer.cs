@@ -250,7 +250,7 @@ namespace MCGalaxy.Commands
             } else if (cmd == "TEXTURE") {
                 if (value == "") {
                     Player.SendMessage(p, "Removing current texture.");
-                    Command.all.Find("texture").Use(p, "level http://null.png");
+                    Command.all.Find("texture").Use(p, "level normal");
                 } else if (!value.EndsWith(".png")) {
                     Player.SendMessage(p, "Your texture image must end in .png");
                 } else {
