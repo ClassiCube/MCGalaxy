@@ -323,7 +323,7 @@ namespace MCGalaxy.Commands
                         Server.Countdown.gamestatus = CountdownGameStatus.Disabled;
                         Server.Countdown.playersleftlist.Clear();
                         Server.Countdown.players.Clear();
-                        Server.Countdown.squaresleft.Clear();
+                        Server.Countdown.squaresLeft.Clear();
                         Server.Countdown.Reset(p, true);
                         Player.SendMessage(p, "Countdown Disabled");
                         return;
@@ -356,7 +356,7 @@ namespace MCGalaxy.Commands
                             Server.Countdown.gamestatus = CountdownGameStatus.Enabled;
                             Server.Countdown.playersleftlist.Clear();
                             Server.Countdown.players.Clear();
-                            Server.Countdown.squaresleft.Clear();
+                            Server.Countdown.squaresLeft.Clear();
                             Server.Countdown.Reset(null, true);
                             return;
                         }

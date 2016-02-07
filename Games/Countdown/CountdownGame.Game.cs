@@ -28,9 +28,8 @@ namespace MCGalaxy {
                 Server.Countdown.players.Add(p);
                 Player.SendMessage(p, "You've joined the Countdown game!!");
                 Player.GlobalMessage(p.name + " has joined Countdown!!");
-                if (p.level != Server.Countdown.mapon) {
-                    Player.SendMessage(p, "You can type '/countdown goto' to goto the countdown map!!");
-                }
+                if (p.level != Server.Countdown.mapon)
+                	Command.all.Find("goto").Use(p, "countdown");
                 p.playerofcountdown = true;
             } else {
                 Player.SendMessage(p, "Sorry, you have already joined!!, to leave please type /countdown leave");
@@ -60,13 +59,11 @@ namespace MCGalaxy {
             if( !p.incountdown || gamestatus != CountdownGameStatus.InProgress || !freezemode)
                 return false;          
             if (p.countdownsettemps) {
-            	Server.s.Log( p.name + "," + x + "," + y + "," + z);
                 p.countdowntempx = x;
                 Thread.Sleep(100);
                 p.countdowntempz = z;
                 Thread.Sleep(100);
                 p.countdownsettemps = false;
-                Server.s.Log(p.name + " M:M " + p.countdowntempx + "," + p.countdowntempz);
             }
             
             if (x != p.countdowntempx || z != p.countdowntempz) {
