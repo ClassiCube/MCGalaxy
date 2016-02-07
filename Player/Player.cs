@@ -1310,58 +1310,33 @@ this.SendPos(0xFF, (ushort)(clippos[0] - 18), (ushort)(clippos[1] - 18), (ushort
 return;
 }*/
             byte thisid = message[0];
+            ushort x = NetUtils.ReadU16(message, 1);
+            ushort y = NetUtils.ReadU16(message, 3);
+            ushort z = NetUtils.ReadU16(message, 5);
+            byte rotx = message[7], roty = message[8];
 
-            if ( this.incountdown && Server.Countdown.gamestatus == CountdownGameStatus.InProgress && Server.Countdown.freezemode ) {
-                if ( this.countdownsettemps ) {
-                    countdowntempx = NetUtils.ReadU16(message, 1);
-                    Thread.Sleep(100);
-                    countdowntempz = NetUtils.ReadU16(message, 5);
-                    Thread.Sleep(100);
-                    countdownsettemps = false;
-                }
-                ushort x = countdowntempx;
-                ushort y = NetUtils.ReadU16(message, 3);
-                ushort z = countdowntempz;
-                byte rotx = message[7];
-                byte roty = message[8];
-                pos = new ushort[3] { x, y, z };
-                rot = new byte[2] { rotx, roty };
-                if ( countdowntempx != NetUtils.ReadU16(message, 1) || countdowntempz != NetUtils.ReadU16(message, 5) ) {
-                    this.SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
-                }
-            } else {
-                ushort x = NetUtils.ReadU16(message, 1);
-                ushort y = NetUtils.ReadU16(message, 3);
-                ushort z = NetUtils.ReadU16(message, 5);
-                byte rotx = message[7];
-                byte roty = message[8];
+            if (Server.Countdown.HandlesMovement(this, x, y, z, rotx, roty))
+                return;
+            if (Server.ZombieModeOn && Server.zombie.HandlesMovement(this, x, y, z, rotx, roty))
+                return;
+            if ( OnMove != null )
+                OnMove(this, x, y, z);
+            if ( PlayerMove != null )
+                PlayerMove(this, x, y, z);
+            PlayerMoveEvent.Call(this, x, y, z);
 
-                if (Server.ZombieModeOn && Server.zombie.HandlesMovement(this, x, y, z, rotx, roty))
-                    return;
-                if ( OnMove != null )
-                    OnMove(this, x, y, z);
-                if ( PlayerMove != null )
-                    PlayerMove(this, x, y, z);
-                PlayerMoveEvent.Call(this, x, y, z);
-
-                if (OnRotate != null)
-                    OnRotate(this, rot);
-                if (PlayerRotate != null)
-                    PlayerRotate(this, rot);
-                PlayerRotateEvent.Call(this, rot);
-                if ( cancelmove ) {
-                    SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]);
-                    return;
-                }
-               
-                pos = new ushort[3] { x, y, z };
-                rot = new byte[2] { rotx, roty };
-                /*if (!CheckIfInsideBlock())
-{
-clippos = pos;
-cliprot = rot;
-}*/
+            if (OnRotate != null)
+                OnRotate(this, rot);
+            if (PlayerRotate != null)
+                PlayerRotate(this, rot);
+            PlayerRotateEvent.Call(this, rot);
+            if ( cancelmove ) {
+                SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
             }
+            
+            pos = new ushort[3] { x, y, z };
+            rot = new byte[2] { rotx, roty };
+            /*if (!CheckIfInsideBlock()) { clippos = pos; cliprot = rot; }*/
         }
 
         internal void CheckSurvival(ushort x, ushort y, ushort z) {
@@ -2314,12 +2289,7 @@ return;
                         team.RemoveMember(this);
                     }
 
-                    if ( Server.Countdown.players.Contains(this) ) {
-                        if ( Server.Countdown.playersleftlist.Contains(this) ) {
-                            Server.Countdown.PlayerLeft(this);
-                        }
-                        Server.Countdown.players.Remove(this);
-                    }
+                    Server.Countdown.PlayerLeftServer(this);
 
                     TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
                     if ( tntwarsgame != null ) {

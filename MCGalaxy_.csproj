@@ -396,6 +396,7 @@
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />
+    <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
     <Compile Include="Games\IGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />

@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-namespace MCGalaxy
-{
-    public sealed class CountdownGame
-    {
+
+namespace MCGalaxy {
+    
+    public sealed partial class CountdownGame {
+        
         public List<Player> players = new List<Player>();
         public List<Player> playersleftlist = new List<Player>();
         public List<string> squaresleft = new List<string>();
         public Level mapon;
 
-        public int playersleft;
         public int speed;
 
         public bool freezemode = false;
@@ -133,7 +133,6 @@ namespace MCGalaxy
                 mapon.ChatLevel("GO!!!!!!!");
             }
             {
-                playersleft = players.Count();
                 playersleftlist = players;
                 foreach (Player plya in players)
                 {
@@ -144,125 +143,107 @@ namespace MCGalaxy
             Play();
         }
 
-        public void Play()
-        {
-            if (freezemode == false)
-            {
-                while (squaresleft.Any() && playersleft != 0 && (gamestatus == CountdownGameStatus.InProgress || gamestatus == CountdownGameStatus.Finished))
-                {
-                    Random number = new Random();
-                    int randnum = number.Next(squaresleft.Count);
-                    string nextsquare = squaresleft.ElementAt(randnum);
-                    squaresleft.Remove(nextsquare);
-                    RemoveSquare(nextsquare);
-                    if (squaresleft.Count % 10 == 0 && gamestatus != CountdownGameStatus.Finished)
-                    {
-                        mapon.ChatLevel(squaresleft.Count + " Squares Left and " + playersleft.ToString() + " Players left!!");
-                    }
-                    if (cancel)
-                    {
-                        End(null);
-                    }
-                }
-                return;
+        public void Play() {
+            if (!freezemode) {
+                RemoveRandomSquares();
+            } else {
+                SendInitialMessages();
+                MessagePlayers("&bPlayers Frozen");
+                mapon.countdowninprogress = true;
+                gamestatus = CountdownGameStatus.InProgress;
+                foreach (Player pl in players)
+                    pl.countdownsettemps = true;
+                Thread.Sleep(500);
+                
+                RemoveGlassBlocks();
+                RemoveRandomSquares();
             }
-            else
+        }
+        
+        void SendInitialMessages() {
+            Thread.Sleep(500);
+            MessagePlayers("Welcome to Freeze Mode of countdown");
+            MessagePlayers("You have 15 seconds to stand on a square");
+            Thread.Sleep(500);
+            MessagePlayers("-----&b15" + Server.DefaultColor + "-----");
+            Thread.Sleep(500);
+            MessagePlayers("Once the countdown is up, you are stuck on your square");
+            Thread.Sleep(500);
+            MessagePlayers("-----&b14" + Server.DefaultColor + "-----");
+            Thread.Sleep(500);
+            MessagePlayers("The squares then start to dissapear");
+            Thread.Sleep(500);
+            MessagePlayers("-----&b13" + Server.DefaultColor + "-----");
+            Thread.Sleep(500);
+            MessagePlayers("Whoever is last out wins!!");
+            Thread.Sleep(500);
+            MessagePlayers("-----&b12" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b11" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b10" + Server.DefaultColor + "-----");
+            MessagePlayers("Only 10 Seconds left to pick your places!!");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b9" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b8" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b7" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b6" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b5" + Server.DefaultColor + "-----");
+            MessagePlayers("5 Seconds left to pick your places!!");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b4" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b3" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b2" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+            MessagePlayers("-----&b1" + Server.DefaultColor + "-----");
+            Thread.Sleep(1000);
+        }
+        
+        void RemoveGlassBlocks() {
+            ushort x3 = 5;
+            while (x3 <= 26)
             {
-                {//Find yo places stuff (15 seconds)
-                    Thread.Sleep(500);
-                    MessagePlayers("Welcome to Freeze Mode of countdown");
-                    MessagePlayers("You have 15 seconds to stand on a square");
-                    Thread.Sleep(500);
-                    MessagePlayers("-----&b15" + Server.DefaultColor + "-----");
-                    Thread.Sleep(500);
-                    MessagePlayers("Once the countdown is up, you are stuck on your square");
-                    Thread.Sleep(500);
-                    MessagePlayers("-----&b14" + Server.DefaultColor + "-----");
-                    Thread.Sleep(500);
-                    MessagePlayers("The squares then start to dissapear");
-                    Thread.Sleep(500);
-                    MessagePlayers("-----&b13" + Server.DefaultColor + "-----");
-                    Thread.Sleep(500);
-                    MessagePlayers("Whoever is last out wins!!");
-                    Thread.Sleep(500);
-                    MessagePlayers("-----&b12" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b11" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b10" + Server.DefaultColor + "-----");
-                    MessagePlayers("Only 10 Seconds left to pick your places!!");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b9" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b8" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b7" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b6" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b5" + Server.DefaultColor + "-----");
-                    MessagePlayers("5 Seconds left to pick your places!!");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b4" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b3" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b2" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("-----&b1" + Server.DefaultColor + "-----");
-                    Thread.Sleep(1000);
-                    MessagePlayers("&bPlayers Frozen");
-                    {
-                        mapon.countdowninprogress = true;
-                        gamestatus = CountdownGameStatus.InProgress;
-                        foreach (Player pl in players)
-                        {
-                            pl.countdownsettemps = true;
-                            Thread.Sleep(100);
-                        }
-                    }
-                    {//Get rid of glass
-                        ushort x3 = 5;
-                        while (x3 <= 26)
-                        {
-                            ushort z4 = 26;
-                            while (z4 >= 4)
-                            {
-                                mapon.Blockchange(x3, 4, z4, Block.air);
-                                z4 = (ushort)(z4 - 1);
-                            }
-                            x3 = (ushort)(x3 + 3);
-                        }
-                        ushort z3 = 5;
-                        while (z3 <= 26)
-                        {
-                            ushort x4 = 4;
-                            while (x4 <= 26)
-                            {
-                                mapon.Blockchange(x4, 4, z3, Block.air);
-                                x4++;
-                            }
-                            z3 = (ushort)(z3 + 3);
-                        }
-                    }
-                    while (squaresleft.Any() && playersleft != 0 && (gamestatus == CountdownGameStatus.InProgress || gamestatus == CountdownGameStatus.Finished))
-                    {
-                        Random number = new Random();
-                        int randnum = number.Next(squaresleft.Count);
-                        string nextsquare = squaresleft.ElementAt(randnum);
-                        squaresleft.Remove(nextsquare);
-                        RemoveSquare(nextsquare);
-                        if (squaresleft.Count % 10 == 0 && gamestatus != CountdownGameStatus.Finished)
-                        {
-                            mapon.ChatLevel(squaresleft.Count + " Squares Left and " + playersleft.ToString() + " Players left!!");
-                        }
-                        if (cancel)
-                        {
-                            End(null);
-                        }
-                    }
-                    return;
+                ushort z4 = 26;
+                while (z4 >= 4)
+                {
+                    mapon.Blockchange(x3, 4, z4, Block.air);
+                    z4 = (ushort)(z4 - 1);
                 }
+                x3 = (ushort)(x3 + 3);
+            }
+            ushort z3 = 5;
+            while (z3 <= 26)
+            {
+                ushort x4 = 4;
+                while (x4 <= 26)
+                {
+                    mapon.Blockchange(x4, 4, z3, Block.air);
+                    x4++;
+                }
+                z3 = (ushort)(z3 + 3);
+            }
+        }
+        
+        void RemoveRandomSquares() {
+            while (squaresleft.Count > 0 && playersleftlist.Count != 0
+                   && (gamestatus == CountdownGameStatus.InProgress || gamestatus == CountdownGameStatus.Finished))
+            {
+                Random number = new Random();
+                int randnum = number.Next(squaresleft.Count);
+                string nextsquare = squaresleft.ElementAt(randnum);
+                squaresleft.Remove(nextsquare);
+                RemoveSquare(nextsquare);
+                
+                if (squaresleft.Count % 10 == 0 && gamestatus != CountdownGameStatus.Finished)
+                    mapon.ChatLevel(squaresleft.Count + " Squares Left and " + playersleftlist.Count + " Players left!!");
+                if (cancel)
+                    End(null);
             }
         }
         
@@ -342,7 +323,7 @@ namespace MCGalaxy
             mapon.Blockchange(x, y, z, block);
             mapon.Blockchange((ushort)(x + 1), y, z, block);
             mapon.Blockchange(x, y, (ushort)(z + 1), block);
-            mapon.Blockchange((ushort)(x + 1), y, (ushort)(z + 1), block);            
+            mapon.Blockchange((ushort)(x + 1), y, (ushort)(z + 1), block);
         }
         
         void PopulateSquaresLeft()
@@ -431,15 +412,15 @@ namespace MCGalaxy
             }
         }
 
-        public void Death(Player p)
-        {
-            playersleft = playersleft - 1;
-
+        public void Death(Player p) {
             mapon.ChatLevel(p.color + p.name + Server.DefaultColor + " is out of countdown!!");
             p.incountdown = false;
             playersleftlist.Remove(p);
-            switch (playersleft)
-            {
+            MessagePlayersLeft();
+        }
+
+        void MessagePlayersLeft() {
+            switch (playersleftlist.Count) {
                 case 1:
                     mapon.ChatLevel(playersleftlist.Last().color + playersleftlist.Last().name + Server.DefaultColor + " is the winner!!");
                     End(playersleftlist.Last());
@@ -450,50 +431,17 @@ namespace MCGalaxy
                     break;
                 case 5:
                     mapon.ChatLevel("Only 5 Players left:");
-                    foreach (Player pl in playersleftlist)
-                    {
+                    foreach (Player pl in playersleftlist) {
                         mapon.ChatLevel(pl.color + pl.name);
                         Thread.Sleep(500);
                     }
                     break;
                 default:
-                    mapon.ChatLevel("Now there are " + playersleft.ToString() + " players left!!");
+                    mapon.ChatLevel("Now there are " + playersleftlist.Count + " players left!!");
                     break;
             }
         }
-
-        public void PlayerLeft(Player p)
-        {
-            playersleft = playersleft - 1;
-
-            mapon.ChatLevel(p.color + p.name + Server.DefaultColor + " logged out and so is out of countdown!!");
-            players.Remove(p);
-            p.incountdown = false;
-            playersleftlist.Remove(p);
-            switch (playersleft)
-            {
-                case 1:
-                    mapon.ChatLevel(playersleftlist.Last().color + playersleftlist.Last().name + Server.DefaultColor + " is the winner!!");
-                    End(playersleftlist.Last());
-                    break;
-                case 2:
-                    mapon.ChatLevel("Only 2 Players left:");
-                    mapon.ChatLevel(playersleftlist.First().color + playersleftlist.First().name + Server.DefaultColor + " and " + playersleftlist.Last().color + playersleftlist.Last().name);
-                    break;
-                case 5:
-                    mapon.ChatLevel("Only 5 Players left:");
-                    foreach (Player pl in playersleftlist)
-                    {
-                        mapon.ChatLevel(pl.color + pl.name);
-                        Thread.Sleep(500);
-                    }
-                    break;
-                default:
-                    mapon.ChatLevel("Now there are " + playersleft.ToString() + " players left!!");
-                    break;
-            }
-        }
-
+        
         public void End(Player winner)
         {
             squaresleft.Clear();
@@ -520,7 +468,6 @@ namespace MCGalaxy
                 }
                 Player.GlobalMessage("The countdown game was canceled!!");
                 gamestatus = CountdownGameStatus.Enabled;
-                playersleft = 0;
                 playersleftlist.Clear();
                 players.Clear();
                 squaresleft.Clear();
@@ -539,7 +486,6 @@ namespace MCGalaxy
                     {
                         { //clean variables
                             gamestatus = CountdownGameStatus.Disabled;
-                            playersleft = 0;
                             playersleftlist.Clear();
                             squaresleft.Clear();
                             speed = 750;
@@ -697,7 +643,6 @@ namespace MCGalaxy
                         }
                     }
                     gamestatus = CountdownGameStatus.Enabled;
-                    playersleft = 0;
                     playersleftlist.Clear();
                     players.Clear();
                     foreach (Player pl in PlayerInfo.players)
