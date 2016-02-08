@@ -70,8 +70,8 @@ namespace MCGalaxy {
                 x = p.countdowntempx; z = p.countdowntempz;
                 p.SendPos(0xFF, x, (ushort)(y - 22), z, rotX, rotY);
             }
-            p.pos = new ushort[3] { x, y, z };
-            p.rot = new byte[2] { rotX, rotY };
+            p.pos[0] = x; p.pos[1] = y; p.pos[2] = z;
+            p.rot[0] = rotX; p.rot[1] = rotY;
             return true;
         }
     }

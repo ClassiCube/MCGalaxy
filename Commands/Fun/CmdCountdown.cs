@@ -37,9 +37,10 @@ namespace MCGalaxy.Commands {
             if (p == null) { MessageInGameOnly(p); return; }
 
             string[] args = message.ToLower().Split(' ');
-            string cmd = args[0], arg1 = "", arg2 = "";
+            string cmd = args[0], arg1 = "", arg2 = "", arg3 = "";
             if (args.Length > 1) arg1 = args[1];
             if (args.Length > 2) arg2 = args[2];
+            if (args.Length > 3) arg3 = args[3]; 
             
             switch (cmd) {
                 case "help":
@@ -62,7 +63,7 @@ namespace MCGalaxy.Commands {
                 switch (cmd) {
                     case "download":
                     case "generate":
-                        HandleGenerate(p); return;
+                        HandleGenerate(p, arg1, arg2, arg3); return;
                     case "enable":
                         HandleEnable(p); return;
                     case "disable":
@@ -210,14 +211,29 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        void HandleGenerate(Player p) {
-            Level lvl = CountdownMapGen.Generate(32, 32, 32);
+        void HandleGenerate(Player p, string arg1, string arg2, string arg3) {
+            int width, height, length;
+            if(!int.TryParse(arg1, out width) || !int.TryParse(arg2, out height) || !int.TryParse(arg3, out length)) {
+                width = 32; height = 32; length = 32;
+            }
+            if (width < 32 || !MapGen.OkayAxis(width)) width = 32;
+            if (height < 32 || !MapGen.OkayAxis(height)) height = 32;
+            if (length < 32 || !MapGen.OkayAxis(length)) length = 32;
+
+            Level oldLevel = LevelInfo.FindExact("countdown");
+            if (oldLevel != null) {
+                oldLevel.permissionbuild = LevelPermission.Guest;
+                Command.all.Find("deletelvl").Use(p, "countdown");
+            }
+            Level lvl = CountdownMapGen.Generate(width, height, length);
             lvl.Save();
-            Player.SendMessage(p, "Downloaded map, now loading map and sending you to it.");
+            if (Server.Countdown.gamestatus != CountdownGameStatus.Disabled)
+            	Server.Countdown.mapon = lvl;
+            
+            const string format = "Generated map ({0}x{1}x{2}), sending you to it..";
+            Player.SendMessage(p, String.Format(format, width, height, length));
             Command.all.Find("load").Use(p, "countdown");
             Command.all.Find("goto").Use(p, "countdown");
-            Thread.Sleep(1000);
-            // Sleep for a bit while they load
 
             p.level.permissionbuild = LevelPermission.Nobody;
             p.level.motd = "Welcome to the Countdown map!!!! -hax";
@@ -233,7 +249,7 @@ namespace MCGalaxy.Commands {
                 Server.Countdown.mapon = LevelInfo.FindExact("countdown");
                 if (Server.Countdown.mapon == null ) {
                     Player.SendMessage(p, "countdown level not found, generating..");
-                    HandleGenerate(p);
+                    HandleGenerate(p, "", "", "");
                     Server.Countdown.mapon = LevelInfo.FindExact("countdown");
                 }
                 
@@ -344,7 +360,7 @@ namespace MCGalaxy.Commands {
                 p.SendMessage("/cd rules - view the rules of countdown");
             
             if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 2)) {
-                p.SendMessage("/cd generate - generates the countdown map");
+                p.SendMessage("/cd generate [width] [height] [length] - generates the countdown map (default size is 32x32x32)");
                 p.SendMessage("/cd enable - enable the game");
                 p.SendMessage("/cd disable - disable the game");
                 p.SendMessage("/cd cancel - cancels a game");

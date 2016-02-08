@@ -71,8 +71,7 @@ namespace MCGalaxy.Commands
                     }
                 }
 
-                if (!File.Exists("levels/" + message + ".lvl"))
-                {
+                if (!LevelInfo.ExistsOffline(message)) {
                     Player.SendMessage(p, "Level \"" + message + "\" doesn't exist!"); return;
                 }
 
@@ -82,7 +81,7 @@ namespace MCGalaxy.Commands
                 {
                     if (File.Exists("levels/" + message + ".lvl.backup"))
                     {
-                        if (File.Exists("levels/" + message + ".lvl"))
+                    	if (LevelInfo.ExistsOffline(message))
                         {
                             Server.s.Log(message + ".lvl file is corrupt. Deleting and replacing with " + message + ".lvl.backup file.");
                             File.Delete("levels/" + message + ".lvl");

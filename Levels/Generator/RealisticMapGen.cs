@@ -49,7 +49,7 @@ namespace MCGalaxy {
                 terrain = new float[Lvl.Width * Lvl.Length];
                 overlay = new float[Lvl.Width * Lvl.Length];
                 if (genParams.GenTrees) overlay2 = new float[Lvl.Width * Lvl.Length];
-                LiquidLevel = genParams.GetLiquidLevel(Lvl.height);
+                LiquidLevel = genParams.GetLiquidLevel(Lvl.Height);
 
                 GenerateFault(terrain, Lvl, rand);
                 FilterAverage(Lvl);

@@ -57,15 +57,13 @@ namespace MCGalaxy {
             mapon.permissionbuild = LevelPermission.Nobody;
             int midX = mapon.Width / 2, midY = mapon.Height / 2, midZ = mapon.Length / 2;
             ushort x1 = (ushort)(midX * 32 + 16);
-            ushort y1 = (ushort)((mapon.height - 2) * 32);
+            ushort y1 = (ushort)((mapon.Height - 2) * 32);
             ushort z1 = (ushort)(midZ * 32 + 16);
             
             foreach (Player player in players) {
                 if (player.level != mapon) {
                     player.SendMessage("Sending you to the correct map.");
                     Command.all.Find("goto").Use(player, mapon.name);
-                    Thread.Sleep(1000);
-                    // Sleep for a bit while they load
                 }
                 player.SendSpawn(0xFF, player.name, x1, y1, z1, (byte)0, (byte)0);
             }
@@ -84,11 +82,11 @@ namespace MCGalaxy {
             Thread.Sleep(2000);
             mapon.ChatLevel("-----&b5%S-----");
             
-            Cuboid(midX, midY, midZ, midX + 1, midY, midZ + 1, Block.air, mapon);
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.air, mapon);
             Thread.Sleep(1000);
             mapon.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
             mapon.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
-           Cuboid(midX, mapon.Height - 5, midZ, midX + 1, mapon.Height - 5, midZ + 1, Block.air, mapon);
+            Cuboid(midX, mapon.Height - 5, midZ, midX + 1, mapon.Height - 5, midZ + 1, Block.air, mapon);
             mapon.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
             mapon.ChatLevel("-----&b1%S-----"); Thread.Sleep(1000);
             mapon.ChatLevel("GO!!!!!!!");
@@ -357,7 +355,7 @@ namespace MCGalaxy {
             Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, block, mapon);
             Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, block, mapon);
             Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, block, mapon);
-            Cuboid(midX, midY, midZ, midX + 1, midY, midZ + 1, floorBlock, mapon);
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock, mapon);
         }
 
         public void MessageAll(string message) {

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             if (foundLevel == Server.mainLevel) { Player.SendMessage(p, "Cannot delete the main level."); return; }
             if (!Directory.Exists("levels/deleted")) Directory.CreateDirectory("levels/deleted");
 
-            if (!File.Exists("levels/" + message + ".lvl")) {
+            if (!LevelInfo.ExistsOffline(message)) {
                 Player.SendMessage(p, "Could not find specified level."); return;
             }
 

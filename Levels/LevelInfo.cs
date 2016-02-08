@@ -44,6 +44,10 @@ namespace MCGalaxy {
             }
             return null;
         }
+		
+        public static bool ExistsOffline(string name) {
+            return File.Exists("levels/" + name.ToLower() + ".lvl");
+        }
         
         public static string FindOfflineProperty(string name, string propKey) {
             string file = "levels/level properties/" + name + ".properties";

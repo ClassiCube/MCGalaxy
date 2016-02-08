@@ -72,11 +72,11 @@ namespace MCGalaxy.Commands {
                     SetEnvWeather(p, value, ref lvl.weather); break;
                 case "cloudsheight":
                 case "cloudheight":
-                    SetEnvMapAppearanceS(p, value, "clouds height", (short)(lvl.height + 2), ref lvl.CloudsHeight); break;
+                    SetEnvMapAppearanceS(p, value, "clouds height", (short)(lvl.Height + 2), ref lvl.CloudsHeight); break;
                 case "waterlevel":
                 case "edgelevel":
                 case "level":
-                    SetEnvMapAppearanceS(p, value, "water level", (short)(lvl.height / 2), ref lvl.EdgeLevel); break;
+                    SetEnvMapAppearanceS(p, value, "water level", (short)(lvl.Height / 2), ref lvl.EdgeLevel); break;
                 case "maxfogdistance":
                 case "maxfog":
                 case "fogdistance":

@@ -69,6 +69,7 @@ namespace MCGalaxy
             Add(Command.all.Find("draw"), (int)Command.all.Find("draw").defaultRank, "The lowest rank that can use spheres with /draw", 3);
             Add(Command.all.Find("draw"), (int)Command.all.Find("draw").defaultRank, "The lowest rank that can use volcanos with /draw", 4);
             Add(Command.core.Find("tntwars"), (int)LevelPermission.Operator, "The lowest rank that can use admin commands for tntwars", 1);
+            Add(Command.core.Find("reload"), (int)LevelPermission.Operator, "The lowest rank that can reload the maps for others", 1);
         }
 
         public static List<OtherPerms> list = new List<OtherPerms>();

@@ -104,10 +104,10 @@ namespace MCGalaxy
         public ushort Width, Height, Length;
         // NOTE: These are for legacy matching only, you should use upper case Width/Height/Length
         // as these correctly map Y to beinh Height
-        public ushort width { get { return Width; } }
-        public ushort height { get { return Length; } }
-        public ushort depth { get { return Height; } }
-        public ushort length { get { return Length; } }
+        [Obsolete] public ushort width { get { return Width; } }
+        [Obsolete] public ushort height { get { return Length; } }
+        [Obsolete] public ushort depth { get { return Height; } }
+        [Obsolete] public ushort length { get { return Length; } }
         
         public int drown = 70;
         public bool edgeWater;

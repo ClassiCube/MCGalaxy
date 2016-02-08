@@ -19,44 +19,46 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace MCGalaxy.Commands {
-	
+    
     public sealed class CmdReload : Command {
-		
+        
         public override string name { get { return "reload"; } }
         public override string shortcut { get { return "rd"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdReload() { }
 
         public override void Use(Player p, string message) {
             if (p == null && message == "") {
-                Player.SendMessage(p, "You must give a level name when running the command from console."); return;
-            }
+                Player.SendMessage(p, "You must give a level name when using the command from console."); return;
+            }            
+            if (message == "") { CmdReveal.ReloadMap(p, p, false); return; }
             
-            string name = message == "" ? p.level.name : message;
-            if (!File.Exists("levels/" + name + ".lvl")) {
-                Player.SendMessage(p, "The given level \"" + name + "\" does not exist."); return;
-            }
-            if (Server.mainLevel.name == name) {
-                Player.SendMessage(p, "You cannot reload the main level."); return;
-            }
+            int minPerm = CommandOtherPerms.GetPerm(this, 1);
+            if (p != null && (int)p.group.Permission < minPerm) {
+                Player.SendMessage(p, "%HYou need to be at least %T" + Group.findPermInt(minPerm).name + " %Hto reload maps."); return;
+            }            
+            if (!LevelInfo.ExistsOffline(message)) {
+                Player.SendMessage(p, "The given level \"" + message + "\" does not exist."); return;
+            } 
             
             foreach (Player pl in PlayerInfo.players) {
-                if (pl.level.name.ToLower() != name.ToLower()) continue;
+                if (pl.level.name.ToLower() != message.ToLower()) continue;
                 CmdReveal.ReloadMap(p, pl, false);
-            }
-            
-            Player.GlobalMessage("&cThe map, " + name + " has been reloaded!");
-            Server.IRC.Say("The map, " + name + " has been reloaded.");
+            }            
+            Player.GlobalMessage("&cThe map, " + message + " has been reloaded!");
+            Server.IRC.Say("The map, " + message + " has been reloaded.");
             string src = p == null ? "the console" : p.name;
-            Server.s.Log("The map " + name + " was reloaded by " + src);
+            Server.s.Log("The map " + message + " was reloaded by " + src);
         }
         
         public override void Help(Player p) {
-        	Player.SendMessage(p, "%T/reload [map]");
-        	Player.SendMessage(p, "%HReloads the given map. " +
-        	                   "If no map is specified, reloads the current map you are in.");
+            Player.SendMessage(p, "%T/reload [map]");
+            Player.SendMessage(p, "%HReloads the given map for all players in that map.");
+            Player.SendMessage(p, "%HIf no map is specified, reloads the map you are in just for you.");
+            int minPerm = CommandOtherPerms.GetPerm(this, 1);
+            Player.SendMessage(p, "%T" + Group.findPermInt(minPerm).name + " %H or above can reload maps for all players.");
         }
     }
 }

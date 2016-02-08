@@ -600,7 +600,7 @@ namespace MCGalaxy
                 {
                     levels = new List<Level>(maps);
 
-                    if (File.Exists("levels/" + level + ".lvl"))
+                    if (LevelInfo.ExistsOffline(level))
                     {
                         mainLevel = Level.Load(level);
                         mainLevel.unload = false;

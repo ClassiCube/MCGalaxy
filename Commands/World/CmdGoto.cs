@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             if (lvl != null) {
                 GoToLevel(p, lvl, message);
             } else if (Server.AutoLoad) {
-                if (!File.Exists("levels/" + message + ".lvl")) {
+            	if (!LevelInfo.ExistsOffline(message)) {
                     lvl = LevelInfo.Find(message);
                     if (lvl == null) {
                         Player.SendMessage(p, "Level \"" + message + "\" doesn't exist! Did you mean...");

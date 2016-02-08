@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
 
             string newName = message.Split(' ')[1];
 
-            if (File.Exists("levels/" + newName + ".lvl")) { Player.SendMessage(p, "Level already exists."); return; }
+            if (LevelInfo.ExistsOffline(newName)) { Player.SendMessage(p, "Level already exists."); return; }
             if (foundLevel == Server.mainLevel) { Player.SendMessage(p, "Cannot rename the main level."); return; }
 
             foundLevel.Unload();

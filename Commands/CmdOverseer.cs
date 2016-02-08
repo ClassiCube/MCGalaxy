@@ -175,8 +175,7 @@ namespace MCGalaxy.Commands
                 string level = p.name.ToLower();
                 if ((File.Exists("levels/" + level + ".lvl")) || (File.Exists("levels/" + level + "00.lvl"))) {
                     for (int i = 2; i < p.group.OverseerMaps + 2; i++) {
-                        if (File.Exists("levels/" + p.name.ToLower() + i + ".lvl"))
-                            continue;
+                		if (LevelInfo.ExistsOffline(p.name.ToLower() + i)) continue;
                         if(i > p.group.OverseerMaps) {
                             p.SendMessage("You have reached the limit for your overseer maps."); return;
                         }
@@ -377,7 +376,7 @@ namespace MCGalaxy.Commands
              * both map names (UserName and UserName00)
              * I need to figure out how to add a system to do this with the players second map.
              */
-            if (File.Exists("levels/" + p.name.ToLower() + "00.lvl"))
+            if (LevelInfo.ExistsOffline(p.name.ToLower() + "00"))
                 return p.name.ToLower() + "00";
             return p.name.ToLower();
         }
