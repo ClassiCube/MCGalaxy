@@ -2219,6 +2219,7 @@ return;
         #endregion
         #region == DISCONNECTING ==
         public void Disconnect() { leftGame(); }
+        public void Kick(string kickString) { leftGame(kickString, false); }
         public void Kick(string kickString, bool sync = false) { leftGame(kickString, sync); }
 
         public void leftGame(string kickString = "", bool sync = false) {

@@ -31,17 +31,13 @@ namespace MCGalaxy.Commands
             if (message == "") { Player.SendMessage(p, "You"); return; }
             if (p == null) { MessageInGameOnly(p); return; }
 
-            if (p.muted) { Player.SendMessage(p, "You are currently muted and cannot use this command."); return; }
+            if (p.joker || p.muted) { Player.SendMessage(p, "Cannot use /me while muted or jokered."); return; }
             if (Server.chatmod && !p.voice) { Player.SendMessage(p, "Chat moderation is on, you cannot emote."); return; }
 
             if (Server.worldChat)
-            {
                 Player.GlobalChat(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + " " + message, false);
-            }
             else
-            {
                 Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + " " + message, false);
-            }
             //IRCBot.Say("*" + p.name + " " + message);
             Server.IRC.Say("*" + p.DisplayName + " " + message);
         }

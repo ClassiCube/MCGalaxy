@@ -59,7 +59,7 @@ namespace Sharkbite.Irc
 		#if SSL
 		private SecureTcpClient client;
 		#else
-			private TcpClient client;
+		private TcpClient client;
 		#endif
 		
 		private readonly Regex propertiesRegex;
@@ -575,12 +575,15 @@ namespace Sharkbite.Irc
 				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceWarning, "[" + Thread.CurrentThread.Name +"] Connection::ReceiveIRCMessages() IO Error while listening for messages " + e);	
 				listener.Error( ReplyCode.ConnectionFailed, "Connection to server unexpectedly failed.");
 			}
-			//The connection to the IRC server has been closed either
-			//by client request or the server itself closed the connection.
-			client.Close();
-			registered = false;
-			connected = false;
-			listener.Disconnected();
+			finally 
+			{
+				//The connection to the IRC server has been closed either
+				//by client request or the server itself closed the connection.
+				client.Close();
+				registered = false;
+				connected = false;
+				listener.Disconnected();
+			}
 		}
 		/// <summary>
 		/// Send a message to the IRC server and clear the command buffer.

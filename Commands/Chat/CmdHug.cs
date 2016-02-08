@@ -33,6 +33,7 @@ namespace MCGalaxy
             if (who == null || who.hidden) {
                 Player.SendMessage(p, "Could not find player specified."); return;
             }
+            if (p != null && p.muted) { Player.SendMessage(p, "Cannot use /hug while muted."); return; }
             
             string giver = (p == null) ? "(console)" : p.color + p.DisplayName;
             Player.GlobalMessage(who.color + who.DisplayName + " %Swas hugged by " + giver);
