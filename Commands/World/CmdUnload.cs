@@ -36,10 +36,11 @@ namespace MCGalaxy.Commands
                 if (!p.level.Unload())
                     Player.SendMessage(p, "You cannot unload this level.");
             } else if (name == "empty") {
-                Server.levels.ForEach(l => {
-                    if (l.players.Count <= 0 && l != Server.mainLevel)
-                        l.Unload(true, true);
-                });
+                for (int i = 0; i < Server.levels.Count; i++) {
+                    Level l = Server.levels[i];
+                    if (l.players.Count <= 0 && l.Unload(true, true))
+                        i--;
+                }
             } else {
                 Level level = LevelInfo.Find(name);
                 if (level == null) {
