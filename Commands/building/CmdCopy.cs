@@ -50,8 +50,8 @@ namespace MCGalaxy.Commands
 			} else if (opt == "delete") {
 				if (parts.Length != 2) { Help(p); return; }
 				string path = "extra/savecopy/" + parts[1] + "/" + message + ".cpy";
-				if (!File.Exists(path)) { 
-					Player.SendMessage(p, "No such copy exists"); return; 
+				if (!File.Exists(path)) {
+					Player.SendMessage(p, "No such copy exists"); return;
 				}
 				
 				File.Delete(path);
@@ -75,20 +75,17 @@ namespace MCGalaxy.Commands
 		void HandleOther(Player p, string opt, string[] parts) {
 			CatchPos cpos = default(CatchPos);
 			cpos.ignoreTypes = new List<byte>();
-			p.copyoffset[0] = 0; p.copyoffset[1] = 0; p.copyoffset[2] = 0;	
+			cpos.extIgnoreTypes = new List<byte>();
+			p.copyoffset[0] = 0; p.copyoffset[1] = 0; p.copyoffset[2] = 0;
 			
 			if (opt == "cut") {
 				cpos.type = 1;
 			} else if (opt == "air") {
 				cpos.type = 2;
+				if (parts.Length > 1 && parts[1].ToLower() == "ignore")
+					GetIgnoreBlocks(cpos, p, 2, parts);
 			} else if (opt == "ignore") {
-				for (int i = 1; i < parts.Length; i++ ) {
-					string s = parts[i];
-					if (Block.Byte(s) != Block.Zero) {
-						cpos.ignoreTypes.Add(Block.Byte(s));
-						Player.SendMessage(p, "Ignoring &b" + s);
-					}
-				}
+				GetIgnoreBlocks(cpos, p, 1, parts);
 			} else if (!String.IsNullOrEmpty(opt)) {
 				Help(p); return;
 			}
@@ -97,6 +94,19 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "Place two blocks to determine the edges.");
 			p.ClearBlockchange();
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+		}
+		
+		void GetIgnoreBlocks(CatchPos cpos, Player p, int i, string[] parts) {
+			for (; i < parts.Length; i++ ) {
+				byte extType = 0;
+				byte type = DrawCmd.GetBlock(p, parts[i], out extType);
+				if (type == Block.Zero) continue;
+				
+				if (type != Block.custom_block || extType == 0)
+					cpos.ignoreTypes.Add(type);
+				if (type == Block.custom_block)
+					cpos.extIgnoreTypes.Add(extType);
+			}
 		}
 
 		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -117,7 +127,7 @@ namespace MCGalaxy.Commands
 			ushort minZ = (ushort)Math.Min(z, cpos.z), maxX = (ushort)Math.Max(x, cpos.x);
 			ushort maxY = (ushort)Math.Max(y, cpos.y), maxZ = (ushort)Math.Max(z, cpos.z);
 			
-			CopyState state = new CopyState(minX, minY, minZ, maxX - minX + 1, 
+			CopyState state = new CopyState(minX, minY, minZ, maxX - minX + 1,
 			                                maxY - minY + 1, maxZ - minZ + 1);
 			state.SetOrigin(cpos.x, cpos.y, cpos.z);
 			int totalAir = 0, index = 0;
@@ -127,15 +137,17 @@ namespace MCGalaxy.Commands
 				for (ushort zz = minZ; zz <= maxZ; ++zz)
 					for (ushort xx = minX; xx <= maxX; ++xx)
 			{
-				byte b = p.level.GetTile(xx, yy, zz);
+				byte b = p.level.GetTile(xx, yy, zz), extB = 0;
 				if (!Block.canPlace(p, b)) { index++; continue; }
+				if (b == Block.custom_block)
+					extB = p.level.GetExtTile(xx, yy, zz);
+				bool ignore = cpos.ignoreTypes.Contains(b) || cpos.extIgnoreTypes.Contains(extB);
 				
-				if (b == Block.air && cpos.type != 2 || cpos.ignoreTypes.Contains(b))
+				if (b == Block.air && cpos.type != 2 || ignore)
 					totalAir++;
-				if (!cpos.ignoreTypes.Contains(b)) {
+				if (!ignore) {
 					state.Blocks[index] = b;
-					if (b == Block.custom_block)
-						state.ExtBlocks[index] = p.level.GetExtTile(xx, yy, zz);
+					state.ExtBlocks[index] = extB;
 				}
 				index++;
 			}
@@ -176,8 +188,7 @@ namespace MCGalaxy.Commands
 
 		void SaveCopy(Player p, string file) {
 			if (!Player.ValidName(file)) {
-				Player.SendMessage(p, "Bad file name");
-				return;
+				Player.SendMessage(p, "Bad file name"); return;
 			}
 			
 			if (!Directory.Exists("extra/savecopy"))
@@ -198,13 +209,12 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "Saved copy as " + file);
 		}
 
-		void LoadCopy(Player p, string file) {		
+		void LoadCopy(Player p, string file) {
 			string path = "extra/savecopy/" + p.name + "/" + file;
 			bool existsNew = File.Exists(path + ".cpb");
 			bool existsOld = File.Exists(path + ".cpy");
 			if (!existsNew && !existsOld) {
-				Player.SendMessage(p, "No such copy exists");
-				return;
+				Player.SendMessage(p, "No such copy exists"); return;
 			}
 			path = existsNew ? path + ".cpb" : path + ".cpy";
 
@@ -221,10 +231,13 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "Loaded copy as " + file);
 		}
 		
-		struct CatchPos { public ushort x, y, z; public int type; public List<byte> ignoreTypes; }
+		struct CatchPos {
+			public ushort x, y, z;
+			public int type;
+			public List<byte> ignoreTypes, extIgnoreTypes;
+		}
 		
-		public override void Help(Player p)
-		{
+		public override void Help(Player p) {
 			Player.SendMessage(p, "/copy - Copies the blocks in an area.");
 			Player.SendMessage(p, "/copy save <save_name> - Saves what you have copied.");
 			Player.SendMessage(p, "/copy load <load_name> - Loads what you have saved.");

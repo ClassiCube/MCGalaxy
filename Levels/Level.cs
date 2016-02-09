@@ -102,12 +102,12 @@ namespace MCGalaxy
         public bool ctfmode;
         public int currentUndo;
         public ushort Width, Height, Length;
-        // NOTE: These are for legacy matching only, you should use upper case Width/Height/Length
-        // as these correctly map Y to beinh Height
-        [Obsolete] public ushort width { get { return Width; } }
-        [Obsolete] public ushort height { get { return Length; } }
-        [Obsolete] public ushort depth { get { return Height; } }
-        [Obsolete] public ushort length { get { return Length; } }
+        // NOTE: These are for legacy code only, you should use upper case Width/Height/Length
+        // as these correctly map Y to being Height
+        [Obsolete] public ushort width;
+        [Obsolete] public ushort height;
+        [Obsolete] public ushort depth;
+        [Obsolete] public ushort length;
         
         public int drown = 70;
         public bool edgeWater;
@@ -205,12 +205,12 @@ namespace MCGalaxy
             Width = x;
             Height = y;
             Length = z;
-            if (Width < 16)
-                Width = 16;
-            if (Height < 16)
-                Height = 16;
-            if (Length < 16)
-                Length = 16;
+            if (Width < 16) Width = 16;
+            if (Height < 16) Height = 16;
+            if (Length < 16) Length = 16;
+            width = Width;
+            length = Height;
+            height = Length; depth = Length;                   
 
             CustomBlockDefs = new BlockDefinition[256];
             for (int i = 0; i < CustomBlockDefs.Length; i++)

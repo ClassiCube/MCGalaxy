@@ -79,11 +79,11 @@ namespace MCGalaxy.Commands
                             lvl.spawnx = temp.spawnx;
                             lvl.spawny = temp.spawny;
                             lvl.spawnz = temp.spawnz;
-
-                            lvl.Length = temp.Length;
-                            lvl.Width = temp.Width;
-                            lvl.Height = temp.Height;
-
+                            
+                            lvl.Width = temp.Width; lvl.width = temp.Width;
+                            lvl.Height = temp.Height; lvl.depth = temp.Height;
+                            lvl.Length = temp.Length; lvl.length = temp.Length; lvl.height = temp.Length;
+                            
                             lvl.blocks = temp.blocks;
                             lvl.setPhysics(0);
                             lvl.ClearPhysics();

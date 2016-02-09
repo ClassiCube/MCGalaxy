@@ -108,7 +108,10 @@ namespace MCGalaxy.Levels.IO {
 
                                 pointer += skip;
                             }
-
+                            lvl.width = lvl.Width;
+                            lvl.depth = lvl.Height;
+                            lvl.length = lvl.Length; lvl.height = lvl.Length; 
+                           
                             lvl.spawnx = (ushort)(lvl.Width / 1.3);
                             lvl.spawny = (ushort)(lvl.Height / 1.3);
                             lvl.spawnz = (ushort)(lvl.Length / 1.3);
