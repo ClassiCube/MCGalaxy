@@ -402,6 +402,9 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="GUI\LevelCollection.cs" />
+    <Compile Include="Levels\Block.Convert.cs" />
+    <Compile Include="Levels\Block.ID.cs" />
+    <Compile Include="Levels\Block.Permissions.cs" />
     <Compile Include="Levels\Generator\MapGen.cs" />
     <Compile Include="Levels\Generator\NoiseGen.cs" />
     <Compile Include="Levels\Generator\MapGenParams.cs" />
