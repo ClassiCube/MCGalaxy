@@ -760,15 +760,9 @@ namespace MCGalaxy {
             SetPrefix();
             playerDb.Dispose();
 
-            if (PlayerConnect != null)
-                PlayerConnect(this);
-            OnPlayerConnectEvent.Call(this);
-
             if (Server.server_owner != "" && Server.server_owner.ToLower().Equals(name.ToLower())) {
-                if (color == Group.standard.color)
-                    color = "&c";
-                if (title == "")
-                    title = "Owner";
+                if (color == Group.standard.color) color = "&c";
+                if (title == "") title = "Owner";
                 SetPrefix();
             }
 
@@ -780,8 +774,22 @@ namespace MCGalaxy {
             if (!File.Exists("text/login/" + this.name + ".txt"))
                 CP437Writer.WriteAllText("text/login/" + this.name + ".txt", "joined the server.");
 
+            string joinm = "&a+ " + this.FullName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
+            if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
+                if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
+                	PlayerInfo.players.ForEach(p1 => Player.SendMessage(p1, joinm));
+                }
+            }
+            if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
+                hidden = true;
+                adminchat = true;
+            }
+            
+            if (PlayerConnect != null)
+                PlayerConnect(this);
+            OnPlayerConnectEvent.Call(this);
+            
             CheckLoginJailed();
-
             if (Server.agreetorulesonentry) {
                 if (!File.Exists("ranks/agreed.txt"))
                     File.WriteAllText("ranks/agreed.txt", "");
@@ -790,19 +798,6 @@ namespace MCGalaxy {
                     SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
                     agreed = false;
                 }
-            }
-
-            string joinm = "&a+ " + this.FullName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
-            if (group.Permission < Server.adminchatperm || Server.adminsjoinsilent == false)
-            {
-                if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest)
-                {
-                	PlayerInfo.players.ForEach(p1 => Player.SendMessage(p1, joinm));
-                }
-            }
-            if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
-                hidden = true;
-                adminchat = true;
             }
 
             if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank) {

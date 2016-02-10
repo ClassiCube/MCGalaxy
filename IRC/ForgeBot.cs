@@ -148,7 +148,8 @@ namespace MCGalaxy {
         void Player_PlayerConnect(Player p) {
             if (!Server.irc || !IsConnected()) return;
             if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest) return;
-            connection.Sender.PublicMessage(channel, p.name + " joined the game");
+            if (!p.hidden)
+                connection.Sender.PublicMessage(channel, p.name + " joined the game");
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
