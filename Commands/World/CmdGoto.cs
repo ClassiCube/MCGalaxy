@@ -127,9 +127,10 @@ namespace MCGalaxy.Commands {
                 foreach (Player pl in PlayerInfo.players) if (pl.level == oldLevel) { unloadOld = false; break; }
                 if (unloadOld && Server.AutoLoad) oldLevel.Unload(true);
             }
+            CheckGamesJoin(p, lvl);
             
             if (!p.hidden) {
-                Player.GlobalChat(p, p.color + "*" + p.DisplayName + Server.DefaultColor + " went to &b" + lvl.name, false);
+                Player.SendChatFrom(p, p.color + "*" + p.DisplayName + Server.DefaultColor + " went to &b" + lvl.name, false);
                 Server.IRC.Say(p.color + p.DisplayName + " %rwent to &8" + lvl.name, false, true);
             }
         }

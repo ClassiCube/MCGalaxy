@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             if (p.hidden)
             {
                 Player.GlobalDespawn(p, true);
-                Player.GlobalChat(p, "&c- " + p.color + p.prefix + p.DisplayName + Server.DefaultColor + " " + 
+                Player.SendChatFrom(p, "&c- " + p.color + p.prefix + p.DisplayName + Server.DefaultColor + " " + 
                                   (File.Exists("text/logout/" + p.name + ".txt") ? CP437Reader.ReadAllText("text/logout/" + p.name + ".txt") : "Disconnected."), false);
                 Server.IRC.Say(p.name + " left the game (Disconnected.)");
                 if (!p.adminchat)
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
             else
             {
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false, "");
-                Player.GlobalChat(p, "&a+ " + p.color + p.prefix + p.DisplayName + Server.DefaultColor + " " + 
+                Player.SendChatFrom(p, "&a+ " + p.color + p.prefix + p.DisplayName + Server.DefaultColor + " " + 
                                   (File.Exists("text/login/" + p.name + ".txt") ? CP437Reader.ReadAllText("text/login/" + p.name + ".txt") : "joined the game."), false);
                 Server.IRC.Say(p.name + " joined the game");
                 if (p.adminchat)

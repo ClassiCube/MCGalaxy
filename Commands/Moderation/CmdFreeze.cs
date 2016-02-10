@@ -38,13 +38,13 @@ namespace MCGalaxy.Commands
             if (!who.frozen)
             {
                 who.frozen = true;
-                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " has been &bfrozen" + Server.DefaultColor + " by " + frozenby + Server.DefaultColor + ".", false);
+                Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " has been &bfrozen" + Server.DefaultColor + " by " + frozenby + Server.DefaultColor + ".", false);
             	Server.s.Log(who.name + " has been frozen by " + frozenby);
             }
             else
             {
                 who.frozen = false;
-                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " has been &adefrosted" + Server.DefaultColor + " by " + frozenby + Server.DefaultColor + ".", false);
+                Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " has been &adefrosted" + Server.DefaultColor + " by " + frozenby + Server.DefaultColor + ".", false);
                 Server.s.Log(who.name + " has been defrosted by " + frozenby);
             }
         }

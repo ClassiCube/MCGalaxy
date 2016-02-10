@@ -50,13 +50,13 @@ namespace MCGalaxy.Commands
             {
                 who.joker = true;
                 if (stealth) { Chat.GlobalMessageOps(who.color + who.DisplayName + Server.DefaultColor + " is now STEALTH joker'd. "); return; }
-                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " is now a &aJ&bo&ck&5e&9r" + Server.DefaultColor + ".", false);
+                Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " is now a &aJ&bo&ck&5e&9r" + Server.DefaultColor + ".", false);
             }
             else
             {
                 who.joker = false;
                 if (stealth) { Chat.GlobalMessageOps(who.color + who.DisplayName + Server.DefaultColor + " is now STEALTH Unjoker'd. "); return; }
-                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " is no longer a &aJ&bo&ck&5e&9r" + Server.DefaultColor + ".", false);
+                Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " is no longer a &aJ&bo&ck&5e&9r" + Server.DefaultColor + ".", false);
             }
         }
         public override void Help(Player p)

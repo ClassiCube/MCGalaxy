@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands
                 }
                 
                 if (Server.cheapMessage && !p.hidden)
-                    Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " has stopped being immortal", false);
+                    Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " has stopped being immortal", false);
             }
             else
             {
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands
                 }
                 who.invincible = true;
                 if (Server.cheapMessage && !p.hidden)
-                    Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " " + Server.cheapMessageGiven, false);
+                    Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " " + Server.cheapMessageGiven, false);
             }
         }
         public override void Help(Player p)

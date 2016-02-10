@@ -1464,7 +1464,7 @@ return;
                         case Block.fishlavashark: Chat.GlobalChatLevel(this, this.FullName + Server.DefaultColor + " was eaten by a ... LAVA SHARK?!", false); break;
                         case Block.rock:
                             if ( explode ) level.MakeExplosion(x, y, z, 1);
-                            GlobalChat(this, this.FullName + Server.DefaultColor + customMessage, false);
+                            SendChatFrom(this, this.FullName + Server.DefaultColor + customMessage, false);
                             break;
                         case Block.stone:
                             if ( explode ) level.MakeExplosion(x, y, z, 1);
@@ -1499,7 +1499,8 @@ return;
                     }
 
                     if ( Server.deathcount )
-                        if ( overallDeath > 0 && overallDeath % 10 == 0 ) GlobalChat(this, this.FullName + Server.DefaultColor + " has died &3" + overallDeath + " times", false);
+                        if ( overallDeath > 0 && overallDeath % 10 == 0 ) 
+                    	    SendChatFrom(this, this.FullName + Server.DefaultColor + " has died &3" + overallDeath + " times", false);
                 }
                 lastDeath = DateTime.Now;
 
@@ -1647,23 +1648,10 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                         return;
                     }
                 }
-
-                //CmdVoteKick core vote recorder
-                if ( Server.voteKickInProgress && text.Length == 1 ) {
-                    if ( text.ToLower() == "y" ) {
-                        this.voteKickChoice = VoteKickChoice.Yes;
-                        SendMessage("Thanks for voting!");
-                        return;
-                    }
-                    if ( text.ToLower() == "n" ) {
-                        this.voteKickChoice = VoteKickChoice.No;
-                        SendMessage("Thanks for voting!");
-                        return;
-                    }
-                }
+                if (VoteHandles(text)) return;
                 
                 // Put this after vote collection so that people can vote even when chat is moderated
-                if ( Server.chatmod && !this.voice ) { this.SendMessage("Chat moderation is on, you cannot speak."); return; }
+                if ( Server.chatmod && !voice ) { this.SendMessage("Chat moderation is on, you cannot speak."); return; }
 
                 // Filter out bad words
                 if ( Server.profanityFilter ) {
@@ -1785,7 +1773,7 @@ return;
                         newtext = text.Remove(0, 1).Trim();
                         Chat.GlobalChatWorld(this, newtext, true);
                     } else {
-                        GlobalChat(this, newtext);
+                       SendChatFrom(this, newtext);
                     }
                     Server.s.Log("<" + name + "> " + newtext);
                     //IRCBot.Say("<" + name + "> " + newtext);
@@ -1807,7 +1795,7 @@ return;
                     return;
                 }
                 if ( Server.worldChat ) {
-                    GlobalChat(this, text);
+                    SendChatFrom(this, text);
                 } else {
                     Chat.GlobalChatLevel(this, text, true);
                 }
@@ -1816,6 +1804,46 @@ return;
             }
             catch ( Exception e ) { Server.ErrorLog(e); Player.GlobalMessage("An error occurred: " + e.Message); }
         }
+        
+        bool VoteHandles(string text) {
+            if (Server.voteKickInProgress && text.Length == 1) {
+                if (text.ToLower() == "y") {
+                    this.voteKickChoice = VoteKickChoice.Yes;
+                    SendMessage("Thanks for voting!");
+                    return true;
+                } else if (text.ToLower() == "n") {
+                    this.voteKickChoice = VoteKickChoice.No;
+                    SendMessage("Thanks for voting!");
+                    return true;
+                }
+            }
+            
+            if (Server.lava.HasPlayer(this) && Server.lava.HasVote(text.ToLower()) ) {
+                if (Server.lava.AddVote(this, text.ToLower())) {
+                    SendMessage("Your vote for &5" + text.ToLower().Capitalize() + Server.DefaultColor + " has been placed. Thanks!");
+                    Server.lava.map.ChatLevelOps(name + " voted for &5" + text.ToLower().Capitalize() + Server.DefaultColor + ".");
+                    return true;
+                } else {
+                    SendMessage("&cYou already voted!");
+                    return true;
+                }
+            }
+
+            if (Server.voting) {
+                string test = text.ToLower();
+                if (CheckVote(test, this, "y", "yes", ref Server.YesVotes) ||
+                    CheckVote(test, this, "n", "no", ref Server.NoVotes)) return true;
+                
+                if (!voice && (test == "y" || test == "n" || test == "yes" || test == "no")) {
+                    SendMessage("Chat moderation is on while voting is on!"); return true;
+                }
+            }
+
+            if (Server.votingforlevel && Server.zombie.HandlesChatMessage(this, text))
+                return true;
+            return false;
+        }
+        
         public void HandleCommand(string cmd, string message) {
             try {
                 if ( Server.verifyadmins ) {
@@ -2036,34 +2064,14 @@ return;
             PlayerInfo.players.ForEach(delegate(Player p) { if ( p.level == level ) { p.SendBlockchange(x, y, z, type, extType); } });
         }
 
-        // THIS IS NOT FOR SENDING GLOBAL MESSAGES!!! IT IS TO SEND A MESSAGE FROM A SPECIFIED PLAYER!!!!!!!!!!!!!!
-        public static void GlobalChat(Player from, string message) { GlobalChat(from, message, true); }
-        public static void GlobalChat(Player from, string message, bool showname) {
+        [Obsolete("Use SendChatFrom() instead.")]
+        public static void GlobalChat(Player from, string message) { SendChatFrom(from, message, true); }
+        [Obsolete("Use SendChatFrom() instead.")]
+        public static void GlobalChat(Player from, string message, bool showname) { SendChatFrom(from, message, showname); }
+        
+        public static void SendChatFrom(Player from, string message) { SendChatFrom(from, message, true); }
+        public static void SendChatFrom(Player from, string message, bool showname) {
             if ( from == null ) return; // So we don't fucking derp the hell out!
-
-            if ( Server.lava.HasPlayer(from) && Server.lava.HasVote(message.ToLower()) ) {
-                if ( Server.lava.AddVote(from, message.ToLower()) ) {
-                    SendMessage(from, "Your vote for &5" + message.ToLower().Capitalize() + Server.DefaultColor + " has been placed. Thanks!");
-                    Server.lava.map.ChatLevelOps(from.name + " voted for &5" + message.ToLower().Capitalize() + Server.DefaultColor + ".");
-                    return;
-                } else {
-                    SendMessage(from, "&cYou already voted!");
-                    return;
-                }
-            }
-
-            if (Server.voting) {
-            	string test = message.ToLower();
-            	if (CheckVote(test, from, "y", "yes", ref Server.YesVotes) ||
-            	    CheckVote(test, from, "n", "no", ref Server.NoVotes)) return;
-            	
-            	if (!from.voice && (test == "y" || test == "n" || test == "yes" || test == "no")) {
-            		from.SendMessage("Chat moderation is on while voting is on!"); return;
-                }
-            }
-
-            if (Server.votingforlevel && Server.zombie.HandlesChatMessage(from, message))
-            	return;
             
             if (Last50Chat.Count() == 50)
                 Last50Chat.RemoveAt(0);
@@ -2319,7 +2327,7 @@ return;
                     }
                     else {
                         totalKicked++;
-                        GlobalChat(this, "&c- " + color + prefix + DisplayName + Server.DefaultColor + " kicked (" + kickString + Server.DefaultColor + ").", false);
+                        SendChatFrom(this, "&c- " + color + prefix + DisplayName + Server.DefaultColor + " kicked (" + kickString + Server.DefaultColor + ").", false);
                         //IRCBot.Say(name + " kicked (" + kickString + ").");
                         Server.s.Log(name + " kicked (" + kickString + ").");
                     }

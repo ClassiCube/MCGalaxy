@@ -185,7 +185,7 @@ namespace MCGalaxy {
                         Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.lava); //better fill the water above me
                     } else if (LiquidLevel - yy > y - 3) {
                         if (overlay[index] < 0.9f) {
-                            byte block = yy < yy ? Block.lava : Block.rock;
+                            byte block = yy < y ? Block.lava : Block.rock;
                             Lvl.SetTile(x, (ushort)(y - yy), z, block);
                         } else {
                             Lvl.SetTile(x, (ushort)(LiquidLevel - yy), (ushort)(z - 5), Block.lava);  //killer lava

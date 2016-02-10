@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
 
             if (who.group.Permission >= p.group.Permission)
             {
-                Player.GlobalChat(p, p.color + p.DisplayName + " " + Server.DefaultColor + "tried to votekick " + who.color + who.DisplayName + " " + Server.DefaultColor + "but failed!", false);
+                Player.SendChatFrom(p, p.color + p.DisplayName + " " + Server.DefaultColor + "tried to votekick " + who.color + who.DisplayName + " " + Server.DefaultColor + "but failed!", false);
                 return;
             }
 

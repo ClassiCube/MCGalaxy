@@ -57,7 +57,7 @@ namespace MCGalaxy
                         {
                             writer.WriteLine(who.name.ToLower() + " " + who.level.name);
                         }
-                        Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " was &8jailed", false);
+                        Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " was &8jailed", false);
                     }
                     else
                     {
@@ -66,7 +66,7 @@ namespace MCGalaxy
                         who.jailed = false;
                         Command.all.Find("spawn").Use(who, "");
                         Player.SendMessage(p, "You freed " + who.name + " from jail");
-                        Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " was &afreed" + Server.DefaultColor + " from jail", false);
+                        Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " was &afreed" + Server.DefaultColor + " from jail", false);
                     }
                 }
                 else

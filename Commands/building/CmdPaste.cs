@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands
 			if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
 		}
 
-		struct CatchPos { public ushort x, y, z; }
+		struct CatchPos { }
 		
 		public override void Help(Player p)
 		{

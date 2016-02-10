@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
                 }
                 if (who.group.Permission >= p.group.Permission)
                 {
-                    Player.GlobalChat(p,
+                    Player.SendChatFrom(p,
                                       p.color + p.DisplayName + "%S tried to kick " + who.color + who.DisplayName +
                                       "%S but failed.",
                                       false);

@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (args.Length == 1) {                
-                Player.GlobalChat(who, who.color + who.DisplayName + Server.DefaultColor + " had their title color removed.", false);
+                Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " had their title color removed.", false);
                 who.titlecolor = "";
                 
                 Database.AddParams("@Name", who.name);
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
                 string color = Colors.Parse(args[1]);
                 if (color == "") { Player.SendMessage(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.titlecolor) { Player.SendMessage(p, who.DisplayName + " already has that title color."); return; }
-                Player.GlobalChat(who, who.color + who.DisplayName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);
+                Player.SendChatFrom(who, who.color + who.DisplayName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.titlecolor = color;
                 
                 Database.AddParams("@Color", Colors.Name(color));
