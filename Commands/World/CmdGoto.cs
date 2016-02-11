@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -102,8 +102,6 @@ namespace MCGalaxy.Commands {
             Player.GlobalDespawn(p, true);
             Level oldLevel = p.level;
             p.level = lvl; p.SendUserMOTD(); p.SendMap(oldLevel);
-
-            GC.Collect();
 
             ushort x = (ushort)((0.5 + lvl.spawnx) * 32);
             ushort y = (ushort)((1 + lvl.spawny) * 32);
