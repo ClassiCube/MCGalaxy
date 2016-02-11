@@ -30,72 +30,69 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-        	if (p == null) { MessageInGameOnly(p); return; }
+            if (p == null) { MessageInGameOnly(p); return; }
             if (message.Split(' ').Length < 2) { Help(p); return; }
             string foundPath = message.Split(' ')[1].ToLower();
 
             if (!Player.ValidName(foundPath)) { Player.SendMessage(p, "Invalid AI name!"); return; }
             if (foundPath == "hunt" || foundPath == "kill") { Player.SendMessage(p, "Reserved for special AI."); return; }
 
-            try
+            switch (message.Split(' ')[0])
             {
-                switch (message.Split(' ')[0])
-                {
-                    case "add":
-                        if (message.Split(' ').Length == 2) addPoint(p, foundPath);
-                        else if (message.Split(' ').Length == 3) addPoint(p, foundPath, message.Split(' ')[2]);
-                        else if (message.Split(' ').Length == 4) addPoint(p, foundPath, message.Split(' ')[2], message.Split(' ')[3]);
-                        else addPoint(p, foundPath, message.Split(' ')[2], message.Split(' ')[3], message.Split(' ')[4]);
-                        break;
-                    case "del":
-                        if (!Directory.Exists("bots/deleted")) Directory.CreateDirectory("bots/deleted");
+                case "add":
+                    if (message.Split(' ').Length == 2) addPoint(p, foundPath);
+                    else if (message.Split(' ').Length == 3) addPoint(p, foundPath, message.Split(' ')[2]);
+                    else if (message.Split(' ').Length == 4) addPoint(p, foundPath, message.Split(' ')[2], message.Split(' ')[3]);
+                    else addPoint(p, foundPath, message.Split(' ')[2], message.Split(' ')[3], message.Split(' ')[4]);
+                    break;
+                case "del":
+                    if (!Directory.Exists("bots/deleted")) Directory.CreateDirectory("bots/deleted");
 
-                        int currentTry = 0;
-                        if (File.Exists("bots/" + foundPath))
-                        {
+                    int currentTry = 0;
+                    if (File.Exists("bots/" + foundPath))
+                    {
                         retry: try
+                        {
+                            if (message.Split(' ').Length == 2)
                             {
-                                if (message.Split(' ').Length == 2)
+                                if (currentTry == 0)
+                                    File.Move("bots/" + foundPath, "bots/deleted/" + foundPath);
+                                else
+                                    File.Move("bots/" + foundPath, "bots/deleted/" + foundPath + currentTry);
+                            }
+                            else
+                            {
+                                if (message.Split(' ')[2].ToLower() == "last")
                                 {
-                                    if (currentTry == 0)
-                                        File.Move("bots/" + foundPath, "bots/deleted/" + foundPath);
-                                    else
-                                        File.Move("bots/" + foundPath, "bots/deleted/" + foundPath + currentTry);
+                                    string[] Lines = File.ReadAllLines("bots/" + foundPath);
+                                    string[] outLines = new string[Lines.Length - 1];
+                                    for (int i = 0; i < Lines.Length - 1; i++)
+                                    {
+                                        outLines[i] = Lines[i];
+                                    }
+
+                                    File.WriteAllLines("bots/" + foundPath, outLines);
+                                    Player.SendMessage(p, "Deleted the last waypoint from " + foundPath);
+                                    return;
                                 }
                                 else
                                 {
-                                    if (message.Split(' ')[2].ToLower() == "last")
-                                    {
-                                        string[] Lines = File.ReadAllLines("bots/" + foundPath);
-                                        string[] outLines = new string[Lines.Length - 1];
-                                        for (int i = 0; i < Lines.Length - 1; i++)
-                                        {
-                                            outLines[i] = Lines[i];
-                                        }
-
-                                        File.WriteAllLines("bots/" + foundPath, outLines);
-                                        Player.SendMessage(p, "Deleted the last waypoint from " + foundPath);
-                                        return;
-                                    }
-                                    else
-                                    {
-                                        Help(p); return;
-                                    }
+                                    Help(p); return;
                                 }
                             }
-                            catch (IOException) { currentTry++; goto retry; }
-                            Player.SendMessage(p, "Deleted &b" + foundPath);
                         }
-                        else
-                        {
-                            Player.SendMessage(p, "Could not find specified AI.");
-                        }
-                        break;
+                        catch (IOException) { currentTry++; goto retry; }
+                        Player.SendMessage(p, "Deleted &b" + foundPath);
+                    }
+                    else
+                    {
+                        Player.SendMessage(p, "Could not find specified AI.");
+                    }
+                    break;
                     default: Help(p); return;
-                }
             }
-            catch (Exception e) { Server.ErrorLog(e); }
         }
+            
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/botai <add/del> [AI name] <extra> - Adds or deletes [AI name]");
