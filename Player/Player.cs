@@ -2035,6 +2035,8 @@ return;
                         case "zz": cmd = "static"; message = "cuboid " + message; break;
                         case "fetch": cmd = "summon"; break;
                         case "ranks": cmd = "help"; message = "ranks"; break;
+                        case "j":
+                        case "join": cmd = "goto"; break;
 
                         default: retry = false; break; //Unknown command, then
                     }

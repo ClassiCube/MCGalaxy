@@ -31,10 +31,10 @@ namespace MCGalaxy.Commands
         public CmdPlayers() { }
 
         public override void Use(Player p, string message) {
-            DisplayPlayers(p, message, text => Player.SendMessage(p, text));
+            DisplayPlayers(p, message, text => Player.SendMessage(p, text), true);
         }
         
-        public static void DisplayPlayers(Player p, string message, Action<string> output) {
+        public static void DisplayPlayers(Player p, string message, Action<string> output, bool showHidden) {
             if (message != "") {
                 Group grp = Group.Find(message);
                 if( grp == null ) {
@@ -45,6 +45,7 @@ namespace MCGalaxy.Commands
                 
                 foreach (Player pl in PlayerInfo.players) {
                     if (pl.group != grp) continue;
+                    if (pl.hidden && !showHidden) continue;
                     if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
                         string name = Colors.StripColours(pl.DisplayName);
                         if (Server.afkset.Contains(pl.name)) name += "-afk";
@@ -75,6 +76,7 @@ namespace MCGalaxy.Commands
             int totalPlayers = 0;
             
             foreach (Player pl in PlayerInfo.players) {
+            	if (pl.hidden && !showHidden) continue;
                 if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
                     totalPlayers++;
                     string name = Colors.StripColours(pl.DisplayName);

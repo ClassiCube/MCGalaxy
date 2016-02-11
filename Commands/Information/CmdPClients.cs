@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/pcount - Lists the clients players are using, and who uses which client.");
+            Player.SendMessage(p, "/pclients - Lists the clients players are using, and who uses which client.");
         }
     }
 }

@@ -90,6 +90,7 @@ namespace MCGalaxy {
                     }
                 }
             }
+            movement = false;
 
             if (Waypoints.Count == 0)
             {
@@ -115,7 +116,7 @@ namespace MCGalaxy {
             else
             {
                 bool skip = false;
-                movement = false;
+                
 
                 retry: switch (Waypoints[currentPoint].type)
                 {
@@ -270,7 +271,7 @@ namespace MCGalaxy {
                 if (currentPoint == Waypoints.Count) currentPoint = 0;
             }
 
-            if (!movement)
+            if (!movement && Waypoints.Count > 0)
             {
                 if (rot[0] < 245) rot[0] += 8;
                 else rot[0] = 0;
