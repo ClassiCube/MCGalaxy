@@ -44,6 +44,10 @@ namespace MCGalaxy.BlockPhysics {
                 case Block.door_gold_air:
                 case Block.door_cobblestone_air:
                 case Block.door_red_air:
+                case Block.door_darkpink_air:
+                case Block.door_darkgrey_air:
+                case Block.door_lightgrey_air:
+                case Block.door_white_air:
 
                 case Block.door_dirt_air:
                 case Block.door_grass_air:

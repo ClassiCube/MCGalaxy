@@ -257,6 +257,10 @@ namespace MCGalaxy
                 case door_book_air: return "door_book_air";
                 case door_cobblestone_air: return "door_cobblestone_air";
                 case door_red_air: return "door_red_air";
+                case door_darkpink_air: return "door_darkpink_air";
+                case door_darkgrey_air: return "door_darkgrey_air";
+                case door_lightgrey_air: return "door_lightgrey_air";
+                case door_white_air: return "door_white_air";
 
                 //"AI" blocks
                 case train: return "train";
@@ -568,6 +572,10 @@ namespace MCGalaxy
 				case "door_gold_air": return door_gold_air;
                 case "door_cobblestone_air": return door_cobblestone_air;
                 case "door_red_air": return door_red_air;
+                case "door_darkpink_air": return door_darkpink_air;
+                case "door_darkgrey_air": return door_darkgrey_air;
+                case "door_lightgrey_air": return door_lightgrey_air;
+                case "door_white_air": return door_white_air;
 
                 case "train": return train;
 
@@ -772,11 +780,15 @@ namespace MCGalaxy
                 case door_iron_air:
 				case door_gold_air:
                 case door_cobblestone_air:
-                case door_red_air: 
                 case door_dirt_air:
                 case door_grass_air:
                 case door_blue_air:
                 case door_book_air:
+                case door_red_air:
+                case door_darkpink_air:
+                case door_darkgrey_air:
+                case door_lightgrey_air:
+                case door_white_air:
                     return air;
                 case door8_air: return red;
                 case door9_air: return lava;
@@ -855,7 +867,11 @@ namespace MCGalaxy
                 case door_book_air: return door_book;
                 case door_cobblestone_air: return door_cobblestone;
                 case door_red_air: return door_red;
-
+                case door_darkpink_air: return door_darkpink;
+                case door_darkgrey_air: return door_darkgrey;
+                case door_lightgrey_air: return door_lightgrey; 
+                case door_white_air: return door_white; 
+                
                 case odoor1_air:
                 case odoor2_air:
                 case odoor3_air:

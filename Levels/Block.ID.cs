@@ -94,6 +94,10 @@ namespace MCGalaxy
         public const byte stonebrick = (byte)65;
         public const byte Zero = 0xff;
 
+        public const byte door_darkpink_air = (byte)66;
+        public const byte door_darkgrey_air = (byte)67;
+        public const byte door_lightgrey_air = (byte)68;
+        public const byte door_white_air = (byte)69;
         public const byte flagbase = (byte)70;
 
         //Seasons

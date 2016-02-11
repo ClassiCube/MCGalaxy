@@ -227,17 +227,15 @@ namespace MCGalaxy.Commands
                 }
             } else if (cmd == "MOTD") {
                 int pos = message.IndexOf("motd ");
-                string newMotd = "";
-                if (message.Split(' ').Length > 2) newMotd = message.Substring(pos + 5);
-
-                if (newMotd == "") {
-                    Command.all.Find("map").Use(p, "motd ignore");
-                    p.level.Save();
-                    Level.SaveSettings(p.level);
-                } else if (newMotd.Length > 30) {
-                    Player.SendMessage(p, "Your motd can be no longer than %b30" + Server.DefaultColor + " characters.");
+                string motd = "";
+                if (message.Split(' ').Length > 2) motd = message.Substring(pos + 5);
+                if (motd == "") motd = "ignore";
+                
+                if (motd.Length > 64) {
+                    Player.SendMessage(p, "Your motd can be no longer than %b64" + Server.DefaultColor + " characters.");
                 } else {
-                    Command.all.Find("map").Use(p, "motd " + newMotd);
+                    p.level.motd = motd;
+                    p.level.ChatLevel("Map's MOTD was changed to: &b" + p.level.motd);
                     p.level.Save();
                     Level.SaveSettings(p.level);
                 }

@@ -494,6 +494,10 @@ namespace MCGalaxy
                 case door_book: return door_book_air;
                 case door_cobblestone: return door_cobblestone_air;
                 case door_red: return door_red_air;
+                case door_darkpink: return door_darkpink_air;
+                case door_darkgrey: return door_darkgrey_air;
+                case door_lightgrey: return door_lightgrey_air; 
+                case door_white: return door_white_air;
                 default: return 0;
             }
         }
