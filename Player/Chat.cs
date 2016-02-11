@@ -70,34 +70,34 @@ namespace MCGalaxy {
                 message = "<World>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
             PlayerInfo.players.ForEach(
-                delegate(Player p) {
-                    if ( p.level.worldChat && p.Chatroom == null )
+                p => {
+                    if (p.level.worldChat && p.Chatroom == null)
                         SendGlobalMessage(p, from, message);
                 });
         }
         
         public static void GlobalMessageLevel(Level l, string message) {
             PlayerInfo.players.ForEach(
-                delegate(Player p) {
-                    if ( p.level == l && p.Chatroom == null )
+               p => {
+                    if (p.level == l && p.Chatroom == null)
+                        Player.SendMessage(p, message);
+                });
+        }
+		
+		public static void GlobalMessageMinPerms(string message, LevelPermission minPerm) {
+            PlayerInfo.players.ForEach(
+				p => {
+					if (p.group.Permission >= minPerm)
                         Player.SendMessage(p, message);
                 });
         }
         
         public static void GlobalMessageOps(string message) {
-            PlayerInfo.players.ForEach(
-                delegate(Player p) {
-                    if (p.group.Permission >= Server.opchatperm)
-                        Player.SendMessage(p, message);
-                });
+            GlobalMessageMinPerms(message, Server.opchatperm);
         }
         
         public static void GlobalMessageAdmins(string message) {
-            PlayerInfo.players.ForEach(
-                delegate(Player p) {
-                    if (p.group.Permission >= Server.adminchatperm)
-                        Player.SendMessage(p, message);
-                });
+            GlobalMessageMinPerms(message, Server.adminchatperm);
         }
         
         static void SendGlobalMessage(Player p, Player from, string message) {

@@ -63,10 +63,10 @@ namespace MCGalaxy.Commands
                             {
                                 foreach (Player pl in PlayerInfo.players)
                                 {
-                                    if (pl.group.Permission >= Server.opchatperm && !pl.hidden)
+                                    if (pl.group.Permission >= Server.reviewnext && !pl.hidden)
                                     {
                                         isopson = true;
-                                        break; // We're done, break out of this loop
+                                        break;
                                     }
                                 }
                             }
@@ -82,9 +82,10 @@ namespace MCGalaxy.Commands
                                 if (reviewlistpos == 1) { Player.SendMessage(p, "You entered the &creview " + Server.DefaultColor + "queue. There is &c1 " + Server.DefaultColor + "person in front of you in the queue"); }
                                 if ((reviewlistpos + 1) == 1) { Player.SendMessage(p, "You entered the &creview " + Server.DefaultColor + "queue. You are &cfirst " + Server.DefaultColor + "in line!"); }
                                 Player.SendMessage(p, "The Online Operators have been notified. Someone should be with you shortly.");
-                                Chat.GlobalMessageOps(p.color + " - " + p.name + " - " + Server.DefaultColor + "entered the review queue");
-                                if ((reviewlistpos + 1) > 1) { Chat.GlobalMessageOps("There are now &c" + (reviewlistpos + 1) + Server.DefaultColor + " people waiting for &creview!"); }
-                                else { Chat.GlobalMessageOps("There is now &c1 " + Server.DefaultColor + "person waiting for &creview!"); }
+                                
+                                string start = (reviewlistpos + 1) > 1 ? "There are now &c" + (reviewlistpos + 1) + " %Speople" : "There is now &c1 %Sperson";
+                                Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", Server.reviewnext);
+                                Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", Server.reviewnext);
                                 p.ReviewTimer();
                             }
                             else
