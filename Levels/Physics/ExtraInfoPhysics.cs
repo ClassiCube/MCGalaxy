@@ -23,8 +23,8 @@ namespace MCGalaxy.BlockPhysics {
     public static class ExtraInfoPhysics {
         
         public static bool DoDoorsOnly(Level lvl, Check C, Random rand) {
-		    string info = C.data as string;
-		    if (info == null) return true;
+            string info = C.data as string;
+            if (info == null) return true;
             if (!info.Contains("wait") && lvl.blocks[C.b] == Block.air)
                 C.data = "";
 
@@ -77,13 +77,12 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static bool DoComplex(Level lvl, Check C, Random rand) {
-		    string info = C.data as string;
-		    if (info == null) return true;			
+            string info = C.data as string;
+            if (info == null) return true;
             if (!info.Contains("wait") && lvl.blocks[C.b] == Block.air)
                 C.data = "";
 
-            bool wait = false, drop = false, dissipate = false, revert = false, door = false;
-            int waitTime = 0, dropnum = 0, dissipatenum = 0; byte reverttype = 0;
+            ExtraInfoArgs args = default(ExtraInfoArgs);
             string[] parts = info.Split(' ');
             
             for (int i = 0; i < parts.Length; i++) {
@@ -91,24 +90,30 @@ namespace MCGalaxy.BlockPhysics {
                 
                 switch (parts[i]) {
                     case "wait":
-                        waitTime = int.Parse(parts[i + 1]);
-                        wait = true; break;
+                        args.WaitTime = int.Parse(parts[i + 1]);
+                        args.Wait = true; break;
                     case "drop":
-                        dropnum = int.Parse(parts[i + 1]);
-                        drop = true; break;
+                        args.DropNum = int.Parse(parts[i + 1]);
+                        args.Drop = true; break;
                     case "dissipate":
-                        dissipatenum = int.Parse(parts[i + 1]);
-                        dissipate = true; break;
+                        args.DissipateNum = int.Parse(parts[i + 1]);
+                        args.Dissipate = true; break;
                     case "revert":
-                        reverttype = byte.Parse(parts[i + 1]);
-                        revert = true; break;
+                        args.RevertType = byte.Parse(parts[i + 1]);
+                        args.Revert = true; break;
                     case "door":
-                        door = true; break;
+                        args.Door = true; break;
+                    case "explode":
+                        args.ExplodeNum = int.Parse(parts[i + 1]);
+                        args.Explode = true; break;
+                    case "rainbow":
+                        args.RainbowNum = int.Parse(parts[i + 1]);
+                        args.Rainbow = true; break;
                 }
             }
 
-            if (wait) {
-                if (door && C.time < 2) {
+            if (args.Wait) {
+                if (args.Door && C.time < 2) {
                     Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
                     Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
                     Checktdoor(lvl, lvl.IntOffset(C.b, 0, -1, 0));
@@ -117,50 +122,76 @@ namespace MCGalaxy.BlockPhysics {
                     Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, 1));
                 }
 
-                if (C.time > waitTime) {
+                if (C.time > args.WaitTime) {
                     int waitIndex = info.IndexOf("wait ");
                     C.data =
                         info.Substring(0, waitIndex) +
                         info.Substring(info.IndexOf(' ', waitIndex + 5) + 1);
-                    DoOther(lvl, C, rand, revert, dissipate, drop, reverttype, dissipatenum, dropnum);
+                    DoOther(lvl, C, rand, ref args);
                     return false;
                 }
                 C.time++;
                 return true;
             }
-            DoOther(lvl, C, rand, revert, dissipate, drop, reverttype, dissipatenum, dropnum);
+            DoOther(lvl, C, rand, ref args);
             return false;
         }
         
-        static void DoOther(Level lvl, Check C, Random rand, bool revert, bool dissipate,
-                            bool drop, byte reverttype, int dissipatenum, int dropnum) {
+        static void DoOther(Level lvl, Check C, Random rand, ref ExtraInfoArgs args) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            if (revert) {
-                lvl.AddUpdate(C.b, reverttype);
+            
+            if (args.Rainbow) {
+                DoRainbow(lvl, C, rand, args.RainbowNum); return;
+            }
+            if (args.Revert) {
+                lvl.AddUpdate(C.b, args.RevertType);
                 C.data = "";
             }
             
             // Not setting drop = false can cause occasional leftover blocks, since C.extraInfo is emptied, so
             // drop can generate another block with no dissipate/explode information.
-            if (dissipate && rand.Next(1, 100) <= dissipatenum) {
+            if (args.Dissipate && rand.Next(1, 100) <= args.DissipateNum) {
                 if (!lvl.ListUpdate.Exists(Update => Update.b == C.b)) {
                     lvl.AddUpdate(C.b, Block.air);
                     C.data = "";
-                    drop = false;
+                    args.Drop = false;
                 } else {
                     lvl.AddUpdate(C.b, lvl.blocks[C.b], false, C.data);
                 }
             }
             
-            if (drop && rand.Next(1, 100) <= dropnum)
-                DoDrop(lvl, C, rand, dropnum, x, y, z);
+            if (args.Explode && rand.Next(1, 100) <= args.ExplodeNum) {
+                lvl.MakeExplosion(x, y, z, 0);
+                C.data = "";
+                args.Drop = false;
+            }
+            
+            if (args.Drop && rand.Next(1, 100) <= args.DropNum)
+                DoDrop(lvl, C, rand, args.DropNum, x, y, z);
+        }
+        
+        static void DoRainbow(Level lvl, Check C, Random rand, int rainbownum) {
+            if (C.time < 4) {
+                C.time++; return;
+            }
+            
+            if (rainbownum > 2) {
+                byte block = lvl.blocks[C.b];
+                if (block < Block.red || block > Block.darkpink) {
+                    lvl.AddUpdate(C.b, Block.red, true);
+                } else {
+                    byte next = block == Block.darkpink ? Block.red : (byte)(block + 1);
+                    lvl.AddUpdate(C.b, next);
+                }
+            } else {
+                lvl.AddUpdate(C.b, rand.Next(Block.red, Block.darkpink + 1));
+            }
         }
         
         static void DoDrop(Level lvl, Check C, Random rand, int dropnum, ushort x, ushort y, ushort z) {
             int index = lvl.PosToInt(x, (ushort)(y - 1), z);
-            if (index < 0)
-                return;
+            if (index < 0) return;
             
             byte below = lvl.blocks[index];
             if (!(below == Block.air || below == Block.lava || below == Block.water))
@@ -170,6 +201,12 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(C.b, Block.air);
                 C.data = "";
             }
+        }
+        
+        struct ExtraInfoArgs {
+            public bool Wait, Drop, Dissipate, Revert, Door, Explode, Rainbow;
+            public int WaitTime, DropNum, DissipateNum, ExplodeNum, RainbowNum;
+            public byte RevertType;
         }
     }
 }

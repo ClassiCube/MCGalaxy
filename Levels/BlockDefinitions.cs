@@ -55,9 +55,10 @@ namespace MCGalaxy {
             GlobalDefs[0].Name = "Air fallback";
             
             try {
-                if (File.Exists(GlobalBackupPath))
+            	if (File.Exists(GlobalPath) && File.Exists(GlobalBackupPath)) {
                     File.Delete(GlobalBackupPath);
-                File.Copy(GlobalPath, GlobalBackupPath);
+                    File.Copy(GlobalPath, GlobalBackupPath);
+            	}
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
