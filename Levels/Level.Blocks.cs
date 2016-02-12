@@ -144,7 +144,7 @@ namespace MCGalaxy {
             
             Level.BlockPos bP;
             bP.name = p.name;
-            bP.TimePerformed = DateTime.Now;
+            bP.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             bP.index = b;
             bP.type = type;
             bP.extType = extType;
@@ -156,7 +156,7 @@ namespace MCGalaxy {
             Pos.mapName = this.name;
             Pos.type = oldType; Pos.extType = oldExtType;
             Pos.newtype = type; Pos.newExtType = extType;
-            Pos.timePlaced = DateTime.Now;
+            Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             p.UndoBuffer.Add(Pos);
         }
 
@@ -324,7 +324,7 @@ namespace MCGalaxy {
                 Pos.mapName = name;
                 Pos.type = b; Pos.extType = extB;
                 Pos.newtype = type; Pos.newExtType = extType;
-                Pos.timePlaced = DateTime.Now;
+                Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                 p.UndoBuffer.Add(Pos);
 
                 errorLocation = "Setting tile";

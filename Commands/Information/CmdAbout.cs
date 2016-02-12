@@ -86,7 +86,8 @@ namespace MCGalaxy.Commands
                 foundOne = true;
                 Deleted = inCache[i].deleted;
                 Username = inCache[i].name;
-                TimePerformed = inCache[i].TimePerformed.ToString("yyyy-MM-dd HH:mm:ss");
+                DateTime time = Server.StartTimeLocal.AddSeconds(inCache[i].timeDelta);
+                TimePerformed = time.ToString("yyyy-MM-dd HH:mm:ss");
                 BlockUsed = Block.Name(inCache[i].type);
 
                 if (!Deleted)

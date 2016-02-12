@@ -350,8 +350,8 @@ namespace MCGalaxy
                     BlockPos bP = tempCache[i];
                     int deleted = bP.deleted ? 1 : 0;
                     IntToPos(bP.index, out x, out y, out z);
-                    string query = String.Format(template, bP.name,
-                                                 bP.TimePerformed.ToString("yyyy-MM-dd HH:mm:ss"),
+                    DateTime time = Server.StartTimeLocal.AddSeconds(bP.timeDelta);
+                    string query = String.Format(template, bP.name, time.ToString("yyyy-MM-dd HH:mm:ss"),
                                                  x, y, z, bP.type, deleted);
                     if (!transaction.Execute(query)) {
                         transaction.Rollback(); return;
@@ -680,13 +680,12 @@ namespace MCGalaxy
             return PlayerInfo.players.Where(p => p.level == this).ToList();
         }
 
-        public struct BlockPos
-        {
-            public DateTime TimePerformed;
-            public string name;
-            public int index;
-            public bool deleted;
+        public struct BlockPos {
+        	public string name;
+            public int timeDelta;
+            public int index;           
             public byte type, extType;
+            public bool deleted;
         }
 
         public struct UndoPos {

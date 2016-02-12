@@ -238,7 +238,7 @@ namespace MCGalaxy {
         }
 
         //Undo
-        public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public DateTime timePlaced; }
+        public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public int timeDelta; }
         public List<UndoPos> UndoBuffer = new List<UndoPos>();
         public List<UndoPos> RedoBuffer = new List<UndoPos>();
 
@@ -1000,7 +1000,7 @@ namespace MCGalaxy {
 
             Level.BlockPos bP;
             bP.name = name;
-            bP.TimePerformed = DateTime.Now;
+            bP.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             bP.index = level.PosToInt(x, y, z);
             bP.type = type;
             bP.extType = extType;

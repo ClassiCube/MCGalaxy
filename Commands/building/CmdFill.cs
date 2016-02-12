@@ -66,13 +66,14 @@ namespace MCGalaxy.Commands {
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { Player.SendMessage(p, "Cannot fill with that."); return; }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
-            List<FillPos> buffer = new List<FillPos>(), origins = new List<FillPos>();
+            List<int> buffer = new List<int>(), origins = new List<int>();
             FloodFill(p, x, y, z, oldType, oldExtType, cpos.solid, bits, buffer, origins, 0);
 
             int totalFill = origins.Count;
             for (int i = 0; i < totalFill; i++) {
-                FillPos pos = origins[i];
-                FloodFill(p, pos.X, pos.Y, pos.Z, oldType, oldExtType, cpos.solid, bits, buffer, origins, 0);
+                int pos = origins[i];
+                p.level.IntToPos(pos, out x, out y, out z);
+                FloodFill(p, x, y, z, oldType, oldExtType, cpos.solid, bits, buffer, origins, 0);
                 totalFill = origins.Count;
             }
             
@@ -91,14 +92,12 @@ namespace MCGalaxy.Commands {
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
 
         void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, byte oldExtType, SolidType fillType,
-                       SparseBitSet bits, List<FillPos> buffer, List<FillPos> origins, int depth) {
-            FillPos pos;
-            pos.X = x; pos.Y = y; pos.Z = z;
+                       SparseBitSet bits, List<int> buffer, List<int> origins, int depth) {
             if (bits.Get(x, y, z)) return;
-
-            if (depth > 2000) { origins.Add(pos); return; }
+            int index = p.level.PosToInt(x, y, z);
+            if (depth > 2000) { origins.Add(index); return; }
             bits.Set(x, y, z, true);
-            buffer.Add(pos);
+            buffer.Add(index);
 
             if (fillType != SolidType.verticalX) { // x
                 if (CheckTile(p, (ushort)(x + 1), y, z, oldType, oldExtType))
@@ -131,9 +130,8 @@ namespace MCGalaxy.Commands {
             if (tile == oldTile && tile == Block.custom_block) {
                 byte extTile = p.level.GetExtTile(x, y, z);
                 return extTile == oldExtTile;
-            } else {
-                return tile == oldTile;
             }
+            return tile == oldTile;
         }
         
         public override void Help(Player p) {

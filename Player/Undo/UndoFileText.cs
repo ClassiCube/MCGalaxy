@@ -30,9 +30,10 @@ namespace MCGalaxy.Util {
         protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
             using (StreamWriter w = File.CreateText(path)) {
                 foreach (Player.UndoPos uP in buffer) {
+        			DateTime time = Server.StartTimeLocal.AddSeconds(uP.timeDelta);
                     w.Write(
                         uP.mapName + " " + uP.x + " " + uP.y + " " + uP.z + " " +
-                        uP.timePlaced.ToString(CultureInfo.InvariantCulture).Replace(' ', '&') + " " +
+                        time.ToString(CultureInfo.InvariantCulture).Replace(' ', '&') + " " +
                         uP.type + " " + uP.newtype + " ");
                 }
             }
@@ -54,7 +55,8 @@ namespace MCGalaxy.Util {
                 Pos.z = ushort.Parse(lines[i + 3]);
                 
                 string time = lines[i + 4].Replace('&', ' ');
-                Pos.timePlaced = DateTime.Parse(time, CultureInfo.InvariantCulture);
+                DateTime rawTime = DateTime.Parse(time, CultureInfo.InvariantCulture);
+                Pos.timeDelta = (int)rawTime.Subtract(Server.StartTimeLocal).TotalSeconds;
                 Pos.type = byte.Parse(lines[i + 5]);
                 Pos.newtype = byte.Parse(lines[i + 6]);
                 buffer.Add(Pos);
@@ -63,6 +65,7 @@ namespace MCGalaxy.Util {
         
         protected override bool UndoEntry(Player p, string path, ref byte[] temp, long seconds) {
             Player.UndoPos Pos;
+            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
             
@@ -84,7 +87,7 @@ namespace MCGalaxy.Util {
                         Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
                         
                         Pos.newtype = Convert.ToByte(lines[(i * 7) - 2]);
-                        Pos.timePlaced = DateTime.Now;
+                        Pos.timeDelta = timeDelta;
 
                         foundLevel.Blockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, 0);
                         if (p != null) p.RedoBuffer.Add(Pos);

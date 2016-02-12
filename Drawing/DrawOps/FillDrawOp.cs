@@ -24,7 +24,7 @@ namespace MCGalaxy {
     
     public class FillDrawOp : DrawOp {
         
-        public List<FillPos> Positions;
+        public List<int> Positions;
         
         public override string Name { get { return "Fill"; } }
         
@@ -34,8 +34,10 @@ namespace MCGalaxy {
         
         public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
                                      ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
-            foreach (FillPos pos in Positions) {
-                PlaceBlock(p, lvl, pos.X, pos.Y, pos.Z, brush);
+            ushort x, y, z;
+            foreach (int pos in Positions) {
+                lvl.IntToPos(pos, out x, out y, out z);
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }

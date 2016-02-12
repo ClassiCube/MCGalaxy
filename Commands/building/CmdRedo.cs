@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
                 lvl.Blockchange(p, Pos.x, Pos.y, Pos.z, Pos.type, Pos.extType);
                 Pos.newtype = Pos.type; Pos.newExtType = Pos.extType;
                 Pos.type = type; Pos.extType = extType;
-                Pos.timePlaced = DateTime.Now;
+                Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                 p.UndoBuffer.Add(Pos);
             }
 

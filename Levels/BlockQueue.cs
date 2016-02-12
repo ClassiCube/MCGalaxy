@@ -65,7 +65,7 @@ namespace MCGalaxy {
                 for (int c = 0; c < count; c++) {
                     block item = l.blockqueue[c];
                     bP.name = item.p.name;
-                    bP.TimePerformed = DateTime.Now;
+                    bP.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                     ushort x, y, z;
                     l.IntToPos(item.index, out x, out y, out z);
                     

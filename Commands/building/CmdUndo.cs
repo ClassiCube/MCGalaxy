@@ -164,8 +164,8 @@ namespace MCGalaxy.Commands
             Level lvl = LevelInfo.FindExact(undo.mapName);
             saveLevel = lvl;
             byte b = lvl.GetTile(undo.x, undo.y, undo.z);
-            if (undo.timePlaced.AddSeconds(seconds) < DateTime.Now)
-                return false;
+            DateTime time = Server.StartTime.AddSeconds(undo.timeDelta + seconds);
+            if (time < DateTime.UtcNow) return false;
             
             if (b == undo.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                 undo.newtype = undo.type; undo.newExtType = undo.extType;

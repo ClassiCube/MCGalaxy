@@ -67,19 +67,19 @@ namespace MCGalaxy.Commands {
         static void HighlightOnline(Player p, long seconds, Player who) {
             for (int i = who.UndoBuffer.Count - 1; i >= 0; --i) {
                 try {
-                    Player.UndoPos Pos = who.UndoBuffer[i];
-                    Level foundLevel = LevelInfo.FindExact(Pos.mapName);
+                    Player.UndoPos undo = who.UndoBuffer[i];
+                    Level foundLevel = LevelInfo.FindExact(undo.mapName);
                     if (foundLevel != p.level) continue;
                     
-                    byte b = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
-                    if (Pos.timePlaced.AddSeconds(seconds) < DateTime.Now)
-                        break;
+                    byte b = foundLevel.GetTile(undo.x, undo.y, undo.z);
+                    DateTime time = Server.StartTime.AddSeconds(undo.timeDelta + seconds);
+                    if (time < DateTime.UtcNow) break;
                     
-                    if (b == Pos.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
+                    if (b == undo.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                         if (b == Block.air || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
-                            p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.red);
+                            p.SendBlockchange(undo.x, undo.y, undo.z, Block.red);
                         else
-                            p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.green);
+                            p.SendBlockchange(undo.x, undo.y, undo.z, Block.green);
                     }
                 } catch { }
             }

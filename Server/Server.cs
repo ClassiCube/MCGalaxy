@@ -71,6 +71,7 @@ namespace MCGalaxy
         //public static List<MySql.Data.MySqlClient.MySqlCommand> mySQLCommands = new List<MySql.Data.MySqlClient.MySqlCommand>();
         public static WebServer APIServer;
         public static WebServer InfoServer;
+        public static DateTime StartTime, StartTimeLocal;
 
         public static int speedPhysics = 250;
 
@@ -407,6 +408,8 @@ namespace MCGalaxy
         }
         
         public void Start() {
+            StartTime = DateTime.UtcNow;
+            StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;
             Log("Starting Server");
             try {
