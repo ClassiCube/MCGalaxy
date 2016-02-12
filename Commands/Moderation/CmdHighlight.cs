@@ -17,10 +17,12 @@
  */
 using System;
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdHighlight : Command
-    {
+using MCGalaxy.Util;
+
+namespace MCGalaxy.Commands {
+    
+    public sealed class CmdHighlight : Command {
+        
         public override string name { get { return "highlight"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -28,153 +30,65 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdHighlight() { }
 
-        public override void Use(Player p, string message)
-        {
-            byte b; Int64 seconds;
-            Player who;
-            Player.UndoPos Pos;
-            int CurrentPos = 0;
+        public override void Use(Player p, string message) {
+            long seconds;
             bool FoundUser = false;
-
+            if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 300";
+            string[] args = message.Split(' ');
+            string name = args[0];
 
-            if (message.Split(' ').Length == 2)
-            {
-                try
-                {
-                    seconds = Int64.Parse(message.Split(' ')[1]);
+            if (args.Length >= 2) {
+                if (!long.TryParse(args[1], out seconds)) {
+                    Player.SendMessage(p, "Invalid seconds."); return;
                 }
-                catch
-                {
-                    Player.SendMessage(p, "Invalid seconds.");
-                    return;
-                }
+            } else if (long.TryParse(args[0], out seconds)) {
+                args[0] = p.name;
+            } else {
+                seconds = 300;
             }
-            else
-            {
-                try
-                {
-                    seconds = int.Parse(message);
-                    if (p != null) message = p.name + " " + message;
-                }
-                catch
-                {
-                    seconds = 300;
-                    message = message + " 300";
-                }
-            }
+            if (seconds <= 0) seconds = 5400;
 
-            if (seconds == 0) seconds = 5400;
-
-            who = PlayerInfo.Find(message.Split(' ')[0]);
-            if (who != null)
-            {
-                message = who.name + " " + seconds;
+            Player who = PlayerInfo.Find(name);
+            if (who != null) {
                 FoundUser = true;
-                for (CurrentPos = who.UndoBuffer.Count - 1; CurrentPos >= 0; --CurrentPos)
-                {
-                    try
-                    {
-                        Pos = who.UndoBuffer[CurrentPos];
-                        Level foundLevel = LevelInfo.Find(Pos.mapName);
-                        if (foundLevel == p.level)
-                        {
-                            b = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
-                            if (Pos.timePlaced.AddSeconds(seconds) >= DateTime.Now)
-                            {
-                                if (b == Pos.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
-                                {
-                                    if (b == Block.air || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.red);
-                                    else p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.green);
-                                }
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    catch { }
-                }
+                HighlightOnline(p, seconds, who);
             }
 
-            DirectoryInfo di;
-            string[] fileContent;
-
-            if (Directory.Exists("extra/undo/" + message.Split(' ')[0]))
-            {
-                di = new DirectoryInfo("extra/undo/" + message.Split(' ')[0]);
-
-                for (int i = 0; i < di.GetFiles("*.undo").Length; i++)
-                {
-                    fileContent = File.ReadAllText("extra/undo/" + message.Split(' ')[0] + "/" + i + ".undo").Split(' ');
-                    highlightStuff(fileContent, seconds, p);
-                }
-                FoundUser = true;
-            }
-
-            if (Directory.Exists("extra/undoPrevious/" + message.Split(' ')[0]))
-            {
-                di = new DirectoryInfo("extra/undoPrevious/" + message.Split(' ')[0]);
-
-                for (int i = 0; i < di.GetFiles("*.undo").Length; i++)
-                {
-                    fileContent = File.ReadAllText("extra/undoPrevious/" + message.Split(' ')[0] + "/" + i + ".undo").Split(' ');
-                    highlightStuff(fileContent, seconds, p);
-                }
-                FoundUser = true;
-            }
-
-            if (FoundUser)
-            {
-                Player.SendMessage(p, "Now highlighting &b" + seconds + Server.DefaultColor + " seconds for " + Server.FindColor(message.Split(' ')[0]) + message.Split(' ')[0]);
-                Player.SendMessage(p, "&cUse /reveal to un-highlight");
-            }
-            else
-            {
+            UndoFile.HighlightPlayer(p, name.ToLower(), seconds, ref FoundUser);
+            if (FoundUser) {
+                Player.SendMessage(p, "Now highlighting &b" + seconds +  " %Sseconds for " + Server.FindColor(name) + name);
+                Player.SendMessage(p, "&cUse /reload to un-highlight");
+            } else {
                 Player.SendMessage(p, "Could not find player specified.");
             }
         }
 
-        public void highlightStuff(string[] fileContent, Int64 seconds, Player p)
-        {
-            Player.UndoPos Pos;
-
-            for (int i = fileContent.Length / 7; i >= 0; i--)
-            {
-                try
-                {
-                    if (Convert.ToDateTime(fileContent[(i * 7) + 4].Replace('&', ' ')).AddSeconds(seconds) >= DateTime.Now)
-                    {
-                        Level foundLevel = LevelInfo.Find(fileContent[i * 7]);
-                        if (foundLevel != null && foundLevel == p.level)
-                        {
-                            Pos.mapName = foundLevel.name;
-                            Pos.x = Convert.ToUInt16(fileContent[(i * 7) + 1]);
-                            Pos.y = Convert.ToUInt16(fileContent[(i * 7) + 2]);
-                            Pos.z = Convert.ToUInt16(fileContent[(i * 7) + 3]);
-
-                            Pos.type = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
-
-                            if (Pos.type == Convert.ToByte(fileContent[(i * 7) + 6]) || Block.Convert(Pos.type) == Block.water || Block.Convert(Pos.type) == Block.lava)
-                            {
-                                if (Pos.type == Block.air || Block.Convert(Pos.type) == Block.water || Block.Convert(Pos.type) == Block.lava)
-                                    p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.red);
-                                else p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.green);
-                            }
-                        }
+        static void HighlightOnline(Player p, long seconds, Player who) {
+            for (int i = who.UndoBuffer.Count - 1; i >= 0; --i) {
+                try {
+                    Player.UndoPos Pos = who.UndoBuffer[i];
+                    Level foundLevel = LevelInfo.FindExact(Pos.mapName);
+                    if (foundLevel != p.level) continue;
+                    
+                    byte b = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
+                    if (Pos.timePlaced.AddSeconds(seconds) < DateTime.Now)
+                        break;
+                    
+                    if (b == Pos.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
+                        if (b == Block.air || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
+                            p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.red);
+                        else
+                            p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.green);
                     }
-                    else break;
-                }
-                catch { }
+                } catch { }
             }
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/highlight [player] [seconds] - Highlights blocks modified by [player] in the last [seconds]");
             Player.SendMessage(p, "/highlight [player] 0 - Will highlight 30 minutes");
-            Player.SendMessage(p, "&c/highlight cannot be disabled, you must use /reveal to un-highlight");
+            Player.SendMessage(p, "&c/highlight cannot be disabled, you must use /reload to un-highlight");
         }
     }
 }
