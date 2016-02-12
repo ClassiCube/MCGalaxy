@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -335,33 +336,66 @@ namespace MCGalaxy
             return true;
         }
 
-        public void saveChanges()
-        {
+        public unsafe void saveChanges() {
             if (blockCache.Count == 0) return;
             List<BlockPos> tempCache = blockCache;
-            ushort x, y, z;
-
-            string template = "INSERT INTO `Block" + name +
-                "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES ('{0}', '{1}', {2}, {3}, {4}, {5}, {6})";
-            DatabaseTransactionHelper transaction = DatabaseTransactionHelper.Create();
-            using (transaction)
-            {
-                for (int i = 0; i < tempCache.Count; i++ ) {
-                    BlockPos bP = tempCache[i];
-                    int deleted = bP.deleted ? 1 : 0;
-                    IntToPos(bP.index, out x, out y, out z);
-                    DateTime time = Server.StartTimeLocal.AddSeconds(bP.timeDelta);
-                    string query = String.Format(template, bP.name, time.ToString("yyyy-MM-dd HH:mm:ss"),
-                                                 x, y, z, bP.type, deleted);
-                    if (!transaction.Execute(query)) {
-                        transaction.Rollback(); return;
-                    }
+            string date = new String('-', 19); //yyyy-mm-dd hh:mm:ss
+            
+            using (DatabaseTransactionHelper transaction = DatabaseTransactionHelper.Create()) {
+                fixed (char* ptr = date) {
+                    ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
+                    DoSaveChanges(tempCache, ptr, date, transaction);
                 }
-                transaction.Commit();
             }
             tempCache.Clear();
-            blockCache = new List<BlockPos>();            
+            blockCache = new List<BlockPos>();
         }
+        
+        unsafe bool DoSaveChanges(List<BlockPos> tempCache, char* ptr, string date, 
+                                  DatabaseTransactionHelper transaction) {
+            string template = "INSERT INTO `Block" + name +
+                "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@Name, @Time, @X, @Y, @Z, @Tile, @Del)";
+            ushort x, y, z;
+            
+            IDbCommand cmd = transaction.CreateCommand(template);
+            DbParameter nameP = transaction.CreateParam("@Name", DbType.AnsiStringFixedLength); cmd.Parameters.Add(nameP);
+            DbParameter timeP = transaction.CreateParam("@Time", DbType.AnsiStringFixedLength); cmd.Parameters.Add(timeP);
+            DbParameter xP = transaction.CreateParam("@X", DbType.UInt16); cmd.Parameters.Add(xP);
+            DbParameter yP = transaction.CreateParam("@Y", DbType.UInt16); cmd.Parameters.Add(yP);
+            DbParameter zP = transaction.CreateParam("@Z", DbType.UInt16); cmd.Parameters.Add(zP);
+            DbParameter tileP = transaction.CreateParam("@Tile", DbType.Byte); cmd.Parameters.Add(tileP);
+            DbParameter delP = transaction.CreateParam("@Del", DbType.Boolean); cmd.Parameters.Add(delP);
+            
+            for (int i = 0; i < tempCache.Count; i++) {
+                BlockPos bP = tempCache[i];
+                IntToPos(bP.index, out x, out y, out z);
+                nameP.Value = bP.name;
+                DateTime time = Server.StartTimeLocal.AddSeconds(bP.timeDelta);
+                MakeInt(time.Year, 4, 0, ptr); MakeInt(time.Month, 2, 5, ptr); MakeInt(time.Day, 2, 8, ptr);
+                MakeInt(time.Hour, 2, 11, ptr); MakeInt(time.Minute, 2, 14, ptr); MakeInt(time.Second, 2, 17, ptr);
+                
+                timeP.Value = date;
+                xP.Value = x; yP.Value = y; zP.Value = z;
+                tileP.Value = bP.type;
+                delP.Value = bP.deleted;
+
+                if (!DatabaseTransactionHelper.Execute(template, cmd)) {
+                    cmd.Dispose();
+                    transaction.Rollback(); return false;
+                }
+            }
+            cmd.Dispose();
+            transaction.Commit();
+            return true;
+        }
+        
+        unsafe static void MakeInt(int value, int chars, int offset, char* ptr) {
+            for (int i = 0; i < chars; i++, value /= 10) {
+        	    char c = (char)('0' + (value % 10));
+                ptr[offset + (chars - 1 - i)] = c; 
+            }
+        }
+        
 
         public bool InBound(ushort x, ushort y, ushort z)
         {

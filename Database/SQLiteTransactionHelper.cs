@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 
 namespace MCGalaxy.SQL {
@@ -63,5 +65,13 @@ namespace MCGalaxy.SQL {
             }
             return true;
         }
+		
+        public override IDbCommand CreateCommand(string query) {
+            return new SQLiteCommand(query, (SQLiteConnection)connection, (SQLiteTransaction)transaction);
+		}
+		
+		public override DbParameter CreateParam(string paramName, DbType type) {
+			return new SQLiteParameter(paramName, type);
+		}
     }
 }

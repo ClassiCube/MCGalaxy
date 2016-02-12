@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -36,6 +37,10 @@ namespace MCGalaxy.SQL {
         }
 
         public abstract bool Execute(string query);
+        
+        public abstract IDbCommand CreateCommand(string query);
+        
+        public abstract DbParameter CreateParam(string paramName, DbType type);
 
         public void Commit() {
             try {
@@ -63,6 +68,17 @@ namespace MCGalaxy.SQL {
             connection.Dispose();
             transaction = null;
             connection = null;
+        }
+        
+        public static bool Execute(string query, IDbCommand cmd) {
+            try {
+                cmd.ExecuteNonQuery();
+            } catch (Exception e) {
+                System.IO.File.AppendAllText("MySQL_error.log", DateTime.Now + " " + query + "\r\n");
+                Server.ErrorLog(e);
+                return false;
+            }
+            return true;
         }
     }
 }

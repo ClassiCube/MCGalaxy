@@ -17,6 +17,8 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -67,5 +69,13 @@ namespace MCGalaxy.SQL {
             }
             return true;
         }
+		
+		public override IDbCommand CreateCommand(string query) {
+            return new MySqlCommand(query, (MySqlConnection)connection, (MySqlTransaction)transaction);
+		}
+		
+		public override DbParameter CreateParam(string paramName, DbType type) {
+			return new MySqlParameter(paramName, type);
+		}
     }
 }
