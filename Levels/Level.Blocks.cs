@@ -95,6 +95,7 @@ namespace MCGalaxy {
             int b = PosToInt(x, y, z);
             if (blocks == null || b < 0) return;
             blocks[b] = type;
+            changed = true;
         }
         
         public void SetExtTile(ushort x, ushort y, ushort z, byte extType) {

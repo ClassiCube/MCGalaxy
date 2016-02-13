@@ -33,40 +33,55 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }            
             if (p.usingGoto) { Player.SendMessage(p, "Cannot use /goto, already loading a map."); return; }
             
+            Level oldLevel = p.level;
             p.usingGoto = true;
+            bool didJoin = false;
             try {
-                HandleGoto(p, message);
+                didJoin = HandleGoto(p, message);
             } finally {
                 p.usingGoto = false;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
+            
+            if (!didJoin) return;
+            bool unloadOld = true;
+            if (oldLevel.unload && !oldLevel.name.Contains("&cMuseum ")) {
+                foreach (Player pl in PlayerInfo.players) 
+                    if (pl.level == oldLevel) { unloadOld = false; break; }
+                if (unloadOld && Server.AutoLoad) oldLevel.Unload(true);
+            }
         }
         
-        void HandleGoto(Player p, string message) {
+        bool HandleGoto(Player p, string message) {
             Level lvl = LevelInfo.FindExact(message);
             if (lvl != null) {
-                GoToLevel(p, lvl, message);
+                return GoToLevel(p, lvl, message);
             } else if (Server.AutoLoad) {
-            	if (!LevelInfo.ExistsOffline(message)) {
+                if (!LevelInfo.ExistsOffline(message)) {
                     lvl = LevelInfo.Find(message);
                     if (lvl == null) {
                         Player.SendMessage(p, "Level \"" + message + "\" doesn't exist! Did you mean...");
                         Command.all.Find("search").Use(p, "levels " + message);
+                        return false;
                     } else {
-                        GoToLevel(p, lvl, message);
+                        return GoToLevel(p, lvl, message);
                     }
                 } else if (Level.CheckLoadOnGoto(message)) {
                     Command.all.Find("load").Use(p, message);
                     lvl = LevelInfo.Find(message);
                     if (lvl != null) {
-                        GoToLevel(p, lvl, message);
+                        return GoToLevel(p, lvl, message);
+                    } else {
+                        Player.SendMessage(p, "Level \"" + message + "\" failed to be auto-loaded.");
+                        return false;
                     }
                 } else {
                     if (lvl == null) {
-                        Player.SendMessage(p, "Level \"" + message + "\" cannot be loaded using /goto!");
+                        Player.SendMessage(p, "Level \"" + message + "\" cannot be loaded using /goto.");
+                        return false;
                     } else {
-                        GoToLevel(p, lvl, message);
+                        return GoToLevel(p, lvl, message);
                     }
                 }
             } else {
@@ -74,25 +89,26 @@ namespace MCGalaxy.Commands {
                 if (lvl == null) {
                     Player.SendMessage(p, "There is no level \"" + message + "\" loaded. Did you mean..");
                     Command.all.Find("search").Use(p, "levels " + message);
+                    return false;
                 } else {
-                    GoToLevel(p, lvl, message);
+                    return GoToLevel(p, lvl, message);
                 }
             }
         }
         
-        void GoToLevel(Player p, Level lvl, string message) {
-            if (p.level == lvl) { Player.SendMessage(p, "You are already in \"" + lvl.name + "\"."); return; }
+        bool GoToLevel(Player p, Level lvl, string message) {
+            if (p.level == lvl) { Player.SendMessage(p, "You are already in \"" + lvl.name + "\"."); return false; }
             if (Player.BlacklistCheck(p.name, message)) {
-                Player.SendMessage(p, "You are blacklisted from " + lvl.name + "."); return;
+                Player.SendMessage(p, "You are blacklisted from " + lvl.name + "."); return false;
             }
             if (!p.ignorePermission && p.group.Permission < lvl.permissionvisit) {
-                Player.SendMessage(p, "You're not allowed to go to " + lvl.name + "."); return;
+                Player.SendMessage(p, "You're not allowed to go to " + lvl.name + "."); return false;
             }
             if (!p.ignorePermission && p.group.Permission > lvl.pervisitmax && !p.group.CanExecute(Command.all.Find("pervisitmax"))) {
-                Player.SendMessage(p, "Your rank must be " + lvl.pervisitmax + " or lower to go there!"); return;
+                Player.SendMessage(p, "Your rank must be " + lvl.pervisitmax + " or lower to go there!"); return false;
             }
             if (File.Exists("text/lockdown/map/" + message.ToLower())) {
-                Player.SendMessage(p, "The level " + message + " is locked."); return;
+                Player.SendMessage(p, "The level " + message + " is locked."); return false;
             }
 
             p.Loading = true;
@@ -120,17 +136,13 @@ namespace MCGalaxy.Commands {
                     p.SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             
             p.Loading = false;
-            bool unloadOld = true;
-            if (oldLevel.unload && !oldLevel.name.Contains("&cMuseum ")) {
-                foreach (Player pl in PlayerInfo.players) if (pl.level == oldLevel) { unloadOld = false; break; }
-                if (unloadOld && Server.AutoLoad) oldLevel.Unload(true);
-            }
             CheckGamesJoin(p, lvl);
             
             if (!p.hidden) {
                 Player.SendChatFrom(p, p.color + "*" + p.DisplayName + Server.DefaultColor + " went to &b" + lvl.name, false);
                 Server.IRC.Say(p.color + p.DisplayName + " %rwent to &8" + lvl.name, false, true);
             }
+            return true;
         }
         
         void CheckGamesJoin(Player p, Level lvl) {
