@@ -183,6 +183,8 @@ namespace MCGalaxy.Commands
                         cmd.Help(p);
                         string foundRank = Level.PermissionToName(GrpCommands.allowedCommands.Find(grpComm => grpComm.commandName == cmd.name).lowestRank);
                         Player.SendMessage(p, "Rank needed: " + getColor(cmd.name) + foundRank);
+                        if (!String.IsNullOrEmpty(cmd.shortcut))
+                            Player.SendMessage(p, "Shortcut: /" + cmd.shortcut);
                         return;
                     }
                     byte b = Block.Byte(message);

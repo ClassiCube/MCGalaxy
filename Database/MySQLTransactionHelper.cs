@@ -69,13 +69,15 @@ namespace MCGalaxy.SQL {
             }
             return true;
         }
-		
-		public override IDbCommand CreateCommand(string query) {
+        
+        public override IDbCommand CreateCommand(string query) {
             return new MySqlCommand(query, (MySqlConnection)connection, (MySqlTransaction)transaction);
-		}
-		
-		public override DbParameter CreateParam(string paramName, DbType type) {
-			return new MySqlParameter(paramName, type);
-		}
+        }
+        
+        public override DbParameter CreateParam(string paramName, DbType type) {
+            MySqlParameter arg = new MySqlParameter(paramName, null);
+            arg.DbType = type;
+            return arg;
+        }
     }
 }

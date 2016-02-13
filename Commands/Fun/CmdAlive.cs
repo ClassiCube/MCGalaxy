@@ -27,8 +27,6 @@ namespace MCGalaxy.Commands
         public CmdAlive() { }
         public override void Use(Player p, string message)
         {
-            Player who = null;
-            if (message == "") { who = p; message = p.name; } else { who = PlayerInfo.Find(message); }
             if (ZombieGame.alive.Count == 0)
             {
                 Player.SendMessage(p, "No one is alive.");
