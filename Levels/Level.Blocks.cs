@@ -89,6 +89,7 @@ namespace MCGalaxy {
         public void SetTile(int b, byte type) {
             if (blocks == null || b < 0 || b >= blocks.Length) return;
             blocks[b] = type;
+            changed = true;
         }
         
         public void SetTile(ushort x, ushort y, ushort z, byte type) {
@@ -132,6 +133,7 @@ namespace MCGalaxy {
             byte oldType = blocks[b];
             blocks[b] = type;
             byte oldExtType = 0;
+            changed = true;
             
             if (oldType == Block.custom_block) {
             	oldExtType = GetExtTile(x, y, z);
