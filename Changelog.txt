@@ -1,3 +1,24 @@
+v1.8.1.0
+- Fix 'blocks modified' not being updated in certain conditions.
+- Can set max number of overseer maps per rank through server properties.
+- Make ban/ranking commands store reasons and show them when used.
+- Fix some /spin modes not working properly.
+- Implement CPE TextColors extension. (ccols command)
+- Fix /explode exploding on player's level, not the target's level.
+- Fix /levels and /unloaded not working in console.
+- Added per-level block definitions with the /lb command.
+- /aka no longer reloads the map. /reload without parameters will do that instead.
+- Fix /clearblockchanges not working on personal realms.
+- Allow /pe to modify online players.
+- IRC commands can now be used via PM, assuming the user is an IRC controller.
+- Implement BlockDefinitionsExt version 2.
+- Reduction in memory usage for physics checks, undo/redo for players and level, and in the /fill command.
+- Optimise BlockDB saving, now only takes 1/3 of time it would take previously.
+- Cleanup countdown and allow generating maps of any size.
+- Fix /cmdbid [num] printing all bindings, instead of only that specific binding.
+- Readd rainbow and explode block physics for /restartphysics.
+- Fix levels not being saved when only modification to the world was a draw command > 10,000 blocks.
+
 v1.8.0.0
 - Fixed /undo from console and IRC not doing anything after restart.
 - /texture with a scope without a url will output the current url for that scope.
