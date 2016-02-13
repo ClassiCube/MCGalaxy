@@ -349,6 +349,7 @@ namespace MCGalaxy
             }
             tempCache.Clear();
             blockCache = new List<BlockPos>();
+            Server.s.Log("Saved BlockDB changes for:" + name);
         }
         
         unsafe bool DoSaveChanges(List<BlockPos> tempCache, char* ptr, string date, 

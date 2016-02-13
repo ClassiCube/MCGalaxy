@@ -369,7 +369,7 @@ namespace MCGalaxy {
             }
         }
         
-        public void Blockchange(int b, byte type, bool overRide = false, string extraInfo = "", byte extType = 0) { //Block change made by physics
+        public void Blockchange(int b, byte type, bool overRide = false, string extraInfo = "", byte extType = 0, bool addUndo = true) { //Block change made by physics
             if (b < 0 || b >= blocks.Length || blocks == null) return;
             if (b >= blocks.Length) return;
             byte oldBlock = blocks[b];
@@ -385,21 +385,23 @@ namespace MCGalaxy {
                 if (b == Block.lava_sponge && physics > 0 && type != Block.lava_sponge)
                     PhysSpongeRemoved(b, true);
 
-                UndoPos uP;
-                uP.location = b;
-                uP.newType = type; uP.newExtType = extType;
-                uP.oldType = oldBlock; uP.oldExtType = oldExtType;
-                uP.timePerformed = DateTime.Now;
+                if (addUndo) {
+                    UndoPos uP;
+                    uP.location = b;
+                    uP.newType = type; uP.newExtType = extType;
+                    uP.oldType = oldBlock; uP.oldExtType = oldExtType;
+                    uP.timePerformed = DateTime.Now;
 
-                if (currentUndo > Server.physUndo) {
-                    currentUndo = 0;
-                    UndoBuffer[currentUndo] = uP;
-                } else if (UndoBuffer.Count < Server.physUndo) {
-                    currentUndo++;
-                    UndoBuffer.Add(uP);
-                } else {
-                    currentUndo++;
-                    UndoBuffer[currentUndo] = uP;
+                    if (currentUndo > Server.physUndo) {
+                        currentUndo = 0;
+                        UndoBuffer[currentUndo] = uP;
+                    } else if (UndoBuffer.Count < Server.physUndo) {
+                        currentUndo++;
+                        UndoBuffer.Add(uP);
+                    } else {
+                        currentUndo++;
+                        UndoBuffer[currentUndo] = uP;
+                    }
                 }
 
                 blocks[b] = type;
@@ -427,8 +429,9 @@ namespace MCGalaxy {
             }
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, byte type, bool overRide = false, string extraInfo = "", byte extType = 0) {
-            Blockchange(PosToInt(x, y, z), type, overRide, extraInfo, extType); //Block change made by physics
+        public void Blockchange(ushort x, ushort y, ushort z, byte type, bool overRide = false, 
+                                string extraInfo = "", byte extType = 0, bool addUndo = true) {
+            Blockchange(PosToInt(x, y, z), type, overRide, extraInfo, extType, addUndo); //Block change made by physics
         }
         
         public void Blockchange(ushort x, ushort y, ushort z, byte type, byte extType) {

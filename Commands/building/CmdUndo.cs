@@ -93,7 +93,6 @@ namespace MCGalaxy.Commands
                 try {
                     Player.UndoPos Pos = who.UndoBuffer[i];
                     if (!CheckBlockPlayer(p, seconds, Pos, ref saveLevel)) break;
-                    who.UndoBuffer.RemoveAt(i);
                 } catch { }
             }
             bool foundUser = false;
@@ -191,7 +190,7 @@ namespace MCGalaxy.Commands
                 p.level.currentUndo = i;
                 p.level.IntToPos(undo.location, out x, out y, out z);
                 p.level.currentUndo = undoIndex;
-                p.level.Blockchange(x, y, z, undo.oldType, true, "", undo.oldExtType);
+                p.level.Blockchange(x, y, z, undo.oldType, true, "", undo.oldExtType, false);
             }
             return true;
         }
