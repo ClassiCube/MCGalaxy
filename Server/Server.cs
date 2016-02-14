@@ -408,6 +408,8 @@ namespace MCGalaxy
         }
         
         public void Start() {
+            PlayerInfo.players = new List<Player>();
+            Player.players = PlayerInfo.players;
             StartTime = DateTime.UtcNow;
             StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;

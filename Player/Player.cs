@@ -2414,16 +2414,16 @@ catch { }*/
         #endregion
         #region == OTHER ==
         
-        [Obsolete]
-        public static List<Player> players { get { return PlayerInfo.players; } }
+        [Obsolete("Use PlayerInfo.players")]
+        public static List<Player> players;
         
-        [Obsolete]
+        [Obsolete("Use PlayerInfo.Find(name)")]
         public static Player Find(string name) { return PlayerInfo.Find(name); }
         
-        [Obsolete]
+        [Obsolete("Use PlayerInfo.FindExact(name)")]
         public static Player FindExact(string name) { return PlayerInfo.FindExact(name); }
         
-        [Obsolete]
+        [Obsolete("Use PlayerInfo.FindNick(name)")]
         public static Player FindNick(string name) { return PlayerInfo.FindNick(name); }
         
         static byte FreeId() {
