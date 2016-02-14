@@ -286,8 +286,7 @@ namespace MCGalaxy
                 cancelunload = false;
                 return false;
             }
-            PlayerInfo.players.ForEach(
-                delegate(Player pl) { if (pl.level == this) Command.all.Find("goto").Use(pl, Server.mainLevel.name); });
+            MovePlayersToMain();
 
             if (changed && (!Server.ZombieModeOn || !Server.noLevelSaving))
             {
@@ -308,7 +307,7 @@ namespace MCGalaxy
                 TntWarsGame.GameList.Remove(TntWarsGame.Find(this));
 
             }
-
+            MovePlayersToMain();
             Server.levels.Remove(this);
 
             try
@@ -336,6 +335,17 @@ namespace MCGalaxy
             return true;
         }
 
+        void MovePlayersToMain() {
+            PlayerInfo.players.ForEach(
+                p => {
+        			if (p.level.name.ToLower() == name.ToLower()) {
+        			    Player.SendMessage(p, "You were moved to the main level as " + name + " was unloaded.");
+                        Command.all.Find("goto").Use(p, Server.mainLevel.name);
+        			}
+                }
+            );
+        }
+        
         public unsafe void saveChanges() {
             if (blockCache.Count == 0) return;
             List<BlockPos> tempCache = blockCache;
@@ -450,11 +460,14 @@ namespace MCGalaxy
                     if (clearPhysics)
                         ClearPhysics();
                     
-                    LvlFile.Save(this, path + ".back");
-                    File.Delete(path + ".backup");
-                    File.Copy(path + ".back", path + ".backup");
-                    File.Delete(path);
-                    File.Move(path + ".back", path);
+                    if (File.Exists(path)) {
+                        if (File.Exists(path + ".prev"))
+                            File.Delete(path + ".prev");
+                        File.Copy(path, path + ".prev");
+                        File.Delete(path);
+                    }
+                    LvlFile.Save(this, path + ".backup");
+                    File.Copy(path + ".backup", path);
                     SaveSettings(this);
 
                     Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
