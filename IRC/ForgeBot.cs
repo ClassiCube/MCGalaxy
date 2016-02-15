@@ -269,9 +269,6 @@ namespace MCGalaxy {
         	if (banCmd.Contains(cmdName)) {
         		error = "You are not allowed to use this command from IRC."; return false;
         	}
-        	if (Player.CommandHasBadColourCodes(null, message)) {
-        		error = "Your command had invalid color codes."; return false;
-        	}
         	return true;
         }
         

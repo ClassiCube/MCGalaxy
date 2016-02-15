@@ -73,10 +73,11 @@ namespace MCGalaxy.Commands {
             	                   "custom color with the name \"" + name + "\"."); return;
             }
             
-            char fallback = args[3][0];
+            char fallback = args[3][0];           
             if (!Colors.IsStandardColor(fallback)) {
                 Player.SendMessage(p, fallback + " must be a standard color code."); return;
             }
+            if (fallback >= 'A' && fallback <= 'F') fallback += ' ';
             
             string hex = args[4];
             if (hex.Length > 0 && hex[0] == '#')

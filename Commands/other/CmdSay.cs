@@ -15,10 +15,10 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdSay : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdSay : Command {
+		
         public override string name { get { return "say"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -26,25 +26,15 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdSay() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
 
-            //for (int i = 0; i < 10; i++)
-            //    message = message.Replace("%" + i, "&" + i);
-            //for (char c = 'a'; c <= 'f'; c++)
-            //    message = message.Replace("%" + c, "&" + c);
             message = Colors.EscapeColors(message);
             Player.GlobalMessage(message);
-
-            for (int i = 0; i < 10; i++)
-                message = message.Replace("&" + i, "");
-            for (char c = 'a'; c <= 'f'; c++)
-                message = message.Replace("&" + c, "");
             Server.IRC.Say(message);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/say - broadcasts a global message to everyone in the server.");
         }
     }

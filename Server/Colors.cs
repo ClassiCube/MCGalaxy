@@ -142,8 +142,7 @@ namespace MCGalaxy {
         }
 
         public static string EscapeColors(string value) {
-            if (value.IndexOf('%') == -1)
-                return value;
+            if (value.IndexOf('%') == -1) return value;
             char[] chars = new char[value.Length];
             
             for (int i = 0; i < value.Length; i++ ) {
@@ -163,7 +162,11 @@ namespace MCGalaxy {
         }
         
         public static bool MapColor(ref char color) {
-            if (IsStandardColor(color)) return true;
+        	if (IsStandardColor(color)) {
+        	    if (color >= 'A' && color <= 'F') color += ' ';
+        	    return true;
+        	}
+        	
             if (color == 's' || color == 'S') { color = Server.DefaultColor[1]; return true; }
             if (color == 'h' || color == 'H') { color = 'e'; return true; }
             if (color == 't' || color == 'T') { color = 'a'; return true; }

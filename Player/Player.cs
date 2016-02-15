@@ -477,36 +477,6 @@ namespace MCGalaxy {
             });
         }
 
-        public static bool CommandHasBadColourCodes(Player who, string message) {
-            string[] checkmessagesplit = message.Split(' ');
-            bool lastendwithcolour = false;
-            foreach ( string s in checkmessagesplit ) {
-                s.Trim();
-                if ( s.StartsWith("%") ) {
-                    if ( lastendwithcolour ) {
-                        if ( who != null ) {
-                            who.SendMessage("Sorry, Your colour codes in this command were invalid (You cannot use 2 colour codes next to each other");
-                            who.SendMessage("Command failed.");
-                            Server.s.Log(who.name + " attempted to send a command with invalid colours codes (2 colour codes were next to each other)!");
-                            Chat.GlobalMessageOps(who.color + who.DisplayName + " " + Server.DefaultColor + " attempted to send a command with invalid colours codes (2 colour codes were next to each other)!");
-                        }
-                        return true;
-                    }
-                    else if ( s.Length == 2 ) {
-                        lastendwithcolour = true;
-                    }
-                }
-                if ( s.TrimEnd(Server.ColourCodesNoPercent).EndsWith("%") ) {
-                    lastendwithcolour = true;
-                }
-                else {
-                    lastendwithcolour = false;
-                }
-
-            }
-            return false;
-        }
-
         public static List<ChatMessage> Last50Chat = new List<ChatMessage>();
         public static void GlobalMessage(string message) {
             GlobalMessage(message, false);

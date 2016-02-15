@@ -188,9 +188,13 @@ namespace MCGalaxy {
 
             if (colorParse) {
             	for (int i = 0; i < 128; i++) {
-            		if (Colors.IsStandardColor((char)i)) continue;
-            		CustomColor col = Colors.ExtColors[i];
-                    
+            		if (Colors.IsStandardColor((char)i)) {
+            		    if (i >= 'A' && i <= 'F') // WoM does not work with uppercase color codes.
+            		        sb.Replace("&" + (char)i, "&" + (char)(i + ' '));
+            		    continue;
+            		}
+            		
+            		CustomColor col = Colors.ExtColors[i];               
                     if (col.Undefined) {
                         sb.Replace("&" + (char)i, ""); continue;
                     }
