@@ -1215,17 +1215,13 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                         Server.IRC.Say(this.DisplayName + " is no longer AFK");
                     }
                 }
-                // This will allow people to type
-                // //Command
-                // and in chat it will appear as
-                // /Command
+                // Typing //Command appears in chat as /command
                 // Suggested by McMrCat
                 if ( text.StartsWith("//") ) {
                     text = text.Remove(0, 1);
                     goto hello;
                 }
-                //This will make / = /repeat
-                //For lazy people :P
+                // Typing / will act as /repeat
                 if ( text == "/" ) {
                     HandleCommand("repeat", "");
                     return;
@@ -1276,8 +1272,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     //}
                     if ( Player.lastMSG == this.name ) {
                         consecutivemessages++;
-                    }
-                    else {
+                    } else {
                         consecutivemessages--;
                     }
 
@@ -1456,212 +1451,155 @@ return;
         }
         
         public void HandleCommand(string cmd, string message) {
+            cmd = cmd.ToLower();
             try {
-                if ( Server.verifyadmins ) {
-                    if ( cmd.ToLower() == "setpass" ) {
-                        Command.all.Find(cmd).Use(this, message);
-                        Server.s.CommandUsed(this.name + " used /setpass");
-                        return;
-                    }
-                    if ( cmd.ToLower() == "pass" ) {
-                        Command.all.Find(cmd).Use(this, message);
-                        Server.s.CommandUsed(this.name + " used /pass");
-                        return;
-                    }
+                if (cmd == "") { SendMessage("No command entered."); return; }
+                if (Server.agreetorulesonentry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
+                    SendMessage("You must read /rules then agree to them with /agree!"); return;
                 }
-                if ( Server.agreetorulesonentry ) {
-                    if ( cmd.ToLower() == "agree" ) {
-                        Command.all.Find(cmd).Use(this, String.Empty);
-                        Server.s.CommandUsed(this.name + " used /agree");
-                        return;
-                    }
-                    if ( cmd.ToLower() == "rules" ) {
-                        Command.all.Find(cmd).Use(this, String.Empty);
-                        Server.s.CommandUsed(this.name + " used /rules");
-                        return;
-                    }
-                    if ( cmd.ToLower() == "disagree" ) {
-                        Command.all.Find(cmd).Use(this, String.Empty);
-                        Server.s.CommandUsed(this.name + " used /disagree");
-                        return;
-                    }
+                if (jailed) {
+                    SendMessage("You cannot use any commands while jailed."); return;
                 }
-
-                if ( cmd == String.Empty ) { SendMessage("No command entered."); return; }
-
-                if ( Server.agreetorulesonentry && !agreed ) {
-                        SendMessage("You must read /rules then agree to them with /agree!");
-                        return;
-                }
-                if ( jailed ) {
-                    SendMessage("You cannot use any commands while jailed.");
-                    return;
-                }
-                if ( Server.verifyadmins ) {
-                    if ( this.adminpen ) {
-                        this.SendMessage("&cYou must use &a/pass [Password]&c to verify!");
-                        return;
-                    }
+                if (Server.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
+                    SendMessage("&cYou must use &a/pass [Password]&c to verify!"); return;
                 }
 
                 //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
-                if ( cmd.ToLower() == "pony" ) {
+                if (cmd == "pony") {
                     if ( ponycount < 2 ) {
-                        GlobalMessage(this.color + this.DisplayName + Server.DefaultColor + " just so happens to be a proud brony! Everyone give " + this.color + this.name + Server.DefaultColor + " a brohoof!");
+                        GlobalMessage(color + DisplayName + " %Sjust so happens to be a proud brony! Everyone give " + color + name + " %Sa brohoof!");
                         ponycount += 1;
-                    }
-                    else {
+                    } else {
                         SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                     }
                     return;
                 }
-                if ( cmd.ToLower() == "rainbowdashlikescoolthings" ) {
+                if (cmd == "rainbowdashlikescoolthings") {
                     if ( rdcount < 2 ) {
                         GlobalMessage("&1T&2H&3I&4S &5S&6E&7R&8V&9E&aR &bJ&cU&dS&eT &fG&0O&1T &22&30 &4P&CE&7R&DC&EE&9N&1T &5C&6O&7O&8L&9E&aR&b!");
                         rdcount += 1;
-                    }
-                    else {
+                    } else {
                         SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                     }
                     return;
                 }
 
-                string foundShortcut = Command.all.FindShort(cmd);
-                if ( foundShortcut != "" ) cmd = foundShortcut;
-                if ( OnCommand != null )
-                    OnCommand(cmd, this, message);
-                if ( PlayerCommand != null )
-                    PlayerCommand(cmd, this, message);
+                string shortcut = Command.all.FindShort(cmd);
+                if (shortcut != "") cmd = shortcut;
+                
+                byte bindIndex;
+                if (byte.TryParse(cmd, out bindIndex) && bindIndex < 10) {
+                    if (messageBind[bindIndex] == null) { SendMessage("No command is bound to: /" + cmd); return; }
+                    cmd = cmdBind[bindIndex];
+                    message = messageBind[bindIndex] + " " + message;
+                    message = message.TrimEnd(' ');                    
+                }
+
+                Alias alias = Alias.Find(cmd);
+                if (alias != null) {
+                    string[] pars = alias.Command.Split(trimChars, 2);
+                    cmd = pars[0];
+                    if (pars.Length > 1)
+                        message = message == "" ? pars[1] : pars[1] + " " + message;                  
+                }
+                
+                if (OnCommand != null) OnCommand(cmd, this, message);
+                if (PlayerCommand != null) PlayerCommand(cmd, this, message);
                 OnPlayerCommandEvent.Call(cmd, this, message);
-                if ( cancelcommand ) {
-                    cancelcommand = false;
-                    return;
+                if (cancelcommand) {
+                    cancelcommand = false; return;
                 }
-                try {
-                    int foundCb = int.Parse(cmd);
-                    if ( messageBind[foundCb] == null ) { SendMessage("No CMD is stored on /" + cmd); return; }
-                    message = messageBind[foundCb] + " " + message;
-                    message = message.TrimEnd(' ');
-                    cmd = cmdBind[foundCb];
-                }
-                catch { }
-                Alias alias =  Alias.Find(cmd);
-                if (alias != null)
-                {
-                    string[] pars = alias.Command.Split(new string[] { " " }, (int)2, StringSplitOptions.None);
-                    try
-                    {
-                        Command.all.Find(pars[0]).Use(this, pars[1] + " " + message);
-                    }
-                    catch
-                    { //pars[1] is empty/null
-                        Command.all.Find(pars[0]).Use(this, message);
-                    }
-                    return;
-                }
+                
                 Command command = Command.all.Find(cmd);
-                //Group old = null;
-                if ( command != null ) {
-                    //this part checks if MCGalaxy staff are able to USE protection commands
-                    /*if (isProtected && Server.ProtectOver.Contains(cmd.ToLower())) {
-                        old = Group.findPerm(this.group.Permission);
-                        this.group = Group.findPerm(LevelPermission.Nobody);
-                    }*/
-
-                    if ( group.CanExecute(command)) {
-                        if ( cmd != "repeat" ) lastCMD = cmd + " " + message;
-                        if ( level.name.Contains("Museum " + Server.DefaultColor) ) {
-                            if ( !command.museumUsable ) {
-                                SendMessage("Cannot use this command while in a museum!");
-                                return;
-                            }
-                        }
-                        if ( this.joker || this.muted ) {
-                            if ( cmd.ToLower() == "me" ) {
-                                SendMessage("Cannot use /me while muted or jokered.");
-                                return;
-                            }
-                        }
-                        if ( cmd.ToLower() != "setpass" || cmd.ToLower() != "pass" ) {
-                            Server.s.CommandUsed(name + " used /" + cmd + " " + message);
-                        }
-
-                        try { //opstats patch (since 5.5.11)
-                            if (Server.opstats.Contains(cmd.ToLower()) || (cmd.ToLower() == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
-                                Database.AddParams("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                Database.AddParams("@Name", name);
-                                Database.AddParams("@Cmd", cmd);
-                                Database.AddParams("@Cmdmsg", message);
-                                Database.executeQuery("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@Time, @Name, @Cmd, @Cmdmsg)");
-                            }
-                        } catch { }
-
-                        Thread commThread = new Thread(new ThreadStart(delegate {
-                            try {
-                                command.Use(this, message);
-                            } catch (Exception e) {
-                                Server.ErrorLog(e);
-                                Player.SendMessage(this, "An error occured when using the command!");
-                                Player.SendMessage(this, e.GetType().ToString() + ": " + e.Message);
-                            }
-                            //finally { if (old != null) this.group = old; }
-                        }));
-                        commThread.Name = "MCG_Command";
-                        commThread.Start();
-                    }
-                    else { SendMessage("You are not allowed to use \"" + cmd + "\"!"); }
-                }
-                else if ( Block.Byte(cmd.ToLower()) != Block.Zero ) {
+                if (command != null) {
+                    UseCommand(command, cmd, message);
+                } else if (Block.Byte(cmd.ToLower()) != Block.Zero) {
                     HandleCommand("mode", cmd.ToLower());
-                }
-                else {
-                    bool retry = true;
-
-                    switch ( cmd.ToLower() ) { //Check for command switching
-                        case "guest": message = message + " " + cmd.ToLower(); cmd = "setrank"; break;
-                        case "builder": message = message + " " + cmd.ToLower(); cmd = "setrank"; break;
-                        case "advbuilder":
-                        case "adv": message = message + " " + cmd.ToLower(); cmd = "setrank"; break;
-                        case "operator":
-                        case "op": message = message + " " + cmd.ToLower(); cmd = "setrank"; break;
-                        case "super":
-                        case "superop": message = message + " " + cmd.ToLower(); cmd = "setrank"; break;
-                        case "cut": cmd = "copy"; message = "cut"; break;
-                        case "admins": message = "superop"; cmd = "viewranks"; break;
-                        case "ops": message = "op"; cmd = "viewranks"; break;
-                        case "banned": message = cmd; cmd = "viewranks"; break;
-
-                        case "ps": message = "ps " + message; cmd = "map"; break;
-
-                        //How about we start adding commands from other softwares
-                        //and seamlessly switch here?
-                        case "bhb":
-                        case "hbox": cmd = "cuboid"; message = "hollow"; break;
-                        case "blb":
-                        case "box": cmd = "cuboid"; break;
-                        case "sphere": cmd = "spheroid"; break;
-                        case "cmdlist":
-                        case "commands": cmd = "help"; message = "old"; break;
-                        case "cmdhelp": cmd = "help"; break;
-                        case "worlds":
-                        case "mapsave": cmd = "save"; break;
-                        case "mapload": cmd = "load"; break;
-                        case "colour": cmd = "color"; break;
-                        case "materials": cmd = "blocks"; break;
-                        case "zz": cmd = "static"; message = "cuboid " + message; break;
-                        case "fetch": cmd = "summon"; break;
-                        case "ranks": cmd = "help"; message = "ranks"; break;
-                        case "j":
-                        case "join": cmd = "goto"; break;
-
-                        default: retry = false; break; //Unknown command, then
-                    }
-
-                    if ( retry ) HandleCommand(cmd, message);
-                    else SendMessage("Unknown command \"" + cmd + "\"!");
+                } else if (MapCommand(ref cmd, ref message)) {
+                    HandleCommand(cmd, message);
+                } else {
+                    SendMessage("Unknown command \"" + cmd + "\"!");
                 }
             }
             catch ( Exception e ) { Server.ErrorLog(e); SendMessage("Command failed."); }
+        }
+        
+        void UseCommand(Command command, string cmd, string message) {
+            if (!group.CanExecute(command)) {
+                SendMessage("You are not allowed to use \"" + cmd + "\"."); return;
+            }          
+            if (cmd != "repeat") lastCMD = cmd + " " + message;
+            
+            if (level.name.Contains("Museum " + Server.DefaultColor) && !command.museumUsable ) {
+                SendMessage("Cannot use this command while in a museum!"); return;
+            }
+            if ((joker || muted) && cmd == "me") {
+                SendMessage("Cannot use /me while muted or jokered."); return;
+            }
+            if (!(cmd == "pass" || cmd == "setpass")) {
+                Server.s.CommandUsed(name + " used /" + cmd + " " + message);
+            }
+
+            try { //opstats patch (since 5.5.11)
+                if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
+                    Database.AddParams("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    Database.AddParams("@Name", name);
+                    Database.AddParams("@Cmd", cmd);
+                    Database.AddParams("@Cmdmsg", message);
+                    Database.executeQuery("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@Time, @Name, @Cmd, @Cmdmsg)");
+                }
+            } catch { }
+
+            Thread thread = new Thread(
+                new ThreadStart(delegate {
+                                    try {
+                                        command.Use(this, message);
+                                    } catch (Exception e) {
+                                        Server.ErrorLog(e);
+                                        Player.SendMessage(this, "An error occured when using the command!");
+                                        Player.SendMessage(this, e.GetType() + ": " + e.Message);
+                                    }
+                                }));
+            thread.Name = "MCG_Command";
+            thread.Start();
+        }
+        
+        bool MapCommand(ref string cmd, ref string message) {
+            switch (cmd) {
+                case "guest":
+                case "builder":
+                case "advbuilder":
+                case "adv":
+                case "operator":
+                case "op":
+                case "super":
+                case "superop": message = cmd + " " + message; cmd = "setrank"; return true;
+                case "cut": cmd = "copy"; message = "cut"; return true;
+                case "admins": message = "superop"; cmd = "viewranks"; return true;
+                case "ops": message = "op"; cmd = "viewranks"; return true;
+                case "banned": message = cmd; cmd = "viewranks"; return true;
+                case "ps": message = "ps " + message; cmd = "map"; return true;
+
+                case "bhb":
+                case "hbox": cmd = "cuboid"; message = "hollow"; return true;
+                case "blb":
+                case "box": cmd = "cuboid"; return true;
+                case "sphere": cmd = "spheroid"; return true;
+                case "cmdlist":
+                case "commands": cmd = "help"; message = "old"; return true;
+                case "cmdhelp": cmd = "help"; return true;
+                case "worlds":
+                case "mapsave": cmd = "save"; return true;
+                case "mapload": cmd = "load"; return true;
+                case "colour": cmd = "color"; return true;
+                case "materials": cmd = "blocks"; return true;
+                case "zz": cmd = "static"; message = "cuboid " + message; return true;
+                case "fetch": cmd = "summon"; return true;
+                case "ranks": cmd = "help"; message = "ranks"; return true;
+                case "j":
+                case "join": cmd = "goto"; return true;
+            }
+            return false;
         }
     }
 }

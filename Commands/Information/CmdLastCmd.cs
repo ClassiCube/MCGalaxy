@@ -36,11 +36,7 @@ namespace MCGalaxy.Commands
                     {
                         pl.lastCMD = "";
                     }
-                    if (pl.group.Permission <= p.group.Permission && pl.hidden)
-                    {
-                        Player.SendMessage(p, pl.color + pl.DisplayName + Server.DefaultColor + " last used \"" + pl.lastCMD + "\"");
-                    }
-                    if (!pl.hidden)
+                    if (!pl.hidden || (pl.group.Permission <= p.group.Permission && pl.hidden))
                     {
                         Player.SendMessage(p, pl.color + pl.DisplayName + Server.DefaultColor + " last used \"" + pl.lastCMD + "\"");
                     }

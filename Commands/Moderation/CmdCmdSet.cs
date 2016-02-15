@@ -50,12 +50,9 @@ namespace MCGalaxy.Commands
             GrpCommands.Save(GrpCommands.allowedCommands);
             GrpCommands.fillRanks();
             Player.GlobalMessage("&d" + foundCmd.name + Server.DefaultColor + "'s permission was changed to " + Level.PermissionToName(newPerm));
-            //if (p == null) ; // this is useless?
-            //{
-                Player.SendMessage(p, foundCmd.name + "'s permission was changed to " + Level.PermissionToName(newPerm));
-                return;
-            //}
+            Player.SendMessage(p, foundCmd.name + "'s permission was changed to " + Level.PermissionToName(newPerm));
         }
+        
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/cmdset [cmd] [rank] - Changes [cmd] rank to [rank]");
