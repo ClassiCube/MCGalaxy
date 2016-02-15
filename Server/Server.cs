@@ -427,6 +427,7 @@ namespace MCGalaxy
             CheckFile("System.Data.SQLite.dll");
             CheckFile("sqlite3.dll");
             CheckFile("Newtonsoft.Json.dll");
+            CheckFile("LibNoise.dll");
 
             //UpdateGlobalSettings();
             if (!Directory.Exists("properties")) Directory.CreateDirectory("properties");
