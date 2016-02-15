@@ -26,13 +26,11 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdEnvironment() { }
 
         public override void Use(Player p, string message) {
             message = message.ToLower();
             if (message == "preset" || message == "l preset" || message == "level preset") {
-                SendPresetsMessage(p);
-                return;
+                SendPresetsMessage(p); return;
             }
             
             string[] args = message.Split(' ');

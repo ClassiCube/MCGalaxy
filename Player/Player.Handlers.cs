@@ -1527,7 +1527,7 @@ return;
         void UseCommand(Command command, string cmd, string message) {
             if (!group.CanExecute(command)) {
                 SendMessage("You are not allowed to use \"" + cmd + "\"."); return;
-            }          
+            }
             if (cmd != "repeat") lastCMD = cmd + " " + message;
             
             if (level.name.Contains("Museum " + Server.DefaultColor) && !command.museumUsable ) {

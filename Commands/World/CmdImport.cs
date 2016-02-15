@@ -27,12 +27,9 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdImport() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { 
-        		Help(p); return; 
-        	}
+            if (message == "") { Help(p); return; }
             string fileName = "extra/import/" + message + ".dat";
 
             if (!Directory.Exists("extra/import")) 

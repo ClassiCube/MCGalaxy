@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdTexture() { }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
