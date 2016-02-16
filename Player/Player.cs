@@ -46,7 +46,6 @@ namespace MCGalaxy {
         public static List<string> emoteList = new List<string>();
         public List<string> listignored = new List<string>();
         public List<string> mapgroups = new List<string>();
-        public static List<string> globalignores = new List<string>();
         public static int totalMySQLFailed = 0;
         public static byte number { get { return (byte)PlayerInfo.players.Count; } }
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
@@ -126,7 +125,7 @@ namespace MCGalaxy {
         public bool onWhitelist = false;
         public bool whisper = false;
         public string whisperTo = "";
-        public bool ignoreglobal = false;
+        public bool ignoreAll = false;
 
         public string storedMessage = "";
 
@@ -305,7 +304,7 @@ namespace MCGalaxy {
         public Random random = new Random();
 
         //Global Chat
-        public bool muteGlobal;
+        public bool ignoreGlobalChat;
 
         public bool loggedIn;
         public bool InGlobalChat { get; set; }
@@ -440,39 +439,19 @@ namespace MCGalaxy {
 
 
             Last50Chat.Add(chatmessage);
-            if ( showname ) {
+            if (showname) {
                 String referee = "";
-                if ( from.referee ) {
+                if (from.referee)
                     referee = Colors.green + "[Referee] ";
-                }
                 message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             }
+            
             PlayerInfo.players.ForEach(delegate(Player p) {
-                if ( p.level.worldChat && p.Chatroom == null ) {
-                    if ( p.ignoreglobal == false ) {
-                        if ( from != null ) {
-                            if ( !p.listignored.Contains(from.name) ) {
-                                Player.SendMessage(p, message);
-                                return;
-                            }
-                            return;
-                        }
+                if (p.level.worldChat && p.Chatroom == null) {
+                    if (from != null && p.listignored.Contains(from.name)) return;
+                   
+                    if (!p.ignoreAll || (from != null && from == p))
                         Player.SendMessage(p, message);
-                        return;
-                    }
-                    if ( Server.globalignoreops == false ) {
-                        if ( from.group.Permission >= Server.opchatperm ) {
-                            if ( p.group.Permission < from.group.Permission ) {
-                                Player.SendMessage(p, message);
-                            }
-                        }
-                    }
-                    if ( from != null ) {
-                        if ( from == p ) {
-                            Player.SendMessage(from, message);
-                            return;
-                        }
-                    }
                 }
             });
         }
@@ -487,10 +466,12 @@ namespace MCGalaxy {
                 message = Colors.EscapeColors(message);
             else
                 message = message.Replace("%G", Server.GlobalChatColor);
+            
             PlayerInfo.players.ForEach(delegate(Player p) {
-                if ( p.level.worldChat && p.Chatroom == null && ( !global || !p.muteGlobal ) ) {
+                if (p.ignoreAll || (global && p.ignoreGlobalChat)) return;
+                
+                if (p.level.worldChat && p.Chatroom == null)
                     Player.SendMessage(p, message, !global);
-                }
             });
         }
         
@@ -584,24 +565,9 @@ namespace MCGalaxy {
                 }
                 // FlyBuffer.Clear();
                 disconnected = true;
+                SaveIgnores();
                 pingTimer.Stop();
                 pingTimer.Dispose();
-                if ( File.Exists("ranks/ignore/" + this.name + ".txt") ) {
-                    try {
-                        File.WriteAllLines("ranks/ignore/" + this.name + ".txt", this.listignored.ToArray());
-                    }
-                    catch {
-                        Server.s.Log("Failed to save ignored list for player: " + this.name);
-                    }
-                }
-                if ( File.Exists("ranks/ignore/GlobalIgnore.xml") ) {
-                    try {
-                        File.WriteAllLines("ranks/ignore/GlobalIgnore.xml", globalignores.ToArray());
-                    }
-                    catch {
-                        Server.s.Log("failed to save global ignore list!");
-                    }
-                }
                 afkTimer.Stop();
                 afkTimer.Dispose();
                 muteTimer.Stop();
@@ -705,7 +671,7 @@ level.Unload();
                 CloseSocket();
             }
         }
-
+        
         public void SaveUndo() { SaveUndo(this); }
         
         public static void SaveUndo(Player p) {
@@ -977,6 +943,44 @@ Next: continue;
                 return true;
             }
             return false;
+        }
+        
+        void SaveIgnores() {
+            string path = "ranks/ignore/" + name + ".txt";
+            if (!File.Exists(path)) return;
+            
+            try {
+                using (StreamWriter w = new StreamWriter(path)) {
+            	    if (ignoreGlobalChat) w.WriteLine("&global");
+                    if (ignoreAll) w.WriteLine("&all");                    
+                    foreach (string line in listignored)
+                        w.WriteLine(line);
+                }
+            } catch (Exception ex) {
+            	Server.ErrorLog(ex);
+                Server.s.Log("Failed to save ignored list for player: " + this.name);
+            }
+        }
+        
+        void LoadIgnores() {
+            string path = "ranks/ignore/" + name + ".txt";
+            if (!File.Exists(path)) return;
+            
+            try {
+                string[] lines = File.ReadAllLines(path);
+                foreach (string line in lines) {
+                    if (line == "&global") ignoreGlobalChat = true;
+                    else if (line == "&all") ignoreAll = true;
+                    else listignored.Add(line);
+                }
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                Server.s.Log("Failed to load ignore list for: " + name);
+            }
+            if (ignoreAll || ignoreGlobalChat || listignored.Count > 0) {
+                SendMessage("&cYou are still ignoring some people from your last login.");
+                SendMessage("&cType &a/ignore list &cto see the list.");
+            }
         }
     }
 }

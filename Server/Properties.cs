@@ -499,10 +499,6 @@ namespace MCGalaxy {
 								try { Server.guestLeaveNotify = bool.Parse(value); }
 								catch { Server.s.Log("Invalid " + key + ". Using default"); }
 								break;
-							case "ignore-ops":
-								try { Server.globalignoreops = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
 							case "admin-verification":
 								try { Server.verifyadmins = bool.Parse(value); }
 								catch { Server.s.Log("invalid " + key + ". Using default"); }
@@ -664,7 +660,8 @@ namespace MCGalaxy {
 					}
 				}
 			}
-			catch {
+			catch(Exception ex) {
+				Server.ErrorLog(ex);
 				Server.s.Log("SAVE FAILED! " + givenPath);
 			}
 		}
@@ -865,7 +862,6 @@ namespace MCGalaxy {
 			w.WriteLine("custom-promote-message = " + Server.customPromoteMessage);
 			w.WriteLine("custom-demote-message = " + Server.customDemoteMessage);
 			w.WriteLine("allow-tp-to-higher-ranks = " + Server.higherranktp.ToString().ToLower());
-			w.WriteLine("ignore-ops = " + Server.globalignoreops.ToString().ToLower());
 			w.WriteLine();
 			w.WriteLine("cheapmessage = " + Server.cheapMessage.ToString().ToLower());
 			w.WriteLine("cheap-message-given = " + Server.cheapMessageGiven);

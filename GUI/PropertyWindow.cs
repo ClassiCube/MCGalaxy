@@ -685,7 +685,8 @@ namespace MCGalaxy.Gui {
                     }
                 }
             }
-            catch ( Exception ) {
+            catch( Exception ex ) {
+                Server.ErrorLog(ex);
                 Server.s.Log("SAVE FAILED! " + givenPath);
             }
         }
@@ -784,7 +785,6 @@ namespace MCGalaxy.Gui {
             Server.customShutdown = chkShutdown.Checked;
             Server.customShutdownMessage = txtShutdown.Text;
             Server.higherranktp = chkTpToHigherRanks.Checked;
-            Server.globalignoreops = chkIgnoreGlobal.Checked; // Wasn't in previous setting-saver
 
             Server.checkUpdates = chkUpdates.Checked;
 

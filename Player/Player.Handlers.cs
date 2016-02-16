@@ -286,13 +286,11 @@ namespace MCGalaxy {
                     }
                 } catch { }
 
-                if (!CheckWhitelist())
-                    return;
-                LoadIgnores();
+                if (!CheckWhitelist()) return;
+                
                 // ban check
                 if (Server.bannedIP.Contains(ip) && (!Server.useWhitelist || !onWhitelist)) {
-                    Kick(Server.customBanMessage, true);
-                    return;
+                    Kick(Server.customBanMessage, true);  return;
                 }
                 
                 if (Server.omniban.CheckPlayer(this)) { Kick(Server.omniban.kickMsg); return; } //deprecated
@@ -340,6 +338,7 @@ namespace MCGalaxy {
                     }
                 }
                 
+                LoadIgnores();
                 if (type == 0x42) {
                     hasCpe = true;
 
@@ -405,35 +404,6 @@ namespace MCGalaxy {
             if (!onWhitelist) 
                 Kick("This is a private server!"); //i think someone forgot this?
             return onWhitelist;
-        }
-        
-        void LoadIgnores() {
-            if (File.Exists("ranks/ignore/" + name + ".txt")) {
-                try {
-                    string[] lines = File.ReadAllLines("ranks/ignore/" + name + ".txt");
-                    foreach (string line in lines)
-                        listignored.Add(line);
-                    File.Delete("ranks/ignore/" + name + ".txt");
-                } catch {
-                    Server.s.Log("Failed to load ignore list for: " + name);
-                }
-            }
-
-            if (File.Exists("ranks/ignore/GlobalIgnore.xml")) {
-                try {
-                    string[] searchxmls = File.ReadAllLines("ranks/ignore/GlobalIgnore.xml");
-                    foreach (string searchxml in searchxmls)
-                        globalignores.Add(searchxml);
-                    
-                    foreach (string ignorer in globalignores) {
-                        Player foundignore = PlayerInfo.Find(ignorer);
-                        foundignore.ignoreglobal = true;
-                    }
-                    File.Delete("ranks/ignore/GlobalIgnore.xml");
-                } catch {
-                    Server.s.Log("Failed to load global ignore list!");
-                }
-            }
         }
         
         void CompleteLoginProcess() {

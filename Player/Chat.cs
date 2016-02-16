@@ -101,23 +101,10 @@ namespace MCGalaxy {
         }
         
         static void SendGlobalMessage(Player p, Player from, string message) {
-            if (!p.ignoreglobal) {
-                if (from != null && p.listignored.Contains(from.name))
-                    return;
-                Player.SendMessage(p, Server.DefaultColor + message);
-                return;
-            }
+			if (from != null && p.listignored.Contains(from.name)) return;
             
-            if (!Server.globalignoreops) {
-                if (from.group.Permission >= Server.opchatperm) {
-                    if (p.group.Permission < from.group.Permission) {
-                        Player.SendMessage(p, Server.DefaultColor + message);
-                    }
-                }
-            }
-            if (from != null && from == p) {
-                Player.SendMessage(from, Server.DefaultColor + message);
-            }
+			if (!p.ignoreAll || (from != null && from == p))
+                Player.SendMessage(p, Server.DefaultColor + message);
         }
         
         public static void ApplyDollarTokens(StringBuilder sb, Player p, bool colorParse) {
@@ -129,10 +116,10 @@ namespace MCGalaxy {
             sb.Replace("$time", DateTime.Now.ToString("HH:mm:ss"));
             sb.Replace("$ip", p.ip);
             sb.Replace("$serverip", Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP);
-            if (colorParse)
-                sb.Replace("$color", p.color);
-            sb.Replace("$rank", p.group.name);
-            sb.Replace("$level", p.level.name);
+            if (colorParse) sb.Replace("$color", p.color);
+            if (p.group != null) sb.Replace("$rank", p.group.name);
+            if (p.level != null) sb.Replace("$level", p.level.name);
+            
             sb.Replace("$deaths", p.overallDeath.ToString());
             sb.Replace("$money", p.money.ToString());
             sb.Replace("$blocks", p.overallBlocks.ToString());
@@ -220,10 +207,7 @@ namespace MCGalaxy {
             LevelPermission whoPerm = who.group.Permission;
             
             if (!who.hidden || (who.hidden && perm >= whoPerm)) {
-                if (who.ignoreglobal) {
-                    if (!Server.globalignoreops && (perm >= Server.opchatperm && whoPerm < perm)) {
-                        DoPM(p, who, message); return;
-                    }
+                if (who.ignoreAll) {
                     DoFakePM(p, who, message); return;
                 }
                 
