@@ -332,7 +332,6 @@
     <Compile Include="Commands\Other\CmdMove.cs" />
     <Compile Include="Commands\Other\CmdNick.cs" />
     <Compile Include="Commands\Other\CmdPass.cs" />
-    <Compile Include="Commands\Other\CmdpCinema.cs" />
     <Compile Include="Commands\Other\CmdQuit.cs" />
     <Compile Include="Commands\Other\CmdRagequit.cs" />
     <Compile Include="Commands\Other\CmdRainbow.cs" />
@@ -343,7 +342,6 @@
     <Compile Include="Commands\Other\CmdRide.cs" />
     <Compile Include="Commands\Other\CmdRoll.cs" />
     <Compile Include="Commands\Other\CmdSay.cs" />
-    <Compile Include="Commands\Other\CmdScinema.cs" />
     <Compile Include="Commands\Other\CmdSend.cs" />
     <Compile Include="Commands\Other\CmdSendCmd.cs" />
     <Compile Include="Commands\Other\CmdServer.cs" />

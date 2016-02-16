@@ -167,8 +167,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdPause()), "physics reset");
             new CommandKeywords((new CmdPay()), "money give " + Server.moneys);
             new CommandKeywords((new CmdPlayerEditDB()), "player block limit mod edit");
-            new CommandKeywords((new CmdpCinema()), "cinema gif");
-            new CommandKeywords((new CmdpCinema2()), "cinema gif");
             new CommandKeywords((new CmdPCount()), "player online total number count");
             new CommandKeywords((new CmdPCreate()), "create add new plugin");
             new CommandKeywords((new CmdPerbuildMax()), "perm build max rank");
@@ -208,7 +206,6 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdRules()), "read prot");
             new CommandKeywords((new CmdSave()), "store load");
             new CommandKeywords((new CmdSay()), "speak broad cast");
-            new CommandKeywords((new CmdSCinema()), "cinema show");
             new CommandKeywords((new CmdSearch()), "find block command player rank");
             new CommandKeywords((new CmdSeen()), "saw last user");
             new CommandKeywords((new CmdServerReport()), "report server");
