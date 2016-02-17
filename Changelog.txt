@@ -1,3 +1,15 @@
+v1.8.2.0
+- Fix a critical bug with leaving a level as the only player and then rejoining
+  the level would result in you being re-added to the level which was then unloaded
+  due to the BlockDB not having finished saving before you rejoined,
+  thus causing draw commands to not work and block updates to not be saved.
+- Can import .mcf files when placed in /extra/import directory.
+- Removed /scinema and /pcinema.
+- Fix /ignore not properly persisting between sessions.
+- Added noise generator for new levels. (thanks megalomaniactom)
+- /limit can now change more variables (rank undo limit, reload threshold 
+  for drawing commands, physics undo max entries)
+
 v1.8.1.0
 - Fix 'blocks modified' not being updated in certain conditions.
 - Can set max number of overseer maps per rank through server properties.

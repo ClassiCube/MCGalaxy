@@ -16,25 +16,19 @@
 	permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands {
+	
 	public sealed class CmdDevs : Command {
+		
 		public override string name { get { return "devs"; } }
 		public override string shortcut { get { return "dev"; } }
 		public override string type { get { return CommandTypes.Information; } }
 		public override bool museumUsable { get { return true; } }
 		public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-		public CmdDevs() { }
 
 		public override void Use(Player p, string message) {
 			if ( message != "" ) { Help(p); return; }
-			string devlist = "";
-			string temp;
-			foreach ( string dev in Server.Devs ) {
-				temp = dev.Substring(0, 1);
-				temp = temp.ToUpper() + dev.Remove(0, 1);
-				devlist += temp + ", ";
-			}
-			devlist = devlist.Remove(devlist.Length - 2);
-			Player.SendMessage(p, "&9MCGalaxy Development Team: " + Server.DefaultColor + devlist + "&e.");
+			string devlist = string.Join(", ", Server.Devs);
+			Player.SendMessage(p, "&9MCGalaxy Development Team: %S" + devlist + "&e.");
 		}
 
 		public override void Help(Player p) {

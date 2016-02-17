@@ -75,11 +75,11 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "> > was banned by " + data[0] + " for " + data[1] + " on " + data[2]);
             }
 
-            if (Server.Devs.Contains(message.ToLower())) {
+            if (Server.Devs.ContainsInsensitive(message)) {
                 Player.SendMessage(p, Server.DefaultColor + "> > Player is a &9Developer");
-            } else if (Server.Mods.Contains(message.ToLower())) {
+            } else if (Server.Mods.ContainsInsensitive(message)) {
                 Player.SendMessage(p, Server.DefaultColor + "> > Player is a &9MCGalaxy Moderator");
-            } else if (Server.GCmods.Contains(message.ToLower())) {
+            } else if (Server.GCmods.ContainsInsensitive(message)) {
                 Player.SendMessage(p, Server.DefaultColor + "> > Player is a &9Global Chat Moderator");
             }
 

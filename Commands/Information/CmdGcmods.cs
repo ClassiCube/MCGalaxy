@@ -15,34 +15,23 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdGcmods : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdGcmods : Command  {
+		
         public override string name { get { return "gcmods"; } }
         public override string shortcut { get { return "gcmod"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdGcmods() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
-            string gcmodlist = "";
-            string tempgcmods;
-            foreach (string gcmod in Server.GCmods)
-            {
-                tempgcmods = gcmod.Substring(0, 1);
-                tempgcmods = tempgcmods.ToUpper() + gcmod.Remove(0, 1);
-                gcmodlist += tempgcmods + ", ";
-            }
-            gcmodlist = gcmodlist.Remove(gcmodlist.Length - 2);
-            Player.SendMessage(p, "&9MCGalaxy Global Chat Moderation Team: " + Server.DefaultColor + gcmodlist + "&e.");
+            string gcmodlist = string.Join(", ", Server.GCmods);
+            Player.SendMessage(p, "&9MCGalaxy Global Chat Moderation Team: %S" + gcmodlist + "&e.");
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/gcmods - Displays the list of MCGalaxy global chat moderators.");
         }
     }

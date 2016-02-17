@@ -114,15 +114,10 @@ namespace MCGalaxy
         public static PlayerList muted;
         public static PlayerList ignored;
 
-        // The MCGalaxy Developer List
-        internal static readonly List<string> devs = new List<string>();
-        public static List<string> Devs { get { return new List<string>(devs); } }
-        //The MCGalaxy Moderation List
-        internal static readonly List<string> mods = new List<string>();
-        public static List<string> Mods { get { return new List<string>(mods); } }
-        //GCMods List
-        internal static readonly List<string> gcmods = new List<string>();
-        public static List<string> GCmods { get { return new List<string>(gcmods); } }
+        public static readonly List<string> Devs = new List<string>();
+        public static readonly List<string> Mods = new List<string>();
+        public static readonly List<string> GCmods = new List<string>();
+        
         internal static readonly List<string> protectover = new List<string>(new string[] { "moderate", "mute", "freeze", "lockdown", "ban", "banip", "kickban", "kick", "global", "xban", "xundo", "undo", "uban", "unban", "unbanip", "demote", "promote", "restart", "shutdown", "setrank", "warn", "tempban", "impersonate", "sendcmd", "possess", "joker", "jail", "ignore", "voice" });
         public static List<string> ProtectOver { get { return new List<string>(protectover); } }
 
@@ -1254,24 +1249,24 @@ namespace MCGalaxy
         }*/
         public void UpdateStaffList() {
             try {
-                devs.Clear();
-                mods.Clear();
-                gcmods.Clear();
+                Devs.Clear();
+                Mods.Clear();
+                GCmods.Clear();
                 using (WebClient web = new WebClient()) {
                     string[] result = web.DownloadString("https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/devs.txt").Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.None);
                     foreach (string line in result) {
                         string type = line.Split(':')[0].ToLower();
-                        List<string> staffList = type.Equals("devs") ? devs : type.Equals("mods") ? mods : type.Equals("gcmods") ? gcmods : null;
+                        List<string> staffList = type.Equals("devs") ? Devs : type.Equals("mods") ? Mods : type.Equals("gcmods") ? GCmods : null;
                         foreach (string name in line.Split(':')[1].Split())
-                            staffList.Add(name.ToLower());
+                            staffList.Add(name);
                     }
                 }
             } catch (Exception e) {
                 ErrorLog(e);
                 s.Log("Couldn't update MCGalaxy staff list, turning MCGalaxy Staff Protection Level off. . . ");
-                devs.Clear();
-                mods.Clear();
-                gcmods.Clear();
+                Devs.Clear();
+                Mods.Clear();
+                GCmods.Clear();
             }
         }
 

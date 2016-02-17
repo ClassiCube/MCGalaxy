@@ -272,9 +272,9 @@ namespace MCGalaxy {
                 name += "+";
                 byte type = message[129];
 
-                isDev = Server.Devs.Contains(name.ToLower());
-                isMod = Server.Mods.Contains(name.ToLower());
-                isGCMod = Server.GCmods.Contains(name.ToLower());
+                isDev = Server.Devs.ContainsInsensitive(name);
+                isMod = Server.Mods.ContainsInsensitive(name);
+                isGCMod = Server.GCmods.ContainsInsensitive(name);
                 verifiedName = Server.verify;
 
                 try {

@@ -315,11 +315,11 @@ namespace MCGalaxy
             if (OnNewRecieveGlobalMessage != null)
                 OnNewRecieveGlobalMessage(user.Nick, message);
             
-            if (Server.Devs.Contains(message.Split(':')[0].ToLower()) && !message.StartsWith("[Dev]") && !message.StartsWith("[Developer]")) 
+            if (Server.Devs.ContainsInsensitive(message.Split(':')[0]) && !message.StartsWith("[Dev]") && !message.StartsWith("[Developer]")) 
                 message = "[Dev]" + message;
-            else if(Server.Mods.Contains(message.Split(':')[0].ToLower()) && !message.StartsWith("[Mod]") && !message.StartsWith("[Moderator]"))
+            else if(Server.Mods.ContainsInsensitive(message.Split(':')[0]) && !message.StartsWith("[Mod]") && !message.StartsWith("[Moderator]"))
                 message = "[Mod]" + message;
-            else if (Server.Mods.Contains(message.Split(':')[0].ToLower()) && !message.StartsWith("[GCMod]"))
+            else if (Server.GCmods.ContainsInsensitive(message.Split(':')[0]) && !message.StartsWith("[GCMod]"))
                 message = "[GCMod]" + message;
 
             /*try { 

@@ -142,5 +142,11 @@ namespace MCGalaxy
                 complete[i] = complete[i].ToLower();
             File.WriteAllLines(file, complete);
         }
+        
+        public static bool ContainsInsensitive(this List<string> list, string value) {
+            foreach (string item in list)
+                if (item.Equals(value, StringComparison.OrdinalIgnoreCase)) return true;
+            return false;
+        }
     }
 }

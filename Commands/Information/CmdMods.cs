@@ -15,34 +15,23 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdMods : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdMods : Command {
+		
         public override string name { get { return "mods"; } }
         public override string shortcut { get { return "mod"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdMods() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
-            string modlist = "";
-            string tempmods;
-            foreach (string mod in Server.Mods)
-            {
-                tempmods = mod.Substring(0, 1);
-                tempmods = tempmods.ToUpper() + mod.Remove(0, 1);
-                modlist += tempmods + ", ";
-            }
-            modlist = modlist.Remove(modlist.Length - 2);
-            Player.SendMessage(p, "&9MCGalaxy Moderation Team: " + Server.DefaultColor + modlist + "&e.");
+            string modlist = string.Join(", ", Server.Mods);
+            Player.SendMessage(p, "&9MCGalaxy Moderation Team: %S" + modlist + "&e.");
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/mods - Displays the list of MCGalaxy moderators.");
         }
     }
