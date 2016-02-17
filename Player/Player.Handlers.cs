@@ -1556,7 +1556,7 @@ return;
                 case "box": cmd = "cuboid"; return true;
                 case "sphere": cmd = "spheroid"; return true;
                 case "cmdlist":
-                case "commands": cmd = "help"; message = "old"; return true;
+                case "commands": cmd = "help"; message = "commands"; return true;
                 case "cmdhelp": cmd = "help"; return true;
                 case "worlds":
                 case "mapsave": cmd = "save"; return true;

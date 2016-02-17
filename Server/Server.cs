@@ -232,7 +232,6 @@ namespace MCGalaxy
         public static string name = "[MCGalaxy] Default";
         public static string motd = "Welcome!";
         public static byte players = 12;
-        public static int menustyle = 0;
         //for the limiting no. of guests:
         public static byte maxGuests = 10;
 
@@ -287,7 +286,6 @@ namespace MCGalaxy
         public static int physUndo = 20000;
         public static int totalUndo = 200;
         public static bool rankSuper = true;
-        public static bool oldHelp = false;
         public static bool parseSmiley = true;
         public static bool useWhitelist = false;
         public static bool PremiumPlayersOnly = false;

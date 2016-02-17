@@ -152,6 +152,13 @@ namespace MCGalaxy {
                 #endif
             }
         }
+        
+        public void SendBlankMessage() {
+        	byte[] buffer = new byte[66];
+            buffer[0] = Opcode.Message;
+            NetUtils.WriteAscii("", buffer, 2);
+            SendRaw(buffer);
+        }
 
         public static void SendMessage(Player p, string message) {
             SendMessage(p, message, true);

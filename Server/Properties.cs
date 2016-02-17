@@ -239,10 +239,6 @@ namespace MCGalaxy {
 								}
 								Server.IRCColour = color;
 								break;
-							case "old-help":
-								try { Server.oldHelp = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
 							case "opchat-perm":
 								try {
 									sbyte parsed = sbyte.Parse(value);
@@ -629,11 +625,6 @@ namespace MCGalaxy {
 									Server.IgnoreOmnibans = false;
 								}
 								break;
-								
-                            case "menu-style":
-                                try { Server.menustyle = Convert.ToInt32(value); }
-                                catch { Server.s.Log("menu-style value invalid! setting to default."); }
-                                break;
 						}
 					}
 				}
@@ -771,7 +762,6 @@ namespace MCGalaxy {
 			w.WriteLine("auto-restart = " + Server.autorestart.ToString().ToLower());
 			w.WriteLine("restarttime = " + Server.restarttime.ToShortTimeString());
 			w.WriteLine("restart-on-error = " + Server.restartOnError);
-            w.WriteLine("menu-style = " + Server.menustyle.ToString());
 			w.WriteLine("main-name = " + Server.level);
             w.WriteLine("default-texture-url = " + Server.defaultTerrainUrl);
             w.WriteLine("default-texture-pack-url = " + Server.defaultTexturePackUrl);
@@ -792,7 +782,6 @@ namespace MCGalaxy {
 			w.WriteLine("rplimit = " + Server.rpLimit.ToString().ToLower());
 			w.WriteLine("rplimit-norm = " + Server.rpNormLimit.ToString().ToLower());
 			w.WriteLine("physicsrestart = " + Server.physicsRestart.ToString().ToLower());
-			w.WriteLine("old-help = " + Server.oldHelp.ToString().ToLower());
 			w.WriteLine("deathcount = " + Server.deathcount.ToString().ToLower());
 			w.WriteLine("afk-minutes = " + Server.afkminutes.ToString());
 			w.WriteLine("afk-kick = " + Server.afkkick.ToString());

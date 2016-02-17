@@ -249,7 +249,6 @@ namespace MCGalaxy.Commands
             Server.physUndo = 20000;
             Server.totalUndo = 200;
             Server.rankSuper = true;
-            Server.oldHelp = false;
             Server.parseSmiley = true;
             Server.useWhitelist = false;
             Server.forceCuboid = false;
