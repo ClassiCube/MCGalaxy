@@ -648,7 +648,6 @@ namespace MCGalaxy {
         }
 
         public void Dispose() {
-            //throw new NotImplementedException();
             if ( connections.Contains(this) ) connections.Remove(this);
             Extras.Clear();
             if (CopyBuffer != null)
@@ -664,7 +663,7 @@ namespace MCGalaxy {
 }
 catch { }*/
         }
-        //fixed undo code
+
         public bool IsAloneOnCurrentLevel() {
             return PlayerInfo.players.All(pl => pl.level != level || pl == this);
         }
