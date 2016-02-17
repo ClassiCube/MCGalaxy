@@ -15,23 +15,21 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdRagequit : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdRagequit : Command {
+		
         public override string name { get { return "ragequit"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override void Use(Player p, string message)
-        {
-            p.totalKicked = p.totalKicked - 1;
-            p.Kick("RAGEQUIT!!");
+        
+        public override void Use(Player p, string message)  {
+            p.LeaveServer("RAGEQUIT!!", "RAGEQUIT!!");
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/ragequit - Makes you ragequit");
         }
     }

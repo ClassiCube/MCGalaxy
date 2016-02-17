@@ -535,32 +535,40 @@ namespace MCGalaxy {
         }
         #endregion
         #region == DISCONNECTING ==
-        public void Disconnect() { leftGame(); }
-        public void Kick(string kickString) { leftGame(kickString, false); }
-        public void Kick(string kickString, bool sync = false) { leftGame(kickString, sync); }
+        
+        string GetLogoutMessage() {
+        	if (!Directory.Exists("text/logout"))
+        		Directory.CreateDirectory("text/logout");
+        	
+        	string path = "text/logout/" + name + ".txt";
+        	if (!File.Exists(path))
+        		CP437Writer.WriteAllText(path, "Disconnected.");
+        	return CP437Reader.ReadAllText(path);
+        }
+        
+        public void Disconnect() { LeaveServer("Disconnected", GetLogoutMessage()); }
+        public void Kick(string kickString) { LeaveServer(kickString, null); }
+        public void Kick(string kickString, bool sync = false) { LeaveServer(kickString, null, sync); }
 
-        public void leftGame(string kickString = "", bool sync = false) {
+        [Obsolete("Use LeaveServer() instead")]
+        public void leftGame(string kickMsg = "") { LeaveServer(kickMsg, null); }
 
-            OnPlayerDisconnectEvent.Call(this, kickString);
-
+        public void LeaveServer(string kickMsg, string discMsg, bool sync = false) {
+            OnPlayerDisconnectEvent.Call(this, discMsg ?? kickMsg);
             //Umm...fixed?
-            if ( name == "" ) {
-                if ( socket != null )
-                    CloseSocket();
-                if ( connections.Contains(this) )
-                    connections.Remove(this);
+            if (name == "") {
+                if (socket != null) CloseSocket();
+                connections.Remove(this);
                 SaveUndo();
                 disconnected = true;
                 return;
             }
-            Server.reviewlist.Remove(name);
             
-            try {
- 
-                if ( disconnected ) {
-                    this.CloseSocket();
-                    if ( connections.Contains(this) )
-                        connections.Remove(this);
+            Server.reviewlist.Remove(name);           
+            try { 
+                if (disconnected) {
+                    CloseSocket();
+                    connections.Remove(this);
                     return;
                 }
                 // FlyBuffer.Clear();
@@ -576,98 +584,55 @@ namespace MCGalaxy {
                 timespent.Dispose();
                 afkCount = 0;
                 afkStart = DateTime.Now;
-
-                if ( Server.afkset.Contains(name) ) Server.afkset.Remove(name);
-
-                if ( kickString == "" ) kickString = "Disconnected.";
-
-                SendKick(kickString, sync);
-
-
-                if ( loggedIn ) {
-                    isFlying = false;
-                    aiming = false;
-
-                    if ( team != null ) {
-                        team.RemoveMember(this);
-                    }
-
-                    Server.Countdown.PlayerLeftServer(this);
-
-                    TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
-                    if ( tntwarsgame != null ) {
-                        tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
-                        tntwarsgame.SendAllPlayersMessage("TNT Wars: " + color + name + Server.DefaultColor + " has left TNT Wars!");
-                    }
-
-                    GlobalDespawn(this, false);
-                    if ( kickString == "Disconnected." || kickString.IndexOf("Server shutdown") != -1 || kickString == Server.customShutdownMessage ) {
-                        if ( !Directory.Exists("text/logout") ) {
-                            Directory.CreateDirectory("text/logout");
-                        }
-                        if ( !File.Exists("text/logout/" + name + ".txt") ) {
-                            CP437Writer.WriteAllText("text/logout/" + name + ".txt", "Disconnected.");
-                        }
-                        if ( !hidden ) {
-                            string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " " + 
-                                CP437Reader.ReadAllText("text/logout/" + name + ".txt");
-                            if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest)
-                            {
-                                PlayerInfo.players.ForEach(p1 => Player.SendMessage(p1, leavem));
-                            }
-                        }
-                        //IRCBot.Say(name + " left the game.");
-                        Server.s.Log(name + " disconnected.");
-                    }
-                    else {
-                        totalKicked++;
-                        SendChatFrom(this, "&c- " + color + prefix + DisplayName + Server.DefaultColor + " kicked (" + kickString + Server.DefaultColor + ").", false);
-                        //IRCBot.Say(name + " kicked (" + kickString + ").");
-                        Server.s.Log(name + " kicked (" + kickString + ").");
-                    }
-
-                    try { save(); }
-                    catch ( Exception e ) { Server.ErrorLog(e); }
-
-                    PlayerInfo.players.Remove(this);
-                    Server.s.PlayerListUpdate();
-                    try {
-                        left.Add(this.name.ToLower(), this.ip);
-                    }
-                    catch ( Exception ) {
-                        //Server.ErrorLog(e);
-                    }
-
-                    /*if (Server.AutoLoad && level.unload)
-{
-
-foreach (Player pl in PlayerInfo.players)
-if (pl.level == level) hasplayers = true;
-if (!level.name.Contains("Museum " + Server.DefaultColor) && hasplayers == false)
-{
-level.Unload();
-}
-}*/
-
-                    if ( Server.AutoLoad && level.unload && !level.name.Contains("Museum " + Server.DefaultColor) && IsAloneOnCurrentLevel() )
-                        level.Unload(true);
-
-                    if ( PlayerDisconnect != null )
-                        PlayerDisconnect(this, kickString);
-
-                    this.Dispose();
-                }
-                else {
-                    connections.Remove(this);
-
+                Server.afkset.Remove(name);
+                isFlying = false;
+                aiming = false;
+                
+                SendKick(kickMsg, sync);           
+                if (!loggedIn) {
+                	connections.Remove(this);
                     Server.s.Log(ip + " disconnected.");
+                    return;
                 }
 
                 Server.zombie.PlayerLeftServer(this);
+                if ( team != null ) team.RemoveMember(this);
+                Server.Countdown.PlayerLeftServer(this);
+                TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
+                if ( tntwarsgame != null ) {
+                	tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
+                	tntwarsgame.SendAllPlayersMessage("TNT Wars: " + color + name + Server.DefaultColor + " has left TNT Wars!");
+                }
 
-            }
-            catch ( Exception e ) { Server.ErrorLog(e); }
-            finally {
+                GlobalDespawn(this, false);
+                if (discMsg != null) {
+                	if (!hidden) {
+                		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " %S" + discMsg;
+                		if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest)
+                			PlayerInfo.players.ForEach(p1 => Player.SendMessage(p1, leavem));
+                	}
+                	Server.s.Log(name + " disconnected.");
+                } else {
+                	totalKicked++;
+                	SendChatFrom(this, "&c- " + color + prefix + DisplayName + " %Skicked (" + kickMsg + "%S).", false);
+                	Server.s.Log(name + " kicked (" + kickMsg + ").");
+                }
+
+                try { save(); }
+                catch ( Exception e ) { Server.ErrorLog(e); }
+
+                PlayerInfo.players.Remove(this);
+                Server.s.PlayerListUpdate();
+                if (name != null)
+                	left[name.ToLower()] = ip;
+                if (PlayerDisconnect != null)
+                	PlayerDisconnect(this, discMsg ?? kickMsg);
+                if (Server.AutoLoad && level.unload && !level.name.Contains("Museum " + Server.DefaultColor) && IsAloneOnCurrentLevel())
+                	level.Unload(true);
+                Dispose();
+            } catch ( Exception e ) { 
+                Server.ErrorLog(e); 
+            } finally {
                 CloseSocket();
             }
         }
@@ -848,7 +813,7 @@ Next: continue;
                 DateTime oldestTime = spamBlockLog.Dequeue();
                 double spamTimer = DateTime.Now.Subtract(oldestTime).TotalSeconds;
                 if ( spamTimer < spamBlockTimer && !ignoreGrief ) {
-                    this.Kick("You were kicked by antigrief system. Slow down.");
+                    Kick("You were kicked by antigrief system. Slow down.");
                     SendMessage(Colors.red + DisplayName + " was kicked for suspected griefing.");
                     Server.s.Log(name + " was kicked for block spam (" + spamBlockCount + " blocks in " + spamTimer + " seconds)");
                     return true;

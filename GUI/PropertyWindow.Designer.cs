@@ -96,7 +96,6 @@ namespace MCGalaxy.Gui
             this.txtIRCServer = new System.Windows.Forms.TextBox();
             this.txtChannel = new System.Windows.Forms.TextBox();
             this.txtOpChannel = new System.Windows.Forms.TextBox();
-            this.ChkTunnels = new System.Windows.Forms.CheckBox();
             this.chkVerify = new System.Windows.Forms.CheckBox();
             this.chkWorld = new System.Windows.Forms.CheckBox();
             this.chkAutoload = new System.Windows.Forms.CheckBox();
@@ -106,7 +105,6 @@ namespace MCGalaxy.Gui
             this.txtMOTD = new System.Windows.Forms.TextBox();
             this.txtPort = new System.Windows.Forms.TextBox();
             this.txtMaps = new System.Windows.Forms.TextBox();
-            this.txtDepth = new System.Windows.Forms.TextBox();
             this.cmbDefaultRank = new System.Windows.Forms.ComboBox();
             this.cmbOpChat = new System.Windows.Forms.ComboBox();
             this.chkLogBeat = new System.Windows.Forms.CheckBox();
@@ -176,7 +174,6 @@ namespace MCGalaxy.Gui
             this.chkGlobalChat = new System.Windows.Forms.CheckBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.chkShowEmptyRanks = new System.Windows.Forms.CheckBox();
-            this.chkIgnoreGlobal = new System.Windows.Forms.CheckBox();
             this.chkNotifyOnJoinLeave = new System.Windows.Forms.CheckBox();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
             this.txtRestartTime = new System.Windows.Forms.TextBox();
@@ -248,8 +245,6 @@ namespace MCGalaxy.Gui
             this.editTxtsBt = new System.Windows.Forms.Button();
             this.txtHost = new System.Windows.Forms.TextBox();
             this.chkRestart = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -433,7 +428,6 @@ namespace MCGalaxy.Gui
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox17.SuspendLayout();
             ( (System.ComponentModel.ISupportInitialize) ( this.updateTimeNumeric ) ).BeginInit();
@@ -1018,18 +1012,6 @@ namespace MCGalaxy.Gui
             this.txtOpChannel.TabIndex = 26;
             this.toolTip.SetToolTip( this.txtOpChannel, "The IRC channel to be used." );
             // 
-            // ChkTunnels
-            // 
-            this.ChkTunnels.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ChkTunnels.AutoSize = true;
-            this.ChkTunnels.Location = new System.Drawing.Point( 18, 20 );
-            this.ChkTunnels.Name = "ChkTunnels";
-            this.ChkTunnels.Size = new System.Drawing.Size( 83, 23 );
-            this.ChkTunnels.TabIndex = 4;
-            this.ChkTunnels.Text = "Anti-Tunneling";
-            this.toolTip.SetToolTip( this.ChkTunnels, "Should guests be limited to digging a certain depth?" );
-            this.ChkTunnels.UseVisualStyleBackColor = true;
-            // 
             // chkVerify
             // 
             this.chkVerify.Appearance = System.Windows.Forms.Appearance.Button;
@@ -1126,15 +1108,6 @@ namespace MCGalaxy.Gui
             this.txtMaps.TabIndex = 2;
             this.toolTip.SetToolTip( this.txtMaps, "The total number of maps which can be loaded at once.\nDefault = 5" );
             this.txtMaps.TextChanged += new System.EventHandler( this.txtMaps_TextChanged );
-            // 
-            // txtDepth
-            // 
-            this.txtDepth.Location = new System.Drawing.Point( 60, 51 );
-            this.txtDepth.Name = "txtDepth";
-            this.txtDepth.Size = new System.Drawing.Size( 41, 21 );
-            this.txtDepth.TabIndex = 2;
-            this.toolTip.SetToolTip( this.txtDepth, "Depth which guests can dig.\nDefault = 4" );
-            this.txtDepth.TextChanged += new System.EventHandler( this.txtDepth_TextChanged );
             // 
             // cmbDefaultRank
             // 
@@ -1940,7 +1913,6 @@ namespace MCGalaxy.Gui
             this.groupBox13.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox13.Controls.Add( this.chkGuestLimitNotify );
             this.groupBox13.Controls.Add( this.chkShowEmptyRanks );
-            this.groupBox13.Controls.Add( this.chkIgnoreGlobal );
             this.groupBox13.Controls.Add( this.chkNotifyOnJoinLeave );
             this.groupBox13.Controls.Add( this.chkRepeatMessages );
             this.groupBox13.Controls.Add( this.chkDeath );
@@ -1968,17 +1940,6 @@ namespace MCGalaxy.Gui
             this.chkShowEmptyRanks.TabIndex = 41;
             this.chkShowEmptyRanks.Text = "Empty ranks in /players";
             this.chkShowEmptyRanks.UseVisualStyleBackColor = true;
-            // 
-            // chkIgnoreGlobal
-            // 
-            this.chkIgnoreGlobal.AutoSize = true;
-            this.chkIgnoreGlobal.Location = new System.Drawing.Point( 194, 166 );
-            this.chkIgnoreGlobal.Name = "chkIgnoreGlobal";
-            this.chkIgnoreGlobal.Size = new System.Drawing.Size( 112, 17 );
-            this.chkIgnoreGlobal.TabIndex = 36;
-            this.chkIgnoreGlobal.Tag = "If enabled, it makes it so, you cannot ignore players of opchat perm +.";
-            this.chkIgnoreGlobal.Text = "Allow Ignoring Ops";
-            this.chkIgnoreGlobal.UseVisualStyleBackColor = true;
             // 
             // chkNotifyOnJoinLeave
             // 
@@ -2530,7 +2491,6 @@ namespace MCGalaxy.Gui
             this.tabPage1.Controls.Add( this.groupBox5 );
             this.tabPage1.Controls.Add( this.groupBox4 );
             this.tabPage1.Controls.Add( this.groupBox2 );
-            this.tabPage1.Controls.Add( this.groupBox3 );
             this.tabPage1.Controls.Add( this.groupBox1 );
             this.tabPage1.Controls.Add( this.groupBox17 );
             this.tabPage1.Controls.Add( this.groupBox6 );
@@ -2718,29 +2678,6 @@ namespace MCGalaxy.Gui
             this.chkRestart.TabIndex = 4;
             this.chkRestart.Text = "Restart on error";
             this.chkRestart.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.AutoSize = true;
-            this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox3.Controls.Add( this.ChkTunnels );
-            this.groupBox3.Controls.Add( this.label7 );
-            this.groupBox3.Controls.Add( this.txtDepth );
-            this.groupBox3.Location = new System.Drawing.Point( 230, 131 );
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size( 107, 92 );
-            this.groupBox3.TabIndex = 43;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Tunnel Prevention";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point( 15, 54 );
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size( 39, 13 );
-            this.label7.TabIndex = 3;
-            this.label7.Text = "Depth:";
             // 
             // groupBox1
             // 
@@ -4500,8 +4437,6 @@ namespace MCGalaxy.Gui
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout( false );
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout( false );
-            this.groupBox3.PerformLayout();
             this.groupBox1.ResumeLayout( false );
             this.groupBox1.PerformLayout();
             this.groupBox17.ResumeLayout( false );
@@ -4664,7 +4599,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown numPlayers;
         private System.Windows.Forms.NumericUpDown numGuests;
         private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.TextBox txtDepth;
         private System.Windows.Forms.TextBox txtMain;
         private System.Windows.Forms.TextBox txtMaps;
         private System.Windows.Forms.TextBox txtHost;
@@ -4693,8 +4627,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox ChkTunnels;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.CheckBox chkAgreeToRules;
         private System.Windows.Forms.ComboBox cmbAdminChat;
@@ -4707,7 +4639,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.TextBox txtServerOwner;
@@ -4717,7 +4648,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.CheckBox chkIgnoreGlobal;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;

@@ -354,12 +354,6 @@ namespace MCGalaxy.Gui {
                         case "irc-password":
                             txtIrcId.Text = value;
                             break;
-                        case "anti-tunnels":
-                            ChkTunnels.Checked = ( value.ToLower() == "true" );
-                            break;
-                        case "max-depth":
-                            txtDepth.Text = value;
-                            break;
 
                         case "rplimit":
                             try { txtRP.Text = value; }
@@ -561,9 +555,6 @@ namespace MCGalaxy.Gui {
                             break;
                         case "guest-limit-notify":
                             chkGuestLimitNotify.Checked = ( value.ToLower() == "true" );
-                            break;
-                        case "ignore-ops":
-                            chkIgnoreGlobal.Checked = ( value.ToLower() == "true" );
                             break;
                         case "admin-verification":
                             chkEnableVerification.Checked = ( value.ToLower() == "true" );
@@ -844,7 +835,6 @@ namespace MCGalaxy.Gui {
         private void txtPort_TextChanged(object sender, EventArgs e) { removeDigit(txtPort); }
         private void txtMaps_TextChanged(object sender, EventArgs e) { removeDigit(txtMaps); }
         private void txtBackup_TextChanged(object sender, EventArgs e) { removeDigit(txtBackup); }
-        private void txtDepth_TextChanged(object sender, EventArgs e) { removeDigit(txtDepth); }
 
         private void btnSave_Click(object sender, EventArgs e) { saveStuff(); Dispose(); }
         private void btnApply_Click(object sender, EventArgs e) { saveStuff(); }

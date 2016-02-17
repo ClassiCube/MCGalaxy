@@ -41,7 +41,8 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Your awesomeness prevents you from using this command");
                 return;
             }
-            p.Kick("If you don't agree with the rules, consider playing elsewhere.");
+            const string msg = "If you don't agree with the rules, consider playing elsewhere.";
+            p.LeaveServer(msg, msg);
         }
 
         public override void Help(Player p)

@@ -320,13 +320,14 @@ namespace MCGalaxy {
                         {
                             if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + this.DisplayName + " couldn't log in - too many guests.");
                             Server.s.Log("Guest " + this.name + " couldn't log in - too many guests.");
-                            Kick("Server has reached max number of guests", true);
+                            const string msg = "Server has reached max number of guests";
+                            LeaveServer(msg, msg, true);
                             return;
                         }
                     }
                 }
 
-                if (version != Server.version) { Kick("Wrong version!", true); return; }
+                if (version != Server.version) { LeaveServer("Wrong version!", "Wrong version!", true); return; }
                 
                 foreach (Player p in PlayerInfo.players) {
                     if (p.name == name)  {
@@ -691,7 +692,7 @@ namespace MCGalaxy {
             catch { Player.SendMessage(p, "Portal had no exit."); return; }
         }
 
-        static char[] trimChars = { ' '};
+        static char[] trimChars = { ' ' };
         void HandleMsgBlock(Player p, ushort x, ushort y, ushort z, byte b) {
             try {
                 //safe against SQL injections because no user input is given here

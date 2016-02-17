@@ -598,10 +598,13 @@ namespace MCGalaxy_.Gui
                 kickList.AddRange(PlayerInfo.players);
                 foreach (Player p in kickList)
                 {
-                    if (restarting)
-                        p.Kick("Server restarted! Rejoin!");
-                    else
-                        p.Kick("Server is shutting down.");
+                    if (restarting) {
+                        string msg = Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.";
+                        p.LeaveServer(msg, msg);
+                    } else {
+                        const string msg = "Server restarted. Sign in again and rejoin.";
+                        p.LeaveServer(msg, msg);
+                    }
                 }
             }
             catch (Exception exc) { Server.ErrorLog(exc); }

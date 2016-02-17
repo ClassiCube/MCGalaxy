@@ -1039,10 +1039,13 @@ namespace MCGalaxy
             foreach (Player p in PlayerInfo.players) { p.save(); players.Add(p.name); }
             foreach (string p in players)
             {
-                if (!AutoRestart)
-                    PlayerInfo.Find(p).Kick(Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.");
-                else
-                    PlayerInfo.Find(p).Kick("Server restarted! Rejoin!");
+            	if (!AutoRestart) {
+            		string msg = Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.";
+            		PlayerInfo.Find(p).LeaveServer(msg, msg);
+            	} else {
+            		const string msg = "Server restarted. Sign in again and rejoin.";
+            		PlayerInfo.Find(p).LeaveServer(msg, msg);
+            	}
             }
             APIServer.Stop();
             InfoServer.Stop();
@@ -1050,10 +1053,13 @@ namespace MCGalaxy
             Player.connections.ForEach(
             delegate(Player p)
             {
-                if (!AutoRestart)
-                    p.Kick(Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.");
-                else
-                    p.Kick("Server restarted! Rejoin!");
+            	if (!AutoRestart) {
+            		string msg = Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.";
+            		p.LeaveServer(msg, msg);
+            	} else {
+            		const string msg = "Server restarted. Sign in again and rejoin.";
+            		p.LeaveServer(msg, msg);
+            	}
             }
             );
             Plugin.Unload();

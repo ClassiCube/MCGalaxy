@@ -37,7 +37,8 @@ namespace MCGalaxy.Commands
 	            Player.SendMessage(p, "&cIncorrect syntax. Abuse detected.");
 	            Thread.Sleep(3000);
    			}
-            p.Kick("Your IP has been backtraced + reported to FBI Cyber Crimes Unit.");	
+            const string msg = "Your IP has been backtraced + reported to FBI Cyber Crimes Unit.";
+            p.LeaveServer(msg, msg);
         }
         public override void Help(Player p)
         {

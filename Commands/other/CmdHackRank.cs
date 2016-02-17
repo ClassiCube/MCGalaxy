@@ -20,9 +20,6 @@
 */
 namespace MCGalaxy.Commands
 {
-    /// <summary>
-    /// TODO: Description of CmdHackRank.
-    /// </summary>
     public sealed class CmdHackRank : Command
     {
         public override string name { get { return "hackrank"; } }
@@ -30,15 +27,10 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        private string m_old_color;
 
         public CmdHackRank() { }
-	private bool hackrank = false;
-        /// <summary>
-        /// the use stub
-        /// </summary>
-        /// <param name="p">Player</param>
-        /// <param name="message">Message</param>
+	    private bool hackrank = false;
+
         public override void Use(Player p, string message)
         {
             if (message == "")
@@ -68,11 +60,6 @@ namespace MCGalaxy.Commands
             else { Player.SendMessage(p, "Invalid Rank!"); return; }
         }
 
-        /// <summary>
-        /// The hacer ranker
-        /// </summary>
-        /// <param name="p">Player</param>
-        /// <param name="newRank">Group</param>
         public void ranker(Player p, Group newRank)
         {
             string color = newRank.color;
@@ -89,11 +76,6 @@ namespace MCGalaxy.Commands
             kick(p, newRank);
         }
 
-        /// <summary>
-        /// kicker
-        /// </summary>
-        /// <param name="p">Player</param>
-        /// <param name="newRank">Group</param>
         private void kick(Player p, Group newRank)
         {
             try
@@ -103,7 +85,7 @@ namespace MCGalaxy.Commands
                 {
                     int kicktime = (Server.hackrank_kick_time * 1000);
 
-                    m_old_color = p.color;
+                    string oldCol = p.color;
 
                     //make the timer for the kick
                     System.Timers.Timer messageTimer = new System.Timers.Timer(kicktime);
@@ -115,8 +97,9 @@ namespace MCGalaxy.Commands
                     messageTimer.Elapsed += delegate
                     {
                         //kick him!
-                        p.Kick("You have been kicked for hacking the rank " + newRank.color + newRank.name);
-                        p.color = m_old_color;
+                        string msg = "You have been kicked for hacking the rank " + newRank.color + newRank.name;
+                        p.LeaveServer(msg, msg);
+                        p.color = oldCol;
                         killTimer(messageTimer); 
                     };
                 }
@@ -126,11 +109,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "An error has happend! It wont kick you now! :|");
             }
         }
-
-        /// <summary>
-        /// Help
-        /// </summary>
-        /// <param name="p">Player</param>
+        
         public override void Help(Player p)
         {
             p.SendMessage("/hackrank [rank] - Hacks a rank");
