@@ -235,8 +235,8 @@ namespace MCGalaxy {
 
         //Undo
         public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public int timeDelta; }
-        public List<UndoPos> UndoBuffer = new List<UndoPos>();
-        public List<UndoPos> RedoBuffer = new List<UndoPos>();
+        public UndoCache UndoBuffer = new UndoCache();
+        public UndoCache RedoBuffer = new UndoCache();
 
 
         public bool showPortals = false;

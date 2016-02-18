@@ -30,6 +30,8 @@ namespace MCGalaxy.Util {
         
         protected abstract void SaveUndoData(List<Player.UndoPos> buffer, string path);
         
+        protected abstract void SaveUndoData(UndoCache buffer, string path);
+         
         protected abstract void ReadUndoData(List<Player.UndoPos> buffer, string path);
         
         protected abstract bool UndoEntry(Player p, string path, ref byte[] temp, long seconds);
@@ -39,7 +41,7 @@ namespace MCGalaxy.Util {
         protected abstract string Extension { get; }
         
         public static void SaveUndo(Player p) {
-            if( p == null || p.UndoBuffer == null || p.UndoBuffer.Count < 1) return;
+            if( p == null || p.UndoBuffer.Count < 1) return;
             
             CreateDefaultDirectories();
             if (Directory.GetDirectories(undoDir).Length >= Server.totalUndo) {
@@ -54,7 +56,7 @@ namespace MCGalaxy.Util {
             
             int numFiles = Directory.GetFiles(playerDir).Length;
             string path = Path.Combine(playerDir, numFiles + NewFormat.Extension);
-            NewFormat.SaveUndoData(p.UndoBuffer.ToList(), path);
+            NewFormat.SaveUndoData(p.UndoBuffer, path);
         }
         
         public static void UndoPlayer(Player p, string targetName, long seconds, ref bool FoundUser) {
@@ -96,11 +98,11 @@ namespace MCGalaxy.Util {
         }
         
         static int CompareFiles(string a, string b) {
-        	int aNumStart = a.LastIndexOf('\\'), bNumStart = b.LastIndexOf('\\');
+            int aNumStart = a.LastIndexOf('\\'), bNumStart = b.LastIndexOf('\\');
             int aNumEnd = a.LastIndexOf('.'), bNumEnd = b.LastIndexOf('.');
             if (aNumStart < 0 || bNumStart < 0 || aNumEnd < 0 || 
                 bNumEnd < 0 || aNumStart >= aNumEnd || bNumStart >= bNumEnd)
-            	return a.CompareTo(b);
+                return a.CompareTo(b);
             
             int aNum, bNum;
             if (!int.TryParse(a.Substring(aNumStart + 1, aNumEnd - aNumStart - 1), out aNum) ||

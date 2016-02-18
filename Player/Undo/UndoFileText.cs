@@ -30,13 +30,17 @@ namespace MCGalaxy.Util {
         protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
             using (StreamWriter w = File.CreateText(path)) {
                 foreach (Player.UndoPos uP in buffer) {
-        			DateTime time = Server.StartTimeLocal.AddSeconds(uP.timeDelta);
+                    DateTime time = Server.StartTimeLocal.AddSeconds(uP.timeDelta);
                     w.Write(
                         uP.mapName + " " + uP.x + " " + uP.y + " " + uP.z + " " +
                         time.ToString(CultureInfo.InvariantCulture).Replace(' ', '&') + " " +
                         uP.type + " " + uP.newtype + " ");
                 }
             }
+        }
+        
+        protected override void SaveUndoData(UndoCache buffer, string path) {
+            throw new NotImplementedException("The .txt based undo files are deprecated.");
         }
         
         protected override void ReadUndoData(List<Player.UndoPos> buffer, string path) {
@@ -74,14 +78,14 @@ namespace MCGalaxy.Util {
                 try {
                     // line format: mapName x y z date oldblock newblock
                     if (!InTime(lines[(i * 7) - 3], seconds)) return false;
-                    Level foundLevel = LevelInfo.FindExact(lines[(i * 7) - 7]);
-                    if (foundLevel == null) continue;
+                    Level lvl = LevelInfo.FindExact(lines[(i * 7) - 7]);
+                    if (lvl == null) continue;
                     
-                    Pos.mapName = foundLevel.name;
+                    Pos.mapName = lvl.name;
                     Pos.x = Convert.ToUInt16(lines[(i * 7) - 6]);
                     Pos.y = Convert.ToUInt16(lines[(i * 7) - 5]);
                     Pos.z = Convert.ToUInt16(lines[(i * 7) - 4]);
-                    Pos.type = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
+                    Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
 
                     if (Pos.type == Convert.ToByte(lines[(i * 7) - 1]) || Block.Convert(Pos.type) == Block.water || 
                         Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
@@ -89,8 +93,8 @@ namespace MCGalaxy.Util {
                         Pos.newtype = Convert.ToByte(lines[(i * 7) - 2]);
                         Pos.timeDelta = timeDelta;
 
-                        foundLevel.Blockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, 0);
-                        if (p != null) p.RedoBuffer.Add(Pos);
+                        lvl.Blockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, 0);
+                        if (p != null) p.RedoBuffer.Add(lvl, Pos);
                     }
                 } catch {
                 }

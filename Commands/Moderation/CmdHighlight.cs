@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Util;
 
@@ -52,7 +53,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(name);
             if (who != null) {
                 FoundUser = true;
-                HighlightOnline(p, seconds, who);
+                PerformHighlight(p, seconds, who.UndoBuffer);
             }
 
             UndoFile.HighlightPlayer(p, name.ToLower(), seconds, ref FoundUser);
@@ -63,25 +64,32 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Could not find player specified.");
             }
         }
-
-        static void HighlightOnline(Player p, long seconds, Player who) {
-            for (int i = who.UndoBuffer.Count - 1; i >= 0; --i) {
-                try {
-                    Player.UndoPos undo = who.UndoBuffer[i];
-                    Level foundLevel = LevelInfo.FindExact(undo.mapName);
-                    if (foundLevel != p.level) continue;
+        
+       static void PerformHighlight(Player p, long seconds, UndoCache cache) {
+            UndoCacheNode node = cache.Tail;
+            if (node == null) return;
+            
+            while (node != null) {
+                Level lvl = LevelInfo.FindExact(node.MapName);
+                if (lvl != p.level) continue;
+                List<UndoCacheItem> items = node.Items;
+                
+                for (int i = items.Count - 1; i >= 0; i--) {
+                    UndoCacheItem item = items[i];                    
+                    ushort x, y, z;
+                    node.Unpack(item.Index, out x, out y, out z);                    
+                    DateTime time = node.BaseTime.AddSeconds(item.TimeDelta + seconds);
+                    if (time < DateTime.UtcNow) return;
                     
-                    byte b = foundLevel.GetTile(undo.x, undo.y, undo.z);
-                    DateTime time = Server.StartTime.AddSeconds(undo.timeDelta + seconds);
-                    if (time < DateTime.UtcNow) break;
-                    
-                    if (b == undo.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
+                    byte b = lvl.GetTile(x, y, z);
+                    if (b == item.NewType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                         if (b == Block.air || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
-                            p.SendBlockchange(undo.x, undo.y, undo.z, Block.red);
+                            p.SendBlockchange(x, y, z, Block.red);
                         else
-                            p.SendBlockchange(undo.x, undo.y, undo.z, Block.green);
+                            p.SendBlockchange(x, y, z, Block.green);
                     }
-                } catch { }
+                }
+                node = node.Prev;
             }
         }
 
