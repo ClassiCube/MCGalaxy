@@ -23,24 +23,22 @@ namespace MCGalaxy {
 
     public static class LevelInfo {
         
+        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Level Find(string name) {
-            name = name.ToLower();
             Level match = null; int matches = 0;
             
-            foreach (Level level in Server.levels) {
-                if (level.name.ToLower() == name) return level;
-                if (level.name.ToLower().Contains(name)) {
-                    match = level; matches++;
+            foreach (Level lvl in Server.levels) {
+                if (lvl.name.Equals(name, comp)) return lvl;
+                if (lvl.name.IndexOf(name, comp) >= 0) {
+                    match = lvl; matches++;
                 }
             }
             return matches == 1 ? match : null;
         }
 
         public static Level FindExact(string name) {
-            name = name.ToLower();
-            
-            foreach (Level level in Server.levels) {
-                if (level.name.ToLower() == name) return level;
+            foreach (Level lvl in Server.levels) {
+            	if (lvl.name.Equals(name, comp)) return lvl;
             }
             return null;
         }

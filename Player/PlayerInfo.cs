@@ -34,6 +34,7 @@ namespace MCGalaxy {
             return GetGroup(name).color;
         }
         
+        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Player Find(string name) {
             List<Player> tempList = new List<Player>();
             tempList.AddRange(players);
@@ -41,8 +42,8 @@ namespace MCGalaxy {
             name = name.ToLower();
 
             foreach (Player p in tempList) {
-                if (p.name.ToLower() == name) return p;
-                if (p.name.ToLower().Contains(name)) {
+                if (p.name.Equals(name, comp)) return p;
+                if (p.name.IndexOf(name, comp) >= 0) {
                     match = p; matches++;
                 }
             }
@@ -52,10 +53,9 @@ namespace MCGalaxy {
         public static Player FindExact(string name) {
             List<Player> tempList = new List<Player>();
             tempList.AddRange(players);
-            name = name.ToLower();
 
             foreach (Player p in tempList) {
-                if (p.name.ToLower() == name) return p;
+            	if (p.name.Equals(name, comp)) return p;
             }
             return null;
         }
@@ -64,11 +64,10 @@ namespace MCGalaxy {
             List<Player> tempList = new List<Player>();
             tempList.AddRange(players);
             Player match = null; int matches = 0;
-            nick = nick.ToLower();
 
             foreach (Player p in tempList) {
-                if (p.DisplayName.ToLower() == nick) return p;
-                if (p.DisplayName.ToLower().Contains(nick)) {
+                if (p.DisplayName.Equals(nick, comp)) return p;
+                if (p.DisplayName.IndexOf(nick, comp) >= 0) {
                     match = p; matches++;
                 }
             }
