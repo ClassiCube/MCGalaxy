@@ -133,6 +133,7 @@
     <Compile Include="Commands\Building\CmdSpin.cs" />
     <Compile Include="Commands\Building\CmdSPlace.cs" />
     <Compile Include="Commands\Building\CmdStatic.cs" />
+    <Compile Include="Commands\building\CmdTorus.cs" />
     <Compile Include="Commands\Building\CmdTree.cs" />
     <Compile Include="Commands\Building\CmdUndo.cs" />
     <Compile Include="Commands\Building\CmdWrite.cs" />
@@ -396,6 +397,7 @@
     <Compile Include="Drawing\DrawOps\ReplaceDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\TorusDrawOp.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />

@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands
             if (!Player.ValidName(name)) { 
                 Player.SendMessage(p, "Invalid name!"); return; 
             }
-            if (LevelInfo.ExistsOffline(message)) {
+            if (LevelInfo.ExistsOffline(name)) {
                 Player.SendMessage(p, "Level \"" + name + "\" already exists!"); return;
             }
 

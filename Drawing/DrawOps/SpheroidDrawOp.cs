@@ -21,9 +21,7 @@ namespace MCGalaxy {
 
     public class EllipsoidDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Ellipsoid"; }
-        }
+        public override string Name { get { return "Ellipsoid"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             double rx = (x2 - x1) / 2.0 + 0.25, ry = (y2 - y1) / 2.0 + 0.25, rz = (z2 - z1) / 2.0 + 0.25;
@@ -50,9 +48,7 @@ namespace MCGalaxy {
     
     public class EllipsoidHollowDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Ellipsoid Hollow"; }
-        }
+        public override string Name { get { return "Ellipsoid Hollow"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             double rx = (x2 - x1) / 2.0 + 0.25, ry = (y2 - y1) / 2.0 + 0.25, rz = (z2 - z1) / 2.0 + 0.25;
@@ -85,9 +81,7 @@ namespace MCGalaxy {
     
     public class CylinderDrawOp : DrawOp {
         
-        public override string Name {
-            get { return "Cylinder"; }
-        }
+        public override string Name { get { return "Cylinder"; } }
         
         public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             double rx = (x2 - x1) / 2.0 + 0.25, rz = (z2 - z1) / 2.0 + 0.25;
