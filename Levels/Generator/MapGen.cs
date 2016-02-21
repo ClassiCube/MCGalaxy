@@ -166,8 +166,24 @@ namespace MCGalaxy {
                 for (int z = 0; z < length; ++z)
                     for (int x = 0; x < width; ++x)
                 {
-                    int height2D = (int)System.Math.Floor((module2D.GetValue(x / 100.0, 0.1, z / 100.0) + 2) * 10) + (half - 10);
-                    lvl.SetTile((ushort)x, (ushort)height2D, (ushort)z, Block.grass);
+                    int waterlvl = half - 1;
+                    int height2D = (int)System.Math.Floor((module2D.GetValue(x / 100.0, 0.1, z / 100.0) + 2) * 10) + (half-20);
+                    int height2Dtex01 = (int)System.Math.Floor((module2D.GetValue(x / 100.0, 0.1, z / 100.0) + 2) * 15) + (half- 30);
+                    if (height2D < height2Dtex01)
+                    {
+                        lvl.SetTile((ushort)x, (ushort)(height2D), (ushort)z, Block.grass);
+                    }
+                    else
+                    {
+                        lvl.SetTile((ushort)x, (ushort)(height2D), (ushort)z, Block.sand);
+                    }
+                    if (height2D < waterlvl)
+                    {
+                        for (int y = waterlvl; y >= height2D; y--)
+                        {
+                            lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.water);
+                        }
+                    }
                     for (int y = height2D - 1; y >= 0; y--) {
                         byte block = (y > height2D * 3 / 4) ? Block.dirt : Block.rock;
                         lvl.SetTile((ushort)x, (ushort)y, (ushort)z, block);
