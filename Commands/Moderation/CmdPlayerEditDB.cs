@@ -42,6 +42,7 @@ namespace MCGalaxy.Commands {
                 
                 using (DataTable table = Database.fillData(syntax)) {
                     if (table.Rows.Count == 0) { Player.SendMessage(p, "Player &b" + args[0] + " %Swas not found in the database."); return; }
+                    args[0] = table.Rows[0]["Name"].ToString();
                 }
             }
             if (args.Length == 1) {

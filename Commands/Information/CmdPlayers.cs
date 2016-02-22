@@ -64,8 +64,6 @@ namespace MCGalaxy.Commands
             
             List<Section> playerList = new List<Section>();
             foreach (Group grp in Group.GroupList) {
-                if (grp.name == "nobody")
-                    continue;
                 string title = ":" + grp.color + GetPlural(grp.trueName) + ":";
                 playerList.Add(MakeSection(grp, title));
             }
