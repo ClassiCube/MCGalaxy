@@ -338,10 +338,11 @@ namespace MCGalaxy {
                 }
                 
                 SendRaw(Opcode.LevelInitialise);
-                buffer = buffer.GZip();
-                int totalRead = 0;                
+                int usedLength = 0;
+                buffer = buffer.GZip(out usedLength);
+                int totalRead = 0;
                 
-                while (totalRead < buffer.Length) {   
+                while (totalRead < usedLength) {   
                     byte[] packet = new byte[1028]; // need each packet separate for Mono
                     packet[0] = Opcode.LevelDataChunk;
                     short length = (short)Math.Min(buffer.Length - totalRead, 1024);

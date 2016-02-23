@@ -24,33 +24,36 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-namespace MCGalaxy
-{
-    public static class Extensions
-    {
-        public static string Truncate(this string source, int maxLength)
-        {
+
+namespace MCGalaxy {
+	
+    public static class Extensions {
+		
+        public static string Truncate(this string source, int maxLength) {
             if (source.Length > maxLength)
-            {
                 source = source.Substring(0, maxLength);
-            }
             return source;
         }
-        public static byte[] GZip(this byte[] bytes)
-        {
-            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
-            {
-                GZipStream gs = new GZipStream(ms, CompressionMode.Compress, true);
-                gs.Write(bytes, 0, bytes.Length);
-                gs.Close();
+    	
+        public static byte[] GZip(this byte[] bytes) {
+            using (MemoryStream ms = new MemoryStream()) {
+                using (GZipStream gs = new GZipStream(ms, CompressionMode.Compress, true))
+                    gs.Write(bytes, 0, bytes.Length);
+                
                 ms.Position = 0;
-                bytes = new byte[ms.Length];
-                ms.Read(bytes, 0, (int)ms.Length);
-                ms.Close();
-                ms.Dispose();
+                return ms.ToArray();
             }
-            return bytes;
         }
+        
+        public static byte[] GZip(this byte[] bytes, out int length) {
+            using (MemoryStream ms = new MemoryStream()) {
+                using (GZipStream gs = new GZipStream(ms, CompressionMode.Compress, true))
+                    gs.Write(bytes, 0, bytes.Length);
+                length = (int)ms.Length;
+                return ms.GetBuffer();
+            }
+        }
+        
         public static byte[] Decompress(this byte[] gzip, int capacity = 16)
         {
             // Create a GZIP stream with decompression mode.
