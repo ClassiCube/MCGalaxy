@@ -658,67 +658,15 @@ namespace MCGalaxy
 
             ml.Queue(delegate
             {
-                if (File.Exists("text/autoload.txt"))
-                {
-                    try
-                    {
-                        string[] lines = File.ReadAllLines("text/autoload.txt");
-                        foreach (string _line in lines.Select(line => line.Trim()))
-                        {
-                            try
-                            {
-                                if (_line == "") { continue; }
-                                if (_line[0] == '#') { continue; }
-
-                                string key = _line.Split('=')[0].Trim();
-                                string value;
-                                try
-                                {
-                                    value = _line.Split('=')[1].Trim();
-                                }
-                                catch
-                                {
-                                    value = "0";
-                                }
-
-                                if (!key.Equals(mainLevel.name))
-                                {
-                                    Command.all.Find("load").Use(null, key + " " + value);
-                                    Level l = LevelInfo.FindExact(key);
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        int temp = int.Parse(value);
-                                        if (temp >= 0 && temp <= 3)
-                                        {
-                                            mainLevel.setPhysics(temp);
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        s.Log("Physics variable invalid");
-                                    }
-                                }
-
-
-                            }
-                            catch
-                            {
-                                s.Log(_line + " failed.");
-                            }
-                        }
-                    }
-                    catch
-                    {
+                if (File.Exists("text/autoload.txt")) {
+                    try {
+                    	PropertiesFile.Read("text/autoload.txt", AutoLoadLineProcessor);
+                    } catch {
                         s.Log("autoload.txt error");
                     }
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
-                }
-                else
-                {
+                } else {
                     Log("autoload.txt does not exist");
                 }
             });
@@ -750,12 +698,9 @@ namespace MCGalaxy
 
             ml.Queue(delegate
             {
-                try
-                {
+                try {
                     Heart.Init();
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     Server.ErrorLog(e);
                 }
             });
@@ -919,6 +864,24 @@ namespace MCGalaxy
                 BlockQueue.Start();
             });
         }
+        
+        static void AutoLoadLineProcessor(string key, string value) {
+            if (value == "") value = "0";
+
+            if (key != mainLevel.name) {
+                Command.all.Find("load").Use(null, key + " " + value);
+                Level l = LevelInfo.FindExact(key);
+            } else {
+                try {
+                    int temp = int.Parse(value);
+                    if (temp >= 0 && temp <= 3)
+                        mainLevel.setPhysics(temp);
+                } catch {
+                    s.Log("Physics variable invalid");
+                }
+            }
+        }
+        
         public static string SendResponse(HttpListenerRequest request)
         {
             try {

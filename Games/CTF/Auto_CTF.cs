@@ -146,83 +146,12 @@ namespace MCGalaxy
         List<string> maps = new List<string>();
         List<Data> cache = new List<Data>();
         string mapname = "";
-        /// <summary>
-        /// Load a map into CTF
-        /// </summary>
+        
+        /// <summary> Load a map into CTF </summary>
         /// <param name="map">The map to load</param>
-        public void LoadMap(string map)
-        {
+        public void LoadMap(string map) {
             mapname = map;
-            string[] lines = File.ReadAllLines("CTF/" + mapname + ".config");
-            foreach (string l in lines)
-            {
-                switch (l.Split('=')[0])
-                {
-                    case "base.red.x":
-                        redbase.x = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.red.y":
-                        redbase.y = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "game.maxpoints":
-                        maxpoints = int.Parse(l.Split('=')[1]);
-                        break;
-                    case "game.tag.points-gain":
-                        tagpoint = int.Parse(l.Split('=')[1]);
-                        break;
-                    case "game.tag.points-lose":
-                        taglose = int.Parse(l.Split('=')[1]);
-                        break;
-                    case "game.capture.points-gain":
-                        cappoint = int.Parse(l.Split('=')[1]);
-                        break;
-                    case "game.capture.points-lose":
-                        caplose = int.Parse(l.Split('=')[1]);
-                        break;
-                    case "auto.setup":
-                        look = bool.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.red.z":
-                        redbase.z = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.red.block":
-                        redbase.block = Block.Byte(l.Split('=')[1]);
-                        break;
-                    case "base.blue.block":
-                        bluebase.block = Block.Byte(l.Split('=')[1]);
-                        break;
-                    case "base.blue.spawnx":
-                        bluebase.spawnx = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.blue.spawny":
-                        bluebase.spawny = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.blue.spawnz":
-                        bluebase.spawnz = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.red.spawnx":
-                        redbase.spawnx = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.red.spawny":
-                        redbase.spawny = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.red.spawnz":
-                        redbase.spawnz = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.blue.x":
-                        bluebase.x = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.blue.y":
-                        bluebase.y = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "base.blue.z":
-                        bluebase.z = ushort.Parse(l.Split('=')[1]);
-                        break;
-                    case "map.line.z":
-                        zline = ushort.Parse(l.Split('=')[1]);
-                        break;
-                }
-            }
+            PropertiesFile.Read("CTF/" + mapname + ".config", LineProcessor);
             Command.all.Find("unload").Use(null, "ctf");
             if (File.Exists("levels/ctf.lvl"))
                 File.Delete("levels/ctf.lvl");
@@ -230,11 +159,56 @@ namespace MCGalaxy
             Command.all.Find("load").Use(null, "ctf");
             mainlevel = LevelInfo.Find("ctf");
         }
-        /// <summary>
-        /// Create a new CTF object
-        /// </summary>
-        public Auto_CTF()
-        {
+        
+        void LineProcessor(string key, string value) {
+            switch (key) {
+                case "base.red.x":
+                    redbase.x = ushort.Parse(value); break;
+                case "base.red.y":
+                    redbase.y = ushort.Parse(value); break;
+                case "game.maxpoints":
+                    maxpoints = int.Parse(value); break;
+                case "game.tag.points-gain":
+                    tagpoint = int.Parse(value); break;
+                case "game.tag.points-lose":
+                    taglose = int.Parse(value); break;
+                case "game.capture.points-gain":
+                    cappoint = int.Parse(value); break;
+                case "game.capture.points-lose":
+                    caplose = int.Parse(value); break;
+                case "auto.setup":
+                    look = bool.Parse(value); break;
+                case "base.red.z":
+                    redbase.z = ushort.Parse(value); break;
+                case "base.red.block":
+                    redbase.block = Block.Byte(value); break;
+                case "base.blue.block":
+                    bluebase.block = Block.Byte(value); break;
+                case "base.blue.spawnx":
+                    bluebase.spawnx = ushort.Parse(value); break;
+                case "base.blue.spawny":
+                    bluebase.spawny = ushort.Parse(value); break;
+                case "base.blue.spawnz":
+                    bluebase.spawnz = ushort.Parse(value); break;
+                case "base.red.spawnx":
+                    redbase.spawnx = ushort.Parse(value); break;
+                case "base.red.spawny":
+                    redbase.spawny = ushort.Parse(value); break;
+                case "base.red.spawnz":
+                    redbase.spawnz = ushort.Parse(value); break;
+                case "base.blue.x":
+                    bluebase.x = ushort.Parse(value); break;
+                case "base.blue.y":
+                    bluebase.y = ushort.Parse(value); break;
+                case "base.blue.z":
+                    bluebase.z = ushort.Parse(value); break;
+                case "map.line.z":
+                    zline = ushort.Parse(value); break;
+            }
+        }
+        
+        /// <summary> Create a new CTF object </summary>
+        public Auto_CTF() {
             //Load some configs
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             if (!File.Exists("CTF/maps.config"))
@@ -245,11 +219,8 @@ namespace MCGalaxy
             string[] lines = File.ReadAllLines("CTF/maps.config");
             foreach (string l in lines)
                 maps.Add(l);
-            if (maps.Count == 0)
-            {
-                Server.s.Log("No maps were found!");
-                return;
-            }
+            if (maps.Count == 0) { Server.s.Log("No maps were found!"); return; }
+            
             redbase = new Base();
             bluebase = new Base();
             Start();
@@ -263,11 +234,9 @@ namespace MCGalaxy
             tagging.Elapsed += new System.Timers.ElapsedEventHandler(tagging_Elapsed);
             tagging.Start();
         }
-        /// <summary>
-        /// Stop the CTF game (if its running)
-        /// </summary>
-        public void Stop()
-        {
+        
+        /// <summary> Stop the CTF game (if its running) </summary>
+        public void Stop() {
             tagging.Stop();
             tagging.Dispose();
             mainlevel = null;
@@ -275,6 +244,7 @@ namespace MCGalaxy
             if (LevelInfo.Find("ctf") != null)
                 Command.all.Find("unload").Use(null, "ctf");
         }
+        
         void tagging_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             PlayerInfo.players.ForEach(delegate(Player p)
@@ -353,9 +323,8 @@ namespace MCGalaxy
             }
 
         }
-        /// <summary>
-        /// Start the CTF game
-        /// </summary>
+        
+        /// <summary> Start the CTF game </summary>
         public void Start()
         {
             if (LevelInfo.Find("ctf") != null)

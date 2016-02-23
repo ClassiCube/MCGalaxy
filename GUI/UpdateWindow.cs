@@ -79,38 +79,19 @@ namespace MCGalaxy.Gui
             Close();
         }
 
-
-        public void UpdLoadProp(string givenPath)
-        {
-            if (File.Exists(givenPath))
-            {
-                string[] lines = File.ReadAllLines(givenPath);
-
-                foreach (string line in lines)
-                {
-                    if (line != "" && line[0] != '#')
-                    {
-                        //int index = line.IndexOf('=') + 1; // not needed if we use Split('=')
-                        string key = line.Split('=')[0].Trim();
-                        string value = line.Split('=')[1].Trim();
-
-                        switch (key.ToLower())
-                        {
-                            case "autoupdate":
-                                chkAutoUpdate.Checked = (value.ToLower() == "true") ? true : false;
-                                break;
-                            case "notify":
-                                chkNotify.Checked = (value.ToLower() == "true") ? true : false;
-                                break;
-                            case "restartcountdown":
-                                txtCountdown.Text = value;
-                                break;
-                        }
-                    }
-                }
-                //Save(givenPath);
+        public void UpdLoadProp(string givenPath) {
+            PropertiesFile.Read(givenPath, LineProcessor);
+        }
+        
+        void LineProcessor(string key, string value) {
+            switch (key) {
+                case "autoupdate":
+                    chkAutoUpdate.Checked = value.ToLower() == "true"; break;
+                case "notify":
+                    chkNotify.Checked = value.ToLower() == "true"; break;
+                case "restartcountdown":
+                    txtCountdown.Text = value; break;
             }
-            //else Save(givenPath);
         }
 
         private void button1_Click(object sender, EventArgs e)

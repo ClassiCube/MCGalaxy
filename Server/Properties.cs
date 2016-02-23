@@ -14,7 +14,7 @@
 	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.IO;
 using System.Linq;
@@ -22,7 +22,9 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace MCGalaxy {
+	
 	public static class SrvProperties {
+		
 		public static void Load(string givenPath, bool skipsalt = false) {
 			/*
 			if (!skipsalt)
@@ -57,582 +59,572 @@ namespace MCGalaxy {
 				}
 			}
 
-			if ( File.Exists(givenPath) ) {
-				string[] lines = File.ReadAllLines(givenPath);
+			if (PropertiesFile.Read(givenPath, LineProcessor))
+				Server.s.SettingsUpdate();
+			Save(givenPath);
+		}
+		
+		static void LineProcessor(string key, string value) {
+			string color = "";
+			switch ( key ) {
+				case "server-name":
+					if ( ValidString(value, "![]:.,{}~-+()?_/\\' ") ) {
+						Server.name = value;
+					}
+					else { Server.s.Log("server-name invalid! setting to default."); }
+					break;
+				case "motd":
+					if ( ValidString(value, "=![]&:.,{}~-+()?_/\\' ") ) // allow = in the motd
+					{
+						Server.motd = value;
+					}
+					else { Server.s.Log("motd invalid! setting to default."); }
+					break;
+				case "port":
+					try { Server.port = Convert.ToInt32(value); }
+					catch { Server.s.Log("port invalid! setting to default."); }
+					break;
+				case "verify-names":
+					Server.verify = value.ToLower() == "true";
+					break;
+				case "public":
+					Server.pub = value.ToLower() == "true";
+					break;
+				case "world-chat":
+					Server.worldChat = value.ToLower() == "true";
+					break;
+					//case "guest-goto":
+					//    Server.guestGoto = value.ToLower() == "true";
+					//    break;
+				case "max-players":
+					try {
+						if ( Convert.ToByte(value) > 128 ) {
+							value = "128"; Server.s.Log("Max players has been lowered to 128.");
+						}
+						else if ( Convert.ToByte(value) < 1 ) {
+							value = "1"; Server.s.Log("Max players has been increased to 1.");
+						}
+						Server.players = Convert.ToByte(value);
+					}
+					catch { Server.s.Log("max-players invalid! setting to default."); }
+					break;
+				case "max-guests":
+					try {
+						if ( Convert.ToByte(value) > Server.players ) {
+							value = Server.players.ToString(); Server.s.Log("Max guests has been lowered to " + Server.players.ToString());
+						}
+						else if ( Convert.ToByte(value) < 0 ) {
+							value = "0"; Server.s.Log("Max guests has been increased to 0.");
+						}
+						Server.maxGuests = Convert.ToByte(value);
+					}
+					catch { Server.s.Log("max-guests invalid! setting to default."); }
+					break;
+				case "max-maps":
+					try {
+						if ( Convert.ToByte(value) > 100 ) {
+							value = "100";
+							Server.s.Log("Max maps has been lowered to 100.");
+						}
+						else if ( Convert.ToByte(value) < 1 ) {
+							value = "1";
+							Server.s.Log("Max maps has been increased to 1.");
+						}
+						Server.maps = Convert.ToByte(value);
+					}
+					catch {
+						Server.s.Log("max-maps invalid! setting to default.");
+					}
+					break;
+				case "irc":
+					Server.irc = value.ToLower() == "true";
+					break;
+				case "irc-colorsenable":
+					Server.ircColorsEnable = value.ToLower() == "true";
+					break;
+				case "irc-server":
+					Server.ircServer = value;
+					break;
+				case "irc-nick":
+					Server.ircNick = value;
+					break;
+				case "irc-channel":
+					Server.ircChannel = value;
+					break;
+				case "irc-opchannel":
+					Server.ircOpChannel = value;
+					break;
+				case "irc-port":
+					try {
+						Server.ircPort = Convert.ToInt32(value);
+					}
+					catch {
+						Server.s.Log("irc-port invalid! setting to default.");
+					}
+					break;
+				case "irc-identify":
+					try {
+						Server.ircIdentify = Convert.ToBoolean(value);
+					}
+					catch {
+						Server.s.Log("irc-identify boolean value invalid! Setting to the default of: " + Server.ircIdentify + ".");
+					}
+					break;
+				case "irc-password":
+					Server.ircPassword = value;
+					break;
 
-				foreach ( string line in lines ) {
-					if ( line != "" && line[0] != '#' ) {
-						//int index = line.IndexOf('=') + 1; // not needed if we use Split('=')
-						string key = line.Split('=')[0].Trim();
-						string value = "";
-						if ( line.IndexOf('=') >= 0 )
-							value = line.Substring(line.IndexOf('=') + 1).Trim(); // allowing = in the values
-						string color = "";
-
-						switch ( key.ToLower() ) {
-							case "server-name":
-								if ( ValidString(value, "![]:.,{}~-+()?_/\\' ") ) {
-									Server.name = value;
-								}
-								else { Server.s.Log("server-name invalid! setting to default."); }
-								break;
-							case "motd":
-								if ( ValidString(value, "=![]&:.,{}~-+()?_/\\' ") ) // allow = in the motd
-								{
-									Server.motd = value;
-								}
-								else { Server.s.Log("motd invalid! setting to default."); }
-								break;
-							case "port":
-								try { Server.port = Convert.ToInt32(value); }
-								catch { Server.s.Log("port invalid! setting to default."); }
-								break;
-							case "verify-names":
-								Server.verify = value.ToLower() == "true";
-								break;
-							case "public":
-								Server.pub = value.ToLower() == "true";
-								break;
-							case "world-chat":
-								Server.worldChat = value.ToLower() == "true";
-								break;
-							//case "guest-goto":
-							//    Server.guestGoto = value.ToLower() == "true";
-							//    break;
-							case "max-players":
-								try {
-									if ( Convert.ToByte(value) > 128 ) {
-										value = "128"; Server.s.Log("Max players has been lowered to 128.");
-									}
-									else if ( Convert.ToByte(value) < 1 ) {
-										value = "1"; Server.s.Log("Max players has been increased to 1.");
-									}
-									Server.players = Convert.ToByte(value);
-								}
-								catch { Server.s.Log("max-players invalid! setting to default."); }
-								break;
-							case "max-guests":
-								try {
-									if ( Convert.ToByte(value) > Server.players ) {
-										value = Server.players.ToString(); Server.s.Log("Max guests has been lowered to " + Server.players.ToString());
-									}
-									else if ( Convert.ToByte(value) < 0 ) {
-										value = "0"; Server.s.Log("Max guests has been increased to 0.");
-									}
-									Server.maxGuests = Convert.ToByte(value);
-								}
-								catch { Server.s.Log("max-guests invalid! setting to default."); }
-								break;
-							case "max-maps":
-								try {
-									if ( Convert.ToByte(value) > 100 ) {
-										value = "100";
-										Server.s.Log("Max maps has been lowered to 100.");
-									}
-									else if ( Convert.ToByte(value) < 1 ) {
-										value = "1";
-										Server.s.Log("Max maps has been increased to 1.");
-									}
-									Server.maps = Convert.ToByte(value);
-								}
-								catch {
-									Server.s.Log("max-maps invalid! setting to default.");
-								}
-								break;
-							case "irc":
-								Server.irc = value.ToLower() == "true";
-								break;
-							case "irc-colorsenable":
-								Server.ircColorsEnable = value.ToLower() == "true";
-								break;
-							case "irc-server":
-								Server.ircServer = value;
-								break;
-							case "irc-nick":
-								Server.ircNick = value;
-								break;
-							case "irc-channel":
-								Server.ircChannel = value;
-								break;
-							case "irc-opchannel":
-								Server.ircOpChannel = value;
-								break;
-							case "irc-port":
-								try {
-									Server.ircPort = Convert.ToInt32(value);
-								}
-								catch {
-									Server.s.Log("irc-port invalid! setting to default.");
-								}
-								break;
-							case "irc-identify":
-								try {
-									Server.ircIdentify = Convert.ToBoolean(value);
-								}
-								catch {
-									Server.s.Log("irc-identify boolean value invalid! Setting to the default of: " + Server.ircIdentify + ".");
-								}
-								break;
-							case "irc-password":
-								Server.ircPassword = value;
-								break;
-
-							case "rplimit":
-								try { Server.rpLimit = Convert.ToInt16(value); }
-								catch { Server.s.Log("rpLimit invalid! setting to default."); }
-								break;
-							case "rplimit-norm":
-								try { Server.rpNormLimit = Convert.ToInt16(value); }
-								catch { Server.s.Log("rpLimit-norm invalid! setting to default."); }
-								break;
+				case "rplimit":
+					try { Server.rpLimit = Convert.ToInt16(value); }
+					catch { Server.s.Log("rpLimit invalid! setting to default."); }
+					break;
+				case "rplimit-norm":
+					try { Server.rpNormLimit = Convert.ToInt16(value); }
+					catch { Server.s.Log("rpLimit-norm invalid! setting to default."); }
+					break;
 
 
-							case "report-back":
-								Server.reportBack = value.ToLower() == "true";
-								break;
-							case "backup-time":
-								if ( Convert.ToInt32(value) > 1 ) { Server.backupInterval = Convert.ToInt32(value); }
-								break;
-							case "backup-location":
-								if ( !value.Contains("System.Windows.Forms.TextBox, Text:") )
-									Server.backupLocation = value;
-								break;
-							case "physicsrestart":
-								Server.physicsRestart = value.ToLower() == "true";
-								break;
-							case "deathcount":
-								Server.deathcount = value.ToLower() == "true";
-								break;
-							case "usemysql":
-								Server.useMySQL = value.ToLower() == "true";
-								break;
-							case "host":
-								Server.MySQLHost = value;
-								break;
-							case "sqlport":
-								Server.MySQLPort = value;
-								break;
-							case "username":
-								Server.MySQLUsername = value;
-								break;
-							case "password":
-								Server.MySQLPassword = value;
-								break;
-							case "databasename":
-								Server.MySQLDatabaseName = value;
-								break;
-							case "pooling":
-								try { Server.DatabasePooling = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "defaultcolor":
-								color = Colors.Parse(value);
-								if ( color == "" ) {
-									color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-								}
-								Server.DefaultColor = color;
-								break;
-							case "irc-color":
-								color = Colors.Parse(value);
-								if ( color == "" ) {
-									color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-								}
-								Server.IRCColour = color;
-								break;
-							case "opchat-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.opchatperm = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-								break;
-							case "adminchat-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.adminchatperm = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-								break;
-							case "log-heartbeat":
-								try { Server.logbeat = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-								break;
-							case "force-cuboid":
-								try { Server.forceCuboid = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-								break;
-							case "profanity-filter":
-								try { Server.profanityFilter = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "notify-on-join-leave":
-								try { Server.notifyOnJoinLeave = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "cheapmessage":
-								try { Server.cheapMessage = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "cheap-message-given":
-								if ( value != "" ) Server.cheapMessageGiven = value;
-								break;
-							case "custom-ban":
-								try { Server.customBan = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "custom-ban-message":
-								if ( value != "" ) Server.customBanMessage = value;
-								break;
-							case "custom-shutdown":
-								try { Server.customShutdown = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "custom-shutdown-message":
-								if ( value != "" ) Server.customShutdownMessage = value;
-								break;
-							case "custom-griefer-stone":
-								try { Server.customGrieferStone = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "custom-griefer-stone-message":
-								if ( value != "" ) Server.customGrieferStoneMessage = value;
-								break;
-							case "custom-promote-message":
-								if ( value != "" ) Server.customPromoteMessage = value;
-								break;
-							case "custom-demote-message":
-								if ( value != "" ) Server.customDemoteMessage = value;
-								break;
-							case "rank-super":
-								try { Server.rankSuper = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "default-rank":
-								try { Server.defaultRank = value.ToLower(); }
-								catch { }
-								break;
-							case "afk-minutes":
-								try {
-									Server.afkminutes = Convert.ToInt32(value);
-								}
-								catch {
-									Server.s.Log("irc-port invalid! setting to default.");
-								}
-								break;
-							case "afk-kick":
-								try { Server.afkkick = Convert.ToInt32(value); }
-								catch { Server.s.Log("irc-port invalid! setting to default."); }
-								break;
-							case "afk-kick-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.afkkickperm = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-								break;
-							case "check-updates":
-								try { Server.autonotify = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "auto-update":
-								Server.autoupdate = value.ToLower() == "true";
-								break;
-							case "use-beta-version":
-								Server.DownloadBeta = value.ToLower() == "true";
-								break;
-							case "in-game-update-notify":
-								Server.notifyPlayers = value.ToLower() == "true";
-								break;
-							case "update-countdown":
-								try { Server.restartcountdown = Convert.ToInt32(value).ToString(); }
-								catch { Server.restartcountdown = "10"; }
-								break;
-							case "autoload":
-								try { Server.AutoLoad = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "auto-restart":
-								try { Server.autorestart = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "restarttime":
-								try { Server.restarttime = DateTime.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using defualt."); break; }
-								break;
-							case "parse-emotes":
-								try { Server.parseSmiley = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-								break;
-							case "use-whitelist":
-								Server.useWhitelist = value.ToLower() == "true";
-								break;
-							case "premium-only":
-								Server.PremiumPlayersOnly = value.ToLower() == "true";
-								break;
-							case "allow-tp-to-higher-ranks":
-								Server.higherranktp = value.ToLower() == "true";
-								break;
-							case "agree-to-rules-on-entry":
-								try { Server.agreetorulesonentry = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "admins-join-silent":
-								try { Server.adminsjoinsilent = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "main-name":
-								if ( Player.ValidName(value) ) Server.level = value;
-								else Server.s.Log("Invalid main name");
-								break;
-                            case "default-texture-url":
-                                if (!value.StartsWith("http://") && !value.StartsWith("https://"))
-                                    Server.defaultTerrainUrl = "";
-                                else
-                                    Server.defaultTerrainUrl = value;
-                                break;
-                            case "default-texture-pack-url":
-                                if (!value.StartsWith("http://") && !value.StartsWith("https://"))
-                                    Server.defaultTexturePackUrl = "";
-                                else
-                                    Server.defaultTexturePackUrl = value;
-                                break;
-							case "dollar-before-dollar":
-								try { Server.dollardollardollar = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "money-name":
-								if ( value != "" ) Server.moneys = value;
-								break;
-							/*case "mono":
+				case "report-back":
+					Server.reportBack = value.ToLower() == "true";
+					break;
+				case "backup-time":
+					if ( Convert.ToInt32(value) > 1 ) { Server.backupInterval = Convert.ToInt32(value); }
+					break;
+				case "backup-location":
+					if ( !value.Contains("System.Windows.Forms.TextBox, Text:") )
+						Server.backupLocation = value;
+					break;
+				case "physicsrestart":
+					Server.physicsRestart = value.ToLower() == "true";
+					break;
+				case "deathcount":
+					Server.deathcount = value.ToLower() == "true";
+					break;
+				case "usemysql":
+					Server.useMySQL = value.ToLower() == "true";
+					break;
+				case "host":
+					Server.MySQLHost = value;
+					break;
+				case "sqlport":
+					Server.MySQLPort = value;
+					break;
+				case "username":
+					Server.MySQLUsername = value;
+					break;
+				case "password":
+					Server.MySQLPassword = value;
+					break;
+				case "databasename":
+					Server.MySQLDatabaseName = value;
+					break;
+				case "pooling":
+					try { Server.DatabasePooling = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "defaultcolor":
+					color = Colors.Parse(value);
+					if ( color == "" ) {
+						color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+					}
+					Server.DefaultColor = color;
+					break;
+				case "irc-color":
+					color = Colors.Parse(value);
+					if ( color == "" ) {
+						color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+					}
+					Server.IRCColour = color;
+					break;
+				case "opchat-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.opchatperm = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
+					break;
+				case "adminchat-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.adminchatperm = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
+					break;
+				case "log-heartbeat":
+					try { Server.logbeat = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
+					break;
+				case "force-cuboid":
+					try { Server.forceCuboid = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
+					break;
+				case "profanity-filter":
+					try { Server.profanityFilter = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "notify-on-join-leave":
+					try { Server.notifyOnJoinLeave = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "cheapmessage":
+					try { Server.cheapMessage = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "cheap-message-given":
+					if ( value != "" ) Server.cheapMessageGiven = value;
+					break;
+				case "custom-ban":
+					try { Server.customBan = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "custom-ban-message":
+					if ( value != "" ) Server.customBanMessage = value;
+					break;
+				case "custom-shutdown":
+					try { Server.customShutdown = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "custom-shutdown-message":
+					if ( value != "" ) Server.customShutdownMessage = value;
+					break;
+				case "custom-griefer-stone":
+					try { Server.customGrieferStone = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "custom-griefer-stone-message":
+					if ( value != "" ) Server.customGrieferStoneMessage = value;
+					break;
+				case "custom-promote-message":
+					if ( value != "" ) Server.customPromoteMessage = value;
+					break;
+				case "custom-demote-message":
+					if ( value != "" ) Server.customDemoteMessage = value;
+					break;
+				case "rank-super":
+					try { Server.rankSuper = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "default-rank":
+					try { Server.defaultRank = value.ToLower(); }
+					catch { }
+					break;
+				case "afk-minutes":
+					try {
+						Server.afkminutes = Convert.ToInt32(value);
+					}
+					catch {
+						Server.s.Log("irc-port invalid! setting to default.");
+					}
+					break;
+				case "afk-kick":
+					try { Server.afkkick = Convert.ToInt32(value); }
+					catch { Server.s.Log("irc-port invalid! setting to default."); }
+					break;
+				case "afk-kick-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.afkkickperm = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
+					break;
+				case "check-updates":
+					try { Server.autonotify = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "auto-update":
+					Server.autoupdate = value.ToLower() == "true";
+					break;
+				case "use-beta-version":
+					Server.DownloadBeta = value.ToLower() == "true";
+					break;
+				case "in-game-update-notify":
+					Server.notifyPlayers = value.ToLower() == "true";
+					break;
+				case "update-countdown":
+					try { Server.restartcountdown = Convert.ToInt32(value).ToString(); }
+					catch { Server.restartcountdown = "10"; }
+					break;
+				case "autoload":
+					try { Server.AutoLoad = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "auto-restart":
+					try { Server.autorestart = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "restarttime":
+					try { Server.restarttime = DateTime.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using defualt."); break; }
+					break;
+				case "parse-emotes":
+					try { Server.parseSmiley = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					break;
+				case "use-whitelist":
+					Server.useWhitelist = value.ToLower() == "true";
+					break;
+				case "premium-only":
+					Server.PremiumPlayersOnly = value.ToLower() == "true";
+					break;
+				case "allow-tp-to-higher-ranks":
+					Server.higherranktp = value.ToLower() == "true";
+					break;
+				case "agree-to-rules-on-entry":
+					try { Server.agreetorulesonentry = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "admins-join-silent":
+					try { Server.adminsjoinsilent = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "main-name":
+					if ( Player.ValidName(value) ) Server.level = value;
+					else Server.s.Log("Invalid main name");
+					break;
+				case "default-texture-url":
+					if (!value.StartsWith("http://") && !value.StartsWith("https://"))
+						Server.defaultTerrainUrl = "";
+					else
+						Server.defaultTerrainUrl = value;
+					break;
+				case "default-texture-pack-url":
+					if (!value.StartsWith("http://") && !value.StartsWith("https://"))
+						Server.defaultTexturePackUrl = "";
+					else
+						Server.defaultTexturePackUrl = value;
+					break;
+				case "dollar-before-dollar":
+					try { Server.dollardollardollar = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "money-name":
+					if ( value != "" ) Server.moneys = value;
+					break;
+					/*case "mono":
 								try { Server.mono = bool.Parse(value); }
 								catch { Server.s.Log("Invalid " + key + ". Using default."); }
 								break;*/
-							case "restart-on-error":
-								try { Server.restartOnError = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "repeat-messages":
-								try { Server.repeatMessage = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "host-state":
-								if ( value != "" )
-									Server.ZallState = value;
-								break;
-							case "kick-on-hackrank":
-								try { Server.hackrank_kick = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "hackrank-kick-time":
-								try { Server.hackrank_kick_time = int.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "server-owner":
-								if ( value != "" )
-									Server.server_owner = value;
-								break;
-							case "zombie-on-server-start":
-								try { Server.startZombieModeOnStartup = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "no-respawning-during-zombie":
-								try { Server.noRespawn = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "no-level-saving-during-zombie":
-								try { Server.noLevelSaving = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "no-pillaring-during-zombie":
-								try { Server.noPillaring = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "zombie-name-while-infected":
-								if ( value != "" )
-									Server.ZombieName = value;
-								break;
-							case "enable-changing-levels":
-								try { Server.ChangeLevels = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "zombie-survival-only-server":
-								try { Server.ZombieOnlyServer = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "use-level-list":
-								try { Server.UseLevelList = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "zombie-level-list":
-								if ( value != "" ) {
+				case "restart-on-error":
+					try { Server.restartOnError = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "repeat-messages":
+					try { Server.repeatMessage = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "host-state":
+					if ( value != "" )
+						Server.ZallState = value;
+					break;
+				case "kick-on-hackrank":
+					try { Server.hackrank_kick = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "hackrank-kick-time":
+					try { Server.hackrank_kick_time = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "server-owner":
+					if ( value != "" )
+						Server.server_owner = value;
+					break;
+				case "zombie-on-server-start":
+					try { Server.startZombieModeOnStartup = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "no-respawning-during-zombie":
+					try { Server.noRespawn = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "no-level-saving-during-zombie":
+					try { Server.noLevelSaving = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "no-pillaring-during-zombie":
+					try { Server.noPillaring = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "zombie-name-while-infected":
+					if ( value != "" )
+						Server.ZombieName = value;
+					break;
+				case "enable-changing-levels":
+					try { Server.ChangeLevels = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "zombie-survival-only-server":
+					try { Server.ZombieOnlyServer = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "use-level-list":
+					try { Server.UseLevelList = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "zombie-level-list":
+					if ( value != "" ) {
 
-									string input = value.Replace(" ", "").ToString();
-									int itndex = input.IndexOf("#");
-									if ( itndex > 0 )
-										input = input.Substring(0, itndex);
+						string input = value.Replace(" ", "").ToString();
+						int itndex = input.IndexOf("#");
+						if ( itndex > 0 )
+							input = input.Substring(0, itndex);
 
-									Server.LevelList = input.Split(',').ToList<string>();
-								}
-								break;
-							case "guest-limit-notify":
-								try { Server.guestLimitNotify = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "guest-join-notify":
-								try { Server.guestJoinNotify = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "guest-leave-notify":
-								try { Server.guestLeaveNotify = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "admin-verification":
-								try { Server.verifyadmins = bool.Parse(value); }
-								catch { Server.s.Log("invalid " + key + ". Using default"); }
-								break;
-							case "verify-admin-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.verifyadminsrank = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-								break;
-							case "mute-on-spam":
-								try { Server.checkspam = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "spam-messages":
-								try { Server.spamcounter = int.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "spam-mute-time":
-								try { Server.mutespamtime = int.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "spam-counter-reset-time":
-								try { Server.spamcountreset = int.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "show-empty-ranks":
-								try { Server.showEmptyRanks = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "global-chat-enabled":
-								try { Server.UseGlobalChat = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-
-							case "global-chat-color":
-								color = Colors.Parse(value);
-								if ( color == "" ) {
-									color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-								}
-								Server.GlobalChatColor = color;
-								break;
-
-							case "total-undo":
-								try { Server.totalUndo = int.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); }
-								break;
-							case "phys-max-undo":
-								try { Server.physUndo = int.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); Server.physUndo = 20000; }
-								break;
-							case "draw-reload-limit":
-								try { Server.DrawReloadLimit = int.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default"); Server.DrawReloadLimit = 10000; }
-								break;
-								
-							case "review-view-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.reviewview = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "review-enter-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.reviewenter = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "review-leave-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.reviewleave = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "review-cooldown":
-								try {
-									Server.reviewcooldown = Convert.ToInt32(value.ToLower());
-								}
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "review-clear-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.reviewclear = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "review-next-perm":
-								try {
-									sbyte parsed = sbyte.Parse(value);
-									if ( parsed < -50 || parsed > 120 ) {
-										throw new FormatException();
-									}
-									Server.reviewnext = (LevelPermission)parsed;
-								}
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "bufferblocks":
-								try {
-									Server.bufferblocks = bool.Parse(value);
-								}
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;
-							case "ignoreomnibans":
-								try {
-									Server.IgnoreOmnibans = bool.Parse(value);
-								}
-								catch {
-									Server.IgnoreOmnibans = false;
-								}
-								break;
-						}
+						Server.LevelList = input.Split(',').ToList<string>();
 					}
-				}
-				Server.s.SettingsUpdate();
-				Save(givenPath);
+					break;
+				case "guest-limit-notify":
+					try { Server.guestLimitNotify = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "guest-join-notify":
+					try { Server.guestJoinNotify = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "guest-leave-notify":
+					try { Server.guestLeaveNotify = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "admin-verification":
+					try { Server.verifyadmins = bool.Parse(value); }
+					catch { Server.s.Log("invalid " + key + ". Using default"); }
+					break;
+				case "verify-admin-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.verifyadminsrank = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
+					break;
+				case "mute-on-spam":
+					try { Server.checkspam = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "spam-messages":
+					try { Server.spamcounter = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "spam-mute-time":
+					try { Server.mutespamtime = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "spam-counter-reset-time":
+					try { Server.spamcountreset = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "show-empty-ranks":
+					try { Server.showEmptyRanks = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "global-chat-enabled":
+					try { Server.UseGlobalChat = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+
+				case "global-chat-color":
+					color = Colors.Parse(value);
+					if ( color == "" ) {
+						color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
+					}
+					Server.GlobalChatColor = color;
+					break;
+
+				case "total-undo":
+					try { Server.totalUndo = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+				case "phys-max-undo":
+					try { Server.physUndo = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.physUndo = 20000; }
+					break;
+				case "draw-reload-limit":
+					try { Server.DrawReloadLimit = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.DrawReloadLimit = 10000; }
+					break;
+					
+				case "review-view-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.reviewview = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "review-enter-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.reviewenter = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "review-leave-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.reviewleave = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "review-cooldown":
+					try {
+						Server.reviewcooldown = Convert.ToInt32(value.ToLower());
+					}
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "review-clear-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.reviewclear = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "review-next-perm":
+					try {
+						sbyte parsed = sbyte.Parse(value);
+						if ( parsed < -50 || parsed > 120 ) {
+							throw new FormatException();
+						}
+						Server.reviewnext = (LevelPermission)parsed;
+					}
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "bufferblocks":
+					try {
+						Server.bufferblocks = bool.Parse(value);
+					}
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				case "ignoreomnibans":
+					try {
+						Server.IgnoreOmnibans = bool.Parse(value);
+					}
+					catch {
+						Server.IgnoreOmnibans = false;
+					}
+					break;
 			}
-			else Save(givenPath);
 		}
+		
 		public static bool ValidString(string str, string allowed) {
 			string allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890" + allowed;
 			foreach ( char ch in str ) {
@@ -656,93 +648,94 @@ namespace MCGalaxy {
 				Server.s.Log("SAVE FAILED! " + givenPath);
 			}
 		}
+		
 		public static void SaveProps(StreamWriter w) {
 			w.WriteLine("#   Edit the settings below to modify how your server operates. This is an explanation of what each setting does.");
 			w.WriteLine("#   server-name\t\t\t\t= The name which displays on minecraft.net");
 			w.WriteLine("#   motd\t\t\t\t= The message which displays when a player connects");
 			w.WriteLine("#   port\t\t\t\t= The port to operate from");
-            w.WriteLine("#   console-only\t\t\t= Run without a GUI (useful for Linux servers with mono)");
-            w.WriteLine("#   verify-names\t\t\t= Verify the validity of names");
-            w.WriteLine("#   public\t\t\t\t= Set to true to appear in the public server list");
-            w.WriteLine("#   max-players\t\t\t\t= The maximum number of connections");
-            w.WriteLine("#   max-guests\t\t\t\t= The maximum number of guests allowed");
-            w.WriteLine("#   max-maps\t\t\t\t= The maximum number of maps loaded at once");
-            w.WriteLine("#   world-chat\t\t\t\t= Set to true to enable world chat");
-            w.WriteLine("#   guest-goto\t\t\t\t= Set to true to give guests goto and levels commands (Not implemented yet)");
-            w.WriteLine("#   irc\t\t\t\t\t= Set to true to enable the IRC bot");
-            w.WriteLine("#   irc-nick\t\t\t\t= The name of the IRC bot");
-            w.WriteLine("#   irc-server\t\t\t\t= The server to connect to");
-            w.WriteLine("#   irc-channel\t\t\t\t= The channel to join");
-            w.WriteLine("#   irc-opchannel\t\t\t= The channel to join (posts OpChat)");
-            w.WriteLine("#   irc-port\t\t\t\t= The port to use to connect");
-            w.WriteLine("#   irc-identify\t\t\t= (true/false)\tDo you want the IRC bot to Identify itself with nickserv. Note: You will need to register it's name with nickserv manually.");
-            w.WriteLine("#   irc-password\t\t\t= The password you want to use if you're identifying with nickserv");
-            w.WriteLine("#   anti-tunnels\t\t\t= Stops people digging below max-depth");
-            w.WriteLine("#   max-depth\t\t\t\t= The maximum allowed depth to dig down");
-            w.WriteLine("#   backup-time\t\t\t\t= The number of seconds between automatic backups");
-            w.WriteLine("#   overload\t\t\t\t= The higher this is, the longer the physics is allowed to lag.  Default 1500");
-            w.WriteLine("#   use-whitelist\t\t\t= Switch to allow use of a whitelist to override IP bans for certain players.  Default false.");
-            w.WriteLine("#   premium-only\t\t\t= Only allow premium players (paid for minecraft) to access the server. Default false.");
-            w.WriteLine("#   force-cuboid\t\t\t= Run cuboid until the limit is hit, instead of canceling the whole operation.  Default false.");
-            w.WriteLine("#   profanity-filter\t\t\t= Replace certain bad words in the chat.  Default false.");
-            w.WriteLine("#   notify-on-join-leave\t\t= Show a balloon popup in tray notification area when a player joins/leaves the server.  Default false.");
-            w.WriteLine("#   allow-tp-to-higher-ranks\t\t= Allows the teleportation to players of higher ranks");
-            w.WriteLine("#   agree-to-rules-on-entry\t\t= Forces all new players to the server to agree to the rules before they can build or use commands.");
-            w.WriteLine("#   adminchat-perm\t\t\t= The rank required to view adminchat. Default rank is superop.");
-            w.WriteLine("#   admins-join-silent\t\t\t= Players who have adminchat permission join the game silently. Default true");
-            w.WriteLine("#   server-owner\t\t\t= The minecraft name, of the owner of the server.");
-            w.WriteLine("#   zombie-on-server-start\t\t= Starts Zombie Survival when server is started.");
-            w.WriteLine("#   no-respawning-during-zombie\t\t= Disables respawning (Pressing R) while Zombie is on.");
-            w.WriteLine("#   no-level-saving-during-zombie\t= Disables level saving while Zombie Survival is activated.");
-            w.WriteLine("#   no-pillaring-during-zombie\t\t= Disables pillaring while Zombie Survival is activated.");
-            w.WriteLine("#   zombie-name-while-infected\t\t= Sets the zombies name while actived if there is a value.");
-            w.WriteLine("#   enable-changing-levels\t\t= After a Zombie Survival round has finished, will change the level it is running on.");
-            w.WriteLine("#   zombie-survival-only-server\t\t= iEXPERIMENTAL! Makes the server only for Zombie Survival (etc. changes main level)");
-            w.WriteLine("#   use-level-list\t\t\t= Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
-            w.WriteLine("#   zombie-level-list\t\t\t= List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
-            w.WriteLine("#   total-undo\t\t\t\t= Track changes made by the last X people logged on for undo purposes. Folder is rotated when full, so when set to 200, will actually track around 400.");
-            w.WriteLine("#   guest-limit-notify\t\t\t= Show -Too Many Guests- message in chat when maxGuests has been reached. Default false");
-            w.WriteLine("#   guest-join-notify\t\t\t= Shows when guests and lower ranks join server in chat and IRC. Default true");
-            w.WriteLine("#   guest-leave-notify\t\t\t= Shows when guests and lower ranks leave server in chat and IRC. Default true");
+			w.WriteLine("#   console-only\t\t\t= Run without a GUI (useful for Linux servers with mono)");
+			w.WriteLine("#   verify-names\t\t\t= Verify the validity of names");
+			w.WriteLine("#   public\t\t\t\t= Set to true to appear in the public server list");
+			w.WriteLine("#   max-players\t\t\t\t= The maximum number of connections");
+			w.WriteLine("#   max-guests\t\t\t\t= The maximum number of guests allowed");
+			w.WriteLine("#   max-maps\t\t\t\t= The maximum number of maps loaded at once");
+			w.WriteLine("#   world-chat\t\t\t\t= Set to true to enable world chat");
+			w.WriteLine("#   guest-goto\t\t\t\t= Set to true to give guests goto and levels commands (Not implemented yet)");
+			w.WriteLine("#   irc\t\t\t\t\t= Set to true to enable the IRC bot");
+			w.WriteLine("#   irc-nick\t\t\t\t= The name of the IRC bot");
+			w.WriteLine("#   irc-server\t\t\t\t= The server to connect to");
+			w.WriteLine("#   irc-channel\t\t\t\t= The channel to join");
+			w.WriteLine("#   irc-opchannel\t\t\t= The channel to join (posts OpChat)");
+			w.WriteLine("#   irc-port\t\t\t\t= The port to use to connect");
+			w.WriteLine("#   irc-identify\t\t\t= (true/false)\tDo you want the IRC bot to Identify itself with nickserv. Note: You will need to register it's name with nickserv manually.");
+			w.WriteLine("#   irc-password\t\t\t= The password you want to use if you're identifying with nickserv");
+			w.WriteLine("#   anti-tunnels\t\t\t= Stops people digging below max-depth");
+			w.WriteLine("#   max-depth\t\t\t\t= The maximum allowed depth to dig down");
+			w.WriteLine("#   backup-time\t\t\t\t= The number of seconds between automatic backups");
+			w.WriteLine("#   overload\t\t\t\t= The higher this is, the longer the physics is allowed to lag.  Default 1500");
+			w.WriteLine("#   use-whitelist\t\t\t= Switch to allow use of a whitelist to override IP bans for certain players.  Default false.");
+			w.WriteLine("#   premium-only\t\t\t= Only allow premium players (paid for minecraft) to access the server. Default false.");
+			w.WriteLine("#   force-cuboid\t\t\t= Run cuboid until the limit is hit, instead of canceling the whole operation.  Default false.");
+			w.WriteLine("#   profanity-filter\t\t\t= Replace certain bad words in the chat.  Default false.");
+			w.WriteLine("#   notify-on-join-leave\t\t= Show a balloon popup in tray notification area when a player joins/leaves the server.  Default false.");
+			w.WriteLine("#   allow-tp-to-higher-ranks\t\t= Allows the teleportation to players of higher ranks");
+			w.WriteLine("#   agree-to-rules-on-entry\t\t= Forces all new players to the server to agree to the rules before they can build or use commands.");
+			w.WriteLine("#   adminchat-perm\t\t\t= The rank required to view adminchat. Default rank is superop.");
+			w.WriteLine("#   admins-join-silent\t\t\t= Players who have adminchat permission join the game silently. Default true");
+			w.WriteLine("#   server-owner\t\t\t= The minecraft name, of the owner of the server.");
+			w.WriteLine("#   zombie-on-server-start\t\t= Starts Zombie Survival when server is started.");
+			w.WriteLine("#   no-respawning-during-zombie\t\t= Disables respawning (Pressing R) while Zombie is on.");
+			w.WriteLine("#   no-level-saving-during-zombie\t= Disables level saving while Zombie Survival is activated.");
+			w.WriteLine("#   no-pillaring-during-zombie\t\t= Disables pillaring while Zombie Survival is activated.");
+			w.WriteLine("#   zombie-name-while-infected\t\t= Sets the zombies name while actived if there is a value.");
+			w.WriteLine("#   enable-changing-levels\t\t= After a Zombie Survival round has finished, will change the level it is running on.");
+			w.WriteLine("#   zombie-survival-only-server\t\t= iEXPERIMENTAL! Makes the server only for Zombie Survival (etc. changes main level)");
+			w.WriteLine("#   use-level-list\t\t\t= Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
+			w.WriteLine("#   zombie-level-list\t\t\t= List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
+			w.WriteLine("#   total-undo\t\t\t\t= Track changes made by the last X people logged on for undo purposes. Folder is rotated when full, so when set to 200, will actually track around 400.");
+			w.WriteLine("#   guest-limit-notify\t\t\t= Show -Too Many Guests- message in chat when maxGuests has been reached. Default false");
+			w.WriteLine("#   guest-join-notify\t\t\t= Shows when guests and lower ranks join server in chat and IRC. Default true");
+			w.WriteLine("#   guest-leave-notify\t\t\t= Shows when guests and lower ranks leave server in chat and IRC. Default true");
 			w.WriteLine();
-            w.WriteLine("#   UseMySQL\t\t\t\t= Use MySQL (true) or use SQLite (false)");
-            w.WriteLine("#   Host\t\t\t\t= The host name for the database (usually 127.0.0.1)");
-            w.WriteLine("#   SQLPort\t\t\t\t= Port number to be used for MySQL.  Unless you manually changed the port, leave this alone.  Default 3306.");
-            w.WriteLine("#   Username\t\t\t\t= The username you used to create the database (usually root)");
-            w.WriteLine("#   Password\t\t\t\t= The password set while making the database");
-            w.WriteLine("#   DatabaseName\t\t\t= The name of the database stored (Default = MCZall)");
+			w.WriteLine("#   UseMySQL\t\t\t\t= Use MySQL (true) or use SQLite (false)");
+			w.WriteLine("#   Host\t\t\t\t= The host name for the database (usually 127.0.0.1)");
+			w.WriteLine("#   SQLPort\t\t\t\t= Port number to be used for MySQL.  Unless you manually changed the port, leave this alone.  Default 3306.");
+			w.WriteLine("#   Username\t\t\t\t= The username you used to create the database (usually root)");
+			w.WriteLine("#   Password\t\t\t\t= The password set while making the database");
+			w.WriteLine("#   DatabaseName\t\t\t= The name of the database stored (Default = MCZall)");
 			w.WriteLine();
-            w.WriteLine("#   defaultColor\t\t\t= The color code of the default messages (Default = &e)");
+			w.WriteLine("#   defaultColor\t\t\t= The color code of the default messages (Default = &e)");
 			w.WriteLine();
-            w.WriteLine("#   Super-limit\t\t\t\t= The limit for building commands for SuperOPs");
-            w.WriteLine("#   Op-limit\t\t\t\t= The limit for building commands for Operators");
-            w.WriteLine("#   Adv-limit\t\t\t\t= The limit for building commands for AdvBuilders");
-            w.WriteLine("#   Builder-limit\t\t\t= The limit for building commands for Builders");
+			w.WriteLine("#   Super-limit\t\t\t\t= The limit for building commands for SuperOPs");
+			w.WriteLine("#   Op-limit\t\t\t\t= The limit for building commands for Operators");
+			w.WriteLine("#   Adv-limit\t\t\t\t= The limit for building commands for AdvBuilders");
+			w.WriteLine("#   Builder-limit\t\t\t= The limit for building commands for Builders");
 			w.WriteLine();
-            w.WriteLine("#   kick-on-hackrank\t\t\t= Set to true if hackrank should kick players");
-            w.WriteLine("#   hackrank-kick-time\t\t\t= Number of seconds until player is kicked");
-            w.WriteLine("#   custom-rank-welcome-messages\t= Decides if different welcome messages for each rank is enabled. Default true.");
-            w.WriteLine("#   ignore-ops\t\t\t\t= Decides whether or not an operator can be ignored. Default false.");
+			w.WriteLine("#   kick-on-hackrank\t\t\t= Set to true if hackrank should kick players");
+			w.WriteLine("#   hackrank-kick-time\t\t\t= Number of seconds until player is kicked");
+			w.WriteLine("#   custom-rank-welcome-messages\t= Decides if different welcome messages for each rank is enabled. Default true.");
+			w.WriteLine("#   ignore-ops\t\t\t\t= Decides whether or not an operator can be ignored. Default false.");
 			w.WriteLine();
-            w.WriteLine("#   admin-verification\t\t\t= Determines whether admins have to verify on entry to the server.  Default true.");
-            w.WriteLine("#   verify-admin-perm\t\t\t= The minimum rank required for admin verification to occur.");
+			w.WriteLine("#   admin-verification\t\t\t= Determines whether admins have to verify on entry to the server.  Default true.");
+			w.WriteLine("#   verify-admin-perm\t\t\t= The minimum rank required for admin verification to occur.");
 			w.WriteLine();
-            w.WriteLine("#   mute-on-spam\t\t\t= If enabled it mutes a player for spamming.  Default false.");
-            w.WriteLine("#   spam-messages\t\t\t= The amount of messages that have to be sent \"consecutively\" to be muted.");
-            w.WriteLine("#   spam-mute-time\t\t\t= The amount of seconds a player is muted for spam.");
-            w.WriteLine("#   spam-counter-reset-time\t\t= The amount of seconds the \"consecutive\" messages have to fall between to be considered spam.");
+			w.WriteLine("#   mute-on-spam\t\t\t= If enabled it mutes a player for spamming.  Default false.");
+			w.WriteLine("#   spam-messages\t\t\t= The amount of messages that have to be sent \"consecutively\" to be muted.");
+			w.WriteLine("#   spam-mute-time\t\t\t= The amount of seconds a player is muted for spam.");
+			w.WriteLine("#   spam-counter-reset-time\t\t= The amount of seconds the \"consecutive\" messages have to fall between to be considered spam.");
 			w.WriteLine();
 			w.WriteLine("#   As an example, if you wanted the spam to only mute if a user posts 5 messages in a row within 2 seconds, you would use the folowing:");
-            w.WriteLine("#   mute-on-spam\t\t\t= true");
-            w.WriteLine("#   spam-messages\t\t\t= 5");
-            w.WriteLine("#   spam-mute-time\t\t\t= 60");
-            w.WriteLine("#   spam-counter-reset-time\t\t= 2");
-            w.WriteLine("#   bufferblocks\t\t\t= Should buffer blocks by default for maps?");
+			w.WriteLine("#   mute-on-spam\t\t\t= true");
+			w.WriteLine("#   spam-messages\t\t\t= 5");
+			w.WriteLine("#   spam-mute-time\t\t\t= 60");
+			w.WriteLine("#   spam-counter-reset-time\t\t= 2");
+			w.WriteLine("#   bufferblocks\t\t\t= Should buffer blocks by default for maps?");
 			w.WriteLine();
-            w.WriteLine("#   MCGalaxy-protection-level\t\t= Choose between: Dev/Mod/Off (default is Off). When set to Mod, MCGalaxy Moderators AND Developers are protected. When set to Dev, MCGalaxy Developers only are protected. When set to Off, MCGalaxy staff are not protected.");
-            w.WriteLine();
-            w.WriteLine("#   menu-style\t\t\t\t= Choose between the default MCGalaxy help menu(0) or the redesigned layout(1). ");
-            w.WriteLine();
+			w.WriteLine("#   MCGalaxy-protection-level\t\t= Choose between: Dev/Mod/Off (default is Off). When set to Mod, MCGalaxy Moderators AND Developers are protected. When set to Dev, MCGalaxy Developers only are protected. When set to Off, MCGalaxy staff are not protected.");
+			w.WriteLine();
+			w.WriteLine("#   menu-style\t\t\t\t= Choose between the default MCGalaxy help menu(0) or the redesigned layout(1). ");
+			w.WriteLine();
 			w.WriteLine("# Server options");
 			w.WriteLine("server-name = " + Server.name);
 			w.WriteLine("motd = " + Server.motd);
@@ -763,8 +756,8 @@ namespace MCGalaxy {
 			w.WriteLine("restarttime = " + Server.restarttime.ToShortTimeString());
 			w.WriteLine("restart-on-error = " + Server.restartOnError);
 			w.WriteLine("main-name = " + Server.level);
-            w.WriteLine("default-texture-url = " + Server.defaultTerrainUrl);
-            w.WriteLine("default-texture-pack-url = " + Server.defaultTexturePackUrl);
+			w.WriteLine("default-texture-url = " + Server.defaultTerrainUrl);
+			w.WriteLine("default-texture-pack-url = " + Server.defaultTexturePackUrl);
 			//w.WriteLine("guest-goto = " + Server.guestGoto);
 			w.WriteLine();
 			w.WriteLine("# irc bot options");
@@ -810,7 +803,7 @@ namespace MCGalaxy {
 			w.WriteLine("enable-changing-levels = " + Server.ChangeLevels);
 			w.WriteLine("zombie-survival-only-server = " + Server.ZombieOnlyServer);
 			w.WriteLine("use-level-list = " + Server.UseLevelList);
-            w.WriteLine("zombie-level-list = " + string.Join(",", Server.LevelList.ToArray()));
+			w.WriteLine("zombie-level-list = " + string.Join(",", Server.LevelList.ToArray()));
 			w.WriteLine("guest-limit-notify = " + Server.guestLimitNotify.ToString().ToLower());
 			w.WriteLine("guest-join-notify = " + Server.guestJoinNotify.ToString().ToLower());
 			w.WriteLine("guest-leave-notify = " + Server.guestLeaveNotify.ToString().ToLower());
@@ -887,7 +880,7 @@ namespace MCGalaxy {
 			w.WriteLine("review-next-perm = " + ( (sbyte)Server.reviewnext ).ToString());
 			w.WriteLine("bufferblocks = " + Server.bufferblocks);
 			w.WriteLine();
-            w.WriteLine("ignoreomnibans = " +  Server.IgnoreOmnibans.ToString().ToLower());
+			w.WriteLine("ignoreomnibans = " +  Server.IgnoreOmnibans.ToString().ToLower());
 		}
 	}
 }

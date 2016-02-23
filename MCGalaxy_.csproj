@@ -558,6 +558,7 @@
       <DependentUpon>Window.cs</DependentUpon>
     </Compile>
     <Compile Include="ScriptingUtil\Scripting.cs" />
+    <Compile Include="Server\PropertiesFile.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\ServerSettings.cs" />
     <Compile Include="Server\Updater.cs" />

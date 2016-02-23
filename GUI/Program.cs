@@ -72,6 +72,7 @@ namespace MCGalaxy_.Gui
                 ExitProgram(true);
         }
 
+        static bool useConsole, useHighQualityGui;
         [STAThread]
         public static void Main(string[] args)
         {
@@ -88,31 +89,23 @@ namespace MCGalaxy_.Gui
             Logger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             Application.ThreadException += ThreadExHandler;
-            bool skip = false;
-        remake:
+            useConsole = false; useHighQualityGui = false;
+
             try
             {
-                if (!File.Exists("Viewmode.cfg") || skip)
-                {
-                    StreamWriter SW = new StreamWriter(File.Create("Viewmode.cfg"));
-                    SW.WriteLine("#This file controls how the console window is shown to the server host");
-                    SW.WriteLine("#cli: True or False (Determines whether a CLI interface is used) (Set True if on Mono)");
-                    SW.WriteLine("#high-quality: True or false (Determines whether the GUI interface uses higher quality objects)");
-                    SW.WriteLine();
-                    SW.WriteLine("cli = false");
-                    SW.WriteLine("high-quality = true");
-                    SW.Flush();
-                    SW.Close();
-                    SW.Dispose();
+                if (!File.Exists("Viewmode.cfg")) {
+                    using (StreamWriter SW = new StreamWriter("Viewmode.cfg")) {
+                        SW.WriteLine("#This file controls how the console window is shown to the server host");
+                        SW.WriteLine("#cli: True or False (Determines whether a CLI interface is used) (Set True if on Mono)");
+                        SW.WriteLine("#high-quality: True or false (Determines whether the GUI interface uses higher quality objects)");
+                        SW.WriteLine();
+                        SW.WriteLine("cli = false");
+                        SW.WriteLine("high-quality = true");
+                    }
                 }
-
-                if (File.ReadAllText("Viewmode.cfg") == "") { skip = true; goto remake; }
-
-                string[] foundView = File.ReadAllLines("Viewmode.cfg");
-                if (foundView[0][0] != '#') { skip = true; goto remake; }
-
-                if (foundView[4].Split(' ')[2].ToLower() == "true")
-                {
+                PropertiesFile.Read("Viewmode.cfg", ViewmodeLineProcessor);
+            	
+                if (useConsole) {
                     Server s = new Server();
                     s.OnLog += WriteToConsole;
                     s.OnCommand += WriteToConsole;
@@ -122,21 +115,14 @@ namespace MCGalaxy_.Gui
                     Console.Title = Server.name + " - MCGalaxy " + Server.Version;
                     usingConsole = true;
                     handleComm();
-
-                    
                     //Application.Run();
-                }
-                else
-                {
-
+                } else {
                     IntPtr hConsole = GetConsoleWindow();
                     if (IntPtr.Zero != hConsole)
-                    {
                         ShowWindow(hConsole, 0);
-                    }
                     UpdateCheck(true);
-                    if (foundView[5].Split(' ')[2].ToLower() == "true")
-                    {
+                    
+                    if (useHighQualityGui) {
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
                     }
@@ -149,6 +135,15 @@ namespace MCGalaxy_.Gui
             catch (Exception e) { Server.ErrorLog(e); }
         }
 
+        static void ViewmodeLineProcessor(string key, string value) {
+            switch (key) {
+                case "cli":
+                    useConsole = value.ToLower() == "true"; break;
+                case "high-quality":
+                    useHighQualityGui = value.ToLower() == "true"; break;
+            }
+        }
+        
         //U WANT TO SEE HOW WE DO IT MCSTORM?
         //I WOULD EXPLAIN, BUT ITS BETTER TO JUST COPY AND PASTE, AMIRITE?
         private static void WriteToConsole(string message)
