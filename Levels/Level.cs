@@ -67,8 +67,8 @@ namespace MCGalaxy
         public static bool cancelload;
         public static bool cancelsave;
         public static bool cancelphysics;
-        internal readonly List<Check> ListCheck = new List<Check>(); //A list of blocks that need to be updated
-        internal readonly List<Update> ListUpdate = new List<Update>(); //A list of block to change after calculation
+        internal readonly FastList<Check> ListCheck = new FastList<Check>(); //A list of blocks that need to be updated
+        internal readonly FastList<Update> ListUpdate = new FastList<Update>(); //A list of block to change after calculation
 
         internal readonly Dictionary<int, sbyte> leaves = new Dictionary<int, sbyte>();
         // Holds block state for leaf decay

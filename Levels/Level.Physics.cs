@@ -111,13 +111,12 @@ namespace MCGalaxy {
         }
 
         public string foundInfo(ushort x, ushort y, ushort z) {
-            Check found = null;
-            try {
-                found = ListCheck.Find(Check => Check.b == PosToInt(x, y, z));
-            } catch {
+            int index = PosToInt(x, y, z);
+            for (int i = 0; i < ListCheck.Count; i++) {
+                Check C = ListCheck.Items[i];
+                if (C.b != index) continue;
+                return (C.data is string) ? (string)C.data : "";
             }
-            if (found != null)
-                return (found.data is string) ? (string)found.data : "";
             return "";
         }
 
@@ -127,56 +126,53 @@ namespace MCGalaxy {
                 ushort x, y, z;
                 lastCheck = ListCheck.Count;
                 if (physics == 5) {
-                    ListCheck.ForEach(
-                        delegate(Check C)
-                        {
-                            try {
-                                string info = C.data as string;
-                                if (info == null) info = "";
-                                IntToPos(C.b, out x, out y, out z);
-                                
-                                if (PhysicsUpdate != null)
-                                    PhysicsUpdate(x, y, z, C.time, info, this);
-                                if (info == "" || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
-                                    DoorPhysics.Do(this, C);
-                            } catch {
-                                ListCheck.Remove(C);
-                            }
-                        });
-                } else {
-                    var rand = new Random();
-                    ListCheck.ForEach(
-                        delegate(Check C)
-                        {
-                            try {
-                                IntToPos(C.b, out x, out y, out z);
-                                string info = C.data as string;
-                                if (info == null) info = "";
-                                
-                                if (PhysicsUpdate != null)
-                                    PhysicsUpdate(x, y, z, C.time, info, this);
-                                OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);
-                                if (info == "" || ExtraInfoPhysics.DoComplex(this, C, rand))
-                                    DoNormalPhysics(x, y, z, rand, C);
-                            } catch {
-                                ListCheck.Remove(C);
-                            }
-                        });
-                }
-                
-                ListCheck.RemoveAll(Check => Check.time == 255); //Remove all that are finished with 255 time
-                lastUpdate = ListUpdate.Count;
-                ListUpdate.ForEach(
-                    delegate(Update C)
-                    {
+                    for (int i = 0; i < ListCheck.Count; i++) {
+                        Check C = ListCheck.Items[i];
                         try {
                             string info = C.data as string;
                             if (info == null) info = "";
-                            Blockchange(C.b, C.type, false, info);
+                            IntToPos(C.b, out x, out y, out z);
+                            
+                            if (PhysicsUpdate != null)
+                                PhysicsUpdate(x, y, z, C.time, info, this);
+                            if (info == "" || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
+                                DoorPhysics.Do(this, C);
                         } catch {
-                            Server.s.Log("Phys update issue");
+                            ListCheck.Remove(C);
                         }
-                    });
+                    }
+                } else {
+                    Random rand = new Random();
+                    for (int i = 0; i < ListCheck.Count; i++) {
+                        Check C = ListCheck.Items[i];
+                        try {
+                            IntToPos(C.b, out x, out y, out z);
+                            string info = C.data as string;
+                            if (info == null) info = "";
+                            
+                            if (PhysicsUpdate != null)
+                                PhysicsUpdate(x, y, z, C.time, info, this);
+                            OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);
+                            if (info == "" || ExtraInfoPhysics.DoComplex(this, C, rand))
+                                DoNormalPhysics(x, y, z, rand, C);
+                        } catch {
+                            ListCheck.Remove(C);
+                        }
+                    }
+                }
+                
+                ListCheck.RemoveAll(C => C.time == 255); //Remove all that are finished with 255 time
+                lastUpdate = ListUpdate.Count;
+                for (int i = 0; i < ListUpdate.Count; i++) {
+                    Update C = ListUpdate.Items[i];
+                    try {
+                        string info = C.data as string;
+                        if (info == null) info = "";
+                        Blockchange(C.b, C.type, false, info);
+                    } catch {
+                        Server.s.Log("Phys update issue");
+                    }
+                }
                 ListUpdate.Clear();
             } catch (Exception e) {
                 Server.s.Log("Level physics error");
@@ -449,14 +445,12 @@ namespace MCGalaxy {
         
         public void AddCheck(int b, bool overRide, object data) {
             try {
-                if (!ListCheck.Exists(Check => Check.b == b)) {
+                int index = ListCheck.IndexOf(C => C.b == b);
+                if (index < 0) {
                     ListCheck.Add(new Check(b, data)); //Adds block to list to be updated
                 } else if (overRide) {
-                    foreach (Check C2 in ListCheck) {
-                        if (C2.b == b) {
-                            C2.data = data; return; //Dont need to check physics here because if the list is active, then physics is active :)
-                        }
-                    }
+                    ListCheck.Items[index].data = data; return;
+                    //Dont need to check physics here because if the list is active, then physics is active :)
                 }
                 if (!physicssate && physics > 0)
                     StartPhysics();
@@ -481,9 +475,9 @@ namespace MCGalaxy {
                     return true;
                 }
 
-                if (!ListUpdate.Exists(Update => Update.b == b)) {
+                if (!ListUpdate.Exists(C => C.b == b)) {
                 } else if (type == Block.sand || type == Block.gravel)  {
-                    ListUpdate.RemoveAll(Update => Update.b == b);
+                    ListUpdate.RemoveAll(C => C.b == b);
                 } else {
                     return false;
                 }
@@ -500,7 +494,8 @@ namespace MCGalaxy {
         }
 
         public void ClearPhysics() {
-            ListCheck.ForEach(C => RevertPhysics(C));
+            for (int i = 0; i < ListCheck.Count; i++ )
+                RevertPhysics(ListCheck.Items[i]);
             ListCheck.Clear();
             ListUpdate.Clear();
         }
@@ -704,7 +699,7 @@ namespace MCGalaxy {
                 case Block.gravel:
                 case Block.wood_float:
                     AddCheck(b); break;
-                default: 
+                default:
                     break;
             }
         }
