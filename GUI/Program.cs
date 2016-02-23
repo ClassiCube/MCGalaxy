@@ -85,7 +85,7 @@ namespace MCGalaxy_.Gui
                             pr.Kill();
                 }
             }
-            PidgeonLogger.Init();
+            Logger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             Application.ThreadException += ThreadExHandler;
             bool skip = false;
