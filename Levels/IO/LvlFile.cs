@@ -1,7 +1,7 @@
 ﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -43,17 +43,20 @@ namespace MCGalaxy.Levels.IO {
                 header[15] = (byte)level.permissionbuild;
                 gs.Write(header, 0, header.Length);
                 byte[] blocks = level.blocks;
-                byte[] convBlocks = new byte[blocks.Length];
+                int start = 0, len = 0;
 
                 for (int i = 0; i < blocks.Length; ++i) {
-                    byte block = blocks[i];
-                    if (block < Block.CpeCount) {
-                        convBlocks[i] = block; //CHANGED THIS TO INCOPARATE SOME MORE SPACE THAT I NEEDED FOR THE door_orange_air ETC.
+                    byte block = blocks[i], convBlock = 0;
+                    if (block < Block.CpeCount || (convBlock = Block.SaveConvert(block)) == block) {
+                    	if (len == 0) start = i;
+                        len++;
                     } else {
-                        convBlocks[i] = Block.SaveConvert(block);
+                    	if (len > 0) gs.Write(blocks, start, len);
+                    	len = 0;
+                    	gs.WriteByte(convBlock);
                     }
                 }
-                gs.Write(convBlocks, 0, convBlocks.Length);
+                if (len > 0) gs.Write(blocks, start, len);
                 
                 // write out new blockdefinitions data
                 gs.WriteByte(0xBD);

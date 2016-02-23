@@ -24,18 +24,18 @@ namespace MCGalaxy {
     /// Also supports # for commented lines. </summary>
     public static class PropertiesFile {
         
-        public static bool Read(string path, Action<string, string> processor) {
+        public static bool Read(string path, Action<string, string> processor, char separator = '=') {
             if (!File.Exists(path)) return false;
             
             using (StreamReader reader = new StreamReader(path)) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
                     if (line == "" || line[0] == '#') continue;
-                    int index = line.IndexOf('=');
+                    int index = line.IndexOf(separator);
                     
                     string key = index < 0 ? line : line.Substring(0, index);
                     string value = index < 0 ? "" : line.Substring(index + 1);
-                    processor(key.ToLower().Trim(), value.Trim());
+                    processor(key.Trim(), value.Trim());
                 }
             }
             return true;

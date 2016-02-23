@@ -866,6 +866,7 @@ namespace MCGalaxy
         }
         
         static void AutoLoadLineProcessor(string key, string value) {
+            key = key.ToLower();
             if (value == "") value = "0";
 
             if (key != mainLevel.name) {

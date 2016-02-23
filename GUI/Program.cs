@@ -136,7 +136,7 @@ namespace MCGalaxy_.Gui
         }
 
         static void ViewmodeLineProcessor(string key, string value) {
-            switch (key) {
+            switch (key.ToLower()) {
                 case "cli":
                     useConsole = value.ToLower() == "true"; break;
                 case "high-quality":

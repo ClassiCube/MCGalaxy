@@ -28,7 +28,7 @@ namespace MCGalaxy {
         }
         
         static void LineProcessor(string key, string value) {
-            switch (key) {
+        	switch (key.ToLower()) {
                 case "autoupdate":
                     Server.autoupdate = value.ToLower() == "true"; break;
                 case "notify":

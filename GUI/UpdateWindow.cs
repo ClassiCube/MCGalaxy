@@ -84,7 +84,7 @@ namespace MCGalaxy.Gui
         }
         
         void LineProcessor(string key, string value) {
-            switch (key) {
+            switch (key.ToLower()) {
                 case "autoupdate":
                     chkAutoUpdate.Checked = value.ToLower() == "true"; break;
                 case "notify":

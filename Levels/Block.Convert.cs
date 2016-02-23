@@ -844,7 +844,7 @@ namespace MCGalaxy
             	case air_flood_layer:
             	case air_flood_down:
             	case air_flood_up:
-                    return (byte)0; //air_flood must be converted to air on save to prevent issues
+                    return air; //air_flood must be converted to air on save to prevent issues
                 case door_air: return door;
                 case door2_air: return door2;
                 case door3_air: return door3;
@@ -872,19 +872,18 @@ namespace MCGalaxy
                 case door_lightgrey_air: return door_lightgrey; 
                 case door_white_air: return door_white; 
                 
-                case odoor1_air:
-                case odoor2_air:
-                case odoor3_air:
-                case odoor4_air:
-                case odoor5_air:
-                case odoor6_air:
-                case odoor7_air:
-                case odoor8_air:
-                case odoor9_air:
-                case odoor10_air:
-                case odoor11_air:
-                case odoor12_air:
-                    return odoor(b);
+                case odoor1_air: return odoor1;
+                case odoor2_air: return odoor2;
+                case odoor3_air: return odoor3;
+                case odoor4_air: return odoor4;
+                case odoor5_air: return odoor5;
+                case odoor6_air: return odoor6;
+                case odoor7_air: return odoor7;
+                case odoor8_air: return odoor8;
+                case odoor9_air: return odoor9;
+                case odoor10_air: return odoor10;
+                case odoor11_air: return odoor11;
+                case odoor12_air: return odoor12;
 
                 default: return b;
             }

@@ -161,7 +161,7 @@ namespace MCGalaxy
         }
         
         void LineProcessor(string key, string value) {
-            switch (key) {
+        	switch (key.ToLower()) {
                 case "base.red.x":
                     redbase.x = ushort.Parse(value); break;
                 case "base.red.y":
