@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -299,37 +300,11 @@ namespace MCGalaxy {
         public bool SendRawMap(Level oldLevel, Level level) {
             if (level.blocks == null) return false;
             bool success = true;
-            bool hasBlockDefinitions = HasCpeExt(CpeExt.BlockDefinitions);
             useCheckpointSpawn = false;
             
-            try { 
-                byte[] buffer = new byte[level.blocks.Length + 4];
-                NetUtils.WriteI32(level.blocks.Length, buffer, 0);
-                if (hasCustomBlocks) {
-                	for (int i = 0; i < level.blocks.Length; ++i) {
-                		byte block = level.blocks[i];
-                		if (block == Block.custom_block) {
-                			if (hasBlockDefinitions)
-                				buffer[i + 4] = level.GetExtTile(i);
-                			else
-                				buffer[i + 4] = level.GetFallbackExtTile(i);
-                		} else {
-                			buffer[i + 4] = Block.Convert(block);
-                		}
-                	}
-                } else {
-                	for (int i = 0; i < level.blocks.Length; ++i) {
-                		byte block = level.blocks[i];
-                		if (block == Block.custom_block) {
-                			if (hasBlockDefinitions)
-                				buffer[i + 4] = Block.ConvertCPE(level.GetExtTile(i));
-                			else
-                				buffer[i + 4] = Block.ConvertCPE(level.GetFallbackExtTile(i));
-                		} else {
-                			buffer[i + 4] = Block.Convert(Block.ConvertCPE(level.blocks[i]));
-                		}
-                	}
-                }
+            try {
+                int usedLength = 0;
+                byte[] buffer = CompressRawMap(out usedLength);
                 
                 if (HasCpeExt(CpeExt.BlockDefinitions)) {
                     if (oldLevel != null && oldLevel != level)
@@ -338,10 +313,7 @@ namespace MCGalaxy {
                 }
                 
                 SendRaw(Opcode.LevelInitialise);
-                int usedLength = 0;
-                buffer = buffer.GZip(out usedLength);
-                int totalRead = 0;
-                
+                int totalRead = 0;                
                 while (totalRead < usedLength) {   
                     byte[] packet = new byte[1028]; // need each packet separate for Mono
                     packet[0] = Opcode.LevelDataChunk;
@@ -351,33 +323,32 @@ namespace MCGalaxy {
                     packet[1027] = (byte)(100 * (float)totalRead / buffer.Length);
                     
                     SendRaw(packet);            
-                    if (ip != "127.0.0.1") {
-                    	Thread.Sleep(Server.updateTimer.Interval > 1000 ? 100 : 10);
-                    }
+                    if (ip != "127.0.0.1")
+                        Thread.Sleep(Server.updateTimer.Interval > 1000 ? 100 : 10);
                     totalRead += length;
                 }
                 
                 buffer = new byte[7];
                 buffer[0] = Opcode.LevelFinalise;
                 NetUtils.WriteI16((short)level.Width, buffer, 1);
-				NetUtils.WriteI16((short)level.Height, buffer, 3);
-				NetUtils.WriteI16((short)level.Length, buffer, 5);
+                NetUtils.WriteI16((short)level.Height, buffer, 3);
+                NetUtils.WriteI16((short)level.Length, buffer, 5);
                 SendRaw(buffer);
                 Loading = false;
                 
                 if (HasCpeExt(CpeExt.EnvWeatherType))
                     SendSetMapWeather(level.weather);
                 if (HasCpeExt(CpeExt.EnvColors))
-                	SendCurrentEnvColors();
+                    SendCurrentEnvColors();
                 if (HasCpeExt(CpeExt.EnvMapAppearance) || HasCpeExt(CpeExt.EnvMapAppearance, 2))
-                	SendCurrentMapAppearance();
+                    SendCurrentMapAppearance();
                 
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
                 if (!level.guns)
-                	aiming = false;
+                    aiming = false;
             } catch( Exception ex ) {
-            	success = false;
+                success = false;
                 Command.all.Find("goto").Use(this, Server.mainLevel.name);
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
                 Server.ErrorLog(ex);
@@ -389,6 +360,55 @@ namespace MCGalaxy {
             if (HasCpeExt(CpeExt.BlockPermissions))
                 SendCurrentBlockPermissions();
             return success;
+        }
+        
+        byte[] CompressRawMap(out int usedLength) {
+            const int bufferSize = 64 * 1024;
+            byte[] buffer = new byte[bufferSize];
+            MemoryStream temp = new MemoryStream();
+            int bIndex = 0;
+            bool hasBlockDefs = HasCpeExt(CpeExt.BlockDefinitions);
+            
+            using (GZipStream compressor = new GZipStream(temp, CompressionMode.Compress, true)) {
+                NetUtils.WriteI32(level.blocks.Length, buffer, 0);
+                compressor.Write(buffer, 0, sizeof(int));
+                
+                // compress the map data in 64 kb chunks
+                if (hasCustomBlocks) {
+                    for (int i = 0; i < level.blocks.Length; ++i) {
+                        byte block = level.blocks[i];
+                        if (block == Block.custom_block) {
+                            if (hasBlockDefs) buffer[bIndex] = level.GetExtTile(i);
+                            else buffer[bIndex] = level.GetFallbackExtTile(i);
+                        } else {
+                            buffer[bIndex] = Block.Convert(block);
+                        }
+                        
+                        bIndex++;
+                        if (bIndex == bufferSize) {
+                            compressor.Write(buffer, 0, bufferSize); bIndex = 0;
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < level.blocks.Length; ++i) {
+                        byte block = level.blocks[i];
+                        if (block == Block.custom_block) {
+                            if (hasBlockDefs) buffer[bIndex] = Block.ConvertCPE(level.GetExtTile(i));
+                            else buffer[bIndex] = Block.ConvertCPE(level.GetFallbackExtTile(i));
+                        } else {
+                            buffer[bIndex] = Block.Convert(Block.ConvertCPE(level.blocks[i]));
+                        }
+                        
+                        bIndex++;
+                        if (bIndex == bufferSize) {
+                            compressor.Write(buffer, 0, bufferSize); bIndex = 0;
+                        }
+                    }
+                }               
+                if (bIndex > 0) compressor.Write(buffer, 0, bIndex);
+            }
+            usedLength = (int)temp.Length;
+            return temp.GetBuffer();
         }
         
         void RemoveOldLevelCustomBlocks(Level oldLevel) {
