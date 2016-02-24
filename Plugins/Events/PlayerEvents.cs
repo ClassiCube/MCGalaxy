@@ -26,7 +26,7 @@ namespace MCGalaxy {
         internal OnPlayerChatEvent(Player.OnPlayerChat method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(Player p, string message)  {
+        public static void Call(Player p, string message) {      	
             events.ForEach(
                 pl => {
                     try {
@@ -62,7 +62,7 @@ namespace MCGalaxy {
         internal PlayerRotateEvent(Player.OnPlayerRotate method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(Player p, byte[] rot) {
+        public static void Call(Player p, byte[] rot) {      	
             events.ForEach(
                 pl => {
                     try {

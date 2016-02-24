@@ -425,7 +425,7 @@ namespace MCGalaxy {
                 string alts = name + " is lately known as:";
                 bool found = false;
                 if (!ip.StartsWith("127.0.0.")) {
-                    foreach (KeyValuePair<string, string> prev in left)  {
+                    foreach (KeyValuePair<string, string> prev in left) {
                         if (prev.Value == ip)
                         {
                             found = true;
@@ -901,21 +901,18 @@ return;
                 return;
             if (Server.ZombieModeOn && Server.zombie.HandlesMovement(this, x, y, z, rotx, roty))
                 return;
-            if ( OnMove != null )
-                OnMove(this, x, y, z);
-            if ( PlayerMove != null )
-                PlayerMove(this, x, y, z);
-            PlayerMoveEvent.Call(this, x, y, z);
-
-            if (OnRotate != null)
-                OnRotate(this, rot);
-            if (PlayerRotate != null)
-                PlayerRotate(this, rot);
-            PlayerRotateEvent.Call(this, rot);
-            if ( cancelmove ) {
-                SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
-            }
             
+            if (OnMove != null) OnMove(this, x, y, z);
+            if (PlayerMove != null) PlayerMove(this, x, y, z);
+            if (PlayerMoveEvent.events.Count > 0) PlayerMoveEvent.Call(this, x, y, z);
+
+            if (OnRotate != null) OnRotate(this, rot);
+            if (PlayerRotate != null) PlayerRotate(this, rot);
+            if (PlayerRotateEvent.events.Count > 0) PlayerRotateEvent.Call(this, rot);
+            
+            if (cancelmove) {
+                SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
+            }            
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
             /*if (!CheckIfInsideBlock()) { clippos = pos; cliprot = rot; }*/
@@ -1346,7 +1343,7 @@ return;
 
                 if ( text[0] == '%' ) {
                     string newtext = text;
-                    if ( !Server.worldChat ) {
+                    if (!Server.worldChat) {
                         newtext = text.Remove(0, 1).Trim();
                         Chat.GlobalChatWorld(this, newtext, true);
                     } else {
@@ -1354,24 +1351,20 @@ return;
                     }
                     Server.s.Log("<" + name + "> " + newtext);
                     //IRCBot.Say("<" + name + "> " + newtext);
-                    if ( OnChat != null )
-                        OnChat(this, text);
-                    if ( PlayerChat != null )
-                        PlayerChat(this, text);
-                    OnPlayerChatEvent.Call(this, text);
+                    if (OnChat != null) OnChat(this, text);
+                    if (PlayerChat != null) PlayerChat(this, text);
+                    if (OnPlayerChatEvent.events.Count > 0) OnPlayerChatEvent.Call(this, text);
                     return;
                 }
                 Server.s.Log("<" + name + "> " + text);
-                if ( OnChat != null )
-                    OnChat(this, text);
-                if ( PlayerChat != null )
-                    PlayerChat(this, text);
-                OnPlayerChatEvent.Call(this, text);
-                if ( cancelchat ) {
-                    cancelchat = false;
-                    return;
+                if (OnChat != null) OnChat(this, text);
+                if (PlayerChat != null) PlayerChat(this, text);
+                if (OnPlayerChatEvent.events.Count > 0) OnPlayerChatEvent.Call(this, text);
+                
+                if (cancelchat) {
+                    cancelchat = false; return;
                 }
-                if ( Server.worldChat ) {
+                if (Server.worldChat) {
                     SendChatFrom(this, text);
                 } else {
                     Chat.GlobalChatLevel(this, text, true);

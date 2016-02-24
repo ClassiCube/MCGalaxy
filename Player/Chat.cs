@@ -107,7 +107,24 @@ namespace MCGalaxy {
                 Player.SendMessage(p, Server.DefaultColor + message);
         }
         
-        public static void ApplyDollarTokens(StringBuilder sb, Player p, bool colorParse) {
+        public static void ApplyTokens(StringBuilder sb, Player p, bool colorParse) {
+            // only apply standard $tokens when necessary
+            for (int i = 0; i < sb.Length; i++) {
+                if (sb[i] != '$') continue;
+                ApplyStandardTokens(sb, p, colorParse); break;
+            }
+
+            foreach (var customReplacement in Server.customdollars) {
+                if (!customReplacement.Key.StartsWith("//")) {
+                    try {
+                        sb.Replace(customReplacement.Key, customReplacement.Value);
+                    } catch {
+                    }
+                }
+            }
+        }
+        
+        static void ApplyStandardTokens(StringBuilder sb, Player p, bool colorParse) {
             if (p.DisplayName != null) {
                 string prefix = Server.dollardollardollar ? "$" : "";
                 sb.Replace("$name", prefix + Colors.StripColours(p.DisplayName));
@@ -129,15 +146,6 @@ namespace MCGalaxy {
             sb.Replace("$motd", Server.motd);
             sb.Replace("$banned", Player.GetBannedCount().ToString());
             sb.Replace("$irc", Server.ircServer + " > " + Server.ircChannel);
-
-            foreach (var customReplacement in Server.customdollars) {
-                if (!customReplacement.Key.StartsWith("//")) {
-                    try {
-                        sb.Replace(customReplacement.Key, customReplacement.Value);
-                    } catch {
-                    }
-                }
-            }
         }
         
         internal static bool HandleModes(Player p, string text) {

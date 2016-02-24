@@ -234,7 +234,7 @@ namespace MCGalaxy.Gui.Components {
                 return;
             }
 
-            Select(Text.Length - 1, 1);
+            Select(TextLength - 1, 1);
             ScrollToCaret();
             Invalidate();
             Refresh();

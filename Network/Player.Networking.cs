@@ -212,7 +212,7 @@ namespace MCGalaxy {
             	}
             }
             
-            Chat.ApplyDollarTokens(sb, this, colorParse);
+            Chat.ApplyTokens(sb, this, colorParse);
             if ( Server.parseSmiley && parseSmiley ) {
                 sb.Replace(":)", "(darksmile)");
                 sb.Replace(":D", "(smile)");
