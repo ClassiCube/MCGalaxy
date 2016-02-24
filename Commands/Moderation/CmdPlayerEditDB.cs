@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands {
                 case "totalkicked":
                     SetInteger(p, args, "totalKicked", 1000000000, who, v => who.totalKicked = v); break;
                 case "timespent":
-                    SetTimespan(p, args, "TimeSpent", who, v => who.time = v); break;
+                    SetTimespan(p, args, "TimeSpent", who, v => who.time = v.ParseDBTime()); break;
                 case "color":
                     SetColor(p, args, "color", who, v => who.color = (v == "" ? who.group.color : Colors.Parse(v))); break;
                 case "titlecolor":

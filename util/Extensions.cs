@@ -150,6 +150,16 @@ namespace MCGalaxy {
             foreach (string item in list)
                 if (item.Equals(value, StringComparison.OrdinalIgnoreCase)) return true;
             return false;
+        }     
+        
+        public static string ToDBTime(this TimeSpan value) {
+        	return value.Days + " " + value.Hours + " " + value.Minutes + " " + value.Seconds;
+        }
+        
+        public static TimeSpan ParseDBTime(this string value) {
+        	string[] parts = value.Split(' ');
+        	return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]), 
+        	                    int.Parse(parts[2]), int.Parse(parts[3]));
         }
     }
 }

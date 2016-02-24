@@ -76,7 +76,7 @@ namespace MCGalaxy {
         byte[] buffer = new byte[0];
         byte[] tempbuffer = new byte[0xFF];
         public bool disconnected = false;
-        public string time;
+        public TimeSpan time;
         public string name;
         public string DisplayName;
         public string SkinName;
@@ -376,7 +376,7 @@ namespace MCGalaxy {
                 ", Money=" + money +
                 ", totalBlocks=" + overallBlocks +
                 ", totalKicked=" + totalKicked +
-                ", TimeSpent='" + time +
+                ", TimeSpent='" + time.ToDBTime() +
                 "' WHERE Name='" + name + "'";
             if ( MySQLSave != null )
                 MySQLSave(this, commandString);

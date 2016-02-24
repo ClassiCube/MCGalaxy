@@ -76,7 +76,7 @@ namespace MCGalaxy {
         
         internal static void CreateInfo(Player p) {
             p.prefix = "";
-            p.time = "0 0 0 1";
+            p.time = new TimeSpan(0, 0, 0, 1);
             p.title = "";
             p.titlecolor = "";
             p.color = p.group.color;
@@ -89,9 +89,10 @@ namespace MCGalaxy {
             p.overallBlocks = 0;
             p.timeLogged = DateTime.Now;
             
-            const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) VALUES " +
-                                                "('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')";
-            Database.executeQuery(String.Format(query, p.name, p.ip, p.firstLogin, DateTime.Now, p.totalLogins, p.prefix, p.overallDeath, p.money, p.loginBlocks, p.totalKicked, p.time));
+            const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) " +
+                "VALUES ('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')";
+            Database.executeQuery(String.Format(query, p.name, p.ip, p.firstLogin, DateTime.Now, p.totalLogins, 
+                                                p.prefix, p.overallDeath, p.money, p.loginBlocks, p.totalKicked, p.time.ToDBTime()));
             string ecoQuery = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + p.name + "', " + p.money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
             Database.executeQuery(ecoQuery);
         }
@@ -99,7 +100,7 @@ namespace MCGalaxy {
         internal static void LoadInfo(DataTable playerDb, Player p) {
             DataRow row = playerDb.Rows[0];
             p.totalLogins = int.Parse(row["totalLogin"].ToString()) + 1;
-            p.time = row["TimeSpent"].ToString();
+            p.time = row["TimeSpent"].ToString().ParseDBTime();
             p.userID = int.Parse(row["ID"].ToString());
             p.firstLogin = DateTime.Parse(row["firstLogin"].ToString());
             p.timeLogged = DateTime.Now;

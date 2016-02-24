@@ -45,26 +45,9 @@ namespace MCGalaxy {
             resetSpamCount.Start();
         }
 
+        static readonly TimeSpan delta = TimeSpan.FromSeconds(1);
         void TimeSpentElapsed(object sender, ElapsedEventArgs e) {
-            try {
-                int Days = Convert.ToInt32(time.Split(' ')[0]);
-                int Hours = Convert.ToInt32(time.Split(' ')[1]);
-                int Minutes = Convert.ToInt32(time.Split(' ')[2]);
-                int Seconds = Convert.ToInt32(time.Split(' ')[3]);
-                Seconds++;
-                
-                if (Seconds >= 60) {
-                    Minutes++; Seconds = 0;
-                }
-                if (Minutes >= 60) {
-                    Hours++; Minutes = 0;
-                }
-                if (Hours >= 24) {
-                    Days++; Hours = 0;
-                }
-                time = "" + Days + " " + Hours + " " + Minutes + " " + Seconds;
-            }
-            catch { time = "0 0 0 1"; }
+            time = time.Add(delta);
         }
         
         void LoginTimerElapsed(object sender, ElapsedEventArgs e) {
