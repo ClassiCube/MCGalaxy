@@ -40,28 +40,28 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            foreach (string line3 in File.ReadAllLines("text/tempranks.txt"))
-            {
-                if (line3.Contains(message))
-                {
-                    string temprank = line3.Split(' ')[1];
-                    string oldrank = line3.Split(' ')[2];
-                    string tempranker = line3.Split(' ')[9];
-                    int period = Convert.ToInt32(line3.Split(' ')[3]);
-                    int minutes = Convert.ToInt32(line3.Split(' ')[4]);
-                    int hours = Convert.ToInt32(line3.Split(' ')[5]);
-                    int days = Convert.ToInt32(line3.Split(' ')[6]);
-                    int months = Convert.ToInt32(line3.Split(' ')[7]);
-                    int years = Convert.ToInt32(line3.Split(' ')[8]);
-                    DateTime ExpireDate = new DateTime(years, months, days, hours, minutes, 0);
-                    DateTime tocheck = ExpireDate.AddHours(Convert.ToDouble(period));
-                    Player.SendMessage(p, "&1Temporary Rank Information of " + message);
-                    Player.SendMessage(p, "&aTemporary Rank: " + temprank);
-                    Player.SendMessage(p, "&aOld Rank: " + oldrank);
-                    Player.SendMessage(p, "&aDate of assignment: " + ExpireDate.ToString());
-                    Player.SendMessage(p, "&aDate of expiry: " + tocheck.ToString());
-                    Player.SendMessage(p, "&aTempranked by: " + tempranker);
-                }
+            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
+                if (!line.Contains(message)) continue;
+                
+                string[] args = line.Split(' ');
+                string temprank = args[1];
+                string oldrank = args[2];
+                string tempranker = args[9];
+                int period = Convert.ToInt32(args[3]);
+                int minutes = Convert.ToInt32(args[4]);
+                int hours = Convert.ToInt32(args[5]);
+                int days = Convert.ToInt32(args[6]);
+                int months = Convert.ToInt32(args[7]);
+                int years = Convert.ToInt32(args[8]);
+                
+                DateTime assignmentDate = new DateTime(years, months, days, hours, minutes, 0);
+                DateTime expireDate = assignmentDate.AddHours(Convert.ToDouble(period));
+                Player.SendMessage(p, "&1Temporary Rank Information of " + message);
+                Player.SendMessage(p, "&aTemporary Rank: " + temprank);
+                Player.SendMessage(p, "&aOld Rank: " + oldrank);
+                Player.SendMessage(p, "&aDate of assignment: " + assignmentDate.ToString());
+                Player.SendMessage(p, "&aDate of expiry: " + expireDate.ToString());
+                Player.SendMessage(p, "&aTempranked by: " + tempranker);
             }
         }
 

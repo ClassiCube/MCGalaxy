@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
                {
                    string group = line.Split(' ')[2];
                    Group newgroup = Group.Find(group);
-                   Command.all.Find("setrank").Use(null, who.name + " " + newgroup.name);
+                   Command.all.Find("setrank").Use(null, who.name + " " + newgroup.name + " temp rank unassigned");
                    Player.SendMessage(p, "&eTemporary rank of &a" + message + "&e has been unassigned");
                    Player.SendMessage(who, "&eYour temporary rank has been unassigned");
                }

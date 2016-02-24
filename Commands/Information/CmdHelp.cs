@@ -103,16 +103,13 @@ namespace MCGalaxy.Commands
                     break;
                 case "colours":
                 case "colors":
-                    Player.SendMessage(p, "&fTo use a color simply put a '%' sign symbol before you put the color code.");
+                    Player.SendMessage(p, "&fTo use a color, put a '%' and then put the color code.");
                     Player.SendMessage(p, "Colors Available:");
-                    Player.SendMessage(p, "0 - &0Black %S| 8 - &8Gray");
-                    Player.SendMessage(p, "1 - &1Navy %S| 9 - &9Blue");
-                    Player.SendMessage(p, "2 - &2Green %S| a - &aLime");
-                    Player.SendMessage(p, "3 - &3Teal %S| b - &bAqua");
-                    Player.SendMessage(p, "4 - &4Maroon %S| c - &cRed");
-                    Player.SendMessage(p, "5 - &5Purple %S| d - &dPink");
-                    Player.SendMessage(p, "6 - &6Gold %S| e - &eYellow");
-                    Player.SendMessage(p, "7 - &7Silver %S| f - &fWhite");
+                    Player.SendMessage(p, "0 - &0Black %S| 1 - &1Navy %S| 2 - &2Green %S| 3 - &3Teal");
+                    Player.SendMessage(p, "4 - &4Maroon %S| 5 - &5Purple %S| 6 - &6Gold %S| 7 - &7Silver");
+                    Player.SendMessage(p, "8 - &8Gray %S| 9 - &9Blue %S| a - &aLime %S| b - &bAqua");
+                    Player.SendMessage(p, "c - &cRed %S| d - &dPink %S| e - &eYellow %S| f - &fWhite");
+                    CmdCustomColors.ListHandler(p, null, true);
                     break;
                 case "old":
                 case "oldmenu":

@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                 case "delete":
                     RemoveHandler(p, args); break;
                 case "list":
-                    ListHandler(p, args); break;
+                    ListHandler(p, args, false); break;
                 default:
                     Help(p); break;
             }
@@ -112,9 +112,9 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "Successfully removed a custom color.");
         }
         
-        void ListHandler(Player p, string[] args) {
+        internal static void ListHandler(Player p, string[] args, bool all) {
             int offset = 0, index = 0, count = 0;
-            if (args.Length > 1) int.TryParse(args[1], out offset);
+            if (args != null && args.Length > 1) int.TryParse(args[1], out offset);
             CustomColor[] cols = Colors.ExtColors;
             
             for( int i = 0; i < cols.Length; i++ ) {
@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands {
                     const string format = "{0} - %{1} displays as &{1}{2}{4}, and falls back to {3}.";
                     Player.SendMessage(p, String.Format(format, col.Name, col.Code, Hex(col), col.Fallback, Server.DefaultColor), false);
                     
-                    if (count >= 8) {
+                    if (count >= 8 && !all) {
                         const string helpFormat = "To see the next set of custom colors, type %T/ccols list {0}";
                         Player.SendMessage(p, String.Format(helpFormat, offset + 8));
                         return;
