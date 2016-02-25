@@ -65,10 +65,8 @@ namespace MCGalaxy.Commands
             }
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/TempRankInfo <player> - Lists the info of the Temporary rank of the given player");
         }
-    }
-    
+    }   
 }
