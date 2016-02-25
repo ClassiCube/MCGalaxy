@@ -301,6 +301,7 @@ namespace MCGalaxy {
             if (level.blocks == null) return false;
             bool success = true;
             useCheckpointSpawn = false;
+            lastCheckpointIndex = -1;
             
             try {
                 int usedLength = 0;

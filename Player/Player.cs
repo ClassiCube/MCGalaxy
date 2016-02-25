@@ -170,6 +170,7 @@ namespace MCGalaxy {
         public string voicestring = "";
 
         public bool useCheckpointSpawn = false;
+        public int lastCheckpointIndex = -1;
         public ushort checkpointX, checkpointY, checkpointZ;
 
         //CTF

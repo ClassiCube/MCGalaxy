@@ -993,11 +993,19 @@ return;
                 	} else if ( b == Block.checkpoint ) {
                 		useCheckpointSpawn = true;
                         checkpointX = x; checkpointY = y; checkpointZ = z;
-                        SendSpawn(0xFF, color + name, pos[0], (ushort)(pos[1] - 22), pos[2], rot[0], rot[1]);
-                	} else if ( b1 == Block.checkpoint ) {
-                		useCheckpointSpawn = true;
-                		checkpointX = x; checkpointY = (ushort)(y + 1); checkpointZ = z;
-                		SendSpawn(0xFF, color + name, pos[0], (ushort)(pos[1] - 22), pos[2], rot[0], rot[1]);
+                        int index = level.PosToInt(x, y, z);
+                        if (index != lastCheckpointIndex) {
+                            SendSpawn(0xFF, color + name, pos[0], (ushort)((y - 1) * 32 + 51), pos[2], rot[0], rot[1]);
+                            lastCheckpointIndex = index;
+                        }
+                    } else if ( b1 == Block.checkpoint ) {
+                        useCheckpointSpawn = true;
+                        checkpointX = x; checkpointY = (ushort)(y + 1); checkpointZ = z;
+                        int index = level.PosToInt(x, (ushort)(y - 1), z);
+                        if (index != lastCheckpointIndex) {
+                            SendSpawn(0xFF, color + name, pos[0], (ushort)((y - 1) * 32 + 51), pos[2], rot[0], rot[1]);
+                            lastCheckpointIndex = index;
+                        }
                 	}
                 }
             }
