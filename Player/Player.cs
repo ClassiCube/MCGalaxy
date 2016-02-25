@@ -555,6 +555,9 @@ namespace MCGalaxy {
         public void leftGame(string kickMsg = "") { LeaveServer(kickMsg, null); }
 
         public void LeaveServer(string kickMsg, string discMsg, bool sync = false) {
+        	if (discMsg != null) discMsg = Colors.EscapeColors(discMsg);
+        	if (kickMsg != null) kickMsg = Colors.EscapeColors(kickMsg);
+        	
             OnPlayerDisconnectEvent.Call(this, discMsg ?? kickMsg);
             //Umm...fixed?
             if (name == "") {

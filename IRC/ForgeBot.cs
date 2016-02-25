@@ -139,8 +139,9 @@ namespace MCGalaxy {
         }
         
         void Player_PlayerDisconnect(Player p, string reason) {
-        	if (!Server.irc || !IsConnected()) return;
-        	if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
+            if (!Server.irc || !IsConnected()) return;
+            if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
+            reason = Colors.MinecraftToIrcColors(reason);
             if (!p.hidden)
                 connection.Sender.PublicMessage(channel, p.name + " left the game (" + reason + ")");
         }
