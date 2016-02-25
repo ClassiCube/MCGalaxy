@@ -159,7 +159,7 @@ namespace MCGalaxy.Commands
             
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl == null) continue;
+                if (lvl == null) { node = node.Prev; continue; }
                 saveLvl = lvl;
                 List<UndoCacheItem> items = node.Items;
                 

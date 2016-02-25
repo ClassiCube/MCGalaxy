@@ -402,7 +402,7 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
             }
             try {
-                SaveUndo();
+                SaveUndo(this);
             } catch (Exception e) {
                 Server.s.Log("Error saving undo data.");
                 Server.ErrorLog(e);
@@ -559,7 +559,7 @@ namespace MCGalaxy {
             if (name == "") {
                 if (socket != null) CloseSocket();
                 connections.Remove(this);
-                SaveUndo();
+                SaveUndo(this);
                 disconnected = true;
                 return;
             }
@@ -636,8 +636,6 @@ namespace MCGalaxy {
                 CloseSocket();
             }
         }
-        
-        public void SaveUndo() { SaveUndo(this); }
         
         public static void SaveUndo(Player p) {
             try {

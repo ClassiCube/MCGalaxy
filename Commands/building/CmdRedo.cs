@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl == null) continue;            
+                if (lvl == null) { node = node.Prev; continue; }
                 List<UndoCacheItem> items = node.Items;
                 
                 for (int i = items.Count - 1; i >= 0; i--) {

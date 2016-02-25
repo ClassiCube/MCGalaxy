@@ -71,11 +71,11 @@ namespace MCGalaxy.Commands {
             
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl != p.level) continue;
+                if (lvl != p.level) { node = node.Prev; continue; }
                 List<UndoCacheItem> items = node.Items;
                 
                 for (int i = items.Count - 1; i >= 0; i--) {
-                    UndoCacheItem item = items[i];                    
+                    UndoCacheItem item = items[i];
                     ushort x, y, z;
                     node.Unpack(item.Index, out x, out y, out z);                    
                     DateTime time = node.BaseTime.AddSeconds(item.TimeDelta + seconds);

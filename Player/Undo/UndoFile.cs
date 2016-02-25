@@ -41,7 +41,7 @@ namespace MCGalaxy.Util {
         protected abstract string Extension { get; }
         
         public static void SaveUndo(Player p) {
-            if( p == null || p.UndoBuffer.Count < 1) return;
+            if (p == null || p.UndoBuffer.Count < 1) return;
             
             CreateDefaultDirectories();
             if (Directory.GetDirectories(undoDir).Length >= Server.totalUndo) {
