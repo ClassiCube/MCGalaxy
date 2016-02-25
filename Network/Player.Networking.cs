@@ -125,7 +125,7 @@ namespace MCGalaxy {
         	SendRaw(buffer);
         }
         
-        [Obsolete]
+        [Obsolete("Include the opcode in the array to avoid an extra temp allocation.")]
         public void SendRaw(int id, byte[] send, bool sync = false) {
             byte[] buffer = new byte[send.Length + 1];
             buffer[0] = (byte)id;
@@ -135,7 +135,7 @@ namespace MCGalaxy {
             buffer = null;
         }
         
-         public void SendRaw(byte[] buffer, bool sync = false) {
+        public void SendRaw(byte[] buffer, bool sync = false) {
             // Abort if socket has been closed
             if (socket == null || !socket.Connected) return;
             
@@ -257,42 +257,42 @@ namespace MCGalaxy {
         }
 
         public void SendMotd() {
-            byte[] buffer = new byte[130];
-            buffer[0] = (byte)8;
-            NetUtils.WriteAscii(Server.name, buffer, 1);
+            byte[] buffer = new byte[131];
+            buffer[0] = Opcode.Handshake;
+            buffer[1] = (byte)8;
+            NetUtils.WriteAscii(Server.name, buffer, 2);
 
             if ( !String.IsNullOrEmpty(group.MOTD) )
-                NetUtils.WriteAscii(group.MOTD, buffer, 65);
+                NetUtils.WriteAscii(group.MOTD, buffer, 66);
             else
-                NetUtils.WriteAscii(Server.motd, buffer, 65);
+                NetUtils.WriteAscii(Server.motd, buffer, 66);
 
             bool canPlace = Block.canPlace(this, Block.blackrock);
-            buffer[129] = canPlace ? (byte)100 : (byte)0;
-            if ( OnSendMOTD != null ) {
-                OnSendMOTD(this, buffer);
-            }
-            SendRaw(Opcode.Handshake, buffer);
+            buffer[130] = canPlace ? (byte)100 : (byte)0;
+            if (OnSendMOTD != null) OnSendMOTD(this, buffer);
+            SendRaw(buffer);
         }
 
         public void SendUserMOTD() {
-            byte[] buffer = new byte[130];
-            buffer[0] = Server.version;
+            byte[] buffer = new byte[131];
+            buffer[0] = Opcode.Handshake;
+            buffer[1] = Server.version;
 
             if (level.motd == "ignore") {
-                NetUtils.WriteAscii(Server.name, buffer, 1);
+                NetUtils.WriteAscii(Server.name, buffer, 2);
                 if (!String.IsNullOrEmpty(group.MOTD) ) 
-                	NetUtils.WriteAscii(group.MOTD, buffer, 65);
+                	NetUtils.WriteAscii(group.MOTD, buffer, 66);
                 else 
-                	NetUtils.WriteAscii(Server.motd, buffer, 65);
+                	NetUtils.WriteAscii(Server.motd, buffer, 66);
             } else {
             	NetUtils.WriteAscii(level.motd, buffer, 1);
             	if (level.motd.Length > 64)
-            		NetUtils.WriteAscii(level.motd.Substring(64), buffer, 65);
+            		NetUtils.WriteAscii(level.motd.Substring(64), buffer, 66);
             }
 
             bool canPlace = Block.canPlace(this, Block.blackrock);
-            buffer[129] = canPlace ? (byte)100 : (byte)0;
-            SendRaw(Opcode.Handshake, buffer);
+            buffer[130] = canPlace ? (byte)100 : (byte)0;
+            SendRaw(buffer);
         }
 
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
@@ -563,40 +563,42 @@ namespace MCGalaxy {
         }
         
         void SendTextHotKey( string label, string command, int keycode, byte mods ) {
-            byte[] buffer = new byte[133];
-            NetUtils.WriteAscii(label, buffer, 0);
-            NetUtils.WriteAscii(command, buffer, 64);
-            NetUtils.WriteI32(keycode, buffer, 128);
-            buffer[132] = mods;
-            SendRaw(Opcode.CpeSetTextHotkey, buffer);
+            byte[] buffer = new byte[134];
+            buffer[0] = Opcode.CpeSetTextHotkey;
+            NetUtils.WriteAscii(label, buffer, 1);
+            NetUtils.WriteAscii(command, buffer, 65);
+            NetUtils.WriteI32(keycode, buffer, 129);
+            buffer[133] = mods;
+            SendRaw(buffer);
         }
         
         public void SendExtAddPlayerName(short id, string name, Group grp, string displayname = "") {
-            byte[] buffer = new byte[195];
-            NetUtils.WriteI16(id, buffer, 0);
-            NetUtils.WriteAscii(name, buffer, 2);
-            if (displayname == "") 
-            	displayname = name;
-            NetUtils.WriteAscii(displayname, buffer, 66);
-            NetUtils.WriteAscii(grp.color + grp.name.ToUpper() + "s:", buffer, 130);
-            buffer[194] = (byte)grp.Permission.GetHashCode();
-            SendRaw(Opcode.CpeExtAddPlayerName, buffer);
+            byte[] buffer = new byte[196];
+            buffer[0] = Opcode.CpeExtAddPlayerName;
+            NetUtils.WriteI16(id, buffer, 1);
+            NetUtils.WriteAscii(name, buffer, 3);
+            if (displayname == "") displayname = name;
+            NetUtils.WriteAscii(displayname, buffer, 67);
+            NetUtils.WriteAscii(grp.color + grp.name.ToUpper() + "s:", buffer, 131);
+            buffer[195] = (byte)grp.Permission.GetHashCode();
+            SendRaw(buffer);
         }
 
         public void SendExtAddEntity(byte id, string name, string displayname = "") {
-            byte[] buffer = new byte[129];
-            buffer[0] = id;
-            NetUtils.WriteAscii(name, buffer, 1);
-            if (displayname == "") 
-            	displayname = name;
-            NetUtils.WriteAscii(displayname, buffer, 65);
-            SendRaw(Opcode.CpeExtAddEntity, buffer);
+            byte[] buffer = new byte[130];
+            buffer[0] = Opcode.CpeExtAddEntity;
+            buffer[1] = id;
+            NetUtils.WriteAscii(name, buffer, 2);
+            if (displayname == "") displayname = name;
+            NetUtils.WriteAscii(displayname, buffer, 66);
+            SendRaw(buffer);
         }
         
         public void SendDeletePlayerName( byte id ) {
-            byte[] buffer = new byte[2];
-            NetUtils.WriteI16(id, buffer, 0);
-            SendRaw(Opcode.CpeExtRemovePlayerName, buffer);
+            byte[] buffer = new byte[3];
+            buffer[0] = Opcode.CpeExtRemovePlayerName;
+            NetUtils.WriteI16(id, buffer, 1);
+            SendRaw(buffer);
         }
         
         public void SendEnvColor( byte type, short r, short g, short b ) {
@@ -610,20 +612,21 @@ namespace MCGalaxy {
         }
         
         public void SendMakeSelection( byte id, string label, short smallx, short smally, short smallz, short bigx, short bigy, short bigz, short r, short g, short b, short opacity ) {
-            byte[] buffer = new byte[85];
-            buffer[0] = id;
-            NetUtils.WriteAscii(label, buffer, 1);
-            NetUtils.WriteI16( smallx, buffer, 65 );
-            NetUtils.WriteI16( smally, buffer,67 );
-            NetUtils.WriteI16( smallz, buffer,69 );
-            NetUtils.WriteI16( bigx, buffer, 71 );
-            NetUtils.WriteI16( bigy, buffer, 73 );
-            NetUtils.WriteI16( bigz, buffer, 75 );
-            NetUtils.WriteI16( r, buffer, 77 );
-            NetUtils.WriteI16( g, buffer, 79);
-            NetUtils.WriteI16( b, buffer, 81 );
-            NetUtils.WriteI16( opacity, buffer, 83 );
-            SendRaw(Opcode.CpeMakeSelection, buffer);
+            byte[] buffer = new byte[86];
+            buffer[0] = Opcode.CpeMakeSelection;
+            buffer[1] = id;
+            NetUtils.WriteAscii(label, buffer, 2);
+            NetUtils.WriteI16(smallx, buffer, 66);
+            NetUtils.WriteI16(smally, buffer, 68);
+            NetUtils.WriteI16(smallz, buffer, 70);
+            NetUtils.WriteI16(bigx, buffer, 72);
+            NetUtils.WriteI16(bigy, buffer, 74);
+            NetUtils.WriteI16(bigz, buffer, 76);
+            NetUtils.WriteI16(r, buffer, 78);
+            NetUtils.WriteI16(g, buffer, 80);
+            NetUtils.WriteI16(b, buffer, 82);
+            NetUtils.WriteI16(opacity, buffer, 84);
+            SendRaw(buffer);
         }
         
         public void SendDeleteSelection( byte id ) {
@@ -676,14 +679,15 @@ namespace MCGalaxy {
         
         void SendHackControl( byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning, 
                              byte allowthirdperson, short maxjumpheight ) {
-            byte[] buffer = new byte[7];
-            buffer[0] = allowflying;
-            buffer[1] = allownoclip;
-            buffer[2] = allowspeeding;
-            buffer[3] = allowrespawning;
-            buffer[4] = allowthirdperson;
-            NetUtils.WriteI16(maxjumpheight, buffer, 5);
-            SendRaw( Opcode.CpeHackControl, buffer );
+            byte[] buffer = new byte[8];
+            buffer[0] = Opcode.CpeHackControl;
+            buffer[1] = allowflying;
+            buffer[2] = allownoclip;
+            buffer[3] = allowspeeding;
+            buffer[4] = allowrespawning;
+            buffer[5] = allowthirdperson;
+            NetUtils.WriteI16(maxjumpheight, buffer, 6);
+            SendRaw(buffer);
         }
         
         void UpdatePosition() {
