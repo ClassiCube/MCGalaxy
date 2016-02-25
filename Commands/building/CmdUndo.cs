@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCGalaxy
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Globalization;
-using System.IO;
+using System.Collections.Generic;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands
@@ -89,12 +88,7 @@ namespace MCGalaxy.Commands
             }
             
             Level saveLevel = null;
-            for (int i = who.UndoBuffer.Count - 1; i >= 0; --i) {
-                try {
-                    Player.UndoPos Pos = who.UndoBuffer[i];
-                    if (!CheckBlockPlayer(p, seconds, Pos, ref saveLevel)) break;
-                } catch { }
-            }
+            PerformUndo(p, seconds, who.UndoBuffer, ref saveLevel);
             bool foundUser = false;
             UndoFile.UndoPlayer(p, whoName.ToLower(), seconds, ref foundUser);
 
@@ -159,24 +153,41 @@ namespace MCGalaxy.Commands
             p.level.Save(true);
         }
         
-        bool CheckBlockPlayer(Player p, long seconds, Player.UndoPos undo, ref Level saveLevel) {
-            Level lvl = LevelInfo.FindExact(undo.mapName);
-            saveLevel = lvl;
-            byte b = lvl.GetTile(undo.x, undo.y, undo.z);
-            DateTime time = Server.StartTime.AddSeconds(undo.timeDelta + seconds);
-            if (time < DateTime.UtcNow) return false;
+        static void PerformUndo(Player p, long seconds, UndoCache cache, ref Level saveLvl) {
+            UndoCacheNode node = cache.Tail;
+            if (node == null) return;
             
-            if (b == undo.newtype || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
-                undo.newtype = undo.type; undo.newExtType = undo.extType;
-                byte extType = 0;
-                if (b == Block.custom_block)
-                    extType = lvl.GetExtTile(undo.x, undo.y, undo.z);
+            while (node != null) {
+                Level lvl = LevelInfo.FindExact(node.MapName);
+                if (lvl == null) continue;
+                saveLvl = lvl;
+                List<UndoCacheItem> items = node.Items;
                 
-                lvl.Blockchange(p, undo.x, undo.y, undo.z, undo.type, undo.extType);
-                undo.type = b; undo.extType = extType;
-                if (p != null) p.RedoBuffer.Add(undo);
+                for (int i = items.Count - 1; i >= 0; i--) {
+                    UndoCacheItem item = items[i];
+                    ushort x, y, z;
+                    node.Unpack(item.Index, out x, out y, out z);
+                    DateTime time = node.BaseTime.AddSeconds(item.TimeDelta + seconds);
+                    if (time < DateTime.UtcNow) return;
+                    
+                    byte b = lvl.GetTile(x, y, z);
+                    if (b == item.NewType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
+                    	Player.UndoPos uP = default(Player.UndoPos);
+                        uP.newtype = item.Type; uP.newExtType = item.ExtType;
+                        byte extType = 0;
+                        if (b == Block.custom_block) extType = lvl.GetExtTile(x, y, z);                        
+                        lvl.Blockchange(p, x, y, z, item.Type, item.ExtType);
+                        
+                        uP.type = b; uP.extType = extType;
+                        uP.x = x; uP.y = y; uP.z = z;
+                        uP.mapName = node.MapName;
+                        time = node.BaseTime.AddSeconds(item.TimeDelta);
+                        uP.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
+                        if (p != null) p.RedoBuffer.Add(lvl, uP);
+                    }
+                }
+                node = node.Prev;
             }
-            return true;
         }
         
         bool CheckBlockPhysics(Player p, long seconds, int i, Level.UndoPos undo) {

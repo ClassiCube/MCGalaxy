@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands {
     
@@ -30,20 +32,31 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
-
-            for (int i = p.RedoBuffer.Count - 1; i >= 0; i--) {
-                Player.UndoPos Pos = p.RedoBuffer[i];
-                Level lvl = LevelInfo.FindExact(Pos.mapName);
-                if (lvl == null)
-                    continue;
-                
-                byte type = lvl.GetTile(Pos.x, Pos.y, Pos.z), extType = 0;
-                if (type == Block.custom_block)
-                    extType = lvl.GetExtTile(Pos.x, Pos.y, Pos.z);
-                lvl.Blockchange(p, Pos.x, Pos.y, Pos.z, Pos.type, Pos.extType);
-            }
-
+            PerformRedo(p, p.RedoBuffer);
             Player.SendMessage(p, "Redo performed.");
+        }
+        
+        static void PerformRedo(Player p, UndoCache cache) {
+            UndoCacheNode node = cache.Tail;
+            if (node == null) return;
+            
+            while (node != null) {
+                Level lvl = LevelInfo.FindExact(node.MapName);
+                if (lvl == null) continue;            
+                List<UndoCacheItem> items = node.Items;
+                
+                for (int i = items.Count - 1; i >= 0; i--) {
+                    UndoCacheItem item = items[i];                    
+                    ushort x, y, z;
+                    node.Unpack(item.Index, out x, out y, out z);
+                    
+                    byte type = lvl.GetTile(x, y, z), extType = 0;
+                    if (type == Block.custom_block)
+                        extType = lvl.GetExtTile(x, y, z);
+                    lvl.Blockchange(p, x, y, z, item.Type, item.ExtType);
+                }
+                node = node.Prev;
+            }
         }
 
         public override void Help(Player p) {

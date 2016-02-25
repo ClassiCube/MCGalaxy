@@ -160,7 +160,7 @@ namespace MCGalaxy {
             Pos.type = oldType; Pos.extType = oldExtType;
             Pos.newtype = type; Pos.newExtType = extType;
             Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            p.UndoBuffer.Add(Pos);
+            p.UndoBuffer.Add(this, Pos);
         }
 
         bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte type) {
@@ -328,7 +328,7 @@ namespace MCGalaxy {
                 Pos.type = b; Pos.extType = extB;
                 Pos.newtype = type; Pos.newExtType = extType;
                 Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-                p.UndoBuffer.Add(Pos);
+                p.UndoBuffer.Add(this, Pos);
 
                 errorLocation = "Setting tile";
                 p.loginBlocks++;
