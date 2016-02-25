@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "overseer"; } }
         public override string shortcut { get { return "os"; } }
-        public override string type { get { return "commands"; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdOverseer() { }

@@ -57,12 +57,15 @@ namespace MCGalaxy.Commands {
             p.ClearBlockchange();
             data.entries = new List<PortalPos>();
             p.blockchangeObject = data;
-            p.Blockchange += new Player.BlockchangeEventHandler(EntryChange);
+            p.Blockchange += EntryChange;
         }
 
-        void EntryChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void EntryChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {          
+            PortalData bp = (PortalData)p.blockchangeObject;            
+            if (!p.level.CheckAffectPermissions(p, x, y, z, type, extType)) {
+                p.RevertBlock(x, y, z); return;
+            }
             p.ClearBlockchange();
-            PortalData bp = (PortalData)p.blockchangeObject;
 
             if (bp.Multi && type == Block.red && bp.entries.Count > 0) { ExitChange(p, x, y, z, type, extType); return; }
 

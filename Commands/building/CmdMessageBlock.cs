@@ -70,28 +70,36 @@ namespace MCGalaxy.Commands {
                 message.StartsWith(cmd + " ", StringComparison.OrdinalIgnoreCase);
         }
 
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-
-            cpos.message = cpos.message.Replace("'", "\\'");
-            cpos.message = Colors.EscapeColors(cpos.message);
-            //safe against SQL injections because no user input is given here
-            DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
-            Database.AddParams("@Message", cpos.message);
-            
-            if (Messages.Rows.Count == 0)
-                Database.executeQuery("INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (" + (int)x + ", " + (int)y + ", " + (int)z + ", @Message)");
-            else
-                Database.executeQuery("UPDATE `Messages" + p.level.name + "` SET Message=@Message WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
-            
-            Messages.Dispose();
-            Player.SendMessage(p, "Message block placed.");
             p.level.Blockchange(p, x, y, z, cpos.type);
-            p.SendBlockchange(x, y, z, cpos.type);
+            
+            if (p.level.GetTile(x, y, z) == cpos.type) {
+                p.SendBlockchange(x, y, z, cpos.type);
+                UpdateDatabase(p, cpos, x, y, z);
+                Player.SendMessage(p, "Message block created.");
+            } else {
+                Player.SendMessage(p, "Failed to create a message block.");
+            }
 
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+        }
+        
+        void UpdateDatabase(Player p, CatchPos cpos, ushort x, ushort y, ushort z) {
+        	cpos.message = cpos.message.Replace("'", "\\'");
+            cpos.message = Colors.EscapeColors(cpos.message);
+            //safe against SQL injections because no user input is given here
+            DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
+            Database.AddParams("@Message", cpos.message);
+            
+            if (Messages.Rows.Count == 0)
+                Database.executeQuery("INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (" + x + ", " + y + ", " + z + ", @Message)");
+            else
+                Database.executeQuery("UPDATE `Messages" + p.level.name + "` SET Message=@Message WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
+            
+            Messages.Dispose();
         }
 
         struct CatchPos { public string message; public byte type; }
