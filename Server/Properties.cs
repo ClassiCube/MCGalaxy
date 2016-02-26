@@ -403,7 +403,7 @@ namespace MCGalaxy {
 						Server.defaultTexturePackUrl = value;
 					break;
 				case "dollar-before-dollar":
-					try { Server.dollardollardollar = bool.Parse(value); }
+					try { Server.dollarNames = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default."); }
 					break;
 				case "money-name":
@@ -617,11 +617,18 @@ namespace MCGalaxy {
 				case "ignoreomnibans":
 					try {
 						Server.IgnoreOmnibans = bool.Parse(value);
-					}
-					catch {
+					} catch {
 						Server.IgnoreOmnibans = false;
 					}
 					break;
+                case "disabledstandardtokens":
+                    {
+                        if (value == "") return;
+                        string[] tokens = value.Split(',');
+                        foreach (string token in tokens)
+                            Chat.standardTokens.Remove(token);
+                        Chat.disabledTokens = value;
+                    } break;
 			}
 		}
 		
@@ -780,7 +787,7 @@ namespace MCGalaxy {
 			w.WriteLine("afk-kick = " + Server.afkkick.ToString());
 			w.WriteLine("afk-kick-perm = " + ( (sbyte)Server.afkkickperm ).ToString());
 			w.WriteLine("parse-emotes = " + Server.parseSmiley.ToString().ToLower());
-			w.WriteLine("dollar-before-dollar = " + Server.dollardollardollar.ToString().ToLower());
+			w.WriteLine("dollar-before-dollar = " + Server.dollarNames.ToString().ToLower());
 			w.WriteLine("use-whitelist = " + Server.useWhitelist.ToString().ToLower());
 			w.WriteLine("premium-only = " + Server.PremiumPlayersOnly.ToString().ToLower());
 			w.WriteLine("money-name = " + Server.moneys);
@@ -881,6 +888,7 @@ namespace MCGalaxy {
 			w.WriteLine("bufferblocks = " + Server.bufferblocks);
 			w.WriteLine();
 			w.WriteLine("ignoreomnibans = " +  Server.IgnoreOmnibans.ToString().ToLower());
+			w.WriteLine("disabledstandardtokens = " + Chat.disabledTokens);
 		}
 	}
 }

@@ -164,20 +164,8 @@ namespace MCGalaxy
         public static bool voteKickInProgress = false;
         public static int voteKickVotesNeeded = 0;
 
-
-        //WoM Direct
-        public static string Server_ALT = "";
-        public static string Server_Disc = "";
-        public static string Server_Flag = "";
-
-
-        public static Dictionary<string, string> customdollars = new Dictionary<string, string>();
-
         // Extra storage for custom commands
         public ExtrasCollection Extras = new ExtrasCollection();
-
-        //Color list as a char array
-        public static Char[] ColourCodesNoPercent = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
         //Zombie
         public static ZombieGame zombie;
@@ -322,7 +310,7 @@ namespace MCGalaxy
 
         public static string defaultRank = "guest";
 
-        public static bool dollardollardollar = true;
+        public static bool dollarNames = true;
         public static bool unsafe_plugin = true;
         public static bool cheapMessage = true;
         public static string cheapMessageGiven = " is now being cheap and being immortal";
@@ -466,37 +454,7 @@ namespace MCGalaxy
                 if (useWhitelist) if (File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
             }
             catch { }
-
-            if (File.Exists("text/custom$s.txt"))
-            {
-                using (StreamReader r = new StreamReader("text/custom$s.txt"))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        if (line.StartsWith("//")) continue;
-                        var split = line.Split(new[] { ':' }, 2);
-                        if (split.Length == 2 && !String.IsNullOrEmpty(split[0]))
-                        {
-                            customdollars.Add(split[0], split[1]);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                s.Log("custom$s.txt does not exist, creating");
-                using (StreamWriter SW = File.CreateText("text/custom$s.txt"))
-                {
-                    SW.WriteLine("// This is used to create custom $s");
-                    SW.WriteLine("// If you start the line with a // it wont be used");
-                    SW.WriteLine("// It should be formatted like this:");
-                    SW.WriteLine("// $website:mcgalaxy.ml");
-                    SW.WriteLine("// That would replace '$website' in any message to 'mcgalaxy.ml'");
-                    SW.WriteLine("// It must not start with a // and it must not have a space between the 2 sides and the colon (:)");
-                    SW.Close();
-                }
-            }
+            Chat.LoadCustomTokens();
 
             if (File.Exists("text/emotelist.txt"))
             {

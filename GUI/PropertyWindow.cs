@@ -705,7 +705,7 @@ namespace MCGalaxy.Gui {
             Server.afkminutes = int.Parse(txtafk.Text);
             Server.afkkick = int.Parse(txtAFKKick.Text);
             Server.parseSmiley = chkSmile.Checked;
-            Server.dollardollardollar = chk17Dollar.Checked;
+            Server.dollarNames = chk17Dollar.Checked;
             //Server.useWhitelist = ; //We don't have a setting for this?
             Server.moneys = txtMoneys.Text;
             Server.opchatperm = Group.GroupList.Find(grp => grp.name == cmbOpChat.SelectedItem.ToString()).Permission;

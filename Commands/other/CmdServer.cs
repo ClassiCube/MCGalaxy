@@ -280,7 +280,7 @@ namespace MCGalaxy.Commands
 
             Server.defaultRank = "guest";
 
-            Server.dollardollardollar = true;
+            Server.dollarNames = true;
             Server.unsafe_plugin = true;
             Server.cheapMessage = true;
             Server.cheapMessageGiven = " is now being cheap and being immortal";

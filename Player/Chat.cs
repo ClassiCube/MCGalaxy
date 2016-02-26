@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using TokenParser = System.Func<bool, MCGalaxy.Player, string>;
 
 namespace MCGalaxy {
     
@@ -27,9 +28,9 @@ namespace MCGalaxy {
                 message = "<Level>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
             PlayerInfo.players.ForEach(
-                delegate(Player p) {
+                p => {
                     if (p.level == from.level && p.Chatroom == null)
-                        SendGlobalMessage(p, from, message);
+                        SendMessage(p, from, message);
                 });
         }
         
@@ -39,9 +40,9 @@ namespace MCGalaxy {
                 message = "<GlobalChatRoom> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
             PlayerInfo.players.ForEach(
-                delegate(Player p) {
-                    if ( p.Chatroom != null )
-                        SendGlobalMessage(p, from, message);
+                p => {
+                    if (p.Chatroom != null)
+                        SendMessage(p, from, message);
                 });
             Server.s.Log(oldmessage + "<GlobalChatRoom>" + from.prefix + from.name + message);
         }
@@ -53,14 +54,14 @@ namespace MCGalaxy {
                 message = "<ChatRoom: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
             PlayerInfo.players.ForEach(
-                delegate(Player p) {
+                p => {
                     if (p.Chatroom == chatroom)
-                        SendGlobalMessage(p, from, message);
+                        SendMessage(p, from, message);
                 });
             PlayerInfo.players.ForEach(
-                delegate(Player p) {
+                p => {
                     if ( p.spyChatRooms.Contains(chatroom) && p.Chatroom != chatroom )
-                        SendGlobalMessage(p, from, message);
+                        SendMessage(p, from, message);
                 });
             Server.s.Log(oldmessage + "<ChatRoom" + chatroom + ">" + from.prefix + from.name + message);
         }
@@ -72,22 +73,22 @@ namespace MCGalaxy {
             PlayerInfo.players.ForEach(
                 p => {
                     if (p.level.worldChat && p.Chatroom == null)
-                        SendGlobalMessage(p, from, message);
+                        SendMessage(p, from, message);
                 });
         }
         
         public static void GlobalMessageLevel(Level l, string message) {
             PlayerInfo.players.ForEach(
-               p => {
+                p => {
                     if (p.level == l && p.Chatroom == null)
                         Player.SendMessage(p, message);
                 });
         }
-		
-		public static void GlobalMessageMinPerms(string message, LevelPermission minPerm) {
+        
+        public static void GlobalMessageMinPerms(string message, LevelPermission minPerm) {
             PlayerInfo.players.ForEach(
-				p => {
-					if (p.group.Permission >= minPerm)
+                p => {
+                    if (p.group.Permission >= minPerm)
                         Player.SendMessage(p, message);
                 });
         }
@@ -100,10 +101,10 @@ namespace MCGalaxy {
             GlobalMessageMinPerms(message, Server.adminchatperm);
         }
         
-        static void SendGlobalMessage(Player p, Player from, string message) {
-			if (from != null && p.listignored.Contains(from.name)) return;
+        static void SendMessage(Player p, Player from, string message) {
+            if (from != null && p.listignored.Contains(from.name)) return;
             
-			if (!p.ignoreAll || (from != null && from == p))
+            if (!p.ignoreAll || (from != null && from == p))
                 Player.SendMessage(p, Server.DefaultColor + message);
         }
         
@@ -111,41 +112,64 @@ namespace MCGalaxy {
             // only apply standard $tokens when necessary
             for (int i = 0; i < sb.Length; i++) {
                 if (sb[i] != '$') continue;
-                ApplyStandardTokens(sb, p, colorParse); break;
-            }
-
-            foreach (var customReplacement in Server.customdollars) {
-                if (!customReplacement.Key.StartsWith("//")) {
-                    try {
-                        sb.Replace(customReplacement.Key, customReplacement.Value);
-                    } catch {
-                    }
+                
+                foreach (var token in standardTokens) {
+                    string value = token.Value(colorParse, p);
+                    if (value == null) continue;
+                    sb.Replace(token.Key, value);
                 }
+                break;
             }
+            foreach (var token in CustomTokens)
+                sb.Replace(token.Key, token.Value);
         }
         
-        static void ApplyStandardTokens(StringBuilder sb, Player p, bool colorParse) {
-            if (p.DisplayName != null) {
-                string prefix = Server.dollardollardollar ? "$" : "";
-                sb.Replace("$name", prefix + Colors.StripColours(p.DisplayName));
-            }
-            sb.Replace("$date", DateTime.Now.ToString("yyyy-MM-dd"));
-            sb.Replace("$time", DateTime.Now.ToString("HH:mm:ss"));
-            sb.Replace("$ip", p.ip);
-            sb.Replace("$serverip", Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP);
-            if (colorParse) sb.Replace("$color", p.color);
-            if (p.group != null) sb.Replace("$rank", p.group.name);
-            if (p.level != null) sb.Replace("$level", p.level.name);
+        internal static Dictionary<string, TokenParser> standardTokens = new Dictionary<string, TokenParser> {
+            { "$name", (c, p) => p.DisplayName == null ? null :
+                    (Server.dollarNames ? "$" : "") + Colors.StripColours(p.DisplayName) },
+            { "$date", (c, p) => DateTime.Now.ToString("yyyy-MM-dd") },
+            { "$time", (c, p) => DateTime.Now.ToString("HH:mm:ss") },
+            { "$ip", (c, p) => p.ip },
+            { "$serverip", (c, p) => Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP },
+            { "$color", (c, p) => c ? p.color : null },
+            { "$rank", (c, p) => p.group == null ? null : p.group.name },
+            { "$level", (c, p) => p.level == null ? null : p.level.name },
             
-            sb.Replace("$deaths", p.overallDeath.ToString());
-            sb.Replace("$money", p.money.ToString());
-            sb.Replace("$blocks", p.overallBlocks.ToString());
-            sb.Replace("$first", p.firstLogin.ToString());
-            sb.Replace("$kicked", p.totalKicked.ToString());
-            sb.Replace("$server", Server.name);
-            sb.Replace("$motd", Server.motd);
-            sb.Replace("$banned", Player.GetBannedCount().ToString());
-            sb.Replace("$irc", Server.ircServer + " > " + Server.ircChannel);
+            { "$deaths", (c, p) => p.overallDeath.ToString() },
+            { "$money", (c, p) => p.money.ToString() },
+            { "$blocks", (c, p) => p.overallBlocks.ToString() },
+            { "$first", (c, p) => p.firstLogin.ToString() },
+            { "$kicked", (c, p) => p.totalKicked.ToString() },
+            { "$server", (c, p) => Server.name },
+            { "$motd", (c, p) => Server.motd },
+            { "$banned", (c, p) => Player.GetBannedCount().ToString() },
+            { "$irc", (c, p) => Server.ircServer + " > " + Server.ircChannel },
+        };
+		internal static string disabledTokens = "";
+        public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();
+        
+        internal static void LoadCustomTokens() {
+            if (File.Exists("text/custom$s.txt")) {
+                using (StreamReader r = new StreamReader("text/custom$s.txt")) {
+                    string line;
+                    while ((line = r.ReadLine()) != null)  {
+                        if (line.StartsWith("//")) continue;
+                        string[] split = line.Split(new[] { ':' }, 2);
+                        if (split.Length == 2 && !String.IsNullOrEmpty(split[0]))
+                            CustomTokens.Add(split[0], split[1]);
+                    }
+                }
+            } else {
+                Server.s.Log("custom$s.txt does not exist, creating");
+                using (StreamWriter w = File.CreateText("text/custom$s.txt")) {
+                    w.WriteLine("// This is used to create custom $s");
+                    w.WriteLine("// If you start the line with a // it wont be used");
+                    w.WriteLine("// It should be formatted like this:");
+                    w.WriteLine("// $website:mcgalaxy.ml");
+                    w.WriteLine("// That would replace '$website' in any message to 'mcgalaxy.ml'");
+                    w.WriteLine("// It must not start with a // and it must not have a space between the 2 sides and the colon (:)");
+                }
+            }
         }
         
         internal static bool HandleModes(Player p, string text) {
