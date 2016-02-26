@@ -293,7 +293,6 @@ namespace MCGalaxy {
                     Kick(Server.customBanMessage, true);  return;
                 }
                 
-                if (Server.omniban.CheckPlayer(this)) { Kick(Server.omniban.kickMsg); return; } //deprecated
                 if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Banned)) {
                     if (!Server.useWhitelist || !onWhitelist) {
                         if (Ban.IsBanned(name)) {

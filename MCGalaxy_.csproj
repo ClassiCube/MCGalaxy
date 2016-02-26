@@ -515,7 +515,6 @@
     <Compile Include="Games\LavaSurvival.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Database\MySQLTransactionHelper.cs" />
-    <Compile Include="Server\Extra\OmniBan.cs" />
     <Compile Include="Player\Player.Events.cs" />
     <Compile Include="ScriptingUtil\ScriptingVB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />

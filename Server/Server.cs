@@ -203,10 +203,6 @@ namespace MCGalaxy
         
         public static CountdownGame Countdown;
 
-        // OmniBan
-        public static OmniBan omniban;
-        public static System.Timers.Timer omnibanCheckTimer = new System.Timers.Timer(60000 * 120);
-
         //Settings
         #region Server Settings
         public const byte version = 7;
@@ -479,9 +475,6 @@ namespace MCGalaxy
             if (!Server.LevelList.Contains("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)"))
                 Server.LevelList.Add("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
 
-            // OmniBan
-            omniban = new OmniBan();
-
             timeOnline = DateTime.Now;
             {//MYSQL stuff
                 try
@@ -698,17 +691,6 @@ namespace MCGalaxy
 
                 if (Server.irc) IRC.Connect();
                 if (Server.UseGlobalChat) GlobalChat.Connect();
-
-                // OmniBan stuff!
-                new Thread(new ThreadStart(() => omniban.Load(true))).Start();
-
-                omnibanCheckTimer.Elapsed += delegate
-                {
-                    omniban.Load(true);
-                    omniban.KickAll();
-                };
-                omnibanCheckTimer.Start();
-
 
                 new AutoSaver(Server.backupInterval);
 
