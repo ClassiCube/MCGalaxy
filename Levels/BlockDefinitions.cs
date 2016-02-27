@@ -49,6 +49,25 @@ namespace MCGalaxy {
         
         public static BlockDefinition[] GlobalDefs;
         
+        public BlockDefinition Copy() {
+            BlockDefinition def = new BlockDefinition();
+            def.BlockID = BlockID; def.Name = Name;
+            def.CollideType = CollideType; def.Speed = Speed;
+            def.TopTex = TopTex; def.SideTex = SideTex;
+            def.BottomTex = BottomTex; def.BlocksLight = BlocksLight;
+            def.WalkSound = WalkSound; def.FullBright = FullBright;
+            def.Shape = Shape; def.BlockDraw = BlockDraw;
+            def.FogDensity = FogDensity; def.FogR = FogR;
+            def.FogG = FogG; def.FogB = FogB;
+            def.FallBack = FallBack;
+            def.MinX = MinX; def.MinY = MinY; def.MinZ = MinZ;
+            def.MaxX = MaxX; def.MaxY = MaxY; def.MaxZ = MaxZ;
+            def.Version2 = Version2;
+            def.LeftTex = LeftTex; def.RightTex = RightTex;
+            def.FrontTex = FrontTex; def.BackTex = BackTex;
+            return def;
+        }
+        
         public static void LoadGlobal() {
             GlobalDefs = Load(true, null);
             GlobalDefs[0] = new BlockDefinition();
