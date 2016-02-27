@@ -30,7 +30,7 @@ namespace MCGalaxy {
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
             if ( jailed || !agreed ) { RevertBlock(x, y, z); return; }
-            if ( level.name.Contains("Museum " + Server.DefaultColor) && Blockchange == null ) {
+            if ( level.IsMuseum && Blockchange == null ) {
                 return;
             }
 
@@ -65,7 +65,7 @@ namespace MCGalaxy {
 
             lastClick[0] = x; lastClick[1] = y; lastClick[2] = z;
             if ( Blockchange != null ) {
-                if ( Blockchange.Method.ToString().IndexOf("AboutBlockchange") == -1 && !level.name.Contains("Museum " + Server.DefaultColor) ) {
+                if ( Blockchange.Method.ToString().IndexOf("AboutBlockchange") == -1 && !level.IsMuseum ) {
                     bP.deleted = true;
                     level.blockCache.Add(bP);
                 }
@@ -1150,7 +1150,8 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 }
                 
                 if( HasCpeExt(CpeExt.LongerMessages) && continued != 0 ) {
-                    storedMessage += text;
+                    if (text.Length < 64) storedMessage = storedMessage + text + " ";
+                    else storedMessage = storedMessage + text;
                     return;
                 }
 
@@ -1501,7 +1502,7 @@ return;
             }
             if (cmd != "repeat") lastCMD = cmd + " " + message;
             
-            if (level.name.Contains("Museum " + Server.DefaultColor) && !command.museumUsable ) {
+            if (level.IsMuseum && !command.museumUsable ) {
                 SendMessage("Cannot use this command while in a museum!"); return;
             }
             if ((joker || muted) && cmd == "me") {

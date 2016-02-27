@@ -110,6 +110,10 @@ namespace MCGalaxy
         [Obsolete] public ushort depth;
         [Obsolete] public ushort length;
         
+        public bool IsMuseum { 
+            get { return name.StartsWith("&cMuseum " + Server.DefaultColor, StringComparison.Ordinal); } 
+        }
+        
         public int drown = 70;
         public bool edgeWater;
         public int fall = 9;
@@ -275,7 +279,7 @@ namespace MCGalaxy
         public bool Unload(bool silent = false, bool save = true)
         {
             if (Server.mainLevel == this) return false;
-            if (name.Contains("&cMuseum ")) return false;
+            if (IsMuseum) return false;
             if (Server.lava.active && Server.lava.map == this) return false;
             if (LevelUnload != null)
                 LevelUnload(this);
