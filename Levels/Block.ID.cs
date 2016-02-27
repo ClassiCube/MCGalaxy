@@ -141,17 +141,17 @@ namespace MCGalaxy
         public const byte lava_sponge = (byte)109;
 
         public const byte wood_float = (byte)110;
-        public const byte door = (byte)111;
+        public const byte door_tree = (byte)111;
         public const byte lava_fast = (byte)112;
-        public const byte door2 = (byte)113;
-        public const byte door3 = (byte)114;
-        public const byte door4 = (byte)115;
-        public const byte door5 = (byte)116;
-        public const byte door6 = (byte)117;
-        public const byte door7 = (byte)118;
-        public const byte door8 = (byte)119;
-        public const byte door9 = (byte)120;
-        public const byte door10 = (byte)121;
+        public const byte door_obsidian = (byte)113;
+        public const byte door_glass = (byte)114;
+        public const byte door_stone = (byte)115;
+        public const byte door_leaves = (byte)116;
+        public const byte door_sand = (byte)117;
+        public const byte door_wood = (byte)118;
+        public const byte door_green = (byte)119;
+        public const byte door_tnt = (byte)120;
+        public const byte door_stair = (byte)121;
 
         public const byte tdoor = (byte)122;
         public const byte tdoor2 = (byte)123;
@@ -255,23 +255,23 @@ namespace MCGalaxy
         public const byte checkpoint = (byte)197;
 
         public const byte air_flood = (byte)200;
-        public const byte door_air = (byte)201;
+        public const byte door_tree__air = (byte)201;
         public const byte air_flood_layer = (byte)202;
         public const byte air_flood_down = (byte)203;
         public const byte air_flood_up = (byte)204;
-        public const byte door2_air = (byte)205;
-        public const byte door3_air = (byte)206;
-        public const byte door4_air = (byte)207;
-        public const byte door5_air = (byte)208;
-        public const byte door6_air = (byte)209;
-        public const byte door7_air = (byte)210;
-        public const byte door8_air = (byte)211;
-        public const byte door9_air = (byte)212;
-        public const byte door10_air = (byte)213;
-        public const byte door11_air = (byte)214;
-        public const byte door12_air = (byte)215;
-        public const byte door13_air = (byte)216;
-        public const byte door14_air = (byte)217;
+        public const byte door_obsidian_air = (byte)205;
+        public const byte door_glass_air = (byte)206;
+        public const byte door_stone_air = (byte)207;
+        public const byte door_leaves_air = (byte)208;
+        public const byte door_sand_air = (byte)209;
+        public const byte door_wood_air = (byte)210;
+        public const byte door_green_air = (byte)211;
+        public const byte door_tnt_air = (byte)212;
+        public const byte door_stair_air = (byte)213;
+        public const byte air_switch_air = (byte)214;
+        public const byte water_door_air = (byte)215;
+        public const byte lava_door_air = (byte)216;
+        public const byte air_door_air = (byte)217;
 
         public const byte door_iron = (byte)220;
         public const byte door_dirt = (byte)221;

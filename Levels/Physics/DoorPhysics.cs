@@ -29,17 +29,17 @@ namespace MCGalaxy.BlockPhysics {
             switch (lvl.blocks[C.b]) {
 
                     //Change any door blocks nearby into door_air
-                case Block.door_air:
-                case Block.door2_air:
-                case Block.door3_air:
-                case Block.door4_air:
-                case Block.door5_air:
-                case Block.door6_air:
-                case Block.door7_air:
-                case Block.door8_air:
-                case Block.door10_air:
-                case Block.door12_air:
-                case Block.door13_air:
+                case Block.door_tree__air:
+                case Block.door_obsidian_air:
+                case Block.door_glass_air:
+                case Block.door_stone_air:
+                case Block.door_leaves_air:
+                case Block.door_sand_air:
+                case Block.door_wood_air:
+                case Block.door_green_air:
+                case Block.door_stair_air:
+                case Block.water_door_air:
+                case Block.lava_door_air:
                 case Block.door_iron_air:
                 case Block.door_gold_air:
                 case Block.door_cobblestone_air:
@@ -55,11 +55,11 @@ namespace MCGalaxy.BlockPhysics {
                 case Block.door_book_air:
                     AnyDoor(lvl, C, x, y, z, 16);
                     break;
-                case Block.door11_air:
-                case Block.door14_air:
+                case Block.air_switch_air:
+                case Block.air_door_air:
                     AnyDoor(lvl, C, x, y, z, 4, true);
                     break;
-                case Block.door9_air:
+                case Block.door_tnt_air:
                     AnyDoor(lvl, C, x, y, z, 4);
                     break;
 
@@ -133,7 +133,7 @@ namespace MCGalaxy.BlockPhysics {
             PhysDoor(lvl, x, (ushort)(y - 1), z, instaUpdate);
             PhysDoor(lvl, x, (ushort)(y + 1), z, instaUpdate);
             
-            if (lvl.blocks[C.b] != Block.door8_air) {
+            if (lvl.blocks[C.b] != Block.door_green_air) {
                 CheckDoorRevert(lvl, C, timer);
                 return;
             }

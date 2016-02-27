@@ -742,16 +742,16 @@ namespace MCGalaxy {
             }
 
             switch ( b ) {
-                case Block.door_air: //Door_air
-                case Block.door2_air:
-                case Block.door3_air:
-                case Block.door4_air:
-                case Block.door5_air:
-                case Block.door6_air:
-                case Block.door7_air:
-                case Block.door8_air:
-                case Block.door9_air:
-                case Block.door10_air:
+                case Block.door_tree__air: //Door_air
+                case Block.door_obsidian_air:
+                case Block.door_glass_air:
+                case Block.door_stone_air:
+                case Block.door_leaves_air:
+                case Block.door_sand_air:
+                case Block.door_wood_air:
+                case Block.door_green_air:
+                case Block.door_tnt_air:
+                case Block.door_stair_air:
                 case Block.door_iron_air:
                 case Block.door_gold_air:
                 case Block.door_cobblestone_air:

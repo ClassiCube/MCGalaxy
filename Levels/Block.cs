@@ -50,16 +50,16 @@ namespace MCGalaxy
                 case Block.MsgWhite:
                 case Block.MsgBlack:
 
-                case Block.door:
-                case Block.door2:
-                case Block.door3:
-                case Block.door4:
-                case Block.door5:
-                case Block.door6:
-                case Block.door7:
-                case Block.door8:
-                case Block.door9:
-                case Block.door10:
+                case Block.door_tree:
+                case Block.door_obsidian:
+                case Block.door_glass:
+                case Block.door_stone:
+                case Block.door_leaves:
+                case Block.door_sand:
+                case Block.door_wood:
+                case Block.door_green:
+                case Block.door_tnt:
+                case Block.door_stair:
                 case door_iron:
 				case door_gold:
                 case door_dirt:
@@ -392,16 +392,16 @@ namespace MCGalaxy
                 case Block.op_air:
                 case Block.op_water:
 
-                case Block.door:
-                case Block.door2:
-                case Block.door3:
-                case Block.door4:
-                case Block.door5:
-                case Block.door6:
-                case Block.door7:
-                case Block.door8:
-                case Block.door9:
-                case Block.door10:
+                case Block.door_tree:
+                case Block.door_obsidian:
+                case Block.door_glass:
+                case Block.door_stone:
+                case Block.door_leaves:
+                case Block.door_sand:
+                case Block.door_wood:
+                case Block.door_green:
+                case Block.door_tnt:
+                case Block.door_stair:
                 case door_iron:
 				case door_gold:
                 case door_dirt:
@@ -472,20 +472,20 @@ namespace MCGalaxy
         {
             switch (b)
             {
-                case door: return door_air;
-                case door2: return door2_air;
-                case door3: return door3_air;
-                case door4: return door4_air;
-                case door5: return door5_air;
-                case door6: return door6_air;
-                case door7: return door7_air;
-                case door8: return door8_air;
-                case door9: return door9_air;
-                case door10: return door10_air;
-                case air_switch: return door11_air;
-                case water_door: return door12_air;
-                case lava_door: return door13_air;
-                case air_door: return door14_air;
+                case door_tree: return door_tree__air;
+                case door_obsidian: return door_obsidian_air;
+                case door_glass: return door_glass_air;
+                case door_stone: return door_stone_air;
+                case door_leaves: return door_leaves_air;
+                case door_sand: return door_sand_air;
+                case door_wood: return door_wood_air;
+                case door_green: return door_green_air;
+                case door_tnt: return door_tnt_air;
+                case door_stair: return door_stair_air;
+                case air_switch: return air_switch_air;
+                case water_door: return water_door_air;
+                case lava_door: return lava_door_air;
+                case air_door: return air_door_air;
                 case door_iron: return door_iron_air;
 				case door_gold: return door_gold_air;
                 case door_dirt: return door_dirt_air;

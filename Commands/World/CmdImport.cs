@@ -35,15 +35,17 @@ namespace MCGalaxy.Commands {
             if (!Directory.Exists("extra/import"))
                 Directory.CreateDirectory("extra/import");
             
-            if (File.Exists(file + ".dat")) { Import(p, file + ".dat", message, false); return; }
-            if (File.Exists(file + ".mcf")) { Import(p, file + ".mcf", message, true); return; }
-            Player.SendMessage(p, "No .dat or .mcf file with the given name was found in the imports directory.");
+            if (File.Exists(file + ".dat")) { Import(p, file + ".dat", message, FileType.Dat); return; }
+            if (File.Exists(file + ".mcf")) { Import(p, file + ".mcf", message, FileType.Mcf); return; }
+            if (File.Exists(file + ".fcm")) { Import(p, file + ".fcm", message, FileType.Fcm); return; }
+            Player.SendMessage(p, "No .dat, .mcf or .fcm file with the given name was found in the imports directory.");
         }
         
-        void Import(Player p, string fileName, string message, bool mcf) {
+        void Import(Player p, string fileName, string message, FileType type) {
             using (FileStream fs = File.OpenRead(fileName)) {
                 try {
-                    if (mcf) McfFile.Load(fs, message);
+                    if (type == FileType.Mcf) McfFile.Load(fs, message);
+                    else if (type == FileType.Fcm) FcmFile.Load(fs, message);
                     else DatFile.Load(fs, message);
                 } catch (Exception ex) {
                     Server.ErrorLog(ex);
@@ -54,10 +56,12 @@ namespace MCGalaxy.Commands {
             }
         }
         
+        enum FileType { Mcf, Fcm, Dat };
+        
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/import [name]");
-            Player.SendMessage(p, "%HImports the .dat or .mcf file with the given name.");
-            Player.SendMessage(p, "%HNote this command only loads .dat/.mcf files from the /extra/import/ folder");
+            Player.SendMessage(p, "%HImports the .dat, .mcf or .fcm file with the given name.");
+            Player.SendMessage(p, "%HNote this command only loads .dat/.mcf/.fcm files from the /extra/import/ folder");
         }
     }
 }

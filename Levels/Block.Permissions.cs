@@ -122,20 +122,20 @@ namespace MCGalaxy
                     case wood_float:
                     case lava_sponge:
 
-                    case door_air:
-                    case door2_air:
-                    case door3_air:
-                    case door4_air:
-                    case door5_air:
-                    case door6_air:
-                    case door7_air:
-                    case door8_air:
-                    case door9_air:
-                    case door10_air:
-                    case door11_air:
-                    case door12_air:
-                    case door13_air:
-                    case door14_air:
+                    case door_tree__air:
+                    case door_obsidian_air:
+                    case door_glass_air:
+                    case door_stone_air:
+                    case door_leaves_air:
+                    case door_sand_air:
+                    case door_wood_air:
+                    case door_green_air:
+                    case door_tnt_air:
+                    case door_stair_air:
+                    case air_switch_air:
+                    case water_door_air:
+                    case lava_door_air:
+                    case air_door_air:
                     case door_iron_air:
                     case door_gold_air:
                     case door_cobblestone_air:
@@ -208,16 +208,16 @@ namespace MCGalaxy
                         b.lowestRank = LevelPermission.AdvBuilder;
                         break;
 
-                    case door:
-                    case door2:
-                    case door3:
-                    case door4:
-                    case door5:
-                    case door6:
-                    case door7:
-                    case door8:
-                    case door9:
-                    case door10:
+                    case door_tree:
+                    case door_obsidian:
+                    case door_glass:
+                    case door_stone:
+                    case door_leaves:
+                    case door_sand:
+                    case door_wood:
+                    case door_green:
+                    case door_tnt:
+                    case door_stair:
                     case air_door:
                     case air_switch:
                     case water_door:
