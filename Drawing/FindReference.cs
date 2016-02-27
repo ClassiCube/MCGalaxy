@@ -20,38 +20,6 @@ using System.Collections.Generic;
 namespace MCGalaxy {
     
     internal static class FindReference {
-        
-        public static ushort WriteLetter(Level l, Player p, char c, ushort x, ushort y, ushort z, byte type, byte extType, int dir) {
-            if( (int)c >= 256 || letters[(int)c] == null ) {
-                Player.SendMessage(p, "\"" + c + "\" is not currently supported, replacing with space.");
-                if (dir == 0) x += 4; 
-                else if (dir == 1) x -= 4;
-                else if (dir == 2) z += 4; 
-                else if (dir == 3) z -= 4;
-            } else {
-                byte[] flags = letters[(int)c];
-                for( int i = 0; i < flags.Length; i++ ) {
-                    byte yUsed = flags[i];
-                    for (int j = 0; j < 8; j++) {
-                        if ((yUsed & (1 << j)) == 0) continue;
-                        
-                        PlaceBlock(l, p, x, (ushort)(y + j), z, type, extType);
-                    }
-                    
-                    if (dir == 0) x++; 
-                    else if (dir == 1) x--;
-                    else if (dir == 2) z++;
-                    else if (dir == 3) z--;
-                }
-            }
-
-            if (dir == 0) return (ushort)(x + 1);
-            else if (dir == 1) return (ushort)(x - 1);
-            else if (dir == 2) return (ushort)(z + 1);
-            else if (dir == 3) return (ushort)(z - 1);
-            return 0;
-        }
-
         public static List<ColorBlock> popRefCol(byte popType)
         {
             ColorBlock tempref = new ColorBlock();
@@ -491,86 +459,8 @@ namespace MCGalaxy {
                 l.Blockchange(p, x, y, z, type, extType);
         }
 
-        public struct ColorBlock
-        {
+        public struct ColorBlock  {
             public ushort x, y, z; public byte type, r, g, b, a;
-        }
-        
-        static byte[][] letters;
-        static FindReference() {
-            letters = new byte[256][];
-            // each set bit indicates to place a block with a y offset equal to the bit index.
-            // e.g. for 0x3, indicates to place a block at 'y = 0' and 'y = 1'
-            letters['A'] = new byte[] { 0x0F, 0x14, 0x0F };
-            letters['B'] = new byte[] { 0x1F, 0x15, 0x0A };
-            letters['C'] = new byte[] { 0x0E, 0x11, 0x11 };
-            letters['D'] = new byte[] { 0x1F, 0x11, 0x0E };
-            letters['E'] = new byte[] { 0x1F, 0x15, 0x15 };
-            letters['F'] = new byte[] { 0x1F, 0x14, 0x14 };
-            letters['G'] = new byte[] { 0x0E, 0x11, 0x17 };
-            letters['H'] = new byte[] { 0x1F, 0x04, 0x1F };
-            letters['I'] = new byte[] { 0x11, 0x1F, 0x11 };
-            letters['J'] = new byte[] { 0x11, 0x11, 0x1E };
-            letters['K'] = new byte[] { 0x1F, 0x04, 0x1B };
-            letters['L'] = new byte[] { 0x1F, 0x01, 0x01 };
-            letters['M'] = new byte[] { 0x1F, 0x08, 0x04, 0x08, 0x1F };
-            letters['N'] = new byte[] { 0x1F, 0x08, 0x04, 0x02, 0x1F };
-            letters['O'] = new byte[] { 0x0E, 0x11, 0x0E };
-            letters['P'] = new byte[] { 0x1F, 0x14, 0x08 };
-            letters['Q'] = new byte[] { 0x0E, 0x11, 0x13, 0x0F };
-            letters['R'] = new byte[] { 0x1F, 0x14, 0x0B };
-            letters['S'] = new byte[] { 0x09, 0x15, 0x12 };
-            letters['T'] = new byte[] { 0x10, 0x1F, 0x10 };
-            letters['U'] = new byte[] { 0x1E, 0x01, 0x1E };
-            letters['V'] = new byte[] { 0x18, 0x06, 0x01, 0x06, 0x18 };
-            letters['W'] = new byte[] { 0x1F, 0x02, 0x04, 0x02, 0x1F };
-            letters['X'] = new byte[] { 0x1B, 0x04, 0x1B };
-            letters['Y'] = new byte[] { 0x10, 0x08, 0x07, 0x08, 0x10 };
-            letters['Z'] = new byte[] { 0x11, 0x13, 0x15, 0x19, 0x11 };
-            letters['0'] = new byte[] { 0x0E, 0x13, 0x15, 0x19, 0x0E };
-            letters['1'] = new byte[] { 0x09, 0x1F, 0x01 };
-            letters['2'] = new byte[] { 0x17, 0x15, 0x1D };
-            letters['3'] = new byte[] { 0x15, 0x15, 0x1F };
-            letters['4'] = new byte[] { 0x1E, 0x02, 0x07, 0x02 };
-            letters['5'] = new byte[] { 0x1D, 0x15, 0x17 };
-            letters['6'] = new byte[] { 0x1F, 0x15, 0x17 };
-            letters['7'] = new byte[] { 0x10, 0x10, 0x1F };
-            letters['8'] = new byte[] { 0x1F, 0x15, 0x1F };
-            letters['9'] = new byte[] { 0x1D, 0x15, 0x1F };
-            
-            letters[' '] = new byte[] { 0x00 };
-            letters['!'] = new byte[] { 0x1D };
-            letters['"'] = new byte[] { 0x18, 0x00, 0x18 };
-            // # is missing
-            // $ is missing
-            // % is missing
-            // & is missing
-            letters['\''] = new byte[] { 0x18 };
-            letters['('] = new byte[] { 0x0E, 0x11 };
-            letters[')'] = new byte[] { 0x11, 0x0E };
-            // * is missing
-            letters['+'] = new byte[] { 0x04, 0x0E, 0x04 };
-            letters[','] = new byte[] { 0x01, 0x03 };
-            letters['-'] = new byte[] { 0x04, 0x04, 0x04 };
-            letters['.'] = new byte[] { 0x01 };
-            letters['/'] = new byte[] { 0x01, 0x02, 0x04, 0x08, 0x10 };
-            letters[':'] = new byte[] { 0x0A };
-            letters[';'] = new byte[] { 0x10, 0x0A };
-            letters['\\'] = new byte[] { 0x10, 0x08, 0x04, 0x02, 0x01 };
-            letters['<'] = new byte[] { 0x04, 0x0A, 0x11 };
-            letters['='] = new byte[] { 0x0A, 0x0A, 0x0A };
-            letters['>'] = new byte[] { 0x11, 0x0A, 0x04 };
-            // '?' is missing
-            // '@' is missing
-            letters['['] = new byte[] { 0x1F, 0x11 };
-            letters['\''] = new byte[] { 0x18 };
-            letters[']'] = new byte[] { 0x11, 0x1F };
-            letters['_'] = new byte[] { 0x01, 0x01, 0x01, 0x01 };
-            letters['`'] = new byte[] { 0x10, 0x08 };
-            letters['{'] = new byte[] { 0x04, 0x1B, 0x11 };
-            letters['|'] = new byte[] { 0x1F };
-            letters['}'] = new byte[] { 0x11, 0x1B, 0x04 };
-            letters['~'] = new byte[] { 0x04, 0x08, 0x04, 0x08 };           
         }
     }
 }

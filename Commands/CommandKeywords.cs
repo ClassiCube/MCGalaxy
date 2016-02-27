@@ -261,6 +261,7 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdWhois()), "who player info");
             new CommandKeywords((new CmdWhowas()), "who player info");
             new CommandKeywords((new CmdWrite()), "block text");
+            new CommandKeywords((new CmdWriteText()), "block text");
             new CommandKeywords((new CmdXban()), "ban undo admin");
             new CommandKeywords((new CmdXhide()), "hide all extra");
             new CommandKeywords((new CmdXJail()), "extra jail undo");

@@ -14,25 +14,37 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdWrite : Command {
+    public sealed class CmdWriteText : Command {
         
-        public override string name { get { return "write"; } }
-        public override string shortcut { get { return ""; } }
+        public override string name { get { return "writetext"; } }
+        public override string shortcut { get { return "wrt"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdWrite() { }
-
+        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
+        static char[] trimChars = { ' ' };
+        
         public override void Use(Player p, string message) {
+            if (p == null) { MessageInGameOnly(p); return; }
+            if (!p.group.CanExecute(Command.all.Find("write"))) {
+                Player.SendMessage(p, "You must be able to use /write to use /writetext."); return;
+            }
+            
             if (message == "") { Help(p); return; }
+            string[] args = message.Split(trimChars, 3);
+            if (args.Length < 3) { Help(p); return; }
+            
+            byte scale = 1, spacing = 1;
+            if (!byte.TryParse(args[0], out scale)) scale = 1;
+            if (!byte.TryParse(args[1], out spacing)) spacing = 1;
 
             CatchPos cpos = default(CatchPos);
-            cpos.givenMessage = message.ToUpper();
+            cpos.scale = scale; cpos.spacing = spacing;
+            cpos.givenMessage = args[2].ToUpper();
             p.blockchangeObject = cpos;
             
             Player.SendMessage(p, "Place two blocks to determine direction.");
@@ -53,29 +65,50 @@ namespace MCGalaxy.Commands {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             Level lvl = p.level;
 
-            ushort cur;
             if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
 
-            if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z)) {
-                cur = cpos.x;
-                int dir = x > cpos.x ? 0 : 1;
-                foreach (char c in cpos.givenMessage)
-                    cur = FindReference.WriteLetter(lvl, p, c, cur, cpos.y, cpos.z, type, extType, dir);
-            } else {
-                cur = cpos.z;
-                int dir = z > cpos.z ? 2 : 3;
-                foreach (char c in cpos.givenMessage)
-                    cur = FindReference.WriteLetter(lvl, p, c, cpos.x, cpos.y, cur, type, extType, dir);
+            int dir = 0;
+            if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z))
+                dir = x > cpos.x ? 0 : 1;
+            else
+                dir = z > cpos.z ? 2 : 3;
+            
+            int count = BlockWriter.CountBlocks(cpos.givenMessage, cpos.scale);
+            if (count > p.group.maxBlocks) {
+                Player.SendMessage(p, "You cannot affect more than " + p.group.maxBlocks + " blocks."); return;
             }
-
-            if (p.staticCommands) 
+            
+            foreach (char c in cpos.givenMessage)
+                BlockWriter.DrawLetter(lvl, p, c, ref cpos.x, cpos.y, ref cpos.z, 
+                                        type, extType, dir, cpos.scale, cpos.spacing);
+            if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        struct CatchPos { public ushort x, y, z; public string givenMessage; }
+        struct CatchPos { public byte scale, spacing; public ushort x, y, z; public string givenMessage; }
+
+        public override void Help(Player p) {
+            Player.SendMessage(p, "%T/wrt [scale] [spacing] [message]");
+            Player.SendMessage(p, "%TWrites the given message in blocks.");
+            Player.SendMessage(p, "%Tspacing specifies the number of blocks between each letter.");
+        }
+    }
+    
+    public sealed class CmdWrite : Command {
+        
+        public override string name { get { return "write"; } }
+        public override string shortcut { get { return ""; } }
+        public override string type { get { return CommandTypes.Building; } }
+        public override bool museumUsable { get { return false; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+
+        public override void Use(Player p, string message) {
+            Command.all.Find("writetext").Use(p, "1 1 " + message);
+        }
 
         public override void Help(Player p) {
             Player.SendMessage(p, "/write [message] - Writes [message] in blocks");
+            Player.SendMessage(p, "Note that this command has been deprecated by /writetext.");
         }
     }
 }
