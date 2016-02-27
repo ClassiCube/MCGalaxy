@@ -131,12 +131,12 @@ namespace MCGalaxy.Util {
 			if (buffer.Count > p.group.maxBlocks) {
 				Player.SendMessage(p, "You tried drawing " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return;
 			}
-			buffer.ForEach(delegate(Pos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, type, extType); });
+			buffer.ForEach(delegate(Pos pos) { p.level.UpdateBlock(p, pos.x, pos.y, pos.z, type, extType); });
 			buffer = null;
 			if (invert)
-				p.level.Blockchange(p, x, y, z, type, extType);
+				p.level.UpdateBlock(p, x, y, z, type, extType);
 			else
-				p.level.Blockchange(p, x, (ushort)(y + height), z, type, extType);
+				p.level.UpdateBlock(p, x, (ushort)(y + height), z, type, extType);
 		}
 
 		public static void Sphere(Player p, ushort x, ushort y, ushort z, int radius, byte type, byte extType) {
@@ -154,7 +154,7 @@ namespace MCGalaxy.Util {
 				}
 			}
 			if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried Sphering " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-			buffer.ForEach(delegate(Pos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, type, extType); });
+			buffer.ForEach(delegate(Pos pos) { p.level.UpdateBlock(p, pos.x, pos.y, pos.z, type, extType); });
 			buffer = null;
 		}
 		
@@ -173,7 +173,7 @@ namespace MCGalaxy.Util {
 				}
 			}
 			if (buffer.Count > p.group.maxBlocks) { Player.SendMessage(p, "You tried HSphering " + buffer.Count + " blocks, your limit is " + p.group.maxBlocks); buffer = null; return; }
-			buffer.ForEach(delegate(Pos pos) { p.level.Blockchange(p, pos.x, pos.y, pos.z, type, extType); });
+			buffer.ForEach(delegate(Pos pos) { p.level.UpdateBlock(p, pos.x, pos.y, pos.z, type, extType); });
 			buffer = null;
 		}
 

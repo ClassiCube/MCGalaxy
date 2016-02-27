@@ -458,5 +458,12 @@ namespace MCGalaxy {
         public int IntOffset(int pos, int x, int y, int z)  {
             return pos + x + z * Width + y * Width * Length;
         }
+        
+        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+            if (bufferblocks && !Instant) 
+                BlockQueue.Addblock(p, x, y, z, type, extType);
+            else 
+                Blockchange(p, x, y, z, type, extType);
+        }
     }
 }

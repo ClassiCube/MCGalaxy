@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
             if (!Block.canPlace(p, type)) { Player.SendMessage(p, "Cannot place that block type."); return; }
             if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
 
-            p.level.Blockchange(p, x, y, z, type, extType);
+            p.level.UpdateBlock(p, x, y, z, type, extType);
             Player.SendMessage(p, "A block was placed at (" + x + ", " + y + ", " + z + ").");
         }
         

@@ -53,7 +53,7 @@ namespace MCGalaxy {
                         for (int ver = 0; ver < scale; ver++)
                             for (int hor = 0; hor < scale; hor++) {
                             int xx = x + dirX * hor, yy = y + j * scale + ver, zz = z + dirZ * hor;
-                            l.Blockchange(p, (ushort)xx, (ushort)yy, (ushort)zz, type, extType);
+                            l.UpdateBlock(p, (ushort)xx, (ushort)yy, (ushort)zz, type, extType);
                         }
                     }
                     x = (ushort)(x + dirX * scale);

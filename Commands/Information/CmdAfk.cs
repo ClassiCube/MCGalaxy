@@ -1,20 +1,20 @@
 /*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 namespace MCGalaxy.Commands
 {
@@ -29,37 +29,39 @@ namespace MCGalaxy.Commands
         public CmdAfk() { }
 
         public override void Use(Player p, string message) {
-        	if (p == null) { MessageInGameOnly(p); return; }
+            if (p == null) { MessageInGameOnly(p); return; }
             if (Server.chatmod) {
                 Player.SendMessage(p, "You cannot use /afk while chat moderation is enabled");
                 return;
             }
 
-            if (message != "list") {
-                if (p.joker)
-                    message = "";
-                if (!Server.afkset.Contains(p.name)) {
-                    Server.afkset.Add(p.name);
-                    if (p.muted)
-                        message = "";
-                    Player.GlobalMessage("-" + p.color + p.DisplayName + Server.DefaultColor + "- is AFK " + message);
-                    //IRCBot.Say(p.name + " is AFK " + message);
-                    Server.IRC.Say(p.DisplayName + " is AFK " + message);
-                    p.afkStart = DateTime.Now;
-                } else {
-                    Server.afkset.Remove(p.name);
-                    Player.GlobalMessage("-" + p.color + p.DisplayName + Server.DefaultColor + "- is no longer AFK");
-                    //IRCBot.Say(p.name + " is no longer AFK");
-                    Server.IRC.Say(p.DisplayName + " is no longer AFK");
-                }
-            } else {
-                foreach (string s in Server.afkset)
+            if (message == "list") {
+                foreach (string s in Server.afkset) {
+                    if (p.hidden) continue;
                     Player.SendMessage(p, s);
+                }
+                return;
+            }
+            
+            if (p.joker)
+                message = "";
+            if (!Server.afkset.Contains(p.name)) {
+                p.afkStart = DateTime.Now;
+                Server.afkset.Add(p.name);
+                if (p.muted)
+                    message = "";
+                Player.GlobalMessage("-" + p.color + p.DisplayName + Server.DefaultColor + "- is AFK " + message);
+                //IRCBot.Say(p.name + " is AFK " + message);
+                Server.IRC.Say(p.DisplayName + " is AFK " + message);
+            } else {
+                Server.afkset.Remove(p.name);
+                Player.GlobalMessage("-" + p.color + p.DisplayName + Server.DefaultColor + "- is no longer AFK");
+                //IRCBot.Say(p.name + " is no longer AFK");
+                Server.IRC.Say(p.DisplayName + " is no longer AFK");
             }
         }
         
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/afk <reason> - mark yourself as AFK. Use again to mark yourself as back");
         }
     }

@@ -452,13 +452,6 @@ namespace MCGalaxy {
             return refCol;
         }
 
-        public static void PlaceBlock(Level l, Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if (p == null)
-                l.Blockchange(x, y, z, type, extType);
-            else
-                l.Blockchange(p, x, y, z, type, extType);
-        }
-
         public struct ColorBlock  {
             public ushort x, y, z; public byte type, r, g, b, a;
         }

@@ -50,35 +50,18 @@ namespace MCGalaxy.Commands
             if (state.Z != state.OriginZ) offZ -= (state.Length - 1);
             int blocksChanged = 0;
             
-            if (p.level.bufferblocks && !p.level.Instant) {
-                for (int i = 0; i < state.Blocks.Length; i++ ) {
-                    ushort locX, locY, locZ;
-                    byte b = state.Blocks[i], extB = state.ExtBlocks[i];
-                    state.GetCoords(i, out locX, out locY, out locZ);
-                    
-                    x = (ushort)(locX + offX); y = (ushort)(locY + offY); z = (ushort)(locZ + offZ);
-                    type = p.level.GetTile(x, y, z);
-                    if (type == Block.custom_block) extType = p.level.GetExtTile(x, y, z);
-                    
-                    bool place = p.level.InBound(x, y, z) && (b != type || (b == Block.custom_block && extB != extType));                    
-                    if ((b != Block.air || p.copyAir) && place) {
-                        BlockQueue.Addblock(p, x, y, z, b, extB); blocksChanged++;
-                    }
-                }
-            } else {
-                for (int i = 0; i < state.Blocks.Length; i++ ) {
-                    ushort locX, locY, locZ;
-                    byte b = state.Blocks[i], extB = state.ExtBlocks[i];
-                    state.GetCoords(i, out locX, out locY, out locZ);
-                    
-                    x = (ushort)(locX + offX); y = (ushort)(locY + offY); z = (ushort)(locZ + offZ);
-                    type = p.level.GetTile(x, y, z);
-                    if (type == Block.custom_block) extType = p.level.GetExtTile(x, y, z);
-                    
-                    bool place = p.level.InBound(x, y, z) && (b != type || (b == Block.custom_block && extB != extType));                    
-                    if ((b != Block.air || p.copyAir) && place) {
-                        p.level.Blockchange(p, x, y, z, b, extB); blocksChanged++;
-                    }
+            for (int i = 0; i < state.Blocks.Length; i++ ) {
+                ushort locX, locY, locZ;
+                byte b = state.Blocks[i], extB = state.ExtBlocks[i];
+                state.GetCoords(i, out locX, out locY, out locZ);
+                
+                x = (ushort)(locX + offX); y = (ushort)(locY + offY); z = (ushort)(locZ + offZ);
+                type = p.level.GetTile(x, y, z);
+                if (type == Block.custom_block) extType = p.level.GetExtTile(x, y, z);
+                
+                bool place = p.level.InBound(x, y, z) && (b != type || (b == Block.custom_block && extB != extType));
+                if ((b != Block.air || p.copyAir) && place) {
+                    p.level.UpdateBlock(p, x, y, z, b, extB); blocksChanged++;
                 }
             }
 

@@ -284,7 +284,7 @@ namespace MCGalaxy.Commands
                         //ALPHA HANDLING (REAL HARD STUFF, YO)
                         if (colblock.a < 20) colblock.type = Block.air;
 
-                        FindReference.PlaceBlock(p.level, p, colblock.x, colblock.y, colblock.z, colblock.type, 0);
+                        p.level.UpdateBlock(p, colblock.x, colblock.y, colblock.z, colblock.type, 0);
                     }
                 }
                 if (bitmaplocation == "tempImage_" + p.name) File.Delete("extra/images/tempImage_" + p.name + ".bmp");
