@@ -41,6 +41,7 @@ namespace MCGalaxy
         public int BlockDefinitions = 0;
         public int BlockDefinitionsExt = 0;
         public int TextColors = 0;
+        public int BulkBlockUpdate = 0;
 
         public void AddExtension(string Extension, int version)
         {
@@ -141,6 +142,8 @@ namespace MCGalaxy
                         if (Colors.ExtColors[i].Undefined) continue;
                         Colors.SendSetTextColor(this, Colors.ExtColors[i]);
                     } break;
+                case CpeExt.BulkBlockUpdate:
+                    BulkBlockUpdate = version; break;
             }
         }
 
@@ -167,6 +170,7 @@ namespace MCGalaxy
                     case CpeExt.BlockDefinitions: return BlockDefinitions == version;
                     case CpeExt.BlockDefinitionsExt: return BlockDefinitionsExt == version;
                     case CpeExt.TextColors: return TextColors == version;
+                    case CpeExt.BulkBlockUpdate: return BulkBlockUpdate == version;
                     default: return false;
             }
         }
@@ -260,5 +264,6 @@ namespace MCGalaxy
         public const string BlockDefinitions = "BlockDefinitions";
         public const string BlockDefinitionsExt = "BlockDefinitionsExt";
         public const string TextColors = "TextColors";
+        public const string BulkBlockUpdate = "BulkBlockUpdate";
     }
 }
