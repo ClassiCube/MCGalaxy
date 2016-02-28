@@ -20,7 +20,7 @@ using System;
 
 namespace MCGalaxy.BlockPhysics {
 
-    public static class SimplePhysics {
+    public static class StandardPhysics {
         
         public static bool DoLeafDecay(Level lvl, Check C) {
             const int dist = 4;

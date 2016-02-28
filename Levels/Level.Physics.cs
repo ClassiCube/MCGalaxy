@@ -227,7 +227,7 @@ namespace MCGalaxy {
                         if (rand.Next(10) == 0) C.time++;
                         break;
                     }
-                    if (SimplePhysics.DoLeafDecay(this, C))
+                    if (StandardPhysics.DoLeafDecay(this, C))
                         AddUpdate(C.b, 0);
                     C.time = 255;
                     break;
@@ -446,8 +446,9 @@ namespace MCGalaxy {
         
         public void AddCheck(int b, bool overRide, object data) {
             try {               
-                ushort x, y, z;
-                IntToPos(b, out x, out y, out z);
+                int x = b % Width;
+                int y = (b / Width) / Length;
+                int z = (b / Width) % Length;
                 if (x >= Width || y >= Height || z >= Length) return;
                 
                 if (!listCheckExists.Get(x, y, z)) {
@@ -474,15 +475,16 @@ namespace MCGalaxy {
         
         internal bool AddUpdate(int b, int type, bool overRide, object data) {
             try {
-                ushort x, y, z;
-                IntToPos(b, out x, out y, out z);
+                int x = b % Width;
+                int y = (b / Width) / Length;
+                int z = (b / Width) % Length;
                 if (x >= Width || y >= Height || z >= Length) return false;
                 
                 if (overRide) {                    
                     AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that                    
                     string info = data as string;
                     if (info == null) info = "";
-                    Blockchange(x, y, z, (byte)type, true, info);
+                    Blockchange((ushort)x, (ushort)y, (ushort)z, (byte)type, true, info);
                     return true;
                 }
 
@@ -795,7 +797,7 @@ namespace MCGalaxy {
                 byte block = GetTile(index);
                 if (block == Block.Zero) continue;
                 
-                if ((!lava && Block.Convert(block) == 8) || (lava && Block.Convert(block) == 10))
+                if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
                     AddUpdate(index, 0);
             }
         }
@@ -811,7 +813,7 @@ namespace MCGalaxy {
                     byte block = GetTile(index);
                     if (block == Block.Zero) continue;
                     
-                    if ((!lava && Block.Convert(block) == 8) || (lava && Block.Convert(block) == 10))
+                    if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
                         AddCheck(index);
                 }
             }
@@ -821,10 +823,10 @@ namespace MCGalaxy {
             int tempb = IntOffset(b, 0, -1, 0); //Get block below
             if (GetTile(tempb) != Block.Zero)
             {
-                if (GetTile(tempb) == 0)
+                if (GetTile(tempb) == Block.air)
                 {
-                    AddUpdate(b, 0);
-                    AddUpdate(tempb, 110);
+                    AddUpdate(b, Block.air);
+                    AddUpdate(tempb, Block.wood_float);
                     return;
                 }
             }
@@ -832,10 +834,10 @@ namespace MCGalaxy {
             tempb = IntOffset(b, 0, 1, 0); //Get block above
             if (GetTile(tempb) != Block.Zero)
             {
-                if (Block.Convert(GetTile(tempb)) == 8)
+                if (Block.Convert(GetTile(tempb)) == Block.water)
                 {
-                    AddUpdate(b, 8);
-                    AddUpdate(tempb, 110);
+                    AddUpdate(b, Block.water);
+                    AddUpdate(tempb, Block.wood_float);
                     return;
                 }
             }
