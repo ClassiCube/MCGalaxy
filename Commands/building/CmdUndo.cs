@@ -197,9 +197,9 @@ namespace MCGalaxy.Commands
             
             if (b == undo.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                 ushort x, y, z;
-                int undoIndex = p.level.currentUndo;
-                p.level.currentUndo = i;
                 p.level.IntToPos(undo.location, out x, out y, out z);
+                int undoIndex = p.level.currentUndo;
+                p.level.currentUndo = i;                
                 p.level.currentUndo = undoIndex;
                 p.level.Blockchange(x, y, z, undo.oldType, true, "", undo.oldExtType, false);
             }

@@ -16,109 +16,76 @@
 	permissions and limitations under the Licenses.
 */
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdBlockSpeed : Command
-    {
+
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdBlockSpeed : Command {
+		
         public override string name { get { return "blockspeed"; } }
         public override string shortcut { get { return "bs"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdBlockSpeed() { }
 
-        public override void Use(Player p, string text)
-        {
-            if (text == "")
-            {
-                SendEstimation(p);
-                return;
+        public override void Use(Player p, string text) {
+            if (text == "") { SendEstimation(p); return; }            
+            string[] args = text.Split(' ');
+            string cmd = args[0].ToLower();
+            if (cmd == "clear") {
+                Server.levels.ForEach(lvl => lvl.blockqueue.Clear()); return;
             }
-            if (text == "clear")
-            {
-                Server.levels.ForEach((l) => { l.blockqueue.Clear(); });
-                return;
-            }
-            if (text.StartsWith("bs"))
-            {
-                try { BlockQueue.blockupdates = int.Parse(text.Split(' ')[1]); }
-                catch { Player.SendMessage(p, "Invalid number specified."); return; }
+            if (args.Length == 1) { Help(p); return; }
+            int value = 0;
+            
+            if (cmd == "bs") {
+            	if (!int.TryParse(args[1], out value)) { 
+            		Player.SendMessage(p, "Invalid number specified."); return; 
+            	}
+            	BlockQueue.blockupdates = value;
                 Player.SendMessage(p, String.Format("Blocks per interval is now {0}.", BlockQueue.blockupdates));
-                return;
-            }
-            if (text.StartsWith("ts"))
-            {
-                try { BlockQueue.time = int.Parse(text.Split(' ')[1]); }
-                catch { Player.SendMessage(p, "Invalid number specified."); return; }
+            } else if (cmd == "ts") {
+                if (!int.TryParse(args[1], out value)) { 
+            		Player.SendMessage(p, "Invalid number specified."); return; 
+            	}
+            	BlockQueue.time = value;
                 Player.SendMessage(p, String.Format("Block interval is now {0}.", BlockQueue.time));
-                return;
-            }
-            if (text.StartsWith("buf"))
-            {
+            } else if (cmd == "buf")  {
                 if (p.level.bufferblocks)
-                {
-                    p.level.bufferblocks = false;
                     Player.SendMessage(p, String.Format("Block buffering on {0} disabled.", p.level.name));
-                }
                 else
-                {
-                    p.level.bufferblocks = true;
                     Player.SendMessage(p, String.Format("Block buffering on {0} enabled.", p.level.name));
-                }
-                return;
-            }
-            if (text.StartsWith("net"))
-            {
-                switch (int.Parse(text.Split(' ')[1]))
-                {
-                    case 2:
-                        BlockQueue.blockupdates = 25;
-                        BlockQueue.time = 100;
-                        break;
-                    case 4:
-                        BlockQueue.blockupdates = 50;
-                        BlockQueue.time = 100;
-                        break;
-                    case 8:
-                        BlockQueue.blockupdates = 100;
-                        BlockQueue.time = 100;
-                        break;
-                    case 12:
-                        BlockQueue.blockupdates = 200;
-                        BlockQueue.time = 100;
-                        break;
-                    case 16:
-                        BlockQueue.blockupdates = 200;
-                        BlockQueue.time = 100;
-                        break;
-                    case 161:
-                        BlockQueue.blockupdates = 100;
-                        BlockQueue.time = 50;
-                        break;
-                    case 20:
-                        BlockQueue.blockupdates = 125;
-                        BlockQueue.time = 50;
-                        break;
-                    case 24:
-                        BlockQueue.blockupdates = 150;
-                        BlockQueue.time = 50;
-                        break;
-                    default:
-                        BlockQueue.blockupdates = 200;
-                        BlockQueue.time = 100;
-                        break;
+                p.level.bufferblocks = !p.level.bufferblocks;
+            } else if (cmd == "net") {
+            	if (!int.TryParse(args[1], out value)) { 
+            		Player.SendMessage(p, "Invalid number specified."); return; 
+            	}
+            	
+                switch (value) {
+                    case 2: Set(25, 100); break;
+                    case 4: Set(50, 100); break;
+                    case 8: Set(100, 100); break;
+                    case 12: Set(200, 100); break;
+                    case 16: Set(200, 100); break;
+                    case 161: Set(100, 50); break;
+                    case 20: Set(125, 50); break;
+                    case 24: Set(150, 50); break;
+                    default: Set(200, 100); break;
                 }
                 SendEstimation(p);
-                return;
             }
         }
-        private static void SendEstimation(Player p)
-        {
+        
+        static void Set(int updates, int time) {
+        	BlockQueue.blockupdates = updates;
+        	BlockQueue.time = time;
+        }
+        
+        static void SendEstimation(Player p) {
             Player.SendMessage(p, String.Format("{0} blocks every {1} milliseconds = {2} blocks per second.", BlockQueue.blockupdates, BlockQueue.time, BlockQueue.blockupdates * (1000 / BlockQueue.time)));
             Player.SendMessage(p, String.Format("Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000, PlayerInfo.players.Count, PlayerInfo.players.Count * ((BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000)));
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/bs [option] [option value] - Options for block speeds.");
             Player.SendMessage(p, "Options are: bs (blocks per interval), ts (interval in milliseconds), buf (toggles buffering), clear, net.");
             Player.SendMessage(p, "/bs net [2,4,8,12,16,20,24] - Presets, divide by 8 and times by 1000 to get blocks per second.");

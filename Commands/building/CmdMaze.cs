@@ -29,32 +29,23 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public static int randomizer = 0;
         public static bool[,] wall;
-        public override void Use(Player p, string message)
-        {
-            String[] split = message.Split(' ');
-            if (split.Length >= 1&&message.Length>0)
-            {
-                try
-                {
-                    randomizer = int.Parse(split[0]);
-                }
-                catch (Exception)
-                {
-                    this.Help(p); return;
-                }
+        
+        public override void Use(Player p, string message) {
+            if (message.Length > 0 && !int.TryParse(message, out randomizer)) {
+                Help(p); return;
             }
-            Player.SendMessage(p, "Place two blocks to determine the edges");
-            
+        	
+            Player.SendMessage(p, "Place two blocks to determine the edges");            
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
+        
+        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             p.blockchangeObject = new CatchPos(x, y, z);
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
+        
+        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             
             CatchPos first = (CatchPos)p.blockchangeObject;
@@ -178,11 +169,7 @@ namespace MCGalaxy.Commands
                         rand.GetBytes(r);
                         r[0] /= (255 / 4);
                         break;
-                    case 1:
-                        r[0] = (byte)rand2.Next(4);
-                        break;
                     default:
-                        Random rand3 = new Random(Environment.TickCount);
                         r[0] = (byte)rand2.Next(4);
                         break;
                 }

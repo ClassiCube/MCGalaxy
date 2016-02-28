@@ -36,10 +36,10 @@ namespace MCGalaxy.Commands
             if (who == null) { Player.SendMessage(p, "Could not find player"); return; }
             if (p != null && who.group.Permission >= p.group.Permission) { Player.SendMessage(p, "Cannot ban someone of the same rank"); return; }
             int minutes;
-            try
-            {
-                minutes = int.Parse(message.Split(' ')[1]);
-            } catch { Player.SendMessage(p, "Invalid minutes"); return; }
+            if (!int.TryParse(message.Split(' ')[1], out minutes)) {
+                Player.SendMessage(p, "Invalid minutes"); return; 
+            }
+            
             if (minutes > 1440) { Player.SendMessage(p, "Cannot ban for more than a day"); return; }
             if (minutes < 1) { Player.SendMessage(p, "Cannot ban someone for less than a minute"); return; }
             

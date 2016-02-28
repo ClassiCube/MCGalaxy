@@ -75,11 +75,9 @@ namespace MCGalaxy.Commands
             else
             {
                 int zoneID;
-                try
-                {
-                    zoneID = int.Parse(message);
+                if (!int.TryParse(message, out zoneID)) {
+                    Help(p); return;
                 }
-                catch { Help(p); return; }
 
                 if (zoneID < 0 || zoneID > p.level.ZoneList.Count)
                 {
