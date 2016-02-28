@@ -1,19 +1,19 @@
 /*
-	Copyright 2011 MCGalaxy
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCGalaxy
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System.Collections.Generic;
 namespace MCGalaxy.Commands
@@ -25,36 +25,27 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdDrill() { }
 
-        public override void Use(Player p, string message)
-        {
-            CatchPos cpos;
-            cpos.distance = 20;
+        public override void Use(Player p, string message) {
+            CatchPos cpos = default(CatchPos);
+            cpos.dist = 20;
 
-            if (message != "")
-                try
-                {
-                    cpos.distance = int.Parse(message);
-                }
-                catch { Help(p); return; }
+            if (message != "" && !int.TryParse(message, out cpos.dist)) {
+                Help(p); return;
+            }
 
-            cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
-
-            Player.SendMessage(p, "Destroy the block you wish to drill."); p.ClearBlockchange();
+            p.blockchangeObject = cpos;
+            Player.SendMessage(p, "Destroy the block you wish to drill.");
+            p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "/drill [distance] - Drills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
-        }
         
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
+        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (!p.staticCommands) p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            byte oldType = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, oldType);
+            type = p.level.GetTile(x, y, z); extType = 0;
+            if (type == Block.custom_block) extType = p.level.GetExtTile(x, y, z);
+            p.RevertBlock(x, y, z);
 
             int diffX = 0, diffZ = 0;
 
@@ -63,53 +54,54 @@ namespace MCGalaxy.Commands
             else if (p.rot[0] <= 160) { diffZ = 1; }
             else diffX = -1;
 
-            List<Pos> buffer = new List<Pos>();
-            Pos pos;
-            int total = 0;
+            List<int> buffer = new List<int>();
+            int depth = 0;
+            Level lvl = p.level;
 
-            if (diffX != 0)
-            {
-                for (ushort xx = x; total < cpos.distance; xx += (ushort)diffX)
+            if (diffX != 0) {
+                for (ushort xx = x; depth < cpos.dist; xx += (ushort)diffX)
                 {
                     for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
                         for (ushort zz = (ushort)(z - 1); zz <= (ushort)(z + 1); zz++)
                         {
-                            pos.x = xx; pos.y = yy; pos.z = zz;
-                            buffer.Add(pos);
+                            buffer.Add(lvl.PosToInt(xx, yy, zz));
                         }
-                    total++;
+                    depth++;
                 }
-            }
-            else
-            {
-                for (ushort zz = z; total < cpos.distance; zz += (ushort)diffZ)
+            } else {
+                for (ushort zz = z; depth < cpos.dist; zz += (ushort)diffZ)
                 {
                     for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
                         for (ushort xx = (ushort)(x - 1); xx <= (ushort)(x + 1); xx++)
                         {
-                            pos.x = xx; pos.y = yy; pos.z = zz;
-                            buffer.Add(pos);
+                            buffer.Add(lvl.PosToInt(xx, yy, zz));
                         }
-                    total++;
+                    depth++;
                 }
             }
 
-            if (buffer.Count > p.group.maxBlocks)
-            {
+            if (buffer.Count > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to drill " + buffer.Count + " blocks.");
                 Player.SendMessage(p, "You cannot drill more than " + p.group.maxBlocks + ".");
                 return;
             }
 
-            foreach (Pos pos1 in buffer)
-            {
-                if (p.level.GetTile(pos1.x, pos1.y, pos1.z) == oldType)
-                    p.level.Blockchange(p, pos1.x, pos1.y, pos1.z, Block.air);
+            foreach (int index in buffer) {
+                if (index < 0) continue;
+                lvl.IntToPos(index, out x, out y, out z);
+                byte tile = lvl.blocks[index], extTile = 0;
+                if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
+                
+                bool sameBlock = type == Block.custom_block ? extType == extTile : type == tile;
+                if (sameBlock) p.level.UpdateBlock(p, x, y, z, Block.air, 0);
             }
-            Player.SendMessage(p, buffer.Count + " blocks.");
+            Player.SendMessage(p, "Drilled " + buffer.Count + " blocks.");
         }
 
-        struct CatchPos { public ushort x, y, z; public int distance; }
-        struct Pos { public ushort x, y, z; }
+        struct CatchPos { public int dist; }
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "/drill [distance] - Drills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
+        }
     }
 }
