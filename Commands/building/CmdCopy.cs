@@ -167,7 +167,7 @@ namespace MCGalaxy.Commands
 			{
 				byte b = p.level.GetTile(xx, yy, zz);
 				if (b != Block.air && Block.canPlace(p, b))
-					p.level.Blockchange(p, xx, yy, zz, Block.air);
+					p.level.UpdateBlock(p, xx, yy, zz, Block.air, 0);
 			}
 
 			Player.SendMessage(p, (state.Volume - totalAir) + " blocks copied.");

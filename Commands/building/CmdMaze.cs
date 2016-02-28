@@ -125,9 +125,9 @@ namespace MCGalaxy.Commands
                 {
                     if (wall[xx, zz])
                     {
-                        p.level.Blockchange(p, (ushort)(xx + minX+1), y, (ushort)(zz + minZ+1), Block.staircasefull);
-                        p.level.Blockchange(p, (ushort)(xx + minX+1), (ushort)(y + 1), (ushort)(zz + minZ+1), Block.leaf);
-                        p.level.Blockchange(p, (ushort)(xx + minX+1), (ushort)(y + 2), (ushort)(zz + minZ+1), Block.leaf);
+                        p.level.UpdateBlock(p, (ushort)(xx + minX+1), y, (ushort)(zz + minZ+1), Block.staircasefull, 0);
+                        p.level.UpdateBlock(p, (ushort)(xx + minX+1), (ushort)(y + 1), (ushort)(zz + minZ+1), Block.leaf, 0);
+                        p.level.UpdateBlock(p, (ushort)(xx + minX+1), (ushort)(y + 2), (ushort)(zz + minZ+1), Block.leaf, 0);
                     }
                 }
             }

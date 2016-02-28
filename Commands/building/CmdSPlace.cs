@@ -75,19 +75,19 @@ namespace MCGalaxy.Commands {
                 dirZ = z > cpos.z ? 1 : -1;
             ushort endX = (ushort)(cpos.x + dirX * distance);
             ushort endZ = (ushort)(cpos.z + dirZ * distance);            
-            p.level.Blockchange(p, endX, cpos.y, endZ, Block.rock);   
+            p.level.UpdateBlock(p, endX, cpos.y, endZ, Block.rock, 0);   
             
             if (interval > 0) {
                 ushort xx = cpos.x, zz = cpos.z;
                 int delta = 0;
                 while (xx < p.level.Width && zz < p.level.Length && delta < distance) {
-                    p.level.Blockchange(p, xx, cpos.y, zz, Block.rock);
+                    p.level.UpdateBlock(p, xx, cpos.y, zz, Block.rock, 0);
                     xx = (ushort)(xx + dirX * interval);
                     zz = (ushort)(zz + dirZ * interval);
                     delta = Math.Abs(xx - cpos.x) + Math.Abs(zz - cpos.z);
                 }
             } else {
-                p.level.Blockchange(p, cpos.x, cpos.y, cpos.z, Block.rock);
+                p.level.UpdateBlock(p, cpos.x, cpos.y, cpos.z, Block.rock, 0);
             }
 
             if (interval > 0)

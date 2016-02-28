@@ -47,6 +47,14 @@ namespace MCGalaxy {
             return File.Exists("levels/" + name.ToLower() + ".lvl");
         }
         
+        public static bool ExistsBackup(string name, string backup) {
+            return File.Exists(BackupPath(name, backup));
+        }
+        
+        public static string BackupPath(string name, string backup) {
+            return Server.backupLocation + "/" + name + "/" + backup + "/" + name + ".lvl";
+        }
+        
         public static string FindOfflineProperty(string name, string propKey) {
             string file = "levels/level properties/" + name + ".properties";
             if (!File.Exists(file))

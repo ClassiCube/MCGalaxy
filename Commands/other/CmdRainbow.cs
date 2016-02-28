@@ -116,10 +116,7 @@ namespace MCGalaxy.Commands
             }
 
             Player.SendMessage(p, buffer.Count.ToString() + " blocks.");
-            buffer.ForEach(delegate(Pos pos)
-            {
-                p.level.Blockchange(p, pos.x, pos.y, pos.z, pos.newType);                  //update block for everyone
-            });
+            buffer.ForEach(P => p.level.UpdateBlock(p, P.x, P.y, P.z, P.newType, 0));
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }

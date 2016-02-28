@@ -443,8 +443,7 @@ namespace MCGalaxy {
         public int PosToInt(ushort x, ushort y, ushort z) {
             if (x < 0 || x >= Width || y < 0 || y >= Height || z < 0 || z >= Length)
                 return -1;
-            return x + (z * Width) + (y * Width * Length);
-            //alternate method: (h * widthY + y) * widthX + x;
+            return x + Width * (z + y * Length);
         }
 
         public void IntToPos(int pos, out ushort x, out ushort y, out ushort z) {

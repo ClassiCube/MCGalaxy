@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
             if (type2 == 255) { Player.SendMessage(p, "There is no block \"" + t2 + "\"."); return; }
             if (!Block.canPlace(p, type2)) { Player.SendMessage(p, "Cannot place that block type."); return; }
 
-            CatchPos cpos; cpos.type2 = type2; cpos.type = type;
+            CatchPos cpos; cpos.newType = type2; cpos.type = type;
 
             cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
             Player.SendMessage(p, "Place two blocks to determine the edges.");
@@ -94,18 +94,10 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            buffer.ForEach(delegate(Pos pos1)
-            {
-                p.level.Blockchange(p, pos1.x, pos1.y, pos1.z, cpos.type2);
-            });
-
+            buffer.ForEach(P => p.level.UpdateBlock(p, P.x, P.y, P.z, cpos.newType, 0));
             Player.SendMessage(p, "You outlined " + buffer.Count + " blocks.");
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
-        }
-        void BufferAdd(List<Pos> list, ushort x, ushort y, ushort z)
-        {
-            Pos pos; pos.x = x; pos.y = y; pos.z = z; list.Add(pos);
         }
 
         struct Pos
@@ -115,7 +107,7 @@ namespace MCGalaxy.Commands
         struct CatchPos
         {
             public byte type;
-            public byte type2;
+            public byte newType;
             public ushort x, y, z;
         }
 

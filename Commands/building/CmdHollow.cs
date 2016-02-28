@@ -97,18 +97,11 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            buffer.ForEach(delegate(Pos pos1)
-            {
-                p.level.Blockchange(p, pos1.x, pos1.y, pos1.z, Block.air);
-            });
+            buffer.ForEach(P => p.level.UpdateBlock(p, P.x, P.y, P.z, Block.air, 0));
 
             Player.SendMessage(p, "You hollowed " + buffer.Count + " blocks.");
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
-        }
-        void BufferAdd(List<Pos> list, ushort x, ushort y, ushort z)
-        {
-            Pos pos; pos.x = x; pos.y = y; pos.z = z; list.Add(pos);
         }
 
         struct Pos

@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             int xCen = (int)((p.centerstart[0] + p.centerend[0]) / 2);
             int yCen = (int)((p.centerstart[1] + p.centerend[1]) / 2);
             int zCen = (int)((p.centerstart[2] + p.centerend[2]) / 2);
-            p.level.Blockchange(p, (ushort)xCen, (ushort)yCen, (ushort)zCen, (byte)Block.goldsolid);
+            p.level.UpdateBlock(p, (ushort)xCen, (ushort)yCen, (ushort)zCen, (byte)Block.goldsolid, 0);
             Player.SendMessage(p, "A gold block was placed at (" + xCen + ", " + yCen + ", " + zCen + ").");
         }
         
