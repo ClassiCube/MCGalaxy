@@ -56,7 +56,6 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "Unload: " + GetBool(lvl.unload));
                     Player.SendMessage(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
                     Player.SendMessage(p, "Auto physics: " + GetBool(lvl.rp));
-                    Player.SendMessage(p, "Instant building: " + GetBool(lvl.Instant));
                     Player.SendMessage(p, "RP chat: " + GetBool(!lvl.worldChat));
                     Player.SendMessage(p, "Guns: " + GetBool(lvl.guns));
                     Player.SendMessage(p, "Buildable: " + GetBool(lvl.Buildable));
@@ -120,10 +119,7 @@ namespace MCGalaxy.Commands
                         SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
                     case "rp":
                     case "restartphysics":
-                        SetBool(p, lvl, ref lvl.rp, "Auto physics: ");break;
-                    case "instant":
-                        if (p != null && p.group.Permission < LevelPermission.Admin) { Player.SendMessage(p, "This is reserved for Super+"); return; }
-                        SetBool(p, lvl, ref lvl.Instant, "Instant building: "); break;
+                        SetBool(p, lvl, ref lvl.rp, "Auto physics: "); break;
                     case "chat":
                         SetBool(p, lvl, ref lvl.worldChat, "RP chat: "); break;
                     case "load":

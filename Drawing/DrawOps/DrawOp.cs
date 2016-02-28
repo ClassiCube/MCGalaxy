@@ -51,8 +51,7 @@ namespace MCGalaxy {
                 method = MethodSetTile;
                 return true;
             } else {
-                method = lvl.bufferblocks && !lvl.Instant ?
-                    MethodBlockQueue : MethodBlockChange;
+                method = lvl.bufferblocks ? MethodBlockQueue : MethodBlockChange;
                 return false;
             }
         }

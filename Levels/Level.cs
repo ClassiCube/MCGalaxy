@@ -81,7 +81,6 @@ namespace MCGalaxy
         public ExtrasCollection Extras = new ExtrasCollection();
         public bool GrassDestroy = true;
         public bool GrassGrow = true;
-        public bool Instant;
         public bool Killer = true;
         public List<UndoPos> UndoBuffer = new List<UndoPos>();
         public List<Zone> ZoneList;

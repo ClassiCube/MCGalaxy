@@ -36,8 +36,6 @@ namespace MCGalaxy.Commands
 			
 			int phys = p.level.physics;
 			Command.all.Find("physics").Use(p, "0");
-			if (!p.level.Instant)
-				Command.all.Find("map").Use(p, "instant");
 
 			Command cmd = Command.all.Find("replaceall");
 			if (message.ToLower() == "all") {
@@ -54,9 +52,6 @@ namespace MCGalaxy.Commands
 				cmd.Use(p, message + " air");
 			}
 
-			if (p.level.Instant)
-				Command.all.Find("map").Use(p, "instant");
-			Command.all.Find("reveal").Use(p, "all");
 			Command.all.Find("physics").Use(p, phys.ToString());
 			Player.GlobalMessage("Unflooded!");
 		}
