@@ -31,7 +31,6 @@ namespace MCGalaxy.Commands
         	if (p == null) { MessageInGameOnly(p); return; }
             p.ClearBlockchange();
             p.painting = false;
-            p.BlockAction = 0;
             p.cmdTimer = false;
             p.staticCommands = false;
             p.deleteMode = false;

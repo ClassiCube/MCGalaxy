@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             p.staticCommands = !p.staticCommands;
             p.ClearBlockchange();
-            p.BlockAction = 0;
+            p.modeType = 0;
 
             Player.SendMessage(p, "Static mode: &a" + p.staticCommands);
             if (message == "") return;

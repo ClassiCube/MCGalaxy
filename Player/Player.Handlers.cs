@@ -830,55 +830,43 @@ namespace MCGalaxy {
 
         void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if ( Block.odoor(b) != Block.Zero ) { SendMessage("oDoor here!"); return; }
-            switch ( BlockAction ) {
-                case 0: //normal
-                    if ( level.physics == 0 || level.physics == 5 ) {
-                        switch ( type ) {
-                            case Block.dirt: //instant dirt to grass
-            				    byte above = level.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
-                                if (type == Block.custom_block)
-                    	            extAbove = level.GetExtTile(x, (ushort)(y + 1), z);
-                                
-                                if (Block.LightPass(above, extAbove, level.CustomBlockDefs)) 
-                                	level.Blockchange(this, x, y, z, (byte)Block.grass);
-                                else
-                                	level.Blockchange(this, x, y, z, (byte)Block.dirt);
-                                break;
-                            case Block.staircasestep: //stair handler
-                                if ( level.GetTile(x, (ushort)( y - 1 ), z) == Block.staircasestep ) {
-                                    SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
-                                    //level.Blockchange(this, x, y, z, (byte)(Block.air));
-                                    level.Blockchange(this, x, (ushort)( y - 1 ), z, (byte)( Block.staircasefull ));
-                                    break;
-                                }
-                                //else
-                                level.Blockchange(this, x, y, z, type, extType);
-                                break;
-                            default:
-                                level.Blockchange(this, x, y, z, type, extType);
-                                break;
-                        }
-                    } else {
-                        level.Blockchange(this, x, y, z, type, extType);
-                    }
-                    break;
-                case 6:
-                    if ( b == modeType ) { SendBlockchange(x, y, z, b); return; }
+            
+            if (modeType != 0) {
+                if (b == modeType) 
+                    SendBlockchange(x, y, z, b);
+                else 
                     level.Blockchange(this, x, y, z, modeType);
-                    break;
-                case 13: //Small TNT
-                    level.Blockchange(this, x, y, z, Block.smalltnt);
-                    break;
-                case 14: //Big TNT
-                    level.Blockchange(this, x, y, z, Block.bigtnt);
-                    break;
-                case 15: //Nuke TNT
-                    level.Blockchange(this, x, y, z, Block.nuketnt);
-                    break;
-                default:
-                    Server.s.Log(name + " is breaking something");
-                    BlockAction = 0;
-                    break;
+                return;
+            }
+            
+            if (level.physics == 0 || level.physics == 5) {
+                switch ( type ) {
+                    case Block.dirt: //instant dirt to grass
+                        byte above = level.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
+                        if (type == Block.custom_block)
+                            extAbove = level.GetExtTile(x, (ushort)(y + 1), z);
+                        
+                        if (Block.LightPass(above, extAbove, level.CustomBlockDefs))
+                            level.Blockchange(this, x, y, z, (byte)Block.grass);
+                        else
+                            level.Blockchange(this, x, y, z, (byte)Block.dirt);
+                        break;
+                    case Block.staircasestep: //stair handler
+                        if ( level.GetTile(x, (ushort)( y - 1 ), z) == Block.staircasestep ) {
+                            SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
+                            //level.Blockchange(this, x, y, z, (byte)(Block.air));
+                            level.Blockchange(this, x, (ushort)( y - 1 ), z, (byte)( Block.staircasefull ));
+                            break;
+                        }
+                        //else
+                        level.Blockchange(this, x, y, z, type, extType);
+                        break;
+                    default:
+                        level.Blockchange(this, x, y, z, type, extType);
+                        break;
+                }
+            } else {
+                level.Blockchange(this, x, y, z, type, extType);
             }
         }
 

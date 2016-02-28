@@ -255,7 +255,6 @@ namespace MCGalaxy {
         //Games
         public DateTime lastDeath = DateTime.Now;
 
-        public byte BlockAction;
         public byte modeType;
         public byte[] bindings = new byte[128];
         public string[] cmdBind = new string[10];

@@ -34,7 +34,6 @@ namespace MCGalaxy.Commands
                 {
                     Player.SendMessage(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + Server.DefaultColor + " mode: &cOFF");
                     p.modeType = 0;
-                    p.BlockAction = 0;
                 }
                 else
                 {
@@ -46,58 +45,14 @@ namespace MCGalaxy.Commands
                 byte b = Block.Byte(message);
                 if (b == Block.Zero) { Player.SendMessage(p, "Could not find block given."); return; }
                 if (b == Block.air) { Player.SendMessage(p, "Cannot use Air Mode."); return; }
-                if (p.allowTnt == false)
-                {
-                    if (b == Block.tnt)
-                    {
-                        Player.SendMessage(p, "Tnt usage is not allowed at the moment");
-                        return;
-                    }
+
+                if (!p.allowTnt && (b == Block.tnt || b == Block.bigtnt || b == Block.smalltnt 
+                                    || b == Block.nuketnt || b == Block.tntexplosion)) {
+                	Player.SendMessage(p, "Tnt usage is not allowed at the moment"); return;
                 }
 
-                if (p.allowTnt == false)
-                {
-                    if (b == Block.bigtnt)
-                    {
-                        Player.SendMessage(p, "Tnt usage is not allowed at the moment");
-                        return;
-                    }
-                }
-
-                if (p.allowTnt == false)
-                {
-                    if (b == Block.nuketnt)
-                    {
-                        Player.SendMessage(p, "Tnt usage is not allowed at the moment");
-                        return;
-                    }
-                }
-
-                if (p.allowTnt == false)
-                {
-                    if (b == Block.fire)
-                    {
-                        Player.SendMessage(p, "Tnt usage is not allowed at the moment, fire is a lighter for tnt and is also disabled");
-                        return;
-                    }
-                }
-
-                if (p.allowTnt == false)
-                {
-                    if (b == Block.tntexplosion)
-                    {
-                        Player.SendMessage(p, "Tnt usage is not allowed at the moment");
-                        return;
-                    }
-                }
-
-                if (p.allowTnt == false)
-                {
-                    if (b == Block.smalltnt)
-                    {
-                        Player.SendMessage(p, "Tnt usage is not allowed at the moment");
-                        return;
-                    }
+                if (!p.allowTnt && b == Block.fire) {
+                    Player.SendMessage(p, "Tnt usage is not allowed at the moment, fire is a lighter for tnt and is also disabled"); return;
                 }
                         
                 if (!Block.canPlace(p, b)) { Player.SendMessage(p, "Cannot place this block at your rank."); return; }
@@ -106,11 +61,9 @@ namespace MCGalaxy.Commands
                 {
                     Player.SendMessage(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + Server.DefaultColor + " mode: &cOFF");
                     p.modeType = 0;
-                    p.BlockAction = 0;
                 }
                 else
                 {
-                    p.BlockAction = 6;
                     p.modeType = b;
                     Player.SendMessage(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + Server.DefaultColor + " mode: &aON");
                 }
