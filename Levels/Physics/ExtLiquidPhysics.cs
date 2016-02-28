@@ -33,10 +33,10 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.magma);
             } else if (below != Block.magma) {
                 byte block = lvl.blocks[C.b];
-                lvl.PhysLava(lvl.PosToInt((ushort)(x + 1), y, z), block);
-                lvl.PhysLava(lvl.PosToInt((ushort)(x - 1), y, z), block);
-                lvl.PhysLava(lvl.PosToInt(x, y, (ushort)(z + 1)), block);
-                lvl.PhysLava(lvl.PosToInt(x, y, (ushort)(z - 1)), block);
+                lvl.PhysLava((ushort)(x + 1), y, z, block);
+                lvl.PhysLava((ushort)(x - 1), y, z, block);
+                lvl.PhysLava(x, y, (ushort)(z + 1), block);
+                lvl.PhysLava(x, y, (ushort)(z - 1), block);
             }
 
             if (lvl.physics <= 1 || C.time <= 10) return;
@@ -70,10 +70,10 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.geyser);
             } else if (below != Block.geyser) {
                 byte block = lvl.blocks[C.b];
-                lvl.PhysWater(lvl.PosToInt((ushort)(x + 1), y, z), block);
-                lvl.PhysWater(lvl.PosToInt((ushort)(x - 1), y, z), block);
-                lvl.PhysWater(lvl.PosToInt(x, y, (ushort)(z + 1)), block);
-                lvl.PhysWater(lvl.PosToInt(x, y, (ushort)(z - 1)), block);
+                lvl.PhysWater((ushort)(x + 1), y, z, block);
+                lvl.PhysWater((ushort)(x - 1), y, z, block);
+                lvl.PhysWater(x, y, (ushort)(z + 1), block);
+                lvl.PhysWater(x, y, (ushort)(z - 1), block);
             }
 
             if (lvl.physics <= 1 || C.time <= 10) return;
@@ -116,10 +116,10 @@ namespace MCGalaxy.BlockPhysics {
                     break;
                 default:
                     byte block = lvl.blocks[C.b];
-                    lvl.PhysWater(lvl.PosToInt((ushort)(x + 1), y, z), block);
-                    lvl.PhysWater(lvl.PosToInt((ushort)(x - 1), y, z), block);
-                    lvl.PhysWater(lvl.PosToInt(x, y, (ushort)(z + 1)),block);
-                    lvl.PhysWater(lvl.PosToInt(x, y, (ushort)(z - 1)), block);
+                    lvl.PhysWater((ushort)(x + 1), y, z, block);
+                    lvl.PhysWater((ushort)(x - 1), y, z, block);
+                    lvl.PhysWater(x, y, (ushort)(z + 1),block);
+                    lvl.PhysWater(x, y, (ushort)(z - 1), block);
                     if (!(C.data is string) || !((string)C.data).Contains("wait"))
                         C.time = 255;
                     break;
@@ -145,10 +145,10 @@ namespace MCGalaxy.BlockPhysics {
                     break;
                 default:
                     byte block = lvl.blocks[C.b];
-                    lvl.PhysLava(lvl.PosToInt((ushort)(x + 1), y, z), block);
-                    lvl.PhysLava(lvl.PosToInt((ushort)(x - 1), y, z), block);
-                    lvl.PhysLava(lvl.PosToInt(x, y, (ushort)(z + 1)),block);
-                    lvl.PhysLava(lvl.PosToInt(x, y, (ushort)(z - 1)), block);
+                    lvl.PhysLava((ushort)(x + 1), y, z, block);
+                    lvl.PhysLava((ushort)(x - 1), y, z, block);
+                    lvl.PhysLava(x, y, (ushort)(z + 1),block);
+                    lvl.PhysLava(x, y, (ushort)(z - 1), block);
                     if (!(C.data is string) || !((string)C.data).Contains("wait"))
                         C.time = 255;
                     break;

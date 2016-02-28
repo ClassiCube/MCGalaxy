@@ -192,8 +192,8 @@ namespace MCGalaxy.Commands
         
         bool CheckBlockPhysics(Player p, long seconds, int i, Level.UndoPos undo) {
             byte b = p.level.GetTile(undo.location);
-            if (undo.timePerformed.AddSeconds(seconds) < DateTime.Now)
-                return false;
+            DateTime time = Server.StartTime.AddSeconds(undo.timeDelta);
+            if (time.AddSeconds(seconds) < DateTime.UtcNow) return false;
             
             if (b == undo.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                 ushort x, y, z;

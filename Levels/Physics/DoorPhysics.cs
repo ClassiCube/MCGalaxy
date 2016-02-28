@@ -151,8 +151,8 @@ namespace MCGalaxy.BlockPhysics {
                     int b1 = lvl.IntOffset(C.b, xx * 3, yy * 3, zz * 3);
                     int b2 = lvl.IntOffset(C.b, xx * 2, yy * 2, zz * 2);
                     bool unblocked = lvl.GetTile(b1) == Block.air && lvl.GetTile(b2) == Block.air &&
-                        !lvl.ListUpdate.Exists(u => u.b == b1) &&
-                        !lvl.ListUpdate.Exists(u => u.b == b2);
+                        !lvl.listUpdateExists.Get(x + xx * 3, y + yy * 3, z + zz * 3) &&
+                        !lvl.listUpdateExists.Get(x + xx * 2, y + yy * 2, z + zz * 2);
                     
                     if (unblocked) {
                         lvl.AddUpdate(b1, Block.rockethead);
@@ -166,8 +166,8 @@ namespace MCGalaxy.BlockPhysics {
                     int b1 = lvl.IntOffset(C.b, xx, yy + 1, zz);
                     int b2 = lvl.IntOffset(C.b, xx, yy + 2, zz);
                     bool unblocked = lvl.GetTile(b1) == Block.air && lvl.GetTile(b2) == Block.air &&
-                        !lvl.ListUpdate.Exists(u => u.b == b1) &&
-                        !lvl.ListUpdate.Exists(u => u.b == b2);
+                        !lvl.listUpdateExists.Get(x + xx, y + yy + 1, z + zz) &&
+                        !lvl.listUpdateExists.Get(x + xx, y + yy + 2, z + zz);
                     
                     if (unblocked) {
                         lvl.AddUpdate(b2, Block.firework);

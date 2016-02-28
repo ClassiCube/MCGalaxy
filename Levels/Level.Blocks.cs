@@ -392,7 +392,7 @@ namespace MCGalaxy {
                     uP.location = b;
                     uP.newType = type; uP.newExtType = extType;
                     uP.oldType = oldBlock; uP.oldExtType = oldExtType;
-                    uP.timePerformed = DateTime.Now;
+                    uP.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
 
                     if (currentUndo > Server.physUndo) {
                         currentUndo = 0;

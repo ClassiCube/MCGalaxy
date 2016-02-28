@@ -22,6 +22,7 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class LiquidPhysics {
         
+        const StringComparison comp = StringComparison.Ordinal;
         public static void DoWater(Level lvl, Check C, Random rand) {
             if (lvl.finite) {
                 lvl.liquids.Remove(C.b);
@@ -65,7 +66,7 @@ namespace MCGalaxy.BlockPhysics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
-            if (!lvl.PhysSpongeCheck(C.b)) {
+            if (!lvl.CheckSpongeWater(x, y, z)) {
                 if (!lvl.liquids.TryGetValue(C.b, out blocked)) {
                     blocked = new bool[5];
                     lvl.liquids.Add(C.b, blocked);
@@ -77,23 +78,23 @@ namespace MCGalaxy.BlockPhysics {
                 }
                 
                 if (!blocked[0] && rand.Next(4) == 0) {
-                    lvl.PhysWater(lvl.PosToInt((ushort)(x + 1), y, z), block);
+                    lvl.PhysWater((ushort)(x + 1), y, z, block);
                     blocked[0] = true;
                 }
                 if (!blocked[1] && rand.Next(4) == 0) {
-                    lvl.PhysWater(lvl.PosToInt((ushort)(x - 1), y, z), block);
+                    lvl.PhysWater((ushort)(x - 1), y, z, block);
                     blocked[1] = true;
                 }
                 if (!blocked[2] && rand.Next(4) == 0) {
-                    lvl.PhysWater(lvl.PosToInt(x, y, (ushort)(z + 1)), block);
+                    lvl.PhysWater(x, y, (ushort)(z + 1), block);
                     blocked[2] = true;
                 }
                 if (!blocked[3] && rand.Next(4) == 0) {
-                    lvl.PhysWater(lvl.PosToInt(x, y, (ushort)(z - 1)), block);
+                    lvl.PhysWater(x, y, (ushort)(z - 1), block);
                     blocked[3] = true;
                 }
                 if (!blocked[4] && rand.Next(4) == 0) {
-                    lvl.PhysWater(lvl.PosToInt(x, (ushort)(y - 1), z), block);
+                    lvl.PhysWater(x, (ushort)(y - 1), z, block);
                     blocked[4] = true;
                 }
 
@@ -111,11 +112,11 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.liquids.TryGetValue(C.b, out blocked);
                 lvl.AddUpdate(C.b, Block.air);
                 
-                if (((string)C.data).IndexOf("wait") == -1)
+                if (((string)C.data).IndexOf("wait", comp) == -1)
                     C.time = 255;
             }
 
-            if (((string)C.data).IndexOf("wait") == -1 && blocked != null)
+            if (((string)C.data).IndexOf("wait", comp) == -1 && blocked != null)
                 if (blocked[0] && blocked[1] && blocked[2] && blocked[3] && blocked[4])
             {
                 lvl.liquids.Remove(C.b);
@@ -128,21 +129,21 @@ namespace MCGalaxy.BlockPhysics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
-            if (!lvl.PhysSpongeCheck(C.b)) {
+            if (!lvl.CheckSpongeWater(x, y, z)) {
                 byte block = lvl.blocks[C.b];
                 if (lvl.GetTile(x, (ushort)(y + 1), z) != Block.Zero) {
                     lvl.PhysSandCheck(lvl.PosToInt(x, (ushort)(y + 1), z));
                 }
-                lvl.PhysWater(lvl.PosToInt((ushort)(x + 1), y, z), block);
-                lvl.PhysWater(lvl.PosToInt((ushort)(x - 1), y, z), block);
-                lvl.PhysWater(lvl.PosToInt(x, y, (ushort)(z + 1)), block);
-                lvl.PhysWater(lvl.PosToInt(x, y, (ushort)(z - 1)), block);
-                lvl.PhysWater(lvl.PosToInt(x, (ushort)(y - 1), z), block);
+                lvl.PhysWater((ushort)(x + 1), y, z, block);
+                lvl.PhysWater((ushort)(x - 1), y, z, block);
+                lvl.PhysWater(x, y, (ushort)(z + 1), block);
+                lvl.PhysWater(x, y, (ushort)(z - 1), block);
+                lvl.PhysWater(x, (ushort)(y - 1), z, block);
             } else { //was placed near sponge
                 lvl.AddUpdate(C.b, Block.air);
             }
 
-            if (((string)C.data).IndexOf("wait") == -1)
+            if (((string)C.data).IndexOf("wait", comp) == -1)
                 C.time = 255;
         }
         
@@ -158,7 +159,7 @@ namespace MCGalaxy.BlockPhysics {
                 case Block.lava:
                 case Block.lava_fast:
                 case Block.activedeathlava:
-                    if (!lvl.PhysSpongeCheck(b)) return false;
+                    if (!lvl.CheckSpongeWater(x, y, z)) return false;
                     break;
 
                 case Block.shrub:
@@ -166,7 +167,7 @@ namespace MCGalaxy.BlockPhysics {
                 case Block.redflower:
                 case Block.mushroom:
                 case Block.redmushroom:
-                    if (lvl.physics > 1 && !lvl.PhysSpongeCheck(b)) return false;
+                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) return false;
                     break;
 
                 case Block.sand:
@@ -182,7 +183,7 @@ namespace MCGalaxy.BlockPhysics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
 
-            if (!lvl.PhysSpongeCheck(C.b, true)) {
+            if (!lvl.CheckSpongeLava(x, y, z)) {
                 C.time = (byte)rand.Next(3);
                 if (!lvl.liquids.TryGetValue(C.b, out blocked)) {
                     blocked = new bool[5];
@@ -191,23 +192,23 @@ namespace MCGalaxy.BlockPhysics {
                 byte block = lvl.blocks[C.b];
 
                 if (!blocked[0] && rand.Next(4) == 0) {
-                    lvl.PhysLava(lvl.PosToInt((ushort)(x + 1), y, z), block);
+                    lvl.PhysLava((ushort)(x + 1), y, z, block);
                     blocked[0] = true;
                 }
                 if (!blocked[1] && rand.Next(4) == 0) {
-                    lvl.PhysLava(lvl.PosToInt((ushort)(x - 1), y, z), block);
+                    lvl.PhysLava((ushort)(x - 1), y, z, block);
                     blocked[1] = true;
                 }
                 if (!blocked[2] && rand.Next(4) == 0) {
-                    lvl.PhysLava(lvl.PosToInt(x, y, (ushort)(z + 1)), block);
+                    lvl.PhysLava(x, y, (ushort)(z + 1), block);
                     blocked[2] = true;
                 }
                 if (!blocked[3] && rand.Next(4) == 0) {
-                    lvl.PhysLava(lvl.PosToInt(x, y, (ushort)(z - 1)), block);
+                    lvl.PhysLava(x, y, (ushort)(z - 1), block);
                     blocked[3] = true;
                 }
                 if (!blocked[4] && rand.Next(4) == 0) {
-                    lvl.PhysLava(lvl.PosToInt(x, (ushort)(y - 1), z), block);
+                    lvl.PhysLava(x, (ushort)(y - 1), z, block);
                     blocked[4] = true;
                 }
 
@@ -224,11 +225,11 @@ namespace MCGalaxy.BlockPhysics {
             } else { //was placed near sponge
                 lvl.liquids.TryGetValue(C.b, out blocked);
                 lvl.AddUpdate(C.b, Block.air);
-                if (!checkWait || ((string)C.data).IndexOf("wait") == -1)
+                if (!checkWait || ((string)C.data).IndexOf("wait", comp) == -1)
                     C.time = 255;
             }
 
-            if (blocked != null && (!checkWait || ((string)C.data).IndexOf("wait") == -1))
+            if (blocked != null && (!checkWait || ((string)C.data).IndexOf("wait", comp) == -1))
                 if (blocked[0] && blocked[1] && blocked[2] && blocked[3] && blocked[4])
             {
                 lvl.liquids.Remove(C.b);
@@ -241,18 +242,18 @@ namespace MCGalaxy.BlockPhysics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
-            if (!lvl.PhysSpongeCheck(C.b, true)) {
+            if (!lvl.CheckSpongeLava(x, y, z)) {
                 byte block = lvl.blocks[C.b];
-                lvl.PhysLava(lvl.PosToInt((ushort)(x + 1), y, z), block);
-                lvl.PhysLava(lvl.PosToInt((ushort)(x - 1), y, z), block);
-                lvl.PhysLava(lvl.PosToInt(x, y, (ushort)(z + 1)), block);
-                lvl.PhysLava(lvl.PosToInt(x, y, (ushort)(z - 1)), block);
-                lvl.PhysLava(lvl.PosToInt(x, (ushort)(y - 1), z), block);
+                lvl.PhysLava((ushort)(x + 1), y, z, block);
+                lvl.PhysLava((ushort)(x - 1), y, z, block);
+                lvl.PhysLava(x, y, (ushort)(z + 1), block);
+                lvl.PhysLava(x, y, (ushort)(z - 1), block);
+                lvl.PhysLava(x, (ushort)(y - 1), z, block);
             } else { //was placed near sponge
                 lvl.AddUpdate(C.b, Block.air);
             }
 
-            if (!checkWait || ((string)C.data).IndexOf("wait") == -1)
+            if (!checkWait || ((string)C.data).IndexOf("wait", comp) == -1)
                 C.time = 255;
         }
         
@@ -264,7 +265,7 @@ namespace MCGalaxy.BlockPhysics {
                 return true;
 
             if (lvl.physics > 1 && lvl.blocks[b] >= Block.red && lvl.blocks[b] <= Block.white 
-                && !lvl.PhysSpongeCheck(b, true))
+                && !lvl.CheckSpongeLava(x, y, z))
                 return false; // Adv physics destroys cloth
             
             switch (lvl.blocks[b]) {
@@ -273,7 +274,7 @@ namespace MCGalaxy.BlockPhysics {
 
                 case Block.water:
                 case Block.activedeathwater:
-                    if (!lvl.PhysSpongeCheck(b, true))  return false;
+                    if (!lvl.CheckSpongeLava(x, y, z))  return false;
                     break;
 
                 case Block.sand:
@@ -288,7 +289,7 @@ namespace MCGalaxy.BlockPhysics {
                 case Block.redflower:
                 case Block.mushroom:
                 case Block.redmushroom:
-                    if (lvl.physics > 1 && !lvl.PhysSpongeCheck(b, true)) return false;
+                    if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) return false;
                     break;
             }
             return true;

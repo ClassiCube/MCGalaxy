@@ -36,7 +36,7 @@ namespace MCGalaxy.BlockPhysics {
 
                 if (keepGoing) {
                     int bAbove = lvl.PosToInt(x, (ushort)(y + 1), z);
-                    bool unblocked = !lvl.ListUpdate.Exists(u => u.b == bAbove);
+                    bool unblocked = bAbove < 0 || !lvl.listUpdateExists.Get(x, y + 1, z);
                     if (unblocked) {
                         lvl.AddUpdate(bAbove, Block.firework, false);
                         lvl.AddUpdate(C.b, Block.lavastill, false, "wait 1 dissipate 100");

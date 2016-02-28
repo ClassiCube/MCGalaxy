@@ -62,6 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Galaxy.ico" />
+    <Content Include="ProfilingSessions\Session20160228_124429.sdps" />
+    <Content Include="ProfilingSessions\Session20160228_131348.sdps" />
+    <Content Include="ProfilingSessions\Session20160228_135632.sdps" />
+    <Content Include="ProfilingSessions\Session20160228_135946.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

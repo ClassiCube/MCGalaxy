@@ -152,7 +152,7 @@ namespace MCGalaxy.BlockPhysics {
             // Not setting drop = false can cause occasional leftover blocks, since C.extraInfo is emptied, so
             // drop can generate another block with no dissipate/explode information.
             if (args.Dissipate && rand.Next(1, 100) <= args.DissipateNum) {
-                if (!lvl.ListUpdate.Exists(Update => Update.b == C.b)) {
+            	if (!lvl.listUpdateExists.Get(x, y, z)) {
                     lvl.AddUpdate(C.b, Block.air);
                     C.data = "";
                     args.Drop = false;

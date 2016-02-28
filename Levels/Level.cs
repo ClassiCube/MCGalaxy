@@ -69,6 +69,7 @@ namespace MCGalaxy
         public static bool cancelphysics;
         internal readonly FastList<Check> ListCheck = new FastList<Check>(); //A list of blocks that need to be updated
         internal readonly FastList<Update> ListUpdate = new FastList<Update>(); //A list of block to change after calculation
+        internal readonly SparseBitSet listCheckExists, listUpdateExists;
 
         internal readonly Dictionary<int, sbyte> leaves = new Dictionary<int, sbyte>();
         // Holds block state for leaf decay
@@ -236,6 +237,8 @@ namespace MCGalaxy
             spawnz = (ushort)(Length / 2);
             rotx = 0;
             roty = 0;
+            listCheckExists = new SparseBitSet(Width, Height, Length);
+            listUpdateExists = new SparseBitSet(Width, Height, Length);
             //season = new SeasonsCore(this);
         }
 
@@ -251,8 +254,8 @@ namespace MCGalaxy
             Extras.Clear();
             liquids.Clear();
             leaves.Clear();
-            ListCheck.Clear();
-            ListUpdate.Clear();
+            ListCheck.Clear(); listCheckExists.Clear();
+            ListUpdate.Clear(); listUpdateExists.Clear();
             UndoBuffer.Clear();
             blockCache.Clear();
             ZoneList.Clear();
@@ -429,10 +432,8 @@ namespace MCGalaxy
 
         // Returns true if ListCheck does not already have an check in the position.
         // Useful for fireworks, which depend on two physics blocks being checked, one with extraInfo.
-        public bool CheckClear(ushort x, ushort y, ushort z)
-        {
-            int b = PosToInt(x, y, z);
-            return !ListCheck.Exists(C => C.b == b);
+        public bool CheckClear(ushort x, ushort y, ushort z) {
+        	return x >= Width || y >= Height || z >= Length || !listCheckExists.Get(x, y, z);
         }
 
         public void Save(bool Override = false, bool clearPhysics = false)
@@ -744,7 +745,7 @@ namespace MCGalaxy
             public int location;
             public byte newType, newExtType;
             public byte oldType, oldExtType;
-            public DateTime timePerformed;
+            public int timeDelta;
         }
 
         public struct Zone {
