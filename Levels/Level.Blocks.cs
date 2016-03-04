@@ -386,7 +386,7 @@ namespace MCGalaxy {
                                            string extraInfo = "", byte extType = 0, bool addUndo = true) {
         	if (b < 0 || b >= blocks.Length || blocks == null) return false;
             byte oldBlock = blocks[b];
-            byte oldExtType = GetExtTile(b);
+            byte oldExtType = oldBlock == Block.custom_block ? GetExtTile(b) : (byte)0;
             try
             {
                 if (!overRide)

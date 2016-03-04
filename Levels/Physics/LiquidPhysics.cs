@@ -73,9 +73,8 @@ namespace MCGalaxy.BlockPhysics {
                 }
 
                 byte block = lvl.blocks[C.b];
-                if (lvl.GetTile(x, (ushort)(y + 1), z) != Block.Zero) {
-                    lvl.PhysSandCheck(lvl.PosToInt(x, (ushort)(y + 1), z));
-                }
+                if (y < lvl.Height - 1)
+                    CheckFallingBlocks(lvl, C.b + lvl.Width * lvl.Length);
                 
                 if (!blocked[0] && rand.Next(4) == 0) {
                     lvl.PhysWater((ushort)(x + 1), y, z, block);
@@ -131,9 +130,8 @@ namespace MCGalaxy.BlockPhysics {
             
             if (!lvl.CheckSpongeWater(x, y, z)) {
                 byte block = lvl.blocks[C.b];
-                if (lvl.GetTile(x, (ushort)(y + 1), z) != Block.Zero) {
-                    lvl.PhysSandCheck(lvl.PosToInt(x, (ushort)(y + 1), z));
-                }
+                if (y < lvl.Height - 1)
+                    CheckFallingBlocks(lvl, C.b + lvl.Width * lvl.Length);
                 lvl.PhysWater((ushort)(x + 1), y, z, block);
                 lvl.PhysWater((ushort)(x - 1), y, z, block);
                 lvl.PhysWater(x, y, (ushort)(z + 1), block);
@@ -293,6 +291,17 @@ namespace MCGalaxy.BlockPhysics {
                     break;
             }
             return true;
+        }
+        
+        static void CheckFallingBlocks(Level lvl, int b) {
+            switch (lvl.blocks[b]) {
+                case Block.sand:
+                case Block.gravel:
+                case Block.wood_float:
+                    lvl.AddCheck(b); break;
+                default:
+                    break;
+            }
         }
     }
 }

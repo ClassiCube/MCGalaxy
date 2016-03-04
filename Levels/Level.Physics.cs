@@ -120,7 +120,7 @@ namespace MCGalaxy {
             return "";
         }
 
-        public void CalcPhysics() {
+        public unsafe void CalcPhysics() {
             if (physics == 0) return;
             try {
                 ushort x, y, z;
@@ -129,9 +129,9 @@ namespace MCGalaxy {
                     for (int i = 0; i < ListCheck.Count; i++) {
                         Check C = ListCheck.Items[i];
                         IntToPos(C.b, out x, out y, out z);
-                        try {                           
+                        try {
                             string info = C.data as string;
-                            if (info == null) info = "";                           
+                            if (info == null) info = "";
                             
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
@@ -147,13 +147,13 @@ namespace MCGalaxy {
                     for (int i = 0; i < ListCheck.Count; i++) {
                         Check C = ListCheck.Items[i];
                         IntToPos(C.b, out x, out y, out z);
-                        try {                           
+                        try {
                             string info = C.data as string;
                             if (info == null) info = "";
                             
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
-                            if (OnPhysicsUpdateEvent.events.Count > 0) 
+                            if (OnPhysicsUpdateEvent.events.Count > 0)
                                 OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);
                             if (info == "" || ExtraInfoPhysics.DoComplex(this, C, rand))
                                 DoNormalPhysics(x, y, z, rand, C);
@@ -162,24 +162,60 @@ namespace MCGalaxy {
                             ListCheck.Remove(C);
                         }
                     }
-                }            
+                }
                 RemoveExpiredChecks();
                 
                 lastUpdate = ListUpdate.Count;
+                int* pendingIndices = stackalloc int[256];
+                byte* pendingTypes = stackalloc byte[256];
+                int pendingCount = 0;
+                
                 for (int i = 0; i < ListUpdate.Count; i++) {
                     Update C = ListUpdate.Items[i];
                     try {
                         string info = C.data as string;
                         if (info == null) info = "";
-                        Blockchange(C.b, C.type, false, info);
+                        if (DoPhysicsBlockchange(C.b, C.type, false,info, 0, true)) {
+                            pendingIndices[pendingCount] = C.b;
+                            pendingTypes[pendingCount] = C.type;
+                            pendingCount++;
+                        }
                     } catch {
                         Server.s.Log("Phys update issue");
                     }
+                    SendUpdates(pendingIndices, pendingTypes, ref pendingCount, false);
                 }
+                SendUpdates(pendingIndices, pendingTypes, ref pendingCount, true);
                 ListUpdate.Clear(); listUpdateExists.Clear();
             } catch (Exception e) {
                 Server.s.Log("Level physics error");
                 Server.ErrorLog(e);
+            }
+        }
+        
+        unsafe void SendUpdates(int* pendingIndices, byte* pendingTypes, ref int pendingCount, bool force) {
+            try {
+                if (pendingCount > 0 && (force || pendingCount == 256)) {
+                    byte[] data = new byte[pendingCount * 8];
+                    for (int i = 0; i < pendingCount; i++) {
+                        int index = pendingIndices[i];
+                        int x = (index % Width);
+                        int y = (index / Width) / Length;
+                        int z = (index / Width) % Length;
+                        
+                        data[(i << 3)] = Opcode.SetBlock;
+                        data[(i << 3) + 1] = (byte)(x >> 8); data[(i << 3) + 2] = (byte)x;
+                        data[(i << 3) + 3] = (byte)(y >> 8); data[(i << 3) + 4] = (byte)y;
+                        data[(i << 3) + 5] = (byte)(z >> 8); data[(i << 3) + 6] = (byte)z;
+                        // TODO: do we need conversion for non-CPE block clients?
+                        data[(i << 3) + 7] = Block.Convert(pendingTypes[i]);
+                    }
+                    PlayerInfo.players.ForEach(p => { if (p.level == this) p.SendRaw(data); });
+                    pendingCount = 0;
+                }
+            } catch {
+                Server.s.Log("Phys update issue");
+                pendingCount = 0;
             }
         }
         
@@ -445,7 +481,7 @@ namespace MCGalaxy {
         public void AddCheck(int b, bool overRide = false) { AddCheck(b, overRide, ""); }
         
         public void AddCheck(int b, bool overRide, object data) {
-            try {               
+            try {
                 int x = b % Width;
                 int y = (b / Width) / Length;
                 int z = (b / Width) % Length;
@@ -480,8 +516,8 @@ namespace MCGalaxy {
                 int z = (b / Width) % Length;
                 if (x >= Width || y >= Height || z >= Length) return false;
                 
-                if (overRide) {                    
-                    AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that                    
+                if (overRide) {
+                    AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
                     string info = data as string;
                     if (info == null) info = "";
                     Blockchange((ushort)x, (ushort)y, (ushort)z, (byte)type, true, info);
@@ -489,12 +525,12 @@ namespace MCGalaxy {
                 }
 
                 if (!listUpdateExists.Get(x, y, z)) {
-                    listUpdateExists.Set(x, y, z, true);                    
+                    listUpdateExists.Set(x, y, z, true);
                 } else if (type == Block.sand || type == Block.gravel)  {
                     RemoveUpdatesAtPos(b);
                 } else {
                     return false;
-                }                
+                }
                 
                 ListUpdate.Add(new Update(b, (byte)type, data));
                 if (!physicssate && physics > 0)
@@ -506,7 +542,7 @@ namespace MCGalaxy {
                 return false;
             }
         }
-      
+        
         void RemoveExpiredChecks() {
             Check[] items = ListCheck.Items;
             int j = 0, count = ListCheck.Count;
@@ -585,7 +621,7 @@ namespace MCGalaxy {
         internal void PhysAir(int b) { AirPhysics.PhysAir(this, b); }
 
         internal void PhysWater(ushort x, ushort y, ushort z, byte type) {
-            if (x >= Width || y >= Height || z >= Length) return;          
+            if (x >= Width || y >= Height || z >= Length) return;
             if (Server.lava.active && Server.lava.map == this && Server.lava.InSafeZone(x, y, z))
                 return;
             
@@ -620,14 +656,14 @@ namespace MCGalaxy {
         }
 
         internal void PhysLava(ushort x, ushort y, ushort z, byte type) {
-            if (x >= Width || y >= Height || z >= Length) return;    
+            if (x >= Width || y >= Height || z >= Length) return;
             if (Server.lava.active && Server.lava.map == this && Server.lava.InSafeZone(x, y, z))
                 return;
 
             int b = x + Width * (z + y * Length);
             if (physics > 1 && physics != 5 && !CheckSpongeLava(x, y, z) && blocks[b] >= 21 && blocks[b] <= 36) {
                 AddUpdate(b, Block.air); return;
-            } // Adv physics destroys cloth           
+            } // Adv physics destroys cloth
             
             switch (blocks[b]) {
                 case Block.air:
@@ -668,8 +704,7 @@ namespace MCGalaxy {
             if (b == -1 || physics == 0 || physics == 5) return false;
 
             int tempb = b;
-            bool blocked = false;
-            bool moved = false;
+            bool blocked = false, moved = false;
 
             do
             {
@@ -731,18 +766,6 @@ namespace MCGalaxy {
             }
 
             return moved;
-        }
-
-        internal void PhysSandCheck(int b) { //also does gravel
-            if (b == -1) return;
-            switch (blocks[b]) {
-                case Block.sand:
-                case Block.gravel:
-                case Block.wood_float:
-                    AddCheck(b); break;
-                default:
-                    break;
-            }
         }
 
         void PhysStair(int b) {
