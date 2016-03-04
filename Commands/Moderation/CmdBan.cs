@@ -60,14 +60,14 @@ namespace MCGalaxy.Commands {
             string banner = p == null ? "(console)" : p.FullName;
             string banMsg = null;
             if (who == null) {
-            	banMsg = target + " &f(offline)" + " %Swas &8banned" + Server.DefaultColor + " by " + banner + "%S." + banReason;
+            	banMsg = target + " &f(offline) %Swas &8banned %Sby " + banner + "%S." + banReason;
             	Player.GlobalMessage(banMsg);
             } else {
             	if (stealth) {
-            		banMsg = who.FullName + " %Swas STEALTH &8banned" + Server.DefaultColor + " by " + banner + "%S." + banReason;
+            		banMsg = who.FullName + " %Swas STEALTH &8banned %Sby " + banner + "%S." + banReason;
                     Chat.GlobalMessageOps(banMsg);
             	} else {
-            		banMsg = who.FullName + " %Swas &8banned" + Server.DefaultColor + " by " + banner + "%S." + banReason;
+            		banMsg = who.FullName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
             		Player.GlobalMessage(banMsg);
             	}
                 

@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
              if (grp.Permission == LevelPermission.Banned)
              {
              	 string banner = p == null ? "console" : p.color + p.DisplayName + Server.DefaultColor;
-                 Player.GlobalMessage(plr.color + plr.name + Server.DefaultColor + " was &8banned" + Server.DefaultColor + " by " + banner + ".");
+                 Player.GlobalMessage(plr.FullName + " %Swas &8banned" + " %Sby " + banner + ".");
              }
              else
              {
