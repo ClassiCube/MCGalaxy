@@ -1617,8 +1617,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             Command cmd = Command.all.Find(listCommandsExtraCmdPerms.SelectedItem.ToString());
             oldcmd = cmd;
             extracmdpermnumber.Maximum = CommandOtherPerms.GetMaxNumber(cmd);
-            if ( extracmdpermnumber.Maximum == 1 ) { extracmdpermnumber.ReadOnly = true; }
-            else { extracmdpermnumber.ReadOnly = false; }
+            extracmdpermnumber.ReadOnly = extracmdpermnumber.Maximum == 1;
             extracmdpermnumber.Value = 1;
             extracmdpermdesc.Text = CommandOtherPerms.Find(cmd, 1).Description;
             extracmdpermperm.Text = CommandOtherPerms.Find(cmd, 1).Permission.ToString();
