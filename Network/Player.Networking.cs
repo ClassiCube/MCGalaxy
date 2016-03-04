@@ -285,7 +285,7 @@ namespace MCGalaxy {
                 else 
                 	NetUtils.WriteAscii(Server.motd, buffer, 66);
             } else {
-            	NetUtils.WriteAscii(level.motd, buffer, 1);
+            	NetUtils.WriteAscii(level.motd, buffer, 2);
             	if (level.motd.Length > 64)
             		NetUtils.WriteAscii(level.motd.Substring(64), buffer, 66);
             }

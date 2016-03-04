@@ -305,11 +305,11 @@ namespace MCGalaxy {
         }
 
         //Forces the edge of a map to slope lower for island map types
-        float NegateEdge(ushort x, ushort y, Level Lvl) {
+        float NegateEdge(ushort x, ushort z, Level Lvl) {
             float tempx = 0.0f, tempy = 0.0f;
             float temp;
             if (x != 0) { tempx = ((float)x / (float)Lvl.Width) * 0.5f; }
-            if (y != 0) { tempy = ((float)y / (float)Lvl.Length) * 0.5f; }
+            if (z != 0) { tempy = ((float)z / (float)Lvl.Length) * 0.5f; }
             tempx = Math.Abs(tempx - 0.25f);
             tempy = Math.Abs(tempy - 0.25f);
             
