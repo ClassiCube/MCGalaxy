@@ -29,6 +29,8 @@ namespace MCGalaxy
 		public abstract LevelPermission defaultRank { get; }
 		public abstract void Use(Player p, string message);
 		public abstract void Help(Player p);
+		public virtual CommandPerm[] OtherPerms { get { return null; } }
+		
 		public bool isIntervalized;
 		public int intervalInMinutes;
 		public DateTime nextExecution;
@@ -44,6 +46,20 @@ namespace MCGalaxy
 		
 		protected void MessageInGameOnly(Player p) {
 			Player.SendMessage(p, "/" + name + " can only be used in-game.");
+		}
+	}
+	
+	public struct CommandPerm {
+		public LevelPermission Perm;
+		public string Description;
+		public int Number;
+		
+		public CommandPerm(LevelPermission perm, string desc) {
+			Perm = perm; Description = desc; Number = 1;
+		}
+		
+		public CommandPerm(LevelPermission perm, string desc, int num) {
+			Perm = perm; Description = desc; Number = num;
 		}
 	}
 	

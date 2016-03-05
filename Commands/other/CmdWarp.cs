@@ -26,6 +26,14 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] {
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank to create warps", 1),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank to delete warps", 2),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank to move/edit warps", 3),
+                }; }
+        }
+        
         public override void Use(Player p, string message)
         {
             if (p == null) { MessageInGameOnly(p); return; }

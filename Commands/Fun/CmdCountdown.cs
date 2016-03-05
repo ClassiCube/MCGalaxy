@@ -30,7 +30,12 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdCountdown() { }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] {
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can send the countdown rules to everybody", 1),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)", 2),
+                }; }
+        }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

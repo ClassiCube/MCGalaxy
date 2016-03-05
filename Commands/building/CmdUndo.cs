@@ -28,7 +28,12 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdUndo() { }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] {
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank to undo other players actions", 1),
+                    new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank to be able to undo physics", 2),
+                }; }
+        }
 
         public override void Use(Player p, string message) {
             if (p != null) p.RedoBuffer.Clear();

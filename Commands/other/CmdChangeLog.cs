@@ -27,6 +27,10 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can send the changelog to everybody") }; }
+        }
+        
         public override void Use(Player p, string message)
         {
             if (!File.Exists("changelog.txt"))

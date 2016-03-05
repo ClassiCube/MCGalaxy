@@ -26,47 +26,7 @@ namespace MCGalaxy {
     public static class CommandOtherPerms {
         
         /// <summary> Restore the permissions to their defaults </summary>
-        public static void AddDefaultPerms() {
-            Add(Command.all.Find("ban"), (int)LevelPermission.AdvBuilder, "The lowest rank that can be banned");
-            Add(Command.all.Find("zone"), (int)LevelPermission.Operator, "The lowest rank to delete zones", 1);
-            Add(Command.all.Find("zone"), (int)LevelPermission.Operator, "The lowest rank to delete all zones", 2);
-            Add(Command.all.Find("zone"), (int)LevelPermission.Operator, "The lowest rank to create zones", 3);
-            Add(Command.all.Find("whowas"), (int)LevelPermission.AdvBuilder, "The lowest rank which can see the target player's ip and if they are whitelisted");
-            Add(Command.all.Find("whois"), (int)LevelPermission.AdvBuilder, "The lowest rank which can see the target player's ip and if they are whitelisted");
-            Add(Command.all.Find("warp"), (int)LevelPermission.Operator, "The lowest rank to create warps", 1);
-            Add(Command.all.Find("warp"), (int)LevelPermission.Operator, "The lowest rank to delete warps", 2);
-            Add(Command.all.Find("warp"), (int)LevelPermission.Operator, "The lowest rank to move/edit warps", 3);
-            Add(Command.all.Find("undo"), (int)LevelPermission.Operator, "The lowest rank to undo other players actions", 1);
-            Add(Command.all.Find("undo"), (int)LevelPermission.AdvBuilder, "The lowest rank to be able to undo physics", 2);
-            Add(Command.all.Find("tnt"), (int)LevelPermission.Operator, "The lowest rank at which big tnt can be used", 1);
-            Add(Command.all.Find("tnt"), (int)LevelPermission.Operator, "The lowest rank at which the user can allow/disallow tnt", 2);
-            Add(Command.all.Find("tnt"), (int)LevelPermission.Operator, "The lowest rank at which nuke tnt can be used", 3);
-            Add(Command.all.Find("rules"), (int)LevelPermission.Builder, "The lowest rank that can send rules to other players");
-            Add(Command.all.Find("reveal"), (int)LevelPermission.Operator, "The lowest rank that can reveal to everyone");
-            Add(Command.all.Find("report"), (int)LevelPermission.Operator, "The lowest rank at which the player can check,view and delete reports");
-            Add(Command.all.Find("patrol"), (int)LevelPermission.Guest, "The highest rank to be patrolled");
-            Add(Command.all.Find("news"), (int)LevelPermission.Operator, "The lowest rank that can send rules to everyone");
-            Add(Command.all.Find("map"), (int)LevelPermission.Operator, "The lowest rank that can edt map optios");
-            Add(Command.all.Find("faq"), (int)LevelPermission.Builder, "The lowest rank that can send rules to other players");
-            Add(Command.all.Find("economy"), (int)LevelPermission.Operator, "The lowest rank that can setup economy");
-            Add(Command.all.Find("chatroom"), (int)LevelPermission.AdvBuilder, "The lowest rank that can create chatrooms", 1);
-            Add(Command.all.Find("chatroom"), (int)LevelPermission.AdvBuilder, "The lowest rank that can delete a chatroom if empty", 2);
-            Add(Command.all.Find("chatroom"), (int)LevelPermission.Operator, "The lowest rank that can delete a chatroom", 3);
-            Add(Command.all.Find("chatroom"), (int)LevelPermission.Operator, "The lowest rank that can spy on a chatroom", 4);
-            Add(Command.all.Find("chatroom"), (int)LevelPermission.Operator, "The lowest rank that can force a player to join a chatroom", 5);
-            Add(Command.all.Find("chatroom"), (int)LevelPermission.Operator, "The lowest rank that can kick a player from a chatroom", 6);
-            Add(Command.all.Find("chatroom"), (int)LevelPermission.Operator, "The lowest rank that can send a global message to a chatroom (without any delay)", 7);
-            Add(Command.all.Find("changelog"), (int)LevelPermission.Operator, "The lowest rank that can send the changelog to everybody");
-            Add(Command.all.Find("countdown"), (int)LevelPermission.Operator, "The lowest rank that can send the rules to everybody", 1);
-            Add(Command.all.Find("countdown"), (int)LevelPermission.Operator, "The lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)", 2);
-            Add(Command.all.Find("botset"), (int)LevelPermission.Operator, "The lowest rank that can set the bot to killer");
-            Add(Command.all.Find("draw"), (int)Command.all.Find("draw").defaultRank, "The lowest rank that can use cones with /draw", 1);
-            Add(Command.all.Find("draw"), (int)Command.all.Find("draw").defaultRank, "The lowest rank that can use pyramids with /draw", 2);
-            Add(Command.all.Find("draw"), (int)Command.all.Find("draw").defaultRank, "The lowest rank that can use spheres with /draw", 3);
-            Add(Command.all.Find("draw"), (int)Command.all.Find("draw").defaultRank, "The lowest rank that can use volcanos with /draw", 4);
-            Add(Command.core.Find("tntwars"), (int)LevelPermission.Operator, "The lowest rank that can use admin commands for tntwars", 1);
-            Add(Command.core.Find("reload"), (int)LevelPermission.Operator, "The lowest rank that can reload the maps for others", 1);
-        }
+        public static void AddDefaultPerms() { }
 
         public static List<OtherPerms> list = new List<OtherPerms>();
 
@@ -82,7 +42,7 @@ namespace MCGalaxy {
             return otpe.Permission;
         }
 
-        public static OtherPerms Find(Command cmd, int number = 1){
+        public static OtherPerms Find(Command cmd, int number = 1) {
             return list.FirstOrDefault(OtPe => OtPe.cmd == cmd && OtPe.number == number);
         }
 

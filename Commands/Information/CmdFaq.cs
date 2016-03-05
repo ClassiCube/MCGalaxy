@@ -26,7 +26,9 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdFaq() { }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Builder, "The lowest rank that can send the faq to other players") }; }
+        }
 
         public override void Use(Player p, string message)
         {

@@ -24,7 +24,9 @@ namespace MCGalaxy.Commands
        public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdMap() { }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can edit map options") }; }
+        }
 
         public override void Use(Player p, string message)
         {

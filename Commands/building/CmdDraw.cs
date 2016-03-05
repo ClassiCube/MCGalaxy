@@ -25,7 +25,14 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public CmdDraw() { }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] {
+                    new CommandPerm(defaultRank, "The lowest rank that can use cones with /draw", 1),
+                    new CommandPerm(defaultRank, "The lowest rank that can use pyramids with /draw", 2),
+                    new CommandPerm(defaultRank, "The lowest rank that can use spheres with /draw", 3),
+                    new CommandPerm(defaultRank, "The lowest rank that can use volcanos with /draw", 4),
+                }; }
+        }
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }

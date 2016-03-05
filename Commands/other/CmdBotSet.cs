@@ -26,7 +26,9 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public CmdBotSet() { }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can set the bot to killer") }; }
+        }
 
         public override void Use(Player p, string message)
         {

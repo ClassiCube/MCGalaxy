@@ -22,18 +22,23 @@ namespace MCGalaxy
     public sealed class CommandList
     {
         public List<Command> commands = new List<Command>();
-        public CommandList() { }
-        public void Add(Command cmd) { commands.Add(cmd); }
-        public void AddRange(List<Command> listCommands)
-        {
-            listCommands.ForEach(delegate(Command cmd) { commands.Add(cmd); });
+        public bool AddOtherPerms = false;
+
+        public void Add(Command cmd) { 
+        	commands.Add(cmd);
+        	if (!AddOtherPerms || cmd.OtherPerms == null) return;
+        	
+        	foreach (CommandPerm perm in cmd.OtherPerms)
+        		CommandOtherPerms.Add(cmd, (int)perm.Perm, perm.Description, perm.Number);
         }
-        public List<string> commandNames()
-        {
-            var tempList = new List<string>();
-
+        
+        public void AddRange(List<Command> listCommands) {
+        	foreach(Command cmd in listCommands) Add(cmd);
+        }
+        
+        public List<string> commandNames() {
+            var tempList = new List<string>(commands.Count);
             commands.ForEach(cmd => tempList.Add(cmd.name));
-
             return tempList;
         }
 

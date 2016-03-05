@@ -24,6 +24,7 @@ namespace MCGalaxy
     {
         public static void InitAll()
         {
+            all.AddOtherPerms = true;
             all.Add(new CmdAbort());
             all.Add(new CmdAbout());
             // all.Add(new CmdAddGlobalBlock());

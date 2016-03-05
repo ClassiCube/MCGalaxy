@@ -29,7 +29,10 @@ namespace MCGalaxy.Commands
        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public CmdPatrol() { }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Guest, "The highest rank to be patrolled") }; }
+        }
+        
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/patrol - Teleports you to a random " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " or lower");

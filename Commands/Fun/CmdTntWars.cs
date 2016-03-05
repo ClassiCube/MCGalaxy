@@ -27,7 +27,9 @@ namespace MCGalaxy.Commands
 		public override string type { get { return CommandTypes.Games; } }
 		public override bool museumUsable { get { return false; } }
 		public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-		public CmdTntWars() { }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can use admin commands for tntwars", 1) }; }
+        }
 
         public bool DeleteZone = false;
         public bool CheckZone = false;

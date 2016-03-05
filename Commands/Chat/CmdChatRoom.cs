@@ -25,6 +25,17 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override CommandPerm[] OtherPerms {
+            get { return new[] { 
+                    new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank that can create chatrooms", 1),
+                    new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank that can delete a chatroom if empty", 2),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can delete a chatroom", 3),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can spy on a chatroom", 4),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can force a player to join a chatroom", 5),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can kick a player from a chatroom", 6),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can send a global message to a chatroom (without any delay)", 7),
+                }; }
+        }
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
