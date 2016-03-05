@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
             if (args.Length > 1) { Help(p); return; }
             
             Player target = PlayerInfo.Find(message);
-            if (target == null || target.hidden) { Player.SendMessage(p, "There is no player \"" + message + "\"."); return; }
+            if (target == null || !Player.CanSee(p, target)) { Player.SendMessage(p, "There is no player \"" + message + "\"."); return; }
             if (target.level.name.Contains("cMuseum")) {
                 Player.SendMessage(p, "Player \"" + message + "\" is in a museum!"); return;
             }

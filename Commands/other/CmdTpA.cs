@@ -11,7 +11,6 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdTpA() { }
 
         public override void Use(Player p, string message) {
             if (message == "") {
@@ -22,7 +21,7 @@ namespace MCGalaxy.Commands {
 
             Player who = PlayerInfo.Find(message);
             if (who == p) { Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You cannot send yourself a request!"); return; }
-            if (who == null || (who.hidden && p.group.Permission < LevelPermission.Admin)) { Player.SendMessage(p, "There is no player \"" + message + "\"!"); return; }
+            if (who == null || !Player.CanSee(p, who)) { Player.SendMessage(p, "There is no player \"" + message + "\"."); return; }
             if (who.listignored.Contains(p.name))
             {
                 //Lies

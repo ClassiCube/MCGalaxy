@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             bool showInfected = p.aka; p.aka = !p.aka;
 
             foreach (Player pl in PlayerInfo.players) {
-                if (pl.level != p.level || p == pl || pl.hidden || pl.referee) continue;
+            	if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.referee) continue;
                 
                 p.SendDespawn(pl.id);
                 string name = null;

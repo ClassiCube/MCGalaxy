@@ -46,10 +46,11 @@ namespace MCGalaxy.Commands
                 foreach (Player pl in PlayerInfo.players) {
                     if (pl.group != grp) continue;
                     if (pl.hidden && !showHidden) continue;
-                    if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
+                    if (Player.CanSee(p, pl)) {
                         string name = Colors.StripColours(pl.DisplayName);
+                        if (pl.hidden) name += "(hidden)";
+                        if (pl.muted) name += "(muted)";
                         if (Server.afkset.Contains(pl.name)) name += "-afk";
-                        if (pl.muted) name += "[muted]";
                         rankSec.Append(pl, name);
                     }
                 } 
@@ -75,12 +76,13 @@ namespace MCGalaxy.Commands
             
             foreach (Player pl in PlayerInfo.players) {
             	if (pl.hidden && !showHidden) continue;
-                if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
+            	if (Player.CanSee(p, pl)) {
                     totalPlayers++;
                     string name = Colors.StripColours(pl.DisplayName);
 
+                    if (pl.hidden) name += "(hidden)";
+                    if (pl.muted) name += "(muted)";
                     if (Server.afkset.Contains(pl.name)) name += "-afk";
-                    if (pl.muted) name += "[muted]";
 
                     if (pl.isDev) devSec.Append(pl, name);
                     if (pl.isMod) modsSec.Append(pl, name);

@@ -30,7 +30,7 @@ namespace MCGalaxy
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             Player who = PlayerInfo.Find(message);
-            if (who == null || who.hidden) {
+            if (who == null || !Player.CanSee(p, who)) {
                 Player.SendMessage(p, "Could not find player specified."); return;
             }
             if (p != null && p.muted) { Player.SendMessage(p, "Cannot use /hug while muted."); return; }

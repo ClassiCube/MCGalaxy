@@ -38,14 +38,7 @@ namespace MCGalaxy.Commands
             {
                 Player who = PlayerInfo.Find(message);
                 if (who == null) { p.whisperTo = ""; p.whisper = false; Player.SendMessage(p, "Could not find player."); return; }
-                if (who.hidden)
-                {
-                    if (p.hidden == false || who.group.Permission > p.group.Permission)
-                    {
-                        Player.SendMessage(p, "Could not find player.");
-                        return;
-                    }
-                }
+                if (!Player.CanSee(p, who)) { Player.SendMessage(p, "Could not find player."); return; }
 
                 p.whisper = true;
                 p.whisperTo = who.name;

@@ -320,6 +320,11 @@ namespace MCGalaxy {
             return "active";
         }
         
+        public static bool CanSee(Player p, Player who) {
+            if (p == null || !who.hidden) return true;
+            return p.group.Permission > who.group.Permission;
+        }
+        
         public void SetPrefix() { 
             string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", Colors.blue, color) : 
         	    isMod ? string.Format("{1}[{0}Mod{1}] ", Colors.lime, color) 
@@ -479,8 +484,8 @@ namespace MCGalaxy {
         {
             PlayerInfo.players.ForEach(delegate(Player p)
             {
-                if (p.Loading && p != from) { return; }
-                if (p.level != from.level || (from.hidden && !self)) { return; }
+                if (p.Loading && p != from) return;
+                if (p.level != from.level || (from.hidden && !self)) return;
                 
                 if (p != from)
                 {

@@ -238,7 +238,7 @@ namespace MCGalaxy {
             LevelPermission perm = p == null ? LevelPermission.Nobody : p.group.Permission;
             LevelPermission whoPerm = who.group.Permission;
             
-            if (!who.hidden || (who.hidden && perm >= whoPerm)) {
+            if (Player.CanSee(p, who)) {
                 if (who.ignoreAll) {
                     DoFakePM(p, who, message); return;
                 }

@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
             }
 
             Player who = PlayerInfo.Find(message);
-            if (who == null || who.hidden) { Player.SendMessage(p, "There is no player \"" + message + "\"!"); return; }
+            if (who == null || !Player.CanSee(p, who)) { Player.SendMessage(p, "There is no player \"" + message + "\"!"); return; }
             if (p.group.Permission < who.group.Permission)
             {
                 Player.SendMessage(p, "You cannot summon someone ranked higher than you!");

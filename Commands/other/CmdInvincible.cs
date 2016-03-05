@@ -29,20 +29,9 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            Player who;
-            if (message != String.Empty)
-            {
-                who = PlayerInfo.Find(message);
-            }
-            else
-            {
-                who = p;
-            }
-
-            if (who == null)
-            {
-                Player.SendMessage(p, "Cannot find player.");
-                return;
+        	Player who = message == "" ? p : PlayerInfo.Find(message);
+        	if (who == null || !Player.CanSee(p, who)) {
+                Player.SendMessage(p, "Cannot find player."); return;
             }
 
             if (p != null && who.group.Permission > p.group.Permission)
@@ -63,7 +52,7 @@ namespace MCGalaxy.Commands
                 	Player.SendMessage(p, who.color + who.DisplayName + Server.DefaultColor + " is no longer invincible.");
                 }
                 
-                if (Server.cheapMessage && !p.hidden)
+                if (Server.cheapMessage && !who.hidden)
                     Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " has stopped being immortal", false);
             }
             else
@@ -77,7 +66,7 @@ namespace MCGalaxy.Commands
             		Player.SendMessage( p, who.color + who.DisplayName + Server.DefaultColor + "is now invincible.");
                 }
                 who.invincible = true;
-                if (Server.cheapMessage && !p.hidden)
+                if (Server.cheapMessage && !who.hidden)
                     Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " " + Server.cheapMessageGiven, false);
             }
         }

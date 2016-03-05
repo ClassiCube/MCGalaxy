@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
                     {
                         pl.lastCMD = "";
                     }
-                    if (!pl.hidden || (pl.group.Permission <= p.group.Permission && pl.hidden))
+                    if (Player.CanSee(p, pl))
                     {
                         Player.SendMessage(p, pl.color + pl.DisplayName + Server.DefaultColor + " last used \"" + pl.lastCMD + "\"");
                     }
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
             else
             {
                 Player who = PlayerInfo.Find(message);
-                if (who == null || who.group.Permission > p.group.Permission && who.hidden) { Player.SendMessage(p, "Could not find player entered"); return; }
+                if (who == null || !Player.CanSee(p, who)) { Player.SendMessage(p, "Could not find player entered"); return; }
                 if (who.lastCMD.Contains("setpass") || who.lastCMD.Contains("pass"))
                 {
                     who.lastCMD = "";

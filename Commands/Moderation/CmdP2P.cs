@@ -34,11 +34,11 @@ namespace MCGalaxy.Commands {
             if (args.Length == 1) { Player.SendMessage(p, "You did not specify the target player."); return; }            
             Player source = PlayerInfo.Find(args[0]), target = PlayerInfo.Find(args[1]);
             
-            if ((source == null || source.hidden) && (target == null || target.hidden)) {
+            if ((source == null || !Player.CanSee(p, source)) && (target == null || !Player.CanSee(p, target))) {
                 Player.SendMessage(p, "Neither of the players specified are online."); return; 
             }
-            if (source == null || source.hidden) { Player.SendMessage(p, "The source player is not online."); return; }
-            if (target == null || target.hidden) { Player.SendMessage(p, "The target player is not online."); return; }
+            if (source == null || !Player.CanSee(p, source)) { Player.SendMessage(p, "The source player is not online."); return; }
+            if (target == null || !Player.CanSee(p, target)) { Player.SendMessage(p, "The target player is not online."); return; }
             
             if (p.group.Permission < source.group.Permission) {
                 Player.SendMessage(p, "You cannot force a player of higher rank to tp to another player."); return;

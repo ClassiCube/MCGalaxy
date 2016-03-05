@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             Dictionary<string, List<Player>> clients = new Dictionary<string, List<Player>>();
             foreach (Player pl in PlayerInfo.players) {
-                if (!pl.hidden || p == null || p.group.Permission > LevelPermission.Operator) {
+            	if (Player.CanSee(p, pl)) {
                     string appName = pl.appName;
                     if (String.IsNullOrEmpty(appName))
                         appName = "(unknown)";
