@@ -288,7 +288,7 @@ namespace MCGalaxy
                 mapData = GenerateMapData(mapSettings);
 
                 map.setPhysics(mapData.destroy ? 2 : 1);
-                map.motd = "Lava Survival: " + map.name.Capitalize();
+                map.motd = "Lava Survival: " + map.name.Capitalize() + " -hax";
                 map.overload = 1000000;
                 map.unload = false;
                 map.loadOnGoto = false;
