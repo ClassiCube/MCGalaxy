@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandPerm[] OtherPerms {
+        public override CommandPerm[] AdditionalPerms {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank that can be banned") }; }
         }
         

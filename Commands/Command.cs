@@ -29,7 +29,7 @@ namespace MCGalaxy
 		public abstract LevelPermission defaultRank { get; }
 		public abstract void Use(Player p, string message);
 		public abstract void Help(Player p);
-		public virtual CommandPerm[] OtherPerms { get { return null; } }
+		public virtual CommandPerm[] AdditionalPerms { get { return null; } }
 		
 		public bool isIntervalized;
 		public int intervalInMinutes;

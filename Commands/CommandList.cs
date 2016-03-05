@@ -26,9 +26,9 @@ namespace MCGalaxy
 
         public void Add(Command cmd) { 
         	commands.Add(cmd);
-        	if (!AddOtherPerms || cmd.OtherPerms == null) return;
+        	if (!AddOtherPerms || cmd.AdditionalPerms == null) return;
         	
-        	foreach (CommandPerm perm in cmd.OtherPerms)
+        	foreach (CommandPerm perm in cmd.AdditionalPerms)
         		CommandOtherPerms.Add(cmd, (int)perm.Perm, perm.Description, perm.Number);
         }
         

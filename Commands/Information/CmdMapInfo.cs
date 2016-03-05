@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands {
 
             if (Directory.Exists(Server.backupLocation + "/" + data.name)) {
                 int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.name).Length;
-                DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.name, latestBackup.ToString());
+                DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.name, latestBackup.ToString()));
                 Player.SendMessage(p, "Latest backup: &a" + latestBackup + " %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"));
             } else {
                 Player.SendMessage(p, "No backups for this map exist yet.");

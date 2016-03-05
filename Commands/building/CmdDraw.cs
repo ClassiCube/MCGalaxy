@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public override CommandPerm[] OtherPerms {
+        public override CommandPerm[] AdditionalPerms {
             get { return new[] {
                     new CommandPerm(defaultRank, "The lowest rank that can use cones with /draw", 1),
                     new CommandPerm(defaultRank, "The lowest rank that can use pyramids with /draw", 2),

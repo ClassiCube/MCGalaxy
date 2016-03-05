@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands
        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandPerm[] OtherPerms {
+        public override CommandPerm[] AdditionalPerms {
             get { return new[] {
                     new CommandPerm(LevelPermission.Operator, "The lowest rank to delete zones", 1),
                     new CommandPerm(LevelPermission.Operator, "The lowest rank to delete all zones", 2),

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public override CommandPerm[] OtherPerms {
+        public override CommandPerm[] AdditionalPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can reload the maps for others", 1) }; }
         }
 
