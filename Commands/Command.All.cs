@@ -25,6 +25,7 @@ namespace MCGalaxy
         public static void InitAll()
         {
             all.AddOtherPerms = true;
+            all.Add(new Cmd8Ball());            
             all.Add(new CmdAbort());
             all.Add(new CmdAbout());
             // all.Add(new CmdAddGlobalBlock());
@@ -206,6 +207,7 @@ namespace MCGalaxy
             all.Add(new CmdPUnload());
             all.Add(new CmdPyramid());
             all.Add(new CmdQueue());
+            all.Add(new CmdQuit());            
             all.Add(new CmdRagequit());
             all.Add(new CmdRainbow());
             all.Add(new CmdRankInfo());
@@ -315,8 +317,6 @@ namespace MCGalaxy
             all.Add(new CmdXundo());
             all.Add(new CmdZombieGame());
             all.Add(new CmdZone());
-            all.Add(new CmdQuit());
-            all.Add(new Cmd8Ball());
             core.commands = new List<Command>(all.commands);
             Scripting.Autoload();
         }
