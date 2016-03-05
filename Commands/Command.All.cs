@@ -316,6 +316,7 @@ namespace MCGalaxy
             all.Add(new CmdZombieGame());
             all.Add(new CmdZone());
             all.Add(new CmdQuit());
+            all.Add(new Cmd8Ball());
             core.commands = new List<Command>(all.commands);
             Scripting.Autoload();
         }
