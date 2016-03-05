@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             if (LevelInfo.ExistsOffline(dst)) { Player.SendMessage(p, "The level \"" + dst + "\" already exists."); return; }
             
             try {
-                File.Copy("levels/" + src + ".lvl", "levels/" + dst + ".lvl");
+            	File.Copy(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
                 if (File.Exists("levels/level properties/" + src + ".properties"))
                     File.Copy("levels/level properties/" + src + ".properties", "levels/level properties/" + dst + ".properties", false);
                 if (File.Exists("blockdefs/lvl_" + src + ".json"))

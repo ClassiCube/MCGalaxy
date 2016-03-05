@@ -79,15 +79,15 @@ namespace MCGalaxy.Commands
 
                 if (level == null)
                 {
-                    if (File.Exists("levels/" + message + ".lvl.backup"))
+                	if (File.Exists(LevelInfo.LevelPath(message) + ".backup"))
                     {
                     	if (LevelInfo.ExistsOffline(message))
                         {
                             Server.s.Log(message + ".lvl file is corrupt. Deleting and replacing with " + message + ".lvl.backup file.");
-                            File.Delete("levels/" + message + ".lvl");
+                            File.Delete(LevelInfo.LevelPath(message));
                         }
                         Server.s.Log("Attempting to load backup");
-                        File.Copy("levels/" + message + ".lvl.backup", "levels/" + message + ".lvl", true);
+                        File.Copy(LevelInfo.LevelPath(message) + ".backup", LevelInfo.LevelPath(message), true);
                         level = Level.Load(message);
                         if (level == null)
                         {
@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands
                             {
                                 int backupNumber = Directory.GetDirectories(backupPath + "/" + message).Length;
                                 Server.s.Log("Attempting to load latest backup, number " + backupNumber + " instead.");
-                                File.Copy(backupPath + "/" + message + "/" + backupNumber + "/" + message + ".lvl", "levels/" + message + ".lvl", true);
+                                File.Copy(LevelInfo.BackupPath(message, backupNumber.ToString()), LevelInfo.LevelPath(message), true);
                                 level = Level.Load(message);
                                 if (level == null)
                                 {

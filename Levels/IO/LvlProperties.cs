@@ -105,11 +105,7 @@ namespace MCGalaxy.Levels.IO {
         
         
         public static void Load(Level level, string path) {
-            string propsFile = path + ".properties";
-            if (!File.Exists(propsFile))
-                propsFile = path;
-            
-            foreach (string line in File.ReadAllLines(propsFile)) {
+            foreach (string line in File.ReadAllLines(path)) {
                 try {
                     if (line[0] == '#') continue;
                     int sepIndex = line.IndexOf(" = ");
@@ -122,9 +118,13 @@ namespace MCGalaxy.Levels.IO {
                     Server.ErrorLog(e);
                 }
             }
+        }
+        
+        public static void LoadEnv(Level level, string name) {
+            string path = "levels/level properties/" + name + ".env";
+            if (!File.Exists(path)) return;
             
-            if (!File.Exists(path + ".env")) return;
-            foreach (string line in File.ReadAllLines(path + ".env")) {
+            foreach (string line in File.ReadAllLines(path)) {
                 try {
                     if (line[0] == '#') continue;
                     int sepIndex = line.IndexOf(" = ");

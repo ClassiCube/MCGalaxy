@@ -533,7 +533,7 @@ namespace MCGalaxy
                 Directory.CreateDirectory(path);
 
                 string BackPath = string.Format("{0}/{1}.lvl", path, name);
-                string current = string.Format("levels/{0}.lvl", name);
+                string current = LevelInfo.LevelPath(name);
                 try
                 {
                     File.Copy(current, BackPath, true);
@@ -582,7 +582,7 @@ namespace MCGalaxy
             }
             CreateLeveldb(givenName);
 
-            string path = string.Format("levels/{0}.lvl", givenName);
+            string path = LevelInfo.LevelPath(givenName);
             if (File.Exists(path))
             {
                 try
@@ -660,7 +660,12 @@ namespace MCGalaxy
                     }
 
                     try {
-                        LvlProperties.Load(level, "levels/level properties/" + level.name);
+                        string propsPath = LevelInfo.GetPropertiesPath(level.name);
+                        if (propsPath != null)
+                            LvlProperties.Load(level, propsPath);
+                        else
+                            Server.s.Log(".properties file for level " + level.name + " was not found.");
+                        LvlProperties.LoadEnv(level, level.name);
                     } catch (Exception e) {
                         Server.ErrorLog(e);
                     }

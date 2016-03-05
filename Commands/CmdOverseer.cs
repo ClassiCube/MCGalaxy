@@ -173,7 +173,7 @@ namespace MCGalaxy.Commands
             
             if (cmd == "ADD") {
                 string level = p.name.ToLower();
-                if ((File.Exists("levels/" + level + ".lvl")) || (File.Exists("levels/" + level + "00.lvl"))) {
+                if (LevelInfo.ExistsOffline(level) || LevelInfo.ExistsOffline(level + "00")) {
                     for (int i = 2; i < p.group.OverseerMaps + 2; i++) {
                 		if (LevelInfo.ExistsOffline(p.name.ToLower() + i)) continue;
                         if(i > p.group.OverseerMaps) {

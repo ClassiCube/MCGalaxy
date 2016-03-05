@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
                 foreach (Player pl in PlayerInfo.players) {
                     if (pl.group != grp) continue;
                     if (pl.hidden && !showHidden) continue;
-                    if (Player.CanSee(p, pl)) {
+                    if (p == pl || Player.CanSee(p, pl)) {
                         string name = Colors.StripColours(pl.DisplayName);
                         if (pl.hidden) name += "(hidden)";
                         if (pl.muted) name += "(muted)";
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands
             
             foreach (Player pl in PlayerInfo.players) {
             	if (pl.hidden && !showHidden) continue;
-            	if (Player.CanSee(p, pl)) {
+            	if (p == pl || Player.CanSee(p, pl)) {
                     totalPlayers++;
                     string name = Colors.StripColours(pl.DisplayName);
 

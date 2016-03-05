@@ -24,8 +24,7 @@ namespace MCGalaxy.Levels.IO {
     public static class LvlFile {
         
         public static void Save(Level level, string file) {
-            using (Stream fs = File.Create(file),
-                   gs = new GZipStream(fs, CompressionMode.Compress, true))
+            using (Stream fs = File.Create(file), gs = new GZipStream(fs, CompressionMode.Compress, true))
             {
                 byte[] header = new byte[16];
                 BitConverter.GetBytes(1874).CopyTo(header, 0);
@@ -78,8 +77,7 @@ namespace MCGalaxy.Levels.IO {
         }
         
         public static Level Load(string name, string file) {
-            using (Stream fs = File.OpenRead(file),
-                   gs = new GZipStream(fs, CompressionMode.Decompress, true))
+            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true))
             {
                 byte[] header = new byte[16];
                 gs.Read(header, 0, 2);
@@ -121,6 +119,28 @@ namespace MCGalaxy.Levels.IO {
                     index++;
                 }
                 return level;
+            }
+        }
+		
+        public static void LoadDimensions(string file, out ushort width, out ushort height, out ushort length) {
+            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true))
+            {
+                byte[] header = new byte[16];
+                gs.Read(header, 0, 2);
+                ushort[] vars = new ushort[6];
+                vars[0] = BitConverter.ToUInt16(header, 0);
+
+                int offset = 0;
+                if (vars[0] == 1874) { // version field, width is next ushort
+                    gs.Read(header, 0, 16);
+                    vars[0] = BitConverter.ToUInt16(header, 0);
+                    offset = 2;
+                } else {
+                    gs.Read(header, 0, 12);
+                }
+                vars[1] = BitConverter.ToUInt16(header, offset);
+                vars[2] = BitConverter.ToUInt16(header, offset + 2);
+                width = vars[0]; height = vars[2]; length = vars[1];
             }
         }
     }

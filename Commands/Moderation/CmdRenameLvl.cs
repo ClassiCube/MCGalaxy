@@ -47,10 +47,10 @@ namespace MCGalaxy.Commands
             foundLevel.Unload();
 
 
-            File.Move("levels/" + foundLevel.name + ".lvl", "levels/" + newName + ".lvl");
+            File.Move(LevelInfo.LevelPath(foundLevel.name), LevelInfo.LevelPath(newName));
             try
             {
-                File.Move("levels/" + foundLevel.name + ".lvl.backup", "levels/" + newName + ".lvl.backup");
+                File.Move(LevelInfo.LevelPath(foundLevel.name) + ".backup", LevelInfo.LevelPath(newName) + ".backup");
             } catch { }
             
             try

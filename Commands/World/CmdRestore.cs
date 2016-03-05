@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands
                         else
                         {
                             Server.s.Log("Restore nulled");
-                            File.Copy("levels/" + lvl.name + ".lvl.backup", "levels/" + lvl.name + ".lvl", true);
+                            File.Copy(LevelInfo.LevelPath(lvl.name) + ".backup", LevelInfo.LevelPath(lvl.name), true);
                         }
 
                     }

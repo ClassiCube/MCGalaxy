@@ -14,61 +14,142 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.IO;
+using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands {
-	
+    
     public sealed class CmdMapInfo : Command {
-		
+        
         public override string name { get { return "mapinfo"; } }
         public override string shortcut { get { return "status"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdMapInfo() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             Level lvl = message == "" ? p.level : LevelInfo.Find(message);
-            if (lvl == null) { Player.SendMessage(p, "Could not find specified level."); return; }
+            MapInfoData data = new MapInfoData();
+            if (lvl != null) {
+            	data.FromOnlineLevel(lvl);
+            } else if (LevelInfo.ExistsOffline(message)) {
+            	data.FromOfflineLevel(message);
+            } else {
+            	Player.SendMessage(p, "Could not find specified level."); return;
+            }
+            
+            Player.SendMessage(p, "&b" + data.name + "%S: Width=" + data.Width + " Height=" + data.Height + " Depth=" + data.Length);
+            string physicsState = CmdPhysics.states[data.physics];
+            Player.SendMessage(p, "Physics are " + physicsState + Server.DefaultColor + " on &b" + data.name);
 
-            Player.SendMessage(p, "&b" + lvl.name + Server.DefaultColor + ": Width=" + lvl.Width + " Height=" + lvl.Height + " Depth=" + lvl.Length);
-            string physicsState = CmdPhysics.states[lvl.physics];
-            Player.SendMessage(p, "Physics are " + physicsState + Server.DefaultColor + " on &b" + lvl.name);
+            Player.SendMessage(p, "Build rank = " + Group.findPerm(data.build).color + Group.findPerm(data.build).trueName +
+                               " %S: Visit rank = " + Group.findPerm(data.visit).color + Group.findPerm(data.visit).trueName);
 
-            Player.SendMessage(p, "Build rank = " + Group.findPerm(lvl.permissionbuild).color + Group.findPerm(lvl.permissionbuild).trueName + Server.DefaultColor +
-                               " : Visit rank = " + Group.findPerm(lvl.permissionvisit).color + Group.findPerm(lvl.permissionvisit).trueName);
+            Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).color + Group.findPerm(data.buildmax).trueName +
+                               " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).color + Group.findPerm(data.visitmax).trueName);
 
-            Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(lvl.perbuildmax).color + Group.findPerm(lvl.perbuildmax).trueName + Server.DefaultColor + 
-                               " : VisitMax Rank = " + Group.findPerm(lvl.pervisitmax).color + Group.findPerm(lvl.pervisitmax).trueName);
+            string gunStatus = data.guns ? "&aonline" : "&coffline";
+            Player.SendMessage(p, "&cGuns &eare " + gunStatus + " &eon " + data.name + ".");
 
-            string gunStatus = lvl.guns ? "&aonline" : "&coffline";
-            Player.SendMessage(p, "&cGuns &eare " + gunStatus + " &eon " + lvl.name + ".");
-
-            if (Directory.Exists(Server.backupLocation + "/" + lvl.name)) {
-                int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + lvl.name).Length;
-                Player.SendMessage(p, "Latest backup: &a" + latestBackup + Server.DefaultColor + " at &a" + Directory.GetCreationTime(@Server.backupLocation + "/" + lvl.name + "/" + latestBackup).ToString("yyyy-MM-dd HH:mm:ss")); // + Directory.GetCreationTime(@Server.backupLocation + "/" + latestBackup + "/").ToString("yyyy-MM-dd HH:mm:ss"));
-            } else  {
+            if (Directory.Exists(Server.backupLocation + "/" + data.name)) {
+                int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.name).Length;
+                DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.name, latestBackup.ToString());
+                Player.SendMessage(p, "Latest backup: &a" + latestBackup + " %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"));
+            } else {
                 Player.SendMessage(p, "No backups for this map exist yet.");
             }
             
-            if (lvl.terrainUrl != "") {
-                Player.SendMessage(p, "TexturePack: %b" + lvl.terrainUrl);
-            } else if (lvl == Server.mainLevel && Server.defaultTerrainUrl != "") {
-                Player.SendMessage(p, "TexturePack: " + Server.defaultTerrainUrl);
-            } else {
+            if (data.terrainUrl != "")
+                Player.SendMessage(p, "TexturePack: %b" + data.terrainUrl);
+            else
                 Player.SendMessage(p, "No textures for this map exist yet.");
-            }
             
             const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
-            Player.SendMessage(p, String.Format(format, Color(lvl.FogColor), Color(lvl.SkyColor), Color(lvl.CloudColor),
-                                                Color(lvl.LightColor), Color(lvl.ShadowColor)));
+            Player.SendMessage(p, String.Format(format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
+                                                Color(data.Light), Color(data.Shadow)));
             
-            Player.SendMessage(p, "Water Level: %b" + lvl.EdgeLevel + "%S, Clouds height: %b" + lvl.CloudsHeight
-                               + "%S, Max fog distance: %b" + lvl.MaxFogDistance);
-            Player.SendMessage(p, "Edge Block: %b" + lvl.EdgeBlock + "%S, Horizon Block: %b" + lvl.HorizonBlock);
+            Player.SendMessage(p, "Water Level: %b" + data.EdgeLevel + "%S, Clouds height: %b" + data.CloudsHeight
+                               + "%S, Max fog distance: %b" + data.MaxFogDistance);
+            Player.SendMessage(p, "Edge Block: %b" + data.EdgeBlock + "%S, Horizon Block: %b" + data.HorizonBlock);
+        }
+        
+        class MapInfoData {
+            
+            public ushort Width, Height, Length;
+            public int physics;
+            public LevelPermission visit, build, visitmax, buildmax;
+            public bool guns;
+            public string name, terrainUrl;
+            public string Fog, Sky, Clouds, Light, Shadow;
+            public short EdgeLevel, CloudsHeight, MaxFogDistance;
+            public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
+
+            public void FromOnlineLevel(Level lvl) {
+                name = lvl.name;
+                Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
+                physics = lvl.physics; guns = lvl.guns;
+                visit = lvl.permissionvisit; build = lvl.permissionbuild;
+                visitmax = lvl.pervisitmax; buildmax = lvl.perbuildmax;
+                
+                Fog = lvl.FogColor; Sky = lvl.SkyColor; Clouds = lvl.CloudColor;
+                Light = lvl.LightColor; Shadow = lvl.ShadowColor;
+                EdgeLevel = lvl.EdgeLevel; CloudsHeight = lvl.CloudsHeight;
+                MaxFogDistance = lvl.MaxFogDistance;
+                EdgeBlock = lvl.EdgeBlock; HorizonBlock = lvl.HorizonBlock;
+                
+                if (lvl.terrainUrl != "")
+                    terrainUrl = lvl.terrainUrl;
+                else if (lvl == Server.mainLevel && Server.defaultTerrainUrl != "")
+                    terrainUrl = lvl.terrainUrl;
+            }
+            
+            public void FromOfflineLevel(string name) {
+                this.name = name;
+                LvlFile.LoadDimensions(LevelInfo.LevelPath(name),
+                                       out Width, out Height, out Length);
+                string path = LevelInfo.GetPropertiesPath(name);
+                Server.s.Log(path);
+                if (path != null)
+                    PropertiesFile.Read(path, ParseProperty, '=');
+                
+                path = "levels/level properties/" + name + ".env";
+                Server.s.Log(path);
+                if (File.Exists(path))
+                    PropertiesFile.Read(path, ParseEnv, '=');
+            }
+            
+            void ParseProperty(string key, string value) {
+            	switch (key.ToLower()) {
+                    case "physics": physics = int.Parse(value); break;
+                    case "perbuild": build = GetPerm(value); break;
+                    case "pervisit": visit = GetPerm(value); break;
+                    case "perbuildmax": buildmax = GetPerm(value); break;
+                    case "pervisitmax": visitmax = GetPerm(value); break;
+                    case "guns": guns = bool.Parse(value); break;
+                }
+            }
+            
+            void ParseEnv(string key, string value) {
+            	switch (key.ToLower()) {
+                    case "cloudcolor": Clouds = value; break;
+                    case "fogcolor": Fog = value; break;
+                    case "skycolor": Sky = value; break;
+                    case "shadowcolor": Shadow = value; break;
+                    case "lightcolor": Light = value; break;
+                    case "edgeblock": EdgeBlock = byte.Parse(value); break;
+                    case "edgelevel": EdgeLevel = short.Parse(value); break;
+                    case "cloudsheight": CloudsHeight = short.Parse(value); break;
+                    case "maxfog": MaxFogDistance = short.Parse(value); break;
+                    case "horizonblock": HorizonBlock = byte.Parse(value); break;
+                }
+            }
+            
+            static LevelPermission GetPerm(string value) {
+                LevelPermission perm = Level.PermissionFromName(value);
+                return perm != LevelPermission.Null ? perm : LevelPermission.Guest;
+            }
         }
         
         static string Color(string src) {

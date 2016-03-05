@@ -940,7 +940,7 @@ namespace MCGalaxy.Gui
                     MessageBox.Show("Level Creation Failed. Are  you sure you didn't leave a box empty?");
                 }
 
-                if (File.Exists("levels/" + nametxtbox.Text + ".lvl"))
+                if (LevelInfo.ExistsOffline(name))
                 {
                     MessageBox.Show("Created Level");
                     try

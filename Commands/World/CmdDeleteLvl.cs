@@ -56,9 +56,9 @@ namespace MCGalaxy.Commands {
                 int currentNum = 0;
                 while (File.Exists("levels/deleted/" + message + currentNum + ".lvl")) currentNum++;
 
-                File.Move("levels/" + message + ".lvl", "levels/deleted/" + message + currentNum + ".lvl");
+                File.Move(LevelInfo.LevelPath(message), "levels/deleted/" + message + currentNum + ".lvl");
             } else {
-                File.Move("levels/" + message + ".lvl", "levels/deleted/" + message + ".lvl");
+            	File.Move(LevelInfo.LevelPath(message), "levels/deleted/" + message + ".lvl");
             }
             Player.SendMessage(p, "Created backup.");
 

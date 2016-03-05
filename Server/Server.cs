@@ -555,10 +555,10 @@ namespace MCGalaxy
                         mainLevel.unload = false;
                         if (mainLevel == null)
                         {
-                            if (File.Exists("levels/" + level + ".lvl.backup"))
+                            if (File.Exists(LevelInfo.LevelPath(level) + ".backup"))
                             {
                                 Log("Attempting to load backup of " + level + ".");
-                                File.Copy("levels/" + level + ".lvl.backup", "levels/" + level + ".lvl", true);
+                                File.Copy(LevelInfo.LevelPath(level) + ".backup", LevelInfo.LevelPath(level), true);
                                 mainLevel = Level.Load(level);
                                 if (mainLevel == null)
                                 {
