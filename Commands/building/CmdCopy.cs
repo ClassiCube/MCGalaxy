@@ -131,7 +131,7 @@ namespace MCGalaxy.Commands
 			                                maxY - minY + 1, maxZ - minZ + 1);
 			state.SetOrigin(cpos.x, cpos.y, cpos.z);
 			int totalAir = 0, index = 0;
-			p.copyAir = cpos.type == 2;
+			state.PasteAir = cpos.type == 2;
 			
 			for (ushort yy = minY; yy <= maxY; ++yy)
 				for (ushort zz = minZ; zz <= maxZ; ++zz)

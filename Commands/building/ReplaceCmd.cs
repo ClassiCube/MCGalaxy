@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
     
@@ -25,8 +26,8 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
 
-        protected ReplaceBlock[] toAffect;
-        protected ReplaceBlock target;
+        protected ExtBlock[] toAffect;
+        protected ExtBlock target;
         
         public override void Use(Player p, string message) {
             string[] parts = message.Split(' ');
@@ -38,19 +39,17 @@ namespace MCGalaxy.Commands {
             }
 
             string[] names = parts[0].Split(',');
-            toAffect = new ReplaceBlock[names.Length];
-            bool anyInvalid = false;
-            
+            toAffect = new ExtBlock[names.Length];
             for (int i = 0; i < names.Length; i++) {
-                ReplaceBlock block;
+                ExtBlock block;
                 block.Type = DrawCmd.GetBlock(p, names[i], out block.ExtType);
                 
-                if (block.Type == Block.Zero) anyInvalid = true;
+                if (block.Type == Block.Zero) return;
                 toAffect[i] = block;
             }
             
             target.Type = DrawCmd.GetBlock(p, parts[1], out target.ExtType);
-            if (anyInvalid || target.Type == Block.Zero) return;           
+            if (target.Type == Block.Zero) return;           
             BeginReplace(p);
         }
         

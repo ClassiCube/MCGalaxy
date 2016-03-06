@@ -21,6 +21,8 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Threading;
+using MCGalaxy.Drawing;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdImageprint : Command

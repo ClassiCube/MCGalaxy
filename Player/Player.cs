@@ -213,7 +213,6 @@ namespace MCGalaxy {
 
         //Copy
         public CopyState CopyBuffer;
-        public bool copyAir = false;
         public int[] copyoffset = new int[3] { 0, 0, 0 };
         public ushort[] copystart = new ushort[3] { 0, 0, 0 };
         

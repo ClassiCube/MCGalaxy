@@ -17,16 +17,12 @@
  */
 using System;
 
-namespace MCGalaxy {
-
-    public struct ReplaceBlock {
-        public byte Type, ExtType;
-    }
+namespace MCGalaxy.Drawing.Ops {
     
     public class ReplaceDrawOp : DrawOp {
         
-        public ReplaceBlock[] ToReplace;
-        public ReplaceBlock Target;
+        public ExtBlock[] ToReplace;
+        public ExtBlock Target;
         
         public override string Name { get { return "Replace"; } }
         
@@ -36,18 +32,17 @@ namespace MCGalaxy {
         
         public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
                                      ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
-            ReplaceBlock[] toReplace = ToReplace;
-            ReplaceBlock target = Target;
+            ExtBlock[] toReplace = ToReplace;
+            ExtBlock target = Target;
             for (ushort y = y1; y <= y2; y++)
                 for (ushort z = z1; z <= z2; z++)
                     for (ushort x = x1; x <= x2; x++)
             {
                 byte tile = lvl.GetTile(x, y, z), extTile = 0;
-                if (tile == Block.custom_block)
-                    extTile = lvl.GetExtTile(x, y, z);
+                if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
                 for (int i = 0; i < toReplace.Length; i++) {
-                    ReplaceBlock block = toReplace[i];
+                    ExtBlock block = toReplace[i];
                     if (tile == block.Type && (tile != Block.custom_block || extTile == block.ExtType)) {
                         PlaceBlock(p, lvl, x, y, z, target.Type, target.ExtType); break;
                     }
@@ -58,8 +53,8 @@ namespace MCGalaxy {
     
     public class ReplaceNotDrawOp : DrawOp {
         
-        public ReplaceBlock[] ToReplace;
-        public ReplaceBlock Target;
+        public ExtBlock[] ToReplace;
+        public ExtBlock Target;
         
         public override string Name { get { return "ReplaceNot"; } }
         
@@ -69,22 +64,24 @@ namespace MCGalaxy {
         
         public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
                                      ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
-            ReplaceBlock[] toReplace = ToReplace;
-            ReplaceBlock target = Target;
+            ExtBlock[] toReplace = ToReplace;
+            ExtBlock target = Target;
             for (ushort y = y1; y <= y2; y++)
                 for (ushort z = z1; z <= z2; z++)
                     for (ushort x = x1; x <= x2; x++)
             {
                 byte tile = lvl.GetTile(x, y, z), extTile = 0;
-                if (tile == Block.custom_block)
-                    extTile = lvl.GetExtTile(x, y, z);
+                if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
+                bool place = true;
                 for (int i = 0; i < toReplace.Length; i++) {
-                    ReplaceBlock block = toReplace[i];
-                    if (tile != block.Type || (tile == Block.custom_block && extTile != block.ExtType)) {
-                        PlaceBlock(p, lvl, x, y, z, target.Type, target.ExtType); break;
+                    ExtBlock block = toReplace[i];
+                    if (tile == block.Type || (tile == Block.custom_block && extTile == block.ExtType)) {
+                        place = false; break;
                     }
                 }
+                if (place)
+                    PlaceBlock(p, lvl, x, y, z, target.Type, target.ExtType);
             }
         }
     }

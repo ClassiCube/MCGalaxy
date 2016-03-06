@@ -16,12 +16,20 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy {
+	
+	 public struct FillPos { public ushort X, Y, Z; }
+	 
+	 public struct ExtBlock { public byte Type, ExtType; }
+}
 
+namespace MCGalaxy.Drawing.Ops {
+	
     public abstract class DrawOp {
         
-        public int TotalAffected; // blocks affected by the draw operation
+        //public int TotalAffected; // blocks affected by the draw operation
         public int TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
         
         protected internal int method;
@@ -57,12 +65,12 @@ namespace MCGalaxy {
         }
         
         public virtual void Reset() {
-            TotalAffected = 0;
+            //TotalAffected = 0;
             TotalModified = 0;
         }
         
         protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
-        	byte type = brush.NextBlock();
+            byte type = brush.NextBlock();
             if (type == Block.Zero) return;
             PlaceBlock(p, lvl, x, y, z, type, brush.NextExtBlock());
         }
@@ -71,17 +79,20 @@ namespace MCGalaxy {
             switch (method) {
                 case MethodBlockQueue:
                     BlockQueue.Addblock(p, x, y, z, type, extType);
+                    TotalModified++;
                     break;
                 case MethodBlockChange:
                     p.level.Blockchange(p, x, y, z, type, extType);
+                    TotalModified++;
                     break;
                 case MethodSetTile:
                     byte old = lvl.GetTile(x, y, z);
                     if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
-                    	return;
+                        return;
                     p.level.SetTile(x, y, z, type, p, extType);
                     p.loginBlocks++;
                     p.overallBlocks++;
+                    TotalModified++;
                     break;
             }
         }
@@ -92,10 +103,10 @@ namespace MCGalaxy {
                                            ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int affected = 0;
             if (op.MinMaxCoords) {
-            	ushort xx1 = x1, yy1 = y1, zz1 = z1, xx2 = x2, yy2 = y2, zz2 = z2;
-            	x1 = Math.Min(xx1, xx2); x2 = Math.Max(xx1, xx2);
-            	y1 = Math.Min(yy1, yy2); y2 = Math.Max(yy1, yy2);
-            	z1 = Math.Min(zz1, zz2); z2 = Math.Max(zz1, zz2);
+                ushort xx1 = x1, yy1 = y1, zz1 = z1, xx2 = x2, yy2 = y2, zz2 = z2;
+                x1 = Math.Min(xx1, xx2); x2 = Math.Max(xx1, xx2);
+                y1 = Math.Min(yy1, yy2); y2 = Math.Max(yy1, yy2);
+                z1 = Math.Min(zz1, zz2); z2 = Math.Max(zz1, zz2);
             }
             
             if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
@@ -107,8 +118,10 @@ namespace MCGalaxy {
             if (needReveal) {
                 foreach (Player pl in PlayerInfo.players) {
                     if (pl.level.name.ToLower() == p.level.name.ToLower())
-                        Command.all.Find("reveal").Use(p, pl.name);
+                        CmdReveal.ReloadMap(p, pl, true);
                 }
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
             return true;
         }

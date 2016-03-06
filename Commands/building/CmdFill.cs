@@ -17,6 +17,9 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Ops;
+
 namespace MCGalaxy.Commands {
     
     public sealed class CmdFill : DrawCmd {

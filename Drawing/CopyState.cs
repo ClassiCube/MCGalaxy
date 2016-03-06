@@ -26,6 +26,7 @@ namespace MCGalaxy.Drawing {
 		public int X, Y, Z;
 		public int OriginX, OriginY, OriginZ;
 		public int Width, Height, Length;
+		public bool PasteAir;
 		
 		const int identifier = 0x434F5059; // 'COPY'
 		const int identifierC = 0x434F5043; // 'COPC' (Copy compressed)

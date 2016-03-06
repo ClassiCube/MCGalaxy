@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands
 {
