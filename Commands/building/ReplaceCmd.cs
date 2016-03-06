@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
 
             ExtBlock[] toAffect = GetBlocks(p, 0, parts.Length - 1, parts);           
             ExtBlock target;
-            target.Type = DrawCmd.GetBlock(p, parts[1], out target.ExtType);
+            target.Type = DrawCmd.GetBlock(p, parts[parts.Length - 1], out target.ExtType);
             if (target.Type == Block.Zero) return;           
             BeginReplace(p, toAffect, target);
         }
