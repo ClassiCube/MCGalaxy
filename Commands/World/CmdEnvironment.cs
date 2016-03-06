@@ -193,15 +193,19 @@ namespace MCGalaxy.Commands {
         }
         
         bool CheckBlock(Player p, string value, string variable, ref byte modify) {
-            byte block = Block.Byte(value);
-            if (block == Block.Zero) {
-                Help(p);
-            } else if (block == Block.shrub || block == Block.yellowflower || block == Block.redflower ||
-                       block == Block.mushroom || block == Block.redmushroom || block == Block.rope || block == Block.fire) {
+            byte extBlock = 0;
+            byte block = DrawCmd.GetBlock(p, value, out extBlock, false);
+            if (block == Block.Zero) return false;
+            if (block >= Block.CpeCount && block != Block.custom_block) {
+                p.SendMessage("Cannot use physics block ids for /env."); return false; 
+            }
+            
+            if (block == Block.shrub || block == Block.yellowflower || block == Block.redflower ||
+                block == Block.mushroom || block == Block.redmushroom || block == Block.rope || block == Block.fire) {
                 p.SendMessage(string.Format("Env: Cannot use {0} for {1}.", block, variable));
             } else {
-                modify = block;
-                p.SendMessage(string.Format("Set {0} for {1}&S to {2}", variable, p.level.name, block));
+                modify = block == Block.custom_block ? extBlock : block;
+                p.SendMessage(string.Format("Set {0} for {1}&S to {2}", variable, p.level.name, modify));
                 return true;
             }
             return false;
