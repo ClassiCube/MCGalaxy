@@ -57,19 +57,16 @@ namespace MCGalaxy {
                 if ( !p.disconnected )
                     p.socket.BeginReceive(p.tempbuffer, 0, p.tempbuffer.Length, SocketFlags.None,
                                           new AsyncCallback(Receive), p);
-            }
-            catch ( SocketException ) {
+            }catch ( SocketException ) {
                 p.Disconnect();
-            }
-            catch ( ObjectDisposedException ) {
+            }  catch ( ObjectDisposedException ) {
                 // Player is no longer connected, socket was closed
                 // Mark this as disconnected and remove them from active connection list
                 Player.SaveUndo(p);
-                if ( connections.Contains(p) )
-                    connections.Remove(p);
+                connections.Remove(p);
+                p.RemoveFromPending();
                 p.disconnected = true;
-            }
-            catch ( Exception e ) {
+            } catch ( Exception e ) {
                 Server.ErrorLog(e);
                 p.Kick("Error!");
             }
@@ -744,6 +741,7 @@ namespace MCGalaxy {
                 Server.ErrorLog(ex);
                 #endif
             }
+            RemoveFromPending();
         }
 
         public string ReadString(int count = 64) {

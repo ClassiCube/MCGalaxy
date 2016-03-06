@@ -20,7 +20,7 @@ namespace MCGalaxy.Commands
     public sealed class CmdMark : Command
     {
         public override string name { get { return "mark"; } }
-        public override string shortcut { get { return "mk"; } }
+        public override string shortcut { get { return "m"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -41,5 +41,4 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Use this to place a marker at your position when making a selection or cuboid.");
         }
     }
-
 }

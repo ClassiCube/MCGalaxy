@@ -599,6 +599,7 @@ namespace MCGalaxy {
                 SendKick(kickMsg, sync);           
                 if (!loggedIn) {
                 	connections.Remove(this);
+                	RemoveFromPending();
                     Server.s.Log(ip + " disconnected.");
                     return;
                 }
@@ -654,7 +655,8 @@ namespace MCGalaxy {
         }
 
         public void Dispose() {
-            if ( connections.Contains(this) ) connections.Remove(this);
+            connections.Remove(this);
+            RemoveFromPending();
             Extras.Clear();
             if (CopyBuffer != null)
                 CopyBuffer.Clear();
