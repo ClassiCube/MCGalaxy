@@ -57,8 +57,7 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, cmd.name + "'s " + permName + " was set to " + Level.PermissionToName(perm));
         }
         
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/cmdset [cmd] [rank] <otherperm> - Changes [cmd] rank to [rank]");
             Player.SendMessage(p, "Only commands you can use can be modified.");
             Player.SendMessage(p, "<otherperm> is optional and is used to set the additional " +

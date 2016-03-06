@@ -690,7 +690,29 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Commands" />
+    <Folder Include="Commands\Building" />
+    <Folder Include="Commands\Fun" />
+    <Folder Include="Commands\Information" />
+    <Folder Include="Commands\Moderation" />
+    <Folder Include="Commands\Economy" />
+    <Folder Include="Commands\Chat" />
+    <Folder Include="Commands\CPE" />
+    <Folder Include="Commands\World" />
+    <Folder Include="Commands\Other" />
+    <Folder Include="Drawing\DrawOps" />
+    <Folder Include="Games\Countdown" />
+    <Folder Include="Games\ZombieSurvival" />
+    <Folder Include="Levels\IO" />
+    <Folder Include="Levels\Generator" />
+    <Folder Include="Levels\Physics" />
+    <Folder Include="Player\Group" />
+    <Folder Include="Player\Undo" />
+    <Folder Include="Plugins" />
+    <Folder Include="Plugins\Events" />
+    <Folder Include="Plugins\Manager" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
