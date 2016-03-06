@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
@@ -27,9 +25,8 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "replaceall"; } }
         public override string shortcut { get { return "ra"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdReplaceAll() { }
         
-        protected override void BeginReplace(Player p) {
+        protected override void BeginReplace(Player p, ExtBlock[] toAffect, ExtBlock target) {
             ushort x2 = (ushort)(p.level.Width - 1);
             ushort y2 = (ushort)(p.level.Height - 1);
             ushort z2 = (ushort)(p.level.Length - 1);
@@ -43,8 +40,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/replaceall [block,block2,...] [new] - Replaces all of [block] with [new] in a map");
-            Player.SendMessage(p, "If more than one block is specified, they will all be replaced.");
+            Player.SendMessage(p, "/ra [block] [block2].. [new] - Replaces all of [block] with [new] in a map");
+            Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public CopyState CopyState;
         
-        public override string Name { get { return "Simple paste"; } }
+        public override string Name { get { return "Paste"; } }
         
         public override bool MinMaxCoords { get { return false; } }
         
@@ -58,7 +58,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class PasteDrawOp : DrawOp {
         
         public CopyState CopyState;
-        public ExtBlock[] Inclusive, Exclusive;
+        public ExtBlock[] Include, Exclude;
         
         public override string Name { get { return "Paste"; } }
         
@@ -72,7 +72,7 @@ namespace MCGalaxy.Drawing.Ops {
                                      ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
-            ExtBlock[] include = Inclusive, exclude = Exclusive;
+            ExtBlock[] include = Include, exclude = Exclude;
             // Adjust for the fact that paste origin may be outside the map.
             short offX = (short)x1, offY = (short)y1, offZ = (short)z1;
             
@@ -90,7 +90,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 if (exclude != null) {
                     for (int j = 0; j < exclude.Length; j++) {
-                        ExtBlock block = exclude[i];
+                        ExtBlock block = exclude[j];
                         if (b == block.Type || (b == Block.custom_block && extB == block.ExtType)) {
                             place = false; break;
                         }

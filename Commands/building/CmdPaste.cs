@@ -17,7 +17,6 @@
  */
 using System;
 using MCGalaxy.Drawing;
-using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
@@ -31,17 +30,18 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         public override void Use(Player p, string message) {
-            if (message != "") { Help(p); return; }
-            if (p.CopyBuffer == null) {
-                Player.SendMessage(p, "You haven't copied anything yet"); return;
-            }
+            if (p.CopyBuffer == null) { Player.SendMessage(p, "You haven't copied anything yet"); return; }
             
-            p.blockchangeObject = default(CatchPos);
-            Player.SendMessage(p, "Place a block in the corner of where you want to paste."); p.ClearBlockchange();
+            CatchPos cpos = default(CatchPos);
+            cpos.message = message;
+            p.blockchangeObject = cpos;
+            Player.SendMessage(p, "Place a block in the corner of where you want to paste.");
+            p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
 
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)p.blockchangeObject;
             RevertAndClearState(p, x, y, z);
             int offX = p.copyoffset[0] + x, offY = p.copyoffset[1] + y, offZ = p.copyoffset[2] + z;
             CopyState state = p.CopyBuffer;
@@ -49,17 +49,31 @@ namespace MCGalaxy.Commands {
             if (state.Y != state.OriginY) offY -= (state.Height - 1);
             if (state.Z != state.OriginZ) offZ -= (state.Length - 1);
 
-            SimplePasteDrawOp drawOp = new SimplePasteDrawOp();          
-            drawOp.CopyState = p.CopyBuffer;
-            if (!DrawOp.DoDrawOp(drawOp, null, p, (ushort)offX, (ushort)offY, (ushort)offZ, 0, 0, 0))
+            DrawOp op;
+            if (cpos.message == "") {
+                op = new SimplePasteDrawOp();
+                ((SimplePasteDrawOp)op).CopyState = p.CopyBuffer;
+            } else {
+                op = new PasteDrawOp();
+                ((PasteDrawOp)op).CopyState = p.CopyBuffer;
+                string[] args = cpos.message.Split(' ');
+                if (args[0].ToLower() == "not")
+                    ((PasteDrawOp)op).Exclude = ReplaceCmd.GetBlocks(p, 1, args.Length, args);
+                else
+                    ((PasteDrawOp)op).Include = ReplaceCmd.GetBlocks(p, 0, args.Length, args);
+            }
+            
+            if (!DrawOp.DoDrawOp(op, null, p, (ushort)offX, (ushort)offY, (ushort)offZ, 0, 0, 0))
                 return;
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
-        }
+        } 
 
-        struct CatchPos { }
+        struct CatchPos { public string message; }
         
         public override void Help(Player p) {
             Player.SendMessage(p, "/paste - Pastes the stored copy.");
+            Player.SendMessage(p, "/paste [block] [block2].. - Pastes only the specified blocks from the copy.");
+            Player.SendMessage(p, "/paste not [block] [block2].. - Pastes all blocks from the copy, except for the specified blocks.");
             Player.SendMessage(p, "&4BEWARE: %SThe blocks will always be pasted in a set direction");
         }
     }

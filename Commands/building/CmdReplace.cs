@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
@@ -27,10 +25,13 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "replace"; } }
         public override string shortcut { get { return "r"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public CmdReplace() { }
         
-        protected override void BeginReplace(Player p) {
-            p.blockchangeObject = default(CatchPos);
+        protected override void BeginReplace(Player p, ExtBlock[] toAffect, ExtBlock target) {
+        	CatchPos cpos = default(CatchPos);
+            cpos.toAffect = toAffect;
+            cpos.target = target;
+            p.blockchangeObject = cpos;
+            
             Player.SendMessage(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
@@ -48,8 +49,8 @@ namespace MCGalaxy.Commands {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             ReplaceDrawOp drawOp = new ReplaceDrawOp();
-            drawOp.ToReplace = toAffect;
-            drawOp.Target = target;
+            drawOp.ToReplace = cpos.toAffect;
+            drawOp.Target = cpos.target;
             
             if (!DrawOp.DoDrawOp(drawOp, null, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
@@ -57,11 +58,11 @@ namespace MCGalaxy.Commands {
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        struct CatchPos { public ushort x, y, z; }
+        struct CatchPos { public ushort x, y, z; public ExtBlock[] toAffect; public ExtBlock target; }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/replace [block,block2,...] [new] - replace block with new inside a selected cuboid");
-            Player.SendMessage(p, "If more than one block is specified, they will all be replaced.");
+            Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
+            Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
         }
     }
 }
