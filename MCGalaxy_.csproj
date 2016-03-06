@@ -173,6 +173,7 @@
     <Compile Include="Commands\Economy\CmdGive.cs" />
     <Compile Include="Commands\Economy\CmdMoney.cs" />
     <Compile Include="Commands\Economy\CmdPay.cs" />
+    <Compile Include="Commands\Fun\CmdPing.cs" />
     <Compile Include="Commands\Fun\Cmd8Ball.cs" />
     <Compile Include="Commands\Fun\CmdAka.cs" />
     <Compile Include="Commands\Fun\CmdAlive.cs" />
