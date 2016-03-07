@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             if (p.joker || p.muted) { Player.SendMessage(p, "Cannot use 8ball while muted or jokered."); return; }
             Random random = new Random();
             string[] messages = { "Not likely." , "Very likely." , "Impossible!" , "Probably." , "Ask again later." , "No." , "Maybe." };
-            Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + " asked the quesiton " + message + " ", false);
+            Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + " asked the question " + message + " ", false);
             Chat.GlobalChatLevel(p, p.color + "*" + p.color + " The answer was " + messages[random.Next(messages.Length)], false);
         }
 
