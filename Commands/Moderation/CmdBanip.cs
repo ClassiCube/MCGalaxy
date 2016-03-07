@@ -39,28 +39,13 @@ namespace MCGalaxy.Commands {
                 Player who = PlayerInfo.Find(message);
 
                 if (who == null) {
-                    DataTable ip;
-                    int tryCounter = 0;
-                rerun: try {
-                        Database.AddParams("@Name", message);
-                        ip = Database.fillData("SELECT IP FROM Players WHERE Name = @Name");
-                    } catch (Exception e) {
-                        tryCounter++;
-                        if (tryCounter < 10)
-                            goto rerun;
-                        else {
-                            Server.ErrorLog(e);
-                            return;
-                        }
-                    }
-                    if (ip.Rows.Count > 0) {
+                    OfflinePlayer target = PlayerInfo.FindOffline(message);                  
+                    if (target != null) {
                         name = message.ToLower();
-                        message = ip.Rows[0]["IP"].ToString();
+                        message = target.ip;
                     } else {
-                        Player.SendMessage(p, "Unable to find an IP address for that user.");
-                        return;
+                        Player.SendMessage(p, "Unable to find an IP address for that user."); return;
                     }
-                    ip.Dispose();
                 } else {
                     name = who.name.ToLower();
                     message = who.ip;

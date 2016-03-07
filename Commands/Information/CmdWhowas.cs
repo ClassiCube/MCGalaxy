@@ -41,33 +41,26 @@ namespace MCGalaxy.Commands
             }
 
             if (message.IndexOf("'") != -1) { Player.SendMessage(p, "Cannot parse request."); return; }
-            string syntax = Server.useMySQL ? "SELECT * FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
-            	"SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";           
-            Database.AddParams("@Name", message);
-            DataTable table = Database.fillData(syntax);
+            OfflinePlayer target = PlayerInfo.FindOffline(message, true);
             
             string plGroup = Group.findPlayer(message.ToLower());
-            if (table.Rows.Count == 0) { Player.SendMessage(p, Group.Find(plGroup).color + message + " %Shas the rank of " + Group.Find(plGroup).color + plGroup); return; }
-            string title = table.Rows[0]["Title"].ToString();
-            string color = Colors.Parse(table.Rows[0]["color"].ToString().Trim());
-            if (String.IsNullOrEmpty(color)) color = Group.Find(plGroup).color;
-            string tcolor = Colors.Parse(table.Rows[0]["title_color"].ToString().Trim());
-            if (String.IsNullOrEmpty(title))
-                Player.SendMessage(p, color + message + " %Shas :");
-            else
-                Player.SendMessage(p, color + "[" + tcolor + title + color + "] " + message + " %Shas :");
-            Player.SendMessage(p, "> > the rank of " + Group.Find(plGroup).color + plGroup);
+            Group group = Group.Find(plGroup);
+            if (target == null) { Player.SendMessage(p, group.color + message + " %Shas the rank of " + group.color + plGroup); return; }
+            string color = target.color == "" ? group.color : target.color;
+            string prefix = target.title == "" ? "" : "[" + target.titleColor + target.title + color + "] ";
+            Player.SendMessage(p, color + prefix + target.name + " %Shas :");
+            Player.SendMessage(p, "> > the rank of " + group.color + plGroup);
             
             Group nobody = Group.findPerm(LevelPermission.Nobody);
             if (nobody == null || (!nobody.commands.Contains("pay") && !nobody.commands.Contains("give") && !nobody.commands.Contains("take")))
-                Player.SendMessage(p, "> > &a" + table.Rows[0]["Money"] + Server.DefaultColor + " " + Server.moneys);
+                Player.SendMessage(p, "> > &a" + target.money + " %S" + Server.moneys);
                 
-            Player.SendMessage(p, "> > &cdied &a" + table.Rows[0]["TotalDeaths"] + Server.DefaultColor + " times");
-            Player.SendMessage(p, "> > &bmodified &a" + table.Rows[0]["totalBlocks"] + " &eblocks.");
-            Player.SendMessage(p, "> > was last seen on &a" + table.Rows[0]["LastLogin"]);
-            Player.SendMessage(p, "> > " + TotalTime(table.Rows[0]["TimeSpent"].ToString()));
-            Player.SendMessage(p, "> > first logged into the server on &a" + table.Rows[0]["FirstLogin"]);
-            Player.SendMessage(p, "> > logged in &a" + table.Rows[0]["totalLogin"] + Server.DefaultColor + " times, &c" + table.Rows[0]["totalKicked"] + Server.DefaultColor + " of which ended in a kick.");
+            Player.SendMessage(p, "> > &cdied &a" + target.deaths + " %Stimes");
+            Player.SendMessage(p, "> > &bmodified &a" + target.blocks + " &eblocks.");
+            Player.SendMessage(p, "> > was last seen on &a" + target.lastLogin);
+            Player.SendMessage(p, "> > " + TotalTime(target.totalTime));
+            Player.SendMessage(p, "> > first logged into the server on &a" + target.firstLogin);
+            Player.SendMessage(p, "> > logged in &a" + target.logins + " %Stimes, &c" + target.kicks + " %Sof which ended in a kick.");
             Player.SendMessage(p, "> > " + Awards.awardAmount(message) + " awards");
             if (Ban.IsBanned(message)) {
                 string[] data = Ban.GetBanData(message);
@@ -79,13 +72,12 @@ namespace MCGalaxy.Commands
             else if (Server.GCmods.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9Global Chat Moderator");
 
             if (p == null || (int)p.group.Permission <= CommandOtherPerms.GetPerm(this)) {
-                if (Server.bannedIP.Contains(table.Rows[0]["IP"].ToString()))
-                    table.Rows[0]["IP"] = "&8" + table.Rows[0]["IP"] + ", which is banned";
-                Player.SendMessage(p, "> > the IP of " + table.Rows[0]["IP"]);
+                if (Server.bannedIP.Contains(target.ip))
+                    target.ip = "&8" + target.ip + ", which is banned";
+                Player.SendMessage(p, "> > the IP of " + target.ip);
                 if (Server.useWhitelist&& Server.whiteList.Contains(message))
                     Player.SendMessage(p, "> > Player is &fWhitelisted");
             }
-            table.Dispose();
         }
         
         string TotalTime(string time) {
@@ -95,7 +87,6 @@ namespace MCGalaxy.Commands
         
         public override void Help(Player p) {
             Player.SendMessage(p, "/whowas <name> - Displays information about someone who left.");
-        }
-       
+        }    
     }
 }

@@ -37,12 +37,11 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(message);
             if (who == null) {
                 Player.SendMessage(p, "&eNo online player \"" + message + "\", searching database..");
-                Database.AddParams("@Name", message);
-                DataTable playerDb = Database.fillData("SELECT * FROM Players WHERE Name=@Name");
-                if (playerDb.Rows.Count == 0) {
+                OfflinePlayer target = PlayerInfo.FindOffline(message);
+                if (target == null) {
                     Player.SendMessage(p, "&cCould not find player at all"); return;
                 }
-                ip = (string)playerDb.Rows[0]["IP"];
+                ip = target.ip;
             } else {
                 ip = who.ip;
             }

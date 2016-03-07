@@ -100,6 +100,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\WhoWas.cs" />
     <Compile Include="Commands\Building\CmdAbort.cs" />
     <Compile Include="Commands\Building\CmdBind.cs" />
     <Compile Include="Commands\Building\CmdCenter.cs" />
@@ -575,7 +576,6 @@
     <Compile Include="Player\VIP.cs" />
     <Compile Include="Server\Extra\Warp.cs" />
     <Compile Include="API\WebServer.cs" />
-    <Compile Include="API\WhoWas.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\SparseBitSet.cs" />
     <EmbeddedResource Include="GUI\Eco\EcoLevelWindow.resx">

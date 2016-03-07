@@ -38,35 +38,15 @@ namespace MCGalaxy.Commands
                 Player who = PlayerInfo.Find(message);
                 if (who == null)
                 {
-                    DataTable ip;
-                    int tryCounter = 0;
-             rerun: try
-                    {
-                        Database.AddParams("@Name", message);
-                        ip = Database.fillData("SELECT IP FROM Players WHERE Name = @Name");
-                    }
-                    catch (Exception e)
-                    {
-                        tryCounter++;
-                        if (tryCounter < 10)
-                        {
-                            goto rerun;
-                        }
-                        else
-                        {
-                            Server.ErrorLog(e);
-                            Player.SendMessage(p, "There was a database error fetching the IP address.  It has been logged.");
-                            return;
-                        }
-                    }
+                    Database.AddParams("@Name", message);
+                    DataTable ip = Database.fillData("SELECT IP FROM Players WHERE Name = @Name");
                     if (ip.Rows.Count > 0)
                     {
                         message = ip.Rows[0]["IP"].ToString();
                     }
                     else
                     {
-                        Player.SendMessage(p, "Unable to find an IP address for that user.");
-                        return;
+                        Player.SendMessage(p, "Unable to find an IP address for that user."); return;
                     }
                     ip.Dispose();
                 }

@@ -36,14 +36,9 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             Player who = PlayerInfo.Find(args[0]);
             if (who == null) {
-                Database.AddParams("@Name", args[0]);
-                string syntax = Server.useMySQL ? "SELECT * FROM players WHERE Name=@Name COLLATE utf8_general_ci" :
-                    "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
-                
-                using (DataTable table = Database.fillData(syntax)) {
-                    if (table.Rows.Count == 0) { Player.SendMessage(p, "Player &b" + args[0] + " %Swas not found in the database."); return; }
-                    args[0] = table.Rows[0]["Name"].ToString();
-                }
+                OfflinePlayer target = PlayerInfo.FindOffline(args[0]);
+                if (target == null) { Player.SendMessage(p, "Player &b" + args[0] + " %Swas not found in the database."); return; }
+                args[0] = target.name;
             }
             if (args.Length == 1) {
                 Player.SendMessage(p, Colors.red + "You must specify a type to modify.");

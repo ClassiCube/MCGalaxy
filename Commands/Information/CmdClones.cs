@@ -41,14 +41,9 @@ namespace MCGalaxy.Commands
 			if (who == null)
 			{
 				Player.SendMessage(p, "Could not find player. Searching Player DB.");
-
-                Database.AddParams("@Name", message);
-				DataTable FindIP = Database.fillData("SELECT IP FROM Players WHERE Name=@Name");
-
-				if (FindIP.Rows.Count == 0) { Player.SendMessage(p, "Could not find any player by the name entered."); FindIP.Dispose(); return; }
-
-				message = FindIP.Rows[0]["IP"].ToString();
-				FindIP.Dispose();
+				OfflinePlayer target = PlayerInfo.FindOffline(message);
+				if (target == null) { Player.SendMessage(p, "Could not find any player by the name entered."); return; }
+				message = target.ip;
 			}
 			else
 			{
@@ -75,7 +70,7 @@ namespace MCGalaxy.Commands
 
 		public override void Help(Player p)
 		{
-			Player.SendMessage(p, "/clones <name> - Finds everyone with the same IP as <name>"); //Fixed typo
+			Player.SendMessage(p, "/clones <name> - Finds everyone with the same IP as <name>");
 		}
 	}
 }
