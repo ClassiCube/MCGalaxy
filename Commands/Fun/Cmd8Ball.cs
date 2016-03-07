@@ -29,11 +29,11 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (String.IsNullOrEmpty(message)) { Help(p); return; }
-            if (p.joker || p.muted) { Player.SendMessage(p, "Cannot use /me while muted or jokered."); return; }
+            if (p.joker || p.muted) { Player.SendMessage(p, "Cannot use /8ball while muted or jokered."); return; }
             Random random = new Random();
             string[] messages = { "Not likely." , "Very likely." , "Impossible!" , "Probably." , "Ask again later." , "No." , "Maybe." };
             Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + "asked the quesiton " + message + " ", false);
-            Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + "and the awnser was " + [random.Next(messages.Length)], false);
+            Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + "and the awnser was " + + messages[random.Next(messages.Length)], false);
         }
 
         public override void Help(Player p) {
