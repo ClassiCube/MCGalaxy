@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             Random random = new Random();
             string[] messages = { "Not likely." , "Very likely." , "Impossible!" , "Probably." , "Ask again later." , "No." , "Maybe." };
             Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + " asked the question " + message + " ", false);
-            Chat.GlobalChatLevel(p, p.color + "*" + p.color + " The answer was " + messages[random.Next(messages.Length)], false);
+            Chat.GlobalChatLevel(p, p.color + "*" + p.color + "The answer was " + messages[random.Next(messages.Length)], false);
         }
 
         public override void Help(Player p) {
