@@ -11,49 +11,45 @@ software distributed under the Licenses are distributed on an "AS IS"
 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
-*/
-
+ */
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdDelTempRank : Command
-    {
+using System.Text;
+
+namespace MCGalaxy.Commands {
+    
+    public sealed class CmdDelTempRank : Command {
         public override string name { get { return "deltemprank"; } }
         public override string shortcut { get { return "dtr"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdDelTempRank() { }
-        public override void Use(Player p, string message)
-        {
+
+        public override void Use(Player p, string message) {
             string alltext = File.ReadAllText("text/tempranks.txt");
-            if (!alltext.Contains(message))
-            {
+            if (!alltext.Contains(message)) {
                 Player.SendMessage(p, "&cPlayer &a" + message + "&c Has not been assigned a temporary rank. Cannot unnasign.");
                 return;
             }
-            string alltempranks = "";
-           Player who = PlayerInfo.Find(message);
-           foreach (string line in File.ReadAllLines("text/tempranks.txt"))
-           {
-               if (line.Contains(message))
-               {
-                   string group = line.Split(' ')[2];
-                   Group newgroup = Group.Find(group);
-                   Command.all.Find("setrank").Use(null, who.name + " " + newgroup.name + " temp rank unassigned");
-                   Player.SendMessage(p, "&eTemporary rank of &a" + message + "&e has been unassigned");
-                   Player.SendMessage(who, "&eYour temporary rank has been unassigned");
-               }
-               if (!line.Contains(message))
-               {
-                   alltempranks = alltempranks + line + "\r\n";
-               }
-           }
-           File.WriteAllText("text/tempranks.txt", alltempranks);
+            
+            StringBuilder all = new StringBuilder();
+            Player who = Player.Find(message);
+            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
+                if (line.Contains(message)) {
+                    string group = line.Split(' ')[2];
+                    Group newgroup = Group.Find(group);
+                    Command.all.Find("setrank").Use(null, message + " " + newgroup.name + " temp rank unassigned");
+                    Player.SendMessage(p, "&eTemporary rank of &a" + message + "&e has been unassigned");
+                    if (who != null)
+                        Player.SendMessage(who, "&eYour temporary rank has been unassigned");
+                } else {
+                    all.AppendLine(line);
+                }
+            }
+            File.WriteAllText("text/tempranks.txt", all.ToString());
         }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "/deltemprank - Deletes someones temporary rank");
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "/dtr <player> - Deletes that player's temp rank");
         }
     }
 }
