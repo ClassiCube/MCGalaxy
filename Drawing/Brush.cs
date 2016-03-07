@@ -16,14 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Drawing {
     
     public abstract class Brush {
         
-        public abstract byte NextBlock();
+        public abstract byte NextBlock(DrawOp op);
         
-        public abstract byte NextExtBlock();
+        public abstract byte NextExtBlock(DrawOp op);
     }
     
     public sealed class SolidBrush : Brush {
@@ -34,15 +35,15 @@ namespace MCGalaxy {
             this.extType = extType;
         }
         
-        public override byte NextBlock() { return type; }
+        public override byte NextBlock(DrawOp op) { return type; }
         
-        public override byte NextExtBlock() { return extType; }
+        public override byte NextExtBlock(DrawOp op) { return extType; }
     }
     
     public sealed class RainbowBrush : Brush {
         byte curBlock = Block.red;
         
-        public override byte NextBlock() {
+        public override byte NextBlock(DrawOp op) {
             byte block = curBlock; 
             curBlock++;
             if (curBlock > Block.darkpink)
@@ -50,7 +51,7 @@ namespace MCGalaxy {
             return block;
         }
         
-        public override byte NextExtBlock() { return 0; }
+        public override byte NextExtBlock(DrawOp op) { return 0; }
     }
     
     public sealed class RandomBrush : Brush {
@@ -62,11 +63,11 @@ namespace MCGalaxy {
             this.extType = extType;
         }
         
-        public override byte NextBlock() {
+        public override byte NextBlock(DrawOp op) {
             return (byte)rnd.Next(1, 11) <= 5 ? type : Block.Zero;
         }
         
-        public override byte NextExtBlock() { return extType; }
+        public override byte NextExtBlock(DrawOp op) { return extType; }
     }
     
     public sealed class RandomRainbowBrush : Brush {
@@ -80,10 +81,10 @@ namespace MCGalaxy {
             rnd = new Random(seed);
         }
         
-        public override byte NextBlock() {
+        public override byte NextBlock(DrawOp op) {
             return (byte)rnd.Next(Block.red, Block.darkgrey);
         }
         
-        public override byte NextExtBlock() { return 0; }
+        public override byte NextExtBlock(DrawOp op) { return 0; }
     }
 }

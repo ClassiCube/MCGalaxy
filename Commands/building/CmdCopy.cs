@@ -73,19 +73,13 @@ namespace MCGalaxy.Commands
 		}
 		
 		void HandleOther(Player p, string opt, string[] parts) {
-			CatchPos cpos = default(CatchPos);
-			cpos.ignoreTypes = new List<byte>();
-			cpos.extIgnoreTypes = new List<byte>();
+			CatchPos cpos = default(CatchPos);;
 			p.copyoffset[0] = 0; p.copyoffset[1] = 0; p.copyoffset[2] = 0;
 			
 			if (opt == "cut") {
 				cpos.type = 1;
 			} else if (opt == "air") {
 				cpos.type = 2;
-				if (parts.Length > 1 && parts[1].ToLower() == "ignore")
-					GetIgnoreBlocks(cpos, p, 2, parts);
-			} else if (opt == "ignore") {
-				GetIgnoreBlocks(cpos, p, 1, parts);
 			} else if (!String.IsNullOrEmpty(opt)) {
 				Help(p); return;
 			}
@@ -94,19 +88,6 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "Place two blocks to determine the edges.");
 			p.ClearBlockchange();
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
-		}
-		
-		void GetIgnoreBlocks(CatchPos cpos, Player p, int i, string[] parts) {
-			for (; i < parts.Length; i++ ) {
-				byte extType = 0;
-				byte type = DrawCmd.GetBlock(p, parts[i], out extType);
-				if (type == Block.Zero) continue;
-				
-				if (type != Block.custom_block || extType == 0)
-					cpos.ignoreTypes.Add(type);
-				if (type == Block.custom_block)
-					cpos.extIgnoreTypes.Add(extType);
-			}
 		}
 
 		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -131,7 +112,7 @@ namespace MCGalaxy.Commands
 			                                maxY - minY + 1, maxZ - minZ + 1);
 			state.SetOrigin(cpos.x, cpos.y, cpos.z);
 			int totalAir = 0, index = 0;
-			p.copyAir = cpos.type == 2;
+			state.PasteAir = cpos.type == 2;
 			
 			for (ushort yy = minY; yy <= maxY; ++yy)
 				for (ushort zz = minZ; zz <= maxZ; ++zz)
@@ -141,14 +122,10 @@ namespace MCGalaxy.Commands
 				if (!Block.canPlace(p, b)) { index++; continue; }
 				if (b == Block.custom_block)
 					extB = p.level.GetExtTile(xx, yy, zz);
-				bool ignore = cpos.ignoreTypes.Contains(b) || cpos.extIgnoreTypes.Contains(extB);
 				
-				if (b == Block.air && cpos.type != 2 || ignore)
-					totalAir++;
-				if (!ignore) {
-					state.Blocks[index] = b;
-					state.ExtBlocks[index] = extB;
-				}
+				if (b == Block.air && cpos.type != 2) totalAir++;
+			    state.Blocks[index] = b;
+				state.ExtBlocks[index] = extB;
 				index++;
 			}
 			p.CopyBuffer = state;
@@ -231,11 +208,7 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "Loaded copy as " + file);
 		}
 		
-		struct CatchPos {
-			public ushort x, y, z;
-			public int type;
-			public List<byte> ignoreTypes, extIgnoreTypes;
-		}
+		struct CatchPos { public ushort x, y, z; public int type; }
 		
 		public override void Help(Player p) {
 			Player.SendMessage(p, "/copy - Copies the blocks in an area.");
@@ -245,7 +218,6 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "/copy list - Lists all saved copies you have");
 			Player.SendMessage(p, "/copy cut - Copies the blocks in an area, then removes them.");
 			Player.SendMessage(p, "/copy air - Copies the blocks in an area, including air.");
-			Player.SendMessage(p, "/copy ignore <block1> <block2>.. - Ignores <blocks> when copying");
 			Player.SendMessage(p, "/copy @ - @ toggle for all the above, gives you a third click after copying that determines where to paste from");
 		}
 	}

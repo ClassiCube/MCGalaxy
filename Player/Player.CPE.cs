@@ -191,20 +191,24 @@ namespace MCGalaxy
         }
         
         public void SendCurrentMapAppearance() {
+        	byte edgeBlock = level.EdgeBlock, horBlock = level.HorizonBlock;
+        	if (edgeBlock >= Block.CpeCount && !HasCpeExt(CpeExt.BlockDefinitions))
+        	    edgeBlock = level.GetFallback(edgeBlock);
+        	if (horBlock >= Block.CpeCount && !HasCpeExt(CpeExt.BlockDefinitions))
+        	    horBlock = level.GetFallback(horBlock);  
+        	    
             if (EnvMapAppearance == 2) {
                 string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
                 if (url == "") 
                     url = Server.defaultTexturePackUrl == "" ? Server.defaultTerrainUrl : Server.defaultTexturePackUrl;
                 
                 // reset all other textures back to client default.
-                SendSetMapAppearanceV2("", level.EdgeBlock, level.HorizonBlock, level.EdgeLevel, 
-                                       level.CloudsHeight, level.MaxFogDistance);
+                SendSetMapAppearanceV2("", edgeBlock, horBlock, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
                 if (url != "")
-                    SendSetMapAppearanceV2(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel,
-                                           level.CloudsHeight, level.MaxFogDistance);
+                    SendSetMapAppearanceV2(url, edgeBlock, horBlock, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
             } else {
                 string url = level.terrainUrl == "" ? Server.defaultTerrainUrl : level.terrainUrl;
-                SendSetMapAppearance(url, level.EdgeBlock, level.HorizonBlock, level.EdgeLevel);
+                SendSetMapAppearance(url, edgeBlock, horBlock, level.EdgeLevel);
             }
         }
         

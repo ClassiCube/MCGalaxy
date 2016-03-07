@@ -396,10 +396,12 @@
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
     <Compile Include="Drawing\DrawOps\FillDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\LineDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\PasteDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\ReplaceDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TorusDrawOp.cs" />
+    <Compile Include="Drawing\Vector3U16.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />

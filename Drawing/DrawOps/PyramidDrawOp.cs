@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Drawing.Ops {
 
     public abstract class PyramidDrawOp : DrawOp {
         protected DrawOp baseOp;

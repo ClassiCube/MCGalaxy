@@ -18,9 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
-
-    public struct FillPos { public ushort X, Y, Z; }
+namespace MCGalaxy.Drawing.Ops {
     
     public class FillDrawOp : DrawOp {
         

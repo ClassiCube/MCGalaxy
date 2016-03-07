@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands {
         
         protected virtual void OnUse(Player p, string msg, string[] parts, ref CatchPos cpos) { }
         
-        internal static byte GetBlock(Player p, string msg, out byte extType) {
+        internal static byte GetBlock(Player p, string msg, out byte extType, bool checkPlacePerm = true) {
             byte type = Block.Byte(msg);
             extType = 0;
             if (type == Block.Zero) {
@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands {
             	return Block.custom_block;
             }
             
-            if (!Block.canPlace(p, type)) {
+            if (checkPlacePerm && !Block.canPlace(p, type)) {
                 Player.SendMessage(p, "Cannot place the block \"" + msg + "\".");
                 return Block.Zero;
             }

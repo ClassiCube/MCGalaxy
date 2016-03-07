@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Drawing.Ops {
 
     public class CuboidDrawOp : DrawOp {
         

@@ -18,6 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.Drawing.Ops;
+
 namespace MCGalaxy.Commands
 {
 	public sealed class CmdMissile : Command

@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
     
@@ -24,36 +25,33 @@ namespace MCGalaxy.Commands {
         
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
-
-        protected ReplaceBlock[] toAffect;
-        protected ReplaceBlock target;
         
         public override void Use(Player p, string message) {
             string[] parts = message.Split(' ');
             for (int i = 0; i < parts.Length; i++)
                 parts[i] = parts[i].ToLower();
-            if (parts.Length != 2) {
-                p.SendMessage("You need to provide exactly two arguments.");
-                Help(p); return;
-            }
+            if (parts.Length < 2) { Help(p); return; }
 
-            string[] names = parts[0].Split(',');
-            toAffect = new ReplaceBlock[names.Length];
-            bool anyInvalid = false;
-            
-            for (int i = 0; i < names.Length; i++) {
-                ReplaceBlock block;
-                block.Type = DrawCmd.GetBlock(p, names[i], out block.ExtType);
-                
-                if (block.Type == Block.Zero) anyInvalid = true;
-                toAffect[i] = block;
-            }
-            
-            target.Type = DrawCmd.GetBlock(p, parts[1], out target.ExtType);
-            if (anyInvalid || target.Type == Block.Zero) return;           
-            BeginReplace(p);
+            ExtBlock[] toAffect = GetBlocks(p, 0, parts.Length - 1, parts);           
+            ExtBlock target;
+            target.Type = DrawCmd.GetBlock(p, parts[parts.Length - 1], out target.ExtType);
+            if (target.Type == Block.Zero) return;           
+            BeginReplace(p, toAffect, target);
         }
         
-        protected abstract void BeginReplace(Player p);
+        internal static ExtBlock[] GetBlocks(Player p, int start, int max, string[] parts) {
+            ExtBlock[] blocks = new ExtBlock[max - start];
+            for (int j = 0; j < blocks.Length; j++)
+                blocks[j].Type = Block.Zero;
+            for (int j = 0; start < max; start++, j++ ) {
+                byte extType = 0;
+                byte type = DrawCmd.GetBlock(p, parts[start], out extType);
+                if (type == Block.Zero) continue;
+                blocks[j].Type = type; blocks[j].ExtType = extType;
+            }
+            return blocks;
+        }
+        
+        protected abstract void BeginReplace(Player p, ExtBlock[] toAffect, ExtBlock target);
     }
 }

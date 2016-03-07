@@ -18,6 +18,9 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
+using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Ops;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdMaze : Command

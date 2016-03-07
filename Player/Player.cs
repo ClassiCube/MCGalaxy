@@ -213,7 +213,6 @@ namespace MCGalaxy {
 
         //Copy
         public CopyState CopyBuffer;
-        public bool copyAir = false;
         public int[] copyoffset = new int[3] { 0, 0, 0 };
         public ushort[] copystart = new ushort[3] { 0, 0, 0 };
         
@@ -599,6 +598,7 @@ namespace MCGalaxy {
                 SendKick(kickMsg, sync);           
                 if (!loggedIn) {
                 	connections.Remove(this);
+                	RemoveFromPending();
                     Server.s.Log(ip + " disconnected.");
                     return;
                 }
@@ -654,7 +654,8 @@ namespace MCGalaxy {
         }
 
         public void Dispose() {
-            if ( connections.Contains(this) ) connections.Remove(this);
+            connections.Remove(this);
+            RemoveFromPending();
             Extras.Clear();
             if (CopyBuffer != null)
                 CopyBuffer.Clear();

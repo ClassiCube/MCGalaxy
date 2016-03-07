@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Drawing.Ops {
     
     public class LineDrawOp : DrawOp {
         

@@ -16,20 +16,42 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy {
+    
+     public struct FillPos { public ushort X, Y, Z; }
+     
+     public struct ExtBlock { public byte Type, ExtType; }
+}
 
+namespace MCGalaxy.Drawing.Ops {
+    
     public abstract class DrawOp {
         
-        public int TotalAffected; // blocks affected by the draw operation
+        //public int TotalAffected; // blocks affected by the draw operation
         public int TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
         
         protected internal int method;
         
+        /// <summary> Minimum coordinates of the bounds of this drawing command. </summary>
+        public Vector3U16 MinCoords;
+        
+        /// <summary> Maximum coordinates of the bounds of this drawing command. </summary>
+        public Vector3U16 MaxCoords;
+        
+        /// <summary> Coordinates of the current block being processed by the drawing command. </summary>
+        public Vector3U16 CurrentCoords;
+        
+        /// <summary> Whether the two given coordinates from the user should be adjusted,
+        /// so that the first coordinate contains the minimum values on all three axes. </summary>
         public virtual bool MinMaxCoords { get { return true; } }
         
+        /// <summary> Human friendly name of the draw operation. </summary>
         public abstract string Name { get; }
         
+        /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
+        /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
         public abstract int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2);
         
         public abstract void Perform(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
@@ -57,31 +79,35 @@ namespace MCGalaxy {
         }
         
         public virtual void Reset() {
-            TotalAffected = 0;
+            //TotalAffected = 0;
             TotalModified = 0;
         }
         
         protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
-        	byte type = brush.NextBlock();
+            CurrentCoords.X = x; CurrentCoords.Y = y; CurrentCoords.Z = z;
+            byte type = brush.NextBlock(this);
             if (type == Block.Zero) return;
-            PlaceBlock(p, lvl, x, y, z, type, brush.NextExtBlock());
+            PlaceBlock(p, lvl, x, y, z, type, brush.NextExtBlock(this));
         }
         
         protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type, byte extType) {
             switch (method) {
                 case MethodBlockQueue:
                     BlockQueue.Addblock(p, x, y, z, type, extType);
+                    TotalModified++;
                     break;
                 case MethodBlockChange:
                     p.level.Blockchange(p, x, y, z, type, extType);
+                    TotalModified++;
                     break;
                 case MethodSetTile:
                     byte old = lvl.GetTile(x, y, z);
                     if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
-                    	return;
+                        return;
                     p.level.SetTile(x, y, z, type, p, extType);
                     p.loginBlocks++;
                     p.overallBlocks++;
+                    TotalModified++;
                     break;
             }
         }
@@ -91,11 +117,13 @@ namespace MCGalaxy {
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                            ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int affected = 0;
+            op.MinCoords = Vector3U16.Min(x1, y1, z1, x2, y2, z2);
+            op.MaxCoords = Vector3U16.Max(x1, y1, z1, x2, y2, z2);
             if (op.MinMaxCoords) {
-            	ushort xx1 = x1, yy1 = y1, zz1 = z1, xx2 = x2, yy2 = y2, zz2 = z2;
-            	x1 = Math.Min(xx1, xx2); x2 = Math.Max(xx1, xx2);
-            	y1 = Math.Min(yy1, yy2); y2 = Math.Max(yy1, yy2);
-            	z1 = Math.Min(zz1, zz2); z2 = Math.Max(zz1, zz2);
+                ushort xx1 = x1, yy1 = y1, zz1 = z1, xx2 = x2, yy2 = y2, zz2 = z2;
+                x1 = Math.Min(xx1, xx2); x2 = Math.Max(xx1, xx2);
+                y1 = Math.Min(yy1, yy2); y2 = Math.Max(yy1, yy2);
+                z1 = Math.Min(zz1, zz2); z2 = Math.Max(zz1, zz2);
             }
             
             if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
@@ -107,8 +135,10 @@ namespace MCGalaxy {
             if (needReveal) {
                 foreach (Player pl in PlayerInfo.players) {
                     if (pl.level.name.ToLower() == p.level.name.ToLower())
-                        Command.all.Find("reveal").Use(p, pl.name);
+                        CmdReveal.ReloadMap(p, pl, true);
                 }
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
             return true;
         }

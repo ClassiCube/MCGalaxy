@@ -17,7 +17,7 @@
  */
 using System.Collections.Generic;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Drawing {
     
     internal static class FindReference {
         public static List<ColorBlock> popRefCol(byte popType)

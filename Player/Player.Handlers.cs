@@ -26,6 +26,14 @@ namespace MCGalaxy {
 	
     public sealed partial class Player : IDisposable {
 		
+        bool removedFromPending = false;        
+        void RemoveFromPending() {
+            if (removedFromPending) return;
+            removedFromPending = true;
+            lock (pendingLock)
+                pendingNames.Remove(truename);
+        }
+        
 		public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
@@ -190,8 +198,6 @@ namespace MCGalaxy {
                     switch (msg) {
                     	case Opcode.Handshake:
                             HandleLogin(message);
-                            lock (pendingLock)
-                                pendingNames.Remove(truename);
                             break;
                     	case Opcode.SetBlockClient:
                             if (!loggedIn)
@@ -415,8 +421,8 @@ namespace MCGalaxy {
 
                 lock (PlayerInfo.players)
                     PlayerInfo.players.Add(this);
-
                 connections.Remove(this);
+                RemoveFromPending();
 
                 Server.s.PlayerListUpdate();
 
