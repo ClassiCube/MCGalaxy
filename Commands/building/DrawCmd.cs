@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
                 Help(p); return;
             } else if (parts.Length >= 2) {                
                 byte type = GetBlock(p, parts[0], out cpos.extType);
-                if (type == 255) return;
+                if (type == Block.Zero) return;
                 SolidType solid = GetType(parts[1]);
                 if (solid == SolidType.Invalid) {
                     Help(p); return;

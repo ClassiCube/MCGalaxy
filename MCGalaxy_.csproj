@@ -390,7 +390,9 @@
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\CmdUnlock.cs" />
     <Compile Include="Drawing\BlockWriter.cs" />
-    <Compile Include="Drawing\Brush.cs" />
+    <Compile Include="Drawing\Brushes\Brush.cs" />
+    <Compile Include="Drawing\Brushes\PasteBrush.cs" />
+    <Compile Include="Drawing\Brushes\SolidBrush.cs" />
     <Compile Include="Drawing\CopyState.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
@@ -704,6 +706,7 @@
     <Folder Include="Commands\World" />
     <Folder Include="Commands\Other" />
     <Folder Include="Drawing\DrawOps" />
+    <Folder Include="Drawing\Brushes" />
     <Folder Include="Games\Countdown" />
     <Folder Include="Games\ZombieSurvival" />
     <Folder Include="Levels\IO" />

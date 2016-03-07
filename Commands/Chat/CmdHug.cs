@@ -17,7 +17,7 @@
 */
 using System;
 
-namespace MCGalaxy
+namespace MCGalaxy.Commands
 {
     public class CmdHug : Command
     {

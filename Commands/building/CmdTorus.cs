@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Commands {
     

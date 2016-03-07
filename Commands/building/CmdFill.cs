@@ -17,7 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
@@ -82,8 +82,8 @@ namespace MCGalaxy.Commands {
             
             FillDrawOp drawOp = new FillDrawOp();
             drawOp.Positions = buffer;
-            SolidBrush brush = new SolidBrush(cpos.type, cpos.extType);
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, 0, 0, 0, 0, 0, 0))
+            Brush brush = new SolidBrush(cpos.type, cpos.extType);
+            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, cpos.x, cpos.y, cpos.z))
                 return;
             bits.Clear();
             drawOp.Positions = null;           

@@ -17,7 +17,7 @@
 */
 using System.IO;
 
-namespace MCGalaxy
+namespace MCGalaxy.Commands
 {
     public sealed class CmdJail : Command
     {

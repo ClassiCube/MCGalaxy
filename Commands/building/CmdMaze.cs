@@ -18,7 +18,7 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
-using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands
