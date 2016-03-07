@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
             else if (Server.Mods.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9MCGalaxy Moderator");
             else if (Server.GCmods.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9Global Chat Moderator");
 
-            if (p == null || (int)p.group.Permission <= CommandOtherPerms.GetPerm(this)) {
+            if (p == null || (int)p.group.Permission >= CommandOtherPerms.GetPerm(this)) {
                 if (Server.bannedIP.Contains(target.ip))
                     target.ip = "&8" + target.ip + ", which is banned";
                 Player.SendMessage(p, "> > the IP of " + target.ip);
