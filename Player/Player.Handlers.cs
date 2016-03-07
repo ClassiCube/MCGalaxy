@@ -285,7 +285,7 @@ namespace MCGalaxy {
 
                 try {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
-                    if (tBan.allowedJoin < DateTime.Now) {
+                    if (tBan.expiryTime < DateTime.Now) {
                         Server.tempBans.Remove(tBan);
                     } else {
                         Kick("You're still banned (temporary ban)!", true);
