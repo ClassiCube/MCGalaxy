@@ -29,13 +29,12 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         protected override SolidType GetType(string msg) {
-            if (msg == "default") return SolidType.solid;
-            else if (msg == "up") return SolidType.up;
+            if (msg == "up") return SolidType.up;
             else if (msg == "down") return SolidType.down;
             else if (msg == "layer") return SolidType.layer;
             else if (msg == "vertical_x") return SolidType.verticalX;
             else if (msg == "vertical_z") return SolidType.verticalZ;
-            return SolidType.Invalid;
+            return SolidType.solid;
         }
         
         protected override string PlaceMessage {
@@ -75,11 +74,12 @@ namespace MCGalaxy.Commands {
             
             FillDrawOp drawOp = new FillDrawOp();
             drawOp.Positions = buffer;
-            Brush brush = new SolidBrush(cpos.type, cpos.extType);
+            Brush brush = GetBrush(p, cpos, 1);
+            if (brush == null) return;
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, cpos.x, cpos.y, cpos.z))
                 return;
             bits.Clear();
-            drawOp.Positions = null;           
+            drawOp.Positions = null;
 
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

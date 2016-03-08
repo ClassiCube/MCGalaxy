@@ -286,7 +286,7 @@ namespace MCGalaxy.Commands {
                 foreach (string key in ckw.Keywords)
             {
                 if (key == "" || key.IndexOf(word, comp) < 0) continue;
-                if (!list.Contains(ckw.Cmd.name)) list.Add(ckw.Cmd.name);
+                list.Add(ckw.Cmd.name); break;
             }
             return list.Count == 0 ? null : list.ToArray();
         }
@@ -300,6 +300,7 @@ namespace MCGalaxy.Commands {
                 for (int i = 0; i < words.Length; i++) {
                     if (key == "" || key.IndexOf(words[i], comp) < 0) continue;
                     if (!list.Contains(ckw.Cmd.name)) list.Add(ckw.Cmd.name);
+                    break;
                 }
             }
             return list.Count == 0 ? null : list.ToArray();

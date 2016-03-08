@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Drawing.Brushes;
 using System;
 
 namespace MCGalaxy.Commands {
@@ -30,32 +31,8 @@ namespace MCGalaxy.Commands {
             for (int i = 0; i < parts.Length; i++)
                 parts[i] = parts[i].ToLower();
             CatchPos cpos = default(CatchPos);
-            
-            if (parts.Length > MaxArgs) {
-                Help(p); return;
-            } else if (parts.Length >= 2) {                
-                byte type = GetBlock(p, parts[0], out cpos.extType);
-                if (type == Block.Zero) return;
-                SolidType solid = GetType(parts[1]);
-                if (solid == SolidType.Invalid) {
-                    Help(p); return;
-                }             
-                cpos.solid = solid;
-                cpos.type = type;
-            } else if (message == "") {
-                cpos.solid = SolidType.solid;
-                cpos.type = 0xFF;
-            } else if (parts.Length == 1) {
-                byte type = 0xFF;
-                SolidType solid = GetType(parts[0]);
-                if (solid == SolidType.Invalid) {
-                    solid = SolidType.solid;
-                    type = GetBlock(p, parts[0], out cpos.extType);
-                    if (type == 255) return;
-                }             
-                cpos.solid = solid;
-                cpos.type = type;           
-            }
+            cpos.message = message;
+            cpos.solid = message == "" ? SolidType.solid : GetType(parts[parts.Length - 1]);
             OnUse(p, message, parts, ref cpos);
             p.blockchangeObject = cpos;
             
@@ -76,8 +53,6 @@ namespace MCGalaxy.Commands {
             p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
-
-        protected virtual int MaxArgs { get { return 2; } }
         
         protected virtual string PlaceMessage { get { return null; } }
         
@@ -108,8 +83,21 @@ namespace MCGalaxy.Commands {
             return type;
         }
         
+        protected static Brush GetBrush(Player p, CatchPos cpos, int usedFromEnd) {
+        	int end = cpos.message.Length - 1;
+        	string brushMsg = "";
+        	for (int i = 0; i < usedFromEnd; i++) {
+        		end = cpos.message.LastIndexOf(' ', end);
+        		if (end == -1) break;  
+        	}
+        	
+        	if (end >= 0) brushMsg = cpos.message.Substring(0, end);
+        	var constructor = Brush.Brushes[p.BrushName];
+        	BrushArgs args = new BrushArgs(p, brushMsg, cpos.type, cpos.extType);
+        	return constructor(args);
+        }
+        
         protected static void GetRealBlock(byte type, byte extType, Player p, ref CatchPos cpos) {
-        	if (cpos.type != Block.Zero) return;
             cpos.type = type < 128 ? p.bindings[type] : type;
             cpos.extType = extType;
         }
@@ -119,6 +107,7 @@ namespace MCGalaxy.Commands {
             public byte type, extType;
             public ushort x, y, z;
             public object data;
+            public string message;
         }
 
         protected enum SolidType {
@@ -126,7 +115,6 @@ namespace MCGalaxy.Commands {
             holes, wire, random,
             vertical, reverse, straight, 
             up, down, layer, verticalX, verticalZ,
-            Invalid = -1,
         }
     }
 }

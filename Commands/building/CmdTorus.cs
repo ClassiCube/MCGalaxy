@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = new TorusDrawOp();
-            Brush brush = new SolidBrush(cpos.type, cpos.extType);
+            Brush brush = GetBrush(p, cpos, 0);
+            if (brush == null) return;
                       
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
@@ -45,7 +46,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/torus [type] - create a radius of blocks.");
+            Player.SendMessage(p, "/torus [block] - create a radius of blocks.");
             Player.SendMessage(p, "Radius of the tube is calculated based on " +
                                "vertical difference between the two corners.");
         }

@@ -50,7 +50,8 @@ namespace MCGalaxy.Commands
                     brush = new RandomBrush(cpos.type, cpos.extType); break;
             }
             
-            if (brush == null) brush = new SolidBrush(cpos.type, cpos.extType);
+            if (brush == null) brush = GetBrush(p, cpos, 1);
+            if (brush == null) return;
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
             if (p.staticCommands)
@@ -58,13 +59,12 @@ namespace MCGalaxy.Commands
         }
         
         protected override SolidType GetType(string msg) {
-            if (msg == "solid") return SolidType.solid;
-            else if (msg == "hollow") return SolidType.hollow;
+            if (msg == "hollow") return SolidType.hollow;
             else if (msg == "walls") return SolidType.walls;
             else if (msg == "holes") return SolidType.holes;
             else if (msg == "wire") return SolidType.wire;
             else if (msg == "random") return SolidType.random;
-            return SolidType.Invalid;
+            return SolidType.solid;
         }
         
         public override void Help(Player p) {

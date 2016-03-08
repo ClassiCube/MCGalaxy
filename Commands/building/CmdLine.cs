@@ -27,9 +27,6 @@ namespace MCGalaxy.Commands {
         
         public override string name { get { return "line"; } }
         public override string shortcut { get { return "l"; } }
-        public CmdLine() {}
-        
-        protected override int MaxArgs { get { return 3; } }
         
         protected override SolidType GetType(string msg) {
             if (msg == "walls") return SolidType.walls;
@@ -38,11 +35,11 @@ namespace MCGalaxy.Commands {
         }
         
         protected override void OnUse(Player p, string msg, string[] parts, ref CatchPos cpos) {
-            if (parts.Length == 2 || parts.Length == 3) {
+            if (parts.Length >= 2) {
                 string arg = parts[parts.Length - 1];
                 ushort len;
                 if (!ushort.TryParse(arg, out len)) {
-                    if (arg == "walls" || arg == "straight" || arg == "normal") return;                
+                    if (arg == "walls" || arg == "straight" || arg == "normal") return;
                     Player.SendMessage(p, msg + " is not valid length, assuming maximum length allowed.");
                 } else {
                     cpos.data = len;
@@ -73,7 +70,8 @@ namespace MCGalaxy.Commands {
             drawOp.WallsMode = cpos.solid == SolidType.walls;
             if (cpos.data != null)
                 drawOp.MaxLength = (ushort)cpos.data;
-            Brush brush = new SolidBrush(cpos.type, cpos.extType);
+            Brush brush = GetBrush(p, cpos, cpos.data == null ? 1 : 2);
+            if (brush == null) return;
                       
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;

@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
-            Brush brush = new SolidBrush(cpos.type, cpos.extType);
+            Brush brush = GetBrush(p, cpos, 1);
+            if (brush == null) return;
 
             switch (cpos.solid) {
                 case SolidType.solid:
@@ -50,10 +51,9 @@ namespace MCGalaxy.Commands {
         }
         
         protected override SolidType GetType(string msg) {
-            if (msg == "solid") return SolidType.solid;
-            else if (msg == "hollow") return SolidType.hollow;
+            if (msg == "hollow") return SolidType.hollow;
             else if (msg == "vertical") return SolidType.vertical;
-            return SolidType.Invalid;
+            return SolidType.solid;
         }
         
         public override void Help(Player p) {

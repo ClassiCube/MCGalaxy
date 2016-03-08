@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
-            Brush brush = new SolidBrush(cpos.type, cpos.extType);
+            Brush brush = GetBrush(p, cpos, 1);
+            if (brush == null) return;
             
             if (y != cpos.y) {
                 Player.SendMessage(p, "The two edges of the pyramid must be on the same level");
@@ -55,10 +56,9 @@ namespace MCGalaxy.Commands
         }
         
         protected override SolidType GetType(string msg) {
-            if (msg == "solid") return SolidType.solid;
-            else if (msg == "hollow") return SolidType.hollow;
+            if (msg == "hollow") return SolidType.hollow;
             else if (msg == "reverse") return SolidType.reverse;
-            return SolidType.Invalid;
+            return SolidType.solid;
         }
         
         public override void Help(Player p) {
