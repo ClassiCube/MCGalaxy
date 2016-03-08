@@ -40,16 +40,9 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (message != "")
-            {
-                Help(p);
-                return;
-            }
-            if (p == null)
-            {
-                Player.SendMessage(p, "Are you stupid? =S You can't use this in the console!");
-                return;
-            }
+        	if (p == null) { MessageInGameOnly(p); return; }
+            if (message != "") { Help(p); return; }
+
             List<string> getpatrol = (from pl in PlayerInfo.players where (int) pl.@group.Permission <= CommandOtherPerms.GetPerm(this) select pl.name).ToList();
             if (getpatrol.Count <= 0)
             {

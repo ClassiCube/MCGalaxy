@@ -68,11 +68,11 @@ namespace MCGalaxy {
         
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Player Find(string name) {
-            Player[] tempList = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online;
             Player match = null; int matches = 0;
             name = name.ToLower();
 
-            foreach (Player p in tempList) {
+            foreach (Player p in players) {
                 if (p.name.Equals(name, comp)) return p;
                 if (p.name.IndexOf(name, comp) >= 0) {
                     match = p; matches++;
@@ -82,19 +82,19 @@ namespace MCGalaxy {
         }
         
         public static Player FindExact(string name) {
-            Player[] tempList = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online;
 
-            foreach (Player p in tempList) {
+            foreach (Player p in players) {
                 if (p.name.Equals(name, comp)) return p;
             }
             return null;
         }
         
         public static Player FindNick(string nick) {
-        	Player[] tempList = PlayerInfo.Online;
+        	Player[] players = PlayerInfo.Online;
             Player match = null; int matches = 0;
 
-            foreach (Player p in tempList) {
+            foreach (Player p in players) {
                 if (p.DisplayName.Equals(nick, comp)) return p;
                 if (p.DisplayName.IndexOf(nick, comp) >= 0) {
                     match = p; matches++;
