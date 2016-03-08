@@ -27,21 +27,14 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "fill"; } }
         public override string shortcut { get { return "f"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public CmdFill() { }
         
         protected override SolidType GetType(string msg) {
-            if (msg == "default")
-                return SolidType.solid;
-            else if (msg == "up")
-                return SolidType.up;
-            else if (msg == "down")
-                return SolidType.down;
-            else if (msg == "layer")
-                return SolidType.layer;
-            else if (msg == "vertical_x")
-                return SolidType.verticalX;
-            else if (msg == "vertical_z")
-                return SolidType.verticalZ;
+            if (msg == "default") return SolidType.solid;
+            else if (msg == "up") return SolidType.up;
+            else if (msg == "down") return SolidType.down;
+            else if (msg == "layer") return SolidType.layer;
+            else if (msg == "vertical_x") return SolidType.verticalX;
+            else if (msg == "vertical_z") return SolidType.verticalZ;
             return SolidType.Invalid;
         }
         

@@ -269,7 +269,7 @@ namespace MCGalaxy {
                         break;
                     }
                     if (StandardPhysics.DoLeafDecay(this, C))
-                        AddUpdate(C.b, 0);
+                        AddUpdate(C.b, Block.air);
                     C.time = 255;
                     break;
 
@@ -648,7 +648,7 @@ namespace MCGalaxy {
                 case Block.mushroom:
                 case Block.redmushroom:
                     if (physics > 1 && physics != 5 && !CheckSpongeWater(x, y, z))
-                        AddUpdate(b, 0); //Adv physics kills flowers and mushrooms in water
+                        AddUpdate(b, Block.air); //Adv physics kills flowers and mushrooms in water
                     break;
 
                 case Block.sand:
@@ -778,10 +778,10 @@ namespace MCGalaxy {
             byte tile = GetTile(bBelow);
             
             if (tile == Block.staircasestep) {
-                AddUpdate(b, 0);
+                AddUpdate(b, Block.air);
                 AddUpdate(bBelow, Block.staircasefull);
             } else if (tile == Block.cobblestoneslab) {
-                AddUpdate(b, 0);
+                AddUpdate(b, Block.air);
                 AddUpdate(bBelow, Block.stone);
             }
         }
@@ -826,7 +826,7 @@ namespace MCGalaxy {
                 if (block == Block.Zero) continue;
                 
                 if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
-                    AddUpdate(index, 0);
+                    AddUpdate(index, Block.air);
             }
         }
         

@@ -32,10 +32,8 @@ namespace MCGalaxy.Commands {
         protected override int MaxArgs { get { return 3; } }
         
         protected override SolidType GetType(string msg) {
-            if (msg == "walls")
-                return SolidType.walls;
-            else if (msg == "straight")
-                return SolidType.straight;
+            if (msg == "walls") return SolidType.walls;
+            else if (msg == "straight") return SolidType.straight;
             return SolidType.solid;
         }
         

@@ -103,6 +103,7 @@
     <Compile Include="API\WhoWas.cs" />
     <Compile Include="Commands\Building\CmdAbort.cs" />
     <Compile Include="Commands\Building\CmdBind.cs" />
+    <Compile Include="Commands\building\CmdBrush.cs" />
     <Compile Include="Commands\Building\CmdCenter.cs" />
     <Compile Include="Commands\Building\CmdClick.cs" />
     <Compile Include="Commands\Building\CmdCmdBind.cs" />
@@ -392,6 +393,7 @@
     <Compile Include="Commands\World\CmdUnlock.cs" />
     <Compile Include="Drawing\BlockWriter.cs" />
     <Compile Include="Drawing\Brushes\Brush.cs" />
+    <Compile Include="Drawing\Brushes\CheckeredBrush.cs" />
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
     <Compile Include="Drawing\Brushes\SolidBrush.cs" />
     <Compile Include="Drawing\CopyState.cs" />

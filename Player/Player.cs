@@ -69,9 +69,9 @@ namespace MCGalaxy {
         public System.Timers.Timer afkTimer = new System.Timers.Timer(2000);
         public int afkCount = 0;
         public DateTime afkStart;
-        public string WoMVersion = "";
         public bool cmdTimer = false;
         public bool UsingWom = false;
+        public string BrushName = "normal";
 
         byte[] buffer = new byte[0];
         byte[] tempbuffer = new byte[0xFF];

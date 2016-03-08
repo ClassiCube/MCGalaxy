@@ -51,7 +51,7 @@ namespace MCGalaxy.BlockPhysics {
         
         public static void DoFlood(Level lvl, Check C, Random rand, AirFlood mode, byte block) {
             if (C.time >= 1) {
-                lvl.AddUpdate(C.b, 0);
+                lvl.AddUpdate(C.b, Block.air);
                 C.time = 255; return;
             }
             ushort x, y, z;

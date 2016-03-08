@@ -28,10 +28,11 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public abstract byte NextExtBlock(DrawOp op);
         
-        public Dictionary<string, Func<BrushArgs, Brush>> Brushes = new Dictionary<string, Func<BrushArgs, Brush>> {
+        public static Dictionary<string, Func<BrushArgs, Brush>> Brushes 
+        	= new Dictionary<string, Func<BrushArgs, Brush>> {
             { "normal", SolidBrush.Process },
-            { "solid", SolidBrush.Process },
             { "paste", PasteBrush.Process },
+            { "checkered", CheckeredBrush.Process },
         };
     }
     

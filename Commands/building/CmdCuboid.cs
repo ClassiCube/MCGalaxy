@@ -58,18 +58,12 @@ namespace MCGalaxy.Commands
         }
         
         protected override SolidType GetType(string msg) {
-            if (msg == "solid")
-                return SolidType.solid;
-            else if (msg == "hollow")
-                return SolidType.hollow;
-            else if (msg == "walls")
-                return SolidType.walls;
-            else if (msg == "holes")
-                return SolidType.holes;
-            else if (msg == "wire")
-                return SolidType.wire;
-            else if (msg == "random")
-                return SolidType.random;
+            if (msg == "solid") return SolidType.solid;
+            else if (msg == "hollow") return SolidType.hollow;
+            else if (msg == "walls") return SolidType.walls;
+            else if (msg == "holes") return SolidType.holes;
+            else if (msg == "wire") return SolidType.wire;
+            else if (msg == "random") return SolidType.random;
             return SolidType.Invalid;
         }
         

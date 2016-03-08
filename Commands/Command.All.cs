@@ -55,6 +55,7 @@ namespace MCGalaxy
             all.Add(new CmdBots());
             all.Add(new CmdBotSet());
             all.Add(new CmdBotSummon());
+            all.Add(new CmdBrush());
             all.Add(new CmdC4());
             all.Add(new CmdCenter());
             all.Add(new CmdChain());

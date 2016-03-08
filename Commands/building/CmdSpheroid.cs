@@ -50,12 +50,9 @@ namespace MCGalaxy.Commands {
         }
         
         protected override SolidType GetType(string msg) {
-            if (msg == "solid")
-                return SolidType.solid;
-            else if (msg == "hollow")
-                return SolidType.hollow;
-            else if (msg == "vertical")
-                return SolidType.vertical;
+            if (msg == "solid") return SolidType.solid;
+            else if (msg == "hollow") return SolidType.hollow;
+            else if (msg == "vertical") return SolidType.vertical;
             return SolidType.Invalid;
         }
         
