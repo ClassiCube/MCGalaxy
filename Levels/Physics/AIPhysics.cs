@@ -30,21 +30,19 @@ namespace MCGalaxy.BlockPhysics {
 			ushort x, y, z;
 			lvl.IntToPos(C.b, out x, out y, out z);
 			
-			PlayerInfo.players.ForEach(
-				delegate(Player p)
-				{
-					if (p.level == lvl && !p.invincible) {
-						int curDist = Math.Abs((p.pos[0] / 32) - x) +
-							Math.Abs((p.pos[1] / 32) - y) +
-							Math.Abs((p.pos[2] / 32) - z);
-						
-						if (curDist < closestDist) {
-							closestDist = curDist;
-							closetPlayer = p;
-						}
-					}
-				}
-			);
+			Player[] players = PlayerInfo.Online; 
+			foreach (Player p in players) {
+                if (p.level == lvl && !p.invincible) {
+                    int curDist = Math.Abs((p.pos[0] / 32) - x) +
+                        Math.Abs((p.pos[1] / 32) - y) +
+                        Math.Abs((p.pos[2] / 32) - z);
+                    
+                    if (curDist < closestDist) {
+                        closestDist = curDist;
+                        closetPlayer = p;
+                    }
+                }
+            }
 			return closetPlayer;
 		}
 	}

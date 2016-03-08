@@ -42,12 +42,10 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    foreach (Player pl in PlayerInfo.players)
-                    {
+                	Player[] players = PlayerInfo.Online;
+                    foreach (Player pl in players) {
                         if (pl.level == which && pl.group.Permission < p.group.Permission)
-                        {
-                               Command.all.Find("slap").Use(p, pl.name);
-                        }
+                            Command.all.Find("slap").Use(p, pl.name);
                     }
                     return;
                 }

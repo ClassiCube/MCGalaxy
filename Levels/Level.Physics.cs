@@ -93,7 +93,9 @@ namespace MCGalaxy {
 
                             wait = speedPhysics;
                         } else {
-                            foreach (Player p in PlayerInfo.players.Where(p => p.level == this)) {
+                        	Player[] online = PlayerInfo.Online;
+                            foreach (Player p in online) {
+                        	    if (p.level != this) continue;
                                 Player.SendMessage(p, "Physics warning!");
                             }
                             Server.s.Log("Physics warning on " + name);
@@ -210,7 +212,10 @@ namespace MCGalaxy {
                         // TODO: do we need conversion for non-CPE block clients?
                         data[(i << 3) + 7] = Block.Convert(pendingTypes[i]);
                     }
-                    PlayerInfo.players.ForEach(p => { if (p.level == this) p.SendRaw(data); });
+                    Player[] players = PlayerInfo.Online;
+                    foreach (Player p in players) {
+                        if (p.level == this) p.SendRaw(data);
+                    }
                     pendingCount = 0;
                 }
             } catch {

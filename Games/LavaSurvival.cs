@@ -300,14 +300,14 @@ namespace MCGalaxy
                 sendingPlayers = true;
                 try
                 {
-                    PlayerInfo.players.ForEach(delegate(Player pl)
-                    {
+                	Player[] online = PlayerInfo.Online; 
+                	foreach (Player pl in online) {
                         if (pl.level == oldMap)
                         {
                             if (sendAfkMain && Server.afkset.Contains(pl.name)) Command.all.Find("main").Use(pl, "");
                             else Command.all.Find("goto").Use(pl, map.name);
                         }
-                    });
+                    }
                     if (OnMapChange != null)
                         OnMapChange(oldMap, map);
                     oldMap.Unload(true, false);
@@ -423,11 +423,11 @@ namespace MCGalaxy
             {
                 if (OnPlayerDeath != null)
                     OnPlayerDeath(p);
-                PlayerInfo.players.ForEach(delegate(Player pl)
-                {
+                Player[] online = PlayerInfo.Online; 
+                foreach (Player pl in online) {
                     if (pl != p && HasPlayer(pl))
                         Player.SendMessage(pl, p.color + p.name + " &4ran out of lives, and is out of the round!");
-                });
+                }
                 Player.SendMessage(p, "&4You ran out of lives, and are out of the round!");
                 Player.SendMessage(p, "&4You can still watch, but you cannot build.");
             }

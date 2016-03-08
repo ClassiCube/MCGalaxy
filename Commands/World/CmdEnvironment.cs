@@ -116,7 +116,8 @@ namespace MCGalaxy.Commands {
         }
         
         void SendEnvColorPackets(Player p, byte envType, string value) {
-            foreach (Player pl in PlayerInfo.players) {
+        	Player[] players = PlayerInfo.Online; 
+            foreach (Player pl in players) {
                 if (pl.level == p.level)
                     SendEnvColorPacket(pl, envType, value);
             }
@@ -158,7 +159,8 @@ namespace MCGalaxy.Commands {
             p.SendMessage(string.Format("&aSet weather for {0}&a to {1} ({2}&a)", p.level.name, weather, weatherType));
             
             // Send the changed colour to all players affected by the command.
-            foreach (Player pl in PlayerInfo.players) {
+            Player[] players = PlayerInfo.Online; 
+            foreach (Player pl in players) {
                 if (pl.level == p.level && pl.HasCpeExt(CpeExt.EnvWeatherType))
                     pl.SendSetMapWeather(weather);
             }
@@ -185,7 +187,8 @@ namespace MCGalaxy.Commands {
         }
         
         void SendCurrentMapAppearance(Level lvl) {
-            foreach (Player pl in PlayerInfo.players) {
+        	Player[] players = PlayerInfo.Online; 
+            foreach (Player pl in players) {
                 bool hasExt = pl.HasCpeExt(CpeExt.EnvMapAppearance) || pl.HasCpeExt(CpeExt.EnvMapAppearance, 2);
                 if (hasExt && pl.level == lvl)
                     pl.SendCurrentMapAppearance();

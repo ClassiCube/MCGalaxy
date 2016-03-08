@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands
         {
             if (message == "")
             {
-                foreach (Player pl in PlayerInfo.players)
+            	Player[] players = PlayerInfo.Online;
+                foreach (Player pl in players)
                 {
                     if (pl.lastCMD.Contains("setpass") || pl.lastCMD.Contains("pass"))
                     {

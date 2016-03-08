@@ -99,9 +99,10 @@ namespace MCGalaxy {
             } catch {
             }
             
+            Player[] players = PlayerInfo.Online;
             SendMessage("You have modified &a" + overallBlocks + Server.DefaultColor + " blocks!");
-            string suffix = PlayerInfo.players.Count == 1 ? " player online" : " players online";
-            SendMessage("There are currently &a" + PlayerInfo.players.Count + suffix);
+            string suffix = players.Length == 1 ? " player online" : " players online";
+            SendMessage("There are currently &a" + players.Length + suffix);
             
             try {
                 ZombieGame.alive.Remove(this);

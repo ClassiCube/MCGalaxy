@@ -75,14 +75,13 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.MakeExplosion(x, y, z, power - 2, true, game);
                 
                 List<Player> Killed = new List<Player>();
-                PlayerInfo.players.ForEach(
-                    delegate(Player p1)
-                    {
-                        if (p1.level == lvl && p1.PlayingTntWars && p1 != p
-                            && Math.Abs((int)(p1.pos[0] / 32) - x) + Math.Abs((int)(p1.pos[1] / 32) - y) + Math.Abs((int)(p1.pos[2] / 32) - z) < ((power * 3) + 1)) {
-                            Killed.Add(p1);
-                        }
-                    });
+                Player[] players = PlayerInfo.Online;
+                foreach (Player p1 in players) {
+                    if (p1.level == lvl && p1.PlayingTntWars && p1 != p
+                        && Math.Abs((int)(p1.pos[0] / 32) - x) + Math.Abs((int)(p1.pos[1] / 32) - y) + Math.Abs((int)(p1.pos[2] / 32) - z) < ((power * 3) + 1)) {
+                        Killed.Add(p1);
+                    }
+                }
                 game.HandleKill(p, Killed);
             } else {
                 if (lvl.physics < 3) {

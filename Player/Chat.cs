@@ -24,14 +24,13 @@ namespace MCGalaxy {
     public static class Chat {
         
         public static void GlobalChatLevel(Player from, string message, bool showname) {
-            if (showname) {
+            if (showname)
                 message = "<Level>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
+			Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (p.level == from.level && p.Chatroom == null)
+                    SendMessage(p, from, message);
             }
-            PlayerInfo.players.ForEach(
-                p => {
-                    if (p.level == from.level && p.Chatroom == null)
-                        SendMessage(p, from, message);
-                });
         }
         
         public static void GlobalChatRoom(Player from, string message, bool showname) {
@@ -39,58 +38,54 @@ namespace MCGalaxy {
             if ( showname ) {
                 message = "<GlobalChatRoom> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
-            PlayerInfo.players.ForEach(
-                p => {
-                    if (p.Chatroom != null)
-                        SendMessage(p, from, message);
-                });
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (p.Chatroom != null)
+                    SendMessage(p, from, message);
+            }
             Server.s.Log(oldmessage + "<GlobalChatRoom>" + from.prefix + from.name + message);
         }
         
         public static void ChatRoom(Player from, string message, bool showname, string chatroom) {
             string oldmessage = message;
             string messageforspy = ( "<ChatRoomSPY: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message );
-            if ( showname ) {
+            if (showname)
                 message = "<ChatRoom: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
+            
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (p.Chatroom == chatroom)
+                    SendMessage(p, from, message);
+                if (p.spyChatRooms.Contains(chatroom) && p.Chatroom != chatroom)
+                    SendMessage(p, from, message);
             }
-            PlayerInfo.players.ForEach(
-                p => {
-                    if (p.Chatroom == chatroom)
-                        SendMessage(p, from, message);
-                });
-            PlayerInfo.players.ForEach(
-                p => {
-                    if ( p.spyChatRooms.Contains(chatroom) && p.Chatroom != chatroom )
-                        SendMessage(p, from, message);
-                });
             Server.s.Log(oldmessage + "<ChatRoom" + chatroom + ">" + from.prefix + from.name + message);
         }
 
         public static void GlobalChatWorld(Player from, string message, bool showname) {
-            if ( showname ) {
+            if (showname)
                 message = "<World>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (p.level.worldChat && p.Chatroom == null)
+                    SendMessage(p, from, message);
             }
-            PlayerInfo.players.ForEach(
-                p => {
-                    if (p.level.worldChat && p.Chatroom == null)
-                        SendMessage(p, from, message);
-                });
         }
         
         public static void GlobalMessageLevel(Level l, string message) {
-            PlayerInfo.players.ForEach(
-                p => {
-                    if (p.level == l && p.Chatroom == null)
-                        Player.SendMessage(p, message);
-                });
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (p.level == l && p.Chatroom == null)
+                    Player.SendMessage(p, message);
+            }
         }
         
         public static void GlobalMessageMinPerms(string message, LevelPermission minPerm) {
-            PlayerInfo.players.ForEach(
-                p => {
-                    if (p.group.Permission >= minPerm)
-                        Player.SendMessage(p, message);
-                });
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (p.group.Permission >= minPerm)
+                    Player.SendMessage(p, message);
+            }
         }
         
         public static void GlobalMessageOps(string message) {

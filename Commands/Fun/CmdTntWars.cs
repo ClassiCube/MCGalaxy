@@ -248,7 +248,8 @@ namespace MCGalaxy.Commands
                         case "everyone":
 							if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
                             {
-                                foreach (Player who in PlayerInfo.players)
+								Player[] players = PlayerInfo.Online;
+                                foreach (Player who in players)
                                 {
                                     Player.SendMessage(who, "TNT Wars Rules: (sent to all players by " + p.color + p.name + Server.DefaultColor + " )");
                                     Player.SendMessage(who, "The aim of the game is to blow up people using TNT!");

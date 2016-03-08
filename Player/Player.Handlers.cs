@@ -315,12 +315,14 @@ namespace MCGalaxy {
                 if (!VIP.Find(this))
                 {
                     // Check to see how many guests we have
-                    if (PlayerInfo.players.Count >= Server.players && !IPInPrivateRange(ip)) { Kick("Server full!"); return; }
+                    Player[] online = PlayerInfo.Online;
+                    if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Kick("Server full!"); return; }
                     // Code for limiting no. of guests
                     if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Guest))
                     {
                         // Check to see how many guests we have
-                        int currentNumOfGuests = PlayerInfo.players.Count(pl => pl.group.Permission <= LevelPermission.Guest);
+                        online = PlayerInfo.Online;
+                        int currentNumOfGuests = online.Count(pl => pl.group.Permission <= LevelPermission.Guest);
                         if (currentNumOfGuests >= Server.maxGuests)
                         {
                             if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + this.DisplayName + " couldn't log in - too many guests.");
@@ -334,7 +336,8 @@ namespace MCGalaxy {
 
                 if (version != Server.version) { LeaveServer("Wrong version!", "Wrong version!", true); return; }
                 
-                foreach (Player p in PlayerInfo.players) {
+                Player[] players = PlayerInfo.Online;
+                foreach (Player p in players) {
                     if (p.name == name)  {
                         if (Server.verify) {
                             p.Kick("Someone logged in as you!"); break;
@@ -419,8 +422,7 @@ namespace MCGalaxy {
                 if (disconnected) return;
                 loggedIn = true;
 
-                lock (PlayerInfo.players)
-                    PlayerInfo.players.Add(this);
+                PlayerInfo.Add(this);
                 connections.Remove(this);
                 RemoveFromPending();
 
@@ -483,7 +485,8 @@ namespace MCGalaxy {
             string joinm = "&a+ " + this.FullName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
             if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
                 if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
-                	PlayerInfo.players.ForEach(p1 => Player.SendMessage(p1, joinm));
+            		Player[] players = PlayerInfo.Online; 
+            		foreach (Player pl in players) { Player.SendMessage(pl, joinm); }
                 }
             }
             if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
@@ -554,7 +557,8 @@ namespace MCGalaxy {
                 pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
 
                 GlobalSpawn(this, x, y, z, rot[0], rot[1], true);
-                foreach (Player p in PlayerInfo.players) {
+                Player[] players = PlayerInfo.Online; 
+                foreach (Player p in players) {
                     if (p.level == level && p != this && !p.hidden)
                         SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                     if (HasCpeExt(CpeExt.ChangeModel))

@@ -142,7 +142,8 @@ namespace MCGalaxy.Commands {
             }
             
             if (!canDeleteForce) {
-                foreach (Player pl in PlayerInfo.players) {
+            	Player[] players = PlayerInfo.Online; 
+                foreach (Player pl in players) {
                     if (pl != p && pl.Chatroom == room) {
                         Player.SendMessage(p, "Sorry, someone else is in the chatroom");
                         return;
@@ -155,7 +156,8 @@ namespace MCGalaxy.Commands {
                 HandleLeave(p);
             Server.Chatrooms.Remove(room);
             
-            foreach (Player pl in PlayerInfo.players) {
+            Player[] online = PlayerInfo.Online;
+            foreach (Player pl in online) {
                 if (pl.Chatroom == room) {
                     pl.Chatroom = null;
                     Player.SendMessage(pl, "You left the chatroom '" + room + "' because it is being deleted");
@@ -283,7 +285,8 @@ namespace MCGalaxy.Commands {
             string room = parts[0];
             if (Server.Chatrooms.Contains(room)) {
                 Player.SendMessage(p, "Players in room '" + room + "' :");
-                foreach (Player pl in PlayerInfo.players) {
+                Player[] players = PlayerInfo.Online;
+                foreach (Player pl in players) {
                     if (pl.Chatroom == room)
                         Player.SendMessage(p, pl.color + pl.name);
                 }

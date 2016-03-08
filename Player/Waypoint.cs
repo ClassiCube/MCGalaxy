@@ -136,13 +136,13 @@ namespace MCGalaxy {
         }
 
         public static void Save() {
-            foreach ( Player p in PlayerInfo.players ) {
+			Player[] players = PlayerInfo.Online;
+            foreach ( Player p in players ) {
                 if ( p.Waypoints.Count >= 1 ) {
                     using ( StreamWriter SW = new StreamWriter("extra/Waypoints/" + p.name + ".save") ) {
                         foreach ( Waypoint wp in p.Waypoints ) {
                             SW.WriteLine(wp.name + ":" + wp.lvlname + ":" + wp.x + ":" + wp.y + ":" + wp.z + ":" + wp.rotx + ":" + wp.roty);
                         }
-                        SW.Dispose();
                     }
                 }
             }

@@ -47,7 +47,8 @@ namespace MCGalaxy.Commands {
             if (!didJoin) return;
             bool unloadOld = true;
             if (oldLevel.unload && !oldLevel.name.Contains("&cMuseum ")) {
-                foreach (Player pl in PlayerInfo.players) 
+            	Player[] players = PlayerInfo.Online; 
+                foreach (Player pl in players) 
                     if (pl.level == oldLevel) { unloadOld = false; break; }
                 if (unloadOld && Server.AutoLoad) oldLevel.Unload(true);
             }
@@ -112,7 +113,8 @@ namespace MCGalaxy.Commands {
             }
 
             p.Loading = true;
-            foreach (Player pl in PlayerInfo.players) if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
+            Player[] players = PlayerInfo.Online; 
+            foreach (Player pl in players) if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
             foreach (PlayerBot b in PlayerBot.playerbots) if (p.level == b.level) p.SendDespawn(b.id);
 
             Player.GlobalDespawn(p, true);
@@ -128,7 +130,8 @@ namespace MCGalaxy.Commands {
             else
                 p.SendPos(0xFF, x, y, z, lvl.rotx, lvl.roty);
 
-            foreach (Player pl in PlayerInfo.players)
+            players = PlayerInfo.Online;
+            foreach (Player pl in players)
                 if (pl.level == p.level && p != pl && !pl.hidden)
                     p.SendSpawn(pl.id, pl.color + pl.name, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);
             foreach (PlayerBot b in PlayerBot.playerbots)

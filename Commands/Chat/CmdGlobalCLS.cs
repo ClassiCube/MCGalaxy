@@ -25,8 +25,10 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            for (int i = 0; i < 20; i++)
-                PlayerInfo.players.ForEach(pl => pl.SendBlankMessage());
+            Player[] players = PlayerInfo.Online;
+        	for (int i = 0; i < 20; i++) {
+        	    foreach (Player pl in players) pl.SendBlankMessage();
+        	}
             Player.GlobalMessage("%4Global Chat Cleared.");
         }
 

@@ -242,7 +242,8 @@ namespace MCGalaxy.Commands
                     allBlocks.Add(pos);
 
                     bool comeOut = false;
-                    foreach (Player pl in PlayerInfo.players)
+                    Player[] players = PlayerInfo.Online; 
+                    foreach (Player pl in players)
                     {
                         if (pl.level == p.level)
                         {
@@ -257,9 +258,6 @@ namespace MCGalaxy.Commands
                                         else
                                             pl.HandleDeath(Block.stone, " was shot by " + p.color + p.name);
                                         comeOut = true;
-                                        
-                                        
-
                                     }
                                 }
                             }

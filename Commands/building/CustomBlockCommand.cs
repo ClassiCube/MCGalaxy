@@ -405,7 +405,8 @@ namespace MCGalaxy.Commands {
         }
         
         static void ReloadMap(Player p, bool global) {
-            foreach (Player pl in PlayerInfo.players) {
+        	Player[] players = PlayerInfo.Online;
+            foreach (Player pl in players) {
                 if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
                 if (!global && p.level != pl.level) continue;
                 if (pl.level == null || !pl.level.HasCustomBlocks) continue;

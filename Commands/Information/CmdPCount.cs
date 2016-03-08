@@ -37,7 +37,8 @@ namespace MCGalaxy.Commands {
             table.Dispose();
             int count = 0, hiddenCount = 0;
             
-            foreach (Player pl in PlayerInfo.players) {
+            Player[] players = PlayerInfo.Online;
+            foreach (Player pl in players) {
                 if (!pl.hidden || p == null || Player.CanSee(p, pl)) {
                     count++;
                     if (pl.hidden) hiddenCount++;

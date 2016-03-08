@@ -342,14 +342,13 @@ namespace MCGalaxy
         }
 
         void MovePlayersToMain() {
-            PlayerInfo.players.ForEach(
-                p => {
-        			if (p.level.name.ToLower() == name.ToLower()) {
-        			    Player.SendMessage(p, "You were moved to the main level as " + name + " was unloaded.");
-                        Command.all.Find("goto").Use(p, Server.mainLevel.name);
-        			}
+        	Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) {
+                if (p.level.name.ToLower() == name.ToLower()) {
+                    Player.SendMessage(p, "You were moved to the main level as " + name + " was unloaded.");
+                    Command.all.Find("goto").Use(p, Server.mainLevel.name);
                 }
-            );
+            }
         }
         
         public unsafe void saveChanges() {
@@ -475,7 +474,7 @@ namespace MCGalaxy
                     SaveSettings(this);
 
                     Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
-                                               PlayerInfo.players.Count, Server.players));
+                                               PlayerInfo.Online.Length, Server.players));
                     changed = false;
                 }
                 else
@@ -705,7 +704,8 @@ namespace MCGalaxy
         public void ChatLevelAdmins(string message) { ChatLevel(message, Server.adminchatperm); }
         
         public void ChatLevel(string message, LevelPermission minPerm) {
-            foreach (Player pl in PlayerInfo.players) {
+        	Player[] players = PlayerInfo.Online; 
+            foreach (Player pl in players) {
             	if (pl.level != this) continue;
             	if (pl.group.Permission < minPerm) continue;
                 pl.SendMessage(message);
@@ -713,7 +713,8 @@ namespace MCGalaxy
         }
         
         public void UpdateBlockPermissions() {
-        	foreach (Player p in PlayerInfo.players) {
+        	Player[] players = PlayerInfo.Online; 
+        	foreach (Player p in players) {
         		if (p.level != this) continue;
         		if (!p.HasCpeExt(CpeExt.BlockPermissions)) continue;
         		p.SendCurrentBlockPermissions();
@@ -734,7 +735,8 @@ namespace MCGalaxy
 
         public List<Player> getPlayers()
         {
-            return PlayerInfo.players.Where(p => p.level == this).ToList();
+        	Player[] players = PlayerInfo.Online; 
+            return players.Where(p => p.level == this).ToList();
         }
 
         public struct BlockPos {

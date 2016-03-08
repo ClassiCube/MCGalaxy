@@ -21,8 +21,40 @@ namespace MCGalaxy {
     
     public static class PlayerInfo {
         
-        /// <summary> List of all server players. </summary>
         public static List<Player> players;
+        /// <summary> Array of all current online players. </summary>
+        /// <remarks> Note this field is highly volatile, you should cache references to it. </remarks>
+        public volatile static Player[] Online = new Player[0];
+        static readonly object listLock = new object();
+        
+        public static void Add(Player p) {
+            lock (listLock) {
+                players.Add(p);
+                Player[] list = new Player[Online.Length + 1];
+                for (int i = 0; i < Online.Length; i++)
+                    list[i] = Online[i];
+                
+                list[Online.Length] = p;
+                Online = list;
+            }
+        }
+        
+        public static void Remove(Player p) {
+            lock (listLock) {
+                players.Remove(p);
+                if (Online.Length == 0) return;
+                
+                Player[] list = new Player[Online.Length - 1];
+                for (int i = 0, j = 0; i < Online.Length; i++) {
+                    if (Online[i] == p) continue;
+                    
+                    // For some reason player wasn't in the list
+                    if (j == list.Length) return;
+                    list[j] = Online[i]; j++;
+                }
+                Online = list;
+            }
+        }
         
         public static List<Player> GetPlayers() { return new List<Player>(PlayerInfo.players); }
         
@@ -36,8 +68,7 @@ namespace MCGalaxy {
         
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Player Find(string name) {
-            List<Player> tempList = new List<Player>();
-            tempList.AddRange(players);
+            Player[] tempList = PlayerInfo.Online;
             Player match = null; int matches = 0;
             name = name.ToLower();
 
@@ -51,18 +82,16 @@ namespace MCGalaxy {
         }
         
         public static Player FindExact(string name) {
-            List<Player> tempList = new List<Player>();
-            tempList.AddRange(players);
+            Player[] tempList = PlayerInfo.Online;
 
             foreach (Player p in tempList) {
-            	if (p.name.Equals(name, comp)) return p;
+                if (p.name.Equals(name, comp)) return p;
             }
             return null;
         }
         
         public static Player FindNick(string nick) {
-            List<Player> tempList = new List<Player>();
-            tempList.AddRange(players);
+        	Player[] tempList = PlayerInfo.Online;
             Player match = null; int matches = 0;
 
             foreach (Player p in tempList) {

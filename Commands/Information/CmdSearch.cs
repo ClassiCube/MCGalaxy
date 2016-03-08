@@ -85,7 +85,8 @@ namespace MCGalaxy.Commands
             if (type.ToLower().Contains("player"))
             {
                 string players = "";
-                foreach (Player who in PlayerInfo.players)
+                Player[] online = PlayerInfo.Online;
+                foreach (Player who in online)
                 {
                     if (who.name.ToLower().Contains(keyword.ToLower()))
                     {

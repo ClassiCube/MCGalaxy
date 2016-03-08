@@ -720,17 +720,15 @@ namespace MCGalaxy
 
                 locationChecker = new Thread(new ThreadStart(delegate
                 {
-                    Player p, who;
-                    ushort x, y, z;
-                    int i;
                     while (true)
                     {
                         Thread.Sleep(3);
-                        for (i = 0; i < PlayerInfo.players.Count; i++)
+                        Player[] players = PlayerInfo.Online;
+                        for (int i = 0; i < players.Length; i++)
                         {
                             try
                             {
-                                p = PlayerInfo.players[i];
+                                Player p = players[i];
 
                                 if (p.frozen)
                                 {
@@ -738,7 +736,7 @@ namespace MCGalaxy
                                 }
                                 else if (p.following != "")
                                 {
-                                    who = PlayerInfo.Find(p.following);
+                                    Player who = PlayerInfo.Find(p.following);
                                     if (who == null || who.level != p.level)
                                     {
                                         p.following = "";
@@ -763,14 +761,14 @@ namespace MCGalaxy
                                 }
                                 else if (p.possess != "")
                                 {
-                                    who = PlayerInfo.Find(p.possess);
+                                    Player who = PlayerInfo.Find(p.possess);
                                     if (who == null || who.level != p.level)
                                         p.possess = "";
                                 }
 
-                                x = (ushort)(p.pos[0] / 32);
-                                y = (ushort)(p.pos[1] / 32);
-                                z = (ushort)(p.pos[2] / 32);
+                                ushort x = (ushort)(p.pos[0] / 32);
+                                ushort y = (ushort)(p.pos[1] / 32);
+                                ushort z = (ushort)(p.pos[2] / 32);
 
                                 if (p.level.Death)
                                     p.CheckSurvival(x, y, z);
@@ -934,16 +932,16 @@ namespace MCGalaxy
 
         public static void Exit(bool AutoRestart)
         {
-            List<string> players = new List<string>();
-            foreach (Player p in PlayerInfo.players) { p.save(); players.Add(p.name); }
-            foreach (string p in players)
+            Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) { p.save(); }
+            foreach (Player p in players)
             {
             	if (!AutoRestart) {
             		string msg = Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.";
-            		PlayerInfo.Find(p).LeaveServer(msg, msg);
+            		p.LeaveServer(msg, msg);
             	} else {
             		const string msg = "Server restarted. Sign in again and rejoin.";
-            		PlayerInfo.Find(p).LeaveServer(msg, msg);
+            		p.LeaveServer(msg, msg);
             	}
             }
             APIServer.Stop();

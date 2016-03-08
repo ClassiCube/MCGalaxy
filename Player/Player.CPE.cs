@@ -176,18 +176,17 @@ namespace MCGalaxy
         }
         
         public void UpdateModels() {
-            PlayerInfo.players.ForEach(
-                p =>
-                {
-                    if (p.level == this.level)
-                        if (p == this) {
-                        SendChangeModel(0xFF, model);
-                    } else {
-                        SendChangeModel(p.id, p.model);
-                        if (p.HasCpeExt(CpeExt.ChangeModel))
-                            p.SendChangeModel(this.id, model);
-                    }
-                });
+        	Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) {
+                if (p.level == this.level)
+                    if (p == this) {
+                    SendChangeModel(0xFF, model);
+                } else {
+                    SendChangeModel(p.id, p.model);
+                    if (p.HasCpeExt(CpeExt.ChangeModel))
+                        p.SendChangeModel(this.id, model);
+                }
+            }
         }
         
         public void SendCurrentMapAppearance() {

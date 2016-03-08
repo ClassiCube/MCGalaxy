@@ -321,7 +321,8 @@ namespace MCGalaxy {
                     Player.SendMessage(p, "You do not need to re-enable it");
                 gamestatus = CountdownGameStatus.Enabled;
                 
-                foreach (Player pl in PlayerInfo.players) {
+                Player[] online = PlayerInfo.Online; 
+                foreach (Player pl in online) {
                     if (!pl.playerofcountdown) continue;
                     if (pl.level == mapon) {
                         Command.all.Find("countdown").Use(pl, "join");
@@ -342,7 +343,8 @@ namespace MCGalaxy {
                 squaresLeft.Clear();
                 
                 speed = 750;
-                foreach (Player pl in PlayerInfo.players) {
+                Player[] online = PlayerInfo.Online;
+                foreach (Player pl in online) {
                     pl.playerofcountdown = false;
                     pl.incountdown = false;
                 }
@@ -359,7 +361,8 @@ namespace MCGalaxy {
         }
 
         public void MessageAll(string message) {
-            foreach (Player pl in PlayerInfo.players) {
+        	Player[] online = PlayerInfo.Online; 
+            foreach (Player pl in online) {
                 if (pl.playerofcountdown)
                     Player.SendMessage(pl, message);
             }

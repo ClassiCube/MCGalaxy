@@ -76,7 +76,8 @@ namespace MCGalaxy {
 
             if (kill)
             {
-                foreach (Player p in PlayerInfo.players)
+            	Player[] players = PlayerInfo.Online; 
+                foreach (Player p in players)
                 {
                     if ((ushort)(p.pos[0] / 32) == x)
                     {
@@ -94,24 +95,24 @@ namespace MCGalaxy {
 
             if (Waypoints.Count == 0)
             {
-                if (hunt)
-                    PlayerInfo.players.ForEach(delegate(Player p)
-                                           {
-                                               if (p.level == level && !p.invincible)
-                                               {
-                                                   currentNum = Math.Abs(p.pos[0] - pos[0]) + Math.Abs(p.pos[1] - pos[1]) + Math.Abs(p.pos[2] - pos[2]);
-                                                   if (currentNum < foundNum)
-                                                   {
-                                                       foundNum = currentNum;
-                                                       foundPos = p.pos;
-                                                       foundRot = p.rot;
-                                                       movement = true;
-                                                       rot[1] = (byte)(255 - foundRot[1]);
-                                                       if (foundRot[0] < 128) rot[0] = (byte)(foundRot[0] + 128);
-                                                       else rot[0] = (byte)(foundRot[0] - 128);
-                                                   }
-                                               }
-                                           });
+            	if (hunt) {
+            		Player[] players = PlayerInfo.Online;
+            		foreach (Player p in players) {
+                        if (p.level != level || p.invincible) continue;
+                        
+                        currentNum = Math.Abs(p.pos[0] - pos[0]) + Math.Abs(p.pos[1] - pos[1]) + Math.Abs(p.pos[2] - pos[2]);
+                        if (currentNum < foundNum)
+                        {
+                            foundNum = currentNum;
+                            foundPos = p.pos;
+                            foundRot = p.rot;
+                            movement = true;
+                            rot[1] = (byte)(255 - foundRot[1]);
+                            if (foundRot[0] < 128) rot[0] = (byte)(foundRot[0] + 128);
+                            else rot[0] = (byte)(foundRot[0] - 128);
+                        }
+                    }
+            	}
             }
             else
             {
@@ -365,7 +366,8 @@ namespace MCGalaxy {
                 playerbots.Add(bot);        
             bot.GlobalSpawn();
             
-            foreach (Player p in PlayerInfo.players) {
+            Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) {
                 if (p.level == bot.level)
                     Player.SendMessage(p, bot.color + bot.name + "%S, the bot, has been added.");
             }
@@ -397,17 +399,17 @@ namespace MCGalaxy {
         }
 
         public void GlobalSpawn() {
-            PlayerInfo.players.ForEach(p => {
-                                       if (p.level == level)
-                                           p.SendSpawn(id, color + name, pos[0], pos[1], pos[2], rot[0], rot[1]);
-                                   });
+            Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) {
+                if (p.level == level) p.SendSpawn(id, color + name, pos[0], pos[1], pos[2], rot[0], rot[1]);
+            }
         }
 
         public void GlobalDespawn() {
-            PlayerInfo.players.ForEach(p => {
-                                       if (p.level == level)
-                                           p.SendDespawn(id);
-                                   });
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (p.level == level) p.SendDespawn(id);
+            }
         }
 
         public void Update() { }
@@ -416,13 +418,10 @@ namespace MCGalaxy {
             byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, rot[1], true);
             oldpos = pos; oldrot = rot;
             if (packet == null) return;
-            
-            try {
-                foreach (Player p in PlayerInfo.players) {
-                    if (p.level == level)
-                        p.SendRaw(packet);
-                }
-            } catch { }
+
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players)
+                if (p.level == level) p.SendRaw(packet);
         }
 
         #region == Misc ==

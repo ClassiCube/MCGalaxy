@@ -141,7 +141,8 @@ namespace MCGalaxy {
             }
             defs[id] = def;
             
-            foreach (Player pl in PlayerInfo.players) {
+            Player[] players = PlayerInfo.Online;
+            foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
                 if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
                 if (global && pl.level.CustomBlockDefs[id] != GlobalDefs[id]) continue;
@@ -170,7 +171,8 @@ namespace MCGalaxy {
             }
             defs[id] = null;
             
-            foreach (Player pl in PlayerInfo.players) {
+            Player[] players = PlayerInfo.Online;
+            foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
                 if (global && pl.level.CustomBlockDefs[id] != null) continue;
                 

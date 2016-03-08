@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands {
             
             if (lvl.guns) {
                 Player.GlobalMessage("&9Gun usage has been disabled on &c" + lvl.name + "&9!");
-                foreach (Player pl in PlayerInfo.players)
+                Player[] players = PlayerInfo.Online;
+                foreach (Player pl in players)
                     if (pl.level.name.ToLower() == lvl.name.ToLower())
                         pl.aiming = false;
             } else {

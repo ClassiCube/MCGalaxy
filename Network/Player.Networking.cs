@@ -694,12 +694,10 @@ namespace MCGalaxy {
         	oldpos = pos; oldrot = rot;
         	if (packet == null) return;
         	
-        	try {
-        		foreach (Player p in PlayerInfo.players) {
-        			if (p != this && p.level == level)
-        				p.SendRaw(packet);
-        		}
-        	} catch { }
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (p != this && p.level == level) p.SendRaw(packet);
+            }
         }
         
         byte MakePitch() {

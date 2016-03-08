@@ -47,7 +47,7 @@ namespace MCGalaxy {
         public List<string> listignored = new List<string>();
         public List<string> mapgroups = new List<string>();
         public static int totalMySQLFailed = 0;
-        public static byte number { get { return (byte)PlayerInfo.players.Count; } }
+        public static byte number { get { return (byte)PlayerInfo.Online.Length; } }
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
         public static string lastMSG = "";
@@ -422,7 +422,10 @@ namespace MCGalaxy {
         }
         
         public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type, byte extType) {
-            PlayerInfo.players.ForEach(delegate(Player p) { if ( p.level == level ) { p.SendBlockchange(x, y, z, type, extType); } });
+        	Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) { 
+                if (p.level == level) p.SendBlockchange(x, y, z, type, extType); 
+            }
         }
 
         [Obsolete("Use SendChatFrom() instead.")]
@@ -450,14 +453,15 @@ namespace MCGalaxy {
                 message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             }
             
-            PlayerInfo.players.ForEach(delegate(Player p) {
+            Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) {
                 if (p.level.worldChat && p.Chatroom == null) {
-                    if (from != null && p.listignored.Contains(from.name)) return;
+                    if (from != null && p.listignored.Contains(from.name)) continue;
                    
                     if (!p.ignoreAll || (from != null && from == p))
                         Player.SendMessage(p, message);
                 }
-            });
+            }
         }
 
         public static List<ChatMessage> Last50Chat = new List<ChatMessage>();
@@ -471,20 +475,21 @@ namespace MCGalaxy {
             else
                 message = message.Replace("%G", Server.GlobalChatColor);
             
-            PlayerInfo.players.ForEach(delegate(Player p) {
-                if (p.ignoreAll || (global && p.ignoreGlobalChat)) return;
+            Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) {
+                if (p.ignoreAll || (global && p.ignoreGlobalChat)) continue;
                 
                 if (p.level.worldChat && p.Chatroom == null)
                     Player.SendMessage(p, message, !global);
-            });
+            }
         }
         
         public static void GlobalSpawn(Player from, ushort x, ushort y, ushort z, byte rotx, byte roty, bool self, string possession = "")
         {
-            PlayerInfo.players.ForEach(delegate(Player p)
-            {
-                if (p.Loading && p != from) return;
-                if (p.level != from.level || (from.hidden && !self)) return;
+        	Player[] players = PlayerInfo.Online; 
+        	foreach (Player p in players) {
+                if (p.Loading && p != from) continue;
+                if (p.level != from.level || (from.hidden && !self)) continue;
                 
                 if (p != from)
                 {
@@ -507,14 +512,15 @@ namespace MCGalaxy {
                     p.oldpos = p.pos; p.basepos = p.pos; p.oldrot = p.rot;
                     p.SendSpawn(0xFF, from.color + from.name + possession, x, y, z, rotx, roty);
                 }
-            });
+            }
         }
         public static void GlobalDespawn(Player from, bool self) {
-            PlayerInfo.players.ForEach(delegate(Player p) {
-                if ( p.level != from.level || ( from.hidden && !self ) ) { return; }
+        	Player[] players = PlayerInfo.Online; 
+        	foreach (Player p in players) {
+                if ( p.level != from.level || ( from.hidden && !self ) ) continue;
                 if ( p != from ) { p.SendDespawn(from.id); }
                 else if ( self ) { p.SendDespawn(255); }
-            });
+            }
         }
 
         public bool MarkPossessed(string marker = "") {
@@ -531,11 +537,10 @@ namespace MCGalaxy {
         }
 
         public static void GlobalUpdate() { 
-            PlayerInfo.players.ForEach(
-                delegate(Player p) {
-                    if ( !p.hidden ) 
-                        p.UpdatePosition();
-                });
+            Player[] players = PlayerInfo.Online;
+            foreach (Player p in players) {
+                if (!p.hidden) p.UpdatePosition();
+            }
         }
         #endregion
         #region == DISCONNECTING ==
@@ -616,8 +621,10 @@ namespace MCGalaxy {
                 if (discMsg != null) {
                 	if (!hidden) {
                 		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " %S" + discMsg;
-                		if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest)
-                			PlayerInfo.players.ForEach(p1 => Player.SendMessage(p1, leavem));
+                		if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
+                			Player[] players = PlayerInfo.Online; 
+                			foreach (Player pl in players) { Player.SendMessage(pl, leavem); }
+                		}
                 	}
                 	Server.s.Log(name + " disconnected.");
                 } else {
@@ -629,7 +636,7 @@ namespace MCGalaxy {
                 try { save(); }
                 catch ( Exception e ) { Server.ErrorLog(e); }
 
-                PlayerInfo.players.Remove(this);
+                PlayerInfo.Remove(this);
                 Server.s.PlayerListUpdate();
                 if (name != null)
                 	left[name.ToLower()] = ip;

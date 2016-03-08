@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "The given level \"" + message + "\" does not exist."); return;
             } 
             
-            foreach (Player pl in PlayerInfo.players) {
+            Player[] players = PlayerInfo.Online;
+            foreach (Player pl in players) {
                 if (pl.level.name.ToLower() != message.ToLower()) continue;
                 CmdReveal.ReloadMap(p, pl, false);
             }            

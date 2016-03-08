@@ -522,8 +522,8 @@ namespace MCGalaxy_.Gui
                         if (Server.lava.active && Server.lava.HasMap(l.name)) l.saveChanges();
                         else l.Save();
 
-                if (PlayerInfo.players != null && PlayerInfo.players.Any())
-                    foreach (Player pl in PlayerInfo.players) pl.save();
+                Player[] players = PlayerInfo.Online;
+                foreach (Player pl in players) pl.save();
                 
                 if (!usingConsole)
                     Process.Start("Updater.exe", "securitycheck10934579068013978427893755755270374" + parent);
@@ -589,9 +589,8 @@ namespace MCGalaxy_.Gui
         {
             try
             {
-                List<Player> kickList = new List<Player>();
-                kickList.AddRange(PlayerInfo.players);
-                foreach (Player p in kickList)
+            	Player[] players = PlayerInfo.Online; 
+                foreach (Player p in players)
                 {
                     if (restarting) {
                         string msg = Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.";

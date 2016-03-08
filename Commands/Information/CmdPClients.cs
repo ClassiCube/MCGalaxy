@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             Dictionary<string, List<Player>> clients = new Dictionary<string, List<Player>>();
-            foreach (Player pl in PlayerInfo.players) {
+            Player[] online = PlayerInfo.Online;
+            foreach (Player pl in online) {
             	if (Player.CanSee(p, pl)) {
                     string appName = pl.appName;
                     if (String.IsNullOrEmpty(appName))

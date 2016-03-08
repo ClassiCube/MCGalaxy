@@ -57,12 +57,11 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Could not find group specified!");
                 return;
             }
-            foreach (Player pl in PlayerInfo.players)
-            {
+            
+            Player[] players = PlayerInfo.Online;
+            foreach (Player pl in players) {
                 if (pl.group.name == findgroup.name)
-                {
-                    pl.SendMessage(p.color + p.name + ": " + Server.DefaultColor + (message.Replace(msg1, "").Trim()));
-                }
+                    pl.SendMessage(p.color + p.name + ": %S" + (message.Replace(msg1, "").Trim()));
             }
         }
         public override void Help(Player p)

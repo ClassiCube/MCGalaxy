@@ -40,7 +40,8 @@ namespace MCGalaxy {
         }
         
         public static void TRExpiryCheck() {
-            foreach (Player p in PlayerInfo.players) {
+        	Player[] players = PlayerInfo.Online; 
+            foreach (Player p in players) {
                 foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
                     if (!line.Contains(p.name)) continue;
                     string[] args = line.Split(' ');

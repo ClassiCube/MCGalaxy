@@ -34,20 +34,12 @@ namespace MCGalaxy.Commands
             if (p == null) { MessageInGameOnly(p); return; }
             if (message.ToLower() == "all")
             {
-                try
-                {
-                    foreach (Player pl in PlayerInfo.players)
-                    {
-                        if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission)
-                        {
-                            pl.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
-                            pl.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
-                        }
+                Player[] players = PlayerInfo.Online;
+                foreach (Player pl in players) {
+                    if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission) {
+                        pl.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+                        pl.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
                     }
-                }
-                catch (Exception e)
-                {
-                    Server.ErrorLog(e);
                 }
                 Player.GlobalMessage(p.color + p.DisplayName + Server.DefaultColor + " summoned everyone!");
                 return;

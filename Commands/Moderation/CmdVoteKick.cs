@@ -66,14 +66,14 @@ namespace MCGalaxy.Commands
                 int votesYes = 0;
                 int votesNo = 0;
 
-                PlayerInfo.players.ForEach(delegate(Player pl)
-                {
+                Player[] players = PlayerInfo.Online; 
+                foreach (Player pl in players) {
                     // Tally the votes
                     if (pl.voteKickChoice == VoteKickChoice.Yes) votesYes++;
                     if (pl.voteKickChoice == VoteKickChoice.No) votesNo++;
                     // Reset their choice
                     pl.voteKickChoice = VoteKickChoice.HasntVoted;
-                });
+                }
 
                 int netVotesYes = votesYes - votesNo;
 

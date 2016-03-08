@@ -133,8 +133,9 @@ namespace MCGalaxy.Drawing.Ops {
             
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);
+            Player[] players = PlayerInfo.Online; 
             if (needReveal) {
-                foreach (Player pl in PlayerInfo.players) {
+                foreach (Player pl in players) {
                     if (pl.level.name.ToLower() == p.level.name.ToLower())
                         CmdReveal.ReloadMap(p, pl, true);
                 }

@@ -247,8 +247,8 @@ namespace MCGalaxy
         
         void tagging_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            PlayerInfo.players.ForEach(delegate(Player p)
-            {
+        	Player[] online = PlayerInfo.Online; 
+        	foreach (Player p in online) {
                 if (p.level == mainlevel)
                 {
                     ushort x = p.pos[0];
@@ -260,9 +260,9 @@ namespace MCGalaxy
                     else if (blueteam.members.Contains(p))
                         b = bluebase;
                     else
-                        return;
+                        continue;
                     if (GetPlayer(p).tagging)
-                        return;
+                        continue;
                     if (OnSide(p, b))
                     {
                         List<Player> temp = redteam.members;
@@ -292,7 +292,7 @@ namespace MCGalaxy
                     }
                 }
                 Thread.Sleep(100);
-            });
+            }
         }
 
         void Player_PlayerDisconnect(Player p, string reason)
@@ -664,20 +664,20 @@ namespace MCGalaxy
                     {
                         if (blueteam.members.Contains(p))
                         {
-                            PlayerInfo.players.ForEach(delegate(Player p1)
-                            {
+                        	Player[] online = PlayerInfo.Online; 
+                        	foreach (Player p1 in online) {
                                 if (blueteam.members.Contains(p1))
                                     Player.SendMessage(p1, "(Blue) " + p.color + p.name + ":&f " + message);
-                            });
+                            }
                             Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                         }
                         if (redteam.members.Contains(p))
                         {
-                            PlayerInfo.players.ForEach(delegate(Player p1)
-                            {
+                        	Player[] online = PlayerInfo.Online; 
+                        	foreach (Player p1 in online) {
                                 if (redteam.members.Contains(p1))
                                     Player.SendMessage(p1, "(Red) " + p.color + p.name + ":&f " + message);
-                            });
+                            }
                             Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                         }
                     }

@@ -115,7 +115,9 @@ namespace MCGalaxy
             Thread.Sleep(1000); if (!Server.ZombieModeOn) { return; }
             Server.zombieRound = true;
             int playerscountminusref = 0; List<Player> players = new List<Player>();
-            foreach (Player playere in PlayerInfo.players)
+            
+            Player[] online = PlayerInfo.Online; 
+            foreach (Player playere in online)
             {
                 if (playere.referee)
                 {
@@ -163,7 +165,8 @@ namespace MCGalaxy
             timer.Elapsed += new ElapsedEventHandler(EndRound);
             timer.Enabled = true;
 
-            foreach (Player playaboi in PlayerInfo.players)
+            online = PlayerInfo.Online;
+            foreach (Player playaboi in online)
             {
                 if(playaboi != player)
                 alive.Add(playaboi);
@@ -283,9 +286,11 @@ namespace MCGalaxy
                 Player.GlobalMessage(Colors.green + "Congratulations to our survivor(s)");
             timer.Enabled = false;
             string playersString = "";
+            Player[] online = null;
             if (aliveCount == 0)
             {
-                foreach (Player winners in PlayerInfo.players)
+            	online = PlayerInfo.Online;
+                foreach (Player winners in online)
                 {
                     if (winners.level.name == currentLevelName)
                     {
@@ -315,7 +320,8 @@ namespace MCGalaxy
                 });
             }
             Player.GlobalMessage(playersString);
-            foreach (Player winners in PlayerInfo.players)
+            online = PlayerInfo.Online;
+            foreach (Player winners in online)
             {
                 if (!winners.CheckIfInsideBlock() && aliveCount == 0 && winners.level.name == currentLevelName)
                 {
@@ -354,7 +360,8 @@ namespace MCGalaxy
                 }
             }
             try {alive.Clear(); infectd.Clear(); } catch{ }
-            foreach (Player player in PlayerInfo.players)
+            online = PlayerInfo.Online; 
+            foreach (Player player in online)
             {
                 player.infected = false;
                 player.color = player.group.color;
@@ -461,10 +468,10 @@ namespace MCGalaxy
                         }
                         ChangeLevel(selectedLevel2, Server.ZombieOnlyServer);
                     }
-                    PlayerInfo.players.ForEach(delegate(Player winners)
-                    {
+                    Player[] online = PlayerInfo.Online; 
+                    foreach (Player winners in online) {
                         winners.voted = false;
-                    });
+                    }
                 }
             }
             catch { }
@@ -566,14 +573,14 @@ namespace MCGalaxy
             if (changeMainLevel)
             {
                 Server.mainLevel = LevelInfo.Find(next.ToLower());
-                PlayerInfo.players.ForEach(delegate(Player player)
-                {
+                Player[] online = PlayerInfo.Online; 
+                foreach (Player player in online) {
                     if (player.level.name != next && player.level.name == currentLevelName)
                     {
                         player.SendMessage("Going to the next map!");
                         Command.all.Find("goto").Use(player, next);
                     }
-                });
+                }
                 Command.all.Find("unload").Use(null, oldLevel);
             }
             else
