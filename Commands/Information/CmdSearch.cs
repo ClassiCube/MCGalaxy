@@ -53,29 +53,33 @@ namespace MCGalaxy.Commands {
         }
         
         static void SearchCommands(Player p, string keyword) {
-            bool mode = true;
+            if (keyword.Length <= 2) {
+                Player.SendMessage(p, "You need to enter at least three characters to search for."); return;
+            }
             string[] keywords = keyword.Split(' ');
-            string[] found = keywords.Length == 1 ? 
+            string[] found = keywords.Length == 1 ?
                 CommandKeywords.Find(keyword) : CommandKeywords.Find(keywords);
             if (found == null) {
                 Player.SendMessage(p, "No commands found matching keyword(s): '" + keyword + "'"); return;
             }
             
+            StringBuilder cmds = new StringBuilder();
+            bool mode = true;
             Player.SendMessage(p, "&bCommands found: ");
             foreach (string cmd in found) {
-                string code = mode ? "&2/" : "&9/";
-                Player.SendMessage(p, code + cmd);
+                cmds.Append(mode ? "%S, &9" : "%S, &2").Append(cmd);
                 mode = !mode;
             }
+            Player.SendMessage(p, cmds.ToString(4, cmds.Length - 4));
         }
         
         static void SearchBlocks(Player p, string keyword) {
-        	StringBuilder blocks = new StringBuilder();
+            StringBuilder blocks = new StringBuilder();
             bool mode = true;
             for (byte id = 0; id < 255; id++) {
                 string name = Block.Name(id);
                 if (name.ToLower() != "unknown" && name.Contains(keyword)) {
-                	blocks.Append(mode ? "%S, &9" : "%S, &2").Append(name);
+                    blocks.Append(mode ? "%S, &9" : "%S, &2").Append(name);
                     mode = !mode;
                 }
             }
@@ -122,7 +126,7 @@ namespace MCGalaxy.Commands {
             foreach (FileInfo file in fi) {
                 string level = file.Name.Replace(".lvl", "");
                 if (level.IndexOf(keyword, comp) >= 0)
-                	searched.Append(", ").Append(level);
+                    searched.Append(", ").Append(level);
             }
 
             if (searched.Length == 0) { Player.SendMessage(p, "No levels found containing &b" + keyword); return; }

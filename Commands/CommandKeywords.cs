@@ -1,38 +1,40 @@
 /*
-	Copyright 2011 MCGalaxy
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2011 MCGalaxy
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
+using System;
 using System.Collections.Generic;
-namespace MCGalaxy.Commands
-{
-    public sealed class CommandKeywords
-    {
+
+namespace MCGalaxy.Commands {
+    
+    public sealed class CommandKeywords {
         public static List<CommandKeywords> all = new List<CommandKeywords>();
         public Command Cmd;
         public string[] Keywords;
-        public CommandKeywords(Command cmd, string key)
-        {
+        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
+        
+        public CommandKeywords(Command cmd, string key) {
             this.Cmd = cmd;
             string keyword = key + " " + cmd.name + " " + cmd.type;
             if (cmd.shortcut.Length > 3) { keyword += " " + cmd.shortcut; }
             this.Keywords = keyword.Split(' ');
             all.Add(this);
         }
-        public static void SetKeyWords()
-        {
+        
+        public static void SetKeyWords() {
             new CommandKeywords((new CmdAbort()), "command action mode");
             new CommandKeywords((new CmdAbout()), "info block history grief");
             new CommandKeywords((new CmdAdminChat()), "admin chat opchat");
@@ -271,55 +273,36 @@ namespace MCGalaxy.Commands
             new CommandKeywords((new CmdZombieGame()), "zombie game");
             new CommandKeywords((new CmdZone()), "area");
         }
-        public void Addcustom(Command cmd, string keywords)
-        {
+        
+        public void Addcustom(Command cmd, string keywords) {
             new CommandKeywords(cmd, keywords);
         }
-        public static string[] Find(string word)
-        {
-            List<string> returnthing = new List<string>();
-            bool found = false;
+        
+        public static string[] Find(string word) {
+            if (word == "") return null;
+            List<string> list = new List<string>();
+
             foreach (CommandKeywords ckw in CommandKeywords.all)
-            {
                 foreach (string key in ckw.Keywords)
-                {
-                    if (word.ToLower().Contains(key.ToLower()) && word != "" && key != "")
-                    {
-                        found = true;
-                        returnthing.Add(ckw.Cmd.name);
-                    }
-                }
+            {
+                if (key == "" || key.IndexOf(word, comp) < 0) continue;
+                if (!list.Contains(ckw.Cmd.name)) list.Add(ckw.Cmd.name);
             }
-            if (!found) { return null; }
-            else { return returnthing.ToArray(); }
+            return list.Count == 0 ? null : list.ToArray();
         }
-        public static string[] Find(string[] words)
-        {
-            List<CommandKeywords> returnthing = CommandKeywords.all;
-            bool found = false;
-            foreach (string word in words)
+        
+        public static string[] Find(string[] words) {
+            List<string> list = new List<string>();
+
+            foreach (CommandKeywords ckw in CommandKeywords.all)
+                foreach (string key in ckw.Keywords)
             {
-                foreach (CommandKeywords ckw in returnthing.ToArray())
-                {
-                    bool del = true;
-                    foreach (string key in ckw.Keywords)
-                    {
-                        if (word.ToLower().Contains(key.ToLower()) && word != "" && key != "")
-                        {
-                            del = false;
-                            found = true;
-                        }
-                    }
-                    if (del) { returnthing.Remove(ckw); }
+                for (int i = 0; i < words.Length; i++) {
+                    if (key == "" || key.IndexOf(words[i], comp) < 0) continue;
+                    if (!list.Contains(ckw.Cmd.name)) list.Add(ckw.Cmd.name);
                 }
             }
-            if (!found) { return null; }
-            else
-            {
-                List<string> k = new List<string>();
-                foreach (CommandKeywords ck in returnthing) { k.Add(ck.Cmd.name); }
-                return k.ToArray();
-            }
+            return list.Count == 0 ? null : list.ToArray();
         }
     }
 }
