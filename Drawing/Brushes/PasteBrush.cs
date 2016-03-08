@@ -29,6 +29,8 @@ namespace MCGalaxy.Drawing.Brushes {
             this.state = state;
         }
         
+        public override string Name { get { return "Paste"; } }
+        
         public static Brush Process(BrushArgs args) {
             if (args.Player.CopyBuffer == null) {
                 args.Player.SendMessage("You haven't copied anything yet.");

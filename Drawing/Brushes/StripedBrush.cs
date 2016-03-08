@@ -22,38 +22,38 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
     
-    public sealed class CheckeredBrush : Brush {
+    public sealed class StripedBrush : Brush {
         readonly byte type1, extType1, type2, extType2;
         
-        public CheckeredBrush(byte type1, byte extType1, byte type2, byte extType2) {
+        public StripedBrush(byte type1, byte extType1, byte type2, byte extType2) {
             this.type1 = type1; this.extType1 = extType1;
             this.type2 = type2; this.extType2 = extType2;
         }
         
-        public override string Name { get { return "Checkered"; } }
+		public override string Name { get { return "Striped"; } }
         
         public static Brush Process(BrushArgs args) {
             if (args.Message == "")
-                return new CheckeredBrush(args.Type, args.ExtType, 0, 0);
+                return new StripedBrush(args.Type, args.ExtType, 0, 0);
             string[] parts = args.Message.Split(' ');
             byte extType1;
             byte type1 = DrawCmd.GetBlock(args.Player, parts[0], out extType1);
             if (type1 == Block.Zero) return null;            
             if (parts.Length == 1)
-            	return new CheckeredBrush(type1, extType1, 0, 0);
+            	return new StripedBrush(type1, extType1, 0, 0);
             
             byte extType2;
             byte type2 = DrawCmd.GetBlock(args.Player, parts[1], out extType2);
             if (type2 == Block.Zero) return null;
-            return new CheckeredBrush(type1, extType1, type2, extType2);
+            return new StripedBrush(type1, extType1, type2, extType2);
         }
         
         public override byte NextBlock(DrawOp op) { 
-        	return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? type1 : type2;
+        	return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 3) <= 1 ? type1 : type2;
         }
         
         public override byte NextExtBlock(DrawOp op) { 
-        	return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? extType1 : extType2;
+        	return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 3) <= 1 ? extType1 : extType2;
         }
     }
 }

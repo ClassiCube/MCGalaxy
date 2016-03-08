@@ -30,6 +30,8 @@ namespace MCGalaxy.Drawing.Brushes {
             this.extType = extType;
         }
         
+        public override string Name { get { return "Normal"; } }
+        
         public static Brush Process(BrushArgs args) {
             if (args.Message == "")
                 return new SolidBrush(args.Type, args.ExtType);

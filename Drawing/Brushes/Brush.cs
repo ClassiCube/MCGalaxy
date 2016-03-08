@@ -23,6 +23,9 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Drawing.Brushes {
     
     public abstract class Brush {
+		
+		/// <summary> Human friendly name of this brush. </summary>
+		public abstract string Name { get; }
         
         public abstract byte NextBlock(DrawOp op);
         
@@ -35,6 +38,7 @@ namespace MCGalaxy.Drawing.Brushes {
             { "checkered", CheckeredBrush.Process },
             { "rainbow", RainbowBrush.Process },
             { "bwrainbow", BWRainbowBrush.Process },
+            { "striped", StripedBrush.Process },
         };
     }
     
@@ -56,6 +60,8 @@ namespace MCGalaxy.Drawing.Brushes {
             this.type = type;
             this.extType = extType;
         }
+        
+        public override string Name { get { return "Random"; } }
         
         public override byte NextBlock(DrawOp op) {
             return (byte)rnd.Next(1, 11) <= 5 ? type : Block.Zero;

@@ -24,6 +24,8 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class RainbowBrush : Brush {
         
+		public override string Name { get { return "Rainbow"; } }
+		
         public override byte NextBlock(DrawOp op) {
             int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 13;
             if (offset < 0) offset += 13;
@@ -49,6 +51,8 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class BWRainbowBrush : Brush {
         
+		public override string Name { get { return "BWRainbow"; } }
+		
         static byte[] blocks = { Block.iron, Block.white, Block.lightgrey,
             Block.darkgrey, Block.obsidian, Block.darkgrey, Block.lightgrey, Block.white };
         public override byte NextBlock(DrawOp op) {
@@ -66,6 +70,8 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class RandomRainbowBrush : Brush {
         readonly Random rnd;
+        
+        public override string Name { get { return "RandomRainbow"; } }
         
         public RandomRainbowBrush() {
             rnd = new Random();

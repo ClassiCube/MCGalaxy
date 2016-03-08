@@ -397,6 +397,7 @@
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
     <Compile Include="Drawing\Brushes\RainbowBrush.cs" />
     <Compile Include="Drawing\Brushes\SolidBrush.cs" />
+    <Compile Include="Drawing\Brushes\StripedBrush.cs" />
     <Compile Include="Drawing\CopyState.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
