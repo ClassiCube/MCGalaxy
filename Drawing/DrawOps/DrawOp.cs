@@ -41,6 +41,9 @@ namespace MCGalaxy.Drawing.Ops {
         /// <summary> Maximum coordinates of the bounds of this drawing command. </summary>
         public Vector3U16 Max;
         
+        /// <summary> Coordinates of the first point selected by the user. </summary>
+        public Vector3U16 Origin;        
+        
         /// <summary> Coordinates of the current block being processed by the drawing command. </summary>
         public Vector3U16 Coords;
         
@@ -118,6 +121,7 @@ namespace MCGalaxy.Drawing.Ops {
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                            ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int affected = 0;
+            op.Origin = new Vector3U16(x1, y1, z1);
             op.Min = Vector3U16.Min(x1, y1, z1, x2, y2, z2);
             op.Max = Vector3U16.Max(x1, y1, z1, x2, y2, z2);
             if (op.MinMaxCoords) {

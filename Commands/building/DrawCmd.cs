@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             for (int i = 0; i < parts.Length; i++)
                 parts[i] = parts[i].ToLower();
             CatchPos cpos = default(CatchPos);
-            cpos.message = message;
+            cpos.message = message.ToLower();
             cpos.solid = message == "" ? SolidType.solid : GetType(parts[parts.Length - 1]);
             OnUse(p, message, parts, ref cpos);
             p.blockchangeObject = cpos;

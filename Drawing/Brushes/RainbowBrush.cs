@@ -25,11 +25,7 @@ namespace MCGalaxy.Drawing.Brushes {
     public sealed class RainbowBrush : Brush {
         
         public override byte NextBlock(DrawOp op) {
-            int dx = op.Coords.X - op.Min.X;
-            int dy = op.Coords.Y - op.Min.Y;
-            int dz = op.Coords.Z - op.Min.Z;
-            
-            int offset = (dx + dy + dz) % 13;
+            int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 13;
             if (offset < 0) offset += 13;
             return (byte)(Block.red + offset);
         }
@@ -37,9 +33,34 @@ namespace MCGalaxy.Drawing.Brushes {
         public override byte NextExtBlock(DrawOp op) { return 0; }
         
         public static Brush Process(BrushArgs args) {
-            if (args.Message == "random")
-            	return new RandomRainbowBrush();
-            return new RainbowBrush(); // TODO: seed
+            if (args.Message.StartsWith("random")) {
+                string[] parts = args.Message.Split(' ');
+                int seed;
+                if (parts.Length > 1 && Int32.TryParse(parts[1], out seed))
+                    return new RandomRainbowBrush(seed);
+                return new RandomRainbowBrush();           
+            }
+
+            if (args.Message == "bw")
+                return new BWRainbowBrush();
+            return new RainbowBrush();
+        }
+    }
+    
+    public sealed class BWRainbowBrush : Brush {
+        
+        static byte[] blocks = { Block.iron, Block.white, Block.lightgrey,
+            Block.darkgrey, Block.obsidian, Block.darkgrey, Block.lightgrey, Block.white };
+        public override byte NextBlock(DrawOp op) {
+            int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 8;
+            if (offset < 0) offset += 8;
+            return blocks[offset];
+        }
+        
+        public override byte NextExtBlock(DrawOp op) { return 0; }
+        
+        public static Brush Process(BrushArgs args) {
+            return new BWRainbowBrush();
         }
     }
     
