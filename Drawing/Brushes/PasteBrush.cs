@@ -29,7 +29,7 @@ namespace MCGalaxy.Drawing.Brushes {
             this.state = state;
         }
         
-        public static PasteBrush Process(BrushArgs args) {
+        public static Brush Process(BrushArgs args) {
             if (args.Player.CopyBuffer == null) {
                 args.Player.SendMessage("You haven't copied anything yet.");
                 return null;

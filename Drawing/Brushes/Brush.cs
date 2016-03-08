@@ -33,6 +33,7 @@ namespace MCGalaxy.Drawing.Brushes {
             { "normal", SolidBrush.Process },
             { "paste", PasteBrush.Process },
             { "checkered", CheckeredBrush.Process },
+            { "rainbow", RainbowBrush.Process },
         };
     }
     
@@ -44,20 +45,6 @@ namespace MCGalaxy.Drawing.Brushes {
         public BrushArgs(Player p, string message, byte type, byte extType) {
             Player = p; Message = message; Type = type; ExtType = extType;
         }
-    }
-    
-    public sealed class RainbowBrush : Brush {
-        byte curBlock = Block.red;
-        
-        public override byte NextBlock(DrawOp op) {
-            byte block = curBlock; 
-            curBlock++;
-            if (curBlock > Block.darkpink)
-                curBlock = Block.red;
-            return block;
-        }
-        
-        public override byte NextExtBlock(DrawOp op) { return 0; }
     }
     
     public sealed class RandomBrush : Brush {
@@ -74,23 +61,5 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override byte NextExtBlock(DrawOp op) { return extType; }
-    }
-    
-    public sealed class RandomRainbowBrush : Brush {
-        readonly Random rnd;
-        
-        public RandomRainbowBrush() {
-            rnd = new Random();
-        }
-        
-        public RandomRainbowBrush(int seed) {
-            rnd = new Random(seed);
-        }
-        
-        public override byte NextBlock(DrawOp op) {
-            return (byte)rnd.Next(Block.red, Block.darkgrey);
-        }
-        
-        public override byte NextExtBlock(DrawOp op) { return 0; }
     }
 }

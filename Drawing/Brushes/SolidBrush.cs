@@ -30,7 +30,7 @@ namespace MCGalaxy.Drawing.Brushes {
             this.extType = extType;
         }
         
-        public static SolidBrush Process(BrushArgs args) {
+        public static Brush Process(BrushArgs args) {
             if (args.Message == "")
                 return new SolidBrush(args.Type, args.ExtType);
             byte extType;

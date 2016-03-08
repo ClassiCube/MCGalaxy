@@ -30,7 +30,7 @@ namespace MCGalaxy.Drawing.Brushes {
             this.type2 = type2; this.extType2 = extType2;
         }
         
-        public static CheckeredBrush Process(BrushArgs args) {
+        public static Brush Process(BrushArgs args) {
             if (args.Message == "")
                 return new CheckeredBrush(args.Type, args.ExtType, 0, 0);
             string[] parts = args.Message.Split(' ');
