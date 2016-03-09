@@ -551,6 +551,14 @@ namespace MCGalaxy {
 					try { Server.DrawReloadLimit = int.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.DrawReloadLimit = 10000; }
 					break;
+				case "map-gen-limit":
+					try { Server.MapGenLimit = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.MapGenLimit = 30 * 1000 * 1000; }
+					break;
+				case "map-gen-limit-admin":
+					try { Server.MapGenLimitAdmin = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.MapGenLimitAdmin = 225 * 1000 * 1000; }
+					break;					
 					
 				case "review-view-perm":
 					try {
@@ -640,6 +648,8 @@ namespace MCGalaxy {
 				}
 			} return true;
 		}
+		
+		public static void Save() { Save("properties/server.properties"); }
 
 		public static void Save(string givenPath) {
 			try {
@@ -817,6 +827,8 @@ namespace MCGalaxy {
 			w.WriteLine("total-undo = " + Server.totalUndo);
 			w.WriteLine("physics-undo-max = " + Server.physUndo);
 			w.WriteLine("draw-reload-limit = " + Server.DrawReloadLimit);
+			w.WriteLine("map-gen-limit = " + Server.MapGenLimit);
+			w.WriteLine("map-gen-limit-admin = " + Server.MapGenLimitAdmin);			
 			w.WriteLine();
 			w.WriteLine("# backup options");
 			w.WriteLine("backup-time = " + Server.backupInterval.ToString());

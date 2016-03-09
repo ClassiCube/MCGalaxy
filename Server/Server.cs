@@ -77,11 +77,10 @@ namespace MCGalaxy
 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
 
-        public static string VersionString
-        {
-            get
-            {
-                return Version.Major + "." + Version.Minor + "." + Version.Build;
+        public static string VersionString {
+            get {
+            	Version v = Version;
+                return v.Major + "." + v.Minor + "." + v.Build;
             }
         }
 
@@ -93,13 +92,7 @@ namespace MCGalaxy
         public static System.Timers.Timer updateTimer = new System.Timers.Timer(100);
         //static System.Timers.Timer heartbeatTimer = new System.Timers.Timer(60000); //Every 45 seconds
         static System.Timers.Timer messageTimer = new System.Timers.Timer(60000 * 5); //Every 5 mins
-        public static System.Timers.Timer cloneTimer = new System.Timers.Timer(5000);
 
-        //public static Thread physThread;
-        //public static bool physPause;
-        //public static DateTime physResume = DateTime.Now;
-        //public static System.Timers.Timer physTimer = new System.Timers.Timer(1000);
-        // static Thread botsThread;
         //Chatrooms
         public static List<string> Chatrooms = new List<string>();
         //Other
@@ -136,16 +129,10 @@ namespace MCGalaxy
         public static List<string> reviewlist = new List<string>();
         //Global Chat Rules Accepted list
         public static List<string> gcaccepted = new List<string>();
-        //public static List<levelID> allLevels = new List<levelID>();
-        public struct levelID { public int ID; public string name; }
 
         public static List<string> afkset = new List<string>();
         public static List<string> ircafkset = new List<string>();
-        public static List<string> afkmessages = new List<string>();
         public static List<string> messages = new List<string>();
-
-        public static Dictionary<string, string> gcnamebans = new Dictionary<string, string>();
-        public static Dictionary<string, string> gcipbans = new Dictionary<string, string>();
 
         public static DateTime timeOnline;
         public static string IP;
@@ -351,6 +338,8 @@ namespace MCGalaxy
         public static LevelPermission reviewclear = LevelPermission.Operator;
 
         public static int DrawReloadLimit = 10000;
+        public static int MapGenLimitAdmin = 225 * 1000 * 1000;
+        public static int MapGenLimit = 30 * 1000 * 1000;
         #endregion
 
         public static MainLoop ml;

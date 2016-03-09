@@ -60,10 +60,13 @@ namespace MCGalaxy.Commands
             }
 
             if (p != null) {
-                int limit = p.group.Permission < LevelPermission.Admin ? 30000000 : 225000000;
-                if (x * y * z > limit ) {
-                    string text = String.Format("Cannot create a map with over {0} million blocks",
-                                                limit / 1000000);
+                int limit = p.group.Permission < LevelPermission.Admin ? 
+                    Server.MapGenLimit : Server.MapGenLimitAdmin;
+                if ((long)x * y * z > limit ) {
+                    string text = "You cannot create a map with over ";
+                    if (limit > 1000 * 1000) text += (limit / (1000 * 1000)) + " million blocks";
+                    else if (limit > 1000) text += (limit / 1000) + " thousand blocks";
+                    else text += limit + " blocks";
                     Player.SendMessage(p, text); return;
                 }
             }

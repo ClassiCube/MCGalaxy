@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands {
                 if (hasExt && url == "")
                     pl.SendCurrentMapAppearance();
             }
-            SrvProperties.Save("properties/server.properties");
+            SrvProperties.Save();
         }
         
         void UpdateLevel(Player p, bool zip) {

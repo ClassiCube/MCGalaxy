@@ -44,18 +44,6 @@ namespace MCGalaxy.Commands
             	if (p.ignoreGlobalChat || p.ignoreAll) { Player.SendMessage(p, "You cannot use Global Chat while you have it muted."); return; }
             	if (Server.chatmod && !p.voice) { Player.SendMessage(p, "You cannot use Global Chat while in Chat Moderation!"); return; }
             	if (!Server.gcaccepted.Contains(p.name.ToLower())) { RulesMethod(p); return; }
-            	
-                string reason;
-                if (Server.gcnamebans.TryGetValue(p.name.ToLower(), out reason)) {
-                    Player.SendMessage(p, "You are %cBANNED" + Server.DefaultColor + " from %GGlobal Chat" + Server.DefaultColor + " by " + reason);
-                    Player.SendMessage(p, "You can apply a 'Ban Appeal' at %9www.mcgalaxy.ml");
-                    return;
-                }
-                if (Server.gcipbans.TryGetValue(p.ip, out reason)) {
-                    Player.SendMessage(p, "Your IP is %cBANNED" + Server.DefaultColor + " from%G Global Chat" + Server.DefaultColor + " by " + reason);
-                    Player.SendMessage(p, "You can apply a 'Ban Appeal' at %9www.mcgalaxy.ml");
-                    return;
-                }
             }            //Server.GlobalChat.Say((p != null ? p.name + ": " : "Console: ") + message, p);
             Server.GlobalChat.Say(p == null ? "Console: " + message : p.name + ": " + message, p);
             Player.GlobalMessage("%G<[Global] " + (p != null ? p.name + ": " : "Console: ") + "&f" + (Server.profanityFilter ? ProfanityFilter.Parse(message) : message), true);

@@ -163,7 +163,6 @@ namespace MCGalaxy.Commands
 
             Server.afkset = new List<string>();
             Server.ircafkset = new List<string>();
-            Server.afkmessages = new List<string>();
             Server.messages = new List<string>();
 
             Server.restartcountdown = "";
@@ -256,6 +255,8 @@ namespace MCGalaxy.Commands
             Server.notifyOnJoinLeave = false;
             Server.repeatMessage = false;
             Server.DrawReloadLimit = 10000;
+            Server.MapGenLimit = 30 * 1000 * 1000;
+            Server.MapGenLimitAdmin = 225 * 1000 * 1000;
 
             Server.checkUpdates = true;
 

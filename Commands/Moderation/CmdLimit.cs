@@ -37,19 +37,35 @@ namespace MCGalaxy.Commands {
             switch (args[0].ToLower()) {
                 case "rt":
                 case "reloadthreshold":
-                    Player.GlobalMessage("Threshold before drawing reloads map changed to &b" + limit);
-                    Server.DrawReloadLimit = limit; return;
+                    Player.GlobalMessage("Threshold before drawing reloads map set to &b" + limit);
+                    Server.DrawReloadLimit = limit;
+                    SrvProperties.Save(); return;
                 case "rp":
                 case "restartphysics":
                     Player.GlobalMessage("Custom /rp's limit was changed to &b" + limit);
-                    Server.rpLimit = limit; return;
+                    Server.rpLimit = limit;
+                    SrvProperties.Save(); return;
                 case "rpnormal":
-                    Player.GlobalMessage("Normal /rp's limit was changed to &b" + limit);
-                    Server.rpNormLimit = limit; return;
+                    Player.GlobalMessage("Normal /rp's limit set to &b" + limit);
+                    Server.rpNormLimit = limit;
+                    SrvProperties.Save(); return;
                 case "pu":
                 case "physicsundo":
-                    Player.GlobalMessage("Physics undo max entries was changed to &b" + limit);
-                    Server.physUndo = limit; return;
+                    Player.GlobalMessage("Physics undo max entries set to &b" + limit);
+                    Server.physUndo = limit;
+                    SrvProperties.Save(); return;
+                case "gen":
+                case "genlimit":
+                    Player.GlobalMessage("Maximum volume of maps players can generate set to &b" + limit);
+                    Server.MapGenLimit = limit;
+                    SrvProperties.Save(); return;
+                case "genadmin":
+                case "genadminlimit":
+                case "admingen":
+                case "admingenlimit":
+                    Player.GlobalMessage("Maximum volume of maps admins can generate set to &b" + limit);
+                    Server.MapGenLimitAdmin = limit; 
+                    SrvProperties.Save(); return;
             }
 
             if (args.Length == 2) { Player.SendMessage(p, "You need to provide a rank name for this type."); return; }
@@ -59,11 +75,11 @@ namespace MCGalaxy.Commands {
             switch (args[0].ToLower()) {
                 case "dl":
                 case "drawlimit":            
-                    Player.GlobalMessage(grp.color + grp.name + "%S's draw limit was set to &b" + limit);
+                    Player.GlobalMessage(grp.color + grp.name + "%S's draw limit set to &b" + limit);
                     grp.maxBlocks = limit; break;
                 case "mu":
                 case "maxundo":
-                    Player.GlobalMessage(grp.color + grp.name + "%S's undo limit was set to &b" + limit);
+                    Player.GlobalMessage(grp.color + grp.name + "%S's undo limit set to &b" + limit);
                     grp.maxUndo = limit; break;                    
                 default:
                     Help(p); return;
@@ -74,7 +90,8 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.SendMessage(p, "/limit <type> <amount> [rank] - Sets the limit for <type>");
             Player.SendMessage(p, "Valid types: reloadthreshold(rt), restartphysics(rp), " +
-                               "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu)");
+                               "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen), " +
+                               "admingenlimit(admingen)");
             Player.SendMessage(p, "Rank is required for drawlimit and maxundo types.");
         }
     }
