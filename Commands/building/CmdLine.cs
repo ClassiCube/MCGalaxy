@@ -60,9 +60,7 @@ namespace MCGalaxy.Commands {
             GetRealBlock(type, extType, p, ref cpos);
 
             if (cpos.mode == DrawMode.straight) { 
-                int dx = Math.Abs(cpos.x - x);
-                int dy = Math.Abs(cpos.y - y);
-                int dz = Math.Abs(cpos.z - z);
+                int dx = Math.Abs(cpos.x - x), dy = Math.Abs(cpos.y - y), dz = Math.Abs(cpos.z - z);
 
                 if (dx > dy && dx > dz) {
                     y = cpos.y; z = cpos.z;

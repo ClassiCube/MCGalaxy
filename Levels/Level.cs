@@ -413,6 +413,7 @@ namespace MCGalaxy
         }
         
 
+        /// <summary> Returns whether the given coordinates are insides the boundaries of this level. </summary>
         public bool InBound(ushort x, ushort y, ushort z)
         {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
@@ -703,6 +704,7 @@ namespace MCGalaxy
 
         public void ChatLevelAdmins(string message) { ChatLevel(message, Server.adminchatperm); }
         
+        /// <summary> Sends a chat messages to all players in the level, who have at least the minPerm rank. </summary>
         public void ChatLevel(string message, LevelPermission minPerm) {
         	Player[] players = PlayerInfo.Online; 
             foreach (Player pl in players) {

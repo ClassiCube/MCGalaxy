@@ -32,6 +32,11 @@ namespace MCGalaxy {
                     SendMessage(p, from, message);
             }
         }
+		
+        [Obsolete("Use GlobalChatLevel instead, this method has been removed.")]
+        public static void GlobalChatWorld(Player from, string message, bool showname) {
+            GlobalChatLevel(from, message, showname);
+        }
         
         public static void GlobalChatRoom(Player from, string message, bool showname) {
             string oldmessage = message;
@@ -61,17 +66,7 @@ namespace MCGalaxy {
             }
             Server.s.Log(oldmessage + "<ChatRoom" + chatroom + ">" + from.prefix + from.name + message);
         }
-
-        public static void GlobalChatWorld(Player from, string message, bool showname) {
-            if (showname)
-                message = "<World>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
-            Player[] players = PlayerInfo.Online;
-            foreach (Player p in players) {
-                if (p.level.worldChat && p.Chatroom == null)
-                    SendMessage(p, from, message);
-            }
-        }
-        
+		
         public static void GlobalMessageLevel(Level l, string message) {
             Player[] players = PlayerInfo.Online;
             foreach (Player p in players) {

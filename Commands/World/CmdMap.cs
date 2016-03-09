@@ -169,7 +169,7 @@ namespace MCGalaxy.Commands
         public override void Help(Player p) {
             Player.SendMessage(p, "/map [level] [toggle] - Sets [toggle] on [level]");
             Player.SendMessage(p, "Possible toggles: theme, finite, randomflow, ai, edge, grass, growtrees, leafdecay, ps, overload, motd, " +
-                               "death, fall, drown, unload, loadongoto, rp, instant, killer, chat, buildable, deletable");
+                               "death, fall, drown, unload, loadongoto, rp, killer, chat, buildable, deletable, levelonlydeath");
             Player.SendMessage(p, "Edge will cause edge water to flow.");
             Player.SendMessage(p, "Grass will make grass not grow without physics.");
             Player.SendMessage(p, "Tree growing will make saplings grow into trees after a while.");
@@ -187,7 +187,6 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Unload sets whether the map unloads when no one's there.");
             Player.SendMessage(p, "Load on /goto sets whether the map can be loaded when some uses /goto. Only works if the load on /goto server option is enabled.");
             Player.SendMessage(p, "RP sets whether the physics auto-start for the map");
-            Player.SendMessage(p, "Instant mode works by not updating everyone's screens");
             Player.SendMessage(p, "Buildable sets whether any blocks can be placed by any player");
             Player.SendMessage(p, "Deleteable sets whether any blocks can be deleted by any player");
         }
