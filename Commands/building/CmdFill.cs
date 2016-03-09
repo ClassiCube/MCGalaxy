@@ -28,13 +28,13 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return "f"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
-        protected override SolidType GetType(string msg) {
-            if (msg == "up") return SolidType.up;
-            else if (msg == "down") return SolidType.down;
-            else if (msg == "layer") return SolidType.layer;
-            else if (msg == "vertical_x") return SolidType.verticalX;
-            else if (msg == "vertical_z") return SolidType.verticalZ;
-            return SolidType.solid;
+        protected override DrawMode ParseMode(string msg) {
+            if (msg == "up") return DrawMode.up;
+            else if (msg == "down") return DrawMode.down;
+            else if (msg == "layer") return DrawMode.layer;
+            else if (msg == "vertical_x") return DrawMode.verticalX;
+            else if (msg == "vertical_z") return DrawMode.verticalZ;
+            return DrawMode.normal;
         }
         
         protected override string PlaceMessage {
@@ -62,19 +62,20 @@ namespace MCGalaxy.Commands {
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
             List<int> buffer = new List<int>(), origins = new List<int>();
-            FloodFill(p, x, y, z, oldType, oldExtType, cpos.solid, bits, buffer, origins, 0);
+            FloodFill(p, x, y, z, oldType, oldExtType, cpos.mode, bits, buffer, origins, 0);
 
             int totalFill = origins.Count;
             for (int i = 0; i < totalFill; i++) {
                 int pos = origins[i];
                 p.level.IntToPos(pos, out x, out y, out z);
-                FloodFill(p, x, y, z, oldType, oldExtType, cpos.solid, bits, buffer, origins, 0);
+                FloodFill(p, x, y, z, oldType, oldExtType, cpos.mode, bits, buffer, origins, 0);
                 totalFill = origins.Count;
             }
             
             FillDrawOp drawOp = new FillDrawOp();
             drawOp.Positions = buffer;
-            Brush brush = GetBrush(p, cpos, 1);
+            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
+            Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, cpos.x, cpos.y, cpos.z))
                 return;
@@ -87,7 +88,7 @@ namespace MCGalaxy.Commands {
         
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
 
-        void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, byte oldExtType, SolidType fillType,
+        void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, byte oldExtType, DrawMode fillType,
                        SparseBitSet bits, List<int> buffer, List<int> origins, int depth) {
             if (bits.Get(x, y, z)) return;
             int index = p.level.PosToInt(x, y, z);
@@ -95,26 +96,26 @@ namespace MCGalaxy.Commands {
             bits.Set(x, y, z, true);
             buffer.Add(index);
 
-            if (fillType != SolidType.verticalX) { // x
+            if (fillType != DrawMode.verticalX) { // x
                 if (CheckTile(p, (ushort)(x + 1), y, z, oldType, oldExtType))
                     FloodFill(p, (ushort)(x + 1), y, z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
                 if (CheckTile(p, (ushort)(x - 1), y, z, oldType, oldExtType))
                     FloodFill(p, (ushort)(x - 1), y, z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
             }
 
-            if (fillType != SolidType.verticalZ) { // z
+            if (fillType != DrawMode.verticalZ) { // z
                 if (CheckTile(p, x, y, (ushort)(z + 1), oldType, oldExtType))
                     FloodFill(p, x, y, (ushort)(z + 1), oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
                 if (CheckTile(p, x, y, (ushort)(z - 1), oldType, oldExtType))
                     FloodFill(p, x, y, (ushort)(z - 1), oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
             }
 
-            if (!(fillType == SolidType.down || fillType == SolidType.layer)) { // y up
+            if (!(fillType == DrawMode.down || fillType == DrawMode.layer)) { // y up
                 if (CheckTile(p, x, (ushort)(y + 1), z, oldType, oldExtType))
                     FloodFill(p, x, (ushort)(y + 1), z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
             }
 
-            if (!(fillType == SolidType.up || fillType == SolidType.layer)) { // y down
+            if (!(fillType == DrawMode.up || fillType == DrawMode.layer)) { // y down
                 if (CheckTile(p, x, (ushort)(y - 1), z, oldType, oldExtType))
                     FloodFill(p, x, (ushort)(y - 1), z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
             }

@@ -27,12 +27,11 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
         public override void Use(Player p, string message) {
+        	message = message.ToLower();
             string[] parts = message.Split(' ');
-            for (int i = 0; i < parts.Length; i++)
-                parts[i] = parts[i].ToLower();
             CatchPos cpos = default(CatchPos);
-            cpos.message = message.ToLower();
-            cpos.solid = message == "" ? SolidType.solid : GetType(parts[parts.Length - 1]);
+            cpos.message = message;
+            cpos.mode = GetMode(message, parts);
             OnUse(p, message, parts, ref cpos);
             p.blockchangeObject = cpos;
             
@@ -58,9 +57,13 @@ namespace MCGalaxy.Commands {
         
         protected abstract void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
-        protected abstract SolidType GetType(string msg);
+        protected abstract DrawMode ParseMode(string mode);
         
         protected virtual void OnUse(Player p, string msg, string[] parts, ref CatchPos cpos) { }
+        
+        protected virtual DrawMode GetMode(string message, string[] parts) {
+        	return message == "" ? DrawMode.normal : ParseMode(parts[parts.Length - 1]);
+        }
         
         internal static byte GetBlock(Player p, string msg, out byte extType, bool checkPlacePerm = true) {
             byte type = Block.Byte(msg);
@@ -84,10 +87,10 @@ namespace MCGalaxy.Commands {
         }
         
         protected static Brush GetBrush(Player p, CatchPos cpos, int usedFromEnd) {
-        	int end = cpos.message.Length - 1;
+        	int end = cpos.message.Length;
         	string brushMsg = "";
         	for (int i = 0; i < usedFromEnd; i++) {
-        		end = cpos.message.LastIndexOf(' ', end);
+        		end = cpos.message.LastIndexOf(' ', end - 1);
         		if (end == -1) break;  
         	}
         	
@@ -103,15 +106,15 @@ namespace MCGalaxy.Commands {
         }
         
         protected struct CatchPos {
-            public SolidType solid;
+            public DrawMode mode;
             public byte type, extType;
             public ushort x, y, z;
             public object data;
             public string message;
         }
 
-        protected enum SolidType {
-            solid, hollow, walls,
+        protected enum DrawMode {
+            normal, solid, hollow, walls,
             holes, wire, random,
             vertical, reverse, straight, 
             up, down, layer, verticalX, verticalZ,

@@ -28,23 +28,30 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "line"; } }
         public override string shortcut { get { return "l"; } }
         
-        protected override SolidType GetType(string msg) {
-            if (msg == "walls") return SolidType.walls;
-            else if (msg == "straight") return SolidType.straight;
-            return SolidType.solid;
+        protected override DrawMode ParseMode(string msg) {
+            if (msg == "normal") return DrawMode.solid;
+            else if (msg == "walls") return DrawMode.walls;
+            else if (msg == "straight") return DrawMode.straight;
+            return DrawMode.normal;
         }
         
         protected override void OnUse(Player p, string msg, string[] parts, ref CatchPos cpos) {
-            if (parts.Length >= 2) {
-                string arg = parts[parts.Length - 1];
-                ushort len;
-                if (!ushort.TryParse(arg, out len)) {
-                    if (arg == "walls" || arg == "straight" || arg == "normal") return;
-                    Player.SendMessage(p, msg + " is not valid length, assuming maximum length allowed.");
-                } else {
-                    cpos.data = len;
-                }
-            } 
+            if (parts.Length < 2 || cpos.mode == DrawMode.normal) return;
+            string arg = parts[parts.Length - 1];
+            ushort len;
+            if (ushort.TryParse(arg, out len))
+                cpos.data = len;
+        }
+        
+        protected override DrawMode GetMode(string message, string[] parts) {
+            if (message == "") return DrawMode.normal;
+            DrawMode mode = ParseMode(parts[parts.Length - 1]);
+            if (mode != DrawMode.normal) return mode;
+            
+            // May be in the format <brush args> <mode> <max_length>
+            ushort len;
+            if (!ushort.TryParse(parts[parts.Length - 1], out len)) return DrawMode.normal;
+            return ParseMode(parts[parts.Length - 2]);
         }
 
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -52,7 +59,7 @@ namespace MCGalaxy.Commands {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
 
-            if (cpos.solid == SolidType.straight) { 
+            if (cpos.mode == DrawMode.straight) { 
                 int dx = Math.Abs(cpos.x - x);
                 int dy = Math.Abs(cpos.y - y);
                 int dz = Math.Abs(cpos.z - z);
@@ -67,10 +74,12 @@ namespace MCGalaxy.Commands {
             }
             
             LineDrawOp drawOp = new LineDrawOp();
-            drawOp.WallsMode = cpos.solid == SolidType.walls;
-            if (cpos.data != null)
-                drawOp.MaxLength = (ushort)cpos.data;
-            Brush brush = GetBrush(p, cpos, cpos.data == null ? 1 : 2);
+            drawOp.WallsMode = cpos.mode == DrawMode.walls;
+            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
+            if (cpos.data != null) {
+                drawOp.MaxLength = (ushort)cpos.data; brushOffset++;
+            }
+            Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
                       
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))

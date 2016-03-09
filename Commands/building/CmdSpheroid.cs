@@ -32,15 +32,17 @@ namespace MCGalaxy.Commands {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
-            Brush brush = GetBrush(p, cpos, 1);
+            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
+            Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
 
-            switch (cpos.solid) {
-                case SolidType.solid:
+            switch (cpos.mode) {
+                case DrawMode.solid:
+                case DrawMode.normal:
                     drawOp = new EllipsoidDrawOp(); break;
-                case SolidType.hollow:
+                case DrawMode.hollow:
                     drawOp = new EllipsoidHollowDrawOp(); break;
-                case SolidType.vertical:
+                case DrawMode.vertical:
                     drawOp = new CylinderDrawOp(); break;
             }
                       
@@ -50,10 +52,11 @@ namespace MCGalaxy.Commands {
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        protected override SolidType GetType(string msg) {
-            if (msg == "hollow") return SolidType.hollow;
-            else if (msg == "vertical") return SolidType.vertical;
-            return SolidType.solid;
+        protected override DrawMode ParseMode(string msg) {
+            if (msg == "solid") return DrawMode.solid;
+            else if (msg == "hollow") return DrawMode.hollow;
+            else if (msg == "vertical") return DrawMode.vertical;
+            return DrawMode.normal;
         }
         
         public override void Help(Player p) {

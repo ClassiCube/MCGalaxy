@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands {
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        protected override SolidType GetType(string msg) {
-            return SolidType.solid;
+        protected override DrawMode ParseMode(string msg) {
+            return DrawMode.normal;
         }
         
         public override void Help(Player p) {

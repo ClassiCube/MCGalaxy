@@ -34,23 +34,25 @@ namespace MCGalaxy.Commands
             DrawOp drawOp = null;
             Brush brush = null;
 
-            switch (cpos.solid) {
-                case SolidType.solid:
+            switch (cpos.mode) {
+                case DrawMode.solid:
+                case DrawMode.normal:
                     drawOp = new CuboidDrawOp(); break;
-                case SolidType.hollow:
+                case DrawMode.hollow:
                     drawOp = new CuboidHollowsDrawOp(); break;
-                case SolidType.walls:
+                case DrawMode.walls:
                     drawOp = new CuboidWallsDrawOp(); break;
-                case SolidType.holes:
+                case DrawMode.holes:
                     drawOp = new CuboidHolesDrawOp(); break;
-                case SolidType.wire:
+                case DrawMode.wire:
                     drawOp = new CuboidWireframeDrawOp(); break;
-                case SolidType.random:
+                case DrawMode.random:
                     drawOp = new CuboidDrawOp();
                     brush = new RandomBrush(cpos.type, cpos.extType); break;
             }
             
-            if (brush == null) brush = GetBrush(p, cpos, 1);
+            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
+            if (brush == null) brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
@@ -58,19 +60,20 @@ namespace MCGalaxy.Commands
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        protected override SolidType GetType(string msg) {
-            if (msg == "hollow") return SolidType.hollow;
-            else if (msg == "walls") return SolidType.walls;
-            else if (msg == "holes") return SolidType.holes;
-            else if (msg == "wire") return SolidType.wire;
-            else if (msg == "random") return SolidType.random;
-            return SolidType.solid;
+        protected override DrawMode ParseMode(string msg) {
+            if (msg == "solid") return DrawMode.solid;
+            else if (msg == "hollow") return DrawMode.hollow;
+            else if (msg == "walls") return DrawMode.walls;
+            else if (msg == "holes") return DrawMode.holes;
+            else if (msg == "wire") return DrawMode.wire;
+            else if (msg == "random") return DrawMode.random;
+            return DrawMode.normal;
         }
         
         public override void Help(Player p) {
-        	Player.SendMessage(p, "%T/cuboid [block type] <mode>");
-        	Player.SendMessage(p, "   %HCreates a cuboid between two points.");
-        	Player.SendMessage(p, "   %HMode can be: solid/hollow/walls/holes/wire/random");
+            Player.SendMessage(p, "%T/cuboid [block type] <mode>");
+            Player.SendMessage(p, "   %HCreates a cuboid between two points.");
+            Player.SendMessage(p, "   %HMode can be: solid/hollow/walls/holes/wire/random");
         }
     }
 }
