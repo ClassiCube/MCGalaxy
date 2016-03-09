@@ -213,9 +213,9 @@ namespace MCGalaxy {
             Server.s.Log("Iterations = " + numIterations);
             
             for (int iter = 0; iter < numIterations; iter++) {            
-                float theta = (float)(rand.NextDouble() * 360);
-                float cosPhi = (float)Math.Cos(theta);
-                float sinPhi = (float)Math.Sin(theta);
+                float phi = (float)(rand.NextDouble() * 360);
+                float cosPhi = (float)Math.Cos(phi);
+                float sinPhi = (float)Math.Sin(phi);
                 float c = ((float)rand.NextDouble()) * 2 * d - d;
 
                 int index = 0;

@@ -16,10 +16,11 @@ permiusing MCGalaxy;ssions and limitations under the Licenses.
 using System.IO;
 
 namespace MCGalaxy {
-	
+    
     public static class Checktimer {
-		
+        
         static System.Timers.Timer t;
+        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static void StartTimer() {
             t = new System.Timers.Timer();
             t.AutoReset = false;
@@ -40,10 +41,10 @@ namespace MCGalaxy {
         }
         
         public static void TRExpiryCheck() {
-        	Player[] players = PlayerInfo.Online; 
+            Player[] players = PlayerInfo.Online; 
             foreach (Player p in players) {
                 foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
-                    if (!line.Contains(p.name)) continue;
+                    if (line.IndexOf(p.name, comp) < 0) continue;
                     string[] args = line.Split(' ');
 
                     int period = Convert.ToInt32(args[3]);
@@ -55,7 +56,7 @@ namespace MCGalaxy {
                     
                     Player who = PlayerInfo.Find(args[0]);
                     DateTime expire = new DateTime(years, months, days, hours, minutes, 0)
-                    	.AddHours(Convert.ToDouble(period));
+                        .AddHours(Convert.ToDouble(period));
                     if (DateTime.Now >= expire)
                         Command.all.Find("deltemprank").Use(null, who.name);
                 }

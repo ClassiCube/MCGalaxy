@@ -12,6 +12,7 @@ BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
+using System;
 using System.IO;
 using System.Text;
 
@@ -23,27 +24,27 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
         public override void Use(Player p, string message) {
-            string alltext = File.ReadAllText("text/tempranks.txt");
-            if (!alltext.Contains(message)) {
-                Player.SendMessage(p, "&cPlayer &a" + message + "&c Has not been assigned a temporary rank. Cannot unnasign.");
-                return;
+            bool assigned = false;
+            StringBuilder all = new StringBuilder();
+            Player who = PlayerInfo.Find(message);
+            
+            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
+                if (!line.StartsWith(message, comp)) { all.AppendLine(line); continue; }
+                
+                string[] parts = line.Split(' ');
+                Group newgroup = Group.Find(parts[2]);
+                Command.all.Find("setrank").Use(null, message + " " + newgroup.name + " temp rank unassigned");
+                Player.SendMessage(p, "&eTemp rank of &a" + message + "&e has been unassigned");
+                if (who != null)
+                    Player.SendMessage(who, "&eYour temp rank has been unassigned");
+                assigned = true;
             }
             
-            StringBuilder all = new StringBuilder();
-            Player who = Player.Find(message);
-            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
-                if (line.Contains(message)) {
-                    string group = line.Split(' ')[2];
-                    Group newgroup = Group.Find(group);
-                    Command.all.Find("setrank").Use(null, message + " " + newgroup.name + " temp rank unassigned");
-                    Player.SendMessage(p, "&eTemporary rank of &a" + message + "&e has been unassigned");
-                    if (who != null)
-                        Player.SendMessage(who, "&eYour temporary rank has been unassigned");
-                } else {
-                    all.AppendLine(line);
-                }
+            if (!assigned) {
+                Player.SendMessage(p, "&a" + message + "&c has not been assigned a temp rank."); return;
             }
             File.WriteAllText("text/tempranks.txt", all.ToString());
         }

@@ -24,51 +24,58 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length < 3) { Help(p); return; }
             string player = args[0], rank = args[1], period = args[2];
             Player who = PlayerInfo.Find(player);
-            if (who == null) { Player.SendMessage(p, "&cPlayer &a" + player + "&c not found."); return; }
-            
-            Group newRank = Group.Find(rank);
-            if (newRank == null) {
-                Player.SendMessage(p, "&cRank &a" + rank + "&c does not exist."); return;
+            if (who == null) {
+                OfflinePlayer pInfo = PlayerInfo.FindOffline(player);
+                if (pInfo == null) { Player.SendMessage(p, "&cPlayer &a" + player + "&c not found."); return; }
+                player = pInfo.name;
+            } else {
+                player = who.name;
             }
+            
+            Group group = Group.Find(rank);
+            if (group == null) { Player.SendMessage(p, "&cRank &a" + rank + "&c does not exist."); return; }
             int periodTime;
             if (!Int32.TryParse(period, out periodTime)) {
                 Player.SendMessage(p, "&cThe period needs to be a number."); return;
             }
 
-            string tempRanks = File.ReadAllText("text/tempranks.txt");
-            if (tempRanks.Contains(player)) {
-                Player.SendMessage(p, "&cThe player already has a temporary rank assigned!"); return;
+            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
+                if (line.StartsWith(player, comp)) {
+                    Player.SendMessage(p, "&cThe player already has a temporary rank assigned!"); return;
+                }
             }
-            if (p != null && p == who) {
+            
+            if (p != null && who != null && p == who) {
                 Player.SendMessage(p, "&cYou cannot assign yourself a temporary rank."); return;
             }
-            if (p != null && who.group.Permission >= p.group.Permission) {
+            Group pGroup = who != null ? who.group : Group.findPlayerGroup(player);
+            if (p != null && pGroup.Permission >= p.group.Permission) {
                 Player.SendMessage(p, "Cannot change the temporary rank of someone equal or higher to yourself."); return;
             }
-            if (p != null && newRank.Permission >= p.group.Permission) {
+            if (p != null && group.Permission >= p.group.Permission) {
                 Player.SendMessage(p, "Cannot change the temporary rank to a higher rank than yourself."); return;
             }
 
             DateTime now = DateTime.Now;
-            string oldrank = who.group.name;
             string assigner = p == null ? "Console" : p.name;
             using (StreamWriter sw = new StreamWriter("text/tempranks.txt", true))
-                sw.WriteLine(who.name + " " + rank + " " + oldrank + " " + period + " " + now.Minute + " " +
+                sw.WriteLine(player + " " + rank + " " + pGroup.name + " " + period + " " + now.Minute + " " +
                              now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner);
             
-            Command.all.Find("setrank").Use(null, who.name + " " + newRank.name + " assigning temp rank");
+            Command.all.Find("setrank").Use(null, who.name + " " + group.name + " assigning temp rank");
             Player.SendMessage(p, "Temporary rank (" + rank + ") assigned succesfully to " + player + " for " + period + " hours");
             Player.SendMessage(who, "Your Temporary rank (" + rank + ") is assigned succesfully for " + period + " hours");
         }
         
         public override void Help(Player p) {
             Player.SendMessage(p, "/temprank <player> <rank> <period(hours)> - Sets a temporary rank for the specified player.");
-        }        
+        }
     }
 }
