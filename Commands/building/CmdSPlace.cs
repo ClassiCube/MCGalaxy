@@ -30,6 +30,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             ushort distance = 0, interval = 0;
             if (message == "") { Help(p); return; }
+            if (p == null) { MessageInGameOnly(p); return; }
             
             string[] parts = message.Split(' ');
             if (!ushort.TryParse(parts[0], out distance)) {
@@ -66,25 +67,28 @@ namespace MCGalaxy.Commands {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             ushort distance = cpos.distance, interval = cpos.interval;
-            if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
+            if (x == cpos.x && y == cpos.y && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
             
-            int dirX = 0, dirZ = 0;
-            if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z))
-                dirX = x > cpos.x ? 1 : -1;
-            else
-                dirZ = z > cpos.z ? 1 : -1;
+            int dirX = 0, dirY = 0, dirZ = 0;
+            int dx = Math.Abs(cpos.x - x), dy = Math.Abs(cpos.y - y), dz = Math.Abs(cpos.z - z);
+            if (dy > dx && dy > dz) dirY = y > cpos.y ? 1 : -1;
+            else if (dx > dz) dirX = x > cpos.x ? 1 : -1;
+            else dirZ = z > cpos.z ? 1 : -1;
+            
             ushort endX = (ushort)(cpos.x + dirX * distance);
+            ushort endY = (ushort)(cpos.y + dirY * distance);
             ushort endZ = (ushort)(cpos.z + dirZ * distance);            
-            p.level.UpdateBlock(p, endX, cpos.y, endZ, Block.rock, 0);   
+            p.level.UpdateBlock(p, endX, endY, endZ, Block.rock, 0);   
             
             if (interval > 0) {
-                ushort xx = cpos.x, zz = cpos.z;
+                ushort xx = cpos.x, yy = cpos.y, zz = cpos.z;
                 int delta = 0;
-                while (xx < p.level.Width && zz < p.level.Length && delta < distance) {
-                    p.level.UpdateBlock(p, xx, cpos.y, zz, Block.rock, 0);
+                while (xx < p.level.Width && yy < p.level.Height && zz < p.level.Length && delta < distance) {
+                    p.level.UpdateBlock(p, xx, yy, zz, Block.rock, 0);
                     xx = (ushort)(xx + dirX * interval);
+                    yy = (ushort)(yy + dirY * interval);
                     zz = (ushort)(zz + dirZ * interval);
-                    delta = Math.Abs(xx - cpos.x) + Math.Abs(zz - cpos.z);
+                    delta = Math.Abs(xx - cpos.x) + Math.Abs(yy - cpos.y) + Math.Abs(zz - cpos.z);
                 }
             } else {
                 p.level.UpdateBlock(p, cpos.x, cpos.y, cpos.z, Block.rock, 0);
