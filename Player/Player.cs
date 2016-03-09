@@ -576,7 +576,7 @@ namespace MCGalaxy {
                 return;
             }
             
-            Server.reviewlist.Remove(name);           
+            Server.reviewlist.Remove(name);
             try { 
                 if (disconnected) {
                     CloseSocket();
@@ -620,13 +620,13 @@ namespace MCGalaxy {
                 GlobalDespawn(this, false);
                 if (discMsg != null) {
                 	if (!hidden) {
-                		string leavem = "&c- " + color + prefix + DisplayName + Server.DefaultColor + " %S" + discMsg;
+                		string leavem = "&c- " + color + prefix + DisplayName + " %S" + discMsg;
                 		if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
                 			Player[] players = PlayerInfo.Online; 
                 			foreach (Player pl in players) { Player.SendMessage(pl, leavem); }
                 		}
                 	}
-                	Server.s.Log(name + " disconnected.");
+                	Server.s.Log(name + "disconnected (" + discMsg + ").");
                 } else {
                 	totalKicked++;
                 	SendChatFrom(this, "&c- " + color + prefix + DisplayName + " %Skicked (" + kickMsg + "%S).", false);
