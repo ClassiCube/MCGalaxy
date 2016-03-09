@@ -1,5 +1,5 @@
 ﻿/*
-	Copyright 2011 MCGalaxy
+	Copyright 2011 MCForge
 	
 	Dual-licensed under the	Educational Community License, Version 2.0 and
 	the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MCGalaxy")]
-[assembly: AssemblyCopyright("Copyright © 2011")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("Forging the Way")]
 //[assembly: AssemblyDevs("MCGalaxy Development Team")]
 

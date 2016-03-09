@@ -1,5 +1,5 @@
 /*
-	Copyright 2011 MCGalaxy modified by headdetect
+	Copyright 2011 MCForge modified by headdetect
 
 	Dual-licensed under the	Educational Community License, Version 2.0 and
 	the GNU General Public License, Version 3 (the "Licenses"); you may

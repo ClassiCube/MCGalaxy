@@ -1,5 +1,5 @@
 /*
-	Copyright 2011 MCGalaxy
+	Copyright 2011 MCForge
 	Created by Techjar (Jordan S.)
 		
 	Dual-licensed under the	Educational Community License, Version 2.0 and

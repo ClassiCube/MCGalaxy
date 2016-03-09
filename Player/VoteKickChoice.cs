@@ -1,5 +1,5 @@
 /*
-	Copyright 2011 MCGalaxy
+	Copyright 2011 MCForge
 	
 	Author: fenderrock87
 	

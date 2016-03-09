@@ -1,5 +1,5 @@
 /*
-	Copyright 2011 MCGalaxy
+	Copyright 2011 MCForge
 	
 	Written by jordanneil23 with alot of help from TheMusiKid.
 		
