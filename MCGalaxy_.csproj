@@ -396,6 +396,7 @@
     <Compile Include="Drawing\Brushes\CheckeredBrush.cs" />
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
     <Compile Include="Drawing\Brushes\RainbowBrush.cs" />
+    <Compile Include="Drawing\Brushes\ReplaceBrush.cs" />
     <Compile Include="Drawing\Brushes\SolidBrush.cs" />
     <Compile Include="Drawing\Brushes\StripedBrush.cs" />
     <Compile Include="Drawing\CopyState.cs" />

@@ -47,6 +47,9 @@ namespace MCGalaxy.Drawing.Ops {
         /// <summary> Coordinates of the current block being processed by the drawing command. </summary>
         public Vector3U16 Coords;
         
+        /// <summary> Level the draw operation is being performed upon. </summary>
+        public Level Level;
+        
         /// <summary> Whether the two given coordinates from the user should be adjusted,
         /// so that the first coordinate contains the minimum values on all three axes. </summary>
         public virtual bool MinMaxCoords { get { return true; } }
@@ -124,6 +127,7 @@ namespace MCGalaxy.Drawing.Ops {
             op.Origin = new Vector3U16(x1, y1, z1);
             op.Min = Vector3U16.Min(x1, y1, z1, x2, y2, z2);
             op.Max = Vector3U16.Max(x1, y1, z1, x2, y2, z2);
+            op.Level = p.level;
             if (op.MinMaxCoords) {
                 ushort xx1 = x1, yy1 = y1, zz1 = z1, xx2 = x2, yy2 = y2, zz2 = z2;
                 x1 = Math.Min(xx1, xx2); x2 = Math.Max(xx1, xx2);

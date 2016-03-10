@@ -18,45 +18,37 @@
 using System;
 using MCGalaxy;
 using MCGalaxy.Drawing.Brushes;
-
+ 
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdBrush : Command {
-        public override string name { get { return "brush"; } }
-        public override string shortcut { get { return ""; } }
+    public sealed class CmdReplaceBrush : Command {
+        public override string name { get { return "replacebrush"; } }
+        public override string shortcut { get { return "rb"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
+        	// TODO: make sure can use or brush first.
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
+            string[] args = message.Split(trimChars, 3);
+            if (args.Length < 2) { Help(p); return }
             
-            string brush = FindBrush(message);
+            byte extType = 0;
+            byte type = DrawCmd.GetBlock(p, args[0], out extType);
+            string brush = CmdBrush.FindBrush(args[1]);
             if (brush == null) {
                 Player.SendMessage(p, "No brush found with name \"" + message + "\".");
-                Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
-            } else {
-                Player.SendMessage(p, "Set your brush to: " + brush);
-                p.BrushName = brush;
+                Player.SendMessage(p, "Available brushes: " + CmdBrush.AvailableBrushes);
+                return;
             }
-        }
-        
-        internal static string FindBrush(string message) {
-            foreach (var brush in Brush.Brushes) {
-                if (brush.Key.Equals(message, StringComparison.OrdinalIgnoreCase))
-                    return brush.Key;
-            }
-        	return null;
-        }
-        
-        internal static string AvailableBrushes {
-            get { return string.Join( ", ", Brush.Brushes.Keys); }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/brush <name> - Sets the currently active brush to the given name.");
-            Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
+            Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
+            Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
         }
     }
 }

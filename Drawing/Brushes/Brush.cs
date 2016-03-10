@@ -39,6 +39,8 @@ namespace MCGalaxy.Drawing.Brushes {
             { "rainbow", RainbowBrush.Process },
             { "bwrainbow", BWRainbowBrush.Process },
             { "striped", StripedBrush.Process },
+            { "replace", ReplaceBrush.Process },
+            { "replacenot", ReplaceNotBrush.Process },
         };
     }
     
