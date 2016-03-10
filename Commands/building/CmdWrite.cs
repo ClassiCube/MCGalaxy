@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            if (!p.group.CanExecute(Command.all.Find("write"))) {
+            if (!p.group.CanExecute("write")) {
                 Player.SendMessage(p, "You must be able to use /write to use /writetext."); return;
             }
             

@@ -221,7 +221,9 @@ namespace MCGalaxy
             all.Add(new CmdRepeat());
             all.Add(new CmdReplace());
             all.Add(new CmdReplaceAll());
+            all.Add(new CmdReplaceBrush());
             all.Add(new CmdReplaceNot());
+            all.Add(new CmdReplaceNotBrush());
             all.Add(new CmdReport());
             all.Add(new CmdResetBot());
             all.Add(new CmdResetPass());

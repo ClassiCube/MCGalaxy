@@ -23,7 +23,13 @@ namespace MCGalaxy {
     
      public struct FillPos { public ushort X, Y, Z; }
      
-     public struct ExtBlock { public byte Type, ExtType; }
+     public struct ExtBlock { 
+         public byte Type, ExtType;
+
+         public ExtBlock(byte type, byte extType) {
+             Type = type; ExtType = extType;
+         }
+     }
 }
 
 namespace MCGalaxy.Drawing.Ops {

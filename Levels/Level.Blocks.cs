@@ -273,8 +273,7 @@ namespace MCGalaxy {
                 return false;
             }
             
-            if (p.group.Permission > perbuildmax && (!inZone || !AllowBuild) &&
-                !p.group.CanExecute(Command.all.Find("perbuildmax"))) {
+            if (p.group.Permission > perbuildmax && (!inZone || !AllowBuild) && !p.group.CanExecute("perbuildmax")) {
                 if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
                     Player.SendMessage(p, "Your rank must be " + perbuildmax + " or lower to build here!");
                     p.ZoneSpam = DateTime.UtcNow;

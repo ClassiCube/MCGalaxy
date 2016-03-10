@@ -127,6 +127,7 @@
     <Compile Include="Commands\Building\CmdPortal.cs" />
     <Compile Include="Commands\Building\CmdPyramid.cs" />
     <Compile Include="Commands\Building\CmdRedo.cs" />
+    <Compile Include="Commands\building\CmdReplaceBrush.cs" />
     <Compile Include="Commands\building\ReplaceCmd.cs" />
     <Compile Include="Commands\Building\CmdRestartPhysics.cs" />
     <Compile Include="Commands\Building\CmdSpheroid.cs" />

@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands {
             if (!p.ignorePermission && p.group.Permission < lvl.permissionvisit) {
                 Player.SendMessage(p, "You're not allowed to go to " + lvl.name + "."); return false;
             }
-            if (!p.ignorePermission && p.group.Permission > lvl.pervisitmax && !p.group.CanExecute(Command.all.Find("pervisitmax"))) {
+            if (!p.ignorePermission && p.group.Permission > lvl.pervisitmax && !p.group.CanExecute("pervisitmax")) {
                 Player.SendMessage(p, "Your rank must be " + lvl.pervisitmax + " or lower to go there!"); return false;
             }
             if (File.Exists("text/lockdown/map/" + message.ToLower())) {

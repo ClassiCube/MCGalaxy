@@ -17,38 +17,98 @@
  */
 using System;
 using MCGalaxy;
+using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
- 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdReplaceBrush : Command {
-        public override string name { get { return "replacebrush"; } }
-        public override string shortcut { get { return "rb"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        static char[] trimChars = {' '};
+using MCGalaxy.Drawing.Ops;
 
-        public override void Use(Player p, string message) {
-        	// TODO: make sure can use or brush first.
-            if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }
-            string[] args = message.Split(trimChars, 3);
-            if (args.Length < 2) { Help(p); return }
-            
-            byte extType = 0;
-            byte type = DrawCmd.GetBlock(p, args[0], out extType);
-            string brush = CmdBrush.FindBrush(args[1]);
-            if (brush == null) {
-                Player.SendMessage(p, "No brush found with name \"" + message + "\".");
-                Player.SendMessage(p, "Available brushes: " + CmdBrush.AvailableBrushes);
-                return;
-            }
-        }
-        
-        public override void Help(Player p) {
-            Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
-            Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
-        }
-    }
+namespace MCGalaxy.Commands {
+	
+	public class CmdReplaceBrush : Command {
+		public override string name { get { return "replacebrush"; } }
+		public override string shortcut { get { return "rb"; } }
+		public override string type { get { return CommandTypes.Building; } }
+		public override bool museumUsable { get { return false; } }
+		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+		static char[] trimChars = {' '};
+
+		public override void Use(Player p, string message) {
+			if (message == "") { Help(p); return; }
+			if (p == null) { MessageInGameOnly(p); return; }
+			string replaceCmd = ReplaceNot ? "replacenot" : "replace";
+			if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("brush")) {
+				Player.SendMessage(p, "You cannot use /brush and/or /" + replaceCmd + 
+				                   ", so therefore cannot use this command."); return;
+			}
+			
+			CatchPos cpos = default(CatchPos);
+			cpos.message = message.ToLower();
+			p.blockchangeObject = cpos;
+			
+			Player.SendMessage(p, "Place two blocks to determine the edges.");
+			p.ClearBlockchange();
+			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+		}
+		
+		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+			RevertAndClearState(p, x, y, z);
+			CatchPos bp = (CatchPos)p.blockchangeObject;
+			bp.x = x; bp.y = y; bp.z = z;
+			p.blockchangeObject = bp;
+			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+		}
+		
+		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+			RevertAndClearState(p, x, y, z);
+			CatchPos cpos = (CatchPos)p.blockchangeObject;
+			type = type < 128 ? p.bindings[type] : type;
+			
+			string[] parts = cpos.message.Split(trimChars, 3);
+			if (parts.Length < 2) { Help(p); return; }
+			
+			byte extTile = 0;
+			byte tile = DrawCmd.GetBlock(p, parts[0], out extTile);
+			if (tile == Block.Zero) return;
+			string brushName = CmdBrush.FindBrush(parts[1]);
+			if (brushName == null) {
+				Player.SendMessage(p, "No brush found with name \"" + parts[1] + "\".");
+				Player.SendMessage(p, "Available brushes: " + CmdBrush.AvailableBrushes);
+				return;
+			}
+			
+			string brushMessage = parts.Length > 2 ? parts[2].ToLower() : "";
+			BrushArgs args = new BrushArgs(p, brushMessage, type, extType);
+			Brush brush = Brush.Brushes[brushName](args);
+			if (brush == null) return;
+			
+			DrawOp drawOp = null;
+			if (ReplaceNot) drawOp = new ReplaceNotDrawOp(tile, extTile);
+			else drawOp = new ReplaceDrawOp(tile, extTile);
+			
+			if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
+				return;
+			if (p.staticCommands)
+				p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+		}
+		
+		protected virtual bool ReplaceNot { get { return false; } }
+		
+		struct CatchPos { public ushort x, y, z; public string message; }
+		
+		public override void Help(Player p) {
+			Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
+			Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
+		}
+	}
+	
+	public class CmdReplaceNotBrush : CmdReplaceBrush {
+		public override string name { get { return "replacenotbrush"; } }
+		public override string shortcut { get { return "r b"; } }
+		
+		protected override bool ReplaceNot { get { return true; } }
+		
+		public override void Help(Player p) {
+			Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
+			Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
+		}
+	}
 }

@@ -99,9 +99,12 @@ namespace MCGalaxy
             GrpCommands.AddCommands(out _commands, Permission);
             commands = _commands;
         }
-        /// <summary>
-        /// Check to see if this group can excute cmd
-        /// </summary>
+        
+        public bool CanExecute(string cmdName) { 
+            return commands.Contains(Command.all.Find(cmdName));
+        }
+        	
+        /// <summary> Check to see if this group can excute cmd </summary>
         /// <param name="cmd">The command object to check</param>
         /// <returns>True if this group can use it, false if they cant</returns>
         public bool CanExecute(Command cmd) { return commands.Contains(cmd); }

@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             }
             
             string src = args[0], dst = args[1];
-            if (!p.group.CanExecute(Command.all.Find("newlvl"))) {
+            if (!p.group.CanExecute("newlvl")) {
                 Player.SendMessage(p, "You cannot use /copylvl as you cannot use /newlvl."); return;
             }
             if (!Player.ValidName(src)) { Player.SendMessage(p, "\"" + src + "\" is not a valid level name."); return; }

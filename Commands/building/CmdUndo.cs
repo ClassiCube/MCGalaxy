@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands
             if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this, 2)) {
                 Player.SendMessage(p, "Reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 2)).name + "+"); return;
             }
-            if (p != null && !p.group.CanExecute(Command.all.Find("physics"))) {
+            if (p != null && !p.group.CanExecute("physics")) {
                 Player.SendMessage(p, "You can only undo physics if you can use /physics."); return;
             }
             Command.all.Find("physics").Use(p, "0");
