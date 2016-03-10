@@ -36,15 +36,13 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player who = PlayerInfo.Find(message);
-                if (who == null) { p.whisperTo = ""; p.whisper = false; Player.SendMessage(p, "Could not find player."); return; }
-                if (!Player.CanSee(p, who)) { Player.SendMessage(p, "Could not find player."); return; }
+                Player who = PlayerInfo.FindOrShowMatches(p, message);
+                if (who == null) { p.whisperTo = ""; p.whisper = false; return; }
 
                 p.whisper = true;
                 p.whisperTo = who.name;
                 Player.SendMessage(p, "Auto-whisper enabled.  All messages will now be sent to " + who.DisplayName + ".");
             }
-
         }
 
         public override void Help(Player p)

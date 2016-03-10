@@ -37,10 +37,7 @@ namespace MCGalaxy.Commands
             
             ushort x, y, z;
             if (args.Length == 1) {
-                Player who = PlayerInfo.Find(message);
-                if (who == null || who.hidden) {
-                    Player.SendMessage(p, "The specified player does not exist!"); return;
-                }                
+                Player who = PlayerInfo.FindOrShowMatches(p, message); return;
                 if (who.level.physics < 3 || who.level.physics == 5) {
                     Player.SendMessage(p, "The physics on the player's level are not sufficient for exploding."); return;
                 }

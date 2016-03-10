@@ -19,9 +19,9 @@ namespace MCGalaxy.Commands {
             int number = message.Split(' ').Length;
             if (number > 1) { Help(p); return; }
 
-            Player who = PlayerInfo.Find(message);
+            Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == p) { Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You cannot send yourself a request!"); return; }
-            if (who == null || !Player.CanSee(p, who)) { Player.SendMessage(p, "There is no player \"" + message + "\"."); return; }
+            if (who == null) return;
             if (who.listignored.Contains(p.name))
             {
                 //Lies

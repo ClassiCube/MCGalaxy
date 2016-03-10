@@ -23,20 +23,15 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "ohide"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             message = message.Split(' ')[0];
-            Player who = PlayerInfo.Find(message);
-            if (who == null)
-            {
-                Player.SendMessage(p, "Could not find player.");
-                return;
-            }
+            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            if (who == null) return;
             if (who == p)
             {
                 Player.SendMessage(p, "On yourself?  Really?  Just use /hide.");
@@ -44,11 +39,10 @@ namespace MCGalaxy.Commands
             }
             if (who.group.Permission >= p.group.Permission)
             {
-                Player.SendMessage(p, "Cannot use this on someone of equal or greater rank.");
-                return;
+                Player.SendMessage(p, "Cannot use this on someone of equal or greater rank."); return;
             }
             Command.all.Find("hide").Use(who, "");
-            Player.SendMessage(p, "Used /hide on " + who.color + who.name + Server.DefaultColor + ".");
+            Player.SendMessage(p, "Used /hide on " + who.color + who.name + Server.DefaultColor + "%S.");
         }
 
         public override void Help(Player p)

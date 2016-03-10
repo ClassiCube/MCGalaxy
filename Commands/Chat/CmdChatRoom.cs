@@ -212,11 +212,8 @@ namespace MCGalaxy.Commands {
             }
             
             string name = parts[1], room = parts[2];
-            Player pl = PlayerInfo.Find(name);
-            if (pl == null) {
-                Player.SendMessage(p, "There is no online player with the name '" + name + "'");
-                return;
-            }
+            Player pl = PlayerInfo.FindOrShowMatches(p, name);
+            if (pl == null) return;
             if (!Server.Chatrooms.Contains(room)) {
                 Player.SendMessage(p, "There is no chatroom with the name '" + room + "'");
                 return;
@@ -249,11 +246,8 @@ namespace MCGalaxy.Commands {
             }
             
             string name = parts[1];
-            Player pl = PlayerInfo.Find(name);
-            if (pl == null) {
-                Player.SendMessage(p, "There is no online player with the name '" + name + "'");
-                return;
-            }
+            Player pl = PlayerInfo.FindOrShowMatches(p, name);
+            if (pl == null) return;
             if (pl.group.Permission >= p.group.Permission) {
                 Player.SendMessage(p, "You can't kick someone of a higher or equal rank from a chatroom.");
                 return;

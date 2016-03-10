@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             Player who = message == "" ? p : PlayerInfo.Find(message);
             if (message == "") message = p.name;
-            if (who == null || who.hidden) {
+            if (who == null || !Player.CanSee(p, who)) {
                 Player.SendMessage(p, "\"" + message + "\" is offline! Using /whowas instead.");
                 Command.all.Find("whowas").Use(p, message); return;
             }

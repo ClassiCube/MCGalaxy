@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,39 +37,27 @@ namespace MCGalaxy.Commands
             }
             List<string> rules = CP437Reader.ReadAllLines("text/rules.txt");
 
-            Player who = null;
+            Player who = p;
             if (message != "") {
-                if (p == null || (int)p.group.Permission < CommandOtherPerms.GetPerm(this))
-                {
-                    Server.s.Log(((int)p.group.Permission).ToString());
-                    Server.s.Log(CommandOtherPerms.GetPerm(this).ToString());
-                    Player.SendMessage(p, "You can't send /rules to another player!");
-                    return;
+                if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
+                    Player.SendMessage(p, "You can't send /rules to another player."); return;
                 }
-                who = PlayerInfo.Find(message);
-            } else {
-                who = p;
+                who = PlayerInfo.FindOrShowMatches(p, message);
+                if (who == null) return;
             }
             
             if (who != null) {
                 who.hasreadrules = true;
-                if (who.level == Server.mainLevel && Server.mainLevel.permissionbuild == LevelPermission.Guest) 
+                if (who.level == Server.mainLevel && Server.mainLevel.permissionbuild == LevelPermission.Guest)
                     Player.SendMessage(who, "You are currently on the guest map where anyone can build");
-                Player.SendMessage(who, "Server Rules:");
-                foreach (string s in rules)
-                    Player.SendMessage(who, s);
-                
-                if (who.name != p.name) {
-                    Player.SendMessage(p, "Sent the rules to " + who.color + who.DisplayName + Server.DefaultColor + ".");
-                    Player.SendMessage(who, p.color + p.DisplayName + Server.DefaultColor + " sent you the rules.");
-                }
+            }
+            Player.SendMessage(who, "Server Rules:");
+            foreach (string s in rules)
+                Player.SendMessage(who, s);
             
-            } else if (p == null && String.IsNullOrEmpty(message)) {
-                Player.SendMessage(p, "Server Rules:");
-                foreach (string s in rules)
-                    Player.SendMessage(p, s);
-            } else {
-                Player.SendMessage(p, "There is no player \"" + message + "\"!");
+            if (who != null && who.name != p.name) {
+                Player.SendMessage(p, "Sent the rules to " + who.color + who.DisplayName + Server.DefaultColor + ".");
+                Player.SendMessage(who, p.color + p.DisplayName + Server.DefaultColor + " sent you the rules.");
             }
         }
 
