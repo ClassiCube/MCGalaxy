@@ -21,15 +21,15 @@ using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy {
     
-     public struct FillPos { public ushort X, Y, Z; }
-     
-     public struct ExtBlock { 
-         public byte Type, ExtType;
+    public struct FillPos { public ushort X, Y, Z; }
+    
+    public struct ExtBlock {
+        public byte Type, ExtType;
 
-         public ExtBlock(byte type, byte extType) {
-             Type = type; ExtType = extType;
-         }
-     }
+        public ExtBlock(byte type, byte extType) {
+            Type = type; ExtType = extType;
+        }
+    }
 }
 
 namespace MCGalaxy.Drawing.Ops {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Ops {
         public Vector3U16 Max;
         
         /// <summary> Coordinates of the first point selected by the user. </summary>
-        public Vector3U16 Origin;        
+        public Vector3U16 Origin;
         
         /// <summary> Coordinates of the current block being processed by the drawing command. </summary>
         public Vector3U16 Coords;
@@ -128,7 +128,7 @@ namespace MCGalaxy.Drawing.Ops {
         internal const int MethodBlockQueue = 0, MethodBlockChange = 1, MethodSetTile = 2;
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
-                                           ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+                                    ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             int affected = 0;
             op.Origin = new Vector3U16(x1, y1, z1);
             op.Min = Vector3U16.Min(x1, y1, z1, x2, y2, z2);
@@ -143,12 +143,17 @@ namespace MCGalaxy.Drawing.Ops {
             
             if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
                 return false;
-            const string format = "{0}({1}): affecting up to {2} blocks";
-            Player.SendMessage(p, String.Format(format, op.Name, brush.Name, affected));
+            if (brush != null) {
+                const string format = "{0}({1}): affecting up to {2} blocks";
+                Player.SendMessage(p, String.Format(format, op.Name, brush.Name, affected));
+            } else {
+                const string format = "{0}: affecting up to {1} blocks";
+                Player.SendMessage(p, String.Format(format, op.Name, affected));
+            }
             
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);
-            Player[] players = PlayerInfo.Online; 
+            Player[] players = PlayerInfo.Online;
             if (needReveal) {
                 foreach (Player pl in players) {
                     if (pl.level.name.ToLower() == p.level.name.ToLower())
