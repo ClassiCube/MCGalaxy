@@ -24,8 +24,16 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class RainbowBrush : Brush {
         
-		public override string Name { get { return "Rainbow"; } }
-		
+        public override string Name { get { return "Rainbow"; } }
+        
+        public override string[] Help { get { return HelpString; } }
+        
+        public static string[] HelpString = new [] {
+            "%TArguments: <random> <seed>",
+            "%HIf no arguments are given, draws a diagonally repeating rainbow",
+            "%HIf \'random\' is given, draws by randomly selecting blocks from the rainbow pattern.",
+        };
+        
         public override byte NextBlock(DrawOp op) {
             int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 13;
             if (offset < 0) offset += 13;
@@ -40,7 +48,7 @@ namespace MCGalaxy.Drawing.Brushes {
                 int seed;
                 if (parts.Length > 1 && Int32.TryParse(parts[1], out seed))
                     return new RandomRainbowBrush(seed);
-                return new RandomRainbowBrush();           
+                return new RandomRainbowBrush();
             }
 
             if (args.Message == "bw")
@@ -51,8 +59,8 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class BWRainbowBrush : Brush {
         
-		public override string Name { get { return "BWRainbow"; } }
-		
+        public override string Name { get { return "BWRainbow"; } }
+        
         static byte[] blocks = { Block.iron, Block.white, Block.lightgrey,
             Block.darkgrey, Block.obsidian, Block.darkgrey, Block.lightgrey, Block.white };
         public override byte NextBlock(DrawOp op) {
@@ -61,6 +69,13 @@ namespace MCGalaxy.Drawing.Brushes {
             return blocks[offset];
         }
         
+        public override string[] Help { get { return HelpString; } }
+        
+        public static string[] HelpString = new [] {
+                    "%TArguments: none",
+                    "%HDraws a diagonally repeating black-white rainbow",
+        };
+        
         public override byte NextExtBlock(DrawOp op) { return 0; }
         
         public static Brush Process(BrushArgs args) {
@@ -68,10 +83,12 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class RandomRainbowBrush : Brush {
+    internal sealed class RandomRainbowBrush : Brush {
         readonly Random rnd;
         
         public override string Name { get { return "RandomRainbow"; } }
+        
+        public override string[] Help { get { return new string[0]; } }
         
         public RandomRainbowBrush() {
             rnd = new Random();

@@ -132,8 +132,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/fill [block] [type] - Fills the area specified with [block].");
-            Player.SendMessage(p, "[types] - up, down, layer, vertical_x, vertical_z");
+        	Player.SendMessage(p, "%T/fill [brush args] <mode>");
+            Player.SendMessage(p, "%HFills the area specified with the output of the current brush.");
+            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.SendMessage(p, "   %HMode can be: up/down/layer/vertical_x/vertical_z");            
         }
     }
 }

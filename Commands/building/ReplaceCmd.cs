@@ -66,8 +66,9 @@ namespace MCGalaxy.Commands {
         struct CatchPos { public ushort x, y, z; public string message; }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
-            Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
+            Player.SendMessage(p, "%T/replace [block] [block2].. [new]");
+            Player.SendMessage(p, "%HReplaces [block] with [new] between two points.");
+            Player.SendMessage(p, "%H   If more than one [block] is specified, they will all be replaced.");
         }
     }
     
@@ -79,8 +80,9 @@ namespace MCGalaxy.Commands {
         protected override bool ReplaceNot { get { return true; } }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/rn [block] [block2].. [new] - replace everything but [block] with [new] inside a selected cuboid");
-            Player.SendMessage(p, "If multiple [block]s are specified they will all be ignored.");
+            Player.SendMessage(p, "%T/replacenot [block] [block2].. [new]");
+            Player.SendMessage(p, "%HReplaces everything but [block] with [new] between two points.");
+            Player.SendMessage(p, "%H   If more than one [block] is specified, they will all be ignored.");
         }
     }
     
@@ -108,8 +110,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/ra [block] [block2].. [new] - Replaces all of [block] with [new] in a map");
-            Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
+            Player.SendMessage(p, "%T/replaceall [block] [block2].. [new]");
+            Player.SendMessage(p, "%HReplaces [block] with [new] for the entire map.");
+            Player.SendMessage(p, "%H   If more than one [block] is specified, they will all be replaced.");
         }
     }
 }

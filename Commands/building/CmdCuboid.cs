@@ -72,8 +72,9 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/cuboid [block type] <mode>");
-            Player.SendMessage(p, "   %HCreates a cuboid between two points.");
+            Player.SendMessage(p, "%T/cuboid [brush args] <mode>");
+            Player.SendMessage(p, "%HDraws a cuboid between two points.");
+            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
             Player.SendMessage(p, "   %HMode can be: solid/hollow/walls/holes/wire/random");
         }
     }

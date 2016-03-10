@@ -87,8 +87,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/line [block type] <mode> <length>");
-            Player.SendMessage(p, "   %HCreates a line between two points.");
+            Player.SendMessage(p, "%T/line [brush args] <mode> <length>");
+            Player.SendMessage(p, "%HCreates a line between two points.");
+            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");            
             Player.SendMessage(p, "   %HMode can be: normal/walls/straight");
             Player.SendMessage(p, "   %HLength specifies the max number of blocks in the line.");
         }

@@ -60,8 +60,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/spheroid [type] <solid/hollow/vertical> - create a spheroid of blocks.");
-            Player.SendMessage(p, "If <vertical> is used, a vertical tube will be created");
+            Player.SendMessage(p, "%T/spheroid [brush args] <mode>");
+            Player.SendMessage(p, "%HDraws a spheroid between two points.");
+            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.SendMessage(p, "   %HMode can be: solid/hollow/vertical(a vertical tube)");            
         }
     }
 }

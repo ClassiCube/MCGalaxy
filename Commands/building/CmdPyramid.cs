@@ -65,7 +65,10 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/pyramid [type] <solid/hollow/reverse> - create a square pyramid of blocks.");
+            Player.SendMessage(p, "%T/pyramid [brush args] <mode>");
+            Player.SendMessage(p, "%HDraws a square pyramid, using two points for the base.");
+            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.SendMessage(p, "   %HMode can be: solid/hollow/reverse");            
         }
     }
 }

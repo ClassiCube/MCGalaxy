@@ -34,11 +34,30 @@ namespace MCGalaxy.Commands {
             
             string brush = FindBrush(message);
             if (brush == null) {
-                Player.SendMessage(p, "No brush found with name \"" + message + "\".");
-                Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
+                if (message.StartsWith("help", StringComparison.OrdinalIgnoreCase)) {
+                    HandleHelp(p, message);
+                } else {
+                    Player.SendMessage(p, "No brush found with name \"" + message + "\".");
+                    Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
+                }
             } else {
                 Player.SendMessage(p, "Set your brush to: " + brush);
                 p.BrushName = brush;
+            }
+        }
+        
+        void HandleHelp(Player p, string message) {
+            string[] args = message.Split(' ');
+            if (args.Length != 2) { Help(p); return; }
+            
+            string brush = FindBrush(args[1]);
+            if (brush == null) {
+                    Player.SendMessage(p, "No brush found with name \"" + message + "\".");
+                    Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
+            } else {
+                string[] help = Brush.BrushesHelp[brush];
+                foreach (string line in help)
+                    Player.SendMessage(p, line);
             }
         }
         
@@ -47,7 +66,7 @@ namespace MCGalaxy.Commands {
                 if (brush.Key.Equals(message, StringComparison.OrdinalIgnoreCase))
                     return brush.Key;
             }
-        	return null;
+            return null;
         }
         
         internal static string AvailableBrushes {
@@ -55,8 +74,13 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/brush <name> - Sets the currently active brush to the given name.");
+            Player.SendMessage(p, "%T/brush [name]");
+            Player.SendMessage(p, "%HSets your current brush to the brush with the given name.");
+            Player.SendMessage(p, "%T/brush help [name]");
+            Player.SendMessage(p, "%HOutputs the help for the brush with the given name.");
             Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
+            Player.SendMessage(p, "%HThe default brush simply takes one argument specifying the block to draw with. " +
+                               "If no arguments are given, your currently held block is used instead.");
         }
     }
 }

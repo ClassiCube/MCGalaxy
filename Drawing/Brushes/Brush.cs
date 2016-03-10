@@ -23,9 +23,12 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Drawing.Brushes {
     
     public abstract class Brush {
-		
-		/// <summary> Human friendly name of this brush. </summary>
-		public abstract string Name { get; }
+        
+        /// <summary> Human friendly name of this brush. </summary>
+        public abstract string Name { get; }
+        
+        /// <summary> Description of the brush, in addition to its syntax. </summary>
+        public abstract string[] Help { get; }
         
         public abstract byte NextBlock(DrawOp op);
         
@@ -33,14 +36,17 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public static Dictionary<string, Func<BrushArgs, Brush>> Brushes 
             = new Dictionary<string, Func<BrushArgs, Brush>> {
-            { "normal", SolidBrush.Process },
-            { "paste", PasteBrush.Process },
-            { "checkered", CheckeredBrush.Process },
-            { "rainbow", RainbowBrush.Process },
-            { "bwrainbow", BWRainbowBrush.Process },
-            { "striped", StripedBrush.Process },
-            { "replace", ReplaceBrush.Process },
-            { "replacenot", ReplaceNotBrush.Process },
+            { "normal", SolidBrush.Process }, { "paste", PasteBrush.Process },
+            { "checkered", CheckeredBrush.Process }, { "rainbow", RainbowBrush.Process },
+            { "bwrainbow", BWRainbowBrush.Process }, { "striped", StripedBrush.Process },
+            { "replace", ReplaceBrush.Process }, { "replacenot", ReplaceNotBrush.Process },
+        };
+        
+        public static Dictionary<string, string[]> BrushesHelp = new Dictionary<string, string[]> {
+            { "normal", SolidBrush.HelpString }, { "paste", PasteBrush.HelpString },
+            { "checkered", CheckeredBrush.HelpString }, { "rainbow", RainbowBrush.HelpString },
+            { "bwrainbow", BWRainbowBrush.HelpString }, { "striped", StripedBrush.HelpString },
+            { "replace", ReplaceBrush.HelpString }, { "replacenot", ReplaceNotBrush.HelpString },
         };
     }
     
@@ -54,6 +60,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
+    // TODO: Make this into a proper full-featured brush
+    // Consider varying random based off 3D positon, like libnoise.
     public sealed class RandomBrush : Brush {
         readonly Random rnd = new Random();
         readonly byte type, extType;
@@ -64,6 +72,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override string Name { get { return "Random"; } }
+        
+        public override string[] Help { get { return new string[0]; } }
         
         public override byte NextBlock(DrawOp op) {
             return (byte)rnd.Next(1, 11) <= 5 ? type : Block.Zero;

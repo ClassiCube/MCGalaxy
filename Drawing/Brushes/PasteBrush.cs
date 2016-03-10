@@ -31,6 +31,13 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string Name { get { return "Paste"; } }
         
+        public override string[] Help { get { return HelpString; } }
+        
+        public static string[] HelpString = new [] {
+            "%TArguments: none",
+            "%HDraws using blocks from the current copy state.",
+        };
+        
         public static Brush Process(BrushArgs args) {
             if (args.Player.CopyBuffer == null) {
                 args.Player.SendMessage("You haven't copied anything yet.");
@@ -39,7 +46,7 @@ namespace MCGalaxy.Drawing.Brushes {
             return new PasteBrush(args.Player.CopyBuffer);
         }
         
-        public override byte NextBlock(DrawOp op) { 
+        public override byte NextBlock(DrawOp op) {
             Vector3U16 p = LocalCoords(op);
             return state.Blocks[state.GetIndex(p.X, p.Y, p.Z)];
         }
@@ -57,6 +64,6 @@ namespace MCGalaxy.Drawing.Brushes {
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
             return new Vector3U16((ushort)x, (ushort)y, (ushort)z);
-        }       
+        }
     }
 }

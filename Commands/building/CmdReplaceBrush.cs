@@ -95,20 +95,24 @@ namespace MCGalaxy.Commands {
 		struct CatchPos { public ushort x, y, z; public string message; }
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
-			Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
+			Player.SendMessage(p, "%T/rb [block] [brush name] <brush args>");
+			Player.SendMessage(p, "%HReplaces all blocks of the given type, " +
+			                   "in the specified area with the output of the given brush.");
+			Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
 		}
 	}
 	
 	public class CmdReplaceNotBrush : CmdReplaceBrush {
 		public override string name { get { return "replacenotbrush"; } }
-		public override string shortcut { get { return "r b"; } }
+		public override string shortcut { get { return "rnb"; } }
 		
 		protected override bool ReplaceNot { get { return true; } }
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
-			Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
+			Player.SendMessage(p, "%T/rnb [block] [brush name] <brush args>");
+			Player.SendMessage(p, "%HReplaces all blocks (except for the given block), " +
+			                   "in the specified area with the output of the given brush.");
+			Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
 		}
 	}
 }

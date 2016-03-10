@@ -32,6 +32,14 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string Name { get { return "Replace"; } }
         
+        public override string[] Help { get { return HelpString; } }
+        
+        public static string[] HelpString = new [] {
+            "%TArguments: [block1] [block2].. [new]",
+            "%HDraws by replacing existing blocks that are in " +
+                "the given [blocks] with the block [new]",
+        };
+        
         public static Brush Process(BrushArgs args) {
             string[] parts = args.Message.Split(' ');
             if (parts.Length < 2) {
@@ -85,6 +93,14 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override string Name { get { return "ReplaceNot"; } }
+        
+        public override string[] Help { get { return HelpString; } }
+        
+        public static string[] HelpString = new [] {
+            "%TArguments: [block1] [block2].. [new]",
+            "%HDraws by replacing existing blocks that not are in " +
+                "the given [blocks] with the block [new]",
+        };
         
         public static Brush Process(BrushArgs args) {
             string[] parts = args.Message.Split(' ');

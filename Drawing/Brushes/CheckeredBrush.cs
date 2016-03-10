@@ -32,15 +32,24 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string Name { get { return "Checkered"; } }
         
+        public override string[] Help { get { return HelpString; } }
+        
+        public static string[] HelpString = new [] {
+            "%TArguments: [block1] [block2]",
+            "%HDraws an alternating pattern of block1 and block2.",
+            "%H   If block2 is not given, air is used.",
+            "%H   If block1 is not given, the currently held block is used.",
+        };
+        
         public static Brush Process(BrushArgs args) {
             if (args.Message == "")
                 return new CheckeredBrush(args.Type, args.ExtType, 0, 0);
             string[] parts = args.Message.Split(' ');
             byte extType1;
             byte type1 = DrawCmd.GetBlock(args.Player, parts[0], out extType1);
-            if (type1 == Block.Zero) return null;            
+            if (type1 == Block.Zero) return null;
             if (parts.Length == 1)
-            	return new CheckeredBrush(type1, extType1, 0, 0);
+                return new CheckeredBrush(type1, extType1, 0, 0);
             
             byte extType2;
             byte type2 = DrawCmd.GetBlock(args.Player, parts[1], out extType2);
@@ -48,12 +57,12 @@ namespace MCGalaxy.Drawing.Brushes {
             return new CheckeredBrush(type1, extType1, type2, extType2);
         }
         
-        public override byte NextBlock(DrawOp op) { 
-        	return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? type1 : type2;
+        public override byte NextBlock(DrawOp op) {
+            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? type1 : type2;
         }
         
-        public override byte NextExtBlock(DrawOp op) { 
-        	return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? extType1 : extType2;
+        public override byte NextExtBlock(DrawOp op) {
+            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? extType1 : extType2;
         }
     }
 }

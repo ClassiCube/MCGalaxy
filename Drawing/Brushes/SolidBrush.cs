@@ -32,6 +32,14 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string Name { get { return "Normal"; } }
         
+        public override string[] Help { get { return HelpString; } }
+        
+        public static string[] HelpString = new [] {
+            "%TArguments: [block]",
+            "%HDraws using the specified block.",
+            "%H   If block is not given, the currently held block is used.",
+        };
+        
         public static Brush Process(BrushArgs args) {
             if (args.Message == "")
                 return new SolidBrush(args.Type, args.ExtType);
