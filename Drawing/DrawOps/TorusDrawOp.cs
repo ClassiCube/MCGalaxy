@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
                 dx *= dx; dy *= dy; dz *= dz;
                 double dInner = rCentre - Math.Sqrt( dx + dz );
                 
-                if (dInner * dInner + dy <= rTube * rTube * 0.5)
+                if (dInner * dInner + dy <= rTube * rTube * 0.5 + 0.25)
                     PlaceBlock(p, lvl, xx, yy, zz, brush);
             }
         }

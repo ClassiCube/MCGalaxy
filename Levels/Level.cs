@@ -292,7 +292,7 @@ namespace MCGalaxy
             }
             MovePlayersToMain();
 
-            if (changed && (!Server.ZombieModeOn || !Server.noLevelSaving))
+            if (changed && (!Server.ZombieModeOn || !Server.zombie.noLevelSaving))
             {
                 if ((!Server.lava.active || !Server.lava.HasMap(name)) && save) Save(false, true);
                 saveChanges();

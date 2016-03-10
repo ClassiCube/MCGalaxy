@@ -495,8 +495,8 @@ namespace MCGalaxy {
                 {
                     if (Server.ZombieModeOn && !p.aka) {
                         if (from.infected) {
-                            if (Server.ZombieName != "")
-                                p.SendSpawn(from.id, Colors.red + Server.ZombieName + possession, x, y, z, rotx, roty);
+                            if (Server.zombie.ZombieName != "")
+                                p.SendSpawn(from.id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
                             else
                                 p.SendSpawn(from.id, Colors.red + from.name + possession, x, y, z, rotx, roty);
                         } else if (!from.referee) {

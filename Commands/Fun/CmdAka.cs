@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdAka() { }
         
         public override void Use(Player p, string message) {
             bool showInfected = p.aka; p.aka = !p.aka;
@@ -38,7 +37,7 @@ namespace MCGalaxy.Commands {
                 p.SendDespawn(pl.id);
                 string name = null;
                 if (pl.infected && showInfected) {
-                    name = Server.ZombieName != "" ? Colors.red + Server.ZombieName : Colors.red + pl.name;
+                    name = Server.zombie.ZombieName != "" ? Colors.red + Server.zombie.ZombieName : Colors.red + pl.name;
                 } else {
                     name = pl.color + pl.name;
                 }

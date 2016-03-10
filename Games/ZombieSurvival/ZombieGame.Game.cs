@@ -2,7 +2,7 @@
     Copyright 2010 MCLawl Team -
     Created by Snowl (David D.) and Cazzar (Cayde D.)
 
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -24,7 +24,7 @@ namespace MCGalaxy {
         
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte tile, byte b) {
-            if (action == 1 && Server.noPillaring && !p.referee) {
+            if (action == 1 && noPillaring && !p.referee) {
                 if (p.lastYblock == y - 1 && p.lastXblock == x && p.lastZblock == z ) {
                     p.blocksStacked++;
                 } else {
@@ -58,7 +58,7 @@ namespace MCGalaxy {
         
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z, 
                                              byte rotX, byte rotY) {
-            if (!p.referee && Server.noRespawn) {
+            if (!p.referee && noRespawn) {
                 if (p.pos[0] >= x + 70 || p.pos[0] <= x - 70 ) {
                     p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                     return true;
@@ -73,9 +73,9 @@ namespace MCGalaxy {
         
         public override bool HandlesChatMessage(Player p, string message) {
             message = message.ToLower();
-            if (Player.CheckVote(message, p, "1", "one", ref Server.Level1Vote) ||
-                Player.CheckVote(message, p, "2", "two", ref Server.Level2Vote) ||
-                Player.CheckVote(message, p, "3", "three", ref Server.Level3Vote))
+            if (Player.CheckVote(message, p, "1", "one", ref Level1Vote) ||
+                Player.CheckVote(message, p, "2", "two", ref Level2Vote) ||
+                Player.CheckVote(message, p, "3", "three", ref Level3Vote))
                 return true;
             
             if (!p.voice) {
@@ -88,11 +88,11 @@ namespace MCGalaxy {
         public override void PlayerLeftServer(Player p) {
             InfectedPlayerDC();
         }
-		
-		public override void PlayerJoinedServer(Player p) {
-			if (ZombieStatus() != 0)
-				Player.SendMessage(p, "There is a Zombie Survival game currently in-progress! " +
-				                   "Join it by typing /g " + Server.zombie.currentLevelName);
-		}
+        
+        public override void PlayerJoinedServer(Player p) {
+            if (ZombieStatus() != 0)
+                Player.SendMessage(p, "There is a Zombie Survival game currently in-progress! " +
+                                   "Join it by typing /g " + Server.zombie.currentLevelName);
+        }
     }
 }

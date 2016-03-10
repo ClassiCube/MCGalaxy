@@ -157,33 +157,13 @@ namespace MCGalaxy
         public static ZombieGame zombie;
         public static bool ZombieModeOn = false;
         public static bool startZombieModeOnStartup = false;
-        public static bool noRespawn = true;
-        public static bool noLevelSaving = true;
-        public static bool noPillaring = true;
-        public static string ZombieName = "";
-        public static int gameStatus = 0; //0 = not started, 1 = always on, 2 = one time, 3 = certain amount of rounds, 4 = stop game next round
-        public static bool queLevel = false;
-        public static bool queZombie = false;
-        public static string nextZombie = "";
-        public static string nextLevel = "";
-        public static bool zombieRound = false;
-        public static string lastPlayerToInfect = "";
-        public static int infectCombo = 0;
+        public static bool ZombieOnlyServer = true;
+        public static bool bufferblocks = true;
+
         public static int YesVotes = 0;
         public static int NoVotes = 0;
         public static bool voting = false;
         public static bool votingforlevel = false;
-        public static int Level1Vote = 0;
-        public static int Level2Vote = 0;
-        public static int Level3Vote = 0;
-        public static bool ChangeLevels = true;
-        public static bool UseLevelList = false;
-        public static bool ZombieOnlyServer = true;
-        public static List<String> LevelList = new List<String>();
-        public static string lastLevelVote1 = "";
-        public static string lastLevelVote2 = "";
-        public static bool bufferblocks = true;
-
         // Lava Survival
         public static LavaSurvival lava;
         
@@ -460,8 +440,8 @@ namespace MCGalaxy
             LoadAllSettings();
 
             //derp
-            if (!Server.LevelList.Contains("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)"))
-                Server.LevelList.Add("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
+            if (!Server.zombie.LevelList.Contains("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)"))
+                Server.zombie.LevelList.Add("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
 
             timeOnline = DateTime.Now;
             {//MYSQL stuff
