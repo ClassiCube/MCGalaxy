@@ -571,6 +571,8 @@
     <Compile Include="ScriptingUtil\Scripting.cs" />
     <Compile Include="Server\PropertiesFile.cs" />
     <Compile Include="Server\Server.cs" />
+    <Compile Include="Server\Server.Tasks.cs" />
+    <Compile Include="Server\Server.Threads.cs" />
     <Compile Include="Server\ServerSettings.cs" />
     <Compile Include="Server\Updater.cs" />
     <Compile Include="GUI\AutoScrollTextBox.cs">
