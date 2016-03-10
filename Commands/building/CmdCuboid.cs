@@ -43,7 +43,8 @@ namespace MCGalaxy.Commands
                 case DrawMode.walls:
                     drawOp = new CuboidWallsDrawOp(); break;
                 case DrawMode.holes:
-                    drawOp = new CuboidHolesDrawOp(); break;
+                    drawOp = new CuboidDrawOp(); 
+                    brush = new CheckeredBrush(cpos.type, cpos.extType, 0, 0); break;
                 case DrawMode.wire:
                     drawOp = new CuboidWireframeDrawOp(); break;
                 case DrawMode.random:

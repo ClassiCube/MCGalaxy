@@ -1,5 +1,5 @@
-﻿/*
-    Copyright 2015 MCGalaxy team
+/*
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -16,42 +16,100 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
+using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
     
-    public abstract class ReplaceCmd : Command {
+    public class CmdReplace : Command {
         
+        public override string name { get { return "replace"; } }
+        public override string shortcut { get { return "r"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         public override void Use(Player p, string message) {
-            string[] parts = message.Split(' ');
-            for (int i = 0; i < parts.Length; i++)
-                parts[i] = parts[i].ToLower();
-            if (parts.Length < 2) { Help(p); return; }
+            CatchPos cpos = default(CatchPos);
+            cpos.message = message.ToLower();
+            p.blockchangeObject = cpos;
+            
+            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            p.ClearBlockchange();
+            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+        }
+        
+        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+            RevertAndClearState(p, x, y, z);
+            CatchPos bp = (CatchPos)p.blockchangeObject;
+            bp.x = x; bp.y = y; bp.z = z;
+            p.blockchangeObject = bp;
+            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+        }
+        
+        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+            RevertAndClearState(p, x, y, z);
+            CatchPos cpos = (CatchPos)p.blockchangeObject;
+            BrushArgs args = new BrushArgs(p, cpos.message, type, extType);
+            Brush brush = ReplaceNot ? ReplaceNotBrush.Process(args) : ReplaceBrush.Process(args);
+            if (brush == null) return;
+            
+            DrawOp drawOp = new CuboidDrawOp();
+            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
+                return;
+            if (p.staticCommands)
+                p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+        }
+        
+        protected virtual bool ReplaceNot { get { return false; } }
+        
+        struct CatchPos { public ushort x, y, z; public string message; }
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "/replace [block] [block2].. [new] - replace block with new inside a selected cuboid");
+            Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
+        }
+    }
+    
+    public sealed class CmdReplaceNot : CmdReplace {
+        
+        public override string name { get { return "replacenot"; } }
+        public override string shortcut { get { return "rn"; } }
 
-            ExtBlock[] toAffect = GetBlocks(p, 0, parts.Length - 1, parts);           
-            ExtBlock target;
-            target.Type = DrawCmd.GetBlock(p, parts[parts.Length - 1], out target.ExtType);
-            if (target.Type == Block.Zero) return;           
-            BeginReplace(p, toAffect, target);
-        }
+        protected override bool ReplaceNot { get { return true; } }
         
-        internal static ExtBlock[] GetBlocks(Player p, int start, int max, string[] parts) {
-            ExtBlock[] blocks = new ExtBlock[max - start];
-            for (int j = 0; j < blocks.Length; j++)
-                blocks[j].Type = Block.Zero;
-            for (int j = 0; start < max; start++, j++ ) {
-                byte extType = 0;
-                byte type = DrawCmd.GetBlock(p, parts[start], out extType);
-                if (type == Block.Zero) continue;
-                blocks[j].Type = type; blocks[j].ExtType = extType;
-            }
-            return blocks;
+        public override void Help(Player p) {
+            Player.SendMessage(p, "/rn [block] [block2].. [new] - replace everything but [block] with [new] inside a selected cuboid");
+            Player.SendMessage(p, "If multiple [block]s are specified they will all be ignored.");
         }
+    }
+    
+    public sealed class CmdReplaceAll : Command {
         
-        protected abstract void BeginReplace(Player p, ExtBlock[] toAffect, ExtBlock target);
+        public override string name { get { return "replaceall"; } }
+        public override string shortcut { get { return "ra"; } }
+        public override string type { get { return CommandTypes.Building; } }
+        public override bool museumUsable { get { return false; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        
+        public override void Use(Player p, string message) {
+            ushort x2 = (ushort)(p.level.Width - 1);
+            ushort y2 = (ushort)(p.level.Height - 1);
+            ushort z2 = (ushort)(p.level.Length - 1);
+
+            BrushArgs args = new BrushArgs(p, message.ToLower(), 0, 0);
+            Brush brush = ReplaceBrush.Process(args);
+            if (brush == null) return;
+            
+            DrawOp drawOp = new CuboidDrawOp();
+            if (!DrawOp.DoDrawOp(drawOp, brush, p, 0, 0, 0, x2, y2, z2))
+                return;
+            Player.SendMessage(p, "&4/replaceall finished!");
+        }
+
+        public override void Help(Player p) {
+            Player.SendMessage(p, "/ra [block] [block2].. [new] - Replaces all of [block] with [new] in a map");
+            Player.SendMessage(p, "If more than one [block] is specified, they will all be replaced.");
+        }
     }
 }

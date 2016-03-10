@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
@@ -58,9 +59,9 @@ namespace MCGalaxy.Commands {
                 ((PasteDrawOp)op).CopyState = p.CopyBuffer;
                 string[] args = cpos.message.Split(' ');
                 if (args[0].ToLower() == "not")
-                    ((PasteDrawOp)op).Exclude = ReplaceCmd.GetBlocks(p, 1, args.Length, args);
+                    ((PasteDrawOp)op).Exclude = ReplaceBrush.GetBlocks(p, 1, args.Length, args);
                 else
-                    ((PasteDrawOp)op).Include = ReplaceCmd.GetBlocks(p, 0, args.Length, args);
+                    ((PasteDrawOp)op).Include = ReplaceBrush.GetBlocks(p, 0, args.Length, args);
             }
             
             if (!DrawOp.DoDrawOp(op, null, p, (ushort)offX, (ushort)offY, (ushort)offZ, 0, 0, 0))

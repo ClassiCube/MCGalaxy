@@ -39,33 +39,6 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class CuboidHolesDrawOp : DrawOp {
-        
-        public override string Name { get { return "Cuboid Holes"; } }
-        
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
-        }
-        
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
-            for (ushort y = y1; y <= y2; y++)
-                for (ushort z = z1; z <= z2; z++)
-            {
-                int i = (y & 1) == 0 ? 0 : 1;
-                if ((z & 1) == 0) i++;
-                
-                for (ushort x = x1; x <= x2; x++) {
-                    if ((i & 1) == 0)
-                    	PlaceBlock(p, lvl, x, y, z, brush);
-                    else
-                    	PlaceBlock(p, lvl, x, y, z, Block.air, 0);
-                    i++;
-                }
-            }
-        }
-    }
-    
     public class CuboidHollowsDrawOp : DrawOp {
         
         public override string Name { get { return "Cuboid Hollow"; } }

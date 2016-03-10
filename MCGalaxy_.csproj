@@ -127,9 +127,7 @@
     <Compile Include="Commands\Building\CmdPortal.cs" />
     <Compile Include="Commands\Building\CmdPyramid.cs" />
     <Compile Include="Commands\Building\CmdRedo.cs" />
-    <Compile Include="Commands\Building\CmdReplace.cs" />
-    <Compile Include="Commands\Building\CmdReplaceAll.cs" />
-    <Compile Include="Commands\Building\CmdReplaceNot.cs" />
+    <Compile Include="Commands\building\ReplaceCmd.cs" />
     <Compile Include="Commands\Building\CmdRestartPhysics.cs" />
     <Compile Include="Commands\Building\CmdSpheroid.cs" />
     <Compile Include="Commands\Building\CmdSpin.cs" />
@@ -141,7 +139,6 @@
     <Compile Include="Commands\Building\CmdWrite.cs" />
     <Compile Include="Commands\building\CustomBlockCommand.cs" />
     <Compile Include="Commands\building\DrawCmd.cs" />
-    <Compile Include="Commands\building\ReplaceCmd.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
     <Compile Include="Commands\Chat\CmdChatRoom.cs" />
     <Compile Include="Commands\Chat\CmdEmote.cs" />

@@ -84,7 +84,7 @@ namespace MCGalaxy.Drawing.Brushes {
             this.exclude = include; this.target = target;
         }
         
-        public override string Name { get { return "Replace"; } }
+        public override string Name { get { return "ReplaceNot"; } }
         
         public static Brush Process(BrushArgs args) {
             string[] parts = args.Message.Split(' ');
