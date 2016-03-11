@@ -39,19 +39,19 @@ namespace MCGalaxy.Commands
                     }
                     if (Player.CanSee(p, pl))
                     {
-                        Player.SendMessage(p, pl.color + pl.DisplayName + Server.DefaultColor + " last used \"" + pl.lastCMD + "\"");
+                        Player.SendMessage(p, pl.color + pl.DisplayName + " %Slast used \"" + pl.lastCMD + "\"");
                     }
                 }
             }
             else
             {
-                Player who = PlayerInfo.Find(message);
-                if (who == null || !Player.CanSee(p, who)) { Player.SendMessage(p, "Could not find player entered"); return; }
+                Player who = PlayerInfo.FindOrShowMatches(message);
+                if (who == null) return;
                 if (who.lastCMD.Contains("setpass") || who.lastCMD.Contains("pass"))
                 {
                     who.lastCMD = "";
                 }
-                Player.SendMessage(p, who.color + who.DisplayName + Server.DefaultColor + " last used \"" + who.lastCMD + "\"");
+                Player.SendMessage(p, who.color + who.DisplayName + " %Slast used \"" + who.lastCMD + "\"");
             }
         }
         public override void Help(Player p)

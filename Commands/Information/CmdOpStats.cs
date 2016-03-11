@@ -72,17 +72,11 @@ namespace MCGalaxy.Commands {
             if (target != null) {
                 message = target.name;
             } else {
-                string syntax = Server.useMySQL ? "SELECT * FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
-                    "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
-                Database.AddParams("@Name", args[0]);
-                using (DataTable playerDb = Database.fillData(syntax)) {
-                    if (playerDb.Rows != null && playerDb.Rows.Count > 0) { // Check if player exists in database since we couldn't find player online
-                        message = playerDb.Rows[0]["Name"].ToString(); // Proper case of player name is pulled from database and converted to message
-                        playerDb.Dispose();
-                    } else {
-                        Player.SendMessage(p, "Unable to find player"); // Player wasn't online and didn't exist in database
-                        return;
-                    }
+                OfflinePlayer player = PlayerInfo.FindOffline(message);
+                if (player == null) {
+                    Player.SendMessage(p, "Unable to find player"); return;
+                } else {
+                    message = player.name;
                 }
             }
 
