@@ -1152,10 +1152,9 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 
                 if (text.ToLower().Contains("^detail.user="))
                 {
-                    SendMessage("&cOh no you don't!");
+                    SendMessage("&cYou cannot use WoM detail strings in a chat message.");
+                    text = text.Replace("^detail.user=", "");
                 }
-                text = text.Replace("^detail.user=", "");
-
 
                 if ( storedMessage != "" ) {
                     if ( !text.EndsWith(">") && !text.EndsWith("<") ) {
