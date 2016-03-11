@@ -1082,9 +1082,8 @@ return;
                         overallDeath++;
                     }
 
-                    if ( Server.deathcount )
-                        if ( overallDeath > 0 && overallDeath % 10 == 0 ) 
-                    	    SendChatFrom(this, this.FullName + Server.DefaultColor + " has died &3" + overallDeath + " times", false);
+            		if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
+            		    Chat.GlobalChatLevel(this, FullName + " %Shas died &3" + overallDeath + " times", false);
                 }
                 lastDeath = DateTime.Now;
 

@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
 				Player.SendMessage(p, "Available brushes: " + CmdBrush.AvailableBrushes);
 				return;
 			}
-			
+
 			string brushMessage = parts.Length > 2 ? parts[2].ToLower() : "";
 			BrushArgs args = new BrushArgs(p, brushMessage, type, extType);
 			Brush brush = Brush.Brushes[brushName](args);

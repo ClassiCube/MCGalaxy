@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
-            Brush brush = null;
+            Func<BrushArgs, Brush> constructor = null;
 
             switch (cpos.mode) {
                 case DrawMode.solid:
@@ -44,16 +44,16 @@ namespace MCGalaxy.Commands
                     drawOp = new CuboidWallsDrawOp(); break;
                 case DrawMode.holes:
                     drawOp = new CuboidDrawOp(); 
-                    brush = new CheckeredBrush(cpos.type, cpos.extType, 0, 0); break;
+                    constructor = CheckeredBrush.Process; break;
                 case DrawMode.wire:
                     drawOp = new CuboidWireframeDrawOp(); break;
                 case DrawMode.random:
                     drawOp = new CuboidDrawOp();
-                    brush = new RandomBrush(cpos.type, cpos.extType); break;
+                    constructor = RandomBrush.Process; break;
             }
             
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
-            if (brush == null) brush = GetBrush(p, cpos, brushOffset);
+            Brush brush = GetBrush(p, cpos, brushOffset, constructor);
             if (brush == null) return;
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;

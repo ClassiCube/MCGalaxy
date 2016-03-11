@@ -86,7 +86,8 @@ namespace MCGalaxy.Commands {
             return type;
         }
         
-        protected static Brush GetBrush(Player p, CatchPos cpos, int usedFromEnd) {
+        protected static Brush GetBrush(Player p, CatchPos cpos, 
+                                        int usedFromEnd, Func<BrushArgs, Brush> constructor = null) {
         	int end = cpos.message.Length;
         	string brushMsg = "";
         	for (int i = 0; i < usedFromEnd; i++) {
@@ -95,7 +96,7 @@ namespace MCGalaxy.Commands {
         	}
         	
         	if (end >= 0) brushMsg = cpos.message.Substring(0, end);
-        	var constructor = Brush.Brushes[p.BrushName];
+        	if (constructor == null) constructor = Brush.Brushes[p.BrushName];
         	BrushArgs args = new BrushArgs(p, brushMsg, cpos.type, cpos.extType);
         	return constructor(args);
         }

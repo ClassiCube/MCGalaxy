@@ -75,6 +75,15 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string[] Help { get { return new string[0]; } }
         
+        public static Brush Process(BrushArgs args) {
+            if (args.Message == "")
+                return new RandomBrush(args.Type, args.ExtType);
+            byte extType;
+            byte type = DrawCmd.GetBlock(args.Player, args.Message, out extType);
+            if (type == Block.Zero) return null;
+            return new RandomBrush(type, extType);
+        }
+        
         public override byte NextBlock(DrawOp op) {
             return (byte)rnd.Next(1, 11) <= 5 ? type : Block.Zero;
         }
