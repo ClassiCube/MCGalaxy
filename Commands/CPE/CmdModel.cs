@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(trimChars, 2);
 
             if (args.Length > 1) {
-            	who = PlayerInfo.Find(args[0]);
-                if (who == null) { Player.SendMessage(p, "Player \"" + args[0] + "\" does not exist"); return; }
+            	who = PlayerInfo.FindOrShowMatches(p, args[0]);
+                if (who == null) return;
             } else {
                 if (p == null) { Player.SendMessage(p, "Console can't use this command on itself."); return; }
             }

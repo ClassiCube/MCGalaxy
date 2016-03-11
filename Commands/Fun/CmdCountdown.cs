@@ -200,10 +200,9 @@ namespace MCGalaxy.Commands {
                     return;
                 }
 
-                Player who = PlayerInfo.Find(target);
-                if (who == null) {
-                    Player.SendMessage(p, "That wasn't an online player."); return;
-                } else if (p.group.Permission < who.group.Permission) {
+                Player who = PlayerInfo.FindOrShowMatches(p, target);
+                if (who == null) return;
+                if (p.group.Permission < who.group.Permission) {
                     Player.SendMessage(p, "You can't send rules to someone of a higher rank than yourself!!"); return;
                 } else {
                     Player.SendMessage(who, "Countdown rules sent to you by " + p.color + p.name);

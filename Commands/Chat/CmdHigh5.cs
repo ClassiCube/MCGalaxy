@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.FindOrShowMatches(message);
+            Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
 
 			string giver = (p == null) ? "(console)" : p.color + p.DisplayName;

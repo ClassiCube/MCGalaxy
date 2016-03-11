@@ -33,24 +33,14 @@ namespace MCGalaxy.Commands
             string value = args[1];
             
             if (args[0] == "zombie") {
-                Player who = PlayerInfo.Find(value);
-                if (who == null) {
-                    p.SendMessage(value + " is not online.");
-                } else {
-                    p.SendMessage(value + " was queued.");
-                    Server.zombie.queZombie = true;
-                    Server.zombie.nextZombie = value;
-                }
-            } else if (args[0] == "level") {
-                bool match = false;
-                DirectoryInfo di = new DirectoryInfo("levels/");
-                FileInfo[] fi = di.GetFiles("*.lvl");
-                foreach (FileInfo file in fi) {
-                    if (file.Name.Replace(".lvl", "").ToLower() == value.ToLower())
-                        match = true;
-                }
+                Player who = PlayerInfo.FindOrShowMatches(p, value);
+                if (who == null) return;
                 
-                if (match) {
+                p.SendMessage(value + " was queued.");
+                Server.zombie.queZombie = true;
+                Server.zombie.nextZombie = value;
+            } else if (args[0] == "level") {
+                if (LevelInfo.ExistsOffline(value)) {
                     p.SendMessage(value + " was queued.");
                     Server.zombie.queLevel = true;
                     Server.zombie.nextLevel = value.ToLower();

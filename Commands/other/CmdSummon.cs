@@ -45,13 +45,12 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            Player who = PlayerInfo.Find(message);
-            if (who == null || !Player.CanSee(p, who)) { Player.SendMessage(p, "There is no player \"" + message + "\"!"); return; }
-            if (p.group.Permission < who.group.Permission)
-            {
-                Player.SendMessage(p, "You cannot summon someone ranked higher than you!");
-                return;
+            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            if (who == null) return;
+            if (p.group.Permission < who.group.Permission) {
+                Player.SendMessage(p, "You cannot summon someone ranked higher than you!"); return;
             }
+            
             if (p.level != who.level)
             {
                 Player.SendMessage(p, who.DisplayName + " is in a different Level. Forcefetching has started!");

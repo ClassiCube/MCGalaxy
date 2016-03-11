@@ -92,15 +92,10 @@ namespace MCGalaxy.Commands
                         Command.all.Find("goto").Use(pl, Server.mainLevel.name);
                 }
             } else if (cmd == "KICK") {
-                if (arg == "") {
-                    p.SendMessage("You must specify a player to kick.");
-                    return;
-                }
+                if (arg == "") { p.SendMessage("You must specify a player to kick."); return; }
                 
-                Player kicked = PlayerInfo.Find(arg);
-                if (kicked == null) {
-                    p.SendMessage("Error: Player not found.");
-                } else {
+                Player kicked = PlayerInfo.FindOrShowMatches(p, arg);
+                if (kicked != null) {
                     if (kicked.level.name == p.level.name)
                         Command.all.Find("goto").Use(kicked, Server.mainLevel.name);
                     else
@@ -320,11 +315,10 @@ namespace MCGalaxy.Commands
                 
                 string path = "levels/blacklists/" + p.level.name + ".txt";
                 EnsureFileExists(path);
-                value = value.Replace("+", "");
+                if (!value.EndsWith("+")) value += "+";
                 if (!File.ReadAllText(path).Contains(value)) {
                     Player.SendMessage(p, value + " is not blacklisted."); return;
                 }
-                value = value + "+";
                 
                 try {
                     var oldLines = File.ReadAllLines(path);

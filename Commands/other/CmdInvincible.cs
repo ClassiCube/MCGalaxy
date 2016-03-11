@@ -29,15 +29,11 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-        	Player who = message == "" ? p : PlayerInfo.Find(message);
-        	if (who == null || !Player.CanSee(p, who)) {
-                Player.SendMessage(p, "Cannot find player."); return;
-            }
+        	Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message);
+        	if (who == null) return;
 
-            if (p != null && who.group.Permission > p.group.Permission)
-            {
-                Player.SendMessage(p, "Cannot toggle invincibility for someone of higher rank");
-                return;
+            if (p != null && who.group.Permission > p.group.Permission) {
+                Player.SendMessage(p, "Cannot toggle invincibility for someone of higher rank");return;
             }
 
             if (who.invincible)

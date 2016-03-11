@@ -56,9 +56,9 @@ namespace MCGalaxy.Commands {
                         ReloadMap(p, who, true);
                 }
             } else {
-                Player who = PlayerInfo.Find(parts[0]);
+                Player who = PlayerInfo.FindOrShowMatches(p, parts[0]);
                 if (who == null) { 
-                    Player.SendMessage(p, "Could not find player."); return; 
+                    return;
                 } else if (who.group.Permission > p.group.Permission && p != who) { 
                     Player.SendMessage(p, "Cannot reload the map of someone higher than you."); return; 
                 }        

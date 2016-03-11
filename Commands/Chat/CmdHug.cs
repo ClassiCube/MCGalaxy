@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.FindOrShowMatches(message);
+            Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
             if (p != null && p.muted) { Player.SendMessage(p, "Cannot use /hug while muted."); return; }
             

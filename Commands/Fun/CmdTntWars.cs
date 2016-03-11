@@ -315,7 +315,7 @@ namespace MCGalaxy.Commands
 						default:
                             if (text[1] != null && (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
                             {
-                                Player who = PlayerInfo.Find(text[1]);
+                                Player who = PlayerInfo.FindOrShowMatches(p, text[1]);
                                 if (who != null)
                                 {
                                     Player.SendMessage(who, "TNT Wars Rules: (sent to you by " + p.color + p.name + Server.DefaultColor + " )");
@@ -324,13 +324,8 @@ namespace MCGalaxy.Commands
                                     Player.SendMessage(who, "During the game the amount of TNT placable at one time may be limited!");
                                     Player.SendMessage(who, "You are not allowed to use hacks of any sort during the game!");
                                     Player.SendMessage(p, "TNT Wars: Sent rules to " + who.color + who.name);
-                                    return;
                                 }
-                                else
-                                {
-                                    Player.SendMessage(p, "TNT Wars Error: Couldn't find player '" + text[1] + "' to send rules to!");
-                                    return;
-                                }
+                                return;
                             }
                             else
                             {

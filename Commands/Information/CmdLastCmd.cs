@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player who = PlayerInfo.FindOrShowMatches(message);
+                Player who = PlayerInfo.FindOrShowMatches(p, message);
                 if (who == null) return;
                 if (who.lastCMD.Contains("setpass") || who.lastCMD.Contains("pass"))
                 {

@@ -33,12 +33,8 @@ namespace MCGalaxy.Commands
 
             if (Server.voteKickInProgress) { Player.SendMessage(p, "Please wait for the current vote to finish!"); return; }
 
-            Player who = PlayerInfo.Find(message);
-            if (who == null)
-            {
-                Player.SendMessage(p, "Could not find player specified!");
-                return;
-            }
+            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            if (who == null) return;
 
             if (who.group.Permission >= p.group.Permission)
             {
