@@ -147,5 +147,9 @@ namespace MCGalaxy.Drawing {
 			Blocks = new byte[Width * Height * Length];
 			ExtBlocks = new byte[Width * Height * Length];
 		}
+		
+		internal int OppositeOriginX { get { return OriginX == X ? X + Width - 1 : X; } }	
+		internal int OppositeOriginY { get { return OriginY == Y ? Y + Height - 1 : Y; } }	
+		internal int OppositeOriginZ { get { return OriginZ == Z ? Z + Length - 1 : Z; } }
 	}
 }

@@ -49,10 +49,10 @@ namespace MCGalaxy.Commands
 				case "u":
 				case "mirrory":
 					FlipY(p.CopyBuffer); break;
-				case "mirror":
-				case "m":
 				case "mirrorx":
 					FlipX(p.CopyBuffer); break;
+				case "mirror":
+				case "m":					
 				case "mirrorz":
 					FlipZ(p.CopyBuffer); break;
 				case "z":
@@ -78,7 +78,8 @@ namespace MCGalaxy.Commands
 				state.GetCoords(i, out x, out y, out z);
 				newState.Set(x, oldMaxZ - z, y, blocks[i], extBlocks[i]);
 			}
-			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
+			newState.SetOrigin(state.OriginX, state.Y + (state.OppositeOriginZ - state.Z), 
+			                   state.Z + (state.OriginY - state.Y));
 			return newState;
 		}
 		
@@ -93,7 +94,8 @@ namespace MCGalaxy.Commands
 				state.GetCoords(i, out x, out y, out z);
 				newState.Set(oldMaxZ - z, y, x, blocks[i], extBlocks[i]);
 			}
-			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
+			newState.SetOrigin(state.X + (state.OppositeOriginZ - state.Z), 
+			                   state.OriginY, state.Z + (state.OriginX - state.X));
 			return newState;
 		}
 		
@@ -108,21 +110,24 @@ namespace MCGalaxy.Commands
 				state.GetCoords(i, out x, out y, out z);
 				newState.Set(y, oldMaxX - x, z, blocks[i], extBlocks[i]);
 			}
-			newState.SetOrigin(state.OriginX, state.OriginY, state.OriginZ);
+			newState.SetOrigin(state.X + (state.OriginY - state.Y), 
+			                   state.Y + (state.OppositeOriginX - state.X), state.OriginZ);
 			return newState;
 		}
 		
 		void FlipX(CopyState state) {
-			int midX = state.Width / 2, maxX = state.Width - 1;
+			int midZ = state.Length / 2, maxZ = state.Length - 1;
 			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
+			state.OriginZ = state.OppositeOriginZ;
 			
-			for (int y = 0; y < state.Height; y++) {			
-				for (int z = 0; z < state.Length; z++) {
-					for (int x = 0; x < midX; x++) {
-						int endX = maxX - x;
-						int start = state.GetIndex(x, y, z);
-						int end = state.GetIndex(endX, y, z);
+			for (int y = 0; y < state.Height; y++) {
+				for (int z = 0; z < midZ; z++) {
+					int endZ = maxZ - z;
+					int start = state.GetIndex(0, y, z);
+					int end = state.GetIndex(0, y, endZ);
+					for (int x = 0; x < state.Width; x++) {
 						Swap(blocks, extBlocks, start, end);
+						start++; end++;
 					}
 				}
 			}
@@ -131,6 +136,7 @@ namespace MCGalaxy.Commands
 		void FlipY(CopyState state) {
 			int midY = state.Height / 2, maxY = state.Height - 1;
 			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
+			state.OriginY = state.OppositeOriginY;
 			
 			for (int y = 0; y < midY; y++) {
 				int endY = maxY - y;
@@ -146,17 +152,17 @@ namespace MCGalaxy.Commands
 		}
 		
 		void FlipZ(CopyState state) {
-			int midZ = state.Length / 2, maxZ = state.Length - 1;
+			int midX = state.Width / 2, maxX = state.Width - 1;
 			byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
+			state.OriginX = state.OppositeOriginX;
 			
 			for (int y = 0; y < state.Height; y++) {			
-				for (int z = 0; z < midZ; z++) {
-					int endZ = maxZ - z;
-					int start = state.GetIndex(0, y, z);
-					int end = state.GetIndex(0, y, endZ);
-					for (int x = 0; x < state.Width; x++) {						
+				for (int z = 0; z < state.Length; z++) {
+					for (int x = 0; x < midX; x++) {
+						int endX = maxX - x;
+						int start = state.GetIndex(x, y, z);
+						int end = state.GetIndex(endX, y, z);
 						Swap(blocks, extBlocks, start, end);
-						start++; end++;
 					}
 				}
 			}
