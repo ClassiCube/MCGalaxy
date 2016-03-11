@@ -400,8 +400,9 @@ namespace MCGalaxy {
                     onWhitelist = true;
             } else {
                 // Verify Names is off. Gotta check the hard way.
-                Database.AddParams("@IP", ip);
-                DataTable ipQuery = Database.fillData("SELECT Name FROM Players WHERE IP = @IP");
+                DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                query.AddParam("@IP", ip);
+                DataTable ipQuery = Database.fillData(query, "SELECT Name FROM Players WHERE IP = @IP");
 
                 if (ipQuery.Rows.Count > 0) {
                     if (ipQuery.Rows.Contains(name) && Server.whiteList.Contains(name)) {
@@ -454,8 +455,9 @@ namespace MCGalaxy {
             
             //OpenClassic Client Check
             SendBlockchange(0, 0, 0, 0);
-            Database.AddParams("@Name", name);
-            DataTable playerDb = Database.fillData("SELECT * FROM Players WHERE Name=@Name");
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@Name", name);
+            DataTable playerDb = Database.fillData(query, "SELECT * FROM Players WHERE Name=@Name");
 
             if (playerDb.Rows.Count == 0)
                 InitPlayerStats(playerDb);
@@ -1514,11 +1516,12 @@ return;
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
-                    Database.AddParams("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                    Database.AddParams("@Name", name);
-                    Database.AddParams("@Cmd", cmd);
-                    Database.AddParams("@Cmdmsg", message);
-                    Database.executeQuery("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@Time, @Name, @Cmd, @Cmdmsg)");
+            		DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                    query.AddParam("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    query.AddParam("@Name", name);
+                    query.AddParam("@Cmd", cmd);
+                    query.AddParam("@Cmdmsg", message);
+                    Database.executeQuery(query, "INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@Time, @Name, @Cmd, @Cmdmsg)");
                 }
             } catch { }
 

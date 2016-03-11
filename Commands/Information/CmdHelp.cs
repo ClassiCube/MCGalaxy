@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
                     message = "";
                     List<string> shortcuts = new List<string>();
                     foreach (Command comm in Command.all.commands)
-                        if (p == null || p.group.commands.All().Contains(comm))
+                        if (p == null || p.group.CanExecute(comm))
                             if (comm.shortcut != "") shortcuts.Add(", &b" + comm.shortcut + " %S[" + comm.name + "]");
                     int top = list1 ? shortcuts.Count / 2 : shortcuts.Count;
                     for (int i = list1 ? 0 : shortcuts.Count / 2; i < top; i++)
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands
                 case "command":
                     string commandsFound = "";
                     foreach (Command comm in Command.all.commands)
-                        if (p == null || p.group.commands.All().Contains(comm))
+                        if (p == null || p.group.CanExecute(comm))
                             try { commandsFound += ", " + comm.name; } catch { }
                     Player.SendMessage(p, "Available commands:");
                     Player.SendMessage(p, commandsFound.Remove(0, 2));
@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands
         static void PrintHelpForGroup(Player p, string typeName, string typeTitle) {
             string message = "";
             foreach (Command c in Command.all.commands) {
-                if (p == null || p.group.commands.All().Contains(c)) {
+            	if (p == null || p.group.CanExecute(c)) {
                     if (c.type.Contains(typeName))
                         message += ", " + getColor(c.name) + c.name;
                 }

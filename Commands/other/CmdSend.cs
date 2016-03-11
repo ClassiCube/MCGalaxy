@@ -70,10 +70,12 @@ namespace MCGalaxy.Commands
             Database.executeQuery("CREATE TABLE if not exists `Inbox" + whoTo + "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
             if (!Server.useMySQL)
                 Server.s.Log(message.Replace("'", "\\'"));
-            Database.AddParams("@From", fromname);
-            Database.AddParams("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            Database.AddParams("@Content", message);
-            Database.executeQuery("INSERT INTO `Inbox" + whoTo + "` (PlayerFrom, TimeSent, Contents) VALUES (@From, @Time, @Content)");
+            
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@From", fromname);
+            query.AddParam("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            query.AddParam("@Content", message);
+            Database.executeQuery(query, "INSERT INTO `Inbox" + whoTo + "` (PlayerFrom, TimeSent, Contents) VALUES (@From, @Time, @Content)");
             //DB
 
             Player.SendMessage(p, "Message sent to &5" + whoTo + ".");

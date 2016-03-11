@@ -447,7 +447,8 @@ namespace MCGalaxy
             {//MYSQL stuff
                 try
                 {
-                    Database.executeQuery("CREATE DATABASE if not exists `" + MySQLDatabaseName + "`", true); // works in both now, SQLite simply ignores this.
+                	if (Server.useMySQL)
+                		Database.executeQuery("CREATE DATABASE if not exists `" + MySQLDatabaseName + "`", true);
                 }
                 //catch (MySql.Data.MySqlClient.MySqlException e)
                 //{

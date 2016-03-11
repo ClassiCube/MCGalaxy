@@ -71,16 +71,17 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, "\"" + FoundRecord + "\" does not exist."); Inbox.Dispose(); return;
                     }
 
+                    DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
                     string queryString;
                     //safe against SQL injections because no user input is given here
                     if (FoundRecord == -1)
                         queryString = Server.useMySQL ? "TRUNCATE TABLE `Inbox" + p.name + "`" : "DELETE FROM `Inbox" + p.name + "`";
                     else {
-                        Database.AddParams("@From", Inbox.Rows[FoundRecord]["PlayerFrom"]);
-                        Database.AddParams("@Time", Convert.ToDateTime(Inbox.Rows[FoundRecord]["TimeSent"]).ToString("yyyy-MM-dd HH:mm:ss"));
+                        query.AddParam("@From", Inbox.Rows[FoundRecord]["PlayerFrom"]);
+                        query.AddParam("@Time", Convert.ToDateTime(Inbox.Rows[FoundRecord]["TimeSent"]).ToString("yyyy-MM-dd HH:mm:ss"));
                         queryString = "DELETE FROM `Inbox" + p.name + "` WHERE PlayerFrom=@FROM AND TimeSent=@Time";
                     }
-                    Database.executeQuery(queryString);
+                    Database.executeQuery(query, queryString);
 
                     if (FoundRecord == -1)
                         Player.SendMessage(p, "Deleted all messages.");

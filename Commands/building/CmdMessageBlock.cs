@@ -91,13 +91,14 @@ namespace MCGalaxy.Commands {
         	cpos.message = cpos.message.Replace("'", "\\'");
             cpos.message = Colors.EscapeColors(cpos.message);
             //safe against SQL injections because no user input is given here
-            DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
-            Database.AddParams("@Message", cpos.message);
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            DataTable Messages = Database.fillData(query, "SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
             
+            query.AddParam("@Message", cpos.message);           
             if (Messages.Rows.Count == 0)
-                Database.executeQuery("INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (" + x + ", " + y + ", " + z + ", @Message)");
+                Database.executeQuery(query, "INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (" + x + ", " + y + ", " + z + ", @Message)");
             else
-                Database.executeQuery("UPDATE `Messages" + p.level.name + "` SET Message=@Message WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
+                Database.executeQuery(query, "UPDATE `Messages" + p.level.name + "` SET Message=@Message WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
             
             Messages.Dispose();
         }

@@ -88,8 +88,10 @@ namespace MCGalaxy.Commands
                     for (int i = 0; i < p.level.ZoneList.Count; i++)
                     {
                         Level.Zone Zn = p.level.ZoneList[i];
-                        Database.AddParams("@Owner", Zn.Owner);
-                        Database.executeQuery("DELETE FROM `Zone" + p.level.name + "` WHERE Owner=@Owner AND SmallX='" + Zn.smallX + "' AND SMALLY='" + Zn.smallY + "' AND SMALLZ='" + Zn.smallZ + "' AND BIGX='" + Zn.bigX + "' AND BIGY='" + Zn.bigY + "' AND BIGZ='" + Zn.bigZ + "'");
+                        DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                        query.AddParam("@Owner", Zn.Owner);
+                        Database.executeQuery(query, "DELETE FROM `Zone" + p.level.name + "` WHERE Owner=@Owner AND SmallX='" + Zn.smallX + "' AND SMALLY='" + Zn.smallY + 
+                                              "' AND SMALLZ='" + Zn.smallZ + "' AND BIGX='" + Zn.bigX + "' AND BIGY='" + Zn.bigY + "' AND BIGZ='" + Zn.bigZ + "'");
 
                         Player.SendMessage(p, "Zone deleted for &b" + Zn.Owner);
                         p.level.ZoneList.Remove(p.level.ZoneList[i]);
@@ -150,7 +152,6 @@ namespace MCGalaxy.Commands
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
             Level.Zone Zn;
-
             Zn.smallX = Math.Min(cpos.x, x);
             Zn.smallY = Math.Min(cpos.y, y);
             Zn.smallZ = Math.Min(cpos.z, z);
@@ -161,11 +162,10 @@ namespace MCGalaxy.Commands
 
             p.level.ZoneList.Add(Zn);
 
-            //DB
-            Database.AddParams("@Owner", Zn.Owner);
-            Database.executeQuery("INSERT INTO `Zone" + p.level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES (" + Zn.smallX + ", " + Zn.smallY + ", " + Zn.smallZ + ", " + Zn.bigX + ", " + Zn.bigY + ", " + Zn.bigZ + ", @Owner)");
-            //DB
-
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@Owner", Zn.Owner);
+            Database.executeQuery(query, "INSERT INTO `Zone" + p.level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES ("
+                                  + Zn.smallX + ", " + Zn.smallY + ", " + Zn.smallZ + ", " + Zn.bigX + ", " + Zn.bigY + ", " + Zn.bigZ + ", @Owner)");
             Player.SendMessage(p, "Added zone for &b" + cpos.Owner);
         }
 

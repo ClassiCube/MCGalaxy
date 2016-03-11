@@ -313,8 +313,9 @@ namespace MCGalaxy {
         public static EcoStats RetrieveEcoStats(string playername) {
             EcoStats es;
             es.playerName = playername;
-            Database.AddParams("@Name", playername);
-            using (DataTable eco = Database.fillData("SELECT * FROM Economy WHERE player=@Name")) {
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@Name", playername);
+            using (DataTable eco = Database.fillData(query, "SELECT * FROM Economy WHERE player=@Name")) {
                 if (eco.Rows.Count == 1) {
                     es.money = int.Parse(eco.Rows[0]["money"].ToString());
                     es.totalSpent = int.Parse(eco.Rows[0]["total"].ToString());
@@ -335,14 +336,16 @@ namespace MCGalaxy {
         }
 
         public static void UpdateEcoStats(EcoStats es) {
-            Database.AddParams("@Name", es.playerName);
-            Database.AddParams("@Money", es.money);
-            Database.AddParams("@Total", es.totalSpent);
-            Database.AddParams("@Purchase", es.purchase);
-            Database.AddParams("@Payment", es.payment);
-            Database.AddParams("@Salary", es.salary);
-            Database.AddParams("@Fine", es.fine);
-            Database.executeQuery(string.Format("{0} Economy (player, money, total, purchase, payment, salary, fine) VALUES (@Name, @Money, @Total, @Purchase, @Payment, @Salary, @Fine)", (Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO")));
+        	DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@Name", es.playerName);
+            query.AddParam("@Money", es.money);
+            query.AddParam("@Total", es.totalSpent);
+            query.AddParam("@Purchase", es.purchase);
+            query.AddParam("@Payment", es.payment);
+            query.AddParam("@Salary", es.salary);
+            query.AddParam("@Fine", es.fine);
+            Database.executeQuery(query, string.Format("{0} Economy (player, money, total, purchase, payment, salary, fine) VALUES " +
+                                                       "(@Name, @Money, @Total, @Purchase, @Payment, @Salary, @Fine)", (Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO")));
         }
     }
 }

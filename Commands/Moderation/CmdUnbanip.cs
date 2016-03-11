@@ -36,22 +36,17 @@ namespace MCGalaxy.Commands
             {
                 message = message.Remove(0, 1).Trim();
                 Player who = PlayerInfo.Find(message);
-                if (who == null)
-                {
-                    Database.AddParams("@Name", message);
-                    DataTable ip = Database.fillData("SELECT IP FROM Players WHERE Name = @Name");
-                    if (ip.Rows.Count > 0)
-                    {
+                if (who == null) {
+                	DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                    query.AddParam("@Name", message);
+                    DataTable ip = Database.fillData(query, "SELECT IP FROM Players WHERE Name = @Name");
+                    if (ip.Rows.Count > 0) {
                         message = ip.Rows[0]["IP"].ToString();
-                    }
-                    else
-                    {
+                    } else {
                         Player.SendMessage(p, "Unable to find an IP address for that user."); return;
                     }
                     ip.Dispose();
-                }
-                else
-                {
+                } else {
                     message = who.ip;
                 }
             }

@@ -39,19 +39,20 @@ namespace MCGalaxy.Commands {
             }
             
             string newTitle = parts.Length > 1 ? parts[1] : "";
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
             if (newTitle != "")
                 newTitle = newTitle.Replace("[", "").Replace("]", "");
             if (newTitle.Length > 17) { Player.SendMessage(p, "Title must be under 17 letters."); return; }
 
             if (newTitle == "") {
                 Player.SendChatFrom(who, who.color + who.prefix + who.name + " %Shad their title removed.", false);
-                Database.AddParams("@Name", who.name);
-                Database.executeQuery("UPDATE Players SET Title = '' WHERE Name = @Name");
+                query.AddParam("@Name", who.name);
+                Database.executeQuery(query, "UPDATE Players SET Title = '' WHERE Name = @Name");
             } else {
                 Player.SendChatFrom(who, who.color + who.name + " %Swas given the title of &b[" + newTitle + "%b]", false);
-                Database.AddParams("@Title", newTitle);
-                Database.AddParams("@Name", who.name);
-                Database.executeQuery("UPDATE Players SET Title = @Title WHERE Name = @Name");
+                query.AddParam("@Title", newTitle);
+                query.AddParam("@Name", who.name);
+                Database.executeQuery(query, "UPDATE Players SET Title = @Title WHERE Name = @Name");
             }        
             who.title = newTitle;
             who.SetPrefix();

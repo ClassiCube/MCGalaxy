@@ -30,10 +30,8 @@ namespace MCGalaxy.SQL {
         protected IDbTransaction transaction;
 
         public static DatabaseTransactionHelper Create() {
-            if (Server.useMySQL)
-                return MySQLTransactionHelper.Create();
-            else
-                return SQLiteTransactionHelper.Create();
+            if (Server.useMySQL) return MySQLTransactionHelper.Create(MySQL.connString);
+            else return SQLiteTransactionHelper.Create(SQLite.connString);
         }
 
         public abstract bool Execute(string query);

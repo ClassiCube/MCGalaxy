@@ -239,7 +239,7 @@ namespace MCGalaxy {
                     byte[] buffer = new byte[66];
                     buffer[0] = Opcode.Message;
                     buffer[1] = id;
-                    if(HasCpeExt(CpeExt.FullCP437))
+                    if (HasCpeExt(CpeExt.FullCP437))
                     	NetUtils.WriteCP437(newLine, buffer, 2);
                     else
                         NetUtils.WriteAscii(newLine, buffer, 2);

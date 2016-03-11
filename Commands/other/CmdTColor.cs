@@ -37,12 +37,13 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Cannot change the title color of someone of greater rank"); return;
             }
             
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
             if (args.Length == 1) {                
                 Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " had their title color removed.", false);
                 who.titlecolor = "";
                 
-                Database.AddParams("@Name", who.name);
-                Database.executeQuery("UPDATE Players SET title_color = '' WHERE Name = @Name");
+                query.AddParam("@Name", who.name);
+                Database.executeQuery(query, "UPDATE Players SET title_color = '' WHERE Name = @Name");
             } else  {
                 string color = Colors.Parse(args[1]);
                 if (color == "") { Player.SendMessage(p, "There is no color \"" + args[1] + "\"."); return; }
@@ -50,9 +51,9 @@ namespace MCGalaxy.Commands {
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.titlecolor = color;
                 
-                Database.AddParams("@Color", Colors.Name(color));
-                Database.AddParams("@Name", who.name);
-                Database.executeQuery("UPDATE Players SET title_color = @Color WHERE Name = @Name");                
+                query.AddParam("@Color", Colors.Name(color));
+                query.AddParam("@Name", who.name);
+                Database.executeQuery(query, "UPDATE Players SET title_color = @Color WHERE Name = @Name");                
             }
             who.SetPrefix();
         }

@@ -24,10 +24,6 @@ namespace MCGalaxy.SQL {
 
     public sealed class SQLiteTransactionHelper : DatabaseTransactionHelper {
 
-        private SQLiteTransactionHelper() {
-            Init(SQLite.connString);
-        }
-
         private SQLiteTransactionHelper(string connString) {
             Init(connString);
         }
@@ -37,10 +33,6 @@ namespace MCGalaxy.SQL {
             connection.Open();
             //connection.ChangeDatabase(Server.MySQLDatabaseName);
             transaction = connection.BeginTransaction();
-        }
-
-        public static DatabaseTransactionHelper Create() {
-            return Create(SQLite.connString);
         }
 
         public static DatabaseTransactionHelper Create(string connString) {

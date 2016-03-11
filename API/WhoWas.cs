@@ -25,8 +25,9 @@ namespace MCGalaxy
         {
             Server.s.Log(p);
             rank = Group.findPlayer(p);
-            Database.AddParams("@Name", p.ToLower());
-            DataTable playerDb = Database.fillData("SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE");
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@Name", p.ToLower());
+            DataTable playerDb = Database.fillData(query, "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE");
             if (playerDb.Rows.Count == 0)
                 return;
             modified_blocks = int.Parse(playerDb.Rows[0]["totalBlocks"].ToString());

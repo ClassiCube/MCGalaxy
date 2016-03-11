@@ -37,22 +37,23 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Cannot change the color of someone of greater rank"); return;
             }     
             
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
             if (args.Length == 1) {
                 Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " had their color removed.", false);
                 who.color = who.group.color;
                 
-                Database.AddParams("@Name", who.name);
-                Database.executeQuery("UPDATE Players SET color = '' WHERE name = @Name");
+                query.AddParam("@Name", who.name);
+                Database.executeQuery(query, "UPDATE Players SET color = '' WHERE name = @Name");
             } else {
             	string color = Colors.Parse(args[1]);
-                if (color == "") { Player.SendMessage(p, "There is no color \"" + message + "\"."); return; }
+            	if (color == "") { Player.SendMessage(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.color) { Player.SendMessage(p, p.DisplayName + " already has that color."); return; }
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
                 
-                Database.AddParams("@Color", Colors.Name(color));
-                Database.AddParams("@Name", who.name);
-                Database.executeQuery("UPDATE Players SET color = @Color WHERE name = @Name");
+                query.AddParam("@Color", Colors.Name(color));
+                query.AddParam("@Name", who.name);
+                Database.executeQuery(query, "UPDATE Players SET color = @Color WHERE name = @Name");
             }
             Player.GlobalDespawn(who, false);
             Player.GlobalSpawn(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1], false);

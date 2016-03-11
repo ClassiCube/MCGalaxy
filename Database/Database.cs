@@ -25,7 +25,7 @@ namespace MCGalaxy
 {
     namespace SQL
     {
-        public sealed class Database
+        public static class Database
         {
             public static void CopyDatabase(StreamWriter sql)
             {
@@ -229,105 +229,60 @@ namespace MCGalaxy
                 return tableNames;
             }// end:CopyDatabase()
 
-            /// <summary>
-            /// Adds a parameter to the parameterized SQL query.
-            /// Use this before executing the query.
-            /// </summary>
-            /// <param name="name">The name of the parameter</param>
-            /// <param name="param">The value of the parameter</param>
-            public static void AddParams(string name, object param)
-            {
-                if (Server.useMySQL)
-                    MySQL.AddParams(name, param);
-                else
-                    SQLite.AddParams(name, param);
+            [Obsolete("Use DatabasedParameterisedQuery instead, which is threadsafe.")]
+            public static void AddParams(string name, object param) {
+                if (Server.useMySQL) MySQL.AddParams(name, param);
+                else SQLite.AddParams(name, param);
             }
 
-            public static void executeQuery(string queryString, bool createDB = false)
-            {
-                int totalCount = 0;
-            retry: try
-                {
-                    if (Server.useMySQL)
-                    {
-                        MySQL.execute(queryString, createDB);
-                    }
-                    else
-                    {
-                        if (!createDB) // Databases do not need to be created in SQLite.
-                            SQLite.execute(queryString);
-                    }
-                }
-                catch (Exception e)
-                {
-                    if (!createDB || !Server.useMySQL)
-                    {
-                        totalCount++;
-                        if (totalCount > 10)
-                        {
-                            File.AppendAllText("MySQL_error.log", DateTime.Now + " " + queryString + "\r\n");
-                            Server.ErrorLog(e);
-                        }
-                        else
-                        {
-                            goto retry;
-                        }
-                    }
-                    else
-                    {
-                        throw e;
-                    }
-                }
-                finally
-                {
-                    if (Server.useMySQL)
-                        MySQL.ClearParams();
-                    else
-                        SQLite.ClearParams();
-                }
+            public static void executeQuery(string queryString, bool createDB = false) {
+                if (Server.useMySQL) executeQuery(MySQL.query, queryString, createDB);
+            	else executeQuery(SQLite.query, queryString, createDB);
             }
 
-            public static DataTable fillData(string queryString, bool skipError = false)
-            {
-                int totalCount = 0;
-                using (DataTable toReturn = new DataTable("toReturn"))
-                {
-                retry: try
-                    {
-                        if (Server.useMySQL)
-                        {
-                            MySQL.fill(queryString, toReturn);
-                        }
-                        else
-                        {
-                            SQLite.fill(queryString, toReturn);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        totalCount++;
-                        if (totalCount > 10)
-                        {
-                            if (!skipError)
-                            {
-                                File.AppendAllText("MySQL_error.log", DateTime.Now + " " + queryString + "\r\n");
-                                Server.ErrorLog(e);
-                            }
-                        }
-                        else
-                            goto retry;
-                    }
-                    finally
-                    {
-                        if (Server.useMySQL)
-                            MySQL.ClearParams();
-                        else
-                            SQLite.ClearParams();
-                    }
-                    return toReturn;
+            public static void executeQuery(DatabaseParameterisedQuery query, string queryString, bool createDB = false) {
+                Exception e = null;
+                for (int i = 0; i < 10; i++) {
+                	try {
+                		query.Execute(queryString, createDB);
+                		query.ClearParams();
+                		return;
+                	} catch (Exception ex) {
+                		e = ex; // try yet again 
+                	}
                 }
+                
+                File.AppendAllText("MySQL_error.log", DateTime.Now + " " + queryString + "\r\n");
+                Server.ErrorLog(e);
+                query.ClearParams();
+            }
+            
+            public static DataTable fillData(string queryString, bool skipError = false) {
+            	if (Server.useMySQL) return fillData(MySQL.query, queryString, skipError);
+            	else return fillData(SQLite.query, queryString, skipError);
             }
 
+            public static DataTable fillData(DatabaseParameterisedQuery query, string queryString, bool skipError = false) {
+            	using (DataTable results = new DataTable("toReturn")) {
+            		Exception e = null;
+            		for (int i = 0; i < 10; i++) {
+            			try {
+            				query.Fill(queryString, results);
+            				query.ClearParams();
+            				return results;
+            			} catch (Exception ex) {
+            				e = ex; // try yet again 
+            			}
+            		}
+            		
+            		if (skipError) return results;
+            		File.AppendAllText("MySQL_error.log", DateTime.Now + " " + queryString + "\r\n");
+            		Server.ErrorLog(e);
+            		query.ClearParams();
+            		return results;
+            	}
+            }
+            
             internal static void fillDatabase(Stream stream)
             {
                 //Backup

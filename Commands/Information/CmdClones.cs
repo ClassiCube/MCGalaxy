@@ -49,8 +49,9 @@ namespace MCGalaxy.Commands
 			{
 				message = who.ip;
 			}
-            Database.AddParams("@IP", message);
-			DataTable Clones = Database.fillData("SELECT Name FROM Players WHERE IP=@IP");
+			DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@IP", message);
+			DataTable Clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
 
 			if (Clones.Rows.Count == 0) { Player.SendMessage(p, "Could not find any record of the player entered."); return; }
 

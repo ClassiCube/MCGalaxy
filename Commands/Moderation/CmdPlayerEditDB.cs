@@ -190,12 +190,13 @@ namespace MCGalaxy.Commands {
         }
         
         static void UpdateDB(Player p, string name, string type, string value, string column) {
-            Database.AddParams("@Name", name);
+        	DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@Name", name);
             if (value != "") {
-                Database.AddParams("@ArgValue", value);
-                Database.executeQuery("UPDATE Players SET " + column + "=@ArgValue WHERE Name=@Name");
+                query.AddParam("@ArgValue", value);
+                Database.executeQuery(query, "UPDATE Players SET " + column + "=@ArgValue WHERE Name=@Name");
             } else {
-                Database.executeQuery("UPDATE Players SET " + column + "='' WHERE Name=@Name");
+                Database.executeQuery(query, "UPDATE Players SET " + column + "='' WHERE Name=@Name");
             }
         }
         

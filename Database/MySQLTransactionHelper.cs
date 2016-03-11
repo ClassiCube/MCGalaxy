@@ -27,10 +27,6 @@ namespace MCGalaxy.SQL {
     
     public sealed class MySQLTransactionHelper : DatabaseTransactionHelper {
 
-        public MySQLTransactionHelper(){
-            Init(MySQL.connString);
-        }
-
         public MySQLTransactionHelper(string connString) {
             Init(connString);
         }
@@ -41,10 +37,6 @@ namespace MCGalaxy.SQL {
             connection.ChangeDatabase(Server.MySQLDatabaseName);
 
             transaction = connection.BeginTransaction();
-        }
-
-        public static DatabaseTransactionHelper Create() {
-            return Create(MySQL.connString);
         }
 
         public static DatabaseTransactionHelper Create(string connString) {
