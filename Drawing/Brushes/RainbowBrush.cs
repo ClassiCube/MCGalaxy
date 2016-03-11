@@ -29,7 +29,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         public static string[] HelpString = new [] {
-            "%TArguments: <random> <seed>",
+            "%TArguments: <random>",
             "%HIf no arguments are given, draws a diagonally repeating rainbow",
             "%HIf \'random\' is given, draws by randomly selecting blocks from the rainbow pattern.",
         };
@@ -43,14 +43,8 @@ namespace MCGalaxy.Drawing.Brushes {
         public override byte NextExtBlock(DrawOp op) { return 0; }
         
         public static Brush Process(BrushArgs args) {
-            if (args.Message.StartsWith("random")) {
-                string[] parts = args.Message.Split(' ');
-                int seed;
-                if (parts.Length > 1 && Int32.TryParse(parts[1], out seed))
-                    return new RandomRainbowBrush(seed);
+            if (args.Message == "random")
                 return new RandomRainbowBrush();
-            }
-
             if (args.Message == "bw")
                 return new BWRainbowBrush();
             return new RainbowBrush();
@@ -72,8 +66,8 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         public static string[] HelpString = new [] {
-                    "%TArguments: none",
-                    "%HDraws a diagonally repeating black-white rainbow",
+            "%TArguments: none",
+            "%HDraws a diagonally repeating black-white rainbow",
         };
         
         public override byte NextExtBlock(DrawOp op) { return 0; }
