@@ -442,23 +442,23 @@ namespace MCGalaxy {
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "no-respawning-during-zombie":
-					try { Server.noRespawn = bool.Parse(value); }
+					try { Server.zombie.noRespawn = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "no-level-saving-during-zombie":
-					try { Server.noLevelSaving = bool.Parse(value); }
+					try { Server.zombie.noLevelSaving = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "no-pillaring-during-zombie":
-					try { Server.noPillaring = bool.Parse(value); }
+					try { Server.zombie.noPillaring = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-name-while-infected":
 					if ( value != "" )
-						Server.ZombieName = value;
+						Server.zombie.ZombieName = value;
 					break;
 				case "enable-changing-levels":
-					try { Server.ChangeLevels = bool.Parse(value); }
+					try { Server.zombie.ChangeLevels = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-survival-only-server":
@@ -466,7 +466,7 @@ namespace MCGalaxy {
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "use-level-list":
-					try { Server.UseLevelList = bool.Parse(value); }
+					try { Server.zombie.UseLevelList = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-level-list":
@@ -477,7 +477,7 @@ namespace MCGalaxy {
 						if ( itndex > 0 )
 							input = input.Substring(0, itndex);
 
-						Server.LevelList = input.Split(',').ToList<string>();
+						Server.zombie.LevelList = input.Split(',').ToList<string>();
 					}
 					break;
 				case "guest-limit-notify":
@@ -813,14 +813,14 @@ namespace MCGalaxy {
 			w.WriteLine("admins-join-silent = " + Server.adminsjoinsilent.ToString().ToLower());
 			w.WriteLine("server-owner = " + Server.server_owner.ToString());
 			w.WriteLine("zombie-on-server-start = " + Server.startZombieModeOnStartup);
-			w.WriteLine("no-respawning-during-zombie = " + Server.noRespawn);
-			w.WriteLine("no-level-saving-during-zombie = " + Server.noLevelSaving);
-			w.WriteLine("no-pillaring-during-zombie = " + Server.noPillaring);
-			w.WriteLine("zombie-name-while-infected = " + Server.ZombieName);
-			w.WriteLine("enable-changing-levels = " + Server.ChangeLevels);
+			w.WriteLine("no-respawning-during-zombie = " + Server.zombie.noRespawn);
+			w.WriteLine("no-level-saving-during-zombie = " + Server.zombie.noLevelSaving);
+			w.WriteLine("no-pillaring-during-zombie = " + Server.zombie.noPillaring);
+			w.WriteLine("zombie-name-while-infected = " + Server.zombie.ZombieName);
+			w.WriteLine("enable-changing-levels = " + Server.zombie.ChangeLevels);
 			w.WriteLine("zombie-survival-only-server = " + Server.ZombieOnlyServer);
-			w.WriteLine("use-level-list = " + Server.UseLevelList);
-			w.WriteLine("zombie-level-list = " + string.Join(",", Server.LevelList.ToArray()));
+			w.WriteLine("use-level-list = " + Server.zombie.UseLevelList);
+			w.WriteLine("zombie-level-list = " + string.Join(",", Server.zombie.LevelList.ToArray()));
 			w.WriteLine("guest-limit-notify = " + Server.guestLimitNotify.ToString().ToLower());
 			w.WriteLine("guest-join-notify = " + Server.guestJoinNotify.ToString().ToLower());
 			w.WriteLine("guest-leave-notify = " + Server.guestLeaveNotify.ToString().ToLower());

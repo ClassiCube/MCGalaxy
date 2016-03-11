@@ -58,35 +58,30 @@ namespace MCGalaxy.Commands
             else if (s[0] == "start")
             {
                 if (Server.zombie.ZombieStatus() != 0) { Player.SendMessage(p, "There is already a Zombie Survival game currently in progress."); return; }
-                if (s.Length == 2)
-                {
-                    int i = 1;
-                    bool result = int.TryParse(s[1], out i);
+                if (s.Length == 2) {
+                    int rounds = 1;
+                    bool result = int.TryParse(s[1], out rounds);
                     if (result == false) { Player.SendMessage(p, "You need to specify a valid option!"); return; }
                     if (s[1] == "0")
-                    {
                         Server.zombie.StartGame(1, 0);
-                    }
                     else
-                    {
-                        Server.zombie.StartGame(3, i);
-                    }
-                }
-                else
+                        Server.zombie.StartGame(3, rounds);
+                } else {
                     Server.zombie.StartGame(2, 0);
+                }
             }
             else if (s[0] == "stop")
             {
                 if (Server.zombie.ZombieStatus() == 0) { Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return; }
                 Player.GlobalMessage("The current game of Zombie Survival will end this round!");
-                Server.gameStatus = 4;
+                Server.zombie.gameStatus = 4;
             }
             else if (s[0] == "force")
             {
                 if (Server.zombie.ZombieStatus() == 0) { Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return; }
                 Server.s.Log("Zombie Survival ended forcefully by " + p.name);
                 Server.zombie.aliveCount = 0;
-                Server.gameStatus = 0; Server.gameStatus = 0; Server.zombie.limitRounds = 0; Server.zombie.initialChangeLevel = false; Server.ZombieModeOn = false; Server.zombieRound = false;
+                Server.zombie.ResetState();
             }
         }
         public override void Help(Player p)

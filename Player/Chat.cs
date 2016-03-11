@@ -155,8 +155,8 @@ namespace MCGalaxy {
                     w.WriteLine("// This is used to create custom $s");
                     w.WriteLine("// If you start the line with a // it wont be used");
                     w.WriteLine("// It should be formatted like this:");
-                    w.WriteLine("// $website:mcgalaxy.ml");
-                    w.WriteLine("// That would replace '$website' in any message to 'mcgalaxy.ml'");
+                    w.WriteLine("// $website:http://example.org");
+                    w.WriteLine("// That would replace '$website' in any message to 'http://example.org'");
                     w.WriteLine("// It must not start with a // and it must not have a space between the 2 sides and the colon (:)");
                 }
             }

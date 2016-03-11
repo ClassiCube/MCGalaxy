@@ -163,10 +163,8 @@ namespace MCGalaxy
         public string name;
         public int overload = 1500;
         public LevelPermission perbuildmax = LevelPermission.Nobody;
-
         public LevelPermission permissionbuild = LevelPermission.Guest;
         // What ranks can go to this map (excludes banned)
-
         public LevelPermission permissionvisit = LevelPermission.Guest;
         public LevelPermission pervisitmax = LevelPermission.Nobody;
 
@@ -294,7 +292,7 @@ namespace MCGalaxy
             }
             MovePlayersToMain();
 
-            if (changed && (!Server.ZombieModeOn || !Server.noLevelSaving))
+            if (changed && (!Server.ZombieModeOn || !Server.zombie.noLevelSaving))
             {
                 if ((!Server.lava.active || !Server.lava.HasMap(name)) && save) Save(false, true);
                 saveChanges();

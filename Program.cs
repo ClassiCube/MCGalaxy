@@ -51,9 +51,9 @@ namespace Starter
                 tries++;
                 Console.WriteLine("This is try number " + tries);
                 Console.WriteLine("You do not have the required DLL!");
-                Console.WriteLine("Go to mcgalaxy.ml yourself and download it, please");
+                Console.WriteLine("Go to https://github.com/Hetal728/MCGalaxy yourself and download it, please");
                 Console.WriteLine("Place it inside my folder, near me, and restart me.");
-                Console.WriteLine("If you have any issues, get the files from the www.mcgalaxy.tk download page and try again.");
+                Console.WriteLine("If you have any issues, get the files from the https://github.com/Hetal728/MCGalaxy download page and try again.");
                 Console.WriteLine("Press any key to close me...");
                 Console.ReadLine();
                 Console.WriteLine("Bye!");

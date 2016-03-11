@@ -226,7 +226,7 @@ namespace MCGalaxy
             switch (code)
             {
                 case ReplyCode.ERR_BANNEDFROMCHAN:
-                    Server.s.Log("Your server is banned from the Global Chat Channel. Please appeal at mcgalaxy.tk");
+                    Server.s.Log("Your server is banned from the Global Chat channel. Contact an MCGalaxy Staff member for an unban.");
                     break;
                 case ReplyCode.ERR_INVITEONLYCHAN:
                     Server.s.Log("Cannot join Global Chat. (Channel is invite only (+i))");
@@ -235,7 +235,7 @@ namespace MCGalaxy
                     {
                         if (Server.irc) { if (Server.ircServer == server) return; }
                         Server.s.Log(message);
-                        Server.s.Log("This means your server is banned from the Global Chat server, please contact a MCGalaxy Staff member for an unban.");
+                        Server.s.Log("Your server is banned from the Global Chat channel. Contact an MCGalaxy Staff member for an unban.");
                     }
                     break;
             }

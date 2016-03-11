@@ -28,11 +28,10 @@ using System.Windows.Forms;
 using MCGalaxy.SQL;
 using MonoTorrent.Client;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace MCGalaxy
 {
-    public sealed class Server
+    public sealed partial class Server
     {
         public static bool cancelcommand = false;
         public static bool canceladmin = false;
@@ -158,33 +157,13 @@ namespace MCGalaxy
         public static ZombieGame zombie;
         public static bool ZombieModeOn = false;
         public static bool startZombieModeOnStartup = false;
-        public static bool noRespawn = true;
-        public static bool noLevelSaving = true;
-        public static bool noPillaring = true;
-        public static string ZombieName = "";
-        public static int gameStatus = 0; //0 = not started, 1 = always on, 2 = one time, 3 = certain amount of rounds, 4 = stop game next round
-        public static bool queLevel = false;
-        public static bool queZombie = false;
-        public static string nextZombie = "";
-        public static string nextLevel = "";
-        public static bool zombieRound = false;
-        public static string lastPlayerToInfect = "";
-        public static int infectCombo = 0;
+        public static bool ZombieOnlyServer = true;
+        public static bool bufferblocks = true;
+
         public static int YesVotes = 0;
         public static int NoVotes = 0;
         public static bool voting = false;
         public static bool votingforlevel = false;
-        public static int Level1Vote = 0;
-        public static int Level2Vote = 0;
-        public static int Level3Vote = 0;
-        public static bool ChangeLevels = true;
-        public static bool UseLevelList = false;
-        public static bool ZombieOnlyServer = true;
-        public static List<String> LevelList = new List<String>();
-        public static string lastLevelVote1 = "";
-        public static string lastLevelVote2 = "";
-        public static bool bufferblocks = true;
-
         // Lava Survival
         public static LavaSurvival lava;
         
@@ -461,8 +440,8 @@ namespace MCGalaxy
             LoadAllSettings();
 
             //derp
-            if (!Server.LevelList.Contains("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)"))
-                Server.LevelList.Add("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
+            if (!Server.zombie.LevelList.Contains("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)"))
+                Server.zombie.LevelList.Add("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
 
             timeOnline = DateTime.Now;
             {//MYSQL stuff
@@ -528,286 +507,19 @@ namespace MCGalaxy
             }
 
             Economy.LoadDatabase();
-            UpdateStaffList();
 
             if (levels != null)
                 foreach (Level l in levels) { l.Unload(); }
-            ml.Queue(delegate
-            {
-                try
-                {
-                    levels = new List<Level>(maps);
-
-                    if (LevelInfo.ExistsOffline(level))
-                    {
-                        mainLevel = Level.Load(level);
-                        mainLevel.unload = false;
-                        if (mainLevel == null)
-                        {
-                            if (File.Exists(LevelInfo.LevelPath(level) + ".backup"))
-                            {
-                                Log("Attempting to load backup of " + level + ".");
-                                File.Copy(LevelInfo.LevelPath(level) + ".backup", LevelInfo.LevelPath(level), true);
-                                mainLevel = Level.Load(level);
-                                if (mainLevel == null)
-                                {
-                                    Log("BACKUP FAILED!");
-                                    Console.ReadLine(); return;
-                                }
-                            }
-                            else
-                            {
-                                Log("mainlevel not found");
-                                mainLevel = new Level(level, 128, 64, 128, "flat") { permissionvisit = LevelPermission.Guest, permissionbuild = LevelPermission.Guest };
-                                mainLevel.Save();
-                                Level.CreateLeveldb(level);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Log("mainlevel not found");
-                        mainLevel = new Level(level, 128, 64, 128, "flat") { permissionvisit = LevelPermission.Guest, permissionbuild = LevelPermission.Guest };
-                        mainLevel.Save();
-                        Level.CreateLeveldb(level);
-                    }
-
-                    addLevel(mainLevel);
-
-                    // fenderrock - Make sure the level does have a physics thread
-                    if (mainLevel.physThread == null)
-                        mainLevel.StartPhysics();
-                }
-                catch (Exception e) { ErrorLog(e); }
-            });
+            ml.Queue(LoadMainLevel);
             Plugin.Load();
-            ml.Queue(delegate
-            {
-                bannedIP = PlayerList.Load("banned-ip.txt", null);
-                ircControllers = PlayerList.Load("IRC_Controllers.txt", null);
-                muted = PlayerList.Load("muted.txt", null);
+            ml.Queue(LoadPlayerLists);
+            ml.Queue(LoadAutoloadCommands);
+            ml.Queue(LoadGCAccepted);
 
-                foreach (Group grp in Group.GroupList)
-                    grp.playerList = PlayerList.Load(grp.fileName, grp);
-                if (useWhitelist)
-                    whiteList = PlayerList.Load("whitelist.txt", null);
-                if (!File.Exists("ranks/jailed.txt")) { File.Create("ranks/jailed.txt").Close(); Server.s.Log("CREATED NEW: ranks/jailed.txt"); }
-                Extensions.UncapitalizeAll("ranks/banned.txt");
-                Extensions.UncapitalizeAll("ranks/muted.txt");
-            });
-
-            ml.Queue(delegate
-            {
-                if (File.Exists("text/autoload.txt")) {
-                    try {
-                    	PropertiesFile.Read("text/autoload.txt", AutoLoadLineProcessor);
-                    } catch {
-                        s.Log("autoload.txt error");
-                    }
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                } else {
-                    Log("autoload.txt does not exist");
-                }
-            });
-
-            ml.Queue(delegate
-            {
-                foreach (string line in File.ReadAllLines("text/gcaccepted.txt"))
-                {
-                    gcaccepted.Add(line); //loading all playernames of people who turned off translation
-                }
-                Log("Creating listening socket on port " + port + "... ");
-                Setup();
-                //s.Log(Setup() ? "Done." : "Could not create socket connection. Shutting down.");
-            });
-
-            ml.Queue(delegate
-            {
-                updateTimer.Elapsed += delegate
-                {
-                    Player.GlobalUpdate();
-                    PlayerBot.GlobalUpdatePosition();
-                };
-
-                updateTimer.Start();
-            });
-
-
-            // Heartbeat code here:
-
-            ml.Queue(delegate
-            {
-                try {
-                    Heart.Init();
-                } catch (Exception e) {
-                    Server.ErrorLog(e);
-                }
-            });
-
-            ml.Queue(delegate
-            {
-                messageTimer.Elapsed += delegate
-                {
-                    RandomMessage();
-                };
-                messageTimer.Start();
-
-                if (File.Exists("text/messages.txt"))
-                {
-                    using (StreamReader r = File.OpenText("text/messages.txt"))
-                    {
-                        while (!r.EndOfStream)
-                            messages.Add(r.ReadLine());
-                    }
-                }
-                else File.Create("text/messages.txt").Close();
-
-                try
-                {
-                    APIServer = new WebServer(SendResponse, "http://localhost:8080/api/");
-                    APIServer.Run();
-                    InfoServer = new WebServer(WhoIsResponse, "http://localhost:8080/whois/");
-                    InfoServer.Run();
-                }
-                catch
-                {
-                    Server.s.Log("Failed to start local API server");
-                }
-
-                IRC = new ForgeBot(Server.ircChannel, Server.ircOpChannel, Server.ircNick, Server.ircServer);
-                GlobalChat = new GlobalChatBot(GlobalChatNick());
-
-                if (Server.irc) IRC.Connect();
-                if (Server.UseGlobalChat) GlobalChat.Connect();
-
-                new AutoSaver(Server.backupInterval);
-
-                blockThread = new Thread(new ThreadStart(delegate
-                {
-                    while (true)
-                    {
-                        Thread.Sleep(blockInterval * 1000);
-                        try {
-                            levels.ForEach(
-                                delegate(Level l) {
-                                    try {
-                                        l.saveChanges();
-                                    } catch (Exception e) {
-                                        Server.ErrorLog(e);
-                                    }
-                                });
-                        } catch (Exception e) {
-                            // an exception is raised on Mono if level list is modified
-                            // while enumerating over it with ForEach
-                            Server.ErrorLog(e);
-                        }
-                    }
-                }));
-                blockThread.Name = "MCG_BlockUpdates";
-                blockThread.Start();
-
-                locationChecker = new Thread(new ThreadStart(delegate
-                {
-                    while (true)
-                    {
-                        Thread.Sleep(3);
-                        Player[] players = PlayerInfo.Online;
-                        for (int i = 0; i < players.Length; i++)
-                        {
-                            try
-                            {
-                                Player p = players[i];
-
-                                if (p.frozen)
-                                {
-                                    p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); continue;
-                                }
-                                else if (p.following != "")
-                                {
-                                    Player who = PlayerInfo.Find(p.following);
-                                    if (who == null || who.level != p.level)
-                                    {
-                                        p.following = "";
-                                        if (!p.canBuild)
-                                        {
-                                            p.canBuild = true;
-                                        }
-                                        if (who != null && who.possess == p.name)
-                                        {
-                                            who.possess = "";
-                                        }
-                                        continue;
-                                    }
-                                    if (p.canBuild)
-                                    {
-                                        p.SendPos(0xFF, who.pos[0], (ushort)(who.pos[1] - 16), who.pos[2], who.rot[0], who.rot[1]);
-                                    }
-                                    else
-                                    {
-                                       p.SendPos(0xFF, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
-                                    }
-                                }
-                                else if (p.possess != "")
-                                {
-                                    Player who = PlayerInfo.Find(p.possess);
-                                    if (who == null || who.level != p.level)
-                                        p.possess = "";
-                                }
-
-                                ushort x = (ushort)(p.pos[0] / 32);
-                                ushort y = (ushort)(p.pos[1] / 32);
-                                ushort z = (ushort)(p.pos[2] / 32);
-
-                                if (p.level.Death)
-                                    p.CheckSurvival(x, y, z);
-                                p.CheckBlock(x, y, z);
-                                p.oldIndex = p.level.PosToInt(x, y, z);
-                            }
-                            catch (Exception e) { Server.ErrorLog(e); }
-                        }
-                    }
-                }));
-                locationChecker.Name = "MCG_LocationCheck";
-                locationChecker.Start();
-#if DEBUG
-	  UseTextures = true;          
-#endif
-                Log("Finished setting up server");
-                ServerSetupFinished = true;
-                Checktimer.StartTimer();
-                Commands.CommandKeywords.SetKeyWords();
-                try
-                {
-                    if (Server.lava.startOnStartup)
-                        Server.lava.Start();
-                    if (Server.startZombieModeOnStartup)
-                        Server.zombie.StartGame(1, 0);
-                    //This doesnt use the main map
-                    if (Server.UseCTF)
-                        ctf = new Auto_CTF();
-                }
-                catch (Exception e) { Server.ErrorLog(e); }
-                BlockQueue.Start();
-            });
-        }
-        
-        static void AutoLoadLineProcessor(string key, string value) {
-            key = key.ToLower();
-            if (value == "") value = "0";
-
-            if (key != mainLevel.name) {
-                Command.all.Find("load").Use(null, key + " " + value);
-                Level l = LevelInfo.FindExact(key);
-            } else {
-                try {
-                    int temp = int.Parse(value);
-                    if (temp >= 0 && temp <= 3)
-                        mainLevel.setPhysics(temp);
-                } catch {
-                    s.Log("Physics variable invalid");
-                }
-            }
+            ml.Queue(InitTimers);
+            ml.Queue(InitRest);
+            ml.Queue(InitHeartbeat);
+            UpdateStaffList();
         }
         
         public static string SendResponse(HttpListenerRequest request)
@@ -1111,54 +823,6 @@ namespace MCGalaxy
                 return grp.color;
             }
             return Group.standard.color;
-        }
-        /*public static void UpdateGlobalSettings()
-        {
-            try
-            {
-                gcipbans.Clear();
-                gcnamebans.Clear();
-                JArray jason; //jason plz (troll)
-                using (var client = new WebClient()) {
-                    jason = JArray.Parse(client.DownloadString("https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/gcbanned.txt"));
-                }
-                foreach (JObject ban in jason) {
-                    if((string)ban["banned_isIp"] == "0")
-                        gcnamebans.Add(((string)ban["banned_name"]).ToLower(), "'" + (string)ban["banned_by"] + "', because: %d" + (string)ban["banned_reason"]);
-                    else if((string)ban["banned_isIp"] == "1")
-                        gcipbans.Add((string)ban["banned_name"], "'" + (string)ban["banned_by"] + "', because: %d" + (string)ban["banned_reason"]);
-                }
-                s.Log("GlobalChat Banlist updated!");
-            }
-            catch (Exception e)
-            {
-                ErrorLog(e);
-                s.Log("Could not update GlobalChat Banlist!");
-                gcnamebans.Clear();
-                gcipbans.Clear();
-            }
-        }*/
-        public void UpdateStaffList() {
-            try {
-                Devs.Clear();
-                Mods.Clear();
-                GCmods.Clear();
-                using (WebClient web = new WebClient()) {
-                    string[] result = web.DownloadString("https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/devs.txt").Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.None);
-                    foreach (string line in result) {
-                        string type = line.Split(':')[0].ToLower();
-                        List<string> staffList = type.Equals("devs") ? Devs : type.Equals("mods") ? Mods : type.Equals("gcmods") ? GCmods : null;
-                        foreach (string name in line.Split(':')[1].Split())
-                            staffList.Add(name);
-                    }
-                }
-            } catch (Exception e) {
-                ErrorLog(e);
-                s.Log("Couldn't update MCGalaxy staff list, turning MCGalaxy Staff Protection Level off. . . ");
-                Devs.Clear();
-                Mods.Clear();
-                GCmods.Clear();
-            }
         }
 
         public static bool canusegc = true; //badpokerface

@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands
                     p.SendMessage(value + " is not online.");
                 } else {
                     p.SendMessage(value + " was queued.");
-                    Server.queZombie = true;
-                    Server.nextZombie = value;
+                    Server.zombie.queZombie = true;
+                    Server.zombie.nextZombie = value;
                 }
             } else if (args[0] == "level") {
                 bool match = false;
@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands
                 
                 if (match) {
                     p.SendMessage(value + " was queued.");
-                    Server.queLevel = true;
-                    Server.nextLevel = value.ToLower();
+                    Server.zombie.queLevel = true;
+                    Server.zombie.nextLevel = value.ToLower();
                 } else {
                     p.SendMessage("Level does not exist.");
                 }
