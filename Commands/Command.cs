@@ -17,7 +17,9 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using MCGalaxy.Commands;
+
 namespace MCGalaxy
 {
 	public abstract partial class Command
@@ -38,6 +40,18 @@ namespace MCGalaxy
 
 		public static CommandList all = new CommandList();
 		public static CommandList core = new CommandList();
+		
+		public static void InitAll() {
+            all.AddOtherPerms = true;
+            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+            for (int i = 0; i < types.Length; i++) {
+            	Type type = types[i];
+            	if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;
+            	all.Add((Command)Activator.CreateInstance(type));
+            }            
+            core.commands = new List<Command>(all.commands);
+            Scripting.Autoload();
+        }
 		
 		protected static void RevertAndClearState(Player p, ushort x, ushort y, ushort z) {
 			p.ClearBlockchange();

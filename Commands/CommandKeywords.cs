@@ -108,7 +108,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdGun()), "shoot boom terrorism missile");
             new CommandKeywords((new CmdHackRank()), "fake rank color set mod");
             new CommandKeywords((new CmdHacks()), "hack fake");
-            new CommandKeywords((new CmdHeartbeat()), "heart server list");
             new CommandKeywords((new CmdHelp()), "info commands cmd list");
             new CommandKeywords((new CmdHide()), "hidden show invisible");
             new CommandKeywords((new CmdHigh5()), "high 5 fun");

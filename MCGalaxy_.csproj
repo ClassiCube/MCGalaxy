@@ -156,7 +156,6 @@
     <Compile Include="Commands\Chat\CmdRankMsg.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
-    <Compile Include="Commands\Command.All.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
     <Compile Include="Commands\CommandList.cs" />
@@ -322,9 +321,7 @@
     <Compile Include="Commands\Other\CmdGarbage.cs" />
     <Compile Include="Commands\Other\CmdGun.cs" />
     <Compile Include="Commands\Other\CmdHackRank.cs" />
-    <Compile Include="Commands\Other\CmdHeartbeat.cs" />
     <Compile Include="Commands\Other\CmdImpersonate.cs" />
-    <Compile Include="Commands\Other\CmdInterval.cs" />
     <Compile Include="Commands\Other\CmdInvincible.cs" />
     <Compile Include="Commands\Other\CmdKill.cs" />
     <Compile Include="Commands\Other\CmdLoginMessage.cs" />

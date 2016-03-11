@@ -37,7 +37,7 @@ namespace MCGalaxy {
 
             while (true) {
                 zombieRound = false;
-                amountOfRounds = amountOfRounds + 1;
+                amountOfRounds++;
                 
                 if (gameStatus == 0) { return; }
                 else if (gameStatus == 1) { DoRound(); if (ChangeLevels) ChangeLevel();}

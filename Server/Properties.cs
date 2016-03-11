@@ -749,10 +749,6 @@ namespace MCGalaxy {
 			w.WriteLine("#   spam-counter-reset-time\t\t= 2");
 			w.WriteLine("#   bufferblocks\t\t\t= Should buffer blocks by default for maps?");
 			w.WriteLine();
-			w.WriteLine("#   MCGalaxy-protection-level\t\t= Choose between: Dev/Mod/Off (default is Off). When set to Mod, MCGalaxy Moderators AND Developers are protected. When set to Dev, MCGalaxy Developers only are protected. When set to Off, MCGalaxy staff are not protected.");
-			w.WriteLine();
-			w.WriteLine("#   menu-style\t\t\t\t= Choose between the default MCGalaxy help menu(0) or the redesigned layout(1). ");
-			w.WriteLine();
 			w.WriteLine("# Server options");
 			w.WriteLine("server-name = " + Server.name);
 			w.WriteLine("motd = " + Server.motd);
