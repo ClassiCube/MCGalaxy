@@ -622,13 +622,6 @@ namespace MCGalaxy {
 					}
 					catch { Server.s.Log("Invalid " + key + ". Using default."); }
 					break;
-				case "ignoreomnibans":
-					try {
-						Server.IgnoreOmnibans = bool.Parse(value);
-					} catch {
-						Server.IgnoreOmnibans = false;
-					}
-					break;
                 case "disabledstandardtokens":
                     {
                         if (value == "") return;
@@ -895,7 +888,6 @@ namespace MCGalaxy {
 			w.WriteLine("review-next-perm = " + ( (sbyte)Server.reviewnext ).ToString());
 			w.WriteLine("bufferblocks = " + Server.bufferblocks);
 			w.WriteLine();
-			w.WriteLine("ignoreomnibans = " +  Server.IgnoreOmnibans.ToString().ToLower());
 			w.WriteLine("disabledstandardtokens = " + Chat.disabledTokens);
 		}
 	}

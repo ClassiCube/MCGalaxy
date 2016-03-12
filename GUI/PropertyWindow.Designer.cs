@@ -134,7 +134,6 @@ namespace MCGalaxy.Gui
             this.lsNudLives = new System.Windows.Forms.NumericUpDown();
             this.cmbAFKKickPerm = new System.Windows.Forms.ComboBox();
             this.chkGuestLimitNotify = new System.Windows.Forms.CheckBox();
-            this.chkIgnoreOmnibans = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.btnBlHelp = new System.Windows.Forms.Button();
             this.txtBlRanks = new System.Windows.Forms.TextBox();
@@ -1509,19 +1508,6 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip( this.chkGuestLimitNotify, "Notify in-game if a guest can\'t join due to the guest limit being reached." );
             this.chkGuestLimitNotify.UseVisualStyleBackColor = true;
             // 
-            // chkIgnoreOmnibans
-            // 
-            this.chkIgnoreOmnibans.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkIgnoreOmnibans.Enabled = false;
-            this.chkIgnoreOmnibans.Location = new System.Drawing.Point( 6, 58 );
-            this.chkIgnoreOmnibans.Name = "chkIgnoreOmnibans";
-            this.chkIgnoreOmnibans.Size = new System.Drawing.Size( 104, 48 );
-            this.chkIgnoreOmnibans.TabIndex = 48;
-            this.chkIgnoreOmnibans.Text = "Ignore Omnibans (not recommended)";
-            this.chkIgnoreOmnibans.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.toolTip.SetToolTip( this.chkIgnoreOmnibans, "Not Recommended, it allows a very specific list of hackers to join your server." );
-            this.chkIgnoreOmnibans.UseVisualStyleBackColor = true;
-            // 
             // tabPage5
             // 
             this.tabPage5.BackColor = System.Drawing.Color.Transparent;
@@ -1855,7 +1841,6 @@ namespace MCGalaxy.Gui
             // 
             this.groupBox18.AutoSize = true;
             this.groupBox18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox18.Controls.Add( this.chkIgnoreOmnibans );
             this.groupBox18.Controls.Add( this.chkPrmOnly );
             this.groupBox18.Location = new System.Drawing.Point( 369, 394 );
             this.groupBox18.Name = "groupBox18";
@@ -4843,7 +4828,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ListBox TntWrsMpsList;
         private System.Windows.Forms.Button TntWrsDiffSlctBt;
         private System.Windows.Forms.CheckBox TntWrsStreaksChck;
-        private System.Windows.Forms.CheckBox chkIgnoreOmnibans;
         private System.Windows.Forms.Button buttonEco;
         private System.Windows.Forms.Label label92;
         private System.Windows.Forms.ListBox lstCommands;

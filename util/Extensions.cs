@@ -161,5 +161,13 @@ namespace MCGalaxy {
         	return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]), 
         	                    int.Parse(parts[2]), int.Parse(parts[3]));
         }
+        
+        public static bool CaselessEquals(this string a, string b) {
+            return a.Equals(b, StringComparison.OrdinalIgnoreCase);
+        }
+        
+        public static bool CaselessStarts(this string a, string b) {
+            return a.StartsWith(b, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

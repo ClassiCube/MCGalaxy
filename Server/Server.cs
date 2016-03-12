@@ -66,7 +66,6 @@ namespace MCGalaxy
         public static GlobalChatBot GlobalChat;
         public static Thread locationChecker;
         public static Thread blockThread;
-        public static bool IgnoreOmnibans = false;
         //public static List<MySql.Data.MySqlClient.MySqlCommand> mySQLCommands = new List<MySql.Data.MySqlClient.MySqlCommand>();
         public static WebServer APIServer;
         public static WebServer InfoServer;

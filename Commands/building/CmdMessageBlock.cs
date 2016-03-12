@@ -66,8 +66,7 @@ namespace MCGalaxy.Commands {
         }
         
         bool IsCommand(string message, string cmd) {
-            return message.Equals(cmd, StringComparison.OrdinalIgnoreCase) ||
-                message.StartsWith(cmd + " ", StringComparison.OrdinalIgnoreCase);
+            return message.CaselessEquals(cmd) || message.CaselessStarts(cmd + " ");
         }
 
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {

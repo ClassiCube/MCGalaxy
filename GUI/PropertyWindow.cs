@@ -641,9 +641,6 @@ namespace MCGalaxy.Gui {
                 case "next":
                     Server.reviewnext = Level.PermissionFromName(value.ToLower());
                     break;
-                case "ignoreomnibans":
-                    chkIgnoreOmnibans.Checked = value.ToLower() == "true";
-                    break;
             }
         }
         
@@ -800,8 +797,6 @@ namespace MCGalaxy.Gui {
             Server.reviewclear = Group.GroupList.Find(grp => grp.name == cmbClearQueue.SelectedItem.ToString()).Permission;
             Server.reviewnext = Group.GroupList.Find(grp => grp.name == cmbGotoNext.SelectedItem.ToString()).Permission;
             Server.reviewcooldown = (int)nudCooldownTime.Value;
-
-            Server.IgnoreOmnibans = chkIgnoreOmnibans.Checked;
         }
 
         private void cmbDefaultColour_SelectedIndexChanged(object sender, EventArgs e) {

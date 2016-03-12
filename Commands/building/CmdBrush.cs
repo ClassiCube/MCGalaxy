@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             
             string brush = FindBrush(message);
             if (brush == null) {
-                if (message.StartsWith("help", StringComparison.OrdinalIgnoreCase)) {
+                if (message.CaselessStarts("help")) {
                     HandleHelp(p, message);
                 } else {
                     Player.SendMessage(p, "No brush found with name \"" + message + "\".");
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands {
         
         internal static string FindBrush(string message) {
             foreach (var brush in Brush.Brushes) {
-                if (brush.Key.Equals(message, StringComparison.OrdinalIgnoreCase))
+                if (brush.Key.CaselessEquals(message))
                     return brush.Key;
             }
             return null;
