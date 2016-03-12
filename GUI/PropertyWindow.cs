@@ -455,7 +455,7 @@ namespace MCGalaxy.Gui {
                     chkUpdates.Checked = ( value.ToLower() == "true" );
                     break;
                 case "use-beta-version":
-                    usebeta.Checked = ( value.ToLower() == "true" );
+                    chkUseBeta.Checked = ( value.ToLower() == "true" );
                     break;
                 case "auto-update":
                     autoUpdate.Checked = ( value.ToLower() == "true" );
@@ -770,7 +770,7 @@ namespace MCGalaxy.Gui {
             Server.rankSuper = chkrankSuper.Checked;
             Server.defaultRank = cmbDefaultRank.SelectedItem.ToString();
             
-            Server.DownloadBeta = usebeta.Checked;
+            Server.DownloadBeta = chkUseBeta.Checked;
 
             Server.hackrank_kick = hackrank_kick.Checked;
             Server.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
@@ -825,7 +825,7 @@ namespace MCGalaxy.Gui {
 
         void saveStuff() {
             foreach ( Control tP in tabControl.Controls )
-                if ( tP is TabPage && tP != tabPage3 && tP != tabPage5 )
+                if ( tP is TabPage && tP != pageCommands && tP != pageBlocks )
                     foreach ( Control ctrl in tP.Controls )
                         if ( ctrl is TextBox && ctrl.Name.ToLower() != "txtgrpmotd" )
                             if ( ctrl.Text == "" ) {
@@ -2211,7 +2211,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         
         void UsebetaClick(object sender, EventArgs e)
         {
-        	if (usebeta.Checked) {
+        	if (chkUseBeta.Checked) {
         		DialogResult d = MessageBox.Show("Would you like to check for beta versions now?", "Check for updates.", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
         		if (d == DialogResult.Yes)
         			MCGalaxy_.Gui.Program.UpdateCheck();
