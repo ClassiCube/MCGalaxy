@@ -1632,7 +1632,6 @@ namespace MCGalaxy.Gui
             this.pageRanks.BackColor = System.Drawing.Color.Transparent;
             this.pageRanks.Controls.Add(this.gbRankGeneral);
             this.pageRanks.Controls.Add(this.gbRankSettings);
-            this.pageRanks.Controls.Add(this.lblColor);
             this.pageRanks.Controls.Add(this.button1);
             this.pageRanks.Controls.Add(this.btnAddRank);
             this.pageRanks.Controls.Add(this.listRanks);
@@ -1657,7 +1656,7 @@ namespace MCGalaxy.Gui
             this.gbRankGeneral.Controls.Add(this.label37);
             this.gbRankGeneral.Location = new System.Drawing.Point(11, 317);
             this.gbRankGeneral.Name = "gbRankGeneral";
-            this.gbRankGeneral.Size = new System.Drawing.Size(200, 177);
+            this.gbRankGeneral.Size = new System.Drawing.Size(202, 177);
             this.gbRankGeneral.TabIndex = 19;
             this.gbRankGeneral.TabStop = false;
             this.gbRankGeneral.Text = "General settings";
@@ -1706,6 +1705,7 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbRankSettings.Controls.Add(this.txtLimit);
             this.gbRankSettings.Controls.Add(this.label12);
+            this.gbRankSettings.Controls.Add(this.lblColor);
             this.gbRankSettings.Controls.Add(this.txtGrpMOTD);
             this.gbRankSettings.Controls.Add(this.txtPermission);
             this.gbRankSettings.Controls.Add(this.label14);
@@ -1720,7 +1720,7 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.Controls.Add(this.label52);
             this.gbRankSettings.Location = new System.Drawing.Point(11, 16);
             this.gbRankSettings.Name = "gbRankSettings";
-            this.gbRankSettings.Size = new System.Drawing.Size(200, 239);
+            this.gbRankSettings.Size = new System.Drawing.Size(202, 239);
             this.gbRankSettings.TabIndex = 18;
             this.gbRankSettings.TabStop = false;
             this.gbRankSettings.Text = "Rank settings";
@@ -1781,7 +1781,7 @@ namespace MCGalaxy.Gui
             this.cmbColor.FormattingEnabled = true;
             this.cmbColor.Location = new System.Drawing.Point(85, 128);
             this.cmbColor.Name = "cmbColor";
-            this.cmbColor.Size = new System.Drawing.Size(100, 21);
+            this.cmbColor.Size = new System.Drawing.Size(79, 21);
             this.cmbColor.TabIndex = 12;
             this.cmbColor.SelectedIndexChanged += new System.EventHandler(this.cmbColor_SelectedIndexChanged);
             // 
@@ -1851,9 +1851,9 @@ namespace MCGalaxy.Gui
             // 
             // lblColor
             // 
-            this.lblColor.Location = new System.Drawing.Point(185, 147);
+            this.lblColor.Location = new System.Drawing.Point(170, 128);
             this.lblColor.Name = "lblColor";
-            this.lblColor.Size = new System.Drawing.Size(26, 23);
+            this.lblColor.Size = new System.Drawing.Size(21, 21);
             this.lblColor.TabIndex = 13;
             // 
             // button1
@@ -2584,7 +2584,7 @@ namespace MCGalaxy.Gui
             this.grpLevels.Controls.Add(this.chkWorld);
             this.grpLevels.Location = new System.Drawing.Point(314, 408);
             this.grpLevels.Name = "grpLevels";
-            this.grpLevels.Size = new System.Drawing.Size(168, 95);
+            this.grpLevels.Size = new System.Drawing.Size(168, 93);
             this.grpLevels.TabIndex = 44;
             this.grpLevels.TabStop = false;
             this.grpLevels.Text = "Level Settings";
@@ -2618,7 +2618,7 @@ namespace MCGalaxy.Gui
             this.grpAdvanced.Controls.Add(this.chkLogBeat);
             this.grpAdvanced.Location = new System.Drawing.Point(8, 253);
             this.grpAdvanced.Name = "grpAdvanced";
-            this.grpAdvanced.Size = new System.Drawing.Size(409, 96);
+            this.grpAdvanced.Size = new System.Drawing.Size(364, 104);
             this.grpAdvanced.TabIndex = 42;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "Advanced Configuration";
@@ -2682,7 +2682,7 @@ namespace MCGalaxy.Gui
             this.grpGeneral.Controls.Add(this.ChkPort);
             this.grpGeneral.Location = new System.Drawing.Point(6, 6);
             this.grpGeneral.Name = "grpGeneral";
-            this.grpGeneral.Size = new System.Drawing.Size(411, 141);
+            this.grpGeneral.Size = new System.Drawing.Size(411, 154);
             this.grpGeneral.TabIndex = 41;
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = "General Configuration";
@@ -2770,7 +2770,7 @@ namespace MCGalaxy.Gui
             this.grpUpdate.Controls.Add(this.chkUpdates);
             this.grpUpdate.Location = new System.Drawing.Point(8, 408);
             this.grpUpdate.Name = "grpUpdate";
-            this.grpUpdate.Size = new System.Drawing.Size(300, 95);
+            this.grpUpdate.Size = new System.Drawing.Size(296, 93);
             this.grpUpdate.TabIndex = 44;
             this.grpUpdate.TabStop = false;
             this.grpUpdate.Text = "Update Settings";
@@ -3835,7 +3835,7 @@ namespace MCGalaxy.Gui
             this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage11.Size = new System.Drawing.Size(468, 473);
             this.tabPage11.TabIndex = 1;
-            this.tabPage11.Text = "Misc";
+            this.tabPage11.Text = "Zombie survival";
             // 
             // groupBox16
             // 
@@ -4406,6 +4406,7 @@ namespace MCGalaxy.Gui
             this.grpIRC.ResumeLayout(false);
             this.grpIRC.PerformLayout();
             this.pageServer.ResumeLayout(false);
+            this.pageServer.PerformLayout();
             this.grpLevels.ResumeLayout(false);
             this.grpLevels.PerformLayout();
             this.grpAdvanced.ResumeLayout(false);
