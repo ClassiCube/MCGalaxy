@@ -1509,6 +1509,10 @@ return;
             if (!group.CanExecute(command)) {
                 SendMessage("You are not allowed to use \"" + cmd + "\"."); return;
             }
+            if (!command.Enabled) {
+                SendMessage("The game associated with this game is not running, " +
+                            "so this command is disabled."); return;
+            }
             if (cmd != "repeat") lastCMD = cmd + " " + message;
             
             if (level.IsMuseum && !command.museumUsable ) {

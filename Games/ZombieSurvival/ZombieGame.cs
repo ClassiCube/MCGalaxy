@@ -24,8 +24,17 @@ using System.Linq;
 using System.Threading;
 using System.Timers;
 
-namespace MCGalaxy
-{
+namespace MCGalaxy {
+	
+	public class BountyData {
+		public Player Origin;
+		public int Amount;
+		
+		public BountyData(Player origin, int amount) {
+			Origin = origin; Amount = amount;
+		}
+	}
+	
     public sealed partial class ZombieGame
     {
         public int amountOfRounds = 0;
@@ -55,6 +64,7 @@ namespace MCGalaxy
         
         string lastPlayerToInfect = "";
         int infectCombo = 0;
+        public Dictionary<string, BountyData> Bounties = new Dictionary<string, BountyData>();
         
         public void StartGame(int status, int amount)
         {

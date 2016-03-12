@@ -175,6 +175,8 @@
     <Compile Include="Commands\Fun\Cmd8Ball.cs" />
     <Compile Include="Commands\Fun\CmdAka.cs" />
     <Compile Include="Commands\Fun\CmdAlive.cs" />
+    <Compile Include="Commands\Fun\CmdBounties.cs" />
+    <Compile Include="Commands\Fun\CmdBounty.cs" />
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
     <Compile Include="Commands\Fun\CmdCtf.cs" />
     <Compile Include="Commands\Fun\CmdDisinfect.cs" />
