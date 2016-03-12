@@ -347,12 +347,12 @@ namespace MCGalaxy
         public static bool canPlace(Player p, byte type) { 
             Blocks b = BlockList[type];
             LevelPermission perm = p.group.Permission;
-            return (perm >= b.lowestRank || b.allow.Contains(perm)) && !b.disallow.Contains(perm));
+            return (perm >= b.lowestRank || b.allow.Contains(perm)) && !b.disallow.Contains(perm);
         }
         
         public static bool canPlace(LevelPermission perm, byte type) {
             Blocks b = BlockList[type];
-            return (perm >= b.lowestRank || b.allow.Contains(perm)) && !b.disallow.Contains(perm));
+            return (perm >= b.lowestRank || b.allow.Contains(perm)) && !b.disallow.Contains(perm);
         }
     }
 }

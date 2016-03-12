@@ -299,18 +299,23 @@ namespace MCGalaxy {
         }
         
         public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
+        	if (DoBlockchange(p, x, y, z, type, extType))
+                Player.GlobalBlockchange(this, x, y, z, type, extType);
+        }
+        
+        internal bool DoBlockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
             string errorLocation = "start";
         retry:
             try
             {
                 //if (x < 0 || y < 0 || z < 0) return;
-                if (x >= Width || y >= Height || z >= Length) return;
+                if (x >= Width || y >= Height || z >= Length) return false;
                 byte b = GetTile(x, y, z), extB = 0;
                 if (b == Block.custom_block) extB = GetExtTile(x, y, z);
 
                 errorLocation = "Permission checking";
                 if (!CheckAffectPermissions(p, x, y, z, b, type, extType)) {
-                    p.RevertBlock(x, y, z); return;
+                    p.RevertBlock(x, y, z); return false;
                 }
 
                 if (b == Block.sponge && physics > 0 && type != Block.sponge)
@@ -332,20 +337,9 @@ namespace MCGalaxy {
                 p.overallBlocks++;
                 SetTile(x, y, z, type);
                 if (b == Block.custom_block && type != Block.custom_block)
-                	RevertExtTileNoCheck(x, y, z);
+                    RevertExtTileNoCheck(x, y, z);
                 if (type == Block.custom_block)
                     SetExtTileNoCheck(x, y, z, extType);
-                
-                errorLocation = "Block sending";
-                bool diffBlock = b == Block.custom_block ? extB != extType :
-                    Block.Convert(b) != Block.Convert(type);
-                if (diffBlock) Player.GlobalBlockchange(this, x, y, z, type, extType);
-
-                errorLocation = "Growing grass";
-                if (GetTile(x, (ushort)(y - 1), z) == Block.grass && GrassDestroy 
-                    && !Block.LightPass(type, extType, CustomBlockDefs)) {
-                    Blockchange(p, x, (ushort)(y - 1), z, Block.dirt);
-                }
 
                 errorLocation = "Adding physics";
                 if (p.PlayingTntWars && type == Block.smalltnt) AddCheck(PosToInt(x, y, z), false, p);
@@ -353,6 +347,9 @@ namespace MCGalaxy {
 
                 changed = true;
                 backedup = false;
+                bool diffBlock = b == Block.custom_block ? extB != extType :
+                    Block.Convert(b) != Block.Convert(type);
+                return diffBlock;
             } catch (OutOfMemoryException) {
                 Player.SendMessage(p, "Undo buffer too big! Cleared!");
                 p.UndoBuffer.Clear();
@@ -363,6 +360,7 @@ namespace MCGalaxy {
                 Chat.GlobalMessageOps("Error location: " + errorLocation);
                 Server.s.Log(p.name + " triggered a non-fatal error on " + name);
                 Server.s.Log("Error location: " + errorLocation);
+                return false;
             }
         }
         

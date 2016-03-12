@@ -736,7 +736,7 @@ namespace MCGalaxy {
         }
         
         void DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if ( deleteMode && b != Block.c4det ) { level.Blockchange(this, x, y, z, Block.air); return; }
+            if ( deleteMode && b != Block.c4det ) { ChangeBlock(x, y, z, Block.air, 0); return; }
 
             if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return; }
             if ( Block.DoorAirs(b) != 0 ) {
@@ -748,7 +748,7 @@ namespace MCGalaxy {
             }
             if ( Block.odoor(b) != Block.Zero ) {
                 if ( b == Block.odoor8 || b == Block.odoor8_air ) {
-                    level.Blockchange(this, x, y, z, Block.odoor(b));
+                    ChangeBlock(x, y, z, Block.odoor(b), 0);
                 } else {
                    RevertBlock(x, y, z);
                 }
@@ -835,21 +835,19 @@ namespace MCGalaxy {
                     break;
 
                 default:
-                    level.Blockchange(this, x, y, z, (byte)( Block.air ));
+                    ChangeBlock(x, y, z, Block.air, 0);
                     break;
             }
-            if ( (level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)( y - 1 ), z) == Block.dirt ) 
-                level.Blockchange(this, x, (ushort)( y - 1 ), z, Block.grass);
+            if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt) 
+                ChangeBlock(x, (ushort)(y - 1), z, Block.grass, 0);
         }
 
         void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if ( Block.odoor(b) != Block.Zero ) { SendMessage("oDoor here!"); return; }
             
             if (modeType != 0) {
-                if (b == modeType) 
-                    SendBlockchange(x, y, z, b);
-                else 
-                    level.Blockchange(this, x, y, z, modeType);
+                if (b == modeType) SendBlockchange(x, y, z, b);
+                else ChangeBlock(x, y, z, modeType, 0);
                 return;
             }
             
@@ -861,28 +859,35 @@ namespace MCGalaxy {
                             extAbove = level.GetExtTile(x, (ushort)(y + 1), z);
                         
                         if (Block.LightPass(above, extAbove, level.CustomBlockDefs))
-                            level.Blockchange(this, x, y, z, (byte)Block.grass);
+                            ChangeBlock(x, y, z, Block.grass, 0);
                         else
-                            level.Blockchange(this, x, y, z, (byte)Block.dirt);
+                            ChangeBlock(x, y, z, Block.dirt, 0);
                         break;
-                    case Block.staircasestep: //stair handler
-                        if ( level.GetTile(x, (ushort)( y - 1 ), z) == Block.staircasestep ) {
+                    case Block.staircasestep:
+                        if (level.GetTile(x, (ushort)(y - 1), z) == Block.staircasestep) {
                             SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
-                            //level.Blockchange(this, x, y, z, (byte)(Block.air));
-                            level.Blockchange(this, x, (ushort)( y - 1 ), z, (byte)( Block.staircasefull ));
+                            ChangeBlock(x, (ushort)( y - 1 ), z, Block.staircasefull, 0);
                             break;
                         }
-                        //else
-                        level.Blockchange(this, x, y, z, type, extType);
+                        ChangeBlock(x, y, z, type, extType);
                         break;
                     default:
-                        level.Blockchange(this, x, y, z, type, extType);
+                        ChangeBlock(x, y, z, type, extType);
                         break;
                 }
             } else {
-                level.Blockchange(this, x, y, z, type, extType);
+                ChangeBlock(x, y, z, type, extType);
             }
         }
+        
+        void ChangeBlock(ushort x, ushort y, ushort z, byte type, byte extType) {
+        	level.Blockchange(this, x, y, z, type, extType);
+        	if (level.GetTile(x, (ushort)(y - 1), z) == Block.grass && level.GrassDestroy 
+        	    && !Block.LightPass(type, extType, level.CustomBlockDefs)) {
+        		level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
+        	}
+        }
+        
 
         void HandleMovement(byte[] message) {
             if ( !loggedIn || trainGrab || following != "" || frozen )

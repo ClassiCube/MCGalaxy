@@ -44,6 +44,7 @@ namespace MCGalaxy.Commands {
                 Level lvl = LevelInfo.FindExact(node.MapName);
                 if (lvl == null) { node = node.Prev; continue; }
                 List<UndoCacheItem> items = node.Items;
+                BufferedBlockSender buffer = new BufferedBlockSender(lvl);
                 
                 for (int i = items.Count - 1; i >= 0; i--) {
                     UndoCacheItem item = items[i];                    
@@ -53,8 +54,12 @@ namespace MCGalaxy.Commands {
                     byte type = lvl.GetTile(x, y, z), extType = 0;
                     if (type == Block.custom_block)
                         extType = lvl.GetExtTile(x, y, z);
-                    lvl.Blockchange(p, x, y, z, item.Type, item.ExtType);
+                    if (lvl.DoBlockchange(p, x, y, z, item.Type, item.ExtType)) {
+                        buffer.Add(lvl.PosToInt(x, y, z), item.Type, item.ExtType);
+                        buffer.CheckIfSend(false);
+                    }
                 }
+                buffer.CheckIfSend(true);
                 node = node.Prev;
             }
         }

@@ -47,7 +47,7 @@ namespace MCGalaxy {
                     
                     // Different clients support varying types of blocks
                     byte[] packet = null;
-                    if (p.HasCpeExt(CpeExt.BulkBlockUpdate) && p.hasCustomBlocks && p.hasBlockDefs && count >= 1600) {
+                    if (p.HasCpeExt(CpeExt.BulkBlockUpdate) && p.hasCustomBlocks && p.hasBlockDefs && count >= 160) {
                         if (bulk == null) bulk = MakeBulkPacket();
                         packet = bulk;
                     } else if (p.hasCustomBlocks && p.hasBlockDefs) {

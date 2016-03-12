@@ -169,6 +169,7 @@ namespace MCGalaxy.Commands
                 if (lvl == null) { node = node.Prev; continue; }
                 saveLvl = lvl;
                 List<UndoCacheItem> items = node.Items;
+                BufferedBlockSender buffer = new BufferedBlockSender(lvl);
                 
                 for (int i = items.Count - 1; i >= 0; i--) {
                     UndoCacheItem item = items[i];
@@ -179,11 +180,14 @@ namespace MCGalaxy.Commands
                     
                     byte b = lvl.GetTile(x, y, z);
                     if (b == item.NewType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
-                    	Player.UndoPos uP = default(Player.UndoPos);
+                        Player.UndoPos uP = default(Player.UndoPos);
                         uP.newtype = item.Type; uP.newExtType = item.ExtType;
                         byte extType = 0;
                         if (b == Block.custom_block) extType = lvl.GetExtTile(x, y, z);                        
-                        lvl.Blockchange(p, x, y, z, item.Type, item.ExtType);
+                        if (lvl.DoBlockchange(p, x, y, z, item.Type, item.ExtType)) {
+                            buffer.Add(lvl.PosToInt(x, y, z), item.Type, item.ExtType);
+                            buffer.CheckIfSend(false);
+                        }
                         
                         uP.type = b; uP.extType = extType;
                         uP.x = x; uP.y = y; uP.z = z;
@@ -191,8 +195,9 @@ namespace MCGalaxy.Commands
                         time = node.BaseTime.AddSeconds(item.TimeDelta);
                         uP.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
                         if (p != null) p.RedoBuffer.Add(lvl, uP);
-                    }
+                    }                   
                 }
+                buffer.CheckIfSend(true);
                 node = node.Prev;
             }
         }
