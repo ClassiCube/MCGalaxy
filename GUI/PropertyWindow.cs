@@ -1067,9 +1067,13 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             fillLowest(ref txtBlLowest, ref storedBlocks[Block.Byte(listBlocks.SelectedItem.ToString())].lowestRank);
         }
         private void txtBlDisallow_TextChanged(object sender, EventArgs e) {
+        	if (storedBlocks[listBlocks.SelectedIndex].disallow == null)
+        	    storedBlocks[listBlocks.SelectedIndex].disallow = new List<LevelPermission>();        	
             fillAllowance(ref txtBlDisallow, ref storedBlocks[listBlocks.SelectedIndex].disallow);
         }
         private void txtBlAllow_TextChanged(object sender, EventArgs e) {
+        	if (storedBlocks[listBlocks.SelectedIndex].allow == null)
+        	    storedBlocks[listBlocks.SelectedIndex].allow = new List<LevelPermission>();
             fillAllowance(ref txtBlAllow, ref storedBlocks[listBlocks.SelectedIndex].allow);
         }
         #endregion

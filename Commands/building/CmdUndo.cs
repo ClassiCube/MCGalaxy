@@ -93,9 +93,7 @@ namespace MCGalaxy.Commands
             }
             
             Level saveLevel = null;
-            DateTime start = DateTime.UtcNow;
             PerformUndo(p, seconds, who.UndoBuffer, ref saveLevel);
-            Server.s.Log( "undo time: " + (DateTime.UtcNow - start).TotalMilliseconds.ToString());
             bool foundUser = false;
             UndoFile.UndoPlayer(p, whoName.ToLower(), seconds, ref foundUser);
 
@@ -175,8 +173,8 @@ namespace MCGalaxy.Commands
                     UndoCacheItem item = items[i];
                     ushort x, y, z;
                     node.Unpack(item.Index, out x, out y, out z);
-                    DateTime time = node.BaseTime.AddSeconds(item.TimeDelta + seconds);
-                    if (time < DateTime.UtcNow) return;
+                    DateTime time = node.BaseTime.AddTicks((item.TimeDelta + seconds) * TimeSpan.TicksPerSecond);
+                    if (time < DateTime.UtcNow) { buffer.CheckIfSend(true); return; }
                     
                     byte b = lvl.GetTile(x, y, z);
                     if (b == item.NewType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
@@ -192,7 +190,7 @@ namespace MCGalaxy.Commands
                         uP.type = b; uP.extType = extType;
                         uP.x = x; uP.y = y; uP.z = z;
                         uP.mapName = node.MapName;
-                        time = node.BaseTime.AddSeconds(item.TimeDelta);
+                        time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
                         uP.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
                         if (p != null) p.RedoBuffer.Add(lvl, uP);
                     }                   
@@ -204,8 +202,8 @@ namespace MCGalaxy.Commands
         
         bool CheckBlockPhysics(Player p, long seconds, int i, Level.UndoPos undo) {
             byte b = p.level.GetTile(undo.location);
-            DateTime time = Server.StartTime.AddSeconds(undo.timeDelta);
-            if (time.AddSeconds(seconds) < DateTime.UtcNow) return false;
+            DateTime time = Server.StartTime.AddTicks(undo.timeDelta * TimeSpan.TicksPerSecond);
+            if (time.AddTicks(seconds * TimeSpan.TicksPerSecond) < DateTime.UtcNow) return false;
             
             if (b == undo.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                 ushort x, y, z;

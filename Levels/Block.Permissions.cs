@@ -27,8 +27,8 @@ namespace MCGalaxy
         public class Blocks
         {
             public LevelPermission lowestRank;
-            public List<LevelPermission> disallow = new List<LevelPermission>();
-            public List<LevelPermission> allow = new List<LevelPermission>();
+            public List<LevelPermission> disallow = null;
+            public List<LevelPermission> allow = null;
             public byte type;
 
             public bool IncludeInBlockProperties()
@@ -287,15 +287,21 @@ namespace MCGalaxy
                 if (Block.Byte(block[0]) == Block.Zero) continue;
                 newBlock.type = Block.Byte(block[0]);
 
-                string[] disallow = new string[0];
+                string[] disallow = null;
                 if (block[2] != "") disallow = block[2].Split(',');
-                string[] allow = new string[0];
+                string[] allow = null;
                 if (block[3] != "") allow = block[3].Split(',');
 
                 try {
                     newBlock.lowestRank = (LevelPermission)int.Parse(block[1]);
-                    foreach (string s in disallow) { newBlock.disallow.Add((LevelPermission)int.Parse(s)); }
-                    foreach (string s in allow) { newBlock.allow.Add((LevelPermission)int.Parse(s)); }
+                    if (disallow != null) {
+                    	newBlock.disallow = new List<LevelPermission>();
+                    	foreach (string s in disallow) { newBlock.disallow.Add((LevelPermission)int.Parse(s)); }
+                    }                    
+                    if (allow != null) {
+                    	newBlock.allow = new List<LevelPermission>();
+                        foreach (string s in allow) { newBlock.allow.Add((LevelPermission)int.Parse(s)); }
+                    }
                 } catch {
                     Server.s.Log("Hit an error on the block " + line);
                     continue;
@@ -347,12 +353,14 @@ namespace MCGalaxy
         public static bool canPlace(Player p, byte type) { 
             Blocks b = BlockList[type];
             LevelPermission perm = p.group.Permission;
-            return (perm >= b.lowestRank || b.allow.Contains(perm)) && !b.disallow.Contains(perm);
+            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
+            	&& (b.disallow == null || !b.disallow.Contains(perm));
         }
         
         public static bool canPlace(LevelPermission perm, byte type) {
             Blocks b = BlockList[type];
-            return (perm >= b.lowestRank || b.allow.Contains(perm)) && !b.disallow.Contains(perm);
+            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
+            	&& (b.disallow == null || !b.disallow.Contains(perm));
         }
     }
 }

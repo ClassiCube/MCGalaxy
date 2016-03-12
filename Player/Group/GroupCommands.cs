@@ -176,6 +176,7 @@ namespace MCGalaxy {
         }
         
         public static string getInts(List<LevelPermission> givenList) {
+            if (givenList == null) return "";
             string returnString = ""; bool foundOne = false;
             foreach (LevelPermission Perm in givenList)
             {

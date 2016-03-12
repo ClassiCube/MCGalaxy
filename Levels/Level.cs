@@ -385,7 +385,7 @@ namespace MCGalaxy
                 BlockPos bP = tempCache[i];
                 IntToPos(bP.index, out x, out y, out z);
                 nameP.Value = bP.name;
-                DateTime time = Server.StartTimeLocal.AddSeconds(bP.timeDelta);
+                DateTime time = Server.StartTimeLocal.AddTicks(bP.timeDelta * TimeSpan.TicksPerSecond);
                 MakeInt(time.Year, 4, 0, ptr); MakeInt(time.Month, 2, 5, ptr); MakeInt(time.Day, 2, 8, ptr);
                 MakeInt(time.Hour, 2, 11, ptr); MakeInt(time.Minute, 2, 14, ptr); MakeInt(time.Second, 2, 17, ptr);
                 

@@ -36,7 +36,7 @@ namespace MCGalaxy.Util {
         
         /// <summary> Appends an item to the cache. </summary>
         public void Add(Level lvl, Player.UndoPos item) {
-            DateTime time = Server.StartTime.AddSeconds(item.timeDelta);
+            DateTime time = Server.StartTime.AddTicks(item.timeDelta * TimeSpan.TicksPerSecond);
             if (Head == null) {
                 Head = UndoCacheNode.Make(lvl, time);
                 Tail = Head;
