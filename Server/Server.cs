@@ -179,7 +179,6 @@ namespace MCGalaxy
         //for the limiting no. of guests:
         public static byte maxGuests = 10;
 
-        public static byte maps = 5;
         public static int port = 25565;
         public static bool pub = true;
         public static bool verify = true;

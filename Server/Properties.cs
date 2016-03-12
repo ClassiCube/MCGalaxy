@@ -120,22 +120,6 @@ namespace MCGalaxy {
 					}
 					catch { Server.s.Log("max-guests invalid! setting to default."); }
 					break;
-				case "max-maps":
-					try {
-						if ( Convert.ToByte(value) > 100 ) {
-							value = "100";
-							Server.s.Log("Max maps has been lowered to 100.");
-						}
-						else if ( Convert.ToByte(value) < 1 ) {
-							value = "1";
-							Server.s.Log("Max maps has been increased to 1.");
-						}
-						Server.maps = Convert.ToByte(value);
-					}
-					catch {
-						Server.s.Log("max-maps invalid! setting to default.");
-					}
-					break;
 				case "irc":
 					Server.irc = value.ToLower() == "true";
 					break;
@@ -750,7 +734,6 @@ namespace MCGalaxy {
 			w.WriteLine("public = " + Server.pub.ToString().ToLower());
 			w.WriteLine("max-players = " + Server.players.ToString());
 			w.WriteLine("max-guests = " + Server.maxGuests.ToString());
-			w.WriteLine("max-maps = " + Server.maps.ToString());
 			w.WriteLine("world-chat = " + Server.worldChat.ToString().ToLower());
 			w.WriteLine("check-updates = " + Server.checkUpdates.ToString().ToLower());
 			w.WriteLine("auto-update = " + Server.autoupdate.ToString().ToLower());

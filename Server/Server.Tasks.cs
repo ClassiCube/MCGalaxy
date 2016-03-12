@@ -28,7 +28,7 @@ namespace MCGalaxy {
         
         void LoadMainLevel() {
             try {
-                levels = new List<Level>(maps);
+                levels = new List<Level>(5);
 
                 if (LevelInfo.ExistsOffline(level)) {
                     mainLevel = Level.Load(level);

@@ -195,7 +195,6 @@ namespace MCGalaxy.Commands
             //for the limiting no. of guests:
             Server.maxGuests = 10;
 
-            Server.maps = 5;
             Server.port = 25565;
             Server.pub = true;
             Server.verify = true;

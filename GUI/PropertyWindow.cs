@@ -307,21 +307,6 @@ namespace MCGalaxy.Gui {
                         numGuests.Value = 10;
                     }
                     break;
-                case "max-maps":
-                    try {
-                        if ( Convert.ToByte(value) > 100 ) {
-                            value = "100";
-                        }
-                        else if ( Convert.ToByte(value) < 1 ) {
-                            value = "1";
-                        }
-                        txtMaps.Text = value;
-                    }
-                    catch {
-                        Server.s.Log("max-maps invalid! setting to default.");
-                        txtMaps.Text = "5";
-                    }
-                    break;
                 case "irc":
                     chkIRC.Checked = ( value.ToLower() == "true" );
                     break;
@@ -677,7 +662,6 @@ namespace MCGalaxy.Gui {
             Server.pub = chkPublic.Checked;
             Server.players = (byte)numPlayers.Value;
             Server.maxGuests = (byte)numGuests.Value;
-            Server.maps = byte.Parse(txtMaps.Text);
             Server.worldChat = chkWorld.Checked;
             Server.autonotify = chkNotifyOnJoinLeave.Checked;
             Server.AutoLoad = chkAutoload.Checked;
@@ -817,7 +801,6 @@ namespace MCGalaxy.Gui {
         }
 
         private void txtPort_TextChanged(object sender, EventArgs e) { removeDigit(txtPort); }
-        private void txtMaps_TextChanged(object sender, EventArgs e) { removeDigit(txtMaps); }
         private void txtBackup_TextChanged(object sender, EventArgs e) { removeDigit(txtBackup); }
 
         private void btnSave_Click(object sender, EventArgs e) { saveStuff(); Dispose(); }
