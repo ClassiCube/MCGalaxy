@@ -188,7 +188,6 @@
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
     <Compile Include="Commands\Fun\CmdZombieGame.cs" />
     <Compile Include="Commands\Fun\CmdZombieSpawn.cs" />
-    <Compile Include="Commands\Fun\CmdZombieSurvival.cs" />
     <Compile Include="Commands\Information\CmdAbout.cs" />
     <Compile Include="Commands\Information\CmdAfk.cs" />
     <Compile Include="Commands\Information\CmdBlocks.cs" />
@@ -412,7 +411,9 @@
     <Compile Include="Games\Countdown\CountdownGame.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
+    <Compile Include="Games\CTF\CtfTeam.cs" />
     <Compile Include="Games\IGame.cs" />
+    <Compile Include="Games\Team.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Core.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
@@ -554,7 +555,6 @@
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Database\MySQL.cs" />
-    <Compile Include="Player\Team.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Server\Extra\Heart.cs" />
     <Compile Include="Server\Logger.cs" />

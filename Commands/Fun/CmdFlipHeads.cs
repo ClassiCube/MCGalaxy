@@ -15,10 +15,10 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdFlipHeads : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdFlipHeads : Command {
+		
         public override string name { get { return "flipheads"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -26,17 +26,13 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdFlipHeads() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             Server.flipHead = !Server.flipHead;
-
-            if (Server.flipHead)
-                Player.GlobalMessage("All necks were broken");
-            else
-                Player.GlobalMessage("All necks were mended");
+            if (Server.flipHead) Player.GlobalMessage("All necks were broken");
+            else Player.GlobalMessage("All necks were mended");
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/flipheads - Does as it says on the tin");
         }
     }

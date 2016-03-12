@@ -174,8 +174,8 @@ namespace MCGalaxy {
         public ushort checkpointX, checkpointY, checkpointZ;
 
         //CTF
-        public Team team;
-        public Team hasflag;
+        public CtfTeam team;
+        public CtfTeam hasflag;
 
         //Countdown
         public bool playerofcountdown = false;

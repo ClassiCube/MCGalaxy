@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands
                 case "command":
                     string commandsFound = "";
                     foreach (Command comm in Command.all.commands)
-                        if (p == null || p.group.CanExecute(comm))
+                        if (p == null || p.group.CanExecute(comm) && comm.Enabled)
                             try { commandsFound += ", " + comm.name; } catch { }
                     Player.SendMessage(p, "Available commands:");
                     Player.SendMessage(p, commandsFound.Remove(0, 2));
@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands
         static void PrintHelpForGroup(Player p, string typeName, string typeTitle) {
             string message = "";
             foreach (Command c in Command.all.commands) {
-            	if (p == null || p.group.CanExecute(c)) {
+            	if (p == null || p.group.CanExecute(c) && c.Enabled) {
                     if (c.type.Contains(typeName))
                         message += ", " + getColor(c.name) + c.name;
                 }

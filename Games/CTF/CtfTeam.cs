@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 namespace MCGalaxy
 {
-    public sealed class Team
+    public sealed class CtfTeam
     {
         public char color;
         public int points = 0;

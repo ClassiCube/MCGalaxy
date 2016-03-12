@@ -1580,6 +1580,8 @@ return;
                 case "ranks": cmd = "help"; message = "ranks"; return true;
                 case "j":
                 case "join": cmd = "goto"; return true;
+                case "zs": cmd = "zombiegame"; return true;
+                case "zombiesurvival": cmd = "zombiegame"; return true;               
             }
             return false;
         }

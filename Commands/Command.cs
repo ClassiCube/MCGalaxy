@@ -32,6 +32,7 @@ namespace MCGalaxy
         public abstract void Use(Player p, string message);
         public abstract void Help(Player p);
         public virtual CommandPerm[] AdditionalPerms { get { return null; } }
+        public virtual bool Enabled { get { return true; } }
 
         public static CommandList all = new CommandList();
         public static CommandList core = new CommandList();

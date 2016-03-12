@@ -15,28 +15,25 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdFlipHead : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdFlipHead : Command {
+		
         public override string name { get { return "fliphead"; } }
         public override string shortcut { get { return "fh"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+		public override bool Enabled { get { return Server.ZombieModeOn; } }
         public CmdFlipHead() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             p.flipHead = !p.flipHead;
-
-            if (p.flipHead)
-                p.SendMessage("Your head was broken!");
-            else
-                p.SendMessage("Your head was healed!");
+            if (p.flipHead) p.SendMessage("Your head was broken!");
+            else p.SendMessage("Your head was healed!");
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/fliphead - Does as it says on the tin (only works while infected)");
         }
     }
