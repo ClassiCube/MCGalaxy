@@ -72,7 +72,7 @@ namespace MCGalaxy {
             }
         }
         
-        public bool hasCpe = false, hasCustomBlocks = false, hasTextColors, finishedCpeLogin = false;
+        public bool hasCpe, hasCustomBlocks, hasBlockDefs, hasTextColors, finishedCpeLogin = false;
         public string appName;
         public int extensionCount;
         public List<string> extensions = new List<string>();
@@ -304,7 +304,7 @@ namespace MCGalaxy {
                 int usedLength = 0;
                 byte[] buffer = CompressRawMap(out usedLength);
                 
-                if (HasCpeExt(CpeExt.BlockDefinitions)) {
+                if (hasBlockDefs) {
                     if (oldLevel != null && oldLevel != level)
                         RemoveOldLevelCustomBlocks(oldLevel);
                     BlockDefinition.SendLevelCustomBlocks(this);
@@ -365,7 +365,6 @@ namespace MCGalaxy {
             byte[] buffer = new byte[bufferSize];
             MemoryStream temp = new MemoryStream();
             int bIndex = 0;
-            bool hasBlockDefs = HasCpeExt(CpeExt.BlockDefinitions);
             
             using (GZipStream compressor = new GZipStream(temp, CompressionMode.Compress, true)) {
                 NetUtils.WriteI32(level.blocks.Length, buffer, 0);
@@ -478,7 +477,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (type == Block.custom_block) {
-            	if (HasCpeExt(CpeExt.BlockDefinitions))
+            	if (hasBlockDefs)
             		buffer[7] = level.GetExtTile(x, y, z);
             	else
             		buffer[7] = level.GetFallbackExtTile(x, y, z);
@@ -502,7 +501,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (type == Block.custom_block) {
-            	if (HasCpeExt(CpeExt.BlockDefinitions))
+            	if (hasBlockDefs)
             		buffer[7] = extType;
             	else
             		buffer[7] = level.GetFallback(extType);

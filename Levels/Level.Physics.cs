@@ -168,59 +168,27 @@ namespace MCGalaxy {
                 RemoveExpiredChecks();
                 
                 lastUpdate = ListUpdate.Count;
-                int* pendingIndices = stackalloc int[256];
-                byte* pendingTypes = stackalloc byte[256];
-                int pendingCount = 0;
+                if (ListUpdate.Count > 0 && bulkSender == null)
+                	bulkSender = new BufferedBlockSender(this);
                 
                 for (int i = 0; i < ListUpdate.Count; i++) {
                     Update C = ListUpdate.Items[i];
                     try {
                         string info = C.data as string;
                         if (info == null) info = "";
-                        if (DoPhysicsBlockchange(C.b, C.type, false,info, 0, true)) {
-                            pendingIndices[pendingCount] = C.b;
-                            pendingTypes[pendingCount] = C.type;
-                            pendingCount++;
-                        }
+                        if (DoPhysicsBlockchange(C.b, C.type, false, info, 0, true))
+                        	bulkSender.Add(C.b, C.type, 0);
                     } catch {
                         Server.s.Log("Phys update issue");
                     }
-                    SendUpdates(pendingIndices, pendingTypes, ref pendingCount, false);
+                    bulkSender.CheckIfSend(false);
                 }
-                SendUpdates(pendingIndices, pendingTypes, ref pendingCount, true);
+                if (bulkSender != null)
+                    bulkSender.CheckIfSend(true);
                 ListUpdate.Clear(); listUpdateExists.Clear();
             } catch (Exception e) {
                 Server.s.Log("Level physics error");
                 Server.ErrorLog(e);
-            }
-        }
-        
-        unsafe void SendUpdates(int* pendingIndices, byte* pendingTypes, ref int pendingCount, bool force) {
-            try {
-                if (pendingCount > 0 && (force || pendingCount == 256)) {
-                    byte[] data = new byte[pendingCount * 8];
-                    for (int i = 0; i < pendingCount; i++) {
-                        int index = pendingIndices[i];
-                        int x = (index % Width);
-                        int y = (index / Width) / Length;
-                        int z = (index / Width) % Length;
-                        
-                        data[(i << 3)] = Opcode.SetBlock;
-                        data[(i << 3) + 1] = (byte)(x >> 8); data[(i << 3) + 2] = (byte)x;
-                        data[(i << 3) + 3] = (byte)(y >> 8); data[(i << 3) + 4] = (byte)y;
-                        data[(i << 3) + 5] = (byte)(z >> 8); data[(i << 3) + 6] = (byte)z;
-                        // TODO: do we need conversion for non-CPE block clients?
-                        data[(i << 3) + 7] = Block.Convert(pendingTypes[i]);
-                    }
-                    Player[] players = PlayerInfo.Online;
-                    foreach (Player p in players) {
-                        if (p.level == this) p.SendRaw(data);
-                    }
-                    pendingCount = 0;
-                }
-            } catch {
-                Server.s.Log("Phys update issue");
-                pendingCount = 0;
             }
         }
         

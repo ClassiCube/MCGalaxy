@@ -420,6 +420,7 @@
     <Compile Include="Levels\Block.Convert.cs" />
     <Compile Include="Levels\Block.ID.cs" />
     <Compile Include="Levels\Block.Permissions.cs" />
+    <Compile Include="Levels\BufferedBlockSender.cs" />
     <Compile Include="Levels\Generator\MapGen.cs" />
     <Compile Include="Levels\Generator\NoiseGen.cs" />
     <Compile Include="Levels\Generator\MapGenParams.cs" />

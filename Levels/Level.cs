@@ -199,6 +199,7 @@ namespace MCGalaxy
         public bool bufferblocks = Server.bufferblocks;
         public List<BlockQueue.block> blockqueue = new List<BlockQueue.block>();
         private readonly object physThreadLock = new object();
+        BufferedBlockSender bulkSender;
 
         public List<C4.C4s> C4list = new List<C4.C4s>();
 

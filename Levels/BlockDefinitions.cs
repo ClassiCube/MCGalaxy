@@ -144,7 +144,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
-                if (!pl.HasCpeExt(CpeExt.BlockDefinitions)) continue;
+                if (!pl.hasBlockDefs) continue;
                 if (global && pl.level.CustomBlockDefs[id] != GlobalDefs[id]) continue;
                 
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0)
@@ -176,7 +176,7 @@ namespace MCGalaxy {
                 if (!global && pl.level != level) continue;
                 if (global && pl.level.CustomBlockDefs[id] != null) continue;
                 
-                if (pl.HasCpeExt(CpeExt.BlockDefinitions))
+                if (pl.hasBlockDefs)
                     pl.SendRaw(Opcode.CpeRemoveBlockDefinition, id);
             }
             Save(global, level);

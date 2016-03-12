@@ -131,7 +131,8 @@ namespace MCGalaxy
                 case CpeExt.FullCP437:
                     FullCP437 = version; break;
                 case CpeExt.BlockDefinitions:
-                    BlockDefinitions = version; break;
+                    BlockDefinitions = version;
+                    hasBlockDefs = true; break;
                 case CpeExt.BlockDefinitionsExt:
                     BlockDefinitionsExt = version; break;
                 case CpeExt.TextColors:
@@ -191,9 +192,9 @@ namespace MCGalaxy
         
         public void SendCurrentMapAppearance() {
         	byte edgeBlock = level.EdgeBlock, horBlock = level.HorizonBlock;
-        	if (edgeBlock >= Block.CpeCount && !HasCpeExt(CpeExt.BlockDefinitions))
+        	if (edgeBlock >= Block.CpeCount && !hasBlockDefs)
         	    edgeBlock = level.GetFallback(edgeBlock);
-        	if (horBlock >= Block.CpeCount && !HasCpeExt(CpeExt.BlockDefinitions))
+        	if (horBlock >= Block.CpeCount && !hasBlockDefs)
         	    horBlock = level.GetFallback(horBlock);  
         	    
             if (EnvMapAppearance == 2) {
@@ -239,7 +240,7 @@ namespace MCGalaxy
                 SendSetBlockPermission(i, canPlace, canDelete);
             }
             
-            if (!HasCpeExt(CpeExt.BlockDefinitions)) return;
+            if (!hasBlockDefs) return;
             for (int i = count; i < 256; i++) {
                 if (level.CustomBlockDefs[i] == null) continue;
                 SendSetBlockPermission((byte)i, level.Buildable, level.Deletable);

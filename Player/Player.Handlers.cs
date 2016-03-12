@@ -351,7 +351,7 @@ namespace MCGalaxy {
                 if (type == 0x42) {
                     hasCpe = true;
 
-                    SendExtInfo(16);
+                    SendExtInfo(18);
                     SendExtEntry(CpeExt.ClickDistance, 1);
                     SendExtEntry(CpeExt.CustomBlocks, 1);
                     SendExtEntry(CpeExt.HeldBlock, 1);
@@ -373,6 +373,8 @@ namespace MCGalaxy {
                     SendExtEntry(CpeExt.BlockDefinitions, 1);
                     
                     SendExtEntry(CpeExt.BlockDefinitionsExt, 2);
+                    SendExtEntry(CpeExt.TextColors, 1);
+                    SendExtEntry(CpeExt.BulkBlockUpdate, 1);
                 }
                 
                 try { left.Remove(name.ToLower()); }
@@ -656,7 +658,7 @@ namespace MCGalaxy {
                 }
                 
                 if (type >= Block.CpeCount) {
-                    if (!HasCpeExt(CpeExt.BlockDefinitions) || level.CustomBlockDefs[type] == null) {
+                    if (!hasBlockDefs || level.CustomBlockDefs[type] == null) {
                         SendMessage("Invalid block type: " + type); 
                         RevertBlock(x, y, z); return;
                     }
