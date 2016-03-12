@@ -137,8 +137,8 @@ namespace MCGalaxy.Gui {
                 LoadCommands();
                 LoadBlocks();
                 LoadExtraCmdCmds();
-            }
-            catch {
+            } catch (Exception ex) {
+            	Server.ErrorLog(ex);
                 Server.s.Log("Failed to load commands and blocks!");
             }
 
@@ -146,8 +146,8 @@ namespace MCGalaxy.Gui {
                 LoadLavaSettings();
                 UpdateLavaMapList();
                 UpdateLavaControls();
-            }
-            catch {
+            } catch (Exception ex) {
+            	Server.ErrorLog(ex);
                 Server.s.Log("Failed to load Lava Survival settings!");
             }
 
@@ -1049,17 +1049,21 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
             bool foundOne = false;
             txtBlDisallow.Text = "";
-            foreach ( LevelPermission perm in bs.disallow ) {
-                foundOne = true;
-                txtBlDisallow.Text += "," + (int)perm;
+            if (bs.disallow != null) {
+                foreach ( LevelPermission perm in bs.disallow ) {
+                    foundOne = true;
+                    txtBlDisallow.Text += "," + (int)perm;
+                }
             }
             if ( foundOne ) txtBlDisallow.Text = txtBlDisallow.Text.Remove(0, 1);
 
             foundOne = false;
             txtBlAllow.Text = "";
-            foreach ( LevelPermission perm in bs.allow ) {
-                foundOne = true;
-                txtBlAllow.Text += "," + (int)perm;
+            if (bs.allow != null) {
+                foreach ( LevelPermission perm in bs.allow ) {
+                    foundOne = true;
+                    txtBlAllow.Text += "," + (int)perm;
+                }
             }
             if ( foundOne ) txtBlAllow.Text = txtBlAllow.Text.Remove(0, 1);
         }

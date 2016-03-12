@@ -101,30 +101,30 @@ namespace MCGalaxy.Util {
         public ushort Flags; // upper 2 bits for 'ext' or 'physics' type, lower 14 bits for time delta.
         
         public short TimeDelta {
-        	get {
-        		int delta = Flags & 0x3FFF;
-        		return delta >= 0x2000 ? (short)(delta - 16384) : (short)delta;
-        	}
+            get {
+                int delta = Flags & 0x3FFF;
+                return delta >= 0x2000 ? (short)(delta - 16384) : (short)delta;
+            }
         }
         
         public void GetExtBlock(out byte type, out byte extType) {
-        	if ((Flags & (1 << 14)) != 0) {
-        		type = Block.custom_block;
-        		extType = Type;
-        	} else {
-        		type = Type;
-        		extType = 0;
-        	}
+            if ((Flags & (1 << 14)) != 0) {
+                type = Block.custom_block;
+                extType = Type;
+            } else {
+                type = Type;
+                extType = 0;
+            }
         }
         
         public void GetNewExtBlock(out byte type, out byte extType) {
-        	if ((Flags & (1 << 15)) != 0) {
-        		type = Block.custom_block;
-        		extType = NewType;
-        	} else {
-        		type = NewType;
-        		extType = 0;
-        	}
+            if ((Flags & (1 << 15)) != 0) {
+                type = Block.custom_block;
+                extType = NewType;
+            } else {
+                type = NewType;
+                extType = 0;
+            }
         }
         
         public static UndoCacheItem Make(UndoCacheNode node, short timeDelta, ref Player.UndoPos pos) {
@@ -133,16 +133,16 @@ namespace MCGalaxy.Util {
             item.Flags = (ushort)(timeDelta & 0x3FFF);
             
             if (pos.type == Block.custom_block) {
-            	item.Type = pos.extType;
-            	item.Flags |= (ushort)(1 << 14);
+                item.Type = pos.extType;
+                item.Flags |= (ushort)(1 << 14);
             } else {
-            	item.Type = pos.type;
+                item.Type = pos.type;
             }           
             if (pos.newtype == Block.custom_block) {
-            	item.NewType = pos.newExtType;
-            	item.Flags |= (ushort)(1 << 15);
+                item.NewType = pos.newExtType;
+                item.Flags |= (ushort)(1 << 15);
             } else {
-            	item.NewType = pos.newtype;
+                item.NewType = pos.newtype;
             }
             return item;
         }
