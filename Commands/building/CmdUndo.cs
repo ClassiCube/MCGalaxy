@@ -93,7 +93,9 @@ namespace MCGalaxy.Commands
             }
             
             Level saveLevel = null;
+            DateTime start = DateTime.UtcNow;
             PerformUndo(p, seconds, who.UndoBuffer, ref saveLevel);
+            Server.s.Log( "undo time: " + (DateTime.UtcNow - start).TotalMilliseconds.ToString());
             bool foundUser = false;
             UndoFile.UndoPlayer(p, whoName.ToLower(), seconds, ref foundUser);
 

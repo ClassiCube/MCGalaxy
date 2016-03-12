@@ -164,7 +164,6 @@ namespace MCGalaxy {
         }
 
         bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte type) {
-            if (!p.PlayingTntWars) return true;
             if (!(type == Block.tnt || type == Block.bigtnt || type == Block.nuketnt || type == Block.smalltnt))
                 return true;
             
@@ -287,14 +286,14 @@ namespace MCGalaxy {
             if (!Block.AllowBreak(b) && !Block.canPlace(p, b) && !Block.BuildIn(b)) {
                 return false;
             }
-            if (!CheckTNTWarsChange(p, x, y, z, ref type))
+            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref type))
                 return false;
             
             string Owners = "";
             bool AllowBuild = true, inZone = false;
             if (!CheckZones(p, x, y, z, b, ref AllowBuild, ref inZone, ref Owners))
                 return false;
-            if (Owners == "" && !CheckRank(p, x, y, z, AllowBuild, inZone))
+            if (Owners.Length == 0 && !CheckRank(p, x, y, z, AllowBuild, inZone))
                 return false;
             return true;
         }

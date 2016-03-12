@@ -38,11 +38,7 @@ namespace MCGalaxy.Commands
 
             if (p != null && !Block.canPlace(p, foundBlock)) { Player.SendMessage(p, "Cannot modify a block set for a higher rank"); return; }
 
-            Block.Blocks newBlock = Block.BlockList.Find(bs => bs.type == foundBlock);
-            newBlock.lowestRank = newPerm;
-
-            Block.BlockList[Block.BlockList.FindIndex(bL => bL.type == foundBlock)] = newBlock;
-
+            Block.BlockList[foundBlock].lowestRank = newPerm;
             Block.SaveBlocks(Block.BlockList);
             Player[] players = PlayerInfo.Online;
             foreach (Player pl in players) {
@@ -59,6 +55,7 @@ namespace MCGalaxy.Commands
             if (p == null)
                 Player.SendMessage(p, Block.Name(foundBlock) + "'s permission was changed to " + Level.PermissionToName(newPerm));
         }
+        
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/blockset [block] [rank] - Changes [block] rank to [rank]");

@@ -151,7 +151,7 @@ namespace MCGalaxy.Commands
                     if (b != Block.Zero)
                     {
                         Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b)));
-                        Group foundRank = Group.findPerm(Block.BlockList.Find(bs => bs.type == b).lowestRank);
+                        Group foundRank = Group.findPerm(Block.BlockList[b].lowestRank);
                         Player.SendMessage(p, "Rank needed: " + foundRank.color + foundRank.name);
                         return;
                     }
