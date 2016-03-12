@@ -37,14 +37,14 @@ namespace MCGalaxy {
 
             while (true) {
                 zombieRound = false;
-                amountOfRounds++;
+                RoundsDone++;
                 
                 if (gameStatus == 0) { return; }
                 else if (gameStatus == 1) { DoRound(); if (ChangeLevels) ChangeLevel();}
                 else if (gameStatus == 2) { DoRound(); if (ChangeLevels) ChangeLevel(); gameStatus = 0; return; }
                 else if (gameStatus == 3)
                 {
-                    if (limitRounds == amountOfRounds) { ResetState(); return; }
+                    if (RoundsDone == MaxRounds) { ResetState(); return; }
                     else { DoRound(); if (ChangeLevels) ChangeLevel(); }
                 }
                 else if (gameStatus == 4) { ResetState(); return; }
@@ -54,79 +54,91 @@ namespace MCGalaxy {
         void DoRound()
         {
             if (gameStatus == 0) return;
-    GoBack: Player.GlobalMessage("%4Round Start:%f 2:00");
-            Thread.Sleep(60000); if (!Server.ZombieModeOn) return;
-            Player.GlobalMessage("%4Round Start:%f 1:00");
-            Thread.Sleep(55000); if (!Server.ZombieModeOn) return;
-            Server.s.Log(Convert.ToString(ChangeLevels) + " " + Convert.ToString(Server.ZombieOnlyServer) + " " + Convert.ToString(UseLevelList) + " " + string.Join(",", LevelList.ToArray()));
-            Player.GlobalMessage("%4Round Start:%f 5...");
-            Thread.Sleep(1000); if (!Server.ZombieModeOn) return;
-            Player.GlobalMessage("%4Round Start:%f 4...");
-            Thread.Sleep(1000); if (!Server.ZombieModeOn) return;
-            Player.GlobalMessage("%4Round Start:%f 3...");
-            Thread.Sleep(1000); if (!Server.ZombieModeOn) return;
-            Player.GlobalMessage("%4Round Start:%f 2...");
-            Thread.Sleep(1000); if (!Server.ZombieModeOn) return;
-            Player.GlobalMessage("%4Round Start:%f 1...");
-            Thread.Sleep(1000); if (!Server.ZombieModeOn) return;
-            zombieRound = true;
-            int playerscountminusref = 0; List<Player> players = new List<Player>();
-            
-            Player[] online = PlayerInfo.Online; 
-            foreach (Player p in online) {
-                if (p.referee) {
-                    p.color = p.group.color;
-                } else if (p.level.name == currentLevelName) {
-                    p.color = p.group.color;
-                    players.Add(p);
-                    playerscountminusref++;
-                }
-            }
-            if (playerscountminusref < 2) {
-                Player.GlobalMessage(Colors.red + "ERROR: Need more than 2 players to play");
-                goto GoBack;
-            }
+            List<Player> players = DoRoundCountdown();
 
             theEnd:
             Random random = new Random();
             int firstinfect = random.Next(players.Count());
             Player player = null;
-            if (queZombie)
-                player = PlayerInfo.Find(nextZombie);
-            else
-                player = players[firstinfect];
+            if (queZombie) player = PlayerInfo.Find(nextZombie);
+            else player = players[firstinfect];
 
             if (player.level.name != currentLevelName) goto theEnd;
 
-            Player.GlobalMessage(player.color + player.name + Server.DefaultColor + " started the infection!");
+            Player.GlobalMessage(player.color + player.name + " %Sstarted the infection!");
             player.infected = true;
             player.color = Colors.red;
             Player.GlobalDespawn(player, false);
             Player.GlobalSpawn(player, player.pos[0], player.pos[1], player.pos[2], player.rot[0], player.rot[1], false);
 
             zombieRound = true;
-            int roundMins = random.Next(5, 12);
+            int roundMins = random.Next(5, 8);
             Player.GlobalMessage("The round will last for " + roundMins + " minutes!");
             timer = new System.Timers.Timer(roundMins * 60 * 1000);
             timer.Elapsed += new ElapsedEventHandler(EndRound);
             timer.Enabled = true;
 
-            online = PlayerInfo.Online;
-            foreach (Player p in online)
-            {
-                if(p != player)
+            Player[] online = PlayerInfo.Online;
+            foreach (Player p in online) {
+                if (p != player)
                 alive.Add(p);
             }
 
             infectd.Clear();
-            if (queZombie)
-            infectd.Add(PlayerInfo.Find(nextZombie));
-            else
-            infectd.Add(player);
+            if (queZombie) infectd.Add(PlayerInfo.Find(nextZombie));
+            else infectd.Add(player);
             aliveCount = alive.Count;
-
-            while (aliveCount > 0)
-            {
+            DoCoreGame(players, random);
+            
+            if (gameStatus == 0) {
+                gameStatus = 4; return;
+            } else {
+                HandOutRewards();
+            }
+        }
+        
+        List<Player> DoRoundCountdown() {
+            while (true) {
+                string logMessage = Convert.ToString(ChangeLevels) + " " + Convert.ToString(Server.ZombieOnlyServer) +
+                    " " + Convert.ToString(UseLevelList) + " " + string.Join(",", LevelList.ToArray());
+                Server.s.Log(logMessage);
+                
+                Player.GlobalMessage("%4Round Start:%f 30...");
+                Thread.Sleep(45000); if (!Server.ZombieModeOn) return null;
+                Player.GlobalMessage("%4Round Start:%f 10...");
+                Thread.Sleep(10000); if (!Server.ZombieModeOn) return null;
+                Player.GlobalMessage("%4Round Start:%f 5...");
+                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Player.GlobalMessage("%4Round Start:%f 4...");
+                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Player.GlobalMessage("%4Round Start:%f 3...");
+                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Player.GlobalMessage("%4Round Start:%f 2...");
+                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Player.GlobalMessage("%4Round Start:%f 1...");
+                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                zombieRound = true;
+                int nonRefPlayers = 0; 
+                List<Player> players = new List<Player>();
+                
+                Player[] online = PlayerInfo.Online;
+                foreach (Player p in online) {
+                    if (p.referee) {
+                        p.color = p.group.color;
+                    } else if (p.level.name == currentLevelName) {
+                        p.color = p.group.color;
+                        players.Add(p);
+                        nonRefPlayers++;
+                    }
+                }
+                
+                if (nonRefPlayers >= 2) return players;
+                Player.GlobalMessage(Colors.red + "ERROR: Need 2 or more players to play");
+            }
+        }
+        
+        void DoCoreGame(List<Player> players, Random random) {
+            while (aliveCount > 0) {
                 aliveCount = alive.Count;
                 infectd.ForEach(delegate(Player pKiller)
                 {
@@ -186,26 +198,16 @@ namespace MCGalaxy {
                                 pKiller.playersInfected = pKiller.playersInfected++;
                                 Player.GlobalDespawn(pAlive, false);
                                 Player.GlobalSpawn(pAlive, pAlive.pos[0], pAlive.pos[1], pAlive.pos[2], pAlive.rot[0], pAlive.rot[1], false);
-                                Thread.Sleep(500);
+                                Thread.Sleep(50);
                             }
                         }
                     });
                 });
-                Thread.Sleep(500);
-            }
-            if (gameStatus == 0)
-            {
-                gameStatus = 4;
-                return;
-            }
-            else
-            {
-                HandOutRewards();
+                Thread.Sleep(50);
             }
         }
 
-        public void EndRound(object sender, ElapsedEventArgs e)
-        {
+        public void EndRound(object sender, ElapsedEventArgs e) {
             if (gameStatus == 0) return;
             Player.GlobalMessage("%4Round End:%f 5"); Thread.Sleep(1000);
             Player.GlobalMessage("%4Round End:%f 4"); Thread.Sleep(1000);
@@ -215,8 +217,7 @@ namespace MCGalaxy {
             HandOutRewards();
         }
 
-        public void HandOutRewards()
-        {
+        public void HandOutRewards() {
             zombieRound = false;
             if (gameStatus == 0) return;
             Player.GlobalMessage(Colors.lime + "The game has ended!");

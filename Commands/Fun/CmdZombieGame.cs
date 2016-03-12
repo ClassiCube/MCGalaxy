@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, "There is a one-time Zombie Survival game currently in progress.");
                         return;
                     case 3:
-                        Player.SendMessage(p, "There is a Zombie Survival game currently in progress with a " + Server.zombie.limitRounds + " amount of rounds.");
+                        Player.SendMessage(p, "There is a Zombie Survival game currently in progress with a " + Server.zombie.MaxRounds + " amount of rounds.");
                         return;
                     case 4:
                         Player.SendMessage(p, "There is a Zombie Survival game currently in progress, scheduled to stop after this round.");

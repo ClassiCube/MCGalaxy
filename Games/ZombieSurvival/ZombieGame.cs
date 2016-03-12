@@ -35,10 +35,13 @@ namespace MCGalaxy {
 		}
 	}
 	
-    public sealed partial class ZombieGame
-    {
-        public int amountOfRounds = 0;
-        public int limitRounds = 0;
+    public sealed partial class ZombieGame {
+		/// <summary> The number of rounds that have been played in this game so far. </summary>
+        public int RoundsDone = 0;
+        
+        /// <summary> The maximum number of rounds that can be played before the game ends. </summary>
+        public int MaxRounds = 0;
+        
         public int aliveCount = 0;
         public string currentZombieLevel = "";
         public static System.Timers.Timer timer;
@@ -79,8 +82,8 @@ namespace MCGalaxy {
             gameStatus = status;
             zombieRound = false;
             initialChangeLevel = false;
-            limitRounds = amount + 1;
-            amountOfRounds = 0;
+            MaxRounds = amount + 1;
+            RoundsDone = 0;
             //SET ALL THE VARIABLES?!?
 
              //Start the main Zombie thread
@@ -204,7 +207,7 @@ namespace MCGalaxy {
 
         public void ResetState() {
             gameStatus = 0; 
-            limitRounds = 0; 
+            MaxRounds = 0; 
             initialChangeLevel = false; 
             Server.ZombieModeOn = false; 
             zombieRound = false;
