@@ -34,6 +34,8 @@ namespace MCGalaxy.Util {
         /// <summary> Total number of items in the cache. </summary>
         public volatile int Count;
         
+        public const int TimeDeltaMax = (1 << 13) - 1;
+        
         /// <summary> Appends an item to the cache. </summary>
         public void Add(Level lvl, Player.UndoPos item) {
             DateTime time = Server.StartTime.AddTicks(item.timeDelta * TimeSpan.TicksPerSecond);
@@ -43,7 +45,7 @@ namespace MCGalaxy.Util {
             }
 
             if (lvl.name != Tail.MapName || lvl.Width != Tail.Width || lvl.Height != Tail.Height ||
-                lvl.Length != Tail.Length || Math.Abs((time - Tail.BaseTime).TotalSeconds) > 32767) {
+                lvl.Length != Tail.Length || Math.Abs((time - Tail.BaseTime).TotalSeconds) > TimeDeltaMax) {
                 UndoCacheNode node = UndoCacheNode.Make(lvl, time);
                 Tail.Next = node; node.Prev = Tail;
                 Tail = node;
@@ -95,16 +97,53 @@ namespace MCGalaxy.Util {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct UndoCacheItem {
         public int Index;
-        public byte Type, ExtType;
-        public byte NewType, NewExtType;
-        public short TimeDelta;
+        public byte Type, NewType;     
+        public ushort Flags; // upper 2 bits for 'ext' or 'physics' type, lower 14 bits for time delta.
+        
+        public short TimeDelta {
+        	get {
+        		int delta = Flags & 0x3FFF;
+        		return delta >= 0x2000 ? (short)(delta - 16384) : (short)delta;
+        	}
+        }
+        
+        public void GetExtBlock(out byte type, out byte extType) {
+        	if ((Flags & (1 << 14)) != 0) {
+        		type = Block.custom_block;
+        		extType = Type;
+        	} else {
+        		type = Type;
+        		extType = 0;
+        	}
+        }
+        
+        public void GetNewExtBlock(out byte type, out byte extType) {
+        	if ((Flags & (1 << 15)) != 0) {
+        		type = Block.custom_block;
+        		extType = NewType;
+        	} else {
+        		type = NewType;
+        		extType = 0;
+        	}
+        }
         
         public static UndoCacheItem Make(UndoCacheNode node, short timeDelta, ref Player.UndoPos pos) {
             UndoCacheItem item = default(UndoCacheItem);
             item.Index = pos.x + node.Width * (pos.z + node.Length * pos.y);
-            item.Type = pos.type; item.ExtType = pos.extType;
-            item.NewType = pos.newtype; item.NewExtType = pos.newExtType;
-            item.TimeDelta = timeDelta;
+            item.Flags = (ushort)(timeDelta & 0x3FFF);
+            
+            if (pos.type == Block.custom_block) {
+            	item.Type = pos.extType;
+            	item.Flags |= (ushort)(1 << 14);
+            } else {
+            	item.Type = pos.type;
+            }           
+            if (pos.newtype == Block.custom_block) {
+            	item.NewType = pos.newExtType;
+            	item.Flags |= (ushort)(1 << 15);
+            } else {
+            	item.NewType = pos.newtype;
+            }
             return item;
         }
     }

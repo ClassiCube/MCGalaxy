@@ -77,12 +77,14 @@ namespace MCGalaxy.Commands {
                 for (int i = items.Count - 1; i >= 0; i--) {
                     UndoCacheItem item = items[i];
                     ushort x, y, z;
-                    node.Unpack(item.Index, out x, out y, out z);                    
+                    node.Unpack(item.Index, out x, out y, out z);
                     DateTime time = node.BaseTime.AddSeconds(item.TimeDelta + seconds);
                     if (time < DateTime.UtcNow) return;
                     
                     byte b = lvl.GetTile(x, y, z);
-                    if (b == item.NewType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
+                    byte newTile = 0, newExtTile = 0;
+                    item.GetNewExtBlock(out newTile, out newExtTile);
+                    if (b == newTile || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                         if (b == Block.air || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
                             p.SendBlockchange(x, y, z, Block.red);
                         else

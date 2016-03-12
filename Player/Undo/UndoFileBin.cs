@@ -70,13 +70,18 @@ namespace MCGalaxy.Util {
                             WriteChunkEntries(w, last.Entries, entriesPos);
                             last = WriteEmptyChunk(w, node.MapName, time, ref entriesPos);
                         }
+                        
                         ushort x, y, z;
                         node.Unpack(uP.Index, out x, out y, out z);
+                        byte tile = 0, extTile = 0;
+                        uP.GetExtBlock(out tile, out extTile);
+                        byte newTile = 0, newExtTile = 0;
+                        uP.GetNewExtBlock(out newTile, out newExtTile);
                         
                         w.Write((ushort)timeDiff);
                         w.Write(x); w.Write(y); w.Write(z);
-                        w.Write(uP.Type); w.Write(uP.ExtType);
-                        w.Write(uP.NewType); w.Write(uP.NewExtType);
+                        w.Write(tile); w.Write(extTile);
+                        w.Write(newTile); w.Write(newExtTile);
                         last.Entries++;
                     }
                     if (last.Entries > 0)
@@ -152,7 +157,7 @@ namespace MCGalaxy.Util {
                             Pos.newtype = oldType; Pos.newExtType = oldExtType;
                             Pos.extType = newExtType; Pos.timeDelta = timeDelta;
                             if (lvl.DoBlockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, Pos.newExtType)) {
-                            	buffer.Add(lvl.PosToInt(Pos.x, Pos.y, Pos.z), Pos.newtype, Pos.newExtType);
+                                buffer.Add(lvl.PosToInt(Pos.x, Pos.y, Pos.z), Pos.newtype, Pos.newExtType);
                                 buffer.CheckIfSend(false);
                             }
                             if (p != null) p.RedoBuffer.Add(lvl, Pos);

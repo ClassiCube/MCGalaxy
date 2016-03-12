@@ -49,13 +49,12 @@ namespace MCGalaxy.Commands {
                 for (int i = items.Count - 1; i >= 0; i--) {
                     UndoCacheItem item = items[i];                    
                     ushort x, y, z;
-                    node.Unpack(item.Index, out x, out y, out z);
+                    node.Unpack(item.Index, out x, out y, out z);                    
+                    byte tile, extTile;
+                    item.GetExtBlock(out tile, out extTile);
                     
-                    byte type = lvl.GetTile(x, y, z), extType = 0;
-                    if (type == Block.custom_block)
-                        extType = lvl.GetExtTile(x, y, z);
-                    if (lvl.DoBlockchange(p, x, y, z, item.Type, item.ExtType)) {
-                        buffer.Add(lvl.PosToInt(x, y, z), item.Type, item.ExtType);
+                    if (lvl.DoBlockchange(p, x, y, z, tile, extTile)) {
+                        buffer.Add(lvl.PosToInt(x, y, z), tile, extTile);
                         buffer.CheckIfSend(false);
                     }
                 }

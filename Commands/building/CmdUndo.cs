@@ -177,16 +177,21 @@ namespace MCGalaxy.Commands
                     if (time < DateTime.UtcNow) { buffer.CheckIfSend(true); return; }
                     
                     byte b = lvl.GetTile(x, y, z);
-                    if (b == item.NewType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
+                    byte newTile = 0, newExtTile = 0;
+                    item.GetNewExtBlock(out newTile, out newExtTile);
+                    if (b == newTile || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                         Player.UndoPos uP = default(Player.UndoPos);
-                        uP.newtype = item.Type; uP.newExtType = item.ExtType;
                         byte extType = 0;
-                        if (b == Block.custom_block) extType = lvl.GetExtTile(x, y, z);                        
-                        if (lvl.DoBlockchange(p, x, y, z, item.Type, item.ExtType)) {
-                            buffer.Add(lvl.PosToInt(x, y, z), item.Type, item.ExtType);
+                        if (b == Block.custom_block) extType = lvl.GetExtTile(x, y, z);
+                        byte tile = 0, extTile = 0;
+                        item.GetExtBlock(out tile, out extTile);
+                    
+                        if (lvl.DoBlockchange(p, x, y, z, tile, extTile)) {
+                            buffer.Add(lvl.PosToInt(x, y, z), tile, extTile);
                             buffer.CheckIfSend(false);
                         }
                         
+                        uP.newtype = tile; uP.newExtType = extTile;
                         uP.type = b; uP.extType = extType;
                         uP.x = x; uP.y = y; uP.z = z;
                         uP.mapName = node.MapName;
