@@ -54,7 +54,6 @@ namespace MCGalaxy {
         public bool RoundInProgress = false;
         
         public int aliveCount = 0;
-        public string currentZombieLevel = "";
         public static System.Timers.Timer timer;
         public bool initialChangeLevel = false;
         public string lastLevelName = "", currentLevelName = "";
@@ -73,7 +72,7 @@ namespace MCGalaxy {
         internal bool ChangeLevels = true, UseLevelList = false;
         
         internal List<string> LevelList = new List<string>();
-        string lastLevelVote1 = "", lastLevelVote2 = "";
+        string lastLevel1 = "", lastLevel2 = "";
 
         int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;
         
@@ -148,18 +147,17 @@ namespace MCGalaxy {
             aliveCount = alive.Count;
         }
 
-        public void ChangeLevel(string LevelName, bool changeMainLevel)
-        {
-            string next = LevelName;
+        void ChangeLevel(string next) {
             currentLevelName = next;
             queLevel = false;
             nextLevel = "";
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
+            
             Player.GlobalMessage("The next map has been chosen - " + Colors.red + next.ToLower());
             Player.GlobalMessage("Please wait while you are transfered.");
             string oldLevel = Server.mainLevel.name;
-            if (changeMainLevel)
-                Server.mainLevel = LevelInfo.Find(next.ToLower());
+            if (Server.ZombieOnlyServer)
+                Server.mainLevel = LevelInfo.Find(next);
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
