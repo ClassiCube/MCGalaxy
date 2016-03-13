@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "There is already a larger active bounty for " + who.name + "."); return;
             }
             // TODO here - actually announce the bounty and place it
-            // "Looks like someone wants the brain of <name>! An bounty for x <money> was placed on them.
+            // "Looks like someone really wants the brains of <name>! An bounty for x <money> was placed on them.
             // "<name> is popular! The bounty on them was increased from <old> to <new> money.
         }
         
