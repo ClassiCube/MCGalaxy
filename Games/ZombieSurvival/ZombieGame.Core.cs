@@ -190,19 +190,11 @@ namespace MCGalaxy {
                                 }
                                 lastPlayerToInfect = pKiller.name;
                                 pKiller.infectThisRound++;
-                                int cazzar = random.Next(0, infectMessages.Length);
-                                if (infectMessages2[cazzar] == "")
-                                {
-                                    Player.GlobalMessage(Colors.red + pKiller.name + Colors.yellow + infectMessages[cazzar] + Colors.red + pAlive.name);
-                                }
-                                else if (infectMessages[cazzar] == "")
-                                {
-                                    Player.GlobalMessage(Colors.red + pAlive.name + Colors.yellow + infectMessages2[cazzar]);
-                                }
-                                else
-                                {
-                                    Player.GlobalMessage(Colors.red + pKiller.name + Colors.yellow + infectMessages[cazzar] + Colors.red + pAlive.name + Colors.yellow + infectMessages2[cazzar]);
-                                }
+                                Player.GlobalMessage(String.Format(
+                                    messages[random.Next(messages.Length)], 
+                                    Colors.red + pKiller.DisplayName + Colors.yellow,
+                                    Colors.red + pAlive.DisplayName + Colors.yellow));
+
                                 pAlive.color = Colors.red;
                                 pKiller.playersInfected = pKiller.playersInfected++;
                                 Player.GlobalDespawn(pAlive, false);
@@ -250,7 +242,7 @@ namespace MCGalaxy {
                         if (winners.level.name == currentLevelName)
                         {
                             winners.color = winners.group.color;
-                            playersString += winners.group.color + winners.name + Colors.white + ", ";
+                            playersString += winners.group.color + winners.DisplayName + Colors.white + ", ";
                         }
                     }
                 }
@@ -265,7 +257,7 @@ namespace MCGalaxy {
                     if (winners.level.name == currentLevelName)
                     {
                         winners.color = winners.group.color;
-                        playersString += winners.group.color + winners.name + Colors.white + ", ";
+                        playersString += winners.group.color + winners.DisplayName + Colors.white + ", ";
                     }
                 });
             }

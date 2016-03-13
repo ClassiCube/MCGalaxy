@@ -60,9 +60,12 @@ namespace MCGalaxy {
         public string currentLevelName = "";
         public static List<Player> alive = new List<Player>();
         public static List<Player> infectd = new List<Player>();
-        string[] infectMessages = new string[] { " WIKIWOO'D ", " stuck their teeth into ", " licked ", " danubed ", " made ", " tripped ", " made some zombie babies with ", " made ", " tweeted ", " made ", " infected ", " iDotted ", "", "transplanted " };
-        string[] infectMessages2 = new string[] { "", "", "'s brain", "", " meet their maker", "", "", " see the dark side", "", " open source", "", "", " got nommed on", "'s living brain" };
-
+        static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}", 
+            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}", 
+            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}", 
+            "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
+            "{0} transplanted {1}'s living brain" };
+        
         internal bool noRespawn = true, noLevelSaving = true, noPillaring = true;
         internal string ZombieName = "";
         internal bool queLevel = false, queZombie = false;
