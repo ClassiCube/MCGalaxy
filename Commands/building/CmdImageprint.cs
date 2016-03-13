@@ -37,8 +37,9 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (!Directory.Exists("extra/images/")) { Directory.CreateDirectory("extra/images/"); }
-            layer = false;
-            popType = 1;
+            bool layer = false;
+            byte popType = 1;
+            string bitmapLoc = null;
             if (message == "") { Help(p); return; }
             if (message.IndexOf(' ') != -1)     //Yay parameters
             {
@@ -67,8 +68,7 @@ namespace MCGalaxy.Commands
 						web.DownloadFile("http://www.imgur.com/" + message, "extra/images/tempImage_" + p.name + ".bmp");
 					}
                     Player.SendMessage(p, "Download complete.");
-                    bitmaplocation = "tempImage_" + p.name;
-                    message = bitmaplocation;   
+                    bitmapLoc = "tempImage_" + p.name;
                 }
                 catch { }
             }
@@ -86,38 +86,39 @@ namespace MCGalaxy.Commands
 						web.DownloadFile(message, "extra/images/tempImage_" + p.name + ".bmp");
 					}
                     Player.SendMessage(p, "Download complete.");
-                    bitmaplocation = "tempImage_" + p.name;
+                    bitmapLoc = "tempImage_" + p.name;
                 }
                 catch { }
             }
             else
             {
-                bitmaplocation = message;
+                bitmapLoc = message;
             }
 
-            if (!File.Exists("extra/images/" + bitmaplocation + ".bmp")) { Player.SendMessage(p, "The URL entered was invalid!"); return; }
+            if (!File.Exists("extra/images/" + bitmapLoc + ".bmp")) { Player.SendMessage(p, "The URL entered was invalid!"); return; }
 
-            CatchPos cpos;
-
-            cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
+            CatchPos cpos = default(CatchPos);
+            cpos.layer = layer;
+            cpos.bitmapLoc = bitmapLoc;
+            cpos.popType = popType;
+            p.blockchangeObject = cpos;
             Player.SendMessage(p, "Place two blocks to determine direction.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
+        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
+        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             RevertAndClearState(p, x, y, z);
-            Bitmap myBitmap = new Bitmap("extra/images/" + bitmaplocation + ".bmp"); 
-            myBitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            
             CatchPos cpos = (CatchPos)p.blockchangeObject;
+            Bitmap myBitmap = new Bitmap("extra/images/" + cpos.bitmapLoc + ".bmp"); 
+            myBitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
             if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
 
@@ -138,6 +139,8 @@ namespace MCGalaxy.Commands
                     direction = 3;
                 }
             }
+            byte popType = cpos.popType;
+            bool layer = cpos.layer;
             if (layer)
             {
                 if (popType == 1) popType = 2;
@@ -289,7 +292,8 @@ namespace MCGalaxy.Commands
                         p.level.UpdateBlock(p, colblock.x, colblock.y, colblock.z, colblock.type, 0);
                     }
                 }
-                if (bitmaplocation == "tempImage_" + p.name) File.Delete("extra/images/tempImage_" + p.name + ".bmp");
+                if (cpos.bitmapLoc == "tempImage_" + p.name) 
+                	File.Delete("extra/images/tempImage_" + p.name + ".bmp");
 
                 string printType;
                 switch (popType)
@@ -308,8 +312,8 @@ namespace MCGalaxy.Commands
             printThread.Name = "MCG_ImagePrint";
             printThread.Start();
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/imageprint <switch> <localfile> - Print local file in extra/images/ folder.  Must be type .bmp, type filename without extension.");
             Player.SendMessage(p, "/imageprint <switch> <imgurfile.extension> - Print IMGUR stored file.  Example: /i piCCm.gif will print www.imgur.com/piCCm.gif. Case-sensitive");
             Player.SendMessage(p, "/imageprint <switch> <webfile> - Print web file in format domain.com/folder/image.jpg. Does not need http:// or www.");
@@ -318,11 +322,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Use switch (&flayer" + Server.DefaultColor + ") or (&fl" + Server.DefaultColor + ") to print horizontally.");
         }
 
-        struct CatchPos { public ushort x, y, z; }
-
-        string bitmaplocation;
-        bool layer = false;
-        byte popType = 1;
+        struct CatchPos { public bool layer; public byte popType; public string bitmapLoc; public ushort x, y, z; }
     }
 }
 

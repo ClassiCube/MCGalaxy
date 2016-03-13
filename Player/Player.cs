@@ -103,6 +103,7 @@ namespace MCGalaxy {
         public bool hasreadrules = false;
         public bool canusereview = true;
         public float ReachDistance = 5;
+        public bool hackrank;
         
         public string FullName { get { return color + prefix + DisplayName; } }
 

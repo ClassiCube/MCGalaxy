@@ -30,11 +30,10 @@ namespace MCGalaxy.Commands
 		public override string type { get { return CommandTypes.Building; } }
 		public override bool museumUsable { get { return true; } }
 		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-		public int allowoffset = 0;
 		public CmdCopy() { }
 
 		public override void Use(Player p, string message) {
-			allowoffset = message.IndexOf('@');
+			int allowoffset = message.IndexOf('@');
 			if (allowoffset != -1)
 				message = message.Replace("@ ", "").Replace("@", "");
 			
@@ -68,13 +67,14 @@ namespace MCGalaxy.Commands
 					Player.SendMessage(p, name);
 				}
 			} else {
-				HandleOther(p, opt, parts);
+				HandleOther(p, opt, parts, allowoffset);
 			}
 		}
 		
-		void HandleOther(Player p, string opt, string[] parts) {
-			CatchPos cpos = default(CatchPos);;
+		void HandleOther(Player p, string opt, string[] parts, int allowoffset) {
+			CatchPos cpos = default(CatchPos);
 			p.copyoffset[0] = 0; p.copyoffset[1] = 0; p.copyoffset[2] = 0;
+			cpos.allowoffset = allowoffset;
 			
 			if (opt == "cut") {
 				cpos.type = 1;
@@ -93,9 +93,7 @@ namespace MCGalaxy.Commands
 		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos bp = (CatchPos)p.blockchangeObject;
-			p.copystart[0] = x;
-			p.copystart[1] = y;
-			p.copystart[2] = z;
+			p.copystart[0] = x; p.copystart[1] = y; p.copystart[2] = z;
 
 			bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
@@ -148,7 +146,7 @@ namespace MCGalaxy.Commands
 			}
 
 			Player.SendMessage(p, (state.Volume - totalAir) + " blocks copied.");
-			if (allowoffset != -1) {
+			if (cpos.allowoffset != -1) {
 				Player.SendMessage(p, "Place a block to determine where to paste from");
 				p.Blockchange += new Player.BlockchangeEventHandler(Blockchange3);
 			}
@@ -208,7 +206,7 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "Loaded copy as " + file);
 		}
 		
-		struct CatchPos { public ushort x, y, z; public int type; }
+		struct CatchPos { public ushort x, y, z; public int type; public int allowoffset; }
 		
 		public override void Help(Player p) {
 			Player.SendMessage(p, "/copy - Copies the blocks in an area.");
