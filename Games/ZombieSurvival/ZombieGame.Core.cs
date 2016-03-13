@@ -31,7 +31,7 @@ namespace MCGalaxy {
         void MainLoop() {
             if (Status == ZombieGameStatus.NotStarted) return;
             if (!initialChangeLevel) {
-                ChangeLevel();
+                ChooseNextLevel();
                 initialChangeLevel = true;
             }
 
@@ -43,7 +43,7 @@ namespace MCGalaxy {
                     return;
                 } else if (Status == ZombieGameStatus.InfiniteRounds) {
                     DoRound();
-                    if (ChangeLevels) ChangeLevel();
+                    if (ChangeLevels) ChooseNextLevel();
                 } else if (Status == ZombieGameStatus.SingleRound) {
                     DoRound();
                     ResetState(); return;
@@ -52,7 +52,7 @@ namespace MCGalaxy {
                         ResetState(); return;
                     } else {
                         DoRound();
-                        if (ChangeLevels) ChangeLevel();
+                        if (ChangeLevels) ChooseNextLevel();
                     }
                 } else if (Status == ZombieGameStatus.LastRound) {
                     ResetState(); return;
@@ -286,8 +286,8 @@ namespace MCGalaxy {
                 playersString += p.group.color + p.DisplayName + Colors.white + ", ";
             }
         }
-        
-        public void ChangeLevel()
+		
+        void ChooseNextLevel()
         {
             if (queLevel)
             {
@@ -297,40 +297,19 @@ namespace MCGalaxy {
             {
                 if (ChangeLevels)
                 {
-                    ArrayList al = new ArrayList();
-                    DirectoryInfo di = new DirectoryInfo("levels/");
-                    FileInfo[] fi = di.GetFiles("*.lvl");
-                    foreach (FileInfo fil in fi)
-                    {
-                        al.Add(fil.Name.Split('.')[0]);
-                    }
+                	List<string> levels = GetCandidateLevels();
+                    if (levels.Count <= 2 && !UseLevelList) { Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return; }
 
-                    if (al.Count <= 2 && !UseLevelList) { Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return; }
+                    if (levels.Count < 2 && UseLevelList) { Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return; }
 
-                    if (LevelList.Count < 2 && UseLevelList) { Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return; }
-
-                    string selectedLevel1 = "";
-                    string selectedLevel2 = "";
+                    string selectedLevel1 = "", selectedLevel2 = "";
+                    Random r = new Random();
 
                 LevelChoice:
-                    Random r = new Random();
-                    int x = 0;
-                    int x2 = 1;
-                    string level = ""; string level2 = "";
-                    if (!UseLevelList)
-                    {
-                        x = r.Next(0, al.Count);
-                        x2 = r.Next(0, al.Count);
-                        level = al[x].ToString();
-                        level2 = al[x2].ToString();
-                    }
-                    else
-                    {
-                        x = r.Next(0, LevelList.Count());
-                        x2 = r.Next(0, LevelList.Count());
-                        level = LevelList[x].ToString();
-                        level2 = LevelList[x2].ToString();
-                    }
+                    int x = 0, x2 = 1;
+                    string level = "", level2 = "";
+                    level = levels[r.Next(0, levels.Count)];
+                    level2 = levels[r.Next(0, levels.Count)];
                     Level current = Server.mainLevel;
 
                     if (lastLevelVote1 == level || lastLevelVote2 == level2 || lastLevelVote1 == level2 || lastLevelVote2 == level || current == LevelInfo.Find(level) || currentZombieLevel == level || current == LevelInfo.Find(level2) || currentZombieLevel == level2)
@@ -358,33 +337,34 @@ namespace MCGalaxy {
                     if (Status == ZombieGameStatus.NotStarted || Status == ZombieGameStatus.LastRound)
                         return;
 
-                    if (Level1Vote >= Level2Vote)
-                    {
-                        if (Level3Vote > Level1Vote && Level3Vote > Level2Vote)
-                        {
-                            r = new Random();
-                            int x3 = r.Next(0, al.Count);
-                            ChangeLevel(al[x3].ToString(), Server.ZombieOnlyServer);
+                    if (Level1Vote >= Level2Vote) {
+                        if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
+                            ChangeLevel(levels[r.Next(0, levels.Count)], Server.ZombieOnlyServer);
                         }
                         ChangeLevel(selectedLevel1, Server.ZombieOnlyServer);
-                    }
-                    else
-                    {
-                        if (Level3Vote > Level1Vote && Level3Vote > Level2Vote)
-                        {
-                            r = new Random();
-                            int x4 = r.Next(0, al.Count);
-                            ChangeLevel(al[x4].ToString(), Server.ZombieOnlyServer);
+                    } else {
+                        if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
+                            ChangeLevel(levels[r.Next(0, levels.Count)], Server.ZombieOnlyServer);
                         }
                         ChangeLevel(selectedLevel2, Server.ZombieOnlyServer);
                     }
                     Player[] online = PlayerInfo.Online.Items;
-                    foreach (Player winners in online) {
-                        winners.voted = false;
-                    }
+                    foreach (Player pl in online)
+                        pl.voted = false;
                 }
             }
             catch { }
         }
+        
+        List<string> GetCandidateLevels() {
+			if (UseLevelList) return LevelList;
+			
+			List<string> maps = new List<string>();
+			DirectoryInfo di = new DirectoryInfo("levels/");
+            FileInfo[] fi = di.GetFiles("*.lvl");
+            foreach (FileInfo fil in fi)
+            	maps.Add(fil.Name.Split('.')[0]);
+            return maps;
+		}
     }
 }

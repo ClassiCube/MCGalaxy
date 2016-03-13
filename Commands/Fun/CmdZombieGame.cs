@@ -102,6 +102,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
+            Player.SendMessage(p, "/zg status - shows the current status of the Zombie Survival game.");
             Player.SendMessage(p, "/zg start 0 - Starts a Zombie Survival game for an unlimited amount of rounds.");
             Player.SendMessage(p, "/zg start [x] - Starts a Zombie Survival game for [x] amount of rounds.");
             Player.SendMessage(p, "/zg stop - Stops the Zombie Survival game after the round has finished.");

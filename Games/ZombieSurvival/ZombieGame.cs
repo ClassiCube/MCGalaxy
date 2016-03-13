@@ -25,21 +25,21 @@ using System.Threading;
 using System.Timers;
 
 namespace MCGalaxy {
-	
-	public class BountyData {
-		public Player Origin;
-		public int Amount;
-		
-		public BountyData(Player origin, int amount) {
-			Origin = origin; Amount = amount;
-		}
-	}
-	
-	public enum ZombieGameStatus { NotStarted, InfiniteRounds, SingleRound, VariableRounds, LastRound }
-	
+    
+    public class BountyData {
+        public Player Origin;
+        public int Amount;
+        
+        public BountyData(Player origin, int amount) {
+            Origin = origin; Amount = amount;
+        }
+    }
+    
+    public enum ZombieGameStatus { NotStarted, InfiniteRounds, SingleRound, VariableRounds, LastRound }
+    
     public sealed partial class ZombieGame {
-		
-		/// <summary> The number of rounds that have been played in this game so far. </summary>
+        
+        /// <summary> The number of rounds that have been played in this game so far. </summary>
         public int RoundsDone = 0;
         
         /// <summary> The maximum number of rounds that can be played before the game ends. </summary>
@@ -57,7 +57,7 @@ namespace MCGalaxy {
         public string currentZombieLevel = "";
         public static System.Timers.Timer timer;
         public bool initialChangeLevel = false;
-        public string currentLevelName = "";
+        public string lastLevelName = "", currentLevelName = "";
         public static List<Player> alive = new List<Player>();
         public static List<Player> infectd = new List<Player>();
         static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}", 
@@ -158,21 +158,19 @@ namespace MCGalaxy {
             Player.GlobalMessage("The next map has been chosen - " + Colors.red + next.ToLower());
             Player.GlobalMessage("Please wait while you are transfered.");
             string oldLevel = Server.mainLevel.name;
-            if (changeMainLevel) {
+            if (changeMainLevel)
                 Server.mainLevel = LevelInfo.Find(next.ToLower());
-                Player[] online = PlayerInfo.Online.Items; 
-                foreach (Player player in online) {
-                    if (player.level.name != next && player.level.name == currentLevelName)
-                    {
-                        player.SendMessage("Going to the next map!");
-                        Command.all.Find("goto").Use(player, next);
-                    }
+            
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player pl in online) {
+                if (pl.level.name != next && pl.level.name == lastLevelName) {
+                    pl.SendMessage("Going to the next map!");
+                    Command.all.Find("goto").Use(pl, next);
                 }
-                Command.all.Find("unload").Use(null, oldLevel);
-            } else {
-                Player.GlobalMessage("Type /goto " + next + " to play the next round of Zombie Survival");
             }
-            return;
+            if (lastLevelName != "")
+                Command.all.Find("unload").Use(null, lastLevelName);
+            lastLevelName = next;
         }
 
         public bool IsInZombieGameLevel(Player p) {
