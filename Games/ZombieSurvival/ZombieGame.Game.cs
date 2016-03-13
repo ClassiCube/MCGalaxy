@@ -35,7 +35,7 @@ namespace MCGalaxy {
                     p.SendMessage("You are pillaring! Stop before you get kicked!");
                 }
                 if (p.blocksStacked == 4 ) {
-                    Command.all.Find("kick").Use(null, p.name + " No pillaring allowed!");
+                    p.Kick(" No pillaring allowed!");
                     return true;
                 }
             }

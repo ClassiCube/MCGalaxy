@@ -90,15 +90,24 @@ namespace MCGalaxy.Commands
         }
         
         static void HandleHitbox(Player p, string message, string[] args) {
-            
+            byte precision;
+            if (args.Length == 1) {
+                Player.SendMessage(p, "Hitbox detection is currently &a" + Server.zombie.HitboxPrecision + " %Sunits apart.");
+            } else if (!byte.TryParse(args[1], out precision)) {
+                Player.SendMessage(p, "Hitbox detection must be an integer between 0 and 256.");
+            } else {
+                Server.zombie.HitboxPrecision = precision;
+                Player.SendMessage(p, "Hitbox detection set to &a" + Server.zombie.HitboxPrecision + " %Sunits apart.");
+            }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/zombiegame start - Starts a Zombie Survival game for one round.");
-            Player.SendMessage(p, "/zombiegame start 0 - Starts a Zombie Survival game for an unlimited amount of rounds.");
-            Player.SendMessage(p, "/zombiegame start [x] - Starts a Zombie Survival game for [x] amount of rounds.");
-            Player.SendMessage(p, "/zombiegame stop - Stops the Zombie Survival game after the round has finished.");
-            Player.SendMessage(p, "/zombiegame force - Force stops the Zombie Survival game immediately.");
+            Player.SendMessage(p, "/zg start 0 - Starts a Zombie Survival game for an unlimited amount of rounds.");
+            Player.SendMessage(p, "/zg start [x] - Starts a Zombie Survival game for [x] amount of rounds.");
+            Player.SendMessage(p, "/zg stop - Stops the Zombie Survival game after the round has finished.");
+            Player.SendMessage(p, "/zg force - Force stops the Zombie Survival game immediately.");
+            Player.SendMessage(p, "/zg hitbox [distance] - Sets how far apart players need to be before " +
+                               "they are considered a 'hit' (32 units = 1 block).");
         }
     }
 }
