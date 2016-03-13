@@ -46,7 +46,7 @@ namespace MCGalaxy {
         void DoLocationChecks() {
             while (true) {
                 Thread.Sleep(3);
-                Player[] players = PlayerInfo.Online;
+                Player[] players = PlayerInfo.Online.Items;
                 for (int i = 0; i < players.Length; i++) {
                     try {
                         Player p = players[i];

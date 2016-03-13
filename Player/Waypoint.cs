@@ -136,7 +136,7 @@ namespace MCGalaxy {
         }
 
         public static void Save() {
-			Player[] players = PlayerInfo.Online;
+			Player[] players = PlayerInfo.Online.Items;
             foreach ( Player p in players ) {
                 if ( p.Waypoints.Count >= 1 ) {
                     using ( StreamWriter SW = new StreamWriter("extra/Waypoints/" + p.name + ".save") ) {

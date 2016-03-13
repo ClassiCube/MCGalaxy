@@ -161,7 +161,7 @@ namespace MCGalaxy {
             if (changeMainLevel)
             {
                 Server.mainLevel = LevelInfo.Find(next.ToLower());
-                Player[] online = PlayerInfo.Online; 
+                Player[] online = PlayerInfo.Online.Items; 
                 foreach (Player player in online) {
                     if (player.level.name != next && player.level.name == currentLevelName)
                     {

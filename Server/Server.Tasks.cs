@@ -56,7 +56,7 @@ namespace MCGalaxy {
                     mainLevel.Save();
                     Level.CreateLeveldb(level);
                 }
-                addLevel(mainLevel);
+                LevelInfo.Loaded.Add(mainLevel);
 
                 // fenderrock - Make sure the level does have a physics thread
                 if (mainLevel.physThread == null)

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             bool showInfected = p.aka; p.aka = !p.aka;
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             
             foreach (Player pl in players) {
             	if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.referee) continue;

@@ -405,7 +405,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void ReloadMap(Player p, bool global) {
-        	Player[] players = PlayerInfo.Online;
+        	Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!pl.hasBlockDefs) continue;
                 if (!global && p.level != pl.level) continue;

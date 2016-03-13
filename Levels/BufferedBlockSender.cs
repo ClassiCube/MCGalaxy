@@ -40,7 +40,7 @@ namespace MCGalaxy {
         public void CheckIfSend(bool force) {
             if (count > 0 && (force || count == 256)) {
                 byte[] bulk = null, normal = null, noBlockDefs = null, original = null;
-                Player[] players = PlayerInfo.Online;
+                Player[] players = PlayerInfo.Online.Items;
                 
                 foreach (Player p in players) {
                     if (p.level != level) continue;

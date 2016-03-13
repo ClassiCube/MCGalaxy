@@ -239,7 +239,7 @@ namespace MCGalaxy.Commands
 						}
 
 						bool comeInner = false;
-						Player[] players = PlayerInfo.Online; 
+						Player[] players = PlayerInfo.Online.Items; 
 						foreach (Player pl in players)
 						{
 							if (pl.level == p.level && pl != p)
@@ -311,7 +311,7 @@ namespace MCGalaxy.Commands
 						allBlocks.Add(pos);
 
 						bool comeOut = false;
-						Player[] players = PlayerInfo.Online; 
+						Player[] players = PlayerInfo.Online.Items; 
 						foreach (Player pl in players)
 						{
 							if (pl.level == p.level && pl != p)

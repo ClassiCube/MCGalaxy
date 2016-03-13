@@ -350,8 +350,8 @@ namespace MCGalaxy
         }
         
         public void Start() {
-            PlayerInfo.players = new List<Player>();
-            Player.players = PlayerInfo.players;
+            PlayerInfo.players = PlayerInfo.Online.list;
+            Player.players = PlayerInfo.Online.list;
             StartTime = DateTime.UtcNow;
             StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;
@@ -632,7 +632,7 @@ namespace MCGalaxy
 
         public static void Exit(bool AutoRestart)
         {
-            Player[] players = PlayerInfo.Online; 
+            Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) { p.save(); }
             foreach (Player p in players)
             {
@@ -676,9 +676,10 @@ namespace MCGalaxy
             catch { }
         }
 
+        [Obsolete("Use LevelInfo.Loaded.Add()")]
         public static void addLevel(Level level)
         {
-            levels.Add(level);
+        	LevelInfo.Loaded.Add(level);
         }
 
         public void PlayerListUpdate()

@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands {
         }
         
         void UpdateGlobally(Player p, bool zip) {
-        	Player[] players = PlayerInfo.Online;
+        	Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 bool hasExt = pl.HasCpeExt(CpeExt.EnvMapAppearance) || pl.HasCpeExt(CpeExt.EnvMapAppearance, 2);
                 string url = zip ? pl.level.texturePackUrl : pl.level.terrainUrl;
@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands {
         }
         
         void UpdateLevel(Player p, bool zip) {
-        	Player[] players = PlayerInfo.Online;
+        	Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 bool hasExt = pl.HasCpeExt(CpeExt.EnvMapAppearance) || pl.HasCpeExt(CpeExt.EnvMapAppearance, 2);
                 if (hasExt && pl.level == p.level)

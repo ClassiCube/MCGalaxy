@@ -30,7 +30,7 @@ namespace MCGalaxy.BlockPhysics {
 			ushort x, y, z;
 			lvl.IntToPos(C.b, out x, out y, out z);
 			
-			Player[] players = PlayerInfo.Online; 
+			Player[] players = PlayerInfo.Online.Items; 
 			foreach (Player p in players) {
                 if (p.level == lvl && !p.invincible) {
                     int curDist = Math.Abs((p.pos[0] / 32) - x) +

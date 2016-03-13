@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             if (p == null) { MessageInGameOnly(p); return; }
             if (message.ToLower() == "all")
             {
-                Player[] players = PlayerInfo.Online;
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission) {
                         pl.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);

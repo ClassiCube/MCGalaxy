@@ -177,7 +177,7 @@ namespace MCGalaxy
         }
         
         public void UpdateModels() {
-        	Player[] players = PlayerInfo.Online; 
+        	Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.level == this.level)
                     if (p == this) {

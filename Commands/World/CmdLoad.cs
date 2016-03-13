@@ -49,26 +49,10 @@ namespace MCGalaxy.Commands
 
                 while (Server.levels == null) Thread.Sleep(100); // Do nothing while we wait on the levels list...
 
-                foreach (Level l in Server.levels)
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level l in loaded)
                 {
                     if (l.name == message) { Player.SendMessage(p, message + " is already loaded!"); return; }
-                }
-
-                if (Server.levels.Count == Server.levels.Capacity)
-                {
-                    if (Server.levels.Capacity == 1)
-                    {
-                        Player.SendMessage(p, "You can't load any levels!");
-                    }
-                    else
-                    {
-                        Command.all.Find("unload").Use(p, "empty");
-                        if (Server.levels.Capacity == 1)
-                        {
-                            Player.SendMessage(p, "No maps are empty to unload. Cannot load map.");
-                            return;
-                        }
-                    }
                 }
 
                 if (!LevelInfo.ExistsOffline(message)) {
@@ -122,7 +106,8 @@ namespace MCGalaxy.Commands
                         return;
                     }
 
-                foreach (Level l in Server.levels)
+                loaded = LevelInfo.Loaded.Items;
+                foreach (Level l in loaded)
                 {
                     if (l.name == message)
                     {
@@ -133,9 +118,7 @@ namespace MCGalaxy.Commands
                     }
                 }
 
-                lock (Server.levels) {
-                    Server.addLevel(level);
-                }
+                LevelInfo.Loaded.Add(level);
                 if (p == null || !p.hidden) { 
                 	Player.GlobalMessage("Level \"" + level.name + "\" loaded."); 
                 }

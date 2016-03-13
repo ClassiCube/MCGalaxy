@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands
         {
             if (message == "")
             {
-                foreach (Level l in Server.levels)
+            	Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level l in loaded)
                 {
                     if (l.physics > 0)
                     {

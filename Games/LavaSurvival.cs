@@ -300,7 +300,7 @@ namespace MCGalaxy
                 sendingPlayers = true;
                 try
                 {
-                	Player[] online = PlayerInfo.Online; 
+                	Player[] online = PlayerInfo.Online.Items; 
                 	foreach (Player pl in online) {
                         if (pl.level == oldMap)
                         {
@@ -423,7 +423,7 @@ namespace MCGalaxy
             {
                 if (OnPlayerDeath != null)
                     OnPlayerDeath(p);
-                Player[] online = PlayerInfo.Online; 
+                Player[] online = PlayerInfo.Online.Items; 
                 foreach (Player pl in online) {
                     if (pl != p && HasPlayer(pl))
                         Player.SendMessage(pl, p.color + p.name + " &4ran out of lives, and is out of the round!");

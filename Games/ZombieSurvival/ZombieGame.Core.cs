@@ -84,7 +84,7 @@ namespace MCGalaxy {
             timer.Elapsed += new ElapsedEventHandler(EndRound);
             timer.Enabled = true;
 
-            Player[] online = PlayerInfo.Online;
+            Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
                 if (p != player)
                     alive.Add(p);
@@ -127,7 +127,7 @@ namespace MCGalaxy {
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
                 
-                Player[] online = PlayerInfo.Online;
+                Player[] online = PlayerInfo.Online.Items;
                 foreach (Player p in online) {
                     if (p.referee) {
                         p.color = p.group.color;
@@ -232,7 +232,7 @@ namespace MCGalaxy {
             Player[] online = null;
             
             if (aliveCount == 0) {
-                online = PlayerInfo.Online;
+                online = PlayerInfo.Online.Items;
                 foreach (Player pl in online)
                     ResetPlayer(pl, ref playersString);
             } else {
@@ -240,7 +240,7 @@ namespace MCGalaxy {
             }
             
             Player.GlobalMessage(playersString);
-            online = PlayerInfo.Online;
+            online = PlayerInfo.Online.Items;
             Random rand = new Random();
             foreach (Player pl in online) {
                 int money = 0;
@@ -378,7 +378,7 @@ namespace MCGalaxy {
                         }
                         ChangeLevel(selectedLevel2, Server.ZombieOnlyServer);
                     }
-                    Player[] online = PlayerInfo.Online;
+                    Player[] online = PlayerInfo.Online.Items;
                     foreach (Player winners in online) {
                         winners.voted = false;
                     }

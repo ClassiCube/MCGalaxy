@@ -47,7 +47,7 @@ namespace MCGalaxy {
         public List<string> listignored = new List<string>();
         public List<string> mapgroups = new List<string>();
         public static int totalMySQLFailed = 0;
-        public static byte number { get { return (byte)PlayerInfo.Online.Length; } }
+        public static byte number { get { return (byte)PlayerInfo.Online.Count; } }
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
         public static string lastMSG = "";
@@ -418,7 +418,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type, byte extType) {
-        	Player[] players = PlayerInfo.Online; 
+        	Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) { 
                 if (p.level == level) p.SendBlockchange(x, y, z, type, extType); 
             }
@@ -449,7 +449,7 @@ namespace MCGalaxy {
                 message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             }
             
-            Player[] players = PlayerInfo.Online; 
+            Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.level.worldChat && p.Chatroom == null) {
                     if (from != null && p.listignored.Contains(from.name)) continue;
@@ -471,7 +471,7 @@ namespace MCGalaxy {
             else
                 message = message.Replace("%G", Server.GlobalChatColor);
             
-            Player[] players = PlayerInfo.Online; 
+            Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.ignoreAll || (global && p.ignoreGlobalChat)) continue;
                 
@@ -482,7 +482,7 @@ namespace MCGalaxy {
         
         public static void GlobalSpawn(Player from, ushort x, ushort y, ushort z, byte rotx, byte roty, bool self, string possession = "")
         {
-        	Player[] players = PlayerInfo.Online; 
+        	Player[] players = PlayerInfo.Online.Items; 
         	foreach (Player p in players) {
                 if (p.Loading && p != from) continue;
                 if (p.level != from.level || (from.hidden && !self)) continue;
@@ -511,7 +511,7 @@ namespace MCGalaxy {
             }
         }
         public static void GlobalDespawn(Player from, bool self) {
-        	Player[] players = PlayerInfo.Online; 
+        	Player[] players = PlayerInfo.Online.Items; 
         	foreach (Player p in players) {
                 if ( p.level != from.level || ( from.hidden && !self ) ) continue;
                 if ( p != from ) { p.SendDespawn(from.id); }
@@ -533,7 +533,7 @@ namespace MCGalaxy {
         }
 
         public static void GlobalUpdate() { 
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (!p.hidden) p.UpdatePosition();
             }
@@ -618,7 +618,7 @@ namespace MCGalaxy {
                 	if (!hidden) {
                 		string leavem = "&c- " + color + prefix + DisplayName + " %S" + discMsg;
                 		if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
-                			Player[] players = PlayerInfo.Online; 
+                			Player[] players = PlayerInfo.Online.Items; 
                 			foreach (Player pl in players) { Player.SendMessage(pl, leavem); }
                 		}
                 	}
@@ -632,7 +632,7 @@ namespace MCGalaxy {
                 try { save(); }
                 catch ( Exception e ) { Server.ErrorLog(e); }
 
-                PlayerInfo.Remove(this);
+                PlayerInfo.Online.Remove(this);
                 Server.s.PlayerListUpdate();
                 if (name != null)
                 	left[name.ToLower()] = ip;

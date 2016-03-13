@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
             } else if (cmd == "ZONE") {
                 HandleZoneCommand(p, arg, arg2);
             } else if (cmd == "KICKALL") {
-            	Player[] players = PlayerInfo.Online;
+            	Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level == p.level && pl.name != p.name)
                         Command.all.Find("goto").Use(pl, Server.mainLevel.name);

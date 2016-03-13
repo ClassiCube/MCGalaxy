@@ -131,7 +131,7 @@ namespace MCGalaxy
             if (Group.Find(Server.defaultRank) != null) standard = Group.Find(Server.defaultRank);
             else standard = Group.findPerm(LevelPermission.Guest);
 
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players)
                 pl.group = GroupList.Find(g => g.name == pl.group.name);
             if (OnGroupLoad != null)

@@ -35,10 +35,10 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player.SendMessage(p, "This server's name is &b" + Server.name + Server.DefaultColor + ".");
+                Player.SendMessage(p, "This server's name is &b" + Server.name + "%S.");
                 Player.SendMessage(p, "There are currently " + Player.number + " players on this server");
-                Player.SendMessage(p, "This server currently has $banned people that are &8banned" + Server.DefaultColor + ".");
-                Player.SendMessage(p, "This server currently has " + Server.levels.Count + " levels loaded.");
+                Player.SendMessage(p, "This server currently has $banned people that are &8banned%S.");
+                Player.SendMessage(p, "This server currently has " + LevelInfo.Loaded.Count + " levels loaded.");
                 Player.SendMessage(p, "This server's currency is: " + Server.moneys);
                 Player.SendMessage(p, "This server runs on &bMCGalaxy" + Server.DefaultColor + ", which is based on &bMCLawl" + Server.DefaultColor + ".");
                 Player.SendMessage(p, "This server's version: &a" + Server.VersionString);

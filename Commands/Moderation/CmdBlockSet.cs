@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
 
             Block.BlockList[foundBlock].lowestRank = newPerm;
             Block.SaveBlocks(Block.BlockList);
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!pl.HasCpeExt(CpeExt.BlockPermissions)) continue;
                 

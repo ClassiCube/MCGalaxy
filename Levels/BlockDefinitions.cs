@@ -134,14 +134,15 @@ namespace MCGalaxy {
             byte id = def.BlockID;
             bool global = defs == GlobalDefs; 
             if (global) {
-                foreach (Level lvl in Server.levels) {
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[id] == null)
                         lvl.CustomBlockDefs[id] = def;
                 }
             }
             defs[id] = def;
             
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
                 if (!pl.hasBlockDefs) continue;
@@ -164,14 +165,15 @@ namespace MCGalaxy {
             byte id = def.BlockID;
             bool global = defs == GlobalDefs;
             if (global) {
-                foreach (Level lvl in Server.levels) {
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[id] == GlobalDefs[id])
                         lvl.CustomBlockDefs[id] = null;
                 }
             }
             defs[id] = null;
             
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
                 if (global && pl.level.CustomBlockDefs[id] != null) continue;

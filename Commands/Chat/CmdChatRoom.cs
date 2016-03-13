@@ -142,7 +142,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (!canDeleteForce) {
-            	Player[] players = PlayerInfo.Online; 
+            	Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player pl in players) {
                     if (pl != p && pl.Chatroom == room) {
                         Player.SendMessage(p, "Sorry, someone else is in the chatroom");
@@ -156,7 +156,7 @@ namespace MCGalaxy.Commands {
                 HandleLeave(p);
             Server.Chatrooms.Remove(room);
             
-            Player[] online = PlayerInfo.Online;
+            Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 if (pl.Chatroom == room) {
                     pl.Chatroom = null;
@@ -279,7 +279,7 @@ namespace MCGalaxy.Commands {
             string room = parts[0];
             if (Server.Chatrooms.Contains(room)) {
                 Player.SendMessage(p, "Players in room '" + room + "' :");
-                Player[] players = PlayerInfo.Online;
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.Chatroom == room)
                         Player.SendMessage(p, pl.color + pl.name);

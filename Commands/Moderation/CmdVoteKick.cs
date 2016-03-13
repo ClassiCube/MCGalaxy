@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
                 int votesYes = 0;
                 int votesNo = 0;
 
-                Player[] players = PlayerInfo.Online; 
+                Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player pl in players) {
                     // Tally the votes
                     if (pl.voteKickChoice == VoteKickChoice.Yes) votesYes++;

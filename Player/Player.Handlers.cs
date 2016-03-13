@@ -315,13 +315,13 @@ namespace MCGalaxy {
                 if (!VIP.Find(this))
                 {
                     // Check to see how many guests we have
-                    Player[] online = PlayerInfo.Online;
+                    Player[] online = PlayerInfo.Online.Items;
                     if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Kick("Server full!"); return; }
                     // Code for limiting no. of guests
                     if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Guest))
                     {
                         // Check to see how many guests we have
-                        online = PlayerInfo.Online;
+                        online = PlayerInfo.Online.Items;
                         int currentNumOfGuests = online.Count(pl => pl.group.Permission <= LevelPermission.Guest);
                         if (currentNumOfGuests >= Server.maxGuests)
                         {
@@ -336,7 +336,7 @@ namespace MCGalaxy {
 
                 if (version != Server.version) { LeaveServer("Wrong version!", "Wrong version!", true); return; }
                 
-                Player[] players = PlayerInfo.Online;
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player p in players) {
                     if (p.name == name)  {
                         if (Server.verify) {
@@ -425,7 +425,7 @@ namespace MCGalaxy {
                 if (disconnected) return;
                 loggedIn = true;
 
-                PlayerInfo.Add(this);
+                PlayerInfo.Online.Add(this);
                 connections.Remove(this);
                 RemoveFromPending();
 
@@ -489,7 +489,7 @@ namespace MCGalaxy {
             string joinm = "&a+ " + this.FullName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
             if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
                 if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
-            		Player[] players = PlayerInfo.Online; 
+            		Player[] players = PlayerInfo.Online.Items; 
             		foreach (Player pl in players) { Player.SendMessage(pl, joinm); }
                 }
             }
@@ -561,7 +561,7 @@ namespace MCGalaxy {
                 pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
 
                 GlobalSpawn(this, x, y, z, rot[0], rot[1], true);
-                Player[] players = PlayerInfo.Online; 
+                Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player p in players) {
                     if (p.level == level && p != this && !p.hidden)
                         SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);

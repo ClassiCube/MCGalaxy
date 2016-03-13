@@ -26,7 +26,7 @@ namespace MCGalaxy {
         public static void GlobalChatLevel(Player from, string message, bool showname) {
             if (showname)
                 message = "<Level>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
-			Player[] players = PlayerInfo.Online;
+			Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == from.level && p.Chatroom == null)
                     SendMessage(p, from, message);
@@ -43,7 +43,7 @@ namespace MCGalaxy {
             if ( showname ) {
                 message = "<GlobalChatRoom> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.Chatroom != null)
                     SendMessage(p, from, message);
@@ -57,7 +57,7 @@ namespace MCGalaxy {
             if (showname)
                 message = "<ChatRoom: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.Chatroom == chatroom)
                     SendMessage(p, from, message);
@@ -68,7 +68,7 @@ namespace MCGalaxy {
         }
 		
         public static void GlobalMessageLevel(Level l, string message) {
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == l && p.Chatroom == null)
                     Player.SendMessage(p, message);
@@ -76,7 +76,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalMessageMinPerms(string message, LevelPermission minPerm) {
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.group.Permission >= minPerm)
                     Player.SendMessage(p, message);

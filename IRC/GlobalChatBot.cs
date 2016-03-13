@@ -256,7 +256,7 @@ namespace MCGalaxy
             //}
             if (message.Contains("^IPGET "))
             {
-            	Player[] players = PlayerInfo.Online; 
+            	Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player p in players)
                 {
                     if (p.name == message.Split(' ')[1])
@@ -291,7 +291,7 @@ namespace MCGalaxy
                         connection.Sender.PublicMessage(channel, "^MOTD: " + Server.motd);
                         connection.Sender.PublicMessage(channel, "^VERSION: " + Server.VersionString);
                         connection.Sender.PublicMessage(channel, "^URL: " + Server.URL);
-                        connection.Sender.PublicMessage(channel, "^PLAYERS: " + PlayerInfo.Online.Length + "/" + Server.players);
+                        connection.Sender.PublicMessage(channel, "^PLAYERS: " + PlayerInfo.Online.Count + "/" + Server.players);
                     }
                 }
             }

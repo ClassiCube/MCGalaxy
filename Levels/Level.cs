@@ -313,7 +313,7 @@ namespace MCGalaxy
 
             }
             MovePlayersToMain();
-            Server.levels.Remove(this);
+            LevelInfo.Loaded.Remove(this);
 
             try
             {
@@ -341,7 +341,7 @@ namespace MCGalaxy
         }
 
         void MovePlayersToMain() {
-        	Player[] players = PlayerInfo.Online; 
+        	Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.level.name.ToLower() == name.ToLower()) {
                     Player.SendMessage(p, "You were moved to the main level as " + name + " was unloaded.");
@@ -474,7 +474,7 @@ namespace MCGalaxy
                     SaveSettings(this);
 
                     Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
-                                               PlayerInfo.Online.Length, Server.players));
+                                               PlayerInfo.Online.Count, Server.players));
                     changed = false;
                 }
                 else
@@ -705,7 +705,7 @@ namespace MCGalaxy
         
         /// <summary> Sends a chat messages to all players in the level, who have at least the minPerm rank. </summary>
         public void ChatLevel(string message, LevelPermission minPerm) {
-        	Player[] players = PlayerInfo.Online; 
+        	Player[] players = PlayerInfo.Online.Items; 
             foreach (Player pl in players) {
             	if (pl.level != this) continue;
             	if (pl.group.Permission < minPerm) continue;
@@ -714,7 +714,7 @@ namespace MCGalaxy
         }
         
         public void UpdateBlockPermissions() {
-        	Player[] players = PlayerInfo.Online; 
+        	Player[] players = PlayerInfo.Online.Items; 
         	foreach (Player p in players) {
         		if (p.level != this) continue;
         		if (!p.HasCpeExt(CpeExt.BlockPermissions)) continue;
@@ -736,7 +736,7 @@ namespace MCGalaxy
 
         public List<Player> getPlayers()
         {
-        	Player[] players = PlayerInfo.Online; 
+        	Player[] players = PlayerInfo.Online.Items; 
             return players.Where(p => p.level == this).ToList();
         }
 

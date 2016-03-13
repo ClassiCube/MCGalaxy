@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
             Level level = LevelInfo.Find(message.Split(' ')[0]);
             if (level == null) { Player.SendMessage(p, "There is no level named '" + message.Split(' ')[0] + "'."); return; }
             
-            Player[] players = PlayerInfo.Online;           
+            Player[] players = PlayerInfo.Online.Items;           
             foreach (Player pl in players) { 
                 if (p == null || pl.group.Permission < p.group.Permission) 
                     Command.all.Find("move").Use(p, pl.name + " " + level.name); 

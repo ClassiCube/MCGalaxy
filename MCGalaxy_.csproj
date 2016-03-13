@@ -588,6 +588,7 @@
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\SparseBitSet.cs" />
+    <Compile Include="util\VolatileArray.cs" />
     <EmbeddedResource Include="GUI\Eco\EcoLevelWindow.resx">
       <DependentUpon>EcoLevelWindow.cs</DependentUpon>
     </EmbeddedResource>

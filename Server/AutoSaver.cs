@@ -40,7 +40,7 @@ namespace MCGalaxy
                             Thread.Sleep(_interval);
                             Server.ml.Queue(delegate { Run(); });
 
-                          Player[] players = PlayerInfo.Online; 
+                          Player[] players = PlayerInfo.Online.Items; 
                           if (players.Length <= 0) continue;
                           string allCount = players.Aggregate("", (current, pl) => current + (", " + pl.name));
                           try { Server.s.Log("!PLAYERS ONLINE: " + allCount.Remove(0, 2), true); }
@@ -70,8 +70,8 @@ namespace MCGalaxy
             {
                 count--;
 
-                Server.levels.ForEach(delegate(Level l)
-                {
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level l in loaded) {
                     try
                     {
                         if (!l.changed) return;
@@ -93,7 +93,7 @@ namespace MCGalaxy
                     {
                         Server.s.Log("Backup for " + l.name + " has caused an error.");
                     }
-                });
+                }
 
                 if (count <= 0)
                 {
@@ -104,7 +104,7 @@ namespace MCGalaxy
             }
 
             try {
-            	Player[] players = PlayerInfo.Online;
+            	Player[] players = PlayerInfo.Online.Items;
             	foreach (Player p in players) { p.save(); }
             } catch (Exception e) { 
             	Server.ErrorLog(e); 

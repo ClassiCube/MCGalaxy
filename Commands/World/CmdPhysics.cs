@@ -28,10 +28,11 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (message == "") {
-                foreach (Level l in Server.levels) {
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level l in loaded) {
                     if (l.physics > 0)
-                        Player.SendMessage(p, "&5" + l.name + Server.DefaultColor + " has physics at &b" + l.physics +
-                                           Server.DefaultColor + ". &cChecks: " + l.lastCheck + "; Updates: " + l.lastUpdate);
+                        Player.SendMessage(p, "&5" + l.name + " %Shas physics at &b" + l.physics +
+                                           "%S. &cChecks: " + l.lastCheck + "; Updates: " + l.lastUpdate);
                 }
                 return;
             }

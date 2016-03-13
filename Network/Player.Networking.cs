@@ -693,7 +693,7 @@ namespace MCGalaxy {
         	oldpos = pos; oldrot = rot;
         	if (packet == null) return;
         	
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p != this && p.level == level) p.SendRaw(packet);
             }

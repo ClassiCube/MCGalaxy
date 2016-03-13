@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands {
         
         static void SearchPlayers(Player p, string keyword) {
             StringBuilder players = new StringBuilder();
-            Player[] online = PlayerInfo.Online;
+            Player[] online = PlayerInfo.Online.Items;
             foreach (Player who in online) {
                 if (who.name.IndexOf(keyword, comp) >= 0 && Player.CanSee(p, who))
                     players.Append(", ").Append(who.color).Append(who.name);
@@ -110,7 +110,8 @@ namespace MCGalaxy.Commands {
         
         static void SearchLoaded(Player p, string keyword) {
             StringBuilder levels = new StringBuilder();
-            foreach (Level level in Server.levels) {
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level level in loaded) {
                 if (level.name.IndexOf(keyword, comp) >= 0)
                     levels.Append(", ").Append(level.name);
             }

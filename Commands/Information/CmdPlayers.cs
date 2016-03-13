@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
                 string title = ":" + grp.color + GetPlural(grp.trueName) + ":";
                 Section rankSec = MakeSection(grp, title);                
                 
-                Player[] players = PlayerInfo.Online;
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.group != grp) continue;
                     if (pl.hidden && !showHidden) continue;
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands
             Section gcModsSec = MakeSection("#%6MCGalaxy GCMods:" + Server.DefaultColor);
             int totalPlayers = 0;
             
-            Player[] online = PlayerInfo.Online;
+            Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
             	if (pl.hidden && !showHidden) continue;
             	if (p == pl || Player.CanSee(p, pl)) {

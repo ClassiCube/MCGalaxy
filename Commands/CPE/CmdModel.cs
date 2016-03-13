@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
             }
 
             who.model = args[args.Length - 1];
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level == who.level && pl.HasCpeExt(CpeExt.ChangeModel)) {
             		byte id = (pl == who) ? (byte)0xFF : who.id;

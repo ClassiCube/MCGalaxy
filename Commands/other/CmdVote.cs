@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
                 
                 Server.voting = false;
                 Player.GlobalMessage("The votes are in! " + Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
-                Player[] players = PlayerInfo.Online; 
+                Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player pl in players) pl.voted = false;
             }  else{
                 p.SendMessage("A vote is in progress!");

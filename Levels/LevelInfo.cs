@@ -1,7 +1,7 @@
 ﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -23,11 +23,16 @@ namespace MCGalaxy {
 
     public static class LevelInfo {
         
+        /// <summary> Array of all current loaded levels. </summary>
+        /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
+        public static VolatileArray<Level> Loaded = new VolatileArray<Level>(true);
+        
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Level Find(string name) {
             Level match = null; int matches = 0;
+            Level[] loaded = Loaded.Items;
             
-            foreach (Level lvl in Server.levels) {
+            foreach (Level lvl in loaded) {
                 if (lvl.name.Equals(name, comp)) return lvl;
                 if (lvl.name.IndexOf(name, comp) >= 0) {
                     match = lvl; matches++;
@@ -37,14 +42,15 @@ namespace MCGalaxy {
         }
 
         public static Level FindExact(string name) {
-            foreach (Level lvl in Server.levels) {
-            	if (lvl.name.Equals(name, comp)) return lvl;
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level lvl in loaded) {
+                if (lvl.name.Equals(name, comp)) return lvl;
             }
             return null;
         }
-		
+        
         public static bool ExistsOffline(string name) {
-        	return File.Exists(LevelPath(name));
+            return File.Exists(LevelPath(name));
         }
         
         public static bool ExistsBackup(string name, string backup) {
@@ -60,14 +66,14 @@ namespace MCGalaxy {
         }
         
         public static string GetPropertiesPath(string name) {
-        	string file = "levels/level properties/" + name + ".properties";
+            string file = "levels/level properties/" + name + ".properties";
             if (!File.Exists(file)) file = "levels/level properties/" + name;
             if (!File.Exists(file)) return null;
             return file;
         }
         
         public static string FindOfflineProperty(string name, string propKey) {
-        	string file = GetPropertiesPath(name);
+            string file = GetPropertiesPath(name);
             if (file == null) return null;
 
             string[] lines = null;

@@ -93,7 +93,7 @@ namespace MCGalaxy {
 
                             wait = speedPhysics;
                         } else {
-                        	Player[] online = PlayerInfo.Online;
+                        	Player[] online = PlayerInfo.Online.Items;
                             foreach (Player p in online) {
                         	    if (p.level != this) continue;
                                 Player.SendMessage(p, "Physics warning!");

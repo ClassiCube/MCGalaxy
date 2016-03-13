@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             Group grp = Group.Find(rank);
             if (grp == null) { Player.SendMessage(p, "Could not find rank specified."); return; }
             
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             string toSend = p.color + p.name + ": %S" + text.Trim();
             foreach (Player pl in players) {
                 if (pl.group.name == grp.name) pl.SendMessage(toSend);

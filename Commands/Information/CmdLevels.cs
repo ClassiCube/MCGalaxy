@@ -1,7 +1,7 @@
 /*
     Copyright 2012 MCGalaxy
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 namespace MCGalaxy.Commands {
     
@@ -31,23 +31,22 @@ namespace MCGalaxy.Commands {
             if (message != "") { Help(p); return; }
 
             string canVisit = "", canBuild = "";
-            Server.levels.ForEach(
-                (level) =>
-                {
-                    if (p == null || level.permissionvisit <= p.group.Permission) {
-                        if (Group.findPerm(level.permissionbuild) != null)
-                            canVisit += ", " + Group.findPerm(level.permissionbuild).color + level.name + " &b[&f" + level.physics + "&b]";
-                        else
-                            canVisit += ", " + level.name + " &b[" + level.physics + "]";
-                    } else {
-                        if (Group.findPerm(level.permissionvisit) != null)
-                            canBuild += ", " + Group.findPerm(level.permissionvisit).color + level.name + " &b[&f" + level.physics + "&b]";
-                        else
-                            canBuild += ", " + level.name + " &b[&f" + level.physics + "&b]";
-                    }
-                });
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level lvl in loaded) {
+                if (p == null || lvl.permissionvisit <= p.group.Permission) {
+                    if (Group.findPerm(lvl.permissionbuild) != null)
+                        canVisit += ", " + Group.findPerm(lvl.permissionbuild).color + lvl.name + " &b[&f" + lvl.physics + "&b]";
+                    else
+                        canVisit += ", " + lvl.name + " &b[" + lvl.physics + "]";
+                } else {
+                    if (Group.findPerm(lvl.permissionvisit) != null)
+                        canBuild += ", " + Group.findPerm(lvl.permissionvisit).color + lvl.name + " &b[&f" + lvl.physics + "&b]";
+                    else
+                        canBuild += ", " + lvl.name + " &b[&f" + lvl.physics + "&b]";
+                }
+            }
 
-            if (canVisit != "") 
+            if (canVisit != "")
                 canVisit = canVisit.Remove(0, 2);
             Player.SendMessage(p, "Loaded levels [physics_level]: " + canVisit);
             if (canBuild != "")

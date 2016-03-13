@@ -522,7 +522,7 @@ namespace MCGalaxy_.Gui
                         if (Server.lava.active && Server.lava.HasMap(l.name)) l.saveChanges();
                         else l.Save();
 
-                Player[] players = PlayerInfo.Online;
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.save();
                 
                 if (!usingConsole)
@@ -589,7 +589,7 @@ namespace MCGalaxy_.Gui
         {
             try
             {
-            	Player[] players = PlayerInfo.Online; 
+            	Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player p in players)
                 {
                     if (restarting) {

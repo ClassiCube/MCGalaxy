@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message.ToLower() == "all") {
-                foreach (Level l in Server.levels) {
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level l in loaded) {
                     try {
                         if (!Server.lava.active || !Server.lava.HasMap(name)) l.Save();
                         else { Server.s.Log("The level \"" + l.name + "\" is a Lava Survival level, only saving block change history."); l.saveChanges(); }

@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
                             }
 
                             bool isopson = false;
-                            Player[] players = PlayerInfo.Online;
+                            Player[] players = PlayerInfo.Online.Items;
                             foreach (Player pl in players) {
                                 if (pl.group.Permission >= Server.reviewnext && !pl.hidden) {
                                     isopson = true; break;

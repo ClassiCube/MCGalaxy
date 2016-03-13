@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
                     Player.SendMessage(p, "Reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + "+"); return; 
                 }
 
-            	Player[] players = PlayerInfo.Online;
+            	Player[] players = PlayerInfo.Online.Items;
                 foreach (Player who in players) {
                     if (who.level == lvl)
                         ReloadMap(p, who, true);
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
         
         internal static void ReloadMap(Player p, Player who, bool showMessage) {
             who.Loading = true;
-            Player[] players = PlayerInfo.Online;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) if (who.level == pl.level && who != pl) who.SendDespawn(pl.id);
             foreach (PlayerBot b in PlayerBot.playerbots.ToArray()) if (who.level == b.level) who.SendDespawn(b.id);
 
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands {
             else
                 who.SendPos(0xFF, x, y, z, who.level.rotx, who.level.roty);
 
-            players = PlayerInfo.Online;
+            players = PlayerInfo.Online.Items;
             foreach (Player pl in players)
                 if (pl.level == who.level && who != pl && !pl.hidden)
                     who.SendSpawn(pl.id, pl.color + pl.name, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);

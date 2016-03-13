@@ -247,7 +247,7 @@ namespace MCGalaxy
         
         void tagging_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-        	Player[] online = PlayerInfo.Online; 
+        	Player[] online = PlayerInfo.Online.Items; 
         	foreach (Player p in online) {
                 if (p.level == mainlevel)
                 {
@@ -664,7 +664,7 @@ namespace MCGalaxy
                     {
                         if (blueteam.members.Contains(p))
                         {
-                        	Player[] online = PlayerInfo.Online; 
+                        	Player[] online = PlayerInfo.Online.Items; 
                         	foreach (Player p1 in online) {
                                 if (blueteam.members.Contains(p1))
                                     Player.SendMessage(p1, "(Blue) " + p.color + p.name + ":&f " + message);
@@ -673,7 +673,7 @@ namespace MCGalaxy
                         }
                         if (redteam.members.Contains(p))
                         {
-                        	Player[] online = PlayerInfo.Online; 
+                        	Player[] online = PlayerInfo.Online.Items; 
                         	foreach (Player p1 in online) {
                                 if (redteam.members.Contains(p1))
                                     Player.SendMessage(p1, "(Red) " + p.color + p.name + ":&f " + message);

@@ -42,7 +42,7 @@ namespace MCGalaxy
                 "&public=" + Server.pub +
                 "&version=7" +
                 "&salt=" + Server.salt +
-                "&users=" + PlayerInfo.Online.Length + "&software=MCGalaxy";
+                "&users=" + PlayerInfo.Online.Count + "&software=MCGalaxy";
         }
         public bool UrlSaid = false;
 
