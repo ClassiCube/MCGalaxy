@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             ushort x = (ushort)(16 + (cpSpawn ? p.checkpointX : p.level.spawnx) * 32);
             ushort y = (ushort)(32 + (cpSpawn ? p.checkpointY : p.level.spawny) * 32);
             ushort z = (ushort)(16 + (cpSpawn ? p.checkpointZ : p.level.spawnz) * 32);
-            if (!p.referee && !p.infected && Server.zombie.GameInProgess())
+            if (!p.referee && !p.infected && Server.zombie.RoundInProgress)
                 Server.zombie.InfectPlayer(p);
             
             if (p.PlayingTntWars) {

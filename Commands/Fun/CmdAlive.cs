@@ -21,10 +21,12 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "alive"; } }
         public override string shortcut { get { return "alive"; } }
-       public override string type { get { return CommandTypes.Games; } }
+        public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override bool Enabled { get { return Server.ZombieModeOn; } }          
         public CmdAlive() { }
+        
         public override void Use(Player p, string message)
         {
             if (ZombieGame.alive.Count == 0)

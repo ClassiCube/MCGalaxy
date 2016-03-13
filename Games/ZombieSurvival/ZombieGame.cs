@@ -35,12 +35,23 @@ namespace MCGalaxy {
 		}
 	}
 	
+	public enum ZombieGameStatus { NotStarted, InfiniteRounds, SingleRound, VariableRounds, LastRound }
+	
     public sealed partial class ZombieGame {
+		
 		/// <summary> The number of rounds that have been played in this game so far. </summary>
         public int RoundsDone = 0;
         
         /// <summary> The maximum number of rounds that can be played before the game ends. </summary>
         public int MaxRounds = 0;
+        
+        /// <summary> How precise collision detection is between alive and dead players. (Where 1 block = 32 units) </summary>
+        public int HitboxPrecision = 24;
+        
+        /// <summary> Current round status of the game. </summary>
+        public ZombieGameStatus Status = ZombieGameStatus.NotStarted;
+        
+        public bool RoundInProgress = false;
         
         public int aliveCount = 0;
         public string currentZombieLevel = "";
@@ -54,10 +65,8 @@ namespace MCGalaxy {
 
         internal bool noRespawn = true, noLevelSaving = true, noPillaring = true;
         internal string ZombieName = "";
-        internal int gameStatus = 0; //0 = not started, 1 = always on, 2 = one time, 3 = certain amount of rounds, 4 = stop game next round
         internal bool queLevel = false, queZombie = false;
         internal string nextZombie = "", nextLevel = "";
-        internal bool zombieRound = false;
         internal bool ChangeLevels = true, UseLevelList = false;
         
         internal List<string> LevelList = new List<string>();
@@ -69,63 +78,42 @@ namespace MCGalaxy {
         int infectCombo = 0;
         public Dictionary<string, BountyData> Bounties = new Dictionary<string, BountyData>();
         
-        public void StartGame(int status, int amount)
-        {
-            //status: 0 = not started, 1 = always on, 2 = one time, 3 = certain amount of rounds, 4 = stop round next round
-
-            if (status == 0) return;
-
-            //SET ALL THE VARIABLES!
+        public void Start(ZombieGameStatus status, int amount) {
             if (UseLevelList && LevelList == null)
                 ChangeLevels = false;
             Server.ZombieModeOn = true;
-            gameStatus = status;
-            zombieRound = false;
+            Status = status;
+            RoundInProgress = false;
             initialChangeLevel = false;
             MaxRounds = amount + 1;
             RoundsDone = 0;
-            //SET ALL THE VARIABLES?!?
 
-             //Start the main Zombie thread
-             Thread t = new Thread(MainLoop);
-             t.Name = "MCG_ZombieGame";
-             t.Start();
+            Thread t = new Thread(MainLoop);
+            t.Name = "MCG_ZombieGame";
+            t.Start();
         }
 
-        public void InfectedPlayerDC()
-        {
-            if (gameStatus == 0) return;
+        public void InfectedPlayerDC() {
+            if (Status == ZombieGameStatus.NotStarted) return;
             //This is for when the first zombie disconnects
             Random random = new Random();
-            if ((gameStatus != 0 && zombieRound) && infectd.Count <= 0)
-            {
-                int firstinfect = random.Next(alive.Count);
-                firstinfect = firstinfect - 1;
-                while (alive[firstinfect].referee || alive[firstinfect].level.name == Server.zombie.currentLevelName)
-                {
-                    if (firstinfect == alive.Count)
-                    {
-                        firstinfect = 0;
-                    }
-                    else
-                    {
-                        firstinfect++;
-                    }
+            if ((Status != ZombieGameStatus.NotStarted && RoundInProgress) && infectd.Count <= 0) {
+                if (alive.Count == 0) return;
+                int index = random.Next(alive.Count);
+                
+                while (alive[index].referee || alive[index].level.name == Server.zombie.currentLevelName) {
+                    if (index >= alive.Count - 1) index = 0;
+                    else index++;
                 }
-                Player.GlobalMessage(alive[firstinfect].color + alive[firstinfect].name + Server.DefaultColor + " continued the infection!");
-                alive[firstinfect].color = Colors.red;
-                Player.GlobalDespawn(alive[firstinfect], false);
-                Player.GlobalSpawn(alive[firstinfect], alive[firstinfect].pos[0], alive[firstinfect].pos[1], alive[firstinfect].pos[2], alive[firstinfect].rot[0], alive[firstinfect].rot[1], false);
-                infectd.Add(alive[firstinfect]);
-                alive.Remove(alive[firstinfect]);
+                
+                Player zombie = alive[index];
+                Player.GlobalMessage(zombie.FullName + " %Scontinued the infection!");
+                InfectPlayer(zombie);
             }
-            return;
         }
 
-        public bool InfectedPlayerLogin(Player p)
-        {
-            if (gameStatus == 0) return false;
-            if (p == null) return false;
+        public bool InfectedPlayerLogin(Player p)  {
+            if (Status == ZombieGameStatus.NotStarted || p == null) return false;
             if (p.level.name != Server.zombie.currentLevelName) return false;
             p.SendMessage("You have joined in the middle of a round. You are now infected!");
             p.blockCount = 50;
@@ -137,19 +125,9 @@ namespace MCGalaxy {
             return true;
         }
 
-        public int ZombieStatus()
-        {
-            return gameStatus;
-        }
-
-        public bool GameInProgess()
-        {
-            return zombieRound;
-        }
-
         public void InfectPlayer(Player p)
         {
-            if (!zombieRound || p == null) return;
+            if (!RoundInProgress || p == null) return;
             infectd.Add(p);
             alive.Remove(p);
             p.infected = true;
@@ -161,7 +139,7 @@ namespace MCGalaxy {
 
         public void DisinfectPlayer(Player p)
         {
-            if (!zombieRound || p == null) return;
+            if (!RoundInProgress || p == null) return;
             infectd.Remove(p);
             alive.Add(p);
             p.infected = false;
@@ -206,11 +184,11 @@ namespace MCGalaxy {
         }
 
         public void ResetState() {
-            gameStatus = 0; 
+            Status = ZombieGameStatus.NotStarted;
             MaxRounds = 0; 
             initialChangeLevel = false; 
             Server.ZombieModeOn = false; 
-            zombieRound = false;
+            RoundInProgress = false;
         }
     }
 }

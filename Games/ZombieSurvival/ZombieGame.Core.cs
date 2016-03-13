@@ -29,31 +29,39 @@ namespace MCGalaxy {
     public sealed partial class ZombieGame {
         
         void MainLoop() {
-            if (gameStatus == 0) return;
+            if (Status == ZombieGameStatus.NotStarted) return;
             if (!initialChangeLevel) {
                 ChangeLevel();
                 initialChangeLevel = true;
             }
 
             while (true) {
-                zombieRound = false;
+                RoundInProgress = false;
                 RoundsDone++;
                 
-                if (gameStatus == 0) { return; }
-                else if (gameStatus == 1) { DoRound(); if (ChangeLevels) ChangeLevel();}
-                else if (gameStatus == 2) { DoRound(); if (ChangeLevels) ChangeLevel(); gameStatus = 0; return; }
-                else if (gameStatus == 3)
-                {
-                    if (RoundsDone == MaxRounds) { ResetState(); return; }
-                    else { DoRound(); if (ChangeLevels) ChangeLevel(); }
+                if (Status == ZombieGameStatus.NotStarted) { 
+                    return;
+                } else if (Status == ZombieGameStatus.InfiniteRounds) { 
+                    DoRound(); 
+                    if (ChangeLevels) ChangeLevel();
+                } else if (Status == ZombieGameStatus.SingleRound) {
+                    DoRound(); 
+                    ResetState(); return;
+                } else if (Status == ZombieGameStatus.VariableRounds) {
+                    if (RoundsDone == MaxRounds) { 
+                        ResetState(); return; 
+                    } else { 
+                        DoRound(); 
+                        if (ChangeLevels) ChangeLevel(); 
+                    }
+                } else if (Status == ZombieGameStatus.LastRound) {
+                    ResetState(); return; 
                 }
-                else if (gameStatus == 4) { ResetState(); return; }
             }
         }
 
-        void DoRound()
-        {
-            if (gameStatus == 0) return;
+        void DoRound() {
+            if (Status == ZombieGameStatus.NotStarted) return;
             List<Player> players = DoRoundCountdown();
 
             theEnd:
@@ -71,7 +79,7 @@ namespace MCGalaxy {
             Player.GlobalDespawn(player, false);
             Player.GlobalSpawn(player, player.pos[0], player.pos[1], player.pos[2], player.rot[0], player.rot[1], false);
 
-            zombieRound = true;
+            RoundInProgress = true;
             int roundMins = random.Next(5, 8);
             Player.GlobalMessage("The round will last for " + roundMins + " minutes!");
             timer = new System.Timers.Timer(roundMins * 60 * 1000);
@@ -90,8 +98,8 @@ namespace MCGalaxy {
             aliveCount = alive.Count;
             DoCoreGame(players, random);
             
-            if (gameStatus == 0) {
-                gameStatus = 4; return;
+            if (Status == ZombieGameStatus.NotStarted) {
+                Status = ZombieGameStatus.LastRound; return;
             } else {
                 HandOutRewards();
             }
@@ -117,7 +125,7 @@ namespace MCGalaxy {
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
                 Player.GlobalMessage("%4Round Start:%f 1...");
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
-                zombieRound = true;
+                RoundInProgress = true;
                 int nonRefPlayers = 0; 
                 List<Player> players = new List<Player>();
                 
@@ -156,8 +164,9 @@ namespace MCGalaxy {
                             Player.GlobalDespawn(pAlive, false);
                             Player.GlobalSpawn(pAlive, pAlive.pos[0], pAlive.pos[1], pAlive.pos[2], pAlive.rot[0], pAlive.rot[1], false);
                         }
-                        if (Math.Abs(pAlive.pos[0] / 32 - pKiller.pos[0] / 32) <= 1 && Math.Abs(pAlive.pos[1] / 32 - pKiller.pos[1] / 32) <= 1
-                            && Math.Abs(pAlive.pos[2] / 32 - pKiller.pos[2] / 32) <= 1) {
+                        if (Math.Abs(pAlive.pos[0] - pKiller.pos[0]) <= HitboxPrecision 
+                            && Math.Abs(pAlive.pos[1] - pKiller.pos[1]) <= HitboxPrecision
+                            && Math.Abs(pAlive.pos[2] - pKiller.pos[2]) <= HitboxPrecision) {
                             if (!pAlive.infected && pKiller.infected && !pAlive.referee && !pKiller.referee && pKiller != pAlive && pKiller.level.name == currentLevelName && pAlive.level.name == currentLevelName)
                             {
                                 pAlive.infected = true;
@@ -208,7 +217,7 @@ namespace MCGalaxy {
         }
 
         public void EndRound(object sender, ElapsedEventArgs e) {
-            if (gameStatus == 0) return;
+            if (Status == ZombieGameStatus.NotStarted) return;
             Player.GlobalMessage("%4Round End:%f 5"); Thread.Sleep(1000);
             Player.GlobalMessage("%4Round End:%f 4"); Thread.Sleep(1000);
             Player.GlobalMessage("%4Round End:%f 3"); Thread.Sleep(1000);
@@ -218,8 +227,8 @@ namespace MCGalaxy {
         }
 
         public void HandOutRewards() {
-            zombieRound = false;
-            if (gameStatus == 0) return;
+            RoundInProgress = false;
+            if (Status == ZombieGameStatus.NotStarted) return;
             Player.GlobalMessage(Colors.lime + "The game has ended!");
             if(aliveCount == 0)
                 Player.GlobalMessage(Colors.maroon + "Zombies have won this round.");
@@ -375,7 +384,8 @@ namespace MCGalaxy {
                     Level1Vote = 0; Level2Vote = 0; Level3Vote = 0;
                     lastLevelVote1 = selectedLevel1; lastLevelVote2 = selectedLevel2;
 
-                    if (gameStatus == 4 || gameStatus == 0) { return; }
+                    if (Status == ZombieGameStatus.NotStarted || Status == ZombieGameStatus.LastRound) 
+                        return;
 
                     if (initialChangeLevel)
                     {
@@ -387,7 +397,8 @@ namespace MCGalaxy {
                     }
                     else { Level1Vote = 1; Level2Vote = 0; Level3Vote = 0; }
 
-                    if (gameStatus == 4 || gameStatus == 0) { return; }
+                    if (Status == ZombieGameStatus.NotStarted || Status == ZombieGameStatus.LastRound) 
+                    	return;
 
                     if (Level1Vote >= Level2Vote)
                     {

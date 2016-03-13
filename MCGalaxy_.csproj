@@ -180,12 +180,14 @@
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
     <Compile Include="Commands\Fun\CmdCtf.cs" />
     <Compile Include="Commands\Fun\CmdDisinfect.cs" />
+    <Compile Include="Commands\Fun\CmdEndRound.cs" />
     <Compile Include="Commands\Fun\CmdFliphead.cs" />
     <Compile Include="Commands\Fun\CmdFlipHeads.cs" />
     <Compile Include="Commands\Fun\CmdInfect.cs" />
     <Compile Include="Commands\Fun\CmdInfected.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
     <Compile Include="Commands\Fun\CmdQueue.cs" />
+    <Compile Include="Commands\Fun\CmdReferee.cs" />
     <Compile Include="Commands\Fun\CmdSlap.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
     <Compile Include="Commands\Fun\CmdZombieGame.cs" />
@@ -242,7 +244,6 @@
     <Compile Include="Commands\Moderation\CmdCrashServer.cs" />
     <Compile Include="Commands\Moderation\CmdDelTempRank.cs" />
     <Compile Include="Commands\Moderation\CmdDemote.cs" />
-    <Compile Include="Commands\Moderation\CmdEndRound.cs" />
     <Compile Include="Commands\Moderation\CmdExplode.cs" />
     <Compile Include="Commands\Moderation\CmdFollow.cs" />
     <Compile Include="Commands\Moderation\CmdFreeze.cs" />
@@ -273,7 +274,6 @@
     <Compile Include="Commands\Moderation\CmdPromote.cs" />
     <Compile Include="Commands\Moderation\CmdPUnload.cs" />
     <Compile Include="Commands\Moderation\CmdRankInfo.cs" />
-    <Compile Include="Commands\Moderation\CmdReferee.cs" />
     <Compile Include="Commands\Moderation\CmdRenameLvl.cs" />
     <Compile Include="Commands\Moderation\CmdResetBot.cs" />
     <Compile Include="Commands\Moderation\CmdRestart.cs" />

@@ -90,7 +90,7 @@ namespace MCGalaxy {
         }
         
         public override void PlayerJoinedServer(Player p) {
-            if (ZombieStatus() != 0)
+            if (Status != ZombieGameStatus.NotStarted)
                 Player.SendMessage(p, "There is a Zombie Survival game currently in-progress! " +
                                    "Join it by typing /g " + Server.zombie.currentLevelName);
         }

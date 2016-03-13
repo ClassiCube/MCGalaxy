@@ -33,52 +33,50 @@ namespace MCGalaxy.Commands
             string[] s = message.ToLower().Split(' ');
             if (s[0] == "status")
             {
-                switch (Server.zombie.ZombieStatus())
-                {
-                    case 0:
-                        Player.GlobalMessage("There is no Zombie Survival game currently in progress.");
-                        return;
-                    case 1:
-                        Player.SendMessage(p, "There is a Zombie Survival game currently in progress with infinite rounds.");
-                        return;
-                    case 2:
-                        Player.SendMessage(p, "There is a one-time Zombie Survival game currently in progress.");
-                        return;
-                    case 3:
-                        Player.SendMessage(p, "There is a Zombie Survival game currently in progress with a " + Server.zombie.MaxRounds + " amount of rounds.");
-                        return;
-                    case 4:
-                        Player.SendMessage(p, "There is a Zombie Survival game currently in progress, scheduled to stop after this round.");
-                        return;
-                    default:
-                        Player.SendMessage(p, "An unknown error occurred.");
-                        return;
+                switch (Server.zombie.Status) {
+                	case ZombieGameStatus.NotStarted:
+                        Player.SendMessage(p, "Zombie Survival is not ccurrently running."); return;
+                    case ZombieGameStatus.InfiniteRounds:
+                        Player.SendMessage(p, "Zombie Survival is currently in progress with infinite rounds."); return;
+                    case ZombieGameStatus.SingleRound:
+                        Player.SendMessage(p, "Zombie Survival game currently in progress."); return;
+                    case ZombieGameStatus.VariableRounds:
+                        Player.SendMessage(p, "Zombie Survival game currently in progress with " + Server.zombie.MaxRounds + " rounds."); return;
+                    case ZombieGameStatus.LastRound:
+                        Player.SendMessage(p, "Zombie Survival game currently in progress, with this round being the final round."); return;
                 }
+                return;
             }
             else if (s[0] == "start")
             {
-                if (Server.zombie.ZombieStatus() != 0) { Player.SendMessage(p, "There is already a Zombie Survival game currently in progress."); return; }
+                if (Server.zombie.Status != ZombieGameStatus.NotStarted) {
+            	    Player.SendMessage(p, "There is already a Zombie Survival game currently in progress."); return; 
+            	}
                 if (s.Length == 2) {
                     int rounds = 1;
-                    bool result = int.TryParse(s[1], out rounds);
-                    if (result == false) { Player.SendMessage(p, "You need to specify a valid option!"); return; }
-                    if (s[1] == "0")
-                        Server.zombie.StartGame(1, 0);
-                    else
-                        Server.zombie.StartGame(3, rounds);
+                    if (!int.TryParse(s[1], out rounds)) { 
+                    	Player.SendMessage(p, "You need to specify a valid option!"); return; 
+                    }
+                    ZombieGameStatus status = rounds == 0 ? 
+                    	ZombieGameStatus.InfiniteRounds : ZombieGameStatus.VariableRounds;
+                    Server.zombie.Start(status, rounds);
                 } else {
-                    Server.zombie.StartGame(2, 0);
+                    Server.zombie.Start(ZombieGameStatus.SingleRound, 0);
                 }
             }
             else if (s[0] == "stop")
             {
-                if (Server.zombie.ZombieStatus() == 0) { Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return; }
+                if (Server.zombie.Status == ZombieGameStatus.NotStarted) { 
+            	    Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return; 
+            	}
                 Player.GlobalMessage("The current game of Zombie Survival will end this round!");
-                Server.zombie.gameStatus = 4;
+                Server.zombie.Status = ZombieGameStatus.LastRound;
             }
             else if (s[0] == "force")
             {
-                if (Server.zombie.ZombieStatus() == 0) { Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return; }
+                if (Server.zombie.Status == ZombieGameStatus.NotStarted) { 
+            		Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return; 
+            	}
                 Server.s.Log("Zombie Survival ended forcefully by " + p.name);
                 Server.zombie.aliveCount = 0;
                 Server.zombie.ResetState();

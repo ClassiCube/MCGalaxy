@@ -159,7 +159,7 @@ namespace MCGalaxy.Commands {
                 }
             }
 
-            if (Server.zombie.GameInProgess()) {
+            if (Server.zombie.RoundInProgress) {
                 if (p.level.name == Server.zombie.currentLevelName)
                     Server.zombie.InfectedPlayerLogin(p);
             }
