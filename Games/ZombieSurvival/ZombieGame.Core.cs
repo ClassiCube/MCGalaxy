@@ -75,7 +75,7 @@ namespace MCGalaxy {
 
             Player.GlobalMessage(player.color + player.name + " %Sstarted the infection!");
             player.infected = true;
-            CheckPlayerColor(player, Colors.red);
+            UpdatePlayerColor(player, Colors.red);
 
             RoundInProgress = true;
             int roundMins = random.Next(5, 8);
@@ -149,11 +149,11 @@ namespace MCGalaxy {
                 infectd.ForEach(
                     delegate(Player pKiller)
                     {
-                        CheckPlayerColor(pKiller, Colors.red);
+                        UpdatePlayerColor(pKiller, Colors.red);
                         alive.ForEach(
                             delegate(Player pAlive)
                             {
-                                CheckPlayerColor(pAlive, pAlive.group.color);
+                                UpdatePlayerColor(pAlive, pAlive.group.color);
                                 if (Math.Abs(pAlive.pos[0] - pKiller.pos[0]) > HitboxPrecision
                                     || Math.Abs(pAlive.pos[1] - pKiller.pos[1]) > HitboxPrecision
                                     || Math.Abs(pAlive.pos[2] - pKiller.pos[2]) > HitboxPrecision)
@@ -178,13 +178,22 @@ namespace MCGalaxy {
                                         infectCombo = 0;
                                     }
                                     lastPlayerToInfect = pKiller.name;
-                                    pKiller.infectThisRound++;
                                     pKiller.playersInfected++;
                                     Player.GlobalMessage(String.Format(
                                         messages[random.Next(messages.Length)],
                                         Colors.red + pKiller.DisplayName + Colors.yellow,
                                         Colors.red + pAlive.DisplayName + Colors.yellow));
-                                    CheckPlayerColor(pAlive, Colors.red);
+                                    
+                                    BountyData bounty;
+                                    if (Bounties.TryGetValue(pAlive.name, out bounty))
+                                        Bounties.Remove(pAlive.name);
+                                    if (bounty != null) {
+                                        Player.GlobalMessage(pKiller.FullName + " %Scollected the bounty of &a" +
+                                                             bounty.Amount + " %S" + Server.moneys + " on " + pAlive.FullName + "%S.");
+                                        bounty.Origin.money = Math.Max(0, bounty.Origin.money - bounty.Amount);
+                                        pKiller.money += bounty.Amount;
+                                    }
+                                    UpdatePlayerColor(pAlive, Colors.red);
                                 }
                             });
                     });
@@ -192,7 +201,7 @@ namespace MCGalaxy {
             }
         }
 
-        static void CheckPlayerColor(Player p, string color) {
+        static void UpdatePlayerColor(Player p, string color) {
             if (p.color == color) return;
             p.color = color;
             Player.GlobalDespawn(p, false);
@@ -211,12 +220,13 @@ namespace MCGalaxy {
 
         public void HandOutRewards() {
             RoundInProgress = false;
+            Bounties.Clear();
             if (Status == ZombieGameStatus.NotStarted) return;
             Player.GlobalMessage(Colors.lime + "The game has ended!");
-            if(aliveCount == 0)
-                Player.GlobalMessage(Colors.maroon + "Zombies have won this round.");
-            else
-                Player.GlobalMessage(Colors.green + "Congratulations to our survivor(s)");
+            if (aliveCount == 0) Player.GlobalMessage(Colors.maroon + "Zombies have won this round.");
+            else if (aliveCount == 1) Player.GlobalMessage(Colors.green + "Congratulations to the sole survivor:");
+            else Player.GlobalMessage(Colors.green + "Congratulations to the survivors:");
+            
             timer.Enabled = false;
             string playersString = "";
             Player[] online = null;
@@ -248,14 +258,14 @@ namespace MCGalaxy {
                 Player.GlobalDespawn(pl, false);
                 Player.GlobalSpawn(pl, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], false);
                 if (money == -1) {
-                    pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you!"); money = 0;
+                    pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you."); money = 0;
                 } else if (money > 0) {
                     pl.SendMessage( Colors.gold + "You gained " + money + " " + Server.moneys);
                 }
+                
                 pl.blockCount = 50;
                 pl.playersInfected = 0;
-                pl.money += money;
-                
+                pl.money += money;               
                 pl.infected = false;
                 pl.color = pl.group.color;
                 if (pl.referee) {
@@ -269,7 +279,7 @@ namespace MCGalaxy {
         void ResetPlayer(Player p, ref string playersString) {
             p.blockCount = 50;
             p.infected = false;
-            p.infectThisRound = 0;
+            p.playersInfected = 0;
             
             if (p.level.name == currentLevelName) {
                 p.color = p.group.color;

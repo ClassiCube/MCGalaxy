@@ -190,16 +190,11 @@ namespace MCGalaxy {
         public int blockCount = 50;
         public bool voted = false;
         public int blocksStacked = 0;
-        public int infectThisRound = 0;
-        public int lastYblock = 0;
-        public int lastXblock = 0;
-        public int lastZblock = 0;
+        public int lastYblock = 0, lastXblock = 0, lastZblock = 0;
         public bool infected = false;
         public bool aka = false;
         public bool flipHead = true;
         public int playersInfected = 0;
-        public int NoClipcount = 0;
-
 
         //Tnt Wars
         public bool PlayingTntWars = false;

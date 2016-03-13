@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 namespace MCGalaxy.Commands {
     
     public sealed class CmdBounty : Command {
@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override bool Enabled { get { return Server.ZombieModeOn; } }       
+        public override bool Enabled { get { return Server.ZombieModeOn; } }
         public CmdBounty() { }
         
         public override void Use(Player p, string message) {
@@ -41,13 +41,19 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "You do not have enough " + Server.moneys + " to place such a large bountry."); return;
             }
             
-            BountyData data;
-            if (Server.zombie.Bounties.TryGetValue(who.name, out data) && data.Amount >= amount) {
+            BountyData old;
+            if (Server.zombie.Bounties.TryGetValue(who.name, out old) && old.Amount >= amount) {
                 Player.SendMessage(p, "There is already a larger active bounty for " + who.name + "."); return;
             }
-            // TODO here - actually announce the bounty and place it
-            // "Looks like someone really wants the brains of <name>! An bounty for x <money> was placed on them.
-            // "<name> is popular! The bounty on them was increased from <old> to <new> money.
+            
+            if (old == null) {
+                Player.GlobalMessage("Looks like someone really wants the brains of " + who.FullName
+                                     + "%S! A bounty of &a" + amount + " %S" + Server.moneys + " was placed on them.");
+            } else {
+                Player.GlobalMessage(who.FullName + " %Sis popular! The bounty on them was increased from &a" + old.Amount + 
+                                     " %Sto &a" + amount + " %S" + Server.moneys + ".");
+            }
+            Server.zombie.Bounties[who.name] = new BountyData(p, amount);
         }
         
         public override void Help(Player p) {

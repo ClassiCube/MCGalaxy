@@ -134,9 +134,7 @@ namespace MCGalaxy {
             infectd.Add(p);
             alive.Remove(p);
             p.infected = true;
-            p.color = Colors.red;
-            Player.GlobalDespawn(p, false);
-            Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
+            UpdatePlayerColor(p, Colors.red);
             aliveCount = alive.Count;
         }
 
@@ -146,9 +144,7 @@ namespace MCGalaxy {
             infectd.Remove(p);
             alive.Add(p);
             p.infected = false;
-            p.color = p.group.color;
-            Player.GlobalDespawn(p, false);
-            Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
+            UpdatePlayerColor(p, p.group.color);
             aliveCount = alive.Count;
         }
 
