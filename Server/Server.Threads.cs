@@ -26,19 +26,13 @@ namespace MCGalaxy {
         void DoBlockUpdates() {
             while (true) {
                 Thread.Sleep(blockInterval * 1000);
-                try {
-                    levels.ForEach(
-                        delegate(Level l) {
-                            try {
-                                l.saveChanges();
-                            } catch (Exception e) {
-                                Server.ErrorLog(e);
-                            }
-                        });
-                } catch (Exception e) {
-                    // an exception is raised on Mono if level list is modified
-                    // while enumerating over it with ForEach
-                    Server.ErrorLog(e);
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level lvl in loaded) {
+                    try {
+                        lvl.saveChanges();
+                    } catch (Exception e) {
+                        Server.ErrorLog(e);
+                    }
                 }
             }
         }

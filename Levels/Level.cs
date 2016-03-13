@@ -277,10 +277,15 @@ namespace MCGalaxy
         [Obsolete("Please use OnLevelUnloadEvent.Register()")]
         public static event OnLevelLoaded LevelLoaded;
 
+        public bool ShouldSaveLevelFile() {
+        	if (Server.ZombieModeOn && name == Server.zombie.currentLevelName) return false;
+        	if (Server.lava.active && Server.lava.HasMap(name)) return false;
+        	return true;
+        }
+        
         public bool Unload(bool silent = false, bool save = true)
         {
-            if (Server.mainLevel == this) return false;
-            if (IsMuseum) return false;
+            if (Server.mainLevel == this || IsMuseum) return false;
             if (Server.lava.active && Server.lava.map == this) return false;
             if (LevelUnload != null)
                 LevelUnload(this);
@@ -293,9 +298,8 @@ namespace MCGalaxy
             }
             MovePlayersToMain();
 
-            if (changed && (!Server.ZombieModeOn || !Server.zombie.noLevelSaving))
-            {
-                if ((!Server.lava.active || !Server.lava.HasMap(name)) && save) Save(false, true);
+            if (changed) {
+            	if (ShouldSaveLevelFile()) Save(false, true);
                 saveChanges();
             }
             if (TntWarsGame.Find(this) != null)
@@ -436,23 +440,13 @@ namespace MCGalaxy
 
         public void Save(bool Override = false, bool clearPhysics = false)
         {
-            //if (season.started)
-            //    season.Stop(this);
             if (blocks == null) return;
             string path = "levels/" + name + ".lvl";
-            if (LevelSave != null)
-                LevelSave(this);
+            if (LevelSave != null) LevelSave(this);
             OnLevelSaveEvent.Call(this);
-            if (cancelsave1)
-            {
-                cancelsave1 = false;
-                return;
-            }
-            if (cancelsave)
-            {
-                cancelsave = false;
-                return;
-            }
+            if (cancelsave1) { cancelsave1 = false; return; }
+            if (cancelsave) { cancelsave = false; return; }
+            
             try
             {
                 if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
@@ -496,16 +490,11 @@ namespace MCGalaxy
                 }
                 else
                     Command.all.Find("restart").Use(null, "");
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Server.s.Log("FAILED TO SAVE :" + name);
                 Player.GlobalMessage("FAILED TO SAVE :" + name);
-
                 Server.ErrorLog(e);
-                return;
             }
-            //season.Start(this);
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }

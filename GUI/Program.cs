@@ -515,12 +515,11 @@ namespace MCGalaxy_.Gui
                 Client.DownloadFile(EXELocation, "MCGalaxy.update");
                 Client.DownloadFile(ChangelogLocation, "Changelog.txt");
 
-                // Its possible there are no levels or players loaded yet
-                // Only save them if they exist, otherwise we fail-whale
-                if (Server.levels != null && Server.levels.Any())
-                    foreach (Level l in Server.levels)
-                        if (Server.lava.active && Server.lava.HasMap(l.name)) l.saveChanges();
-                        else l.Save();
+                Level[] levels = LevelInfo.Loaded.Items;
+                foreach (Level lvl in levels) {
+                	if (lvl.ShouldSaveLevelFile()) lvl.Save();
+                	lvl.saveChanges();
+                }
 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.save();
@@ -606,14 +605,14 @@ namespace MCGalaxy_.Gui
             try
             {
                 string level = null;
-                foreach (Level l in Server.levels)
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level lvl in loaded)
                 {
-                    if (!Server.lava.active || !Server.lava.HasMap(l.name))
-                    {
-                        level = level + l.name + "=" + l.physics + System.Environment.NewLine;
-                        l.Save(false, true);
+                	if (lvl.ShouldSaveLevelFile()) {
+                        level = level + lvl.name + "=" + lvl.physics + Environment.NewLine;
+                        lvl.Save(false, true);
                     }
-                    l.saveChanges();
+                    lvl.saveChanges();
                 }
                 if (Server.ServerSetupFinished && !Server.AutoLoad)
                 {

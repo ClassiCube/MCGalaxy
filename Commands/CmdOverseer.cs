@@ -58,7 +58,8 @@ namespace MCGalaxy.Commands
                     }
                     mapname = p.name.ToLower() + arg;
                 }
-                if (!Server.levels.Any(l => l.name == mapname))
+                Level[] loaded = LevelInfo.Loaded.Items;
+                if (!loaded.Any(l => l.name == mapname))
                     Command.all.Find("load").Use(p, mapname);
                 Command.all.Find("goto").Use(p, mapname);
             } else if (cmd == "LB" || cmd == "LEVELBLOCK") {

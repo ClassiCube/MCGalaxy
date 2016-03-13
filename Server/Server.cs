@@ -352,6 +352,7 @@ namespace MCGalaxy
         public void Start() {
             PlayerInfo.players = PlayerInfo.Online.list;
             Player.players = PlayerInfo.Online.list;
+            Server.levels = LevelInfo.Loaded.list;
             StartTime = DateTime.UtcNow;
             StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;
@@ -507,8 +508,9 @@ namespace MCGalaxy
 
             Economy.LoadDatabase();
 
-            if (levels != null)
-                foreach (Level l in levels) { l.Unload(); }
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level l in loaded)
+            	l.Unload();
             ml.Queue(LoadMainLevel);
             Plugin.Load();
             ml.Queue(LoadPlayerLists);

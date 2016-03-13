@@ -18,6 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdUnloaded : Command
@@ -31,8 +33,8 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            List<string> levels = new List<string>(Server.levels.Count);
             string unloadedLevels = ""; int currentNum = 0; int maxMaps = 0;
+            Level[] loaded = LevelInfo.Loaded.Items;
 
             if (message != "")
             {
@@ -46,15 +48,12 @@ namespace MCGalaxy.Commands
 
             DirectoryInfo di = new DirectoryInfo("levels/");
             FileInfo[] fi = di.GetFiles("*.lvl");
-            foreach (Level l in Server.levels) { levels.Add(l.name.ToLower()); }
-
             if (maxMaps == 0)
             {
                 foreach (FileInfo file in fi)
                 {
-                    if (!levels.Contains(file.Name.Replace(".lvl", "").ToLower()))
-                    {
-                        string level = file.Name.Replace(".lvl", "");
+                	string level = file.Name.Replace(".lvl", "");
+                	if (!loaded.Any(l => l.name.CaselessEquals(level))) {
                         string visit = GetLoadOnGoto(level) && (p == null || p.group.Permission >= GetPerVisitPermission(level)) ? "%aYes" : "%cNo";
                         unloadedLevels += ", " + Group.findPerm(GetPerBuildPermission(level)).color + level + " &b[" + visit + "&b]";
                     }
@@ -75,9 +74,8 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Unloaded levels [Accessible] (" + currentNum + " to " + maxMaps + "):");
                 for (int i = currentNum; i < maxMaps; i++)
                 {
-                    if (!levels.Contains(fi[i].Name.Replace(".lvl", "").ToLower()))
-                    {
-                        string level = fi[i].Name.Replace(".lvl", "");
+                	string level = fi[i].Name.Replace(".lvl", "");
+                    if (!loaded.Any(l => l.name.CaselessEquals(level))) {                       
                         string visit = GetLoadOnGoto(level) && (p == null || p.group.Permission >= GetPerVisitPermission(level)) ? "%aYes" : "%cNo";
                         unloadedLevels += ", " + Group.findPerm(GetPerBuildPermission(level)).color + level + " &b[" + visit + "&b]";
                     }

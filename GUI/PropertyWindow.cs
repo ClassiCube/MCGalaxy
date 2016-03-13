@@ -702,7 +702,6 @@ namespace MCGalaxy.Gui {
             Server.server_owner = txtServerOwner.Text;
             Server.startZombieModeOnStartup = chkZombieOnServerStart.Checked;
             Server.zombie.noRespawn = chkNoRespawnDuringZombie.Checked;
-            Server.zombie.noLevelSaving = chkNoLevelSavingDuringZombie.Checked;
             Server.zombie.noPillaring = chkNoPillaringDuringZombie.Checked;
             Server.zombie.ZombieName = ZombieName.Text;
             Server.zombie.ChangeLevels = chkEnableChangingLevels.Checked;

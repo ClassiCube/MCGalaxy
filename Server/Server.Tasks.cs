@@ -28,8 +28,6 @@ namespace MCGalaxy {
         
         void LoadMainLevel() {
             try {
-                levels = new List<Level>(5);
-
                 if (LevelInfo.ExistsOffline(level)) {
                     mainLevel = Level.Load(level);
                     mainLevel.unload = false;
@@ -216,7 +214,7 @@ namespace MCGalaxy {
                 }
             } catch (Exception e) {
                 ErrorLog(e);
-                s.Log("Couldn't update MCGalaxy staff list, turning MCGalaxy Staff Protection Level off. . . ");
+                s.Log("Failed to update MCGalaxy staff list.");
                 Devs.Clear();
                 Mods.Clear();
                 GCmods.Clear();

@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
+
 namespace MCGalaxy.Commands {
     
     public sealed class CmdSave : Command {
@@ -31,9 +33,11 @@ namespace MCGalaxy.Commands {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level l in loaded) {
                     try {
-                        if (!Server.lava.active || !Server.lava.HasMap(name)) l.Save();
-                        else { Server.s.Log("The level \"" + l.name + "\" is a Lava Survival level, only saving block change history."); l.saveChanges(); }
-                    } catch { }
+                		if (l.ShouldSaveLevelFile()) l.Save();
+                        else { Server.s.Log("The level \"" + l.name + "\" is running a game, only saving block change history."); l.saveChanges(); }
+                	} catch (Exception ex) {
+                		Server.ErrorLog(ex);
+                	}
                 }
                 Player.GlobalMessage("All levels have been saved.");
             } else {

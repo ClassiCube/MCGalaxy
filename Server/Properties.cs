@@ -429,10 +429,6 @@ namespace MCGalaxy {
 					try { Server.zombie.noRespawn = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
-				case "no-level-saving-during-zombie":
-					try { Server.zombie.noLevelSaving = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
 				case "no-pillaring-during-zombie":
 					try { Server.zombie.noPillaring = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
@@ -680,7 +676,6 @@ namespace MCGalaxy {
 			w.WriteLine("#   server-owner\t\t\t= The minecraft name, of the owner of the server.");
 			w.WriteLine("#   zombie-on-server-start\t\t= Starts Zombie Survival when server is started.");
 			w.WriteLine("#   no-respawning-during-zombie\t\t= Disables respawning (Pressing R) while Zombie is on.");
-			w.WriteLine("#   no-level-saving-during-zombie\t= Disables level saving while Zombie Survival is activated.");
 			w.WriteLine("#   no-pillaring-during-zombie\t\t= Disables pillaring while Zombie Survival is activated.");
 			w.WriteLine("#   zombie-name-while-infected\t\t= Sets the zombies name while actived if there is a value.");
 			w.WriteLine("#   enable-changing-levels\t\t= After a Zombie Survival round has finished, will change the level it is running on.");
@@ -786,7 +781,6 @@ namespace MCGalaxy {
 			w.WriteLine("server-owner = " + Server.server_owner.ToString());
 			w.WriteLine("zombie-on-server-start = " + Server.startZombieModeOnStartup);
 			w.WriteLine("no-respawning-during-zombie = " + Server.zombie.noRespawn);
-			w.WriteLine("no-level-saving-during-zombie = " + Server.zombie.noLevelSaving);
 			w.WriteLine("no-pillaring-during-zombie = " + Server.zombie.noPillaring);
 			w.WriteLine("zombie-name-while-infected = " + Server.zombie.ZombieName);
 			w.WriteLine("enable-changing-levels = " + Server.zombie.ChangeLevels);

@@ -47,8 +47,6 @@ namespace MCGalaxy.Commands
                     message = message.ToLower();
                 }
 
-                while (Server.levels == null) Thread.Sleep(100); // Do nothing while we wait on the levels list...
-
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level l in loaded)
                 {

@@ -42,7 +42,7 @@ namespace MCGalaxy {
         }
 
         public static Level FindExact(string name) {
-            Level[] loaded = LevelInfo.Loaded.Items;
+            Level[] loaded = Loaded.Items;
             foreach (Level lvl in loaded) {
                 if (lvl.name.Equals(name, comp)) return lvl;
             }

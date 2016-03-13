@@ -178,7 +178,6 @@ namespace MCGalaxy.Commands
             Server.ZombieModeOn = false;
             Server.startZombieModeOnStartup = false;
             Server.zombie.noRespawn = true;
-            Server.zombie.noLevelSaving = true;
             Server.zombie.noPillaring = true;
             Server.zombie.ZombieName = "";
             Server.zombie.ChangeLevels = false;

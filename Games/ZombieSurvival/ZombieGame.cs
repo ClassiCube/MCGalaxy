@@ -66,7 +66,7 @@ namespace MCGalaxy {
             "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
             "{0} transplanted {1}'s living brain" };
         
-        internal bool noRespawn = true, noLevelSaving = true, noPillaring = true;
+        internal bool noRespawn = true, noPillaring = true;
         internal string ZombieName = "";
         internal bool queLevel = false, queZombie = false;
         internal string nextZombie = "", nextLevel = "";
@@ -150,16 +150,15 @@ namespace MCGalaxy {
 
         public void ChangeLevel(string LevelName, bool changeMainLevel)
         {
-            String next = LevelName;
+            string next = LevelName;
             currentLevelName = next;
             queLevel = false;
             nextLevel = "";
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
             Player.GlobalMessage("The next map has been chosen - " + Colors.red + next.ToLower());
             Player.GlobalMessage("Please wait while you are transfered.");
-            String oldLevel = Server.mainLevel.name;
-            if (changeMainLevel)
-            {
+            string oldLevel = Server.mainLevel.name;
+            if (changeMainLevel) {
                 Server.mainLevel = LevelInfo.Find(next.ToLower());
                 Player[] online = PlayerInfo.Online.Items; 
                 foreach (Player player in online) {
@@ -170,9 +169,7 @@ namespace MCGalaxy {
                     }
                 }
                 Command.all.Find("unload").Use(null, oldLevel);
-            }
-            else
-            {
+            } else {
                 Player.GlobalMessage("Type /goto " + next + " to play the next round of Zombie Survival");
             }
             return;
