@@ -14,89 +14,67 @@
 	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Globalization;
 namespace MCGalaxy.Commands
 {
-    public sealed class CmdTake : Command
-    {
-        public override string name { get { return "take"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdTake() { }
+	public sealed class CmdTake : Command
+	{
+		public override string name { get { return "take"; } }
+		public override string shortcut { get { return ""; } }
+		public override string type { get { return CommandTypes.Other; } }
+		public override bool museumUsable { get { return true; } }
+		public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+		public CmdTake() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message.IndexOf(' ') == -1) { Help(p); return; }
-            if (message.Split(' ').Length != 2) { Help(p); return; }
+		public override void Use(Player p, string message) {
+			string[] args = message.Split(' ');
+			if (args.Length != 2) { Help(p); return; }
 
-            string user1 = "";
-            string user2 = "";
-            if (p == null) { user1 = "%f[ " + Server.DefaultColor + "Console%f]"; user2 = String.Format("{0}Console [&a{1}{0}]", Server.DefaultColor, Server.ZallState); } else { user1 = p.color + p.name; user2 = p.prefix + p.name; }
+			string taker = null, takerRaw = null;
+			if (p == null) { takerRaw = "(console)"; taker = "(console)"; }
+			else { takerRaw = p.color + p.name; taker = p.FullName; }
 
-            int amountTaken = 0;
-            bool all = false;
-            try { amountTaken = int.Parse(message.Split(' ')[1]); }
-            catch
-            {
-                if (message.Split()[1].ToLower() != "all")
-                {
-                    Player.SendMessage(p, "%cInvalid amount");
-                    return;
-                }
-                all = true;
-            }
-            if (amountTaken < 0) { Player.SendMessage(p, "%cYou can't take negative %3" + Server.moneys); return; }
-
-
-            Player who = PlayerInfo.Find(message.Split()[0]);
-            Economy.EcoStats ecos;
-            if (who == null)
-            { //player is offline
-                OfflinePlayer off = PlayerInfo.FindOffline(message.Split()[0]);
-                if (off == null) { Player.SendMessage(p, "%cThe player %f" + message.Split()[0] + Server.DefaultColor + "(offline)%c does not exist or has never logged on to this server"); return; }
-                ecos = Economy.RetrieveEcoStats(message.Split()[0]);
-                if (all || ecos.money - amountTaken < 0)
-                {
-                    amountTaken = ecos.money;
-                    ecos.money = 0;
-                }
-                else
-                    ecos.money -= amountTaken;
-                ecos.fine = "%f" + amountTaken + " %3" + Server.moneys + " by " + user1 + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                Economy.UpdateEcoStats(ecos);
-                Player.GlobalMessage(user2 + Server.DefaultColor + " took %f" + amountTaken + " %3" + Server.moneys + Server.DefaultColor + " from " + off.color + off.name + "%f(offline)");
-                return;
-            }
-            ecos = Economy.RetrieveEcoStats(who.name);
-            if (who == p)
-            {
-                Player.SendMessage(p, "%cYou can't take %3" + Server.moneys + "%c from yourself");
-                return;
-            }
-
-            if (all || ecos.money - amountTaken < 0)
-            {
-                amountTaken = who.money;
-                who.money = 0;
-                ecos.money = 0;
-            }
-            else
-            {
-                who.money -= amountTaken;
-                ecos.money = who.money;
-            }
-            ecos.fine = "%f" + amountTaken + " %3" + Server.moneys + " by " + user1 + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            Economy.UpdateEcoStats(ecos);
-            Player.GlobalMessage(user2 + Server.DefaultColor + " took %f" + amountTaken + " %3" + Server.moneys + Server.DefaultColor + " from " + who.prefix + who.name);
-        }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "&f/take [player] <amount> " + Server.DefaultColor + "- Takes <amount> of " + Server.moneys + " from [player]");
-            Player.SendMessage(p, "&f/take [player] all " + Server.DefaultColor + "- Takes all the " + Server.moneys + " from [player]");
-        }
-    }
+			int amount = 0;
+			bool all = args[1].CaselessEquals("all");
+			if (!all && !int.TryParse(args[1], out amount)) {
+				Player.SendMessage(p, "Amount must be an integer."); return;
+			}
+			if (amount < 0) { Player.SendMessage(p, "%cYou can't take negative %3" + Server.moneys); return; }
+			Player who = PlayerInfo.Find(args[0]);
+			if (p != null && p == who) { Player.SendMessage(p, "%cYou can't take %3" + Server.moneys + "%c from yourself"); return; }
+			
+			Economy.EcoStats ecos;
+			if (who == null) {
+				OfflinePlayer off = PlayerInfo.FindOffline(args[0]);
+				if (off == null) { Player.SendMessage(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }
+				ecos = Economy.RetrieveEcoStats(args[0]);
+				Take(all, ref ecos, ref amount);
+				Player.GlobalMessage(taker + " %Stook %f" + amount + " %3" + Server.moneys + " %Sfrom " + off.color + off.name + "%f(offline)");
+			} else {
+				ecos = Economy.RetrieveEcoStats(who.name);
+				ecos.money = who.money;
+				Take(all, ref ecos, ref amount);
+				who.money = ecos.money;
+				Player.GlobalMessage(taker + " %Stook %f" + amount + " %3" + Server.moneys + " %Sfrom " + who.prefix + who.name);
+			}
+			ecos.fine = "%f" + amount + " %3" + Server.moneys + " by " + takerRaw + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+			Economy.UpdateEcoStats(ecos);
+		}
+		
+		static void Take(bool all, ref Economy.EcoStats ecos, ref int amount) {
+			if (all || ecos.money < amount) {
+				amount = ecos.money;
+				ecos.money = 0;
+			} else {
+				ecos.money -= amount;
+			}
+		}
+		
+		public override void Help(Player p){
+			Player.SendMessage(p, "&f/take [player] <amount> " + Server.DefaultColor + "- Takes <amount> of " + Server.moneys + " from [player]");
+			Player.SendMessage(p, "&f/take [player] all " + Server.DefaultColor + "- Takes all the " + Server.moneys + " from [player]");
+		}
+	}
 }
