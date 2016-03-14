@@ -198,12 +198,10 @@ namespace MCGalaxy
         public static string level = "main";
         public static string errlog = "error.log";
 
-        //        public static bool console = false; // never used
         public static bool reportBack = true;
 
         public static bool irc = false;
         public static bool ircColorsEnable = true;
-        //        public static bool safemode = false; //Never used
         public static int ircPort = 6667;
         public static string ircNick = "ForgeBot";
         public static string ircServer = "irc.geekshed.net";

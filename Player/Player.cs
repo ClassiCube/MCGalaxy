@@ -475,7 +475,7 @@ namespace MCGalaxy {
                 if (p.ignoreAll || (global && p.ignoreGlobalChat)) continue;
                 
                 if (p.level.worldChat && p.Chatroom == null)
-                    Player.SendMessage(p, message, !global);
+                    p.SendMessage(message, !global);
             }
         }
         

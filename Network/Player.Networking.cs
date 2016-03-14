@@ -192,7 +192,11 @@ namespace MCGalaxy {
         }
         
         public void SendMessage(CpeMessageType id, string message, bool colorParse = true) {
-        	if (id != CpeMessageType.Normal && !HasCpeExt(CpeExt.MessageTypes)) return;
+            if (id != CpeMessageType.Normal && !HasCpeExt(CpeExt.MessageTypes)) {
+                if (id == CpeMessageType.Announcement) id = CpeMessageType.Normal;
+                else return;
+            }
+        	
             if (colorParse)
             	message = Colors.EscapeColors(message);
             StringBuilder sb = new StringBuilder(message);
