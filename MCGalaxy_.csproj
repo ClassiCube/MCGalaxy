@@ -299,7 +299,6 @@
     <Compile Include="Commands\Moderation\CmdWarn.cs" />
     <Compile Include="Commands\Moderation\CmdWhitelist.cs" />
     <Compile Include="Commands\Moderation\CmdXban.cs" />
-    <Compile Include="Commands\Moderation\CmdXhide.cs" />
     <Compile Include="Commands\Moderation\CmdXmute.cs" />
     <Compile Include="Commands\Moderation\CmdZone.cs" />
     <Compile Include="Commands\Other\CmdAgree.cs" />

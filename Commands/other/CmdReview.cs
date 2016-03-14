@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands
                             bool isopson = false;
                             Player[] players = PlayerInfo.Online.Items;
                             foreach (Player pl in players) {
-                                if (pl.group.Permission >= Server.reviewnext && !pl.hidden) {
+                            	if (pl.group.Permission >= Server.reviewnext && Player.CanSee(p, pl)) {
                                     isopson = true; break;
                                 }
                             }
@@ -70,12 +70,12 @@ namespace MCGalaxy.Commands
                             {
                                 Server.reviewlist.Add(p.name);
                                 int reviewlistpos = Server.reviewlist.IndexOf(p.name);
-                                if (reviewlistpos > 1) { Player.SendMessage(p, "You entered the &creview " + Server.DefaultColor + "queue. You have &c" + reviewlistpos.ToString() + Server.DefaultColor + " people in front of you in the queue"); }
-                                if (reviewlistpos == 1) { Player.SendMessage(p, "You entered the &creview " + Server.DefaultColor + "queue. There is &c1 " + Server.DefaultColor + "person in front of you in the queue"); }
-                                if ((reviewlistpos + 1) == 1) { Player.SendMessage(p, "You entered the &creview " + Server.DefaultColor + "queue. You are &cfirst " + Server.DefaultColor + "in line!"); }
+                                if (reviewlistpos > 1) { Player.SendMessage(p, "You entered the &creview %Squeue. You have &c" + reviewlistpos + " %Speople in front of you in the queue"); }
+                                if (reviewlistpos == 1) { Player.SendMessage(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
+                                if (reviewlistpos == 0) { Player.SendMessage(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
                                 Player.SendMessage(p, "The Online Operators have been notified. Someone should be with you shortly.");
                                 
-                                string start = (reviewlistpos + 1) > 1 ? "There are now &c" + (reviewlistpos + 1) + " %Speople" : "There is now &c1 %Sperson";
+                                string start = reviewlistpos > 0 ? "There are now &c" + (reviewlistpos + 1) + " %Speople" : "There is now &c1 %Sperson";
                                 Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", Server.reviewnext);
                                 Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", Server.reviewnext);
                                 p.ReviewTimer();

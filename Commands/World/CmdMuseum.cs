@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands
                     level.name = "&cMuseum " + Server.DefaultColor + "(" + message.Split(' ')[0] + " " + message.Split(' ')[1] + ")";
 
                 if (!p.hidden)
-                    Player.GlobalMessage(p.color + p.prefix + p.name + Server.DefaultColor + " went to the " + level.name);
+                    Player.GlobalMessage(p.FullName + " %Swent to the " + level.name);
             } else {
                 Player.SendMessage(p, "Level or backup could not be found.");
             }

@@ -39,10 +39,9 @@ namespace MCGalaxy.Commands {
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (!pl.hidden || p == null || Player.CanSee(p, pl)) {
-                    count++;
-                    if (pl.hidden) hiddenCount++;
-                }
+                if (!Player.CanSee(p, pl)) continue;
+                count++;
+                if (pl.hidden) hiddenCount++;
             }
             
             string verb = count == 1 ? "is " : "are ";

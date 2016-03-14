@@ -479,42 +479,40 @@ namespace MCGalaxy {
             }
         }
         
-        public static void GlobalSpawn(Player from, ushort x, ushort y, ushort z, byte rotx, byte roty, bool self, string possession = "")
-        {
+        public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
+                                       byte rotx, byte roty, bool self, string possession = "") {
         	Player[] players = PlayerInfo.Online.Items; 
-        	foreach (Player p in players) {
-                if (p.Loading && p != from) continue;
-                if (p.level != from.level || (from.hidden && !self)) continue;
+        	foreach (Player other in players) {
+                if (other.Loading && p != other) continue;
+                if (p.level != other.level || (p.hidden && !self)) continue;
                 
-                if (p != from)
-                {
-                    if (Server.ZombieModeOn && !p.aka) {
-                        if (from.infected) {
+                if (p != other) {
+                    if (Server.ZombieModeOn && !other.aka) {
+                        if (p.infected) {
                             if (Server.zombie.ZombieName != "")
-                                p.SendSpawn(from.id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
+                                other.SendSpawn(p.id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
                             else
-                                p.SendSpawn(from.id, Colors.red + from.name + possession, x, y, z, rotx, roty);
-                        } else if (!from.referee) {
-                            p.SendSpawn(from.id, from.color + from.name + possession, x, y, z, rotx, roty);
+                                other.SendSpawn(p.id, Colors.red + p.name + possession, x, y, z, rotx, roty);
+                        } else if (!p.referee) {
+                            other.SendSpawn(p.id, p.color + p.name + possession, x, y, z, rotx, roty);
                         }
                     } else {
-                        p.SendSpawn(from.id, from.color + from.name + possession, x, y, z, rotx, roty);
+                        other.SendSpawn(p.id, p.color + p.name + possession, x, y, z, rotx, roty);
                     }
-                }
-                else if (self)
-                {
-                    p.pos = new ushort[3] { x, y, z }; p.rot = new byte[2] { rotx, roty };
-                    p.oldpos = p.pos; p.basepos = p.pos; p.oldrot = p.rot;
-                    p.SendSpawn(0xFF, from.color + from.name + possession, x, y, z, rotx, roty);
+                } else if (self) {
+                    other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
+                    other.oldpos = other.pos; other.basepos = other.pos; other.oldrot = other.rot;
+                    other.SendSpawn(0xFF, p.color + p.name + possession, x, y, z, rotx, roty);
                 }
             }
         }
-        public static void GlobalDespawn(Player from, bool self) {
+        
+        public static void GlobalDespawn(Player p, bool self) {
         	Player[] players = PlayerInfo.Online.Items; 
-        	foreach (Player p in players) {
-                if ( p.level != from.level || ( from.hidden && !self ) ) continue;
-                if ( p != from ) { p.SendDespawn(from.id); }
-                else if ( self ) { p.SendDespawn(255); }
+        	foreach (Player other in players) {
+                if (p.level != other.level || (p.hidden && !self) ) continue;
+                if (p != other) { other.SendDespawn(p.id); }
+                else if (self) { other.SendDespawn(255); }
             }
         }
 
@@ -595,7 +593,7 @@ namespace MCGalaxy {
                 isFlying = false;
                 aiming = false;
                 
-                SendKick(kickMsg, sync);           
+                SendKick(kickMsg, sync);
                 if (!loggedIn) {
                 	connections.Remove(this);
                 	RemoveFromPending();
@@ -615,7 +613,7 @@ namespace MCGalaxy {
                 GlobalDespawn(this, false);
                 if (discMsg != null) {
                 	if (!hidden) {
-                		string leavem = "&c- " + color + prefix + DisplayName + " %S" + discMsg;
+                		string leavem = "&c- " + FullName + " %S" + discMsg;
                 		if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
                 			Player[] players = PlayerInfo.Online.Items; 
                 			foreach (Player pl in players) { Player.SendMessage(pl, leavem); }
