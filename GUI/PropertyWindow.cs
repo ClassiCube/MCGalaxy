@@ -1595,25 +1595,27 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             }
         }
 
+        private bool skipExtraPermChanges;
         private int oldnumber;
         private Command oldcmd;
         private void listCommandsExtraCmdPerms_SelectedIndexChanged(object sender, EventArgs e) {
             SaveOldExtraCustomCmdChanges();
             Command cmd = Command.all.Find(listCommandsExtraCmdPerms.SelectedItem.ToString());
             oldcmd = cmd;
+            skipExtraPermChanges = true;
             extracmdpermnumber.Maximum = CommandOtherPerms.GetMaxNumber(cmd);
             extracmdpermnumber.ReadOnly = extracmdpermnumber.Maximum == 1;
             extracmdpermnumber.Value = 1;
+            skipExtraPermChanges = false;
             extracmdpermdesc.Text = CommandOtherPerms.Find(cmd, 1).Description;
             extracmdpermperm.Text = CommandOtherPerms.Find(cmd, 1).Permission.ToString();
             oldnumber = (int)extracmdpermnumber.Value;
         }
 
         private void SaveOldExtraCustomCmdChanges() {
-            if ( oldcmd != null ) {
-                CommandOtherPerms.Edit(CommandOtherPerms.Find(oldcmd, oldnumber), int.Parse(extracmdpermperm.Text));
-                CommandOtherPerms.Save();
-            }
+            if (oldcmd == null || skipExtraPermChanges) return;
+            CommandOtherPerms.Edit(CommandOtherPerms.Find(oldcmd, oldnumber), int.Parse(extracmdpermperm.Text));
+            CommandOtherPerms.Save();
         }
 
         private void extracmdpermnumber_ValueChanged(object sender, EventArgs e) {

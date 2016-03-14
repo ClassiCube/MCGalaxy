@@ -126,7 +126,11 @@ namespace MCGalaxy {
                 return;
             }*/
 
-            if (!File.Exists("properties/economy.properties")) { Server.s.Log("Economy properties don't exist, creating"); File.Create("properties/economy.properties").Close(); Save(); }
+            if (!File.Exists("properties/economy.properties")) { 
+            	Server.s.Log("Economy properties don't exist, creating"); 
+            	File.Create("properties/economy.properties").Close(); 
+            	Save(); 
+            }
             using (StreamReader r = File.OpenText("properties/economy.properties")) {
                 string line;
                 while (!r.EndOfStream) {
@@ -274,24 +278,19 @@ namespace MCGalaxy {
             Settings.Level found = null;
             foreach (Settings.Level lvl in Settings.LevelsList) {
                 try {
-                    if (lvl.name.ToLower() == name.ToLower()) {
-                        found = lvl;
-                    }
+            		if (lvl.name.CaselessEquals(name)) return lvl;
                 } catch { }
             }
-            return found;
+            return null;
         }
 
         public static Settings.Rank FindRank(string name) {
-            Settings.Rank found = null;
             foreach (Settings.Rank rnk in Settings.RanksList) {
                 try {
-                    if (rnk.group.name.ToLower() == name.ToLower()) {
-                        found = rnk;
-                    }
+            		if (rnk.group.name.CaselessEquals(name)) return rnk;
                 } catch { }
             }
-            return found;
+            return null;
         }
 
         public static Economy.Settings.Rank NextRank(Player p) {
