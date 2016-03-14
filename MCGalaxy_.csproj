@@ -171,7 +171,7 @@
     <Compile Include="Commands\Economy\CmdEconomy.cs" />
     <Compile Include="Commands\Economy\CmdFakePay.cs" />
     <Compile Include="Commands\Economy\CmdGive.cs" />
-    <Compile Include="Commands\Economy\CmdMoney.cs" />
+    <Compile Include="Commands\Economy\CmdBalance.cs" />
     <Compile Include="Commands\Economy\CmdPay.cs" />
     <Compile Include="Commands\Economy\CmdStore.cs" />
     <Compile Include="Commands\Economy\CmdTake.cs" />

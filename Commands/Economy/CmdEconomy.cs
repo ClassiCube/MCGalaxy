@@ -38,18 +38,10 @@ namespace MCGalaxy.Commands {
             for (int i = 0; i < raw.Length; i++)
                 args[i] = i < 2 ? raw[i].ToLower() : raw[i];
 
-            switch (args[0]) {
-                case "setup":
-                    HandleSetup(p, message, args); break;
-                case "stats":
-                case "balance":
-                case "amount":
-                    HandleStats(p, message, args); break;
-                case "help":
-                    HandleHelp(p, message, args); break;
-                default:
-                    Help(p); break;
-            }
+            if (args[0] == "setup") 
+            	HandleSetup(p, message, args);
+            else
+            	Help(p);
         }
         
         void HandleSetup(Player p, string message, string[] args) {
@@ -303,6 +295,9 @@ namespace MCGalaxy.Commands {
                 case "disable":
                     if (!Economy.Settings.Enabled) { Player.SendMessage(p, "%cThe economy system is already disabled"); return; }
                     else { Economy.Settings.Enabled = false; Player.SendMessage(p, "%aThe economy system is now disabled"); return; }
+                    
+                case "help":
+                    SetupHelp(p); return;
 
                 default:
                     if (args[1] == "") { SetupHelp(p); return; }
@@ -312,88 +307,16 @@ namespace MCGalaxy.Commands {
             Economy.Save();
         }
         
-        void HandleStats(Player p, string message, string[] args) {
-            Economy.EcoStats ecostats;
-            if (p == null && args[1] == "") {
-                Player.SendMessage(p, "You must provide a name when using the command from console."); return;
-            }
-
-            if (args[1] != "") {
-                Player who = PlayerInfo.Find(args[1]);
-                if (who == null) {
-                    ecostats = Economy.RetrieveEcoStats(args[1]);
-                    Player.SendMessage(p, "%3===Economy stats for: %f" + ecostats.playerName + "%7(offline)%3===");
-                } else {
-                    ecostats = Economy.RetrieveEcoStats(who.name);
-                    Player.SendMessage(p, "%3===Economy stats for: " + who.color + who.name + "%3===");
-                }
-            } else {
-                ecostats = Economy.RetrieveEcoStats(p.name);
-                Player.SendMessage(p, "%3===Economy stats for: " + p.color + p.name + "%3===");
-            }
-            
-            Player.SendMessage(p, "Balance: %f" + ecostats.money + " %3" + Server.moneys);
-            Player.SendMessage(p, "Total spent: %f" + ecostats.totalSpent + " %3" + Server.moneys);
-            Player.SendMessage(p, "Recent purchase: " + ecostats.purchase);
-            Player.SendMessage(p, "Recent payment: " + ecostats.payment);
-            Player.SendMessage(p, "Recent receivement: " + ecostats.salary);
-            Player.SendMessage(p, "Recent fine: " + ecostats.fine);
-        }
-        
-        void HandleHelp(Player p, string message, string[] args) {
-            switch (args[1]) {
-                case "":
-                    Help(p);
-                    return;
-
-                case "buy":
-                    Player.SendMessage(p, "%3===Economy Help: Buy===");
-                    Player.SendMessage(p, "Buying titles: %f/eco buy title [title_name]");
-                    Player.SendMessage(p, "Buying colors: %f/eco buy color [color]");
-                    Player.SendMessage(p, "Buying titlecolors: %f/eco buy tcolor [color]");
-                    Player.SendMessage(p, "Buying ranks: %f/eco buy the NEXT rank");
-                    Player.SendMessage(p, "%7Check out the ranks and their prices with: %f/eco info rank");
-                    Player.SendMessage(p, "Buy your own maps: %f/eco buy map [map_preset_name] [custom_map_name]");
-                    Player.SendMessage(p, "%7Check out the map presets with: %f/eco info map");
-                    return;
-
-                case "stats":
-                case "balance":
-                case "amount":
-                    Player.SendMessage(p, "%3===Economy Help: Stats===");
-                    Player.SendMessage(p, "Check your stats: %f/eco stats");
-                    Player.SendMessage(p, "Check the stats of a player: %f/eco stats [player_name]");
-                    return;
-
-                case "info":
-                case "about":
-                    Player.SendMessage(p, "%3===Economy Help: Info===");
-                    Player.SendMessage(p, "To get info and prices about features: %f/eco info [color/title/titlecolor/rank/map]");
-                    return;
-
-                case "setup":
-                    if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this)) {
-                        SetupHelp(p); return;
-                    } else { Player.SendMessage(p, "%cYou are not allowed to use %f/eco help setup"); return; }
-
-                default:
-                    Player.SendMessage(p, "%cThat wasn't a valid command addition, sending you to help");
-                    Help(p); return;
-            }
-        }
-        
         public override void Help(Player p) {
-            Player.SendMessage(p, "%3===Welcome to the Economy Help Menu===");
-            Player.SendMessage(p, "%f/eco stats [%aplayer%f] %e- view ecostats about yourself or [player]");
-            Player.SendMessage(p, "%f/eco info <title/color/tcolor/rank/map> %e- view information about buying the specific feature");
+            Player.SendMessage(p, "%cMost commands have been removed from /economy, " +
+                               "use the appropriate command from %T/help economy %cinstead.");
             if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this)) {
                 Player.SendMessage(p, "%f/eco setup <type> %e- to setup economy");
-                Player.SendMessage(p, "%f/eco help <buy/stats/info/setup> %e- get more specific help");
-            } else { Player.SendMessage(p, "%f/eco help <buy/stats/info> %e- get more specific help"); }
+                Player.SendMessage(p, "%f/eco setup help %e- get more specific help for setting up the economy");
+            }
         }
 
         void SetupHelp(Player p) {
-            Player.SendMessage(p, "%3===Economy Setup Help Menu===");
             if (p == null || p.name == Server.server_owner) {
                 Player.SendMessage(p, "%4/eco setup apply %e- applies the changes made to 'economy.properties'");
             }

@@ -47,6 +47,7 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdAward()), "reward trophy price");
             new CommandKeywords((new CmdAwards()), "price list trophy info");
             new CommandKeywords((new CmdAwardMod()), "trophy add del price");
+            new CommandKeywords((new CmdBalance()), "cash " + Server.moneys);
             new CommandKeywords((new CmdBan()), "kick mod punish");
             new CommandKeywords((new CmdBanEdit()), "reason edit ban");
             new CommandKeywords((new CmdBaninfo()), "info ban details");
@@ -147,7 +148,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdMissile()), "gun missil");
             new CommandKeywords((new CmdMode()), "block place");
             new CommandKeywords((new CmdModerate()), "chat enable disable allow disallow");
-            new CommandKeywords((new CmdMoney()), "cash " + Server.moneys);
             new CommandKeywords((new CmdMove()), "player pos");
             new CommandKeywords((new CmdMoveAll()), "move all player pos");
             new CommandKeywords((new CmdMuseum()), "musea map lvl level");
