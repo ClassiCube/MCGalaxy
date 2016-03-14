@@ -167,11 +167,13 @@
     <Compile Include="Commands\Economy\CmdAward.cs" />
     <Compile Include="Commands\Economy\CmdAwardMod.cs" />
     <Compile Include="Commands\Economy\CmdAwards.cs" />
+    <Compile Include="Commands\Economy\CmdBuy.cs" />
     <Compile Include="Commands\Economy\CmdEconomy.cs" />
     <Compile Include="Commands\Economy\CmdFakePay.cs" />
     <Compile Include="Commands\Economy\CmdGive.cs" />
     <Compile Include="Commands\Economy\CmdMoney.cs" />
     <Compile Include="Commands\Economy\CmdPay.cs" />
+    <Compile Include="Commands\Economy\CmdTake.cs" />
     <Compile Include="Commands\Fun\Cmd8Ball.cs" />
     <Compile Include="Commands\Fun\CmdAka.cs" />
     <Compile Include="Commands\Fun\CmdAlive.cs" />
@@ -348,7 +350,6 @@
     <Compile Include="Commands\Other\CmdSetPass.cs" />
     <Compile Include="Commands\Other\CmdSpawn.cs" />
     <Compile Include="Commands\Other\CmdSummon.cs" />
-    <Compile Include="Commands\Other\CmdTake.cs" />
     <Compile Include="Commands\Other\CmdTColor.cs" />
     <Compile Include="Commands\Other\CmdText.cs" />
     <Compile Include="Commands\Other\CmdTimer.cs" />

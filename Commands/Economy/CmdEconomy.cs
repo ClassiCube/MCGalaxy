@@ -42,8 +42,6 @@ namespace MCGalaxy.Commands {
             switch (args[0]) {
                 case "setup":
                     HandleSetup(p, message, args); break;
-                case "buy":
-                    HandleBuy(p, message, args); break;
                 case "stats":
                 case "balance":
                 case "amount":
@@ -84,23 +82,14 @@ namespace MCGalaxy.Commands {
                             if (Economy.FindLevel(args[3]) != null) { Player.SendMessage(p, "%cThat preset level already exists"); break; } else {
                                 Economy.Settings.Level level = new Economy.Settings.Level();
                                 level.name = args[3];
-                                if (isGood(args[4]) && isGood(args[5]) && isGood(args[6])) { level.x = args[4]; level.y = args[5]; level.z = args[6]; } else { Player.SendMessage(p, "%cDimension must be  a power of 2"); break; }
-                                switch (args[7].ToLower()) {
-                                    case "flat":
-                                    case "pixel":
-                                    case "island":
-                                    case "mountains":
-                                    case "ocean":
-                                    case "forest":
-                                    case "desert":
-                                    case "space":
-                                        level.type = args[7].ToLower();
-                                        break;
-
-                                    default:
-                                        Player.SendMessage(p, "%cValid types are: island, mountains, forest, ocean, flat, pixel, desert, space");
-                                        break;
+                                if (isGood(args[4]) && isGood(args[5]) && isGood(args[6])) {
+                                    level.x = args[4]; level.y = args[5]; level.z = args[6];
+                                } else { Player.SendMessage(p, "%cDimension must be a power of 2"); break; }
+                                
+                                if (!MapGen.IsRecognisedFormat(args[7])) {
+                                    MapGen.PrintValidFormats(p); return;
                                 }
+                                level.type = args[7].ToLower();
                                 try {
                                     level.price = int.Parse(args[8]);
                                 } catch { Player.SendMessage(p, "%cInvalid price input: that wasn't a number!"); return; }
@@ -115,101 +104,67 @@ namespace MCGalaxy.Commands {
 
                         case "delete":
                         case "remove":
-                            if (lvl == null) { Player.SendMessage(p, "%cThat preset level doesn't exist"); break; } else { Economy.Settings.LevelsList.Remove(lvl); Player.SendMessage(p, "%aSuccessfully removed preset: %f" + lvl.name); break; }
+                            if (lvl == null) { Player.SendMessage(p, "%cThat preset level doesn't exist"); return; }
+                            Economy.Settings.LevelsList.Remove(lvl);
+                            Player.SendMessage(p, "%aSuccessfully removed preset: %f" + lvl.name);
+                            break;
 
                         case "edit":
                         case "change":
-                            if (lvl == null) { Player.SendMessage(p, "%cThat preset level doesn't exist"); break; } else {
-                                switch (args[4]) {
-                                    case "name":
-                                    case "title":
-                                        Economy.Settings.LevelsList.Remove(lvl);
-                                        lvl.name = args[5];
-                                        Economy.Settings.LevelsList.Add(lvl);
-                                        Player.SendMessage(p, "%aSuccessfully changed preset name to %f" + lvl.name);
-                                        break;
+                            if (lvl == null) { Player.SendMessage(p, "%cThat preset level doesn't exist"); return; }
+                            
+                            switch (args[4]) {
+                                case "name":
+                                case "title":
+                                    lvl.name = args[5];
+                                    Player.SendMessage(p, "%aSuccessfully changed preset name to %f" + lvl.name);
+                                    break;
 
-                                    case "x":
-                                        if (isGood(args[5])) {
-                                            Economy.Settings.LevelsList.Remove(lvl);
-                                            lvl.x = args[5];
-                                            Economy.Settings.LevelsList.Add(lvl);
-                                            Player.SendMessage(p, "%aSuccessfully changed preset x size to %f" + lvl.x);
-                                        } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                                        break;
+                                case "x":
+                                    if (isGood(args[5])) {
+                                        lvl.x = args[5];
+                                        Player.SendMessage(p, "%aSuccessfully changed preset x size to %f" + lvl.x);
+                                    } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
+                                    break;
 
-                                    case "y":
-                                        if (isGood(args[5])) {
-                                            Economy.Settings.LevelsList.Remove(lvl);
-                                            lvl.y = args[5];
-                                            Economy.Settings.LevelsList.Add(lvl);
-                                            Player.SendMessage(p, "%aSuccessfully changed preset y size to %f" + lvl.y);
-                                        } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                                        break;
+                                case "y":
+                                    if (isGood(args[5])) {
+                                        lvl.y = args[5];
+                                        Player.SendMessage(p, "%aSuccessfully changed preset y size to %f" + lvl.y);
+                                    } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
+                                    break;
 
-                                    case "z":
-                                        if (isGood(args[5])) {
-                                            Economy.Settings.LevelsList.Remove(lvl);
-                                            lvl.z = args[5];
-                                            Economy.Settings.LevelsList.Add(lvl);
-                                            Player.SendMessage(p, "%aSuccessfully changed preset z size to %f" + lvl.z);
-                                        } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                                        break;
+                                case "z":
+                                    if (isGood(args[5])) {
+                                        lvl.z = args[5];
+                                        Player.SendMessage(p, "%aSuccessfully changed preset z size to %f" + lvl.z);
+                                    } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
+                                    break;
 
-                                    case "type":
-                                        Economy.Settings.LevelsList.Remove(lvl);
-                                        switch (args[5].ToLower()) {
-                                            case "flat":
-                                            case "pixel":
-                                            case "island":
-                                            case "mountains":
-                                            case "ocean":
-                                            case "forest":
-                                            case "desert":
-                                            case "space":
-                                                lvl.type = args[5].ToLower();
-                                                break;
+                                case "type":
+                                    if (MapGen.IsRecognisedFormat(args[5])) {
+                                        lvl.type = args[5].ToLower();
+                                    } else {
+                                        MapGen.PrintValidFormats(p); return;
+                                    }
+                                    Player.SendMessage(p, "%aSuccessfully changed preset type to %f" + lvl.type);
+                                    break;
 
-                                            default:
-                                                Player.SendMessage(p, "%cValid types are: island, mountains, forest, ocean, flat, pixel, desert, space");
-                                                Economy.Settings.LevelsList.Add(lvl);
-                                                return;
-                                        }
-                                        Economy.Settings.LevelsList.Add(lvl);
-                                        Player.SendMessage(p, "%aSuccessfully changed preset type to %f" + lvl.type);
-                                        break;
+                                case "price":
+                                    int newPrice = 0;
+                                    if (!int.TryParse(args[5], out newPrice)) {
+                                        Player.SendMessage(p, "%cInvalid amount of %3" + Server.moneys); return;
+                                    }
+                                    if (newPrice < 0) { 
+                                        Player.SendMessage(p, "%cAmount of %3" + Server.moneys + "%c cannot be negative"); return; 
+                                    }
+                                    lvl.price = newPrice;
+                                    Player.SendMessage(p, "%aSuccessfully changed preset price to %f" + lvl.price + " %3" + Server.moneys);
+                                    break;
 
-                                        /*case "dimensions":
-                                                case "sizes":
-                                                case "dimension":
-                                                case "size":
-                                                    Economy.Settings.LevelsList.Remove(lvl);
-                                                    if (isGood(args[4])) { lvl.x = args[4]; }
-                                                    if (isGood(args[5])) { lvl.y = args[5]; }
-                                                    if (isGood(args[6])) { lvl.z = args[6]; } else { Player.SendMessage(p, "A Dimension was wrong, it must a power of 2"); Economy.Settings.LevelsList.Add(lvl); break; }
-                                                    Economy.Settings.LevelsList.Add(lvl);
-                                                    Player.SendMessage(p, "Changed preset name");
-                                                    break;*/
-
-                                    case "price":
-                                        Economy.Settings.LevelsList.Remove(lvl);
-                                        int old = lvl.price;
-                                        try {
-                                            lvl.price = int.Parse(args[5]);
-                                        } catch {
-                                            Economy.Settings.LevelsList.Add(lvl);
-                                            Player.SendMessage(p, "%cInvalid amount of %3" + Server.moneys);
-                                            return;
-                                        }
-                                        if (lvl.price < 0) { Player.SendMessage(p, "%cAmount of %3" + Server.moneys + "%c cannot be negative"); lvl.price = old; Economy.Settings.LevelsList.Add(lvl); return; }
-                                        Economy.Settings.LevelsList.Add(lvl);
-                                        Player.SendMessage(p, "%aSuccessfully changed preset price to %f" + lvl.price + " %3" + Server.moneys);
-                                        break;
-
-                                    default:
-                                        Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                                        break;
-                                }
+                                default:
+                                    Player.SendMessage(p, "%cThat wasn't a valid command addition!");
+                                    break;
                             }
                             break;
 
@@ -361,189 +316,6 @@ namespace MCGalaxy.Commands {
             Economy.Save();
         }
         
-        void HandleBuy(Player p, string message, string[] args) {
-            if (p == null) { Player.SendMessage(p, "%cConsole cannot buy any items"); return; }
-            Economy.EcoStats ecos = Economy.RetrieveEcoStats(p.name);
-            switch (args[1]) {
-                case "map":
-                case "level":
-                case "maps":
-                case "levels":
-                    Economy.Settings.Level lvl = Economy.FindLevel(args[2]);
-                    if (lvl == null) { Player.SendMessage(p, "%cThat isn't a level preset"); return; } else {
-                        if (!p.EnoughMoney(lvl.price)) {
-                            Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy that map");
-                            return;
-                        } else {
-                            if (args[3] == null) { Player.SendMessage(p, "%cYou didn't specify a name for your level"); return; } else {
-                                int old = p.money;
-                                int oldTS = ecos.totalSpent;
-                                string oldP = ecos.purchase;
-                                try {
-                                    Command.all.Find("newlvl").Use(null, p.name + "_" + args[3] + " " + lvl.x + " " + lvl.y + " " + lvl.z + " " + lvl.type);
-                                    Player.SendMessage(p, "%aCreating level: '%f" + p.name + "_" + args[3] + "%a' . . .");
-                                    p.money = p.money - lvl.price;
-                                    ecos.money = p.money;
-                                    ecos.totalSpent += lvl.price;
-                                    ecos.purchase = "%3Map: %f" + lvl.name + "%3 - Price: %f"  + lvl.price + " %3" + Server.moneys + " - Date: %f" + ecoColor + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                                    Economy.UpdateEcoStats(ecos);
-                                    Command.all.Find("load").Use(null, p.name + "_" + args[3]);
-                                    Thread.Sleep(250);
-                                    Level level = LevelInfo.Find(p.name + "_" + args[3]);
-                                    if (level.permissionbuild > p.group.Permission) { level.permissionbuild = p.group.Permission; }
-                                    if (level.permissionvisit > p.group.Permission) { level.permissionvisit = p.group.Permission; }
-                                    Command.all.Find("goto").Use(p, p.name + "_" + args[3]);
-
-                                    Player.SendMessage(p, "%aSuccessfully created your map: '%f" + p.name + "_" + args[3] + "%a'");
-                                    Player.SendMessage(p, "%aYour balance is now %f" + p.money.ToString() + " %3" + Server.moneys);
-                                    try {
-                                        //safe against SQL injections, but will be replaced soon by a new feature
-                                        //DB
-                                        Database.executeQuery("INSERT INTO `Zone" + level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES " +
-                                                              "(0,0,0," + (level.Width - 1) + "," + (level.Height - 1) + "," + (level.Length - 1) + ",'" + p.name + "')");
-                                        //DB
-                                        Player.SendMessage(p, "%aZoning Succesful");
-                                        return;
-                                    } catch { Player.SendMessage(p, "%cZoning Failed"); return; }
-                                } catch { Player.SendMessage(p, "%cSomething went wrong, Money restored"); if (old != p.money) { p.money = old; ecos.money = old; ecos.totalSpent = oldTS; ecos.purchase = oldP; Economy.UpdateEcoStats(ecos); } return; }
-                            }
-                        }
-                    }
-
-                case "colors":
-                case "color":
-                case "colours":
-                case "colour":
-                    if (p.EnoughMoney(Economy.Settings.ColorPrice) == false) {
-                        Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a color");
-                        return;
-                    }
-                    if (!args[2].StartsWith("&") || !args[2].StartsWith("%")) {
-                        args[2] = Colors.Parse(args[2]);
-                        if (args[2] == "") {
-                            Player.SendMessage(p, "%cThat wasn't a color");
-                            return;
-                        }
-                    }
-                    if (args[2] == p.color) {
-                        Player.SendMessage(p, "%cYou already have a " + args[2] + Colors.Name(args[2]) + "%c color");
-                        return;
-                    } else {
-                        Command.all.Find("color").Use(null, p.name + " " + Colors.Name(args[2]));
-                        p.money = p.money - Economy.Settings.ColorPrice;
-                        ecos.money = p.money;
-                        ecos.totalSpent += Economy.Settings.ColorPrice;
-                        ecos.purchase = "%3Color: " + args[2] + Colors.Name(args[2]) + "%3 - Price: %f" + Economy.Settings.ColorPrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                        Economy.UpdateEcoStats(ecos);
-                        Player.SendMessage(p, "%aYour color has been successfully changed to " + args[2] + Colors.Name(args[2]));
-                        Player.SendMessage(p, "%aYour balance is now %f" + p.money.ToString() + " %3" + Server.moneys);
-                        return;
-                    }
-
-                case "tcolor":
-                case "tcolors":
-                case "titlecolor":
-                case "titlecolors":
-                case "tc":
-                    if (!p.EnoughMoney(Economy.Settings.TColorPrice)) {
-                        Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a titlecolor");
-                        return;
-                    }
-                    if (!args[2].StartsWith("&") || !args[2].StartsWith("%")) {
-                        args[2] = Colors.Parse(args[2]);
-                        if (args[2] == "") {
-                            Player.SendMessage(p, "%cThat wasn't a color");
-                            return;
-                        }
-                    }
-                    if (args[2] == p.titlecolor) {
-                        Player.SendMessage(p, "%cYou already have a " + args[2] + Colors.Name(args[2]) + "%c titlecolor");
-                        return;
-                    } else {
-                        Command.all.Find("tcolor").Use(null, p.name + " " + Colors.Name(args[2]));
-                        p.money = p.money - Economy.Settings.TColorPrice;
-                        ecos.money = p.money;
-                        ecos.totalSpent += Economy.Settings.TColorPrice;
-                        ecos.purchase = "%3Titlecolor: " + args[2] + Colors.Name(args[2]) + "%3 - Price: %f" + Economy.Settings.TColorPrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                        Economy.UpdateEcoStats(ecos);
-                        Player.SendMessage(p, "%aYour titlecolor has been successfully changed to " + args[2] + Colors.Name(args[2]));
-                        Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-                        return;
-                    }
-
-                case "titles":
-                case "title":
-                    if (p.EnoughMoney(Economy.Settings.TitlePrice) == false) {
-                        Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a title");
-                        return;
-                    }
-                    if (args[3] != string.Empty) {
-                        Player.SendMessage(p, "%cYour title cannot contain any spaces");
-                        return;
-                    }
-                    if (args[2] == p.title) {
-                        Player.SendMessage(p, "%cYou already have that title");
-                        return;
-                    }
-                    if (args[2].Length > 17) {
-                        Player.SendMessage(p, "%cTitles cannot be longer than 17 characters");
-                        return;
-                    }
-                    var regex = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9-_\\.]*$");
-                    if (!regex.IsMatch(args[2])) {
-                        Player.SendMessage(p, "%cInvalid title! Titles may only contain alphanumeric characters and .-_");
-                        return;
-                    }
-                    bool free = false;
-                    if (args[2] == null || args[2] == string.Empty || args[2] == "") {
-                        args[2] = ""; //just an extra check to make sure it's good
-                        free = true;
-                    }
-                    Command.all.Find("title").Use(null, p.name + " " + args[2]);
-                    if (!free) {
-                        p.money = p.money - Economy.Settings.TitlePrice;
-                        ecos.money = p.money;
-                        ecos.totalSpent += Economy.Settings.TitlePrice;
-                        ecos.purchase = "%3Title: %f" + args[2] + "%3 - Price: %f" + Economy.Settings.TitlePrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                        Economy.UpdateEcoStats(ecos);
-                        Player.SendMessage(p, "%aYour title has been successfully changed to [" + p.titlecolor + args[2] + "%a]");
-                    } else { Player.SendMessage(p, "%aYour title has been successfully removed for free"); }
-                    Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-                    return;
-
-                case "ranks":
-                case "rank":
-                    if (args[2] != "" && args[2] != null && !string.IsNullOrEmpty(args[2]) && args[2] != string.Empty) {
-                        Player.SendMessage(p, "%cYou cannot provide a rank name, use %a/eco buy rank %cto buy the NEXT rank.");
-                        return;
-                    }
-
-                    LevelPermission maxrank = Group.Find(Economy.Settings.MaxRank).Permission;
-                    if (p.group.Permission == maxrank || p.group.Permission >= maxrank) {
-                        Player.SendMessage(p, "%cYou cannot buy anymore ranks, because you passed the max buyable rank: " + Group.Find(Economy.Settings.MaxRank).color + Economy.Settings.MaxRank);
-                        return;
-                    } else {
-                        if (!p.EnoughMoney(Economy.NextRank(p).price)) {
-                            Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy the next rank");
-                            return;
-                        }
-                        Command.all.Find("promote").Use(null, p.name);
-                        p.money = p.money - Economy.FindRank(p.group.name).price;
-                        ecos.money = p.money;
-                        ecos.totalSpent += Economy.FindRank(p.group.name).price;
-                        ecos.purchase = "%3Rank: " + p.group.color + p.group.name + "%3 - Price: %f" + Economy.FindRank(p.group.name).price + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                        Economy.UpdateEcoStats(ecos);
-                        Player.SendMessage(p, "%aYou've successfully bought the rank " + p.group.color + p.group.name);
-                        Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-                        return;
-                    }
-
-                default:
-                    Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                    return;
-            }
-        }
-        
         void HandleStats(Player p, string message, string[] args) {
             Economy.EcoStats ecostats;
             if (p == null && args[1] == "") {
@@ -681,23 +453,20 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            string defaultcolor = Group.findPerm(defaultRank).color;
-            string othercolor = Group.findPermInt(CommandOtherPerms.GetPerm(this)).color;
             Player.SendMessage(p, "%3===Welcome to the Economy Help Menu===");
-            Player.SendMessage(p, defaultcolor + "%f/eco buy <title/color/tcolor/rank/map> [%atitle/color/tcolor/map_preset%f] [%acustom_map_name%f] %e- to buy one of these features");
-            Player.SendMessage(p, defaultcolor + "%f/eco stats [%aplayer%f] %e- view ecostats about yourself or [player]");
-            Player.SendMessage(p, defaultcolor + "%f/eco info <title/color/tcolor/rank/map> %e- view information about buying the specific feature");
+            Player.SendMessage(p, "%f/eco stats [%aplayer%f] %e- view ecostats about yourself or [player]");
+            Player.SendMessage(p, "%f/eco info <title/color/tcolor/rank/map> %e- view information about buying the specific feature");
             if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this)) {
-                Player.SendMessage(p, othercolor + "%f/eco setup <type> %e- to setup economy");
-                Player.SendMessage(p, othercolor + "%f/eco help <buy/stats/info/setup> %e- get more specific help");
-            } else { Player.SendMessage(p, defaultcolor + "%f/eco help <buy/stats/info> %e- get more specific help"); }
+                Player.SendMessage(p, "%f/eco setup <type> %e- to setup economy");
+                Player.SendMessage(p, "%f/eco help <buy/stats/info/setup> %e- get more specific help");
+            } else { Player.SendMessage(p, "%f/eco help <buy/stats/info> %e- get more specific help"); }
         }
 
         public void SetupHelp(Player p) {
             Player.SendMessage(p, "%3===Economy Setup Help Menu===");
-            if (p !=null && p.name == Server.server_owner) {
+            if (p == null || p.name == Server.server_owner) {
                 Player.SendMessage(p, "%4/eco setup apply %e- applies the changes made to 'economy.properties'");
-            } else if (p == null) { Player.SendMessage(p, "%4/eco setup apply %e- applies the changes made to 'economy.properties'"); }
+            }
             Player.SendMessage(p, "%4/eco setup [%aenable%4/%cdisable%4] %e- to enable/disable the economy system");
             Player.SendMessage(p, "%4/eco setup [title/color/tcolor/rank/map] [%aenable%4/%cdisable%4] %e- to enable/disable that feature");
             Player.SendMessage(p, "%4/eco setup [title/color/tcolor] [%3price%4] %e- to setup the prices for these features");
@@ -708,7 +477,7 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%4/eco setup map edit [%fname%4] [name/x/y/z/type/price] [%fvalue%4] %e- to edit a map preset");
         }
 
-        static public bool isGood(string value) {
+        public static bool isGood(string value) {
             ushort uvalue = ushort.Parse(value);
             switch (uvalue) {
                 case 2:
