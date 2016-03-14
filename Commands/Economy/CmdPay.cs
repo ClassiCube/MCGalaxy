@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
                 Economy.UpdateEcoStats(payer);
                 Economy.UpdateEcoStats(receiver);
 
-                Player.GlobalMessage(p.prefix + p.DisplayName + Server.DefaultColor + " paid %f" + off.color + off.name + Server.DefaultColor + "(offline) %f" + amountPaid + " %3" + Server.moneys);
+                Player.GlobalMessage(p.FullName + " %Spaid %f" + off.color + off.name + "%S(offline) %f" + amountPaid + " %3" + Server.moneys);
                 return;
             }
             if (who == p) { Player.SendMessage(p, "%cYou can't pay yourself %3" + Server.moneys); return; }
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands
 
             Economy.UpdateEcoStats(payer);
             Economy.UpdateEcoStats(receiver);
-            Player.GlobalMessage(p.prefix + p.DisplayName + Server.DefaultColor + " paid " + who.prefix + who.name + " %f" + amountPaid + " %3" + Server.moneys);
+            Player.GlobalMessage(p.FullName + " %Spaid " + who.FullName + " %f" + amountPaid + " %3" + Server.moneys);
         }
         public override void Help(Player p)
         {

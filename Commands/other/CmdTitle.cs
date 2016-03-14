@@ -45,11 +45,11 @@ namespace MCGalaxy.Commands {
             if (newTitle.Length > 17) { Player.SendMessage(p, "Title must be under 17 letters."); return; }
 
             if (newTitle == "") {
-                Player.SendChatFrom(who, who.color + who.prefix + who.name + " %Shad their title removed.", false);
+                Player.SendChatFrom(who, who.FullName + " %Shad their title removed.", false);
                 query.AddParam("@Name", who.name);
                 Database.executeQuery(query, "UPDATE Players SET Title = '' WHERE Name = @Name");
             } else {
-                Player.SendChatFrom(who, who.color + who.name + " %Swas given the title of &b[" + newTitle + "%b]", false);
+                Player.SendChatFrom(who, who.FullName + " %Swas given the title of &b[" + newTitle + "%b]", false);
                 query.AddParam("@Title", newTitle);
                 query.AddParam("@Name", who.name);
                 Database.executeQuery(query, "UPDATE Players SET Title = @Title WHERE Name = @Name");

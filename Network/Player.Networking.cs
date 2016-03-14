@@ -174,19 +174,25 @@ namespace MCGalaxy {
                 else
                     Server.IRC.Pm(Server.IRC.usedCmd, message);
             } else {
-                p.SendMessage(0, Server.DefaultColor + message, colorParse);
+                p.SendMessage(CpeMessageType.Normal, Server.DefaultColor + message, colorParse);
             }
         }
         
         public void SendMessage(string message) {
-           SendMessage(0, Server.DefaultColor + message, true);
+           SendMessage(CpeMessageType.Normal, Server.DefaultColor + message, true);
         }
         
         public void SendMessage(string message, bool colorParse) {
-            SendMessage(0, Server.DefaultColor + message, colorParse);
+            SendMessage(CpeMessageType.Normal, Server.DefaultColor + message, colorParse);
         }
         
+        [Obsolete("Use the overload with the CpeMessageType parameter.")]
         public void SendMessage(byte id, string message, bool colorParse = true) {
+            SendMessage((CpeMessageType)id, message, colorParse);
+        }
+        
+        public void SendMessage(CpeMessageType id, string message, bool colorParse = true) {
+        	if (id != CpeMessageType.Normal && !HasCpeExt(CpeExt.MessageTypes)) return;
             if (colorParse)
             	message = Colors.EscapeColors(message);
             StringBuilder sb = new StringBuilder(message);
@@ -222,7 +228,7 @@ namespace MCGalaxy {
                     
                     byte[] buffer = new byte[66];
                     buffer[0] = Opcode.Message;
-                    buffer[1] = id;
+                    buffer[1] = (byte)id;
                     if (HasCpeExt(CpeExt.FullCP437))
                     	NetUtils.WriteCP437(newLine, buffer, 2);
                     else

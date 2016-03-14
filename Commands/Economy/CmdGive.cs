@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands
             ecos.money = who.money;
             ecos.salary = "%f" + amountGiven + "%3 " + Server.moneys + " by " + user1 + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             Economy.UpdateEcoStats(ecos);
-            Player.GlobalMessage(user2 + Server.DefaultColor + " gave " + who.prefix + who.name + " %f" + amountGiven + " %3" + Server.moneys);
+            Player.GlobalMessage(user2 + " %Sgave " + who.FullName + " %f" + amountGiven + " %3" + Server.moneys);
             //Player.GlobalMessage(who.color + who.prefix + who.name + Server.DefaultColor + " was given %f" + amountGiven + " %3" + Server.moneys + Server.DefaultColor + " by " + user2);
         }
         public override void Help(Player p)

@@ -51,7 +51,7 @@ namespace MCGalaxy
                 p.hasflag = null;
                 p.prefix = p.color + "[" + Colors.Name("&" + color).ToUpper() + "] ";
                 players.Add(p);
-                mapOn.ChatLevel(p.color + p.prefix + p.name + Server.DefaultColor + " has joined the " + teamstring + ".");
+                mapOn.ChatLevel(p.FullName + " %Shas joined the " + teamstring + ".");
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
             }
         }
@@ -67,7 +67,7 @@ namespace MCGalaxy
                 //p.carryingFlag = false;
                 p.hasflag = null;
                 players.Remove(p);
-                mapOn.ChatLevel(p.color + p.prefix + p.name + Server.DefaultColor + " has left the " + teamstring + ".");
+                mapOn.ChatLevel(p.FullName + " %Shas left the " + teamstring + ".");
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
             }
         }

@@ -56,7 +56,7 @@ namespace MCGalaxy {
             return false;
         }
         
-        public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z, 
+        public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
                                              byte rotX, byte rotY) {
             if (!p.referee && noRespawn) {
                 if (p.pos[0] >= x + 70 || p.pos[0] <= x - 70 ) {
@@ -90,16 +90,19 @@ namespace MCGalaxy {
         }
         
         public override void PlayerJoinedServer(Player p) {
-            if (Status != ZombieGameStatus.NotStarted)
-                Player.SendMessage(p, "There is a Zombie Survival game currently in-progress! " +
-                                   "Join it by typing /g " + Server.zombie.currentLevelName);
+            if (Status == ZombieGameStatus.NotStarted) return;
+            Player.SendMessage(p, "There is a Zombie Survival game currently in-progress! " +
+                               "Join it by typing /g " + Server.zombie.currentLevelName);
         }
         
         public override void PlayerJoinedLevel(Player p, Level oldLevl) {
             if (Server.zombie.RoundInProgress && p.level.name == currentLevelName)
                 Server.zombie.InfectedPlayerLogin(p);
-
-            if (p.level.name == currentLevelName) return;
+            if (p.level.name == currentLevelName) {
+                //p.SendMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
+                return;
+            }
+            p.SendMessage(CpeMessageType.BottomRight1, "");
             if(ZombieGame.alive.Contains(p))
                 ZombieGame.alive.Remove(p);
             if (ZombieGame.infectd.Contains(p))

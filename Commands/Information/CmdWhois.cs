@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands
                 Command.all.Find("whowas").Use(p, message); return;
             }
 
-            Player.SendMessage(p, who.color + who.name + Server.DefaultColor + " (" + who.DisplayName + ") " + Server.DefaultColor + " is on &b" + who.level.name);
-            Player.SendMessage(p, who.color + who.prefix + who.name + Server.DefaultColor + " has :");
+            Player.SendMessage(p, who.color + who.name + " %S(" + who.DisplayName + ") %Sis on &b" + who.level.name);
+            Player.SendMessage(p, who.FullName + Server.DefaultColor + " %Shas :");
             Player.SendMessage(p, "> > the rank of " + who.group.color + who.group.name);
             
             Group nobody = Group.findPerm(LevelPermission.Nobody);
