@@ -20,9 +20,8 @@ using System.Globalization;
 using System.Threading;
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
-    /// <summary>
-    /// Economy Beta v1.0 QuantumHive
-    /// </summary>
+	
+    /// <summary> Economy Beta v1.0 QuantumHive  </summary>
     public sealed class CmdEconomy : Command {
         public override string name { get { return "economy"; } }
         public override string shortcut { get { return "eco"; } }
@@ -46,9 +45,6 @@ namespace MCGalaxy.Commands {
                 case "balance":
                 case "amount":
                     HandleStats(p, message, args); break;
-                case "info":
-                case "about":
-                    HandleInfo(p, message, args); break;
                 case "help":
                     HandleHelp(p, message, args); break;
                 default:
@@ -344,72 +340,6 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "Recent fine: " + ecostats.fine);
         }
         
-        void HandleInfo(Player p, string message, string[] args) {
-            if (!Economy.Settings.Enabled) {
-                Player.SendMessage(p, "%cThe %3Economy System %cis currently disabled!"); return;
-            }
-            switch (args[1]) {
-                case "map":
-                case "level":
-                case "maps":
-                case "levels":
-                    if (Economy.Settings.Levels == false) { Player.SendMessage(p, "%cMaps are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Maps===");
-                    Player.SendMessage(p, "%aAvailable maps to buy:");
-                    if (Economy.Settings.LevelsList.Count == 0)
-                        Player.SendMessage(p, "%8-None-");
-                    else
-                        foreach (Economy.Settings.Level lvl in Economy.Settings.LevelsList) {
-                        Player.SendMessage(p, lvl.name + " (" + lvl.x + "," + lvl.y + "," + lvl.z + ") " + lvl.type + ": %f" + lvl.price + " %3" + Server.moneys);
-                    }
-                    return;
-
-                case "title":
-                case "titles":
-                    if (Economy.Settings.Titles == false) { Player.SendMessage(p, "%cTitles are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Titles===");
-                    Player.SendMessage(p, "Titles cost %f" + Economy.Settings.TitlePrice + " %3" + Server.moneys + Server.DefaultColor + " each");
-                    return;
-
-                case "tcolor":
-                case "tcolors":
-                case "titlecolor":
-                case "titlecolors":
-                case "tc":
-                    if (!Economy.Settings.TColors) { Player.SendMessage(p, "%cTitlecolors are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Titlecolors===");
-                    Player.SendMessage(p, "Titlecolors cost %f" + Economy.Settings.TColorPrice + " %3" + Server.moneys + Server.DefaultColor + " each");
-                    return;
-
-                case "colors":
-                case "color":
-                case "colours":
-                case "colour":
-                    if (Economy.Settings.Colors == false) { Player.SendMessage(p, "%cColors are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Colors===");
-                    Player.SendMessage(p, "Colors cost %f" + Economy.Settings.ColorPrice + " %3" + Server.moneys + Server.DefaultColor + " each");
-                    return;
-
-                case "ranks":
-                case "rank":
-                    if (Economy.Settings.Ranks == false) { Player.SendMessage(p, "%cRanks are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Ranks===");
-                    Player.SendMessage(p, "%fThe maximum buyable rank is: " + Group.Find(Economy.Settings.MaxRank).color + Economy.Settings.MaxRank);
-                    Player.SendMessage(p, "%cRanks purchased will be bought in order.");
-                    Player.SendMessage(p, "%fRanks cost:");
-                    foreach (Economy.Settings.Rank rnk in Economy.Settings.RanksList) {
-                        Player.SendMessage(p, rnk.group.color + rnk.group.name + ": %f" + rnk.price + " %3" + Server.moneys);
-                        if (rnk.group.name == Economy.Settings.MaxRank.ToLower())
-                            break;
-                    }
-                    return;
-
-                default:
-                    Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                    return;
-            }
-        }
-        
         void HandleHelp(Player p, string message, string[] args) {
             switch (args[1]) {
                 case "":
@@ -462,7 +392,7 @@ namespace MCGalaxy.Commands {
             } else { Player.SendMessage(p, "%f/eco help <buy/stats/info> %e- get more specific help"); }
         }
 
-        public void SetupHelp(Player p) {
+        void SetupHelp(Player p) {
             Player.SendMessage(p, "%3===Economy Setup Help Menu===");
             if (p == null || p.name == Server.server_owner) {
                 Player.SendMessage(p, "%4/eco setup apply %e- applies the changes made to 'economy.properties'");

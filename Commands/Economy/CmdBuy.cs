@@ -214,9 +214,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/buy <title/color/tcolor/rank/map> [parts[1]] <map name>");
-            Player.SendMessage(p, "%Hparts[1] is either [title/color/tcolor/map_preset]");
+            Player.SendMessage(p, "%T/buy <title/color/tcolor/rank/map> [value] <map name>");
+            Player.SendMessage(p, "%Hvalue is either [title/color/tcolor/map_preset]");
             Player.SendMessage(p, "%Hmap name is only used for %T/buy map%H.");
+            Player.SendMessage(p, "%HUse %T/store <type> %Hto see the cost of an item.");
         }
     }
 }
