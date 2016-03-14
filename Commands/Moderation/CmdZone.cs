@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "zone"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] AdditionalPerms {
@@ -138,16 +138,14 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/zone del - Deletes the zone clicked");
         }
 
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
+        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
 
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
+        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 

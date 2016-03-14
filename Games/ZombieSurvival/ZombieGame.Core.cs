@@ -63,6 +63,7 @@ namespace MCGalaxy {
         void DoRound() {
             if (Status == ZombieGameStatus.NotStarted) return;
             List<Player> players = DoRoundCountdown();
+            RoundInProgress = true;
 
         theEnd:
             Random random = new Random();
@@ -123,7 +124,6 @@ namespace MCGalaxy {
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
                 Player.GlobalMessage("%4Round Start:%f 1...");
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
-                RoundInProgress = true;
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
                 

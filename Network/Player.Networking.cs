@@ -190,24 +190,8 @@ namespace MCGalaxy {
             if (colorParse)
             	message = Colors.EscapeColors(message);
             StringBuilder sb = new StringBuilder(message);
-
-            if (colorParse) {
-            	for (int i = 0; i < 128; i++) {
-            		if (Colors.IsStandardColor((char)i)) {
-            		    if (i >= 'A' && i <= 'F') // WoM does not work with uppercase color codes.
-            		        sb.Replace("&" + (char)i, "&" + (char)(i + ' '));
-            		    continue;
-            		}
-            		
-            		CustomColor col = Colors.ExtColors[i];               
-                    if (col.Undefined) {
-                        sb.Replace("&" + (char)i, ""); continue;
-                    }
-                    if (!hasTextColors) {
-                        sb.Replace("&" + (char)i, "&" + col.Fallback); continue;
-                    }
-            	}
-            }
+            if (colorParse) 
+            	ParseColors(sb);
             
             Chat.ApplyTokens(sb, this, colorParse);
             if ( Server.parseSmiley && parseSmiley ) {
@@ -253,6 +237,24 @@ namespace MCGalaxy {
             }
         }
 
+        void ParseColors(StringBuilder sb) {
+            for (int i = 0; i < 128; i++) {
+                if (Colors.IsStandardColor((char)i)) {
+                    if (i >= 'A' && i <= 'F') // WoM does not work with uppercase color codes.
+                        sb.Replace("&" + (char)i, "&" + (char)(i + ' '));
+                    continue;
+                }
+                
+                CustomColor col = Colors.ExtColors[i];
+                if (col.Undefined) {
+                    sb.Replace("&" + (char)i, ""); continue;
+                }
+                if (!hasTextColors) {
+                    sb.Replace("&" + (char)i, "&" + col.Fallback); continue;
+                }
+            }
+        }
+        
         public void SendMotd() {
             byte[] buffer = new byte[131];
             buffer[0] = Opcode.Handshake;

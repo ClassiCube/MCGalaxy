@@ -350,31 +350,7 @@ namespace MCGalaxy {
                 LoadIgnores();
                 if (type == 0x42) {
                     hasCpe = true;
-
-                    SendExtInfo(18);
-                    SendExtEntry(CpeExt.ClickDistance, 1);
-                    SendExtEntry(CpeExt.CustomBlocks, 1);
-                    SendExtEntry(CpeExt.HeldBlock, 1);
-                    
-                    SendExtEntry(CpeExt.TextHotkey, 1);
-                    SendExtEntry(CpeExt.EnvColors, 1);
-                    SendExtEntry(CpeExt.SelectionCuboid, 1);
-                    
-                    SendExtEntry(CpeExt.BlockPermissions, 1);
-                    SendExtEntry(CpeExt.ChangeModel, 1);
-                    SendExtEntry(CpeExt.EnvMapAppearance, 2);
-                    
-                    SendExtEntry(CpeExt.EnvWeatherType, 1);
-                    SendExtEntry(CpeExt.HackControl, 1);
-                    SendExtEntry(CpeExt.EmoteFix, 1);
-                    
-                    SendExtEntry(CpeExt.FullCP437, 1);
-                    SendExtEntry(CpeExt.LongerMessages, 1);
-                    SendExtEntry(CpeExt.BlockDefinitions, 1);
-                    
-                    SendExtEntry(CpeExt.BlockDefinitionsExt, 2);
-                    SendExtEntry(CpeExt.TextColors, 1);
-                    SendExtEntry(CpeExt.BulkBlockUpdate, 1);
+                    SendCpeExtensions();
                 }
                 
                 try { left.Remove(name.ToLower()); }
@@ -391,6 +367,35 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
             }
+        }
+        
+        void SendCpeExtensions() {
+            SendExtInfo(19);
+            SendExtEntry(CpeExt.ClickDistance, 1);
+            SendExtEntry(CpeExt.CustomBlocks, 1);
+            SendExtEntry(CpeExt.HeldBlock, 1);
+            
+            SendExtEntry(CpeExt.TextHotkey, 1);
+            SendExtEntry(CpeExt.EnvColors, 1);
+            SendExtEntry(CpeExt.SelectionCuboid, 1);
+            
+            SendExtEntry(CpeExt.BlockPermissions, 1);
+            SendExtEntry(CpeExt.ChangeModel, 1);
+            SendExtEntry(CpeExt.EnvMapAppearance, 2);
+            
+            SendExtEntry(CpeExt.EnvWeatherType, 1);
+            SendExtEntry(CpeExt.HackControl, 1);
+            SendExtEntry(CpeExt.EmoteFix, 1);
+            
+            SendExtEntry(CpeExt.FullCP437, 1);
+            SendExtEntry(CpeExt.LongerMessages, 1);
+            SendExtEntry(CpeExt.BlockDefinitions, 1);
+            
+            SendExtEntry(CpeExt.BlockDefinitionsExt, 2);
+            SendExtEntry(CpeExt.TextColors, 1);
+            SendExtEntry(CpeExt.BulkBlockUpdate, 1);
+            
+            SendExtEntry(CpeExt.MessageTypes, 1);
         }
         
         bool CheckWhitelist() {
@@ -1404,17 +1409,6 @@ return;
                     return true;
                 }
             }
-            
-            if (Server.lava.HasPlayer(this) && Server.lava.HasVote(text.ToLower()) ) {
-                if (Server.lava.AddVote(this, text.ToLower())) {
-                    SendMessage("Your vote for &5" + text.ToLower().Capitalize() + Server.DefaultColor + " has been placed. Thanks!");
-                    Server.lava.map.ChatLevelOps(name + " voted for &5" + text.ToLower().Capitalize() + Server.DefaultColor + ".");
-                    return true;
-                } else {
-                    SendMessage("&cYou already voted!");
-                    return true;
-                }
-            }
 
             if (Server.voting) {
                 string test = text.ToLower();
@@ -1426,6 +1420,8 @@ return;
                 }
             }
 
+        	if (Server.lava.HandlesChatMessage(this, text))
+        	    return false;
             if (Server.votingforlevel && Server.zombie.HandlesChatMessage(this, text))
                 return true;
             return false;

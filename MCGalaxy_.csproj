@@ -415,7 +415,11 @@
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
     <Compile Include="Games\CTF\CtfTeam.cs" />
     <Compile Include="Games\IGame.cs" />
+    <Compile Include="Games\LavaSurvival\LavaSurvival.Game.cs" />
+    <Compile Include="Games\LavaSurvival\LavaSurvival.cs" />
+    <Compile Include="Games\LavaSurvival\LavaSurvival.Settings.cs" />
     <Compile Include="Games\Team.cs" />
+    <Compile Include="Games\TntWars\TntWars.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Core.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
@@ -506,7 +510,6 @@
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Games\CTF\Setup.cs" />
-    <Compile Include="Games\TntWarsGame.cs" />
     <Compile Include="GUI\PortTools.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -529,7 +532,6 @@
     <Compile Include="GUI\EditText.Designer.cs">
       <DependentUpon>EditText.cs</DependentUpon>
     </Compile>
-    <Compile Include="Games\LavaSurvival.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Database\MySQLTransactionHelper.cs" />
     <Compile Include="Player\Player.Events.cs" />
@@ -719,6 +721,8 @@
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Drawing\Brushes" />
     <Folder Include="Games\Countdown" />
+    <Folder Include="Games\LavaSurvival" />
+    <Folder Include="Games\TntWars" />
     <Folder Include="Games\ZombieSurvival" />
     <Folder Include="Levels\IO" />
     <Folder Include="Levels\Generator" />

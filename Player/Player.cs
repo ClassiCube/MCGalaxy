@@ -234,7 +234,6 @@ namespace MCGalaxy {
         public UndoCache UndoBuffer = new UndoCache();
         public UndoCache RedoBuffer = new UndoCache();
 
-
         public bool showPortals = false;
         public bool showMBs = false;
 

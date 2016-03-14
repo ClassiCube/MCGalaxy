@@ -94,5 +94,16 @@ namespace MCGalaxy {
                 Player.SendMessage(p, "There is a Zombie Survival game currently in-progress! " +
                                    "Join it by typing /g " + Server.zombie.currentLevelName);
         }
+        
+        public override void PlayerJoinedLevel(Player p, Level oldLevl) {
+            if (Server.zombie.RoundInProgress && p.level.name == currentLevelName)
+                Server.zombie.InfectedPlayerLogin(p);
+
+            if (p.level.name == currentLevelName) return;
+            if(ZombieGame.alive.Contains(p))
+                ZombieGame.alive.Remove(p);
+            if (ZombieGame.infectd.Contains(p))
+                ZombieGame.infectd.Remove(p);
+        }
     }
 }

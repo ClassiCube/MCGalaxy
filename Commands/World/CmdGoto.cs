@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands {
                     p.SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             
             p.Loading = false;
-            CheckGamesJoin(p, lvl);
+            CheckGamesJoin(p, oldLevel);
             
             if (!p.hidden) {
                 Player.SendChatFrom(p, p.color + "*" + p.DisplayName + Server.DefaultColor + " went to &b" + lvl.name, false);
@@ -148,40 +148,20 @@ namespace MCGalaxy.Commands {
             return true;
         }
         
-        void CheckGamesJoin(Player p, Level lvl) {
-            if (Server.lava.active && !Server.lava.sendingPlayers && Server.lava.map == p.level) {
-                if (Server.lava.roundActive) {
-                    Server.lava.AnnounceRoundInfo(p);
-                    Server.lava.AnnounceTimeLeft(!Server.lava.flooded, true, p);
-                } else {
-                    Player.SendMessage(p, "Vote for the next map!");
-                    Player.SendMessage(p, "Choices: " + Server.lava.VoteString);
-                }
-            }
-
-            if (Server.zombie.RoundInProgress) {
-                if (p.level.name == Server.zombie.currentLevelName)
-                    Server.zombie.InfectedPlayerLogin(p);
-            }
-
-            if (p.level.name != Server.zombie.currentLevelName) {
-                if(ZombieGame.alive.Contains(p))
-                    ZombieGame.alive.Remove(p);
-                if (ZombieGame.infectd.Contains(p))
-                    ZombieGame.infectd.Remove(p);
-            }
-            
-            if (p.inTNTwarsMap)
-                p.canBuild = true;
+        void CheckGamesJoin(Player p, Level oldLvl) {
+        	Server.lava.PlayerJoinedLevel(p, oldLvl);
+        	Server.zombie.PlayerJoinedLevel(p, oldLvl);
+ 
+            if (p.inTNTwarsMap) p.canBuild = true;
             TntWarsGame game = TntWarsGame.Find(p.level);
-            if (game != null) {
-                if (game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished &&
-                    game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
-                    p.canBuild = false;
-                    Player.SendMessage(p, "TNT Wars: Disabled your building because you are in a TNT Wars map!");
-                }
-                p.inTNTwarsMap = true;
+            if (game == null) return;
+            
+            if (game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished &&
+                game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
+                p.canBuild = false;
+                Player.SendMessage(p, "TNT Wars: Disabled your building because you are in a TNT Wars map!");
             }
+            p.inTNTwarsMap = true;
         }
         
         public override void Help(Player p) {
