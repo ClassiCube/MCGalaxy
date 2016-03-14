@@ -17,6 +17,8 @@
  */
 using System;
 using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands {
     
@@ -53,35 +55,27 @@ namespace MCGalaxy.Commands {
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
         
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             type = type < 128 ? p.bindings[type] : type;
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             Level lvl = p.level;
-
             if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
+            
+            WriteDrawOp op = new WriteDrawOp();
+            op.Text = cpos.givenMessage;
+            op.Scale = cpos.scale; op.Spacing = cpos.spacing;
+            Brush brush = new SolidBrush(type, extType);
+            if (!DrawOp.DoDrawOp(op, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
+                return;
 
-            int dir = 0;
-            if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z))
-                dir = x > cpos.x ? 0 : 1;
-            else
-                dir = z > cpos.z ? 2 : 3;
-            
-            int count = BlockWriter.CountBlocks(cpos.givenMessage, cpos.scale);
-            if (count > p.group.maxBlocks) {
-                Player.SendMessage(p, "You cannot affect more than " + p.group.maxBlocks + " blocks."); return;
-            }
-            
-            foreach (char c in cpos.givenMessage)
-                BlockWriter.DrawLetter(lvl, p, c, ref cpos.x, cpos.y, ref cpos.z, 
-                                        type, extType, dir, cpos.scale, cpos.spacing);
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
