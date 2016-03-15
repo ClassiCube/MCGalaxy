@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using MCGalaxy.SQL;
 using Timer = System.Timers.Timer;
@@ -390,14 +391,14 @@ namespace MCGalaxy
                 BlockPos bP = tempCache[i];
                 IntToPos(bP.index, out x, out y, out z);
                 nameP.Value = bP.name;
-                DateTime time = Server.StartTimeLocal.AddTicks(bP.timeDelta * TimeSpan.TicksPerSecond);
+                DateTime time = Server.StartTimeLocal.AddTicks((bP.flags >> 2) * TimeSpan.TicksPerSecond);
                 MakeInt(time.Year, 4, 0, ptr); MakeInt(time.Month, 2, 5, ptr); MakeInt(time.Day, 2, 8, ptr);
                 MakeInt(time.Hour, 2, 11, ptr); MakeInt(time.Minute, 2, 14, ptr); MakeInt(time.Second, 2, 17, ptr);
                 
                 timeP.Value = date;
                 xP.Value = x; yP.Value = y; zP.Value = z;
-                tileP.Value = bP.type;
-                delP.Value = bP.deleted;
+                tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
+                delP.Value = (bP.flags & 1) != 0;
 
                 if (!DatabaseTransactionHelper.Execute(template, cmd)) {
                     cmd.Dispose();
@@ -730,19 +731,45 @@ namespace MCGalaxy
             return players.Where(p => p.level == this).ToList();
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct BlockPos {
-        	public string name;
-            public int timeDelta;
-            public int index;           
-            public byte type, extType;
-            public bool deleted;
+            public string name;
+            public int flags, index; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
+            public byte rawType;
+            
+            public void SetData(byte type, byte extType, bool delete) {
+                TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
+                flags = (int)delta.TotalSeconds << 2;
+                flags |= (byte)(delete ? 1 : 0);
+                
+                if (type == Block.custom_block) {
+                    rawType = extType; flags |= 2;
+                } else {
+                    rawType = type;
+                }
+            }
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct UndoPos {
-            public int location;
-            public byte newType, newExtType;
-            public byte oldType, oldExtType;
-            public int timeDelta;
+            public int flags, index; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
+            public byte oldRawType, newRawType;
+            
+            public void SetData(byte oldType, byte oldExtType, byte newType, byte newExtType) {
+                TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
+                flags = (int)delta.TotalSeconds << 2;
+                
+                if (oldType == Block.custom_block) {
+                    oldRawType = oldExtType; flags |= 1;
+                } else {
+                    oldRawType = oldType;
+                }                
+                if (newType == Block.custom_block) {
+                    newRawType = newExtType; flags |= 2;
+                } else {
+                    newRawType = newType;
+                }
+            }
         }
 
         public struct Zone {

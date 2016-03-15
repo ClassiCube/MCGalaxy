@@ -28,10 +28,10 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.FindOrShowMatches(message);
+            Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
             if (p == who) { Player.SendMessage(p, "Cannot freeze yourself."); return; }
-            if (p != nul && who.group.Permission >= p.group.Permission) { 
+            if (p != null && who.group.Permission >= p.group.Permission) { 
             	Player.SendMessage(p, "Cannot freeze someone of equal or greater rank."); return; 
             }
             

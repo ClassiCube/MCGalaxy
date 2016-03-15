@@ -62,20 +62,17 @@ namespace MCGalaxy {
                 int count = blockupdates;
                 if (l.blockqueue.Count < blockupdates || l.players.Count == 0)
                     count = l.blockqueue.Count;
-                Level.BlockPos bP;
+                Level.BlockPos bP = default(Level.BlockPos);
 
                 for (int c = 0; c < count; c++) {
                     block item = l.blockqueue[c];
                     bP.name = item.p.name;
-                    bP.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                     ushort x, y, z;
                     l.IntToPos(item.index, out x, out y, out z);
                     
                     bP.index = item.index;
-                    bP.type = item.type;
-                    bP.extType = item.extType;
-                    bP.deleted = bP.type == 0;
-                    l.Blockchange(item.p, x, y, z, bP.type, bP.extType);
+                    bP.SetData(item.type, item.extType, item.type == 0);
+                    l.Blockchange(item.p, x, y, z, item.type, item.extType);
                     l.blockCache.Add(bP);
                 }
                 l.blockqueue.RemoveRange(0, count);

@@ -84,11 +84,12 @@ namespace MCGalaxy.Commands
             for (int i = 0; i < inCache.Count; i++)
             {
                 foundOne = true;
-                Deleted = inCache[i].deleted;
+                Deleted = (inCache[i].flags & 1) != 0;
                 Username = inCache[i].name;
-                DateTime time = Server.StartTimeLocal.AddSeconds(inCache[i].timeDelta);
+                DateTime time = Server.StartTimeLocal.AddSeconds(inCache[i].flags >> 2);
                 TimePerformed = time.ToString("yyyy-MM-dd HH:mm:ss");
-                BlockUsed = Block.Name(inCache[i].type);
+                byte inBlock = (inCache[i].flags & 2) != 0 ? Block.custom_block : inCache[i].rawType;
+                BlockUsed = Block.Name(inBlock);
 
                 if (!Deleted)
                     Player.SendMessage(p, "&3Created by " + Server.FindColor(Username.Trim()) + Username.Trim() + Server.DefaultColor + ", using &3" + BlockUsed);

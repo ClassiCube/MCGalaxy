@@ -206,17 +206,20 @@ namespace MCGalaxy.Commands
         }
         
         bool CheckBlockPhysics(Player p, long seconds, int i, Level.UndoPos undo) {
-            byte b = p.level.GetTile(undo.location);
-            DateTime time = Server.StartTime.AddTicks(undo.timeDelta * TimeSpan.TicksPerSecond);
+            byte b = p.level.GetTile(undo.index);
+            DateTime time = Server.StartTime.AddTicks((undo.flags >> 2) * TimeSpan.TicksPerSecond);
             if (time.AddTicks(seconds * TimeSpan.TicksPerSecond) < DateTime.UtcNow) return false;
             
-            if (b == undo.newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
+            byte newType = (undo.flags & 2) != 0 ? Block.custom_block : undo.newRawType;
+            if (b == newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                 ushort x, y, z;
-                p.level.IntToPos(undo.location, out x, out y, out z);
+                p.level.IntToPos(undo.index, out x, out y, out z);
                 int undoIndex = p.level.currentUndo;
                 p.level.currentUndo = i;                
                 p.level.currentUndo = undoIndex;
-                p.level.Blockchange(x, y, z, undo.oldType, true, "", undo.oldExtType, false);
+                byte oldType = (undo.flags & 1) != 0 ? Block.custom_block : undo.oldRawType;
+                byte oldExtType = (undo.flags & 1) != 0 ? undo.oldRawType : (byte)0;
+                p.level.Blockchange(x, y, z, oldType, true, "", oldExtType, false);
             }
             return true;
         }

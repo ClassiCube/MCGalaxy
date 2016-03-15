@@ -145,13 +145,10 @@ namespace MCGalaxy {
             if (p == null)
                 return;    
             
-            Level.BlockPos bP;
+            Level.BlockPos bP = default(Level.BlockPos);
             bP.name = p.name;
-            bP.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             bP.index = b;
-            bP.type = type;
-            bP.extType = extType;
-            bP.deleted = bP.type == 0;
+            bP.SetData(type, extType, type == 0);          
             blockCache.Add(bP);
             
             Player.UndoPos Pos;
@@ -395,11 +392,9 @@ namespace MCGalaxy {
                     PhysSpongeRemoved(b, true);
 
                 if (addUndo) {
-                    UndoPos uP;
-                    uP.location = b;
-                    uP.newType = type; uP.newExtType = extType;
-                    uP.oldType = oldBlock; uP.oldExtType = oldExtType;
-                    uP.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
+                	UndoPos uP = default(UndoPos);
+                    uP.index = b;
+                    uP.SetData(oldBlock, oldExtType, type, extType);
 
                     if (currentUndo > Server.physUndo) {
                         currentUndo = 0;

@@ -64,17 +64,15 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            Level.BlockPos bP;
+            Level.BlockPos bP = default(Level.BlockPos);
             bP.name = name;
-            bP.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             bP.index = level.PosToInt(x, y, z);
-            bP.type = type;
-            bP.extType = extType;
+            bP.SetData(type, extType, false);
 
             lastClick[0] = x; lastClick[1] = y; lastClick[2] = z;
             if ( Blockchange != null ) {
                 if ( Blockchange.Method.ToString().IndexOf("AboutBlockchange") == -1 && !level.IsMuseum ) {
-                    bP.deleted = true;
+                    bP.flags |= 1;
                     level.blockCache.Add(bP);
                 }
 
@@ -84,10 +82,7 @@ namespace MCGalaxy {
             if ( PlayerBlockChange != null )
                 PlayerBlockChange(this, x, y, z, type, extType);
             OnBlockChangeEvent.Call(this, x, y, z, type, extType);
-            if ( cancelBlock ) {
-                cancelBlock = false;
-                return;
-            }
+            if ( cancelBlock ) { cancelBlock = false; return; }
 
             if ( group.Permission == LevelPermission.Banned ) return;
             if ( group.Permission == LevelPermission.Guest ) {
@@ -133,12 +128,10 @@ namespace MCGalaxy {
                     if ( Block.portal(b) ) { HandlePortal(this, x, y, z, b); return; }
                     if ( Block.mb(b) ) { HandleMsgBlock(this, x, y, z, b); return; }
                 }
-
-                bP.deleted = true;
+                bP.flags |= 1;
                 level.blockCache.Add(bP);
                 DeleteBlock(b, x, y, z, type, extType);
             } else {
-                bP.deleted = false;
                 level.blockCache.Add(bP);
                 PlaceBlock(b, x, y, z, type, extType);
             }
