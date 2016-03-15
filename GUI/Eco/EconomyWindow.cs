@@ -15,23 +15,24 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void EconomyWindow_Load(object sender, EventArgs e) {
-			numericUpDownTitle.Value = ((SimpleItem)Economy.GetItem("title")).Price;
-			numericUpDownColor.Value = ((SimpleItem)Economy.GetItem("color")).Price;
-			numericUpDownTcolor.Value = ((SimpleItem)Economy.GetItem("titlecolor")).Price;
-            checkBoxEco.Checked = Economy.Settings.Enabled;
-            checkBoxTitle.Checked = Economy.GetItem("title").Enabled;
-            checkBoxColor.Checked = Economy.GetItem("color").Enabled;
-            checkBoxTcolor.Checked = Economy.GetItem("titlecolor").Enabled;
-            checkBoxRank.Checked = Economy.Settings.Ranks;
+			RankItem rankItem = Economy.Ranks;
+			numericUpDownTitle.Value = Economy.Title.Price;
+			numericUpDownColor.Value = Economy.Color.Price;
+			numericUpDownTcolor.Value = Economy.TitleColor.Price;
+            checkBoxEco.Checked = Economy.Enabled;
+            checkBoxTitle.Checked = Economy.Title.Enabled;
+            checkBoxColor.Checked = Economy.Color.Enabled;
+            checkBoxTcolor.Checked = Economy.TitleColor.Enabled;
+            checkBoxRank.Checked = rankItem.Enabled;
             checkBoxLevel.Checked = Economy.Settings.Levels;
 
             //load all ranks in combobox
             List<string> groupList = new List<string>();
             foreach (Group group in Group.GroupList)
-                if(group.Permission > 0 && (int)group.Permission < 120)
+                if (group.Permission > LevelPermission.Guest && group.Permission < LevelPermission.Nobody)
                     groupList.Add(group.name);
             comboBoxRank.DataSource = groupList;
-            comboBoxRank.SelectedItem = Economy.Settings.MaxRank;
+            comboBoxRank.SelectedItem = rankItem.MaxRank;
 
             UpdateRanks();
             UpdateLevels();
@@ -72,29 +73,17 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void UpdateRanks() {
-            int lasttrueprice = 0;
-            foreach (Group group in Group.GroupList) {
-                if (group.Permission > Group.Find(Economy.Settings.MaxRank).Permission) { break; }
-                if (!(group.Permission <= Group.Find(Server.defaultRank).Permission)) {
-                    Economy.Settings.Rank rank = new Economy.Settings.Rank();
-                    rank = Economy.FindRank(group.name);
-                    if (rank == null) {
-                        rank = new Economy.Settings.Rank();
-                        rank.group = group;
-                        if (lasttrueprice == 0) { rank.price = 1000; } else { rank.price = lasttrueprice + 250; }
-                        Economy.Settings.RanksList.Add(rank);
-                    } else { lasttrueprice = rank.price; }
-                }
-            }
+			RankItem rankItem = Economy.Ranks;
+			rankItem.UpdatePrices();
+
             List<string> ranklist = new List<string>();
-            foreach (Economy.Settings.Rank rank in Economy.Settings.RanksList) {
+            foreach (RankItem.Rank rank in rankItem.RanksList) {
                 ranklist.Add(rank.group.name);
-                if (rank.group.name == Economy.Settings.MaxRank)
-                    break;
+                if (rank.group.name == rankItem.MaxRank) break;
             }
             listBoxRank.DataSource = ranklist;
             listBoxRank.SelectedItem = comboBoxRank.SelectedItem;
-            numericUpDownRank.Value = Economy.Settings.RanksList.Find(rank => rank.group.name == comboBoxRank.SelectedItem.ToString()).price;
+            numericUpDownRank.Value = rankItem.FindRank(comboBoxRank.SelectedItem.ToString()).price;
         }
 
         public void UpdateLevels() {
@@ -115,40 +104,40 @@ namespace MCGalaxy.GUI.Eco {
             groupBoxTcolor.Enabled = checkBoxEco.Checked;
             groupBoxRank.Enabled = checkBoxEco.Checked;
             groupBoxLevel.Enabled = checkBoxEco.Checked;
-            Economy.Settings.Enabled = checkBoxEco.Checked;
+            Economy.Enabled = checkBoxEco.Checked;
         }
 
         private void checkBoxTitle_CheckedChanged(object sender, EventArgs e) {
             labelPriceTitle.Enabled = checkBoxTitle.Checked;
             numericUpDownTitle.Enabled = checkBoxTitle.Checked;
-            Economy.GetItem("title").Enabled = checkBoxTitle.Checked;
-            ((SimpleItem)Economy.GetItem("title")).Price = (int)numericUpDownTitle.Value;
+            Economy.Title.Enabled = checkBoxTitle.Checked;
+            Economy.Title.Price = (int)numericUpDownTitle.Value;
         }
 
         private void checkBoxColor_CheckedChanged(object sender, EventArgs e) {
             labelPriceColor.Enabled = checkBoxColor.Checked;
             numericUpDownColor.Enabled = checkBoxColor.Checked;
-            Economy.GetItem("color").Enabled = checkBoxColor.Checked;
-            ((SimpleItem)Economy.GetItem("color")).Price = (int)numericUpDownColor.Value;
+            Economy.Color.Enabled = checkBoxColor.Checked;
+            Economy.Color.Price = (int)numericUpDownColor.Value;
         }
 
         private void checkBoxTcolor_CheckedChanged(object sender, EventArgs e) {
             labelPriceTcolor.Enabled = checkBoxTcolor.Checked;
             numericUpDownTcolor.Enabled = checkBoxTcolor.Checked;
-            Economy.GetItem("titlecolor").Enabled = checkBoxTcolor.Checked;
-            ((SimpleItem)Economy.GetItem("titlecolor")).Price = (int)numericUpDownTcolor.Value;
+            Economy.TitleColor.Enabled = checkBoxTcolor.Checked;
+            Economy.TitleColor.Price = (int)numericUpDownTcolor.Value;
         }
 
         private void numericUpDownTitle_ValueChanged(object sender, EventArgs e) {
-			((SimpleItem)Economy.GetItem("title")).Price = (int)numericUpDownTitle.Value;
+			Economy.Title.Price = (int)numericUpDownTitle.Value;
         }
 
         private void numericUpDownColor_ValueChanged(object sender, EventArgs e) {
-            ((SimpleItem)Economy.GetItem("color")).Price = (int)numericUpDownColor.Value;
+            Economy.Color.Price = (int)numericUpDownColor.Value;
         }
 
         private void numericUpDownTcolor_ValueChanged(object sender, EventArgs e) {
-            ((SimpleItem)Economy.GetItem("titlecolor")).Price = (int)numericUpDownTcolor.Value;
+            Economy.TitleColor.Price = (int)numericUpDownTcolor.Value;
         }
 
         private void checkBoxRank_CheckedChanged(object sender, EventArgs e) {
@@ -157,20 +146,20 @@ namespace MCGalaxy.GUI.Eco {
             listBoxRank.Enabled = checkBoxRank.Checked;
             labelPriceRank.Enabled = checkBoxRank.Checked;
             numericUpDownRank.Enabled = checkBoxRank.Checked;
-            Economy.Settings.Ranks = checkBoxRank.Checked;
+            Economy.Ranks.Enabled = checkBoxRank.Checked;
         }
 
         private void comboBoxRank_SelectionChangeCommitted(object sender, EventArgs e) {
-            Economy.Settings.MaxRank = comboBoxRank.SelectedItem.ToString();
+            Economy.Ranks.MaxRank = comboBoxRank.SelectedItem.ToString();
             UpdateRanks();
         }
 
         private void numericUpDownRank_ValueChanged(object sender, EventArgs e) {
-            Economy.FindRank(listBoxRank.SelectedItem.ToString()).price = (int)numericUpDownRank.Value;
+            Economy.Ranks.FindRank(listBoxRank.SelectedItem.ToString()).price = (int)numericUpDownRank.Value;
         }
 
         private void listBoxRank_SelectedIndexChanged(object sender, EventArgs e) {
-            numericUpDownRank.Value = Economy.FindRank(listBoxRank.SelectedItem.ToString()).price;
+            numericUpDownRank.Value = Economy.Ranks.FindRank(listBoxRank.SelectedItem.ToString()).price;
         }
 
         private void EconomyWindow_FormClosing(object sender, FormClosingEventArgs e) {

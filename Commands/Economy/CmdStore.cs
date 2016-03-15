@@ -29,13 +29,9 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public override bool Enabled { get { return Economy.Settings.Enabled; } }
+        public override bool Enabled { get { return Economy.Enabled; } }
 
         public override void Use(Player p, string message) {
-            if (!Economy.Settings.Enabled) {
-                Player.SendMessage(p, "%cThe %3Economy System %cis currently disabled!"); return;
-            }
-        	
             switch (message) {
                 case "map":
                 case "level":
@@ -49,20 +45,6 @@ namespace MCGalaxy.Commands {
                     else
                         foreach (Economy.Settings.Level lvl in Economy.Settings.LevelsList) {
                         Player.SendMessage(p, lvl.name + " (" + lvl.x + "," + lvl.y + "," + lvl.z + ") " + lvl.type + ": %f" + lvl.price + " %3" + Server.moneys);
-                    }
-                    return;
-
-                case "ranks":
-                case "rank":
-                    if (!Economy.Settings.Ranks) { Player.SendMessage(p, "%cRanks are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Ranks===");
-                    Player.SendMessage(p, "%fThe maximum buyable rank is: " + Group.Find(Economy.Settings.MaxRank).color + Economy.Settings.MaxRank);
-                    Player.SendMessage(p, "%cRanks purchased will be bought in order.");
-                    Player.SendMessage(p, "%fRanks cost:");
-                    foreach (Economy.Settings.Rank rnk in Economy.Settings.RanksList) {
-                        Player.SendMessage(p, rnk.group.color + rnk.group.name + ": %f" + rnk.price + " %3" + Server.moneys);
-                        if (rnk.group.name == Economy.Settings.MaxRank.ToLower())
-                            break;
                     }
                     return;
 

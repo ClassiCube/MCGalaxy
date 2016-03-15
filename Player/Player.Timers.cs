@@ -86,12 +86,8 @@ namespace MCGalaxy {
             
             if ( Server.updateTimer.Interval > 1000 )
                 SendMessage("Lowlag mode is currently &aON.");
-            
-            try {
-                if (Economy.Settings.Enabled)
-                    SendMessage("You currently have &a" + money + " %S" + Server.moneys);
-            } catch {
-            }
+            if (Economy.Enabled)
+                SendMessage("You currently have &a" + money + " %S" + Server.moneys);
             
             try {
                 if ( !Group.Find("Nobody").commands.Contains("award") && !Group.Find("Nobody").commands.Contains("awards") && !Group.Find("Nobody").commands.Contains("awardmod") )

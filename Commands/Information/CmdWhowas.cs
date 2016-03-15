@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
             string prefix = target.title == "" ? "" : "[" + target.titleColor + target.title + color + "] ";
             Player.SendMessage(p, color + prefix + target.name + " %Shas :");
             Player.SendMessage(p, "> > the rank of " + group.color + plGroup);            
-            if (Economy.Settings.Enabled)
+            if (Economy.Enabled)
                 Player.SendMessage(p, "> > &a" + target.money + " %S" + Server.moneys);
                 
             Player.SendMessage(p, "> > &cdied &a" + target.deaths + " %Stimes");

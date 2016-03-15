@@ -1,19 +1,19 @@
 /*
-	Copyright 2011 MCForge
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCForge
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System.Collections.Generic;
 using System.Data;
@@ -24,16 +24,18 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     public static class Economy {
 
+        public static bool Enabled = false;
+        
         public const string createTable =
             @"CREATE TABLE if not exists Economy (
-	            player 	    VARCHAR(20),
-	            money       INT UNSIGNED,
+                player         VARCHAR(20),
+                money       INT UNSIGNED,
                 total       INT UNSIGNED NOT NULL DEFAULT 0,
                 purchase    VARCHAR(255) NOT NULL DEFAULT '%cNone',
                 payment     VARCHAR(255) NOT NULL DEFAULT '%cNone',
                 salary      VARCHAR(255) NOT NULL DEFAULT '%cNone',
                 fine        VARCHAR(255) NOT NULL DEFAULT '%cNone',
-	            PRIMARY KEY(player)
+                PRIMARY KEY(player)
             );";
 
         public struct EcoStats {
@@ -51,8 +53,6 @@ namespace MCGalaxy {
         }
 
         public static class Settings {
-            public static bool Enabled = false;
-
             //Maps
             public static bool Levels = false;
             public static List<Level> LevelsList = new List<Level>();
@@ -63,15 +63,6 @@ namespace MCGalaxy {
                 public string y;
                 public string z;
                 public string type;
-            }
-
-            //Ranks
-            public static bool Ranks = false;
-            public static string MaxRank = Group.findPerm(LevelPermission.AdvBuilder).name;
-            public static List<Rank> RanksList = new List<Rank>();
-            public class Rank {
-                public Group group;
-                public int price = 1000;
             }
         }
 
@@ -93,7 +84,7 @@ namespace MCGalaxy {
             } catch { }
         }
 
-        public static void Load(bool loadDatabase = false) {
+        public static void Load() {
             /*if (loadDatabase) {
             retry:
                 if (Server.useMySQL) MySQL.executeQuery(createTable); else SQLite.executeQuery(createTable); //create database on server loading
@@ -116,9 +107,9 @@ namespace MCGalaxy {
             }*/
 
             if (!File.Exists("properties/economy.properties")) { 
-            	Server.s.Log("Economy properties don't exist, creating"); 
-            	File.Create("properties/economy.properties").Close(); 
-            	Save(); 
+                Server.s.Log("Economy properties don't exist, creating"); 
+                File.Create("properties/economy.properties").Close(); 
+                Save(); 
             }
             using (StreamReader r = File.OpenText("properties/economy.properties")) {
                 string line;
@@ -128,34 +119,7 @@ namespace MCGalaxy {
                     try {
                         switch (linear[0]) {
                             case "enabled":
-                                if (linear[1] == "true") { Settings.Enabled = true; } else if (linear[1] == "false") { Settings.Enabled = false; }
-                                break;
-                                
-                            case "rank":
-                                if (linear[1] == "price") {
-                                    Economy.Settings.Rank rnk = new Economy.Settings.Rank();
-                                    rnk = Economy.FindRank(linear[2]);
-                                    if (rnk == null) {
-                                        rnk = new Economy.Settings.Rank();
-                                        rnk.group = Group.Find(linear[2]);
-                                        rnk.price = int.Parse(linear[3]);
-                                        Economy.Settings.RanksList.Add(rnk);
-                                    } else {
-                                        Economy.Settings.RanksList.Remove(rnk);
-                                        rnk.price = int.Parse(linear[3]);
-                                        Economy.Settings.RanksList.Add(rnk);
-                                    }
-                                }
-                                if (linear[1] == "maxrank") {
-                                    //Group grp = Group.Find(linear[2]);
-                                    //if (grp != null) { Settings.MaxRank = grp.Permission; }
-                                    string grpname = linear[2];
-                                    if (Group.Exists(grpname)) Settings.MaxRank = grpname;
-                                }
-                                if (linear[1] == "enabled") {
-                                    if (linear[2] == "true") { Settings.Ranks = true; } else if (linear[2] == "false") { Settings.Ranks = false; }
-                                }
-                                break;
+                    		    Enabled = linear[1].CaselessEquals("true"); break;
 
                             case "level":
                                 if (linear[1] == "enabled") {
@@ -182,6 +146,7 @@ namespace MCGalaxy {
                                 }
                                 break;
                              default:
+                                if (linear.Length < 3) break;
                                 Item item = GetItem(linear[0]);
                                 if (item != null) item.Parse(line, linear);
                                 break;
@@ -200,18 +165,12 @@ namespace MCGalaxy {
             //Thread.Sleep(2000);
             using (StreamWriter w = File.CreateText("properties/economy.properties")) {
                 //enabled
-                w.WriteLine("enabled:" + Settings.Enabled);              
-                foreach (Item item in Items)
-                	item.Serialise(w);
-                
-                //rank
-                w.WriteLine();
-                w.WriteLine("rank:enabled:" + Settings.Ranks);
-                w.WriteLine("rank:maxrank:" + Settings.MaxRank);
-                foreach (Settings.Rank rnk in Settings.RanksList) {
-                    w.WriteLine("rank:price:" + rnk.group.name + ":" + rnk.price);
-                    if (rnk.group.name == Economy.Settings.MaxRank) break;
+                w.WriteLine("enabled:" + Enabled);              
+                foreach (Item item in Items) {
+                    w.WriteLine();
+                    item.Serialise(w);                    
                 }
+
                 //maps
                 w.WriteLine();
                 w.WriteLine("level:enabled:" + Settings.Levels);
@@ -231,35 +190,10 @@ namespace MCGalaxy {
         public static Settings.Level FindLevel(string name) {
             foreach (Settings.Level lvl in Settings.LevelsList) {
                 try {
-            		if (lvl.name.CaselessEquals(name)) return lvl;
+                    if (lvl.name.CaselessEquals(name)) return lvl;
                 } catch { }
             }
             return null;
-        }
-
-        public static Settings.Rank FindRank(string name) {
-            foreach (Settings.Rank rnk in Settings.RanksList) {
-                try {
-            		if (rnk.group.name.CaselessEquals(name)) return rnk;
-                } catch { }
-            }
-            return null;
-        }
-
-        public static Economy.Settings.Rank NextRank(Player p) {
-            Group foundGroup = p.group;
-            Group nextGroup = null; bool nextOne = false;
-            for (int i = 0; i < Group.GroupList.Count; i++) {
-                Group grp = Group.GroupList[i];
-                if (nextOne) {
-                    if (grp.Permission >= LevelPermission.Nobody) break;
-                    nextGroup = grp;
-                    break;
-                }
-                if (grp == foundGroup)
-                    nextOne = true;
-            }
-            return Economy.FindRank(nextGroup.name);
         }
 
         public static EcoStats RetrieveEcoStats(string playername) {
@@ -288,7 +222,7 @@ namespace MCGalaxy {
         }
 
         public static void UpdateEcoStats(EcoStats es) {
-        	DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
             query.AddParam("@Name", es.playerName);
             query.AddParam("@Money", es.money);
             query.AddParam("@Total", es.totalSpent);
@@ -300,7 +234,7 @@ namespace MCGalaxy {
                                                        "(@Name, @Money, @Total, @Purchase, @Payment, @Salary, @Fine)", (Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO")));
         }
         
-        public static Item[] Items = { new ColorItem(), new TitleColorItem(), new TitleItem() };
+        public static Item[] Items = { new ColorItem(), new TitleColorItem(), new TitleItem(), new RankItem() };
         
         public static Item GetItem(string name) {
             foreach (Item item in Items) {
@@ -308,5 +242,10 @@ namespace MCGalaxy {
             }
             return null;
         }
+        
+        public static SimpleItem Color { get { return (SimpleItem)Items[0]; } }
+        public static SimpleItem TitleColor { get { return (SimpleItem)Items[1]; } }
+        public static SimpleItem Title { get { return (SimpleItem)Items[2]; } }
+        public static RankItem Ranks { get { return (RankItem)Items[3]; } }
     }
 }

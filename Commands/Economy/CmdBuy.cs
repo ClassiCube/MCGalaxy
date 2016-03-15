@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public override bool Enabled { get { return Economy.Settings.Enabled; } }
+        public override bool Enabled { get { return Economy.Enabled; } }
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
@@ -89,31 +89,6 @@ namespace MCGalaxy.Commands {
                             Economy.UpdateEcoStats(ecos);
                         }
                     } break;
-
-                case "ranks":
-                case "rank":
-                    if (parts.Length >= 2) {
-                        Player.SendMessage(p, "%cYou cannot provide a rank name, use %a/eco buy rank %cto buy the NEXT rank."); return;
-                    }
-
-                    LevelPermission maxrank = Group.Find(Economy.Settings.MaxRank).Permission;
-                    if (p.group.Permission >= maxrank) {
-                        Player.SendMessage(p, "%cYou cannot buy anymore ranks, because you passed the max buyable rank: " + Group.Find(Economy.Settings.MaxRank).color + Economy.Settings.MaxRank);
-                        return;
-                    }
-                    
-                    if (!p.EnoughMoney(Economy.NextRank(p).price)) {
-                        Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy the next rank"); return;
-                    }
-                    Command.all.Find("promote").Use(null, p.name);
-                    p.money = p.money - Economy.FindRank(p.group.name).price;
-                    ecos.money = p.money;
-                    ecos.totalSpent += Economy.FindRank(p.group.name).price;
-                    ecos.purchase = "%3Rank: " + p.group.color + p.group.name + "%3 - Price: %f" + Economy.FindRank(p.group.name).price + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                    Economy.UpdateEcoStats(ecos);
-                    Player.SendMessage(p, "%aYou've successfully bought the rank " + p.group.color + p.group.name);
-                    Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-                    break;
 
                 default:
                     foreach (Item item in Economy.Items)

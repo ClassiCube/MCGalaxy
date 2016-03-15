@@ -1499,7 +1499,7 @@ return;
                 SendMessage("You are not allowed to use \"" + cmd + "\"."); return;
             }
             if (!command.Enabled) {
-                SendMessage("The game associated with this game is not running, " +
+                SendMessage("The game or economy associated with this command is not running, " +
                             "so this command is disabled."); return;
             }
             if (cmd != "repeat") lastCMD = cmd + " " + message;

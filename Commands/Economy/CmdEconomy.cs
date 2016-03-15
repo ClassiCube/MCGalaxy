@@ -169,66 +169,13 @@ namespace MCGalaxy.Commands {
                             Player.SendMessage(p, "%cThat wasn't a valid command addition!");
                             break;
                     }
-                    break;
-
-                case "ranks":
-                case "rank":
-                    switch (args[2]) {
-                        case "enable":
-                            if (Economy.Settings.Ranks) { Player.SendMessage(p, "%cRanks are already enabled for the economy system"); break; } 
-                            else { Economy.Settings.Ranks = true; Player.SendMessage(p, "%aRanks are now enabled for the economy system"); break; }
-
-                        case "disable":
-                            if (!Economy.Settings.Ranks) { Player.SendMessage(p, "%cRanks are already disabled for the economy system"); break; } 
-                            else { Economy.Settings.Ranks = false; Player.SendMessage(p, "%aRanks are now disabled for the economy system"); break; }
-
-                        case "price":
-                            Economy.Settings.Rank rnk = Economy.FindRank(args[3]);
-                            if (rnk == null) {
-                                Player.SendMessage(p, "%cThat wasn't a rank or it's past the max rank (maxrank is: " + Group.Find(Economy.Settings.MaxRank).color + Economy.Settings.MaxRank + "%c)"); return; }
-                            try {
-                                rnk.price = int.Parse(args[4]);
-                            } catch { Player.SendMessage(p, "%cInvalid price input: that wasn't a number!"); return; }
-                            Player.SendMessage(p, "%aSuccesfully changed the rank price for " + rnk.group.color + rnk.group.name + " to: %f" + rnk.price + " %3" + Server.moneys);
-                            break;
-
-                        case "maxrank":
-                        case "max":
-                        case "maximum":
-                        case "maximumrank":
-                            Group grp = Group.Find(args[3]);
-                            if (grp == null) { Player.SendMessage(p, "%cThat wasn't a rank!"); return; }
-                            if (p.group.Permission < grp.Permission) { Player.SendMessage(p, "%cCan't set a maxrank that is higher than yours!"); return; }
-                            Economy.Settings.MaxRank = args[3].ToLower();
-                            Player.SendMessage(p, "%aSuccessfully set max rank to: " + Group.Find(Economy.Settings.MaxRank).color + Economy.Settings.MaxRank);
-                            int lasttrueprice = 0;
-                            foreach (Group group in Group.GroupList) {
-                                if (group.Permission > grp.Permission) break;
-                                if (!(group.Permission <= Group.Find(Server.defaultRank).Permission)) {
-                                    Economy.Settings.Rank rank = new Economy.Settings.Rank();
-                                    rank = Economy.FindRank(group.name);
-                                    if (rank == null) {
-                                        rank = new Economy.Settings.Rank();
-                                        rank.group = group;
-                                        if (lasttrueprice == 0) { rank.price = 1000; } else { rank.price = lasttrueprice + 250; }
-                                        Economy.Settings.RanksList.Add(rank);
-                                    } else { lasttrueprice = rank.price; }
-                                }
-                            }
-                            break;
-                        default:
-                            Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                            break;
-                    }
-                    break;
+                    break;                  
 
                 case "enable":
-                    if (Economy.Settings.Enabled) { Player.SendMessage(p, "%cThe economy system is already enabled"); return; }
-                    else { Economy.Settings.Enabled = true; Player.SendMessage(p, "%aThe economy system is now enabled"); return; }
+                    Economy.Enabled = true; Player.SendMessage(p, "%aThe economy system is now enabled"); return;
 
                 case "disable":
-                    if (!Economy.Settings.Enabled) { Player.SendMessage(p, "%cThe economy system is already disabled"); return; }
-                    else { Economy.Settings.Enabled = false; Player.SendMessage(p, "%aThe economy system is now disabled"); return; }
+                    Economy.Enabled = false; Player.SendMessage(p, "%aThe economy system is now disabled"); return;
                     
                 case "help":
                     SetupHelp(p); return;

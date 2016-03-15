@@ -415,6 +415,7 @@
     <Compile Include="Economy\Economy.cs" />
     <Compile Include="Economy\Item.cs" />
     <Compile Include="Economy\NameItems.cs" />
+    <Compile Include="Economy\RankItem.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
