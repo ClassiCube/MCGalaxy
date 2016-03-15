@@ -81,15 +81,9 @@ namespace MCGalaxy.Commands {
                     DateTime time = node.BaseTime.AddSeconds(item.TimeDelta + seconds);
                     if (time < DateTime.UtcNow) return;
                     
-                    byte b = lvl.GetTile(x, y, z);
                     byte newTile = 0, newExtTile = 0;
                     item.GetNewExtBlock(out newTile, out newExtTile);
-                    if (b == newTile || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
-                        if (b == Block.air || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava)
-                            p.SendBlockchange(x, y, z, Block.red);
-                        else
-                            p.SendBlockchange(x, y, z, Block.green);
-                    }
+                    p.SendBlockchange(x, y, z, newTile == Block.air ? Block.red : Block.green);
                 }
                 node = node.Prev;
             }
