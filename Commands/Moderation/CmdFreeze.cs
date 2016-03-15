@@ -26,30 +26,27 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdFreeze() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.Find(message);
-            if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
-            else if (who == p) { Player.SendMessage(p, "Cannot freeze yourself."); return; }
-            else if (p != null) { if (who.group.Permission >= p.group.Permission) { Player.SendMessage(p, "Cannot freeze someone of equal or greater rank."); return; } }
-            string frozenby = (p == null) ? "<CONSOLE>" : p.color + p.DisplayName;
-            
-            if (!who.frozen)
-            {
-                who.frozen = true;
-                Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " has been &bfrozen" + Server.DefaultColor + " by " + frozenby + Server.DefaultColor + ".", false);
-            	Server.s.Log(who.name + " has been frozen by " + frozenby);
+            Player who = PlayerInfo.FindOrShowMatches(message);
+            if (who == null) return;
+            if (p == who) { Player.SendMessage(p, "Cannot freeze yourself."); return; }
+            if (p != nul && who.group.Permission >= p.group.Permission) { 
+            	Player.SendMessage(p, "Cannot freeze someone of equal or greater rank."); return; 
             }
-            else
-            {
-                who.frozen = false;
-                Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " has been &adefrosted" + Server.DefaultColor + " by " + frozenby + Server.DefaultColor + ".", false);
+            
+            string frozenby = (p == null) ? "(console)" : p.ColoredName;
+            if (!who.frozen) {
+                Player.SendChatFrom(who, who.ColoredName + " %Shas been &bfrozen %Sby " + frozenby + "%S.", false);
+            	Server.s.Log(who.name + " has been frozen by " + frozenby);
+            } else {
+                Player.SendChatFrom(who, who.ColoredName + " %Shas been &adefrosted %Sby " + frozenby + "%S.", false);
                 Server.s.Log(who.name + " has been defrosted by " + frozenby);
             }
+            who.frozen = !who.frozen;
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/freeze <name> - Stops <name> from moving until unfrozen.");
         }
     }

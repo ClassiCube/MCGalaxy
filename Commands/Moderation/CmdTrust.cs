@@ -26,25 +26,17 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdTrust() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
 
-            Player who = PlayerInfo.Find(message);
-            if (who == null)
-            {
-                Player.SendMessage(p, "Could not find player specified");
-                return;
-            }
-            else
-            {
-                who.ignoreGrief = !who.ignoreGrief;
-                Player.SendMessage(p, who.color + who.DisplayName + Server.DefaultColor + "'s trust status: " + who.ignoreGrief);
-                who.SendMessage("Your trust status was changed to: " + who.ignoreGrief);
-            }
+            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            if (who == null) return;
+            who.ignoreGrief = !who.ignoreGrief;
+            Player.SendMessage(p, who.ColoredName + "%S's trust status: " + who.ignoreGrief);
+            who.SendMessage("Your trust status was changed to: " + who.ignoreGrief);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/trust <name> - Turns off the anti-grief for <name>");
         }
     }

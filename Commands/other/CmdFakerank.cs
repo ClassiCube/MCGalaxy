@@ -37,10 +37,10 @@ namespace MCGalaxy.Commands
             }
             
             if (grp.Permission == LevelPermission.Banned) {
-                string banner = p == null ? "console" : p.color + p.DisplayName;
-                Player.GlobalMessage(who.FullName + " %Swas &8banned" + " %Sby " + banner + "%S.");
+                string banner = p == null ? "console" : p.FullName;
+                Player.GlobalMessage(who.ColoredName + " %Swas &8banned %Sby " + banner + "%S.");
             } else {
-                Player.GlobalMessage(who.color + who.DisplayName + "%S's rank was set to " + 
+                Player.GlobalMessage(who.ColoredName + "%S's rank was set to " + 
                                      grp.color + grp.name + "%S. (Congratulations!)");
                 who.SendMessage("You are now ranked " + grp.color + grp.name + "%S, type /help for your new set of commands.");
             }

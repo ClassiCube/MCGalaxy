@@ -67,10 +67,10 @@ namespace MCGalaxy.Commands {
             	Player.GlobalMessage(banMsg);
             } else {
             	if (stealth) {
-            		banMsg = who.FullName + " %Swas STEALTH &8banned %Sby " + banner + "%S." + banReason;
+            		banMsg = who.ColoredName + " %Swas STEALTH &8banned %Sby " + banner + "%S." + banReason;
                     Chat.GlobalMessageOps(banMsg);
             	} else {
-            		banMsg = who.FullName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
+            		banMsg = who.ColoredName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
             		Player.GlobalMessage(banMsg);
             	}
                 

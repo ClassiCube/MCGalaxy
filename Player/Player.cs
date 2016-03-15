@@ -106,6 +106,8 @@ namespace MCGalaxy {
         public bool hackrank;
         
         public string FullName { get { return color + prefix + DisplayName; } }
+        
+        public string ColoredName { get { return color + DisplayName; } }
 
         //Gc checks
         public string lastmsg = "";

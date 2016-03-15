@@ -411,6 +411,9 @@
     <Compile Include="Drawing\DrawOps\TorusDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
     <Compile Include="Drawing\Vector3U16.cs" />
+    <Compile Include="Economy\Awards.cs" />
+    <Compile Include="Economy\Economy.cs" />
+    <Compile Include="Economy\Item.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
@@ -522,10 +525,8 @@
     <Compile Include="GUI\Win32\RECT.cs" />
     <Compile Include="Database\DatabaseTransactionHelper.cs" />
     <Compile Include="Database\Database.cs" />
-    <Compile Include="Server\Extra\Awards.cs" />
     <Compile Include="Games\CTF\Auto_CTF.cs" />
     <Compile Include="IRC\GlobalChatBot.cs" />
-    <Compile Include="Server\Extra\Economy.cs" />
     <Compile Include="IRC\ForgeBot.cs" />
     <Compile Include="GUI\EditText.cs">
       <SubType>Form</SubType>
@@ -729,6 +730,7 @@
     <Folder Include="Levels\IO" />
     <Folder Include="Levels\Generator" />
     <Folder Include="Levels\Physics" />
+    <Folder Include="Economy" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\Undo" />
     <Folder Include="Plugins" />

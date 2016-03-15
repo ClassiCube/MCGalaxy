@@ -35,8 +35,7 @@ namespace MCGalaxy {
                     p.SendMessage("You are pillaring! Stop before you get kicked!");
                 }
                 if (p.blocksStacked == 4 ) {
-                    p.Kick(" No pillaring allowed!");
-                    return true;
+                    p.Kick("No pillaring allowed!"); return true;
                 }
             }
             p.lastXblock = x; p.lastYblock = y; p.lastZblock = z;
