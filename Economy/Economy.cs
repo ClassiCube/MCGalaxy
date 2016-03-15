@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
@@ -63,18 +64,6 @@ namespace MCGalaxy {
                 public string z;
                 public string type;
             }
-
-            //Titles
-            public static bool Titles = false;
-            public static int TitlePrice = 100;
-
-            //Colors
-            public static bool Colors = false;
-            public static int ColorPrice = 100;
-
-            //TitleColors
-            public static bool TColors = false;
-            public static int TColorPrice = 100;
 
             //Ranks
             public static bool Ranks = false;
@@ -141,26 +130,7 @@ namespace MCGalaxy {
                             case "enabled":
                                 if (linear[1] == "true") { Settings.Enabled = true; } else if (linear[1] == "false") { Settings.Enabled = false; }
                                 break;
-
-                            case "title":
-                                if (linear[1] == "price") { Settings.TitlePrice = int.Parse(linear[2]); }
-                                if (linear[1] == "enabled") {
-                                    if (linear[2] == "true") { Settings.Titles = true; } else if (linear[2] == "false") { Settings.Titles = false; }
-                                }
-                                break;
-
-                            case "color":
-                                if (linear[1] == "price") { Settings.ColorPrice = int.Parse(linear[2]); }
-                                if (linear[1] == "enabled") {
-                                    if (linear[2] == "true") { Settings.Colors = true; } else if (linear[2] == "false") { Settings.Colors = false; }
-                                }
-                                break;
-                            case "titlecolor":
-                                if (linear[1] == "price") { Settings.TColorPrice = int.Parse(linear[2]); }
-                                if (linear[1] == "enabled") {
-                                    if (linear[2] == "true") { Settings.TColors = true; } else if (linear[2] == "false") { Settings.TColors = false; }
-                                }
-                                break;
+                                
                             case "rank":
                                 if (linear[1] == "price") {
                                     Economy.Settings.Rank rnk = new Economy.Settings.Rank();
@@ -196,31 +166,24 @@ namespace MCGalaxy {
                                     if (FindLevel(linear[2]) != null) { lvl = FindLevel(linear[2]); Settings.LevelsList.Remove(lvl); }
                                     switch (linear[3]) {
                                         case "name":
-                                            lvl.name = linear[4];
-                                            break;
-
+                                            lvl.name = linear[4]; break;
                                         case "price":
-                                            lvl.price = int.Parse(linear[4]);
-                                            break;
-
+                                            lvl.price = int.Parse(linear[4]); break;
                                         case "x":
-                                            lvl.x = linear[4];
-                                            break;
-
+                                            lvl.x = linear[4]; break;
                                         case "y":
-                                            lvl.y = linear[4];
-                                            break;
-
+                                            lvl.y = linear[4]; break;
                                         case "z":
-                                            lvl.z = linear[4];
-                                            break;
-
+                                            lvl.z = linear[4]; break;
                                         case "type":
-                                            lvl.type = linear[4];
-                                            break;
+                                            lvl.type = linear[4]; break;
                                     }
                                     Settings.LevelsList.Add(lvl);
                                 }
+                                break;
+                             default:
+                                Item item = GetItem(linear[0]);
+                                if (item != null) item.Parse(line, linear);
                                 break;
                         }
                     } catch { }
@@ -237,19 +200,10 @@ namespace MCGalaxy {
             //Thread.Sleep(2000);
             using (StreamWriter w = File.CreateText("properties/economy.properties")) {
                 //enabled
-                w.WriteLine("enabled:" + Settings.Enabled);
-                //title
-                w.WriteLine();
-                w.WriteLine("title:enabled:" + Settings.Titles);
-                w.WriteLine("title:price:" + Settings.TitlePrice);
-                //color
-                w.WriteLine();
-                w.WriteLine("color:enabled:" + Settings.Colors);
-                w.WriteLine("color:price:" + Settings.ColorPrice);
-                //tcolor
-                w.WriteLine();
-                w.WriteLine("titlecolor:enabled:" + Settings.TColors);
-                w.WriteLine("titlecolor:price:" + Settings.TColorPrice);
+                w.WriteLine("enabled:" + Settings.Enabled);              
+                foreach (Item item in Items)
+                	item.Serialise(w);
+                
                 //rank
                 w.WriteLine();
                 w.WriteLine("rank:enabled:" + Settings.Ranks);
@@ -275,7 +229,6 @@ namespace MCGalaxy {
         }
 
         public static Settings.Level FindLevel(string name) {
-            Settings.Level found = null;
             foreach (Settings.Level lvl in Settings.LevelsList) {
                 try {
             		if (lvl.name.CaselessEquals(name)) return lvl;
@@ -315,7 +268,7 @@ namespace MCGalaxy {
             DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
             query.AddParam("@Name", playername);
             using (DataTable eco = Database.fillData(query, "SELECT * FROM Economy WHERE player=@Name")) {
-                if (eco.Rows.Count == 1) {
+                if (eco.Rows.Count >= 1) {
                     es.money = int.Parse(eco.Rows[0]["money"].ToString());
                     es.totalSpent = int.Parse(eco.Rows[0]["total"].ToString());
                     es.purchase = eco.Rows[0]["purchase"].ToString();
@@ -345,6 +298,15 @@ namespace MCGalaxy {
             query.AddParam("@Fine", es.fine);
             Database.executeQuery(query, string.Format("{0} Economy (player, money, total, purchase, payment, salary, fine) VALUES " +
                                                        "(@Name, @Money, @Total, @Purchase, @Payment, @Salary, @Fine)", (Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO")));
+        }
+        
+        public static Item[] Items = { new ColorItem(), new TitleColorItem(), new TitleItem() };
+        
+        public static Item GetItem(string name) {
+            foreach (Item item in Items) {
+                if (name.CaselessEquals(item.Name)) return item;
+            }
+            return null;
         }
     }
 }

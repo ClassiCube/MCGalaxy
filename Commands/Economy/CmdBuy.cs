@@ -18,6 +18,7 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {
@@ -89,99 +90,6 @@ namespace MCGalaxy.Commands {
                         }
                     } break;
 
-                case "colors":
-                case "color":
-                case "colours":
-                case "colour":
-                    if (parts.Length < 2) { Help(p); return; }
-                    if (!p.EnoughMoney(Economy.Settings.ColorPrice)) {
-                        Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a color");
-                        return;
-                    }
-                    if (!parts[1].StartsWith("&") || !parts[1].StartsWith("%")) {
-                        parts[1] = Colors.Parse(parts[1]);
-                        if (parts[1] == "") {
-                            Player.SendMessage(p, "%cThat wasn't a color");
-                            return;
-                        }
-                    }
-                    if (parts[1] == p.color) {
-                        Player.SendMessage(p, "%cYou already have a " + parts[1] + Colors.Name(parts[1]) + "%c color"); return;
-                    }
-                    
-                    Command.all.Find("color").Use(null, p.name + " " + Colors.Name(parts[1]));
-                    p.money = p.money - Economy.Settings.ColorPrice;
-                    ecos.money = p.money;
-                    ecos.totalSpent += Economy.Settings.ColorPrice;
-                    ecos.purchase = "%3Color: " + parts[1] + Colors.Name(parts[1]) + "%3 - Price: %f" + Economy.Settings.ColorPrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                    Economy.UpdateEcoStats(ecos);
-                    Player.SendMessage(p, "%aYour color has been successfully changed to " + parts[1] + Colors.Name(parts[1]));
-                    Player.SendMessage(p, "%aYour balance is now %f" + p.money.ToString() + " %3" + Server.moneys);
-                    break;
-
-                case "tcolor":
-                case "tcolors":
-                case "titlecolor":
-                case "titlecolors":
-                case "tc":
-                    if (parts.Length < 2) { Help(p); return; }
-                    if (!p.EnoughMoney(Economy.Settings.TColorPrice)) {
-                        Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a titlecolor");
-                        return;
-                    }
-                    if (!parts[1].StartsWith("&") || !parts[1].StartsWith("%")) {
-                        parts[1] = Colors.Parse(parts[1]);
-                        if (parts[1] == "") {
-                            Player.SendMessage(p, "%cThat wasn't a color");
-                            return;
-                        }
-                    }
-                    if (parts[1] == p.titlecolor) {
-                        Player.SendMessage(p, "%cYou already have a " + parts[1] + Colors.Name(parts[1]) + "%c titlecolor"); return;
-                    }
-                    
-                    Command.all.Find("tcolor").Use(null, p.name + " " + Colors.Name(parts[1]));
-                    p.money = p.money - Economy.Settings.TColorPrice;
-                    ecos.money = p.money;
-                    ecos.totalSpent += Economy.Settings.TColorPrice;
-                    ecos.purchase = "%3Titlecolor: " + parts[1] + Colors.Name(parts[1]) + "%3 - Price: %f" + Economy.Settings.TColorPrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                    Economy.UpdateEcoStats(ecos);
-                    Player.SendMessage(p, "%aYour titlecolor has been successfully changed to " + parts[1] + Colors.Name(parts[1]));
-                    Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-                    break;
-
-                case "titles":
-                case "title":
-                    if (parts.Length < 2) { Help(p); return; }
-                    if (!p.EnoughMoney(Economy.Settings.TitlePrice)) {
-                        Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a title"); return;
-                    }
-                    if (parts[1] == p.title) {
-                        Player.SendMessage(p, "%cYou already have that title"); return;
-                    }
-                    if (parts[1].Length > 17) {
-                        Player.SendMessage(p, "%cTitles cannot be longer than 17 characters"); return;
-                    }
-                    var regex = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9-_\\.]*$");
-                    if (!regex.IsMatch(parts[1])) {
-                        Player.SendMessage(p, "%cInvalid title! Titles may only contain alphanumeric characters and .-_");
-                        return;
-                    }
-                    bool free = parts[1] == "";
-                    Command.all.Find("title").Use(null, p.name + " " + parts[1]);
-                    if (!free) {
-                        p.money = p.money - Economy.Settings.TitlePrice;
-                        ecos.money = p.money;
-                        ecos.totalSpent += Economy.Settings.TitlePrice;
-                        ecos.purchase = "%3Title: %f" + parts[1] + "%3 - Price: %f" + Economy.Settings.TitlePrice + " %3" + Server.moneys + " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                        Economy.UpdateEcoStats(ecos);
-                        Player.SendMessage(p, "%aYour title has been successfully changed to [" + p.titlecolor + parts[1] + "%a]");
-                    } else {
-                        Player.SendMessage(p, "%aYour title has been successfully removed for free");
-                    }
-                    Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-                    break;
-
                 case "ranks":
                 case "rank":
                     if (parts.Length >= 2) {
@@ -208,6 +116,13 @@ namespace MCGalaxy.Commands {
                     break;
 
                 default:
+                    foreach (Item item in Economy.Items)
+                        foreach (string alias in item.Aliases) 
+                    {
+                        if (parts[0].CaselessEquals(alias)) {
+                            item.OnBuyCommand(this, p, parts); return;
+                        }
+                    }
                     Player.SendMessage(p, "%cThat wasn't a valid command addition!");
                     break;
             }

@@ -1,4 +1,20 @@
-﻿
+﻿/*
+    Copyright 2011 MCForge
+    
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 
 namespace MCGalaxy.Eco {
@@ -11,11 +27,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Title"; } }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p, string[] args) {
-            if (args.Length < 2) { cmd.Help(p); return; }
-            if (!p.EnoughMoney(Economy.Settings.TitlePrice)) {
-                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a title"); return;
-            }
+        protected override void OnBuyCommand(Player p, string[] args) {
             if (args[1] == p.title) {
                 Player.SendMessage(p, "%cYou already have that title"); return;
             }
@@ -48,11 +60,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "TitleColor"; } }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p, string[] args) {
-            if (args.Length < 2) { cmd.Help(p); return; }
-            if (!p.EnoughMoney(Economy.Settings.TColorPrice)) {
-                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a titlecolor"); return;
-            }
+        protected override void OnBuyCommand(Player p, string[] args) {
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }
@@ -75,11 +83,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Color"; } }
 
-        protected internal override void OnBuyCommand(Command cmd, Player p, string[] args) {
-            if (args.Length < 2) { cmd.Help(p); return; }
-            if (!p.EnoughMoney(Economy.Settings.ColorPrice)) {
-                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a color"); return;
-            }
+        protected override void OnBuyCommand(Player p, string[] args) {
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }

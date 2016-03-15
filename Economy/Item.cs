@@ -31,7 +31,7 @@ namespace MCGalaxy.Eco {
         public string[] Aliases;
         
         /// <summary> Whether this item can currently be bought in the economy. </summary>
-        public bool Enabled { get; set; }
+        public bool Enabled;
         
         /// <summary> Reads the given property of this item from the economy.properties file. </summary>
         /// <remarks> split is line split by the : character. </remarks>
@@ -44,7 +44,7 @@ namespace MCGalaxy.Eco {
 
         protected internal abstract void OnSetupCommand(Player p, string[] args);
         
-        protected internal abstract void OnStoreCommand(Player p, string[] args);
+        protected internal abstract void OnStoreCommand(Player p);
         
         protected static void MakePurchase(Player p, int cost, string item) {
             Economy.EcoStats ecos = Economy.RetrieveEcoStats(p.name);
@@ -62,7 +62,7 @@ namespace MCGalaxy.Eco {
     public abstract class SimpleItem : Item {
         
         /// <summary> How much this item costs to purchase. </summary>
-        public int Price { get; set; }
+        public int Price = 100;
         
         public override void Parse(string line, string[] split) {
             if (split.Length < 3) return;
@@ -77,6 +77,16 @@ namespace MCGalaxy.Eco {
             writer.WriteLine(Name + ":enabled:" + Enabled);
             writer.WriteLine(Name + ":price:" + Price);
         }
+        
+		protected internal override void OnBuyCommand(Command cmd, Player p, string[] args) {
+			if (args.Length < 2) { cmd.Help(p); return; }
+            if (!p.EnoughMoney(Price)) {
+                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
+            }
+			OnBuyCommand(p, args);
+		}
+		
+		protected abstract void OnBuyCommand(Player p, string[] args);
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
             switch (args[2]) {
@@ -98,7 +108,7 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected internal override void OnStoreCommand(Player p, string[] args) {
+        protected internal override void OnStoreCommand(Player p) {
             if (!Enabled) { Player.SendMessage(p, "%c" + Name + "s are not enabled for the economy system."); return; }
             Player.SendMessage(p, Name + "s cost %f" + Price + " %3" + Server.moneys + " %Seach");
         }

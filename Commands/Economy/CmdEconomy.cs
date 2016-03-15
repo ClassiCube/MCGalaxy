@@ -18,6 +18,7 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
     
@@ -170,76 +171,6 @@ namespace MCGalaxy.Commands {
                     }
                     break;
 
-                case "titles":
-                case "title":
-                    switch (args[2]) {
-                        case "enable":
-                            if (Economy.Settings.Titles) { Player.SendMessage(p, "%cTitles are already enabled for the economy system"); break; } else { Economy.Settings.Titles = true; Player.SendMessage(p, "%aTitles are now enabled for the economy system"); break; }
-
-                        case "disable":
-                            if (Economy.Settings.Titles == false) { Player.SendMessage(p, "%cTitles are already disabled for the economy system"); break; } else { Economy.Settings.Titles = false; Player.SendMessage(p, "%aTitles are now disabled for the economy system"); break; }
-
-                        case "price":
-                            try {
-                                Economy.Settings.TitlePrice = int.Parse(args[3]);
-                            } catch { Player.SendMessage(p, "%cInvalid price input: that wasn't a number!"); return; }
-                            Player.SendMessage(p, "%aSuccessfully changed the title price to: %f"  + Economy.Settings.TitlePrice + " %3" + Server.moneys);
-                            break;
-
-                        default:
-                            Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                            break;
-                    }
-                    break;
-
-                case "colors":
-                case "colours":
-                case "color":
-                case "colour":
-                    switch (args[2]) {
-                        case "enable":
-                            if (Economy.Settings.Colors) { Player.SendMessage(p, "%cColors are already enabled for the economy system"); break; } else { Economy.Settings.Colors = true; Player.SendMessage(p, "%aColors are now enabled for the economy system"); break; }
-
-                        case "disable":
-                            if (Economy.Settings.Colors == false) { Player.SendMessage(p, "%cColors are already disabled for the economy system"); break; } else { Economy.Settings.Colors = false; Player.SendMessage(p, "%aColors are now disabled for the economy system"); break; }
-
-                        case "price":
-                            try {
-                                Economy.Settings.ColorPrice = int.Parse(args[3]);
-                            } catch { Player.SendMessage(p, "%cInvalid price input: that wasn't a number!"); return; }
-                            Player.SendMessage(p, "Successfully changed the color price to %f" + Economy.Settings.ColorPrice + " %3" + Server.moneys);
-                            break;
-
-                        default:
-                            Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                            break;
-                    }
-                    break;
-                case "tcolor":
-                case "tcolors":
-                case "titlecolor":
-                case "titlecolors":
-                case "tc":
-                    switch (args[2]) {
-                        case "enable":
-                            if (Economy.Settings.TColors) Player.SendMessage(p, "%cTitleColors are already enabled for the economy system");
-                            else { Economy.Settings.TColors = true; Player.SendMessage(p, "%aTitleColors are now enabled for the economy system"); }
-                            break;
-                        case "disable":
-                            if (Economy.Settings.TColors == false) Player.SendMessage(p, "%cTitleColors are already disabled for the economy system");
-                            else { Economy.Settings.TColors = false; Player.SendMessage(p, "%aTitleColors are now disabled for the economy system"); }
-                            break;
-                        case "price":
-                            try {
-                                Economy.Settings.TColorPrice = int.Parse(args[3]);
-                            } catch { Player.SendMessage(p, "%cInvalid price input: that wasn't a number!"); return; }
-                            Player.SendMessage(p, "%aSuccessfully changed the titlecolor price to %f" + Economy.Settings.TColorPrice + " %3" + Server.moneys);
-                            break;
-                        default:
-                            Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                            break;
-                    }
-                    break;
                 case "ranks":
                 case "rank":
                     switch (args[2]) {
@@ -303,6 +234,14 @@ namespace MCGalaxy.Commands {
                     SetupHelp(p); return;
 
                 default:
+                    foreach (Item item in Economy.Items)
+                        foreach (string alias in item.Aliases) 
+                    {
+                        if (args[0].CaselessEquals(alias)) {
+                            item.OnSetupCommand(p, args); return;
+                        }
+                    }
+                                        
                     if (args[1] == "") { SetupHelp(p); return; }
                     Player.SendMessage(p, "%cThat wasn't a valid command addition!");
                     return;

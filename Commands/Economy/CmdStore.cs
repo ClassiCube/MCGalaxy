@@ -18,6 +18,7 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
 	
@@ -51,32 +52,6 @@ namespace MCGalaxy.Commands {
                     }
                     return;
 
-                case "title":
-                case "titles":
-                    if (!Economy.Settings.Titles ) { Player.SendMessage(p, "%cTitles are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Titles===");
-                    Player.SendMessage(p, "Titles cost %f" + Economy.Settings.TitlePrice + " %3" + Server.moneys + " %Seach");
-                    return;
-
-                case "tcolor":
-                case "tcolors":
-                case "titlecolor":
-                case "titlecolors":
-                case "tc":
-                    if (!Economy.Settings.TColors) { Player.SendMessage(p, "%cTitlecolors are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Titlecolors===");
-                    Player.SendMessage(p, "Titlecolors cost %f" + Economy.Settings.TColorPrice + " %3" + Server.moneys + " %Seach");
-                    return;
-
-                case "colors":
-                case "color":
-                case "colours":
-                case "colour":
-                    if (!Economy.Settings.Colors) { Player.SendMessage(p, "%cColors are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Colors===");
-                    Player.SendMessage(p, "Colors cost %f" + Economy.Settings.ColorPrice + " %3" + Server.moneys + " %Seach");
-                    return;
-
                 case "ranks":
                 case "rank":
                     if (!Economy.Settings.Ranks) { Player.SendMessage(p, "%cRanks are not enabled for the economy system"); return; }
@@ -92,6 +67,13 @@ namespace MCGalaxy.Commands {
                     return;
 
                 default:
+                    foreach (Item item in Economy.Items)
+                        foreach (string alias in item.Aliases) 
+                    {
+                        if (message.CaselessEquals(alias)) {
+                            item.OnStoreCommand(p); return;
+                        }
+                    }                    
                     Player.SendMessage(p, "%cThat wasn't a valid command addition!");
                     return;
             }

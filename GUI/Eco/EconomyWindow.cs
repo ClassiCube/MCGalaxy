@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using MCGalaxy.Eco;
 
 namespace MCGalaxy.GUI.Eco {
     public partial class EconomyWindow : Form {
@@ -14,13 +15,13 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void EconomyWindow_Load(object sender, EventArgs e) {
-            numericUpDownTitle.Value = Economy.Settings.TitlePrice;
-            numericUpDownColor.Value = Economy.Settings.ColorPrice;
-            numericUpDownTcolor.Value = Economy.Settings.TColorPrice;
+			numericUpDownTitle.Value = ((SimpleItem)Economy.GetItem("title")).Price;
+			numericUpDownColor.Value = ((SimpleItem)Economy.GetItem("color")).Price;
+			numericUpDownTcolor.Value = ((SimpleItem)Economy.GetItem("titlecolor")).Price;
             checkBoxEco.Checked = Economy.Settings.Enabled;
-            checkBoxTitle.Checked = Economy.Settings.Titles;
-            checkBoxColor.Checked = Economy.Settings.Colors;
-            checkBoxTcolor.Checked = Economy.Settings.TColors;
+            checkBoxTitle.Checked = Economy.GetItem("title").Enabled;
+            checkBoxColor.Checked = Economy.GetItem("color").Enabled;
+            checkBoxTcolor.Checked = Economy.GetItem("titlecolor").Enabled;
             checkBoxRank.Checked = Economy.Settings.Ranks;
             checkBoxLevel.Checked = Economy.Settings.Levels;
 
@@ -120,34 +121,34 @@ namespace MCGalaxy.GUI.Eco {
         private void checkBoxTitle_CheckedChanged(object sender, EventArgs e) {
             labelPriceTitle.Enabled = checkBoxTitle.Checked;
             numericUpDownTitle.Enabled = checkBoxTitle.Checked;
-            Economy.Settings.Titles = checkBoxTitle.Checked;
-            Economy.Settings.TitlePrice = (int)numericUpDownTitle.Value;
+            Economy.GetItem("title").Enabled = checkBoxTitle.Checked;
+            ((SimpleItem)Economy.GetItem("title")).Price = (int)numericUpDownTitle.Value;
         }
 
         private void checkBoxColor_CheckedChanged(object sender, EventArgs e) {
             labelPriceColor.Enabled = checkBoxColor.Checked;
             numericUpDownColor.Enabled = checkBoxColor.Checked;
-            Economy.Settings.Colors = checkBoxColor.Checked;
-            Economy.Settings.ColorPrice = (int)numericUpDownColor.Value;
+            Economy.GetItem("color").Enabled = checkBoxColor.Checked;
+            ((SimpleItem)Economy.GetItem("color")).Price = (int)numericUpDownColor.Value;
         }
 
         private void checkBoxTcolor_CheckedChanged(object sender, EventArgs e) {
             labelPriceTcolor.Enabled = checkBoxTcolor.Checked;
             numericUpDownTcolor.Enabled = checkBoxTcolor.Checked;
-            Economy.Settings.TColors = checkBoxTcolor.Checked;
-            Economy.Settings.TColorPrice = (int)numericUpDownTcolor.Value;
+            Economy.GetItem("titlecolor").Enabled = checkBoxTcolor.Checked;
+            ((SimpleItem)Economy.GetItem("titlecolor")).Price = (int)numericUpDownTcolor.Value;
         }
 
         private void numericUpDownTitle_ValueChanged(object sender, EventArgs e) {
-            Economy.Settings.TitlePrice = (int)numericUpDownTitle.Value;
+			((SimpleItem)Economy.GetItem("title")).Price = (int)numericUpDownTitle.Value;
         }
 
         private void numericUpDownColor_ValueChanged(object sender, EventArgs e) {
-            Economy.Settings.ColorPrice = (int)numericUpDownColor.Value;
+            ((SimpleItem)Economy.GetItem("color")).Price = (int)numericUpDownColor.Value;
         }
 
         private void numericUpDownTcolor_ValueChanged(object sender, EventArgs e) {
-            Economy.Settings.TColorPrice = (int)numericUpDownTcolor.Value;
+            ((SimpleItem)Economy.GetItem("titlecolor")).Price = (int)numericUpDownTcolor.Value;
         }
 
         private void checkBoxRank_CheckedChanged(object sender, EventArgs e) {
