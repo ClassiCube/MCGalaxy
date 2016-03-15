@@ -49,10 +49,8 @@ namespace MCGalaxy.Commands
             string color = target.color == "" ? group.color : target.color;
             string prefix = target.title == "" ? "" : "[" + target.titleColor + target.title + color + "] ";
             Player.SendMessage(p, color + prefix + target.name + " %Shas :");
-            Player.SendMessage(p, "> > the rank of " + group.color + plGroup);
-            
-            Group nobody = Group.findPerm(LevelPermission.Nobody);
-            if (nobody == null || (!nobody.commands.Contains("pay") && !nobody.commands.Contains("give") && !nobody.commands.Contains("take")))
+            Player.SendMessage(p, "> > the rank of " + group.color + plGroup);            
+            if (Economy.Settings.Enabled)
                 Player.SendMessage(p, "> > &a" + target.money + " %S" + Server.moneys);
                 
             Player.SendMessage(p, "> > &cdied &a" + target.deaths + " %Stimes");

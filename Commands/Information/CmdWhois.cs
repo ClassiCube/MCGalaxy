@@ -40,9 +40,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, who.color + who.name + " %S(" + who.DisplayName + ") %Sis on &b" + who.level.name);
             Player.SendMessage(p, who.FullName + Server.DefaultColor + " %Shas :");
             Player.SendMessage(p, "> > the rank of " + who.group.color + who.group.name);
-            
-            Group nobody = Group.findPerm(LevelPermission.Nobody);
-            if (nobody == null || (!nobody.commands.Contains("pay") && !nobody.commands.Contains("give") && !nobody.commands.Contains("take")))
+            if (Economy.Settings.Enabled))
                 Player.SendMessage(p, "> > &a" + who.money + Server.DefaultColor + " " + Server.moneys);
 
             Player.SendMessage(p, "> > &cdied &a" + who.overallDeath + Server.DefaultColor + " times");

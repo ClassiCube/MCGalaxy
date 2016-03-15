@@ -88,8 +88,8 @@ namespace MCGalaxy {
                 SendMessage("Lowlag mode is currently &aON.");
             
             try {
-                if ( !Group.Find("Nobody").commands.Contains("pay") && !Group.Find("Nobody").commands.Contains("give") && !Group.Find("Nobody").commands.Contains("take") )
-                    SendMessage("You currently have &a" + money + Server.DefaultColor + " " + Server.moneys);
+                if (Economy.Settings.Enabled)
+                    SendMessage("You currently have &a" + money + " %S" + Server.moneys);
             } catch {
             }
             
