@@ -52,130 +52,17 @@ namespace MCGalaxy.Commands {
             
             switch (args[1]) {
                 case "apply":
-                    if (p == null || p.name == Server.server_owner) {
-                        Economy.Load();
-                        Player.SendMessage(p, "%aApplied changes");
-                    } else {
-                        Player.SendMessage(p, "%cThis command is only usable by the server owner: %6" + Server.server_owner);
-                    }
-                    return;
-                case "maps":
-                case "levels":
-                case "map":
-                case "level":
-                    Economy.Settings.Level lvl = Economy.FindLevel(args[3]);
-                    switch (args[2]) {
-                        case "new":
-                        case "create":
-                        case "add":
-                            if (Economy.FindLevel(args[3]) != null) { Player.SendMessage(p, "%cThat preset level already exists"); break; } else {
-                                Economy.Settings.Level level = new Economy.Settings.Level();
-                                level.name = args[3];
-                                if (isGood(args[4]) && isGood(args[5]) && isGood(args[6])) {
-                                    level.x = args[4]; level.y = args[5]; level.z = args[6];
-                                } else { Player.SendMessage(p, "%cDimension must be a power of 2"); break; }
-                                
-                                if (!MapGen.IsRecognisedFormat(args[7])) {
-                                    MapGen.PrintValidFormats(p); return;
-                                }
-                                level.type = args[7].ToLower();
-                                try {
-                                    level.price = int.Parse(args[8]);
-                                } catch { Player.SendMessage(p, "%cInvalid price input: that wasn't a number!"); return; }
-                                Economy.Settings.LevelsList.Add(level);
-                                Player.SendMessage(p, "%aSuccessfully added the map preset with the following specs:");
-                                Player.SendMessage(p, "Map Preset Name: %f" + level.name);
-                                Player.SendMessage(p, "x:" + level.x + ", y:" + level.y + ", z:" + level.z);
-                                Player.SendMessage(p, "Map Type: %f" + level.type);
-                                Player.SendMessage(p, "Map Price: %f" + level.price + " %3" + Server.moneys);
-                                break;
-                            }
-
-                        case "delete":
-                        case "remove":
-                            if (lvl == null) { Player.SendMessage(p, "%cThat preset level doesn't exist"); return; }
-                            Economy.Settings.LevelsList.Remove(lvl);
-                            Player.SendMessage(p, "%aSuccessfully removed preset: %f" + lvl.name);
-                            break;
-
-                        case "edit":
-                        case "change":
-                            if (lvl == null) { Player.SendMessage(p, "%cThat preset level doesn't exist"); return; }
-                            
-                            switch (args[4]) {
-                                case "name":
-                                case "title":
-                                    lvl.name = args[5];
-                                    Player.SendMessage(p, "%aSuccessfully changed preset name to %f" + lvl.name);
-                                    break;
-
-                                case "x":
-                                    if (isGood(args[5])) {
-                                        lvl.x = args[5];
-                                        Player.SendMessage(p, "%aSuccessfully changed preset x size to %f" + lvl.x);
-                                    } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                                    break;
-
-                                case "y":
-                                    if (isGood(args[5])) {
-                                        lvl.y = args[5];
-                                        Player.SendMessage(p, "%aSuccessfully changed preset y size to %f" + lvl.y);
-                                    } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                                    break;
-
-                                case "z":
-                                    if (isGood(args[5])) {
-                                        lvl.z = args[5];
-                                        Player.SendMessage(p, "%aSuccessfully changed preset z size to %f" + lvl.z);
-                                    } else { Player.SendMessage(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                                    break;
-
-                                case "type":
-                                    if (MapGen.IsRecognisedFormat(args[5])) {
-                                        lvl.type = args[5].ToLower();
-                                    } else {
-                                        MapGen.PrintValidFormats(p); return;
-                                    }
-                                    Player.SendMessage(p, "%aSuccessfully changed preset type to %f" + lvl.type);
-                                    break;
-
-                                case "price":
-                                    int newPrice = 0;
-                                    if (!int.TryParse(args[5], out newPrice)) {
-                                        Player.SendMessage(p, "%cInvalid amount of %3" + Server.moneys); return;
-                                    }
-                                    if (newPrice < 0) {
-                                        Player.SendMessage(p, "%cAmount of %3" + Server.moneys + "%c cannot be negative"); return;
-                                    }
-                                    lvl.price = newPrice;
-                                    Player.SendMessage(p, "%aSuccessfully changed preset price to %f" + lvl.price + " %3" + Server.moneys);
-                                    break;
-
-                                default:
-                                    Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                                    break;
-                            }
-                            break;
-
-                        case "enable":
-                            if (Economy.Settings.Levels) { Player.SendMessage(p, "%cMaps are already enabled for the economy system"); break; } 
-                            else { Economy.Settings.Levels = true; Player.SendMessage(p, "%aMaps are now enabled for the economy system"); break; }
-
-                        case "disable":
-                            if (!Economy.Settings.Levels) { Player.SendMessage(p, "%cMaps are already disabled for the economy system"); break; } 
-                            else { Economy.Settings.Levels = false; Player.SendMessage(p, "%aMaps are now disabled for the economy system"); break; }
-
-                        default:
-                            Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                            break;
-                    }
-                    break;                  
+                    Economy.Load();
+                    Player.SendMessage(p, "%aApplied changes");
+                    return;                  
 
                 case "enable":
-                    Economy.Enabled = true; Player.SendMessage(p, "%aThe economy system is now enabled"); return;
+                    Player.SendMessage(p, "%aThe economy system is now enabled"); 
+                    Economy.Enabled = true; return;
 
                 case "disable":
-                    Economy.Enabled = false; Player.SendMessage(p, "%aThe economy system is now disabled"); return;
+                    Player.SendMessage(p, "%aThe economy system is now disabled"); 
+                    Economy.Enabled = false; return;
                     
                 case "help":
                     SetupHelp(p); return;
@@ -184,8 +71,9 @@ namespace MCGalaxy.Commands {
                     foreach (Item item in Economy.Items)
                         foreach (string alias in item.Aliases) 
                     {
-                        if (args[0].CaselessEquals(alias)) {
-                            item.OnSetupCommand(p, args); return;
+                        if (args[1].CaselessEquals(alias)) {
+                            item.OnSetupCommand(p, args); 
+                            Economy.Save(); return;
                         }
                     }
                                         
@@ -206,9 +94,7 @@ namespace MCGalaxy.Commands {
         }
 
         void SetupHelp(Player p) {
-            if (p == null || p.name == Server.server_owner) {
-                Player.SendMessage(p, "%4/eco setup apply %e- applies the changes made to 'economy.properties'");
-            }
+            Player.SendMessage(p, "%4/eco setup apply %e- reloads changes made to 'economy.properties'");
             Player.SendMessage(p, "%4/eco setup [%aenable%4/%cdisable%4] %e- to enable/disable the economy system");
             Player.SendMessage(p, "%4/eco setup [title/color/tcolor/rank/map] [%aenable%4/%cdisable%4] %e- to enable/disable that feature");
             Player.SendMessage(p, "%4/eco setup [title/color/tcolor] [%3price%4] %e- to setup the prices for these features");
@@ -217,28 +103,6 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%4/eco setup map new [%fname%4] [%fx%4] [%fy%4] [%fz%4] [%ftype%4] [%3price%4] %e- to setup a map preset");
             Player.SendMessage(p, "%4/eco setup map delete [%fname%4] %e- to delete a map");
             Player.SendMessage(p, "%4/eco setup map edit [%fname%4] [name/x/y/z/type/price] [%fvalue%4] %e- to edit a map preset");
-        }
-
-        public static bool isGood(string value) {
-            ushort uvalue = ushort.Parse(value);
-            switch (uvalue) {
-                case 2:
-                case 4:
-                case 8:
-                case 16:
-                case 32:
-                case 64:
-                case 128:
-                case 256:
-                case 512:
-                case 1024:
-                case 2048:
-                case 4096:
-                case 8192:
-                    return true;
-            }
-
-            return false;
         }
     }
 }

@@ -215,10 +215,10 @@ namespace MCGalaxy.Util {
             return (ushort)(buffer[offset + 0] | buffer[offset + 1] << 8);
         }
         
-        static bool CheckChunk(ChunkHeader chunk, DateTime now, long seconds, Player p, out Level lvl) {
+        static bool CheckChunk(ChunkHeader chunk, DateTime now, long ticks, Player p, out Level lvl) {
             DateTime time = chunk.BaseTime;
             lvl = null;
-            if (time.AddSeconds(65536 + seconds) < now)
+            if (time.AddTicks(65536 * TimeSpan.TicksPerSecond + ticks) < now)
                 return false; // we can safely discard the entire chunk
             
             lvl = LevelInfo.FindExact(chunk.LevelName);

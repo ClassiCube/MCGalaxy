@@ -15,16 +15,16 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void EconomyWindow_Load(object sender, EventArgs e) {
-			RankItem rankItem = Economy.Ranks;
-			numericUpDownTitle.Value = Economy.Title.Price;
-			numericUpDownColor.Value = Economy.Color.Price;
-			numericUpDownTcolor.Value = Economy.TitleColor.Price;
+            RankItem rankItem = Economy.Ranks;
+            numericUpDownTitle.Value = Economy.Title.Price;
+            numericUpDownColor.Value = Economy.Color.Price;
+            numericUpDownTcolor.Value = Economy.TitleColor.Price;
             checkBoxEco.Checked = Economy.Enabled;
             checkBoxTitle.Checked = Economy.Title.Enabled;
             checkBoxColor.Checked = Economy.Color.Enabled;
             checkBoxTcolor.Checked = Economy.TitleColor.Enabled;
             checkBoxRank.Checked = rankItem.Enabled;
-            checkBoxLevel.Checked = Economy.Settings.Levels;
+            checkBoxLevel.Checked = Economy.Levels.Enabled;
 
             //load all ranks in combobox
             List<string> groupList = new List<string>();
@@ -73,8 +73,8 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void UpdateRanks() {
-			RankItem rankItem = Economy.Ranks;
-			rankItem.UpdatePrices();
+            RankItem rankItem = Economy.Ranks;
+            rankItem.UpdatePrices();
 
             List<string> ranklist = new List<string>();
             foreach (RankItem.Rank rank in rankItem.RanksList) {
@@ -88,8 +88,8 @@ namespace MCGalaxy.GUI.Eco {
 
         public void UpdateLevels() {
             dataGridView1.Rows.Clear();
-            foreach (Economy.Settings.Level lvl in Economy.Settings.LevelsList) {
-                dataGridView1.Rows.Add(lvl.name, lvl.price, lvl.x, lvl.y, lvl.z, lvl.type);
+            foreach (LevelItem.LevelPreset preset in Economy.Levels.Presets) {
+                dataGridView1.Rows.Add(preset.name, preset.price, preset.x, preset.y, preset.z, preset.type);
             }
         }
 
@@ -129,7 +129,7 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void numericUpDownTitle_ValueChanged(object sender, EventArgs e) {
-			Economy.Title.Price = (int)numericUpDownTitle.Value;
+            Economy.Title.Price = (int)numericUpDownTitle.Value;
         }
 
         private void numericUpDownColor_ValueChanged(object sender, EventArgs e) {
@@ -171,7 +171,7 @@ namespace MCGalaxy.GUI.Eco {
             dataGridView1.Enabled = checkBoxLevel.Checked;
             buttonAdd.Enabled = checkBoxLevel.Checked;
             CheckLevelEnables();
-            Economy.Settings.Levels = checkBoxLevel.Checked;
+            Economy.Levels.Enabled = checkBoxLevel.Checked;
         }
 
         private void buttonAdd_Click(object sender, EventArgs e) {
@@ -189,7 +189,8 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void buttonRemove_Click(object sender, EventArgs e) {
-            Economy.Settings.LevelsList.Remove(Economy.FindLevel(dataGridView1.SelectedRows[0].Cells[0].Value.ToString()));
+			LevelItem item = Economy.Levels;
+            item.Presets.Remove(item.FindPreset(dataGridView1.SelectedRows[0].Cells[0].Value.ToString()));
             dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
             buttonRemove.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;
             buttonEdit.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;

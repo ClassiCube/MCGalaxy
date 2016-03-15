@@ -16,10 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Globalization;
-using System.Threading;
 using MCGalaxy.Eco;
-using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {
     
@@ -36,71 +33,14 @@ namespace MCGalaxy.Commands {
             if (p == null) { MessageInGameOnly(p); return; }
             string[] parts = message.Split(' ');
 
-            Economy.EcoStats ecos = Economy.RetrieveEcoStats(p.name);
-            switch (parts[0].ToLower()) {
-                case "map":
-                case "level":
-                case "maps":
-                case "levels":
-                    if (parts.Length < 2) { Help(p); return; }
-                    Economy.Settings.Level lvl = Economy.FindLevel(parts[1]);
-                    if (lvl == null) { Player.SendMessage(p, "%cThat isn't a level preset"); return; }
-                    
-                    if (!p.EnoughMoney(lvl.price)) {
-                        Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy that map"); return;
-                    }
-                    int old = p.money;
-                    int oldTS = ecos.totalSpent;
-                    string oldP = ecos.purchase;
-                    if (parts.Length < 3) { Help(p); return; }
-                    string name = parts[2];
-                    
-                    try {
-                        Command.all.Find("newlvl").Use(null, p.name + "_" + name + " " + lvl.x + " " + lvl.y + " " + lvl.z + " " + lvl.type);
-                        Player.SendMessage(p, "%aCreating level: '%f" + p.name + "_" + name + "%a' . . .");
-                        p.money = p.money - lvl.price;
-                        ecos.money = p.money;
-                        ecos.totalSpent += lvl.price;
-                        ecos.purchase = "%3Map: %f" + lvl.name + "%3 - Price: %f"  + lvl.price + " %3" + Server.moneys +
-                            " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                        Economy.UpdateEcoStats(ecos);
-                        
-                        Command.all.Find("load").Use(null, p.name + "_" + name);
-                        Thread.Sleep(250);
-                        Level level = LevelInfo.Find(p.name + "_" + name);
-                        if (level.permissionbuild > p.group.Permission) { level.permissionbuild = p.group.Permission; }
-                        if (level.permissionvisit > p.group.Permission) { level.permissionvisit = p.group.Permission; }
-                        Command.all.Find("goto").Use(p, p.name + "_" + name);
-
-                        Player.SendMessage(p, "%aSuccessfully created your map: '%f" + p.name + "_" + name + "%a'");
-                        Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-                        try {
-                            //safe against SQL injections, but will be replaced soon by a new feature
-                            //DB
-                            Database.executeQuery("INSERT INTO `Zone" + level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) parts[1]S " +
-                                                  "(0,0,0," + (level.Width - 1) + "," + (level.Height - 1) + "," + (level.Length - 1) + ",'" + p.name + "')");
-                            //DB
-                            Player.SendMessage(p, "%aZoning Succesful");
-                        } catch { Player.SendMessage(p, "%cZoning Failed"); }
-                    } catch {
-                        Player.SendMessage(p, "%cSomething went wrong, Money restored");
-                        if (old != p.money) {
-                            p.money = old; ecos.money = old; ecos.totalSpent = oldTS; ecos.purchase = oldP;
-                            Economy.UpdateEcoStats(ecos);
-                        }
-                    } break;
-
-                default:
-                    foreach (Item item in Economy.Items)
-                        foreach (string alias in item.Aliases) 
-                    {
-                        if (parts[0].CaselessEquals(alias)) {
-                            item.OnBuyCommand(this, p, parts); return;
-                        }
-                    }
-                    Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                    break;
+            foreach (Item item in Economy.Items)
+                foreach (string alias in item.Aliases)
+            {
+                if (parts[0].CaselessEquals(alias)) {
+                    item.OnBuyCommand(this, p, parts); return;
+                }
             }
+            Help(p);
         }
         
         public override void Help(Player p) {

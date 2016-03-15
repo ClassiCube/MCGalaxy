@@ -21,7 +21,7 @@ using System.Threading;
 using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
-	
+    
     /// <summary> Economy Beta v1.0 QuantumHive  </summary>
     public sealed class CmdStore : Command {
         public override string name { get { return "store"; } }
@@ -32,33 +32,14 @@ namespace MCGalaxy.Commands {
         public override bool Enabled { get { return Economy.Enabled; } }
 
         public override void Use(Player p, string message) {
-            switch (message) {
-                case "map":
-                case "level":
-                case "maps":
-                case "levels":
-                    if (!Economy.Settings.Levels) { Player.SendMessage(p, "%cMaps are not enabled for the economy system"); return; }
-                    Player.SendMessage(p, "%3===Economy info: Maps===");
-                    Player.SendMessage(p, "%aAvailable maps to buy:");
-                    if (Economy.Settings.LevelsList.Count == 0)
-                        Player.SendMessage(p, "%8-None-");
-                    else
-                        foreach (Economy.Settings.Level lvl in Economy.Settings.LevelsList) {
-                        Player.SendMessage(p, lvl.name + " (" + lvl.x + "," + lvl.y + "," + lvl.z + ") " + lvl.type + ": %f" + lvl.price + " %3" + Server.moneys);
-                    }
-                    return;
-
-                default:
-                    foreach (Item item in Economy.Items)
-                        foreach (string alias in item.Aliases) 
-                    {
-                        if (message.CaselessEquals(alias)) {
-                            item.OnStoreCommand(p); return;
-                        }
-                    }                    
-                    Player.SendMessage(p, "%cThat wasn't a valid command addition!");
-                    return;
+            foreach (Item item in Economy.Items)
+                foreach (string alias in item.Aliases)
+            {
+                if (message.CaselessEquals(alias)) {
+                    item.OnStoreCommand(p); return;
+                }
             }
+            Help(p);
         }
         
         public override void Help(Player p) {

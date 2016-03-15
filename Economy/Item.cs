@@ -104,7 +104,7 @@ namespace MCGalaxy.Eco {
                     Player.SendMessage(p, "%aSuccessfully changed the " + Name + " price to %f" + cost + " %3" + Server.moneys); 
                     Price = cost; break;
                 default:
-                    Player.SendMessage(p, "Supported actions: enable, disable, price [pcost]"); break;
+                    Player.SendMessage(p, "Supported actions: enable, disable, price [cost]"); break;
             }
         }
         

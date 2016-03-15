@@ -52,20 +52,6 @@ namespace MCGalaxy {
             }
         }
 
-        public static class Settings {
-            //Maps
-            public static bool Levels = false;
-            public static List<Level> LevelsList = new List<Level>();
-            public class Level {
-                public int price;
-                public string name;
-                public string x;
-                public string y;
-                public string z;
-                public string type;
-            }
-        }
-
         public static void LoadDatabase() {
         retry:
             Database.executeQuery(createTable); //create database
@@ -98,31 +84,6 @@ namespace MCGalaxy {
                         switch (linear[0]) {
                             case "enabled":
                     		    Enabled = linear[1].CaselessEquals("true"); break;
-
-                            case "level":
-                                if (linear[1] == "enabled") {
-                                    if (linear[2] == "true") { Settings.Levels = true; } else if (linear[2] == "false") { Settings.Levels = false; }
-                                }
-                                if (linear[1] == "levels") {
-                                    Settings.Level lvl = new Settings.Level();
-                                    if (FindLevel(linear[2]) != null) { lvl = FindLevel(linear[2]); Settings.LevelsList.Remove(lvl); }
-                                    switch (linear[3]) {
-                                        case "name":
-                                            lvl.name = linear[4]; break;
-                                        case "price":
-                                            lvl.price = int.Parse(linear[4]); break;
-                                        case "x":
-                                            lvl.x = linear[4]; break;
-                                        case "y":
-                                            lvl.y = linear[4]; break;
-                                        case "z":
-                                            lvl.z = linear[4]; break;
-                                        case "type":
-                                            lvl.type = linear[4]; break;
-                                    }
-                                    Settings.LevelsList.Add(lvl);
-                                }
-                                break;
                              default:
                                 if (linear.Length < 3) break;
                                 Item item = GetItem(linear[0]);
@@ -144,30 +105,8 @@ namespace MCGalaxy {
                     w.WriteLine();
                     item.Serialise(w);                    
                 }
-
-                //maps
-                w.WriteLine();
-                w.WriteLine("level:enabled:" + Settings.Levels);
-                foreach (Settings.Level lvl in Settings.LevelsList) {
-                    w.WriteLine();
-                    w.WriteLine("level:levels:" + lvl.name + ":name:" + lvl.name);
-                    w.WriteLine("level:levels:" + lvl.name + ":price:" + lvl.price);
-                    w.WriteLine("level:levels:" + lvl.name + ":x:" + lvl.x);
-                    w.WriteLine("level:levels:" + lvl.name + ":y:" + lvl.y);
-                    w.WriteLine("level:levels:" + lvl.name + ":z:" + lvl.z);
-                    w.WriteLine("level:levels:" + lvl.name + ":type:" + lvl.type);
-                }
                 w.Close();
             }
-        }
-
-        public static Settings.Level FindLevel(string name) {
-            foreach (Settings.Level lvl in Settings.LevelsList) {
-                try {
-                    if (lvl.name.CaselessEquals(name)) return lvl;
-                } catch { }
-            }
-            return null;
         }
 
         public static EcoStats RetrieveEcoStats(string playername) {
@@ -208,7 +147,8 @@ namespace MCGalaxy {
                                                        "(@Name, @Money, @Total, @Purchase, @Payment, @Salary, @Fine)", (Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO")));
         }
         
-        public static Item[] Items = { new ColorItem(), new TitleColorItem(), new TitleItem(), new RankItem() };
+        public static Item[] Items = { new ColorItem(), new TitleColorItem(), 
+        	new TitleItem(), new RankItem(), new LevelItem() };
         
         public static Item GetItem(string name) {
             foreach (Item item in Items) {
@@ -221,5 +161,6 @@ namespace MCGalaxy {
         public static SimpleItem TitleColor { get { return (SimpleItem)Items[1]; } }
         public static SimpleItem Title { get { return (SimpleItem)Items[2]; } }
         public static RankItem Ranks { get { return (RankItem)Items[3]; } }
+        public static LevelItem Levels { get { return (LevelItem)Items[4]; } }
     }
 }

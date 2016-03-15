@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using MCGalaxy.Eco;
 
 namespace MCGalaxy.GUI.Eco {
     public partial class EcoLevelWindow : Form {
@@ -99,15 +100,17 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void buttonOk_Click(object sender, EventArgs e) {
-            if (edit) Economy.Settings.LevelsList.Remove(Economy.FindLevel(lvledit.oldname));
-            Economy.Settings.Level level = new Economy.Settings.Level();
-            level.name = textBoxName.Text.Split()[0];
-            level.price = (int)numericUpDownPrice.Value;
-            level.x = comboBoxX.SelectedItem.ToString();
-            level.y = comboBoxY.SelectedItem.ToString();
-            level.z = comboBoxZ.SelectedItem.ToString();
-            level.type = comboBoxType.SelectedItem.ToString().ToLower();
-            Economy.Settings.LevelsList.Add(level);
+            LevelItem item = Economy.Levels;
+            if (edit) item.Presets.Remove(item.FindPreset(lvledit.oldname));
+            LevelItem.LevelPreset preset = new LevelItem.LevelPreset();
+            preset.name = textBoxName.Text.Split()[0];
+            preset.price = (int)numericUpDownPrice.Value;
+            preset.x = comboBoxX.SelectedItem.ToString();
+            preset.y = comboBoxY.SelectedItem.ToString();
+            preset.z = comboBoxZ.SelectedItem.ToString();
+            preset.type = comboBoxType.SelectedItem.ToString().ToLower();
+            
+            item.Presets.Add(preset);
             eco.UpdateLevels();
             eco.CheckLevelEnables();
             this.Close();
