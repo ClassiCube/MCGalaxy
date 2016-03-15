@@ -91,7 +91,7 @@ namespace MCGalaxy.Eco {
 			
 			try {
 				Command.all.Find("newlvl").Use(null, name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
-				Player.SendMessage(p, "%aCreating level: '%f" + p.name + "_" + name + "%a' . . .");
+				Player.SendMessage(p, "%aCreating level: '%f" + name + "%a' . . .");
 				
 				Command.all.Find("load").Use(null, name);
 				Thread.Sleep(250);

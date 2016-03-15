@@ -4,48 +4,33 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace MCGalaxy
-{
-	public class PlayerDB
-	{
-		public static bool Load( Player p ) {
-			if ( File.Exists( "players/" + p.name + "DB.txt" ) ) {
-				foreach ( string line in File.ReadAllLines( "players/" + p.name + "DB.txt" ) ) {
-					if ( !string.IsNullOrEmpty( line ) && !line.StartsWith( "#" ) ) {
-						string key = line.Split( '=' )[0].Trim();
-						string value = line.Split( '=' )[1].Trim();
-						string section = "nowhere yet...";
+namespace MCGalaxy {
+    
+    public static class PlayerDB {
+        
+        static char[] trimChars = {'='};
+        public static bool Load( Player p ) {
+            if (!File.Exists("players/" + p.name + "DB.txt")) {
+                Save(p); return false;
+            }
+            
+            foreach (string line in File.ReadAllLines( "players/" + p.name + "DB.txt")) {
+                if (string.IsNullOrEmpty(line) || line[0] == '#') continue;
+                string[] parts = line.Split(trimChars, 2);
+                if (parts.Length < 2) continue;             
+                string key = parts[0].Trim(), value = parts[1].Trim();
 
-						try {
-							switch ( key.ToLower() ) {
-								case "nick":
-								p.DisplayName = value;
-								section = key;
-								break;
-							}
-						} catch(Exception e) {
-							Server.s.Log( "Loading " + p.name + "'s EXP database failed at section: " + section );
-							Server.ErrorLog( e );
-						}
+                if (key.CaselessEquals("nick"))
+                    p.DisplayName = value;
+                p.timeLogged = DateTime.Now;
+            }
+            p.SetPrefix();
+            return true;
+        }
 
-						p.timeLogged = DateTime.Now;
-					}
-				}
-
-				p.SetPrefix();
-				return true;
-			} else {
-				Save( p );
-				return false;
-			}
-		}
-
-		public static void Save( Player p ) {
-			StreamWriter sw = new StreamWriter( File.Create( "players/" + p.name + "DB.txt" ) );
-			sw.WriteLine ("Nick = " + p.DisplayName );
-			sw.Flush();
-			sw.Close();
-			sw.Dispose();
-		}
-	}
+        public static void Save(Player p) {
+            using (StreamWriter sw = new StreamWriter("players/" + p.name + "DB.txt", false))
+                sw.WriteLine("Nick = " + p.DisplayName);
+        }
+    }
 }

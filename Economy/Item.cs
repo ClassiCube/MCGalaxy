@@ -64,6 +64,8 @@ namespace MCGalaxy.Eco {
         /// <summary> How much this item costs to purchase. </summary>
         public int Price = 100;
         
+        protected bool NoArgsResetsItem;
+        
         public override void Parse(string line, string[] split) {
             if (split.Length < 3) return;
             
@@ -79,6 +81,10 @@ namespace MCGalaxy.Eco {
         }
         
 		protected internal override void OnBuyCommand(Command cmd, Player p, string[] args) {
+        	if (NoArgsResetsItem && args.Length == 1) {
+        		OnBuyCommand(p, args); return;
+        	}
+        	// Must always provide an argument.
 			if (args.Length < 2) { cmd.Help(p); return; }
             if (!p.EnoughMoney(Price)) {
                 Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;

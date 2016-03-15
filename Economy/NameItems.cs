@@ -23,11 +23,19 @@ namespace MCGalaxy.Eco {
         
         public TitleItem() {
             Aliases = new[] { "titles", "title" };
+            NoArgsResetsItem = true;
         }
         
         public override string Name { get { return "Title"; } }
         
         protected override void OnBuyCommand(Player p, string[] args) {
+        	if (args.Length == 1) {
+        		Command.all.Find("title").Use(null, p.name);
+        		Player.SendMessage(p, "%aYour title was removed for free");
+                Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
+                return;
+        	}
+        	
             if (args[1] == p.title) {
                 Player.SendMessage(p, "%cYou already have that title"); return;
             }
@@ -40,15 +48,9 @@ namespace MCGalaxy.Eco {
                 return;
             }
             
-            bool free = args[1] == "";
             Command.all.Find("title").Use(null, p.name + " " + args[1]);
-            if (!free) {
-                Player.SendMessage(p, "%aYour title has been successfully changed to [" + p.titlecolor + args[1] + "%a]");
-                MakePurchase(p, Price, "%3Title: %f" + args[1]);
-            } else {
-                Player.SendMessage(p, "%aYour title has been successfully removed for free");
-                Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-            }
+            Player.SendMessage(p, "%aYour title was changed to [" + p.titlecolor + args[1] + "%a]");
+            MakePurchase(p, Price, "%3Title: %f" + args[1]);
         }
     }
     
@@ -60,7 +62,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "TitleColor"; } }
         
-        protected override void OnBuyCommand(Player p, string[] args) {
+        protected override void OnBuyCommand(Player p, string[] args) {        	
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }
@@ -70,7 +72,7 @@ namespace MCGalaxy.Eco {
             }
             
             Command.all.Find("tcolor").Use(null, p.name + " " + Colors.Name(args[1]));
-            Player.SendMessage(p, "%aYour titlecolor has been successfully changed to " + args[1] + Colors.Name(args[1]));
+            Player.SendMessage(p, "%aYour titlecolor was changed to " + args[1] + Colors.Name(args[1]));
             MakePurchase(p, Price, "%3Titlecolor: " + args[1] + Colors.Name(args[1]));
         }
     }
