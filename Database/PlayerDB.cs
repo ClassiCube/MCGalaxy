@@ -32,5 +32,33 @@ namespace MCGalaxy {
             using (StreamWriter sw = new StreamWriter("players/" + p.name + "DB.txt", false))
                 sw.WriteLine("Nick = " + p.DisplayName);
         }
+        
+        public static string GetLoginMessage(Player p) {
+            if (!Directory.Exists("text/login"))
+                Directory.CreateDirectory("text/login");            
+            string path = "text/login/" + p.name.ToLower() + ".txt";
+            if (File.Exists(path)) return CP437Reader.ReadAllText(path); 
+            // Unix is case sensitive (older files used correct casing of name)
+            path = "text/login/" + p.name + ".txt";
+            return File.Exists(path) ? CP437Reader.ReadAllText(path) : "joined the game.";
+        }
+        
+        public static string GetLogoutMessage(Player p) {
+            if (!Directory.Exists("text/logout"))
+                Directory.CreateDirectory("text/logout");            
+            string path = "text/logout/" + p.name.ToLower() + ".txt";
+            if (File.Exists(path)) return CP437Reader.ReadAllText(path); 
+            
+            path = "text/logout/" + p.name + ".txt";
+            return File.Exists(path) ? CP437Reader.ReadAllText(path) : "Disconnected";
+        }
+        
+        public static void SetLoginMessage(string name, string value) {
+        	CP437Writer.WriteAllText("text/login/" + name.ToLower() + ".txt", value);
+        }
+        
+        public static void SetLogoutMessage(string name, string value) {
+        	CP437Writer.WriteAllText("text/logout/" + name.ToLower() + ".txt", value);
+        }
     }
 }

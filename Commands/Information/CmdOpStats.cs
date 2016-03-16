@@ -72,12 +72,8 @@ namespace MCGalaxy.Commands {
             if (target != null) {
                 message = target.name;
             } else {
-                OfflinePlayer player = PlayerInfo.FindOffline(message);
-                if (player == null) {
-                    Player.SendMessage(p, "Unable to find player"); return;
-                } else {
-                    message = player.name;
-                }
+                message = PlayerInfo.FindOfflineName(message);
+                if (message == null) { Player.SendMessage(p, "Unable to find player"); return; }
             }
 
             Player.SendMessage(p, (p == null ? "" : "&d") + "OpStats for " + (p == null ? "" : "&c") + message); // Use colorcodes if in game, don't use color if in console

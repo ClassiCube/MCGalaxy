@@ -193,6 +193,20 @@ namespace MCGalaxy {
             }
             return pl;
         }
+        
+        public static string FindOfflineName(string name) {
+            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            query.AddParam("@Name", name);
+            string syntax = Server.useMySQL ? "SELECT Name FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
+                "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
+            using (DataTable playerDB = Database.fillData(query, syntax)) {
+                if (playerDB.Rows.Count == 0) {
+                    return null;
+                } else {
+                    return playerDB.Rows[0]["Name"].ToString().Trim();
+                }
+            }
+        }
     }
     
     public class OfflinePlayer {

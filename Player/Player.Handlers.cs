@@ -479,12 +479,8 @@ namespace MCGalaxy {
             if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank)
                 adminpen = true;
             if (emoteList.Contains(name)) parseSmiley = false;
-            if (!Directory.Exists("text/login"))
-                Directory.CreateDirectory("text/login");
-            if (!File.Exists("text/login/" + this.name + ".txt"))
-                CP437Writer.WriteAllText("text/login/" + this.name + ".txt", "joined the server.");
 
-            string joinm = "&a+ " + this.FullName + Server.DefaultColor + " " + File.ReadAllText("text/login/" + this.name + ".txt");
+            string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
             if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
                 if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
             		Player[] players = PlayerInfo.Online.Items; 

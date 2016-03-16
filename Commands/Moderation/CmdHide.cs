@@ -49,8 +49,7 @@ namespace MCGalaxy.Commands
                 if (messageOps)
                     Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + "%S- is now &finvisible%S.");
                 
-                Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + 
-                                  (File.Exists("text/logout/" + p.name + ".txt") ? CP437Reader.ReadAllText("text/logout/" + p.name + ".txt") : "Disconnected."), false);
+                Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + PlayerDB.GetLogoutMessage(p), false);
                 Server.IRC.Say(p.DisplayName + " left the game (Disconnected.)");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
             } else {
@@ -58,8 +57,7 @@ namespace MCGalaxy.Commands
                 if (messageOps)
                     Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + "%S- is now &8visible%S.");
                 
-                Player.SendChatFrom(p, "&a+ " + p.FullName + " %S" + 
-                                  (File.Exists("text/login/" + p.name + ".txt") ? CP437Reader.ReadAllText("text/login/" + p.name + ".txt") : "joined the game."), false);
+                Player.SendChatFrom(p, "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p), false);
                 Server.IRC.Say(p.DisplayName + " joined the game");
                 if (messageOps && p.opchat) opchat.Use(p, message);
                 if (p.adminchat) adminchat.Use(p, message);

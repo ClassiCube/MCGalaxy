@@ -540,17 +540,7 @@ namespace MCGalaxy {
         #endregion
         #region == DISCONNECTING ==
         
-        string GetLogoutMessage() {
-        	if (!Directory.Exists("text/logout"))
-        		Directory.CreateDirectory("text/logout");
-        	
-        	string path = "text/logout/" + name + ".txt";
-        	if (!File.Exists(path))
-        		CP437Writer.WriteAllText(path, "Disconnected.");
-        	return CP437Reader.ReadAllText(path);
-        }
-        
-        public void Disconnect() { LeaveServer("Disconnected", GetLogoutMessage()); }
+        public void Disconnect() { LeaveServer("Disconnected", PlayerDB.GetLogoutMessage(this)); }
         public void Kick(string kickString) { LeaveServer(kickString, null); }
         public void Kick(string kickString, bool sync = false) { LeaveServer(kickString, null, sync); }
 

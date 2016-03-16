@@ -32,9 +32,8 @@ namespace MCGalaxy.Commands {
             string player = args[0], rank = args[1], period = args[2];
             Player who = PlayerInfo.Find(player);
             if (who == null) {
-                OfflinePlayer pInfo = PlayerInfo.FindOffline(player);
-                if (pInfo == null) { Player.SendMessage(p, "&cPlayer &a" + player + "&c not found."); return; }
-                player = pInfo.name;
+                player = PlayerInfo.FindOfflineName(player);
+                if (player == null) { Player.SendMessage(p, "&cPlayer &a" + args[0] + "&c not found."); return; }
             } else {
                 player = who.name;
             }

@@ -36,9 +36,9 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             Player who = PlayerInfo.Find(args[0]);
             if (who == null) {
-                OfflinePlayer target = PlayerInfo.FindOffline(args[0]);
+                string target = PlayerInfo.FindOfflineName(args[0]);
                 if (target == null) { Player.SendMessage(p, "Player &b" + args[0] + " %Swas not found in the database."); return; }
-                args[0] = target.name;
+                args[0] = target;
             }
             if (args.Length == 1) {
                 Player.SendMessage(p, Colors.red + "You must specify a type to modify.");

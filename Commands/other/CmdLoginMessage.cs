@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands {
     public sealed class CmdLoginMessage : Command {
         
         public override string name { get { return "loginmessage"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "loginmsg"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -39,25 +39,19 @@ namespace MCGalaxy.Commands {
             Player target = PlayerInfo.Find(args[0]);
             string name = target != null ? target.name : args[0];
 
-            if (!File.Exists("text/login/" + name + ".txt")) {
+            if (target == null && PlayerInfo.FindOfflineName(name) == null) {
                 Player.SendMessage(p, "There is no player with the given name."); return;
             }
-            CP437Writer.WriteAllText("text/login/" + name + ".txt", args[1]);
+            PlayerDB.SetLoginMessage(name, args[1]);
             
             string fullName = target != null ? target.FullName : name;
-            Player.SendMessage(p, "The login message of " + fullName + " %Shas been changed to:");
-            Player.SendMessage(p, args[1]);
-            if (p != null)
-                Server.s.Log(p.name + " changed " + name + "'s login message to:");
-            else
-                Server.s.Log("(console) changed " + name + "'s login message to:");
-            Server.s.Log(args[1]);
+            Player.SendMessage(p, "The login message of " + fullName + " %Shas been changed to: " + args[1]);
+            string changer = p == null ? "(console)" : p.name;
+            Server.s.Log(changer + " changed " + name + "'s login message to: " + args[1]);
         }
         
         public override void Help(Player p) {
             Player.SendMessage(p, "/loginmessage [Player] [Message] - Customize your login message.");
-            if (Server.mono)
-                Player.SendMessage(p, "Please note that if the player is offline, the name is case sensitive.");
         }
     }
 }
