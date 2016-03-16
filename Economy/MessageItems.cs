@@ -1,6 +1,6 @@
 ﻿/*
-    Copyright 2011 MCForge
-    
+    Copyright 2015 MCGalaxy
+        
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
@@ -22,45 +22,54 @@ namespace MCGalaxy.Eco {
     public sealed class LoginMessageItem : SimpleItem {
         
         public LoginMessageItem() {
-            Aliases = new[] { "login", "loginmessage" };
+            Aliases = new[] { "login", "loginmsg", "loginmessage" };
+            NoArgsResetsItem = true;
         }
         
         public override string Name { get { return "LoginMessage"; } }
+        static char[] trimChars = { ' ' };
         
-        protected override void OnBuyCommand(Player p, string[] args) {
-            if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
-                args[1] = Colors.Parse(args[1]);
-                if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }
-            }
-            if (args[1] == p.titlecolor) {
-                Player.SendMessage(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c titlecolor"); return;
+        protected override void OnBuyCommand(Player p, string message, string[] args) {
+            if (args.Length == 1) {
+                Command.all.Find("loginmessage").Use(null, p.name + " joined the server.");
+                Player.SendMessage(p, "%aYour login message was removed for free.");
+                return;
             }
             
-            Command.all.Find("tcolor").Use(null, p.name + " " + Colors.Name(args[1]));
-            Player.SendMessage(p, "%aYour titlecolor has been successfully changed to " + args[1] + Colors.Name(args[1]));
-            MakePurchase(p, Price, "%3Titlecolor: " + args[1] + Colors.Name(args[1]));
+            string text = message.Split(trimChars, 2)[1]; // keep spaces this way         
+            if (text == PlayerDB.GetLoginMessage(p)) {
+                Player.SendMessage(p, "%cYou already have that login message."); return;
+            }            
+            Command.all.Find("loginmessage").Use(null, p.name + " " + text);
+            Player.SendMessage(p, "%aYour login message was changed to: %f" + text);
+            MakePurchase(p, Price, "%3LoginMessage: %f" + text);
         }
     }
     
     public sealed class LogoutMessageItem : SimpleItem {
         
         public LogoutMessageItem() {
-            Aliases = new[] { "logout", "logoutmessage" };
+            Aliases = new[] { "logout", "logoutmsg", "logoutmessage" };
+            NoArgsResetsItem = true;
         }
         
         public override string Name { get { return "LogoutMessage"; } }
+        static char[] trimChars = { ' ' };
 
-        protected override void OnBuyCommand(Player p, string[] args) {
-            if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
-                args[1] = Colors.Parse(args[1]);
-                if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }
-            }
-            if (args[1] == p.color) {
-                Player.SendMessage(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c color"); return;
+        protected override void OnBuyCommand(Player p, string message, string[] args) {
+            if (args.Length == 1) {
+                Command.all.Find("logoutmessage").Use(null, p.name + " Disconnected.");
+                Player.SendMessage(p, "%aYour logout message was removed for free.");
+                return;
             }
             
-            Command.all.Find("color").Use(null, p.name + " " + Colors.Name(args[1]));
-            MakePurchase(p, Price, "%3Color: " + args[1] + Colors.Name(args[1]));
+            string text = message.Split(trimChars, 2)[1]; // keep spaces this way         
+            if (text == PlayerDB.GetLogoutMessage(p)) {
+                Player.SendMessage(p, "%cYou already have that logout message."); return;
+            }            
+            Command.all.Find("logoutmessage").Use(null, p.name + " " + text);
+            Player.SendMessage(p, "%aYour logout message was changed to: %f" + text);
+            MakePurchase(p, Price, "%3LogoutMessage: %f" + text);
         }
     }
 }

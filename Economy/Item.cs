@@ -40,7 +40,8 @@ namespace MCGalaxy.Eco {
         /// <summary> Writes the properties of this item to the economy.properties file. </summary>
         public abstract void Serialise(StreamWriter writer);
 
-        protected internal abstract void OnBuyCommand(Command cmd, Player p, string[] args);
+        protected internal abstract void OnBuyCommand(Command cmd, Player p, 
+                                                      string message, string[] args);
 
         protected internal abstract void OnSetupCommand(Player p, string[] args);
         
@@ -80,19 +81,20 @@ namespace MCGalaxy.Eco {
             writer.WriteLine(Name + ":price:" + Price);
         }
         
-		protected internal override void OnBuyCommand(Command cmd, Player p, string[] args) {
+		protected internal override void OnBuyCommand(Command cmd, Player p, 
+                                                      string message, string[] args) {
         	if (NoArgsResetsItem && args.Length == 1) {
-        		OnBuyCommand(p, args); return;
+        		OnBuyCommand(p, message, args); return;
         	}
         	// Must always provide an argument.
 			if (args.Length < 2) { cmd.Help(p); return; }
             if (!p.EnoughMoney(Price)) {
                 Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
             }
-			OnBuyCommand(p, args);
+			OnBuyCommand(p, message, args);
 		}
 		
-		protected abstract void OnBuyCommand(Player p, string[] args);
+		protected abstract void OnBuyCommand(Player p, string message, string[] args);
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
             switch (args[2]) {
@@ -115,7 +117,6 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            if (!Enabled) { Player.SendMessage(p, "%c" + Name + "s are not enabled for the economy system."); return; }
             Player.SendMessage(p, Name + "s cost %f" + Price + " %3" + Server.moneys + " %Seach");
         }
     }

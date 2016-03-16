@@ -79,7 +79,8 @@ namespace MCGalaxy.Eco {
 			}
 		}
 		
-		protected internal override void OnBuyCommand(Command cmd, Player p, string[] args) {
+		protected internal override void OnBuyCommand(Command cmd, Player p, 
+		                                              string message, string[] args) {
 			if (args.Length < 3) { cmd.Help(p); return; }
 			LevelPreset preset = FindPreset(args[1]);
 			if (preset == null) { Player.SendMessage(p, "%cThat isn't a level preset"); return; }
@@ -225,7 +226,6 @@ namespace MCGalaxy.Eco {
 		}
 		
 		protected internal override void OnStoreCommand(Player p) {
-			if (!Enabled) { Player.SendMessage(p, "%cMaps are not enabled for the economy system"); return; }
 			Player.SendMessage(p, "%aAvailable maps to buy:");
 			if (Presets.Count == 0) {
 				Player.SendMessage(p, "%8-None-");

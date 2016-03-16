@@ -148,7 +148,8 @@ namespace MCGalaxy {
         }
         
         public static Item[] Items = { new ColorItem(), new TitleColorItem(), 
-        	new TitleItem(), new RankItem(), new LevelItem() };
+        	new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(), 
+        	new LogoutMessageItem() };
         
         public static Item GetItem(string name) {
             foreach (Item item in Items) {

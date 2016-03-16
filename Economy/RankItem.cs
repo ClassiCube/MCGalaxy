@@ -65,7 +65,8 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p, string[] args) {
+        protected internal override void OnBuyCommand(Command cmd, Player p, 
+                                                      string message, string[] args) {
             if (args.Length >= 2) {
                 Player.SendMessage(p, "%cYou cannot provide a rank name, use %a/buy rank %cto buy the NEXT rank."); return;
             }
@@ -119,7 +120,6 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            if (!Enabled) { Player.SendMessage(p, "%c" + Name + "s are not enabled for the economy system."); return; }
             Group maxrank = Group.Find(MaxRank);
             Player.SendMessage(p, "%fThe maximum buyable rank is: " + maxrank.color + maxrank.name);
             Player.SendMessage(p, "%cRanks purchased will be bought in order.");

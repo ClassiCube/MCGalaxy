@@ -27,30 +27,26 @@ namespace MCGalaxy.Eco {
         }
         
         public override string Name { get { return "Title"; } }
+        static char[] trimChars = { ' ' };
         
-        protected override void OnBuyCommand(Player p, string[] args) {
-        	if (args.Length == 1) {
-        		Command.all.Find("title").Use(null, p.name);
-        		Player.SendMessage(p, "%aYour title was removed for free");
-                Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-                return;
-        	}
-        	
-            if (args[1] == p.title) {
-                Player.SendMessage(p, "%cYou already have that title"); return;
-            }
-            if (args[1].Length > 17) {
-                Player.SendMessage(p, "%cTitles cannot be longer than 17 characters"); return;
-            }
-            var regex = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9-_\\.]*$");
-            if (!regex.IsMatch(args[1])) {
-                Player.SendMessage(p, "%cInvalid title! Titles may only contain alphanumeric characters and .-_");
+        protected override void OnBuyCommand(Player p, string message, string[] args) {
+            if (args.Length == 1) {
+                Command.all.Find("title").Use(null, p.name);
+                Player.SendMessage(p, "%aYour title was removed for free.");
                 return;
             }
             
-            Command.all.Find("title").Use(null, p.name + " " + args[1]);
-            Player.SendMessage(p, "%aYour title was changed to [" + p.titlecolor + args[1] + "%a]");
-            MakePurchase(p, Price, "%3Title: %f" + args[1]);
+            string title = message.Split(trimChars, 2)[1]; // keep spaces this way
+            if (title == p.title) {
+                Player.SendMessage(p, "%cYou already have that title"); return;
+            }
+            if (title.Length > 17) {
+                Player.SendMessage(p, "%cTitles cannot be longer than 17 characters"); return;
+            }
+            
+            Command.all.Find("title").Use(null, p.name + " " + title);
+            Player.SendMessage(p, "%aYour title was changed to [" + p.titlecolor + title + "%a]");
+            MakePurchase(p, Price, "%3Title: %f" + title);
         }
     }
     
@@ -62,7 +58,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "TitleColor"; } }
         
-        protected override void OnBuyCommand(Player p, string[] args) {        	
+        protected override void OnBuyCommand(Player p, string message, string[] args) {            
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }
@@ -85,7 +81,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Color"; } }
 
-        protected override void OnBuyCommand(Player p, string[] args) {
+        protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }

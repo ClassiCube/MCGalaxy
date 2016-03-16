@@ -36,7 +36,11 @@ namespace MCGalaxy.Commands {
                 foreach (string alias in item.Aliases)
             {
                 if (message.CaselessEquals(alias)) {
-                    item.OnStoreCommand(p); return;
+                    if (!item.Enabled) { 
+                        Player.SendMessage(p, "%c" + item.Name + "s are not enabled for the economy system."); return; 
+                    }
+                    item.OnStoreCommand(p); 
+                    return;
                 }
             }
             Help(p);

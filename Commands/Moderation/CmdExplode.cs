@@ -37,7 +37,8 @@ namespace MCGalaxy.Commands
             
             ushort x, y, z;
             if (args.Length == 1) {
-                Player who = PlayerInfo.FindOrShowMatches(p, message); return;
+                Player who = PlayerInfo.FindOrShowMatches(p, message);
+                if (who == null) return;
                 if (who.level.physics < 3 || who.level.physics == 5) {
                     Player.SendMessage(p, "The physics on the player's level are not sufficient for exploding."); return;
                 }
