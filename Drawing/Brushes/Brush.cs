@@ -40,6 +40,7 @@ namespace MCGalaxy.Drawing.Brushes {
             { "checkered", CheckeredBrush.Process }, { "rainbow", RainbowBrush.Process },
             { "bwrainbow", BWRainbowBrush.Process }, { "striped", StripedBrush.Process },
             { "replace", ReplaceBrush.Process }, { "replacenot", ReplaceNotBrush.Process },
+            { "random", RandomBrush.Process },
         };
         
         public static Dictionary<string, string[]> BrushesHelp = new Dictionary<string, string[]> {
@@ -47,6 +48,7 @@ namespace MCGalaxy.Drawing.Brushes {
             { "checkered", CheckeredBrush.HelpString }, { "rainbow", RainbowBrush.HelpString },
             { "bwrainbow", BWRainbowBrush.HelpString }, { "striped", StripedBrush.HelpString },
             { "replace", ReplaceBrush.HelpString }, { "replacenot", ReplaceNotBrush.HelpString },
+            { "random", RandomBrush.HelpString },
         };
     }
     
@@ -58,36 +60,5 @@ namespace MCGalaxy.Drawing.Brushes {
         public BrushArgs(Player p, string message, byte type, byte extType) {
             Player = p; Message = message; Type = type; ExtType = extType;
         }
-    }
-    
-    // TODO: Make this into a proper full-featured brush
-    // Consider varying random based off 3D positon, like libnoise.
-    public sealed class RandomBrush : Brush {
-        readonly Random rnd = new Random();
-        readonly byte type, extType;
-        
-        public RandomBrush(byte type, byte extType) {
-            this.type = type;
-            this.extType = extType;
-        }
-        
-        public override string Name { get { return "Random"; } }
-        
-        public override string[] Help { get { return new string[0]; } }
-        
-        public static Brush Process(BrushArgs args) {
-            if (args.Message == "")
-                return new RandomBrush(args.Type, args.ExtType);
-            byte extType;
-            byte type = DrawCmd.GetBlock(args.Player, args.Message, out extType);
-            if (type == Block.Zero) return null;
-            return new RandomBrush(type, extType);
-        }
-        
-        public override byte NextBlock(DrawOp op) {
-            return (byte)rnd.Next(1, 11) <= 5 ? type : Block.Zero;
-        }
-        
-        public override byte NextExtBlock(DrawOp op) { return extType; }
     }
 }
