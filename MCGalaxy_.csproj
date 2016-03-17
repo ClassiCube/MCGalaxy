@@ -180,6 +180,7 @@
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
     <Compile Include="Commands\Fun\CmdCtf.cs" />
     <Compile Include="Commands\Fun\CmdFlipHeads.cs" />
+    <Compile Include="Commands\Fun\CmdGun.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
     <Compile Include="Commands\Fun\CmdSlap.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
@@ -322,7 +323,6 @@
     <Compile Include="Commands\Other\CmdFakerank.cs" />
     <Compile Include="Commands\Other\CmdFly.cs" />
     <Compile Include="Commands\Other\CmdGarbage.cs" />
-    <Compile Include="Commands\Other\CmdGun.cs" />
     <Compile Include="Commands\Other\CmdHackRank.cs" />
     <Compile Include="Commands\Other\CmdImpersonate.cs" />
     <Compile Include="Commands\Other\CmdInvincible.cs" />
