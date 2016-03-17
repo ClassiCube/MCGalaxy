@@ -148,6 +148,9 @@ namespace MCGalaxy {
                 #if DEBUG
                 Server.ErrorLog(e);
                 #endif
+            } catch (ObjectDisposedException ex) {
+                // socket was already closed by another thread.
+                buffer = null;
             }
         }
         

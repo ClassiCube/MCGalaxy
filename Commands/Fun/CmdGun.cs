@@ -185,9 +185,8 @@ namespace MCGalaxy.Commands
             if (bp.ending == GunType.Teleport) {
                 int index = previous.Count - 3;
                 if (index >= 0 && index < previous.Count)
-                    p.SendPos(0xFF, (ushort)(previous[index].x * 32), (ushort)(previous[index].y * 32 + 32), 
-                              (ushort)(previous[index].z * 32), p.rot[0], p.rot[1]);
-            } 
+                	DoTeleport(p, previous[index]);
+            }
             if (bp.ending == GunType.Laser) Thread.Sleep(400);
 
             foreach (Pos pos1 in previous) {
@@ -197,7 +196,7 @@ namespace MCGalaxy.Commands
         }
         
         bool HandlesHitBlock(Player p, byte type, CatchPos bp, Pos pos) {
-            if (p.level.physics < 2 || bp.ending == GunType.Teleport 
+            if (p.level.physics < 2 || bp.ending == GunType.Teleport
                 || bp.ending == GunType.Normal) return true;
             
             if (bp.ending == GunType.Destroy) {
@@ -232,6 +231,13 @@ namespace MCGalaxy.Commands
                 }
             }
             return false;
+        }
+        
+        static void DoTeleport(Player p, Pos pos) {
+            try {
+                p.SendPos(0xFF, (ushort)(pos.x * 32), (ushort)(pos.y * 32 + 32), (ushort)(pos.z * 32), p.rot[0], p.rot[1]);
+            } catch {
+            }
         }
         
         public override void Help(Player p) {

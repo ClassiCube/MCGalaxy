@@ -443,7 +443,7 @@ namespace MCGalaxy
         public void Save(bool Override = false, bool clearPhysics = false)
         {
             if (blocks == null) return;
-            string path = "levels/" + name + ".lvl";
+            string path = LevelInfo.LevelPath(name);
             if (LevelSave != null) LevelSave(this);
             OnLevelSaveEvent.Call(this);
             if (cancelsave1) { cancelsave1 = false; return; }

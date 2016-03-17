@@ -92,7 +92,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (exclude != null) {
                     for (int j = 0; j < exclude.Length; j++) {
                         ExtBlock block = exclude[j];
-                        if (b == block.Type || (b == Block.custom_block && extB == block.ExtType)) {
+                        if (b == block.Type && (b != Block.custom_block || extB == block.ExtType)) {
                             place = false; break;
                         }
                     }
@@ -103,7 +103,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (include != null) {
                     for (int j = 0; j < include.Length; j++) {
                         ExtBlock block = include[j];
-                        if (b == block.Type || (b == Block.custom_block && extB == block.ExtType)) {
+                        if (b == block.Type && (b != Block.custom_block || extB == block.ExtType)) {
                             PlaceBlock(p, lvl, x, y, z, b, extB); break;
                         }
                     }
