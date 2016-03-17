@@ -182,9 +182,11 @@
     <Compile Include="Commands\Fun\CmdFlipHeads.cs" />
     <Compile Include="Commands\Fun\CmdGun.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
+    <Compile Include="Commands\Fun\CmdMissile.cs" />
     <Compile Include="Commands\Fun\CmdSlap.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
     <Compile Include="Commands\Fun\CmdZombieSpawn.cs" />
+    <Compile Include="Commands\Fun\WeaponCmd.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdAlive.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounties.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounty.cs" />
@@ -330,7 +332,6 @@
     <Compile Include="Commands\Other\CmdLoginMessage.cs" />
     <Compile Include="Commands\Other\CmdLogoutMessage.cs" />
     <Compile Include="Commands\Other\CmdMain.cs" />
-    <Compile Include="Commands\Other\CmdMissile.cs" />
     <Compile Include="Commands\Other\CmdMove.cs" />
     <Compile Include="Commands\Other\CmdNick.cs" />
     <Compile Include="Commands\Other\CmdPass.cs" />
