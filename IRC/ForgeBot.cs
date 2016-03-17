@@ -24,9 +24,7 @@ using Sharkbite.Irc;
 
 namespace MCGalaxy {
     public sealed class ForgeBot {
-        public static readonly string ColorSignal = "\x03";
-        public static readonly string ColorSignal2 = "\x030";
-        public static readonly string ResetSignal = "\x03";
+        public static readonly string ResetSignal = "\x0F\x03";
         private Connection connection;
         private List<string> banCmd;
         private string channel, opchannel;
@@ -107,7 +105,6 @@ namespace MCGalaxy {
             if (String.IsNullOrEmpty(message.Trim()))
                 message = ".";
             message = CP437Writer.ConvertToUnicode(message);
-
             if (color)
                 message = Colors.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
             return message;
@@ -340,7 +337,7 @@ namespace MCGalaxy {
             }
 
             if (Server.ircColorsEnable && Server.irc && IsConnected())
-                Say(p.color + p.prefix + p.DisplayName + "%r: " + message, p.opchat);
+                Say(p.FullName + "%r: " + message, p.opchat);
             if (Server.ircColorsEnable == false && Server.irc && IsConnected())
             {
                 Say(p.DisplayName + ": " + message, p.opchat);
