@@ -49,7 +49,7 @@ namespace MCGalaxy.Drawing.Brushes {
             byte type1 = DrawCmd.GetBlock(args.Player, parts[0], out extType1);
             if (type1 == Block.Zero) return null;
             if (parts.Length == 1)
-                return new CheckeredBrush(type1, extType1, 0, 0);
+                return new CheckeredBrush(type1, extType1, Block.Zero, 0);
             
             byte extType2;
             byte type2 = DrawCmd.GetBlock(args.Player, parts[1], out extType2);
