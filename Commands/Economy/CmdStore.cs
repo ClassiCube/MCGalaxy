@@ -47,8 +47,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/store <title/color/tcolor/rank/map>");
-            Player.SendMessage(p, "%HViews information about buying the specific feature, such as prices.");
+            Player.SendMessage(p, "%T/store [item]");
+            Player.SendMessage(p, "%HViews information about the specific item, such as its cost.");
+            Player.SendMessage(p, "%H   Available items: %f" + Economy.GetItemNames(", "));
         }
     }
 }

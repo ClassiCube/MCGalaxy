@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Text;
 using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 
@@ -83,7 +84,7 @@ namespace MCGalaxy {
                     try {
                         switch (linear[0]) {
                             case "enabled":
-                    		    Enabled = linear[1].CaselessEquals("true"); break;
+                                Enabled = linear[1].CaselessEquals("true"); break;
                              default:
                                 if (linear.Length < 3) break;
                                 Item item = GetItem(linear[0]);
@@ -148,14 +149,25 @@ namespace MCGalaxy {
         }
         
         public static Item[] Items = { new ColorItem(), new TitleColorItem(), 
-        	new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(), 
-        	new LogoutMessageItem() };
+            new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(), 
+            new LogoutMessageItem(), new BlocksItem() };
         
         public static Item GetItem(string name) {
             foreach (Item item in Items) {
                 if (name.CaselessEquals(item.Name)) return item;
             }
             return null;
+        }
+        
+        public static string GetItemNames(string separator) {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < Items.Length; i++) {
+                if (!Items[i].Enabled) continue;
+                builder.Append(Items[i].Name);
+                if (i < Items.Length - 1)
+                    builder.Append(separator);
+            }
+            return builder.Length == 0 ? "(no enabled items)" : builder.ToString();
         }
         
         public static SimpleItem Color { get { return (SimpleItem)Items[0]; } }

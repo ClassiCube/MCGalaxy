@@ -36,6 +36,8 @@ namespace MCGalaxy.Commands
 
             switch (cpos.mode) {
                 case DrawMode.solid:
+                    drawOp = new CuboidDrawOp();
+                    constructor = SolidBrush.Process; break;
                 case DrawMode.normal:
                     drawOp = new CuboidDrawOp(); break;
                 case DrawMode.hollow:

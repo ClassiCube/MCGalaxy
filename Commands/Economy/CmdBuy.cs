@@ -47,11 +47,11 @@ namespace MCGalaxy.Commands {
             Help(p);
         }
         
-        public override void Help(Player p) {
-            Player.SendMessage(p, "%T/buy <title/color/tcolor/rank/map> [value] <map name>");
-            Player.SendMessage(p, "%Hvalue is either [title/color/tcolor/map_preset]");
+        public override void Help(Player p) {            
+            Player.SendMessage(p, "%T/buy [item] [value] <map name>");
             Player.SendMessage(p, "%Hmap name is only used for %T/buy map%H.");
-            Player.SendMessage(p, "%HUse %T/store <type> %Hto see the cost of an item.");
+            Player.SendMessage(p, "%HUse %T/store <type> %Hto see the information for an item.");
+            Player.SendMessage(p, "%H   Available items: %f" + Economy.GetItemNames(", "));
         }
     }
 }

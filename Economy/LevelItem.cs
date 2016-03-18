@@ -29,7 +29,7 @@ namespace MCGalaxy.Eco {
 			Aliases = new [] { "level", "levels", "map", "maps" };
 		}
 		
-		public override string Name { get { return "level"; } }
+		public override string Name { get { return "Level"; } }
 		
 		public List<LevelPreset> Presets = new List<LevelPreset>();
 		public class LevelPreset {

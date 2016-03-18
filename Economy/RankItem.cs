@@ -28,7 +28,7 @@ namespace MCGalaxy.Eco {
             Aliases = new [] { "rank", "ranks" };
         }
         
-        public override string Name { get { return "rank"; } }
+        public override string Name { get { return "Rank"; } }
         
         public string MaxRank = Group.findPerm(LevelPermission.AdvBuilder).name;
         
