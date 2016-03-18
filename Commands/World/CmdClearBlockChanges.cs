@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 /*
 	Copyright 2011 MCForge
 	

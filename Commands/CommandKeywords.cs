@@ -245,7 +245,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdUnflood()), "flood un restore");
             new CommandKeywords((new CmdUnload()), "load un map level lvl");
             new CommandKeywords((new CmdUnloaded()), "map level lvl list");
-            new CommandKeywords((new CmdUnlock()), "lock un level lvl map");
             new CommandKeywords((new CmdView()), "file content player user");
             new CommandKeywords((new CmdViewRanks()), "show rank view user player");
             new CommandKeywords((new CmdVIP()), "list add remove del");
