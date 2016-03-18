@@ -352,14 +352,12 @@
     <Compile Include="Commands\Other\CmdSpawn.cs" />
     <Compile Include="Commands\Other\CmdSummon.cs" />
     <Compile Include="Commands\Other\CmdTColor.cs" />
-    <Compile Include="Commands\Other\CmdText.cs" />
     <Compile Include="Commands\Other\CmdTimer.cs" />
     <Compile Include="Commands\Other\CmdTitle.cs" />
     <Compile Include="Commands\Other\CmdTnt.cs" />
     <Compile Include="Commands\Other\CmdTp.cs" />
     <Compile Include="Commands\Other\CmdTpA.cs" />
     <Compile Include="Commands\Other\CmdTpZone.cs" />
-    <Compile Include="Commands\Other\CmdView.cs" />
     <Compile Include="Commands\Other\CmdVote.cs" />
     <Compile Include="Commands\Other\CmdWarp.cs" />
     <Compile Include="Commands\Other\CmdWaypoint.cs" />

@@ -51,7 +51,14 @@ namespace MCGalaxy {
         /// <summary> Current round status of the game. </summary>
         public ZombieGameStatus Status = ZombieGameStatus.NotStarted;
         
+        /// <summary> Whether a round is currently in progress. </summary>
         public bool RoundInProgress = false;
+        
+        /// <summary> Time at which the next round is scheduled to start. </summary>
+        public DateTime RoundStart;
+        
+        /// <summary> Time at which the next round is scheduled to end. </summary>
+        public DateTime RoundEnd;
         
         public int aliveCount = 0;
         public static System.Timers.Timer timer;
@@ -181,6 +188,8 @@ namespace MCGalaxy {
             initialChangeLevel = false; 
             Server.ZombieModeOn = false; 
             RoundInProgress = false;
+            RoundStart = DateTime.MinValue;
+            RoundEnd = DateTime.MinValue;
         }
     }
 }

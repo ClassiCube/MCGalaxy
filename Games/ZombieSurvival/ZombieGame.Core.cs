@@ -81,14 +81,14 @@ namespace MCGalaxy {
             RoundInProgress = true;
             int roundMins = random.Next(5, 8);
             Player.GlobalMessage("The round will last for " + roundMins + " minutes!");
+            RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
             timer = new System.Timers.Timer(roundMins * 60 * 1000);
             timer.Elapsed += new ElapsedEventHandler(EndRound);
             timer.Enabled = true;
 
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
-                if (p != player)
-                    alive.Add(p);
+                if (p != player) alive.Add(p);
             }
 
             infectd.Clear();
@@ -110,8 +110,9 @@ namespace MCGalaxy {
                     " " + Convert.ToString(UseLevelList) + " " + string.Join(",", LevelList.ToArray());
                 Server.s.Log(logMessage);
                 
+                RoundStart = DateTime.UtcNow.AddSeconds(30);
                 Player.GlobalMessage("%4Round Start:%f 30...");
-                Thread.Sleep(45000); if (!Server.ZombieModeOn) return null;
+                Thread.Sleep(20000); if (!Server.ZombieModeOn) return null;
                 Player.GlobalMessage("%4Round Start:%f 10...");
                 Thread.Sleep(10000); if (!Server.ZombieModeOn) return null;
                 Player.GlobalMessage("%4Round Start:%f 5...");
@@ -220,6 +221,8 @@ namespace MCGalaxy {
 
         public void HandOutRewards() {
             RoundInProgress = false;
+            RoundStart = DateTime.MinValue;
+            RoundEnd = DateTime.MinValue;
             Bounties.Clear();
             if (Status == ZombieGameStatus.NotStarted) return;
             Player.GlobalMessage(Colors.lime + "The game has ended!");

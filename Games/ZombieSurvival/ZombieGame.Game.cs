@@ -78,8 +78,7 @@ namespace MCGalaxy {
                 return true;
             
             if (!p.voice) {
-                p.SendMessage("Chat moderation is on while voting is on!");
-                return true;
+                p.SendMessage("Chat moderation is on while voting is on!"); return true;
             }
             return false;
         }
@@ -98,9 +97,13 @@ namespace MCGalaxy {
             if (Server.zombie.RoundInProgress && p.level.name == currentLevelName)
                 Server.zombie.InfectedPlayerLogin(p);
             if (p.level.name == currentLevelName) {
+            	double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
+            	if (startLeft >= 0)
+            		p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
                 //p.SendMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
                 return;
             }
+            
             p.SendMessage(CpeMessageType.BottomRight1, "");
             if(ZombieGame.alive.Contains(p))
                 ZombieGame.alive.Remove(p);

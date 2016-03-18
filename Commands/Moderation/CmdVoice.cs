@@ -15,36 +15,35 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdVoice : Command
-    {
+namespace MCGalaxy.Commands {
+    
+    public sealed class CmdVoice : Command {        
         public override string name { get { return "voice"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdVoice() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            if (message == "" && p == null) { Help(p); return; }
+            Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
             
             if (who.voice) {
                 Player.SendMessage(p, "Removing voice status from " + who.color + who.DisplayName);
                 who.SendMessage("Your voice status has been revoked.");
-                who.voicestring = "";
             } else {
                 Player.SendMessage(p, "Giving voice status to " + who.color + who.DisplayName);
                 who.SendMessage("You have received voice status.");
-                who.voicestring = "&f+";
             }
             who.voice = !who.voice;
+            who.voicestring = who.voice ? "&f+" : "";
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/voice <name> - Toggles voice status on or off for specified player.");
+            Player.SendMessage(p, "%T/voice [name]");
+            Player.SendMessage(p, "%HToggles voice status on or off for the given player.");
+            Player.SendMessage(p, "%HIf no name is given, toggles your own voice status.");
         }
     }
 }
