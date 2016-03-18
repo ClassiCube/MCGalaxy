@@ -1,131 +1,86 @@
 /*
-	Copyright 2011 MCForge
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2011 MCForge
+        
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System.IO;
 using System.Threading;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdLockdown : Command
-    {
+namespace MCGalaxy.Commands {
+    
+    public sealed class CmdLockdown : Command {
         public override string name { get { return "lockdown"; } }
         public override string shortcut { get { return "ld"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (!Directory.Exists("text/lockdown"))
-            {
-                Player.SendMessage(p, "Could not locate the folder creating one now.");
                 Directory.CreateDirectory("text/lockdown");
+            if (!Directory.Exists("text/lockdown/map"))
                 Directory.CreateDirectory("text/lockdown/map");
-                Player.SendMessage(p, "Added the settings for the command");
+
+            string[] args = message.Split(' ');
+            if (args.Length != 2 || !(args[0].CaselessEquals("map") || args[0].CaselessEquals("player"))) {
+                Help(p); return;
             }
 
-            string[] param = message.Split(' ');
-
-
-            if (param.Length == 2 && (param[0] == "map" || param[0] == "player"))
-            {
-                if (param[0] == "map")
-                {
-                    if (!Directory.Exists("text/lockdown/map"))
-                    {
-                        p.SendMessage("Could not locate the map folder, creating one now.");
-                        Directory.CreateDirectory("text/lockdown/map");
-                        p.SendMessage("Added the map settings Directory within 'text/lockdown'!");
-                    }
-
-                    param[1] = param[1].ToLower();
-                    string filepath = "text/lockdown/map/" + param[1] + "";
-                    bool mapIsLockedDown = File.Exists(filepath);
-
-                    if (!mapIsLockedDown)
-                    {
-                        File.Create(filepath).Dispose();
-                        Player.GlobalMessage("The map " + param[1] + " has been locked");
-                        Chat.GlobalMessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
-                    }
-                    else
-                    {
-                        File.Delete(filepath);
-                        Player.GlobalMessage("The map " + param[1] + " has been unlocked");
-                        Chat.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
-                    }
+            if (args[0].CaselessEquals("map")) {
+                args[1] = args[1].ToLower();
+                if (!Player.ValidName(args[1])) {
+                    Player.SendMessage(p, "\"" + args[1] + "\" is not a valid level name."); return;
                 }
+                string path = "text/lockdown/map/" + args[1];
 
-                if (param[0] == "player")
-                {
-                    Player who = PlayerInfo.Find(param[1]);
-
-                    if (who == null)
-                    {
-                        Player.SendMessage(p, "There is no player with such name online");
-                        return;
-                    }
-
-                    if (!who.jailed)
-                    {
-                        if (p != null)
-                        {
-                            if (who.group.Permission >= p.group.Permission)
-                            {
-                                Player.SendMessage(p, "Cannot lock down someone of equal or greater rank.");
-                                return;
-                            }
-                        }
-                        if (p != null && who.level != p.level)
-                        {
-                            Player.SendMessage(p, "Moving player to your map...");
-                            Command.all.Find("goto").Use(who, p.level.name);
-                            int waits = 0;
-                            while (who.Loading)
-                            {
-                                Thread.Sleep(500);
-                                // If they don't load in 10 seconds, eff it.
-                                if (waits++ == 20)
-                                    break;
-                            }
-                        }
-                        who.jailed = true;
-                        Player.GlobalMessage(who.color + who.DisplayName + Server.DefaultColor + " has been locked down!");
-                        Chat.GlobalMessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
-                        return;
-                    }
-                    else
-                    {
-                        who.jailed = false;
-                        Player.GlobalMessage(who.color + who.DisplayName + Server.DefaultColor + " has been unlocked.");
-                        Chat.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
-                        return;
-                    }
+                if (!File.Exists(path)) {
+                    File.Create(path).Dispose();
+                    Player.GlobalMessage("The map " + args[1] + " has been locked");
+                    Chat.GlobalMessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
+                } else {
+                    File.Delete(path);
+                    Player.GlobalMessage("The map " + args[1] + " has been unlocked");
+                    Chat.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
-            }
-            else
-            {
-                Help(p);
-                return;
+            } else {
+                Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
+                if (who == null) return;
+
+                if (!who.jailed) {
+                    if (p != null && who.group.Permission >= p.group.Permission) {
+                        Player.SendMessage(p, "Cannot lock down someone of equal or greater rank."); return;
+                    }
+                    if (p != null && who.level != p.level) {
+                        Player.SendMessage(p, "Moving player to your map...");
+                        Command.all.Find("goto").Use(who, p.level.name);
+                        who.BlockUntilLoad(500);
+                    }
+                    Player.GlobalMessage(who.color + who.DisplayName + " %Shas been locked down!");
+                    Chat.GlobalMessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
+                } else {
+                    Player.GlobalMessage(who.color + who.DisplayName + " %Shas been unlocked.");
+                    Chat.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
+                }
+                who.jailed = !who.jailed;
             }
         }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, " use /lockdown map <mapname> to lock it down.");
-            Player.SendMessage(p, " use /lockdown player <playername> to lock down player."); return;
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "%T/lockdown [map/player] [name]");
+            Player.SendMessage(p, "%H'map' - prevents new players from joining that map.");
+            Player.SendMessage(p, "%H'player' - prevents that player from using commands.");
+            Player.SendMessage(p, "%HUsing /lockdown again will unlock that map/player.");
         }
     }
 }
