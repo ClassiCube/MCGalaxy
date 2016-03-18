@@ -75,8 +75,8 @@ namespace MCGalaxy.Commands
                 string foundLevelDir, newNameDir;
                 for (int i = 1; ; i++)
                 {
-                    foundLevelDir = @Server.backupLocation + "/" + foundLevel.name + "/" + i + "/";
-                    newNameDir = @Server.backupLocation + "/" + newName + "/" + i + "/";
+                	foundLevelDir = LevelInfo.BackupPath(foundLevel.name, i.ToString());
+                	newNameDir = LevelInfo.BackupPath(newName, i.ToString());
 
                     if (File.Exists(foundLevelDir + foundLevel.name + ".lvl"))
                     {

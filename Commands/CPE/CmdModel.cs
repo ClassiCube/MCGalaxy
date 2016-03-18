@@ -18,9 +18,9 @@
 using System;
 
 namespace MCGalaxy.Commands {
-	
+    
     public class CmdModel : Command {
-		
+        
         public override string name { get { return "model"; } }
         public override string shortcut { get { return "setmodel"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -31,29 +31,48 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") message = "normal";
             Player who = p;
-            string[] args = message.Split(trimChars, 2);
+            PlayerBot pBot = null;
+            bool isBot = message.CaselessStarts("bot ");
+            string[] args = message.Split(trimChars, isBot ? 3 : 2);
 
             if (args.Length > 1) {
-            	who = PlayerInfo.FindOrShowMatches(p, args[0]);
-                if (who == null) return;
-            } else {
-                if (p == null) { Player.SendMessage(p, "Console can't use this command on itself."); return; }
+                if (isBot && args.Length > 2) {
+                    pBot = PlayerBot.Find(args[1]);
+                    if (pBot == null) { Player.SendMessage(p, "There is no bot with that name."); return; }
+                } else {
+                    isBot = false;
+                    who = PlayerInfo.FindOrShowMatches(p, args[0]);
+                    if (who == null) return;
+                }                
+            } else if (p == null) { 
+                Player.SendMessage(p, "Console can't use this command on itself."); return;
             }
 
-            who.model = args[args.Length - 1];
+            string model = args[args.Length - 1];
+            if (isBot) {
+                pBot.model = model;
+                UpdateModel(pBot.id, model, pBot.level, null);
+                Player.GlobalMessage("Bot " + pBot.name + "'s %Smodel was changed to a &c" + model);
+            } else {
+                who.model = model;
+                UpdateModel(who.id, model, who.level, who);
+                Player.GlobalMessage(who.color + who.DisplayName + "'s %Smodel was changed to a &c" + model);
+            }           
+        }
+        
+        void UpdateModel(byte id, string model, Level level, Player who) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level == who.level && pl.HasCpeExt(CpeExt.ChangeModel)) {
-            		byte id = (pl == who) ? (byte)0xFF : who.id;
-                    pl.SendChangeModel(id, who.model);
-                }
+                if (pl.level != level || !pl.HasCpeExt(CpeExt.ChangeModel)) continue;
+                byte sendId = (pl == who) ? (byte)0xFF : id;
+                pl.SendChangeModel(sendId, model);
             }
-            Player.GlobalMessage(who.color + who.DisplayName + "'s %Smodel was changed to a &c" + args[args.Length - 1]);
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/model <player> [model] - Changes your player model.");
-            Player.SendMessage(p, "Available models: Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
+            Player.SendMessage(p, "/model [name] [model] - Sets the model of that player.");
+            Player.SendMessage(p, "/model bot [name] [model] - Sets the model of that bot.");
+            Player.SendMessage(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
             Player.SendMessage(p, "You can also place a block ID instead of a model name, to change your model into a block!");
         }
     }

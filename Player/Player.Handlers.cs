@@ -513,37 +513,19 @@ namespace MCGalaxy {
                 else
                     SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
             }
-            try
-            {
+            
+            try {
                 WaypointList.Load(this);
                 //if (Waypoints.Count > 0) { this.SendMessage("Loaded " + Waypoints.Count + " waypoints!"); }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 SendMessage("Error loading waypoints!");
                 Server.ErrorLog(ex);
             }
-            try
-            {
-                if (File.Exists("ranks/muted.txt"))
-                {
-                    using (StreamReader read = new StreamReader("ranks/muted.txt"))
-                    {
-                        string line;
-                        while ((line = read.ReadLine()) != null)
-                        {
-                            if (line.ToLower() == this.name.ToLower())
-                            {
-                                this.muted = true;
-                                Player.SendMessage(this, "!%cYou are still %8muted%c since your last login.");
-                                break;
-                            }
-                        }
-                    }
-                }
-                else { File.Create("ranks/muted.txt").Close(); }
+            try {
+            	CheckIfMuted();
+            } catch { 
+            	muted = false; 
             }
-            catch { muted = false; }
 
             Server.s.Log(name + " [" + ip + "] has joined the server.");
 
@@ -559,11 +541,9 @@ namespace MCGalaxy {
                 foreach (Player p in players) {
                     if (p.level == level && p != this && !p.hidden)
                         SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
-                    if (HasCpeExt(CpeExt.ChangeModel))
-                        SendChangeModel(p.id, p.model);
                 }
-                
-                foreach (PlayerBot pB in PlayerBot.playerbots) {
+                PlayerBot[] bots = PlayerBot.Bots.Items;
+                foreach (PlayerBot pB in bots) {
                     if (pB.level == level)
                         SendSpawn(pB.id, pB.color + pB.name, pB.pos[0], pB.pos[1], pB.pos[2], pB.rot[0], pB.rot[1]);
                 }
@@ -572,6 +552,23 @@ namespace MCGalaxy {
                 Server.s.Log("Error spawning player \"" + name + "\"");
             }
             Loading = false;
+        }
+        
+        void CheckIfMuted() {
+            if (File.Exists("ranks/muted.txt")) {
+                File.Create("ranks/muted.txt").Close(); return;
+            }
+            
+            using (StreamReader reader = new StreamReader("ranks/muted.txt")) {
+                string line;
+                while ((line = reader.ReadLine()) != null) {
+                    if (!line.CaselessEquals(name)) continue;
+
+                    muted = true;
+                    Player.SendMessage(this, "!%cYou are still %8muted%c since your last login.");
+                    return;
+                }
+            }
         }
         
         void InitPlayerStats(DataTable playerDb) {

@@ -177,16 +177,23 @@ namespace MCGalaxy
         }
         
         public void UpdateModels() {
-        	Player[] players = PlayerInfo.Online.Items; 
+        	Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level == this.level)
-                    if (p == this) {
-                    SendChangeModel(0xFF, model);
-                } else {
-                    SendChangeModel(p.id, p.model);
-                    if (p.HasCpeExt(CpeExt.ChangeModel))
-                        p.SendChangeModel(this.id, model);
+        		if (p.level != level) continue;
+                if (p == this) {
+                    if (model != "humanoid") SendChangeModel(0xFF, model);
+                    continue;
                 }
+                
+                if (p.model != "humanoid") SendChangeModel(p.id, p.model);
+                if (p.HasCpeExt(CpeExt.ChangeModel) && model != "humanoid")
+                    p.SendChangeModel(id, model);
+            }
+            
+            PlayerBot[] bots = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in bots) {
+                if (level != b.level) continue;
+                if (b.model != "humanoid") SendChangeModel(b.id, b.model);
             }
         }
         

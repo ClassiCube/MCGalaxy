@@ -351,6 +351,7 @@ namespace MCGalaxy
             PlayerInfo.players = PlayerInfo.Online.list;
             Player.players = PlayerInfo.Online.list;
             Server.levels = LevelInfo.Loaded.list;
+            PlayerBot.playerbots = PlayerBot.Bots.list;
             StartTime = DateTime.UtcNow;
             StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;

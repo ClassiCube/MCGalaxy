@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands
                 {
                     try
                     {
-                        File.Copy(LevelInfo.BackupPath(lvl.name, text[0])), LevelInfo.LevelPath(lvl.name, text[0])), true);
+                        File.Copy(LevelInfo.BackupPath(lvl.name, text[0]), LevelInfo.LevelPath(lvl.name), true);
                         Level temp = Level.Load(lvl.name);
                         temp.StartPhysics();
                         if (temp != null)

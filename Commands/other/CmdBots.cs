@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             message = "";
-            foreach (PlayerBot Pb in PlayerBot.playerbots)
+            PlayerBot[] bots = PlayerBot.Bots.Items;
+            foreach (PlayerBot Pb in bots)
             {
                 if (Pb.AIName != "") message += ", " + Pb.name + "(" + Pb.level.name + ")[" + Pb.AIName + "]";
                 else if (Pb.hunt) message += ", " + Pb.name + "(" + Pb.level.name + ")[Hunt]";

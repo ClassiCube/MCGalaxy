@@ -72,7 +72,8 @@ namespace MCGalaxy.Commands {
             who.Loading = true;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) if (who.level == pl.level && who != pl) who.SendDespawn(pl.id);
-            foreach (PlayerBot b in PlayerBot.playerbots.ToArray()) if (who.level == b.level) who.SendDespawn(b.id);
+            PlayerBot[] bots = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in bots) if (who.level == b.level) who.SendDespawn(b.id);
 
             ushort x = who.pos[0], y = who.pos[1], z = who.pos[2];
             Player.GlobalDespawn(who, true);
@@ -87,8 +88,8 @@ namespace MCGalaxy.Commands {
             foreach (Player pl in players)
                 if (pl.level == who.level && who != pl && !pl.hidden)
                     who.SendSpawn(pl.id, pl.color + pl.name, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);
-
-            foreach (PlayerBot b in PlayerBot.playerbots.ToArray())
+            bots = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in bots)
                 if (b.level == who.level)
                     who.SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
 
