@@ -33,62 +33,58 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdMuseum() { }
 
-        public override void Use(Player p, string message)
-        {
-            string path;
-            if (message.Split(' ').Length == 1) path = "levels/" + message + ".lvl";
-            else if (message.Split(' ').Length == 2) try { path = @Server.backupLocation + "/" + message.Split(' ')[0] + "/" + int.Parse(message.Split(' ')[1]) + "/" + message.Split(' ')[0] + ".lvl"; }
-            catch { Help(p); return; }
-            else { Help(p); return; }
-
-            if (File.Exists(path))
-            {
-                Level level = LvlFile.Load(name, path);
-                level.setPhysics(0);
-
-                level.backedup = true;
-                level.permissionbuild = LevelPermission.Admin;
-
-                level.jailx = (ushort)(level.spawnx * 32);
-                level.jaily = (ushort)(level.spawny * 32);
-                level.jailz = (ushort)(level.spawnz * 32);
-                level.jailrotx = level.rotx; level.jailroty = level.roty;
-
-                p.Loading = true;
-                Player[] players = PlayerInfo.Online.Items; 
-                foreach (Player pl in players) if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
-                foreach (PlayerBot b in PlayerBot.playerbots) if (p.level == b.level) p.SendDespawn(b.id);
-
-                Player.GlobalDespawn(p, true);
-
-                Level oldLevel = p.level;
-                p.level = level;
-                p.SendMotd();
-                if (!p.SendRawMap(oldLevel, level))
-                    return;
-
-                ushort x = (ushort)((0.5 + level.spawnx) * 32);
-                ushort y = (ushort)((1 + level.spawny) * 32);
-                ushort z = (ushort)((0.5 + level.spawnz) * 32);
-
-                p.aiming = false;
-                Player.GlobalSpawn(p, x, y, z, level.rotx, level.roty, true);
-                p.ClearBlockchange();
-                p.Loading = false;
-
-                if (message.IndexOf(' ') == -1)
-                    level.name = "&cMuseum " + Server.DefaultColor + "(" + message.Split(' ')[0] + ")";
-                else
-                    level.name = "&cMuseum " + Server.DefaultColor + "(" + message.Split(' ')[0] + " " + message.Split(' ')[1] + ")";
-
-                if (!p.hidden)
-                    Player.GlobalMessage(p.FullName + " %Swent to the " + level.name);
-            } else {
-                Player.SendMessage(p, "Level or backup could not be found.");
+        public override void Use(Player p, string message) {
+            string[] args = message.Split(' ');
+            string path = args.Length == 1 ? LevelInfo.LevelPath(args[0]) :
+                LevelInfo.BackupPath(args[0], args[1]);
+            Server.s.Log(path);
+            
+            if (!File.Exists(path)) {
+                Player.SendMessage(p, "Level or backup could not be found."); return;
             }
+            
+            Level lvl = LvlFile.Load(name, path);
+            lvl.setPhysics(0);
+            lvl.backedup = true;
+            lvl.permissionbuild = LevelPermission.Admin;
+
+            lvl.jailx = (ushort)(lvl.spawnx * 32);
+            lvl.jaily = (ushort)(lvl.spawny * 32);
+            lvl.jailz = (ushort)(lvl.spawnz * 32);
+            lvl.jailrotx = lvl.rotx; lvl.jailroty = lvl.roty;
+
+            p.Loading = true;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
+            foreach (PlayerBot b in PlayerBot.playerbots) if (p.level == b.level) p.SendDespawn(b.id);
+
+            Player.GlobalDespawn(p, true);
+
+            Level oldLevel = p.level;
+            p.level = lvl;
+            p.SendMotd();
+            if (!p.SendRawMap(oldLevel, lvl))
+                return;
+
+            ushort x = (ushort)((0.5 + lvl.spawnx) * 32);
+            ushort y = (ushort)((1 + lvl.spawny) * 32);
+            ushort z = (ushort)((0.5 + lvl.spawnz) * 32);
+
+            p.aiming = false;
+            Player.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true);
+            p.ClearBlockchange();
+            p.Loading = false;
+
+            if (args.Length == 1)
+                lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + ")";
+            else
+                lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + " " + args[1] + ")";
+
+            if (!p.hidden)
+                Player.GlobalMessage(p.FullName + " %Swent to the " + lvl.name);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/museum <map> <restore> - Allows you to access a restore of the map entered.");
             Player.SendMessage(p, "Works on offline maps");
         }

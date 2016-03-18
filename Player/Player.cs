@@ -627,7 +627,7 @@ namespace MCGalaxy {
                 	left[name.ToLower()] = ip;
                 if (PlayerDisconnect != null)
                 	PlayerDisconnect(this, discMsg ?? kickMsg);
-                if (Server.AutoLoad && level.unload && !level.name.Contains("Museum " + Server.DefaultColor) && IsAloneOnCurrentLevel())
+                if (Server.AutoLoad && level.unload && !level.IsMuseum && IsAloneOnCurrentLevel())
                 	level.Unload(true);
                 Dispose();
             } catch ( Exception e ) { 

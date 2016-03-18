@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
                     Command jail = Command.all.Find("jail");
                     if (message == "set")
                     {
-                        if (!p.level.name.Contains("cMuseum"))
+                        if (!p.level.IsMuseum)
                         {
                             jail.Use(p, "create");
                             using (StreamWriter SW = new StreamWriter(jailMapFile))

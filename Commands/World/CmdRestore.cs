@@ -29,8 +29,6 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            //Thread CrossThread;
-
             if (message != "")
             {
                 Level lvl;
@@ -66,12 +64,12 @@ namespace MCGalaxy.Commands
                         return;
                     }
                 }
-                Server.s.Log(@Server.backupLocation + "/" + lvl.name + "/" + text[0] + "/" + lvl.name + ".lvl");
-                if (File.Exists(@Server.backupLocation + "/" + lvl.name + "/" + text[0] + "/" + lvl.name + ".lvl"))
+
+                if (File.Exists(LevelInfo.BackupPath(lvl.name, text[0])))
                 {
                     try
                     {
-                        File.Copy(@Server.backupLocation + "/" + lvl.name + "/" + text[0] + "/" + lvl.name + ".lvl", "levels/" + lvl.name + ".lvl", true);
+                        File.Copy(LevelInfo.BackupPath(lvl.name, text[0])), LevelInfo.LevelPath(lvl.name, text[0])), true);
                         Level temp = Level.Load(lvl.name);
                         temp.StartPhysics();
                         if (temp != null)

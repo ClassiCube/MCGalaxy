@@ -42,8 +42,8 @@ namespace MCGalaxy.Commands {
                 if (!Player.ValidName(args[1])) {
                     Player.SendMessage(p, "\"" + args[1] + "\" is not a valid level name."); return;
                 }
+                
                 string path = "text/lockdown/map/" + args[1];
-
                 if (!File.Exists(path)) {
                     File.Create(path).Dispose();
                     Player.GlobalMessage("The map " + args[1] + " has been locked");

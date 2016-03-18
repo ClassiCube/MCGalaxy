@@ -31,16 +31,17 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "" || message.Split(' ').Length > 1) { Help(p); return; }
-            Level foundLevel = LevelInfo.Find(message);
-            if (foundLevel != null) {
-                if (p != null && foundLevel.permissionbuild > p.group.Permission) {
+            Level lvl = LevelInfo.Find(message);
+            if (lvl != null) {
+                if (p != null && lvl.permissionbuild > p.group.Permission) {
                     Player.SendMessage(p, "%cYou can't delete levels with a perbuild rank higher than yours!");
                     return;
                 }
-                foundLevel.Unload();
+                lvl.Unload();
             }
-
-            if (foundLevel == Server.mainLevel) { Player.SendMessage(p, "Cannot delete the main level."); return; }
+            
+            if (!Player.ValidName(message)) { Player.SendMessage(p, "\"" + message + "\" is not a valid level name."); return; }
+            if (lvl == Server.mainLevel) { Player.SendMessage(p, "Cannot delete the main level."); return; }
             if (!Directory.Exists("levels/deleted")) Directory.CreateDirectory("levels/deleted");
 
             if (!LevelInfo.ExistsOffline(message)) {

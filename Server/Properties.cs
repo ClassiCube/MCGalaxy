@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MCGalaxy {
 	
@@ -175,8 +176,10 @@ namespace MCGalaxy {
 					if ( Convert.ToInt32(value) > 1 ) { Server.backupInterval = Convert.ToInt32(value); }
 					break;
 				case "backup-location":
-					if ( !value.Contains("System.Windows.Forms.TextBox, Text:") )
+					if (!value.Contains("System.Windows.Forms.TextBox, Text:"))
 						Server.backupLocation = value;
+					if (!Directory.Exists(value))
+						Server.backupLocation = Application.StartupPath + "/levels/backups";;
 					break;
 				case "physicsrestart":
 					Server.physicsRestart = value.ToLower() == "true";
