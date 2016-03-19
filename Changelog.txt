@@ -1,3 +1,18 @@
+v 1.8.3.0
+- Added brushes system similar to fCraft.
+- Added support for importing .fcm files from fCraft/ProCraft.
+- Significantly optimised physics and /undo responsiveness.
+- Many changes to reduce memory usage.
+- Made most commands that involve querying the database case insensitive.
+- More commands now show an appropriate message if the input name matches multiple online players.
+- /paste now can take an optional list of blocks to only paste, or alternatively an optional list of blocks to not paste.
+- Added a torus draw operation.
+- Cleaned up the economy code. Now separated into /buy, /store, and /eco setup.
+- /tempban can be used with offline players.
+- More work on zombie survival.
+- Noise map generators now use water and sand. (Thanks megalomaniactom)
+- Added an 8ball command. (Thanks PatchTest)
+
 v1.8.2.0
 - Fix a critical bug with leaving a level as the only player and then rejoining
   the level would result in you being re-added to the level which was then unloaded

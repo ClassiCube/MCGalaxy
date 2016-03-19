@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System;
+/*using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {
@@ -106,4 +106,4 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%T/team members [name] %H-Lists the players within that team.");
         }
     }
-}
+}*/
