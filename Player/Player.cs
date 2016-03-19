@@ -114,9 +114,6 @@ namespace MCGalaxy {
         public string lastmsg = "";
         public int spamcount = 0, capscount = 0, floodcount = 0, multi = 0;
         public DateTime lastmsgtime = DateTime.MinValue;
-        /// <summary>
-        /// Console only please
-        /// </summary>
         public bool canusegc = true;
 
         public bool deleteMode = false;
@@ -159,6 +156,7 @@ namespace MCGalaxy {
         public string savedcolor = "";
 
         public bool staticCommands = false;
+        internal bool outdatedClient = false; // for ClassicalSharp 0.98.5, which didn't reload map for BlockDefinitions
 
         public DateTime ZoneSpam;
         public bool ZoneCheck = false;

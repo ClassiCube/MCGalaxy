@@ -36,25 +36,24 @@ namespace MCGalaxy.Commands {
                 case "owner":
                     HandleOwner(p, args); break;
                 case "kick":
-                    break;
+                    HandleKick(p, args); break;
                 case "color":
-                    break;
-                    
+                    HandleColor(p, args); break;
                 case "create":
-                    break;
+                    HandleCreate(p, args); break;
                 case "join":
-                    break;
+                    HandleJoin(p, args); break;
                 case "invite":
-                    break;
+                    HandleInvite(p, args); break;
                 case "leave":
-                    break;
+                    HandleLeave(p, args); break;
                 case "members":
-                    break;
+                    HandleMembers(p, args); break;
             }
         }
 
         void HandleOwner(Player p, string[] args) {
-            Team team = Team.FindTeam(p);
+            Team team = p.GameTeam;
             if (team == null) { Player.SendMessage(p, "You need to be in a team first."); return; }
             
             if (args.Length == 1) {
@@ -69,7 +68,7 @@ namespace MCGalaxy.Commands {
         }
 
         void HandleKick(Player p, string[] args) {
-            Team team = Team.FindTeam(p);
+            Team team = p.GameTeam;
             if (team == null) { Player.SendMessage(p, "You need to be in a team first."); return; }
             if (args.Length == 1) {
                 Player.SendMessage(p, "You need to provide the name of the player to kick."); return;
@@ -85,12 +84,15 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleColor(Player p, string[] args) {
-        	Team team = Team.FindTeam(p);
+        	Team team = p.GameTeam;
             if (team == null) { Player.SendMessage(p, "You need to be in a team first."); return; }
             if (args.Length == 1) {
                 Player.SendMessage(p, "You need to provide the new color."); return;
             }
             string color = Colors.Parse(args[1]);
+            if (color == "") {
+            	Player.SendMessage(p, "\"" + color + "\" is not a valid color."); return;
+            }
         }
         
         public override void Help(Player p) {

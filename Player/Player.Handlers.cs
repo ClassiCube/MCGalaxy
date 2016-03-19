@@ -449,6 +449,7 @@ namespace MCGalaxy {
                         Server.s.Log(alts);
                     }
                 }
+                CheckOutdatedClient();
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
@@ -468,6 +469,7 @@ namespace MCGalaxy {
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
             PlayerDB.Load(this);
+            GameTeam = Team.FindTeam(this);
             SetPrefix();
             playerDb.Dispose();
 
@@ -553,6 +555,21 @@ namespace MCGalaxy {
                 Server.s.Log("Error spawning player \"" + name + "\"");
             }
             Loading = false;
+        }
+        
+        void CheckOutdatedClient() {
+            if (appName == null || !appName.StartsWith("ClassicalSharp ")) return;
+            int spaceIndex = appName.IndexOf(' ');
+            string version = appName.Substring(spaceIndex, appName.Length - spaceIndex);
+            Version ver;
+            if (!Version.TryParse(version, out ver)) return;
+            
+            if (ver < new Version("0.98.6")) {
+                SendMessage("%aYou are using an outdated version of ClassicalSharp.");
+                SendMessage("%aYou can click %eCheck for updates %ain the launcher to update. " +
+                            "(make sure to close the client first)");
+                outdatedClient = true;
+            }
         }
         
         void CheckIfMuted() {
