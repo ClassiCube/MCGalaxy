@@ -1315,13 +1315,13 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 return;
             }
             try {
-                File.Delete("extra/passwords/" + listPasswords.Text + ".xml");
+                File.Delete("extra/passwords/" + listPasswords.Text + ".dat");
                 listPasswords.Items.Clear();
                 DirectoryInfo di = new DirectoryInfo("extra/passwords/");
                 FileInfo[] fi = di.GetFiles("*.xml");
                 Thread.Sleep(10);
                 foreach ( FileInfo file in fi ) {
-                    listPasswords.Items.Add(file.Name.Replace(".xml", ""));
+                    listPasswords.Items.Add(file.Name.Replace(".dat", ""));
                 }
             }
             catch {

@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             
             DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
             if (args.Length == 1) {
-                Player.SendChatFrom(who, who.color + who.DisplayName + Server.DefaultColor + " had their color removed.", false);
+                Player.SendChatFrom(who, who.color + who.DisplayName + " %Shad their color removed.", false);
                 who.color = who.group.color;
                 
                 query.AddParam("@Name", who.name);

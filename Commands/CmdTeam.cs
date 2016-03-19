@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-/*using System;
+using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
             if (who == null) return;
             team.Owner = who.name;
-            team.Message(who, "The owner of the team is now: " + who.FullName);
+            team.Action(who, "set the team owner to " + who.FullName);
             Team.SaveList();
         }
 
@@ -80,15 +80,24 @@ namespace MCGalaxy.Commands {
             
             Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
             if (who == null) return;
-            team.Remo
+            team.Action(who, "kicked " + args[1] + " from the team.");
             Team.SaveList();
+        }
+        
+        void HandleColor(Player p, string[] args) {
+        	Team team = Team.FindTeam(p);
+            if (team == null) { Player.SendMessage(p, "You need to be in a team first."); return; }
+            if (args.Length == 1) {
+                Player.SendMessage(p, "You need to provide the new color."); return;
+            }
+            string color = Colors.Parse(args[1]);
         }
         
         public override void Help(Player p) {
             //.. team message?
             Player.SendMessage(p, "%T/team owner <name> %H-Sets the player who has owner priveliges for the team.");
             Player.SendMessage(p, "%T/team kick [name] %H-Removes that player from the team you are in.");
-            Player.SendMessage(p, "%T/team color %H-Sets the color of the team name shown in chat.");
+            Player.SendMessage(p, "%T/team color [color] %H-Sets the color of the team name shown in chat.");
 
             Player.SendMessage(p, "%T/team create %H- Creates a new team.");
             Player.SendMessage(p, "%T/team join %H-Joins the team you last received an invite to.");
@@ -98,4 +107,3 @@ namespace MCGalaxy.Commands {
         }
     }
 }
-*/
