@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.Games;
 using MCGalaxy.Gui.Popups;
 using MCGalaxy.Util;
 using Microsoft.Win32;

@@ -23,6 +23,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using MCGalaxy.Drawing;
+using MCGalaxy.Games;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
@@ -176,6 +177,7 @@ namespace MCGalaxy {
         public int lastCheckpointIndex = -1;
         public ushort checkpointX, checkpointY, checkpointZ;
 
+        public Team GameTeam;
         //CTF
         public CtfTeam team;
         public CtfTeam hasflag;

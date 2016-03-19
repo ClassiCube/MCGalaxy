@@ -18,7 +18,7 @@
  */
 using System;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Games {
     
     public sealed partial class ZombieGame : IGame {
         

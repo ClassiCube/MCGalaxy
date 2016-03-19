@@ -25,6 +25,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.Games;
 using MCGalaxy.SQL;
 using MonoTorrent.Client;
 using Newtonsoft.Json;

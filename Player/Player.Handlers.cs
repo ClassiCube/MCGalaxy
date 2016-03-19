@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {

@@ -17,6 +17,8 @@
 	permissions and limitations under the Licenses.
 */
 using System;
+using MCGalaxy.Games;
+
 namespace MCGalaxy.Commands
 {
 	public sealed class CmdLavaSurvival : Command

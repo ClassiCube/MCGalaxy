@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Timers;
 
-namespace MCGalaxy
+namespace MCGalaxy.Games
 {
     public sealed partial class LavaSurvival
     {

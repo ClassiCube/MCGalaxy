@@ -18,6 +18,8 @@
 using System;
 using System.Linq;
 using System.Threading;
+using MCGalaxy.Games;
+
 namespace MCGalaxy.Commands
 {
 	public sealed class CmdTntWars : Command

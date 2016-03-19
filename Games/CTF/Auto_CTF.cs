@@ -23,7 +23,7 @@ using System.IO;
 using System.Threading;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy
+namespace MCGalaxy.Games
 {
     /// <summary>
     /// This is the team class for CTF

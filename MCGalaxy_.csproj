@@ -156,6 +156,7 @@
     <Compile Include="Commands\Chat\CmdRankMsg.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
+    <Compile Include="Commands\CmdTeam.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
     <Compile Include="Commands\CommandList.cs" />
@@ -426,6 +427,7 @@
     <Compile Include="Games\LavaSurvival\LavaSurvival.cs" />
     <Compile Include="Games\LavaSurvival\LavaSurvival.Settings.cs" />
     <Compile Include="Games\Team.cs" />
+    <Compile Include="Games\Team.List.cs" />
     <Compile Include="Games\TntWars\TntWars.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Core.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />

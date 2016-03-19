@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {
     
@@ -227,7 +228,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdTempRank()), "temp rank");
             new CommandKeywords((new CmdTempRankInfo()), "temp rank info");
             new CommandKeywords((new CmdTempRankList()), "temp rank list");
-            new CommandKeywords((new CmdText()), "write read view able");
             new CommandKeywords((new CmdTime()), "server");
             new CommandKeywords((new CmdTimer()), "count down");
             new CommandKeywords((new CmdTitle()), "set user");
@@ -245,7 +245,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdUnflood()), "flood un restore");
             new CommandKeywords((new CmdUnload()), "load un map level lvl");
             new CommandKeywords((new CmdUnloaded()), "map level lvl list");
-            new CommandKeywords((new CmdView()), "file content player user");
             new CommandKeywords((new CmdViewRanks()), "show rank view user player");
             new CommandKeywords((new CmdVIP()), "list add remove del");
             new CommandKeywords((new CmdVoice()), "speak moderate");

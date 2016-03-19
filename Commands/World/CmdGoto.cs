@@ -17,6 +17,8 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Games;
+
 namespace MCGalaxy.Commands {
     
     public sealed class CmdGoto : Command {

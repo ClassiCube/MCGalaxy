@@ -22,48 +22,19 @@ using System.Linq;
 
 namespace MCGalaxy.Games {
 
-    public sealed class Team {
+    public sealed partial class Team {
         
         public string Color;
         public string Name;
-        public string Founder;
+        public string Owner;
         public List<string> Members = new List<string>();
         
-        public static Dictionary<string, Team> TeamsList = new Dictionary<string, Team>();
-        
-        public static void SaveList() {
-            using (StreamWriter w = new StreamWriter("extra/teams.txt")) {
-                foreach (var pair in TeamsList) {
-                    w.WriteLine("Name=" + pair.Value.Name);
-                    w.WriteLine("Color=" + pair.Value.Color);
-                    w.WriteLine("Founder=" + pair.Value.Founder);
-                    string list = String.Join(",", TeamsList.ToArray());
-                    w.WriteLine("Members=" + list);
-                    w.WriteLine("");
-                }
-            }
-        }
-        
-        public static void LoadList() {
-            if (!File.Exists("extra/teams.txt")) return;
-            Team team = new Team();
-            PropertiesFile.Read("extra/teams.txt", ref team, LineProcessor, '=');
-            if (team.Name != null) TeamsList[team.Name] = team;
-        }
-        
-        static void LineProcessor(string key, string value, ref Team team) {
-            switch (key.ToLower()) {
-                case "name":
-                    if (team.Name != null) TeamsList[team.Name] = team;
-                    team = new Team();
-                    team.Name = value;
-                    break;
-                case "color":
-                    team.Color = value; break;
-                case "founder":
-                    team.Founder = value; break;
-                case "members":
-                    team.Members = new List<string>(value.Split(',')); break;
+        public void Message(Player source, string message) {
+            string toSend = source.FullName + " %Sto team: " + message;
+            foreach (string name in Members) {
+                Player p = PlayerInfo.FindExact(name);
+                if (p == null) continue;
+                p.SendMessage(toSend);
             }
         }
     }

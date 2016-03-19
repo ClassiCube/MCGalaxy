@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace MCGalaxy
+namespace MCGalaxy.Games
 {
     public sealed class TntWarsGame
     {

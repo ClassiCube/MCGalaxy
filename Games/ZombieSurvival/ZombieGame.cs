@@ -24,7 +24,7 @@ using System.Linq;
 using System.Threading;
 using System.Timers;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Games {
     
     public class BountyData {
         public Player Origin;

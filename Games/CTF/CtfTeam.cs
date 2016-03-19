@@ -17,7 +17,7 @@
 */
 using System;
 using System.Collections.Generic;
-namespace MCGalaxy
+namespace MCGalaxy.Games
 {
     public sealed class CtfTeam
     {

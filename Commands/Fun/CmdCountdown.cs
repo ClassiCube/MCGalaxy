@@ -20,6 +20,7 @@
 using System;
 using System.Net;
 using System.Threading;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {
     

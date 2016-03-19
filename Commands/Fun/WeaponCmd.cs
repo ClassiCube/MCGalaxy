@@ -77,31 +77,23 @@ namespace MCGalaxy.Commands {
         }
         
         void DoAim(Player p) {
-            Pos pos;
             List<Pos> lastSent = new List<Pos>(), toSend = new List<Pos>();
             while (p.aiming) {
                 double a = Math.Sin(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
                 double b = Math.Cos(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
                 double c = Math.Cos(((double)(p.rot[1] + 64) / 256) * 2 * Math.PI);
 
-                try {
-                    ushort x = (ushort)Math.Round((ushort)(p.pos[0] / 32) + a * 3);
+                try {                    
                     ushort y = (ushort)Math.Round((ushort)(p.pos[1] / 32) + c * 3);
+                    ushort x = (ushort)Math.Round((ushort)(p.pos[0] / 32) + a * 3);
                     ushort z = (ushort)Math.Round((ushort)(p.pos[2] / 32) + b * 3);
 
-                    if (x >= p.level.Width || y >= p.level.Height || z >= p.level.Length) {
-                        Thread.Sleep(20); continue;
-                    }
-
-                    for (ushort xx = x; xx <= x + 1; xx++)
-                        for (ushort yy = (ushort)(y - 1); yy <= y; yy++)
-                            for (ushort zz = z; zz <= z + 1; zz++)
-                    {
-                        if (p.level.GetTile(xx, yy, zz) == Block.air) {
-                            pos.x = xx; pos.y = yy; pos.z = zz;
-                            toSend.Add(pos);
-                        }
-                    }
+                    int dirX = Math.Sign(a) >= 0 ? 1 : -1;
+                    int dirZ = Math.Sign(b) >= 0 ? 1 : -1;
+                    CheckTile(p.level, toSend, x, y, z);
+                    CheckTile(p.level, toSend, x + dirX, y, z);
+                    CheckTile(p.level, toSend, x, y, z + dirZ);
+                    CheckTile(p.level, toSend, x + dirX, y, z + dirZ);
 
                     // Revert all glass blocks now not in the ray from the player's direction
                     for (int i = 0; i < lastSent.Count; i++) {
@@ -126,6 +118,18 @@ namespace MCGalaxy.Commands {
             
             foreach (Pos cP in lastSent)
                 p.SendBlockchange(cP.x, cP.y, cP.z, Block.air);
+        }
+        
+        void CheckTile(Level lvl, List<Pos> toSend, int x, int y, int z) {
+            Pos pos;
+            if (lvl.GetTile((ushort)x, (ushort)(y - 1), (ushort)z) == Block.air) {
+                pos.x = (ushort)x; pos.y = (ushort)y; pos.z = (ushort)z;
+                toSend.Add(pos);
+            }
+            if (lvl.GetTile((ushort)x, (ushort)y, (ushort)z) == Block.air) {
+                pos.x = (ushort)x; pos.y = (ushort)y; pos.z = (ushort)z;
+                toSend.Add(pos);
+            }
         }
         
         protected abstract void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
