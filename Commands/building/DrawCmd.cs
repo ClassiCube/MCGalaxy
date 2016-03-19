@@ -96,6 +96,7 @@ namespace MCGalaxy.Commands {
         	}
         	
         	if (end >= 0) brushMsg = cpos.message.Substring(0, end);
+        	if (brushMsg == "" ) brushMsg = p.DefaultBrushArgs;
         	if (constructor == null) constructor = Brush.Brushes[p.BrushName];
         	BrushArgs args = new BrushArgs(p, brushMsg, cpos.type, cpos.extType);
         	return constructor(args);

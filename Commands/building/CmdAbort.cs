@@ -39,6 +39,8 @@ namespace MCGalaxy.Commands
             p.aiming = false;
             p.onTrain = false;
             p.isFlying = false;
+            p.BrushName = "normal";
+            p.DefaultBrushArgs = "";
             try
             {
                 p.level.blockqueue.RemoveAll(b => b.p == p);

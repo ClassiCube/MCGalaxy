@@ -27,33 +27,37 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
+            if (message == "") {
+                Player.SendMessage(p, "Your current brush is: " + p.BrushName); return;
+            }
+            string[] args = message.Split(trimChars, 2);           
+            string brush = FindBrush(args[0]);
             
-            string brush = FindBrush(message);
             if (brush == null) {
                 if (message.CaselessStarts("help")) {
-                    HandleHelp(p, message);
+                    HandleHelp(p, args);
                 } else {
-                    Player.SendMessage(p, "No brush found with name \"" + message + "\".");
+                    Player.SendMessage(p, "No brush found with name \"" + args[0] + "\".");
                     Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
                 }
             } else {
                 Player.SendMessage(p, "Set your brush to: " + brush);
                 p.BrushName = brush;
+                p.DefaultBrushArgs = args.Length > 1 ? args[1] : "";
             }
         }
         
-        void HandleHelp(Player p, string message) {
-            string[] args = message.Split(' ');
+        void HandleHelp(Player p, string[] args) {
             if (args.Length != 2) { Help(p); return; }
             
             string brush = FindBrush(args[1]);
             if (brush == null) {
-                    Player.SendMessage(p, "No brush found with name \"" + message + "\".");
-                    Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
+                Player.SendMessage(p, "No brush found with name \"" + args[1] + "\".");
+                Player.SendMessage(p, "Available brushes: " + AvailableBrushes);
             } else {
                 string[] help = Brush.BrushesHelp[brush];
                 foreach (string line in help)
