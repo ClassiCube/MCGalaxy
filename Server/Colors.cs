@@ -203,7 +203,7 @@ namespace MCGalaxy {
             for (int i = 0; i < ExtColors.Length; i++) {
                 CustomColor col = ExtColors[i];
                 if (col.Undefined) continue;
-                if (col.Name.CaselessEquals(name))
+                if (col.Name.CaselessEq(name))
                     return "&" + col.Code;
             }
             return "";

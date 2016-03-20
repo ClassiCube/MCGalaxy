@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
 			else { takerRaw = p.color + p.name; taker = p.FullName; }
 
 			int amount = 0;
-			bool all = args[1].CaselessEquals("all");
+			bool all = args[1].CaselessEq("all");
 			if (!all && !int.TryParse(args[1], out amount)) {
 				Player.SendMessage(p, "Amount must be an integer."); return;
 			}

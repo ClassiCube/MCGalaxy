@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
         
         internal static string FindBrush(string message) {
             foreach (var brush in Brush.Brushes) {
-                if (brush.Key.CaselessEquals(message))
+                if (brush.Key.CaselessEq(message))
                     return brush.Key;
             }
             return null;
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/brush [name]");
+            Player.SendMessage(p, "%T/brush [name] <default brush args>");
             Player.SendMessage(p, "%HSets your current brush to the brush with the given name.");
             Player.SendMessage(p, "%T/brush help [name]");
             Player.SendMessage(p, "%HOutputs the help for the brush with the given name.");

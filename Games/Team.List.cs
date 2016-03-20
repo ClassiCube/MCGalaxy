@@ -31,7 +31,7 @@ namespace MCGalaxy.Games {
             foreach (var team in TeamsList) {
                 List<string> members = team.Value.Members;
                 foreach (string member in members) {
-                    if (p.name.CaselessEquals(member))
+                    if (p.name.CaselessEq(member))
                         return team.Value;
                 }
             }

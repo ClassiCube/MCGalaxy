@@ -162,7 +162,7 @@ namespace MCGalaxy {
         	                    int.Parse(parts[2]), int.Parse(parts[3]));
         }
         
-        public static bool CaselessEquals(this string a, string b) {
+        public static bool CaselessEq(this string a, string b) {
             return a.Equals(b, StringComparison.OrdinalIgnoreCase);
         }
         

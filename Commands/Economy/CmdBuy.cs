@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             foreach (Item item in Economy.Items)
                 foreach (string alias in item.Aliases)
             {
-                if (parts[0].CaselessEquals(alias)) {
+                if (parts[0].CaselessEq(alias)) {
                     if (!item.Enabled) {
                         Player.SendMessage(p, "%c" + item.Name + "s are not enabled for the economy system."); return;
                     }

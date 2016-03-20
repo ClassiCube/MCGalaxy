@@ -206,7 +206,7 @@ namespace MCGalaxy {
             for (int i = 1; i < 255; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;             
-                if (def.Name.Replace(" ", "").CaselessEquals(msg))
+                if (def.Name.Replace(" ", "").CaselessEq(msg))
                     return def.BlockID;
             }
             

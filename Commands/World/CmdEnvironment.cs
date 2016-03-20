@@ -141,11 +141,11 @@ namespace MCGalaxy.Commands {
                 p.level.weather = 0;
             } else {
                 if (byte.TryParse(value, out weather)) {
-                } else if (value.CaselessEquals("sun")) {
+                } else if (value.CaselessEq("sun")) {
                     weather = 0;
-                } else if (value.CaselessEquals("rain")) {
+                } else if (value.CaselessEq("rain")) {
                     weather = 1;
-                }  else if (value.CaselessEquals("snow")) {
+                }  else if (value.CaselessEq("snow")) {
                     weather = 2;
                 }
                 
@@ -228,25 +228,25 @@ namespace MCGalaxy.Commands {
         
         bool SetPreset(Player p,  string value) {
             EnvPreset preset = null; // fog, sky, clouds, sun, shadow
-            if (value.CaselessEquals("midnight")) {
+            if (value.CaselessEq("midnight")) {
                 preset = new EnvPreset("8b8989", "191970", "000080", "0000cd", "918A3B");
-            } else if (value.CaselessEquals("cartoon")) {
+            } else if (value.CaselessEq("cartoon")) {
                 preset = new EnvPreset("00ffff", "1e90ff", "00bfff", "f5deb3", "f4a460");
-            } else if (value.CaselessEquals("noir")) {
+            } else if (value.CaselessEq("noir")) {
                 preset = new EnvPreset("000000", "1f1f1f", "000000", "696969", "1f1f1f");
-            } else if (value.CaselessEquals("trippy")) {
+            } else if (value.CaselessEq("trippy")) {
                 preset = new EnvPreset("4B0082", "FFD700", "006400", "7CFC00", "B22222");
-            } else if (value.CaselessEquals("watery")) {
+            } else if (value.CaselessEq("watery")) {
                 preset = new EnvPreset("5f9ea0", "008080", "008B8B", "E0FFFF", "008B8B");
-            } else if (value.CaselessEquals("normal")) {
+            } else if (value.CaselessEq("normal")) {
                 preset = new EnvPreset("-1", "-1", "-1", "-1", "-1");
-            } else if (value.CaselessEquals("gloomy")) {
+            } else if (value.CaselessEq("gloomy")) {
                 preset = new EnvPreset("6A80A5", "405875", "405875", "444466", "3B3B59");
-            } else if (value.CaselessEquals("cloudy")) {
+            } else if (value.CaselessEq("cloudy")) {
                 preset = new EnvPreset("AFAFAF", "8E8E8E", "8E8E8E", "9b9b9b", "8C8C8C");
-            } else if (value.CaselessEquals("sunset")) {
+            } else if (value.CaselessEq("sunset")) {
                 preset = new EnvPreset("FFA322", "836668", "9A6551", "7F6C60", "46444C");
-            } else if (value.CaselessEquals("midnight2")) {
+            } else if (value.CaselessEq("midnight2")) {
                 preset = new EnvPreset("131947", "070A23", "1E223A", "181828", "0F0F19");
             }
             
@@ -262,7 +262,7 @@ namespace MCGalaxy.Commands {
                 SendEnvColorPacket(p, 4, preset.Sun);
                 p.level.LightColor = preset.Sun;
                 
-                if (value.CaselessEquals("normal")) {
+                if (value.CaselessEq("normal")) {
                     Command.all.Find("env").Use(p, "weather 0");
                     Command.all.Find("env").Use(p, "water normal");
                     Command.all.Find("env").Use(p, "bedrock normal");
@@ -293,8 +293,8 @@ namespace MCGalaxy.Commands {
         }
         
         bool IsResetString(string value) {
-            return value.CaselessEquals("-1") || value.CaselessEquals("normal") ||
-                value.CaselessEquals("reset") || value.CaselessEquals("default");
+            return value.CaselessEq("-1") || value.CaselessEq("normal") ||
+                value.CaselessEq("reset") || value.CaselessEq("default");
         }
         
         static void SendPresetsMessage(Player p) {

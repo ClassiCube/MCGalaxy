@@ -84,7 +84,7 @@ namespace MCGalaxy {
                     try {
                         switch (linear[0]) {
                             case "enabled":
-                                Enabled = linear[1].CaselessEquals("true"); break;
+                                Enabled = linear[1].CaselessEq("true"); break;
                              default:
                                 if (linear.Length < 3) break;
                                 Item item = GetItem(linear[0]);
@@ -154,7 +154,7 @@ namespace MCGalaxy {
         
         public static Item GetItem(string name) {
             foreach (Item item in Items) {
-                if (name.CaselessEquals(item.Name)) return item;
+                if (name.CaselessEq(item.Name)) return item;
             }
             return null;
         }

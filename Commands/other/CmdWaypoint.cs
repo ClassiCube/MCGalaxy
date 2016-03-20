@@ -31,15 +31,15 @@ namespace MCGalaxy.Commands
         {
             if (p == null) { MessageInGameOnly(p); return; }
             string[] command = message.ToLower().Split(' ');
-            string par0 = String.Empty;
+            string cmd = String.Empty;
             string par1 = String.Empty;
             try
             {
-                par0 = command[0];
+            	cmd = command[0].ToLower();
                 par1 = command[1];
             }
             catch { }
-            if (par0.ToLower() == "create" || par0.ToLower() == "new" || par0.ToLower() == "add")
+            if (cmd == "create" || cmd == "new" || cmd == "add")
             {
                 if (!WaypointList.Exists(par1, p))
                 {
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
                 }
                 else { Player.SendMessage(p, "That waypoint already exists"); return; }
             }
-            else if (par0.ToLower() == "goto")
+            else if (cmd == "goto")
             {
                 if (WaypointList.Exists(par1, p))
                 {
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands
                 }
                 else { Player.SendMessage(p, "That waypoint doesn't exist"); return; }
             }
-            else if (par0.ToLower() == "replace" || par0.ToLower() == "update" || par0.ToLower() == "edit")
+            else if (cmd == "replace" || cmd == "update" || cmd == "edit")
             {
                 if (WaypointList.Exists(par1, p))
                 {
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands
                 }
                 else { Player.SendMessage(p, "That waypoint doesn't exist"); return; }
             }
-            else if (par0.ToLower() == "delete" || par0.ToLower() == "remove")
+            else if (cmd == "delete" || cmd == "remove")
             {
                 if (WaypointList.Exists(par1, p))
                 {
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands
                 }
                 else { Player.SendMessage(p, "That waypoint doesn't exist"); return; }
             }
-            else if (par0.ToLower() == "list")
+            else if (cmd == "list")
             {
                 Player.SendMessage(p, "Waypoints:");
                 foreach (Waypoint wp in p.Waypoints)
@@ -92,9 +92,9 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                if (WaypointList.Exists(par0, p))
+                if (WaypointList.Exists(cmd, p))
                 {
-                    WaypointList.Goto(par0, p);
+                    WaypointList.Goto(cmd, p);
                     Player.SendMessage(p, "Sent you to waypoint");
                     return;
                 }

@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands
             else
             {
                 if (!Awards.removeAward(message))
-                    Player.SendMessage(p, "This award doesn't exist!"); //corrected spelling error
+                    Player.SendMessage(p, "This award doesn't exist!");
                 else
                     Player.GlobalMessage("Award removed: &6" + message);
             }

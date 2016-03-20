@@ -33,11 +33,11 @@ namespace MCGalaxy.Commands {
                 Directory.CreateDirectory("text/lockdown/map");
 
             string[] args = message.Split(' ');
-            if (args.Length != 2 || !(args[0].CaselessEquals("map") || args[0].CaselessEquals("player"))) {
+            if (args.Length != 2 || !(args[0].CaselessEq("map") || args[0].CaselessEq("player"))) {
                 Help(p); return;
             }
 
-            if (args[0].CaselessEquals("map")) {
+            if (args[0].CaselessEq("map")) {
                 args[1] = args[1].ToLower();
                 if (!Player.ValidName(args[1])) {
                     Player.SendMessage(p, "\"" + args[1] + "\" is not a valid level name."); return;

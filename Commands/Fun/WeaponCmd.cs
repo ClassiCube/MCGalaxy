@@ -61,14 +61,14 @@ namespace MCGalaxy.Commands {
         
         EndType GetEnd(Player p, string mode) {
             if (mode == "") return EndType.Normal;
-            if (mode.CaselessEquals("destroy")) return EndType.Destroy;
-            if (mode.CaselessEquals("tp") || mode.CaselessEquals("teleport")) return EndType.Teleport;
+            if (mode.CaselessEq("destroy")) return EndType.Destroy;
+            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return EndType.Teleport;
             
-            if (mode.CaselessEquals("explode")) {
+            if (mode.CaselessEq("explode")) {
                 if (!p.allowTnt) Player.SendMessage(p, "Tnt usage is currently disallowed, switching to normal gun.");
                 return p.allowTnt ? EndType.Explode : EndType.Destroy;
             }
-            if (mode.CaselessEquals("laser")) {
+            if (mode.CaselessEq("laser")) {
                 if (!p.allowTnt) Player.SendMessage(p, "Tnt usage is currently disallowed, switching to normal gun.");
                 return p.allowTnt ? EndType.Laser : EndType.Destroy;
             }

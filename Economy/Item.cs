@@ -70,9 +70,9 @@ namespace MCGalaxy.Eco {
         public override void Parse(string line, string[] split) {
             if (split.Length < 3) return;
             
-            if (split[1].CaselessEquals("enabled"))
-                Enabled = split[2].CaselessEquals("true");
-            if (split[1].CaselessEquals("price"))
+            if (split[1].CaselessEq("enabled"))
+                Enabled = split[2].CaselessEq("true");
+            if (split[1].CaselessEq("price"))
                 Price = int.Parse(split[2]);
         }
         

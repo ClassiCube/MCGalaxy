@@ -20,7 +20,7 @@ namespace MCGalaxy {
                 if (parts.Length < 2) continue;             
                 string key = parts[0].Trim(), value = parts[1].Trim();
 
-                if (key.CaselessEquals("nick"))
+                if (key.CaselessEq("nick"))
                     p.DisplayName = value;
                 p.timeLogged = DateTime.Now;
             }

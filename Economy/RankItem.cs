@@ -52,7 +52,7 @@ namespace MCGalaxy.Eco {
             } else if (split[1] == "maxrank") {
                 if (Group.Exists(split[2])) MaxRank = split[2];
             } else if (split[1] == "enabled") {
-                Enabled = split[2].CaselessEquals("true");
+                Enabled = split[2].CaselessEq("true");
             }
         }
         
@@ -127,13 +127,13 @@ namespace MCGalaxy.Eco {
             
             foreach (Rank rnk in RanksList) {
                 Player.SendMessage(p, rnk.group.color + rnk.group.name + ": %f" + rnk.price + " %3" + Server.moneys);
-                if (rnk.group.name.CaselessEquals(maxrank.name)) break;
+                if (rnk.group.name.CaselessEq(maxrank.name)) break;
             }
         }
         
         public Rank FindRank(string name) {
             foreach (Rank rank in RanksList) {
-                if (rank.group.name != null && rank.group.name.CaselessEquals(name))
+                if (rank.group.name != null && rank.group.name.CaselessEq(name))
                     return rank;
             }
             return null;

@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands {
                     foreach (Item item in Economy.Items)
                         foreach (string alias in item.Aliases) 
                     {
-                        if (args[1].CaselessEquals(alias)) {
+                        if (args[1].CaselessEq(alias)) {
                             item.OnSetupCommand(p, args); 
                             Economy.Save(); return;
                         }

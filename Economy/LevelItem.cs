@@ -41,7 +41,7 @@ namespace MCGalaxy.Eco {
 		
 		public override void Parse(string line, string[] split) {
 			if (split[1] == "enabled") {
-				Enabled = split[2].CaselessEquals("true");
+				Enabled = split[2].CaselessEq("true");
 			} else if (split[1] == "levels") {
 				LevelPreset preset = FindPreset(split[2]);
 				if (preset == null) {
@@ -239,7 +239,7 @@ namespace MCGalaxy.Eco {
 		
 		public LevelPreset FindPreset(string name) {
 			foreach (LevelPreset preset in Presets) {
-				if (preset.name != null && preset.name.CaselessEquals(name))
+				if (preset.name != null && preset.name.CaselessEq(name))
 					return preset;
 			}
 			return null;

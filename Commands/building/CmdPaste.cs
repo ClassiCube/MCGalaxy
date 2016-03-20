@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
                 op = new PasteDrawOp();
                 ((PasteDrawOp)op).CopyState = p.CopyBuffer;
                 string[] args = cpos.message.Split(' ');
-                if (args[0].ToLower() == "not")
+                if (args[0].CaselessEq("not"))
                     ((PasteDrawOp)op).Exclude = ReplaceBrush.GetBlocks(p, 1, args.Length, args);
                 else
                     ((PasteDrawOp)op).Include = ReplaceBrush.GetBlocks(p, 0, args.Length, args);

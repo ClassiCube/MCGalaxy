@@ -580,7 +580,7 @@ namespace MCGalaxy {
             using (StreamReader reader = new StreamReader("ranks/muted.txt")) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
-                    if (!line.CaselessEquals(name)) continue;
+                    if (!line.CaselessEq(name)) continue;
 
                     muted = true;
                     Player.SendMessage(this, "!%cYou are still %8muted%c since your last login.");

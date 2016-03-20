@@ -92,13 +92,10 @@ namespace MCGalaxy {
         }
 
         public static bool Exists(string waypoint, Player p) {
-            bool exists = false;
-            foreach ( Waypoint wp in p.Waypoints ) {
-                if ( wp.name.ToLower() == waypoint.ToLower() ) {
-                    exists = true;
-                }
+            foreach (Waypoint wp in p.Waypoints) {
+				if (wp.name.CaselessEq(waypoint)) return true;
             }
-            return exists;
+            return false;
         }
 
         public static void Load(Player p) {

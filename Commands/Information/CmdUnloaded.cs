@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
                 foreach (FileInfo file in fi)
                 {
                 	string level = file.Name.Replace(".lvl", "");
-                	if (!loaded.Any(l => l.name.CaselessEquals(level))) {
+                	if (!loaded.Any(l => l.name.CaselessEq(level))) {
                         string visit = GetLoadOnGoto(level) && (p == null || p.group.Permission >= GetPerVisitPermission(level)) ? "%aYes" : "%cNo";
                         unloadedLevels += ", " + Group.findPerm(GetPerBuildPermission(level)).color + level + " &b[" + visit + "&b]";
                     }
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands
                 for (int i = currentNum; i < maxMaps; i++)
                 {
                 	string level = fi[i].Name.Replace(".lvl", "");
-                    if (!loaded.Any(l => l.name.CaselessEquals(level))) {                       
+                    if (!loaded.Any(l => l.name.CaselessEq(level))) {                       
                         string visit = GetLoadOnGoto(level) && (p == null || p.group.Permission >= GetPerVisitPermission(level)) ? "%aYes" : "%cNo";
                         unloadedLevels += ", " + Group.findPerm(GetPerBuildPermission(level)).color + level + " &b[" + visit + "&b]";
                     }

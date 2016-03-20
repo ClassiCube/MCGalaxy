@@ -46,11 +46,11 @@ namespace MCGalaxy.Commands
             }
             
             string[] parts = message.Split(' ');
-            bool undoPhysics = parts[0].ToLower() == "physics";
+            bool undoPhysics = parts[0].CaselessEq("physics");
             Player who = undoPhysics ? null : PlayerInfo.Find(parts[0]);
             long seconds = GetSeconds(p, who, parts.Length > 1 ? parts[1] : "30");
             
-            if (parts.Length > 1 && parts[1].ToLower() == "update") {
+            if (parts.Length > 1 && parts[1].CaselessEq("update")) {
                 UndoFile.UpgradePlayerUndoFiles(parts[0]);
                 Player.SendMessage(p, "Updated undo files for " + parts[0] + " to the new binary format.");
                 return;
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
         const int undoMax = -1; // allows everything to be undone.
         long GetSeconds(Player p, Player who, string param) {
             long secs;
-            if (param.ToLower() == "all") {
+            if (param.CaselessEq("all")) {
                 secs = (p.group.maxUndo == undoMax || p == who) ? int.MaxValue : p.group.maxUndo;
             } else if (!long.TryParse(param, out secs)) {
                 Player.SendMessage(p, "Invalid seconds, using 30 seconds.");
