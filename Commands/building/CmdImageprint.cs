@@ -1,20 +1,20 @@
 /*
-	Copyright 2011 MCForge
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2011 MCForge
+        
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -34,17 +34,16 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdImageprint() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (!Directory.Exists("extra/images/")) { Directory.CreateDirectory("extra/images/"); }
+        public override void Use(Player p, string message) {
+            if (!Directory.Exists("extra/images/"))
+                Directory.CreateDirectory("extra/images/");
             bool layer = false;
             byte popType = 1;
             string bitmapLoc = null;
             if (message == "") { Help(p); return; }
-            if (message.IndexOf(' ') != -1)     //Yay parameters
-            {
+            
+            if (message.IndexOf(' ') != -1) {
                 string[] args = message.Split(' ');
-
                 for (int i = 0; i < args.Length; i++)
                 {
                     if (args[i] == "layer" || args[i] == "l") layer = true;
@@ -55,48 +54,44 @@ namespace MCGalaxy.Commands
                     else if (args[i] == "5" || args[i] == "bw") popType = 5;
                     else if (args[i] == "6" || args[i] == "gray") popType = 6;
                 }
-
                 message = args[args.Length - 1];
             }
-            if (message.IndexOf('/') == -1 && message.IndexOf('.') != -1)
-            {
+            
+            if (message.IndexOf('/') == -1 && message.IndexOf('.') != -1) {
                 try
                 {
-					using (WebClient web = new WebClient())
-					{
-						Player.SendMessage(p, "Downloading IMGUR file from: &fhttp://www.imgur.com/" + message);
-						web.DownloadFile("http://www.imgur.com/" + message, "extra/images/tempImage_" + p.name + ".bmp");
-					}
+                    using (WebClient web = new WebClient())
+                    {
+                        Player.SendMessage(p, "Downloading IMGUR file from: &fhttp://www.imgur.com/" + message);
+                        web.DownloadFile("http://www.imgur.com/" + message, "extra/images/tempImage_" + p.name + ".bmp");
+                    }
                     Player.SendMessage(p, "Download complete.");
                     bitmapLoc = "tempImage_" + p.name;
                 }
                 catch { }
-            }
-            else if (message.IndexOf('.') != -1)
-            {
+            } else if (message.IndexOf('.') != -1) {
                 try
                 {
-					using (WebClient web = new WebClient())
-					{
-						if (message.Substring(0, 4) != "http")
-						{
-							message = "http://" + message;
-						}
-						Player.SendMessage(p, "Downloading file from: &f" + message + Server.DefaultColor + ", please wait.");
-						web.DownloadFile(message, "extra/images/tempImage_" + p.name + ".bmp");
-					}
+                    using (WebClient web = new WebClient())
+                    {
+                        if (message.Substring(0, 4) != "http")
+                        {
+                            message = "http://" + message;
+                        }
+                        Player.SendMessage(p, "Downloading file from: &f" + message + "%S, please wait.");
+                        web.DownloadFile(message, "extra/images/tempImage_" + p.name + ".bmp");
+                    }
                     Player.SendMessage(p, "Download complete.");
                     bitmapLoc = "tempImage_" + p.name;
                 }
                 catch { }
-            }
-            else
-            {
+            } else {
                 bitmapLoc = message;
             }
 
-            if (!File.Exists("extra/images/" + bitmapLoc + ".bmp")) { Player.SendMessage(p, "The URL entered was invalid!"); return; }
-
+            if (!File.Exists("extra/images/" + bitmapLoc + ".bmp")) {
+                Player.SendMessage(p, "The URL entered was invalid!"); return;
+            }
             CatchPos cpos = default(CatchPos);
             cpos.layer = layer;
             cpos.bitmapLoc = bitmapLoc;
@@ -106,211 +101,116 @@ namespace MCGalaxy.Commands
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
+        
+        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
-        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
-        {
+        
+        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            Bitmap myBitmap = new Bitmap("extra/images/" + cpos.bitmapLoc + ".bmp"); 
-            myBitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
             if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
 
             int direction;
             if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z))
-            {
-                direction = 0;
-                if (x <= cpos.x)
-                {
-                    direction = 1;
-                }
-            }
+                direction = x <= cpos.x ? 1 : 0;
             else
-            {
-                direction = 2;
-                if (z <= cpos.z)
-                {
-                    direction = 3;
-                }
-            }
+                direction = z <= cpos.z ? 3 : 2;
+            
+            Thread thread = new Thread(() => DoDrawImage(p, cpos, direction));
+            thread.Name = "MCG_ImagePrint";
+            thread.Start();
+        }
+        
+        void DoDrawImage(Player p, CatchPos cpos, int direction) {
+            Bitmap bmp = new Bitmap("extra/images/" + cpos.bitmapLoc + ".bmp");
+            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            
             byte popType = cpos.popType;
             bool layer = cpos.layer;
-            if (layer)
-            {
+            if (layer) {
                 if (popType == 1) popType = 2;
                 if (popType == 3) popType = 4;
             }
-            ImagePalette.ColorBlock[] refCol = ImagePalette.GetPalette(popType);
-            ImagePalette.ColorBlock colblock;
-            p.SendMessage("" + direction);
-            Thread printThread = new Thread(new ThreadStart(delegate
+            ImagePalette.ColorBlock[] palette = ImagePalette.GetPalette(popType);
+            ImagePalette.ColorBlock cur;
+
+            for (int yy = 0; yy < bmp.Height; yy++)
+                for (int xx = 0; xx < bmp.Width; xx++)
             {
-                double[] distance = new double[refCol.Length]; // Array of distances between color pulled from image to the referance colors.
-
-                int position; // This is the block selector for when we find which distance is the shortest.
-
-                for (int k = 0; k < myBitmap.Width; k++)
-                {
-
-                    for (int i = 0; i < myBitmap.Height; i++)
-                    {
-                        if (layer)
-                        {
-                            colblock.y = cpos.y;
-                            if (direction <= 1)
-                            {
-                                if (direction == 0) { colblock.x = (ushort)(cpos.x + k); colblock.z = (ushort)(cpos.z - i); }
-                                else { colblock.x = (ushort)(cpos.x - k); colblock.z = (ushort)(cpos.z + i); }
-                                //colblock.z = (ushort)(cpos.z - i);
-                            }
-                            else
-                            {
-                                if (direction == 2) { colblock.z = (ushort)(cpos.z + k); colblock.x = (ushort)(cpos.x + i); }
-                                else { colblock.z = (ushort)(cpos.z - k); colblock.x = (ushort)(cpos.x - i); }
-                                //colblock.x = (ushort)(cpos.x - i);
-                            }
-                        }
-                        else
-                        {
-                            colblock.y = (ushort)(cpos.y + i);
-                            if (direction <= 1)
-                            {
-
-                                if (direction == 0) colblock.x = (ushort)(cpos.x + k);
-                                else colblock.x = (ushort)(cpos.x - k);
-                                colblock.z = cpos.z;
-                            }
-                            else
-                            {
-                                if (direction == 2) colblock.z = (ushort)(cpos.z + k);
-                                else colblock.z = (ushort)(cpos.z - k);
-                                colblock.x = cpos.x;
-                            }
-                        }
-
-
-                        colblock.r = myBitmap.GetPixel(k, i).R;
-                        colblock.g = myBitmap.GetPixel(k, i).G;
-                        colblock.b = myBitmap.GetPixel(k, i).B;
-                        colblock.a = myBitmap.GetPixel(k, i).A;
-
-                        if (popType == 6)
-                        {
-                            if ((colblock.r + colblock.g + colblock.b) / 3 < (256 / 4))
-                            {
-                                colblock.type = Block.obsidian;
-                            }
-                            else if (((colblock.r + colblock.g + colblock.b) / 3) >= (256 / 4) && ((colblock.r + colblock.g + colblock.b) / 3) < (256 / 4) * 2)
-                            {
-                                colblock.type = Block.darkgrey;
-                            }
-                            else if (((colblock.r + colblock.g + colblock.b) / 3) >= (256 / 4) * 2 && ((colblock.r + colblock.g + colblock.b) / 3) < (256 / 4) * 3)
-                            {
-                                colblock.type = Block.lightgrey;
-                            }
-                            else
-                            {
-                                colblock.type = Block.white;
-                            }
-                        }
-                        else
-                        {
-                            for (int j = 0; j < distance.Length; j++) // Calculate distances between the colors in the image and the set referance colors, and store them.
-                            {
-                                distance[j] = Math.Sqrt(Math.Pow((colblock.r - refCol[j].r), 2) + Math.Pow((colblock.b - refCol[j].b), 2) + Math.Pow((colblock.g - refCol[j].g), 2));
-                            }
-
-                            position = 0;
-                            double minimum = distance[0];
-                            for (int h = 1; h < distance.Length; h++) // Find the smallest distance in the array of distances.
-                            {
-                                if (distance[h] < minimum)
-                                {
-                                    minimum = distance[h];
-                                    position = h;
-                                }
-                            }
-
-
-                            colblock.type = refCol[position].type; // Set the block we found closest to the image to the block we are placing.
-
-                            if (popType == 1)
-                            {
-                                if (position <= 20)
-                                {
-                                    if (direction == 0)
-                                    {
-                                        colblock.z = (ushort)(colblock.z + 1);
-                                    }
-                                    else if (direction == 2)
-                                    {
-                                        colblock.x = (ushort)(colblock.x - 1);
-                                    }
-                                    else if (direction == 1)
-                                    {
-                                        colblock.z = (ushort)(colblock.z - 1);
-                                    }
-                                    else if (direction == 3)
-                                    {
-                                        colblock.x = (ushort)(colblock.x + 1);
-                                    }
-                                }
-                            }
-                            else if (popType == 3)
-                            {
-                                if (position <= 3)
-                                {
-                                    if (direction == 0)
-                                    {
-                                        colblock.z = (ushort)(colblock.z + 1);
-                                    }
-                                    else if (direction == 2)
-                                    {
-                                        colblock.x = (ushort)(colblock.x - 1);
-                                    }
-                                    else if (direction == 1)
-                                    {
-                                        colblock.z = (ushort)(colblock.z - 1);
-                                    }
-                                    else if (direction == 3)
-                                    {
-                                        colblock.x = (ushort)(colblock.x + 1);
-                                    }
-                                }
-                            }
-                        }
-
-                        //ALPHA HANDLING (REAL HARD STUFF, YO)
-                        if (colblock.a < 20) colblock.type = Block.air;
-
-                        p.level.UpdateBlock(p, colblock.x, colblock.y, colblock.z, colblock.type, 0);
+                if (layer) {
+                    cur.y = cpos.y;
+                    if (direction <= 1) {
+                        if (direction == 0) { cur.x = (ushort)(cpos.x + xx); cur.z = (ushort)(cpos.z - yy); }
+                        else { cur.x = (ushort)(cpos.x - xx); cur.z = (ushort)(cpos.z + yy); }
+                    } else {
+                        if (direction == 2) { cur.z = (ushort)(cpos.z + xx); cur.x = (ushort)(cpos.x + yy); }
+                        else { cur.z = (ushort)(cpos.z - xx); cur.x = (ushort)(cpos.x - yy); }
+                    }
+                } else {
+                    cur.y = (ushort)(cpos.y + yy);
+                    if (direction <= 1) {
+                        if (direction == 0) cur.x = (ushort)(cpos.x + xx);
+                        else cur.x = (ushort)(cpos.x - xx);
+                        cur.z = cpos.z;
+                    } else {
+                        if (direction == 2) cur.z = (ushort)(cpos.z + xx);
+                        else cur.z = (ushort)(cpos.z - xx);
+                        cur.x = cpos.x;
                     }
                 }
-                if (cpos.bitmapLoc == "tempImage_" + p.name) 
-                	File.Delete("extra/images/tempImage_" + p.name + ".bmp");
 
-                string printType;
-                switch (popType)
-                {
-                    case 1: printType = "2-layer color"; break;
-                    case 2: printType = "1-layer color"; break;
-                    case 3: printType = "2-layer grayscale"; break;
-                    case 4: printType = "1-layer grayscale"; break;
-                    case 5: printType = "Black and White"; break;
-                    case 6: printType = "Mathematical grayscale"; break;
-                    default: printType = "Something unknown"; break;
+                Color col = bmp.GetPixel(xx, yy);
+                cur.r = col.R; cur.g = col.G; cur.b = col.B; cur.a = col.A;
+                if (popType == 6) {
+                    int brightness = (cur.r + cur.g + cur.b) / 3;
+                    if (brightness < (256 / 4))
+                        cur.type = Block.obsidian;
+                    else if (brightness >= (256 / 4) && brightness < (256 / 4) * 2)
+                        cur.type = Block.darkgrey;
+                    else if (brightness >= (256 / 4) * 2 && brightness < (256 / 4) * 3)
+                        cur.type = Block.lightgrey;
+                    else
+                        cur.type = Block.white;
+                } else {
+                    int minimum = int.MaxValue, position = 0;
+                    for (int i = 0; i < palette.Length; i++) {
+                        ImagePalette.ColorBlock pixel = palette[i];
+                        int dist = (cur.r - pixel.r) * (cur.r - pixel.r) 
+                            + (cur.g - pixel.g) * (cur.g - pixel.g)
+                            + (cur.b - pixel.b) * (cur.b - pixel.b);
+                        
+                        if (dist < minimum) {
+                            minimum = dist; position = i;
+                        }
+                    }
+
+                    cur.type = palette[position].type;
+                    if (popType == 1 || popType == 3) {
+                        int threshold = popType == 1 ? 20 : 3;
+                        if (position <= threshold) {
+                            if (direction == 0)
+                                cur.z = (ushort)(cur.z + 1);
+                            else if (direction == 2)
+                                cur.x = (ushort)(cur.x - 1);
+                            else if (direction == 1)
+                                cur.z = (ushort)(cur.z - 1);
+                            else if (direction == 3)
+                                cur.x = (ushort)(cur.x + 1);
+                        }
+                    }
                 }
 
-                Player.SendMessage(p, "Finished printing image using " + printType);
-            }));
-            printThread.Name = "MCG_ImagePrint";
-            printThread.Start();
+                if (cur.a < 20) cur.type = Block.air;
+                p.level.UpdateBlock(p, cur.x, cur.y, cur.z, cur.type, 0);
+            }
+            
+            if (cpos.bitmapLoc == "tempImage_" + p.name)
+                File.Delete("extra/images/tempImage_" + p.name + ".bmp");
+            Player.SendMessage(p, "Finished printing image using " + ImagePalette.Names[popType]);
         }
         
         public override void Help(Player p) {

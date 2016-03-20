@@ -21,12 +21,16 @@ namespace MCGalaxy.Drawing {
     
     internal static class ImagePalette {
         
+        internal static string[] Names = {
+            null, "2-layer color", "1-layer color", "2-layer grayscale", 
+            "1-layer grayscale", "Black and White", "Mathematical grayscale"
+        };
         public static ColorBlock[] GetPalette(byte type) {
-            if (type == 1) return Color_2;      // 2-Layer color
-            if (type == 2) return Color_1;      // 1-Layer color
-            if (type == 3) return Grayscale_2;  // 2-Layer grayscale
-            if (type == 4) return Grayscale_1;  // 1-Layer grayscale
-            if (type == 5) return BlackWhite_1; // 1-Layer Black and white
+            if (type == 1) return Color_2;
+            if (type == 2) return Color_1;
+            if (type == 3) return Grayscale_2;
+            if (type == 4) return Grayscale_1;
+            if (type == 5) return BlackWhite_1;
             return null;
         }
         
