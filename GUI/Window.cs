@@ -1058,61 +1058,7 @@ namespace MCGalaxy.Gui
                     }
                     //Color
                     {
-                        ColorCombo.SelectedText = "";
-                        switch (p.color)
-                        {
-                            case "&0":
-                                ColorCombo.Text = "Black";
-                                break;
-                            case "&1":
-                                ColorCombo.Text = "Navy";
-                                break;
-                            case "&2":
-                                ColorCombo.Text = "Green";
-                                break;
-                            case "&3":
-                                ColorCombo.Text = "Teal";
-                                break;
-                            case "&4":
-                                ColorCombo.Text = "Maroon";
-                                break;
-                            case "&5":
-                                ColorCombo.Text = "Purple";
-                                break;
-                            case "&6":
-                                ColorCombo.Text = "Gold";
-                                break;
-                            case "&7":
-                                ColorCombo.Text = "Silver";
-                                break;
-                            case "&8":
-                                ColorCombo.Text = "Gray";
-                                break;
-                            case "&9":
-                                ColorCombo.Text = "Blue";
-                                break;
-                            case "&a":
-                                ColorCombo.Text = "Lime";
-                                break;
-                            case "&b":
-                                ColorCombo.Text = "Aqua";
-                                break;
-                            case "&c":
-                                ColorCombo.Text = "Red";
-                                break;
-                            case "&d":
-                                ColorCombo.Text = "Pink";
-                                break;
-                            case "&e":
-                                ColorCombo.Text = "Yellow";
-                                break;
-                            case "&f":
-                                ColorCombo.Text = "White";
-                                break;
-                            default:
-                                ColorCombo.Text = "";
-                                break;
-                        }
+                    	ColorCombo.SelectedText = Colors.Name(p.color).Capitalize();
                     }
                     //Map
                     {
@@ -1195,60 +1141,7 @@ namespace MCGalaxy.Gui
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            switch (ColorCombo.Text)
-            {
-                case "Black":
-                    prpertiesofplyer.color = "&0";
-                    break;
-                case "Navy":
-                    prpertiesofplyer.color = "&1";
-                    break;
-                case "Green":
-                    prpertiesofplyer.color = "&2";
-                    break;
-                case "Teal":
-                    prpertiesofplyer.color = "&3";
-                    break;
-                case "Maroon":
-                    prpertiesofplyer.color = "&4";
-                    break;
-                case "Purple":
-                    prpertiesofplyer.color = "&5";
-                    break;
-                case "Gold":
-                    prpertiesofplyer.color = "&6";
-                    break;
-                case "Silver":
-                    prpertiesofplyer.color = "&7";
-                    break;
-                case "Gray":
-                    prpertiesofplyer.color = "&8";
-                    break;
-                case "Blue":
-                    prpertiesofplyer.color = "&9";
-                    break;
-                case "Lime":
-                    prpertiesofplyer.color = "&a";
-                    break;
-                case "Aqua":
-                    prpertiesofplyer.color = "&b";
-                    break;
-                case "Red":
-                    prpertiesofplyer.color = "&c";
-                    break;
-                case "Pink":
-                    prpertiesofplyer.color = "&d";
-                    break;
-                case "Yellow":
-                    prpertiesofplyer.color = "&e";
-                    break;
-                case "White":
-                    prpertiesofplyer.color = "&f";
-                    break;
-                default:
-                    prpertiesofplyer.color = "";
-                    break;
-            }
+            prpertiesofplyer.color = Colors.Parse(ColorCombo.Text);
             PlayersTextBox.AppendTextAndScroll("Set color to " + ColorCombo.Text);
         }
 

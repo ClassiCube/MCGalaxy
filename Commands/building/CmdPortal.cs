@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
             else if (block == "show") { ShowPortals(p); return; }
             else { Help(p); return; }
 
-            Player.SendMessage(p, "Place an &aEntry block" + Server.DefaultColor + " for the portal");
+            Player.SendMessage(p, "Place an &aEntry block %Sfor the portal");
             p.ClearBlockchange();
             data.entries = new List<PortalPos>();
             p.blockchangeObject = data;
@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands {
                     p.SendBlockchange(pos.x, pos.y, pos.z, bp.type);
             }
 
-            Player.SendMessage(p, "&3Exit" + Server.DefaultColor + " block placed");
+            Player.SendMessage(p, "&3Exit %Sblock placed");
             if (!p.staticCommands)
                 return;
             bp.entries.Clear(); 
@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands {
                     p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.green);
                 }
 
-                Player.SendMessage(p, "Now showing &a" + Portals.Rows.Count + Server.DefaultColor + " portals.");
+                Player.SendMessage(p, "Now showing &a" + Portals.Rows.Count + " %Sportals.");
             } else {
                 for (int i = 0; i < Portals.Rows.Count; i++) {
                     DataRow row = Portals.Rows[i];

@@ -75,12 +75,8 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player player = PlayerInfo.Find(split[0]);
-                    if (player == null)
-                    {
-                        Player.SendMessage(p, "Could not find player \"" + split[0] + "\"!");
-                        return;
-                    }
+                    Player player = PlayerInfo.FindOrShowMatches(p, split[0]);
+                    if (player == null) return;
 
                     Player.SendMessage(player, "Changelog:");
 

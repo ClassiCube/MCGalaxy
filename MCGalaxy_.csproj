@@ -156,7 +156,6 @@
     <Compile Include="Commands\Chat\CmdRankMsg.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
-    <Compile Include="Commands\CmdTeam.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
     <Compile Include="Commands\CommandList.cs" />
@@ -185,6 +184,7 @@
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
     <Compile Include="Commands\Fun\CmdMissile.cs" />
     <Compile Include="Commands\Fun\CmdSlap.cs" />
+    <Compile Include="Commands\Fun\CmdTeam.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
     <Compile Include="Commands\Fun\CmdZombieSpawn.cs" />
     <Compile Include="Commands\Fun\WeaponCmd.cs" />

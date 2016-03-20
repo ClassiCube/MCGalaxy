@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             string killer = p == null ? "(console)" : p.color + p.DisplayName;
             string[] args = message.Split(trimChars, 2);
             
-            Player who = PlayerInfo.Find(args[0]);
+            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (args.Length >= 2) {
                 if(args[1].ToLower() == "explode") {
                     deathMessage = " was exploded by " + killer;
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
             if (who == null) {
                 if (p != null)
                     p.HandleDeath(Block.rock, " killed themselves in their confusion");
-                Player.SendMessage(p, "Could not find player"); return;
+                return;
             }
 
             if (p != null && who.group.Permission > p.group.Permission) {

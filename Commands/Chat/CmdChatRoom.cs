@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands {
                 }
                 
                 Player.SendMessage(p, "You joined the chat room '" + room + "'");
-                Chat.ChatRoom(p, p.color + p.name + Server.DefaultColor + " has joined your chat room", false, room);
+                Chat.ChatRoom(p, p.color + p.name + " %Shas joined your chat room", false, room);
                 p.Chatroom = room;
             } else {
                 Player.SendMessage(p, "There is no chat room with that name");
@@ -99,8 +99,8 @@ namespace MCGalaxy.Commands {
         
         void HandleLeave(Player p) {
             Player.SendMessage(p, "You left the chat room '" + p.Chatroom + "'");
-            Chat.ChatRoom(p, p.color + p.name + Server.DefaultColor + " has left the chat room", false, p.Chatroom);
-            Player.GlobalMessage(p.color + p.name + Server.DefaultColor + " has left their chat room " + p.Chatroom);
+            Chat.ChatRoom(p, p.color + p.name + " %Shas left the chat room", false, p.Chatroom);
+            Player.GlobalMessage(p.color + p.name + " %Shas left their chat room " + p.Chatroom);
             p.Chatroom = null;
         }
         
@@ -253,8 +253,8 @@ namespace MCGalaxy.Commands {
             }
             
             Player.SendMessage(pl, "You were kicked from the chat room '" + pl.Chatroom + "'");
-            Player.SendMessage(p, pl.color + pl.name + Server.DefaultColor + " was kicked from the chat room '" + pl.Chatroom + "'");
-            Chat.ChatRoom(pl, pl.color + pl.name + Server.DefaultColor + " was kicked from your chat room", false, pl.Chatroom);
+            Player.SendMessage(p, pl.color + pl.name + " %Swas kicked from the chat room '" + pl.Chatroom + "'");
+            Chat.ChatRoom(pl, pl.color + pl.name + " %Swas kicked from your chat room", false, pl.Chatroom);
             pl.Chatroom = null;
         }
         

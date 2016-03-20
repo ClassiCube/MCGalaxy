@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
                     message += ", " + Block.Name(i);
                 }
                 Player.SendMessage(p, message.Remove(0, 2));
-                Player.SendMessage(p, "&d/blocks all <0/1/2/3/4> " + Server.DefaultColor + "will show the rest.");
+                Player.SendMessage(p, "&d/blocks all <0/1/2/3/4> %Swill show the rest.");
             }
             else if (message.ToLower() == "all")
             {
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
                     if (Block.Name(i).ToLower() != "unknown") message += ", " + Block.Name(i);
                 }
                 Player.SendMessage(p, message.Remove(0, 2));
-                Player.SendMessage(p, "Use &d/blocks all <0/1/2/3/4> " + Server.DefaultColor + "for a readable list.");
+                Player.SendMessage(p, "Use &d/blocks all <0/1/2/3/4> %Sfor a readable list.");
             }
             else if (message.ToLower().IndexOf(' ') != -1 && message.Split(' ')[0] == "all")
             {

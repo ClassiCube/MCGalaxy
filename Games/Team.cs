@@ -29,6 +29,14 @@ namespace MCGalaxy.Games {
         public string Owner;
         public List<string> Members = new List<string>();
         
+        public Team() { }
+        
+        public Team(string name, string owner) {
+        	Name = name;
+        	Owner = owner;
+        	Members.Add(owner);
+        }
+        
         public void Chat(Player source, string message) {
             string toSend = source.FullName + " %Sto team: " + message;
             foreach (string name in Members) {
@@ -45,6 +53,21 @@ namespace MCGalaxy.Games {
                 if (p == null) continue;
                 p.SendMessage(toSend);
             }
+        }
+        
+        public bool Remove(string name) {
+            for (int i = 0; i < Members.Count; i++) {
+                if (!name.CaselessEq(Members[i])) continue;
+                Members.RemoveAt(i); return true;
+            }
+            return false;
+        }
+        
+        public void UpdatePrefix() {
+        	foreach (string name in Members) {
+        		Player p = PlayerInfo.FindExact(name);
+        		if (p != null) p.SetPrefix();
+        	}
         }
     }
 }

@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
 
             string message = "Block (" + x + "," + y + "," + z + "): ";
             message += "&f" + b + " = " + Block.Name(b);
-            Player.SendMessage(p, message + Server.DefaultColor + ".");
+            Player.SendMessage(p, message + "%S.");
             message = p.level.foundInfo(x, y, z);
             if (message != "") Player.SendMessage(p, "Physics information: &a" + message);
 
@@ -72,9 +72,9 @@ namespace MCGalaxy.Commands
                 Deleted = Convert.ToBoolean(Blocks.Rows[i]["Deleted"]);
 
                 if (!Deleted)
-                    Player.SendMessage(p, "&3Created by " + Server.FindColor(Username.Trim()) + Username.Trim() + Server.DefaultColor + ", using &3" + BlockUsed);
+                    Player.SendMessage(p, "&3Created by " + Server.FindColor(Username.Trim()) + Username.Trim() + "%S, using &3" + BlockUsed);
                 else
-                    Player.SendMessage(p, "&4Destroyed by " + Server.FindColor(Username.Trim()) + Username.Trim() + Server.DefaultColor + ", using &3" + BlockUsed);
+                    Player.SendMessage(p, "&4Destroyed by " + Server.FindColor(Username.Trim()) + Username.Trim()+ "%S, using &3" + BlockUsed);
                 Player.SendMessage(p, "Date and time modified: &2" + TimePerformed);
             }
 
@@ -92,9 +92,9 @@ namespace MCGalaxy.Commands
                 BlockUsed = Block.Name(inBlock);
 
                 if (!Deleted)
-                    Player.SendMessage(p, "&3Created by " + Server.FindColor(Username.Trim()) + Username.Trim() + Server.DefaultColor + ", using &3" + BlockUsed);
+                    Player.SendMessage(p, "&3Created by " + Server.FindColor(Username.Trim()) + Username.Trim() + "%S, using &3" + BlockUsed);
                 else
-                    Player.SendMessage(p, "&4Destroyed by " + Server.FindColor(Username.Trim()) + Username.Trim() + Server.DefaultColor + ", using &3" + BlockUsed);
+                    Player.SendMessage(p, "&4Destroyed by " + Server.FindColor(Username.Trim()) + Username.Trim() + "%S, using &3" + BlockUsed);
                 Player.SendMessage(p, "Date and time modified: &2" + TimePerformed);
             }
 

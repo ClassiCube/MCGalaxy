@@ -38,6 +38,14 @@ namespace MCGalaxy.Games {
             return null;
         }
         
+        public static Team FindTeam(string name) {
+        	foreach (var team in TeamsList) {
+        		if (name.CaselessEq(team.Key))
+                    return team.Value;
+            }
+            return null;
+        }
+        
         public static void SaveList() {
             lock (readLock)
                 using (StreamWriter w = new StreamWriter("extra/teams.txt"))

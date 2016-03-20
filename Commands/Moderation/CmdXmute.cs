@@ -29,25 +29,14 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override void Use(Player p, string message)
         {
-            if (message == "")
-            {
-                Help(p);
-                return;
-            }
-
-            if (p == null)
-            {
-                Player.SendMessage(p, "This command can only be used in-game. Use /mute [Player] instead.");
-                return;
+            if (message == "") { Help(p); return; }
+            if (p == null) {
+                Player.SendMessage(p, "This command can only be used in-game. Use /mute [Player] instead."); return;
             }
 
             var split = message.Split(' ');
-            Player muter = PlayerInfo.Find(split[0]);
-            if (muter == null)
-            {
-                Player.SendMessage(p, "Player not found.");
-                return;
-            }
+            Player muter = PlayerInfo.FindOrShowMatches(p, split[0]);
+            if (muter == null) return;
 
             if (p != null && muter.group.Permission > p.group.Permission)
             {

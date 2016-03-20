@@ -221,27 +221,23 @@ namespace MCGalaxy {
         }
         
         static void HandleWhisper(Player p, string target, string message) {
-            Player who = PlayerInfo.Find(target);
-            if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
+            Player who = PlayerInfo.FindOrShowMatches(p, target);
+            if (who == null) return;
             if (who == p) { Player.SendMessage(p, "Trying to talk to yourself, huh?"); return; }
             
             LevelPermission perm = p == null ? LevelPermission.Nobody : p.group.Permission;
             LevelPermission whoPerm = who.group.Permission;
             
-            if (Player.CanSee(p, who)) {
-                if (who.ignoreAll) {
+            if (who.ignoreAll) {
+                DoFakePM(p, who, message); return;
+            }
+            
+            foreach (string ignored in who.listignored) {
+                if (p != null && ignored == p.name) {
                     DoFakePM(p, who, message); return;
                 }
-                
-                foreach (string ignored in who.listignored) {
-                    if (p != null && ignored == p.name) {
-                        DoFakePM(p, who, message); return;
-                    }
-                }
-                DoPM(p, who, message);
-            } else {
-                Player.SendMessage(p, "Player \"" + target + "\" isn't online.");
             }
+            DoPM(p, who, message);
         }
         
         static void DoFakePM(Player p, Player who, string message) {

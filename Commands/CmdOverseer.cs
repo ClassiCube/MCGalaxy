@@ -256,7 +256,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "/os map save -- Saves your map");
                 Player.SendMessage(p, "/os map motd -- Changes the motd of your map");
                 Player.SendMessage(p, "/os map guns -- Toggles if guns can be used on your map");
-                Player.SendMessage(p, "/os map pervisit %b[default is " + Server.defaultRank + "]" + Server.DefaultColor + " -- Changes the pervisit of you map");
+                Player.SendMessage(p, "/os map pervisit %b[default is " + Server.defaultRank + "]%S -- Changes the pervisit of you map");
                 Player.SendMessage(p, "/os map texture -- Add a texture to your map");
                 Player.SendMessage(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
                 Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space");
@@ -334,7 +334,7 @@ namespace MCGalaxy.Commands
                 if (!File.Exists(path)) {
                     Player.SendMessage(p, "There are no blacklisted players on this map.");
                 } else {
-                    Player.SendMessage(p, "Current blocked players on level &b" + p.level.name + Server.DefaultColor + ":");
+                    Player.SendMessage(p, "Current blocked players on level &b" + p.level.name + "%S:");
                     string blocked = "";
                     string[] lines = File.ReadAllLines(path);
                     foreach (string line in lines) {

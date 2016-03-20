@@ -176,6 +176,7 @@ namespace MCGalaxy {
         public ushort checkpointX, checkpointY, checkpointZ;
 
         public Team GameTeam;
+        public string GameTeamInvite;
         //CTF
         public CtfTeam team;
         public CtfTeam hasflag;
@@ -321,12 +322,15 @@ namespace MCGalaxy {
             return p.group.Permission > who.group.Permission;
         }
         
-        public void SetPrefix() { 
+        public void SetPrefix() {
+        	Team team = GameTeam;
+        	prefix = team != null ? "<" + team.Color + team.Name + color + "> " : "";
+        		
             string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", Colors.blue, color) : 
         	    isMod ? string.Format("{1}[{0}Mod{1}] ", Colors.lime, color) 
         	    : isGCMod ? string.Format("{1}[{0}GCMod{1}] ", Colors.gold, color) : "";
-            prefix = (title == "") ? "" : color + "[" + titlecolor + title + color + "] ";
-            prefix = viptitle + prefix;
+        	prefix = prefix + viptitle;
+            prefix = (title == "") ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";            
         }
         
         public bool Readgcrules = false;
