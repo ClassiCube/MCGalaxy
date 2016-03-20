@@ -178,6 +178,7 @@ namespace MCGalaxy.Games {
             online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 pl.ratedMap = false;
+                pl.assertingSurvive = false;
                 if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(LastLevelName)) {
                     pl.SendMessage("Going to the next map!");
                     Command.all.Find("goto").Use(pl, next);
@@ -201,8 +202,10 @@ namespace MCGalaxy.Games {
             CurrentLevel = null;
             
             Player[] online = PlayerInfo.Online.Items;
-            foreach (Player pl in online)
+            foreach (Player pl in online) {
                 pl.ratedMap = false;
+                pl.assertingSurvive = false;
+            }
         }
         
         void UpdatePlayerStatus(Player p) {

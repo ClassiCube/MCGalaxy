@@ -66,7 +66,7 @@ namespace MCGalaxy.Games {
             RoundInProgress = true;
             Random random = new Random();
             
-        pickFirst:            
+        pickFirst:
             int firstinfect = random.Next(players.Count());
             Player first = null;
             if (queZombie) first = PlayerInfo.Find(nextZombie);
@@ -80,7 +80,7 @@ namespace MCGalaxy.Games {
             UpdatePlayerColor(first, Colors.red);
 
             RoundInProgress = true;
-            int roundMins = random.Next(5, 8);
+            int roundMins = random.Next(4, 7);
             CurrentLevel.ChatLevel("The round will last for " + roundMins + " minutes!");
             RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
             timer = new System.Timers.Timer(roundMins * 60 * 1000);
@@ -145,7 +145,7 @@ namespace MCGalaxy.Games {
             while ((alive = Alive.Items).Length > 0) {
                 Player[] infected = Infected.Items;
                 foreach (Player pKiller in infected) {
-                	pKiller.infected = true;
+                    pKiller.infected = true;
                     UpdatePlayerColor(pKiller, Colors.red);
                     bool aliveChanged = false;
                     foreach (Player pAlive in alive) {
@@ -155,7 +155,7 @@ namespace MCGalaxy.Games {
                             || Math.Abs(pAlive.pos[2] - pKiller.pos[2]) > HitboxPrecision)
                             continue;
                         
-                        if (!pAlive.infected && pKiller.infected && !pAlive.referee && !pKiller.referee && pKiller != pAlive 
+                        if (!pAlive.infected && pKiller.infected && !pAlive.referee && !pKiller.referee && pKiller != pAlive
                             && pKiller.level.name.CaselessEq(CurrentLevelName) && pAlive.level.name.CaselessEq(CurrentLevelName))
                         {
                             InfectPlayer(pAlive);
@@ -181,23 +181,36 @@ namespace MCGalaxy.Games {
                                 Colors.red + pKiller.DisplayName + Colors.yellow,
                                 Colors.red + pAlive.DisplayName + Colors.yellow));
                             
-                            BountyData bounty;
-                            if (Bounties.TryGetValue(pAlive.name, out bounty))
-                                Bounties.Remove(pAlive.name);
-                            if (bounty != null) {
-                                CurrentLevel.ChatLevel(pKiller.FullName + " %Scollected the bounty of &a" +
-                                                       bounty.Amount + " %S" + Server.moneys + " on " + pAlive.FullName + "%S.");
-                                bounty.Origin.money = Math.Max(0, bounty.Origin.money - bounty.Amount);
-                                bounty.Origin.OnMoneyChanged();
-                                pKiller.money += bounty.Amount;
-                                pKiller.OnMoneyChanged();
-                            }
+                            CheckAssertHuman(pAlive);
+                            CheckBounty(pAlive, pKiller);
                             UpdatePlayerColor(pAlive, Colors.red);
                         }
                     }
                     if (aliveChanged) alive = Alive.Items;
                 }
                 Thread.Sleep(50);
+            }
+        }
+        
+        void CheckAssertHuman(Player pAlive) {
+            if (!pAlive.assertingSurvive) return;
+            pAlive.assertingSurvive = false;
+            CurrentLevel.ChatLevel(pAlive.FullName + "%Sfailed the challenge of not being infected.");
+            pAlive.money = Math.Max(pAlive.money - 2, 0);
+            pAlive.OnMoneyChanged();
+        }
+        
+        void CheckBounty(Player pAlive, Player pKiller) {
+            BountyData bounty;
+            if (Bounties.TryGetValue(pAlive.name, out bounty))
+                Bounties.Remove(pAlive.name);
+            if (bounty != null) {
+                CurrentLevel.ChatLevel(pKiller.FullName + " %Scollected the bounty of &a" +
+                                       bounty.Amount + " %S" + Server.moneys + " on " + pAlive.FullName + "%S.");
+                bounty.Origin.money = Math.Max(0, bounty.Origin.money - bounty.Amount);
+                bounty.Origin.OnMoneyChanged();
+                pKiller.money += bounty.Amount;
+                pKiller.OnMoneyChanged();
             }
         }
 
@@ -240,8 +253,15 @@ namespace MCGalaxy.Games {
                 foreach (Player pl in online)
                     ResetPlayer(pl, ref playersString);
             } else {
-                foreach (Player pl in alive)
+                foreach (Player pl in alive) {
+                    if (pl.assertingSurvive) {
+                        pl.SendMessage("You received &a5 %3" + Server.moneys + 
+                                       "%s for successfully asserting that you would survive.");
+                        pl.money += 5;
+                        pl.OnMoneyChanged();
+                    }
                     ResetPlayer(pl, ref playersString);
+                }
             }
             
             CurrentLevel.ChatLevel(playersString);
@@ -328,7 +348,7 @@ namespace MCGalaxy.Games {
                 if (initialChangeLevel) {
                     Server.votingforlevel = true;
                     CurrentLevel.ChatLevel(" " + Colors.black + "Level Vote: %S" + selectedLevel1 + ", " + selectedLevel2 +
-                                         " or random " + "(" + Colors.lime + "1%S/" + Colors.red + "2%S/" + Colors.blue + "3%S)");
+                                           " or random " + "(" + Colors.lime + "1%S/" + Colors.red + "2%S/" + Colors.blue + "3%S)");
                     System.Threading.Thread.Sleep(15000);
                     Server.votingforlevel = false;
                 } else { Level1Vote = 1; Level2Vote = 0; Level3Vote = 0; }
