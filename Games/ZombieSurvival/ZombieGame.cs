@@ -156,7 +156,13 @@ namespace MCGalaxy.Games {
         }
 
         void ChangeLevel(string next) {
+            Player[] online = PlayerInfo.Online.Items;
             if (CurrentLevel != null) {
+                bool saveSettings = false;
+                foreach (Player pl in online)
+                    saveSettings |= pl.ratedMap;
+                if (saveSettings) Level.SaveSettings(CurrentLevel);
+                
                 CurrentLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
                 CurrentLevel.ChatLevel("Please wait while you are transfered.");
             }
@@ -169,8 +175,9 @@ namespace MCGalaxy.Games {
             if (Server.ZombieOnlyServer)
                 Server.mainLevel = CurrentLevel;
             
-            Player[] online = PlayerInfo.Online.Items;
+            online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
+                pl.ratedMap = false;
                 if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(LastLevelName)) {
                     pl.SendMessage("Going to the next map!");
                     Command.all.Find("goto").Use(pl, next);
@@ -192,6 +199,10 @@ namespace MCGalaxy.Games {
             LastLevelName = "";
             CurrentLevelName = "";
             CurrentLevel = null;
+            
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player pl in online)
+                pl.ratedMap = false;
         }
         
         void UpdatePlayerStatus(Player p) {

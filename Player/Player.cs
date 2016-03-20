@@ -199,6 +199,7 @@ namespace MCGalaxy {
         public bool flipHead = true;
         public int playersInfected = 0;
         internal string lastSpawnColor = "";
+        internal bool ratedMap = false;
 
         //Tnt Wars
         public bool PlayingTntWars = false;

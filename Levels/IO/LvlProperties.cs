@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.IO;
 
@@ -76,6 +76,9 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("Weather = " + level.weather);
             writer.WriteLine("Texture = " + level.terrainUrl);
             writer.WriteLine("TexturePack = " + level.texturePackUrl);
+            
+            writer.WriteLine("Likes = " + level.Likes);
+            writer.WriteLine("Dislikes = " + level.Dislikes);
         }
         
         static string GetName(LevelPermission perm) {
@@ -207,11 +210,15 @@ namespace MCGalaxy.Levels.IO {
                 case "texture":
                     level.terrainUrl = value; break;
                 case "texturepack":
-                    level.texturePackUrl = value; break; 
+                    level.texturePackUrl = value; break;
                 case "buildable":
                     level.Buildable = bool.Parse(value); break;
                 case "deletable":
                     level.Deletable = bool.Parse(value); break;
+                case "likes":
+                    level.Likes = int.Parse(value); break;
+                case "dislikes":
+                    level.Dislikes = int.Parse(value); break;
             }
         }
         

@@ -204,6 +204,7 @@ namespace MCGalaxy
         BufferedBlockSender bulkSender;
 
         public List<C4.C4s> C4list = new List<C4.C4s>();
+        public int Likes, Dislikes;
 
         public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false)
         {

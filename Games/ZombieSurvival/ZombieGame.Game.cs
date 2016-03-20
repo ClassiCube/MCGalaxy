@@ -109,6 +109,8 @@ namespace MCGalaxy.Games {
                 double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
                 if (startLeft >= 0)
                     p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
+                p.SendMessage("This map has &a" + CurrentLevel.Likes + 
+                              " likes %Sand &c" + CurrentLevel.Dislikes + " dislikes");
                 p.SendCpeMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
                 UpdatePlayerStatus(p);
                 return;
