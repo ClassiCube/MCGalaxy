@@ -412,7 +412,7 @@ namespace MCGalaxy
                 if (File.Exists("externalurl.txt")) File.Move("externalurl.txt", "text/externalurl.txt");
                 if (File.Exists("autoload.txt")) File.Move("autoload.txt", "text/autoload.txt");
                 if (File.Exists("IRC_Controllers.txt")) File.Move("IRC_Controllers.txt", "ranks/IRC_Controllers.txt");
-                if (useWhitelist) if (File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
+                if (useWhitelist && File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
             }
             catch { }
             Chat.LoadCustomTokens();
