@@ -177,44 +177,20 @@ namespace MCGalaxy {
                 else
                     Server.IRC.Pm(Server.IRC.usedCmd, message);
             } else {
-                p.SendMessage(CpeMessageType.Normal, Server.DefaultColor + message, colorParse);
+                p.SendMessage(0, Server.DefaultColor + message, colorParse);
             }
         }
         
         public void SendMessage(string message) {
-           SendMessage(CpeMessageType.Normal, Server.DefaultColor + message, true);
+           SendMessage(0, Server.DefaultColor + message, true);
         }
         
         public void SendMessage(string message, bool colorParse) {
-            SendMessage(CpeMessageType.Normal, Server.DefaultColor + message, colorParse);
+            SendMessage(0, Server.DefaultColor + message, colorParse);
         }
         
-        [Obsolete("Use the overload with the CpeMessageType parameter.")]
-        public void SendMessage(byte id, string message, bool colorParse = true) {
-            SendMessage((CpeMessageType)id, message, colorParse);
-        }
-        
-        public void SendMessage(CpeMessageType id, string message, bool colorParse = true) {
-            if (id != CpeMessageType.Normal && !HasCpeExt(CpeExt.MessageTypes)) {
-                if (id == CpeMessageType.Announcement) id = CpeMessageType.Normal;
-                else return;
-            }
-        	
-            if (colorParse)
-            	message = Colors.EscapeColors(message);
-            StringBuilder sb = new StringBuilder(message);
-            if (colorParse) 
-            	ParseColors(sb);
-            
-            Chat.ApplyTokens(sb, this, colorParse);
-            if ( Server.parseSmiley && parseSmiley ) {
-                sb.Replace(":)", "(darksmile)");
-                sb.Replace(":D", "(smile)");
-                sb.Replace("<3", "(heart)");
-            }
-
-            message = EmotesHandler.ReplaceEmoteKeywords(sb.ToString());
-            message = FullCP437Handler.Replace(message);
+        public void SendMessage(byte id, string message, bool colorParse = true) {            
+            message = ConvertMessage(message, colorParse);
             int totalTries = 0;
             if ( MessageRecieve != null )
                 MessageRecieve(this, message);
@@ -225,6 +201,7 @@ namespace MCGalaxy {
                 cancelmessage = false;
                 return;
             }
+            
             retryTag: try {
                 foreach ( string line in Wordwrap(message) ) {
                     string newLine = line;
@@ -237,7 +214,7 @@ namespace MCGalaxy {
                     buffer[0] = Opcode.Message;
                     buffer[1] = (byte)id;
                     if (HasCpeExt(CpeExt.FullCP437))
-                    	NetUtils.WriteCP437(newLine, buffer, 2);
+                        NetUtils.WriteCP437(newLine, buffer, 2);
                     else
                         NetUtils.WriteAscii(newLine, buffer, 2);
                     SendRaw(buffer);
@@ -249,7 +226,43 @@ namespace MCGalaxy {
                 else Server.ErrorLog(e);
             }
         }
+        
+        public void SendCpeMessage(CpeMessageType id, string message, bool colorParse = true) {
+            if (id != CpeMessageType.Normal && !HasCpeExt(CpeExt.MessageTypes)) {
+                if (id == CpeMessageType.Announcement) id = CpeMessageType.Normal;
+                else return;
+            }
+            message = ConvertMessage(message, colorParse);
+                   
+            byte[] buffer = new byte[66];
+            buffer[0] = Opcode.Message;
+            buffer[1] = (byte)id;
+            if (HasCpeExt(CpeExt.FullCP437))
+                NetUtils.WriteCP437(message, buffer, 2);
+            else
+                NetUtils.WriteAscii(message, buffer, 2);
+            SendRaw(buffer);
+        }
 
+        string ConvertMessage(string message, bool colorParse) {
+            if (colorParse)
+                message = Colors.EscapeColors(message);
+            StringBuilder sb = new StringBuilder(message);
+            if (colorParse) 
+                ParseColors(sb);
+            
+            Chat.ApplyTokens(sb, this, colorParse);
+            if ( Server.parseSmiley && parseSmiley ) {
+                sb.Replace(":)", "(darksmile)");
+                sb.Replace(":D", "(smile)");
+                sb.Replace("<3", "(heart)");
+            }
+
+            message = EmotesHandler.ReplaceEmoteKeywords(sb.ToString());
+            message = FullCP437Handler.Replace(message);
+            return message;
+        }
+        
         void ParseColors(StringBuilder sb) {
             for (int i = 0; i < 128; i++) {
                 if (Colors.IsStandardColor((char)i)) {

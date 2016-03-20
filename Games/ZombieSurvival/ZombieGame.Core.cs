@@ -94,6 +94,7 @@ namespace MCGalaxy.Games {
 
             Infected.Clear();
             Infected.Add(first);
+            UpdateAllPlayerStatus();
             DoCoreGame(random);
             
             if (Status == ZombieGameStatus.NotStarted) {
@@ -148,6 +149,7 @@ namespace MCGalaxy.Games {
             while ((alive = Alive.Items).Length > 0) {
                 Player[] infected = Infected.Items;
                 foreach (Player pKiller in infected) {
+                	pKiller.infected = true;
                     UpdatePlayerColor(pKiller, Colors.red);
                     bool aliveChanged = false;
                     foreach (Player pAlive in alive) {
@@ -160,9 +162,7 @@ namespace MCGalaxy.Games {
                         if (!pAlive.infected && pKiller.infected && !pAlive.referee && !pKiller.referee && pKiller != pAlive 
                             && pKiller.level.name.CaselessEq(CurrentLevelName) && pAlive.level.name.CaselessEq(CurrentLevelName))
                         {
-                            pAlive.infected = true;
-                            Infected.Add(pAlive);
-                            Alive.Remove(pAlive);
+                            InfectPlayer(pAlive);
                             aliveChanged = true;
                             pAlive.blockCount = 25;
                             
@@ -281,6 +281,7 @@ namespace MCGalaxy.Games {
             }
             Alive.Clear();
             Infected.Clear();
+            UpdateAllPlayerStatus();
         }
 
         void ResetPlayer(Player p, ref string playersString) {

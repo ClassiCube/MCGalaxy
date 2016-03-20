@@ -43,6 +43,7 @@ namespace MCGalaxy.Commands {
                     Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
                     Server.zombie.Infected.Remove(p);
                     Server.zombie.Alive.Add(p);
+                    Server.zombie.UpdateAllPlayerStatus();
                     p.color = p.group.color;
                 }
             } else {
@@ -51,6 +52,7 @@ namespace MCGalaxy.Commands {
                 Player.GlobalDespawn(p, false);
                 Server.zombie.Alive.Remove(p);
                 Server.zombie.Infected.Remove(p);
+                Server.zombie.UpdateAllPlayerStatus();               
                 p.color = p.group.color;         
                 if (Server.zombie.RoundInProgress)
                     Server.zombie.AssignFirstZombie();

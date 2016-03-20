@@ -143,6 +143,7 @@ namespace MCGalaxy.Games {
             Alive.Remove(p);
             p.infected = true;
             UpdatePlayerColor(p, Colors.red);
+            UpdateAllPlayerStatus();
         }
 
         public void DisinfectPlayer(Player p) {
@@ -151,6 +152,7 @@ namespace MCGalaxy.Games {
             Alive.Add(p);
             p.infected = false;
             UpdatePlayerColor(p, p.group.color);
+            UpdateAllPlayerStatus();
         }
 
         void ChangeLevel(string next) {
@@ -189,6 +191,19 @@ namespace MCGalaxy.Games {
             LastLevelName = "";
             CurrentLevelName = "";
             CurrentLevel = null;
+        }
+        
+        void UpdatePlayerStatus(Player p) {
+            string message = "&a{0} %Salive, &c{1} %Sinfected";
+            message = String.Format(message, Alive.Count, Infected.Count);
+            p.SendCpeMessage(CpeMessageType.Status1, message, true);
+        }
+        
+        internal void UpdateAllPlayerStatus() {
+            Player[] players = Alive.Items;
+            foreach (Player p in players) UpdatePlayerStatus(p);
+            players = Infected.Items;
+            foreach (Player p in players) UpdatePlayerStatus(p);
         }
     }
 }

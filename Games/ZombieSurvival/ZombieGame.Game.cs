@@ -87,6 +87,7 @@ namespace MCGalaxy.Games {
             Alive.Remove(p);
             Infected.Remove(p);
             AssignFirstZombie();
+            UpdateAllPlayerStatus();
         }
         
         public override void PlayerJoinedServer(Player p) {
@@ -96,7 +97,6 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedLevel(Player p, Level oldLvl) {
-            Server.s.Log("CHECK " + p.name);
             if (RoundInProgress && p.level.name.CaselessEq(CurrentLevelName)) {
                 if (Status != ZombieGameStatus.NotStarted && p != null) {
                     p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
@@ -109,11 +109,13 @@ namespace MCGalaxy.Games {
                 double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
                 if (startLeft >= 0)
                     p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
-                //p.SendMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
+                p.SendCpeMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
+                UpdatePlayerStatus(p);
                 return;
             }
             
-            p.SendMessage(CpeMessageType.BottomRight1, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight1, "");
+            p.SendCpeMessage(CpeMessageType.Status1, "");
             Alive.Remove(p);
             Infected.Remove(p);
         }
