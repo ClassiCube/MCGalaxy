@@ -33,7 +33,6 @@ namespace MCGalaxy.Commands {
             if (p.referee) {
                 p.referee = false;
                 LevelPermission perm = Group.findPlayerGroup(name).Permission;
-                Player.GlobalDespawn(p, false);
                 Player.SendChatFrom(p, p.FullName + " %Sis no longer a referee", false);
                 
                 if (Server.zombie.RoundInProgress) {
@@ -44,7 +43,6 @@ namespace MCGalaxy.Commands {
                     Server.zombie.Infected.Remove(p);
                     Server.zombie.Alive.Add(p);
                     Server.zombie.UpdateAllPlayerStatus();
-                    p.color = p.group.color;
                 }
             } else {
                 p.referee = true;
@@ -52,8 +50,7 @@ namespace MCGalaxy.Commands {
                 Player.GlobalDespawn(p, false);
                 Server.zombie.Alive.Remove(p);
                 Server.zombie.Infected.Remove(p);
-                Server.zombie.UpdateAllPlayerStatus();               
-                p.color = p.group.color;         
+                Server.zombie.UpdateAllPlayerStatus();     
                 if (Server.zombie.RoundInProgress)
                     Server.zombie.AssignFirstZombie();
             }

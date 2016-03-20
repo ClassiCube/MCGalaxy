@@ -198,6 +198,7 @@ namespace MCGalaxy {
         public bool aka = false;
         public bool flipHead = true;
         public int playersInfected = 0;
+        internal string lastSpawnColor = "";
 
         //Tnt Wars
         public bool PlayingTntWars = false;
@@ -487,7 +488,8 @@ namespace MCGalaxy {
         
         public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, bool self, string possession = "") {
-        	Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
+            p.lastSpawnColor = p.infected ? Colors.red : p.color;
         	foreach (Player other in players) {
                 if (other.Loading && p != other) continue;
                 if (p.level != other.level || (p.hidden && !self)) continue;

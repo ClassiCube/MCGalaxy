@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             } else if (who.warn == 1) {
                 Player.SendMessage(who, "Do it one more time and you will get kicked!");
             } else if (who.warn == 2) {
-                Player.GlobalMessage(who.color + who.DisplayName + " " + "%Swas warn-kicked by " + warnedby);
+                Player.GlobalMessage(who.color + who.DisplayName + " %Swas warn-kicked by " + warnedby);
                 who.Kick("KICKED BECAUSE " + reason + "");
             }
             who.warn++;

@@ -38,13 +38,13 @@ namespace MCGalaxy.Commands
 
             if (who.group.Permission >= p.group.Permission)
             {
-                Player.SendChatFrom(p, p.color + p.DisplayName + " " + Server.DefaultColor + "tried to votekick " + who.color + who.DisplayName + " " + Server.DefaultColor + "but failed!", false);
+                Player.SendChatFrom(p, p.color + p.DisplayName + " %Stried to votekick " + who.color + who.DisplayName + " %Sbut failed!", false);
                 return;
             }
 
-            Chat.GlobalMessageOps(p.color + p.DisplayName + Server.DefaultColor + " used &a/votekick");
-            Player.GlobalMessage("&9A vote to kick " + who.color + who.DisplayName + " " + Server.DefaultColor + "has been called!");
-            Player.GlobalMessage("&9Type &aY " + Server.DefaultColor + "or &cN " + Server.DefaultColor + "to vote.");
+            Chat.GlobalMessageOps(p.color + p.DisplayName + " %Sused &a/votekick");
+            Player.GlobalMessage("&9A vote to kick " + who.color + who.DisplayName + " %Shas been called!");
+            Player.GlobalMessage("&9Type &aY %Sor &cN %Sto vote.");
 
             // 1/3rd of the players must vote or nothing happens
             // Keep it at 0 to disable min number of votes
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player.GlobalMessage(who.color + who.DisplayName + " " + Server.DefaultColor + "shall remain!");
+                    Player.GlobalMessage(who.color + who.DisplayName + " %Sshall remain!");
                 }
 
                 voteTimer.Dispose();

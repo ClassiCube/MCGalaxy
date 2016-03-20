@@ -133,7 +133,7 @@ namespace MCGalaxy.Games {
             }
             
             Player zombie = alive[index];
-            Player.GlobalMessage(zombie.FullName + " %Scontinued the infection!");
+            CurrentLevel.ChatLevel(zombie.FullName + " %Scontinued the infection!");
             InfectPlayer(zombie);
         }
 
@@ -156,21 +156,22 @@ namespace MCGalaxy.Games {
         }
 
         void ChangeLevel(string next) {
+            if (CurrentLevel != null) {
+                CurrentLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
+                CurrentLevel.ChatLevel("Please wait while you are transfered.");
+            }
+            
             CurrentLevelName = next;
             queLevel = false;
             nextLevel = "";
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
             CurrentLevel = LevelInfo.Find(next);
-            
-            Player.GlobalMessage("The next map has been chosen - " + Colors.red + next.ToLower());
-            Player.GlobalMessage("Please wait while you are transfered.");
-            string oldLevel = Server.mainLevel.name;
             if (Server.ZombieOnlyServer)
                 Server.mainLevel = CurrentLevel;
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-            	if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(LastLevelName)) {
+                if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(LastLevelName)) {
                     pl.SendMessage("Going to the next map!");
                     Command.all.Find("goto").Use(pl, next);
                 }

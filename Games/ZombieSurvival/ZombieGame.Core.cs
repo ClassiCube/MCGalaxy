@@ -130,10 +130,7 @@ namespace MCGalaxy.Games {
                 
                 Player[] online = PlayerInfo.Online.Items;
                 foreach (Player p in online) {
-                    if (p.referee) {
-                        p.color = p.group.color;
-                    } else if (p.level.name.CaselessEq(CurrentLevelName)) {
-                        p.color = p.group.color;
+                    if (!p.referee && p.level.name.CaselessEq(CurrentLevelName)) {
                         players.Add(p);
                         nonRefPlayers++;
                     }
@@ -203,8 +200,8 @@ namespace MCGalaxy.Games {
         }
 
         static void UpdatePlayerColor(Player p, string color) {
-            if (p.color == color) return;
-            p.color = color;
+            if (p.lastSpawnColor == color) return;
+            p.lastSpawnColor = color;
             Player.GlobalDespawn(p, false);
             Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
         }
@@ -273,7 +270,6 @@ namespace MCGalaxy.Games {
                 pl.playersInfected = 0;
                 pl.money += money;
                 pl.infected = false;
-                pl.color = pl.group.color;
                 if (pl.referee) {
                     pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
                     pl.money++;
@@ -289,10 +285,8 @@ namespace MCGalaxy.Games {
             p.infected = false;
             p.playersInfected = 0;
             
-            if (p.level.name.CaselessEq(CurrentLevelName)) {
-                p.color = p.group.color;
-                playersString += p.group.color + p.DisplayName + Colors.white + ", ";
-            }
+            if (p.level.name.CaselessEq(CurrentLevelName))
+                playersString += p.color + p.DisplayName + Colors.white + ", ";
         }
         
         void ChooseNextLevel() {
