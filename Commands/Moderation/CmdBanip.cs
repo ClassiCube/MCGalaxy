@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands {
                         if (grp != null) {
                             if (grp.Permission >= p.group.Permission) {
                                 Player.SendMessage(p, "You can only ipban IPs used by players with a lower rank.");
-                                Player.SendMessage(p, Server.DefaultColor + opname + "(" + grp.color + grp.name + Server.DefaultColor + ") uses that IP.");
+                                Player.SendMessage(p, opname + "(" + grp.color + grp.name + Server.DefaultColor + ") uses that IP.");
                                 Server.s.Log(p.name + "failed to ipban " + message + " - IP is also used by: " + opname + "(" + grp.name + ")");
                                 return;
                             }
@@ -102,11 +102,11 @@ namespace MCGalaxy.Commands {
             if (p != null) {
                 Server.IRC.Say(message.ToLower() + " was ip-banned by " + p.name + ".");
                 Server.s.Log("IP-BANNED: " + message.ToLower() + " by " + p.name + ".");
-                Player.GlobalMessage(message + " was &8ip-banned" + Server.DefaultColor + " by " + p.color + p.name + Server.DefaultColor + ".");
+                Player.GlobalMessage(message + " was &8ip-banned %Sby " + p.color + p.name + "%S.");
             } else {
                 Server.IRC.Say(message.ToLower() + " was ip-banned by console.");
                 Server.s.Log("IP-BANNED: " + message.ToLower() + " by console.");
-                Player.GlobalMessage(message + " was &8ip-banned" + Server.DefaultColor + " by console.");
+                Player.GlobalMessage(message + " was &8ip-banned %S by (console).");
             }
             Server.bannedIP.Add(message);
             Server.bannedIP.Save("banned-ip.txt", false);

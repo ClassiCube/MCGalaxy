@@ -44,6 +44,7 @@ namespace MCGalaxy {
         }
         
         public static string GetLogoutMessage(Player p) {
+            if (p.name == null) return "Disconnected";
             if (!Directory.Exists("text/logout"))
                 Directory.CreateDirectory("text/logout");            
             string path = "text/logout/" + p.name.ToLower() + ".txt";

@@ -76,15 +76,15 @@ namespace MCGalaxy.Commands
                 {
                     if (p != null)
                     {
-                        Player.GlobalMessage(message + " was &8(unbanned)" + Server.DefaultColor + " by " + p.color + p.name + Server.DefaultColor + ".");
+                        Player.GlobalMessage(message + " was &8(unbanned) %Sby " + p.color + p.name + "%S.");
                         Server.s.Log("UNBANNED: by " + p.name);
                         Server.IRC.Say(message + " was unbanned by " + p.name + ".");
                     }
                     else
                     {
-                        Player.GlobalMessage(message + " was &8(unbanned)" + Server.DefaultColor + " by console.");
+                        Player.GlobalMessage(message + " was &8(unbanned) %Sby (console).");
                         Server.s.Log("UNBANNED: by console");
-                        Server.IRC.Say(message + " was unbanned by console.");
+                        Server.IRC.Say(message + " was unbanned by (console).");
                     }
                     Group.findPerm(LevelPermission.Banned).playerList.Remove(message);
                     if (Ban.DeleteBan(message))

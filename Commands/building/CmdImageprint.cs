@@ -43,20 +43,20 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             if (message.IndexOf(' ') != -1)     //Yay parameters
             {
-                string[] parameters = message.Split(' ');
+                string[] args = message.Split(' ');
 
-                for (int i = 0; i < parameters.Length; i++)
+                for (int i = 0; i < args.Length; i++)
                 {
-                    if (parameters[i] == "layer" || parameters[i] == "l") layer = true;
-                    else if (parameters[i] == "1" || parameters[i] == "2color") popType = 1;
-                    else if (parameters[i] == "2" || parameters[i] == "1color") popType = 2;
-                    else if (parameters[i] == "3" || parameters[i] == "2gray") popType = 3;
-                    else if (parameters[i] == "4" || parameters[i] == "1gray") popType = 4;
-                    else if (parameters[i] == "5" || parameters[i] == "bw") popType = 5;
-                    else if (parameters[i] == "6" || parameters[i] == "gray") popType = 6;
+                    if (args[i] == "layer" || args[i] == "l") layer = true;
+                    else if (args[i] == "1" || args[i] == "2color") popType = 1;
+                    else if (args[i] == "2" || args[i] == "1color") popType = 2;
+                    else if (args[i] == "3" || args[i] == "2gray") popType = 3;
+                    else if (args[i] == "4" || args[i] == "1gray") popType = 4;
+                    else if (args[i] == "5" || args[i] == "bw") popType = 5;
+                    else if (args[i] == "6" || args[i] == "gray") popType = 6;
                 }
 
-                message = parameters[parameters.Length - 1];
+                message = args[args.Length - 1];
             }
             if (message.IndexOf('/') == -1 && message.IndexOf('.') != -1)
             {
@@ -146,12 +146,12 @@ namespace MCGalaxy.Commands
                 if (popType == 1) popType = 2;
                 if (popType == 3) popType = 4;
             }
-            List<FindReference.ColorBlock> refCol = FindReference.popRefCol(popType);
-            FindReference.ColorBlock colblock;
+            ImagePalette.ColorBlock[] refCol = ImagePalette.GetPalette(popType);
+            ImagePalette.ColorBlock colblock;
             p.SendMessage("" + direction);
             Thread printThread = new Thread(new ThreadStart(delegate
             {
-                double[] distance = new double[refCol.Count]; // Array of distances between color pulled from image to the referance colors.
+                double[] distance = new double[refCol.Length]; // Array of distances between color pulled from image to the referance colors.
 
                 int position; // This is the block selector for when we find which distance is the shortest.
 
@@ -317,9 +317,10 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/imageprint <switch> <localfile> - Print local file in extra/images/ folder.  Must be type .bmp, type filename without extension.");
             Player.SendMessage(p, "/imageprint <switch> <imgurfile.extension> - Print IMGUR stored file.  Example: /i piCCm.gif will print www.imgur.com/piCCm.gif. Case-sensitive");
             Player.SendMessage(p, "/imageprint <switch> <webfile> - Print web file in format domain.com/folder/image.jpg. Does not need http:// or www.");
-            Player.SendMessage(p, "Available switches: (&f1" + Server.DefaultColor + ") 2-Layer Color image, (&f2" + Server.DefaultColor + ") 1-Layer Color Image, (&f3" + Server.DefaultColor + ") 2-Layer Grayscale, (&f4" + Server.DefaultColor + ") 1-Layer Grayscale, (%f5" + Server.DefaultColor + ") Black and White, (&f6" + Server.DefaultColor + ") Mathematical Grayscale");
+            Player.SendMessage(p, "Available switches: (&f1%S) 2-Layer Color image, (&f2%S) 1-Layer Color Image, " +
+                               "(&f3%S) 2-Layer Grayscale, (&f4%S) 1-Layer Grayscale, (%f5%S) Black and White, (&f6%S) Mathematical Grayscale");
             Player.SendMessage(p, "Local filetypes: .bmp.   Remote Filetypes: .gif .png .jpg .bmp.  PNG and GIF may use transparency");
-            Player.SendMessage(p, "Use switch (&flayer" + Server.DefaultColor + ") or (&fl" + Server.DefaultColor + ") to print horizontally.");
+            Player.SendMessage(p, "Use switch (&flayer%S) or (&fl%S) to print horizontally.");
         }
 
         struct CatchPos { public bool layer; public byte popType; public string bitmapLoc; public ushort x, y, z; }

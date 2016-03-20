@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands
             {
                 if (Awards.giveAward(foundPlayer, awardName))
                 {
-                    Player.GlobalMessage(Server.FindColor(foundPlayer) + foundPlayer + Server.DefaultColor + " was awarded: &b" + Awards.camelCase(awardName));
+                    Player.GlobalMessage(Server.FindColor(foundPlayer) + foundPlayer + " %Swas awarded: &b" + Awards.camelCase(awardName));
                 }
                 else
                 {
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands
             {
                 if (Awards.takeAward(foundPlayer, awardName))
                 {
-                    Player.GlobalMessage(Server.FindColor(foundPlayer) + foundPlayer + Server.DefaultColor + " had their &b" + Awards.camelCase(awardName) + Server.DefaultColor + " award removed");
+                    Player.GlobalMessage(Server.FindColor(foundPlayer) + foundPlayer + " %Shad their &b" + Awards.camelCase(awardName) + " %Saward removed");
                 }
                 else
                 {

@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
             
             bool mapOnly = cmd == "SPAWN" || cmd == "PRESET" || cmd == "WEATHER" || cmd == "ENV" ||
                 cmd == "KICK" || cmd == "KICKALL" || cmd == "ZONE" || cmd == "LB" || cmd == "LEVELBLOCK";
-            if (mapOnly && !p.level.name.ToUpper().StartsWith(p.name.ToUpper())) {
+            if (mapOnly && !p.level.name.CaselessStarts(p.name)) {
                 Player.SendMessage(p, "You may only perform that action on your own map.");
                 return;
             }
@@ -160,7 +160,7 @@ namespace MCGalaxy.Commands
         void HandleMapCommand(Player p, string message, string cmd, string value) {
             bool mapOnly = cmd == "PHYSICS" || cmd == "MOTD" || cmd == "GUNS" ||
                 cmd == "PERVISIT" || cmd == "TEXTURE";
-            if (mapOnly && !p.level.name.ToUpper().StartsWith(p.name.ToUpper())) {
+            if (mapOnly && !p.level.name.CaselessStarts(p.name)) {
                 Player.SendMessage(p, "You may only perform that action on your own map.");
                 return;
             }

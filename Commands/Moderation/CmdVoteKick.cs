@@ -79,11 +79,11 @@ namespace MCGalaxy.Commands
 
                 if (votesYes + votesNo < Server.voteKickVotesNeeded)
                 {
-                    Player.GlobalMessage("Not enough votes were made. " + who.color + who.DisplayName + " " + Server.DefaultColor + "shall remain!");
+                    Player.GlobalMessage("Not enough votes were made. " + who.color + who.DisplayName + " %Sshall remain!");
                 }
                 else if (netVotesYes > 0)
                 {
-                    Player.GlobalMessage("The people have spoken, " + who.color + who.DisplayName + " " + Server.DefaultColor + "is gone!");
+                    Player.GlobalMessage("The people have spoken, " + who.color + who.DisplayName + " %Sis gone!");
                     who.Kick("Vote-Kick: The people have spoken!");
                 }
                 else
