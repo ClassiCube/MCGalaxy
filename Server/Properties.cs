@@ -613,6 +613,12 @@ namespace MCGalaxy {
                             Chat.standardTokens.Remove(token);
                         Chat.disabledTokens = value;
                     } break;
+				case "enable-http-api":
+					try {
+						Server.EnableHttpApi = bool.Parse(value);
+					}
+					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
 			}
 		}
 		
@@ -745,7 +751,7 @@ namespace MCGalaxy {
 			w.WriteLine("main-name = " + Server.level);
 			w.WriteLine("default-texture-url = " + Server.defaultTerrainUrl);
 			w.WriteLine("default-texture-pack-url = " + Server.defaultTexturePackUrl);
-			//w.WriteLine("guest-goto = " + Server.guestGoto);
+			w.WriteLine("enable-http-api = " + Server.EnableHttpApi);
 			w.WriteLine();
 			w.WriteLine("# irc bot options");
 			w.WriteLine("irc = " + Server.irc.ToString().ToLower());

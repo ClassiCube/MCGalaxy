@@ -65,5 +65,12 @@ namespace MCGalaxy {
                 Items = newItems;
             }
         }
+        
+        public void Clear() {
+            lock (locker) {
+                if (useList) list.Clear();
+                Items = new T[0];
+            }
+        }
     }
 }

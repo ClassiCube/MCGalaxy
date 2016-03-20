@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return;
             }
             Server.s.Log("Zombie Survival ended forcefully by " + p.name);
-            Server.zombie.aliveCount = 0;
+            Server.zombie.Alive.Clear();
             Server.zombie.ResetState();
         }
         

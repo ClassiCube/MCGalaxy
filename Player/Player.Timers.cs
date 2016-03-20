@@ -101,12 +101,7 @@ namespace MCGalaxy {
             string suffix = players.Length == 1 ? " player online" : " players online";
             SendMessage("There are currently &a" + players.Length + suffix);
             
-            try {
-                ZombieGame.alive.Remove(this);
-                ZombieGame.infectd.Remove(this);
-            } catch {
-            }
-            if ( Server.lava.active )
+            if (Server.lava.active)
                 SendMessage("There is a &aLava Survival " + Server.DefaultColor + "game active! Join it by typing /ls go");
             extraTimer.Dispose();
         }

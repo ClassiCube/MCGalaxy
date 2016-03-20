@@ -280,8 +280,9 @@ namespace MCGalaxy
         public static event OnLevelLoaded LevelLoaded;
 
         public bool ShouldSaveLevelFile() {
-        	if (Server.ZombieModeOn && (name == Server.zombie.currentLevelName 
-        	                             || name == Server.zombie.lastLevelName)) return false;
+        	if (Server.ZombieModeOn && 
+        	    (name.CaselessEq(Server.zombie.CurrentLevelName)
+        	     || name.CaselessEq(Server.zombie.LastLevelName))) return false;
         	if (Server.lava.active && Server.lava.HasMap(name)) return false;
         	return true;
         }

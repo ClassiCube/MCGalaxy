@@ -41,7 +41,7 @@ namespace MCGalaxy.Games {
             p.lastXblock = x; p.lastYblock = y; p.lastZblock = z;
             
             if (action == 1 || (action == 0 && p.painting)) {
-                if (p.level.name != Server.zombie.currentLevelName || p.referee) return false;
+                if (!p.level.name.CaselessEq(CurrentLevelName) || p.referee) return false;
                 
                 if (p.blockCount == 0 ) {
                     p.SendMessage("You have no blocks left.");
@@ -84,31 +84,38 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerLeftServer(Player p) {
-            InfectedPlayerDC();
+            Alive.Remove(p);
+            Infected.Remove(p);
+            AssignFirstZombie();
         }
         
         public override void PlayerJoinedServer(Player p) {
             if (Status == ZombieGameStatus.NotStarted) return;
             Player.SendMessage(p, "There is a Zombie Survival game currently in-progress! " +
-                               "Join it by typing /g " + Server.zombie.currentLevelName);
+                               "Join it by typing /g " + CurrentLevelName);
         }
         
-        public override void PlayerJoinedLevel(Player p, Level oldLevl) {
-            if (Server.zombie.RoundInProgress && p.level.name == currentLevelName)
-                Server.zombie.InfectedPlayerLogin(p);
-            if (p.level.name == currentLevelName) {
-            	double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
-            	if (startLeft >= 0)
-            		p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
+        public override void PlayerJoinedLevel(Player p, Level oldLvl) {
+            Server.s.Log("CHECK " + p.name);
+            if (RoundInProgress && p.level.name.CaselessEq(CurrentLevelName)) {
+                if (Status != ZombieGameStatus.NotStarted && p != null) {
+                    p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
+                    p.blockCount = 50;
+                    InfectPlayer(p);
+                }
+            }
+            
+            if (p.level.name.CaselessEq(CurrentLevelName)) {
+                double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
+                if (startLeft >= 0)
+                    p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
                 //p.SendMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
                 return;
             }
             
             p.SendMessage(CpeMessageType.BottomRight1, "");
-            if(ZombieGame.alive.Contains(p))
-                ZombieGame.alive.Remove(p);
-            if (ZombieGame.infectd.Contains(p))
-                ZombieGame.infectd.Remove(p);
+            Alive.Remove(p);
+            Infected.Remove(p);
         }
     }
 }

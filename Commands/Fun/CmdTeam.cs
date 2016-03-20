@@ -20,8 +20,7 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {
 
-    public sealed class CmdTeam : Command {
-        
+    public sealed class CmdTeam : Command {        
         public override string name { get { return "team"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Games; } }
@@ -29,6 +28,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public override void Use(Player p, string message) {
+            if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
 
@@ -49,6 +49,12 @@ namespace MCGalaxy.Commands {
                     HandleLeave(p, args); break;
                 case "members":
                     HandleMembers(p, args); break;
+                default:
+                    Team team = p.GameTeam;
+                    if (team == null) { 
+                        Player.SendMessage(p, "You need to be in a team first to send a team message."); return; 
+                    }
+                    team.Chat(p, message); break;
             }
         }
 
@@ -175,7 +181,6 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            //.. team message?
             Player.SendMessage(p, "%T/team owner <name> %H-Sets the player who has owner priveliges for the team.");
             Player.SendMessage(p, "%T/team kick [name] %H-Removes that player from the team you are in.");
             Player.SendMessage(p, "%T/team color [color] %H-Sets the color of the team name shown in chat.");
@@ -185,6 +190,7 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%T/team invite [name] %H-Invites that player to join your team.");
             Player.SendMessage(p, "%T/team leave %H-Removes you from the team you are in.");
             Player.SendMessage(p, "%T/team members [name] %H-Lists the players within that team.");
+            Player.SendMessage(p, "%HAnything else is sent as a message to all members of the team.");
         }
     }
 }

@@ -60,12 +60,24 @@ namespace MCGalaxy.Games {
         /// <summary> Time at which the next round is scheduled to end. </summary>
         public DateTime RoundEnd;
         
-        public int aliveCount = 0;
         public static System.Timers.Timer timer;
         public bool initialChangeLevel = false;
-        public string lastLevelName = "", currentLevelName = "";
-        public static List<Player> alive = new List<Player>();
-        public static List<Player> infectd = new List<Player>();
+        
+        /// <summary> The name of the level that the last round of zombie survival was played on. </summary>
+        public string LastLevelName = "";
+        
+        /// <summary> The name of the level that the current round of zombie survival is being played on. </summary>
+        public string CurrentLevelName = "";
+        
+        /// <summary> The level that the current round of zombie survival is being played on. </summary>
+        public Level CurrentLevel = null;
+        
+        /// <summary> List of alive/human players. </summary>
+        public VolatileArray<Player> Alive = new VolatileArray<Player>(false);
+        
+        /// <summary> List of dead/infected players. </summary>
+        public VolatileArray<Player> Infected = new VolatileArray<Player>(false);
+        
         static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}", 
             "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}", 
             "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}", 
@@ -102,84 +114,68 @@ namespace MCGalaxy.Games {
             t.Start();
         }
 
-        public void InfectedPlayerDC() {
-            if (Status == ZombieGameStatus.NotStarted) return;
-            //This is for when the first zombie disconnects
+        /// <summary> If there are no infected players left, randomly selected one of the alive players to continue the infection. </summary>
+        public void AssignFirstZombie() {
+            if (Status == ZombieGameStatus.NotStarted || !RoundInProgress || Infected.Count > 0) return;
             Random random = new Random();
-            if ((Status != ZombieGameStatus.NotStarted && RoundInProgress) && infectd.Count <= 0) {
-                if (alive.Count == 0) return;
-                int index = random.Next(alive.Count);
-                
-                while (alive[index].referee || alive[index].level.name == Server.zombie.currentLevelName) {
-                    if (index >= alive.Count - 1) index = 0;
-                    else index++;
+            Player[] alive = Alive.Items;
+            if (alive.Length == 0) return;
+            int index = random.Next(alive.Length);
+            
+            while (alive[index].referee || !alive[index].level.name.CaselessEq(CurrentLevelName)) {
+                if (index >= alive.Length - 1) {
+                    index = 0;
+                    alive = Alive.Items;
+                    if (alive.Length == 0) return;
+                } else {
+                    index++;
                 }
-                
-                Player zombie = alive[index];
-                Player.GlobalMessage(zombie.FullName + " %Scontinued the infection!");
-                InfectPlayer(zombie);
             }
+            
+            Player zombie = alive[index];
+            Player.GlobalMessage(zombie.FullName + " %Scontinued the infection!");
+            InfectPlayer(zombie);
         }
 
-        public bool InfectedPlayerLogin(Player p)  {
-            if (Status == ZombieGameStatus.NotStarted || p == null) return false;
-            if (p.level.name != Server.zombie.currentLevelName) return false;
-            p.SendMessage("You have joined in the middle of a round. You are now infected!");
-            p.blockCount = 50;
-            try
-            {
-                Server.zombie.InfectPlayer(p);
-            }
-            catch { }
-            return true;
-        }
-
-        public void InfectPlayer(Player p)
-        {
+        public void InfectPlayer(Player p) {
             if (!RoundInProgress || p == null) return;
-            infectd.Add(p);
-            alive.Remove(p);
+            Infected.Add(p);
+            Alive.Remove(p);
             p.infected = true;
             UpdatePlayerColor(p, Colors.red);
-            aliveCount = alive.Count;
         }
 
-        public void DisinfectPlayer(Player p)
-        {
+        public void DisinfectPlayer(Player p) {
             if (!RoundInProgress || p == null) return;
-            infectd.Remove(p);
-            alive.Add(p);
+            Infected.Remove(p);
+            Alive.Add(p);
             p.infected = false;
             UpdatePlayerColor(p, p.group.color);
-            aliveCount = alive.Count;
         }
 
         void ChangeLevel(string next) {
-            currentLevelName = next;
+            CurrentLevelName = next;
             queLevel = false;
             nextLevel = "";
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
+            CurrentLevel = LevelInfo.Find(next);
             
             Player.GlobalMessage("The next map has been chosen - " + Colors.red + next.ToLower());
             Player.GlobalMessage("Please wait while you are transfered.");
             string oldLevel = Server.mainLevel.name;
             if (Server.ZombieOnlyServer)
-                Server.mainLevel = LevelInfo.Find(next);
+                Server.mainLevel = CurrentLevel;
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-                if (pl.level.name != next && pl.level.name == lastLevelName) {
+            	if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(LastLevelName)) {
                     pl.SendMessage("Going to the next map!");
                     Command.all.Find("goto").Use(pl, next);
                 }
             }
-            if (lastLevelName != "")
-                Command.all.Find("unload").Use(null, lastLevelName);
-            lastLevelName = next;
-        }
-
-        public bool IsInZombieGameLevel(Player p) {
-            return p.level.name == currentLevelName;
+            if (LastLevelName != "")
+                Command.all.Find("unload").Use(null, LastLevelName);
+            LastLevelName = next;
         }
 
         public void ResetState() {
@@ -190,6 +186,9 @@ namespace MCGalaxy.Games {
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
+            LastLevelName = "";
+            CurrentLevelName = "";
+            CurrentLevel = null;
         }
     }
 }

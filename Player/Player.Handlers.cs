@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
@@ -531,7 +532,6 @@ namespace MCGalaxy {
             }
 
             Server.s.Log(name + " [" + ip + "] has joined the server.");
-
             Server.zombie.PlayerJoinedServer(this);
             try {
                 ushort x = (ushort)((0.5 + level.spawnx) * 32);
@@ -554,6 +554,7 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
                 Server.s.Log("Error spawning player \"" + name + "\"");
             }
+            CmdGoto.CheckGamesJoin(this, null);
             Loading = false;
         }
         

@@ -152,7 +152,7 @@ namespace MCGalaxy.Commands {
             return true;
         }
         
-        void CheckGamesJoin(Player p, Level oldLvl) {
+        internal static void CheckGamesJoin(Player p, Level oldLvl) {
         	Server.lava.PlayerJoinedLevel(p, oldLvl);
         	Server.zombie.PlayerJoinedLevel(p, oldLvl);
  

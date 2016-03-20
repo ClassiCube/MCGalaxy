@@ -71,8 +71,7 @@ namespace MCGalaxy
         public static WebServer APIServer;
         public static WebServer InfoServer;
         public static DateTime StartTime, StartTimeLocal;
-
-        public static int speedPhysics = 250;
+        public static bool EnableHttpApi = false;
 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
 
@@ -184,7 +183,6 @@ namespace MCGalaxy
         public static bool pub = true;
         public static bool verify = true;
         public static bool worldChat = true;
-        //        public static bool guestGoto = false;
 
         //Spam Prevention
         public static bool checkspam = false;
@@ -647,8 +645,8 @@ namespace MCGalaxy
             		p.LeaveServer(msg, msg);
             	}
             }
-            APIServer.Stop();
-            InfoServer.Stop();
+            if (APIServer != null) APIServer.Stop();
+            if (InfoServer != null) InfoServer.Stop();
             //PlayerInfo.players.ForEach(delegate(Player p) { p.Kick("Server shutdown. Rejoin in 10 seconds."); });
             Player.connections.ForEach(
             delegate(Player p)
