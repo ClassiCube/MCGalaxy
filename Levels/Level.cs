@@ -205,6 +205,7 @@ namespace MCGalaxy
 
         public List<C4.C4s> C4list = new List<C4.C4s>();
         public int Likes, Dislikes;
+        public string Authors = "";
 
         public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false)
         {

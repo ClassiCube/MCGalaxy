@@ -21,7 +21,7 @@ using System.Threading;
 
 namespace MCGalaxy.Commands {
     
-    public sealed class MapLikeCmd : Command {
+    public sealed class CmdMapLike : Command {
         public override string name { get { return "maplike"; } }
         public override string shortcut { get { return "like"; } }
         public override string type { get { return CommandTypes.Games; } }
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public sealed class MapDislikeCmd : Command {
+    public sealed class CmdMapDislike : Command {
         public override string name { get { return "mapdislike"; } }
         public override string shortcut { get { return "dislike"; } }
         public override string type { get { return CommandTypes.Games; } }

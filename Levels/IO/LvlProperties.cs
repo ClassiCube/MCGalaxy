@@ -61,6 +61,7 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("Unload = " + level.unload);
             writer.WriteLine("WorldChat = " + level.worldChat);
             
+            writer.WriteLine();
             writer.WriteLine("PerBuild = " + GetName(level.permissionbuild));
             writer.WriteLine("PerVisit = " + GetName(level.permissionvisit));
             writer.WriteLine("PerBuildMax = " + GetName(level.perbuildmax));
@@ -68,6 +69,7 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("Buildable = " + level.Buildable);
             writer.WriteLine("Deletable = " + level.Deletable);
             
+            writer.WriteLine();
             writer.WriteLine("Guns = " + level.guns);
             writer.WriteLine("LoadOnGoto = " + level.loadOnGoto);
             writer.WriteLine("LeafDecay = " + level.leafDecay);
@@ -77,8 +79,10 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("Texture = " + level.terrainUrl);
             writer.WriteLine("TexturePack = " + level.texturePackUrl);
             
+            writer.WriteLine();
             writer.WriteLine("Likes = " + level.Likes);
             writer.WriteLine("Dislikes = " + level.Dislikes);
+            writer.WriteLine("Authors = " + level.Authors);
         }
         
         static string GetName(LevelPermission perm) {
@@ -219,6 +223,8 @@ namespace MCGalaxy.Levels.IO {
                     level.Likes = int.Parse(value); break;
                 case "dislikes":
                     level.Dislikes = int.Parse(value); break;
+                case "authors":
+                    level.Authors = value; break;
             }
         }
         

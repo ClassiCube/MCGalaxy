@@ -302,6 +302,7 @@ namespace MCGalaxy.Games
                 {
                 	Player[] online = PlayerInfo.Online.Items; 
                 	foreach (Player pl in online) {
+                	    pl.ratedMap = false;
                         if (pl.level == oldMap)
                         {
                             if (sendAfkMain && Server.afkset.Contains(pl.name)) Command.all.Find("main").Use(pl, "");
