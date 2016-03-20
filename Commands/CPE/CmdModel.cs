@@ -76,4 +76,25 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "You can also place a block ID instead of a model name, to change your model into a block!");
         }
     }
+    
+    public class CmdXModel : Command {
+        
+        public override string name { get { return "xmodel"; } }
+        public override string shortcut { get { return "xm"; } }
+        public override string type { get { return CommandTypes.Other; } }
+        public override bool museumUsable { get { return true; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+
+        public override void Use(Player p, string message) {
+            if (p == null) { MessageInGameOnly(p); }
+            string model = message == "" ? "normal" : message;
+            Command.all.Find("model").Use(p, p.name + " " + model);
+        }
+
+        public override void Help(Player p) {
+            Player.SendMessage(p, "/xm [model] - Sets your own model.");
+            Player.SendMessage(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
+            Player.SendMessage(p, "You can also place a block ID instead of a model name, to change your model into a block!");
+        }
+    } 
 }

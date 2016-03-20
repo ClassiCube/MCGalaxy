@@ -163,7 +163,6 @@
     <Compile Include="Commands\CPE\CmdCustomColors.cs" />
     <Compile Include="Commands\CPE\CmdModel.cs" />
     <Compile Include="Commands\CPE\CmdReachDistance.cs" />
-    <Compile Include="Commands\CPE\CmdXModel.cs" />
     <Compile Include="Commands\Economy\CmdAward.cs" />
     <Compile Include="Commands\Economy\CmdAwardMod.cs" />
     <Compile Include="Commands\Economy\CmdAwards.cs" />

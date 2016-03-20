@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override bool Enabled { get { return Server.ZombieModeOn; } }
-        public CmdBounty() { }
         
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');

@@ -1250,15 +1250,13 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                         return;
                     }
                 }
-                if (VoteHandles(text)) return;
+                // Filter out bad words
+                if (Server.profanityFilter) text = ProfanityFilter.Parse(text);
+                
+                if (IsHandledMessage(text)) return;
                 
                 // Put this after vote collection so that people can vote even when chat is moderated
                 if ( Server.chatmod && !voice ) { this.SendMessage("Chat moderation is on, you cannot speak."); return; }
-
-                // Filter out bad words
-                if ( Server.profanityFilter ) {
-                    text = ProfanityFilter.Parse(text);
-                }
 
                 if ( Server.checkspam ) {
                     //if (consecutivemessages == 0)
@@ -1402,7 +1400,7 @@ return;
             catch ( Exception e ) { Server.ErrorLog(e); Player.GlobalMessage("An error occurred: " + e.Message); }
         }
         
-        bool VoteHandles(string text) {
+        bool IsHandledMessage(string text) {
             if (Server.voteKickInProgress && text.Length == 1) {
                 if (text.ToLower() == "y") {
                     this.voteKickChoice = VoteKickChoice.Yes;
@@ -1425,10 +1423,8 @@ return;
                 }
             }
 
-        	if (Server.lava.HandlesChatMessage(this, text))
-        	    return false;
-            if (Server.votingforlevel && Server.zombie.HandlesChatMessage(this, text))
-                return true;
+        	if (Server.lava.HandlesChatMessage(this, text)) return true;
+            if (Server.zombie.HandlesChatMessage(this, text)) return true;
             return false;
         }
         

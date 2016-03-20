@@ -135,7 +135,7 @@ namespace MCGalaxy.Commands {
             if (team != null) { Player.SendMessage(p, "You need to leave your current team before you can join another one."); return; }
             
             team = Team.FindTeam(p.GameTeamInvite);
-            if (team == null ) { Player.SendMessage(p, "The team you were invited to no longer exists."); return; }
+            if (team == null) { Player.SendMessage(p, "The team you were invited to no longer exists."); return; }
             team.Members.Add(p.name);
             team.Action(p, "joined the team.");
             p.GameTeam = team;
@@ -152,7 +152,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
             if (who == null) return;
             
-            Player.SendMessage(p, "Invited " + who.FullName + " %S to join your team.");
+            Player.SendMessage(p, "Invited " + who.FullName + " %Sto join your team.");
             Player.SendMessage(who, p.color + p.DisplayName + " %Sinvited you to join the " + team.Color + team.Name + " %Steam.");
             who.GameTeamInvite = team.Name;
         }

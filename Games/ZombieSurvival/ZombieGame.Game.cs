@@ -71,6 +71,27 @@ namespace MCGalaxy.Games {
         }
         
         public override bool HandlesChatMessage(Player p, string message) {
+            if (Status == ZombieGameStatus.NotStarted 
+                || (p.level == null || !p.level.name.CaselessEq(CurrentLevelName))) return false;
+            if (Server.votingforlevel && HandleVote(p, message)) return true;
+            
+            if (message[0] == '~' && message.Length > 1) {
+                Player[] players = p.infected ? Infected.Items : Alive.Items;
+                string type = p.infected ? " &cto zombies%S: " : " &ato humans%S: ";
+                foreach (Player pl in players)
+                    pl.SendMessage(p.color + p.DisplayName + type + message);
+                return true;
+            } else if (message[0] == '`' && message.Length > 1) {
+                if (p.GameTeam == null) {
+                    p.SendMessage("You are not on a team, so cannot send a team message."); return true;
+                }
+                p.GameTeam.Chat(p, message.Substring(1)); 
+                return true;
+            }
+            return false;
+        }
+        
+        bool HandleVote(Player p, string message) {
             message = message.ToLower();
             if (Player.CheckVote(message, p, "1", "one", ref Level1Vote) ||
                 Player.CheckVote(message, p, "2", "two", ref Level2Vote) ||

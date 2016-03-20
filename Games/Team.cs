@@ -38,7 +38,7 @@ namespace MCGalaxy.Games {
         }
         
         public void Chat(Player source, string message) {
-            string toSend = source.FullName + " %Sto team: " + message;
+            string toSend = source.color + source.DisplayName + " %Sto team: " + message;
             foreach (string name in Members) {
                 Player p = PlayerInfo.FindExact(name);
                 if (p == null) continue;

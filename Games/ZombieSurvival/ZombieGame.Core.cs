@@ -106,8 +106,7 @@ namespace MCGalaxy.Games {
         
         List<Player> DoRoundCountdown() {
             while (true) {
-                string logMessage = Convert.ToString(ChangeLevels) + " " + Convert.ToString(Server.ZombieOnlyServer) +
-                    " " + Convert.ToString(UseLevelList) + " " + string.Join(",", LevelList.ToArray());
+                string logMessage = ChangeLevels + " " + Server.ZombieOnlyServer + " " + UseLevelList;
                 Server.s.Log(logMessage);
                 
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
