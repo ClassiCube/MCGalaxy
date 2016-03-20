@@ -46,8 +46,6 @@ namespace MCGalaxy {
         System.Timers.Timer muteTimer = new System.Timers.Timer(1000);
         public static List<string> emoteList = new List<string>();
         public List<string> listignored = new List<string>();
-        public List<string> mapgroups = new List<string>();
-        public static int totalMySQLFailed = 0;
         public static byte number { get { return (byte)PlayerInfo.Online.Count; } }
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
@@ -866,10 +864,14 @@ Next: continue;
         }
 
         public bool EnoughMoney(int amount) {
-            if (this.money >= amount)
-                return true;
-            return false;
+        	return money >= amount;
         }
+        
+        public void OnMoneyChanged() {
+            if (Server.ZombieModeOn) Server.zombie.PlayerMoneyChanged(this);
+            if (Server.lava.active) Server.lava.PlayerMoneyChanged(this);
+        }
+        
         public void ReviewTimer() {
             this.canusereview = false;
             System.Timers.Timer Clock = new System.Timers.Timer(1000 * Server.reviewcooldown);

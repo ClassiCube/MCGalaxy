@@ -50,6 +50,7 @@ namespace MCGalaxy.Eco {
         protected static void MakePurchase(Player p, int cost, string item) {
             Economy.EcoStats ecos = Economy.RetrieveEcoStats(p.name);
             p.money -= cost;
+            p.OnMoneyChanged();
             ecos.money = p.money;
             ecos.totalSpent += cost;
             ecos.purchase = item + "%3 - Price: %f" + cost + " %3" + Server.moneys +
@@ -88,7 +89,7 @@ namespace MCGalaxy.Eco {
         	}
         	// Must always provide an argument.
 			if (args.Length < 2) { cmd.Help(p); return; }
-            if (!p.EnoughMoney(Price)) {
+            if (p.money < Price) {
                 Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
             }
 			OnBuyCommand(p, message, args);

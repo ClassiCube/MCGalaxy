@@ -56,6 +56,7 @@ namespace MCGalaxy.Commands
                 if (ReachedMax(p, who.money, amount)) return;
                 ecos.money = who.money;
                 who.money += amount;
+                who.OnMoneyChanged();
                 ecos = Economy.RetrieveEcoStats(who.name);
                 Player.GlobalMessage(giver + " %Sgave " + who.FullName + " %f" + amount + " %3" + Server.moneys);
             }

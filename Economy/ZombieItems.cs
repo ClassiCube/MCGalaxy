@@ -33,13 +33,13 @@ namespace MCGalaxy.Eco {
             if (args.Length >= 3 && !byte.TryParse(args[2], out count) || count == 0 || count > 10) {
                 Player.SendMessage(p, "Number of groups of 10 blocks to buy must be an integer between 1 and 10."); return;
             }
-            if (!p.EnoughMoney(Price * count)) {
+            if (p.money < Price * count) {
                 Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + 
                                    "%c to buy " +  (count * 10) +  " " + Name + "."); return;
             }
             
             p.blocksStacked += 10 * count;
-            MakePurchase(p, Price, "%3Blocks: " + (10 * count));
+            MakePurchase(p, Price * count, "%3Blocks: " + (10 * count));
         }
     }
     

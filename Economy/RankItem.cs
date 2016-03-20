@@ -75,7 +75,7 @@ namespace MCGalaxy.Eco {
                 Player.SendMessage(p, "%cYou cannot buy anymore ranks, because you passed the max buyable rank: " + maxrank.color + maxrank.name);
                 return;
             }
-            if (!p.EnoughMoney(NextRank(p).price)) {
+            if (p.money < NextRank(p).price) {
                 Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy the next rank"); return;
             }
             

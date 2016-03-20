@@ -85,7 +85,7 @@ namespace MCGalaxy.Eco {
 			LevelPreset preset = FindPreset(args[1]);
 			if (preset == null) { Player.SendMessage(p, "%cThat isn't a level preset"); return; }
 			
-			if (!p.EnoughMoney(preset.price)) {
+			if (p.money < preset.price) {
 				Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy that map"); return;
 			}
 			string name = p.name + "_" + args[2];

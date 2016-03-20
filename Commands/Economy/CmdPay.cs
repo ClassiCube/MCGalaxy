@@ -60,6 +60,7 @@ namespace MCGalaxy.Commands
                 
                 receiver.money = who.money;
                 who.money += amount;
+                who.OnMoneyChanged();
                 target = who.color + who.name;
                 Player.GlobalMessage(p.FullName + " %Spaid " + who.FullName + " %f" + amount + " %3" + Server.moneys);
             }
@@ -68,6 +69,7 @@ namespace MCGalaxy.Commands
             receiver.salary = "%f" + amount + " %3" + Server.moneys + " by " + p.color + p.name + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             receiver.money += amount;
             p.money -= amount;
+            p.OnMoneyChanged();
             payer.money = p.money;
             Economy.UpdateEcoStats(payer);
             Economy.UpdateEcoStats(receiver);            

@@ -44,5 +44,7 @@ namespace MCGalaxy.Games {
         public virtual void PlayerLeftGame(Player p) { }
         
         public virtual void PlayerJoinedLevel(Player p, Level oldLvl) { }
+        
+        public virtual void PlayerMoneyChanged(Player p) { }
     }
 }

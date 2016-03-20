@@ -123,5 +123,11 @@ namespace MCGalaxy.Games {
             Alive.Remove(p);
             Infected.Remove(p);
         }
+        
+        public override void PlayerMoneyChanged(Player p) {
+            if (Status == ZombieGameStatus.NotStarted 
+                || !p.level.name.CaselessEq(CurrentLevelName)) return;
+            p.SendCpeMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
+        }
     }
 }

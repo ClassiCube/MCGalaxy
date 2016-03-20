@@ -166,8 +166,9 @@ namespace MCGalaxy.Games {
                             if (lastPlayerToInfect == pKiller.name) {
                                 infectCombo++;
                                 if (infectCombo >= 2) {
-                                    pKiller.SendMessage("You gained " + (4 - infectCombo) + " " + Server.moneys);
-                                    pKiller.money += 4 - infectCombo;
+                                    pKiller.SendMessage("You gained " + (4 + infectCombo) + " " + Server.moneys);
+                                    pKiller.money += 4 + infectCombo;
+                                    pKiller.OnMoneyChanged();
                                     CurrentLevel.ChatLevel(pKiller.FullName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
                                 }
                             } else {
@@ -188,7 +189,9 @@ namespace MCGalaxy.Games {
                                 CurrentLevel.ChatLevel(pKiller.FullName + " %Scollected the bounty of &a" +
                                                        bounty.Amount + " %S" + Server.moneys + " on " + pAlive.FullName + "%S.");
                                 bounty.Origin.money = Math.Max(0, bounty.Origin.money - bounty.Amount);
+                                bounty.Origin.OnMoneyChanged();
                                 pKiller.money += bounty.Amount;
+                                pKiller.OnMoneyChanged();
                             }
                             UpdatePlayerColor(pAlive, Colors.red);
                         }
@@ -274,6 +277,7 @@ namespace MCGalaxy.Games {
                     pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
                     pl.money++;
                 }
+                pl.OnMoneyChanged();
             }
             Alive.Clear();
             Infected.Clear();

@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Cannot use this on someone of equal or greater rank."); return;
             }
             Command.all.Find("hide").Use(who, "");
-            Player.SendMessage(p, "Used /hide on " + who.color + who.name + Server.DefaultColor + "%S.");
+            Player.SendMessage(p, "Used /hide on " + who.color + who.name + "%S.");
         }
 
         public override void Help(Player p)
