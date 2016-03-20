@@ -102,7 +102,9 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "\"" + color + "\" is not a valid color."); return;
             }
             team.Color = color;
+            team.Action(p, "changed the team color to: " + args[1]);
             team.UpdatePrefix();
+            Team.SaveList();
         }
         
         void HandleCreate(Player p, string[] args) {

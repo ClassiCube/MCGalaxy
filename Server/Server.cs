@@ -585,6 +585,7 @@ namespace MCGalaxy
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Alias.Load();
+            Team.LoadList();
         }
 
         public static void Setup()

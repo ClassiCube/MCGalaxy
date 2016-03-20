@@ -33,14 +33,14 @@ namespace MCGalaxy.Commands
             if (args.Length != 2) { Help(p); return; }
             string value = args[1];
             
-            if (args[0] == "zombie") {
+            if (args[0].CaselessEq("zombie")) {
                 Player who = PlayerInfo.FindOrShowMatches(p, value);
                 if (who == null) return;
                 
                 p.SendMessage(value + " was queued.");
                 Server.zombie.queZombie = true;
                 Server.zombie.nextZombie = value;
-            } else if (args[0] == "level") {
+            } else if (args[0].CaselessEq("level")) {
                 if (LevelInfo.ExistsOffline(value)) {
                     p.SendMessage(value + " was queued.");
                     Server.zombie.queLevel = true;

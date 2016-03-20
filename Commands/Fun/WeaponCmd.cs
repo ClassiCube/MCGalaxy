@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands {
         void CheckTile(Level lvl, List<Pos> toSend, int x, int y, int z) {
             Pos pos;
             if (lvl.GetTile((ushort)x, (ushort)(y - 1), (ushort)z) == Block.air) {
-                pos.x = (ushort)x; pos.y = (ushort)y; pos.z = (ushort)z;
+                pos.x = (ushort)x; pos.y = (ushort)(y - 1); pos.z = (ushort)z;
                 toSend.Add(pos);
             }
             if (lvl.GetTile((ushort)x, (ushort)y, (ushort)z) == Block.air) {

@@ -45,7 +45,7 @@ namespace MCGalaxy.BlockPhysics {
                     ShowWarningFuse(lvl, x, y, z);
                     return;
                 }
-                lvl.MakeExplosion(x, y, z, power);
+                MakeExplosion(lvl, x, y, z, power);
             }
         }
         
@@ -73,7 +73,7 @@ namespace MCGalaxy.BlockPhysics {
                 }
                 if (p.TntWarsKillStreak >= TntWarsGame.Properties.DefaultStreakTwoAmount && game.Streaks)
                     power++;
-                lvl.MakeExplosion(x, y, z, power - 2, true, game);
+                MakeExplosion(lvl, x, y, z, power - 2, true, game);
                 
                 List<Player> Killed = new List<Player>();
                 Player[] players = PlayerInfo.Online.Items;
@@ -94,7 +94,7 @@ namespace MCGalaxy.BlockPhysics {
                                         ? Block.air : Block.lavastill);
                         return;
                     }
-                    lvl.MakeExplosion(x, y, z, 0);
+                    MakeExplosion(lvl, x, y, z, 0);
                 }
             }
         }
@@ -127,9 +127,10 @@ namespace MCGalaxy.BlockPhysics {
                             continue;
                     }
                     
-                    if (rand.Next(1, 11) <= 4)
+                    int mode = rand.Next(1, 11);
+                    if (mode <= 4)
                         lvl.AddUpdate(index, Block.tntexplosion);
-                    else if (rand.Next(1, 11) <= 8)
+                    else if (mode <= 8)
                         lvl.AddUpdate(index, Block.air);
                     else
                         lvl.AddCheck(index, false, "drop 50 dissipate 8");

@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2011 MCForge
+    Copyright 2015 MCGalaxy
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -40,6 +40,28 @@ namespace MCGalaxy.Eco {
             
             p.blocksStacked += 10 * count;
             MakePurchase(p, Price, "%3Blocks: " + (10 * count));
+        }
+    }
+    
+    public sealed class QueueLevelItem : SimpleItem {
+        
+        public QueueLevelItem() {
+            Aliases = new[] { "queuelevel", "queuelvl", "queue" };
+            Price = 150;
+        }
+        
+        public override string Name { get { return "QueueLevel"; } }
+        
+        protected override void OnBuyCommand(Player p, string message, string[] args) {
+            if (Server.zombie.queLevel) {
+                Player.SendMessage(p, "Someone else has already queued a level."); return;
+            }
+            if (!LevelInfo.ExistsOffline(message)) {
+                Player.SendMessage(p, "Given level does not exist."); return;
+            }
+            
+            Command.all.Find("queue").Use(p, "level " + message);
+            MakePurchase(p, Price, "%3QueueLevel: " + message);
         }
     }
 }
