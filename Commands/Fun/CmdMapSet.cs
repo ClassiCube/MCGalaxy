@@ -21,9 +21,9 @@ using System.Threading;
 
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdMapAuthor : Command {
-        public override string name { get { return "mapauthors"; } }
-        public override string shortcut { get { return "authors"; } }
+    public sealed class CmdMapSet : Command {
+        public override string name { get { return "mapset"; } }
+        public override string shortcut { get { return "mset"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -31,14 +31,20 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            p.level.Authors = message;
-            Player.SendMessage(p, "Sets the authors of the map to: " + message.Replace(" ", "%S, "));
+            if (message == "") {
+            	Player.SendMessage(p, "Map authors: " + p.level.Authors);
+            	Player.SendMessage(p, "Pillaring allowed: " + p.level.Pillaring);
+            }
+            p.level.Authors = message.Replace(" ", "%S, ")
+            Player.SendMessage(p, "Sets the authors of the map to: " + message);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/mapauthors [name1] <name2>...");
+            Player.SendMessage(p, "%T/mapset author [name1] <name2>...");
             Player.SendMessage(p, "%HSets the authors of the current map. " +
                                "This is shown to players at the start of rounds in various games.");
+            Player.SendMessage(p, "%T/mapset pillaring [true/false]");
+            Player.SendMessage(p, "%HSets whether players can pillar on this map in various games.");
         }
     }
 }

@@ -83,6 +83,7 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("Likes = " + level.Likes);
             writer.WriteLine("Dislikes = " + level.Dislikes);
             writer.WriteLine("Authors = " + level.Authors);
+            writer.WriteLine("Pillaring = " + level.Pillaring);
         }
         
         static string GetName(LevelPermission perm) {
@@ -225,6 +226,8 @@ namespace MCGalaxy.Levels.IO {
                     level.Dislikes = int.Parse(value); break;
                 case "authors":
                     level.Authors = value; break;
+                case "pillaring":
+                    level.Pillaring = bool.Parse(value); break;
             }
         }
         

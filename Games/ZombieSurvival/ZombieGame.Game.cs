@@ -24,7 +24,7 @@ namespace MCGalaxy.Games {
         
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte tile, byte b) {
-            if (action == 1 && noPillaring && !p.referee) {
+            if (action == 1 && !CurrentLevel.Pillaring && !p.referee) {
                 if (p.lastYblock == y - 1 && p.lastXblock == x && p.lastZblock == z ) {
                     p.blocksStacked++;
                 } else {
@@ -133,7 +133,7 @@ namespace MCGalaxy.Games {
                 p.SendMessage("This map has &a" + CurrentLevel.Likes + 
                               " likes %Sand &c" + CurrentLevel.Dislikes + " dislikes");
                 if (CurrentLevel.Authors != "")
-                    p.SendMessage("It was created by " + CurrentLevel.Authors.Replace(" ", "%S, "));
+                    p.SendMessage("It was created by " + CurrentLevel.Authors);
                 p.SendCpeMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
                 UpdatePlayerStatus(p);
                 return;
