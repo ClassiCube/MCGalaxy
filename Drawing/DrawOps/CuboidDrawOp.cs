@@ -63,10 +63,10 @@ namespace MCGalaxy.Drawing.Ops {
                 QuadX(p2.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, p, lvl, brush);
             }
             if (lenX > 2 && lenY > 2) {
-                QuadZ(p1.Z, (ushort)(p1.X + 1), (ushort)(p1.Y + 1),
-                      (ushort)(p2.X - 1), (ushort)(p2.Y - 1), p, lvl, brush);
-                QuadZ(p2.Z, (ushort)(p1.X + 1), (ushort)(p1.Y + 1),
-                      (ushort)(p2.X - 1), (ushort)(p2.Y - 1), p, lvl, brush);
+                QuadZ(p1.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1), 
+                      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), p, lvl, brush);
+                QuadZ(p2.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1), 
+                      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), p, lvl, brush);
             }
         }
         
@@ -88,7 +88,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        protected void QuadZ(ushort z, ushort x1, ushort y1, ushort x2, ushort y2,
+        protected void QuadZ(ushort z, ushort y1, ushort x1, ushort y2, ushort x2,
                              Player p, Level lvl, Brush brush) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort x = x1; x <= x2; x++)
@@ -116,8 +116,8 @@ namespace MCGalaxy.Drawing.Ops {
             QuadX(p1.X, p1.Y, p1.Z, p2.Y, p2.Z, p, lvl, brush);
             QuadX(p2.X, p1.Y, p1.Z, p2.Y, p2.Z, p, lvl, brush);
             if (lenX > 2) {
-                QuadZ(p1.Z, (ushort)(p1.X + 1), p1.Y, (ushort)(p2.X - 1), p2.Y, p, lvl, brush);
-                QuadZ(p2.Z, (ushort)(p1.X + 1), p1.Y, (ushort)(p2.X - 1), p2.Y, p, lvl, brush);
+                QuadZ(p1.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), p, lvl, brush);
+                QuadZ(p2.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), p, lvl, brush);
             }
         }
     }

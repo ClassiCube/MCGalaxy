@@ -135,9 +135,10 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "You can only undo physics if you can use /physics."); return;
             }
             Command.all.Find("physics").Use(p, "0");
-            UndoPhysicsDrawOp drawOp = new UndoPhysicsDrawOp();
-            drawOp.seconds = seconds;
-            drawOp.Perform(null, p, p.level, null);
+            UndoPhysicsDrawOp op = new UndoPhysicsDrawOp();
+            op.seconds = seconds;
+            op.Perform(null, p, p.level, null);
+            
             Player.GlobalMessage("Physics were undone &b" + seconds + " %Sseconds");
             Server.s.Log( "Physics were undone &b" + seconds + " %Sseconds");
             p.level.Save(true);

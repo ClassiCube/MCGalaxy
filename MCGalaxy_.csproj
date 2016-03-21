@@ -406,6 +406,7 @@
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
     <Compile Include="Drawing\DrawOps\FillDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\LineDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\MazeDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PasteDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\ReplaceDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
