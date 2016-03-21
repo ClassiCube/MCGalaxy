@@ -128,6 +128,7 @@
     <Compile Include="Commands\Building\CmdPyramid.cs" />
     <Compile Include="Commands\Building\CmdRedo.cs" />
     <Compile Include="Commands\building\CmdReplaceBrush.cs" />
+    <Compile Include="Commands\building\CmdTriangle.cs" />
     <Compile Include="Commands\building\ReplaceCmd.cs" />
     <Compile Include="Commands\Building\CmdRestartPhysics.cs" />
     <Compile Include="Commands\Building\CmdSpheroid.cs" />
@@ -410,8 +411,9 @@
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TorusDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\TriangleDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
-    <Compile Include="Drawing\Vector3U16.cs" />
+    <Compile Include="Drawing\Vectors.cs" />
     <Compile Include="Economy\Awards.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
     <Compile Include="Economy\Economy.cs" />

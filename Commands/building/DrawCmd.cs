@@ -111,6 +111,7 @@ namespace MCGalaxy.Commands {
             public DrawMode mode;
             public byte type, extType;
             public ushort x, y, z;
+            public ushort x2, y2, z2; // for triangle
             public object data;
             public string message;
         }
