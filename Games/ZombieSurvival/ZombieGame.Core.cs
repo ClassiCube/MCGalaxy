@@ -313,7 +313,7 @@ namespace MCGalaxy.Games {
         }
         
         void ChooseNextLevel() {
-            if (queLevel) { ChangeLevel(nextLevel); return; } // TODO: show global message of 'x level was queued'
+            if (queLevel) { ChangeLevel(nextLevel); return; }
             if (!ChangeLevels) return;
             
             try

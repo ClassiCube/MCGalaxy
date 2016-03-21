@@ -141,7 +141,7 @@ namespace MCGalaxy.Games {
                 p.SendMessage("This map has &a" + CurrentLevel.Likes + 
                               " likes %Sand &c" + CurrentLevel.Dislikes + " dislikes");
                 p.SendCpeMessage(CpeMessageType.Status2, 
-                                 "%SPillaring " + (CurrentLevel.Pillaring ? "&aAllowed" : "&cForbidden") +
+                                 "%SPillaring " + (CurrentLevel.Pillaring ? "&aYes" : "&cNo") +
                                  "%S, Type is &a" + CurrentLevel.BuildType);
                 
                 if (CurrentLevel.Authors != "")
