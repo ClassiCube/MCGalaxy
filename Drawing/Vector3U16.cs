@@ -78,5 +78,9 @@ namespace MCGalaxy.Drawing {
         public static Vector3U16 operator - (Vector3U16 a, Vector3U16 b) {
             return new Vector3U16((ushort)(a.X - b.X), (ushort)(a.Y - b.Y), (ushort)(a.Z - b.Z));
         }
+        
+        public override string ToString() {
+            return X + "," + Y + "," + Z;
+        }
     }
 }

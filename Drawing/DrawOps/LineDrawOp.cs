@@ -30,30 +30,31 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            double dx = Math.Abs(x2 - x1) + 0.25, dy = Math.Abs(y2 - y1) + 0.25, dz = Math.Abs(z2 - z1) + 0.25;
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
+            double dx = Math.Abs(p2.X - p1.X) + 0.25, dy = Math.Abs(p2.Y - p1.Y) + 0.25, dz = Math.Abs(p2.Z - p1.Z) + 0.25;
             if (WallsMode) {
                 int baseLen = (int)Math.Ceiling(Math.Sqrt(dx * dx + dz * dz));
-                return Math.Min(baseLen, MaxLength) * (Math.Abs(y2 - y1) + 1);
+                return Math.Min(baseLen, MaxLength) * (Math.Abs(p2.Y - p1.Y) + 1);
             } else {
                 int baseLen = (int)Math.Ceiling(Math.Sqrt(dx * dx + dy * dy + dz * dz));
                 return Math.Min(baseLen, MaxLength);
             }
         }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
             List<FillPos> buffer = new List<FillPos>();
-            DrawLine(x1, y1, z1, MaxLength, x2, y2, z2, buffer);
+            DrawLine(p1.X, p1.Y, p1.Z, MaxLength, p2.X, p2.Y, p2.Z, buffer);
             if (WallsMode) {
-                ushort yy1 = y1, yy2 = y2;
-                y1 = Math.Min(yy1, yy2); y2 = Math.Max(yy1, yy2);
+                ushort yy1 = p1.Y, yy2 = p2.Y;
+                p1.Y = Math.Min(yy1, yy2); p2.Y = Math.Max(yy1, yy2);
             }
             
             for (int i = 0; i < buffer.Count; i++) {
                 FillPos pos = buffer[i];
                 if (WallsMode) {
-                    for (ushort yy = y1; yy <= y2; yy++)
+                    for (ushort yy = p1.Y; yy <= p2.Y; yy++)
                         PlaceBlock(p, lvl, pos.X, yy, pos.Z, brush);
                 } else {
                     PlaceBlock(p, lvl, pos.X, pos.Y, pos.Z, brush);

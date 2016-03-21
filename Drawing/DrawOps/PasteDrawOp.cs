@@ -29,16 +29,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
             return CopyState.Volume;
         }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vector3U16 p1 = marks[0];
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             // Adjust for the fact that paste origin may be outside the map.
-            short offX = (short)x1, offY = (short)y1, offZ = (short)z1;
+            short offX = (short)p1.X, offY = (short)p1.Y, offZ = (short)p1.Z;
             
             for (int i = 0; i < state.Blocks.Length; i++ ) {
                 ushort locX, locY, locZ;
@@ -65,17 +65,17 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
             return CopyState.Volume;
         }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vector3U16 p1 = marks[0];
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             ExtBlock[] include = Include, exclude = Exclude;
             // Adjust for the fact that paste origin may be outside the map.
-            short offX = (short)x1, offY = (short)y1, offZ = (short)z1;
+            short offX = (short)p1.X, offY = (short)p1.Y, offZ = (short)p1.Z;
             
             for (int i = 0; i < state.Blocks.Length; i++ ) {
                 ushort locX, locY, locZ;

@@ -65,14 +65,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
-        public abstract int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2);
+        public abstract int GetBlocksAffected(Level lvl, Vector3U16[] marks);
         
-        public abstract void Perform(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
-                                     Player p, Level lvl, Brush brush);
+        public abstract void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush);
         
-        public bool CanDraw(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2,
-                            Player p, out int affected) {
-            affected = GetBlocksAffected(p.level, x1, y1, z1, x2, y2, z2);
+        public bool CanDraw(Vector3U16[] marks, Player p, out int affected) {
+            affected = GetBlocksAffected(p.level, marks);
             if (affected > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
                 Player.SendMessage(p, "You cannot draw more than " + p.group.maxBlocks + ".");
@@ -129,19 +127,26 @@ namespace MCGalaxy.Drawing.Ops {
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                     ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            int affected = 0;
-            op.Origin = new Vector3U16(x1, y1, z1);
-            op.Min = Vector3U16.Min(x1, y1, z1, x2, y2, z2);
-            op.Max = Vector3U16.Max(x1, y1, z1, x2, y2, z2);
-            op.Level = p.level;
             if (op.MinMaxCoords) {
                 ushort xx1 = x1, yy1 = y1, zz1 = z1, xx2 = x2, yy2 = y2, zz2 = z2;
                 x1 = Math.Min(xx1, xx2); x2 = Math.Max(xx1, xx2);
                 y1 = Math.Min(yy1, yy2); y2 = Math.Max(yy1, yy2);
                 z1 = Math.Min(zz1, zz2); z2 = Math.Max(zz1, zz2);
             }
+            Vector3U16[] marks = new [] { new Vector3U16(x1, y1, z1), new Vector3U16(x2, y2, z2) };
+            return DoDrawOp(op, brush, p, marks);
+        }
+        
+        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, Vector3U16[] marks) {
+            op.Origin = marks[0]; op.Min = marks[0]; op.Max = marks[0];
+            for (int i = 1; i < marks.Length; i++) {
+                op.Min = Vector3U16.Min(op.Min, marks[i]);
+                op.Max = Vector3U16.Max(op.Max, marks[i]);
+            }
+            op.Level = p.level;
             
-            if (!op.CanDraw(x1, y1, z1, x2, y2, z2, p, out affected))
+            int affected = 0;
+            if (!op.CanDraw(marks, p, out affected))
                 return false;
             if (brush != null) {
                 const string format = "{0}({1}): affecting up to {2} blocks";
@@ -152,7 +157,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
-            op.Perform(x1, y1, z1, x2, y2, z2, p, p.level, brush);
+            op.Perform(marks, p, p.level, brush);
             Player[] players = PlayerInfo.Online.Items;
             if (needReveal) {
                 foreach (Player pl in players) {

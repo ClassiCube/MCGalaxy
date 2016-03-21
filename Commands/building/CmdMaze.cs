@@ -18,6 +18,7 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
+using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
@@ -128,18 +129,21 @@ namespace MCGalaxy.Commands
             CuboidWallsDrawOp drawOp = new CuboidWallsDrawOp();
             drawOp.method = DrawOp.MethodBlockChange;
             
-            SolidBrush brush = new SolidBrush(Block.staircasefull, 0);      
-            drawOp.Perform(minX, y, minZ, maxX, y, maxZ, p, p.level, brush);
+            SolidBrush brush = new SolidBrush(Block.staircasefull, 0);  
+            Vector3U16[] marks = { new Vector3U16(minX, y, minZ), new Vector3U16(maxX, y, maxZ) };
+            drawOp.Perform(marks, p, p.level, brush);
             brush = new SolidBrush(Block.leaf, 0);
-            drawOp.Perform(minX, (ushort)(y + 1), minZ, maxX, (ushort)(y + 2), maxZ, p, p.level, brush);
+            marks[0].Y = (ushort)(y + 1); marks[1].Y = (ushort)(y + 2);
+            drawOp.Perform(marks, p, p.level, brush);
             
             Player.SendMessage(p, "Maze painted. Build your entrance and exit yourself");
             randomizer = 0;
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/maze: generates a maze");
         }
+        
         private class CatchPos
         {
             public ushort X;

@@ -27,12 +27,11 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Fill"; } }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
             return Positions.Count;
         }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
             ushort x, y, z;
             foreach (int pos in Positions) {
                 lvl.IntToPos(pos, out x, out y, out z);

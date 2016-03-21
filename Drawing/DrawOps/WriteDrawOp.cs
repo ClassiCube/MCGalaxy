@@ -30,7 +30,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
             int blocks = 0;
             foreach (char c in Text) {
                 if ((int)c >= 256 || letters[(int)c] == null) {
@@ -45,14 +45,14 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         int dirX, dirZ;
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
-            if (Math.Abs(x2 - x1) > Math.Abs(z2 - z1))
-                dirX = x2 > x1? 1 : -1;
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+        	Vector3U16 p1 = marks[0], p2 = marks[1];
+            if (Math.Abs(p2.X - p1.X) > Math.Abs(p2.Z - p1.Z))
+                dirX = p2.X > p1.X? 1 : -1;
             else
-                dirZ = z2 > z1 ? 1 : -1;
+                dirZ = p2.Z > p1.Z ? 1 : -1;
             foreach (char c in Text)
-                DrawLetter(p, lvl, c, ref x1, y1, ref z1, brush);
+                DrawLetter(p, lvl, c, ref p1.X, p1.Y, ref p1.Z, brush);
         }
         
         void DrawLetter(Player p, Level lvl, char c, ref ushort x, ushort y, ref ushort z, Brush brush) {

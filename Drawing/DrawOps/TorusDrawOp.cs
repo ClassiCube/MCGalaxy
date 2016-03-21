@@ -24,23 +24,24 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Torus"; } }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            double rx = (x2 - x1) / 2.0 + 0.25, ry = (y2 - y1) / 2.0 + 0.25, rz = (z2 - z1) / 2.0 + 0.25;
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
+            double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;
             return (int)(2 * Math.PI * Math.PI * rTube * rTube * rCentre);
         }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
-            double cx = (x1 + x2) / 2.0, cy = (y1 + y2) / 2.0, cz = (z1 + z2) / 2.0;
-            double rx = (x2 - x1) / 2.0 + 0.25, ry = (y2 - y1) / 2.0 + 0.25, rz = (z2 - z1) / 2.0 + 0.25;
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
+            double cx = (p1.X + p2.X) / 2.0, cy = (p1.Y + p2.Y) / 2.0, cz = (p1.Z + p2.Z) / 2.0;
+            double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;
             
-            for (ushort yy = y1; yy <= y2; yy++)
-                for (ushort zz = z1; zz <= z2; zz++)
-                    for (ushort xx = x1; xx <= x2; xx++)
+            for (ushort yy = p1.Y; yy <= p2.Y; yy++)
+                for (ushort zz = p1.Z; zz <= p2.Z; zz++)
+                    for (ushort xx = p1.X; xx <= p2.X; xx++)
             {
-            	double dx = xx - cx, dy = yy - cy, dz = zz - cz;
+                double dx = xx - cx, dy = yy - cy, dz = zz - cz;
                 dx *= dx; dy *= dy; dz *= dz;
                 double dInner = rCentre - Math.Sqrt( dx + dz );
                 

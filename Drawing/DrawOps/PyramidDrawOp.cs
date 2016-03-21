@@ -33,35 +33,40 @@ namespace MCGalaxy.Drawing.Ops {
             return baseOp.DetermineDrawOpMethod(lvl, affected);
         }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+            Vector3U16 origP1 = marks[0], origP2 = marks[1];
+            Vector3U16 p1 = marks[0], p2 = marks[1];
             int total = 0;
             while (true) {
-                total += baseOp.GetBlocksAffected(lvl, x1, y1, z2, x2, y1, z2);
-                if (y1 >= lvl.Height || Math.Abs(x2 - x1) <= 1 || Math.Abs(z2 - z1) <= 1)
+                total += baseOp.GetBlocksAffected(lvl, marks);
+                if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
                     break;            
-                x1++; x2--;
-                z1++; z2--;
-                y1 = (ushort)(y1 + yDir);
+                p1.X++; p2.X--;
+                p1.Z++; p2.Z--;
+                p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
+                marks[0] = p1; marks[1] = p2;
             }
+            marks[0] = origP1; marks[1] = origP2;
             return total;
         }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
             while (true) {
-                baseOp.Perform(x1, y1, z1, x2, y1, z2, p, lvl, brush);
-                if (y1 >= lvl.Height || Math.Abs(x2 - x1) <= 1 || Math.Abs(z2 - z1) <= 1)
-                    break;                
-                x1++; x2--;
-                z1++; z2--;
-                y1 = (ushort)(y1 + yDir);
+                baseOp.Perform(marks, p, lvl, brush);
+                if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
+                    break;
+                p1.X++; p2.X--;
+                p1.Z++; p2.Z--;
+                p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
+                marks[0] = p1; marks[1] = p2;
             }
         }
     }
     
     public class PyramidSolidDrawOp : PyramidDrawOp {      
 
-        public PyramidSolidDrawOp() : base(new CuboidDrawOp(), 1) {        
+        public PyramidSolidDrawOp() : base(new CuboidDrawOp(), 1) {
         }
         
         public override string Name { get { return "Pyramid solid"; } }
@@ -69,13 +74,13 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class PyramidHollowDrawOp : PyramidDrawOp {      
 
-        public PyramidHollowDrawOp() : base(new CuboidWallsDrawOp(), 1) {        
+        public PyramidHollowDrawOp() : base(new CuboidWallsDrawOp(), 1) {
         }
         
         public override string Name { get { return "Pyramid hollow"; } }
     }
     
-    public class PyramidReverseDrawOp : PyramidDrawOp {      
+    public class PyramidReverseDrawOp : PyramidDrawOp {
 
         DrawOp wallOp;
         Brush airBrush;
@@ -86,16 +91,19 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Pyramid reverse"; } }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
             while (true) {
-                wallOp.Perform(x1, y1, z1, x2, y1, z2, p, lvl, brush);
-                if (y1 >= lvl.Height || Math.Abs(x2 - x1) <= 1 || Math.Abs(z2 - z1) <= 1)
-                    break;            
-                x1++; x2--;
-                z1++; z2--;
-                baseOp.Perform(x1, y1, z1, x2, y1, z2, p, lvl, airBrush);
-                y1 = (ushort)(y1 + yDir);
+                wallOp.Perform(marks, p, lvl, brush);
+                if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
+                    break;
+                p1.X++; p2.X--;
+                p1.Z++; p2.Z--;
+                marks[0] = p1; marks[1] = p2;
+                
+                baseOp.Perform(marks, p, lvl, airBrush);
+                p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
+                marks[0] = p1; marks[1] = p2;
             }
         }
     }

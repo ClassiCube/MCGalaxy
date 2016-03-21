@@ -30,15 +30,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Replace"; } }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
+            return (p2.X - p1.X + 1) * (p2.Y - p1.Y + 1) * (p2.Z - p1.Z + 1);
         }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
-            for (ushort y = y1; y <= y2; y++)
-                for (ushort z = z1; z <= z2; z++)
-                    for (ushort x = x1; x <= x2; x++)
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
                 byte tile = lvl.GetTile(x, y, z), extTile = 0;
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
@@ -59,15 +60,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "ReplaceNot"; } }
         
-        public override int GetBlocksAffected(Level lvl, ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            return (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
+        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
+            return (p2.X - p1.X + 1) * (p2.Y - p1.Y + 1) * (p2.Z - p1.Z + 1);
         }
         
-        public override void Perform(ushort x1, ushort y1, ushort z1, ushort x2,
-                                     ushort y2, ushort z2, Player p, Level lvl, Brush brush) {
-            for (ushort y = y1; y <= y2; y++)
-                for (ushort z = z1; z <= z2; z++)
-                    for (ushort x = x1; x <= x2; x++)
+        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vector3U16 p1 = marks[0], p2 = marks[1];
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
                 byte tile = lvl.GetTile(x, y, z), extTile = 0;
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
