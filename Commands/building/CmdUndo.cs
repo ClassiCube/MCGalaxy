@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands
@@ -57,7 +58,7 @@ namespace MCGalaxy.Commands
             }
 
             if (who != null)
-                UndoOnlinePlayer(p, seconds, parts[0], who);
+                UndoOnlinePlayer(p, seconds, who);
             else if (undoPhysics)
                 UndoLevelPhysics(p, seconds);
             else
@@ -82,21 +83,22 @@ namespace MCGalaxy.Commands
             return secs;
         }
         
-        void UndoOnlinePlayer(Player p, long seconds, string whoName, Player who) {
-            if (p != null) {
-                if (who.group.Permission > p.group.Permission && who != p) {
+        void UndoOnlinePlayer(Player p, long seconds, Player who) {
+            if (p != null && p != who) {
+                if (who.group.Permission > p.group.Permission) {
                     Player.SendMessage(p, "Cannot undo a user of higher or equal rank"); return;
                 }
-                if (who != p && (int)p.group.Permission < CommandOtherPerms.GetPerm(this, 1)) {
+                if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 1)) {
                     Player.SendMessage(p, "Only an " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 1)).name + "+ may undo other people's actions"); return;
                 }
             }
             
-            Level saveLevel = null;
-            PerformUndo(p, seconds, who.UndoBuffer, ref saveLevel);
-            bool foundUser = false;
-            UndoFile.UndoPlayer(p, whoName.ToLower(), seconds, ref foundUser);
-
+            UndoOnlineDrawOp op = new UndoOnlineDrawOp();
+            op.seconds = seconds;
+            op.who = who;
+            op.Perform(null, p, null, null);
+            
+            Level saveLevel = op.saveLevel;
             if (p == who) {
                 Player.SendMessage(p, "Undid your actions for the past &b" + seconds + " %Sseconds.");
             } else {
@@ -111,10 +113,12 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + "+"); return;
             }
 
-            bool foundUser = false;
-            UndoFile.UndoPlayer(p, whoName.ToLower(), seconds, ref foundUser);
+            UndoOfflineDrawOp op = new UndoOfflineDrawOp();
+            op.seconds = seconds;
+            op.whoName = whoName;
+            op.Perform(null, p, null, null);
 
-            if (foundUser) {
+            if (op.foundUser) {
                 Player.GlobalMessage(Server.FindColor(whoName) + whoName + "%S's actions for the past &b" + seconds + " %Sseconds were undone.");
                 Server.s.Log(whoName + "'s actions for the past " + seconds + " seconds were undone.");
                 p.level.Save(true);
@@ -131,97 +135,12 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "You can only undo physics if you can use /physics."); return;
             }
             Command.all.Find("physics").Use(p, "0");
-
-            if (p.level.UndoBuffer.Count != Server.physUndo) {
-                int count = p.level.currentUndo;
-                for (int i = count; i >= 0; i--) {
-                    try {
-                        if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
-                    } catch { }
-                }
-            } else {
-                int count = p.level.currentUndo;
-                for (int i = count; i >= 0; i--) {
-                    try {
-                        if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
-                    } catch { }
-                }
-                for (int i = p.level.UndoBuffer.Count - 1; i > count; i--) {
-                    try {
-                        if (!CheckBlockPhysics(p, seconds, i, p.level.UndoBuffer[i])) break;
-                    } catch { }
-                }
-            }
-
+            UndoPhysicsDrawOp drawOp = new UndoPhysicsDrawOp();
+            drawOp.seconds = seconds;
+            drawOp.Perform(null, p, p.level, null);
             Player.GlobalMessage("Physics were undone &b" + seconds + " %Sseconds");
             Server.s.Log( "Physics were undone &b" + seconds + " %Sseconds");
             p.level.Save(true);
-        }
-        
-        static void PerformUndo(Player p, long seconds, UndoCache cache, ref Level saveLvl) {
-            UndoCacheNode node = cache.Tail;
-            if (node == null) return;
-            
-            while (node != null) {
-                Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl == null) { node = node.Prev; continue; }
-                saveLvl = lvl;
-                List<UndoCacheItem> items = node.Items;
-                BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-                
-                for (int i = items.Count - 1; i >= 0; i--) {
-                    UndoCacheItem item = items[i];
-                    ushort x, y, z;
-                    node.Unpack(item.Index, out x, out y, out z);
-                    DateTime time = node.BaseTime.AddTicks((item.TimeDelta + seconds) * TimeSpan.TicksPerSecond);
-                    if (time < DateTime.UtcNow) { buffer.CheckIfSend(true); return; }
-                    
-                    byte b = lvl.GetTile(x, y, z);
-                    byte newTile = 0, newExtTile = 0;
-                    item.GetNewExtBlock(out newTile, out newExtTile);
-                    if (b == newTile || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
-                        Player.UndoPos uP = default(Player.UndoPos);
-                        byte extType = 0;
-                        if (b == Block.custom_block) extType = lvl.GetExtTile(x, y, z);
-                        byte tile = 0, extTile = 0;
-                        item.GetExtBlock(out tile, out extTile);
-                    
-                        if (lvl.DoBlockchange(p, x, y, z, tile, extTile)) {
-                            buffer.Add(lvl.PosToInt(x, y, z), tile, extTile);
-                            buffer.CheckIfSend(false);
-                        }
-                        
-                        uP.newtype = tile; uP.newExtType = extTile;
-                        uP.type = b; uP.extType = extType;
-                        uP.x = x; uP.y = y; uP.z = z;
-                        uP.mapName = node.MapName;
-                        time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
-                        uP.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
-                        if (p != null) p.RedoBuffer.Add(lvl, uP);
-                    }                   
-                }
-                buffer.CheckIfSend(true);
-                node = node.Prev;
-            }
-        }
-        
-        bool CheckBlockPhysics(Player p, long seconds, int i, Level.UndoPos undo) {
-            byte b = p.level.GetTile(undo.index);
-            DateTime time = Server.StartTime.AddTicks((undo.flags >> 2) * TimeSpan.TicksPerSecond);
-            if (time.AddTicks(seconds * TimeSpan.TicksPerSecond) < DateTime.UtcNow) return false;
-            
-            byte newType = (undo.flags & 2) != 0 ? Block.custom_block : undo.newRawType;
-            if (b == newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
-                ushort x, y, z;
-                p.level.IntToPos(undo.index, out x, out y, out z);
-                int undoIndex = p.level.currentUndo;
-                p.level.currentUndo = i;                
-                p.level.currentUndo = undoIndex;
-                byte oldType = (undo.flags & 1) != 0 ? Block.custom_block : undo.oldRawType;
-                byte oldExtType = (undo.flags & 1) != 0 ? undo.oldRawType : (byte)0;
-                p.level.Blockchange(x, y, z, oldType, true, "", oldExtType, false);
-            }
-            return true;
         }
 
         public override void Help(Player p) {

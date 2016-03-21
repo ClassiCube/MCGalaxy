@@ -412,6 +412,7 @@
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TorusDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TriangleDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\UndoDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
     <Compile Include="Drawing\Vectors.cs" />
     <Compile Include="Economy\Awards.cs" />
