@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             
             if (args[0].CaselessEq("author") || args[0].CaselessEq("authors")) {
             	p.level.Authors = args[1].Replace(" ", "%S, ");
-            	Player.SendMessage(p, "Sets the authors of the map to: " + args[1];
+            	Player.SendMessage(p, "Sets the authors of the map to: " + args[1]);
             } else if (args[0].CaselessEq("pillar") || args[0].CaselessEq("pillaring")) {
                 bool value;
                 if (!bool.TryParse(args[1], out value)) {

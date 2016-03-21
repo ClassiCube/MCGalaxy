@@ -18,9 +18,9 @@
 using System;
 
 namespace MCGalaxy.Commands {
-	
+    
     public sealed class CmdAka : Command {
-		
+        
         public override string name { get { return "aka"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Games; } }
@@ -32,12 +32,13 @@ namespace MCGalaxy.Commands {
             Player[] players = PlayerInfo.Online.Items;
             
             foreach (Player pl in players) {
-            	if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.referee) continue;
+                if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.referee) continue;
                 
                 p.SendDespawn(pl.id);
                 string name = null;
-                if (pl.infected && showInfected) {
-                    name = Server.zombie.ZombieName != "" ? Colors.red + Server.zombie.ZombieName : Colors.red + pl.name;
+                if (pl.infected) {
+                    name = (Server.zombie.ZombieName != "" && showInfected) ? 
+                        Colors.red + Server.zombie.ZombieName : Colors.red + pl.name;
                 } else {
                     name = pl.color + pl.name;
                 }

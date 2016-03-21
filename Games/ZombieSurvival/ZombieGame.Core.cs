@@ -65,15 +65,7 @@ namespace MCGalaxy.Games {
             List<Player> players = DoRoundCountdown();
             RoundInProgress = true;
             Random random = new Random();
-            
-        pickFirst:
-            int firstinfect = random.Next(players.Count());
-            Player first = null;
-            if (queZombie) first = PlayerInfo.Find(nextZombie);
-            else first = players[firstinfect];
-            queZombie = false;
-
-            if (!first.level.name.CaselessEq(CurrentLevelName)) goto pickFirst;
+            Player first = PickFirstZombie(random, players);
 
             CurrentLevel.ChatLevel(first.color + first.name + " %Sstarted the infection!");
             first.infected = true;
@@ -104,11 +96,17 @@ namespace MCGalaxy.Games {
             }
         }
         
+        Player PickFirstZombie(Random random, List<Player> players) {
+            Player first = null;            
+            do {    
+                first = QueuedZombie != null ? 
+                    PlayerInfo.Find(QueuedZombie) : players[random.Next(players.Count)];
+            } while (first == null || !first.level.name.CaselessEq(CurrentLevelName));
+            return first;
+        }
+        
         List<Player> DoRoundCountdown() {
             while (true) {
-                string logMessage = ChangeLevels + " " + Server.ZombieOnlyServer + " " + UseLevelList;
-                Server.s.Log(logMessage);
-                
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
                 CurrentLevel.ChatLevel("%4Round Start:%f 30...");
                 Thread.Sleep(20000); if (!Server.ZombieModeOn) return null;
@@ -142,8 +140,17 @@ namespace MCGalaxy.Games {
         
         void DoCoreGame(Random random) {
             Player[] alive = null;
+            string lastTimespan = null;
             while ((alive = Alive.Items).Length > 0) {
                 Player[] infected = Infected.Items;
+                // Update the round time left shown in the top right
+                int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds; 
+                string timespan = GetTimespan(seconds);
+                if (lastTimespan != timespan) {
+                    UpdateAllPlayerStatus(timespan);
+                    lastTimespan = timespan;
+                }
+                    
                 foreach (Player pKiller in infected) {
                     pKiller.infected = true;
                     UpdatePlayerColor(pKiller, Colors.red);
@@ -181,18 +188,18 @@ namespace MCGalaxy.Games {
                                 Colors.red + pKiller.DisplayName + Colors.yellow,
                                 Colors.red + pAlive.DisplayName + Colors.yellow));
                             
-                            CheckAssertHuman(pAlive);
+                            CheckHumanPledge(pAlive);
                             CheckBounty(pAlive, pKiller);
                             UpdatePlayerColor(pAlive, Colors.red);
                         }
                     }
                     if (aliveChanged) alive = Alive.Items;
                 }
-                Thread.Sleep(50);
+                Thread.Sleep(25);
             }
         }
         
-        void CheckAssertHuman(Player pAlive) {
+        void CheckHumanPledge(Player pAlive) {
             if (!pAlive.pledgeSurvive) return;
             pAlive.pledgeSurvive = false;
             CurrentLevel.ChatLevel(pAlive.FullName + "%Sbroke their pledge of not being infected.");
@@ -255,7 +262,7 @@ namespace MCGalaxy.Games {
             } else {
                 foreach (Player pl in alive) {
                     if (pl.pledgeSurvive) {
-                        pl.SendMessage("You received &a5 %3" + Server.moneys + 
+                        pl.SendMessage("You received &a5 %3" + Server.moneys +
                                        "%s for successfully pledging that you would survive.");
                         pl.money += 5;
                         pl.OnMoneyChanged();
@@ -313,7 +320,7 @@ namespace MCGalaxy.Games {
         }
         
         void ChooseNextLevel() {
-            if (queLevel) { ChangeLevel(nextLevel); return; }
+            if (QueuedLevel != null) { ChangeLevel(QueuedLevel); return; }
             if (!ChangeLevels) return;
             
             try

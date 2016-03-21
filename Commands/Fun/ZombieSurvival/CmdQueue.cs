@@ -38,13 +38,13 @@ namespace MCGalaxy.Commands
                 if (who == null) return;
                 
                 p.SendMessage(value + " was queued.");
-                Server.zombie.queZombie = true;
-                Server.zombie.nextZombie = value;
+                Server.zombie.QueuedZombie = value;
             } else if (args[0].CaselessEq("level")) {
                 if (LevelInfo.ExistsOffline(value)) {
                     p.SendMessage(value + " was queued.");
-                    Server.zombie.queLevel = true;
-                    Server.zombie.nextLevel = value.ToLower();
+                    Server.zombie.QueuedLevel = value.ToLower();
+                    if (Server.zombie.CurrentLevel != null)
+                        Server.zombie.CurrentLevel.ChatLevel(value + " was queued as the next map.");
                 } else {
                     p.SendMessage("Level does not exist.");
                 }

@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCLawl Team - 
+    Copyright 2010 MCLawl Team -
     Created by Snowl (David D.) and Cazzar (Cayde D.)
 
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -15,7 +15,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -78,16 +78,20 @@ namespace MCGalaxy.Games {
         /// <summary> List of dead/infected players. </summary>
         public VolatileArray<Player> Infected = new VolatileArray<Player>(false);
         
-        static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}", 
-            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}", 
-            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}", 
+        /// <summary> Name of the player queued to be the first zombie in the next round. </summary>
+        public string QueuedZombie;
+        
+        /// <summary> Name of the level queued to be used for the next round. </summary>
+        public string QueuedLevel;
+        
+        static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
+            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
+            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
             "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
             "{0} transplanted {1}'s living brain" };
         
         internal bool noRespawn = true, noPillaring = true;
         internal string ZombieName = "";
-        internal bool queLevel = false, queZombie = false;
-        internal string nextZombie = "", nextLevel = "";
         internal bool ChangeLevels = true, UseLevelList = false;
         
         internal List<string> LevelList = new List<string>();
@@ -168,8 +172,7 @@ namespace MCGalaxy.Games {
             }
             
             CurrentLevelName = next;
-            queLevel = false;
-            nextLevel = "";
+            QueuedLevel = null;
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
             CurrentLevel = LevelInfo.Find(next);
             if (Server.ZombieOnlyServer)
@@ -191,9 +194,9 @@ namespace MCGalaxy.Games {
 
         public void ResetState() {
             Status = ZombieGameStatus.NotStarted;
-            MaxRounds = 0; 
-            initialChangeLevel = false; 
-            Server.ZombieModeOn = false; 
+            MaxRounds = 0;
+            initialChangeLevel = false;
+            Server.ZombieModeOn = false;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
@@ -209,16 +212,42 @@ namespace MCGalaxy.Games {
         }
         
         void UpdatePlayerStatus(Player p) {
-            string message = "&a{0} %Salive, &c{1} %Sinfected";
-            message = String.Format(message, Alive.Count, Infected.Count);
-            p.SendCpeMessage(CpeMessageType.Status1, message, true);
+            int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
+            string status = GetStatusMessage(GetTimespan(seconds));
+            p.SendCpeMessage(CpeMessageType.Status1, status, true);
         }
         
         internal void UpdateAllPlayerStatus() {
+            int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
+            UpdateAllPlayerStatus(GetTimespan(seconds));
+        }
+        
+        internal void UpdateAllPlayerStatus(string timespan) {
+            string message = GetStatusMessage(timespan);
             Player[] players = Alive.Items;
-            foreach (Player p in players) UpdatePlayerStatus(p);
+            foreach (Player p in players)
+                p.SendCpeMessage(CpeMessageType.Status1, message, true);
             players = Infected.Items;
-            foreach (Player p in players) UpdatePlayerStatus(p);
+            foreach (Player p in players)
+                p.SendCpeMessage(CpeMessageType.Status1, message, true);
+        }
+
+        string GetStatusMessage(string timespan) {
+            if (timespan.Length > 0) {
+                const string format = "&a{0} %Salive, &c{1} %Sinfected ({2})";                
+                return String.Format(format, Alive.Count, Infected.Count, timespan);
+            } else {
+                const string format = "&a{0} %Salive, &c{1} %Sinfected";                
+                return String.Format(format, Alive.Count, Infected.Count);
+            }
+        }
+
+        string GetTimespan(int seconds) {
+            if (seconds < 0) return "";           
+            if (seconds <= 10) return "10 secs left";
+            if (seconds <= 30) return "30 secs left";
+            if (seconds <= 60) return "1 min left";
+            return ((seconds + 59) / 60) + " mins left";
         }
     }
 }

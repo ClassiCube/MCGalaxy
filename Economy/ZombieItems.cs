@@ -53,7 +53,7 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "QueueLevel"; } }
         
         protected override void OnBuyCommand(Player p, string message, string[] args) {
-            if (Server.zombie.queLevel) {
+            if (Server.zombie.QueuedLevel != null) {
                 Player.SendMessage(p, "Someone else has already queued a level."); return;
             }
             if (!LevelInfo.ExistsOffline(message)) {

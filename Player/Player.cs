@@ -341,8 +341,8 @@ namespace MCGalaxy {
             byte head = level.GetTile(x, y, z);
             byte feet = level.GetTile(x, (ushort)(y - 1), z);
 
-            return (Block.Walkthrough(Block.Convert(head)) || head == Block.Zero)
-                && (Block.Walkthrough(Block.Convert(feet)) || feet == Block.Zero);
+            return !(Block.Walkthrough(Block.Convert(head)) || head == Block.Zero)
+                && !(Block.Walkthrough(Block.Convert(feet)) || feet == Block.Zero);
         }
 
         //This is so that plugin devs can declare a player without needing a socket..
@@ -494,9 +494,9 @@ namespace MCGalaxy {
                 if (p.level != other.level || (p.hidden && !self)) continue;
                 
                 if (p != other) {
-                    if (Server.ZombieModeOn && !other.aka) {
+                    if (Server.ZombieModeOn) {
                         if (p.infected) {
-                            if (Server.zombie.ZombieName != "")
+                            if (Server.zombie.ZombieName != "" && !other.aka)
                                 other.SendSpawn(p.id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
                             else
                                 other.SendSpawn(p.id, Colors.red + p.name + possession, x, y, z, rotx, roty);

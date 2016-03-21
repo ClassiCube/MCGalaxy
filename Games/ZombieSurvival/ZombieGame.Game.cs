@@ -120,7 +120,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedServer(Player p) {
-            if (Status == ZombieGameStatus.NotStarted) return;
+            if (Status == ZombieGameStatus.NotStarted || Server.ZombieOnlyServer) return;
             Player.SendMessage(p, "A Zombie Survival game is running! " +
                                "Type %T/g " + CurrentLevelName + " %Sto join.");
         }
@@ -146,14 +146,14 @@ namespace MCGalaxy.Games {
                 
                 if (CurrentLevel.Authors != "")
                     p.SendMessage("It was created by " + CurrentLevel.Authors);
-                p.SendCpeMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
+                p.SendCpeMessage(CpeMessageType.Status3, "%SYou have &a" + p.money + " %S" + Server.moneys);
                 UpdatePlayerStatus(p);
                 return;
             }
             
-            p.SendCpeMessage(CpeMessageType.BottomRight1, "");
             p.SendCpeMessage(CpeMessageType.Status1, "");
             p.SendCpeMessage(CpeMessageType.Status2, "");
+            p.SendCpeMessage(CpeMessageType.Status3, "");
             Alive.Remove(p);
             Infected.Remove(p);
         }
@@ -161,7 +161,7 @@ namespace MCGalaxy.Games {
         public override void PlayerMoneyChanged(Player p) {
             if (Status == ZombieGameStatus.NotStarted 
                 || !p.level.name.CaselessEq(CurrentLevelName)) return;
-            p.SendCpeMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
+            p.SendCpeMessage(CpeMessageType.Status3, "%SYou have &a" + p.money + " %S" + Server.moneys);
         }
     }
 }
