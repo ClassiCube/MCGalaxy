@@ -35,17 +35,13 @@ using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy
 {
-    public enum LevelPermission //int is default
-    {
-        Banned = -20,
-        Guest = 0,
-        Builder = 30,
-        AdvBuilder = 50,
-        Operator = 80,
-        Admin = 100,
-        Nobody = 120,
-        Null = 150
+    public enum LevelPermission {
+        Banned = -20, Guest = 0, Builder = 30,
+        AdvBuilder = 50, Operator = 80,
+        Admin = 100, Nobody = 120, Null = 150
     }
+	
+    public enum BuildType { Normal, ModifyOnly, NoModify };
 
     public sealed partial class Level : IDisposable
     {
@@ -208,7 +204,10 @@ namespace MCGalaxy
         public int Likes, Dislikes;
         public string Authors = "";
         public bool Pillaring = !Server.zombie.noPillaring;
-
+        public BuildType BuildType = BuildType.Normal;
+        public bool CanPlace { get { return Buildable && BuildType != BuildType.NoModify; } }
+        public bool CanDelete { get { return Deletable && BuildType != BuildType.NoModify; } }
+        
         public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false)
         {
             //onLevelSave += null;

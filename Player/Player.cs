@@ -198,7 +198,7 @@ namespace MCGalaxy {
         public int playersInfected = 0;
         internal string lastSpawnColor = "";
         internal bool ratedMap = false;
-        internal bool assertingSurvive = false;
+        internal bool pledgeSurvive = false;
 
         //Tnt Wars
         public bool PlayingTntWars = false;
@@ -341,9 +341,8 @@ namespace MCGalaxy {
             byte head = level.GetTile(x, y, z);
             byte feet = level.GetTile(x, (ushort)(y - 1), z);
 
-            if (Block.Walkthrough(Block.Convert(head)) && Block.Walkthrough(Block.Convert(feet)))
-                return false;
-            return Block.Convert(head) != Block.Zero && Block.Convert(head) != Block.op_air;
+            return (Block.Walkthrough(Block.Convert(head)) || head == Block.Zero)
+                && (Block.Walkthrough(Block.Convert(feet)) || feet == Block.Zero);
         }
 
         //This is so that plugin devs can declare a player without needing a socket..

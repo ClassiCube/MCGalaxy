@@ -24,6 +24,14 @@ namespace MCGalaxy.Games {
         
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte tile, byte b) {
+            
+            if (CurrentLevel.BuildType == BuildType.NoModify) {
+                p.RevertBlock(x, y, z); return true;
+            } else if (CurrentLevel.BuildType == BuildType.ModifyOnly 
+                       && p.level.GetTile(x, y, z) == Block.op_air) {
+                p.RevertBlock(x, y, z); return true;
+            }
+            
             if (action == 1 && !CurrentLevel.Pillaring && !p.referee) {
                 if (p.lastYblock == y - 1 && p.lastXblock == x && p.lastZblock == z ) {
                     p.blocksStacked++;
@@ -113,8 +121,8 @@ namespace MCGalaxy.Games {
         
         public override void PlayerJoinedServer(Player p) {
             if (Status == ZombieGameStatus.NotStarted) return;
-            Player.SendMessage(p, "There is a Zombie Survival game currently in-progress! " +
-                               "Join it by typing /g " + CurrentLevelName);
+            Player.SendMessage(p, "A Zombie Survival game is running! " +
+                               "Type %T/g " + CurrentLevelName + " %Sto join.");
         }
         
         public override void PlayerJoinedLevel(Player p, Level oldLvl) {
@@ -132,6 +140,10 @@ namespace MCGalaxy.Games {
                     p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
                 p.SendMessage("This map has &a" + CurrentLevel.Likes + 
                               " likes %Sand &c" + CurrentLevel.Dislikes + " dislikes");
+                p.SendCpeMessage(CpeMessageType.Status2, 
+                                 "%SPillaring " + (CurrentLevel.Pillaring ? "&aAllowed" : "&cForbidden") +
+                                 "%S, Type is &a" + CurrentLevel.BuildType);
+                
                 if (CurrentLevel.Authors != "")
                     p.SendMessage("It was created by " + CurrentLevel.Authors);
                 p.SendCpeMessage(CpeMessageType.BottomRight1, "%SYou have &a" + p.money + " %S" + Server.moneys);
@@ -141,6 +153,7 @@ namespace MCGalaxy.Games {
             
             p.SendCpeMessage(CpeMessageType.BottomRight1, "");
             p.SendCpeMessage(CpeMessageType.Status1, "");
+            p.SendCpeMessage(CpeMessageType.Status2, "");
             Alive.Remove(p);
             Infected.Remove(p);
         }

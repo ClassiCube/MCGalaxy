@@ -239,18 +239,15 @@ namespace MCGalaxy
         public void SendCurrentBlockPermissions() {
             byte count = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
             for (byte i = 0; i < count; i++) {
-                bool canPlace = Block.canPlace(this, i);
-                bool canDelete = canPlace;
-                
-                if (!level.Buildable) canPlace = false;
-                if (!level.Deletable) canDelete = false;
+                bool canPlace = Block.canPlace(this, i) && level.CanPlace;
+                bool canDelete = Block.canPlace(this, i) && level.CanDelete;
                 SendSetBlockPermission(i, canPlace, canDelete);
             }
             
             if (!hasBlockDefs) return;
             for (int i = count; i < 256; i++) {
                 if (level.CustomBlockDefs[i] == null) continue;
-                SendSetBlockPermission((byte)i, level.Buildable, level.Deletable);
+                SendSetBlockPermission((byte)i, level.CanPlace, level.CanDelete);
             }
         }
     }

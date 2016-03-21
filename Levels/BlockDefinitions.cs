@@ -156,7 +156,7 @@ namespace MCGalaxy {
                     SendDefineBlock(pl, def);
                 
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
-                    pl.SendSetBlockPermission(def.BlockID, pl.level.Buildable, pl.level.Deletable);
+                    pl.SendSetBlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete);
             }
             Save(global, level);
         }
@@ -197,7 +197,7 @@ namespace MCGalaxy {
                     SendDefineBlock(pl, def);
                 
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
-                    pl.SendSetBlockPermission(def.BlockID, pl.level.Buildable, pl.level.Deletable);
+                    pl.SendSetBlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete);
             }
         }
         

@@ -30,17 +30,17 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
         	if (p == null) { MessageInGameOnly(p); return; }
-        	if (p.assertingSurvive) {
-        		Player.SendMessage(p, "You cannot un-assert that you will be infected."); return;
+        	if (p.pledgeSurvive) {
+        		Player.SendMessage(p, "You cannot un-pledge that you will be infected."); return;
         	}
         	
-        	p.assertingSurvive = true;
+        	p.pledgeSurvive = true;
         	Server.zombie.CurrentLevel
-        		.ChatLevel(p.FullName + " %Sasserts that they will not succumb to the infection!");
+        		.ChatLevel(p.FullName + " %Spledges that they will not succumb to the infection!");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/human %H- asserts that you will not be infected.");
+            Player.SendMessage(p, "%T/human %H- pledges that you will not be infected.");
             Player.SendMessage(p, "%HIf you survive, you receive an &aextra 5 %3" + Server.moneys);
             Player.SendMessage(p, "%HHowever, if you are infected, you will &close 2 %3" + Server.moneys);
         }

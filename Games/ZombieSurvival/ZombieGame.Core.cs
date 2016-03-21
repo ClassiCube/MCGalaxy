@@ -193,9 +193,9 @@ namespace MCGalaxy.Games {
         }
         
         void CheckAssertHuman(Player pAlive) {
-            if (!pAlive.assertingSurvive) return;
-            pAlive.assertingSurvive = false;
-            CurrentLevel.ChatLevel(pAlive.FullName + "%Sfailed the challenge of not being infected.");
+            if (!pAlive.pledgeSurvive) return;
+            pAlive.pledgeSurvive = false;
+            CurrentLevel.ChatLevel(pAlive.FullName + "%Sbroke their pledge of not being infected.");
             pAlive.money = Math.Max(pAlive.money - 2, 0);
             pAlive.OnMoneyChanged();
         }
@@ -254,9 +254,9 @@ namespace MCGalaxy.Games {
                     ResetPlayer(pl, ref playersString);
             } else {
                 foreach (Player pl in alive) {
-                    if (pl.assertingSurvive) {
+                    if (pl.pledgeSurvive) {
                         pl.SendMessage("You received &a5 %3" + Server.moneys + 
-                                       "%s for successfully asserting that you would survive.");
+                                       "%s for successfully pledging that you would survive.");
                         pl.money += 5;
                         pl.OnMoneyChanged();
                     }

@@ -21,6 +21,8 @@ using System.IO.Compression;
 
 namespace MCGalaxy.Levels.IO {
 
+    //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
+    //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
     public static class LvlFile {
         
         public static void Save(Level level, string file) {

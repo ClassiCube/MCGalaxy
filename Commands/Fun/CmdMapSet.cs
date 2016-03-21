@@ -34,8 +34,9 @@ namespace MCGalaxy.Commands {
             if (message == "") {
             	Player.SendMessage(p, "Map authors: " + p.level.Authors);
             	Player.SendMessage(p, "Pillaring allowed: " + p.level.Pillaring);
+            	Player.SendMessage(p, "Build type: " + p.level.BuildType);
             }
-            p.level.Authors = message.Replace(" ", "%S, ")
+            p.level.Authors = message.Replace(" ", "%S, ");
             Player.SendMessage(p, "Sets the authors of the map to: " + message);
         }
         
