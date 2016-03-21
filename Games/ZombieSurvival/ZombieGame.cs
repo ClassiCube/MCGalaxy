@@ -219,7 +219,6 @@ namespace MCGalaxy.Games {
         
         internal void UpdateAllPlayerStatus() {
             int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-            Server.s.Log("UPDATE ALL - " + seconds);
             UpdateAllPlayerStatus(GetTimespan(seconds));
         }
         

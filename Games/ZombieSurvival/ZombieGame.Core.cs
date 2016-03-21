@@ -305,9 +305,9 @@ namespace MCGalaxy.Games {
                 }
                 pl.OnMoneyChanged();
             }
-            Alive.Clear();
-            Infected.Clear();
             UpdateAllPlayerStatus();
+            Alive.Clear();
+            Infected.Clear();         
         }
 
         void ResetPlayer(Player p, ref string playersString) {

@@ -2616,7 +2616,7 @@ namespace MCGalaxy.Gui
             this.grpAdvanced.Controls.Add(this.chkPublic);
             this.grpAdvanced.Controls.Add(this.chkVerify);
             this.grpAdvanced.Controls.Add(this.chkLogBeat);
-            this.grpAdvanced.Location = new System.Drawing.Point(8, 253);
+            this.grpAdvanced.Location = new System.Drawing.Point(8, 263);
             this.grpAdvanced.Name = "grpAdvanced";
             this.grpAdvanced.Size = new System.Drawing.Size(364, 104);
             this.grpAdvanced.TabIndex = 42;
@@ -2869,7 +2869,7 @@ namespace MCGalaxy.Gui
             this.grpPlayers.Controls.Add(this.chkAgreeToRules);
             this.grpPlayers.Controls.Add(this.label35);
             this.grpPlayers.Controls.Add(this.numGuests);
-            this.grpPlayers.Location = new System.Drawing.Point(8, 153);
+            this.grpPlayers.Location = new System.Drawing.Point(8, 168);
             this.grpPlayers.Name = "grpPlayers";
             this.grpPlayers.Size = new System.Drawing.Size(409, 85);
             this.grpPlayers.TabIndex = 46;
