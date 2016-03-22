@@ -33,27 +33,32 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         public override void Use(Player p, string message) {
-            if (message.Length > 0 && !int.TryParse(message, out MazeDrawOp.randomizer)) {
+        	CatchPos cpos = default(CatchPos);
+            if (message.Length > 0 && !int.TryParse(message, out cpos.randomizer)) {
                 Help(p); return;
             }
         	
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            Player.SendMessage(p, "Place two blocks to determine the edges.");           
             p.ClearBlockchange();
+            p.blockchangeObject = cpos;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            p.blockchangeObject = new Vector3U16(x, y, z);
+            CatchPos cpos = (CatchPos)p.blockchangeObject;
+            cpos.x = x; cpos.y = y; cpos.z = z;
+            p.blockchangeObject = cpos;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
         
         void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Vector3U16 cpos = (Vector3U16)p.blockchangeObject;
-            DrawOp drawOp = new MazeDrawOp();
+            CatchPos cpos = (CatchPos)p.blockchangeObject;
+            MazeDrawOp drawOp = new MazeDrawOp();
+            drawOp.randomizer = cpos.randomizer;
             
-            if (!DrawOp.DoDrawOp(drawOp, null, p, cpos.X, cpos.Y, cpos.Z, x, y, z))
+            if (!DrawOp.DoDrawOp(drawOp, null, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
@@ -63,5 +68,7 @@ namespace MCGalaxy.Commands
         	Player.SendMessage(p, "%T/maze");
         	Player.SendMessage(p, "%HGenerates a random maze between two points.");
         }
+        
+        struct CatchPos { public ushort x, y, z; public int randomizer; }
     }
 }
