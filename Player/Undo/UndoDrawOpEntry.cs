@@ -30,12 +30,14 @@ namespace MCGalaxy.Util {
         
         public void SetStart(Player p) {
             StartNode = p.UndoBuffer.Tail;
-            StartIndex = StartNode.Items.Count;
+            if (StartNode != null)
+                StartIndex = StartNode.Items.Count;
         }
         
         public void SetEnd(Player p) {
             EndNode = p.UndoBuffer.Tail;
-            EndIndex = EndNode.Items.Count;
+            if (EndNode != null)
+                EndIndex = EndNode.Items.Count;
         }
         
         public bool IsValid(Player p) {

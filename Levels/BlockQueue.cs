@@ -24,6 +24,7 @@ namespace MCGalaxy {
         public static int blockupdates = 250;
         static System.Timers.Timer blocktimer = new System.Timers.Timer(100);
         static bool started = false;
+        static BufferedBlockSender bulkSender = new BufferedBlockSender(null);
 
         public static void Start() {
             blocktimer.Elapsed += delegate {
@@ -33,6 +34,7 @@ namespace MCGalaxy {
                     Level[] loaded = LevelInfo.Loaded.Items;
                     foreach (Level l in loaded)
                         ProcessLevelBlocks(l);
+                    bulkSender.level = null;
                 } catch (Exception ex) {
                     Server.ErrorLog(ex);
                     throw;
@@ -56,30 +58,35 @@ namespace MCGalaxy {
             p.level.blockqueue.Add(item);
         }
         
-        static void ProcessLevelBlocks(Level l) {
+        static void ProcessLevelBlocks(Level lvl) {
             try {
-                if (l.blockqueue.Count < 1) return;
+                if (lvl.blockqueue.Count < 1) return;
+                bulkSender.level = lvl;
                 int count = blockupdates;
-                if (l.blockqueue.Count < blockupdates || l.players.Count == 0)
-                    count = l.blockqueue.Count;
+                if (lvl.blockqueue.Count < blockupdates || lvl.players.Count == 0)
+                    count = lvl.blockqueue.Count;
                 Level.BlockPos bP = default(Level.BlockPos);
 
                 for (int c = 0; c < count; c++) {
-                    block item = l.blockqueue[c];
+                    block item = lvl.blockqueue[c];
                     bP.name = item.p.name;
                     ushort x, y, z;
-                    l.IntToPos(item.index, out x, out y, out z);
+                    lvl.IntToPos(item.index, out x, out y, out z);
                     
                     bP.index = item.index;
                     bP.SetData(item.type, item.extType, item.type == 0);
-                    l.Blockchange(item.p, x, y, z, item.type, item.extType);
-                    l.blockCache.Add(bP);
+                    if (lvl.DoBlockchange(item.p, x, y, z, item.type, item.extType)) {
+                        bulkSender.Add(item.index, item.type, item.extType);
+                        bulkSender.CheckIfSend(false);
+                        lvl.blockCache.Add(bP);
+                    }                    
                 }
-                l.blockqueue.RemoveRange(0, count);
+                bulkSender.CheckIfSend(true);
+                lvl.blockqueue.RemoveRange(0, count);
             } catch (Exception e)  {
                 Server.s.ErrorCase("error:" + e);
-                Server.s.Log(String.Format("Block cache failed for map: {0}. {1} lost.", l.name, l.blockqueue.Count));
-                l.blockqueue.Clear();
+                Server.s.Log(String.Format("Block cache failed for map: {0}. {1} lost.", lvl.name, lvl.blockqueue.Count));
+                lvl.blockqueue.Clear();
             }
         }
 

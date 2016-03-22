@@ -24,7 +24,7 @@ namespace MCGalaxy {
         int[] indices = new int[256];
         byte[] types = new byte[256];
         int count = 0;
-        Level level;
+        public Level level;
         
         public BufferedBlockSender(Level level) {
             this.level = level;

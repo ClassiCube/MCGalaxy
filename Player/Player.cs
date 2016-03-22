@@ -951,7 +951,7 @@ Next: continue;
         internal void RemoveInvalidUndos() {
             UndoDrawOpEntry[] items = UndoDrawOps.Items;
             for (int i = 0; i < items.Length; i++) {
-                if (!items[i].IsValid(p))
+                if (!items[i].IsValid(this))
                     UndoDrawOps.Remove(items[i]);
             }
         }

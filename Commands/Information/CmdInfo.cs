@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands
                 else upTime += up.Seconds + " seconds";
                 Player.SendMessage(p, upTime);
                 if (Server.updateTimer.Interval > 1000) Player.SendMessage(p, "This server is currently in &5Low Lag" + Server.DefaultColor + " mode.");
-            }
+            }            	
         }
         public override void Help(Player p)
         {
