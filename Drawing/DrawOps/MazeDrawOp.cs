@@ -154,16 +154,13 @@ namespace MCGalaxy.Drawing.Ops {
         }
 
         bool IsWall(int x, int y) {
-        	if (x < 0 || y < 0 || x >= width || y >= length) return false;
+        	if (x < 0 || y < 0 || x > width || y > length) return false;
         	return wall[x, y];
         }
         
         struct GridNode {
-            public ushort X, Y;
-            
-            public GridNode(ushort x, ushort y) {
-                X = x; Y = y;
-            }
+            public ushort X, Y;         
+            public GridNode(ushort x, ushort y) { X = x; Y = y; }
         }
     }
 }
