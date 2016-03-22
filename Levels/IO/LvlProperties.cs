@@ -81,6 +81,7 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("Dislikes = " + level.Dislikes);
             writer.WriteLine("Authors = " + level.Authors);
             writer.WriteLine("Pillaring = " + level.Pillaring);
+            writer.WriteLine("BuildType = " + level.BuildType);
         }
         
         static string GetName(LevelPermission perm) {
@@ -225,6 +226,8 @@ namespace MCGalaxy.Levels.IO {
                     level.Authors = value; break;
                 case "pillaring":
                     level.Pillaring = bool.Parse(value); break;
+                case "buildtype":
+                    level.BuildType = (BuildType)Enum.Parse(typeof(BuildType), value); break;
             }
         }
         

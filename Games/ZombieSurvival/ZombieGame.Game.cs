@@ -65,6 +65,7 @@ namespace MCGalaxy.Games {
         
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
                                              byte rotX, byte rotY) {
+            if (p.level == null || !p.level.name.CaselessEq(CurrentLevelName)) return false;
             if (!p.referee && noRespawn) {
                 if (p.pos[0] >= x + 70 || p.pos[0] <= x - 70 ) {
                     p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
@@ -156,6 +157,8 @@ namespace MCGalaxy.Games {
             p.SendCpeMessage(CpeMessageType.Status3, "");
             Alive.Remove(p);
             Infected.Remove(p);
+            if (oldLvl != null && oldLvl.name.CaselessEq(CurrentLevelName))
+                UpdateAllPlayerStatus();
         }
         
         public override void PlayerMoneyChanged(Player p) {

@@ -38,7 +38,7 @@ namespace MCGalaxy.Eco {
                                    "%c to buy " +  (count * 10) +  " " + Name + "."); return;
             }
             
-            p.blocksStacked += 10 * count;
+            p.blockCount += 10 * count;
             MakePurchase(p, Price * count, "%3Blocks: " + (10 * count));
         }
     }

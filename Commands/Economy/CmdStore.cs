@@ -32,6 +32,14 @@ namespace MCGalaxy.Commands {
         public override bool Enabled { get { return Economy.Enabled; } }
 
         public override void Use(Player p, string message) {
+            if (message == "") {
+                foreach (Item item in Economy.Items) {
+                    if (!item.Enabled) continue;
+                    item.OnStoreCommand(p); 
+                }
+                return;
+            }
+            
             foreach (Item item in Economy.Items)
                 foreach (string alias in item.Aliases)
             {
@@ -49,6 +57,8 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/store [item]");
             Player.SendMessage(p, "%HViews information about the specific item, such as its cost.");
+            Player.SendMessage(p, "%T/store");
+            Player.SendMessage(p, "%HViews information about all enabled items.");
             Player.SendMessage(p, "%H   Available items: %f" + Economy.GetItemNames(", "));
         }
     }
