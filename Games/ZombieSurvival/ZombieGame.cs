@@ -155,7 +155,7 @@ namespace MCGalaxy.Games {
             Infected.Remove(p);
             Alive.Add(p);
             p.infected = false;
-            UpdatePlayerColor(p, p.group.color);
+            UpdatePlayerColor(p, p.color);
             UpdateAllPlayerStatus();
         }
 

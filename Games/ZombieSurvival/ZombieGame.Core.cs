@@ -156,7 +156,7 @@ namespace MCGalaxy.Games {
                     UpdatePlayerColor(pKiller, Colors.red);
                     bool aliveChanged = false;
                     foreach (Player pAlive in alive) {
-                        UpdatePlayerColor(pAlive, pAlive.group.color);
+                        UpdatePlayerColor(pAlive, pAlive.color);
                         if (Math.Abs(pAlive.pos[0] - pKiller.pos[0]) > HitboxPrecision
                             || Math.Abs(pAlive.pos[1] - pKiller.pos[1]) > HitboxPrecision
                             || Math.Abs(pAlive.pos[2] - pKiller.pos[2]) > HitboxPrecision)
@@ -228,7 +228,7 @@ namespace MCGalaxy.Games {
             Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
         }
         
-        public void EndRound(object sender, ElapsedEventArgs e) {
+        void EndRound(object sender, ElapsedEventArgs e) {
             if (Status == ZombieGameStatus.NotStarted) return;
             CurrentLevel.ChatLevel("%4Round End:%f 5"); Thread.Sleep(1000);
             CurrentLevel.ChatLevel("%4Round End:%f 4"); Thread.Sleep(1000);
@@ -239,6 +239,7 @@ namespace MCGalaxy.Games {
         }
 
         public void HandOutRewards() {
+            if (!RoundInProgress) return;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
