@@ -237,6 +237,7 @@ namespace MCGalaxy {
         public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public int timeDelta; }
         public UndoCache UndoBuffer = new UndoCache();
         public UndoCache RedoBuffer = new UndoCache();
+        public VolatileArray<UndoDrawOpEntry> UndoDrawOps = new VolatileArray<UndoDrawOpEntry>(false);
 
         public bool showPortals = false;
         public bool showMBs = false;
@@ -657,6 +658,7 @@ namespace MCGalaxy {
             if (CopyBuffer != null)
                 CopyBuffer.Clear();
             RedoBuffer.Clear();
+            UndoDrawOps.Clear();
             UndoBuffer.Clear();
             spamBlockLog.Clear();
             //spamChatLog.Clear();
@@ -814,7 +816,7 @@ Next: continue;
         bool CheckBlockSpam() {
             if ( spamBlockLog.Count >= spamBlockCount ) {
                 DateTime oldestTime = spamBlockLog.Dequeue();
-                double spamTimer = DateTime.Now.Subtract(oldestTime).TotalSeconds;
+                double spamTimer = DateTime.UtcNow.Subtract(oldestTime).TotalSeconds;
                 if ( spamTimer < spamBlockTimer && !ignoreGrief ) {
                     Kick("You were kicked by antigrief system. Slow down.");
                     SendMessage(Colors.red + DisplayName + " was kicked for suspected griefing.");
@@ -822,7 +824,7 @@ Next: continue;
                     return true;
                 }
             }
-            spamBlockLog.Enqueue(DateTime.Now);
+            spamBlockLog.Enqueue(DateTime.UtcNow);
             return false;
         }
 
@@ -833,15 +835,6 @@ Next: continue;
             return IPAddress.IsLoopback(IPAddress.Parse(ip)) || ip.StartsWith("192.168.") || ip.StartsWith("10.");
             //return IsLocalIpAddress(ip);
         }
-
-        /*public string ResolveExternalIP(string ip) {
-            HTTPGet req = new HTTPGet();
-            req.Request("http://checkip.dyndns.org");
-            string[] a1 = req.ResponseBody.Split(':');
-            string a2 = a1[1].Substring(1);
-            string[] a3 = a2.Split('<');
-            return a3[0];
-        }*/
 
         public static bool IsLocalIpAddress(string host) {
             try { // get host IP addresses
@@ -952,6 +945,14 @@ Next: continue;
             if (ignoreAll || ignoreGlobalChat || listignored.Count > 0) {
                 SendMessage("&cYou are still ignoring some people from your last login.");
                 SendMessage("&cType &a/ignore list &cto see the list.");
+            }
+        }
+        
+        internal void RemoveInvalidUndos() {
+            UndoDrawOpEntry[] items = UndoDrawOps.Items;
+            for (int i = 0; i < items.Length; i++) {
+                if (!items[i].IsValid(p))
+                    UndoDrawOps.Remove(items[i]);
             }
         }
     }

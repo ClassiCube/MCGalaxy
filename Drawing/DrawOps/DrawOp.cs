@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     
@@ -156,18 +157,40 @@ namespace MCGalaxy.Drawing.Ops {
                 Player.SendMessage(p, String.Format(format, op.Name, affected));
             }
             
+            UndoDrawOpEntry entry = new UndoDrawOpEntry();
+            entry.DrawOpName = op.Name;
+            entry.LevelName = p.level.name;
+            entry.SetStart(p);
+            DateTime start = DateTime.UtcNow;
+            
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(marks, p, p.level, brush);
-            Player[] players = PlayerInfo.Online.Items;
-            if (needReveal) {
-                foreach (Player pl in players) {
-                    if (pl.level.name.ToLower() == p.level.name.ToLower())
-                        CmdReveal.ReloadMap(p, pl, true);
-                }
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+            entry.SetEnd(p);
+            
+            if (start > p.UndoBuffer.LastClear) {
+                UndoDrawOpEntry[] items = p.UndoDrawOps.Items;
+                if (items.Length == 20)
+                    p.UndoDrawOps.Remove(items[0]);
+            } else { // UndoBuffer has been cleared during the draw op.
+                entry.StartNode = p.UndoBuffer.Head;
+                entry.StartIndex = 0;
+                p.RemoveInvalidUndos();
             }
+            p.UndoDrawOps.Add(entry);
+            DoReload(p, needReveal);
             return true;
+        }
+        
+        static void DoReload(Player p, bool needReveal) {
+            if (!needReveal) return;
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level.name.CaselessEq(p.level.name))
+                    CmdReveal.ReloadMap(p, pl, true);
+            }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 }

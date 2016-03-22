@@ -34,6 +34,9 @@ namespace MCGalaxy.Util {
         /// <summary> Total number of items in the cache. </summary>
         public volatile int Count;
         
+        /// <summary> Last time this undo buffer was cleared. </summary>
+        public DateTime LastClear;
+        
         public const int TimeDeltaMax = (1 << 13) - 1;
         
         /// <summary> Appends an item to the cache. </summary>
@@ -60,10 +63,11 @@ namespace MCGalaxy.Util {
         public void Clear() {
             Count = 0;
             if( Head == null ) return;
+            LastClear = DateTime.UtcNow;
             
             UndoCacheNode node = Head;
             while( node != null ) {
-                node.Items.Clear();
+                node.Items = null;
                 node = node.Next;
             }
             Head = null; Tail = null;

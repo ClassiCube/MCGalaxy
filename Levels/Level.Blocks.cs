@@ -351,6 +351,7 @@ namespace MCGalaxy {
             } catch (OutOfMemoryException) {
                 Player.SendMessage(p, "Undo buffer too big! Cleared!");
                 p.UndoBuffer.Clear();
+                p.RemoveInvalidUndos();
                 goto retry;
             } catch (Exception e) {
                 Server.ErrorLog(e);
