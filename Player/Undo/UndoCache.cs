@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace MCGalaxy.Util {
 
@@ -101,7 +100,7 @@ namespace MCGalaxy.Util {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct UndoCacheItem {
         public int Index;
-        public byte Type, NewType;     
+        public byte Type, NewType;
         public ushort Flags; // upper 2 bits for 'ext' or 'physics' type, lower 14 bits for time delta.
         
         public short TimeDelta {
@@ -141,7 +140,7 @@ namespace MCGalaxy.Util {
                 item.Flags |= (ushort)(1 << 14);
             } else {
                 item.Type = pos.type;
-            }           
+            }
             if (pos.newtype == Block.custom_block) {
                 item.NewType = pos.newExtType;
                 item.Flags |= (ushort)(1 << 15);
@@ -150,5 +149,11 @@ namespace MCGalaxy.Util {
             }
             return item;
         }
+    }
+    
+    public sealed class UndoDrawOpEntry {
+        public string DrawOpName;
+        public string LevelName;
+        public DateTime Start, End;
     }
 }

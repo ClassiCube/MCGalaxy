@@ -56,7 +56,8 @@ namespace MCGalaxy.Commands {
                 PerformHighlight(p, seconds, who.UndoBuffer);
             }
 
-            UndoFile.HighlightPlayer(p, name.ToLower(), seconds, ref FoundUser);
+            DateTime start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
+            UndoFile.HighlightPlayer(p, name.ToLower(), start, ref FoundUser);
             if (FoundUser) {
                 Player.SendMessage(p, "Now highlighting &b" + seconds +  " %Sseconds for " + Server.FindColor(name) + name);
                 Player.SendMessage(p, "&cUse /reload to un-highlight");

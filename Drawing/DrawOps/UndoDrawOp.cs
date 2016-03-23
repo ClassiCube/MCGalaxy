@@ -26,7 +26,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "UndoOnline"; } }
         
-        internal long seconds;
+        /// <summary> Point in time that the /undo should go backwards up to. </summary>
+        public DateTime Start = DateTime.MinValue;
+        
+        /// <summary> Point in time that the /undo should start updating blocks. </summary>
+        public DateTime End = DateTime.MaxValue;
+        
         internal Player who;
         internal Level saveLevel = null;
         
@@ -35,7 +40,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
             PerformUndo(p, ref saveLevel);
             bool foundUser = false;
-            UndoFile.UndoPlayer(p, who.name.ToLower(), seconds, ref foundUser);
+            UndoFile.UndoPlayer(p, who.name.ToLower(), Start, ref foundUser);
         }
         
         void PerformUndo(Player p, ref Level saveLvl) {
@@ -54,8 +59,9 @@ namespace MCGalaxy.Drawing.Ops {
                     UndoCacheItem item = items[i];
                     ushort x, y, z;
                     node.Unpack(item.Index, out x, out y, out z);
-                    DateTime time = node.BaseTime.AddTicks((item.TimeDelta + seconds) * TimeSpan.TicksPerSecond);
-                    if (time < DateTime.UtcNow) { buffer.CheckIfSend(true); return; }
+                    DateTime time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
+                    if (time > End) continue;
+                    if (time < Start) { buffer.CheckIfSend(true); return; }
                     
                     byte b = lvl.GetTile(x, y, z);
                     byte newTile = 0, newExtTile = 0;
@@ -91,14 +97,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "UndoOffline"; } }
         
-        internal long seconds;
+        /// <summary> Point in time that the /undo should go backwards up to. </summary>
+        public DateTime Start = DateTime.MinValue;
+        
         internal string whoName;
         internal bool foundUser = false;
         
         public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) { return 0; }
         
         public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {            
-            UndoFile.UndoPlayer(p, whoName.ToLower(), seconds, ref foundUser);
+        	UndoFile.UndoPlayer(p, whoName.ToLower(), Start, ref foundUser);
         }
     }
     

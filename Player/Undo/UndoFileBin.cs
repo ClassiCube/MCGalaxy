@@ -116,13 +116,11 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, ref byte[] temp, long seconds) {
+        protected override bool UndoEntry(Player p, string path, ref byte[] temp, DateTime start) {
             List<ChunkHeader> list = new List<ChunkHeader>();
-            DateTime now = DateTime.UtcNow;
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             Player.UndoPos Pos;
             bool isPlayer = p != null && p.group.Permission < LevelPermission.Nobody;
-            seconds *= TimeSpan.TicksPerSecond;
             
             using (Stream fs = File.OpenRead(path))
                 using (BinaryReader r = new BinaryReader(fs))
@@ -131,7 +129,7 @@ namespace MCGalaxy.Util {
                 for (int i = list.Count - 1; i >= 0; i--) {
                     ChunkHeader chunk = list[i];
                     Level lvl;
-                    if (!CheckChunk(chunk, now, seconds, p, out lvl))
+                    if (!CheckChunk(chunk, start, p, out lvl))
                         return false;
                     if (lvl == null || (isPlayer && lvl != p.level)) continue;
                     BufferedBlockSender buffer = new BufferedBlockSender(lvl);
@@ -144,7 +142,7 @@ namespace MCGalaxy.Util {
                     for (int j = chunk.Entries - 1; j >= 0; j-- ) {
                         int offset = j * entrySize;
                         DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
-                        if (time.AddTicks(seconds) < now) { buffer.CheckIfSend(true); return false; }
+                        if (time < start) { buffer.CheckIfSend(true); return false; }
                         Pos.x = U16(temp, offset + 2); Pos.y = U16(temp, offset + 4); Pos.z = U16(temp, offset + 6);
                         
                         Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
@@ -169,10 +167,8 @@ namespace MCGalaxy.Util {
             return true;
         }
 
-        protected override bool HighlightEntry(Player p, string path, ref byte[] temp, long seconds) {
+        protected override bool HighlightEntry(Player p, string path, ref byte[] temp, DateTime start) {
             List<ChunkHeader> list = new List<ChunkHeader>();
-            DateTime now = DateTime.UtcNow;
-            seconds *= TimeSpan.TicksPerSecond;
             
             using (Stream fs = File.OpenRead(path))
                 using (BinaryReader r = new BinaryReader(fs))
@@ -181,7 +177,7 @@ namespace MCGalaxy.Util {
                 for (int i = list.Count - 1; i >= 0; i--) {
                     ChunkHeader chunk = list[i];
                     Level lvl;
-                    if (!CheckChunk(chunk, now, seconds, p, out lvl))
+                    if (!CheckChunk(chunk, start, p, out lvl))
                         return false;
                     if (lvl == null || lvl != p.level) continue;
                     
@@ -192,7 +188,7 @@ namespace MCGalaxy.Util {
                     for (int j = chunk.Entries - 1; j >= 0; j-- ) {
                         int offset = j * entrySize;
                         DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
-                        if (time.AddTicks(seconds) < now) return false;
+                        if (time < start) return false;
                         ushort x = U16(temp, offset + 2), y = U16(temp, offset + 4), z = U16(temp, offset + 6);
                         
                         byte lvlTile = lvl.GetTile(x, y, z);
@@ -215,12 +211,11 @@ namespace MCGalaxy.Util {
             return (ushort)(buffer[offset + 0] | buffer[offset + 1] << 8);
         }
         
-        static bool CheckChunk(ChunkHeader chunk, DateTime now, long ticks, Player p, out Level lvl) {
+        static bool CheckChunk(ChunkHeader chunk, DateTime start, Player p, out Level lvl) {
             DateTime time = chunk.BaseTime;
             lvl = null;
-            if (time.AddTicks(65536 * TimeSpan.TicksPerSecond + ticks) < now)
-                return false; // we can safely discard the entire chunk
-            
+            if (time.AddTicks(65536 * TimeSpan.TicksPerSecond) < start)
+                return false; // we can safely discard the entire chunk            
             lvl = LevelInfo.FindExact(chunk.LevelName);
             return true;
         }

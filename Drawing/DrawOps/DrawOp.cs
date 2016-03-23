@@ -160,20 +160,18 @@ namespace MCGalaxy.Drawing.Ops {
             UndoDrawOpEntry entry = new UndoDrawOpEntry();
             entry.DrawOpName = op.Name;
             entry.LevelName = p.level.name;
-            entry.SetStart(p);
-            DateTime start = DateTime.UtcNow;
+            entry.Start = DateTime.UtcNow;
             
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(marks, p, p.level, brush);
-            entry.SetEnd(p);
+            entry.End = DateTime.UtcNow;
             
-            if (start > p.UndoBuffer.LastClear) {
+            if (entry.Start > p.UndoBuffer.LastClear) {
                 UndoDrawOpEntry[] items = p.UndoDrawOps.Items;
                 if (items.Length == 20)
                     p.UndoDrawOps.Remove(items[0]);
             } else { // UndoBuffer has been cleared during the draw op.
-                entry.StartNode = p.UndoBuffer.Head;
-                entry.StartIndex = 0;
+                entry.Start = p.UndoBuffer.LastClear;
                 p.RemoveInvalidUndos();
             }
             p.UndoDrawOps.Add(entry);

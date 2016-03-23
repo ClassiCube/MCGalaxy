@@ -34,9 +34,9 @@ namespace MCGalaxy.Util {
          
         protected abstract void ReadUndoData(List<Player.UndoPos> buffer, string path);
         
-        protected abstract bool UndoEntry(Player p, string path, ref byte[] temp, long seconds);
+        protected abstract bool UndoEntry(Player p, string path, ref byte[] temp, DateTime start);
         
-        protected abstract bool HighlightEntry(Player p, string path, ref byte[] temp, long seconds);
+        protected abstract bool HighlightEntry(Player p, string path, ref byte[] temp, DateTime start);
         
         protected abstract string Extension { get; }
         
@@ -59,17 +59,17 @@ namespace MCGalaxy.Util {
             NewFormat.SaveUndoData(p.UndoBuffer, path);
         }
         
-        public static void UndoPlayer(Player p, string targetName, long seconds, ref bool FoundUser) {
-            FilterEntries(p, undoDir, targetName, seconds, false, ref FoundUser);
-            FilterEntries(p, prevUndoDir, targetName, seconds, false, ref FoundUser);
+        public static void UndoPlayer(Player p, string targetName, DateTime start, ref bool FoundUser) {
+            FilterEntries(p, undoDir, targetName, start, false, ref FoundUser);
+            FilterEntries(p, prevUndoDir, targetName, start, false, ref FoundUser);
         }
         
-        public static void HighlightPlayer(Player p, string targetName, long seconds, ref bool FoundUser) {
-            FilterEntries(p, undoDir, targetName, seconds, true, ref FoundUser);
-            FilterEntries(p, prevUndoDir, targetName, seconds, true, ref FoundUser);
+        public static void HighlightPlayer(Player p, string targetName, DateTime start, ref bool FoundUser) {
+            FilterEntries(p, undoDir, targetName, start, true, ref FoundUser);
+            FilterEntries(p, prevUndoDir, targetName, start, true, ref FoundUser);
         }
         
-        static void FilterEntries(Player p, string dir, string name, long seconds, bool highlight, ref bool FoundUser) {
+        static void FilterEntries(Player p, string dir, string name, DateTime start, bool highlight, ref bool FoundUser) {
             string path = Path.Combine(dir, name);
             if (!Directory.Exists(path))
                 return;
@@ -89,9 +89,9 @@ namespace MCGalaxy.Util {
                 if (format == null) continue;
                 
                 if (highlight) {
-                    if (!format.HighlightEntry(p, path, ref temp, seconds)) break;
+                	if (!format.HighlightEntry(p, path, ref temp, start)) break;
                 } else {
-                    if (!format.UndoEntry(p, path, ref temp, seconds)) break;
+                    if (!format.UndoEntry(p, path, ref temp, start)) break;
                 }
             }
             FoundUser = true;

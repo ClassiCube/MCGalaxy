@@ -67,7 +67,7 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, ref byte[] temp, long seconds) {
+        protected override bool UndoEntry(Player p, string path, ref byte[] temp, DateTime start) {
             Player.UndoPos Pos;
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             Pos.extType = 0; Pos.newExtType = 0;
@@ -77,7 +77,7 @@ namespace MCGalaxy.Util {
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
                 try {
                     // line format: mapName x y z date oldblock newblock
-                    if (!InTime(lines[(i * 7) - 3], seconds)) return false;
+                    if (!InTime(lines[(i * 7) - 3], start)) return false;
                     Level lvl = LevelInfo.FindExact(lines[(i * 7) - 7]);
                     if (lvl == null) continue;
                     
@@ -102,7 +102,7 @@ namespace MCGalaxy.Util {
             return true;
         }
         
-        protected override bool HighlightEntry(Player p, string path, ref byte[] temp, long seconds) {
+        protected override bool HighlightEntry(Player p, string path, ref byte[] temp, DateTime start) {
             Player.UndoPos Pos;
             Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
@@ -110,7 +110,7 @@ namespace MCGalaxy.Util {
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
                 try {
                     // line format: mapName x y z date oldblock newblock
-                    if (!InTime(lines[(i * 7) - 3], seconds)) return false;
+                    if (!InTime(lines[(i * 7) - 3], start)) return false;
                     Level foundLevel = LevelInfo.FindExact(lines[(i * 7) - 7]);
                     if (foundLevel == null || foundLevel != p.level) continue;
                     
@@ -133,11 +133,10 @@ namespace MCGalaxy.Util {
             return true;
         }
         
-        static bool InTime(string line, long seconds) {
+        static bool InTime(string line, DateTime start) {
             line = line.Replace('&', ' ');
-            DateTime time = DateTime.Parse(line, CultureInfo.InvariantCulture)
-                .AddSeconds(seconds);
-            return time >= DateTime.Now;
+            DateTime time = DateTime.Parse(line, CultureInfo.InvariantCulture);
+            return time >= start;
         }
     }
 }

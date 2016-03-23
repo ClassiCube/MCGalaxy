@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands
             }
             
             UndoOnlineDrawOp op = new UndoOnlineDrawOp();
-            op.seconds = seconds;
+            op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.who = who;
             op.Perform(null, p, null, null);
             
@@ -114,7 +114,7 @@ namespace MCGalaxy.Commands
             }
 
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();
-            op.seconds = seconds;
+            op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.whoName = whoName;
             op.Perform(null, p, null, null);
 
