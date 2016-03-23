@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Util {
 
@@ -67,11 +68,14 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, ref byte[] temp, DateTime start) {
+        protected override bool UndoEntry(Player p, string path, Vec3U16[] marks,
+                                          ref byte[] temp, DateTime start) {
             Player.UndoPos Pos;
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
+            Vec3U16 min = marks[0], max = marks[1];
+            bool undoArea = min.X != ushort.MaxValue;
             
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
@@ -79,15 +83,22 @@ namespace MCGalaxy.Util {
                     // line format: mapName x y z date oldblock newblock
                     if (!InTime(lines[(i * 7) - 3], start)) return false;
                     Level lvl = LevelInfo.FindExact(lines[(i * 7) - 7]);
-                    if (lvl == null) continue;
+                    if (lvl == null || (p.level != null && !p.level.name.CaselessEq(lvl.name)))
+                        continue;
+                    if (!undoArea) {
+                        min = new Vec3U16(0, 0, 0);
+                        max = new Vec3U16((ushort)(lvl.Width - 1), (ushort)(lvl.Height - 1), (ushort)(lvl.Length - 1));
+                    }
                     
                     Pos.mapName = lvl.name;
                     Pos.x = Convert.ToUInt16(lines[(i * 7) - 6]);
                     Pos.y = Convert.ToUInt16(lines[(i * 7) - 5]);
                     Pos.z = Convert.ToUInt16(lines[(i * 7) - 4]);
+                    if (Pos.x < min.X || Pos.y < min.Y || Pos.z < min.Z ||
+                        Pos.x > max.X || Pos.y > max.Y || Pos.z > max.Z) continue;
                     Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
 
-                    if (Pos.type == Convert.ToByte(lines[(i * 7) - 1]) || Block.Convert(Pos.type) == Block.water || 
+                    if (Pos.type == Convert.ToByte(lines[(i * 7) - 1]) || Block.Convert(Pos.type) == Block.water ||
                         Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
                         
                         Pos.newtype = Convert.ToByte(lines[(i * 7) - 2]);

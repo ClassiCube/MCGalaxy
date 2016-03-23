@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Util {
 
@@ -116,11 +117,13 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, ref byte[] temp, DateTime start) {
+        protected override bool UndoEntry(Player p, string path, Vec3U16[] marks,
+                                          ref byte[] temp, DateTime start) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             Player.UndoPos Pos;
-            bool isPlayer = p != null && p.group.Permission < LevelPermission.Nobody;
+            Vec3U16 min = marks[0], max = marks[1];
+            bool undoArea = min.X != ushort.MaxValue;
             
             using (Stream fs = File.OpenRead(path))
                 using (BinaryReader r = new BinaryReader(fs))
@@ -131,8 +134,13 @@ namespace MCGalaxy.Util {
                     Level lvl;
                     if (!CheckChunk(chunk, start, p, out lvl))
                         return false;
-                    if (lvl == null || (isPlayer && lvl != p.level)) continue;
+                    if (lvl == null || (p.level != null && !p.level.name.CaselessEq(lvl.name)))
+                        continue;
                     BufferedBlockSender buffer = new BufferedBlockSender(lvl);
+                    if (!undoArea) {
+                        min = new Vec3U16(0, 0, 0);
+                        max = new Vec3U16((ushort)(lvl.Width - 1), (ushort)(lvl.Height - 1), (ushort)(lvl.Length - 1));
+                    }
                     
                     Pos.mapName = chunk.LevelName;
                     fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
@@ -144,6 +152,8 @@ namespace MCGalaxy.Util {
                         DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
                         if (time < start) { buffer.CheckIfSend(true); return false; }
                         Pos.x = U16(temp, offset + 2); Pos.y = U16(temp, offset + 4); Pos.z = U16(temp, offset + 6);
+                        if (Pos.x < min.X || Pos.y < min.Y || Pos.z < min.Z ||
+                            Pos.x > max.X || Pos.y > max.Y || Pos.z > max.Z) continue;
                         
                         Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
                         byte oldType = temp[offset + 8], oldExtType = temp[offset + 9];
@@ -167,7 +177,8 @@ namespace MCGalaxy.Util {
             return true;
         }
 
-        protected override bool HighlightEntry(Player p, string path, ref byte[] temp, DateTime start) {
+        protected override bool HighlightEntry(Player p, string path,
+                                               ref byte[] temp, DateTime start) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             
             using (Stream fs = File.OpenRead(path))
@@ -215,7 +226,7 @@ namespace MCGalaxy.Util {
             DateTime time = chunk.BaseTime;
             lvl = null;
             if (time.AddTicks(65536 * TimeSpan.TicksPerSecond) < start)
-                return false; // we can safely discard the entire chunk            
+                return false; // we can safely discard the entire chunk
             lvl = LevelInfo.FindExact(chunk.LevelName);
             return true;
         }

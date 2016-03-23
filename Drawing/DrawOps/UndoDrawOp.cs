@@ -35,30 +35,42 @@ namespace MCGalaxy.Drawing.Ops {
         internal Player who;
         internal Level saveLevel = null;
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) { return -1; }
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             PerformUndo(p, ref saveLevel);
             bool foundUser = false;
-            UndoFile.UndoPlayer(p, who.name.ToLower(), Start, ref foundUser);
+            UndoFile.UndoPlayer(p, who.name.ToLower(), marks, Start, ref foundUser);
         }
         
         void PerformUndo(Player p, ref Level saveLvl) {
             UndoCache cache = who.UndoBuffer;
             UndoCacheNode node = cache.Tail;
             if (node == null) return;
+            Vec3U16 min = Min, max = Max;
+            bool undoArea = min.X != ushort.MaxValue;
             
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl == null) { node = node.Prev; continue; }
+                if (lvl == null || (p.level != null && !p.level.name.CaselessEq(lvl.name))) {
+                    node = node.Prev; continue;
+                }
+                
                 saveLvl = lvl;
                 List<UndoCacheItem> items = node.Items;
                 BufferedBlockSender buffer = new BufferedBlockSender(lvl);
+                if (!undoArea) { 
+                	min = new Vec3U16(0, 0, 0);
+                	max = new Vec3U16((ushort)(lvl.Width - 1), (ushort)(lvl.Height - 1), (ushort)(lvl.Length - 1));
+                }
                 
                 for (int i = items.Count - 1; i >= 0; i--) {
                     UndoCacheItem item = items[i];
                     ushort x, y, z;
                     node.Unpack(item.Index, out x, out y, out z);
+                    if (x < min.X || y < min.Y || z < min.Z ||
+                        x > max.X || y > max.Y || z > max.Z) continue;
+                    
                     DateTime time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
                     if (time > End) continue;
                     if (time < Start) { buffer.CheckIfSend(true); return; }
@@ -103,10 +115,10 @@ namespace MCGalaxy.Drawing.Ops {
         internal string whoName;
         internal bool foundUser = false;
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) { return -1; }
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {            
-        	UndoFile.UndoPlayer(p, whoName.ToLower(), Start, ref foundUser);
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {            
+            UndoFile.UndoPlayer(p, whoName.ToLower(), marks, Start, ref foundUser);
         }
     }
     
@@ -116,9 +128,9 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal long seconds;
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) { return -1; }
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             if (lvl.UndoBuffer.Count != Server.physUndo) {
                 int count = lvl.currentUndo;
                 for (int i = count; i >= 0; i--) {

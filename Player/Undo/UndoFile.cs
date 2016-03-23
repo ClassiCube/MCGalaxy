@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Util {
 
@@ -34,9 +34,11 @@ namespace MCGalaxy.Util {
          
         protected abstract void ReadUndoData(List<Player.UndoPos> buffer, string path);
         
-        protected abstract bool UndoEntry(Player p, string path, ref byte[] temp, DateTime start);
+        protected abstract bool UndoEntry(Player p, string path, Vec3U16[] marks,
+                                          ref byte[] temp, DateTime start);
         
-        protected abstract bool HighlightEntry(Player p, string path, ref byte[] temp, DateTime start);
+        protected abstract bool HighlightEntry(Player p, string path, 
+                                               ref byte[] temp, DateTime start);
         
         protected abstract string Extension { get; }
         
@@ -59,17 +61,18 @@ namespace MCGalaxy.Util {
             NewFormat.SaveUndoData(p.UndoBuffer, path);
         }
         
-        public static void UndoPlayer(Player p, string targetName, DateTime start, ref bool FoundUser) {
-            FilterEntries(p, undoDir, targetName, start, false, ref FoundUser);
-            FilterEntries(p, prevUndoDir, targetName, start, false, ref FoundUser);
+        public static void UndoPlayer(Player p, string target, Vec3U16[] marks, DateTime start, ref bool FoundUser) {
+            FilterEntries(p, undoDir, target, marks, start, false, ref FoundUser);
+            FilterEntries(p, prevUndoDir, target, marks, start, false, ref FoundUser);
         }
         
-        public static void HighlightPlayer(Player p, string targetName, DateTime start, ref bool FoundUser) {
-            FilterEntries(p, undoDir, targetName, start, true, ref FoundUser);
-            FilterEntries(p, prevUndoDir, targetName, start, true, ref FoundUser);
+        public static void HighlightPlayer(Player p, string target, DateTime start, ref bool FoundUser) {
+            FilterEntries(p, undoDir, target, null, start, true, ref FoundUser);
+            FilterEntries(p, prevUndoDir, target, null, start, true, ref FoundUser);
         }
         
-        static void FilterEntries(Player p, string dir, string name, DateTime start, bool highlight, ref bool FoundUser) {
+        static void FilterEntries(Player p, string dir, string name, Vec3U16[] marks,
+                                  DateTime start, bool highlight, ref bool FoundUser) {
             string path = Path.Combine(dir, name);
             if (!Directory.Exists(path))
                 return;
@@ -89,9 +92,9 @@ namespace MCGalaxy.Util {
                 if (format == null) continue;
                 
                 if (highlight) {
-                	if (!format.HighlightEntry(p, path, ref temp, start)) break;
+                    if (!format.HighlightEntry(p, path, ref temp, start)) break;
                 } else {
-                    if (!format.UndoEntry(p, path, ref temp, start)) break;
+                    if (!format.UndoEntry(p, path, marks, ref temp, start)) break;
                 }
             }
             FoundUser = true;

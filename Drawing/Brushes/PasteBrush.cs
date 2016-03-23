@@ -47,23 +47,23 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override byte NextBlock(DrawOp op) {
-            Vector3U16 p = LocalCoords(op);
+            Vec3U16 p = LocalCoords(op);
             return state.Blocks[state.GetIndex(p.X, p.Y, p.Z)];
         }
         
         public override byte NextExtBlock(DrawOp op) {
-            Vector3U16 p = LocalCoords(op);
+            Vec3U16 p = LocalCoords(op);
             return state.ExtBlocks[state.GetIndex(p.X, p.Y, p.Z)];
         }
         
-        Vector3U16 LocalCoords(DrawOp op) {
+        Vec3U16 LocalCoords(DrawOp op) {
             int x = (op.Coords.X - op.Min.X) % state.Width;
             if (x < 0) x += state.Width;
             int y = (op.Coords.Y - op.Min.Y) % state.Height;
             if (y < 0) y += state.Height;
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
-            return new Vector3U16((ushort)x, (ushort)y, (ushort)z);
+            return new Vec3U16((ushort)x, (ushort)y, (ushort)z);
         }
     }
 }

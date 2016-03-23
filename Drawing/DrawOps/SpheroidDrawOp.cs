@@ -24,14 +24,14 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Ellipsoid"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
             double cx = (p1.X + p2.X) / 2.0, cy = (p1.Y + p2.Y) / 2.0, cz = (p1.Z + p2.Z) / 2.0;
             double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
@@ -52,14 +52,14 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Ellipsoid Hollow"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
             double cx = (p1.X + p2.X) / 2.0, cy = (p1.Y + p2.Y) / 2.0, cz = (p1.Z + p2.Z) / 2.0;
             double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
@@ -86,15 +86,15 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cylinder"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             double rx = (p2.X - p1.X) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
             int height = (p2.Y - p1.Y + 1);
             return (int)(Math.PI * rx * rz * height);
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
             double cx = (p1.X + p2.X) / 2.0, cz = (p1.Z + p2.Z) / 2.0;
             double rx = (p2.X - p1.X) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;

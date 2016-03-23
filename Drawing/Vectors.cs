@@ -19,23 +19,25 @@ using System;
 
 namespace MCGalaxy.Drawing {
     
-    public struct Vector3U16 {
+    public struct Vec3U16 {
         
         public ushort X, Y, Z;
+        public static Vec3U16 MinVal = new Vec3U16(ushort.MinValue);
+        public static Vec3U16 MaxVal = new Vec3U16(ushort.MaxValue);
         
-        public Vector3U16(ushort x, ushort y, ushort z) {
+        public Vec3U16(ushort x, ushort y, ushort z) {
             X = x; Y = y; Z = z;
         }
         
-        public Vector3U16(ushort value) {
+        public Vec3U16(ushort value) {
             X = value; Y = value; Z = value;
         }
         
         public override bool Equals(object obj) {
-            return (obj is Vector3U16) && Equals((Vector3U16)obj);
+            return (obj is Vec3U16) && Equals((Vec3U16)obj);
         }
         
-        public bool Equals(Vector3U16 other) {
+        public bool Equals(Vec3U16 other) {
             return X == other.X & Y == other.Y && Z == other.Z;
         }
         
@@ -51,42 +53,42 @@ namespace MCGalaxy.Drawing {
         
         public double Length { get { return Math.Sqrt( X * X + Y * Y + Z * Z ); } }
         
-        public float Dot(Vector3U16 b) { return X * b.X + Y * b.Y + Z * b.Z; }
+        public float Dot(Vec3U16 b) { return X * b.X + Y * b.Y + Z * b.Z; }
         
-        public Vector3U16 Max(Vector3U16 b) { return Max(this, b); }
+        public Vec3U16 Max(Vec3U16 b) { return Max(this, b); }
         
-        public Vector3U16 Min(Vector3U16 b) { return Min(this, b); }
+        public Vec3U16 Min(Vec3U16 b) { return Min(this, b); }
         
-        public static Vector3U16 Max(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            return new Vector3U16(Math.Max(x1, x2), Math.Max(y1, y2), Math.Max(z1, z2));
+        public static Vec3U16 Max(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            return new Vec3U16(Math.Max(x1, x2), Math.Max(y1, y2), Math.Max(z1, z2));
         }
         
-        public static Vector3U16 Min(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            return new Vector3U16(Math.Min(x1, x2), Math.Min(y1, y2), Math.Min(z1, z2));
+        public static Vec3U16 Min(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            return new Vec3U16(Math.Min(x1, x2), Math.Min(y1, y2), Math.Min(z1, z2));
         }
         
-        public static Vector3U16 Max(Vector3U16 a, Vector3U16 b) {
-            return new Vector3U16(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y), Math.Max(a.Z, b.Z));
+        public static Vec3U16 Max(Vec3U16 a, Vec3U16 b) {
+            return new Vec3U16(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y), Math.Max(a.Z, b.Z));
         }
         
-        public static Vector3U16 Min(Vector3U16 a, Vector3U16 b) {
-            return new Vector3U16(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Min(a.Z, b.Z));
+        public static Vec3U16 Min(Vec3U16 a, Vec3U16 b) {
+            return new Vec3U16(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Min(a.Z, b.Z));
         }
         
-        public static bool operator == (Vector3U16 a, Vector3U16 b) {
+        public static bool operator == (Vec3U16 a, Vec3U16 b) {
             return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
         }
         
-        public static bool operator != (Vector3U16 a, Vector3U16 b) {
+        public static bool operator != (Vec3U16 a, Vec3U16 b) {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
         }
         
-        public static Vector3U16 operator + (Vector3U16 a, Vector3U16 b) {
-            return new Vector3U16((ushort)(a.X + b.X), (ushort)(a.Y + b.Y), (ushort)(a.Z + b.Z));
+        public static Vec3U16 operator + (Vec3U16 a, Vec3U16 b) {
+            return new Vec3U16((ushort)(a.X + b.X), (ushort)(a.Y + b.Y), (ushort)(a.Z + b.Z));
         }
         
-        public static Vector316 operator - (Vector3U16 a, Vector3U16 b) {
-            return new Vector316((short)(a.X - b.X), (short)(a.Y - b.Y), (short)(a.Z - b.Z));
+        public static Vec3S16 operator - (Vec3U16 a, Vec3U16 b) {
+            return new Vec3S16((short)(a.X - b.X), (short)(a.Y - b.Y), (short)(a.Z - b.Z));
         }
         
         public override string ToString() {
@@ -94,19 +96,19 @@ namespace MCGalaxy.Drawing {
         }
     }
 	
-	public struct Vector316 {
+	public struct Vec3S16 {
         
         public short X, Y, Z;
         
-        public Vector316(short x, short y, short z) {
+        public Vec3S16(short x, short y, short z) {
             X = x; Y = y; Z = z;
         }
         
         public override bool Equals(object obj) {
-            return (obj is Vector316) && Equals((Vector316)obj);
+            return (obj is Vec3S16) && Equals((Vec3S16)obj);
         }
         
-        public bool Equals(Vector316 other) {
+        public bool Equals(Vec3S16 other) {
             return X == other.X & Y == other.Y && Z == other.Z;
         }
         
@@ -122,13 +124,13 @@ namespace MCGalaxy.Drawing {
         
         public double Length { get { return Math.Sqrt( X * X + Y * Y + Z * Z ); } }
         
-        public float Dot(Vector316 b) { return X * b.X + Y * b.Y + Z * b.Z; }
+        public float Dot(Vec3S16 b) { return X * b.X + Y * b.Y + Z * b.Z; }
         
-        public static bool operator == (Vector316 a, Vector316 b) {
+        public static bool operator == (Vec3S16 a, Vec3S16 b) {
             return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
         }
         
-        public static bool operator != (Vector316 a, Vector316 b) {
+        public static bool operator != (Vec3S16 a, Vec3S16 b) {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
         }
         

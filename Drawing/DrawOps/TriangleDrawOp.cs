@@ -24,7 +24,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Triangle"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             // Applying Heron's Formula
             double a = (marks[0] - marks[2]).Length;
             double b = (marks[1] - marks[2]).Length;
@@ -33,9 +33,9 @@ namespace MCGalaxy.Drawing.Ops {
             return (int)Math.Sqrt(s * (s - a) * (s - b) * (s - c));
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-        	Vector3U16 p1 = Min, p2 = Max, a = marks[0];
-            Vector316 v0 = marks[1] - a, v1 = marks[2] - a;
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 p1 = Min, p2 = Max, a = marks[0];
+            Vec3S16 v0 = marks[1] - a, v1 = marks[2] - a;
             float d00 = v0.Dot(v0), d01 = v0.Dot(v1), d11 = v1.Dot(v1);
             float invDenom = 1f / (d00 * d11 - d01 * d01);
             
@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
                     for (ushort xx = p1.X; xx <= p2.X; xx++)
             {
                 // Compute the barycentric coordinates of the point
-                Vector316 v2 = new Vector3U16(xx, yy, zz) - a;
+                Vec3S16 v2 = new Vec3U16(xx, yy, zz) - a;
                 float d20 = v2.Dot(v0), d21 = v2.Dot(v1);                
                 float v = (d11 * d20 - d01 * d21) * invDenom;
                 float w = (d00 * d21 - d01 * d20) * invDenom;

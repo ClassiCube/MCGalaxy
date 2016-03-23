@@ -33,13 +33,13 @@ namespace MCGalaxy.Drawing.Ops {
         byte[] r = new byte[1];
         int width, length;
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             int lenX = (Math.Abs(marks[1].X - marks[0].X) + 1) / 2;
             int lenZ = (Math.Abs(marks[1].Z - marks[0].Z) + 1) / 2;
             return lenX * lenZ * 3;
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             width = Max.X - Min.X;
             if (width % 2 != 0) { width++; Min.X--; }
             width -= 2;

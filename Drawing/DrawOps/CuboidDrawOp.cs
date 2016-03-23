@@ -24,13 +24,13 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cuboid"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             return (p2.X - p1.X + 1) * (p2.Y - p1.Y + 1) * (p2.Z - p1.Z + 1);
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
@@ -44,8 +44,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cuboid Hollow"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1), lenZ = (p2.Z - p1.Z + 1);
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
             int yQuadsVol = Math.Max(0, Math.Min(lenY, 2) * ((lenX - 2) * lenZ)); // we need to avoid double counting overlaps
@@ -53,8 +53,8 @@ namespace MCGalaxy.Drawing.Ops {
             return xQuadsVol + yQuadsVol + zQuadzVol;
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1);
             QuadY(p1.Y, p1.X, p1.Z, p2.X, p2.Z, p, lvl, brush);
             QuadY(p2.Y, p1.X, p1.Z, p2.X, p2.Z, p, lvl, brush);
@@ -102,16 +102,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cuboid Walls"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1), lenZ = (p2.Z - p1.Z + 1);
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
             int zQuadsVol = Math.Max(0, Math.Min(lenZ, 2) * ((lenX - 2) * lenY)); // we need to avoid double counting overlaps
             return xQuadsVol + zQuadsVol;
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             int lenX = (p2.X - p1.X + 1);
             QuadX(p1.X, p1.Y, p1.Z, p2.Y, p2.Z, p, lvl, brush);
             QuadX(p2.X, p1.Y, p1.Z, p2.Y, p2.Z, p, lvl, brush);
@@ -126,16 +126,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cuboid Wireframe"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1), lenZ = (p2.Z - p1.Z + 1);
             int horSidesvol = 2 * (lenX * 2 + lenZ * 2); // TODO: slightly overestimated by at most four blocks.
             int verSidesVol = Math.Max(0, lenY - 2) * 4;
             return horSidesvol + verSidesVol;
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             for (ushort y = p1.Y; y <= p2.Y; y++ ) {
                 PlaceBlock(p, lvl, p1.X, y, p1.Z, brush);
                 PlaceBlock(p, lvl, p2.X, y, p1.Z, brush);

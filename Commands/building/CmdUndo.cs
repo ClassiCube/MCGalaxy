@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
         }
 
         const int undoMax = -1; // allows everything to be undone.
-        long GetSeconds(Player p, Player who, string param) {
+        internal static long GetSeconds(Player p, Player who, string param) {
             long secs;
             if (param.CaselessEq("all")) {
                 secs = (p.group.maxUndo == undoMax || p == who) ? int.MaxValue : p.group.maxUndo;
@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands
             UndoOnlineDrawOp op = new UndoOnlineDrawOp();
             op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.who = who;
-            DrawOp.DoDrawOp(op, null, p, new Vector3U16[1]);
+            DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
             Level saveLevel = op.saveLevel;
             if (p == who) {
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();
             op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.whoName = whoName;
-            DrawOp.DoDrawOp(op, null, p, new Vector3U16[1]);
+            DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
 
             if (op.foundUser) {
                 Player.GlobalMessage(Server.FindColor(whoName) + whoName + "%S's actions for the past &b" + seconds + " %Sseconds were undone.");
@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands
             Command.all.Find("physics").Use(p, "0");
             UndoPhysicsDrawOp op = new UndoPhysicsDrawOp();
             op.seconds = seconds;
-            DrawOp.DoDrawOp(op, null, p, new Vector3U16[1]);
+            DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
             Player.GlobalMessage("Physics were undone &b" + seconds + " %Sseconds");
             Server.s.Log( "Physics were undone &b" + seconds + " %Sseconds");

@@ -33,9 +33,9 @@ namespace MCGalaxy.Drawing.Ops {
             return baseOp.DetermineDrawOpMethod(lvl, affected);
         }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
-            Vector3U16 origP1 = marks[0], origP2 = marks[1];
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            Vec3U16 origP1 = marks[0], origP2 = marks[1];
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             int total = 0;
             while (true) {
                 total += baseOp.GetBlocksAffected(lvl, marks);
@@ -50,8 +50,8 @@ namespace MCGalaxy.Drawing.Ops {
             return total;
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             while (true) {
                 baseOp.Perform(marks, p, lvl, brush);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
@@ -91,8 +91,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Pyramid reverse"; } }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0], p2 = marks[1];
             while (true) {
                 wallOp.Perform(marks, p, lvl, brush);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)

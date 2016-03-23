@@ -29,12 +29,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             return CopyState.Volume;
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0];
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             // Adjust for the fact that paste origin may be outside the map.
@@ -65,12 +65,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, Vector3U16[] marks) {
+        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             return CopyState.Volume;
         }
         
-        public override void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vector3U16 p1 = marks[0];
+        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = marks[0];
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             ExtBlock[] include = Include, exclude = Exclude;

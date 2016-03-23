@@ -43,16 +43,16 @@ namespace MCGalaxy.Drawing.Ops {
         protected internal int method;
         
         /// <summary> Minimum coordinates of the bounds of this drawing command. </summary>
-        public Vector3U16 Min;
+        public Vec3U16 Min;
         
         /// <summary> Maximum coordinates of the bounds of this drawing command. </summary>
-        public Vector3U16 Max;
+        public Vec3U16 Max;
         
         /// <summary> Coordinates of the first point selected by the user. </summary>
-        public Vector3U16 Origin;
+        public Vec3U16 Origin;
         
         /// <summary> Coordinates of the current block being processed by the drawing command. </summary>
-        public Vector3U16 Coords;
+        public Vec3U16 Coords;
         
         /// <summary> Level the draw operation is being performed upon. </summary>
         public Level Level;
@@ -66,11 +66,11 @@ namespace MCGalaxy.Drawing.Ops {
         
         /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
-        public abstract int GetBlocksAffected(Level lvl, Vector3U16[] marks);
+        public abstract int GetBlocksAffected(Level lvl, Vec3U16[] marks);
         
-        public abstract void Perform(Vector3U16[] marks, Player p, Level lvl, Brush brush);
+        public abstract void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush);
         
-        public bool CanDraw(Vector3U16[] marks, Player p, out int affected) {
+        public bool CanDraw(Vec3U16[] marks, Player p, out int affected) {
             affected = GetBlocksAffected(p.level, marks);
             if (affected > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
@@ -128,21 +128,20 @@ namespace MCGalaxy.Drawing.Ops {
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                     ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            Vec3U16[] marks = new [] { new Vec3U16(x1, y1, z1), new Vec3U16(x2, y2, z2) };
             if (op.MinMaxCoords) {
-                ushort xx1 = x1, yy1 = y1, zz1 = z1, xx2 = x2, yy2 = y2, zz2 = z2;
-                x1 = Math.Min(xx1, xx2); x2 = Math.Max(xx1, xx2);
-                y1 = Math.Min(yy1, yy2); y2 = Math.Max(yy1, yy2);
-                z1 = Math.Min(zz1, zz2); z2 = Math.Max(zz1, zz2);
+                marks[0].X = Math.Min(x1, x2); marks[1].X = Math.Max(x1, x2);
+                marks[0].Y = Math.Min(y1, y2); marks[1].Y = Math.Max(y1, y2);
+                marks[0].Z = Math.Min(z1, z2); marks[1].Z = Math.Max(z1, z2);
             }
-            Vector3U16[] marks = new [] { new Vector3U16(x1, y1, z1), new Vector3U16(x2, y2, z2) };
             return DoDrawOp(op, brush, p, marks);
         }
         
-        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, Vector3U16[] marks) {
+        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, Vec3U16[] marks) {
             op.Origin = marks[0]; op.Min = marks[0]; op.Max = marks[0];
             for (int i = 1; i < marks.Length; i++) {
-                op.Min = Vector3U16.Min(op.Min, marks[i]);
-                op.Max = Vector3U16.Max(op.Max, marks[i]);
+                op.Min = Vec3U16.Min(op.Min, marks[i]);
+                op.Max = Vec3U16.Max(op.Max, marks[i]);
             }
             op.Level = p.level;
             
@@ -168,7 +167,7 @@ namespace MCGalaxy.Drawing.Ops {
             
             if (entry.Start > p.UndoBuffer.LastClear) {
                 UndoDrawOpEntry[] items = p.UndoDrawOps.Items;
-                if (items.Length == 20)
+                if (items.Length == 25)
                     p.UndoDrawOps.Remove(items[0]);
             } else { // UndoBuffer has been cleared during the draw op.
                 entry.Start = p.UndoBuffer.LastClear;
