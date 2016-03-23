@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Util;
 
@@ -96,7 +97,7 @@ namespace MCGalaxy.Commands
             UndoOnlineDrawOp op = new UndoOnlineDrawOp();
             op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.who = who;
-            op.Perform(null, p, null, null);
+            DrawOp.DoDrawOp(op, null, p, new Vector3U16[1]);
             
             Level saveLevel = op.saveLevel;
             if (p == who) {
@@ -116,7 +117,7 @@ namespace MCGalaxy.Commands
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();
             op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.whoName = whoName;
-            op.Perform(null, p, null, null);
+            DrawOp.DoDrawOp(op, null, p, new Vector3U16[1]);
 
             if (op.foundUser) {
                 Player.GlobalMessage(Server.FindColor(whoName) + whoName + "%S's actions for the past &b" + seconds + " %Sseconds were undone.");
@@ -137,7 +138,7 @@ namespace MCGalaxy.Commands
             Command.all.Find("physics").Use(p, "0");
             UndoPhysicsDrawOp op = new UndoPhysicsDrawOp();
             op.seconds = seconds;
-            op.Perform(null, p, p.level, null);
+            DrawOp.DoDrawOp(op, null, p, new Vector3U16[1]);
             
             Player.GlobalMessage("Physics were undone &b" + seconds + " %Sseconds");
             Server.s.Log( "Physics were undone &b" + seconds + " %Sseconds");

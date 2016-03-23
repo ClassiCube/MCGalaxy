@@ -468,6 +468,8 @@ namespace MCGalaxy.Gui
         {
             if (e.KeyCode == Keys.Enter)
             {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
                 string text = txtInput.Text.Trim();
                 if (String.IsNullOrEmpty(text)) return;
                 if (MCGalaxy.Chat.HandleModes(null, text))
@@ -485,6 +487,8 @@ namespace MCGalaxy.Gui
             if (e.KeyCode != Keys.Enter)
                 return;
             string sentCmd, sentMsg = "";
+            e.Handled = true;
+            e.SuppressKeyPress = true;
 
             if (txtCommands.Text == null || txtCommands.Text.Trim() == "")
             {
@@ -1021,45 +1025,10 @@ namespace MCGalaxy.Gui
                     if (p.jailed) { JailBt.Text = "UnJail"; } else { JailBt.Text = "Jail"; }
                 }
                 { //Text box stuff
-                    //Login
-                    {
-                        if (File.Exists("text/login/" + p.name + ".txt"))
-                        {
-                            LoginTxt.Text = null;
-                            LoginTxt.Text = CP437Reader.ReadAllText("text/login/" + p.name + ".txt");
-                        }
-                        else
-                        {
-                            LoginTxt.Text = null;
-                        }
-                    }
-                    //Logout
-                    {
-                        if (File.Exists("text/logout/" + p.name + ".txt"))
-                        {
-                            LogoutTxt.Text = null;
-                            LogoutTxt.Text = CP437Reader.ReadAllText("text/logout/" + p.name + ".txt");
-                        }
-                        else
-                        {
-                            LogoutTxt.Text = null;
-                        }
-                    }
-                    //Title
-                    {
-                        if (p.title != null)
-                        {
-                            TitleTxt.Text = p.title;
-                        }
-                        else
-                        {
-                            TitleTxt.Text = null;
-                        }
-                    }
-                    //Color
-                    {
-                    	ColorCombo.SelectedText = Colors.Name(p.color).Capitalize();
-                    }
+                    LoginTxt.Text = PlayerDB.GetLoginMessage(p);
+                    LogoutTxt.Text = PlayerDB.GetLogoutMessage(p);
+                    TitleTxt.Text = p.title;
+                    ColorCombo.SelectedText = Colors.Name(p.color).Capitalize();
                     //Map
                     {
                         try
