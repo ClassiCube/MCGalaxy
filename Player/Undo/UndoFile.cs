@@ -114,6 +114,23 @@ namespace MCGalaxy.Util {
             return aNum.CompareTo(bNum);
         }
         
+        protected internal static void UndoBlock(Player p, Level lvl, Player.UndoPos Pos, 
+                                        int timeDelta, BufferedBlockSender buffer,
+                                         byte oldType, byte oldExtType, byte newType, byte newExtType) {
+            Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
+            if (Pos.type == newType || Block.Convert(Pos.type) == Block.water
+                || Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
+                
+                Pos.newtype = oldType; Pos.newExtType = oldExtType;
+                Pos.extType = newExtType; Pos.timeDelta = timeDelta;
+                if (lvl.DoBlockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, Pos.newExtType)) {
+                    buffer.Add(lvl.PosToInt(Pos.x, Pos.y, Pos.z), Pos.newtype, Pos.newExtType);
+                    buffer.CheckIfSend(false);
+                }
+                if (p != null) p.RedoBuffer.Add(lvl, Pos);
+            }
+        }
+        
         public static void CreateDefaultDirectories() {
             if (!Directory.Exists(undoDir))
                 Directory.CreateDirectory(undoDir);

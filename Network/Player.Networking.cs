@@ -728,7 +728,7 @@ namespace MCGalaxy {
         }
         
         byte MakePitch() {
-        	if (Server.flipHead || (flipHead && infected))
+        	if (Server.flipHead || flipHead)
         		if (rot[1] > 64 && rot[1] < 192)
         			return rot[1];
         		else

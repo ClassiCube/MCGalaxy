@@ -70,12 +70,13 @@ namespace MCGalaxy.Util {
         
         protected override bool UndoEntry(Player p, string path, Vec3U16[] marks,
                                           ref byte[] temp, DateTime start) {
-            Player.UndoPos Pos;
+            Player.UndoPos Pos = default(Player.UndoPos);
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
             Vec3U16 min = marks[0], max = marks[1];
             bool undoArea = min.X != ushort.MaxValue;
+            BufferedBlockSender buffer = new BufferedBlockSender(null);
+            string last = null;
             
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
@@ -89,27 +90,26 @@ namespace MCGalaxy.Util {
                         min = new Vec3U16(0, 0, 0);
                         max = new Vec3U16((ushort)(lvl.Width - 1), (ushort)(lvl.Height - 1), (ushort)(lvl.Length - 1));
                     }
-                    
+                    if (last == null || last != lvl.name) {
+                        buffer.CheckIfSend(true);
+                        last = lvl.name;
+                    }
+                    buffer.level = lvl; 
                     Pos.mapName = lvl.name;
+                    
                     Pos.x = Convert.ToUInt16(lines[(i * 7) - 6]);
                     Pos.y = Convert.ToUInt16(lines[(i * 7) - 5]);
                     Pos.z = Convert.ToUInt16(lines[(i * 7) - 4]);
                     if (Pos.x < min.X || Pos.y < min.Y || Pos.z < min.Z ||
                         Pos.x > max.X || Pos.y > max.Y || Pos.z > max.Z) continue;
-                    Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
-
-                    if (Pos.type == Convert.ToByte(lines[(i * 7) - 1]) || Block.Convert(Pos.type) == Block.water ||
-                        Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
-                        
-                        Pos.newtype = Convert.ToByte(lines[(i * 7) - 2]);
-                        Pos.timeDelta = timeDelta;
-
-                        lvl.Blockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, 0);
-                        if (p != null) p.RedoBuffer.Add(lvl, Pos);
-                    }
+                    
+                    byte newType = Convert.ToByte(lines[(i * 7) - 1]);
+                    byte oldType = Convert.ToByte(lines[(i * 7) - 2]);
+                    UndoBlock(p, lvl, Pos, timeDelta, buffer, oldType, 0, newType, 0);                   
                 } catch {
                 }
             }
+            buffer.CheckIfSend(true);
             return true;
         }
         

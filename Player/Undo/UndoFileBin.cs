@@ -121,7 +121,7 @@ namespace MCGalaxy.Util {
                                           ref byte[] temp, DateTime start) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            Player.UndoPos Pos;
+            Player.UndoPos Pos = default(Player.UndoPos);
             Vec3U16 min = marks[0], max = marks[1];
             bool undoArea = min.X != ushort.MaxValue;
             
@@ -155,21 +155,9 @@ namespace MCGalaxy.Util {
                         if (Pos.x < min.X || Pos.y < min.Y || Pos.z < min.Z ||
                             Pos.x > max.X || Pos.y > max.Y || Pos.z > max.Z) continue;
                         
-                        Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
                         byte oldType = temp[offset + 8], oldExtType = temp[offset + 9];
                         byte newType = temp[offset + 10], newExtType = temp[offset + 11];
-
-                        if (Pos.type == newType || Block.Convert(Pos.type) == Block.water
-                            || Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
-                            
-                            Pos.newtype = oldType; Pos.newExtType = oldExtType;
-                            Pos.extType = newExtType; Pos.timeDelta = timeDelta;
-                            if (lvl.DoBlockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, Pos.newExtType)) {
-                                buffer.Add(lvl.PosToInt(Pos.x, Pos.y, Pos.z), Pos.newtype, Pos.newExtType);
-                                buffer.CheckIfSend(false);
-                            }
-                            if (p != null) p.RedoBuffer.Add(lvl, Pos);
-                        }
+                        UndoBlock(p, lvl, Pos, timeDelta, buffer, oldType, oldExtType, newType, newExtType);
                     }
                     buffer.CheckIfSend(true);
                 }

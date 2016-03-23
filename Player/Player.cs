@@ -194,7 +194,7 @@ namespace MCGalaxy {
         public int lastYblock = 0, lastXblock = 0, lastZblock = 0;
         public bool infected = false;
         public bool aka = false;
-        public bool flipHead = true;
+        public bool flipHead = false;
         public int playersInfected = 0;
         internal string lastSpawnColor = "";
         internal bool ratedMap = false;
@@ -501,6 +501,8 @@ namespace MCGalaxy {
                                 other.SendSpawn(p.id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
                             else
                                 other.SendSpawn(p.id, Colors.red + p.name + possession, x, y, z, rotx, roty);
+                            if (other.HasCpeExt(CpeExt.ChangeModel))
+                                other.SendChangeModel(p.id, "zombie");
                         } else if (!p.referee) {
                             other.SendSpawn(p.id, p.color + p.name + possession, x, y, z, rotx, roty);
                         }

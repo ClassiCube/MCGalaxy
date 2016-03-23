@@ -47,57 +47,42 @@ namespace MCGalaxy.Drawing.Ops {
             UndoCache cache = who.UndoBuffer;
             UndoCacheNode node = cache.Tail;
             if (node == null) return;
+            
             Vec3U16 min = Min, max = Max;
             bool undoArea = min.X != ushort.MaxValue;
+            Player.UndoPos Pos = default(Player.UndoPos);
+            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
                 if (lvl == null || (p.level != null && !p.level.name.CaselessEq(lvl.name))) {
                     node = node.Prev; continue;
                 }
+                Pos.mapName = lvl.name;
                 
                 saveLvl = lvl;
                 List<UndoCacheItem> items = node.Items;
                 BufferedBlockSender buffer = new BufferedBlockSender(lvl);
                 if (!undoArea) { 
-                	min = new Vec3U16(0, 0, 0);
-                	max = new Vec3U16((ushort)(lvl.Width - 1), (ushort)(lvl.Height - 1), (ushort)(lvl.Length - 1));
+                    min = new Vec3U16(0, 0, 0);
+                    max = new Vec3U16((ushort)(lvl.Width - 1), (ushort)(lvl.Height - 1), (ushort)(lvl.Length - 1));
                 }
                 
                 for (int i = items.Count - 1; i >= 0; i--) {
                     UndoCacheItem item = items[i];
-                    ushort x, y, z;
-                    node.Unpack(item.Index, out x, out y, out z);
-                    if (x < min.X || y < min.Y || z < min.Z ||
-                        x > max.X || y > max.Y || z > max.Z) continue;
+                    node.Unpack(item.Index, out Pos.x, out Pos.y, out Pos.z);
+                    if (Pos.x < min.X || Pos.y < min.Y || Pos.z < min.Z ||
+                        Pos.x > max.X || Pos.y > max.Y || Pos.z > max.Z) continue;
                     
                     DateTime time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
                     if (time > End) continue;
                     if (time < Start) { buffer.CheckIfSend(true); return; }
                     
-                    byte b = lvl.GetTile(x, y, z);
                     byte newTile = 0, newExtTile = 0;
                     item.GetNewExtBlock(out newTile, out newExtTile);
-                    if (b == newTile || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
-                        Player.UndoPos uP = default(Player.UndoPos);
-                        byte extType = 0;
-                        if (b == Block.custom_block) extType = lvl.GetExtTile(x, y, z);
-                        byte tile = 0, extTile = 0;
-                        item.GetExtBlock(out tile, out extTile);
-                        
-                        if (lvl.DoBlockchange(p, x, y, z, tile, extTile)) {
-                            buffer.Add(lvl.PosToInt(x, y, z), tile, extTile);
-                            buffer.CheckIfSend(false);
-                        }
-                        
-                        uP.newtype = tile; uP.newExtType = extTile;
-                        uP.type = b; uP.extType = extType;
-                        uP.x = x; uP.y = y; uP.z = z;
-                        uP.mapName = node.MapName;
-                        time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
-                        uP.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
-                        if (p != null) p.RedoBuffer.Add(lvl, uP);
-                    }
+                    byte tile = 0, extTile = 0;
+                    item.GetExtBlock(out tile, out extTile);
+                    UndoFile.UndoBlock(p, lvl, Pos, timeDelta, buffer, tile, extTile, newTile, newExtTile);
                 }
                 buffer.CheckIfSend(true);
                 node = node.Prev;
