@@ -50,8 +50,11 @@ namespace MCGalaxy {
 		/// <summary> Returns whether the given user is banned. </summary>
 		public static bool IsBanned(string who) {
 			who = who.ToLower();
-			foreach (string line in File.ReadAllLines("text/bans.txt"))
-				if (line.Split(' ')[1] == who) return true;
+			foreach (string line in File.ReadAllLines("text/bans.txt")) {
+				string[] parts = line.Split(' ');
+				if (parts.Length <= 1) continue;
+				if (parts[1] == who) return true;
+			}
 			return false;
 		}
 		
@@ -62,6 +65,7 @@ namespace MCGalaxy {
 			string bannedby = "", reason = "", timedate = "", oldrank = "", stealth = "";
 			foreach (string line in File.ReadAllLines("text/bans.txt")) {
 				string[] parts = line.Split(' ');
+				if (parts.Length <= 5) continue;
 				if (parts[1] == who) {
 					bannedby = parts[0];
 					reason = CP437Reader.ConvertToRaw(parts[2]);
@@ -80,7 +84,8 @@ namespace MCGalaxy {
 			StringBuilder sb = new StringBuilder();
 			
 			foreach (string line in File.ReadAllLines("text/bans.txt")) {
-				if (line.Split(' ')[1] != name)
+				string[] parts = line.Split(' ');
+				if (parts.Length <= 1 || parts[1] != name)
 					sb.Append(line + "\r\n");
 				else
 					success = true;
@@ -97,7 +102,7 @@ namespace MCGalaxy {
 			
 			foreach (string line in File.ReadAllLines("text/bans.txt")) {
 				string[] parts = line.Split(' ');
-				if (parts[1] == who) {
+				if (parts.Length > 2 && parts[1] == who) {
 					parts[2] = CP437Writer.ConvertToUnicode(reason);				
 					found = true;
 					sb.Append(String.Join(" ", parts) + "\r\n");
