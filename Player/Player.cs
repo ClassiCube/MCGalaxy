@@ -335,8 +335,6 @@ namespace MCGalaxy {
             prefix = (title == "") ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";            
         }
         
-        public bool Readgcrules = false;
-        public DateTime Timereadgcrules = DateTime.MinValue;
         public bool CheckIfInsideBlock() {
             ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
             byte head = level.GetTile(x, y, z);

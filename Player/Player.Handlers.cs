@@ -264,7 +264,7 @@ namespace MCGalaxy {
                     {
                         if (!IPInPrivateRange(ip))
                         {
-                            Kick("Login failed! Try again.", true); return;
+                            Kick("Login failed! Try signing in again.", true); return;
                         }
                     }
                 }

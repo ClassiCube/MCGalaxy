@@ -43,14 +43,14 @@ namespace MCGalaxy.Commands
             	if (p.muted) { Player.SendMessage(p, "You are muted."); return; }
             	if (p.ignoreGlobalChat || p.ignoreAll) { Player.SendMessage(p, "You cannot use Global Chat while you have it muted."); return; }
             	if (Server.chatmod && !p.voice) { Player.SendMessage(p, "You cannot use Global Chat while in Chat Moderation!"); return; }
-            	if (!Server.gcaccepted.Contains(p.name.ToLower())) { RulesMethod(p); return; }
+            	if (!Server.gcaccepted.Contains(p.name.ToLower())) { ShowRules(p, true); return; }
             }            //Server.GlobalChat.Say((p != null ? p.name + ": " : "Console: ") + message, p);
             Server.GlobalChat.Say(p == null ? "Console: " + message : p.name + ": " + message, p);
             Player.GlobalMessage("%G<[Global] " + (p != null ? p.name + ": " : "Console: ") + "&f" + (Server.profanityFilter ? ProfanityFilter.Parse(message) : message), true);
 
         }
-        public void RulesMethod(Player p)
-        {
+        
+        public static void ShowRules(Player p, bool showAccept) {
             Player.SendMessage(p, "&cBy using the Global Chat you agree to the following rules:");
             Player.SendMessage(p, "1. No Spamming");
             Player.SendMessage(p, "2. No Advertising (Trying to get people to your server)");
@@ -63,10 +63,11 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "9. Do not ask for a server name");
             Player.SendMessage(p, "10. Use common sense.");
             Player.SendMessage(p, "11. Don't say any server name");
-            Player.SendMessage(p, "&3Type /gcaccept to accept these rules");
+            if (showAccept)
+                Player.SendMessage(p, "&3Type /gcaccept to accept these rules");
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/global [message] - Send a message to Global Chat.");
         }
     }
