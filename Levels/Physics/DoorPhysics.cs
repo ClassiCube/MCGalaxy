@@ -93,7 +93,7 @@ namespace MCGalaxy.BlockPhysics {
                 default:
                     //non special blocks are then ignored, maybe it would be better to avoid getting here and cutting down the list
                     if (!(C.data is string) || !((string)C.data).Contains("wait"))
-                    	C.time = 255;
+                        C.time = 255;
                     break;
             }
         }
@@ -123,8 +123,7 @@ namespace MCGalaxy.BlockPhysics {
         
         static void AnyDoor(Level lvl, Check C, ushort x, ushort y, ushort z, int timer, bool instaUpdate = false) {
             if (C.time != 0) {
-                CheckDoorRevert(lvl, C, timer);
-                return;
+                CheckDoorRevert(lvl, C, timer); return;
             }
             PhysDoor(lvl, (ushort)(x + 1), y, z, instaUpdate);
             PhysDoor(lvl, (ushort)(x - 1), y, z, instaUpdate);
@@ -134,20 +133,21 @@ namespace MCGalaxy.BlockPhysics {
             PhysDoor(lvl, x, (ushort)(y + 1), z, instaUpdate);
             
             if (lvl.blocks[C.b] != Block.door_green_air) {
-                CheckDoorRevert(lvl, C, timer);
-                return;
+                CheckDoorRevert(lvl, C, timer); return;
             }
             
+            if (lvl.physics != 5)
+                ActivateNeighbours(lvl, C, x, y, z);           
+            CheckDoorRevert(lvl, C, timer);
+        }
+        
+        static void ActivateNeighbours(Level lvl, Check C, ushort x, ushort y, ushort z) {
             for (int xx = -1; xx <= 1; xx++)
                 for (int yy = -1; yy <= 1; yy++)
                     for (int zz = -1; zz <= 1; zz++)
             {
                 byte b = lvl.GetTile(lvl.IntOffset(C.b, xx, yy, zz));
                 if (b == Block.rocketstart) {
-                    if (lvl.physics == 5) {
-                        lvl.Blockchange(x, y, z, Block.air);
-                        return;
-                    }
                     int b1 = lvl.IntOffset(C.b, xx * 3, yy * 3, zz * 3);
                     int b2 = lvl.IntOffset(C.b, xx * 2, yy * 2, zz * 2);
                     bool unblocked = lvl.GetTile(b1) == Block.air && lvl.GetTile(b2) == Block.air &&
@@ -159,10 +159,6 @@ namespace MCGalaxy.BlockPhysics {
                         lvl.AddUpdate(b2, Block.fire);
                     }
                 } else if (b == Block.firework) {
-                    if (lvl.physics == 5) {
-                        lvl.Blockchange(x, y, z, Block.air);
-                        return;
-                    }
                     int b1 = lvl.IntOffset(C.b, xx, yy + 1, zz);
                     int b2 = lvl.IntOffset(C.b, xx, yy + 2, zz);
                     bool unblocked = lvl.GetTile(b1) == Block.air && lvl.GetTile(b2) == Block.air &&
@@ -174,14 +170,9 @@ namespace MCGalaxy.BlockPhysics {
                         lvl.AddUpdate(b1, Block.lavastill, false, "dissipate 100");
                     }
                 } else if (b == Block.tnt) {
-                    if (lvl.physics == 5) {
-                        lvl.Blockchange(x, y, z, Block.air);
-                        return;
-                    }
                     lvl.MakeExplosion((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz), 0);
                 }
             }
-            CheckDoorRevert(lvl, C, timer);
         }
 
         static void CheckDoorRevert(Level lvl, Check C, int timer) {
