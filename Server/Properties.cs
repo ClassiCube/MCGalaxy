@@ -27,38 +27,15 @@ namespace MCGalaxy {
 	public static class SrvProperties {
 		
 		public static void Load(string givenPath, bool skipsalt = false) {
-			/*
-			if (!skipsalt)
-			{
-				Server.salt = "";
-				string rndchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-				Random rnd = new Random();
-				for (int i = 0; i < 16; ++i) { Server.salt += rndchars[rnd.Next(rndchars.Length)]; }
-			}*/
-			if ( !skipsalt ) {
-				bool gotSalt = false;
-				if ( File.Exists("text/salt.txt") ) {
-					string salt = File.ReadAllText("text/salt.txt");
-					if ( salt.Length != 16 )
-						Server.s.Log("Invalid salt in salt.txt!");
-					else {
-						Server.salt = salt;
-						gotSalt = true;
-					}
-				}
-				if ( !gotSalt ) {
-					RandomNumberGenerator prng = RandomNumberGenerator.Create();
-					StringBuilder sb = new StringBuilder();
-					byte[] oneChar = new byte[1];
-					while ( sb.Length < 16 ) {
-						prng.GetBytes(oneChar);
-						if ( Char.IsLetterOrDigit((char)oneChar[0]) ) {
-							sb.Append((char)oneChar[0]);
-						}
-					}
-					Server.salt = sb.ToString();
-				}
-			}
+            RandomNumberGenerator prng = RandomNumberGenerator.Create();
+            StringBuilder sb = new StringBuilder();
+            byte[] oneChar = new byte[1];
+            while (sb.Length < 16) {
+                prng.GetBytes(oneChar);
+                if (Char.IsLetterOrDigit((char)oneChar[0]))
+                    sb.Append((char)oneChar[0]);
+            }
+            Server.salt = sb.ToString();
 
 			if (PropertiesFile.Read(givenPath, LineProcessor))
 				Server.s.SettingsUpdate();

@@ -30,6 +30,7 @@ using Timer = System.Timers.Timer;
 using MCGalaxy.BlockPhysics;
 using MCGalaxy.Games;
 using MCGalaxy.Levels.IO;
+using MCGalaxy.SQL.Native;
 //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
 //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
 
@@ -391,6 +392,7 @@ namespace MCGalaxy
             IDataParameter zP = transaction.CreateParam("@Z", DbType.UInt16); cmd.Parameters.Add(zP);
             IDataParameter tileP = transaction.CreateParam("@Tile", DbType.Byte); cmd.Parameters.Add(tileP);
             IDataParameter delP = transaction.CreateParam("@Del", DbType.Boolean); cmd.Parameters.Add(delP);
+            bool isNative = transaction is NativeBulkTransaction;
             
             for (int i = 0; i < tempCache.Count; i++) {
                 BlockPos bP = tempCache[i];
@@ -401,9 +403,18 @@ namespace MCGalaxy
                 MakeInt(time.Hour, 2, 11, ptr); MakeInt(time.Minute, 2, 14, ptr); MakeInt(time.Second, 2, 17, ptr);
                 
                 timeP.Value = date;
-                xP.Value = x; yP.Value = y; zP.Value = z;
-                tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
-                delP.Value = (bP.flags & 1) != 0;
+                // For NativeParameter, we make the optimisation of avoiding boxing primitive types.
+                if (!isNative) {
+                    xP.Value = x; yP.Value = y; zP.Value = z;
+                    tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
+                    delP.Value = (bP.flags & 1) != 0;
+                } else {
+                    ((NativeParameter)xP).U16Value = x;
+                    ((NativeParameter)yP).U16Value = y;
+                    ((NativeParameter)zP).U16Value = z;
+                    ((NativeParameter)tileP).U8Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
+                    ((NativeParameter)delP).BoolValue = (bP.flags & 1) != 0;
+                }
 
                 if (!BulkTransaction.Execute(template, cmd)) {
                     cmd.Dispose();

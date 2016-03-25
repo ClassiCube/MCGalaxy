@@ -76,16 +76,13 @@ namespace MCGalaxy.SQL.Native {
                     code = sqlite3_bind_text(Statement, nParam.Index, dataPtr, dataCount - 1, IntPtr.Zero);
                     break;
                 case DbType.UInt16:
-                    ushort value_u16 = (ushort)nParam.Value;
-                    code = sqlite3_bind_int(Statement, nParam.Index, value_u16);
+                    code = sqlite3_bind_int(Statement, nParam.Index, nParam.U16Value);
                     break;                    
                 case DbType.Byte:
-                    byte value_u8 = (byte)nParam.Value;
-                    code = sqlite3_bind_int(Statement, nParam.Index, value_u8);
+                    code = sqlite3_bind_int(Statement, nParam.Index, nParam.U8Value);
                     break;
                 case DbType.Boolean:
-                    bool value_bool = (bool)nParam.Value;
-                    code = sqlite3_bind_int(Statement, nParam.Index, value_bool ? 1 : 0);
+                    code = sqlite3_bind_int(Statement, nParam.Index, nParam.BoolValue ? 1 : 0);
                     break;
             }
             if (code > 0) throw new NativeException(code);

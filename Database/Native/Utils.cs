@@ -44,7 +44,7 @@ namespace MCGalaxy.SQL.Native {
         }
     }
     
-    sealed class NativeParameter : IDataParameter {	    
+    internal sealed class NativeParameter : IDataParameter {	    
 		public DbType DbType { get { return type; } set { type = value; } }
         public ParameterDirection Direction { get; set; }
         public bool IsNullable { get { return false; } }
@@ -54,7 +54,10 @@ namespace MCGalaxy.SQL.Native {
         public object Value { get; set; }
         
         public DbType type;
-        public int Index = -1;
+        public int Index = -1;        
+        public ushort U16Value;
+        public byte U8Value;
+        public bool BoolValue;
     }
     
     sealed class NativeParamsList : List<IDataParameter>, IDataParameterCollection {        
