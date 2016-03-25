@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using MCGalaxy.Drawing;
 using MCGalaxy.Levels.IO;
@@ -46,7 +45,7 @@ namespace MCGalaxy.Util {
                         if (!LevelInfo.ExistsOffline(uP.mapName)) {
                             if (uP.mapName != lastLoggedName) {
                                 lastLoggedName = uP.mapName;
-                                Server.s.Log("Missing map file\"" + lastLoggedName+ "\", skipping undo entries");
+                                Server.s.Log("Missing map file \"" + lastLoggedName+ "\", skipping undo entries");
                             }
                             continue;
                         }
@@ -169,7 +168,7 @@ namespace MCGalaxy.Util {
                         DateTime time = chunk.BaseTime.AddTicks((item.Flags & 0x3FFF) * TimeSpan.TicksPerSecond);
                         if (time < start) { buffer.CheckIfSend(true); return false; }
                         
-                        int index = NetUtils.ReadI32(temp, offset + 2);
+                        int index = I32(temp, offset + 2);
                         Pos.x = (ushort)(index % chunk.Width);
                         Pos.y = (ushort)((index / chunk.Width) / chunk.Length);
                         Pos.z = (ushort)((index / chunk.Width) % chunk.Length);
@@ -213,7 +212,7 @@ namespace MCGalaxy.Util {
                         DateTime time = chunk.BaseTime.AddTicks((flags & 0x3FFF) * TimeSpan.TicksPerSecond);
                         if (time < start) return false;
                         
-                        int index = NetUtils.ReadI32(temp, offset + 2);
+                        int index = I32(temp, offset + 2);
                         ushort x = (ushort)(index % chunk.Width);
                         ushort y = (ushort)((index / chunk.Width) / chunk.Length);
                         ushort z = (ushort)((index / chunk.Width) % chunk.Length);
@@ -226,6 +225,11 @@ namespace MCGalaxy.Util {
         
         static ushort U16(byte[] buffer, int offset) {
             return (ushort)(buffer[offset + 0] | buffer[offset + 1] << 8);
+        }
+        
+        static int I32(byte[] buffer, int offset) {
+            return buffer[offset + 0] | buffer[offset + 1] << 8 | 
+                buffer[offset + 2] << 16 | buffer[offset + 3] << 24;
         }
         
         static bool CheckChunk(ChunkHeader chunk, DateTime start, Player p, out Level lvl) {

@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using MCGalaxy.Drawing;
 
@@ -30,66 +29,11 @@ namespace MCGalaxy.Util {
         const int entrySize = 12;
 
         protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
-            using (FileStream fs = File.Create(path)) {
-                BinaryWriter w = new BinaryWriter(fs);
-                long entriesPos = 0;
-                ChunkHeader last = default(ChunkHeader);
-                
-                foreach (Player.UndoPos uP in buffer) {
-                    DateTime time = Server.StartTime.AddSeconds(uP.timeDelta);
-                    int timeDiff = (int)(time - last.BaseTime).TotalSeconds;
-                    if (last.LevelName != uP.mapName || timeDiff > 65535 || last.Entries == ushort.MaxValue) {
-                        WriteChunkEntries(w, last.Entries, entriesPos);
-                        last = WriteEmptyChunk(w, uP.mapName, time, ref entriesPos);
-                    }
-                    
-                    w.Write((ushort)timeDiff);
-                    w.Write(uP.x); w.Write(uP.y); w.Write(uP.z);
-                    w.Write(uP.type); w.Write(uP.extType);
-                    w.Write(uP.newtype); w.Write(uP.newExtType);
-                    last.Entries++;
-                }
-                if (last.Entries > 0)
-                    WriteChunkEntries(w, last.Entries, entriesPos);
-            }
+            throw new NotSupportedException("Non-optimised binary undo files have been deprecated");
         }
         
         protected override void SaveUndoData(UndoCache buffer, string path) {
-            using (FileStream fs = File.Create(path)) {
-                BinaryWriter w = new BinaryWriter(fs);
-                long entriesPos = 0;
-                ChunkHeader last = default(ChunkHeader);
-                UndoCacheNode node = buffer.Tail;
-                
-                while (node != null) {
-                    List<UndoCacheItem> items = node.Items;
-                    for (int i = 0; i < items.Count; i++) {
-                        UndoCacheItem uP = items[i];
-                        DateTime time = node.BaseTime.AddSeconds(uP.TimeDelta);
-                        int timeDiff = (int)(time - last.BaseTime).TotalSeconds;
-                        if (last.LevelName != node.MapName || timeDiff > 65535 || last.Entries == ushort.MaxValue) {
-                            WriteChunkEntries(w, last.Entries, entriesPos);
-                            last = WriteEmptyChunk(w, node.MapName, time, ref entriesPos);
-                        }
-                        
-                        ushort x, y, z;
-                        node.Unpack(uP.Index, out x, out y, out z);
-                        byte tile = 0, extTile = 0;
-                        uP.GetExtBlock(out tile, out extTile);
-                        byte newTile = 0, newExtTile = 0;
-                        uP.GetNewExtBlock(out newTile, out newExtTile);
-                        
-                        w.Write((ushort)timeDiff);
-                        w.Write(x); w.Write(y); w.Write(z);
-                        w.Write(tile); w.Write(extTile);
-                        w.Write(newTile); w.Write(newExtTile);
-                        last.Entries++;
-                    }
-                    if (last.Entries > 0)
-                        WriteChunkEntries(w, last.Entries, entriesPos);
-                    node = node.Prev;
-                }
-            }
+            throw new NotSupportedException("Non-optimised binary undo files have been deprecated");
         }
         
         protected override void ReadUndoData(List<Player.UndoPos> buffer, string path) {

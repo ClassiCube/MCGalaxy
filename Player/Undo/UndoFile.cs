@@ -58,8 +58,8 @@ namespace MCGalaxy.Util {
                 Directory.CreateDirectory(playerDir);
             
             int numFiles = Directory.GetFiles(playerDir).Length;
-            string path = Path.Combine(playerDir, numFiles + BinFormat.Extension);
-            BinFormat.SaveUndoData(p.UndoBuffer, path);
+            string path = Path.Combine(playerDir, numFiles + NewFormat.Extension);
+            NewFormat.SaveUndoData(p.UndoBuffer, path);
         }
         
         public static void UndoPlayer(Player p, string target, Vec3U16[] marks, DateTime start, ref bool FoundUser) {

@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Util {
@@ -29,19 +28,11 @@ namespace MCGalaxy.Util {
         protected override string Extension { get { return ".undo"; } }
         
         protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
-            using (StreamWriter w = File.CreateText(path)) {
-                foreach (Player.UndoPos uP in buffer) {
-                    DateTime time = Server.StartTimeLocal.AddSeconds(uP.timeDelta);
-                    w.Write(
-                        uP.mapName + " " + uP.x + " " + uP.y + " " + uP.z + " " +
-                        time.ToString(CultureInfo.InvariantCulture).Replace(' ', '&') + " " +
-                        uP.type + " " + uP.newtype + " ");
-                }
-            }
+            throw new NotSupportedException("Text undo files have been deprecated");
         }
         
         protected override void SaveUndoData(UndoCache buffer, string path) {
-            throw new NotImplementedException("The .txt based undo files are deprecated.");
+            throw new NotSupportedException("Text undo files have been deprecated");
         }
         
         protected override void ReadUndoData(List<Player.UndoPos> buffer, string path) {
