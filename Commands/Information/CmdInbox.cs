@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, "\"" + FoundRecord + "\" does not exist."); Inbox.Dispose(); return;
                     }
 
-                    DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                    ParameterisedQuery query = ParameterisedQuery.Create();
                     string queryString;
                     //safe against SQL injections because no user input is given here
                     if (FoundRecord == -1)

@@ -22,7 +22,6 @@ using System.Threading;
 
 namespace MCGalaxy
 {
-    //I
     public sealed class AutoSaver
     {
         static int _interval;

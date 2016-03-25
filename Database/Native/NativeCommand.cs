@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace MCGalaxy.SQL.Native {
 
-    sealed class NativeCommand : IDbCommand {
+    unsafe sealed class NativeCommand : IDbCommand {
         public IntPtr Statement;
         NativeParamsList args = new NativeParamsList();
 
@@ -52,7 +52,7 @@ namespace MCGalaxy.SQL.Native {
                 BindParam(param);
             
             int code = sqlite3_step(Statement);
-            if (code > 0) throw new NativeException(code);
+            if (code > 0 && code != 101) throw new NativeException(code);
             code = sqlite3_reset(Statement);
             if (code > 0) throw new NativeException(code);
             return 0;
@@ -61,18 +61,19 @@ namespace MCGalaxy.SQL.Native {
         public void Dispose() {
             int code = sqlite3_finalize(Statement);
             if (code > 0) throw new NativeException(code);
+            if (dataCount == 0) return;
+            Marshal.FreeHGlobal((IntPtr)dataPtr);
         }
         
         void BindParam(IDataParameter param) {
             NativeParameter nParam = (NativeParameter)param;
             if (nParam.Index == -1) BindIndex(nParam);
             
-            DbType type = param.DbType;
             int code = 0;
-            switch (type) {
+            switch (nParam.type) {
                 case DbType.AnsiStringFixedLength:
-                    byte[] data = NativeUtils.MakeUTF8((string)nParam.Value);
-                    code = sqlite3_bind_text(Statement, nParam.Index, data, data.Length - 1, IntPtr.Zero);
+                    MakeString((string)nParam.Value);
+                    code = sqlite3_bind_text(Statement, nParam.Index, dataPtr, dataCount - 1, IntPtr.Zero);
                     break;
                 case DbType.UInt16:
                     ushort value_u16 = (ushort)nParam.Value;
@@ -90,30 +91,43 @@ namespace MCGalaxy.SQL.Native {
             if (code > 0) throw new NativeException(code);
         }
         
+        byte* dataPtr;
+        int dataCount;
+        void MakeString(string value) {
+        	if ((value.Length + 1) > dataCount) {
+        		if (dataCount > 0) 
+        			Marshal.FreeHGlobal((IntPtr)dataPtr);
+        		dataCount = value.Length + 1;
+        		dataPtr = (byte*)Marshal.AllocHGlobal(dataCount);
+        	}
+        	for (int i = 0; i < value.Length; i++)
+        		dataPtr[i] = (byte)value[i];
+        }
+        
         void BindIndex(NativeParameter nParam) {
             byte[] name = NativeUtils.MakeUTF8(nParam.ParameterName);
             nParam.Index = sqlite3_bind_parameter_index(Statement, name);
         }
 
-        [DllImport("sqlite3.dll")]
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_bind_int(IntPtr stmt, int index, int value);
         
-        [DllImport("sqlite3.dll")]
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_bind_parameter_index(IntPtr stmt, byte[] name);
 
-        [DllImport("sqlite3.dll")]
-        static extern int sqlite3_bind_text(IntPtr stmt, int index, byte[] text, int textLen, IntPtr reserved);
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        static extern int sqlite3_bind_text(IntPtr stmt, int index, byte* text, int textLen, IntPtr reserved);
         
-        [DllImport("sqlite3.dll")]
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_finalize(IntPtr stmt);
         
-        [DllImport("sqlite3.dll")]
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_prepare_v2(IntPtr db, byte[] sql, int nBytes, out IntPtr stmt, out IntPtr sqlTail);
         
-        [DllImport("sqlite3.dll")]
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_reset(IntPtr stmt);
         
-        [DllImport("sqlite3.dll")]
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_step(IntPtr stmt);
     }
 }

@@ -21,7 +21,7 @@ using System.Data;
 
 namespace MCGalaxy.SQL {
 
-    public abstract class DatabaseParameterisedQuery {
+    public abstract class ParameterisedQuery {
         
 		protected Dictionary<string, object> parameters = new Dictionary<string, object>();
 		public void AddParam(string name, object param) {
@@ -36,7 +36,7 @@ namespace MCGalaxy.SQL {
         
         public abstract void Fill(string query, DataTable results);
         
-        public static DatabaseParameterisedQuery Create() {
+        public static ParameterisedQuery Create() {
         	if (Server.useMySQL) return new MySQLParameterisedQuery();
         	else return new SQLiteParameterisedQuery();
         }

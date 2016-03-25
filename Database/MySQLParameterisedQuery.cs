@@ -21,7 +21,7 @@ using MySql.Data.MySqlClient;
 
 namespace MCGalaxy.SQL {
     
-    public sealed class MySQLParameterisedQuery : DatabaseParameterisedQuery {
+    public sealed class MySQLParameterisedQuery : ParameterisedQuery {
 
         public override void Execute(string queryString, bool createDB = false) {
             using (var conn = new MySqlConnection(MySQL.connString)) {

@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
                 message = message.Remove(0, 1).Trim();
                 Player who = PlayerInfo.Find(message);
                 if (who == null) {
-                    DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                    ParameterisedQuery query = ParameterisedQuery.Create();
                     query.AddParam("@Name", message);
                     DataTable ip = Database.fillData(query, "SELECT IP FROM Players WHERE Name = @Name");
                     if (ip.Rows.Count > 0) {

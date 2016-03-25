@@ -402,7 +402,7 @@ namespace MCGalaxy {
                     onWhitelist = true;
             } else {
                 // Verify Names is off. Gotta check the hard way.
-                DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                ParameterisedQuery query = ParameterisedQuery.Create();
                 query.AddParam("@IP", ip);
                 DataTable ipQuery = Database.fillData(query, "SELECT Name FROM Players WHERE IP = @IP");
 
@@ -458,7 +458,7 @@ namespace MCGalaxy {
             
             //OpenClassic Client Check
             SendBlockchange(0, 0, 0, 0);
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", name);
             DataTable playerDb = Database.fillData(query, "SELECT * FROM Players WHERE Name=@Name");
 
@@ -1524,7 +1524,7 @@ return;
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
-            		DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            		ParameterisedQuery query = ParameterisedQuery.Create();
                     query.AddParam("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                     query.AddParam("@Name", name);
                     query.AddParam("@Cmd", cmd);

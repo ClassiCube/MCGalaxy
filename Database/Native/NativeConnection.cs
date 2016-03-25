@@ -33,11 +33,11 @@ namespace MCGalaxy.SQL.Native {
         public void ChangeDatabase(string databaseName) { }
         
         public IDbTransaction BeginTransaction(IsolationLevel il) { 
-            return null;
+        	return new NativeTransaction(this);
         }
         
         public void Close() {
-            int code = sqlite3_close_v2(DB);
+            int code = sqlite3_close(DB);
             DB = IntPtr.Zero;
             if (code > 0) throw new NativeException(code);
         }
@@ -53,17 +53,30 @@ namespace MCGalaxy.SQL.Native {
             Close();
         }
         
+        string path;
         public void Open() {
-            string[] args = ConnectionString.Split(';');
-            byte[] filename = NativeUtils.MakeUTF8(args[0]);
-            int code = sqlite3_open_v2(filename, out DB, 0, IntPtr.Zero);
+        	ParseConnectionString();
+            byte[] filename = NativeUtils.MakeUTF8(path);
+            int code = sqlite3_open_v2(filename, out DB, 0x2, IntPtr.Zero);
             if (code > 0) throw new NativeException(code);
         }
         
-        [DllImport("sqlite3.dll")]
+        void ParseConnectionString() {
+        	string[] args = ConnectionString.Split(';');
+            foreach (string kvp in args) {
+            	int sepIndex = kvp.IndexOf('=');
+            	if (sepIndex < 0) continue;
+            	string key = kvp.Substring(0, sepIndex).Trim();
+            	string value = kvp.Substring(sepIndex + 1).Trim();
+
+            	if (key == "Data Source") path = value;
+            }
+        }
+        
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int sqlite3_open_v2(byte[] filename, out IntPtr db, int flags, IntPtr vfs);
         
-        [DllImport("sqlite3.dll")]
-        static extern int sqlite3_close_v2(IntPtr db);
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        static extern int sqlite3_close(IntPtr db);
     }
 }

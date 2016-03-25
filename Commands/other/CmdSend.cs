@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
             if (!Server.useMySQL)
                 Server.s.Log(message.Replace("'", "\\'"));
             
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@From", fromname);
             query.AddParam("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             query.AddParam("@Content", message);

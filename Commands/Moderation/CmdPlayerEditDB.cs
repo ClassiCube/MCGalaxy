@@ -190,7 +190,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void UpdateDB(Player p, string name, string type, string value, string column) {
-        	DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+        	ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", name);
             if (value != "") {
                 query.AddParam("@ArgValue", value);

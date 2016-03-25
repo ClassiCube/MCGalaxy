@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Cannot change the color of someone of greater rank"); return;
             }     
             
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             if (args.Length == 1) {
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Shad their color removed.", false);
                 who.color = who.group.color;

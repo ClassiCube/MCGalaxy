@@ -44,14 +44,16 @@ namespace MCGalaxy.SQL.Native {
         }
     }
     
-    sealed class NativeParameter : IDataParameter {
-        public DbType DbType { get; set; }
+    sealed class NativeParameter : IDataParameter {	    
+		public DbType DbType { get { return type; } set { type = value; } }
         public ParameterDirection Direction { get; set; }
         public bool IsNullable { get { return false; } }
         public string ParameterName { get; set; }
         public string SourceColumn { get; set; }
         public DataRowVersion SourceVersion { get; set; }
         public object Value { get; set; }
+        
+        public DbType type;
         public int Index = -1;
     }
     

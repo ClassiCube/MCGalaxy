@@ -163,7 +163,7 @@ namespace MCGalaxy {
         
         public static OfflinePlayer FindOffline(string name, bool fullStats = false) {
             OfflinePlayer pl = new OfflinePlayer();
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", name);
             string syntax = Server.useMySQL ? "SELECT * FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
                 "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
@@ -195,7 +195,7 @@ namespace MCGalaxy {
         }
         
         public static string FindOfflineName(string name) {
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", name);
             string syntax = Server.useMySQL ? "SELECT Name FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
                 "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";

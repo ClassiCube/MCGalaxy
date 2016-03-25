@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands {
             // First get names of active ops+ with that ip
             List<string> opNamesWithThatIP = (from pl in PlayerInfo.players where (pl.ip == message && pl.@group.Permission >= LevelPermission.Operator) select pl.name).ToList();
             // Next, add names from the database
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@IP", message);
             DataTable dbnames = Database.fillData(query, "SELECT Name FROM Players WHERE IP = @IP");
 

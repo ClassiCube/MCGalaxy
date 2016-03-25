@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands
 			{
 				message = who.ip;
 			}
-			DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+			ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@IP", message);
 			DataTable Clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
 

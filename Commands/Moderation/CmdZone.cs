@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
                     for (int i = 0; i < p.level.ZoneList.Count; i++)
                     {
                         Level.Zone Zn = p.level.ZoneList[i];
-                        DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                        ParameterisedQuery query = ParameterisedQuery.Create();
                         query.AddParam("@Owner", Zn.Owner);
                         Database.executeQuery(query, "DELETE FROM `Zone" + p.level.name + "` WHERE Owner=@Owner AND SmallX='" + Zn.smallX + "' AND SMALLY='" + Zn.smallY + 
                                               "' AND SMALLZ='" + Zn.smallZ + "' AND BIGX='" + Zn.bigX + "' AND BIGY='" + Zn.bigY + "' AND BIGZ='" + Zn.bigZ + "'");
@@ -160,7 +160,7 @@ namespace MCGalaxy.Commands
 
             p.level.ZoneList.Add(Zn);
 
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Owner", Zn.Owner);
             Database.executeQuery(query, "INSERT INTO `Zone" + p.level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES ("
                                   + Zn.smallX + ", " + Zn.smallY + ", " + Zn.smallZ + ", " + Zn.bigX + ", " + Zn.bigY + ", " + Zn.bigZ + ", @Owner)");

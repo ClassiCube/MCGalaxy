@@ -113,7 +113,7 @@ namespace MCGalaxy {
         public static EcoStats RetrieveEcoStats(string playername) {
             EcoStats es;
             es.playerName = playername;
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", playername);
             using (DataTable eco = Database.fillData(query, "SELECT * FROM Economy WHERE player=@Name")) {
                 if (eco.Rows.Count >= 1) {
@@ -136,7 +136,7 @@ namespace MCGalaxy {
         }
 
         public static void UpdateEcoStats(EcoStats es) {
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", es.playerName);
             query.AddParam("@Money", es.money);
             query.AddParam("@Total", es.totalSpent);

@@ -22,9 +22,9 @@ using System.Data.SQLite;
 
 namespace MCGalaxy.SQL {
 
-    public sealed class BulkSQLiteTransaction : BulkDatabaseTransaction {
+    public sealed class SQLiteBulkTransaction : BulkTransaction {
 
-        private BulkSQLiteTransaction(string connString) {
+        private SQLiteBulkTransaction(string connString) {
             Init(connString);
         }
 
@@ -35,9 +35,9 @@ namespace MCGalaxy.SQL {
             transaction = connection.BeginTransaction();
         }
 
-        public static BulkDatabaseTransaction Create(string connString) {
+        public static BulkTransaction Create(string connString) {
             try {
-                return new BulkSQLiteTransaction(connString);
+                return new SQLiteBulkTransaction(connString);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 return null;

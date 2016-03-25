@@ -22,54 +22,62 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
+using MCGalaxy.SQL.Native;
 
 namespace MCGalaxy.SQL {
     
-    public sealed class BulkMySQLTransaction : BulkDatabaseTransaction {
+    public abstract class BulkTransaction : IDisposable {
+        protected IDbConnection connection;
+        protected IDbTransaction transaction;
 
-        public BulkMySQLTransaction(string connString) {
-            Init(connString);
+        public static BulkTransaction Create() {
+            if (Server.useMySQL) return MySQLBulkTransaction.Create(MySQL.connString);
+            else return SQLiteBulkTransaction.Create(SQLite.connString);
         }
 
-        void Init(string connString) {
-            connection = new MySqlConnection(connString);
-            connection.Open();
-            connection.ChangeDatabase(Server.MySQLDatabaseName);
+        public abstract bool Execute(string query);
+        
+        public abstract IDbCommand CreateCommand(string query);
+        
+        public abstract IDataParameter CreateParam(string paramName, DbType type);
 
-            transaction = connection.BeginTransaction();
-        }
-
-        public static BulkDatabaseTransaction Create(string connString) {
+        public void Commit() {
             try {
-                return new BulkMySQLTransaction(connString);
+                transaction.Commit();
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
-                return null;
+                Rollback();
+            } finally {
+                connection.Close();
             }
         }
-
-        public override bool Execute(string query) {
+        
+        public bool Rollback() {
             try {
-                using (MySqlCommand cmd = new MySqlCommand(
-                    query, (MySqlConnection)connection, (MySqlTransaction)transaction)) {
-                    cmd.ExecuteNonQuery();
-                }
+                transaction.Rollback();
+                return true;
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                return false;
+            }
+        }
+        
+        public void Dispose() {
+            transaction.Dispose();
+            connection.Dispose();
+            transaction = null;
+            connection = null;
+        }
+        
+        public static bool Execute(string query, IDbCommand cmd) {
+            try {
+                cmd.ExecuteNonQuery();
             } catch (Exception e) {
                 System.IO.File.AppendAllText("MySQL_error.log", DateTime.Now + " " + query + "\r\n");
                 Server.ErrorLog(e);
                 return false;
             }
             return true;
-        }
-        
-        public override IDbCommand CreateCommand(string query) {
-            return new MySqlCommand(query, (MySqlConnection)connection, (MySqlTransaction)transaction);
-        }
-        
-        public override IDataParameter CreateParam(string paramName, DbType type) {
-            MySqlParameter arg = new MySqlParameter(paramName, null);
-            arg.DbType = type;
-            return arg;
         }
     }
 }

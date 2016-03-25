@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             if (message.IndexOf("'") != -1) { Player.SendMessage(p, "Cannot parse request."); return; }
 
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@IP", message);
             DataTable playerDb = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
 

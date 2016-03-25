@@ -366,7 +366,7 @@ namespace MCGalaxy
             List<BlockPos> tempCache = blockCache;
             string date = new String('-', 19); //yyyy-mm-dd hh:mm:ss
             
-            using (BulkDatabaseTransaction transaction = BulkDatabaseTransaction.Create()) {
+            using (BulkTransaction transaction = BulkTransaction.Create()) {
                 fixed (char* ptr = date) {
                     ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
                     DoSaveChanges(tempCache, ptr, date, transaction);
@@ -378,7 +378,7 @@ namespace MCGalaxy
         }
         
         unsafe bool DoSaveChanges(List<BlockPos> tempCache, char* ptr, string date, 
-                                  BulkDatabaseTransaction transaction) {
+                                  BulkTransaction transaction) {
             string template = "INSERT INTO `Block" + name +
                 "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@Name, @Time, @X, @Y, @Z, @Tile, @Del)";
             ushort x, y, z;
@@ -405,7 +405,7 @@ namespace MCGalaxy
                 tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
                 delP.Value = (bP.flags & 1) != 0;
 
-                if (!BulkDatabaseTransaction.Execute(template, cmd)) {
+                if (!BulkTransaction.Execute(template, cmd)) {
                     cmd.Dispose();
                     transaction.Rollback(); return false;
                 }

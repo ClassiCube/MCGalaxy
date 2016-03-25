@@ -21,9 +21,9 @@ using System.Runtime.InteropServices;
 
 namespace MCGalaxy.SQL.Native {
 
-    public partial class BulkNativeTransaction : BulkDatabaseTransaction {
+    public partial class NativeBulkTransaction : BulkTransaction {
 
-        private BulkNativeTransaction(string connString) {
+        private NativeBulkTransaction(string connString) {
             Init(connString);
         }
 
@@ -34,9 +34,9 @@ namespace MCGalaxy.SQL.Native {
             transaction = connection.BeginTransaction();
         }
 
-        public static BulkDatabaseTransaction Create(string connString) {
+        public static BulkTransaction Create(string connString) {
             try {
-                return new BulkNativeTransaction(connString);
+                return new NativeBulkTransaction(connString);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 return null;
@@ -52,6 +52,7 @@ namespace MCGalaxy.SQL.Native {
             cmd.CommandText = query;
             cmd.Connection = connection;
             cmd.Transaction = transaction;
+            cmd.Prepare();
             return cmd;
         }
         

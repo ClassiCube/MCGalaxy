@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands {
         	cpos.message = cpos.message.Replace("'", "\\'");
             cpos.message = Colors.EscapeColors(cpos.message);
             //safe against SQL injections because no user input is given here
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             DataTable Messages = Database.fillData(query, "SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
             
             query.AddParam("@Message", cpos.message);           

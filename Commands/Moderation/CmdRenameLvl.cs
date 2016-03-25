@@ -103,11 +103,11 @@ namespace MCGalaxy.Commands
                                                     "`Messages{0}` TO `Messages{1}`, " +
                                                     "`Zone{0}` TO `Zone{1}`", foundLevel.name.ToLower(), newName.ToLower()));
             else {
-                using (BulkDatabaseTransaction helper = BulkSQLiteTransaction.Create()) { // ensures that it's either all work, or none work.
-                    helper.Execute(String.Format("ALTER TABLE Block{0} RENAME TO Block{1}", foundLevel.name.ToLower(), newName.ToLower()));
-                    helper.Execute(String.Format("ALTER TABLE Portals{0} RENAME TO Portals{1}", foundLevel.name.ToLower(), newName.ToLower()));
-                    helper.Execute(String.Format("ALTER TABLE Messages{0} RENAME TO Messages{1}", foundLevel.name.ToLower(), newName.ToLower()));
-                    helper.Execute(String.Format("ALTER TABLE Zone{0} RENAME TO Zone{1}", foundLevel.name.ToLower(), newName.ToLower()));
+                using (BulkTransaction helper = SQLiteBulkTransaction.Create()) { // ensures that it's either all work, or none work.
+                    helper.Execute(String.Format("ALTER TABLE `Block{0}` RENAME TO `Block{1}`", foundLevel.name.ToLower(), newName.ToLower()));
+                    helper.Execute(String.Format("ALTER TABLE `Portals{0}` RENAME TO `Portals{1}`", foundLevel.name.ToLower(), newName.ToLower()));
+                    helper.Execute(String.Format("ALTER TABLE `Messages{0}` RENAME TO `Messages{1}`", foundLevel.name.ToLower(), newName.ToLower()));
+                    helper.Execute(String.Format("ALTER TABLE `Zone{0}` RENAME TO `Zone{1}`", foundLevel.name.ToLower(), newName.ToLower()));
                     helper.Commit();
                 }
             }

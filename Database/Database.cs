@@ -240,7 +240,7 @@ namespace MCGalaxy
                 else executeQuery(SQLite.query, queryString, createDB);
             }
 
-            public static void executeQuery(DatabaseParameterisedQuery query, string queryString, bool createDB = false) {
+            public static void executeQuery(ParameterisedQuery query, string queryString, bool createDB = false) {
                 Exception e = null;
                 for (int i = 0; i < 10; i++) {
                     try {
@@ -262,7 +262,7 @@ namespace MCGalaxy
                 else return fillData(SQLite.query, queryString, skipError);
             }
 
-            public static DataTable fillData(DatabaseParameterisedQuery query, string queryString, bool skipError = false) {
+            public static DataTable fillData(ParameterisedQuery query, string queryString, bool skipError = false) {
                 using (DataTable results = new DataTable("toReturn")) {
                     Exception e = null;
                     for (int i = 0; i < 10; i++) {
@@ -301,7 +301,7 @@ namespace MCGalaxy
                 string[] cmds = script.Split(';');
                 StringBuilder sb = new StringBuilder();
 
-                using (BulkDatabaseTransaction helper = BulkDatabaseTransaction.Create())
+                using (BulkTransaction helper = BulkTransaction.Create())
                 {
 
                     foreach (string cmd in cmds)

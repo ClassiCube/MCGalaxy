@@ -25,7 +25,7 @@ namespace MCGalaxy
         {
             Server.s.Log(p);
             rank = Group.findPlayer(p);
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", p.ToLower());
             DataTable playerDb = Database.fillData(query, "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE");
             if (playerDb.Rows.Count == 0)

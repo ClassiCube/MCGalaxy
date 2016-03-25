@@ -431,7 +431,7 @@ namespace MCGalaxy.Games
             {
                 const string syntax = "UPDATE CTF SET Points=@Points, Captures=@Captures, tags=@Tags WHERE Name=@Name";
                 d.hasflag = false;
-                DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+                ParameterisedQuery query = ParameterisedQuery.Create();
                 query.AddParam("@Points", d.points);
                 query.AddParam("@Captures", d.cap);
                 query.AddParam("@Tags", d.tag);

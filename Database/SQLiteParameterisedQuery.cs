@@ -21,7 +21,7 @@ using System.Data.SQLite;
 
 namespace MCGalaxy.SQL {
     
-    public sealed class SQLiteParameterisedQuery : DatabaseParameterisedQuery {
+    public sealed class SQLiteParameterisedQuery : ParameterisedQuery {
 
         public override void Execute(string query, bool createDB = false) {
             using (var conn = new SQLiteConnection(SQLite.connString)) {

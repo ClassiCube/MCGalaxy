@@ -27,6 +27,8 @@ namespace MCGalaxy.SQL.Native {
         public NativeException(int errorCode) {
             ErrorCode = errorCode;
         }
+               
+        public override string Message { get { return ToString(); } }
 
         public override string ToString() {
             byte primaryCode = (byte)ErrorCode;

@@ -391,11 +391,11 @@
     <Compile Include="Commands\World\CmdTexture.cs" />
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
-    <Compile Include="Database\DatabaseParameterisedQuery.cs" />
+    <Compile Include="Database\ParameterisedQuery.cs" />
     <Compile Include="Database\MySQLParameterisedQuery.cs" />
     <Compile Include="Database\Native\NativeConnection.cs" />
     <Compile Include="Database\Native\Utils.cs" />
-    <Compile Include="Database\Native\BulkNativeTransaction.cs" />
+    <Compile Include="Database\Native\NativeBulkTransaction.cs" />
     <Compile Include="Database\Native\NativeCommand.cs" />
     <Compile Include="Database\Native\NativeException.cs" />
     <Compile Include="Database\SQLiteParameterisedQuery.cs" />
@@ -541,7 +541,7 @@
     <Compile Include="GUI\Win32\Margins.cs" />
     <Compile Include="GUI\Win32\Natives.cs" />
     <Compile Include="GUI\Win32\RECT.cs" />
-    <Compile Include="Database\BulkDatabaseTransaction.cs" />
+    <Compile Include="Database\BulkTransaction.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\Auto_CTF.cs" />
     <Compile Include="IRC\GlobalChatBot.cs" />
@@ -553,13 +553,13 @@
       <DependentUpon>EditText.cs</DependentUpon>
     </Compile>
     <Compile Include="Levels\BlockQueue.cs" />
-    <Compile Include="Database\BulkMySQLTransaction.cs" />
+    <Compile Include="Database\MySQLBulkTransaction.cs" />
     <Compile Include="Player\Player.Events.cs" />
     <Compile Include="ScriptingUtil\ScriptingVB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Database\SQLite.cs" />
-    <Compile Include="Database\BulkSQLiteTransaction.cs" />
+    <Compile Include="Database\SQLiteBulkTransaction.cs" />
     <Compile Include="Drawing\ImagePalette.cs" />
     <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             }
             
             string newTitle = parts.Length > 1 ? parts[1] : "";
-            DatabaseParameterisedQuery query = DatabaseParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             if (newTitle != "")
                 newTitle = newTitle.Replace("[", "").Replace("]", "");
             if (newTitle.Length > 17) { Player.SendMessage(p, "Title must be under 17 letters."); return; }
