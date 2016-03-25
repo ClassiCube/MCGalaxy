@@ -393,6 +393,7 @@
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Database\DatabaseParameterisedQuery.cs" />
     <Compile Include="Database\MySQLParameterisedQuery.cs" />
+    <Compile Include="Database\Native\NativeConnection.cs" />
     <Compile Include="Database\Native\Utils.cs" />
     <Compile Include="Database\Native\BulkNativeTransaction.cs" />
     <Compile Include="Database\Native\NativeCommand.cs" />

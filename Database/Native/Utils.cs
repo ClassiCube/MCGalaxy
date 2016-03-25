@@ -16,32 +16,32 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
 namespace MCGalaxy.SQL.Native {
-
-    sealed class NativeConnection : IDbConnection {
-        public string ConnectionString { get; set; }
-        public int ConnectionTimeout { get { return 0; } }
-        public string Database { get { return ""; } }
-        public ConnectionState State { get { return ConnectionState.Open; } }
-        
-        public IDbTransaction BeginTransaction() { return BeginTransaction(IsolationLevel.Unspecified); }
-        public IDbTransaction BeginTransaction(IsolationLevel il) { return null; }
-        public void Close() { }
-        public void ChangeDatabase(string databaseName) { }
-        public IDbCommand CreateCommand() { return null; }
-        public void Open() { }
-        public void Dispose() { }
-    }
     
     sealed class NativeTransaction : IDbTransaction {
         public IDbConnection Connection { get; set; }
         public IsolationLevel IsolationLevel { get { return IsolationLevel.Unspecified; } }
-        public void Commit() { }
-        public void Rollback() { }
+        
+        public NativeTransaction(IDbConnection connection) {
+            Connection = connection;
+            DoCommand("BEGIN");
+        }
+        
+        public void Commit() { DoCommand("COMMIT"); }
+        public void Rollback() { DoCommand("ROLLBACK"); }
         public void Dispose() { }
+        
+        void DoCommand(string query) {
+            using (IDbCommand cmd = Connection.CreateCommand()) {
+                cmd.CommandText = query;
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
     
     sealed class NativeParameter : IDataParameter {
@@ -52,6 +52,31 @@ namespace MCGalaxy.SQL.Native {
         public string SourceColumn { get; set; }
         public DataRowVersion SourceVersion { get; set; }
         public object Value { get; set; }
+        public int Index = -1;
+    }
+    
+    sealed class NativeParamsList : List<IDataParameter>, IDataParameterCollection {        
+
+        public object this[string parameterName] {
+            get { return this[IndexOf(parameterName)]; }
+            set { this[IndexOf(parameterName)] = (IDbDataParameter)value; }
+        }
+        
+        public bool Contains(string parameterName) {
+            return IndexOf(parameterName) >= 0;
+        }
+        
+        public int IndexOf(string parameterName) {
+            for (int i = 0; i < Count; i++) {
+                if (this[i].ParameterName == parameterName) return i;
+            }
+            return -1;
+        }
+
+        public void RemoveAt(string parameterName) {
+            int index = IndexOf(parameterName);
+            if (index >= 0) RemoveAt(index);
+        }
     }
     
     static class NativeUtils {

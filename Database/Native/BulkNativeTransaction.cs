@@ -48,7 +48,7 @@ namespace MCGalaxy.SQL.Native {
         }
         
         public override IDbCommand CreateCommand(string query) {
-            IDbCommand cmd = new NativeSQLiteCommand();
+            IDbCommand cmd = new NativeCommand();
             cmd.CommandText = query;
             cmd.Connection = connection;
             cmd.Transaction = transaction;
@@ -61,11 +61,5 @@ namespace MCGalaxy.SQL.Native {
             param.DbType = type;
             return param;
         }
-        
-        [DllImport("sqlite3.dll")]
-        static extern int sqlite3_open_v2(byte[] filename, out IntPtr db, int flags, IntPtr vfs);
-        
-        [DllImport("sqlite3.dll")]
-        static extern int sqlite3_close_v2(IntPtr db);
     }
 }
