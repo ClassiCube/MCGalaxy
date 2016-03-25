@@ -85,7 +85,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
-            switch (args[2]) {
+            switch (args[1].ToLower()) {
                 case "enable":
                     Player.SendMessage(p, "%a" + Name + "s are now enabled for the economy system.");
                     Enabled = true; break;
@@ -93,12 +93,12 @@ namespace MCGalaxy.Eco {
                     Player.SendMessage(p, "%a" + Name + "s are now disabled for the economy system.");
                     Enabled = false; break;
                 case "price":
-                    Rank rnk = FindRank(args[3]);
+                    Rank rnk = FindRank(args[2]);
                     if (rnk == null) {
                         Player.SendMessage(p, "%cThat wasn't a rank or it's past the max rank (maxrank is: " + Group.Find(MaxRank).color + MaxRank + "%c)"); return; }
                     int cost;
-                    if (!int.TryParse(args[4], out cost)) {
-                        Player.SendMessage(p, "\"" + args[4] + "\" is not a valid integer."); return;
+                    if (!int.TryParse(args[3], out cost)) {
+                        Player.SendMessage(p, "\"" + args[3] + "\" is not a valid integer."); return;
                     }
                     Player.SendMessage(p, "%aSuccesfully changed the rank price for " + rnk.group.color + rnk.group.name + " to: %f" + cost + " %3" + Server.moneys);
                     rnk.price = cost; break;
@@ -107,10 +107,10 @@ namespace MCGalaxy.Eco {
                 case "max":
                 case "maximum":
                 case "maximumrank":
-                    Group grp = Group.Find(args[3]);
+                    Group grp = Group.Find(args[2]);
                     if (grp == null) { Player.SendMessage(p, "%cThat wasn't a rank!"); return; }
                     if (p.group.Permission < grp.Permission) { Player.SendMessage(p, "%cCan't set a maxrank that is higher than yours!"); return; }
-                    MaxRank = args[3].ToLower();
+                    MaxRank = args[2].ToLower();
                     Player.SendMessage(p, "%aSuccessfully set max rank to: " + grp.color + grp.name);
                     UpdatePrices();
                     break;

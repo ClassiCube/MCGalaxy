@@ -98,7 +98,7 @@ namespace MCGalaxy.Eco {
 		protected abstract void OnBuyCommand(Player p, string message, string[] args);
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
-            switch (args[2]) {
+			switch (args[1].ToLower()) {
                 case "enable":
                     Player.SendMessage(p, "%a" + Name + "s are now enabled for the economy system.");
                     Enabled = true; break;
@@ -107,8 +107,8 @@ namespace MCGalaxy.Eco {
                     Enabled = false; break;
                 case "price":
                     int cost;
-                    if (!int.TryParse(args[3], out cost)) {
-                        Player.SendMessage(p, "\"" + args[3] + "\" is not a valid integer."); return;
+                    if (!int.TryParse(args[2], out cost)) {
+                        Player.SendMessage(p, "\"" + args[2] + "\" is not a valid integer."); return;
                     }
                     Player.SendMessage(p, "%aSuccessfully changed the " + Name + " price to %f" + cost + " %3" + Server.moneys); 
                     Price = cost; break;
