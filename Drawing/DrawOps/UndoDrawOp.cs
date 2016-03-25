@@ -78,11 +78,9 @@ namespace MCGalaxy.Drawing.Ops {
                     if (time > End) continue;
                     if (time < Start) { buffer.CheckIfSend(true); return; }
                     
-                    byte newTile = 0, newExtTile = 0;
-                    item.GetNewExtBlock(out newTile, out newExtTile);
-                    byte tile = 0, extTile = 0;
-                    item.GetExtBlock(out tile, out extTile);
-                    UndoFile.UndoBlock(p, lvl, Pos, timeDelta, buffer, tile, extTile, newTile, newExtTile);
+                    item.GetNewExtBlock(out Pos.newtype, out Pos.newExtType);
+                    item.GetExtBlock(out Pos.type, out Pos.extType);
+                    UndoFile.UndoBlock(p, lvl, Pos, timeDelta, buffer);
                 }
                 buffer.CheckIfSend(true);
                 node = node.Prev;

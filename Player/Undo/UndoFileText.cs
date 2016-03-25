@@ -103,9 +103,9 @@ namespace MCGalaxy.Util {
                     if (Pos.x < min.X || Pos.y < min.Y || Pos.z < min.Z ||
                         Pos.x > max.X || Pos.y > max.Y || Pos.z > max.Z) continue;
                     
-                    byte newType = Convert.ToByte(lines[(i * 7) - 1]);
-                    byte oldType = Convert.ToByte(lines[(i * 7) - 2]);
-                    UndoBlock(p, lvl, Pos, timeDelta, buffer, oldType, 0, newType, 0);                   
+                    Pos.newtype = Convert.ToByte(lines[(i * 7) - 1]);
+                    Pos.type = Convert.ToByte(lines[(i * 7) - 2]);
+                    UndoBlock(p, lvl, Pos, timeDelta, buffer);                   
                 } catch {
                 }
             }
@@ -114,31 +114,19 @@ namespace MCGalaxy.Util {
         }
         
         protected override bool HighlightEntry(Player p, string path, ref byte[] temp, DateTime start) {
-            Player.UndoPos Pos;
-            Pos.extType = 0; Pos.newExtType = 0;
             string[] lines = File.ReadAllText(path).Split(' ');
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
                 try {
                     // line format: mapName x y z date oldblock newblock
                     if (!InTime(lines[(i * 7) - 3], start)) return false;
-                    Level foundLevel = LevelInfo.FindExact(lines[(i * 7) - 7]);
-                    if (foundLevel == null || foundLevel != p.level) continue;
+                    Level lvl = LevelInfo.FindExact(lines[(i * 7) - 7]);
+                    if (lvl == null || lvl != p.level) continue;
                     
-                    Pos.mapName = foundLevel.name;
-                    Pos.x = Convert.ToUInt16(lines[(i * 7) - 6]);
-                    Pos.y = Convert.ToUInt16(lines[(i * 7) - 5]);
-                    Pos.z = Convert.ToUInt16(lines[(i * 7) - 4]);
-                    Pos.type = foundLevel.GetTile(Pos.x, Pos.y, Pos.z);
-
-                    if (Pos.type == Convert.ToByte(lines[(i * 7) - 1]) ||
-                        Block.Convert(Pos.type) == Block.water || Block.Convert(Pos.type) == Block.lava) {
-                        
-                        if (Pos.type == Block.air || Block.Convert(Pos.type) == Block.water || Block.Convert(Pos.type) == Block.lava)
-                            p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.red);
-                        else
-                            p.SendBlockchange(Pos.x, Pos.y, Pos.z, Block.green);
-                    }
+                    ushort x = Convert.ToUInt16(lines[(i * 7) - 6]);
+                    ushort y = Convert.ToUInt16(lines[(i * 7) - 5]);
+                    ushort z = Convert.ToUInt16(lines[(i * 7) - 4]);
+                    HighlightBlock(p, lvl, Convert.ToByte(lines[(i * 7) - 1]), x, y, z);
                 } catch { }
             }
             return true;

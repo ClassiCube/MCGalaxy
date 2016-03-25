@@ -481,6 +481,7 @@
     <Compile Include="Player\Player.Handlers.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\Undo\UndoCache.cs" />
+    <Compile Include="Player\Undo\UndoFileCBin.cs" />
     <Compile Include="Player\Waypoint.cs" />
     <Compile Include="Player\Player.Timers.cs" />
     <Compile Include="Player\Undo\UndoFile.cs" />

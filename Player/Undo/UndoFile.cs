@@ -25,8 +25,9 @@ namespace MCGalaxy.Util {
     public abstract class UndoFile {
         
         protected const string undoDir = "extra/undo", prevUndoDir = "extra/undoPrevious";
-        public static UndoFile OldFormat = new UndoFileText();
-        public static UndoFile NewFormat = new UndoFileBin();
+        public static UndoFile TxtFormat = new UndoFileText();
+        public static UndoFile BinFormat = new UndoFileBin();
+        public static UndoFile NewFormat = new UndoFileCBin();
         
         protected abstract void SaveUndoData(List<Player.UndoPos> buffer, string path);
         
@@ -57,8 +58,8 @@ namespace MCGalaxy.Util {
                 Directory.CreateDirectory(playerDir);
             
             int numFiles = Directory.GetFiles(playerDir).Length;
-            string path = Path.Combine(playerDir, numFiles + NewFormat.Extension);
-            NewFormat.SaveUndoData(p.UndoBuffer, path);
+            string path = Path.Combine(playerDir, numFiles + BinFormat.Extension);
+            BinFormat.SaveUndoData(p.UndoBuffer, path);
         }
         
         public static void UndoPlayer(Player p, string target, Vec3U16[] marks, DateTime start, ref bool FoundUser) {
@@ -87,7 +88,8 @@ namespace MCGalaxy.Util {
                     continue;
                 
                 UndoFile format = null;
-                if (path.EndsWith(OldFormat.Extension)) format = OldFormat;
+                if (path.EndsWith(TxtFormat.Extension)) format = TxtFormat;
+                if (path.EndsWith(BinFormat.Extension)) format = BinFormat;
                 if (path.EndsWith(NewFormat.Extension)) format = NewFormat;
                 if (format == null) continue;
                 
@@ -115,19 +117,29 @@ namespace MCGalaxy.Util {
         }
         
         protected internal static void UndoBlock(Player p, Level lvl, Player.UndoPos Pos, 
-                                        int timeDelta, BufferedBlockSender buffer,
-                                         byte oldType, byte oldExtType, byte newType, byte newExtType) {
-            Pos.type = lvl.GetTile(Pos.x, Pos.y, Pos.z);
-            if (Pos.type == newType || Block.Convert(Pos.type) == Block.water
-                || Block.Convert(Pos.type) == Block.lava || Pos.type == Block.grass) {
+                                        int timeDelta, BufferedBlockSender buffer) {
+            byte lvlTile = lvl.GetTile(Pos.x, Pos.y, Pos.z);
+            if (lvlTile == Pos.newtype || Block.Convert(lvlTile) == Block.water
+                || Block.Convert(lvlTile) == Block.lava || lvlTile == Block.grass) {
                 
-                Pos.newtype = oldType; Pos.newExtType = oldExtType;
-                Pos.extType = newExtType; Pos.timeDelta = timeDelta;
+                byte newExtType = Pos.newExtType;
+                Pos.newtype = Pos.type; Pos.newExtType = Pos.extType;
+                Pos.extType = newExtType; Pos.type = lvlTile;
+                Pos.timeDelta = timeDelta;
                 if (lvl.DoBlockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, Pos.newExtType)) {
                     buffer.Add(lvl.PosToInt(Pos.x, Pos.y, Pos.z), Pos.newtype, Pos.newExtType);
                     buffer.CheckIfSend(false);
                 }
                 if (p != null) p.RedoBuffer.Add(lvl, Pos);
+            }
+        }
+        
+        protected static void HighlightBlock(Player p, Level lvl, byte type, ushort x, ushort y, ushort z) {
+            byte lvlTile = lvl.GetTile(x, y, z);
+            if (lvlTile == type || Block.Convert(lvlTile) == Block.water || Block.Convert(lvlTile) == Block.lava) {             
+                byte block = (lvlTile == Block.air || Block.Convert(lvlTile) == Block.water
+                              || Block.Convert(lvlTile) == Block.lava) ? Block.red : Block.green;
+                p.SendBlockchange(x, y, z, block);
             }
         }
         
@@ -152,10 +164,13 @@ namespace MCGalaxy.Util {
             
             for (int i = 0; i < files.Length; i++) {
                 path = files[i];
-                if (!path.EndsWith(OldFormat.Extension)) 
-                    continue;
-                buffer.Clear();
-                OldFormat.ReadUndoData(buffer, path);
+                if (path.EndsWith(BinFormat.Extension)) {
+                    buffer.Clear();
+                    BinFormat.ReadUndoData(buffer, path);
+                } else if (path.EndsWith(TxtFormat.Extension)) {
+                    buffer.Clear();
+                    TxtFormat.ReadUndoData(buffer, path);
+                }
                 
                 string newPath = Path.ChangeExtension(path, NewFormat.Extension);
                 NewFormat.SaveUndoData(buffer, newPath);

@@ -112,21 +112,17 @@ namespace MCGalaxy.Util {
         
         public void GetExtBlock(out byte type, out byte extType) {
             if ((Flags & (1 << 14)) != 0) {
-                type = Block.custom_block;
-                extType = Type;
+                type = Block.custom_block; extType = Type;
             } else {
-                type = Type;
-                extType = 0;
+                type = Type; extType = 0;
             }
         }
         
         public void GetNewExtBlock(out byte type, out byte extType) {
             if ((Flags & (1 << 15)) != 0) {
-                type = Block.custom_block;
-                extType = NewType;
+                type = Block.custom_block; extType = NewType;
             } else {
-                type = NewType;
-                extType = 0;
+                type = NewType; extType = 0;
             }
         }
         
@@ -148,6 +144,10 @@ namespace MCGalaxy.Util {
                 item.NewType = pos.newtype;
             }
             return item;
+        }
+        
+        public static UndoCacheItem Make(UndoCacheNode node, short timeDelta, Player.UndoPos pos) {
+            return Make(node, timeDelta, ref pos);
         }
     }
     
