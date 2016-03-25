@@ -366,7 +366,7 @@ namespace MCGalaxy
             List<BlockPos> tempCache = blockCache;
             string date = new String('-', 19); //yyyy-mm-dd hh:mm:ss
             
-            using (DatabaseTransactionHelper transaction = DatabaseTransactionHelper.Create()) {
+            using (BulkDatabaseTransaction transaction = BulkDatabaseTransaction.Create()) {
                 fixed (char* ptr = date) {
                     ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
                     DoSaveChanges(tempCache, ptr, date, transaction);
@@ -378,19 +378,19 @@ namespace MCGalaxy
         }
         
         unsafe bool DoSaveChanges(List<BlockPos> tempCache, char* ptr, string date, 
-                                  DatabaseTransactionHelper transaction) {
+                                  BulkDatabaseTransaction transaction) {
             string template = "INSERT INTO `Block" + name +
                 "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@Name, @Time, @X, @Y, @Z, @Tile, @Del)";
             ushort x, y, z;
             
             IDbCommand cmd = transaction.CreateCommand(template);
-            DbParameter nameP = transaction.CreateParam("@Name", DbType.AnsiStringFixedLength); cmd.Parameters.Add(nameP);
-            DbParameter timeP = transaction.CreateParam("@Time", DbType.AnsiStringFixedLength); cmd.Parameters.Add(timeP);
-            DbParameter xP = transaction.CreateParam("@X", DbType.UInt16); cmd.Parameters.Add(xP);
-            DbParameter yP = transaction.CreateParam("@Y", DbType.UInt16); cmd.Parameters.Add(yP);
-            DbParameter zP = transaction.CreateParam("@Z", DbType.UInt16); cmd.Parameters.Add(zP);
-            DbParameter tileP = transaction.CreateParam("@Tile", DbType.Byte); cmd.Parameters.Add(tileP);
-            DbParameter delP = transaction.CreateParam("@Del", DbType.Boolean); cmd.Parameters.Add(delP);
+            IDataParameter nameP = transaction.CreateParam("@Name", DbType.AnsiStringFixedLength); cmd.Parameters.Add(nameP);
+            IDataParameter timeP = transaction.CreateParam("@Time", DbType.AnsiStringFixedLength); cmd.Parameters.Add(timeP);
+            IDataParameter xP = transaction.CreateParam("@X", DbType.UInt16); cmd.Parameters.Add(xP);
+            IDataParameter yP = transaction.CreateParam("@Y", DbType.UInt16); cmd.Parameters.Add(yP);
+            IDataParameter zP = transaction.CreateParam("@Z", DbType.UInt16); cmd.Parameters.Add(zP);
+            IDataParameter tileP = transaction.CreateParam("@Tile", DbType.Byte); cmd.Parameters.Add(tileP);
+            IDataParameter delP = transaction.CreateParam("@Del", DbType.Boolean); cmd.Parameters.Add(delP);
             
             for (int i = 0; i < tempCache.Count; i++) {
                 BlockPos bP = tempCache[i];
@@ -405,7 +405,7 @@ namespace MCGalaxy
                 tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
                 delP.Value = (bP.flags & 1) != 0;
 
-                if (!DatabaseTransactionHelper.Execute(template, cmd)) {
+                if (!BulkDatabaseTransaction.Execute(template, cmd)) {
                     cmd.Dispose();
                     transaction.Rollback(); return false;
                 }

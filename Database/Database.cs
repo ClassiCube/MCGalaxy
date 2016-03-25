@@ -301,7 +301,7 @@ namespace MCGalaxy
                 string[] cmds = script.Split(';');
                 StringBuilder sb = new StringBuilder();
 
-                using (DatabaseTransactionHelper helper = DatabaseTransactionHelper.Create())
+                using (BulkDatabaseTransaction helper = BulkDatabaseTransaction.Create())
                 {
 
                     foreach (string cmd in cmds)

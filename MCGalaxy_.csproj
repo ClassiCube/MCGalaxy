@@ -393,6 +393,10 @@
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Database\DatabaseParameterisedQuery.cs" />
     <Compile Include="Database\MySQLParameterisedQuery.cs" />
+    <Compile Include="Database\Native\Utils.cs" />
+    <Compile Include="Database\Native\BulkNativeTransaction.cs" />
+    <Compile Include="Database\Native\NativeCommand.cs" />
+    <Compile Include="Database\Native\NativeException.cs" />
     <Compile Include="Database\SQLiteParameterisedQuery.cs" />
     <Compile Include="Drawing\Brushes\Brush.cs" />
     <Compile Include="Drawing\Brushes\CheckeredBrush.cs" />
@@ -536,7 +540,7 @@
     <Compile Include="GUI\Win32\Margins.cs" />
     <Compile Include="GUI\Win32\Natives.cs" />
     <Compile Include="GUI\Win32\RECT.cs" />
-    <Compile Include="Database\DatabaseTransactionHelper.cs" />
+    <Compile Include="Database\BulkDatabaseTransaction.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\Auto_CTF.cs" />
     <Compile Include="IRC\GlobalChatBot.cs" />
@@ -548,13 +552,13 @@
       <DependentUpon>EditText.cs</DependentUpon>
     </Compile>
     <Compile Include="Levels\BlockQueue.cs" />
-    <Compile Include="Database\MySQLTransactionHelper.cs" />
+    <Compile Include="Database\BulkMySQLTransaction.cs" />
     <Compile Include="Player\Player.Events.cs" />
     <Compile Include="ScriptingUtil\ScriptingVB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Database\SQLite.cs" />
-    <Compile Include="Database\SQLiteTransactionHelper.cs" />
+    <Compile Include="Database\BulkSQLiteTransaction.cs" />
     <Compile Include="Drawing\ImagePalette.cs" />
     <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -734,6 +738,7 @@
     <Folder Include="Commands\CPE" />
     <Folder Include="Commands\World" />
     <Folder Include="Commands\Other" />
+    <Folder Include="Database\Native" />
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Drawing\Brushes" />
     <Folder Include="Games\Countdown" />

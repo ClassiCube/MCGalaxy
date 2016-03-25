@@ -16,32 +16,28 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using MySql.Data.MySqlClient;
+using System.Data.SQLite;
 
 namespace MCGalaxy.SQL {
-    
-    public sealed class MySQLTransactionHelper : DatabaseTransactionHelper {
 
-        public MySQLTransactionHelper(string connString) {
+    public sealed class BulkSQLiteTransaction : BulkDatabaseTransaction {
+
+        private BulkSQLiteTransaction(string connString) {
             Init(connString);
         }
 
         void Init(string connString) {
-            connection = new MySqlConnection(connString);
+            connection = new SQLiteConnection(connString);
             connection.Open();
-            connection.ChangeDatabase(Server.MySQLDatabaseName);
-
+            //connection.ChangeDatabase(Server.MySQLDatabaseName);
             transaction = connection.BeginTransaction();
         }
 
-        public static DatabaseTransactionHelper Create(string connString) {
+        public static BulkDatabaseTransaction Create(string connString) {
             try {
-                return new MySQLTransactionHelper(connString);
+                return new BulkSQLiteTransaction(connString);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 return null;
@@ -50,8 +46,8 @@ namespace MCGalaxy.SQL {
 
         public override bool Execute(string query) {
             try {
-                using (MySqlCommand cmd = new MySqlCommand(
-                    query, (MySqlConnection)connection, (MySqlTransaction)transaction)) {
+                using (SQLiteCommand cmd = new SQLiteCommand(
+                    query, (SQLiteConnection)connection, (SQLiteTransaction)transaction)) {
                     cmd.ExecuteNonQuery();
                 }
             } catch (Exception e) {
@@ -61,15 +57,13 @@ namespace MCGalaxy.SQL {
             }
             return true;
         }
-        
+		
         public override IDbCommand CreateCommand(string query) {
-            return new MySqlCommand(query, (MySqlConnection)connection, (MySqlTransaction)transaction);
-        }
-        
-        public override DbParameter CreateParam(string paramName, DbType type) {
-            MySqlParameter arg = new MySqlParameter(paramName, null);
-            arg.DbType = type;
-            return arg;
-        }
+            return new SQLiteCommand(query, (SQLiteConnection)connection, (SQLiteTransaction)transaction);
+		}
+		
+		public override IDataParameter CreateParam(string paramName, DbType type) {
+			return new SQLiteParameter(paramName, type);
+		}
     }
 }
