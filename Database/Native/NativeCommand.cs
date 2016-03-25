@@ -61,8 +61,6 @@ namespace MCGalaxy.SQL.Native {
         public void Dispose() {
             int code = sqlite3_finalize(Statement);
             if (code > 0) throw new NativeException(code);
-            if (dataCount == 0) return;
-            Marshal.FreeHGlobal((IntPtr)dataPtr);
         }
         
         void BindParam(IDataParameter param) {
@@ -72,8 +70,8 @@ namespace MCGalaxy.SQL.Native {
             int code = 0;
             switch (nParam.type) {
                 case DbType.AnsiStringFixedLength:
-                    MakeString((string)nParam.Value);
-                    code = sqlite3_bind_text(Statement, nParam.Index, dataPtr, dataCount - 1, IntPtr.Zero);
+                    code = sqlite3_bind_text(Statement, nParam.Index, nParam.StringPtr, 
+                                             nParam.StringCount - 1, IntPtr.Zero);
                     break;
                 case DbType.UInt16:
                     code = sqlite3_bind_int(Statement, nParam.Index, nParam.U16Value);
@@ -86,19 +84,6 @@ namespace MCGalaxy.SQL.Native {
                     break;
             }
             if (code > 0) throw new NativeException(code);
-        }
-        
-        byte* dataPtr;
-        int dataCount;
-        void MakeString(string value) {
-        	if ((value.Length + 1) > dataCount) {
-        		if (dataCount > 0) 
-        			Marshal.FreeHGlobal((IntPtr)dataPtr);
-        		dataCount = value.Length + 1;
-        		dataPtr = (byte*)Marshal.AllocHGlobal(dataCount);
-        	}
-        	for (int i = 0; i < value.Length; i++)
-        		dataPtr[i] = (byte)value[i];
         }
         
         void BindIndex(NativeParameter nParam) {

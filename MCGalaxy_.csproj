@@ -391,6 +391,7 @@
     <Compile Include="Commands\World\CmdTexture.cs" />
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
+    <Compile Include="Database\Native\NativeParamsList.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />
     <Compile Include="Database\MySQLParameterisedQuery.cs" />
     <Compile Include="Database\Native\NativeConnection.cs" />

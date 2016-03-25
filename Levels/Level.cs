@@ -397,18 +397,20 @@ namespace MCGalaxy
             for (int i = 0; i < tempCache.Count; i++) {
                 BlockPos bP = tempCache[i];
                 IntToPos(bP.index, out x, out y, out z);
-                nameP.Value = bP.name;
                 DateTime time = Server.StartTimeLocal.AddTicks((bP.flags >> 2) * TimeSpan.TicksPerSecond);
                 MakeInt(time.Year, 4, 0, ptr); MakeInt(time.Month, 2, 5, ptr); MakeInt(time.Day, 2, 8, ptr);
-                MakeInt(time.Hour, 2, 11, ptr); MakeInt(time.Minute, 2, 14, ptr); MakeInt(time.Second, 2, 17, ptr);
+                MakeInt(time.Hour, 2, 11, ptr); MakeInt(time.Minute, 2, 14, ptr); MakeInt(time.Second, 2, 17, ptr);               
                 
-                timeP.Value = date;
                 // For NativeParameter, we make the optimisation of avoiding boxing primitive types.
                 if (!isNative) {
+                    nameP.Value = bP.name;
+                    timeP.Value = date;
                     xP.Value = x; yP.Value = y; zP.Value = z;
                     tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
                     delP.Value = (bP.flags & 1) != 0;
                 } else {
+                    ((NativeParameter)nameP).SetString(bP.name);
+                    ((NativeParameter)timeP).SetString(date);
                     ((NativeParameter)xP).U16Value = x;
                     ((NativeParameter)yP).U16Value = y;
                     ((NativeParameter)zP).U16Value = z;
@@ -418,10 +420,12 @@ namespace MCGalaxy
 
                 if (!BulkTransaction.Execute(template, cmd)) {
                     cmd.Dispose();
+                    cmd.Parameters.Clear();
                     transaction.Rollback(); return false;
                 }
             }
             cmd.Dispose();
+            cmd.Parameters.Clear();
             transaction.Commit();
             return true;
         }

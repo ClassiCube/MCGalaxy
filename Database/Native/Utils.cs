@@ -16,8 +16,10 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MCGalaxy.SQL.Native {
@@ -44,8 +46,8 @@ namespace MCGalaxy.SQL.Native {
         }
     }
     
-    internal sealed class NativeParameter : IDataParameter {	    
-		public DbType DbType { get { return type; } set { type = value; } }
+    internal unsafe sealed class NativeParameter : IDataParameter {        
+        public DbType DbType { get { return type; } set { type = value; } }
         public ParameterDirection Direction { get; set; }
         public bool IsNullable { get { return false; } }
         public string ParameterName { get; set; }
@@ -54,33 +56,29 @@ namespace MCGalaxy.SQL.Native {
         public object Value { get; set; }
         
         public DbType type;
-        public int Index = -1;        
+        public int Index = -1;
+        // Avoid boxing primitive types
         public ushort U16Value;
         public byte U8Value;
         public bool BoolValue;
-    }
-    
-    sealed class NativeParamsList : List<IDataParameter>, IDataParameterCollection {        
-
-        public object this[string parameterName] {
-            get { return this[IndexOf(parameterName)]; }
-            set { this[IndexOf(parameterName)] = (IDbDataParameter)value; }
-        }
+        public byte* StringPtr;
+        public int StringCount;
         
-        public bool Contains(string parameterName) {
-            return IndexOf(parameterName) >= 0;
-        }
-        
-        public int IndexOf(string parameterName) {
-            for (int i = 0; i < Count; i++) {
-                if (this[i].ParameterName == parameterName) return i;
+        public void SetString(string value) {
+            if ((value.Length + 1) > StringCount) {
+                if (StringCount > 0) 
+                    Marshal.FreeHGlobal((IntPtr)StringPtr);
+                StringCount = value.Length + 1;
+                StringPtr = (byte*)Marshal.AllocHGlobal(StringCount);
             }
-            return -1;
+            for (int i = 0; i < value.Length; i++)
+                StringPtr[i] = (byte)value[i];
         }
-
-        public void RemoveAt(string parameterName) {
-            int index = IndexOf(parameterName);
-            if (index >= 0) RemoveAt(index);
+        
+        public void Dispose() {
+            if (StringCount != 0) return;
+            Marshal.FreeHGlobal((IntPtr)StringPtr);
+            StringCount = 0;
         }
     }
     
