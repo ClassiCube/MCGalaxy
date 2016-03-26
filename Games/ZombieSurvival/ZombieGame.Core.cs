@@ -67,13 +67,14 @@ namespace MCGalaxy.Games {
             Random random = new Random();
             Player first = PickFirstZombie(random, players);
 
-            CurrentLevel.ChatLevel(first.color + first.name + " %Sstarted the infection!");
+            CurLevel.ChatLevel(first.color + first.name + " %Sstarted the infection!");
             first.infected = true;
             UpdatePlayerColor(first, InfectCol);
 
             RoundInProgress = true;
-            int roundMins = random.Next(4, 7);
-            CurrentLevel.ChatLevel("The round will last for " + roundMins + " minutes!");
+            int roundMins = random.Next(CurLevel.MinRoundTime, CurLevel.MaxRoundTime);
+            string suffix = roundMins == 1 ? " %Sminute!" : " %Sminutes!";
+            CurLevel.ChatLevel("The round will last for &a" + roundMins + suffix);
             RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
             timer = new System.Timers.Timer(roundMins * 60 * 1000);
             timer.Elapsed += new ElapsedEventHandler(EndRound);
@@ -102,40 +103,40 @@ namespace MCGalaxy.Games {
                 first = QueuedZombie != null ? 
                     PlayerInfo.Find(QueuedZombie) : players[random.Next(players.Count)];
                 QueuedZombie = null;
-            } while (first == null || !first.level.name.CaselessEq(CurrentLevelName));
+            } while (first == null || !first.level.name.CaselessEq(CurLevelName));
             return first;
         }
         
         List<Player> DoRoundCountdown() {
             while (true) {
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
-                CurrentLevel.ChatLevel("%4Round Start:%f 30...");
+                CurLevel.ChatLevel("%4Round Start:%f 30...");
                 Thread.Sleep(20000); if (!Server.ZombieModeOn) return null;
-                CurrentLevel.ChatLevel("%4Round Start:%f 10...");
+                CurLevel.ChatLevel("%4Round Start:%f 10...");
                 Thread.Sleep(10000); if (!Server.ZombieModeOn) return null;
-                CurrentLevel.ChatLevel("%4Round Start:%f 5...");
+                CurLevel.ChatLevel("%4Round Start:%f 5...");
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
-                CurrentLevel.ChatLevel("%4Round Start:%f 4...");
+                CurLevel.ChatLevel("%4Round Start:%f 4...");
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
-                CurrentLevel.ChatLevel("%4Round Start:%f 3...");
+                CurLevel.ChatLevel("%4Round Start:%f 3...");
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
-                CurrentLevel.ChatLevel("%4Round Start:%f 2...");
+                CurLevel.ChatLevel("%4Round Start:%f 2...");
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
-                CurrentLevel.ChatLevel("%4Round Start:%f 1...");
+                CurLevel.ChatLevel("%4Round Start:%f 1...");
                 Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
                 
                 Player[] online = PlayerInfo.Online.Items;
                 foreach (Player p in online) {
-                    if (!p.referee && p.level.name.CaselessEq(CurrentLevelName)) {
+                    if (!p.referee && p.level.name.CaselessEq(CurLevelName)) {
                         players.Add(p);
                         nonRefPlayers++;
                     }
                 }
                 
                 if (nonRefPlayers >= 2) return players;
-                CurrentLevel.ChatLevel(Colors.red + "ERROR: Need 2 or more players to play");
+                CurLevel.ChatLevel(Colors.red + "ERROR: Need 2 or more players to play");
             }
         }
         
@@ -164,7 +165,7 @@ namespace MCGalaxy.Games {
                             continue;
                         
                         if (!pAlive.infected && pKiller.infected && !pAlive.referee && !pKiller.referee && pKiller != pAlive
-                            && pKiller.level.name.CaselessEq(CurrentLevelName) && pAlive.level.name.CaselessEq(CurrentLevelName))
+                            && pKiller.level.name.CaselessEq(CurLevelName) && pAlive.level.name.CaselessEq(CurLevelName))
                         {
                             InfectPlayer(pAlive);
                             aliveChanged = true;
@@ -176,7 +177,7 @@ namespace MCGalaxy.Games {
                                     pKiller.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
                                     pKiller.money += 2 + infectCombo;
                                     pKiller.OnMoneyChanged();
-                                    CurrentLevel.ChatLevel(pKiller.FullName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                                    CurLevel.ChatLevel(pKiller.FullName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
                                 }
                             } else {
                                 infectCombo = 0;
@@ -184,7 +185,7 @@ namespace MCGalaxy.Games {
                             
                             lastPlayerToInfect = pKiller.name;
                             pKiller.playersInfected++;
-                            CurrentLevel.ChatLevel(String.Format(
+                            CurLevel.ChatLevel(String.Format(
                                 messages[random.Next(messages.Length)],
                                 Colors.red + pKiller.DisplayName + Colors.yellow,
                                 Colors.red + pAlive.DisplayName + Colors.yellow));
@@ -203,7 +204,7 @@ namespace MCGalaxy.Games {
         void CheckHumanPledge(Player pAlive) {
             if (!pAlive.pledgeSurvive) return;
             pAlive.pledgeSurvive = false;
-            CurrentLevel.ChatLevel(pAlive.FullName + "%Sbroke their pledge of not being infected.");
+            CurLevel.ChatLevel(pAlive.FullName + "%Sbroke their pledge of not being infected.");
             pAlive.money = Math.Max(pAlive.money - 2, 0);
             pAlive.OnMoneyChanged();
         }
@@ -213,7 +214,7 @@ namespace MCGalaxy.Games {
             if (Bounties.TryGetValue(pAlive.name, out bounty))
                 Bounties.Remove(pAlive.name);
             if (bounty != null) {
-                CurrentLevel.ChatLevel(pKiller.FullName + " %Scollected the bounty of &a" +
+                CurLevel.ChatLevel(pKiller.FullName + " %Scollected the bounty of &a" +
                                        bounty.Amount + " %S" + Server.moneys + " on " + pAlive.FullName + "%S.");
                 bounty.Origin.money = Math.Max(0, bounty.Origin.money - bounty.Amount);
                 bounty.Origin.OnMoneyChanged();
@@ -231,11 +232,11 @@ namespace MCGalaxy.Games {
         
         void EndRound(object sender, ElapsedEventArgs e) {
             if (Status == ZombieGameStatus.NotStarted) return;
-            CurrentLevel.ChatLevel("%4Round End:%f 5"); Thread.Sleep(1000);
-            CurrentLevel.ChatLevel("%4Round End:%f 4"); Thread.Sleep(1000);
-            CurrentLevel.ChatLevel("%4Round End:%f 3"); Thread.Sleep(1000);
-            CurrentLevel.ChatLevel("%4Round End:%f 2"); Thread.Sleep(1000);
-            CurrentLevel.ChatLevel("%4Round End:%f 1"); Thread.Sleep(1000);
+            CurLevel.ChatLevel("%4Round End:%f 5"); Thread.Sleep(1000);
+            CurLevel.ChatLevel("%4Round End:%f 4"); Thread.Sleep(1000);
+            CurLevel.ChatLevel("%4Round End:%f 3"); Thread.Sleep(1000);
+            CurLevel.ChatLevel("%4Round End:%f 2"); Thread.Sleep(1000);
+            CurLevel.ChatLevel("%4Round End:%f 1"); Thread.Sleep(1000);
             HandOutRewards();
         }
 
@@ -248,10 +249,10 @@ namespace MCGalaxy.Games {
             if (Status == ZombieGameStatus.NotStarted) return;
             
             Player[] alive = Alive.Items;
-            CurrentLevel.ChatLevel(Colors.lime + "The game has ended!");
-            if (alive.Length == 0) CurrentLevel.ChatLevel(Colors.maroon + "Zombies have won this round.");
-            else if (alive.Length == 1) CurrentLevel.ChatLevel(Colors.green + "Congratulations to the sole survivor:");
-            else CurrentLevel.ChatLevel(Colors.green + "Congratulations to the survivors:");
+            CurLevel.ChatLevel(Colors.lime + "The game has ended!");
+            if (alive.Length == 0) CurLevel.ChatLevel(Colors.maroon + "Zombies have won this round.");
+            else if (alive.Length == 1) CurLevel.ChatLevel(Colors.green + "Congratulations to the sole survivor:");
+            else CurLevel.ChatLevel(Colors.green + "Congratulations to the survivors:");
             
             timer.Enabled = false;
             string playersString = "";
@@ -273,12 +274,12 @@ namespace MCGalaxy.Games {
                 }
             }
             
-            CurrentLevel.ChatLevel(playersString);
+            CurLevel.ChatLevel(playersString);
             online = PlayerInfo.Online.Items;
             Random rand = new Random();
             foreach (Player pl in online) {
                 int money = 0;
-                if (!pl.level.name.CaselessEq(CurrentLevelName)) continue;
+                if (!pl.level.name.CaselessEq(CurLevelName)) continue;
                 bool inBlock = pl.CheckIfInsideBlock();
                 
                 if (!inBlock && alive.Length == 0) {
@@ -317,7 +318,7 @@ namespace MCGalaxy.Games {
             p.infected = false;
             p.playersInfected = 0;
             
-            if (p.level.name.CaselessEq(CurrentLevelName))
+            if (p.level.name.CaselessEq(CurLevelName))
                 playersString += p.color + p.DisplayName + Colors.white + ", ";
         }
         
@@ -339,8 +340,8 @@ namespace MCGalaxy.Games {
                 string level = levels[r.Next(0, levels.Count)];
                 string level2 = levels[r.Next(0, levels.Count)];
 
-                if (level == lastLevel1 || level == lastLevel2 || level == CurrentLevelName ||
-                    level2 == lastLevel1 || level2 == lastLevel2 || level2 == CurrentLevelName ||
+                if (level == lastLevel1 || level == lastLevel2 || level == CurLevelName ||
+                    level2 == lastLevel1 || level2 == lastLevel2 || level2 == CurLevelName ||
                     level == selectedLevel1) {
                     goto LevelChoice;
                 } else if (selectedLevel1 == "") {
@@ -357,7 +358,7 @@ namespace MCGalaxy.Games {
 
                 if (initialChangeLevel) {
                     Server.votingforlevel = true;
-                    CurrentLevel.ChatLevel(" " + Colors.black + "Level Vote: %S" + selectedLevel1 + ", " + selectedLevel2 +
+                    CurLevel.ChatLevel(" " + Colors.black + "Level Vote: %S" + selectedLevel1 + ", " + selectedLevel2 +
                                            " or random " + "(" + Colors.lime + "1%S/" + Colors.red + "2%S/" + Colors.blue + "3%S)");
                     System.Threading.Thread.Sleep(15000);
                     Server.votingforlevel = false;

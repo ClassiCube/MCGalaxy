@@ -208,6 +208,7 @@ namespace MCGalaxy
         public BuildType BuildType = BuildType.Normal;
         public bool CanPlace { get { return Buildable && BuildType != BuildType.NoModify; } }
         public bool CanDelete { get { return Deletable && BuildType != BuildType.NoModify; } }
+        public int MinRoundTime = 4, MaxRoundTime = 7;
         
         public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false)
         {
@@ -284,7 +285,7 @@ namespace MCGalaxy
 
         public bool ShouldSaveLevelFile() {
         	if (Server.ZombieModeOn && 
-        	    (name.CaselessEq(Server.zombie.CurrentLevelName)
+        	    (name.CaselessEq(Server.zombie.CurLevelName)
         	     || name.CaselessEq(Server.zombie.LastLevelName))) return false;
         	if (Server.lava.active && Server.lava.HasMap(name)) return false;
         	return true;

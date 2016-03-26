@@ -25,15 +25,15 @@ namespace MCGalaxy.Games {
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte tile, byte b) {
             if (Status == ZombieGameStatus.NotStarted 
-                || (p.level == null || !p.level.name.CaselessEq(CurrentLevelName))) return false;
-            if (CurrentLevel.BuildType == BuildType.NoModify) {
+                || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
+            if (CurLevel.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); return true;
-            } else if (CurrentLevel.BuildType == BuildType.ModifyOnly 
+            } else if (CurLevel.BuildType == BuildType.ModifyOnly 
                        && p.level.GetTile(x, y, z) == Block.op_air) {
                 p.RevertBlock(x, y, z); return true;
             }
             
-            if (action == 1 && !CurrentLevel.Pillaring && !p.referee) {
+            if (action == 1 && !CurLevel.Pillaring && !p.referee) {
                 if (p.lastYblock == y - 1 && p.lastXblock == x && p.lastZblock == z ) {
                     p.blocksStacked++;
                 } else {
@@ -50,7 +50,7 @@ namespace MCGalaxy.Games {
             p.lastXblock = x; p.lastYblock = y; p.lastZblock = z;
             
             if (action == 1 || (action == 0 && p.painting)) {
-                if (!p.level.name.CaselessEq(CurrentLevelName) || p.referee) return false;
+                if (!p.level.name.CaselessEq(CurLevelName) || p.referee) return false;
                 
                 if (p.blockCount == 0 ) {
                     p.SendMessage("You have no blocks left.");
@@ -67,7 +67,7 @@ namespace MCGalaxy.Games {
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
                                              byte rotX, byte rotY) {
             if (Status == ZombieGameStatus.NotStarted 
-                || (p.level == null || !p.level.name.CaselessEq(CurrentLevelName))) return false;
+                || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (!p.referee && noRespawn) {
                 if (p.pos[0] >= x + 70 || p.pos[0] <= x - 70 ) {
                     p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
@@ -83,7 +83,7 @@ namespace MCGalaxy.Games {
         
         public override bool HandlesChatMessage(Player p, string message) {
             if (Status == ZombieGameStatus.NotStarted 
-                || (p.level == null || !p.level.name.CaselessEq(CurrentLevelName))) return false;
+                || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (Server.votingforlevel && HandleVote(p, message)) return true;
             
             if (message[0] == '~' && message.Length > 1) {
@@ -125,11 +125,11 @@ namespace MCGalaxy.Games {
         public override void PlayerJoinedServer(Player p) {
             if (Status == ZombieGameStatus.NotStarted || Server.ZombieOnlyServer) return;
             Player.SendMessage(p, "A Zombie Survival game is running! " +
-                               "Type %T/g " + CurrentLevelName + " %Sto join.");
+                               "Type %T/g " + CurLevelName + " %Sto join.");
         }
         
         public override void PlayerJoinedLevel(Player p, Level oldLvl) {
-            if (RoundInProgress && p.level.name.CaselessEq(CurrentLevelName)) {
+            if (RoundInProgress && p.level.name.CaselessEq(CurLevelName)) {
                 if (Status != ZombieGameStatus.NotStarted && p != null) {
                     p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
                     p.blockCount = 50;
@@ -137,18 +137,18 @@ namespace MCGalaxy.Games {
                 }
             }
             
-            if (p.level.name.CaselessEq(CurrentLevelName)) {
+            if (p.level.name.CaselessEq(CurLevelName)) {
                 double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
                 if (startLeft >= 0)
                     p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
-                p.SendMessage("This map has &a" + CurrentLevel.Likes + 
-                              " likes %Sand &c" + CurrentLevel.Dislikes + " dislikes");
+                p.SendMessage("This map has &a" + CurLevel.Likes + 
+                              " likes %Sand &c" + CurLevel.Dislikes + " dislikes");
                 p.SendCpeMessage(CpeMessageType.Status2, 
-                                 "%SPillaring " + (CurrentLevel.Pillaring ? "&aYes" : "&cNo") +
-                                 "%S, Type is &a" + CurrentLevel.BuildType);
+                                 "%SPillaring " + (CurLevel.Pillaring ? "&aYes" : "&cNo") +
+                                 "%S, Type is &a" + CurLevel.BuildType);
                 
-                if (CurrentLevel.Authors != "")
-                    p.SendMessage("It was created by " + CurrentLevel.Authors);
+                if (CurLevel.Authors != "")
+                    p.SendMessage("It was created by " + CurLevel.Authors);
                 p.SendCpeMessage(CpeMessageType.Status3, "%SYou have &a" + p.money + " %S" + Server.moneys);
                 UpdatePlayerStatus(p);
                 return;
@@ -159,13 +159,13 @@ namespace MCGalaxy.Games {
             p.SendCpeMessage(CpeMessageType.Status3, "");
             Alive.Remove(p);
             Infected.Remove(p);
-            if (oldLvl != null && oldLvl.name.CaselessEq(CurrentLevelName))
+            if (oldLvl != null && oldLvl.name.CaselessEq(CurLevelName))
                 UpdateAllPlayerStatus();
         }
         
         public override void PlayerMoneyChanged(Player p) {
             if (Status == ZombieGameStatus.NotStarted 
-                || !p.level.name.CaselessEq(CurrentLevelName)) return;
+                || !p.level.name.CaselessEq(CurLevelName)) return;
             p.SendCpeMessage(CpeMessageType.Status3, "%SYou have &a" + p.money + " %S" + Server.moneys);
         }
     }

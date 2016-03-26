@@ -69,10 +69,10 @@ namespace MCGalaxy.Games {
         public string LastLevelName = "";
         
         /// <summary> The name of the level that the current round of zombie survival is being played on. </summary>
-        public string CurrentLevelName = "";
+        public string CurLevelName = "";
         
         /// <summary> The level that the current round of zombie survival is being played on. </summary>
-        public Level CurrentLevel = null;
+        public Level CurLevel = null;
         
         /// <summary> List of alive/human players. </summary>
         public VolatileArray<Player> Alive = new VolatileArray<Player>(false);
@@ -128,7 +128,7 @@ namespace MCGalaxy.Games {
             if (alive.Length == 0) return;
             int index = random.Next(alive.Length);
             
-            while (alive[index].referee || !alive[index].level.name.CaselessEq(CurrentLevelName)) {
+            while (alive[index].referee || !alive[index].level.name.CaselessEq(CurLevelName)) {
                 if (index >= alive.Length - 1) {
                     index = 0;
                     alive = Alive.Items;
@@ -139,7 +139,7 @@ namespace MCGalaxy.Games {
             }
             
             Player zombie = alive[index];
-            CurrentLevel.ChatLevel(zombie.FullName + " %Scontinued the infection!");
+            CurLevel.ChatLevel(zombie.FullName + " %Scontinued the infection!");
             InfectPlayer(zombie);
         }
 
@@ -163,22 +163,22 @@ namespace MCGalaxy.Games {
 
         void ChangeLevel(string next) {
             Player[] online = PlayerInfo.Online.Items;
-            if (CurrentLevel != null) {
+            if (CurLevel != null) {
                 bool saveSettings = false;
                 foreach (Player pl in online)
                     saveSettings |= pl.ratedMap;
-                if (saveSettings) Level.SaveSettings(CurrentLevel);
+                if (saveSettings) Level.SaveSettings(CurLevel);
                 
-                CurrentLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
-                CurrentLevel.ChatLevel("Please wait while you are transfered.");
+                CurLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
+                CurLevel.ChatLevel("Please wait while you are transfered.");
             }
             
-            CurrentLevelName = next;
+            CurLevelName = next;
             QueuedLevel = null;
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
-            CurrentLevel = LevelInfo.Find(next);
+            CurLevel = LevelInfo.Find(next);
             if (Server.ZombieOnlyServer)
-                Server.mainLevel = CurrentLevel;
+                Server.mainLevel = CurLevel;
             
             online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
@@ -203,8 +203,8 @@ namespace MCGalaxy.Games {
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
             LastLevelName = "";
-            CurrentLevelName = "";
-            CurrentLevel = null;
+            CurLevelName = "";
+            CurLevel = null;
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {

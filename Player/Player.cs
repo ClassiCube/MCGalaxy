@@ -517,7 +517,7 @@ namespace MCGalaxy {
                 dst.SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
             else
                 dst.SendSpawn(id, Colors.red + p.name + possession, x, y, z, rotx, roty);
-            if (dst.HasCpeExt(CpeExt.ChangeModel))
+            if (dst.HasCpeExt(CpeExt.ChangeModel) && id != 0xFF)
                 dst.SendChangeModel(id, "zombie");
         }
         

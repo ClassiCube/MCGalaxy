@@ -61,6 +61,7 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("Unload = " + level.unload);
             writer.WriteLine("WorldChat = " + level.worldChat);
             
+            writer.WriteLine("#Permission settings");
             writer.WriteLine("PerBuild = " + GetName(level.permissionbuild));
             writer.WriteLine("PerVisit = " + GetName(level.permissionvisit));
             writer.WriteLine("PerBuildMax = " + GetName(level.perbuildmax));
@@ -77,11 +78,14 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("Texture = " + level.terrainUrl);
             writer.WriteLine("TexturePack = " + level.texturePackUrl);
             
+            writer.WriteLine("#Game settings");
             writer.WriteLine("Likes = " + level.Likes);
             writer.WriteLine("Dislikes = " + level.Dislikes);
             writer.WriteLine("Authors = " + level.Authors);
             writer.WriteLine("Pillaring = " + level.Pillaring);
             writer.WriteLine("BuildType = " + level.BuildType);
+            writer.WriteLine("MinRoundTime = " + level.MinRoundTime);
+            writer.WriteLine("MaxRoundTime = " + level.MaxRoundTime);
         }
         
         static string GetName(LevelPermission perm) {
@@ -113,7 +117,7 @@ namespace MCGalaxy.Levels.IO {
         public static void Load(Level level, string path) {
             foreach (string line in File.ReadAllLines(path)) {
                 try {
-                    if (line[0] == '#') continue;
+                    if (line.Length == 0 || line[0] == '#') continue;
                     int sepIndex = line.IndexOf(" = ");
                     if (sepIndex < 0) continue;
                     
@@ -228,6 +232,10 @@ namespace MCGalaxy.Levels.IO {
                     level.Pillaring = bool.Parse(value); break;
                 case "buildtype":
                     level.BuildType = (BuildType)Enum.Parse(typeof(BuildType), value); break;
+                case "minroundtime":
+                    level.MinRoundTime = int.Parse(value); break;
+                case "maxroundtime":
+                    level.MaxRoundTime = int.Parse(value); break;                 
             }
         }
         

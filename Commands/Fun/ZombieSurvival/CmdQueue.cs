@@ -43,8 +43,8 @@ namespace MCGalaxy.Commands
                 if (LevelInfo.ExistsOffline(value)) {
                     p.SendMessage(value + " was queued.");
                     Server.zombie.QueuedLevel = value.ToLower();
-                    if (Server.zombie.CurrentLevel != null)
-                        Server.zombie.CurrentLevel.ChatLevel(value + " was queued as the next map.");
+                    if (Server.zombie.CurLevel != null)
+                        Server.zombie.CurLevel.ChatLevel(value + " was queued as the next map.");
                 } else {
                     p.SendMessage("Level does not exist.");
                 }
