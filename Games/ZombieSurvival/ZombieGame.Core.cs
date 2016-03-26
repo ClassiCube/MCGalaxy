@@ -173,8 +173,8 @@ namespace MCGalaxy.Games {
                             if (lastPlayerToInfect == pKiller.name) {
                                 infectCombo++;
                                 if (infectCombo >= 2) {
-                                    pKiller.SendMessage("You gained " + (4 + infectCombo) + " " + Server.moneys);
-                                    pKiller.money += 4 + infectCombo;
+                                    pKiller.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
+                                    pKiller.money += 2 + infectCombo;
                                     pKiller.OnMoneyChanged();
                                     CurrentLevel.ChatLevel(pKiller.FullName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
                                 }
@@ -320,8 +320,6 @@ namespace MCGalaxy.Games {
             if (p.level.name.CaselessEq(CurrentLevelName))
                 playersString += p.color + p.DisplayName + Colors.white + ", ";
         }
-		
-		static string Eq(string src, string a, string b) { return src == a || src == b; }
         
         void ChooseNextLevel() {
             if (QueuedLevel != null) { ChangeLevel(QueuedLevel); return; }

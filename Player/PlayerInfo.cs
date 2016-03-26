@@ -158,6 +158,7 @@ namespace MCGalaxy {
             p.overallBlocks = long.Parse(row["totalBlocks"].ToString().Trim());
             //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
             p.money = Economy.RetrieveEcoStats(p.name).money;
+            p.loginMoney = p.money;
             p.totalKicked = int.Parse(row["totalKicked"].ToString());
         }
         

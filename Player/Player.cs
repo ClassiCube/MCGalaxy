@@ -140,7 +140,7 @@ namespace MCGalaxy {
         //Using for anything else can cause unintended effects!
         public bool canBuild = true;
 
-        public int money = 0;
+        public int money = 0, loginMoney = 0;
         public long overallBlocks = 0;
 
         public int loginBlocks = 0;
@@ -372,7 +372,7 @@ namespace MCGalaxy {
 
         public void save() {
             //safe against SQL injects because no user input is provided
-            string commandString =
+            string query =
                 "UPDATE Players SET IP='" + ip + "'" +
                 ", LastLogin='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'" +
                 ", totalLogin=" + totalLogins +
@@ -383,13 +383,18 @@ namespace MCGalaxy {
                 ", TimeSpent='" + time.ToDBTime() +
                 "' WHERE Name='" + name + "'";
             if ( MySQLSave != null )
-                MySQLSave(this, commandString);
-            OnMySQLSaveEvent.Call(this, commandString);
+                MySQLSave(this, query);
+            OnMySQLSaveEvent.Call(this, query);
             if ( cancelmysql ) {
                 cancelmysql = false;
                 return;
             }
-            Database.executeQuery(commandString);
+            Database.executeQuery(query);
+            if (Economy.Enabled && loginMoney != money) {
+                Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
+                ecos.money = money;
+                Economy.UpdateEcoStats(ecos);
+            }           	
 
             try {
                 if ( !smileySaved ) {
