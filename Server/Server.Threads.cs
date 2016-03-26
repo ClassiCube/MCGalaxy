@@ -48,7 +48,7 @@ namespace MCGalaxy {
                         if (p.frozen) {
                             p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); continue;
                         } else if (p.following != "") {
-                            Player who = PlayerInfo.Find(p.following);
+                            Player who = PlayerInfo.FindExact(p.following);
                             if (who == null || who.level != p.level) {
                                 p.following = "";
                                 if (!p.canBuild)

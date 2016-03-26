@@ -143,10 +143,8 @@ namespace MCGalaxy.Commands {
             foreach (Player pl in players) {
                 if (pl.level != p.level || pl.hidden || p == pl) continue;
                 Player.SpawnEntity(pl, p, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
-            }
-            
-            if (!p.hidden) Player.GlobalSpawn(p, x, y, z, rotX, rotY, true, "");
-            else p.SendPos(0xFF, x, y, z, rotX, rotY);
+            }           
+            Player.GlobalSpawn(p, x, y, z, rotX, rotY, true);
             
             PlayerBot[] bots = PlayerBot.Bots.Items;
             foreach (PlayerBot b in bots)

@@ -17,10 +17,9 @@
  */
 
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPossess : Command
-    {
+namespace MCGalaxy.Commands {
+    
+    public sealed class CmdPossess : Command {
         public override string name { get { return "possess"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -28,129 +27,69 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdPossess() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message.Split(' ').Length > 2) { Help(p); return; }
-            if (p == null) { Player.SendMessage(p, "Console possession?  Nope.avi."); return; }
+        public override void Use(Player p, string message) {
+            if (p == null) { MessageInGameOnly(p); return; }
+            string[] args = message.Split(' ');
+            if (args.Length > 2) { Help(p); return; }
 
-            string skin = (message.Split(' ').Length == 2) ? message.Split(' ')[1] : "";
-            message = message.Split(' ')[0];
-            if (message == "")
-            {
-                if (p.possess == "")
-                {
-                    Help(p);
-                    return;
-                }
-                else
-                {
-                    Player who = PlayerInfo.Find(p.possess);
-                    if (who == null)
-                    {
-                        p.possess = "";
-                        Player.SendMessage(p, "Possession disabled.");
-                        return;
-                    }
-                    who.following = "";
-                    who.canBuild = true;
-                    p.possess = "";
-                    if (!who.MarkPossessed())
-                    {
-                        return;
-                    }
-                    p.invincible = false;
-                    Command.all.Find("hide").Use(p, "");
-                    Player.SendMessage(p, "Stopped possessing " + who.color + who.name + Server.DefaultColor + ".");
-                    return;
-                }
-            }
-            else if (message == p.possess)
-            {
+            string skin = (args.Length == 2) ? args[1] : "";
+            message = args[0];
+            if (message == "" || message == p.possess) {
+                if (message == "" && p.possess == "") { Help(p); return; }
+                
                 Player who = PlayerInfo.Find(p.possess);
-                if (who == null)
-                {
+                if (who == null) {
                     p.possess = "";
-                    Player.SendMessage(p, "Possession disabled.");
-                    return;
+                    Player.SendMessage(p, "Possession disabled."); return;
                 }
-                if (who == p)
-                {
-                    Player.SendMessage(p, "Cannot possess yourself!");
-                    return;
+                if (who == p) {
+                    Player.SendMessage(p, "Cannot possess yourself!"); return;
                 }
                 who.following = "";
                 who.canBuild = true;
                 p.possess = "";
-                if (!who.MarkPossessed())
-                {
-                    return;
-                }
+                if (!who.MarkPossessed()) return;
+                
                 p.invincible = false;
                 Command.all.Find("hide").Use(p, "");
-                Player.SendMessage(p, "Stopped possessing " + who.color + who.name + Server.DefaultColor + ".");
-                return;
-            }
-            else
-            {
-                Player who = PlayerInfo.Find(message);
-                if (who == null)
-                {
-                    Player.SendMessage(p, "Could not find player.");
-                    return;
+                Player.SendMessage(p, "Stopped possessing " + who.color + who.name + "%S.");
+            } else {
+                Player who = PlayerInfo.FindOrShowMatches(p, message);
+                if (who == null) return;
+                if (who.group.Permission >= p.group.Permission) {
+                    Player.SendMessage(p, "Cannot possess someone of equal or greater rank."); return;
                 }
-                if (who.group.Permission >= p.group.Permission)
-                {
-                    Player.SendMessage(p, "Cannot possess someone of equal or greater rank.");
-                    return;
+                
+                if (who.possess != "") {
+                    Player.SendMessage(p, "That player is currently possessing someone!"); return;
                 }
-                if (who.possess != "")
-                {
-                    Player.SendMessage(p, "That player is currently possessing someone!");
-                    return;
-                }
-                if (who.following != "")
-                {
-                    Player.SendMessage(p, "That player is either following someone or already possessed.");
-                    return;
-                }
-                if (p.possess != "")
-                {
-                    Player oldwho = PlayerInfo.Find(p.possess);
-                    if (oldwho != null)
-                    {
-                        oldwho.following = "";
-                        oldwho.canBuild = true;
-                        if (!oldwho.MarkPossessed())
-                        {
-                            return;
-                        }
-                        //p.SendSpawn(oldwho.id, oldwho.color + oldwho.name, oldwho.pos[0], oldwho.pos[1], oldwho.pos[2], oldwho.rot[0], oldwho.rot[1]);
+                if (who.following != "") {
+                    Player.SendMessage(p, "That player is either following someone or already possessed."); return;
+                }                
+                if (p.possess != "") {
+                    Player prev = PlayerInfo.Find(p.possess);
+                    if (prev != null) {
+                        prev.following = "";
+                        prev.canBuild = true;
+                        if (!prev.MarkPossessed()) return;
                     }
                 }
+                
                 Command.all.Find("tp").Use(p, who.name);
-                if (!p.hidden)
-                {
-                    Command.all.Find("hide").Use(p, "");
-                }
+                if (!p.hidden) Command.all.Find("hide").Use(p, "");
                 p.possess = who.name;
                 who.following = p.name;
-                if (!p.invincible)
-                {
-                    p.invincible = true;
-                }
+                if (!p.invincible) p.invincible = true;
+                
                 bool result = (skin == "#") ? who.MarkPossessed() : who.MarkPossessed(p.name);
-                if (!result)
-                {
-                    return;
-                }
+                if (!result) return;
                 p.SendDespawn(who.id);
                 who.canBuild = false;
-                Player.SendMessage(p, "Successfully possessed " + who.color + who.name + Server.DefaultColor + ".");
+                Player.SendMessage(p, "Successfully possessed " + who.color + who.name + "%S.");
             }
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/possess <player> [skin as #] - DEMONIC POSSESSION HUE HUE");
             Player.SendMessage(p, "Using # after player name makes possessed keep their custom skin during possession.");
             Player.SendMessage(p, "Not using it makes them lose their skin, and makes their name show as \"Player (YourName)\".");

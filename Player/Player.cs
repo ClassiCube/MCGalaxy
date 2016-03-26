@@ -489,8 +489,8 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             p.lastSpawnColor = p.infected ? ZombieGame.InfectCol : p.color;
             foreach (Player other in players) {
-                if (other.Loading && p != other) continue;
-                if (p.level != other.level || (p.hidden && !self)) continue;
+            	if ((other.Loading && p != other) || p.level != other.level) continue;
+            	if ((p.hidden || p.referee) && !self) continue;
                 
                 if (p != other) {
                     SpawnEntity(p, other, p.id, x, y, z, rotx, roty, possession);
@@ -504,20 +504,16 @@ namespace MCGalaxy {
         
         internal static void SpawnEntity(Player p, Player dst, byte id, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, string possession = "") {
-            if (!Server.ZombieModeOn) {
+            if (!Server.ZombieModeOn || !p.infected) {
                 dst.SendSpawn(id, p.color + p.name + possession, x, y, z, rotx, roty); return;
             }
             
-            if (p.infected) {
-                if (Server.zombie.ZombieName != "" && !dst.aka)
-                    dst.SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
-                else
-                    dst.SendSpawn(id, Colors.red + p.name + possession, x, y, z, rotx, roty);
-                if (dst.HasCpeExt(CpeExt.ChangeModel))
-                    dst.SendChangeModel(id, "zombie");
-            } else if (!p.referee) {
-                dst.SendSpawn(id, p.color + p.name + possession, x, y, z, rotx, roty);
-            }
+            if (Server.zombie.ZombieName != "" && !dst.aka)
+                dst.SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
+            else
+                dst.SendSpawn(id, Colors.red + p.name + possession, x, y, z, rotx, roty);
+            if (dst.HasCpeExt(CpeExt.ChangeModel))
+                dst.SendChangeModel(id, "zombie");
         }
         
         public static void GlobalDespawn(Player p, bool self) {
@@ -530,13 +526,12 @@ namespace MCGalaxy {
         }
 
         public bool MarkPossessed(string marker = "") {
-            if ( marker != "" ) {
-                Player controller = PlayerInfo.Find(marker);
-                if ( controller == null ) {
-                    return false;
-                }
+            if (marker != "") {
+                Player controller = PlayerInfo.FindExact(marker);
+                if (controller == null) return false;
                 marker = " (" + controller.color + controller.name + color + ")";
             }
+        	
             GlobalDespawn(this, true);
             GlobalSpawn(this, pos[0], pos[1], pos[2], rot[0], rot[1], true, marker);
             return true;
