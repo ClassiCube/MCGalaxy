@@ -538,18 +538,7 @@ namespace MCGalaxy {
                 ushort y = (ushort)((1 + level.spawny) * 32);
                 ushort z = (ushort)((0.5 + level.spawnz) * 32);
                 pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
-
-                GlobalSpawn(this, x, y, z, rot[0], rot[1], true);
-                Player[] players = PlayerInfo.Online.Items; 
-                foreach (Player p in players) {
-                    if (p.level == level && p != this && !p.hidden)
-                        SendSpawn(p.id, p.color + p.name, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
-                }
-                PlayerBot[] bots = PlayerBot.Bots.Items;
-                foreach (PlayerBot pB in bots) {
-                    if (pB.level == level)
-                        SendSpawn(pB.id, pB.color + pB.name, pB.pos[0], pB.pos[1], pB.pos[2], pB.rot[0], pB.rot[1]);
-                }
+                CmdGoto.SpawnEntities(this, x, y, z, rot[0], rot[1]);
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Server.s.Log("Error spawning player \"" + name + "\"");

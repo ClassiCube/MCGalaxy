@@ -69,7 +69,7 @@ namespace MCGalaxy.Games {
 
             CurrentLevel.ChatLevel(first.color + first.name + " %Sstarted the infection!");
             first.infected = true;
-            UpdatePlayerColor(first, Colors.red);
+            UpdatePlayerColor(first, InfectCol);
 
             RoundInProgress = true;
             int roundMins = random.Next(4, 7);
@@ -101,6 +101,7 @@ namespace MCGalaxy.Games {
             do {    
                 first = QueuedZombie != null ? 
                     PlayerInfo.Find(QueuedZombie) : players[random.Next(players.Count)];
+                QueuedZombie = null;
             } while (first == null || !first.level.name.CaselessEq(CurrentLevelName));
             return first;
         }
@@ -153,7 +154,7 @@ namespace MCGalaxy.Games {
                     
                 foreach (Player pKiller in infected) {
                     pKiller.infected = true;
-                    UpdatePlayerColor(pKiller, Colors.red);
+                    UpdatePlayerColor(pKiller, InfectCol);
                     bool aliveChanged = false;
                     foreach (Player pAlive in alive) {
                         UpdatePlayerColor(pAlive, pAlive.color);
@@ -190,7 +191,7 @@ namespace MCGalaxy.Games {
                             
                             CheckHumanPledge(pAlive);
                             CheckBounty(pAlive, pKiller);
-                            UpdatePlayerColor(pAlive, Colors.red);
+                            UpdatePlayerColor(pAlive, InfectCol);
                         }
                     }
                     if (aliveChanged) alive = Alive.Items;

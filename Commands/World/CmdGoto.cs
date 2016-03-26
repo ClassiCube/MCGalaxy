@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             if (!didJoin) return;
             bool unloadOld = true;
             if (oldLevel.unload && !oldLevel.name.Contains("&cMuseum ")) {
-            	Player[] players = PlayerInfo.Online.Items; 
+                Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player pl in players) 
                     if (pl.level == oldLevel) { unloadOld = false; break; }
                 if (unloadOld && Server.AutoLoad) oldLevel.Unload(true);
@@ -127,21 +127,7 @@ namespace MCGalaxy.Commands {
             ushort x = (ushort)((0.5 + lvl.spawnx) * 32);
             ushort y = (ushort)((1 + lvl.spawny) * 32);
             ushort z = (ushort)((0.5 + lvl.spawnz) * 32);
-
-            if (!p.hidden)
-                Player.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true, "");
-            else
-                p.SendPos(0xFF, x, y, z, lvl.rotx, lvl.roty);
-
-            players = PlayerInfo.Online.Items;
-            foreach (Player pl in players)
-                if (pl.level == p.level && p != pl && !pl.hidden)
-                    p.SendSpawn(pl.id, pl.color + pl.name, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);
-            bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots)
-                if (b.level == p.level)
-                    p.SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
-            
+            SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
             p.Loading = false;
             CheckGamesJoin(p, oldLevel);
             
@@ -152,9 +138,25 @@ namespace MCGalaxy.Commands {
             return true;
         }
         
+        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY) {
+        	Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != p.level || pl.hidden || p == pl) continue;
+                Player.SpawnEntity(pl, p, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
+            }
+            
+            if (!p.hidden) Player.GlobalSpawn(p, x, y, z, rotX, rotY, true, "");
+            else p.SendPos(0xFF, x, y, z, rotX, rotY);
+            
+            PlayerBot[] bots = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in bots)
+                if (b.level == p.level)
+                    p.SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+        }
+        
         internal static void CheckGamesJoin(Player p, Level oldLvl) {
-        	Server.lava.PlayerJoinedLevel(p, oldLvl);
-        	Server.zombie.PlayerJoinedLevel(p, oldLvl);
+            Server.lava.PlayerJoinedLevel(p, oldLvl);
+            Server.zombie.PlayerJoinedLevel(p, oldLvl);
  
             if (p.inTNTwarsMap) p.canBuild = true;
             TntWarsGame game = TntWarsGame.Find(p.level);

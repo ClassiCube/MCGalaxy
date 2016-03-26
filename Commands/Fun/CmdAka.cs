@@ -32,17 +32,9 @@ namespace MCGalaxy.Commands {
             Player[] players = PlayerInfo.Online.Items;
             
             foreach (Player pl in players) {
-                if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.referee) continue;
-                
+                if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.referee) continue;                
                 p.SendDespawn(pl.id);
-                string name = null;
-                if (pl.infected) {
-                    name = (Server.zombie.ZombieName != "" && showInfected) ? 
-                        Colors.red + Server.zombie.ZombieName : Colors.red + pl.name;
-                } else {
-                    name = pl.color + pl.name;
-                }
-                p.SendSpawn(pl.id, name, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);
+                Player.SpawnEntity(pl, p, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }
         }
         

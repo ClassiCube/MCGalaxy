@@ -75,24 +75,9 @@ namespace MCGalaxy.Commands {
             PlayerBot[] bots = PlayerBot.Bots.Items;
             foreach (PlayerBot b in bots) if (who.level == b.level) who.SendDespawn(b.id);
 
-            ushort x = who.pos[0], y = who.pos[1], z = who.pos[2];
             Player.GlobalDespawn(who, true);
-            who.SendUserMOTD(); who.SendMap(who.level);
-
-            if (!who.hidden)
-                Player.GlobalSpawn(who, x, y, z, who.level.rotx, who.level.roty, true);
-            else
-                who.SendPos(0xFF, x, y, z, who.level.rotx, who.level.roty);
-
-            players = PlayerInfo.Online.Items;
-            foreach (Player pl in players)
-                if (pl.level == who.level && who != pl && !pl.hidden)
-                    who.SendSpawn(pl.id, pl.color + pl.name, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1]);
-            bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots)
-                if (b.level == who.level)
-                    who.SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
-
+            who.SendUserMOTD(); who.SendMap(who.level);            
+            CmdGoto.SpawnEntities(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
             who.Loading = false;
 
             if (!showMessage) return;

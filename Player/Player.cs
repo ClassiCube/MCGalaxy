@@ -487,31 +487,36 @@ namespace MCGalaxy {
         public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
-            p.lastSpawnColor = p.infected ? Colors.red : p.color;
-        	foreach (Player other in players) {
+            p.lastSpawnColor = p.infected ? ZombieGame.InfectCol : p.color;
+            foreach (Player other in players) {
                 if (other.Loading && p != other) continue;
                 if (p.level != other.level || (p.hidden && !self)) continue;
                 
                 if (p != other) {
-                    if (Server.ZombieModeOn) {
-                        if (p.infected) {
-                            if (Server.zombie.ZombieName != "" && !other.aka)
-                                other.SendSpawn(p.id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
-                            else
-                                other.SendSpawn(p.id, Colors.red + p.name + possession, x, y, z, rotx, roty);
-                            if (other.HasCpeExt(CpeExt.ChangeModel))
-                                other.SendChangeModel(p.id, "zombie");
-                        } else if (!p.referee) {
-                            other.SendSpawn(p.id, p.color + p.name + possession, x, y, z, rotx, roty);
-                        }
-                    } else {
-                        other.SendSpawn(p.id, p.color + p.name + possession, x, y, z, rotx, roty);
-                    }
+                    SpawnEntity(p, other, p.id, x, y, z, rotx, roty, possession);
                 } else if (self) {
                     other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
                     other.oldpos = other.pos; other.basepos = other.pos; other.oldrot = other.rot;
-                    other.SendSpawn(0xFF, p.color + p.name + possession, x, y, z, rotx, roty);
+                    SpawnEntity(p, other, 0xFF, x, y, z, rotx, roty, possession);
                 }
+            }
+        }
+        
+        internal static void SpawnEntity(Player p, Player dst, byte id, ushort x, ushort y, ushort z, 
+                                       byte rotx, byte roty, string possession = "") {
+            if (!Server.ZombieModeOn) {
+                dst.SendSpawn(id, p.color + p.name + possession, x, y, z, rotx, roty); return;
+            }
+            
+            if (p.infected) {
+                if (Server.zombie.ZombieName != "" && !dst.aka)
+                    dst.SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
+                else
+                    dst.SendSpawn(id, Colors.red + p.name + possession, x, y, z, rotx, roty);
+                if (dst.HasCpeExt(CpeExt.ChangeModel))
+                    dst.SendChangeModel(id, "zombie");
+            } else if (!p.referee) {
+                dst.SendSpawn(id, p.color + p.name + possession, x, y, z, rotx, roty);
             }
         }
         
