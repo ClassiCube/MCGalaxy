@@ -38,9 +38,9 @@ namespace MCGalaxy.Commands
             } else if (name == "empty") {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 for (int i = 0; i < loaded.Length; i++) {
-                    Level l = loaded[i];
-                    if (l.players.Count > 0) continue;
-                    l.Unload(true, true);
+                    Level lvl = loaded[i];
+                    if (lvl.HasPlayers()) continue;
+                    lvl.Unload(true, true);
                 }
             } else {
                 Level level = LevelInfo.Find(name);

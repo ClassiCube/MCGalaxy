@@ -243,7 +243,6 @@ namespace MCGalaxy
             roty = 0;
             listCheckExists = new SparseBitSet(Width, Height, Length);
             listUpdateExists = new SparseBitSet(Width, Height, Length);
-            //season = new SeasonsCore(this);
         }
 
         public List<Player> players
@@ -439,8 +438,7 @@ namespace MCGalaxy
         
 
         /// <summary> Returns whether the given coordinates are insides the boundaries of this level. </summary>
-        public bool InBound(ushort x, ushort y, ushort z)
-        {
+        public bool InBound(ushort x, ushort y, ushort z) {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
 
@@ -733,21 +731,25 @@ namespace MCGalaxy
         	}
         }
 
-        public static LevelPermission PermissionFromName(string name)
-        {
+        public static LevelPermission PermissionFromName(string name) {
             Group foundGroup = Group.Find(name);
             return foundGroup != null ? foundGroup.Permission : LevelPermission.Null;
         }
 
-        public static string PermissionToName(LevelPermission perm)
-        {
+        public static string PermissionToName(LevelPermission perm) {
             Group foundGroup = Group.findPerm(perm);
             return foundGroup != null ? foundGroup.name : ((int)perm).ToString();
         }
+        
+        public bool HasPlayers() {
+            Player[] players = PlayerInfo.Online.Items; 
+            foreach (Player p in players)
+                if (p.level == this) return true;
+            return false;
+        }
 
-        public List<Player> getPlayers()
-        {
-        	Player[] players = PlayerInfo.Online.Items; 
+        public List<Player> getPlayers() {
+            Player[] players = PlayerInfo.Online.Items; 
             return players.Where(p => p.level == this).ToList();
         }
 

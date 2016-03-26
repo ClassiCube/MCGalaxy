@@ -774,17 +774,14 @@ Next: continue;
                     }
                 }
             }
-            char[] temp;
             for ( int i = 0; i < lines.Count; i++ ) // Gotta do it the old fashioned way...
             {
-                temp = lines[i].ToCharArray();
+            	char[] temp = lines[i].ToCharArray();
                 if ( temp[temp.Length - 2] == '%' || temp[temp.Length - 2] == '&' ) {
                     temp[temp.Length - 1] = ' ';
                     temp[temp.Length - 2] = ' ';
                 }
-                StringBuilder message1 = new StringBuilder();
-                message1.Append(temp);
-                lines[i] = message1.ToString();
+                lines[i] = new string(temp);
             }
             return lines;
         }

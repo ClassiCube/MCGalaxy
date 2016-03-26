@@ -63,7 +63,7 @@ namespace MCGalaxy {
                 if (lvl.blockqueue.Count < 1) return;
                 bulkSender.level = lvl;
                 int count = blockupdates;
-                if (lvl.blockqueue.Count < blockupdates || lvl.players.Count == 0)
+                if (lvl.blockqueue.Count < blockupdates || !lvl.HasPlayers())
                     count = lvl.blockqueue.Count;
                 Level.BlockPos bP = default(Level.BlockPos);
 

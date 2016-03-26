@@ -320,6 +320,8 @@ namespace MCGalaxy.Games {
             if (p.level.name.CaselessEq(CurrentLevelName))
                 playersString += p.color + p.DisplayName + Colors.white + ", ";
         }
+		
+		static string Eq(string src, string a, string b) { return src == a || src == b; }
         
         void ChooseNextLevel() {
             if (QueuedLevel != null) { ChangeLevel(QueuedLevel); return; }
@@ -330,7 +332,7 @@ namespace MCGalaxy.Games {
                 List<string> levels = GetCandidateLevels();
                 if (levels.Count <= 2 && !UseLevelList) { Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return; }
 
-                if (levels.Count < 2 && UseLevelList) { Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return; }
+                if (levels.Count <= 2 && UseLevelList) { Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return; }
 
                 string selectedLevel1 = "", selectedLevel2 = "";
                 Random r = new Random();
@@ -339,8 +341,9 @@ namespace MCGalaxy.Games {
                 string level = levels[r.Next(0, levels.Count)];
                 string level2 = levels[r.Next(0, levels.Count)];
 
-                if (lastLevel1 == level || lastLevel2 == level2 || lastLevel1 == level2 ||
-                    lastLevel2 == level || CurrentLevelName == level || CurrentLevelName == level2) {
+                if (level == lastLevel1 || level == lastLevel2 || level == CurrentLevelName ||
+                    level2 == lastLevel1 || level2 == lastLevel2 || level2 == CurrentLevelName ||
+                    level == selectedLevel1) {
                     goto LevelChoice;
                 } else if (selectedLevel1 == "") {
                     selectedLevel1 = level; goto LevelChoice;
