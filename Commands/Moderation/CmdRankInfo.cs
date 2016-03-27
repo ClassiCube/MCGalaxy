@@ -34,27 +34,24 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(message);
             string target = who == null ? message : who.name;
 
-            Player.SendMessage(p, "&1Rank Information of " + target);
+            Player.SendMessage(p, "&1Rank information for " + target);
             bool found = false;
             foreach (string line in File.ReadAllLines("text/rankinfo.txt")) {
-                if (!line.Contains(target))
-                    continue;               
+                if (!line.CaselessStarts(target)) continue;               
                 string[] parts = line.Split(' ');
-                if (parts[0] != target) continue;
+                if (!parts[0].CaselessEq(target)) continue;
                 
                 Group newRank = Group.Find(parts[7]), oldRank = Group.Find(parts[8]);
                 int minutes = Convert.ToInt32(parts[2]), hours = Convert.ToInt32(parts[3]);
                 int days = Convert.ToInt32(parts[4]), months = Convert.ToInt32(parts[5]);
                 int years = Convert.ToInt32(parts[6]);
                 DateTime timeRanked = new DateTime(years, months, days, hours, minutes, 0);
-                string reason = parts.Length <= 9 ? null :
+                string reason = parts.Length <= 9 ? "(no reason given)" :
                 	CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));
                
-                Player.SendMessage(p, "&aRank changed from: " + oldRank.color + oldRank.name 
-                                   + " &ato " + newRank.color + newRank.name);
-                Player.SendMessage(p, "&aRanked by: %S" + parts[1] + " &aon %S" + timeRanked);
-                if (reason != null)
-                	Player.SendMessage(p, "&aRank reason: %S" + reason);
+                Player.SendMessage(p, "&aFrom " + oldRank.color + oldRank.name 
+                                   + " &ato " + newRank.color + newRank.name + " &aon %S" + timeRanked);
+                Player.SendMessage(p, "&aBy %S" + parts[1] + " &awith reason: %S" + reason);
                 found = true;
             }
             if (!found)

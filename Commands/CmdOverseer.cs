@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
                 p.SendMessage("Your rank is set to have 0 overseer maps. Therefore, you may not use overseer.");
             if (message == "") { Help(p); return; }
             
-            string[] parts = message.Split(' ');        
+            string[] parts = message.Split(trimChars, 3);        
             string cmd = parts[0].ToUpper();
             string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
             string arg2 = parts.Length > 2 ? parts[2] : "";
@@ -182,10 +182,13 @@ namespace MCGalaxy.Commands
                     }
                 }
                 
-                if (value == "" || MapGen.IsRecognisedFormat(value)) {
-                    string type = value == "" ? "flat" : value;
+                string[] args = value.Split(' ');
+                bool noTypeArg = value == "" || args.Length == 3;
+                string type = noTypeArg ? "flat" : args[args.Length - 1];
+                if (MapGen.IsRecognisedFormat(type)) {
                     Player.SendMessage(p, "Creating a new map for you: " + level);
-                    Command.all.Find("newlvl").Use(p, level + " 128 64 128 " + type);
+                    string cmdArgs = args.Length == 1 ? "128 64 128 flat" : (noTypeArg ? value + " flat" : value);
+                    Command.all.Find("newlvl").Use(p, level + " " + cmdArgs);
                 } else {
                     Player.SendMessage(p, "Invalid map type was specified.");
                     MapGen.PrintValidFormats(p);
@@ -250,7 +253,8 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "Your texture has been updated!");
                 }
             } else {
-                Player.SendMessage(p, "/os map add [type - default is flat] -- Creates your map");
+                Player.SendMessage(p, "/os map add [type - default is flat] -- Creates your map (128x64x128)");
+                Player.SendMessage(p, "/os map add [width] [height] [length] [type] -- Creates your map");
                 Player.SendMessage(p, "/os map physics -- Sets the physics on your map.");
                 Player.SendMessage(p, "/os map delete -- Deletes your map");
                 Player.SendMessage(p, "/os map save -- Saves your map");

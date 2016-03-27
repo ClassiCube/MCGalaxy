@@ -29,7 +29,6 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
-            Chat.GlobalMessageOps(p.color + p.DisplayName + " %Sused &b/crashserver");
             int code = p.random.Next(int.MinValue, int.MaxValue);
             string msg = "Server crash! Error code 0x" + Convert.ToString(code, 16).ToUpper();
             p.LeaveServer(msg, msg);
