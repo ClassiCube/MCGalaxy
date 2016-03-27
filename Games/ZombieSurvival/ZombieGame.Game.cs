@@ -147,7 +147,7 @@ namespace MCGalaxy.Games {
                 
                 if (CurLevel.Authors != "")
                     p.SendMessage("It was created by " + CurLevel.Authors);
-                p.SendCpeMessage(CpeMessageType.Status3, "%SYou have &a" + p.money + " %S" + Server.moneys);
+                PlayerMoneyChanged(p);
                 UpdatePlayerStatus(p);
                 
                 if (Server.votingforlevel)
@@ -165,9 +165,10 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerMoneyChanged(Player p) {
-            if (Status == ZombieGameStatus.NotStarted 
-                || !p.level.name.CaselessEq(CurLevelName)) return;
-            p.SendCpeMessage(CpeMessageType.Status3, "%SYou have &a" + p.money + " %S" + Server.moneys);
+            if (Status == ZombieGameStatus.NotStarted || !p.level.name.CaselessEq(CurLevelName)) return;
+		    string moneyMsg = "&a" + p.money + " %S" + Server.moneys;
+		    string stateMsg = " and you are " + (p.infected ? "&cdead" : "&aalive");
+            p.SendCpeMessage(CpeMessageType.Status3, moneyMsg + stateMsg);
         }
     }
 }

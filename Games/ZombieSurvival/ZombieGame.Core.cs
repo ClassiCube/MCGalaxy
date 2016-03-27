@@ -69,6 +69,7 @@ namespace MCGalaxy.Games {
 
             CurLevel.ChatLevel(first.color + first.name + " %Sstarted the infection!");
             first.infected = true;
+            PlayerMoneyChanged(first);
             UpdatePlayerColor(first, InfectCol);
 
             RoundInProgress = true;
@@ -282,12 +283,14 @@ namespace MCGalaxy.Games {
                 if (!pl.level.name.CaselessEq(CurLevelName)) continue;
                 bool inBlock = pl.CheckIfInsideBlock();
                 
-                if (!inBlock && alive.Length == 0) {
+                if (pl.CheckIfInsideBlock()) {
+                	money = -1;
+                } else if (alive.Length == 0) {
                     money = rand.Next(1, 5 + pl.playersInfected);
-                } else if (!inBlock && (alive.Length == 1 && !pl.infected)) {
+                } else if (alive.Length == 1 && !pl.infected) {
                     money = rand.Next(5, 15);
-                } else if (inBlock) {
-                    money = -1;
+                } else if (alive.Length > 1 && !pl.infected) {
+                    money = rand.Next(2, 6);
                 }
                 
                 Player.GlobalDespawn(pl, false);

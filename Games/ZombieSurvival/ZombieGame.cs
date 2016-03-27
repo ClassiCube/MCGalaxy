@@ -147,18 +147,22 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress || p == null) return;
             Infected.Add(p);
             Alive.Remove(p);
+            
             p.infected = true;
             UpdatePlayerColor(p, Colors.red);
             UpdateAllPlayerStatus();
+            PlayerMoneyChanged(p);
         }
 
         public void DisinfectPlayer(Player p) {
             if (!RoundInProgress || p == null) return;
             Infected.Remove(p);
             Alive.Add(p);
+            
             p.infected = false;
             UpdatePlayerColor(p, p.color);
             UpdateAllPlayerStatus();
+            PlayerMoneyChanged(p);
         }
 
         void ChangeLevel(string next) {
