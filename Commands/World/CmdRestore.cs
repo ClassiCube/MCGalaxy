@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
                     bool foundOne = false; string foundRestores = "";
                     foreach (string s in directories)
                     {
-                        string directoryName = s.Substring(s.LastIndexOf('\\') + 1);
+                        string directoryName = s.Substring(s.LastIndexOf(Path.DirectorySeparatorChar) + 1);
                         try
                         {
                             int.Parse(directoryName);

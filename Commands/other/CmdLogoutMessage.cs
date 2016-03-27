@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "logoutmessage"; } }
         public override string shortcut { get { return "logoutmsg"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return false; } }
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdLogoutMessage() { }
         static char[] trimChars = { ' ' };

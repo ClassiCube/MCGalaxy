@@ -1757,6 +1757,7 @@ namespace MCGalaxy.Gui
             this.txtPermission.Name = "txtPermission";
             this.txtPermission.Size = new System.Drawing.Size(100, 21);
             this.txtPermission.TabIndex = 6;
+            this.txtPermission.TextChanged += new System.EventHandler(this.txtPermission_TextChanged);
             // 
             // label14
             // 
@@ -1774,6 +1775,7 @@ namespace MCGalaxy.Gui
             this.txtRankName.Name = "txtRankName";
             this.txtRankName.Size = new System.Drawing.Size(100, 21);
             this.txtRankName.TabIndex = 5;
+            this.txtRankName.TextChanged += new System.EventHandler(this.txtRankName_TextChanged);
             // 
             // cmbColor
             // 

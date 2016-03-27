@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "economy"; } }
         public override string shortcut { get { return "eco"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return false; } }
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can setup the economy") }; }

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "store"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return false; } }
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool Enabled { get { return Economy.Enabled; } }
 
