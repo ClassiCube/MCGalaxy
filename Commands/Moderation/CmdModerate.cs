@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands
             else
             {
                 Server.chatmod = true;
-                Player.GlobalMessage("Chat moderation engaged!  Silence the plebians!");
+                Player.GlobalMessage("Chat moderation engaged! Silence the plebians!");
             }
         }
         public override void Help(Player p)

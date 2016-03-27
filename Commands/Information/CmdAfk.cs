@@ -34,6 +34,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "You cannot use /afk while chat moderation is enabled");
                 return;
             }
+            if (p != null && p.muted) { Player.SendMessage(p, "Cannot use /afk while muted."); return; }
 
             if (message == "list") {
                 foreach (string s in Server.afkset) {

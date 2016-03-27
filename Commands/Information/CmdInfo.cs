@@ -27,38 +27,33 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdInfo() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message != "")
-            {
-                Help(p);
-            }
-            else
-            {
-                Player.SendMessage(p, "This server's name is &b" + Server.name + "%S.");
-                Player.SendMessage(p, "There are currently " + Player.number + " players on this server");
-                Player.SendMessage(p, "This server currently has $banned people that are &8banned%S.");
-                Player.SendMessage(p, "This server currently has " + LevelInfo.Loaded.Count + " levels loaded.");
-                Player.SendMessage(p, "This server's currency is: " + Server.moneys);
-                Player.SendMessage(p, "This server runs on &bMCGalaxy" + Server.DefaultColor + ", which is based on &bMCLawl" + Server.DefaultColor + ".");
-                Player.SendMessage(p, "This server's version: &a" + Server.VersionString);
-                Command.all.Find("devs").Use(p, "");
-                TimeSpan up = DateTime.Now - Server.timeOnline;
-                string upTime = "Time online: &b";
-                if (up.Days == 1) upTime += up.Days + " day, ";
-                else if (up.Days > 0) upTime += up.Days + " days, ";
-                if (up.Hours == 1) upTime += up.Hours + " hour, ";
-                else if (up.Days > 0 || up.Hours > 0) upTime += up.Hours + " hours, ";
-                if (up.Minutes == 1) upTime += up.Minutes + " minute and ";
-                else if (up.Hours > 0 || up.Days > 0 || up.Minutes > 0) upTime += up.Minutes + " minutes and ";
-                if (up.Seconds == 1) upTime += up.Seconds + " second";
-                else upTime += up.Seconds + " seconds";
-                Player.SendMessage(p, upTime);
-                if (Server.updateTimer.Interval > 1000) Player.SendMessage(p, "This server is currently in &5Low Lag" + Server.DefaultColor + " mode.");
-            }            	
+        public override void Use(Player p, string message) {
+        	if (message != "") { Help(p); return; }
+        	
+        	Player.SendMessage(p, "This server's name is &b" + Server.name + "%S.");
+        	Player.SendMessage(p, "There are currently " + Player.number + " players online.");
+        	Player.SendMessage(p, "There are " + Player.GetBannedCount() + " &8banned%S players.");
+        	Player.SendMessage(p, "There are currently " + LevelInfo.Loaded.Count + " levels loaded.");
+        	Player.SendMessage(p, "This server's currency is: " + Server.moneys);
+        	Player.SendMessage(p, "This server runs on &bMCGalaxy &a" + Server.VersionString + 
+        	                   "%S, which is based on &bMCForge %Sand &bMCLawl%S.");
+        	Command.all.Find("devs").Use(p, "");
+        	
+        	TimeSpan up = DateTime.Now - Server.timeOnline;
+        	string upTime = "Time online: &b";
+        	if (up.Days == 1) upTime += up.Days + " day, ";
+        	else if (up.Days > 0) upTime += up.Days + " days, ";
+        	if (up.Hours == 1) upTime += up.Hours + " hour, ";
+        	else if (up.Days > 0 || up.Hours > 0) upTime += up.Hours + " hours, ";
+        	if (up.Minutes == 1) upTime += up.Minutes + " minute and ";
+        	else if (up.Hours > 0 || up.Days > 0 || up.Minutes > 0) upTime += up.Minutes + " minutes and ";
+        	if (up.Seconds == 1) upTime += up.Seconds + " second";
+        	else upTime += up.Seconds + " seconds";
+        	Player.SendMessage(p, upTime);
+        	if (Server.updateTimer.Interval > 1000) Player.SendMessage(p, "This server is currently in &5Low Lag" + Server.DefaultColor + " mode.");
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/info - Displays the server information.");
         }
     }

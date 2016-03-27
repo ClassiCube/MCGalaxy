@@ -1230,8 +1230,8 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 // Lava Survival map vote recorder
                 if ( Server.lava.HasPlayer(this) && Server.lava.HasVote(text.ToLower()) ) {
                     if ( Server.lava.AddVote(this, text.ToLower()) ) {
-                        SendMessage("Your vote for &5" + text.ToLower().Capitalize() + Server.DefaultColor + " has been placed. Thanks!");
-                        Server.lava.map.ChatLevelOps(name + " voted for &5" + text.ToLower().Capitalize() + Server.DefaultColor + ".");
+                        SendMessage("Your vote for &5" + text.ToLower().Capitalize() + " %Shas been placed. Thanks!");
+                        Server.lava.map.ChatLevelOps(name + " voted for &5" + text.ToLower().Capitalize() + "%S.");
                         return;
                     }
                     else {
