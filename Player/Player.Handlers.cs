@@ -532,6 +532,7 @@ namespace MCGalaxy {
             }
 
             Server.s.Log(name + " [" + ip + "] has joined the server.");
+            infectMessages = PlayerDB.GetInfectMessages(this);
             Server.zombie.PlayerJoinedServer(this);
             try {
                 ushort x = (ushort)((0.5 + level.spawnx) * 32);

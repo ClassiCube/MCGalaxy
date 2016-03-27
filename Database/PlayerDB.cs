@@ -55,11 +55,23 @@ namespace MCGalaxy {
         }
         
         public static void SetLoginMessage(string name, string value) {
-        	CP437Writer.WriteAllText("text/login/" + name.ToLower() + ".txt", value);
+            CP437Writer.WriteAllText("text/login/" + name.ToLower() + ".txt", value);
         }
         
         public static void SetLogoutMessage(string name, string value) {
-        	CP437Writer.WriteAllText("text/logout/" + name.ToLower() + ".txt", value);
+            CP437Writer.WriteAllText("text/logout/" + name.ToLower() + ".txt", value);
+        }
+        
+        public static List<string> GetInfectMessages(Player p) {
+            if (p.name == null || !Directory.Exists("text/infect")) return null;
+            string path = "text/infect/" + p.name.ToLower() + ".txt";
+            return File.Exists(path) ? CP437Reader.ReadAllLines(path) : null;
+        }
+        
+        public static void AppendInfectMessage(string name, string value) {
+            if (!Directory.Exists("text/infect"))
+                Directory.CreateDirectory("text/infect");
+            CP437Writer.AppendLine("text/infect/" + name.ToLower() + ".txt", value);
         }
     }
 }

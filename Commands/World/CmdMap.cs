@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands
                         SetBool(p, lvl, ref lvl.leafDecay, "Leaf deacy: "); break;
                     case "flow":
                     case "randomflow":
-                        SetBool(p, lvl, ref lvl.randomFlow, "Ranbow flow: "); break;
+                        SetBool(p, lvl, ref lvl.randomFlow, "Random flow: "); break;
                     case "tree":
                     case "growtrees":
                         SetBool(p, lvl, ref lvl.growTrees, "Tree growing: "); break;

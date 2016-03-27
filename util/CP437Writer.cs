@@ -63,6 +63,13 @@ namespace MCGalaxy {
                 writer.Write(text);
         }
         
+        public static void AppendLine(string file, string text) {
+        	using (CP437Writer writer = new CP437Writer(file, true)) {
+                writer.Write(text);
+                writer.WriteLine();                
+        	}
+        }
+        
         public static string ConvertToUnicode(string text) {
         	if (text == null) return null;
         	if (text.Length == 0) return "";

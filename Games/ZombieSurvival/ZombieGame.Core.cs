@@ -186,11 +186,7 @@ namespace MCGalaxy.Games {
                             
                             lastPlayerToInfect = pKiller.name;
                             pKiller.playersInfected++;
-                            CurLevel.ChatLevel(String.Format(
-                                messages[random.Next(messages.Length)],
-                                Colors.red + pKiller.DisplayName + Colors.yellow,
-                                Colors.red + pAlive.DisplayName + Colors.yellow));
-                            
+                            ShowInfectMessage(random, pAlive, pKiller);
                             CheckHumanPledge(pAlive);
                             CheckBounty(pAlive, pKiller);
                             UpdatePlayerColor(pAlive, InfectCol);
@@ -208,6 +204,19 @@ namespace MCGalaxy.Games {
             CurLevel.ChatLevel(pAlive.FullName + "%Sbroke their pledge of not being infected.");
             pAlive.money = Math.Max(pAlive.money - 2, 0);
             pAlive.OnMoneyChanged();
+        }
+		
+        void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
+            string text = null;
+            List<string> infectMsgs = pKiller.infectMessages;
+            if (infectMsgs != null && random.Next(0, 10) < 5)
+            	text = infectMsgs[random.Next(infectMsgs.Count)];
+            else
+                text = messages[random.Next(messages.Length)];
+            
+            CurLevel.ChatLevel(String.Format(text,
+                Colors.red + pKiller.DisplayName + Colors.yellow,
+                Colors.red + pAlive.DisplayName + Colors.yellow));
         }
         
         void CheckBounty(Player pAlive, Player pKiller) {

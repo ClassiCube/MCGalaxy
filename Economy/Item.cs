@@ -82,23 +82,23 @@ namespace MCGalaxy.Eco {
             writer.WriteLine(Name + ":price:" + Price);
         }
         
-		protected internal override void OnBuyCommand(Command cmd, Player p, 
+        protected internal override void OnBuyCommand(Command cmd, Player p, 
                                                       string message, string[] args) {
-        	if (NoArgsResetsItem && args.Length == 1) {
-        		OnBuyCommand(p, message, args); return;
-        	}
-        	// Must always provide an argument.
-			if (args.Length < 2) { cmd.Help(p); return; }
+            if (NoArgsResetsItem && args.Length == 1) {
+                OnBuyCommand(p, message, args); return;
+            }
+            // Must always provide an argument.
+            if (args.Length < 2) { cmd.Help(p); return; }
             if (p.money < Price) {
                 Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
             }
-			OnBuyCommand(p, message, args);
-		}
-		
-		protected abstract void OnBuyCommand(Player p, string message, string[] args);
+            OnBuyCommand(p, message, args);
+        }
+        
+        protected abstract void OnBuyCommand(Player p, string message, string[] args);
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
-			switch (args[1].ToLower()) {
+            switch (args[1].ToLower()) {
                 case "enable":
                     Player.SendMessage(p, "%a" + Name + "s are now enabled for the economy system.");
                     Enabled = true; break;
@@ -118,7 +118,8 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.SendMessage(p, Name + "s cost %f" + Price + " %3" + Server.moneys + " %Seach");
+            string plural = Name[Name.Length - 1] == 's' ? Name : Name + "s";
+            Player.SendMessage(p, plural + " cost %f" + Price + " %3" + Server.moneys + " %Seach");
         }
     }
 }

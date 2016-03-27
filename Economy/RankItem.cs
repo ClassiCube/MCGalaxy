@@ -123,10 +123,9 @@ namespace MCGalaxy.Eco {
             Group maxrank = Group.Find(MaxRank);
             Player.SendMessage(p, "%fThe maximum buyable rank is: " + maxrank.color + maxrank.name);
             Player.SendMessage(p, "%cRanks purchased will be bought in order.");
-            Player.SendMessage(p, "%fRanks cost:");
             
             foreach (Rank rnk in RanksList) {
-                Player.SendMessage(p, rnk.group.color + rnk.group.name + ": %f" + rnk.price + " %3" + Server.moneys);
+                Player.SendMessage(p, rnk.group.color + rnk.group.name + " costs&f" + rnk.price + " &3" + Server.moneys);
                 if (rnk.group.name.CaselessEq(maxrank.name)) break;
             }
         }

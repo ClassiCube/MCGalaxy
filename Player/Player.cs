@@ -188,17 +188,18 @@ namespace MCGalaxy {
 
         //Zombie
         public bool referee = false;
-        public int blockCount = 50;
+        internal int blockCount = 50;
         public bool voted = false;
-        public int blocksStacked = 0;
-        public int lastYblock = 0, lastXblock = 0, lastZblock = 0;
+        internal int blocksStacked = 0;
+        internal int lastYblock = 0, lastXblock = 0, lastZblock = 0;
         public bool infected = false;
         public bool aka = false;
         public bool flipHead = false;
-        public int playersInfected = 0;
+        internal int playersInfected = 0;
         internal string lastSpawnColor = "";
         internal bool ratedMap = false;
         internal bool pledgeSurvive = false;
+        internal List<string> infectMessages = null;
 
         //Tnt Wars
         public bool PlayingTntWars = false;
