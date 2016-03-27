@@ -108,10 +108,6 @@ namespace MCGalaxy.Games {
                 Player.CheckVote(message, p, "2", "two", ref Level2Vote) ||
                 Player.CheckVote(message, p, "3", "three", ref Level3Vote))
                 return true;
-            
-            if (!p.voice) {
-                p.SendMessage("Chat moderation is on while voting is on!"); return true;
-            }
             return false;
         }
         
@@ -129,6 +125,8 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedLevel(Player p, Level oldLvl) {
+		    p.SendCpeMessage(CpeMessageType.BottomRight2, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight1, "");
             if (RoundInProgress && p.level.name.CaselessEq(CurLevelName)) {
                 if (Status != ZombieGameStatus.NotStarted && p != null) {
                     p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
@@ -151,6 +149,9 @@ namespace MCGalaxy.Games {
                     p.SendMessage("It was created by " + CurLevel.Authors);
                 p.SendCpeMessage(CpeMessageType.Status3, "%SYou have &a" + p.money + " %S" + Server.moneys);
                 UpdatePlayerStatus(p);
+                
+                if (Server.votingforlevel)
+                    SendVoteMessage(p, lastLevel1, lastLevel2);
                 return;
             }
             

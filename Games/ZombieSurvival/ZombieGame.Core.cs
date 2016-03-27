@@ -358,8 +358,11 @@ namespace MCGalaxy.Games {
 
                 if (initialChangeLevel) {
                     Server.votingforlevel = true;
-                    CurLevel.ChatLevel(" " + Colors.black + "Level Vote: %S" + selectedLevel1 + ", " + selectedLevel2 +
-                                           " or random " + "(" + Colors.lime + "1%S/" + Colors.red + "2%S/" + Colors.blue + "3%S)");
+                    Player[] players = PlayerInfo.Online.Items; 
+                    foreach (Player pl in players) {
+                        if (pl.level != CurLevel) continue;
+                        SendVoteMessage(pl, selectedLevel1, selectedLevel2);
+                    }
                     System.Threading.Thread.Sleep(15000);
                     Server.votingforlevel = false;
                 } else { Level1Vote = 1; Level2Vote = 0; Level3Vote = 0; }
@@ -397,6 +400,18 @@ namespace MCGalaxy.Games {
             foreach (FileInfo fil in fi)
                 maps.Add(fil.Name.Split('.')[0]);
             return maps;
+        }
+        
+        void SendVoteMessage(Player p, string lvl1, string lvl2) {
+            const string line1 = "&eVote for the next level! Type &a1&e, &c2&e or &93";
+            string line2 = "&eLevels: &a" + lvl1 + "&e, &c" + lvl2 + "&e, &9random";
+            if (p.HasCpeExt(CpeExt.MessageTypes)) {
+                p.SendCpeMessage(CpeMessageType.BottomRight2, line1, true);
+                p.SendCpeMessage(CpeMessageType.BottomRight1, line2, true);
+            } else {
+                p.SendMessage(line1, true);
+                p.SendMessage(line2, true);
+            }
         }
     }
 }

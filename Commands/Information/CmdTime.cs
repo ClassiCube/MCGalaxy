@@ -32,11 +32,11 @@ namespace MCGalaxy.Commands {
             string time = DateTime.Now.ToString("HH:mm:ss"); //DateTime.Now.ToString();
             Player.SendMessage(p, "Server time is " + time);
             if (Server.zombie.Status != ZombieGameStatus.NotStarted) {
-                int delta = (int)(DateTime.UtcNow - Server.zombie.RoundEnd).TotalSeconds;
+                int delta = (int)(Server.zombie.RoundEnd - DateTime.UtcNow).TotalSeconds;
                 if (delta > 0) {
                     Player.SendMessage(p, "&a" + delta + " %Sseconds until the round ends.");
                 } else {
-                    delta = (int)(DateTime.UtcNow - Server.zombie.RoundStart).TotalSeconds;
+                    delta = (int)(Server.zombie.RoundStart - DateTime.UtcNow).TotalSeconds;
                     if (delta > 0)
                         Player.SendMessage(p, "&a" + delta + " %Sseconds until the round starts.");
                 }                
