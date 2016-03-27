@@ -70,16 +70,6 @@ namespace MCGalaxy.Commands
                 Command.all.Find("setspawn").Use(p, "");
             } else if (cmd == "PRESET") {
                 Command.all.Find("env").Use(p, "l preset " + arg);
-            } else if (cmd == "WEATHER") {
-                if (arg == "SUN" || arg == "NORMAL") {
-                    Command.all.Find("env").Use(p, "l weather 0");
-                } else if (arg == "RAIN") {
-                    Command.all.Find("env").Use(p, "l weather 1");
-                } else if (arg == "SNOW") {
-                    Command.all.Find("env").Use(p, "l weather 2");
-                } else {
-                    Player.SendMessage(p, "/os weather [sun/rain/snow/normal] -- Changes the weather of your map.");
-                }
             } else if (cmd == "ENV") {
                 HandleEnvCommand(p, arg, arg2);
             } else if (cmd == "MAP") {
@@ -147,12 +137,23 @@ namespace MCGalaxy.Commands
             } else if (type == "BORDER") {
                 string block = value == "" ? "normal" : value;
                 Command.all.Find("env").Use(p, "l border " + block);
+            } else if (type == "WEATHER") {
+                if (value == "SUN" || value == "NORMAL") {
+                    Command.all.Find("env").Use(p, "weather 0");
+                } else if (value == "RAIN") {
+                    Command.all.Find("env").Use(p, "weather 1");
+                } else if (value == "SNOW") {
+                    Command.all.Find("env").Use(p, "weather 2");
+                } else {
+                    Player.SendMessage(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
+                }
             } else {
                 Player.SendMessage(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
                 Player.SendMessage(p, "/os env level -- Sets the water height of your map");
                 Player.SendMessage(p, "/os env horizon -- Sets what block the \"ocean\" shows outside your map");
                 Player.SendMessage(p, "/os env border -- Sets what block replaces the bedrock below sea level in your map");
-                Player.SendMessage(p, "  Warning: Air,Shrub,Glass,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock.");
+                Player.SendMessage(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
+                Player.SendMessage(p, "  Warning: Shrub,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock.");
                 Player.SendMessage(p, "  Note: If no hex or block is given, the default will be used.");
             }
         }
@@ -381,7 +382,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/os [command string] - sends command to The Overseer");
             Player.SendMessage(p, "Accepted commands:");
             Player.SendMessage(p, "go, map, spawn, zone, kick, kickall, env, " +
-                               "weather, preset, levelblock/lb");
+                               "preset, levelblock/lb");
         }
     }
 }

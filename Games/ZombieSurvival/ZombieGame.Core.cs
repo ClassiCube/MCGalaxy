@@ -288,7 +288,7 @@ namespace MCGalaxy.Games {
                 } else if (alive.Length == 0) {
                     money = rand.Next(1, 5 + pl.playersInfected);
                 } else if (alive.Length == 1 && !pl.infected) {
-                    money = rand.Next(5, 15);
+                    money = rand.Next(5, 10);
                 } else if (alive.Length > 1 && !pl.infected) {
                     money = rand.Next(2, 6);
                 }
