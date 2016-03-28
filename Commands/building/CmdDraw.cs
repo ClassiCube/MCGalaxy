@@ -20,10 +20,9 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdDraw : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdDraw : Command {
         public override string name { get { return "draw"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }

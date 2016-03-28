@@ -119,8 +119,11 @@ namespace MCGalaxy.Commands {
         protected enum DrawMode {
             normal, solid, hollow, walls,
             holes, wire, random,
-            vertical, reverse, straight, 
-            up, down, layer, verticalX, verticalZ,
+            vertical, reverse, straight,           // line           
+            up, down, layer, verticalX, verticalZ, // fill
+            cone, hcone, icone, hicone, volcano,   // draw
+            pyramid, hpyramid, ipyramid, hipyramid,// draw
+            sphere, hsphere,                       // draw    
         }
     }
 }

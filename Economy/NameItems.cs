@@ -32,21 +32,50 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.all.Find("title").Use(null, p.name);
-                Player.SendMessage(p, "%aYour title was removed for free.");
-                return;
+                Player.SendMessage(p, "%aYour title was removed for free."); return;
             }
             
             string title = message.Split(trimChars, 2)[1]; // keep spaces this way
             if (title == p.title) {
-                Player.SendMessage(p, "%cYou already have that title"); return;
+                Player.SendMessage(p, "%cYou already have that title."); return;
             }
-            if (title.Length > 17) {
-                Player.SendMessage(p, "%cTitles cannot be longer than 17 characters"); return;
+            if (title.Length >= 20) {
+                Player.SendMessage(p, "%cTitles must be under 20 characters."); return;
             }
             
             Command.all.Find("title").Use(null, p.name + " " + title);
             Player.SendMessage(p, "%aYour title was changed to [" + p.titlecolor + title + "%a]");
             MakePurchase(p, Price, "%3Title: %f" + title);
+        }
+    }
+	
+	public sealed class NickItem : SimpleItem {
+        
+        public NickItem() {
+            Aliases = new[] { "nickname", "nick", "nicks", "name", "names" };
+            NoArgsResetsItem = true;
+        }
+        
+        public override string Name { get { return "Nickname"; } }
+        static char[] trimChars = { ' ' };
+        
+        protected override void OnBuyCommand(Player p, string message, string[] args) {
+            if (args.Length == 1) {
+                Command.all.Find("nick").Use(null, p.name);
+                Player.SendMessage(p, "%aYour nickname was removed for free."); return;
+            }
+            
+            string nick = message.Split(trimChars, 2)[1]; // keep spaces this way
+            if (nick == p.DisplayName) {
+                Player.SendMessage(p, "%cYou already have that nickname."); return;
+            }
+            if (nick.Length >= 30) {
+                Player.SendMessage(p, "%cNicknames must be under 30 characters."); return;
+            }
+            
+            Command.all.Find("nick").Use(null, p.name + " " + nick);
+            Player.SendMessage(p, "%aYour nickname was changed to [" + p.color + nick + "%a]");
+            MakePurchase(p, Price, "%3Nickname: %f" + nick);
         }
     }
     

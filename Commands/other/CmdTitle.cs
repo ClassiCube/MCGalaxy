@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             ParameterisedQuery query = ParameterisedQuery.Create();
             if (newTitle != "")
                 newTitle = newTitle.Replace("[", "").Replace("]", "");
-            if (newTitle.Length > 17) { Player.SendMessage(p, "Title must be under 17 letters."); return; }
+            if (newTitle.Length >= 20) { Player.SendMessage(p, "Title must be under 20 letters."); return; }
 
             if (newTitle == "") {
                 Player.SendChatFrom(who, who.FullName + " %Shad their title removed.", false);

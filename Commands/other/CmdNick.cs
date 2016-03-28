@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
 				who.DisplayName = who.name;
 				Player.SendChatFrom(who, who.FullName + "%S has reverted their nick to their original name.", false);
 			} else {
-				if (newName.Length > 60) { Player.SendMessage(p, "Nick must be under 60 letters."); return; }				
+				if (newName.Length >= 30) { Player.SendMessage(p, "Nick must be under 30 letters."); return; }				
 				Player.SendChatFrom(who, who.FullName + "%S has changed their nick to " + who.color + newName + "%S.", false);
 				who.DisplayName = newName;
 			}
