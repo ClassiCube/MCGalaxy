@@ -53,6 +53,9 @@ namespace MCGalaxy.Games {
         /// <summary> Current round status of the game. </summary>
         public ZombieGameStatus Status = ZombieGameStatus.NotStarted;
         
+        /// <summary> Gets whether zombie survival is currently running. </summary>
+        public bool Running { get { return Status != ZombieGameStatus.NotStarted; } }
+        
         /// <summary> Whether a round is currently in progress. </summary>
         public bool RoundInProgress = false;
         
@@ -108,7 +111,6 @@ namespace MCGalaxy.Games {
         public void Start(ZombieGameStatus status, int amount) {
             if (UseLevelList && LevelList == null)
                 ChangeLevels = false;
-            Server.ZombieModeOn = true;
             Status = status;
             RoundInProgress = false;
             initialChangeLevel = false;
@@ -122,7 +124,7 @@ namespace MCGalaxy.Games {
 
         /// <summary> If there are no infected players left, randomly selected one of the alive players to continue the infection. </summary>
         public void AssignFirstZombie() {
-            if (Status == ZombieGameStatus.NotStarted || !RoundInProgress || Infected.Count > 0) return;
+            if (!Running || !RoundInProgress || Infected.Count > 0) return;
             Random random = new Random();
             Player[] alive = Alive.Items;
             if (alive.Length == 0) return;
@@ -202,7 +204,6 @@ namespace MCGalaxy.Games {
             Status = ZombieGameStatus.NotStarted;
             MaxRounds = 0;
             initialChangeLevel = false;
-            Server.ZombieModeOn = false;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;

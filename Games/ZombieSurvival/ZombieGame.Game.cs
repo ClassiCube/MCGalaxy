@@ -24,8 +24,7 @@ namespace MCGalaxy.Games {
         
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte tile, byte b) {
-            if (Status == ZombieGameStatus.NotStarted 
-                || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
+            if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (CurLevel.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); return true;
             } else if (CurLevel.BuildType == BuildType.ModifyOnly 
@@ -66,8 +65,7 @@ namespace MCGalaxy.Games {
         
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
                                              byte rotX, byte rotY) {
-            if (Status == ZombieGameStatus.NotStarted 
-                || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
+            if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (!p.referee && noRespawn) {
                 if (p.pos[0] >= x + 70 || p.pos[0] <= x - 70 ) {
                     p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
@@ -82,8 +80,7 @@ namespace MCGalaxy.Games {
         }
         
         public override bool HandlesChatMessage(Player p, string message) {
-            if (Status == ZombieGameStatus.NotStarted 
-                || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
+            if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (Server.votingforlevel && HandleVote(p, message)) return true;
             
             if (message[0] == '~' && message.Length > 1) {
@@ -119,23 +116,23 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedServer(Player p) {
-            if (Status == ZombieGameStatus.NotStarted || Server.ZombieOnlyServer) return;
+            if (!Running || Server.ZombieOnlyServer) return;
             Player.SendMessage(p, "A Zombie Survival game is running! " +
                                "Type %T/g " + CurLevelName + " %Sto join.");
         }
         
-        public override void PlayerJoinedLevel(Player p, Level oldLvl) {
+        public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) {
 		    p.SendCpeMessage(CpeMessageType.BottomRight2, "");
             p.SendCpeMessage(CpeMessageType.BottomRight1, "");
-            if (RoundInProgress && p.level.name.CaselessEq(CurLevelName)) {
-                if (Status != ZombieGameStatus.NotStarted && p != null) {
+            if (RoundInProgress && lvl.name.CaselessEq(CurLevelName)) {
+                if (Running && p != null) {
                     p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
                     p.blockCount = 50;
                     InfectPlayer(p);
                 }
             }
             
-            if (p.level.name.CaselessEq(CurLevelName)) {
+            if (lvl.name.CaselessEq(CurLevelName)) {
                 double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
                 if (startLeft >= 0)
                     p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
@@ -163,9 +160,13 @@ namespace MCGalaxy.Games {
             if (oldLvl != null && oldLvl.name.CaselessEq(CurLevelName))
                 UpdateAllPlayerStatus();
         }
+		
+        public override bool PlayerCanJoinLevel(Player p, Level lvl, Level oldLvl) {
+             return base.PlayerCanJoinLevel(p, lvl, oldLvl);
+        }
         
         public override void PlayerMoneyChanged(Player p) {
-            if (Status == ZombieGameStatus.NotStarted || !p.level.name.CaselessEq(CurLevelName)) return;
+            if (!Running || !p.level.name.CaselessEq(CurLevelName)) return;
 		    string moneyMsg = "&a" + p.money + " %S" + Server.moneys;
 		    string stateMsg = " and you are " + (p.infected ? "&cdead" : "&aalive");
             p.SendCpeMessage(CpeMessageType.Status3, moneyMsg + stateMsg);

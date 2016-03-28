@@ -39,7 +39,7 @@ namespace MCGalaxy.Games {
                 RoundInProgress = false;
                 RoundsDone++;
                 
-                if (Status == ZombieGameStatus.NotStarted) {
+                if (!Running) {
                     return;
                 } else if (Status == ZombieGameStatus.InfiniteRounds) {
                     DoRound();
@@ -61,7 +61,7 @@ namespace MCGalaxy.Games {
         }
 
         void DoRound() {
-            if (Status == ZombieGameStatus.NotStarted) return;
+            if (!Running) return;
             List<Player> players = DoRoundCountdown();
             RoundInProgress = true;
             Random random = new Random();
@@ -91,7 +91,7 @@ namespace MCGalaxy.Games {
             UpdateAllPlayerStatus();
             DoCoreGame(random);
             
-            if (Status == ZombieGameStatus.NotStarted) {
+            if (!Running) {
                 Status = ZombieGameStatus.LastRound; return;
             } else {
                 HandOutRewards();
@@ -112,19 +112,19 @@ namespace MCGalaxy.Games {
             while (true) {
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
                 CurLevel.ChatLevel("%4Round Start:%f 30...");
-                Thread.Sleep(20000); if (!Server.ZombieModeOn) return null;
+                Thread.Sleep(20000); if (!Running) return null;
                 CurLevel.ChatLevel("%4Round Start:%f 10...");
-                Thread.Sleep(10000); if (!Server.ZombieModeOn) return null;
+                Thread.Sleep(10000); if (!Running) return null;
                 CurLevel.ChatLevel("%4Round Start:%f 5...");
-                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Thread.Sleep(1000); if (!Running) return null;
                 CurLevel.ChatLevel("%4Round Start:%f 4...");
-                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Thread.Sleep(1000); if (!Running) return null;
                 CurLevel.ChatLevel("%4Round Start:%f 3...");
-                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Thread.Sleep(1000); if (!Running) return null;
                 CurLevel.ChatLevel("%4Round Start:%f 2...");
-                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Thread.Sleep(1000); if (!Running) return null;
                 CurLevel.ChatLevel("%4Round Start:%f 1...");
-                Thread.Sleep(1000); if (!Server.ZombieModeOn) return null;
+                Thread.Sleep(1000); if (!Running) return null;
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
                 
@@ -241,7 +241,7 @@ namespace MCGalaxy.Games {
         }
         
         void EndRound(object sender, ElapsedEventArgs e) {
-            if (Status == ZombieGameStatus.NotStarted) return;
+            if (!Running) return;
             CurLevel.ChatLevel("%4Round End:%f 5"); Thread.Sleep(1000);
             CurLevel.ChatLevel("%4Round End:%f 4"); Thread.Sleep(1000);
             CurLevel.ChatLevel("%4Round End:%f 3"); Thread.Sleep(1000);
@@ -256,7 +256,7 @@ namespace MCGalaxy.Games {
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
             Bounties.Clear();
-            if (Status == ZombieGameStatus.NotStarted) return;
+            if (!Running) return;
             
             Player[] alive = Alive.Items;
             CurLevel.ChatLevel(Colors.lime + "The game has ended!");
@@ -364,9 +364,7 @@ namespace MCGalaxy.Games {
 
                 Level1Vote = 0; Level2Vote = 0; Level3Vote = 0;
                 lastLevel1 = selectedLevel1; lastLevel2 = selectedLevel2;
-
-                if (Status == ZombieGameStatus.NotStarted || Status == ZombieGameStatus.LastRound)
-                    return;
+                if (!Running || Status == ZombieGameStatus.LastRound) return;
 
                 if (initialChangeLevel) {
                     Server.votingforlevel = true;
@@ -379,8 +377,7 @@ namespace MCGalaxy.Games {
                     Server.votingforlevel = false;
                 } else { Level1Vote = 1; Level2Vote = 0; Level3Vote = 0; }
 
-                if (Status == ZombieGameStatus.NotStarted || Status == ZombieGameStatus.LastRound)
-                    return;
+                if (!Running || Status == ZombieGameStatus.LastRound) return;
 
                 if (Level1Vote >= Level2Vote) {
                     if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {

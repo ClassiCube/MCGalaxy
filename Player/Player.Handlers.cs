@@ -58,7 +58,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if (Server.ZombieModeOn && Server.zombie.HandlesManualChange(this, x, y, z, action, type, b)) 
+            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, type, b)) 
                 return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
@@ -905,7 +905,7 @@ return;
 
             if (Server.Countdown.HandlesMovement(this, x, y, z, rotx, roty))
                 return;
-            if (Server.ZombieModeOn && Server.zombie.HandlesMovement(this, x, y, z, rotx, roty))
+            if (Server.zombie.Running && Server.zombie.HandlesMovement(this, x, y, z, rotx, roty))
                 return;
             
             if (OnMove != null) OnMove(this, x, y, z);

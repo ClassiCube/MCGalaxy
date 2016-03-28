@@ -113,6 +113,7 @@ namespace MCGalaxy.Commands {
             if (File.Exists("text/lockdown/map/" + message.ToLower())) {
                 Player.SendMessage(p, "The level " + message + " is locked."); return false;
             }
+            if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 
             p.Loading = true;
             Player[] players = PlayerInfo.Online.Items; 
@@ -153,8 +154,8 @@ namespace MCGalaxy.Commands {
         }
         
         internal static void CheckGamesJoin(Player p, Level oldLvl) {
-            Server.lava.PlayerJoinedLevel(p, oldLvl);
-            Server.zombie.PlayerJoinedLevel(p, oldLvl);
+            Server.lava.PlayerJoinedLevel(p, p.level, oldLvl);
+            Server.zombie.PlayerJoinedLevel(p, p.level, oldLvl);
  
             if (p.inTNTwarsMap) p.canBuild = true;
             TntWarsGame game = TntWarsGame.Find(p.level);

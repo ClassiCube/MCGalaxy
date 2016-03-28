@@ -175,7 +175,7 @@ namespace MCGalaxy.Commands
             Server.voteKickVotesNeeded = 0;
 
             //Zombie
-            Server.ZombieModeOn = false;
+            Server.zombie.ResetState();
             Server.startZombieModeOnStartup = false;
             Server.zombie.noRespawn = true;
             Server.zombie.noPillaring = true;

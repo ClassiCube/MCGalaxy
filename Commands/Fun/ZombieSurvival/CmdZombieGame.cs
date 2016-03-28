@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands
         }
         
         static void HandleStart(Player p, string message, string[] args) {
-            if (Server.zombie.Status != ZombieGameStatus.NotStarted) {
+            if (Server.zombie.Running) {
                 Player.SendMessage(p, "There is already a Zombie Survival game currently in progress."); return;
             }
             if (args.Length == 2) {
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands
         }
         
         static void HandleStop(Player p, string message, string[] args) {
-            if (Server.zombie.Status == ZombieGameStatus.NotStarted) {
+            if (!Server.zombie.Running) {
                 Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return;
             }
             Player.GlobalMessage("The current game of Zombie Survival will end this round!");
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands
         }
         
         static void HandleForceStop(Player p, string message, string[] args) {
-            if (Server.zombie.Status == ZombieGameStatus.NotStarted) {
+            if (!Server.zombie.Running) {
                 Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return;
             }
             Server.s.Log("Zombie Survival ended forcefully by " + p.name);

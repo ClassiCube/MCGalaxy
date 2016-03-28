@@ -510,7 +510,7 @@ namespace MCGalaxy {
         
         internal static void SpawnEntity(Player p, Player dst, byte id, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, string possession = "") {
-            if (!Server.ZombieModeOn || !p.infected) {
+            if (!Server.zombie.Running || !p.infected) {
                 dst.SendSpawn(id, p.color + p.name + possession, x, y, z, rotx, roty); return;
             }
             
@@ -864,7 +864,7 @@ Next: continue;
         }
         
         public void OnMoneyChanged() {
-            if (Server.ZombieModeOn) Server.zombie.PlayerMoneyChanged(this);
+            if (Server.zombie.Running) Server.zombie.PlayerMoneyChanged(this);
             if (Server.lava.active) Server.lava.PlayerMoneyChanged(this);
         }
         

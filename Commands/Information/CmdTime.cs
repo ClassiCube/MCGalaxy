@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using MCGalaxy.Games;
 
@@ -31,15 +31,15 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string time = DateTime.Now.ToString("HH:mm:ss"); //DateTime.Now.ToString();
             Player.SendMessage(p, "Server time is " + time);
-            if (Server.zombie.Status != ZombieGameStatus.NotStarted) {
-                int delta = (int)(Server.zombie.RoundEnd - DateTime.UtcNow).TotalSeconds;
-                if (delta > 0) {
-                    Player.SendMessage(p, "&a" + delta + " %Sseconds until the round ends.");
-                } else {
-                    delta = (int)(Server.zombie.RoundStart - DateTime.UtcNow).TotalSeconds;
-                    if (delta > 0)
-                        Player.SendMessage(p, "&a" + delta + " %Sseconds until the round starts.");
-                }                
+            if (!Server.zombie.Running) return;
+            
+            int delta = (int)(Server.zombie.RoundEnd - DateTime.UtcNow).TotalSeconds;
+            if (delta > 0) {
+                Player.SendMessage(p, "&a" + delta + " %Sseconds until the round ends.");
+            } else {
+                delta = (int)(Server.zombie.RoundStart - DateTime.UtcNow).TotalSeconds;
+                if (delta > 0)
+                    Player.SendMessage(p, "&a" + delta + " %Sseconds until the round starts.");
             }
         }
         

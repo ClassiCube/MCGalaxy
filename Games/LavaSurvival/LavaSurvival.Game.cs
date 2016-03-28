@@ -35,8 +35,8 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        public override void PlayerJoinedLevel(Player p, Level oldLevl) {
-            if (Server.lava.active && !Server.lava.sendingPlayers && Server.lava.map == p.level) {
+        public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLevl) {
+            if (Server.lava.active && !Server.lava.sendingPlayers && Server.lava.map == lvl) {
                 if (Server.lava.roundActive) {
                     Server.lava.AnnounceRoundInfo(p);
                     Server.lava.AnnounceTimeLeft(!Server.lava.flooded, true, p);
