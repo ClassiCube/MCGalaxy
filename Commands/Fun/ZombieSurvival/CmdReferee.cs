@@ -31,29 +31,16 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (p.referee) {
-                p.referee = false;
-                LevelPermission perm = Group.findPlayerGroup(name).Permission;
                 Player.SendChatFrom(p, p.FullName + " %Sis no longer a referee", false);
-                
-                if (Server.zombie.RoundInProgress) {
-                    Server.zombie.InfectPlayer(p);
-                } else {
-                    Player.GlobalDespawn(p, false);
-                    Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
-                    Server.zombie.Infected.Remove(p);
-                    Server.zombie.Alive.Add(p);
-                    Server.zombie.UpdateAllPlayerStatus();
-                }
+                if (p.level == Server.zombie.CurLevel)
+                    Server.zombie.PlayerJoinedLevel(p, Server.zombie.CurLevel, Server.zombie.CurLevel);
+                Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], true, "");
             } else {
-                p.referee = true;
-                Player.SendChatFrom(p, p.FullName + " %Sis now a referee", false);
+                Player.SendChatFrom(p, p.FullName + " %Sis now a referee", false);               
+                Server.zombie.PlayerLeftServer(p);
                 Player.GlobalDespawn(p, false);
-                Server.zombie.Alive.Remove(p);
-                Server.zombie.Infected.Remove(p);
-                Server.zombie.UpdateAllPlayerStatus();     
-                if (Server.zombie.RoundInProgress)
-                    Server.zombie.AssignFirstZombie();
             }
+            p.referee = !p.referee;
         }
         
         public override void Help(Player p) {

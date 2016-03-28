@@ -231,12 +231,11 @@ namespace MCGalaxy.Games {
         
         internal void UpdateAllPlayerStatus(string timespan) {
             string message = GetStatusMessage(timespan);
-            Player[] players = Alive.Items;
-            foreach (Player p in players)
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != CurLevel) continue;
                 p.SendCpeMessage(CpeMessageType.Status1, message, true);
-            players = Infected.Items;
-            foreach (Player p in players)
-                p.SendCpeMessage(CpeMessageType.Status1, message, true);
+            }
         }
 
         string GetStatusMessage(string timespan) {

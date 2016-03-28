@@ -83,7 +83,7 @@ namespace MCGalaxy.Games {
 
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
-                if (p.level == null || p.level != CurLevel) continue;
+                if (p.level == null || p.level != CurLevel || p.referee) continue;
                 if (p != first) Alive.Add(p);
             }
 
