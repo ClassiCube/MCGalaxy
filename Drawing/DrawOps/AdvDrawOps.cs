@@ -34,17 +34,20 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Adv Sphere"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            int R = Radius;
-            return (int)(Math.PI * 4.0 / 3.0 * (R * R * R));
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            long R = Radius;
+            return (long)(Math.PI * 4.0 / 3.0 * (R * R * R));
         }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 P = marks[0];
             int upper = (Radius + 1) * (Radius + 1);
-            for (short yy = (short)-Radius; yy <= Radius; yy++)
-                for (short zz = (short)-Radius; zz <= Radius; zz++)
-                    for (short xx = (short)-Radius; xx <= Radius; xx++)
+            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
+            int minY = Math.Max(P.Y - Radius, 0) - P.Y, maxY = Math.Min(P.Y + Radius, lvl.Height - 1) - P.Y;
+            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
+            for (int yy = minY; yy <= maxY; yy++)
+                for (int zz = minZ; zz <= maxZ; zz++)
+                    for (int xx = minX; xx <= maxX; xx++)
             {
                 int curDist = xx * xx + yy * yy + zz * zz;
                 if (curDist < upper)
@@ -58,19 +61,22 @@ namespace MCGalaxy.Drawing.Ops {
         public int Radius;
         public override string Name { get { return "Adv Hollow Sphere"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            int R = Radius;
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            long R = Radius;
             double outer = (int)(Math.PI * 4.0 / 3.0 * (R * R * R));
             double inner = (int)(Math.PI * 4.0 / 3.0 * ((R - 1) * (R - 1) * (R - 1)));
-            return (int)(outer - inner);
+            return (long)(outer - inner);
         }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 P = marks[0];
             int upper = (Radius + 1) * (Radius + 1), inner = (Radius - 1) * (Radius - 1);
-            for (short yy = (short)-Radius; yy <= Radius; yy++)
-                for (short zz = (short)-Radius; zz <= Radius; zz++)
-                    for (short xx = (short)-Radius; xx <= Radius; xx++)
+            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
+            int minY = Math.Max(P.Y - Radius, 0) - P.Y, maxY = Math.Min(P.Y + Radius, lvl.Height - 1) - P.Y;
+            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
+            for (int yy = minY; yy <= maxY; yy++)
+                for (int zz = minZ; zz <= maxZ; zz++)
+                    for (int xx = minX; xx <= maxX; xx++)
             {
                 int curDist = xx * xx + yy * yy + zz * zz;
                 if (curDist < upper && curDist >= inner) {

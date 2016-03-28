@@ -66,11 +66,11 @@ namespace MCGalaxy.Drawing.Ops {
         
         /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
-        public abstract int GetBlocksAffected(Level lvl, Vec3U16[] marks);
+        public abstract long GetBlocksAffected(Level lvl, Vec3U16[] marks);
         
         public abstract void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush);
         
-        public bool CanDraw(Vec3U16[] marks, Player p, out int affected) {
+        public bool CanDraw(Vec3U16[] marks, Player p, out long affected) {
             affected = GetBlocksAffected(p.level, marks);
             if (affected > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
@@ -80,7 +80,7 @@ namespace MCGalaxy.Drawing.Ops {
             return true;
         }
         
-        public virtual bool DetermineDrawOpMethod(Level lvl, int affected) {
+        public virtual bool DetermineDrawOpMethod(Level lvl, long affected) {
             if (affected > Server.DrawReloadLimit) {
                 method = M_PSetTile;
                 return true;
@@ -156,7 +156,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             op.Level = p.level;
             
-            int affected = 0;
+            long affected = 0;
             if (!op.CanDraw(marks, p, out affected))
                 return false;
             if (brush != null && affected != -1) {

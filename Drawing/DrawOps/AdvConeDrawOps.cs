@@ -29,16 +29,18 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Adv Cone"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            int R = Radius, H = Height;
-            return (int)(Math.PI / 3 * (R * R * H));
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            long R = Radius, H = Height;
+            return (long)(Math.PI / 3 * (R * R * H));
         }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 P = marks[0];
-            for (short yy = 0; yy <= Height; yy++)
-                for (short zz = (short)-Radius; zz <= Radius; zz++)
-                    for (short xx = (short)-Radius; xx <= Radius; xx++)
+            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
+            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
+            for (int yy = 0; yy <= Height; yy++)
+                for (int zz = minZ; zz <= maxZ; zz++)
+                    for (int xx = minX; xx <= maxX; xx++)
             {
                 int curHeight = Invert ? yy : Height - yy;
                 if (curHeight == 0) continue;
@@ -59,18 +61,21 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Adv Hollow Cone"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            int R = Radius, H = Height;
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            long R = Radius, H = Height;
             double outer = (int)(Math.PI / 3 * (R * R * H));
             double inner = (int)(Math.PI / 3 * ((R - 1) * (R - 1) * (H - 1)));
-            return (int)(outer - inner);
+            return (long)(outer - inner);
         }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 P = marks[0];
-            for (short yy = 0; yy <= Height; yy++)
-                for (short zz = (short)-Radius; zz <= Radius; zz++)
-                    for (short xx = (short)-Radius; xx <= Radius; xx++)
+            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
+            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
+            int maxY = Math.Min(P.Y + Height, lvl.Height - 1) - P.Y;
+            for (int yy = 0; yy <= maxY; yy++)
+                for (int zz = minZ; zz <= maxZ; zz++)
+                    for (int xx = minX; xx <= maxX; xx++)
             {
                 int curHeight = Invert ? yy : Height - yy;
                 if (curHeight == 0) continue;
@@ -92,18 +97,19 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Adv Volcano"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            int R = Radius, H = Height;
-            double outer = (int)(Math.PI / 3 * (R * R * H));
-            double inner = (int)(Math.PI / 3 * ((R - 1) * (R - 1) * (H - 1)));
-            return (int)(outer - inner);
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            long R = Radius, H = Height;
+            return (long)(Math.PI / 3 * (R * R * H));
         }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 P = marks[0];
-            for (short yy = 0; yy <= Height; yy++)
-                for (short zz = (short)-Radius; zz <= Radius; zz++)
-                    for (short xx = (short)-Radius; xx <= Radius; xx++)
+            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
+            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
+            int maxY = Math.Min(P.Y + Height, lvl.Height - 1) - P.Y;
+            for (int yy = 0; yy <= maxY; yy++)
+                for (int zz = minZ; zz <= maxZ; zz++)
+                    for (int xx = minX; xx <= maxX; xx++)
             {
                 int cx = (P.X + xx), cy = (P.Y + yy), cz = (P.Z + zz);
                 int curHeight = Height - yy;

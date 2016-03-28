@@ -24,7 +24,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Triangle"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             // Applying Heron's Formula
             double a = (marks[0] - marks[2]).Length;
             double b = (marks[1] - marks[2]).Length;

@@ -35,7 +35,7 @@ namespace MCGalaxy.Drawing.Ops {
         internal Player who;
         internal Level saveLevel = null;
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             PerformUndo(p, ref saveLevel);
@@ -98,7 +98,7 @@ namespace MCGalaxy.Drawing.Ops {
         internal string whoName;
         internal bool foundUser = false;
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {            
             UndoFile.UndoPlayer(p, whoName.ToLower(), marks, Start, ref foundUser);
@@ -111,7 +111,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal long seconds;
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             if (lvl.UndoBuffer.Count != Server.physUndo) {

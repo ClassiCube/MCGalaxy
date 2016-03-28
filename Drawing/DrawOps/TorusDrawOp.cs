@@ -24,7 +24,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Torus"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             Vec3U16 p1 = marks[0], p2 = marks[1];
             double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;

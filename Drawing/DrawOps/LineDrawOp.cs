@@ -30,7 +30,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             Vec3U16 p1 = marks[0], p2 = marks[1];
             double dx = Math.Abs(p2.X - p1.X) + 0.25, dy = Math.Abs(p2.Y - p1.Y) + 0.25, dz = Math.Abs(p2.Z - p1.Z) + 0.25;
             if (WallsMode) {

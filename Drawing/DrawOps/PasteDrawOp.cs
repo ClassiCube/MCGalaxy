@@ -29,7 +29,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             return CopyState.Volume;
         }
         
@@ -65,7 +65,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             return CopyState.Volume;
         }
         

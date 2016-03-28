@@ -30,7 +30,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool MinMaxCoords { get { return false; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             int blocks = 0;
             foreach (char c in Text) {
                 if ((int)c >= 256 || letters[(int)c] == null) {

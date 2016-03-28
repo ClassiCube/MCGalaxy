@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
         public const int T_Tree = 0, T_NotchTree = 1, T_NotchSwamp = 2, T_Cactus = 3;
         static Brush defBrush = new SolidBrush(Block.leaf, 0);
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
         	if (brush == null) brush = defBrush;

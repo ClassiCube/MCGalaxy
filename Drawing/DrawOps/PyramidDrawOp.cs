@@ -29,14 +29,14 @@ namespace MCGalaxy.Drawing.Ops {
             this.yDir = yDir;
         }
         
-        public override bool DetermineDrawOpMethod(Level lvl, int affected) {
+        public override bool DetermineDrawOpMethod(Level lvl, long affected) {
             return baseOp.DetermineDrawOpMethod(lvl, affected);
         }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             Vec3U16 origP1 = marks[0], origP2 = marks[1];
             Vec3U16 p1 = marks[0], p2 = marks[1];
-            int total = 0;
+            long total = 0;
             while (true) {
                 total += baseOp.GetBlocksAffected(lvl, marks);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)

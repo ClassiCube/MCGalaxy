@@ -24,7 +24,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cuboid"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             Vec3U16 p1 = marks[0], p2 = marks[1];
             return (p2.X - p1.X + 1) * (p2.Y - p1.Y + 1) * (p2.Z - p1.Z + 1);
         }
@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cuboid Hollow"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             Vec3U16 p1 = marks[0], p2 = marks[1];
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1), lenZ = (p2.Z - p1.Z + 1);
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
@@ -102,7 +102,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cuboid Walls"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             Vec3U16 p1 = marks[0], p2 = marks[1];
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1), lenZ = (p2.Z - p1.Z + 1);
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
@@ -126,7 +126,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Cuboid Wireframe"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             Vec3U16 p1 = marks[0], p2 = marks[1];
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1), lenZ = (p2.Z - p1.Z + 1);
             int horSidesvol = 2 * (lenX * 2 + lenZ * 2); // TODO: slightly overestimated by at most four blocks.

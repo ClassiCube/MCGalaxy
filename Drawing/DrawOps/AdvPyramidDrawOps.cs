@@ -29,20 +29,23 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Adv Pyramid"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            int R = Radius, H = Height;
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            long R = Radius, H = Height;
             return (R * R * H) / 3;
         }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 P = marks[0];
-            for (short yy = 0; yy <= Height; yy++)
-                for (short zz = (short)-Radius; zz <= Radius; zz++)
-                    for (short xx = (short)-Radius; xx <= Radius; xx++)
+            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
+            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
+            int maxY = Math.Min(P.Y + Height, lvl.Height - 1) - P.Y;
+            for (int yy = 0; yy <= maxY; yy++)
+                for (int zz = minZ; zz <= maxZ; zz++)
+                    for (int xx = minX; xx <= maxX; xx++)
             {
                 int curHeight = Invert ? yy : Height - yy;
                 if (curHeight == 0) continue;
-                int cx = P.X + xx, cy = P.Y + + (Height - curHeight), cz = P.Z + zz;                
+                int cx = P.X + xx, cy = P.Y + (Height - curHeight), cz = P.Z + zz;                
                 
                 double curRadius = Radius * ((double)curHeight / (double)Height);
                 if (Math.Abs(xx) > curRadius || Math.Abs(zz) > curRadius)
@@ -58,18 +61,21 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Adv Hollow Pyramid"; } }
         
-        public override int GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            int R = Radius, H = Height;
-            int outer = (R * R * H) / 3;
-            int inner = ((R - 1) * (R - 1) * (H - 1)) / 3;
+        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+            long R = Radius, H = Height;
+            long outer = (R * R * H) / 3;
+            long inner = ((R - 1) * (R - 1) * (H - 1)) / 3;
             return outer - inner;
         }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 P = marks[0];
-            for (short yy = 0; yy <= Height; yy++)
-                for (short zz = (short)-Radius; zz <= Radius; zz++)
-                    for (short xx = (short)-Radius; xx <= Radius; xx++)
+            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
+            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
+            int maxY = Math.Min(P.Y + Height, lvl.Height - 1) - P.Y;
+            for (int yy = 0; yy <= maxY; yy++)
+                for (int zz = minZ; zz <= maxZ; zz++)
+                    for (int xx = minX; xx <= maxX; xx++)
             {
                 int curHeight = Invert ? yy : Height - yy;
                 if (curHeight == 0) continue;

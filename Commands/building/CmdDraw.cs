@@ -46,43 +46,42 @@ namespace MCGalaxy.Commands
             
             string[] parts = message.Split(' ');
             Player.BlockchangeEventHandler newHandler = null;
-            bool help;
 
             switch (parts[0].ToLower()) {
                 case "cone":
-                    if (!CheckTwoArgs(p, 1, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 1, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeCone); break;
                 case "hcone":
-                    if (!CheckTwoArgs(p, 1, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 1, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeHCone); break;
                 case "icone":
-                    if (!CheckTwoArgs(p, 1, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 1, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeICone); break;
                 case "hicone":
-                    if (!CheckTwoArgs(p, 1, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 1, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeHICone); break;
                     
                 case "pyramid":
-                    if (!CheckTwoArgs(p, 2, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 2, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangePyramid); break;
                 case "hpyramid":
-                    if (!CheckTwoArgs(p, 2, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 2, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeHPyramid); break;
                 case "ipyramid":
-                    if (!CheckTwoArgs(p, 2, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 2, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeIPyramid); break;
                 case "hipyramid":
-                    if (!CheckTwoArgs(p, 2, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 2, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeHIPyramid); break;
 
                 case "sphere":
-                    if (!CheckOneArg(p, 3, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckOneArg(p, 3, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeSphere); break;
                 case "hsphere":
-                    if (!CheckOneArg(p, 3, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckOneArg(p, 3, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeHSphere); break;
                 case "volcano":
-                    if (!CheckTwoArgs(p, 4, parts, out help)) { if (help) Help(p); return; }
+                    if (!CheckTwoArgs(p, 4, parts)) return;
                     newHandler = new Player.BlockchangeEventHandler(BlockchangeVolcano); break;
             }
             Player.SendMessage(p, "Place a block");
@@ -90,36 +89,35 @@ namespace MCGalaxy.Commands
             p.Blockchange += newHandler;        
         }
         
-        bool CheckTwoArgs(Player p, int addition, string[] parts, out bool help) {
+        bool CheckTwoArgs(Player p, int addition, string[] parts) {
             if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, addition)) {
                 Group group = Group.findPermInt(CommandOtherPerms.GetPerm(this, addition));
                 Player.SendMessage(p, "That commands addition is for " + group.name + "+");
-                help = false; return false;
+                return false;
             }
             
-            help = true;
-            if (parts.Length != 3)
-                return false;
+            if (parts.Length != 3) { Help(p); return false; }
             ushort height, radius;
-            if (!ushort.TryParse(parts[1], out height) || !ushort.TryParse(parts[2], out radius))
-                return false;
+            if (!ushort.TryParse(parts[1], out height) || height > 2000 ||
+                !ushort.TryParse(parts[2], out radius) || radius > 2000) {
+                Player.SendMessage(p, "Radius and height must be positive integers less than 2000."); return false;
+            }
             p.BcVar = new int[] { height, radius };
             return true;
         }
         
-        bool CheckOneArg(Player p, int addition, string[] parts, out bool help) {
+        bool CheckOneArg(Player p, int addition, string[] parts) {
             if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, addition)) {
                 Group group = Group.findPermInt(CommandOtherPerms.GetPerm(this, addition));
                 Player.SendMessage(p, "That commands addition is for " + group.name + "+");
-                help = false; return false;
+                return false;
             }
             
-            help = true;
-            if (parts.Length != 2)
-                return false;
+            if (parts.Length != 2) { Help(p); return false; }
             ushort radius;
-            if (!ushort.TryParse(parts[1], out radius))
-                return false;
+            if (!ushort.TryParse(parts[1], out radius) || radius > 2000) { 
+                Player.SendMessage(p, "Radius must be a positive integer less than 2000."); return false;
+            }
             p.BcVar = new int[] { 0, radius };
             return true;
         }
