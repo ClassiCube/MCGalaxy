@@ -25,6 +25,9 @@ Ideas, concepts, and code were used from the following two sources:
 
  */
 using System;
+using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Ops;
+
 namespace MCGalaxy {
     
     public sealed class RealisticMapGen {
@@ -36,6 +39,8 @@ namespace MCGalaxy {
         Random rand;
         ushort LiquidLevel;
         MapGenParams genParams;
+        TreeDrawOp treeDrawer;
+        Vec3U16[] treeCoords;
         
         public bool GenerateMap(Level Lvl, string type, int seed = 0, bool useSeed = false) {
             DateTime startTime = DateTime.UtcNow;
@@ -43,6 +48,12 @@ namespace MCGalaxy {
             rand = useSeed ? new System.Random(seed) : new System.Random();
             if (!MapGenParams.Themes.TryGetValue(type, out genParams))
                 genParams = new MapGenParams();
+            if (genParams.GenTrees) {
+                treeDrawer = new TreeDrawOp();
+                treeDrawer.random = rand;
+                treeDrawer.method = DrawOp.M_SetTile;
+                treeCoords = new Vec3U16[1];
+            }
             
             try
             {
@@ -131,11 +142,11 @@ namespace MCGalaxy {
                 if (genParams.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
                     if (Lvl.GetTile(x, (ushort)(y + 1), z) == Block.air) {
                         if (Lvl.GetTile(x, y, z) == Block.grass || genParams.UseCactus) {
-                            if (rand.Next(13) == 0 && !TreeGen.TreeCheck(Lvl, x, y, z, treeDist))
-                                if (genParams.UseCactus)
-                                    TreeGen.AddCactus(Lvl, x, (ushort)(y + 1), z, rand);
-                                else
-                                    TreeGen.AddTree(Lvl, x, (ushort)(y + 1), z, rand);
+                            if (rand.Next(13) == 0 && !TreeDrawOp.TreeCheck(Lvl, x, y, z, treeDist)) {
+                                treeDrawer.Type = genParams.UseCactus ? TreeDrawOp.T_Cactus : TreeDrawOp.T_Tree;
+                                treeCoords[0].X = x; treeCoords[0].Y = (ushort)(y + 1); treeCoords[0].Z = z;
+                                treeDrawer.Perform(treeCoords, null, Lvl, null);
+                            }
                         }
                     }
                 }

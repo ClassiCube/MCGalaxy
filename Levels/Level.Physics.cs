@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using MCGalaxy.BlockPhysics;
+using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Games;
 
 namespace MCGalaxy {
@@ -254,17 +256,19 @@ namespace MCGalaxy {
                         //Check block above
                     }
 
-                    if (!growTrees)
-                    {
+                    if (!growTrees) {
                         C.time = 255;
                         break;
                     }
-                    if (C.time < 20)
-                    {
+                    if (C.time < 20) {
                         if (rand.Next(20) == 0) C.time++;
                         break;
                     }
-                    TreeGen.AddTree(this, x, y, z, rand, true, false);
+                    
+                    TreeDrawOp op = new TreeDrawOp();
+                    op.random = rand;
+                    op.method = DrawOp.M_BlockChange;
+                    op.Perform(new [] { new Vec3U16(x, y, z) }, null, this, null);
                     C.time = 255;
                     break;
 

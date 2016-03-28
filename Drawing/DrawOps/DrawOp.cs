@@ -82,10 +82,10 @@ namespace MCGalaxy.Drawing.Ops {
         
         public virtual bool DetermineDrawOpMethod(Level lvl, int affected) {
             if (affected > Server.DrawReloadLimit) {
-                method = MethodSetTile;
+                method = M_PSetTile;
                 return true;
             } else {
-                method = lvl.bufferblocks ? MethodBlockQueue : MethodBlockChange;
+                method = lvl.bufferblocks ? M_PBlockQueue : M_PBlockChange;
                 return false;
             }
         }
@@ -104,27 +104,38 @@ namespace MCGalaxy.Drawing.Ops {
         
         protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type, byte extType) {
             switch (method) {
-                case MethodBlockQueue:
+                case M_PBlockQueue:
                     BlockQueue.Addblock(p, x, y, z, type, extType);
                     TotalModified++;
                     break;
-                case MethodBlockChange:
-                    p.level.Blockchange(p, x, y, z, type, extType);
+                case M_PBlockChange:
+                    lvl.Blockchange(p, x, y, z, type, extType);
                     TotalModified++;
                     break;
-                case MethodSetTile:
+                case M_PSetTile:
                     byte old = lvl.GetTile(x, y, z);
                     if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
                         return;
-                    p.level.SetTile(x, y, z, type, p, extType);
+                    lvl.SetTile(x, y, z, type, p, extType);
                     p.loginBlocks++;
                     p.overallBlocks++;
+                    TotalModified++;
+                    break;
+                case M_BlockChange:
+                    lvl.Blockchange(x, y, z, type, extType);
+                    TotalModified++;
+                    break;
+                case M_SetTile:
+                    lvl.SetTile(x, y, z, type);
+                    if (type == Block.custom_block)
+                        lvl.SetExtTile(x, y, z, extType);
                     TotalModified++;
                     break;
             }
         }
         
-        internal const int MethodBlockQueue = 0, MethodBlockChange = 1, MethodSetTile = 2;
+        internal const int M_PBlockQueue = 0, M_PBlockChange = 1, M_PSetTile = 2;
+        internal const int M_BlockChange = 3, M_SetTile = 4;
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                     ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
