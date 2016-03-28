@@ -31,33 +31,33 @@ namespace MCGalaxy.Commands
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
-            DrawOp drawOp = null;
+            DrawOp op = null;
             Func<BrushArgs, Brush> constructor = null;
 
             switch (cpos.mode) {
                 case DrawMode.solid:
-                    drawOp = new CuboidDrawOp();
+                    op = new CuboidDrawOp();
                     constructor = SolidBrush.Process; break;
                 case DrawMode.normal:
-                    drawOp = new CuboidDrawOp(); break;
+                    op = new CuboidDrawOp(); break;
                 case DrawMode.hollow:
-                    drawOp = new CuboidHollowsDrawOp(); break;
+                    op = new CuboidHollowsDrawOp(); break;
                 case DrawMode.walls:
-                    drawOp = new CuboidWallsDrawOp(); break;
+                    op = new CuboidWallsDrawOp(); break;
                 case DrawMode.holes:
-                    drawOp = new CuboidDrawOp(); 
+                    op = new CuboidDrawOp(); 
                     constructor = CheckeredBrush.Process; break;
                 case DrawMode.wire:
-                    drawOp = new CuboidWireframeDrawOp(); break;
+                    op = new CuboidWireframeDrawOp(); break;
                 case DrawMode.random:
-                    drawOp = new CuboidDrawOp();
+                    op = new CuboidDrawOp();
                     constructor = RandomBrush.Process; break;
             }
             
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset, constructor);
             if (brush == null) return;
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
+            if (!DrawOp.DoDrawOp(op, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

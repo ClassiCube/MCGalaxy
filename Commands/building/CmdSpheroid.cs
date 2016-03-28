@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
-            DrawOp drawOp = null;
+            DrawOp op = null;
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
@@ -39,14 +39,14 @@ namespace MCGalaxy.Commands {
             switch (cpos.mode) {
                 case DrawMode.solid:
                 case DrawMode.normal:
-                    drawOp = new EllipsoidDrawOp(); break;
+                    op = new EllipsoidDrawOp(); break;
                 case DrawMode.hollow:
-                    drawOp = new EllipsoidHollowDrawOp(); break;
+                    op = new EllipsoidHollowDrawOp(); break;
                 case DrawMode.vertical:
-                    drawOp = new CylinderDrawOp(); break;
+                    op = new CylinderDrawOp(); break;
             }
                       
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
+            if (!DrawOp.DoDrawOp(op, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

@@ -26,12 +26,14 @@ using MCGalaxy.Drawing.Brushes;
 namespace MCGalaxy.Drawing.Ops {
     
     public abstract class AdvDrawOp : DrawOp {
-        public int Radius, Height;
+        public ushort Radius, Height;
         public bool Invert;
+        public virtual bool UsesHeight { get { return true; } }
     }
     
     public class AdvSphereDrawOp : AdvDrawOp {
         
+        public override bool UsesHeight { get { return false; } }
         public override string Name { get { return "Adv Sphere"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
@@ -56,9 +58,9 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class AdvHollowSphereDrawOp : DrawOp {
+    public class AdvHollowSphereDrawOp : AdvDrawOp {
         
-        public int Radius;
+        public override bool UsesHeight { get { return false; } }
         public override string Name { get { return "Adv Hollow Sphere"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {

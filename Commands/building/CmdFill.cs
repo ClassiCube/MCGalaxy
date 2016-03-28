@@ -72,15 +72,15 @@ namespace MCGalaxy.Commands {
                 totalFill = origins.Count;
             }
             
-            FillDrawOp drawOp = new FillDrawOp();
-            drawOp.Positions = buffer;
+            FillDrawOp op = new FillDrawOp();
+            op.Positions = buffer;
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, cpos.x, cpos.y, cpos.z))
+            if (!DrawOp.DoDrawOp(op, brush, p, cpos.x, cpos.y, cpos.z, cpos.x, cpos.y, cpos.z))
                 return;
             bits.Clear();
-            drawOp.Positions = null;
+            op.Positions = null;
 
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

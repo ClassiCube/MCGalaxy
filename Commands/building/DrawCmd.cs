@@ -27,19 +27,16 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
         public override void Use(Player p, string message) {
+            if (p == null) { MessageInGameOnly(p); return; }
         	message = message.ToLower();
             string[] parts = message.Split(' ');
             CatchPos cpos = default(CatchPos);
             cpos.message = message;
             cpos.mode = GetMode(message, parts);
             OnUse(p, message, parts, ref cpos);
-            p.blockchangeObject = cpos;
             
-            if (PlaceMessage == null)
-            	Player.SendMessage(p, "Place two blocks to determine the edges.");
-            else
-            	Player.SendMessage(p, PlaceMessage);
-            
+            p.blockchangeObject = cpos;           
+            Player.SendMessage(p, PlaceMessage);            
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -53,7 +50,7 @@ namespace MCGalaxy.Commands {
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
         
-        protected virtual string PlaceMessage { get { return null; } }
+        protected virtual string PlaceMessage { get { return "Place two blocks to determine the edges."; } }
         
         protected abstract void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
