@@ -27,18 +27,16 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "fill"; } }
         public override string shortcut { get { return "f"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        protected override string PlaceMessage { get { return "Destroy the block you wish to fill."; } }
         
         protected override DrawMode ParseMode(string msg) {
-            if (msg == "up") return DrawMode.up;
+            if (msg == "normal") return DrawMode.solid;
+            else if (msg == "up") return DrawMode.up;
             else if (msg == "down") return DrawMode.down;
             else if (msg == "layer") return DrawMode.layer;
             else if (msg == "vertical_x") return DrawMode.verticalX;
             else if (msg == "vertical_z") return DrawMode.verticalZ;
             return DrawMode.normal;
-        }
-        
-        protected override string PlaceMessage {
-            get { return "Destroy the block you wish to fill."; }
         }
         
         protected override void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -132,10 +130,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-        	Player.SendMessage(p, "%T/fill [brush args] <mode>");
+            Player.SendMessage(p, "%T/fill [brush args] <mode>");
             Player.SendMessage(p, "%HFills the area specified with the output of the current brush.");
             Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.SendMessage(p, "   %HMode can be: up/down/layer/vertical_x/vertical_z");            
+            Player.SendMessage(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");            
         }
     }
 }

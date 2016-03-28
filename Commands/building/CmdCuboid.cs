@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "%T/cuboid [brush args] <mode>");
             Player.SendMessage(p, "%HDraws a cuboid between two points.");
             Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.SendMessage(p, "   %HMode can be: solid/hollow/walls/holes/wire/random");
+            Player.SendMessage(p, "   %HModes: &fsolid/hollow/walls/holes/wire/random");
         }
     }
 }

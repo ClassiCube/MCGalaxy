@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%T/line [brush args] <mode> <length>");
             Player.SendMessage(p, "%HCreates a line between two points.");
             Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");            
-            Player.SendMessage(p, "   %HMode can be: normal/walls/straight");
+            Player.SendMessage(p, "   %HModes: &fnormal/walls/straight");
             Player.SendMessage(p, "   %HLength specifies the max number of blocks in the line.");
         }
     }

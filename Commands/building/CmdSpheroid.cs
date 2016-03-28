@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%T/spheroid [brush args] <mode>");
             Player.SendMessage(p, "%HDraws a spheroid between two points.");
             Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.SendMessage(p, "   %HMode can be: solid/hollow/vertical(a vertical tube)");            
+            Player.SendMessage(p, "   %HModes: &fsolid/hollow/vertical(a vertical tube)");            
         }
     }
 }

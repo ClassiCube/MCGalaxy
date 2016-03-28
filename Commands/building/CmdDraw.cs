@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -24,11 +24,7 @@ namespace MCGalaxy.Commands {
     
     public sealed class CmdDraw : DrawCmd {
         public override string name { get { return "draw"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        
+        public override string shortcut { get { return ""; } }     
         protected override string PlaceMessage { get { return "Place a block to determine the origin."; } }
         
         protected override DrawMode ParseMode(string msg) {
@@ -110,8 +106,14 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/draw <brush args> <height> <baseradius> <mode>- Draw an object in game- " +
-                               "Valid Types cones, spheres, and pyramids, hspheres (hollow sphere), and hpyramids (hollow pyramid)");
+            Player.SendMessage(p, "%T/draw [brush args] <height> <baseradius> <mode>");
+            Player.SendMessage(p, "%T/draw [brush args] <radius> <mode>");
+            Player.SendMessage(p, "%HDraws an object at the specified point.");
+            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.SendMessage(p, "   %HObjects: &fcone/hcone/icone/hicone");
+            Player.SendMessage(p, "     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
+            Player.SendMessage(p, "   %HObjects with only radius: &fsphere/hsphere");
+            Player.SendMessage(p, "   %HNote 'h' means hollow, 'i' means inverse");
         }
     }
 }

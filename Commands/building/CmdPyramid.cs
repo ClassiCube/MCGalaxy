@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "%T/pyramid [brush args] <mode>");
             Player.SendMessage(p, "%HDraws a square pyramid, using two points for the base.");
             Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.SendMessage(p, "   %HMode can be: solid/hollow/reverse");            
+            Player.SendMessage(p, "   %HModes: &fsolid/hollow/reverse");            
         }
     }
 }
