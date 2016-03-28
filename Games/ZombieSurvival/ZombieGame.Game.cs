@@ -162,7 +162,14 @@ namespace MCGalaxy.Games {
         }
 		
         public override bool PlayerCanJoinLevel(Player p, Level lvl, Level oldLvl) {
-             return base.PlayerCanJoinLevel(p, lvl, oldLvl);
+			if (!oldLvl.name.CaselessEq(CurLevelName)) return true;
+			if (lvl.name.CaselessEq(CurLevelName)) return true;
+			
+			if (RoundInProgress && !p.referee) {
+				p.SendMessage("Sorry, you cannot leave a zombie survival map until the current round has ended.");
+				return false;
+			}
+			return true;
         }
         
         public override void PlayerMoneyChanged(Player p) {
