@@ -132,7 +132,8 @@ namespace MCGalaxy.Commands {
             p.Loading = false;
             CheckGamesJoin(p, oldLevel);
             
-            if (!p.hidden && p.level.ShouldSaveLevelFile()) {
+            bool showJoin = p.level.ShouldSaveLevelFile() || (oldLevel != null && oldLevel.ShouldSaveLevelFile());
+            if (!p.hidden && showJoin) {
                 Player.SendChatFrom(p, p.color + "*" + p.DisplayName + Server.DefaultColor + " went to &b" + lvl.name, false);
                 Server.IRC.Say(p.color + p.DisplayName + " %rwent to &8" + lvl.name, false, true);
             }
