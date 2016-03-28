@@ -16,6 +16,10 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdDraw : Command
@@ -120,64 +124,100 @@ namespace MCGalaxy.Commands
             return true;
         }
 
-        public void BlockchangeCone(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeCone(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.Cone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, false);
+            Cone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, false);
         }
         
-        public void BlockchangeHCone(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeHCone(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HCone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, false);
+            HCone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, false);
         }
         
-        public void BlockchangeICone(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeICone(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.Cone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, true);
+            Cone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, true);
         }
         
-        public void BlockchangeHICone(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeHICone(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HCone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, true);
+            HCone(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, true);
         }
 
-        public void BlockchangePyramid(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangePyramid(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.Pyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, false);
+            Pyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, false);
         }
         
-        public void BlockchangeHPyramid(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeHPyramid(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, false);
+            HPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, false);
         }
         
-        public void BlockchangeIPyramid(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeIPyramid(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.Pyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, true);
+            Pyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, true);
         }
         
-        public void BlockchangeHIPyramid(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeHIPyramid(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, true);
+            HPyramid(p, x, y, z, p.BcVar[0], p.BcVar[1], type, extType, true);
         }
 
-        public void BlockchangeSphere(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeSphere(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.Sphere(p, x, y, z, p.BcVar[1], type, extType);
+            AdvSphereDrawOp op = new AdvSphereDrawOp();
+            op.Radius = p.BcVar[1];
+            Brush brush = new SolidBrush(type, extType);
+            DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3U16(x, y, z) });
         }
         
-        public void BlockchangeHSphere(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeHSphere(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.HSphere(p, x, y, z, p.BcVar[1], type, extType);
+            AdvHollowSphereDrawOp op = new AdvHollowSphereDrawOp();
+            op.Radius = p.BcVar[1];
+            Brush brush = new SolidBrush(type, extType);
+            DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3U16(x, y, z) });
         }
 
-        public void BlockchangeVolcano(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeVolcano(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            Util.SCOGenerator.Volcano(p, x, y, z, p.BcVar[0], p.BcVar[1]);
+            AdvVolcanoDrawOp op = new AdvVolcanoDrawOp();
+            op.Radius = p.BcVar[1]; op.Height = p.BcVar[1];
+            DrawOp.DoDrawOp(op, null, p, new [] { new Vec3U16(x, y, z) });
+        }
+        
+        static void Cone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte type, byte extType, bool invert) {
+            AdvConeDrawOp op = new AdvConeDrawOp();
+            op.Radius = radius; op.Height = height; op.Invert = invert;
+            Brush brush = new SolidBrush(type, extType);
+            DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3U16(x, y, z) });
+        }
+        
+        static void HCone(Player p, ushort x, ushort y, ushort z, int height, int radius, byte type, byte extType, bool invert) {
+            AdvHollowConeDrawOp op = new AdvHollowConeDrawOp();
+            op.Radius = radius; op.Height = height; op.Invert = invert;
+            Brush brush = new SolidBrush(type, extType);
+            DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3U16(x, y, z) });
+        }
+
+        static void Pyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte type, byte extType, bool invert) {
+            AdvPyramidDrawOp op = new AdvPyramidDrawOp();
+            op.Radius = radius; op.Height = height; op.Invert = invert;
+            Brush brush = new SolidBrush(type, extType);
+            DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3U16(x, y, z) });
+        }
+        
+        static void HPyramid(Player p, ushort x, ushort y, ushort z, int height, int radius, byte type, byte extType, bool invert) {
+            AdvHollowPyramidDrawOp op = new AdvHollowPyramidDrawOp();
+            op.Radius = radius; op.Height = height; op.Invert = invert;
+            Brush brush = new SolidBrush(type, extType);
+            DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3U16(x, y, z) });
         }
         
         public override void Help(Player p) {
             Player.SendMessage(p, "/draw <shape> <height> <baseradius> - Draw an object in game- " +
-        	                   "Valid Types cones, spheres, and pyramids, hspheres (hollow sphere), and hpyramids (hollow pyramid)");
+                               "Valid Types cones, spheres, and pyramids, hspheres (hollow sphere), and hpyramids (hollow pyramid)");
         }
     }
 }

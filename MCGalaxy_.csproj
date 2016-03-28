@@ -409,6 +409,9 @@
     <Compile Include="Drawing\Brushes\SolidBrush.cs" />
     <Compile Include="Drawing\Brushes\StripedBrush.cs" />
     <Compile Include="Drawing\CopyState.cs" />
+    <Compile Include="Drawing\DrawOps\AdvConeDrawOps.cs" />
+    <Compile Include="Drawing\DrawOps\AdvDrawOps.cs" />
+    <Compile Include="Drawing\DrawOps\AdvPyramidDrawOps.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
     <Compile Include="Drawing\DrawOps\FillDrawOp.cs" />
@@ -679,7 +682,6 @@
     <Compile Include="Util\ICryptoService.cs" />
     <Compile Include="Util\MathHelper.cs" />
     <Compile Include="Util\MCForgeScripter.cs" />
-    <Compile Include="Util\SCOGenerator.cs" />
     <Compile Include="Player\Player.CPE.cs" />
     <Compile Include="Database\PlayerDB.cs" />
   </ItemGroup>

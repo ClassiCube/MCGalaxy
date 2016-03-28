@@ -159,7 +159,7 @@ namespace MCGalaxy.Drawing.Ops {
             int affected = 0;
             if (!op.CanDraw(marks, p, out affected))
                 return false;
-            if (brush != null) {
+            if (brush != null && affected != -1) {
                 const string format = "{0}({1}): affecting up to {2} blocks";
                 Player.SendMessage(p, String.Format(format, op.Name, brush.Name, affected));
             } else if (affected != -1) {
