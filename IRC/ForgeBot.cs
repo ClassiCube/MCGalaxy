@@ -49,7 +49,7 @@ namespace MCGalaxy {
 
                 ConnectionArgs con = new ConnectionArgs(nick, server);
                 con.Port = Server.ircPort;
-                connection = new Connection(new UTF8Encoding(false), con, false, false);
+                connection = new Connection(new UTF8Encoding(false), con);
 
                 // Regster events for outgoing
                 Player.PlayerChat += new Player.OnPlayerChat(Player_PlayerChat);

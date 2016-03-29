@@ -45,7 +45,7 @@ namespace MCGalaxy
             server = "irc.geekshed.net";
            	channel = "#MCGalaxy";
             this.nick = nick.Replace(" ", "");
-            connection = new Connection(new UTF8Encoding(false), new ConnectionArgs(nick, server), false, false);
+            connection = new Connection(new UTF8Encoding(false), new ConnectionArgs(nick, server));
 
             if (Server.UseGlobalChat)
             {

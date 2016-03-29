@@ -642,17 +642,6 @@
     <Compile Include="SharkBite.Thresher\CommandBuilder.cs" />
     <Compile Include="SharkBite.Thresher\Connection.cs" />
     <Compile Include="SharkBite.Thresher\ConnectionArgs.cs" />
-    <Compile Include="SharkBite.Thresher\Ctcp\CtcpListener.cs" />
-    <Compile Include="SharkBite.Thresher\Ctcp\CtcpResponder.cs" />
-    <Compile Include="SharkBite.Thresher\Ctcp\CtcpSender.cs" />
-    <Compile Include="SharkBite.Thresher\Ctcp\CtcpUtil.cs" />
-    <Compile Include="SharkBite.Thresher\Dcc\DccChatSession.cs" />
-    <Compile Include="SharkBite.Thresher\Dcc\DccFileInfo.cs" />
-    <Compile Include="SharkBite.Thresher\Dcc\DccFileSession.cs" />
-    <Compile Include="SharkBite.Thresher\Dcc\DccFileSessionManager.cs" />
-    <Compile Include="SharkBite.Thresher\Dcc\DccListener.cs" />
-    <Compile Include="SharkBite.Thresher\Dcc\DccUserInfo.cs" />
-    <Compile Include="SharkBite.Thresher\Dcc\DccUtil.cs" />
     <Compile Include="SharkBite.Thresher\Delegates.cs" />
     <Compile Include="SharkBite.Thresher\Enums.cs" />
     <Compile Include="SharkBite.Thresher\Identd.cs" />
