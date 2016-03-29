@@ -435,6 +435,7 @@
     <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
     <Compile Include="Games\CTF\CtfTeam.cs" />
+    <Compile Include="Games\GameProps.cs" />
     <Compile Include="Games\IGame.cs" />
     <Compile Include="Games\LavaSurvival\LavaSurvival.Game.cs" />
     <Compile Include="Games\LavaSurvival\LavaSurvival.cs" />

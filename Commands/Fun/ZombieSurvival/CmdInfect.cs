@@ -31,9 +31,9 @@ namespace MCGalaxy.Commands {
             Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
             
-            if (who.infected || !Server.zombie.RoundInProgress) {
+            if (who.Game.Infected || !Server.zombie.RoundInProgress) {
                 Player.SendMessage(p, "Cannot infect player");
-            } else if (!who.referee) {
+            } else if (!who.Game.Referee) {
                 Server.zombie.InfectPlayer(who);
                 Player.GlobalMessage(who.color + who.DisplayName + " %Swas infected!");
             }

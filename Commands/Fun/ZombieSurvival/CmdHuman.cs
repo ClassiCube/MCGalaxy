@@ -30,11 +30,11 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
         	if (p == null) { MessageInGameOnly(p); return; }
-        	if (p.pledgeSurvive) {
+        	if (p.Game.PledgeSurvive) {
         		Player.SendMessage(p, "You cannot un-pledge that you will be infected."); return;
         	}
         	
-        	p.pledgeSurvive = true;
+        	p.Game.PledgeSurvive = true;
         	Server.zombie.CurLevel
         		.ChatLevel(p.color + p.DisplayName + " %Spledges that they will not succumb to the infection!");
         }

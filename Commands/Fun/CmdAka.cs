@@ -28,11 +28,12 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
         public override void Use(Player p, string message) {
-            bool showInfected = p.aka; p.aka = !p.aka;
+            bool showInfected = p.Game.Aka; 
+            p.Game.Aka = !p.Game.Aka;
             Player[] players = PlayerInfo.Online.Items;
             
             foreach (Player pl in players) {
-                if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.referee) continue;                
+                if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.Game.Referee) continue;                
                 p.SendDespawn(pl.id);
                 Player.SpawnEntity(pl, p, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }

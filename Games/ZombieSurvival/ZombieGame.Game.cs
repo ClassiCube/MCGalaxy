@@ -32,33 +32,33 @@ namespace MCGalaxy.Games {
                 p.RevertBlock(x, y, z); return true;
             }
             
-            if (action == 1 && !CurLevel.Pillaring && !p.referee) {
-                if (p.lastYblock == y - 1 && p.lastXblock == x && p.lastZblock == z ) {
-                    p.blocksStacked++;
+            if (action == 1 && !CurLevel.Pillaring && !p.Game.Referee) {
+                if (p.Game.LastY == y - 1 && p.Game.LastX == x && p.Game.LastZ == z ) {
+                    p.Game.BlocksStacked++;
                 } else {
-                    p.blocksStacked = 0;
+                    p.Game.BlocksStacked = 0;
                 }
                 
-                if (p.blocksStacked == 2 ) {
+                if (p.Game.BlocksStacked == 2 ) {
                     p.SendMessage("You are pillaring! Stop before you get kicked!");
                 }
-                if (p.blocksStacked == 4 ) {
+                if (p.Game.BlocksStacked == 4 ) {
                     p.Kick("No pillaring allowed!"); return true;
                 }
             }
-            p.lastXblock = x; p.lastYblock = y; p.lastZblock = z;
+            p.Game.LastX = x; p.Game.LastY = y; p.Game.LastZ = z;
             
             if (action == 1 || (action == 0 && p.painting)) {
-                if (!p.level.name.CaselessEq(CurLevelName) || p.referee) return false;
+                if (!p.level.name.CaselessEq(CurLevelName) || p.Game.Referee) return false;
                 
-                if (p.blockCount == 0 ) {
+                if (p.Game.BlocksLeft == 0 ) {
                     p.SendMessage("You have no blocks left.");
                     p.RevertBlock(x, y, z); return true;
                 }
 
-                p.blockCount--;
-                if ((p.blockCount % 10) == 0 || (p.blockCount >= 0 && p.blockCount <= 10))
-                    p.SendMessage("Blocks Left: " + Colors.maroon + p.blockCount);
+                p.Game.BlocksLeft--;
+                if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10))
+                    p.SendMessage("Blocks Left: " + Colors.maroon + p.Game.BlocksLeft);
             }
             return false;
         }
@@ -66,7 +66,7 @@ namespace MCGalaxy.Games {
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
                                              byte rotX, byte rotY) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
-            if (!p.referee && noRespawn) {
+            if (!p.Game.Referee && noRespawn) {
                 if (p.pos[0] >= x + 70 || p.pos[0] <= x - 70 ) {
                     p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                     return true;
@@ -84,16 +84,16 @@ namespace MCGalaxy.Games {
             if (Server.votingforlevel && HandleVote(p, message)) return true;
             
             if (message[0] == '~' && message.Length > 1) {
-                Player[] players = p.infected ? Infected.Items : Alive.Items;
-                string type = p.infected ? " &cto zombies%S: " : " &ato humans%S: ";
+                Player[] players = p.Game.Infected ? Infected.Items : Alive.Items;
+                string type = p.Game.Infected ? " &cto zombies%S: " : " &ato humans%S: ";
                 foreach (Player pl in players)
                 	pl.SendMessage(p.color + p.DisplayName + type + message.Substring(1));
                 return true;
             } else if (message[0] == '`' && message.Length > 1) {
-                if (p.GameTeam == null) {
+                if (p.Game.Team == null) {
                     p.SendMessage("You are not on a team, so cannot send a team message."); return true;
                 }
-                p.GameTeam.Chat(p, message.Substring(1)); 
+                p.Game.Team.Chat(p, message.Substring(1)); 
                 return true;
             }
             return false;
@@ -127,7 +127,7 @@ namespace MCGalaxy.Games {
             if (RoundInProgress && lvl.name.CaselessEq(CurLevelName)) {
                 if (Running && p != null) {
                     p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
-                    p.blockCount = 50;
+                    p.Game.BlocksLeft = 50;
                     InfectPlayer(p);
                 }
             }
@@ -165,7 +165,7 @@ namespace MCGalaxy.Games {
 			if (!oldLvl.name.CaselessEq(CurLevelName)) return true;
 			if (lvl.name.CaselessEq(CurLevelName)) return true;
 			
-			if (RoundInProgress && !p.referee) {
+			if (RoundInProgress && !p.Game.Referee) {
 				p.SendMessage("Sorry, you cannot leave a zombie survival map until the current round has ended.");
 				return false;
 			}
@@ -175,7 +175,7 @@ namespace MCGalaxy.Games {
         public override void PlayerMoneyChanged(Player p) {
             if (!Running || !p.level.name.CaselessEq(CurLevelName)) return;
 		    string moneyMsg = "&a" + p.money + " %S" + Server.moneys;
-		    string stateMsg = " and you are " + (p.infected ? "&cdead" : "&aalive");
+		    string stateMsg = " and you are " + (p.Game.Infected ? "&cdead" : "&aalive");
             p.SendCpeMessage(CpeMessageType.Status3, moneyMsg + stateMsg);
         }
     }

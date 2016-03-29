@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            if (p.referee) {
+            if (p.Game.Referee) {
                 Player.SendChatFrom(p, p.FullName + " %Sis no longer a referee", false);
                 if (p.level == Server.zombie.CurLevel)
                     Server.zombie.PlayerJoinedLevel(p, Server.zombie.CurLevel, Server.zombie.CurLevel);
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                 Server.zombie.PlayerLeftServer(p);
                 Player.GlobalDespawn(p, false);
             }
-            p.referee = !p.referee;
+            p.Game.Referee = !p.Game.Referee;
         }
         
         public override void Help(Player p) {

@@ -68,7 +68,7 @@ namespace MCGalaxy.Games {
             Player first = PickFirstZombie(random, players);
 
             CurLevel.ChatLevel(first.color + first.name + " %Sstarted the infection!");
-            first.infected = true;
+            first.Game.Infected = true;
             PlayerMoneyChanged(first);
             UpdatePlayerColor(first, InfectCol);
 
@@ -83,7 +83,7 @@ namespace MCGalaxy.Games {
 
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
-                if (p.level == null || p.level != CurLevel || p.referee) continue;
+                if (p.level == null || p.level != CurLevel || p.Game.Referee) continue;
                 if (p != first) Alive.Add(p);
             }
 
@@ -131,7 +131,7 @@ namespace MCGalaxy.Games {
                 
                 Player[] online = PlayerInfo.Online.Items;
                 foreach (Player p in online) {
-                    if (!p.referee && p.level.name.CaselessEq(CurLevelName)) {
+                    if (!p.Game.Referee && p.level.name.CaselessEq(CurLevelName)) {
                         players.Add(p);
                         nonRefPlayers++;
                     }
@@ -156,7 +156,7 @@ namespace MCGalaxy.Games {
                 }
                     
                 foreach (Player pKiller in infected) {
-                    pKiller.infected = true;
+                    pKiller.Game.Infected = true;
                     UpdatePlayerColor(pKiller, InfectCol);
                     bool aliveChanged = false;
                     foreach (Player pAlive in alive) {
@@ -166,12 +166,12 @@ namespace MCGalaxy.Games {
                             || Math.Abs(pAlive.pos[2] - pKiller.pos[2]) > HitboxPrecision)
                             continue;
                         
-                        if (!pAlive.infected && pKiller.infected && !pAlive.referee && !pKiller.referee && pKiller != pAlive
+                        if (!pAlive.Game.Infected && pKiller.Game.Infected && !pAlive.Game.Referee && !pKiller.Game.Referee && pKiller != pAlive
                             && pKiller.level.name.CaselessEq(CurLevelName) && pAlive.level.name.CaselessEq(CurLevelName))
                         {
                             InfectPlayer(pAlive);
                             aliveChanged = true;
-                            pAlive.blockCount = 25;
+                            pAlive.Game.BlocksLeft = 25;
                             
                             if (lastPlayerToInfect == pKiller.name) {
                                 infectCombo++;
@@ -186,7 +186,7 @@ namespace MCGalaxy.Games {
                             }
                             
                             lastPlayerToInfect = pKiller.name;
-                            pKiller.playersInfected++;
+                            pKiller.Game.NumInfected++;
                             ShowInfectMessage(random, pAlive, pKiller);
                             CheckHumanPledge(pAlive);
                             CheckBounty(pAlive, pKiller);
@@ -200,8 +200,8 @@ namespace MCGalaxy.Games {
         }
         
         void CheckHumanPledge(Player pAlive) {
-            if (!pAlive.pledgeSurvive) return;
-            pAlive.pledgeSurvive = false;
+            if (!pAlive.Game.PledgeSurvive) return;
+            pAlive.Game.PledgeSurvive = false;
             CurLevel.ChatLevel(pAlive.FullName + "%Sbroke their pledge of not being infected.");
             pAlive.money = Math.Max(pAlive.money - 2, 0);
             pAlive.OnMoneyChanged();
@@ -209,7 +209,7 @@ namespace MCGalaxy.Games {
 		
         void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
             string text = null;
-            List<string> infectMsgs = pKiller.infectMessages;
+            List<string> infectMsgs = pKiller.Game.InfectMessages;
             if (infectMsgs != null && random.Next(0, 10) < 5)
             	text = infectMsgs[random.Next(infectMsgs.Count)];
             else
@@ -235,8 +235,8 @@ namespace MCGalaxy.Games {
         }
 
         static void UpdatePlayerColor(Player p, string color) {
-            if (p.lastSpawnColor == color) return;
-            p.lastSpawnColor = color;
+            if (p.Game.lastSpawnColor == color) return;
+            p.Game.lastSpawnColor = color;
             Player.GlobalDespawn(p, false);
             Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
         }
@@ -275,7 +275,7 @@ namespace MCGalaxy.Games {
                     ResetPlayer(pl, ref playersString);
             } else {
                 foreach (Player pl in alive) {
-                    if (pl.pledgeSurvive) {
+                    if (pl.Game.PledgeSurvive) {
                         pl.SendMessage("You received &a5 %3" + Server.moneys +
                                        "%s for successfully pledging that you would survive.");
                         pl.money += 5;
@@ -296,10 +296,10 @@ namespace MCGalaxy.Games {
                 if (pl.CheckIfInsideBlock()) {
                 	money = -1;
                 } else if (alive.Length == 0) {
-                    money = rand.Next(1, 5 + pl.playersInfected);
-                } else if (alive.Length == 1 && !pl.infected) {
+                    money = rand.Next(1 + pl.Game.NumInfected, 5 + pl.Game.NumInfected);
+                } else if (alive.Length == 1 && !pl.Game.Infected) {
                     money = rand.Next(5, 10);
-                } else if (alive.Length > 1 && !pl.infected) {
+                } else if (alive.Length > 1 && !pl.Game.Infected) {
                     money = rand.Next(2, 6);
                 }
                 
@@ -311,11 +311,11 @@ namespace MCGalaxy.Games {
                     pl.SendMessage( Colors.gold + "You gained " + money + " " + Server.moneys);
                 }
                 
-                pl.blockCount = 50;
-                pl.playersInfected = 0;
+                pl.Game.BlocksLeft = 50;
+                pl.Game.NumInfected = 0;
                 pl.money += money;
-                pl.infected = false;
-                if (pl.referee) {
+                pl.Game.Infected = false;
+                if (pl.Game.Referee) {
                     pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
                     pl.money++;
                 }
@@ -327,9 +327,9 @@ namespace MCGalaxy.Games {
         }
 
         void ResetPlayer(Player p, ref string playersString) {
-            p.blockCount = 50;
-            p.infected = false;
-            p.playersInfected = 0;
+            p.Game.BlocksLeft = 50;
+            p.Game.Infected = false;
+            p.Game.NumInfected = 0;
             
             if (p.level.name.CaselessEq(CurLevelName))
                 playersString += p.color + p.DisplayName + Colors.white + ", ";

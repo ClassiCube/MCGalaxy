@@ -467,7 +467,7 @@ namespace MCGalaxy {
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
             PlayerDB.Load(this);
-            GameTeam = Team.FindTeam(this);
+            Game.Team = Team.FindTeam(this);
             SetPrefix();
             playerDb.Dispose();
 
@@ -529,7 +529,7 @@ namespace MCGalaxy {
             }
 
             Server.s.Log(name + " [" + ip + "] has joined the server.");
-            infectMessages = PlayerDB.GetInfectMessages(this);
+            Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             Server.zombie.PlayerJoinedServer(this);
             try {
                 ushort x = (ushort)((0.5 + level.spawnx) * 32);
@@ -1061,12 +1061,12 @@ return;
                             Chat.GlobalChatLevel(this, FullName + "%S" + customMessage, false);
                             break;
                     }
-                    if ( team != null && this.level.ctfmode ) {
+                    if ( Game.team != null && this.level.ctfmode ) {
                         //if (carryingFlag)
                         //{
                         // level.ctfgame.DropFlag(this, hasflag);
                         //}
-                        team.SpawnPlayer(this);
+                        Game.team.SpawnPlayer(this);
                         //this.health = 100;
                     }
                     else if ( Server.Countdown.playersleftlist.Contains(this) ) {

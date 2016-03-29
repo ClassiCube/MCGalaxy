@@ -130,7 +130,7 @@ namespace MCGalaxy.Games {
             if (alive.Length == 0) return;
             int index = random.Next(alive.Length);
             
-            while (alive[index].referee || !alive[index].level.name.CaselessEq(CurLevelName)) {
+            while (alive[index].Game.Referee || !alive[index].level.name.CaselessEq(CurLevelName)) {
                 if (index >= alive.Length - 1) {
                     index = 0;
                     alive = Alive.Items;
@@ -150,7 +150,7 @@ namespace MCGalaxy.Games {
             Infected.Add(p);
             Alive.Remove(p);
             
-            p.infected = true;
+            p.Game.Infected = true;
             UpdatePlayerColor(p, Colors.red);
             UpdateAllPlayerStatus();
             PlayerMoneyChanged(p);
@@ -161,7 +161,7 @@ namespace MCGalaxy.Games {
             Infected.Remove(p);
             Alive.Add(p);
             
-            p.infected = false;
+            p.Game.Infected = false;
             UpdatePlayerColor(p, p.color);
             UpdateAllPlayerStatus();
             PlayerMoneyChanged(p);
@@ -172,7 +172,7 @@ namespace MCGalaxy.Games {
             if (CurLevel != null) {
                 bool saveSettings = false;
                 foreach (Player pl in online)
-                    saveSettings |= pl.ratedMap;
+                    saveSettings |= pl.Game.RatedMap;
                 if (saveSettings) Level.SaveSettings(CurLevel);
                 
                 CurLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
@@ -188,8 +188,8 @@ namespace MCGalaxy.Games {
             
             online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-                pl.ratedMap = false;
-                pl.pledgeSurvive = false;
+                pl.Game.RatedMap = false;
+                pl.Game.PledgeSurvive = false;
                 if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(LastLevelName)) {
                     pl.SendMessage("Going to the next map - &a" + next);
                     Command.all.Find("goto").Use(pl, next);
@@ -213,8 +213,8 @@ namespace MCGalaxy.Games {
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-                pl.ratedMap = false;
-                pl.pledgeSurvive = false;
+                pl.Game.RatedMap = false;
+                pl.Game.PledgeSurvive = false;
             }
         }
         

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             if (!p.level.guns) {
                 Player.SendMessage(p, Weapon + "s cannot be used on this map!"); return;
             }
-            if (p.hasflag != null) {
+            if (p.Game.hasflag != null) {
                 Player.SendMessage(p, "You can't use a " + Weapon.ToLower() + " while you have the flag!"); return;
             }
 

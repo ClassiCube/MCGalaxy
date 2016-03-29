@@ -39,7 +39,7 @@ namespace MCGalaxy.Eco {
                                    "%c to buy " +  (count * 10) +  " " + Name + "."); return;
             }
             
-            p.blockCount += 10 * count;
+            p.Game.BlocksLeft += 10 * count;
             MakePurchase(p, Price * count, "%3Blocks: " + (10 * count));
         }
     }
@@ -90,8 +90,8 @@ namespace MCGalaxy.Eco {
             }
             
             PlayerDB.AppendInfectMessage(p.name, text);
-            if (p.infectMessages == null) p.infectMessages = new List<string>();
-            p.infectMessages.Add(text);
+            if (p.Game.InfectMessages == null) p.Game.InfectMessages = new List<string>();
+            p.Game.InfectMessages.Add(text);
             Player.SendMessage(p, "%aAdded infect message: %f" + text);
             MakePurchase(p, Price, "%3InfectMessage: " + message);
         }

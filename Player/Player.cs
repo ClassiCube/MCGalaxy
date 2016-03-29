@@ -172,12 +172,9 @@ namespace MCGalaxy {
         public bool useCheckpointSpawn = false;
         public int lastCheckpointIndex = -1;
         public ushort checkpointX, checkpointY, checkpointZ;
-
-        public Team GameTeam;
-        public string GameTeamInvite;
-        //CTF
-        public CtfTeam team;
-        public CtfTeam hasflag;
+        public bool voted = false;
+        public bool flipHead = false;
+        public GameProps Game = new GameProps();
 
         //Countdown
         public bool playerofcountdown = false;
@@ -185,21 +182,6 @@ namespace MCGalaxy {
         public ushort countdowntempx;
         public ushort countdowntempz;
         public bool countdownsettemps = false;
-
-        //Zombie
-        public bool referee = false;
-        internal int blockCount = 50;
-        public bool voted = false;
-        internal int blocksStacked = 0;
-        internal int lastYblock = 0, lastXblock = 0, lastZblock = 0;
-        public bool infected = false;
-        public bool aka = false;
-        public bool flipHead = false;
-        internal int playersInfected = 0;
-        internal string lastSpawnColor = "";
-        internal bool ratedMap = false;
-        internal bool pledgeSurvive = false;
-        internal List<string> infectMessages = null;
 
         //Tnt Wars
         public bool PlayingTntWars = false;
@@ -326,7 +308,7 @@ namespace MCGalaxy {
         }
         
         public void SetPrefix() {
-        	Team team = GameTeam;
+        	Team team = Game.Team;
         	prefix = team != null ? "<" + team.Color + team.Name + color + "> " : "";
         		
             string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", Colors.blue, color) : 
@@ -452,8 +434,8 @@ namespace MCGalaxy {
 
             Last50Chat.Add(chatmessage);
             if (showname) {
-                String referee = "";
-                if (from.referee)
+                string referee = "";
+                if (from.Game.Referee)
                     referee = Colors.green + "[Referee] ";
                 message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             }
@@ -492,10 +474,10 @@ namespace MCGalaxy {
         public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
-            p.lastSpawnColor = p.infected ? ZombieGame.InfectCol : p.color;
+            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;
             foreach (Player other in players) {
             	if ((other.Loading && p != other) || p.level != other.level) continue;
-            	if ((p.hidden || p.referee) && !self) continue;
+            	if ((p.hidden || p.Game.Referee) && !self) continue;
                 
                 if (p != other) {
                     SpawnEntity(p, other, p.id, x, y, z, rotx, roty, possession);
@@ -509,11 +491,11 @@ namespace MCGalaxy {
         
         internal static void SpawnEntity(Player p, Player dst, byte id, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, string possession = "") {
-            if (!Server.zombie.Running || !p.infected) {
+            if (!Server.zombie.Running || !p.Game.Infected) {
                 dst.SendSpawn(id, p.color + p.name + possession, x, y, z, rotx, roty); return;
             }
             
-            if (Server.zombie.ZombieName != "" && !dst.aka)
+            if (Server.zombie.ZombieName != "" && !dst.Game.Aka)
                 dst.SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
             else
                 dst.SendSpawn(id, Colors.red + p.name + possession, x, y, z, rotx, roty);
@@ -605,7 +587,7 @@ namespace MCGalaxy {
                 }
 
                 Server.zombie.PlayerLeftServer(this);
-                if ( team != null ) team.RemoveMember(this);
+                if ( Game.team != null ) Game.team.RemoveMember(this);
                 Server.Countdown.PlayerLeftServer(this);
                 TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
                 if ( tntwarsgame != null ) {

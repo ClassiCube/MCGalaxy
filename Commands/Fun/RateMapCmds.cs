@@ -31,9 +31,9 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            if (p.ratedMap) { Player.SendMessage(p, "You have already liked this map."); return; }
+            if (p.Game.RatedMap) { Player.SendMessage(p, "You have already liked this map."); return; }
             p.level.Likes++;
-            p.ratedMap = true;
+            p.Game.RatedMap = true;
             Player.SendMessage(p, "You have liked this map.");
         }
         
@@ -53,9 +53,9 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            if (p.ratedMap) { Player.SendMessage(p, "You have already disliked this map."); return; }
+            if (p.Game.RatedMap) { Player.SendMessage(p, "You have already disliked this map."); return; }
             p.level.Dislikes++;
-            p.ratedMap = true;
+            p.Game.RatedMap = true;
             Player.SendMessage(p, "You have disliked this map.");
         }
         

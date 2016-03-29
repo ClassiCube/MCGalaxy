@@ -39,16 +39,16 @@ namespace MCGalaxy.Games
 
         public void AddMember(Player p)
         {
-            if (p.team != this)
+            if (p.Game.team != this)
             {
-                if (p.team != null) { p.team.RemoveMember(p); }
-                p.team = this;
+                if (p.Game.team != null) { p.Game.team.RemoveMember(p); }
+                p.Game.team = this;
                 Player.GlobalDespawn(p, false);
                 //p.CTFtempcolor = p.color;
                 //p.CTFtempprefix = p.prefix;
                 p.color = "&" + color;
                 //p.carryingFlag = false;
-                p.hasflag = null;
+                p.Game.hasflag = null;
                 p.prefix = p.color + "[" + Colors.Name("&" + color).ToUpper() + "] ";
                 players.Add(p);
                 mapOn.ChatLevel(p.FullName + " %Shas joined the " + teamstring + ".");
@@ -58,14 +58,14 @@ namespace MCGalaxy.Games
 
         public void RemoveMember(Player p)
         {
-            if (p.team == this)
+            if (p.Game.team == this)
             {
-                p.team = null;
+                p.Game.team = null;
                 Player.GlobalDespawn(p, false);
                 //p.color = p.CTFtempcolor;
                 //p.prefix = p.CTFtempprefix;
                 //p.carryingFlag = false;
-                p.hasflag = null;
+                p.Game.hasflag = null;
                 players.Remove(p);
                 mapOn.ChatLevel(p.FullName + " %Shas left the " + teamstring + ".");
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
