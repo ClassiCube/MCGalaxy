@@ -58,33 +58,11 @@ namespace MCGalaxy.Commands
             }
             
             if (message.IndexOf('/') == -1 && message.IndexOf('.') != -1) {
-                try
-                {
-                    using (WebClient web = new WebClient())
-                    {
-                        Player.SendMessage(p, "Downloading IMGUR file from: &fhttp://www.imgur.com/" + message);
-                        web.DownloadFile("http://www.imgur.com/" + message, "extra/images/tempImage_" + p.name + ".bmp");
-                    }
-                    Player.SendMessage(p, "Download complete.");
-                    bitmapLoc = "tempImage_" + p.name;
-                }
-                catch { }
+                if (!DownloadWebFile("http://www.imgur.com/" + message, p)) return;
+                bitmapLoc = "tempImage_" + p.name;
             } else if (message.IndexOf('.') != -1) {
-                try
-                {
-                    using (WebClient web = new WebClient())
-                    {
-                        if (message.Substring(0, 4) != "http")
-                        {
-                            message = "http://" + message;
-                        }
-                        Player.SendMessage(p, "Downloading file from: &f" + message + "%S, please wait.");
-                        web.DownloadFile(message, "extra/images/tempImage_" + p.name + ".bmp");
-                    }
-                    Player.SendMessage(p, "Download complete.");
-                    bitmapLoc = "tempImage_" + p.name;
-                }
-                catch { }
+                if (!DownloadWebFile(message, p)) return;
+                bitmapLoc = "tempImage_" + p.name;
             } else {
                 bitmapLoc = message;
             }
@@ -100,6 +78,26 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Place two blocks to determine direction.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+        }
+        
+        bool DownloadWebFile(string url, Player p) {
+            if (!(url.StartsWith("http://") || url.StartsWith("https://"))) {
+                url = "http://" + url;
+            }
+            
+            try {
+                using (WebClient web = new WebClient()) {
+                    Player.SendMessage(p, "Downloading file from: &f" + url);
+                    web.DownloadFile(url, "extra/images/tempImage_" + p.name + ".bmp");
+                }
+                Player.SendMessage(p, "Finished downloading image.");
+                return true;
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                Player.SendMessage(p, "&cFailed to download the image from the given url.");
+                Player.SendMessage(p, "&cThe url may need to end with its extension (such as .jpg).");
+                return false;
+            }
         }
         
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -126,8 +124,17 @@ namespace MCGalaxy.Commands
         }
         
         void DoDrawImage(Player p, CatchPos cpos, int direction) {
-            Bitmap bmp = new Bitmap("extra/images/" + cpos.bitmapLoc + ".bmp");
-            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            Bitmap bmp = null;
+            try {
+                bmp = new Bitmap("extra/images/" + cpos.bitmapLoc + ".bmp");
+                bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                if (bmp != null) bmp.Dispose();
+                Player.SendMessage(p, "&cThere was an error reading the downloaded image.");
+                Player.SendMessage(p, "&cThe url may need to end with its extension (such as .jpg).");
+                return;
+            }
             
             byte popType = cpos.popType;
             bool layer = cpos.layer;
