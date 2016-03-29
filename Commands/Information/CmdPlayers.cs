@@ -88,7 +88,6 @@ namespace MCGalaxy.Commands
 
                     if (pl.isDev) devSec.Append(pl, name);
                     if (pl.isMod) modsSec.Append(pl, name);
-                    if (pl.isGCMod) gcModsSec.Append(pl, name);
                     playerList.Find(grp => grp.group == pl.group).Append(pl, name);
                 }
             }

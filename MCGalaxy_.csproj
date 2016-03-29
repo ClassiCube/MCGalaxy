@@ -206,9 +206,7 @@
     <Compile Include="Commands\Information\CmdAfk.cs" />
     <Compile Include="Commands\Information\CmdBlocks.cs" />
     <Compile Include="Commands\Information\CmdClones.cs" />
-    <Compile Include="Commands\Information\CmdDevs.cs" />
     <Compile Include="Commands\Information\CmdFaq.cs" />
-    <Compile Include="Commands\Information\CmdGcmods.cs" />
     <Compile Include="Commands\Information\CmdHasirc.cs" />
     <Compile Include="Commands\Information\CmdHelp.cs" />
     <Compile Include="Commands\Information\CmdHost.cs" />
@@ -218,7 +216,6 @@
     <Compile Include="Commands\Information\CmdLevels.cs" />
     <Compile Include="Commands\Information\CmdMapInfo.cs" />
     <Compile Include="Commands\Information\CmdMeasure.cs" />
-    <Compile Include="Commands\Information\CmdMods.cs" />
     <Compile Include="Commands\Information\CmdNews.cs" />
     <Compile Include="Commands\Information\CmdOpRules.cs" />
     <Compile Include="Commands\Information\CmdOpStats.cs" />

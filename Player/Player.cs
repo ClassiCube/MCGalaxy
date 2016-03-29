@@ -310,7 +310,7 @@ namespace MCGalaxy {
         public bool InGlobalChat { get; set; }
         public Dictionary<string, string> sounds = new Dictionary<string, string>();
 
-        public bool isDev, isMod, isGCMod; //is this player a dev/mod/gcmod?
+        public bool isDev, isMod;
         public bool isStaff;
         public bool verifiedName;
 
@@ -330,8 +330,7 @@ namespace MCGalaxy {
         	prefix = team != null ? "<" + team.Color + team.Name + color + "> " : "";
         		
             string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", Colors.blue, color) : 
-        	    isMod ? string.Format("{1}[{0}Mod{1}] ", Colors.lime, color) 
-        	    : isGCMod ? string.Format("{1}[{0}GCMod{1}] ", Colors.gold, color) : "";
+        		isMod ? string.Format("{1}[{0}Mod{1}] ", Colors.lime, color) : "";
         	prefix = prefix + viptitle;
             prefix = (title == "") ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";            
         }

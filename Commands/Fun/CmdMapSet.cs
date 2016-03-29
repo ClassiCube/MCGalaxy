@@ -36,6 +36,9 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Map authors: " + p.level.Authors);
                 Player.SendMessage(p, "Pillaring allowed: " + p.level.Pillaring);
                 Player.SendMessage(p, "Build type: " + p.level.BuildType);
+                Player.SendMessage(p, "Min round time: " + p.level.MinRoundTime + " minutes");
+                Player.SendMessage(p, "Max round time: " + p.level.MaxRoundTime + " minutes");
+                Player.SendMessage(p, "Drawing commands allowed: " + p.level.DrawingAllowed);
                 return;
             }
             
@@ -81,6 +84,13 @@ namespace MCGalaxy.Commands {
                 }
                 p.level.MaxRoundTime = time;
                 Player.SendMessage(p, "Set max round time to: " + time + " minutes");
+            } else if (args[0].CaselessEq("drawingallowed") || args[0].CaselessEq("drawingenabled")) {
+            	bool value;
+                if (!bool.TryParse(args[1], out value)) {
+                    Player.SendMessage(p, "Value must be 'true' or 'false'"); return;
+                }
+                p.level.DrawingAllowed = value;
+                Player.SendMessage(p, "Set drawing commands allowed to: " + value);
             } else {
                 Player.SendMessage(p, "Unrecognised property \"" + args[0] + "\"."); return;
             }
@@ -95,6 +105,7 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%T/mapset build [normal/modifyonly/nomodify]");
             Player.SendMessage(p, "%T/mapset minroundtime [minutes]");
             Player.SendMessage(p, "%T/mapset maxroundtime [minutes]");
+            Player.SendMessage(p, "%T/mapset drawingallowed [true/false]");
         }
     }
 }

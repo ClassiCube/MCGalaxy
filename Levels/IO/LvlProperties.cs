@@ -86,6 +86,7 @@ namespace MCGalaxy.Levels.IO {
             writer.WriteLine("BuildType = " + level.BuildType);
             writer.WriteLine("MinRoundTime = " + level.MinRoundTime);
             writer.WriteLine("MaxRoundTime = " + level.MaxRoundTime);
+            writer.WriteLine("DrawingAllowed = " + level.DrawingAllowed);
         }
         
         static string GetName(LevelPermission perm) {

@@ -155,6 +155,10 @@ namespace MCGalaxy.Drawing.Ops {
                 op.Max = Vec3U16.Max(op.Max, marks[i]);
             }
             op.Level = p.level;
+            if (!op.Level.DrawingAllowed) {
+                Player.SendMessage(p, "Drawing commands are turned off on this map.");
+                return false;
+            }
             
             long affected = 0;
             if (!op.CanDraw(marks, p, out affected))

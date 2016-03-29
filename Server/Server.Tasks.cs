@@ -200,7 +200,6 @@ namespace MCGalaxy {
         void UpdateStaffList() {
             Devs.Clear();
             Mods.Clear();
-            GCmods.Clear();
             ml.Queue(UpdateStaffListTask);
         }
         
@@ -210,7 +209,7 @@ namespace MCGalaxy {
                     string[] result = web.DownloadString(staffUrl).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
                     foreach (string line in result) {
                         string type = line.Split(':')[0].ToLower();
-                        List<string> staffList = type.Equals("devs") ? Devs : type.Equals("mods") ? Mods : type.Equals("gcmods") ? GCmods : null;
+                        List<string> staffList = type.Equals("devs") ? Devs : type.Equals("mods") ? Mods : null;
                         foreach (string name in line.Split(':')[1].Split())
                             staffList.Add(name);
                     }
@@ -220,7 +219,6 @@ namespace MCGalaxy {
                 s.Log("Failed to update MCGalaxy staff list.");
                 Devs.Clear();
                 Mods.Clear();
-                GCmods.Clear();
             }
         }
     }

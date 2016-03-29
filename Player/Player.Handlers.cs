@@ -256,17 +256,16 @@ namespace MCGalaxy {
                 }
 
                 string verify = enc.GetString(message, 65, 32).Trim();
-                if (Server.verify)
-                {
-                    if (verify == "--" || verify !=
-                        BitConverter.ToString(md5.ComputeHash(enc.GetBytes(Server.salt + truename)))
-                        .Replace("-", "").ToLower())
-                    {
-                        if (!IPInPrivateRange(ip))
-                        {
+                verifiedName = false;
+                if (Server.verify) {
+                	string hash = BitConverter.ToString(md5.ComputeHash(enc.GetBytes(Server.salt + truename)));
+                	if (!verify.CaselessEq(hash.Replace("-", ""))) {
+                        if (!IPInPrivateRange(ip)) {
                             Kick("Login failed! Try signing in again.", true); return;
                         }
-                    }
+                	} else {
+                		verifiedName = true;
+                	}
                 }
                 DisplayName = name;
                 SkinName = name;
@@ -275,8 +274,6 @@ namespace MCGalaxy {
 
                 isDev = Server.Devs.ContainsInsensitive(name);
                 isMod = Server.Mods.ContainsInsensitive(name);
-                isGCMod = Server.GCmods.ContainsInsensitive(name);
-                verifiedName = Server.verify;
 
                 try {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());

@@ -59,7 +59,6 @@ namespace MCGalaxy.Commands
 
             if (who.isDev) Player.SendMessage(p, "> > Player is a &9Developer");
             else if (who.isMod) Player.SendMessage(p, "> > Player is a &9MCGalaxy Moderator");
-            else if (who.isGCMod) Player.SendMessage(p, "> > Player is a &9Global Chat Moderator");
 
             if (p == null || (int)p.group.Permission >= CommandOtherPerms.GetPerm(this)) {
                 string givenIP;

@@ -320,8 +320,6 @@ namespace MCGalaxy
                 message = "[Dev]" + message;
             else if(Server.Mods.ContainsInsensitive(message.Split(':')[0]) && !message.StartsWith("[Mod]") && !message.StartsWith("[Moderator]"))
                 message = "[Mod]" + message;
-            else if (Server.GCmods.ContainsInsensitive(message.Split(':')[0]) && !message.StartsWith("[GCMod]"))
-                message = "[GCMod]" + message;
 
             /*try { 
                 if(GUI.GuiEvent != null)

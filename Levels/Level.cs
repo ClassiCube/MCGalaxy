@@ -209,6 +209,7 @@ namespace MCGalaxy
         public bool CanPlace { get { return Buildable && BuildType != BuildType.NoModify; } }
         public bool CanDelete { get { return Deletable && BuildType != BuildType.NoModify; } }
         public int MinRoundTime = 4, MaxRoundTime = 7;
+        public bool DrawingAllowed = true;
         
         public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false)
         {

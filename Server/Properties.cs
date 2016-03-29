@@ -627,7 +627,7 @@ namespace MCGalaxy {
 		
 		public static void SaveProps(StreamWriter w) {
 			w.WriteLine("#   Edit the settings below to modify how your server operates. This is an explanation of what each setting does.");
-			w.WriteLine("#   server-name\t\t\t\t= The name which displays on minecraft.net");
+			w.WriteLine("#   server-name\t\t\t\t= The name which displays on classicube.net");
 			w.WriteLine("#   motd\t\t\t\t= The message which displays when a player connects");
 			w.WriteLine("#   port\t\t\t\t= The port to operate from");
 			w.WriteLine("#   console-only\t\t\t= Run without a GUI (useful for Linux servers with mono)");

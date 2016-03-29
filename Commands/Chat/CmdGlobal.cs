@@ -29,7 +29,9 @@ namespace MCGalaxy.Commands
         //bla
         public override void Use(Player p, string message)
         {
-            if (p != null && !p.verifiedName) { Player.SendMessage(p, "You can't use GC, because the server hasn't verify-names on"); return; }
+            if (p != null && !p.verifiedName) { 
+        	    Player.SendMessage(p, "You cannot use global chat, because your name is not verified."); return; 
+        	}
 
             if (String.IsNullOrEmpty(message)) { 
                 p.InGlobalChat = !p.InGlobalChat;
