@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands {
             Vec3U16[] marks = { new Vec3U16(x, y, z) };
             if (!DrawOp.DoDrawOp(op, brush, p, marks))
                 return;
-            if (!p.staticCommands)
+            if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(PlaceBlock1);
         }
         
