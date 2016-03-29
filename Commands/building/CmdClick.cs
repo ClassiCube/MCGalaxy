@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            ushort[] click = p.lastClick;
+            Vec3U16 click = p.lastClick;
+            ushort value;
 
             if (message.IndexOf(' ') != -1) {
                 string[] args = message.ToLower().Split(' ');
@@ -36,28 +37,20 @@ namespace MCGalaxy.Commands {
                 
                 for (int i = 0; i < 3; i++) {
                     if (args[i] == "x" || args[i] == "y" || args[i] == "z") {
-                        click[i] = p.lastClick[i];
-                    } else if (IsValid(p, i, args[i])) {
-                        click[i] = ushort.Parse(args[i]);
+                       // use the last value
+                	} else if (ushort.TryParse(args[i], out value)) {
+                        if (i == 0) click.X = value;
+                        else if (i == 1) click.Y = value;
+                        else click.Z = value;
                     } else {
-                        Player.SendMessage(p, "\"" + args[i] + "\" was not valid");  return;
+                        Player.SendMessage(p, "\"" + args[i] + "\" was not valid"); return;
                     }
                 }
             }
-
-            p.lastCMD = "click";
-            p.ManualChange(click[0], click[1], click[2], 0, Block.rock);
-            Player.SendMessage(p, "Clicked &b(" + click[0] + ", " + click[1] + ", " + click[2] + ")");
-        }
-
-        bool IsValid(Player p, int axis, string message) {
-            ushort value;
-            if (!ushort.TryParse(message, out value)) return false;
-
-            if (value >= p.level.Width && axis == 0) return false;
-            else if (value >= p.level.Height && axis == 1) return false;
-            else if (value >= p.level.Length && axis == 2) return false;
-            return true;
+            
+            click = Vec3U16.ClampToBounds(click.X, click.Y, click.Z, p.level);
+            p.ManualChange(click.X, click.Y, click.Z, 0, Block.rock);
+            Player.SendMessage(p, "Clicked &b(" + click.X + ", " + click.Y + ", " + click.Z + ")");
         }
         
         public override void Help(Player p) {

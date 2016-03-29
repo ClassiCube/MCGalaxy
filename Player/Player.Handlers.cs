@@ -71,7 +71,7 @@ namespace MCGalaxy {
             bP.index = level.PosToInt(x, y, z);
             bP.SetData(type, extType, false);
 
-            lastClick[0] = x; lastClick[1] = y; lastClick[2] = z;
+            lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
             if ( Blockchange != null ) {
                 if ( Blockchange.Method.ToString().IndexOf("AboutBlockchange") == -1 && !level.IsMuseum ) {
                     bP.flags |= 1;

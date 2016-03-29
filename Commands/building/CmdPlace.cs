@@ -58,10 +58,9 @@ namespace MCGalaxy.Commands {
 
             if (type == Block.Zero) return;
             if (!Block.canPlace(p, type)) { Player.SendMessage(p, "Cannot place that block type."); return; }
-            if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
-
-            p.level.UpdateBlock(p, x, y, z, type, extType);
-            Player.SendMessage(p, "A block was placed at (" + x + ", " + y + ", " + z + ").");
+            Vec3U16 P = Vec3U16.ClampToBounds(x, y, z, p.level);
+            p.level.UpdateBlock(p, P.X, P.Y, P.Z, type, extType);
+            Player.SendMessage(p, "A block was placed at (" + P.X + ", " + P.Y + ", " + P.Z + ").");
         }
         
         public override void Help(Player p) {

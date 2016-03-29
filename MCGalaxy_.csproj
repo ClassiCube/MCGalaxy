@@ -426,7 +426,6 @@
     <Compile Include="Drawing\DrawOps\TriangleDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\UndoDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
-    <Compile Include="Drawing\Vectors.cs" />
     <Compile Include="Economy\Awards.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
     <Compile Include="Economy\Economy.cs" />
@@ -615,6 +614,7 @@
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\SparseBitSet.cs" />
+    <Compile Include="util\Vectors.cs" />
     <Compile Include="util\VolatileArray.cs" />
     <EmbeddedResource Include="GUI\Eco\EcoLevelWindow.resx">
       <DependentUpon>EcoLevelWindow.cs</DependentUpon>

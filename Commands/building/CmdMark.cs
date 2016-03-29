@@ -26,8 +26,7 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdMark() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             
             int x = (ushort)(p.pos[0] / 32);
@@ -35,8 +34,8 @@ namespace MCGalaxy.Commands
             int z = (ushort)(p.pos[2] / 32);
             Command.all.Find("click").Use(p, x + " " + y + " " + z);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/mark - Clicks where you are standing.");
             Player.SendMessage(p, "Use this to place a marker at your position when making a selection or cuboid.");
         }

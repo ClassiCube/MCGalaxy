@@ -17,11 +17,12 @@
  */
 using System;
 
-namespace MCGalaxy.Drawing {
+namespace MCGalaxy {
     
     public struct Vec3U16 {
         
         public ushort X, Y, Z;
+        public static Vec3U16 Zero = new Vec3U16(0);
         public static Vec3U16 MinVal = new Vec3U16(ushort.MinValue);
         public static Vec3U16 MaxVal = new Vec3U16(ushort.MaxValue);
         
@@ -75,6 +76,18 @@ namespace MCGalaxy.Drawing {
             return new Vec3U16(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Min(a.Z, b.Z));
         }
         
+        public static Vec3U16 ClampToBounds(ushort x, ushort y, ushort z, Level lvl) {
+            Vec3U16 P = new Vec3U16(x, y, z);
+            if (P.X >= 32768) P.X = 0;
+            if (P.Y >= 32768) P.Y = 0;
+            if (P.Z >= 32768) P.Z = 0;
+            
+            if (P.X >= lvl.Width) P.X = (ushort)(lvl.Width - 1);
+            if (P.Y >= lvl.Height) P.Y = (ushort)(lvl.Height - 1);
+            if (P.Z >= lvl.Length) P.Z = (ushort)(lvl.Length - 1);
+            return P;
+        }
+        
         public static bool operator == (Vec3U16 a, Vec3U16 b) {
             return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
         }
@@ -95,8 +108,8 @@ namespace MCGalaxy.Drawing {
             return X + "," + Y + "," + Z;
         }
     }
-	
-	public struct Vec3S16 {
+    
+    public struct Vec3S16 {
         
         public short X, Y, Z;
         
