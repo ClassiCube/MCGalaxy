@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             
             Player target = PlayerInfo.FindOrShowMatches(p, message);
             if (target == null) return;
-            if (target.level.name.Contains("cMuseum")) {
+            if (target.level.IsMuseum) {
                 Player.SendMessage(p, "Player \"" + message + "\" is in a museum!"); return;
             }
         

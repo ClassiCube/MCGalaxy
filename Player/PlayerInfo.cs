@@ -162,37 +162,35 @@ namespace MCGalaxy {
             p.totalKicked = int.Parse(row["totalKicked"].ToString());
         }
         
-        public static OfflinePlayer FindOffline(string name, bool fullStats = false) {
-            OfflinePlayer pl = new OfflinePlayer();
+        public static OfflinePlayer FindOffline(string name, bool fullStats = false) {         
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", name);
             string syntax = Server.useMySQL ? "SELECT * FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
                 "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
             using (DataTable playerDB = Database.fillData(query, syntax)) {
-                if (playerDB.Rows.Count == 0) {
-                    return null;
-                } else {
-                    DataRow row = playerDB.Rows[0];
-                    pl.name = row["Name"].ToString().Trim();
-                    pl.ip = row["IP"].ToString().Trim();   
-                    
-                    pl.totalTime = row["TimeSpent"].ToString();
-                    pl.firstLogin = row["FirstLogin"].ToString();
-                    pl.lastLogin = row["LastLogin"].ToString();                    
-                    if (!fullStats) return pl;
-                    
-                    pl.title = row["Title"].ToString().Trim();
-                    pl.titleColor = Colors.Parse(row["title_color"].ToString().Trim());
-                    pl.color = Colors.Parse(row["color"].ToString().Trim());
-                    
-                    pl.money = row["Money"].ToString();
-                    pl.deaths = row["TotalDeaths"].ToString();
-                    pl.blocks = row["totalBlocks"].ToString();
-                    pl.logins = row["totalLogin"].ToString();
-                    pl.kicks = row["totalKicked"].ToString();
-                }
+                if (playerDB.Rows.Count == 0) return null;
+                
+                OfflinePlayer pl = new OfflinePlayer();
+                DataRow row = playerDB.Rows[0];
+                pl.name = row["Name"].ToString().Trim();
+                pl.ip = row["IP"].ToString().Trim();
+                
+                pl.totalTime = row["TimeSpent"].ToString();
+                pl.firstLogin = row["FirstLogin"].ToString();
+                pl.lastLogin = row["LastLogin"].ToString();
+                if (!fullStats) return pl;
+                
+                pl.title = row["Title"].ToString().Trim();
+                pl.titleColor = Colors.Parse(row["title_color"].ToString().Trim());
+                pl.color = Colors.Parse(row["color"].ToString().Trim());
+                
+                pl.money = row["Money"].ToString();
+                pl.deaths = row["TotalDeaths"].ToString();
+                pl.blocks = row["totalBlocks"].ToString();
+                pl.logins = row["totalLogin"].ToString();
+                pl.kicks = row["totalKicked"].ToString();
+                return pl;
             }
-            return pl;
         }
         
         public static string FindOfflineName(string name) {

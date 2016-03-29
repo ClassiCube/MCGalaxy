@@ -31,7 +31,6 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length != 2) { Help(p); return; }
-
             string giver = null, giverRaw = null;
             if (p == null) { giverRaw = "(console)"; giver = "(console)"; } 
             else { giverRaw = p.color + p.name; giver = p.FullName; }
@@ -41,7 +40,10 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Amount must be an integer."); return;
             }
             if (amount < 0) { Player.SendMessage(p, "Cannot give negative %3" + Server.moneys); return; }
-            Player who = PlayerInfo.Find(args[0]);
+            
+            int matches = 1;
+            Player who = PlayerInfo.FindOrShowMatches(p, args[0], out matches);
+            if (matches > 1) return;
             if (p != null && p == who) { Player.SendMessage(p, "You cannot give yourself %3" + Server.moneys); return; }
             Economy.EcoStats ecos;
 

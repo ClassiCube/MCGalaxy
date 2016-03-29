@@ -28,22 +28,20 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdPay() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length != 2) { Help(p); return; }
-            Player who = PlayerInfo.Find(args[0]);
-            Economy.EcoStats payer;
-            Economy.EcoStats receiver;
-
             int amount;
-            if (!int.TryParse(args[1], out amount)) {
-                Player.SendMessage(p, "Amount must be an integer."); return;
-            }
+            if (!int.TryParse(args[1], out amount)) { Player.SendMessage(p, "Amount must be an integer."); return; }
             if (amount < 0) { Player.SendMessage(p, "Cannot pay negative %3" + Server.moneys); return; }
+            
+            int matches = 1;
+            Player who = PlayerInfo.FindOrShowMatches(p, args[0], out matches);
+            if (matches > 1) return;
             if (p != null && p == who) { Player.SendMessage(p, "You cannot pay yourself %3" + Server.moneys); return; }
             string target = null;
-
+            Economy.EcoStats payer, receiver;
+            
             if (who == null) {
                 OfflinePlayer off = PlayerInfo.FindOffline(args[0]);
                 if (off == null) { Player.SendMessage(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }

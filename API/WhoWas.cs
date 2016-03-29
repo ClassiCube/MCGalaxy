@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy
-{
-    public class WhoWas
-    {
+namespace MCGalaxy {
+    public class WhoWas {
         public string rank { get; set; }
         public int modified_blocks { get; set; }
         public string time { get; set; }
@@ -21,21 +17,17 @@ namespace MCGalaxy
         public string banned_time { get; set; }
         public int kicks { get; set; }
 
-        public WhoWas(string p)
-        {
-            Server.s.Log(p);
+        public WhoWas(string p) {
             rank = Group.findPlayer(p);
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", p.ToLower());
-            DataTable playerDb = Database.fillData(query, "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE");
-            if (playerDb.Rows.Count == 0)
-                return;
-            modified_blocks = int.Parse(playerDb.Rows[0]["totalBlocks"].ToString());
-            time = playerDb.Rows[0]["TimeSpent"].ToString();
-            first_login = playerDb.Rows[0]["FirstLogin"].ToString();
-            last_login = playerDb.Rows[0]["LastLogin"].ToString();
-            total_logins = int.Parse(playerDb.Rows[0]["totalLogin"].ToString());
-            kicks = int.Parse(playerDb.Rows[0]["totalKicked"].ToString());
+            OfflinePlayer pl = PlayerInfo.FindOffline(p, true);
+            if (pl == null) return;
+            
+            modified_blocks = int.Parse(pl.blocks);
+            time = pl.totalTime;
+            first_login = pl.firstLogin;
+            last_login = pl.lastLogin;
+            total_logins = int.Parse(pl.logins);
+            kicks = int.Parse(pl.kicks);
         }
     }
 }

@@ -42,7 +42,10 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Amount must be an integer."); return;
             }
             if (amount < 0) { Player.SendMessage(p, "%cYou can't take negative %3" + Server.moneys); return; }
-            Player who = PlayerInfo.Find(args[0]);
+            
+            int matches = 1;
+            Player who = PlayerInfo.FindOrShowMatches(p, args[0], out matches);
+            if (matches > 1) return;
             if (p != null && p == who) { Player.SendMessage(p, "%cYou can't take %3" + Server.moneys + "%c from yourself"); return; }
             
             Economy.EcoStats ecos;

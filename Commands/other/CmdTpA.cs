@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             if (who.name == p.currentTpa) { Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You already have a pending request with this player."); return; }
-            if (p.level != who.level && who.level.name.Contains("cMuseum")) {
+            if (p.level != who.level && who.level.IsMuseum) {
                 Player.SendMessage(p, "Player \"" + who.color + who.DisplayName + "\" is in a museum!"); return;
             }
 

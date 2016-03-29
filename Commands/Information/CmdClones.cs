@@ -55,22 +55,21 @@ namespace MCGalaxy.Commands
 
 			if (Clones.Rows.Count == 0) { Player.SendMessage(p, "Could not find any record of the player entered."); return; }
 
-			List<string> foundPeople = new List<string>();
-			for (int i = 0; i < Clones.Rows.Count; ++i)
-			{
-				if (!foundPeople.Contains(Clones.Rows[i]["Name"].ToString().ToLower()))
-					foundPeople.Add(Clones.Rows[i]["Name"].ToString().ToLower());
+			List<string> alts = new List<string>();
+			for (int i = 0; i < Clones.Rows.Count; ++i) {
+				string name = Clones.Rows[i]["Name"].ToString();
+				if (!alts.Contains(name.ToLower()))
+					alts.Add(name.ToLower());
 			}
 
 			Clones.Dispose();
-			if (foundPeople.Count <= 1) { Player.SendMessage(p, originalName + " has no clones."); return; }
+			if (alts.Count <= 1) { Player.SendMessage(p, originalName + " has no clones."); return; }
 
-			Player.SendMessage(p, "These people have the same IP address:");
-			Player.SendMessage(p, string.Join(", ", foundPeople.ToArray()));
+			Player.SendMessage(p, "These players have the same IP address:");
+			Player.SendMessage(p, string.Join(", ", alts.ToArray()));
 		}
 
-		public override void Help(Player p)
-		{
+		public override void Help(Player p) {
 			Player.SendMessage(p, "/clones <name> - Finds everyone with the same IP as <name>");
 		}
 	}
