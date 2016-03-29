@@ -29,8 +29,7 @@ namespace MCGalaxy.Commands {
         
         protected override void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.RevertBlock(x, y, z);
-            if (p.modeType != Block.air)
-                type = p.modeType;
+            if (!Block.canPlace(p, type)) { Player.SendMessage(p, "You cannot place this block."); return; }
 
             Thread gunThread = new Thread(() => DoShoot(p, type, extType));
             gunThread.Name = "MCG_Gun";
@@ -75,7 +74,7 @@ namespace MCGalaxy.Commands {
 
                 if (t > 12 && bp.ending != EndType.Laser) {
                     pos = previous[0];
-                    p.level.Blockchange(pos.x, pos.y, pos.z, Block.air);
+                    p.level.Blockchange(pos.x, pos.y, pos.z, Block.air, true);
                     previous.RemoveAt(0);
                 }
                 
@@ -90,7 +89,7 @@ namespace MCGalaxy.Commands {
             if (bp.ending == EndType.Laser) Thread.Sleep(400);
 
             foreach (Pos pos1 in previous) {
-                p.level.Blockchange(pos1.x, pos1.y, pos1.z, Block.air);
+                p.level.Blockchange(pos1.x, pos1.y, pos1.z, Block.air, true);
                 if (bp.ending != EndType.Laser) Thread.Sleep(20);
             }
         }

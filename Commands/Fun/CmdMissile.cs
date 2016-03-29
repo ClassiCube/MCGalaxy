@@ -33,10 +33,8 @@ namespace MCGalaxy.Commands {
                 p.ClearBlockchange();
                 p.aiming = false;
             }
-            p.RevertBlock(x, y, z);           
-
-            if (p.modeType != Block.air)
-                type = p.modeType;
+            p.RevertBlock(x, y, z);
+            if (!Block.canPlace(p, type)) { Player.SendMessage(p, "You cannot place this block."); return; }
 
             Thread gunThread = new Thread(() => DoShoot(p, type, extType));
             gunThread.Name = "MCG_Missile";
@@ -107,7 +105,7 @@ namespace MCGalaxy.Commands {
                     }
 
                     if (previous.Count > 12) {
-                        p.level.Blockchange(previous[0].x, previous[0].y, previous[0].z, Block.air);
+                        p.level.Blockchange(previous[0].x, previous[0].y, previous[0].z, Block.air, true);
                         previous.RemoveAt(0);
                     }
                     Thread.Sleep(100);
@@ -120,7 +118,7 @@ namespace MCGalaxy.Commands {
                     DoTeleport(p, previous[index]);
             }
             foreach (Pos pos1 in previous) {
-                p.level.Blockchange(pos1.x, pos1.y, pos1.z, Block.air);
+                p.level.Blockchange(pos1.x, pos1.y, pos1.z, Block.air, true);
                 Thread.Sleep(100);
             }
         }
