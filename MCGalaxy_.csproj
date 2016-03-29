@@ -227,6 +227,7 @@
     <Compile Include="Commands\Information\CmdPlayers.cs" />
     <Compile Include="Commands\Information\CmdRules.cs" />
     <Compile Include="Commands\Information\CmdSearch.cs" />
+    <Compile Include="Commands\Information\CmdSeen.cs" />
     <Compile Include="Commands\Information\CmdServerReport.cs" />
     <Compile Include="Commands\Information\CmdStaff.cs" />
     <Compile Include="Commands\Information\CmdTime.cs" />
@@ -289,7 +290,6 @@
     <Compile Include="Commands\Moderation\CmdRestart.cs" />
     <Compile Include="Commands\Moderation\CmdRestoreSelection.cs" />
     <Compile Include="Commands\Moderation\CmdReveal.cs" />
-    <Compile Include="Commands\Moderation\CmdSeen.cs" />
     <Compile Include="Commands\Moderation\CmdSetRank.cs" />
     <Compile Include="Commands\Moderation\CmdShutdown.cs" />
     <Compile Include="Commands\Moderation\CmdTempBan.cs" />

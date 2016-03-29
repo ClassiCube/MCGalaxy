@@ -19,39 +19,31 @@
 */
 using System;
 
-namespace MCGalaxy.Commands
-{
-	public class CmdXspawn : Command
-	{
+namespace MCGalaxy.Commands {
+	public class CmdXspawn : Command {
     	public override string name { get { return "xspawn"; } }
 		public override string shortcut { get { return ""; } }
 		public override string type { get { return CommandTypes.Other; } }
 		public override bool museumUsable { get { return false; } }
 		public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override void Use(Player p, string message)
-        {
-            Player player = PlayerInfo.Find(message.Split(' ')[0]);
-            if (player == null)
-            {
-                Player.SendMessage(p, "Error: " + player.color + player.name + Server.DefaultColor + " was not found");
-                return;
+		
+        public override void Use(Player p, string message) {
+        	Player pl = PlayerInfo.FindOrShowMatches(p, message);
+            if (pl == null) return;
+            if (pl == p) {
+                Player.SendMessage(p, "Use /spawn to respawn yourself."); return;
             }
-            if (player == p)
-            {
-                Player.SendMessage(p, "Error: Seriously? Just use /spawn!");
-                return;
+            if (p != null && pl.group.Permission >= p.group.Permission) {
+                Player.SendMessage(p, "Cannot respawn someone of greater or same rank"); return;
             }
-            if (player.group.Permission > p.group.Permission)
-            {
-                Player.SendMessage(p, "Cannot move someone of greater rank");
-                return;
-            }
-            Command.all.Find("spawn").Use(player, "");
-            Player.SendMessage(p, "Succesfully spawned " + player.color + player.DisplayName + Server.DefaultColor + ".");
-            Player.GlobalMessage(player.color + player.name + Server.DefaultColor + " was respawned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
+            
+            Command.all.Find("spawn").Use(pl, "");
+            Player.SendMessage(p, "Succesfully spawned " + pl.color + pl.DisplayName + "%S.");
+            string src = p == null ? "(console)" : p.color + p.DisplayName;
+            Player.GlobalMessage(pl.color + pl.name + " %Swas respawned by " + src + "%S.");
         }
-		public override void Help(Player p)
-		{
+		
+		public override void Help(Player p) {
 			Player.SendMessage(p, "/xspawn [player] - Spawn another player.");
             Player.SendMessage(p, "WARNING: It says who used it!");
 		}

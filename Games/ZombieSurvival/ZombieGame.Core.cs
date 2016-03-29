@@ -103,7 +103,7 @@ namespace MCGalaxy.Games {
             Player first = null;            
             do {    
                 first = QueuedZombie != null ? 
-                    PlayerInfo.Find(QueuedZombie) : players[random.Next(players.Count)];
+                    PlayerInfo.FindExact(QueuedZombie) : players[random.Next(players.Count)];
                 QueuedZombie = null;
             } while (first == null || !first.level.name.CaselessEq(CurLevelName));
             return first;

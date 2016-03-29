@@ -33,14 +33,15 @@ namespace MCGalaxy.Commands
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player pl = PlayerInfo.Find(message);
-            if (pl != null && Player.CanSee(p, pl)) {
+            int matches;
+            Player pl = PlayerInfo.FindOrShowMatches(p, message, out matches);
+            if (matches > 1) return;
+            if (matches == 1) {
                 Player.SendMessage(p, pl.color + pl.name + " %Sis online, using /whois instead.");
-                Command.all.Find("whois").Use(p, message);
-                return;
+                Command.all.Find("whois").Use(p, message); return;
             }
 
-            if (message.IndexOf("'") != -1) { Player.SendMessage(p, "Cannot parse request."); return; }
+            if (!Player.ValidName(message)) { Player.SendMessage(p, "\"" + message + "\" is not a valid player name."); return; }
             OfflinePlayer target = PlayerInfo.FindOffline(message, true);
             
             string plGroup = Group.findPlayer(message.ToLower());

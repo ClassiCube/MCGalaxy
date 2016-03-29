@@ -25,21 +25,20 @@ namespace MCGalaxy.Commands
         public override string shortcut { get { return ""; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Information; } }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
 
-            Player pl = PlayerInfo.Find(message);
-            if (pl != null && Player.CanSee(p, pl)) {
-                Player.SendMessage(p, pl.color + pl.name + " %Sis currently online.");
-                return;
+            int matches;
+            Player pl = PlayerInfo.FindOrShowMatches(p, message, out matches);
+            if (matches > 1) return;
+            if (matches == 1) {
+                Player.SendMessage(p, pl.color + pl.name + " %Sis currently online."); return;
             }
 
             OfflinePlayer target = PlayerInfo.FindOffline(message);
-            if (target == null) {
-                Player.SendMessage(p, "Unable to find player"); return;
-            }
+            if (target == null) { Player.SendMessage(p, "Unable to find player"); return; }
             Player.SendMessage(p, message + " was last seen: " + target.lastLogin);
         }
         

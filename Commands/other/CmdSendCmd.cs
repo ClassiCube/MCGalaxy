@@ -30,11 +30,8 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             string[] parts = message.Split(trimChars, 3);
-            Player target = PlayerInfo.Find(parts[0]);
-
-            if (target == null) {
-                Player.SendMessage(p, "No online player found matching: " + parts[0]); return;
-            }            
+            Player target = PlayerInfo.FindOrShowMatches(p, parts[0]);
+            if (target == null) return;        
             if (p != null && p.group.Permission < target.group.Permission) {
                 Player.SendMessage(p, "Cannot use this on someone of equal or greater rank."); return;
             }

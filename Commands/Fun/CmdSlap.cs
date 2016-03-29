@@ -14,11 +14,10 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdSlap : Command
-    {
+ */
+namespace MCGalaxy.Commands {
+    
+    public sealed class CmdSlap : Command {
         public override string name { get { return "slap"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -26,32 +25,24 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdSlap() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.Find(message);
-
-            if (who == null)
-            {
-                Level which = LevelInfo.Find(message);
-
-                if (which == null)
-                {
-                    Player.SendMessage(p, "Could not find player or map specified");
-                    return;
+            int matches;
+            Player who = PlayerInfo.FindOrShowMatches(p, message, out matches);
+            if (matches > 1) return;
+            
+            if (who == null) {
+                Level lvl = LevelInfo.Find(message);
+                if (lvl == null) {
+                    Player.SendMessage(p, "Could not find player or map specified"); return;
                 }
-                else
-                {
-                	Player[] players = PlayerInfo.Online.Items;
-                    foreach (Player pl in players) {
-                        if (pl.level == which && pl.group.Permission < p.group.Permission)
-                            Command.all.Find("slap").Use(p, pl.name);
-                    }
-                    return;
+                
+                Player[] players = PlayerInfo.Online.Items;
+                foreach (Player pl in players) {
+                    if (pl.level == lvl && pl.group.Permission < p.group.Permission)
+                        Command.all.Find("slap").Use(p, pl.name);
                 }
-            }
-            if (!Player.CanSee(p, who)) {
-                Player.SendMessage(p, "Could not find player or map specified"); return;
+                return;
             }
             if (p != null && who.group.Permission > p.group.Permission) {
                 Player.SendMessage(p, "You cannot slap someone ranked higher than you!"); return;
@@ -72,7 +63,7 @@ namespace MCGalaxy.Commands
             if (foundHeight == ushort.MaxValue) {
                 who.level.ChatLevel(who.color + who.DisplayName + " %Swas slapped sky high by " + src);
                 foundHeight = 1000;
-            }         
+            }
             who.SendPos(0xFF, who.pos[0], (ushort)(foundHeight * 32), who.pos[2], who.rot[0], who.rot[1]);
         }
         

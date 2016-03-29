@@ -33,18 +33,15 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "You must provide a name when using the command from console."); return;
             }
 
-            if (message != "") {
-                Player who = PlayerInfo.Find(message);
-                if (who == null) {
-                    ecos = Economy.RetrieveEcoStats(message);
-                    Player.SendMessage(p, "%3===Economy stats for: %f" + ecos.playerName + "%7(offline)%3===");
-                } else {
-                    ecos = Economy.RetrieveEcoStats(who.name);
-                    Player.SendMessage(p, "%3===Economy stats for: " + who.color + who.name + "%3===");
-                }
+            int matches = 1;
+            Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message, out matches);
+            if (matches > 1) return;
+            if (matches == 0) {
+                ecos = Economy.RetrieveEcoStats(message);
+                Player.SendMessage(p, "%3===Economy stats for: %f" + ecos.playerName + "%7(offline)%3===");
             } else {
-                ecos = Economy.RetrieveEcoStats(p.name);
-                Player.SendMessage(p, "%3===Economy stats for: " + p.color + p.name + "%3===");
+                ecos = Economy.RetrieveEcoStats(who.name);
+                Player.SendMessage(p, "%3===Economy stats for: " + who.color + who.name + "%3===");
             }
             
             Player.SendMessage(p, "Current balance: %f" + ecos.money + " %3" + Server.moneys);

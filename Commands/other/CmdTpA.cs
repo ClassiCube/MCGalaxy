@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You do not have any pending teleport requests!"); return;
             }
             
-            Player who = PlayerInfo.Find(p.senderName);
+            Player who = PlayerInfo.FindExact(p.senderName);
             p.Request = false;
             p.senderName = "";
             if (who == null) {
@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You do not have any pending teleport requests!"); return;
             }
             
-            Player who = PlayerInfo.Find(p.senderName);
+            Player who = PlayerInfo.FindExact(p.senderName);
             p.Request = false;
             p.senderName = "";
             if (who == null) {
