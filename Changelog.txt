@@ -1,3 +1,14 @@
+v 1.8.4.0
+- Fixed /resetpass not working at all.
+- Show a warning to outdated ClassicalSharp clients, suggesting they update.
+- More work on zombie survival and other game related code.
+- /hug now has more options (Thanks Goodlyay)
+- Added an /undoarea command to only undo players in a specific area.
+- Optimised undo files to use even less disk space.
+- /tree and /draw are now more optimised and implement a DrawOp, so can be used with brushes.
+- Fixed /report only working with a one word report.
+- /place, /click, and /mark now clamp coordinates outside the map properly.
+
 v 1.8.3.0
 - Added brushes system similar to fCraft.
 - Added support for importing .fcm files from fCraft/ProCraft.
