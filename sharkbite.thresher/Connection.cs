@@ -22,7 +22,7 @@
 
 using System.Runtime.InteropServices;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Net.Sockets;
@@ -75,7 +75,7 @@ namespace Sharkbite.Irc
 		//TCP/IP connection established with IRC server
 		private bool connected;
 		private bool handleNickFailure;
-		private ArrayList parsers;
+		private List<IParser> parsers;
 		private ServerProperties properties;
 		private Encoding encoding;
 
@@ -93,7 +93,7 @@ namespace Sharkbite.Irc
 			connected = false;
 			handleNickFailure = true;
 			connectionArgs = args;
-			parsers = new ArrayList();
+			parsers = new List<IParser>();
 			sender = new Sender( this );
 			listener = new Listener( );
 			RegisterDelegates();

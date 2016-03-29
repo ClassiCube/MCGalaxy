@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Sharkbite.Irc
 {
@@ -22,33 +22,28 @@ namespace Sharkbite.Irc
 	/// </code></example>
 	public sealed class ServerProperties
 	{
-		private Hashtable properties;
+		private Dictionary<string, string> properties;
 
 		/// <summary>
 		/// Instances should only be created by the Connection class.
 		/// </summary>
 		internal ServerProperties()
 		{
-			properties = new Hashtable();
+			properties = new Dictionary<string, string>();
 		}
 
 		/// <summary>
 		/// Read-only indexer for the various server
 		/// property strings.
 		/// </summary>
-		/// <returns>The string sent by the server or <see cref="String.Empty"/> if not present..</returns>
+		/// <returns>The string sent by the server or <see cref="String.Empty"/> if not present.</returns>
 		public string this [ string key ] 
 		{
 			get
 			{
-				if( properties[ key ] != null ) 
-				{
-					return (string) properties[key];
-				}
-				else 
-				{
-					return String.Empty;
-				}
+				string value;
+				properties.TryGetValue( key, out value );
+				return value ?? "";
 			}
 		}
 
@@ -58,11 +53,7 @@ namespace Sharkbite.Irc
 		/// </summary>
 		internal void SetProperty( string key, string propertyValue )
 		{
-            if (properties.ContainsKey(key)) {
-                properties[key] = propertyValue;
-                return;
-            }
-			properties.Add( key, propertyValue );
+			properties[key] = propertyValue;
 		}
 
 		/// <summary>
@@ -77,7 +68,7 @@ namespace Sharkbite.Irc
 		/// Console.WriteLine("Key:" + entry.Key + " Value:" + entry.Value );
 		/// }
 		/// </code></example>
-		public IDictionaryEnumerator GetEnumerator()
+		public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
 		{
 			return properties.GetEnumerator();
 		}
@@ -88,7 +79,7 @@ namespace Sharkbite.Irc
 		/// <returns>True if it is present.</returns>
 		public bool ContainsKey( string key ) 
 		{
-			return properties[ key] != null;
+			return properties.ContainsKey( key );
 		}
 
 	}
