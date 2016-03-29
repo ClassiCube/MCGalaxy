@@ -103,9 +103,12 @@ namespace MCGalaxy {
                 while ((line = r.ReadLine()) != null) {
                     try {
                         if (!line.StartsWith("#") && line.Contains(':')) {
-                            string[] LINE = line.ToLower().Split(':');
-                            OtherPerms OTPE = Find(Command.all.Find(LINE[0]), int.Parse(LINE[1]));
-                            Edit(OTPE, int.Parse(LINE[2]));
+                            string[] parts = line.ToLower().Split(':');
+                            Command cmd = Command.all.Find(parts[0]);
+                            
+                            OtherPerms perms = Find(cmd, int.Parse(parts[1]));
+                            if (perms == null && cmd != null) continue; // command has no additional perms, so skip
+                            Edit(perms, int.Parse(parts[2]));
                         }
                     } catch (Exception ex) {
                         Server.s.Log("Loading an additional command permission failed!!");
