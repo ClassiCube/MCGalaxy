@@ -89,7 +89,7 @@ namespace MCGalaxy.Games
                 ushort y1 = (ushort)((1 + y) * 32);
                 ushort z1 = (ushort)((0.5 + z) * 32);
                 rotx = spawns[rnd].rotx;
-                p.SendSpawn((byte)0xFF, p.name, x1, y1, z1, (byte)rotx, 0);
+                p.SendSpawn(0xFF, p.name, x1, y1, z1, (byte)rotx, 0);
                 //p.health = 100;
             }
             else

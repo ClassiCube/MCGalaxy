@@ -58,7 +58,7 @@ namespace MCGalaxy {
 
         public static bool storeHelp = false;
         public static string storedHelp = "";
-        private string truename;
+        internal string truename;
         internal bool dontmindme = false;
         public Socket socket;
         System.Timers.Timer timespent = new System.Timers.Timer(1000);
@@ -486,13 +486,13 @@ namespace MCGalaxy {
         internal static void SpawnEntity(Player p, Player dst, byte id, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, string possession = "") {
             if (!Server.zombie.Running || !p.Game.Infected) {
-                dst.SendSpawn(id, p.color + p.name + possession, x, y, z, rotx, roty); return;
+                dst.SendSpawn(id, p.color + p.truename + possession, x, y, z, rotx, roty); return;
             }
             
             if (Server.zombie.ZombieName != "" && !dst.Game.Aka)
                 dst.SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
             else
-                dst.SendSpawn(id, Colors.red + p.name + possession, x, y, z, rotx, roty);
+                dst.SendSpawn(id, Colors.red + p.truename + possession, x, y, z, rotx, roty);
             if (dst.HasCpeExt(CpeExt.ChangeModel) && id != 0xFF)
                 dst.SendChangeModel(id, "zombie");
         }

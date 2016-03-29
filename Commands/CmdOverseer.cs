@@ -245,13 +245,15 @@ namespace MCGalaxy.Commands
                 Command.all.Find("pervisit").Use(p, rank);
             } else if (cmd == "TEXTURE") {
                 if (value == "") {
-                    Player.SendMessage(p, "Removing current texture.");
                     Command.all.Find("texture").Use(p, "level normal");
-                } else if (!value.EndsWith(".png")) {
-                    Player.SendMessage(p, "Your texture image must end in .png");
                 } else {
                     Command.all.Find("texture").Use(p, "level " + value);
-                    Player.SendMessage(p, "Your texture has been updated!");
+                }
+            } else if (cmd == "TEXTUREZIP") {
+                if (value == "") {
+                    Command.all.Find("texture").Use(p, "levelzip normal");
+                } else {
+                    Command.all.Find("texture").Use(p, "levelzip " + value);
                 }
             } else {
                 Player.SendMessage(p, "/os map add [type - default is flat] -- Creates your map (128x64x128)");
@@ -262,7 +264,8 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "/os map motd -- Changes the motd of your map");
                 Player.SendMessage(p, "/os map guns -- Toggles if guns can be used on your map");
                 Player.SendMessage(p, "/os map pervisit %b[default is " + Server.defaultRank + "]%S -- Changes the pervisit of you map");
-                Player.SendMessage(p, "/os map texture -- Add a texture to your map");
+                Player.SendMessage(p, "/os map texture -- Sets terrain.png url for your map");
+                Player.SendMessage(p, "/os map texturezip -- Sets texture pack .zip url for your map");
                 Player.SendMessage(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
                 Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space");
                 Player.SendMessage(p, "  Motd: If no message is provided, the default message will be used.");
