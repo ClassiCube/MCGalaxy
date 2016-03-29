@@ -100,9 +100,9 @@ namespace MCGalaxy.Games {
         }
         
         Player PickFirstZombie(Random random, List<Player> players) {
-            Player first = null;            
-            do {    
-                first = QueuedZombie != null ? 
+            Player first = null;
+            do {
+                first = QueuedZombie != null ?
                     PlayerInfo.FindExact(QueuedZombie) : players[random.Next(players.Count)];
                 QueuedZombie = null;
             } while (first == null || !first.level.name.CaselessEq(CurLevelName));
@@ -148,13 +148,13 @@ namespace MCGalaxy.Games {
             while ((alive = Alive.Items).Length > 0) {
                 Player[] infected = Infected.Items;
                 // Update the round time left shown in the top right
-                int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds; 
+                int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
                 string timespan = GetTimespan(seconds);
                 if (lastTimespan != timespan) {
                     UpdateAllPlayerStatus(timespan);
                     lastTimespan = timespan;
                 }
-                    
+                
                 foreach (Player pKiller in infected) {
                     pKiller.Game.Infected = true;
                     UpdatePlayerColor(pKiller, InfectCol);
@@ -206,18 +206,18 @@ namespace MCGalaxy.Games {
             pAlive.money = Math.Max(pAlive.money - 2, 0);
             pAlive.OnMoneyChanged();
         }
-		
+        
         void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
             string text = null;
             List<string> infectMsgs = pKiller.Game.InfectMessages;
             if (infectMsgs != null && random.Next(0, 10) < 5)
-            	text = infectMsgs[random.Next(infectMsgs.Count)];
+                text = infectMsgs[random.Next(infectMsgs.Count)];
             else
                 text = messages[random.Next(messages.Length)];
             
             CurLevel.ChatLevel(String.Format(text,
-                Colors.red + pKiller.DisplayName + Colors.yellow,
-                Colors.red + pAlive.DisplayName + Colors.yellow));
+                                             Colors.red + pKiller.DisplayName + Colors.yellow,
+                                             Colors.red + pAlive.DisplayName + Colors.yellow));
         }
         
         void CheckBounty(Player pAlive, Player pKiller) {
@@ -226,7 +226,7 @@ namespace MCGalaxy.Games {
                 Bounties.Remove(pAlive.name);
             if (bounty != null) {
                 CurLevel.ChatLevel(pKiller.FullName + " %Scollected the bounty of &a" +
-                                       bounty.Amount + " %S" + Server.moneys + " on " + pAlive.FullName + "%S.");
+                                   bounty.Amount + " %S" + Server.moneys + " on " + pAlive.FullName + "%S.");
                 bounty.Origin.money = Math.Max(0, bounty.Origin.money - bounty.Amount);
                 bounty.Origin.OnMoneyChanged();
                 pKiller.money += bounty.Amount;
@@ -289,19 +289,8 @@ namespace MCGalaxy.Games {
             online = PlayerInfo.Online.Items;
             Random rand = new Random();
             foreach (Player pl in online) {
-                int money = 0;
                 if (!pl.level.name.CaselessEq(CurLevelName)) continue;
-                bool inBlock = pl.CheckIfInsideBlock();
-                
-                if (pl.CheckIfInsideBlock()) {
-                	money = -1;
-                } else if (alive.Length == 0) {
-                    money = rand.Next(1 + pl.Game.NumInfected, 5 + pl.Game.NumInfected);
-                } else if (alive.Length == 1 && !pl.Game.Infected) {
-                    money = rand.Next(5, 10);
-                } else if (alive.Length > 1 && !pl.Game.Infected) {
-                    money = rand.Next(2, 6);
-                }
+                int money = GetMoney(pl, alive, rand);
                 
                 Player.GlobalDespawn(pl, false);
                 Player.GlobalSpawn(pl, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], false);
@@ -323,7 +312,20 @@ namespace MCGalaxy.Games {
             }
             UpdateAllPlayerStatus();
             Alive.Clear();
-            Infected.Clear();         
+            Infected.Clear();
+        }
+        
+        int GetMoney(Player pl, Player[] alive, Random rand) {
+            if (pl.CheckIfInsideBlock()) return -1;
+            
+            if (alive.Length == 0) {
+                return rand.Next(1 + pl.Game.NumInfected, 5 + pl.Game.NumInfected);
+            } else if (alive.Length == 1 && !pl.Game.Infected) {
+                return rand.Next(5, 10);
+            } else if (alive.Length > 1 && !pl.Game.Infected) {
+                return rand.Next(2, 6);
+            }
+            return 0;
         }
 
         void ResetPlayer(Player p, ref string playersString) {
@@ -346,7 +348,7 @@ namespace MCGalaxy.Games {
 
                 if (levels.Count <= 2 && UseLevelList) { Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return; }
 
-                string selectedLevel1 = "", selectedLevel2 = "";
+                string picked1 = "", picked2 = "";
                 Random r = new Random();
 
             LevelChoice:
@@ -355,50 +357,53 @@ namespace MCGalaxy.Games {
 
                 if (level == lastLevel1 || level == lastLevel2 || level == CurLevelName ||
                     level2 == lastLevel1 || level2 == lastLevel2 || level2 == CurLevelName ||
-                    level == selectedLevel1) {
+                    level == picked1) {
                     goto LevelChoice;
-                } else if (selectedLevel1 == "") {
-                    selectedLevel1 = level; goto LevelChoice;
+                } else if (picked1 == "") {
+                    picked1 = level; goto LevelChoice;
                 } else {
-                    selectedLevel2 = level2;
+                    picked2 = level2;
                 }
 
                 Level1Vote = 0; Level2Vote = 0; Level3Vote = 0;
-                lastLevel1 = selectedLevel1; lastLevel2 = selectedLevel2;
+                lastLevel1 = picked1; lastLevel2 = picked2;
                 if (!Running || Status == ZombieGameStatus.LastRound) return;
 
                 if (initialChangeLevel) {
                     Server.votingforlevel = true;
-                    Player[] players = PlayerInfo.Online.Items; 
+                    Player[] players = PlayerInfo.Online.Items;
                     foreach (Player pl in players) {
                         if (pl.level != CurLevel) continue;
-                        SendVoteMessage(pl, selectedLevel1, selectedLevel2);
+                        SendVoteMessage(pl, picked1, picked2);
                     }
                     System.Threading.Thread.Sleep(15000);
                     Server.votingforlevel = false;
                 } else { Level1Vote = 1; Level2Vote = 0; Level3Vote = 0; }
 
                 if (!Running || Status == ZombieGameStatus.LastRound) return;
-
-                if (Level1Vote >= Level2Vote) {
-                    if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
-                        ChangeLevel(levels[r.Next(0, levels.Count)]);
-                    } else {
-                        ChangeLevel(selectedLevel1);
-                    }
-                } else {
-                    if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
-                        ChangeLevel(levels[r.Next(0, levels.Count)]);
-                    } else {
-                        ChangeLevel(selectedLevel2);
-                    }
-                }
-                Player[] online = PlayerInfo.Online.Items;
-                foreach (Player pl in online)
-                    pl.voted = false;
+                MoveToNextLevel(r, levels, picked1, picked2);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
+        }
+        
+        void MoveToNextLevel(Random r, List<string> levels, string picked1, string picked2) {
+            if (Level1Vote >= Level2Vote) {
+                if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
+                    ChangeLevel(levels[r.Next(0, levels.Count)]);
+                } else {
+                    ChangeLevel(picked1);
+                }
+            } else {
+                if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
+                    ChangeLevel(levels[r.Next(0, levels.Count)]);
+                } else {
+                    ChangeLevel(picked2);
+                }
+            }
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player pl in online)
+                pl.voted = false;
         }
         
         List<string> GetCandidateLevels() {

@@ -38,10 +38,10 @@ namespace MCGalaxy.Commands
             }
 
             Player.SendMessage(p, who.color + who.name + " %S(" + who.DisplayName + ") %Sis on &b" + who.level.name);
-            Player.SendMessage(p, who.FullName + Server.DefaultColor + " %Shas :");
+            Player.SendMessage(p, who.FullName + " %Shas :");
             Player.SendMessage(p, "> > the rank of " + who.group.color + who.group.name);
             if (Economy.Enabled)
-                Player.SendMessage(p, "> > &a" + who.money + Server.DefaultColor + " " + Server.moneys);
+                Player.SendMessage(p, "> > &a" + who.money + " %S" + Server.moneys);
 
             Player.SendMessage(p, "> > &cdied &a" + who.overallDeath + Server.DefaultColor + " times");
             Player.SendMessage(p, "> > &bmodified &a" + who.overallBlocks + " &eblocks &eand &a" + who.loginBlocks + " &ewere changed &9since logging in&e.");
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "> > time spent on server: " + time.Days + " Days, " + time.Hours + " Hours, " + time.Minutes + " Minutes, " + time.Seconds + " Seconds.");
             Player.SendMessage(p, "> > been logged in for &a" + storedTime);
             Player.SendMessage(p, "> > first logged into the server on &a" + who.firstLogin.ToString("yyyy-MM-dd") + " at " + who.firstLogin.ToString("HH:mm:ss"));
-            Player.SendMessage(p, "> > logged in &a" + who.totalLogins + Server.DefaultColor + " times, &c" + who.totalKicked + Server.DefaultColor + " of which ended in a kick.");
+            Player.SendMessage(p, "> > logged in &a" + who.totalLogins + " %Stimes, &c" + who.totalKicked + " %Sof which ended in a kick.");
             Player.SendMessage(p, "> > " + Awards.awardAmount(who.name) + " awards");
             if (Ban.IsBanned(who.name)) {
                 string[] data = Ban.GetBanData(who.name);

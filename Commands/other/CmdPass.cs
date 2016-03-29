@@ -69,13 +69,13 @@ namespace MCGalaxy.Commands
 
             if (number > 1)
             {
-                Player.SendMessage(p, "Your password must be &cone " + Server.DefaultColor + "word!");
+                Player.SendMessage(p, "Your password must be &cone %Sword!");
                 return;
             }
 
             if (!Directory.Exists("extra/passwords"))
             {
-                Player.SendMessage(p, "You have not &cset a password, " + Server.DefaultColor + "use &a/setpass [Password] &cto set one!");
+                Player.SendMessage(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!");
                 return;
             }
 
@@ -83,23 +83,20 @@ namespace MCGalaxy.Commands
             FileInfo[] fi = di.GetFiles("*.dat");
             if (!File.Exists("extra/passwords/" + p.name + ".dat"))
             {
-                Player.SendMessage(p, "You have not &cset a password, " + Server.DefaultColor + "use &a/setpass [Password] &cto set one!");
+                Player.SendMessage(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!");
                 return;
             }
 
             if (PasswordHasher.MatchesPass(p.name, message))
             {
-                Player.SendMessage(p, "Thank you, " + p.color + p.name + Server.DefaultColor + "! You have now &averified " + Server.DefaultColor + "and have &aaccess to admin commands and features!");
-                if (p.adminpen)
-                {
-                    p.adminpen = false;
-                }
+                Player.SendMessage(p, "Thank you, " + p.color + p.name + "%S! You have now &averified %Sand have &aaccess to admin commands and features!");
+                p.adminpen = false;
                 return;
             }
 
             p.passtries++;
-            Player.SendMessage(p, "&cWrong Password. " + Server.DefaultColor + "Remember your password is &ccase sensitive!");
-            Player.SendMessage(p, "Forgot your password? " + Server.DefaultColor + "Contact the owner so they can reset it!");
+            Player.SendMessage(p, "&cWrong Password. %SRemember your password is &ccase sensitive!");
+            Player.SendMessage(p, "Forgot your password? %SContact the owner so they can reset it!");
         }
 
         public override void Help(Player p)

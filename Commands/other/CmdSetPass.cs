@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
                 Directory.CreateDirectory("extra/passwords");
             if (p.group.Permission < Server.verifyadminsrank)
             {
-                Player.SendMessage(p, "You do not have the &crequired rank " + Server.DefaultColor + "to use this command!");
+                Player.SendMessage(p, "You do not have the &crequired rank %Sto use this command!");
                 return;
             }
             if (!Server.verifyadmins)
@@ -48,7 +48,8 @@ namespace MCGalaxy.Commands
             {
                 if (File.Exists("extra/passwords/" + p.name + ".dat"))
                 {
-                    Player.SendMessage(p, "&cYou already have a password set. " + Server.DefaultColor + "You &ccannot change " + Server.DefaultColor + "it unless &cyou verify it with &a/pass [Password]. " + Server.DefaultColor + "If you have &cforgotten " + Server.DefaultColor + "your password, contact &c" + Server.server_owner + Server.DefaultColor + " and they can &creset it!");
+                    Player.SendMessage(p, "&cYou already have a password set. %SYou &ccannot change %Sit unless &cyou verify it with &a/pass [Password]. " +
+                	                   "%SIf you have &cforgotten %Syour password, contact &c" + Server.server_owner + " %Sand they can &creset it!");
                     return;
                 }
             }
