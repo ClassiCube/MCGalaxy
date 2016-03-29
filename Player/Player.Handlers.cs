@@ -466,6 +466,7 @@ namespace MCGalaxy {
             
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
+            timeLogged = DateTime.Now;
             PlayerDB.Load(this);
             Game.Team = Team.FindTeam(this);
             SetPrefix();

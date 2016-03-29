@@ -19,23 +19,15 @@ namespace MCGalaxy.Commands {
 
        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)  {
             RevertAndClearState(p, x, y, z);
-            p.centerstart[0] = x;
-            p.centerstart[1] = y;
-            p.centerstart[2] = z;
-
+            p.blockchangeObject = new Vec3U16(x, y, z);
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
         }
         
         void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
-            p.centerend[0] = x;
-            p.centerend[1] = y;
-            p.centerend[2] = z;
-
-            int xCen = (int)((p.centerstart[0] + p.centerend[0]) / 2);
-            int yCen = (int)((p.centerstart[1] + p.centerend[1]) / 2);
-            int zCen = (int)((p.centerstart[2] + p.centerend[2]) / 2);
-            p.level.UpdateBlock(p, (ushort)xCen, (ushort)yCen, (ushort)zCen, (byte)Block.goldsolid, 0);
+            Vec3U16 start = (Vec3U16)p.blockchangeObject;
+            int xCen = (start.X + x) / 2, yCen = (start.Y + y) / 2, zCen = (start.Z + z) / 2;
+            p.level.UpdateBlock(p, (ushort)xCen, (ushort)yCen, (ushort)zCen, Block.goldsolid, 0);
             Player.SendMessage(p, "A gold block was placed at (" + xCen + ", " + yCen + ", " + zCen + ").");
         }
         

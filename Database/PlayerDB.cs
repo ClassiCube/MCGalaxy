@@ -10,9 +10,7 @@ namespace MCGalaxy {
         
         static char[] trimChars = {'='};
         public static bool Load( Player p ) {
-            if (!File.Exists("players/" + p.name + "DB.txt")) {
-                Save(p); return false;
-            }
+            if (!File.Exists("players/" + p.name + "DB.txt")) return false;
             
             foreach (string line in File.ReadAllLines( "players/" + p.name + "DB.txt")) {
                 if (string.IsNullOrEmpty(line) || line[0] == '#') continue;
@@ -22,7 +20,6 @@ namespace MCGalaxy {
 
                 if (key.CaselessEq("nick"))
                     p.DisplayName = value;
-                p.timeLogged = DateTime.Now;
             }
             p.SetPrefix();
             return true;

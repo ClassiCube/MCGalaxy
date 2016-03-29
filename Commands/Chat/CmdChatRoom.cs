@@ -266,9 +266,9 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            if (p.lastchatroomglobal.AddSeconds(30) < DateTime.Now) {
+            if (p.lastchatroomglobal.AddSeconds(30) < DateTime.UtcNow) {
                 Chat.GlobalChatRoom(p, message, true);
-                p.lastchatroomglobal = DateTime.Now;
+                p.lastchatroomglobal = DateTime.UtcNow;
             } else {
                 Player.SendMessage(p, "Sorry, you must wait 30 seconds in between each global chatroom message!!");
             }

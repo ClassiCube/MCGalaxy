@@ -199,10 +199,6 @@ namespace MCGalaxy {
         public int[] copyoffset = new int[3] { 0, 0, 0 };
         public ushort[] copystart = new ushort[3] { 0, 0, 0 };
         
-        //Center
-        public int[] centerstart = new int[3] { 0, 0, 0 };
-        public int[] centerend = new int[3] { 0, 0, 0 };
-        
         // GlobalBlock
         internal int gbStep = 0, gbTargetId = 0;
         internal BlockDefinition gbBlock;
@@ -287,10 +283,8 @@ namespace MCGalaxy {
 
         //Global Chat
         public bool ignoreGlobalChat;
-
         public bool loggedIn;
-        public bool InGlobalChat { get; set; }
-        public Dictionary<string, string> sounds = new Dictionary<string, string>();
+        public bool InGlobalChat;
 
         public bool isDev, isMod;
         public bool isStaff;
@@ -436,7 +430,7 @@ namespace MCGalaxy {
             if (showname) {
                 string referee = "";
                 if (from.Game.Referee)
-                    referee = Colors.green + "[Referee] ";
+                    referee = Colors.green + "[Ref] ";
                 message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             }
             
