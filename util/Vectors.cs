@@ -76,6 +76,7 @@ namespace MCGalaxy {
             return new Vec3U16(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Min(a.Z, b.Z));
         }
         
+        /// <summary> Clamps the given block coordinates to inside the map. </summary>
         public static Vec3U16 ClampToBounds(ushort x, ushort y, ushort z, Level lvl) {
             Vec3U16 P = new Vec3U16(x, y, z);
             if (P.X >= 32768) P.X = 0;
@@ -85,6 +86,19 @@ namespace MCGalaxy {
             if (P.X >= lvl.Width) P.X = (ushort)(lvl.Width - 1);
             if (P.Y >= lvl.Height) P.Y = (ushort)(lvl.Height - 1);
             if (P.Z >= lvl.Length) P.Z = (ushort)(lvl.Length - 1);
+            return P;
+        }
+        
+        /// <summary> Clamps the given player position coordinates to inside the map. </summary>
+        public static Vec3U16 ClampPosToBounds(ushort x, ushort y, ushort z, Level lvl) {
+            Vec3U16 P = new Vec3U16(x, y, z);
+            if (P.X >= 32768) P.X = 0;
+            if (P.Y >= 32768) P.Y = 0;
+            if (P.Z >= 32768) P.Z = 0;
+            
+            if (P.X >= lvl.Width * 32) P.X = (ushort)(32 * lvl.Width - 32);
+            if (P.Y >= lvl.Height * 32) P.Y = (ushort)(32 * lvl.Height - 32);
+            if (P.Z >= lvl.Length * 32) P.Z = (ushort)(32 * lvl.Length - 32);
             return P;
         }
         

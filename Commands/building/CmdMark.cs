@@ -29,10 +29,8 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             
-            int x = (ushort)(p.pos[0] / 32);
-            int y = (ushort)((p.pos[1] / 32) - 1);
-            int z = (ushort)(p.pos[2] / 32);
-            Command.all.Find("click").Use(p, x + " " + y + " " + z);
+            Vec3U16 P = Vec3U16.ClampPosToBounds(p.pos[0], (ushort)(p.pos[1] - 32), p.pos[2], p.level);
+            Command.all.Find("click").Use(p, (P.X / 32) + " " + (P.Y / 32) + " " + (P.Z / 32));
         }
         
         public override void Help(Player p) {
