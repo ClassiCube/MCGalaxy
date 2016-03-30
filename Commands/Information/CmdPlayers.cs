@@ -72,7 +72,6 @@ namespace MCGalaxy.Commands
 
             Section devSec = MakeSection("#%9MCGalaxy Devs:" + Server.DefaultColor);
             Section modsSec = MakeSection("#%2MCGalaxy Mods:" + Server.DefaultColor);
-            Section gcModsSec = MakeSection("#%6MCGalaxy GCMods:" + Server.DefaultColor);
             int totalPlayers = 0;
             
             Player[] online = PlayerInfo.Online.Items;
@@ -93,15 +92,9 @@ namespace MCGalaxy.Commands
             }
 
             output("There are %a" + totalPlayers + Server.DefaultColor + " players online.");
-            bool hasStaff = !devSec.Empty || !modsSec.Empty || !gcModsSec.Empty;
-            if (hasStaff)
-                output("%cMCGalaxy Staff Online:");
             devSec.Print(output, false);
             modsSec.Print(output, false);
-            gcModsSec.Print(output, false);
             
-            if (hasStaff)
-                output( "%aNormal Players Online:");
             for (int i = playerList.Count - 1; i >= 0; i--)
                 playerList[i].Print(output, Server.showEmptyRanks);
         }

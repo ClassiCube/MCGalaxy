@@ -125,7 +125,7 @@ namespace MCGalaxy.Eco {
             Player.SendMessage(p, "%cRanks purchased will be bought in order.");
             
             foreach (Rank rnk in RanksList) {
-                Player.SendMessage(p, rnk.group.color + rnk.group.name + " costs&f" + rnk.price + " &3" + Server.moneys);
+                Player.SendMessage(p, rnk.group.color + rnk.group.name + " costs &f" + rnk.price + " &3" + Server.moneys);
                 if (rnk.group.name.CaselessEq(maxrank.name)) break;
             }
         }
