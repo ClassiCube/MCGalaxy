@@ -131,10 +131,10 @@ namespace MCGalaxy.Commands
 								Server.lava.AddMap(foundLevel.name);
 
 								LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(foundLevel.name);
-								settings.blockFlood = new LavaSurvival.Pos((ushort)(foundLevel.Width / 2), (ushort)(foundLevel.Height - 1), (ushort)(foundLevel.Length / 2));
-								settings.blockLayer = new LavaSurvival.Pos(0, (ushort)(foundLevel.Height / 2), 0);
+								settings.blockFlood = new Vec3U16((ushort)(foundLevel.Width / 2), (ushort)(foundLevel.Height - 1), (ushort)(foundLevel.Length / 2));
+								settings.blockLayer = new Vec3U16(0, (ushort)(foundLevel.Height / 2), 0);
 								ushort x = (ushort)(foundLevel.Width / 2), y = (ushort)(foundLevel.Height / 2), z = (ushort)(foundLevel.Length / 2);
-								settings.safeZone = new LavaSurvival.Pos[] { new LavaSurvival.Pos((ushort)(x - 3), y, (ushort)(z - 3)), new LavaSurvival.Pos((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
+								settings.safeZone = new Vec3U16[] { new Vec3U16((ushort)(x - 3), y, (ushort)(z - 3)), new Vec3U16((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
 								Server.lava.SaveMapSettings(settings);
 
 								foundLevel.motd = "Lava Survival: " + foundLevel.name.Capitalize();
@@ -380,8 +380,8 @@ namespace MCGalaxy.Commands
 			}
 
 			LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
-			if (cpos.mode == 0) settings.blockFlood = new LavaSurvival.Pos(x, y, z);
-			if (cpos.mode == 1) settings.blockLayer = new LavaSurvival.Pos(x, y, z);
+			if (cpos.mode == 0) settings.blockFlood = new Vec3U16(x, y, z);
+			if (cpos.mode == 1) settings.blockLayer = new Vec3U16(x, y, z);
 			Server.lava.SaveMapSettings(settings);
 
 			Player.SendMessage(p, String.Format("Position set! &b({0}, {1}, {2})", x, y, z));
@@ -402,7 +402,7 @@ namespace MCGalaxy.Commands
 				ushort ez = Math.Max(cpos.z, z);
 
 				LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
-				settings.safeZone = new LavaSurvival.Pos[] { new LavaSurvival.Pos(sx, sy, sz), new LavaSurvival.Pos(ex, ey, ez) };
+				settings.safeZone = new Vec3U16[] { new Vec3U16(sx, sy, sz), new Vec3U16(ex, ey, ez) };
 				Server.lava.SaveMapSettings(settings);
 
 				Player.SendMessage(p, String.Format("Safe zone set! &b({0}, {1}, {2}) ({3}, {4}, {5})", sx, sy, sz, ex, ey, ez));

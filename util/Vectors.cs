@@ -121,6 +121,10 @@ namespace MCGalaxy {
         public override string ToString() {
             return X + "," + Y + "," + Z;
         }
+        
+        public string ToString(string separator) {
+            return String.Format("{1}{0}{2}{0}{3}", separator, X, Y, Z);
+        }
     }
     
     public struct Vec3S16 {
@@ -163,6 +167,10 @@ namespace MCGalaxy {
         
         public override string ToString() {
             return X + "," + Y + "," + Z;
+        }
+        
+        public string ToString(string separator) {
+            return String.Format("{1}{0}{2}{0}{3}", separator, X, Y, Z);
         }
     }
 }

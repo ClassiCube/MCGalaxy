@@ -66,8 +66,8 @@ namespace MCGalaxy.Commands
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             if (cpos.type != Block.Zero) 
                 type = cpos.type;
-            List<Pos> buffer = new List<Pos>();
-            Pos pos;
+            List<Vec3U16> buffer = new List<Vec3U16>();
+            Vec3U16 pos;
 
             bool AddMe = false;
 
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands
                         else if (p.level.GetTile(xx, yy, (ushort)(zz - 1)) == cpos.type) AddMe = true;
                         else if (p.level.GetTile(xx, yy, (ushort)(zz + 1)) == cpos.type) AddMe = true;
 
-                        if (AddMe && p.level.GetTile(xx, yy, zz) != cpos.type) { pos.x = xx; pos.y = yy; pos.z = zz; buffer.Add(pos); }
+                        if (AddMe && p.level.GetTile(xx, yy, zz) != cpos.type) { pos.X = xx; pos.Y = yy; pos.Z = zz; buffer.Add(pos); }
                     }
 
             if (buffer.Count > p.group.maxBlocks)
@@ -94,16 +94,12 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            buffer.ForEach(P => p.level.UpdateBlock(p, P.x, P.y, P.z, cpos.newType, 0));
+            buffer.ForEach(P => p.level.UpdateBlock(p, P.X, P.Y, P.Z, cpos.newType, 0));
             Player.SendMessage(p, "You outlined " + buffer.Count + " blocks.");
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
 
-        struct Pos
-        {
-            public ushort x, y, z;
-        }
         struct CatchPos
         {
             public byte type;

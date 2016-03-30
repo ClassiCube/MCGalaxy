@@ -65,8 +65,8 @@ namespace MCGalaxy.Commands
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
-            List<Pos> buffer = new List<Pos>();
-            Pos pos;
+            List<Vec3U16> buffer = new List<Vec3U16>();
+            Vec3U16 pos;
 
             bool AddMe = false;
 
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands
                         }
                         else AddMe = false;
 
-                        if (AddMe) { pos.x = xx; pos.y = yy; pos.z = zz; buffer.Add(pos); }
+                        if (AddMe) { pos.X = xx; pos.Y = yy; pos.Z = zz; buffer.Add(pos); }
                     }
 
             if (buffer.Count > p.group.maxBlocks)
@@ -97,17 +97,13 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            buffer.ForEach(P => p.level.UpdateBlock(p, P.x, P.y, P.z, Block.air, 0));
+            buffer.ForEach(P => p.level.UpdateBlock(p, P.X, P.Y, P.Z, Block.air, 0));
 
             Player.SendMessage(p, "You hollowed " + buffer.Count + " blocks.");
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
 
-        struct Pos
-        {
-            public ushort x, y, z;
-        }
         struct CatchPos
         {
             public ushort x, y, z; public byte countOther;

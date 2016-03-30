@@ -158,16 +158,16 @@ namespace MCGalaxy.Games
                                 break;
                             case "block-flood":
                                 sp = value.Split(',');
-                                settings.blockFlood = new Pos(ushort.Parse(sp[0]), ushort.Parse(sp[1]), ushort.Parse(sp[2]));
+                                settings.blockFlood = new Vec3U16(ushort.Parse(sp[0]), ushort.Parse(sp[1]), ushort.Parse(sp[2]));
                                 break;
                             case "block-layer":
                                 sp = value.Split(',');
-                                settings.blockLayer = new Pos(ushort.Parse(sp[0]), ushort.Parse(sp[1]), ushort.Parse(sp[2]));
+                                settings.blockLayer = new Vec3U16(ushort.Parse(sp[0]), ushort.Parse(sp[1]), ushort.Parse(sp[2]));
                                 break;
                             case "safe-zone":
                                 sp = value.Split('-');
                                 string[] p1 = sp[0].Split(','), p2 = sp[1].Split(',');
-                                settings.safeZone = new Pos[] { new Pos(ushort.Parse(p1[0]), ushort.Parse(p1[1]), ushort.Parse(p1[2])), new Pos(ushort.Parse(p2[0]), ushort.Parse(p2[1]), ushort.Parse(p2[2])) };
+                                settings.safeZone = new Vec3U16[] { new Vec3U16(ushort.Parse(p1[0]), ushort.Parse(p1[1]), ushort.Parse(p1[2])), new Vec3U16(ushort.Parse(p2[0]), ushort.Parse(p2[1]), ushort.Parse(p2[2])) };
                                 break;
                         }
                     }
@@ -207,8 +207,8 @@ namespace MCGalaxy.Games
             public byte fast, killer, destroy, water, layer;
             public int layerHeight, layerCount;
             public double layerInterval, roundTime, floodTime;
-            public Pos blockFlood, blockLayer;
-            public Pos[] safeZone;
+            public Vec3U16 blockFlood, blockLayer;
+            public Vec3U16[] safeZone;
 
             public MapSettings(string name)
             {
@@ -223,9 +223,9 @@ namespace MCGalaxy.Games
                 layerInterval = 2;
                 roundTime = 15;
                 floodTime = 5;
-                blockFlood = new Pos();
-                blockLayer = new Pos();
-                safeZone = new Pos[] { new Pos(), new Pos() };
+                blockFlood = new Vec3U16();
+                blockLayer = new Vec3U16();
+                safeZone = new Vec3U16[2];
             }
         }
 

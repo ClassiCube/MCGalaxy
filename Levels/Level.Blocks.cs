@@ -452,6 +452,10 @@ namespace MCGalaxy {
             return pos + x + z * Width + y * Width * Length;
         }
         
+        public bool IsValidPos(Vec3U16 pos) {
+            return pos.X < Width && pos.Y < Height && pos.Z < Length;
+        }
+        
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (bufferblocks) BlockQueue.Addblock(p, x, y, z, type, extType);
             else Blockchange(p, x, y, z, type, extType);

@@ -45,17 +45,17 @@ namespace MCGalaxy.Commands
 
             Thread flyThread = new Thread(new ThreadStart(delegate
             {
-                Pos pos;
+                Vec3U16 pos;
                 ushort[] oldpos = new ushort[3];
-                List<Pos> buffer = new List<Pos>();
+                List<Vec3U16> buffer = new List<Vec3U16>();
                 while (p.isFlying)
                 {
                     Thread.Sleep(20);
                     if (p.pos == oldpos) continue;
                     try
                     {
-                        List<Pos> tempBuffer = new List<Pos>();
-                        List<Pos> toRemove = new List<Pos>();
+                        List<Vec3U16> tempBuffer = new List<Vec3U16>();
+                        List<Vec3U16> toRemove = new List<Vec3U16>();
                         ushort x = (ushort)((p.pos[0]) / 32);
                         ushort y = (ushort)((p.pos[1] - 60) / 32);
                         ushort z = (ushort)((p.pos[2]) / 32);
@@ -70,29 +70,29 @@ namespace MCGalaxy.Commands
                                     {
                                         if (p.level.GetTile(xx, yy, zz) == Block.air)
                                         {
-                                            pos.x = xx; pos.y = yy; pos.z = zz;
+                                            pos.X = xx; pos.Y = yy; pos.Z = zz;
                                             tempBuffer.Add(pos);
                                         }
                                     }
                                 }
                             }
-                            foreach (Pos cP in tempBuffer)
+                            foreach (Vec3U16 cP in tempBuffer)
                             {
                                 if (!buffer.Contains(cP))
                                 {
                                     buffer.Add(cP);
-                                    p.SendBlockchange(cP.x, cP.y, cP.z, Block.glass);
+                                    p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.glass);
                                 }
                             }
-                            foreach (Pos cP in buffer)
+                            foreach (Vec3U16 cP in buffer)
                             {
                                 if (!tempBuffer.Contains(cP))
                                 {
-                                    p.SendBlockchange(cP.x, cP.y, cP.z, Block.air);
+                                    p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air);
                                     toRemove.Add(cP);
                                 }
                             }
-                            foreach (Pos cP in toRemove)
+                            foreach (Vec3U16 cP in toRemove)
                             {
                                 buffer.Remove(cP);
                             }
@@ -105,9 +105,9 @@ namespace MCGalaxy.Commands
                     p.pos.CopyTo(oldpos, 0);
                 }
 
-                foreach (Pos cP in buffer)
+                foreach (Vec3U16 cP in buffer)
                 {
-                    p.SendBlockchange(cP.x, cP.y, cP.z, Block.air);
+                    p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air);
                 }
 
                 Player.SendMessage(p, "Stopped flying");
@@ -120,7 +120,5 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/fly - The old method of flight before custom clients.");
             Player.SendMessage(p, "May not work at all depending on your connection.");
         }
-
-        struct Pos { public ushort x, y, z; }
     }
 }

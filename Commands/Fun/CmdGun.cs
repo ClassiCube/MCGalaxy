@@ -45,28 +45,28 @@ namespace MCGalaxy.Commands {
             double bigDiag = Math.Sqrt(Math.Sqrt(p.level.Width * p.level.Width + p.level.Length * p.level.Length) 
                                        + p.level.Height * p.level.Height + p.level.Width * p.level.Width);
 
-            List<Pos> previous = new List<Pos>();
-            List<Pos> allBlocks = new List<Pos>();
-            Pos pos;
+            List<Vec3U16> previous = new List<Vec3U16>();
+            List<Vec3U16> allBlocks = new List<Vec3U16>();
+            Vec3U16 pos;
             
             ushort startX = (ushort)(p.pos[0] / 32);
             ushort startY = (ushort)(p.pos[1] / 32);
             ushort startZ = (ushort)(p.pos[2] / 32);
 
-            pos.x = (ushort)Math.Round(startX + (double)(a * 3));
-            pos.y = (ushort)Math.Round(startY + (double)(c * 3));
-            pos.z = (ushort)Math.Round(startZ + (double)(b * 3));
+            pos.X = (ushort)Math.Round(startX + (double)(a * 3));
+            pos.Y = (ushort)Math.Round(startY + (double)(c * 3));
+            pos.Z = (ushort)Math.Round(startZ + (double)(b * 3));
 
             for (double t = 4; bigDiag > t; t++) {
-                pos.x = (ushort)Math.Round(startX + (double)(a * t));
-                pos.y = (ushort)Math.Round(startY + (double)(c * t));
-                pos.z = (ushort)Math.Round(startZ + (double)(b * t));
+                pos.X = (ushort)Math.Round(startX + (double)(a * t));
+                pos.Y = (ushort)Math.Round(startY + (double)(c * t));
+                pos.Z = (ushort)Math.Round(startZ + (double)(b * t));
 
-                byte by = p.level.GetTile(pos.x, pos.y, pos.z);
+                byte by = p.level.GetTile(pos.X, pos.Y, pos.Z);
                 if (by != Block.air && !allBlocks.Contains(pos) && HandlesHitBlock(p, by, bp, pos, true))
                     break;
 
-                p.level.Blockchange(pos.x, pos.y, pos.z, type, extType);
+                p.level.Blockchange(pos.X, pos.Y, pos.Z, type, extType);
                 previous.Add(pos);
                 allBlocks.Add(pos);
 
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
 
                 if (t > 12 && bp.ending != EndType.Laser) {
                     pos = previous[0];
-                    p.level.Blockchange(pos.x, pos.y, pos.z, Block.air, true);
+                    p.level.Blockchange(pos.X, pos.Y, pos.Z, Block.air, true);
                     previous.RemoveAt(0);
                 }
                 
@@ -88,13 +88,13 @@ namespace MCGalaxy.Commands {
             }
             if (bp.ending == EndType.Laser) Thread.Sleep(400);
 
-            foreach (Pos pos1 in previous) {
-                p.level.Blockchange(pos1.x, pos1.y, pos1.z, Block.air, true);
+            foreach (Vec3U16 pos1 in previous) {
+                p.level.Blockchange(pos1.X, pos1.Y, pos1.Z, Block.air, true);
                 if (bp.ending != EndType.Laser) Thread.Sleep(20);
             }
         }
         
-        bool HandlesPlayers(Player p, CatchPos bp, Pos pos) {
+        bool HandlesPlayers(Player p, CatchPos bp, Vec3U16 pos) {
             Player pl = GetPlayer(p, pos, true);
             if (pl == null) return false;
             

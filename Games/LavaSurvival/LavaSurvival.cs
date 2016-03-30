@@ -211,9 +211,9 @@ namespace MCGalaxy.Games
                 }
                 else
                 {
-                    map.Blockchange((ushort)mapSettings.blockFlood.x, (ushort)mapSettings.blockFlood.y, (ushort)mapSettings.blockFlood.z, mapData.block, true);
+                    map.Blockchange((ushort)mapSettings.blockFlood.X, (ushort)mapSettings.blockFlood.Y, (ushort)mapSettings.blockFlood.Z, mapData.block, true);
                     if (OnLavaFlood != null)
-                        OnLavaFlood((ushort)mapSettings.blockFlood.x, (ushort)mapSettings.blockFlood.y, (ushort)mapSettings.blockFlood.z);
+                        OnLavaFlood((ushort)mapSettings.blockFlood.X, (ushort)mapSettings.blockFlood.Y, (ushort)mapSettings.blockFlood.Z);
                 }
             }
             catch (Exception e) { Server.ErrorLog(e); }
@@ -223,9 +223,9 @@ namespace MCGalaxy.Games
         {
             map.ChatLevel("&4Layer " + mapData.currentLayer + " flooding...");
             Server.s.Log("[Lava Survival] Layer " + mapData.currentLayer + " flooding.");
-            map.Blockchange((ushort)mapSettings.blockLayer.x, (ushort)(mapSettings.blockLayer.y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), (ushort)mapSettings.blockLayer.z, mapData.block, true);
+            map.Blockchange((ushort)mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), (ushort)mapSettings.blockLayer.Z, mapData.block, true);
             if (OnLayerFlood != null)
-                OnLayerFlood((ushort)mapSettings.blockLayer.x, (ushort)(mapSettings.blockLayer.y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), (ushort)mapSettings.blockLayer.z);
+                OnLayerFlood((ushort)mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), (ushort)mapSettings.blockLayer.Z);
             mapData.currentLayer++;
         }
 
@@ -463,16 +463,16 @@ namespace MCGalaxy.Games
             return maps.Contains(name.ToLower());
         }
 
-        public bool InSafeZone(Pos pos)
+        public bool InSafeZone(Vec3U16 pos)
         {
-            return InSafeZone(pos.x, pos.y, pos.z);
+            return InSafeZone(pos.X, pos.Y, pos.Z);
         }
 
         public bool InSafeZone(ushort x, ushort y, ushort z)
         {
             if (mapSettings == null) return false;
-            return x >= mapSettings.safeZone[0].x && x <= mapSettings.safeZone[1].x && y >= mapSettings.safeZone[0].y 
-                && y <= mapSettings.safeZone[1].y && z >= mapSettings.safeZone[0].z && z <= mapSettings.safeZone[1].z;
+            return x >= mapSettings.safeZone[0].X && x <= mapSettings.safeZone[1].X && y >= mapSettings.safeZone[0].Y 
+                && y <= mapSettings.safeZone[1].Y && z >= mapSettings.safeZone[0].Z && z <= mapSettings.safeZone[1].Z;
         }
 
         // Accessors
@@ -497,29 +497,6 @@ namespace MCGalaxy.Games
             get
             {
                 return new List<string>(maps);
-            }
-        }
-
-        public struct Pos
-        {
-            public ushort x, y, z;
-
-
-            public Pos(ushort x, ushort y, ushort z)
-            {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-            }
-
-            public override string ToString()
-            {
-                return this.ToString(",");
-            }
-
-            public string ToString(string separator)
-            {
-                return String.Format("{1}{0}{2}{0}{3}", separator, this.x, this.y, this.z);
             }
         }
     }

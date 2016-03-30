@@ -1488,10 +1488,10 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 Server.lava.AddMap(name);
 
                 LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(level.name);
-                settings.blockFlood = new LavaSurvival.Pos((ushort)( level.Width / 2 ), (ushort)( level.Height - 1 ), (ushort)( level.Length / 2 ));
-                settings.blockLayer = new LavaSurvival.Pos(0, (ushort)( level.Height / 2 ), 0);
+                settings.blockFlood = new Vec3U16((ushort)( level.Width / 2 ), (ushort)( level.Height - 1 ), (ushort)( level.Length / 2 ));
+                settings.blockLayer = new Vec3U16(0, (ushort)( level.Height / 2 ), 0);
                 ushort x = (ushort)( level.Width / 2 ), y = (ushort)( level.Height / 2 ), z = (ushort)( level.Length / 2 );
-                settings.safeZone = new LavaSurvival.Pos[] { new LavaSurvival.Pos((ushort)( x - 3 ), y, (ushort)( z - 3 )), new LavaSurvival.Pos((ushort)( x + 3 ), (ushort)( y + 4 ), (ushort)( z + 3 )) };
+                settings.safeZone = new Vec3U16[] { new Vec3U16((ushort)( x - 3 ), y, (ushort)( z - 3 )), new Vec3U16((ushort)( x + 3 ), (ushort)( y + 4 ), (ushort)( z + 3 )) };
                 Server.lava.SaveMapSettings(settings);
 
                 level.motd = "Lava Survival: " + level.name.Capitalize();

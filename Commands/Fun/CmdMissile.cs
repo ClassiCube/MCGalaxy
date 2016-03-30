@@ -43,26 +43,26 @@ namespace MCGalaxy.Commands {
 
         void DoShoot(Player p, byte type, byte extType) {
             CatchPos bp = (CatchPos)p.blockchangeObject;
-            List<Pos> previous = new List<Pos>(), allBlocks = new List<Pos>();
-            Pos pos = MakePos(p);
+            List<Vec3U16> previous = new List<Vec3U16>(), allBlocks = new List<Vec3U16>();
+            Vec3U16 pos = MakePos(p);
 
             int total = 0;
             List<FillPos> buffer = new List<FillPos>(2);
             while (true) {
-                Pos start = MakePos(p);
+                Vec3U16 start = MakePos(p);
                 total++;
                 double a = Math.Sin(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
                 double b = Math.Cos(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
                 double c = Math.Cos(((double)(p.rot[1] + 64) / 256) * 2 * Math.PI);
 
-                Pos lookedAt;
+                Vec3U16 lookedAt;
                 int i;
                 for (i = 1; ; i++) {
-                    lookedAt.x = (ushort)Math.Round(start.x + (double)(a * i));
-                    lookedAt.y = (ushort)Math.Round(start.y + (double)(c * i));
-                    lookedAt.z = (ushort)Math.Round(start.z + (double)(b * i));
+                    lookedAt.X = (ushort)Math.Round(start.X + (double)(a * i));
+                    lookedAt.Y = (ushort)Math.Round(start.Y + (double)(c * i));
+                    lookedAt.Z = (ushort)Math.Round(start.Z + (double)(b * i));
 
-                    byte tile = p.level.GetTile(lookedAt.x, lookedAt.y, lookedAt.z);
+                    byte tile = p.level.GetTile(lookedAt.X, lookedAt.Y, lookedAt.Z);
                     if (tile == Block.Zero) break;
 
                     if (tile != Block.air && !allBlocks.Contains(lookedAt) && HandlesHitBlock(p, tile, bp, pos, false))
@@ -74,17 +74,17 @@ namespace MCGalaxy.Commands {
                     }
                 }
 
-                lookedAt.x = (ushort)Math.Round(start.x + (double)(a * (i - 1)));
-                lookedAt.y = (ushort)Math.Round(start.y + (double)(c * (i - 1)));
-                lookedAt.z = (ushort)Math.Round(start.z + (double)(b * (i - 1)));
+                lookedAt.X = (ushort)Math.Round(start.X + (double)(a * (i - 1)));
+                lookedAt.Y = (ushort)Math.Round(start.Y + (double)(c * (i - 1)));
+                lookedAt.Z = (ushort)Math.Round(start.Z + (double)(b * (i - 1)));
                 FindNext(lookedAt, ref pos, buffer);
 
-                byte by = p.level.GetTile(pos.x, pos.y, pos.z);
+                byte by = p.level.GetTile(pos.X, pos.Y, pos.Z);
                 if (total > 3) {
                     if (by != Block.air && !allBlocks.Contains(pos) && HandlesHitBlock(p, by, bp, pos, true))
                         break;
 
-                    p.level.Blockchange(pos.x, pos.y, pos.z, type, extType);
+                    p.level.Blockchange(pos.X, pos.Y, pos.Z, type, extType);
                     previous.Add(pos);
                     allBlocks.Add(pos);
 
@@ -97,15 +97,15 @@ namespace MCGalaxy.Commands {
                         break;
                     }
 
-                    if (pos.x == lookedAt.x && pos.y == lookedAt.y && pos.z == lookedAt.z) {
+                    if (pos.X == lookedAt.X && pos.Y == lookedAt.Y && pos.Z == lookedAt.Z) {
                         if (p.level.physics >= 3 && bp.ending >= EndType.Explode && p.allowTnt) {
-                            p.level.MakeExplosion(lookedAt.x, lookedAt.y, lookedAt.z, 2);
+                            p.level.MakeExplosion(lookedAt.X, lookedAt.Y, lookedAt.Z, 2);
                             break;
                         }
                     }
 
                     if (previous.Count > 12) {
-                        p.level.Blockchange(previous[0].x, previous[0].y, previous[0].z, Block.air, true);
+                        p.level.Blockchange(previous[0].X, previous[0].Y, previous[0].Z, Block.air, true);
                         previous.RemoveAt(0);
                     }
                     Thread.Sleep(100);
@@ -117,24 +117,24 @@ namespace MCGalaxy.Commands {
                 if (index >= 0 && index < previous.Count)
                     DoTeleport(p, previous[index]);
             }
-            foreach (Pos pos1 in previous) {
-                p.level.Blockchange(pos1.x, pos1.y, pos1.z, Block.air, true);
+            foreach (Vec3U16 pos1 in previous) {
+                p.level.Blockchange(pos1.X, pos1.Y, pos1.Z, Block.air, true);
                 Thread.Sleep(100);
             }
         }
         
-        static Pos MakePos(Player p) {
-            Pos pos;
-            pos.x = (ushort)(p.pos[0] / 32);
-            pos.y = (ushort)(p.pos[1] / 32);
-            pos.z = (ushort)(p.pos[2] / 32);
+        static Vec3U16 MakePos(Player p) {
+            Vec3U16 pos;
+            pos.X = (ushort)(p.pos[0] / 32);
+            pos.Y = (ushort)(p.pos[1] / 32);
+            pos.Z = (ushort)(p.pos[2] / 32);
             return pos;
         }
         
-        void FindNext(Pos lookedAt, ref Pos pos, List<FillPos> buffer) {
-            LineDrawOp.DrawLine(pos.x, pos.y, pos.z, 2, lookedAt.x, lookedAt.y, lookedAt.z, buffer);
+        void FindNext(Vec3U16 lookedAt, ref Vec3U16 pos, List<FillPos> buffer) {
+            LineDrawOp.DrawLine(pos.X, pos.Y, pos.Z, 2, lookedAt.X, lookedAt.Y, lookedAt.Z, buffer);
             FillPos end = buffer[buffer.Count - 1];
-            pos.x = end.X; pos.y = end.Y; pos.z = end.Z;
+            pos.X = end.X; pos.Y = end.Y; pos.Z = end.Z;
             buffer.Clear();
         }
         
