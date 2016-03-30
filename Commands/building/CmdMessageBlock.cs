@@ -46,6 +46,9 @@ namespace MCGalaxy.Commands {
                     case "show": ShowMessageBlocks(p); return;
                     default: cpos.type = Block.MsgWhite; cpos.message = message; break;
             }
+            if (args.Length == 1) {
+                Player.SendMessage(p, "You need to provide text to put in the messageblock."); return;
+            }
             if (cpos.message == null)
                 cpos.message = args[1];
 
@@ -87,7 +90,7 @@ namespace MCGalaxy.Commands {
         }
         
         void UpdateDatabase(Player p, CatchPos cpos, ushort x, ushort y, ushort z) {
-        	cpos.message = cpos.message.Replace("'", "\\'");
+            cpos.message = cpos.message.Replace("'", "\\'");
             cpos.message = Colors.EscapeColors(cpos.message);
             //safe against SQL injections because no user input is given here
             ParameterisedQuery query = ParameterisedQuery.Create();
