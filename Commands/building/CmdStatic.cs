@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             p.modeType = 0;
 
             Player.SendMessage(p, "Static mode: &a" + p.staticCommands);
-            if (message == "") return;
+            if (message == "" || !p.staticCommands) return;
 
             string[] parts = message.Split(new char[] { ' ' }, 2);
             Command cmd = Command.all.Find(parts[0]);

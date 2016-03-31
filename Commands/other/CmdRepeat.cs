@@ -28,11 +28,8 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (p.lastCMD == "") { Player.SendMessage(p, "No commands used yet."); return; }
-            if (p.lastCMD.Length > 5 && p.lastCMD.Substring(0, 6) == "static") {
-                Player.SendMessage(p, "Can't repeat static"); return;
-            }
 
-            Player.SendMessage(p, "Using &b/" + p.lastCMD);
+            Player.SendMessage(p, "Repeating &b/" + p.lastCMD);
             int argsIndex = p.lastCMD.IndexOf(' ');
             string cmdName = argsIndex == -1 ? p.lastCMD : p.lastCMD.Substring(0, argsIndex);
             string cmdMsg = argsIndex == -1 ? "" : p.lastCMD.Substring(argsIndex + 1);

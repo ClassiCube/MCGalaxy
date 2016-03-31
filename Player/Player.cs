@@ -238,6 +238,7 @@ namespace MCGalaxy {
         public string[] cmdBind = new string[10];
         public string[] messageBind = new string[10];
         public string lastCMD = "";
+        public DateTime lastCmdTime;
         public sbyte c4circuitNumber = -1;
 
         public Level level = Server.mainLevel;

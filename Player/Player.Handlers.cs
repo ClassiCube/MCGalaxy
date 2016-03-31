@@ -91,7 +91,7 @@ namespace MCGalaxy {
                 int Diff = Math.Abs((pos[0] / 32) - x) + Math.Abs((pos[1] / 32) - y) 
                     + Math.Abs((pos[2] / 32) - z);
 
-                if ((Diff > ReachDistance + 4) && lastCMD != "click") {
+                if ((Diff > ReachDistance + 4) && (lastCMD == "click" || lastCMD == "mark")) {
                     Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
                     SendMessage("You can't build that far away.");
                     RevertBlock(x, y, z); return;
@@ -1498,7 +1498,10 @@ return;
                 SendMessage("The game or economy associated with this command is not running, " +
                             "so this command is disabled."); return;
             }
-            if (cmd != "repeat") lastCMD = cmd + " " + message;
+        	if (!(cmd == "repeat" || cmd == "pass" || cmd == "setpass")) {
+        	    lastCMD = cmd + " " + message;
+        	    lastCmdTime = DateTime.Now;
+        	}
             
             if (level.IsMuseum && !command.museumUsable ) {
                 SendMessage("Cannot use this command while in a museum!"); return;
