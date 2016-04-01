@@ -381,7 +381,6 @@
     <Compile Include="Commands\World\CmdPause.cs" />
     <Compile Include="Commands\World\CmdPermissions.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
-    <Compile Include="Commands\World\CmdReload.cs" />
     <Compile Include="Commands\World\CmdRestore.cs" />
     <Compile Include="Commands\World\CmdSave.cs" />
     <Compile Include="Commands\World\CmdSetspawn.cs" />

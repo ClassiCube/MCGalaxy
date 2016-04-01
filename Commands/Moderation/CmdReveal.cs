@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCForge
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -87,10 +87,29 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/reveal <name> - Reveals the map for <name>.");
-            Player.SendMessage(p, "/reveal all - Reveals for all in the map");
-            Player.SendMessage(p, "/reveal all <map> - Reveals for all in <map>");
-            Player.SendMessage(p, "Will reload the map for anyone. (incl. banned)");
+            Player.SendMessage(p, "/reveal <name> - Reloads the map for <name>.");
+            Player.SendMessage(p, "/reveal all - Reloads for all players in your map");
+            Player.SendMessage(p, "/reveal all <map> - Reloads for all players in <map>");
+        }
+    }
+	
+	public sealed class CmdReload : Command {
+        
+        public override string name { get { return "reload"; } }
+        public override string shortcut { get { return "rd"; } }
+        public override string type { get { return CommandTypes.World; } }
+        public override bool museumUsable { get { return false; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+
+        public override void Use(Player p, string message) {
+        	if (p == null) { MessageInGameOnly(p); return; }
+            CmdReveal.ReloadMap(p, p, false);    
+        }
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "%T/reload");
+            Player.SendMessage(p, "%HReloads the map you in, just for you.");
+            Player.SendMessage(p, "%HUse %T/reveal %Hto reload maps for other players.");
         }
     }
 }
