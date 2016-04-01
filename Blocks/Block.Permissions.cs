@@ -46,6 +46,7 @@ namespace MCGalaxy
         }
 
         public static void SetBlocks() {
+            SetupCoreHandlers();
             InitDefaults();
             // Custom permissions set by the user.
             if (File.Exists("properties/block.properties")) {

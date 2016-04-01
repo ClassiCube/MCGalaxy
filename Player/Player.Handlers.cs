@@ -91,7 +91,7 @@ namespace MCGalaxy {
                 int Diff = Math.Abs((pos[0] / 32) - x) + Math.Abs((pos[1] / 32) - y) 
                     + Math.Abs((pos[2] / 32) - z);
 
-                if ((Diff > ReachDistance + 4) && (lastCMD == "click" || lastCMD == "mark")) {
+                if ((Diff > ReachDistance + 4) && !(lastCMD == "click" || lastCMD == "mark")) {
                     Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
                     SendMessage("You can't build that far away.");
                     RevertBlock(x, y, z); return;
@@ -810,22 +810,6 @@ namespace MCGalaxy {
                         }
                     }
                     break;
-                case Block.firework:
-                    if ( level.physics == 5 ) {
-                        RevertBlock(x, y, z); return;
-                    }
-                    if ( level.physics != 0 ) {
-                        Random rand = new Random();
-                        int mx = rand.Next(0, 2); int mz = rand.Next(0, 2);
-                        byte b1 = level.GetTile((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 ));
-                        byte b2 = level.GetTile((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 ));
-                        if ( b1 == Block.air && b2 == Block.air && level.CheckClear((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 )) && level.CheckClear((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 )) ) {
-                            level.Blockchange((ushort)( x + mx - 1 ), (ushort)( y + 2 ), (ushort)( z + mz - 1 ), Block.firework);
-                            level.Blockchange((ushort)( x + mx - 1 ), (ushort)( y + 1 ), (ushort)( z + mz - 1 ), Block.lavastill, false, "wait 1 dissipate 100");
-                        }
-                    }
-                    RevertBlock(x, y, z);
-                    break;
 
                 case Block.c4det:
                     Level.C4.BlowUp(new ushort[] { x, y, z }, level);
@@ -833,7 +817,12 @@ namespace MCGalaxy {
                     break;
 
                 default:
-                    ChangeBlock(x, y, z, Block.air, 0);
+                    Block.HandleDelete handler = Block.deleteHandlers[b];
+                    if (handler != null) {
+                    	if (handler(this, b, x, y, z)) return;
+                    } else {
+                        ChangeBlock(x, y, z, Block.air, 0);
+                    }
                     break;
             }
             if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt) 

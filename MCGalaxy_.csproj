@@ -101,6 +101,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\WhoWas.cs" />
+    <Compile Include="Blocks\Block.Behaviour.cs" />
+    <Compile Include="Blocks\Block.Convert.cs" />
+    <Compile Include="Blocks\Block.cs" />
+    <Compile Include="Blocks\Block.ID.cs" />
+    <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Commands\Building\CmdAbort.cs" />
     <Compile Include="Commands\Building\CmdBind.cs" />
     <Compile Include="Commands\building\CmdBrush.cs" />
@@ -446,9 +451,6 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="GUI\LevelCollection.cs" />
-    <Compile Include="Levels\Block.Convert.cs" />
-    <Compile Include="Levels\Block.ID.cs" />
-    <Compile Include="Levels\Block.Permissions.cs" />
     <Compile Include="Levels\BufferedBlockSender.cs" />
     <Compile Include="Levels\Generator\MapGen.cs" />
     <Compile Include="Levels\Generator\NoiseGen.cs" />
@@ -511,7 +513,6 @@
     <Compile Include="Player\FullCP437Handler.cs" />
     <Compile Include="Server\AutoSaver.cs" />
     <Compile Include="Player\Ban.cs" />
-    <Compile Include="Levels\Block.cs" />
     <Compile Include="Levels\BlockDefinitions.cs" />
     <Compile Include="API\ChatMessage.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">
@@ -740,6 +741,7 @@
     <Folder Include="Levels\Generator" />
     <Folder Include="Levels\Physics" />
     <Folder Include="Economy" />
+    <Folder Include="Blocks" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\Undo" />
     <Folder Include="Plugins" />
