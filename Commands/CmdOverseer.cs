@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands
         
         void HandleMapCommand(Player p, string message, string cmd, string value) {
             bool mapOnly = cmd == "PHYSICS" || cmd == "MOTD" || cmd == "GUNS" ||
-                cmd == "PERVISIT" || cmd == "TEXTURE";
+                cmd == "PERVISIT" || cmd == "TEXTURE" || cmd == "BUILDABLE" || cmd == "DELETEABLE";
             if (mapOnly && !p.level.name.CaselessStarts(p.name)) {
                 Player.SendMessage(p, "You may only perform that action on your own map.");
                 return;
@@ -222,7 +222,11 @@ namespace MCGalaxy.Commands
                 } else {
                     Command.all.Find("texture").Use(p, "levelzip " + value);
                 }
-            } else {
+            } else if (cmd == "BUILDABLE") {
+                Command.all.Find("map").Use(p, "buildable");
+            } else if (cmd == "DELETABLE") {
+                Command.all.Find("map").Use(p, "deletable");
+            }  else {
                 Player.SendMessage(p, "/os map add [type - default is flat] -- Creates your map (128x64x128)");
                 Player.SendMessage(p, "/os map add [width] [height] [length] [type] -- Creates your map");
                 Player.SendMessage(p, "/os map physics -- Sets the physics on your map.");
@@ -233,6 +237,8 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "/os map pervisit %b[default is " + Server.defaultRank + "]%S -- Changes the pervisit of you map");
                 Player.SendMessage(p, "/os map texture -- Sets terrain.png url for your map");
                 Player.SendMessage(p, "/os map texturezip -- Sets texture pack .zip url for your map");
+                Player.SendMessage(p, "/os map buildable -- Sets whether any blocks can be placed");
+                Player.SendMessage(p, "/os map deletable -- Sets whether any blocks can be deleted");
                 Player.SendMessage(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
                 Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space");
                 Player.SendMessage(p, "  Motd: If no message is provided, the default message will be used.");

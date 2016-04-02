@@ -141,7 +141,7 @@ namespace MCGalaxy.Commands
                         SetBool(p, lvl, ref lvl.Buildable, "Buildable: "); 
                         lvl.UpdateBlockPermissions(); break;
                     case "deletable":
-                        SetBool(p, lvl, ref lvl.Deletable, "Deleteable: "); 
+                        SetBool(p, lvl, ref lvl.Deletable, "Deletable: "); 
                         lvl.UpdateBlockPermissions(); break;
                     
                     default:
@@ -188,7 +188,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Load on /goto sets whether the map can be loaded when some uses /goto. Only works if the load on /goto server option is enabled.");
             Player.SendMessage(p, "RP sets whether the physics auto-start for the map");
             Player.SendMessage(p, "Buildable sets whether any blocks can be placed by any player");
-            Player.SendMessage(p, "Deleteable sets whether any blocks can be deleted by any player");
+            Player.SendMessage(p, "Deletable sets whether any blocks can be deleted by any player");
         }
     }
 }
