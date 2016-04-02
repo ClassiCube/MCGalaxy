@@ -17,30 +17,15 @@
  */
 using System;
 
-namespace MCGalaxy {
+namespace MCGalaxy.BlockBehaviour {
     
-    public sealed partial class Block {
-        
-        /// <summary> Returns whether this block handles the player placing a block at the given coordinates. </summary>
-        /// <remarks>If this returns true, the usual 'checking dirt/grass below' behaviour is skipped. </remarks>
-        public delegate bool HandleDelete(Player p, byte block, ushort x, ushort y, ushort z);
-        internal static HandleDelete[] deleteHandlers = new HandleDelete[256];
-        
-        /// <summary> Returns whether this block handles the player deleting a block at the given coordinates. </summary>
-        /// <remarks>If this returns true, the usual 'checking dirt/grass below' behaviour is skipped. </remarks>
-        public delegate bool HandlePlace(Player p, byte block, ushort x, ushort y, ushort z);
-        internal static HandlePlace[] placeHandlers = new Block.HandlePlace[256];
-        
-        static void SetupCoreHandlers() {
-            deleteHandlers[Block.rocketstart] = RocketStartDelete;
-            deleteHandlers[Block.firework] = FireworkDelete;
-        }
+    internal static class DeleteBehaviour {
 
-        static bool RocketStartDelete(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static bool RocketStart(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics < 2 || p.level.physics == 5) { p.RevertBlock(x, y, z); return true; }
             
             int newZ = 0, newX = 0, newY = 0;
-            p.SendBlockchange(x, y, z, Block.rocketstart);
+            p.RevertBlock(x, y, z);
             if ( p.rot[0] < 48 || p.rot[0] > ( 256 - 48 ) )
                 newZ = -1;
             else if ( p.rot[0] > ( 128 - 48 ) && p.rot[0] < ( 128 + 48 ) )
@@ -68,7 +53,7 @@ namespace MCGalaxy {
             return false;
         }
         
-        static bool FireworkDelete(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static bool Firework(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) { p.RevertBlock(x, y, z); return true; }
             
             Random rand = new Random();
@@ -83,6 +68,12 @@ namespace MCGalaxy {
                 p.level.Blockchange(x2, (ushort)(y + 1), z2, Block.lavastill, false, "wait 1 dissipate 100");
             }
             p.RevertBlock(x, y, z); return false;
+        }
+        
+        internal static bool C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
+            Level.C4.BlowUp(new ushort[] { x, y, z }, p.level);
+            p.level.UpdateBlock(p, x, y, z, Block.air, 0);
+            return false;
         }
     }
 }

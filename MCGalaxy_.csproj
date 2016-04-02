@@ -101,7 +101,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\WhoWas.cs" />
-    <Compile Include="Blocks\Block.Behaviour.cs" />
+    <Compile Include="Blocks\Behaviour\Block.Behaviour.cs" />
+    <Compile Include="Blocks\Behaviour\DeleteBehaviour.cs" />
+    <Compile Include="Blocks\Behaviour\WalkthroughBehaviour.cs" />
     <Compile Include="Blocks\Block.Convert.cs" />
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\Block.ID.cs" />
@@ -719,6 +721,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Blocks\Behaviour" />
     <Folder Include="Commands" />
     <Folder Include="Commands\Building" />
     <Folder Include="Commands\Fun" />

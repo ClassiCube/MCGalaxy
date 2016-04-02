@@ -126,13 +126,9 @@ namespace MCGalaxy {
             }
             //else
             if ( !painting && action == 0 ) {
-                if ( !deleteMode ) {
-                    if ( Block.portal(b) ) { HandlePortal(this, x, y, z, b); return; }
-                    if ( Block.mb(b) ) { HandleMsgBlock(this, x, y, z, b); return; }
-                }
-                bP.flags |= 1;
-                level.blockCache.Add(bP);
-                DeleteBlock(b, x, y, z, type, extType);
+                bP.flags |= 1;             
+                if (DeleteBlock(b, x, y, z, type, extType))
+                    level.blockCache.Add(bP);
             } else {
                 level.blockCache.Add(bP);
                 PlaceBlock(b, x, y, z, type, extType);
@@ -672,77 +668,18 @@ namespace MCGalaxy {
             }
         }
 
-        void HandlePortal(Player p, ushort x, ushort y, ushort z, byte b) {
-            try {
-                //safe against SQL injections because no user input is given here
-                DataTable Portals = Database.fillData("SELECT * FROM `Portals" + level.name + "` WHERE EntryX=" + (int)x + " AND EntryY=" + (int)y + " AND EntryZ=" + (int)z);
-
-                int LastPortal = Portals.Rows.Count - 1;
-                if ( LastPortal > -1 ) {
-                    if ( level.name != Portals.Rows[LastPortal]["ExitMap"].ToString() ) {
-                        if ( level.permissionvisit > this.group.Permission ) {
-                            Player.SendMessage(this, "You do not have the adequate rank to visit this map!");
-                            return;
-                        }
-                        ignorePermission = true;
-                        Level thisLevel = level;
-                        Command.all.Find("goto").Use(this, Portals.Rows[LastPortal]["ExitMap"].ToString());
-                        if ( thisLevel == level ) { Player.SendMessage(p, "The map the portal goes to isn't loaded."); return; }
-                        ignorePermission = false;
-                    }
-                    else SendBlockchange(x, y, z, b);
-
-                    p.BlockUntilLoad(10);
-                    Command.all.Find("move").Use(this, this.name + " " + Portals.Rows[LastPortal]["ExitX"].ToString() + " " + Portals.Rows[LastPortal]["ExitY"].ToString() + " " + Portals.Rows[LastPortal]["ExitZ"].ToString());
-                }
-                else {
-                    Blockchange(this, x, y, z, Block.air, 0);
-                }
-                Portals.Dispose();
-            }
-            catch { Player.SendMessage(p, "Portal had no exit."); return; }
-        }
-
         static char[] trimChars = { ' ' };
-        void HandleMsgBlock(Player p, ushort x, ushort y, ushort z, byte b) {
-            try {
-                //safe against SQL injections because no user input is given here
-                DataTable Messages = Database.fillData("SELECT * FROM `Messages" + level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
-
-                int LastMsg = Messages.Rows.Count - 1;
-                if ( LastMsg > -1 ) {
-                    string message = Messages.Rows[LastMsg]["Message"].ToString().Trim();
-                    message = message.Replace("\\'", "\'");
-                    if ( message != prevMsg || Server.repeatMessage ) {
-                        if ( message.StartsWith("/") ) {
-                    	    string[] parts = message.Remove(0, 1).Split(trimChars, 2);
-                            HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
-                    	} else {
-                            Player.SendMessage(p, message);
-                        }
-                        prevMsg = message;
-                    }
-                    SendBlockchange(x, y, z, b);
-                } else {
-                    Blockchange(this, x, y, z, Block.air, 0);
-                }
-                Messages.Dispose();
-            } catch { 
-        	    Player.SendMessage(p, "No message was stored.");
-        	    RevertBlock(x, y, z); return;
-        	}
-        }
         
-        void DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if ( deleteMode && b != Block.c4det ) { ChangeBlock(x, y, z, Block.air, 0); return; }
+        bool DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
+            if (deleteMode) { ChangeBlock(x, y, z, Block.air, 0); return true; }
 
-            if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return; }
+            if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return true; }
             if ( Block.DoorAirs(b) != 0 ) {
                 if ( level.physics != 0 ) 
                     level.Blockchange(x, y, z, Block.DoorAirs(b));
                 else 
                     RevertBlock(x, y, z);
-                return;
+                return true;
             }
             if ( Block.odoor(b) != Block.Zero ) {
                 if ( b == Block.odoor8 || b == Block.odoor8_air ) {
@@ -750,11 +687,11 @@ namespace MCGalaxy {
                 } else {
                    RevertBlock(x, y, z);
                 }
-                return;
+                return true;
             }
 
             switch ( b ) {
-                case Block.door_tree__air: //Door_air
+                case Block.door_tree_air: //Door_air
                 case Block.door_obsidian_air:
                 case Block.door_glass_air:
                 case Block.door_stone_air:
@@ -779,15 +716,10 @@ namespace MCGalaxy {
                 case Block.door_book_air:
                     break;
 
-                case Block.c4det:
-                    Level.C4.BlowUp(new ushort[] { x, y, z }, level);
-                    level.Blockchange(x, y, z, Block.air);
-                    break;
-
                 default:
                     Block.HandleDelete handler = Block.deleteHandlers[b];
                     if (handler != null) {
-                    	if (handler(this, b, x, y, z)) return;
+                    	if (handler(this, b, x, y, z)) return false;
                     } else {
                         ChangeBlock(x, y, z, Block.air, 0);
                     }
@@ -795,6 +727,7 @@ namespace MCGalaxy {
             }
             if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt) 
                 ChangeBlock(x, (ushort)(y - 1), z, Block.grass, 0);
+            return true;
         }
 
         void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -941,33 +874,10 @@ return;
                     level.Blockchange(x, (ushort)(y - 1), z, Block.DoorAirs(b1));
 
                 if ( level.PosToInt( x, y, z ) != oldIndex ) {
-                    if ( b == Block.air_portal || b == Block.water_portal || b == Block.lava_portal ) {
-                        HandlePortal(this, x, y, z, b);
-                    } else if ( b1 == Block.air_portal || b1 == Block.water_portal || b1 == Block.lava_portal ) {
-                        HandlePortal(this, x, (ushort)(y - 1), z, b1);
-                    }
-
-                    if ( b == Block.MsgAir || b == Block.MsgWater || b == Block.MsgLava ) {
-                        HandleMsgBlock(this, x, y, z, b);
-                    } else if ( b1 == Block.MsgAir || b1 == Block.MsgWater || b1 == Block.MsgLava ) {
-                        HandleMsgBlock(this, x, (ushort)(y - 1), z, b1);
-                	} else if ( b == Block.checkpoint ) {
-                		useCheckpointSpawn = true;
-                        checkpointX = x; checkpointY = y; checkpointZ = z;
-                        int index = level.PosToInt(x, y, z);
-                        if (index != lastCheckpointIndex) {
-                            SendSpawn(0xFF, color + truename, pos[0], (ushort)((y - 1) * 32 + 51), pos[2], rot[0], rot[1]);
-                            lastCheckpointIndex = index;
-                        }
-                    } else if ( b1 == Block.checkpoint ) {
-                        useCheckpointSpawn = true;
-                        checkpointX = x; checkpointY = (ushort)(y + 1); checkpointZ = z;
-                        int index = level.PosToInt(x, (ushort)(y - 1), z);
-                        if (index != lastCheckpointIndex) {
-                            SendSpawn(0xFF, color + truename, pos[0], (ushort)((y - 1) * 32 + 51), pos[2], rot[0], rot[1]);
-                            lastCheckpointIndex = index;
-                        }
-                	}
+                    Block.HandleWalkthrough handler = Block.walkthroughHandlers[b];
+                    if (handler != null && handler(this, b, x, y, z)) return;
+                    handler = Block.walkthroughHandlers[b1];
+                    if (handler != null && handler(this, b, x, y, z)) return;
                 }
             }
             if ( ( b == Block.tntexplosion || b1 == Block.tntexplosion ) && PlayingTntWars ) { }

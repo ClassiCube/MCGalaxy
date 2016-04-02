@@ -472,7 +472,7 @@ namespace MCGalaxy
         {
             switch (b)
             {
-                case door_tree: return door_tree__air;
+                case door_tree: return door_tree_air;
                 case door_obsidian: return door_obsidian_air;
                 case door_glass: return door_glass_air;
                 case door_stone: return door_stone_air;

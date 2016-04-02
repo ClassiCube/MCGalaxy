@@ -255,7 +255,7 @@ namespace MCGalaxy
         public const byte checkpoint = (byte)197;
 
         public const byte air_flood = (byte)200;
-        public const byte door_tree__air = (byte)201;
+        public const byte door_tree_air = (byte)201;
         public const byte air_flood_layer = (byte)202;
         public const byte air_flood_down = (byte)203;
         public const byte air_flood_up = (byte)204;

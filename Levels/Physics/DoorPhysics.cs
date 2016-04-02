@@ -29,7 +29,7 @@ namespace MCGalaxy.BlockPhysics {
             switch (lvl.blocks[C.b]) {
 
                     //Change any door blocks nearby into door_air
-                case Block.door_tree__air:
+                case Block.door_tree_air:
                 case Block.door_obsidian_air:
                 case Block.door_glass_air:
                 case Block.door_stone_air:

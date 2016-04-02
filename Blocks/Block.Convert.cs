@@ -232,7 +232,7 @@ namespace MCGalaxy
 
                 //Blocks after this are converted before saving
                 case air_flood: return "air_flood";
-                case door_tree__air: return "door_air";
+                case door_tree_air: return "door_air";
                 case air_flood_layer: return "air_flood_layer";
                 case air_flood_down: return "air_flood_down";
                 case air_flood_up: return "air_flood_up";
@@ -550,7 +550,7 @@ namespace MCGalaxy
                 case "air_flood_layer": return air_flood_layer;
                 case "air_flood_down": return air_flood_down;
                 case "air_flood_up": return air_flood_up;
-                case "door_air": return door_tree__air;
+                case "door_air": return door_tree_air;
                 case "door2_air": return door_obsidian_air;
                 case "door3_air": return door_glass_air;
                 case "door4_air": return door_stone_air;
@@ -762,7 +762,7 @@ namespace MCGalaxy
                 case Block.checkpoint: return Block.air;
 
                 case air_flood:
-                case door_tree__air:
+                case door_tree_air:
                 case air_flood_layer:
                 case air_flood_down:
                	case air_flood_up:
@@ -845,7 +845,7 @@ namespace MCGalaxy
             	case air_flood_down:
             	case air_flood_up:
                     return air; //air_flood must be converted to air on save to prevent issues
-                case door_tree__air: return door_tree;
+                case door_tree_air: return door_tree;
                 case door_obsidian_air: return door_obsidian;
                 case door_glass_air: return door_glass;
                 case door_stone_air: return door_stone;

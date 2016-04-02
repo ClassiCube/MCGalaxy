@@ -117,7 +117,7 @@ namespace MCGalaxy
                     case wood_float:
                     case lava_sponge:
 
-                    case door_tree__air:
+                    case door_tree_air:
                     case door_obsidian_air:
                     case door_glass_air:
                     case door_stone_air:
