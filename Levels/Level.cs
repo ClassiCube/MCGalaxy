@@ -200,7 +200,7 @@ namespace MCGalaxy
         private readonly object physThreadLock = new object();
         BufferedBlockSender bulkSender;
 
-        public List<C4.C4s> C4list = new List<C4.C4s>();
+        public List<C4Physics.C4Data> C4list = new List<C4Physics.C4Data>();
         // Games fields
         public int Likes, Dislikes;
         public string Authors = "";

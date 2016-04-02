@@ -1,6 +1,5 @@
 ﻿/*
-    Copyright 2015 MCGalaxy
-    Original level physics copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
         
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -17,60 +16,12 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.BlockPhysics {
 
     public static class OtherPhysics {
-        
-        public static bool DoLeafDecay(Level lvl, Check C) {
-            const int dist = 4;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-
-            for (int xx = -dist; xx <= dist; xx++)
-                for (int yy = -dist; yy <= dist; yy++)
-                    for (int zz = -dist; zz <= dist; zz++)
-            {
-                int index = lvl.PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz));
-                if (index < 0) continue;
-                byte type = lvl.blocks[index];
-                
-                if (type == Block.trunk)
-                    lvl.leaves[index] = 0;
-                else if (type == Block.leaf)
-                    lvl.leaves[index] = -2;
-                else
-                    lvl.leaves[index] = -1;
-            }
-
-            for (int i = 1; i <= dist; i++)
-                for (int xx = -dist; xx <= dist; xx++)
-                    for (int yy = -dist; yy <= dist; yy++)
-                        for (int zz = -dist; zz <= dist; zz++)
-            {
-                int index = lvl.PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz));
-                if (index < 0) continue;
-                
-                if (lvl.leaves[index] == i - 1) {
-                    CheckLeaf(lvl, i, x + xx - 1, y + yy, z + zz);
-                    CheckLeaf(lvl, i, x + xx + 1, y + yy, z + zz);
-                    CheckLeaf(lvl, i, x + xx, y + yy - 1, z + zz);
-                    CheckLeaf(lvl, i, x + xx, y + yy + 1, z + zz);
-                    CheckLeaf(lvl, i, x + xx, y + yy, z + zz - 1);
-                    CheckLeaf(lvl, i, x + xx, y + yy, z + zz + 1);
-                }
-            }
-            return lvl.leaves[C.b] < 0;
-        }
-        
-        static void CheckLeaf(Level lvl, int i, int x, int y, int z) {
-            int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
-            if (index < 0) return;
-            
-            sbyte type;
-            if (lvl.leaves.TryGetValue(index, out type) && type == -2)
-                lvl.leaves[index] = (sbyte)i;
-        }
         
         public static void DoFalling(Level lvl, Check C, byte type) {
             if (lvl.physics == 0 || lvl.physics == 5) { C.time = 255; return; }
@@ -147,6 +98,94 @@ namespace MCGalaxy.BlockPhysics {
                     lvl.AddUpdate(index, Block.wood_float);
                 }
             }
+            C.time = 255;
+        }
+        
+        public static void DoShrub(Level lvl, Check C, Random rand) {
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava
+                AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
+                AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
+                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
+                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
+                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
+            }
+
+            if (!lvl.growTrees) { C.time = 255; return; }
+            if (C.time < 20) {
+                if (rand.Next(20) == 0) C.time++;
+                return;
+            }
+            
+            TreeDrawOp op = new TreeDrawOp();
+            op.random = rand;
+            op.method = DrawOp.M_BlockChange;
+            op.Perform(new [] { new Vec3U16(x, y, z) }, null, lvl, null);
+            C.time = 255;
+        }
+        
+        public static void DoDirt(Level lvl, Check C) {
+            if (!lvl.GrassGrow) { C.time = 255; return; }
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            
+            if (C.time > 20) {
+                byte type = lvl.GetTile(x, (ushort)(y + 1), z), extType = 0;
+                if (type == Block.custom_block)
+                    extType = lvl.GetExtTile(x, (ushort)(y + 1), z);
+                
+                if (Block.LightPass(type, extType, lvl.CustomBlockDefs))
+                    lvl.AddUpdate(C.b, Block.grass);
+                C.time = 255;
+            } else {
+                C.time++;
+            }
+        }
+		
+        public static void DoSponge(Level lvl, Check C, bool lava) {
+            for (int y = -2; y <= +2; ++y)
+                for (int z = -2; z <= +2; ++z)
+                    for (int x = -2; x <= +2; ++x)
+            {
+                int index = lvl.IntOffset(C.b, x, y, z);
+                byte block = lvl.GetTile(index);
+                if (block == Block.Zero) continue;
+                
+                if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
+                    lvl.AddUpdate(index, Block.air);
+            }
+            C.time = 255;
+        }
+		
+		public static void DoSpongeRemoved(Level lvl, int b, bool lava = false) {
+            for (int y = -3; y <= +3; ++y)
+                for (int z = -3; z <= +3; ++z)
+                    for (int x = -3; x <= +3; ++x)
+            {
+                if (Math.Abs(x) == 3 || Math.Abs(y) == 3 || Math.Abs(z) == 3) //Calc only edge
+                {
+                    int index = lvl.IntOffset(b, x, y, z);
+                    byte block = lvl.GetTile(index);
+                    if (block == Block.Zero) continue;
+                    
+                    if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
+                        lvl.AddCheck(index);
+                }
+            }
+        }
+        
+        public static void DoOther(Level lvl, Check C) {
+            if (lvl.physics <= 1) { C.time = 255; return; }
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            
+            //Adv physics kills flowers and mushroos in water/lava
+            AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
+            AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
+            AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
+            AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
+            AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
             C.time = 255;
         }
     }

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.BlockPhysics;
 
 namespace MCGalaxy.BlockBehaviour {
     
@@ -71,7 +72,7 @@ namespace MCGalaxy.BlockBehaviour {
         }
         
         internal static bool C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
-            Level.C4.BlowUp(new ushort[] { x, y, z }, p.level);
+            C4Physics.BlowUp(new ushort[] { x, y, z }, p.level);
             p.ChangeBlock(x, y, z, Block.air, 0);
             return false;
         }

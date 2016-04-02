@@ -96,9 +96,9 @@ namespace MCGalaxy {
 
                             wait = speedPhysics;
                         } else {
-                        	Player[] online = PlayerInfo.Online.Items;
+                            Player[] online = PlayerInfo.Online.Items;
                             foreach (Player p in online) {
-                        	    if (p.level != this) continue;
+                                if (p.level != this) continue;
                                 Player.SendMessage(p, "Physics warning!");
                             }
                             Server.s.Log("Physics warning on " + name);
@@ -172,7 +172,7 @@ namespace MCGalaxy {
                 
                 lastUpdate = ListUpdate.Count;
                 if (ListUpdate.Count > 0 && bulkSender == null)
-                	bulkSender = new BufferedBlockSender(this);
+                    bulkSender = new BufferedBlockSender(this);
                 
                 for (int i = 0; i < ListUpdate.Count; i++) {
                     Update C = ListUpdate.Items[i];
@@ -180,7 +180,7 @@ namespace MCGalaxy {
                         string info = C.data as string;
                         if (info == null) info = "";
                         if (DoPhysicsBlockchange(C.b, C.type, false, info, 0, true))
-                        	bulkSender.Add(C.b, C.type, 0);
+                            bulkSender.Add(C.b, C.type, 0);
                     } catch {
                         Server.s.Log("Phys update issue");
                     }
@@ -196,85 +196,18 @@ namespace MCGalaxy {
         }
         
         void DoNormalPhysics(ushort x, ushort y, ushort z, Random rand, Check C) {
-            switch (blocks[C.b])
-            {
-                case Block.air: //Placed air
-                    AirPhysics.DoAir(this, C, rand);
-                    break;
-                case Block.dirt: //Dirt
-                    if (!GrassGrow) { C.time = 255; break; }
-
-                    if (C.time > 20) {
-                        byte type = GetTile(x, (ushort)(y + 1), z), extType = 0;
-                        if (type == Block.custom_block)
-                            extType = GetExtTile(x, (ushort)(y + 1), z);
-                        
-                        if (Block.LightPass(type, extType, CustomBlockDefs))
-                            AddUpdate(C.b, Block.grass);
-                        C.time = 255;
-                    } else {
-                        C.time++;
-                    }
-                    break;
-
+            switch (blocks[C.b]) {
+                case Block.air:
+                    AirPhysics.DoAir(this, C, rand); break;
+                case Block.dirt:
+                    OtherPhysics.DoDirt(this, C); break;
                 case Block.leaf:
-                    if (physics > 1)
-                        //Adv physics kills flowers and mushroos in water/lava
-                    {
-                        PhysAir(PosToInt((ushort)(x + 1), y, z));
-                        PhysAir(PosToInt((ushort)(x - 1), y, z));
-                        PhysAir(PosToInt(x, y, (ushort)(z + 1)));
-                        PhysAir(PosToInt(x, y, (ushort)(z - 1)));
-                        PhysAir(PosToInt(x, (ushort)(y + 1), z));
-                        //Check block above
-                    }
-
-                    if (!leafDecay) {
-                        C.time = 255;
-                        leaves.Clear();
-                        break;
-                    }
-                    if (C.time < 5)
-                    {
-                        if (rand.Next(10) == 0) C.time++;
-                        break;
-                    }
-                    if (OtherPhysics.DoLeafDecay(this, C))
-                        AddUpdate(C.b, Block.air);
-                    C.time = 255;
-                    break;
-
+                    LeafPhysics.DoLeaf(this, C, rand); break;
                 case Block.shrub:
-                    if (physics > 1)
-                        //Adv physics kills flowers and mushroos in water/lava
-                    {
-                        PhysAir(PosToInt((ushort)(x + 1), y, z));
-                        PhysAir(PosToInt((ushort)(x - 1), y, z));
-                        PhysAir(PosToInt(x, y, (ushort)(z + 1)));
-                        PhysAir(PosToInt(x, y, (ushort)(z - 1)));
-                        PhysAir(PosToInt(x, (ushort)(y + 1), z));
-                        //Check block above
-                    }
-
-                    if (!growTrees) {
-                        C.time = 255;
-                        break;
-                    }
-                    if (C.time < 20) {
-                        if (rand.Next(20) == 0) C.time++;
-                        break;
-                    }
-                    
-                    TreeDrawOp op = new TreeDrawOp();
-                    op.random = rand;
-                    op.method = DrawOp.M_BlockChange;
-                    op.Perform(new [] { new Vec3U16(x, y, z) }, null, this, null);
-                    C.time = 255;
-                    break;
-
+                    OtherPhysics.DoShrub(this, C, rand); break;
                 case Block.water:
                 case Block.activedeathwater:
-                    LiquidPhysics.DoWater(this, C, rand); break;
+                    SimpleLiquidPhysics.DoWater(this, C, rand); break;
                 case Block.WaterDown:
                     ExtLiquidPhysics.DoWaterfall(this, C, rand); break;
                 case Block.LavaDown:
@@ -285,7 +218,7 @@ namespace MCGalaxy {
                     ExtLiquidPhysics.DoFaucet(this, C, rand, Block.LavaDown); break;
                 case Block.lava:
                 case Block.activedeathlava:
-                    LiquidPhysics.DoLava(this, C, rand); break;
+                    SimpleLiquidPhysics.DoLava(this, C, rand); break;
                 case Block.fire:
                     FirePhysics.Do(this, C, rand); break;
                 case Block.finiteWater:
@@ -295,25 +228,20 @@ namespace MCGalaxy {
                     FinitePhysics.DoFaucet(this, C, rand); break;
                 case Block.sand:
                 case Block.gravel:
-                    OtherPhysics.DoFalling(this, C, blocks[C.b]);
-                    break;
-                case Block.sponge: //SPONGE
-                    PhysSponge(C.b);
-                    C.time = 255;
-                    break;
-                case Block.lava_sponge: //SPONGE
-                    PhysSponge(C.b, true);
-                    C.time = 255;
-                    break;
-                    //Adv physics updating anything placed next to water or lava
+                    OtherPhysics.DoFalling(this, C, blocks[C.b]); break;
+                case Block.sponge:
+                    OtherPhysics.DoSponge(this, C, false); break;
+                case Block.lava_sponge:
+                    OtherPhysics.DoSponge(this, C, true); break;                  
+                //Adv physics updating anything placed next to water or lava
                 case Block.wood: //Wood to die in lava
                 case Block.trunk: //Wood to die in lava
                 case Block.yellowflower:
                 case Block.redflower:
                 case Block.mushroom:
                 case Block.redmushroom:
-                case Block.bookcase: //bookcase
-                case Block.red: //Shitload of cloth
+               case Block.bookcase:
+                case Block.red:
                 case Block.orange:
                 case Block.yellow:
                 case Block.lightgreen:
@@ -329,19 +257,7 @@ namespace MCGalaxy {
                 case Block.darkgrey:
                 case Block.lightgrey:
                 case Block.white:
-                    if (physics > 1)
-                        //Adv physics kills flowers and mushroos in water/lava
-                    {
-                        PhysAir(PosToInt((ushort)(x + 1), y, z));
-                        PhysAir(PosToInt((ushort)(x - 1), y, z));
-                        PhysAir(PosToInt(x, y, (ushort)(z + 1)));
-                        PhysAir(PosToInt(x, y, (ushort)(z - 1)));
-                        PhysAir(PosToInt(x, (ushort)(y + 1), z));
-                        //Check block above
-                    }
-                    C.time = 255;
-                    break;
-
+                    OtherPhysics.DoOther(this, C); break;
                 case Block.staircasestep:
                 case Block.cobblestoneslab:
                     OtherPhysics.DoStairs(this, C); break;
@@ -349,8 +265,8 @@ namespace MCGalaxy {
                     OtherPhysics.DoFloatwood(this, C); break;
                 case Block.lava_fast:
                 case Block.fastdeathlava:
-                    LiquidPhysics.DoFastLava(this, C, rand); break;
-                    //Special blocks that are not saved
+                    SimpleLiquidPhysics.DoFastLava(this, C, rand); break;
+                //Special blocks that are not saved
                 case Block.air_flood:
                     AirPhysics.DoFlood(this, C, rand, AirFlood.Full, Block.air_flood); break;
                 case Block.air_flood_layer:
@@ -404,25 +320,9 @@ namespace MCGalaxy {
                 case Block.creeper:
                     ZombiePhysics.Do(this, C, rand); break;
                 case Block.c4:
-                    C4.C4s c4 = C4.Find(this, ((Player)C.data).c4circuitNumber);
-                    if (c4 != null) {
-                        FillPos pos; pos.X = x; pos.Y = y; pos.Z = z;
-                        c4.list.Add(pos);
-                    }
-                    C.time = 255;
-                    break;
-
+                    C4Physics.DoC4(this, C, rand); break;
                 case Block.c4det:
-                    C4.C4s c = C4.Find(this, ((Player)C.data).c4circuitNumber);
-                    if (c != null) {
-                        c.detenator[0] = x;
-                        c.detenator[1] = y;
-                        c.detenator[2] = z;
-                    }
-                    ((Player)C.data).c4circuitNumber = -1;
-                    C.time = 255;
-                    break;
-
+                    C4Physics.DoC4Det(this, C, rand); break;
                 default:
                     DoorPhysics.Do(this, C); break;
             }
@@ -567,88 +467,6 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
             }
         }
-
-        internal void PhysAir(int b) { AirPhysics.PhysAir(this, b); }
-
-        internal void PhysWater(ushort x, ushort y, ushort z, byte type) {
-            if (x >= Width || y >= Height || z >= Length) return;
-            if (Server.lava.active && Server.lava.map == this && Server.lava.InSafeZone(x, y, z))
-                return;
-            
-            int b = x + (z * Width) + (y * Width * Length);
-            switch (blocks[b]) {
-                case Block.air:
-                    if (!CheckSpongeWater(x, y, z)) AddUpdate(b, type);
-                    break;
-
-                case Block.lava:
-                case Block.lava_fast:
-                case Block.activedeathlava:
-                    if (!CheckSpongeWater(x, y, z)) AddUpdate(b, Block.rock);
-                    break;
-
-                case Block.shrub:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                    if (physics > 1 && physics != 5 && !CheckSpongeWater(x, y, z))
-                        AddUpdate(b, Block.air); //Adv physics kills flowers and mushrooms in water
-                    break;
-
-                case Block.sand:
-                case Block.gravel:
-                case Block.wood_float:
-                    AddCheck(b); break;
-                default:
-                    break;
-            }
-        }
-
-        internal void PhysLava(ushort x, ushort y, ushort z, byte type) {
-            if (x >= Width || y >= Height || z >= Length) return;
-            if (Server.lava.active && Server.lava.map == this && Server.lava.InSafeZone(x, y, z))
-                return;
-
-            int b = x + Width * (z + y * Length);
-            if (physics > 1 && physics != 5 && !CheckSpongeLava(x, y, z) && blocks[b] >= 21 && blocks[b] <= 36) {
-                AddUpdate(b, Block.air); return;
-            } // Adv physics destroys cloth
-            
-            switch (blocks[b]) {
-                case Block.air:
-                    if (!CheckSpongeLava(x, y, z)) AddUpdate(b, type);
-                    break;
-
-                case Block.water:
-                case Block.activedeathwater:
-                    if (!CheckSpongeLava(x, y, z)) AddUpdate(b, Block.rock); break;
-
-                case Block.sand:
-                    if (physics > 1) { //Adv physics changes sand to glass next to lava
-                        if (physics != 5) AddUpdate(b, Block.glass);
-                    } else {
-                        AddCheck(b);
-                    } break;
-
-                case Block.gravel:
-                    AddCheck(b); break;
-
-                case Block.wood:
-                case Block.shrub:
-                case Block.trunk:
-                case Block.leaf:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                    if (physics > 1 && physics != 5) //Adv physics kills flowers and mushrooms plus wood in lava
-                        if (!CheckSpongeLava(x, y, z)) AddUpdate(b, Block.air);
-                    break;
-                default:
-                    break;
-            }
-        }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {
             for (int yy = y - 2; yy <= y + 2; ++yy) {
@@ -680,81 +498,8 @@ namespace MCGalaxy {
             return false;
         }
 
-        void PhysSponge(int b, bool lava = false) {
-            for (int y = -2; y <= +2; ++y)
-                for (int z = -2; z <= +2; ++z)
-                    for (int x = -2; x <= +2; ++x)
-            {
-                int index = IntOffset(b, x, y, z);
-                byte block = GetTile(index);
-                if (block == Block.Zero) continue;
-                
-                if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
-                    AddUpdate(index, Block.air);
-            }
-        }
-        
-        void PhysSpongeRemoved(int b, bool lava = false) {
-            for (int y = -3; y <= +3; ++y)
-                for (int z = -3; z <= +3; ++z)
-                    for (int x = -3; x <= +3; ++x)
-            {
-                if (Math.Abs(x) == 3 || Math.Abs(y) == 3 || Math.Abs(z) == 3) //Calc only edge
-                {
-                    int index = IntOffset(b, x, y, z);
-                    byte block = GetTile(index);
-                    if (block == Block.Zero) continue;
-                    
-                    if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
-                        AddCheck(index);
-                }
-            }
-        }
-
         public void MakeExplosion(ushort x, ushort y, ushort z, int size, bool force = false, TntWarsGame CheckForExplosionZone = null) {
             TntPhysics.MakeExplosion(this, x, y, z, size, force, CheckForExplosionZone);
-        }
-
-        public static class C4 {
-            
-            public static void BlowUp(ushort[] detenator, Level lvl) {
-                try {
-                    foreach (C4s c4 in lvl.C4list) {
-                        if (c4.detenator[0] == detenator[0] && c4.detenator[1] == detenator[1] && c4.detenator[2] == detenator[2]) {
-                            foreach (FillPos c in c4.list)
-                                lvl.MakeExplosion(c.X, c.Y, c.Z, 0);
-                            lvl.C4list.Remove(c4);
-                        }
-                    }
-                } catch { }
-            }
-            
-            public static sbyte NextCircuit(Level lvl) {
-                sbyte number = 1;
-                foreach (C4s c4 in lvl.C4list)
-                    number++;
-                return number;
-            }
-            
-            public static C4s Find(Level lvl, sbyte CircuitNumber) {
-                foreach (C4s c4 in lvl.C4list) {
-                    if (c4.CircuitNumb == CircuitNumber)
-                        return c4;
-                }
-                return null;
-            }
-            
-            public class C4s {
-                public sbyte CircuitNumb;
-                public ushort[] detenator;
-                public List<FillPos> list;
-
-                public C4s(sbyte num) {
-                    CircuitNumb = num;
-                    list = new List<FillPos>();
-                    detenator = new ushort[3];
-                }
-            }
         }
     }
     

@@ -1,6 +1,5 @@
 ﻿/*
-    Copyright 2015 MCGalaxy
-    Original level physics copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
         
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -33,10 +32,10 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.magma);
             } else if (below != Block.magma) {
                 byte block = lvl.blocks[C.b];
-                lvl.PhysLava((ushort)(x + 1), y, z, block);
-                lvl.PhysLava((ushort)(x - 1), y, z, block);
-                lvl.PhysLava(x, y, (ushort)(z + 1), block);
-                lvl.PhysLava(x, y, (ushort)(z - 1), block);
+                LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
+                LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
+                LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1), block);
+                LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
             }
 
             if (lvl.physics <= 1 || C.time <= 10) return;
@@ -70,10 +69,10 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.geyser);
             } else if (below != Block.geyser) {
                 byte block = lvl.blocks[C.b];
-                lvl.PhysWater((ushort)(x + 1), y, z, block);
-                lvl.PhysWater((ushort)(x - 1), y, z, block);
-                lvl.PhysWater(x, y, (ushort)(z + 1), block);
-                lvl.PhysWater(x, y, (ushort)(z - 1), block);
+                LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
+                LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
+                LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1), block);
+                LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
             }
 
             if (lvl.physics <= 1 || C.time <= 10) return;
@@ -116,10 +115,10 @@ namespace MCGalaxy.BlockPhysics {
                     break;
                 default:
                     byte block = lvl.blocks[C.b];
-                    lvl.PhysWater((ushort)(x + 1), y, z, block);
-                    lvl.PhysWater((ushort)(x - 1), y, z, block);
-                    lvl.PhysWater(x, y, (ushort)(z + 1),block);
-                    lvl.PhysWater(x, y, (ushort)(z - 1), block);
+                    LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
+                    LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
+                    LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1),block);
+                    LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
                     if (!(C.data is string) || !((string)C.data).Contains("wait"))
                         C.time = 255;
                     break;
@@ -145,10 +144,10 @@ namespace MCGalaxy.BlockPhysics {
                     break;
                 default:
                     byte block = lvl.blocks[C.b];
-                    lvl.PhysLava((ushort)(x + 1), y, z, block);
-                    lvl.PhysLava((ushort)(x - 1), y, z, block);
-                    lvl.PhysLava(x, y, (ushort)(z + 1),block);
-                    lvl.PhysLava(x, y, (ushort)(z - 1), block);
+                    LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
+                    LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
+                    LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1),block);
+                    LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
                     if (!(C.data is string) || !((string)C.data).Contains("wait"))
                         C.time = 255;
                     break;

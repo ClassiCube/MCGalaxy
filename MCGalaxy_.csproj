@@ -471,6 +471,7 @@
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\AirPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
+    <Compile Include="Levels\Physics\C4Physics.cs" />
     <Compile Include="Levels\Physics\DoorPhysics.cs" />
     <Compile Include="Levels\Physics\ExtLiquidPhysics.cs" />
     <Compile Include="Levels\Physics\ExtraInfoPhysics.cs" />
@@ -478,7 +479,9 @@
     <Compile Include="Levels\Physics\FirePhysics.cs" />
     <Compile Include="Levels\Physics\FireworkPhysics.cs" />
     <Compile Include="Levels\Physics\HunterPhysics.cs" />
+    <Compile Include="Levels\Physics\LeafPhysics.cs" />
     <Compile Include="Levels\Physics\LiquidPhysics.cs" />
+    <Compile Include="Levels\Physics\SimpleLiquidPhysics.cs" />
     <Compile Include="Levels\Physics\RocketPhysics.cs" />
     <Compile Include="Levels\Physics\OtherPhysics.cs" />
     <Compile Include="Levels\Physics\SnakePhysics.cs" />

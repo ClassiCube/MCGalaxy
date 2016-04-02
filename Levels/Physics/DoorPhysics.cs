@@ -1,6 +1,5 @@
 ﻿/*
-    Copyright 2015 MCGalaxy
-    Original level physics copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
         
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -23,9 +22,6 @@ namespace MCGalaxy.BlockPhysics {
     public static class DoorPhysics {
         
         public static void Do(Level lvl, Check C) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            
             switch (lvl.blocks[C.b]) {
 
                     //Change any door blocks nearby into door_air
@@ -53,15 +49,12 @@ namespace MCGalaxy.BlockPhysics {
                 case Block.door_grass_air:
                 case Block.door_blue_air:
                 case Block.door_book_air:
-                    AnyDoor(lvl, C, x, y, z, 16);
-                    break;
+                    AnyDoor(lvl, C, 16); break;
                 case Block.air_switch_air:
                 case Block.air_door_air:
-                    AnyDoor(lvl, C, x, y, z, 4, true);
-                    break;
+                    AnyDoor(lvl, C, 4, true); break;
                 case Block.door_tnt_air:
-                    AnyDoor(lvl, C, x, y, z, 4);
-                    break;
+                    AnyDoor(lvl, C, 4); break;
 
                 case Block.odoor1_air:
                 case Block.odoor2_air:
@@ -121,10 +114,13 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(index, block, true);
         }
         
-        static void AnyDoor(Level lvl, Check C, ushort x, ushort y, ushort z, int timer, bool instaUpdate = false) {
+        static void AnyDoor(Level lvl, Check C, int timer, bool instaUpdate = false) {
+			ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
             if (C.time != 0) {
                 CheckDoorRevert(lvl, C, timer); return;
             }
+            
             PhysDoor(lvl, (ushort)(x + 1), y, z, instaUpdate);
             PhysDoor(lvl, (ushort)(x - 1), y, z, instaUpdate);
             PhysDoor(lvl, x, y, (ushort)(z + 1), instaUpdate);
