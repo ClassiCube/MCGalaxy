@@ -103,6 +103,7 @@
     <Compile Include="API\WhoWas.cs" />
     <Compile Include="Blocks\Behaviour\Block.Behaviour.cs" />
     <Compile Include="Blocks\Behaviour\DeleteBehaviour.cs" />
+    <Compile Include="Blocks\Behaviour\PlaceBehaviour.cs" />
     <Compile Include="Blocks\Behaviour\WalkthroughBehaviour.cs" />
     <Compile Include="Blocks\Block.Convert.cs" />
     <Compile Include="Blocks\Block.cs" />

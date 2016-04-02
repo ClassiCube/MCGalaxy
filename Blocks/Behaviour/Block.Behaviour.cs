@@ -42,6 +42,8 @@ namespace MCGalaxy {
             deleteHandlers[Block.firework] = DeleteBehaviour.Firework;
             walkthroughHandlers[Block.checkpoint] = WalkthroughBehaviour.Checkpoint;
             deleteHandlers[Block.c4det] = DeleteBehaviour.C4Det;
+            placeHandlers[Block.dirt] = PlaceBehaviour.Dirt;
+            placeHandlers[Block.staircasestep] = PlaceBehaviour.Stairs;
             
             for (int i = 0; i < 256; i++) {
                 if (Block.mb((byte)i)) {
@@ -50,6 +52,16 @@ namespace MCGalaxy {
                 } else if (Block.portal((byte)i)) {
                     walkthroughHandlers[i] = WalkthroughBehaviour.Portal;
                     deleteHandlers[i] = WalkthroughBehaviour.Portal;
+                }
+                
+                byte doorAir = Block.DoorAirs((byte)i); // if not 0, means i is a door block
+                if (Block.tDoor((byte)i)) {
+                    deleteHandlers[i] = DeleteBehaviour.RevertDoor;
+                } else if (Block.odoor((byte)i) != Block.Zero) {
+                    deleteHandlers[i] = DeleteBehaviour.ODoor;
+                } else if (doorAir != 0) {
+                    deleteHandlers[doorAir] = DeleteBehaviour.RevertDoor;
+                    deleteHandlers[i] = DeleteBehaviour.Door;
                 }
             }
         }

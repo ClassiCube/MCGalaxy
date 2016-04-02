@@ -25,9 +25,9 @@ using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
-	
+    
     public sealed partial class Player : IDisposable {
-		
+        
         bool removedFromPending = false;        
         void RemoveFromPending() {
             if (removedFromPending) return;
@@ -36,22 +36,18 @@ namespace MCGalaxy {
                 pendingNames.Remove(truename);
         }
         
-		public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
+        public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
             if ( jailed || !agreed ) { RevertBlock(x, y, z); return; }
-            if ( level.IsMuseum && Blockchange == null ) {
-                return;
-            }
+            if ( level.IsMuseum && Blockchange == null ) { return; }
 
             if ( !deleteMode ) {
                 string info = level.foundInfo(x, y, z);
                 if ( info.Contains("wait") ) return;
             }
 
-            if ( !canBuild ) {
-                RevertBlock(x, y, z); return;
-            }
+            if ( !canBuild ) { RevertBlock(x, y, z); return; }
 
             if ( Server.verifyadmins && adminpen ) {
                 SendMessage("&cYou must use &a/pass [Password]&c to verify!");
@@ -130,11 +126,51 @@ namespace MCGalaxy {
                 if (DeleteBlock(b, x, y, z, type, extType))
                     level.blockCache.Add(bP);
             } else {
-                level.blockCache.Add(bP);
-                PlaceBlock(b, x, y, z, type, extType);
+                if (PlaceBlock(b, x, y, z, type, extType))
+                    level.blockCache.Add(bP);
             }
         }
-		
+        
+        bool DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
+            if (deleteMode) { ChangeBlock(x, y, z, Block.air, 0); return true; }
+
+            Block.HandleDelete handler = Block.deleteHandlers[b];
+            if (handler != null) {
+                if (handler(this, b, x, y, z)) return false;
+            } else {
+                ChangeBlock(x, y, z, Block.air, 0);
+            }
+
+            if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt) 
+                ChangeBlock(x, (ushort)(y - 1), z, Block.grass, 0);
+            return true;
+        }
+
+        bool PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
+            if (modeType != 0) {
+                if (b == modeType) SendBlockchange(x, y, z, b);
+                else ChangeBlock(x, y, z, modeType, 0);
+                return true;
+            }
+            
+            Block.HandlePlace handler = Block.placeHandlers[type];
+            if (handler != null) {
+                if (handler(this, type, x, y, z)) return false;
+            } else {
+                ChangeBlock(x, y, z, type, extType);
+            }
+            return true;
+        }
+        
+        /// <summary> Updates the block at the given position, also turning the block below to dirt if the block above blocks light. </summary>
+        internal void ChangeBlock(ushort x, ushort y, ushort z, byte type, byte extType) {
+            level.Blockchange(this, x, y, z, type, extType);
+            if (level.GetTile(x, (ushort)(y - 1), z) == Block.grass && level.GrassDestroy 
+                && !Block.LightPass(type, extType, level.CustomBlockDefs)) {
+                level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
+            }
+        }
+        
         byte[] HandleMessage(byte[] buffer) {
             try {
                 int length = 0; byte msg = buffer[0];
@@ -187,31 +223,31 @@ namespace MCGalaxy {
                     buffer = tempbuffer;
 
                     switch (msg) {
-                    	case Opcode.Handshake:
+                        case Opcode.Handshake:
                             HandleLogin(message);
                             break;
-                    	case Opcode.SetBlockClient:
+                        case Opcode.SetBlockClient:
                             if (!loggedIn)
                                 break;
                             HandleBlockchange(message);
                             break;
-                    	case Opcode.EntityTeleport:
+                        case Opcode.EntityTeleport:
                             if (!loggedIn)
                                 break;
                             HandleMovement(message);
                             break;
-                    	case Opcode.Message:
+                        case Opcode.Message:
                             if (!loggedIn)
                                 break;
                             HandleChat(message);
                             break;
-                    	case Opcode.CpeExtInfo:
+                        case Opcode.CpeExtInfo:
                             HandleExtInfo( message );
                             break;
-                    	case Opcode.CpeExtEntry:
+                        case Opcode.CpeExtEntry:
                             HandleExtEntry( message );
                             break;
-                    	case Opcode.CpeCustomBlockSupportLevel:
+                        case Opcode.CpeCustomBlockSupportLevel:
                             HandleCustomBlockSupportLevel( message );
                             break;
                     }
@@ -254,14 +290,14 @@ namespace MCGalaxy {
                 string verify = enc.GetString(message, 65, 32).Trim();
                 verifiedName = false;
                 if (Server.verify) {
-                	string hash = BitConverter.ToString(md5.ComputeHash(enc.GetBytes(Server.salt + truename)));
-                	if (!verify.CaselessEq(hash.Replace("-", ""))) {
+                    string hash = BitConverter.ToString(md5.ComputeHash(enc.GetBytes(Server.salt + truename)));
+                    if (!verify.CaselessEq(hash.Replace("-", ""))) {
                         if (!IPInPrivateRange(ip)) {
                             Kick("Login failed! Try signing in again.", true); return;
                         }
-                	} else {
-                		verifiedName = true;
-                	}
+                    } else {
+                        verifiedName = true;
+                    }
                 }
                 DisplayName = name;
                 SkinName = name;
@@ -292,9 +328,9 @@ namespace MCGalaxy {
                         if (Ban.IsBanned(name)) {
                             string[] data = Ban.GetBanData(name);
                             Kick("Banned for \"" + data[1] + "\" by " + data[0], true);
-                    	} else {
+                        } else {
                             Kick(Server.customBanMessage, true);
-                    	}
+                        }
                         return;
                     }
                 }
@@ -481,8 +517,8 @@ namespace MCGalaxy {
             string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
             if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
                 if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
-            		Player[] players = PlayerInfo.Online.Items; 
-            		foreach (Player pl in players) { Player.SendMessage(pl, joinm); }
+                    Player[] players = PlayerInfo.Online.Items; 
+                    foreach (Player pl in players) { Player.SendMessage(pl, joinm); }
                 }
             }
             if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
@@ -520,9 +556,9 @@ namespace MCGalaxy {
                 Server.ErrorLog(ex);
             }
             try {
-            	CheckIfMuted();
+                CheckIfMuted();
             } catch { 
-            	muted = false; 
+                muted = false; 
             }
 
             Server.s.Log(name + " [" + ip + "] has joined the server.");
@@ -580,9 +616,9 @@ namespace MCGalaxy {
         }
         
         void LoadPlayerStats(DataTable playerDb) {
-        	PlayerInfo.LoadInfo(playerDb, this);
+            PlayerInfo.LoadInfo(playerDb, this);
             SendMessage("Welcome back " + color + prefix + DisplayName + "%S! " +
-        	            "You've been here " + totalLogins + " times!");
+                        "You've been here " + totalLogins + " times!");
             
             if (Server.muted.Contains(name)) {
                 muted = true;
@@ -667,116 +703,7 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
             }
         }
-
-        static char[] trimChars = { ' ' };
         
-        bool DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if (deleteMode) { ChangeBlock(x, y, z, Block.air, 0); return true; }
-
-            if ( Block.tDoor(b) ) { RevertBlock(x, y, z); return true; }
-            if ( Block.DoorAirs(b) != 0 ) {
-                if ( level.physics != 0 ) 
-                    level.Blockchange(x, y, z, Block.DoorAirs(b));
-                else 
-                    RevertBlock(x, y, z);
-                return true;
-            }
-            if ( Block.odoor(b) != Block.Zero ) {
-                if ( b == Block.odoor8 || b == Block.odoor8_air ) {
-                    ChangeBlock(x, y, z, Block.odoor(b), 0);
-                } else {
-                   RevertBlock(x, y, z);
-                }
-                return true;
-            }
-
-            switch ( b ) {
-                case Block.door_tree_air: //Door_air
-                case Block.door_obsidian_air:
-                case Block.door_glass_air:
-                case Block.door_stone_air:
-                case Block.door_leaves_air:
-                case Block.door_sand_air:
-                case Block.door_wood_air:
-                case Block.door_green_air:
-                case Block.door_tnt_air:
-                case Block.door_stair_air:
-                case Block.door_iron_air:
-                case Block.door_gold_air:
-                case Block.door_cobblestone_air:
-                case Block.door_red_air:
-                case Block.door_darkpink_air:
-                case Block.door_darkgrey_air:
-                case Block.door_lightgrey_air:
-                case Block.door_white_air:
-            		
-                case Block.door_dirt_air:
-                case Block.door_grass_air:
-                case Block.door_blue_air:
-                case Block.door_book_air:
-                    break;
-
-                default:
-                    Block.HandleDelete handler = Block.deleteHandlers[b];
-                    if (handler != null) {
-                    	if (handler(this, b, x, y, z)) return false;
-                    } else {
-                        ChangeBlock(x, y, z, Block.air, 0);
-                    }
-                    break;
-            }
-            if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt) 
-                ChangeBlock(x, (ushort)(y - 1), z, Block.grass, 0);
-            return true;
-        }
-
-        void PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if ( Block.odoor(b) != Block.Zero ) { SendMessage("oDoor here!"); return; }
-            
-            if (modeType != 0) {
-                if (b == modeType) SendBlockchange(x, y, z, b);
-                else ChangeBlock(x, y, z, modeType, 0);
-                return;
-            }
-            
-            if (level.physics == 0 || level.physics == 5) {
-                switch ( type ) {
-                    case Block.dirt: //instant dirt to grass
-                        byte above = level.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
-                        if (type == Block.custom_block)
-                            extAbove = level.GetExtTile(x, (ushort)(y + 1), z);
-                        
-                        if (Block.LightPass(above, extAbove, level.CustomBlockDefs))
-                            ChangeBlock(x, y, z, Block.grass, 0);
-                        else
-                            ChangeBlock(x, y, z, Block.dirt, 0);
-                        break;
-                    case Block.staircasestep:
-                        if (level.GetTile(x, (ushort)(y - 1), z) == Block.staircasestep) {
-                            SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
-                            ChangeBlock(x, (ushort)( y - 1 ), z, Block.staircasefull, 0);
-                            break;
-                        }
-                        ChangeBlock(x, y, z, type, extType);
-                        break;
-                    default:
-                        ChangeBlock(x, y, z, type, extType);
-                        break;
-                }
-            } else {
-                ChangeBlock(x, y, z, type, extType);
-            }
-        }
-        
-        void ChangeBlock(ushort x, ushort y, ushort z, byte type, byte extType) {
-        	level.Blockchange(this, x, y, z, type, extType);
-        	if (level.GetTile(x, (ushort)(y - 1), z) == Block.grass && level.GrassDestroy 
-        	    && !Block.LightPass(type, extType, level.CustomBlockDefs)) {
-        		level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
-        	}
-        }
-        
-
         void HandleMovement(byte[] message) {
             if ( !loggedIn || trainGrab || following != "" || frozen )
                 return;
@@ -864,25 +791,25 @@ return;
         }
 
         internal void CheckBlock(ushort x, ushort y, ushort z) {
-            byte b = level.GetTile(x, y, z);
-            byte b1 = level.GetTile(x, (ushort)(y - 1), z);
+            byte bHead = level.GetTile(x, y, z);
+            byte bFeet = level.GetTile(x, (ushort)(y - 1), z);
 
-            if ( Block.Mover(b) || Block.Mover(b1) ) {
-                if ( Block.DoorAirs(b) != 0 )
-                    level.Blockchange(x, y, z, Block.DoorAirs(b));
-                if ( Block.DoorAirs(b1) != 0 )
-                    level.Blockchange(x, (ushort)(y - 1), z, Block.DoorAirs(b1));
+            if ( Block.Mover(bHead) || Block.Mover(bFeet) ) {
+                if ( Block.DoorAirs(bHead) != 0 )
+                    level.Blockchange(x, y, z, Block.DoorAirs(bHead));
+                if ( Block.DoorAirs(bFeet) != 0 )
+                    level.Blockchange(x, (ushort)(y - 1), z, Block.DoorAirs(bFeet));
 
-                if ( level.PosToInt( x, y, z ) != oldIndex ) {
-                    Block.HandleWalkthrough handler = Block.walkthroughHandlers[b];
-                    if (handler != null && handler(this, b, x, y, z)) return;
-                    handler = Block.walkthroughHandlers[b1];
-                    if (handler != null && handler(this, b, x, (ushort)(y - 1), z)) return;
+                if (level.PosToInt(x, y, z) != oldIndex) {
+                    Block.HandleWalkthrough handler = Block.walkthroughHandlers[bHead];
+                    if (handler != null && handler(this, bHead, x, y, z)) return;
+                    handler = Block.walkthroughHandlers[bFeet];
+                    if (handler != null && handler(this, bFeet, x, (ushort)(y - 1), z)) return;
                 }
             }
-            if ( ( b == Block.tntexplosion || b1 == Block.tntexplosion ) && PlayingTntWars ) { }
-            else if ( Block.Death(b) ) HandleDeath(b); 
-            else if ( Block.Death(b1) ) HandleDeath(b1);
+            if ( ( bHead == Block.tntexplosion || bFeet == Block.tntexplosion ) && PlayingTntWars ) { }
+            else if ( Block.Death(bHead) ) HandleDeath(bHead); 
+            else if ( Block.Death(bFeet) ) HandleDeath(bFeet);
         }
 
         public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
@@ -956,8 +883,8 @@ return;
                         overallDeath++;
                     }
 
-            		if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
-            		    Chat.GlobalChatLevel(this, FullName + " %Shas died &3" + overallDeath + " times", false);
+                    if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
+                        Chat.GlobalChatLevel(this, FullName + " %Shas died &3" + overallDeath + " times", false);
                 }
                 lastDeath = DateTime.Now;
 
@@ -1146,7 +1073,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 Player.lastMSG = this.name;
 
                 if( Chat.HandleModes(this, text) )
-                	return;
+                    return;
 
                 if ( InGlobalChat ) {
                     Command.all.Find("global").Use(this, text); //Didn't want to rewrite the whole command... you lazy bastard :3
@@ -1278,11 +1205,12 @@ return;
                 }
             }
 
-        	if (Server.lava.HandlesChatMessage(this, text)) return true;
+            if (Server.lava.HandlesChatMessage(this, text)) return true;
             if (Server.zombie.HandlesChatMessage(this, text)) return true;
             return false;
         }
         
+        static char[] trimChars = { ' ' };
         public void HandleCommand(string cmd, string message) {
             cmd = cmd.ToLower();
             try {
@@ -1365,10 +1293,10 @@ return;
                 SendMessage("The game or economy associated with this command is not running, " +
                             "so this command is disabled."); return;
             }
-        	if (!(cmd == "repeat" || cmd == "pass" || cmd == "setpass")) {
-        	    lastCMD = cmd + " " + message;
-        	    lastCmdTime = DateTime.Now;
-        	}
+            if (!(cmd == "repeat" || cmd == "pass" || cmd == "setpass")) {
+                lastCMD = cmd + " " + message;
+                lastCmdTime = DateTime.Now;
+            }
             
             if (level.IsMuseum && !command.museumUsable ) {
                 SendMessage("Cannot use this command while in a museum!"); return;
@@ -1382,7 +1310,7 @@ return;
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
-            		ParameterisedQuery query = ParameterisedQuery.Create();
+                    ParameterisedQuery query = ParameterisedQuery.Create();
                     query.AddParam("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                     query.AddParam("@Name", name);
                     query.AddParam("@Cmd", cmd);

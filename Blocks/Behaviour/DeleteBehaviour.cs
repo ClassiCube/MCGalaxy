@@ -72,8 +72,29 @@ namespace MCGalaxy.BlockBehaviour {
         
         internal static bool C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
             Level.C4.BlowUp(new ushort[] { x, y, z }, p.level);
-            p.level.UpdateBlock(p, x, y, z, Block.air, 0);
+            p.ChangeBlock(x, y, z, Block.air, 0);
             return false;
+        }
+        
+        internal static bool RevertDoor(Player p, byte block, ushort x, ushort y, ushort z) {
+            p.RevertBlock(x, y, z); 
+            return true;
+        }
+        
+        internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (p.level.physics != 0) {
+                p.level.Blockchange(x, y, z, Block.DoorAirs(block), 0); return false;
+            } else {
+                p.RevertBlock(x, y, z); return true;
+            }
+        }
+        
+        internal static bool ODoor(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (block == Block.odoor8 || block == Block.odoor8_air ) {
+                p.level.Blockchange(x, y, z, Block.odoor(block), 0); return false;
+            } else {
+                p.RevertBlock(x, y, z); return true;
+            }
         }
     }
 }
