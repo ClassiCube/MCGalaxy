@@ -105,6 +105,12 @@ namespace MCGalaxy.BlockPhysics {
             lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.air);
         }
         
+        public static void DoHead(Level lvl, Check C) {
+            if (lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.zombiebody
+                && lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.creeper)
+                C.data = "revert 0";
+        }
+        
         static bool MoveZombie(Level lvl, Check C, int index) {
             if(
                 lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.air &&

@@ -642,24 +642,24 @@ namespace MCGalaxy
                 case op_water: return waterstill;
                 case op_lava: return lavastill;
 
-                case griefer_stone: return stone; //Griefer_stone
+                case griefer_stone: return stone;
                 case lava_sponge: return sponge;
 
-                case wood_float: return wood; //wood_float
+                case wood_float: return wood;
                 case lava_fast: return lava;
                 case 71:
                 case 72:
                     return Block.white;
-                case door_tree: return trunk;//door show by treetype
-                case door_obsidian: return obsidian;//door show by obsidian
-                case door_glass: return glass;//door show by glass
-                case door_stone: return rock;//door show by stone
-                case door_leaves: return leaf;//door show by leaves
-                case door_sand: return sand;//door show by sand
-                case door_wood: return wood;//door show by wood
+                case door_tree: return trunk;
+                case door_obsidian: return obsidian;
+                case door_glass: return glass;
+                case door_stone: return rock;
+                case door_leaves: return leaf;
+                case door_sand: return sand;
+                case door_wood: return wood;
                 case door_green: return green;
-                case door_tnt: return tnt;//door show by TNT
-                case door_stair: return staircasestep;//door show by Stair
+                case door_tnt: return tnt;
+                case door_stair: return staircasestep;
                 case door_iron: return iron;
                 case door_dirt: return dirt;
                 case door_grass: return grass;

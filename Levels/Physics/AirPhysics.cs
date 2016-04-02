@@ -80,16 +80,14 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void FloodAir(Level lvl, int b, byte type) {
-            if (b == -1)
-                return;
+            if (b == -1) return;
             byte block = Block.Convert(lvl.blocks[b]);
             if (block == Block.water || block == Block.lava)
                 lvl.AddUpdate(b, type);
         }
         
         internal static void PhysAir(Level lvl, int b) {
-            if (b == -1)
-                return;
+            if (b == -1) return;
             byte block = lvl.blocks[b];
             byte convBlock = Block.Convert(block);
             if (convBlock == Block.water || convBlock == Block.lava ||

@@ -33,6 +33,11 @@ namespace MCGalaxy.BlockPhysics {
             lvl.Blockchange(x, y, (ushort)(z - 1), lvl.GetTile(x, y, (ushort)(z - 1)) == Block.lavastill ? Block.air : Block.lavastill);
         }
         
+        public static void DoTntExplosion(Level lvl, Check C, Random rand) {
+            if (rand.Next(1, 11) <= 7)
+                lvl.AddUpdate(C.b, Block.air);
+        }
+		
         public static void DoLargeTnt(Level lvl, Check C, Random rand, int power) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);

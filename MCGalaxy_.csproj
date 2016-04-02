@@ -480,7 +480,7 @@
     <Compile Include="Levels\Physics\HunterPhysics.cs" />
     <Compile Include="Levels\Physics\LiquidPhysics.cs" />
     <Compile Include="Levels\Physics\RocketPhysics.cs" />
-    <Compile Include="Levels\Physics\SimplePhysics.cs" />
+    <Compile Include="Levels\Physics\OtherPhysics.cs" />
     <Compile Include="Levels\Physics\SnakePhysics.cs" />
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\TntPhysics.cs" />

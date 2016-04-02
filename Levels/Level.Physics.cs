@@ -239,7 +239,7 @@ namespace MCGalaxy {
                         if (rand.Next(10) == 0) C.time++;
                         break;
                     }
-                    if (StandardPhysics.DoLeafDecay(this, C))
+                    if (OtherPhysics.DoLeafDecay(this, C))
                         AddUpdate(C.b, Block.air);
                     C.time = 255;
                     break;
@@ -295,15 +295,7 @@ namespace MCGalaxy {
                     FinitePhysics.DoFaucet(this, C, rand); break;
                 case Block.sand:
                 case Block.gravel:
-                    if (PhysSand(C.b, blocks[C.b]))
-                    {
-                        PhysAir(PosToInt((ushort)(x + 1), y, z));
-                        PhysAir(PosToInt((ushort)(x - 1), y, z));
-                        PhysAir(PosToInt(x, y, (ushort)(z + 1)));
-                        PhysAir(PosToInt(x, y, (ushort)(z - 1)));
-                        PhysAir(PosToInt(x, (ushort)(y + 1), z));
-                    }
-                    C.time = 255;
+                    OtherPhysics.DoFalling(this, C, blocks[C.b]);
                     break;
                 case Block.sponge: //SPONGE
                     PhysSponge(C.b);
@@ -352,18 +344,12 @@ namespace MCGalaxy {
 
                 case Block.staircasestep:
                 case Block.cobblestoneslab:
-                    PhysStair(C.b);
-                    C.time = 255;
-                    break;
-                case Block.wood_float: //wood_float
-                    PhysFloatwood(C.b);
-                    C.time = 255;
-                    break;
-                case Block.lava_fast: //lava_fast
+                    OtherPhysics.DoStairs(this, C); break;
+                case Block.wood_float:
+                    OtherPhysics.DoFloatwood(this, C); break;
+                case Block.lava_fast:
                 case Block.fastdeathlava:
-                    LiquidPhysics.DoFastLava(this, C, rand);
-                    break;
-
+                    LiquidPhysics.DoFastLava(this, C, rand); break;
                     //Special blocks that are not saved
                 case Block.air_flood:
                     AirPhysics.DoFlood(this, C, rand, AirFlood.Full, Block.air_flood); break;
@@ -376,15 +362,11 @@ namespace MCGalaxy {
                 case Block.smalltnt:
                     TntPhysics.DoSmallTnt(this, C, rand); break;
                 case Block.bigtnt:
-                    TntPhysics.DoLargeTnt(this, C, rand, 1);
-                    break;
+                    TntPhysics.DoLargeTnt(this, C, rand, 1); break;
                 case Block.nuketnt:
-                    TntPhysics.DoLargeTnt(this, C, rand, 4);
-                    break;
+                    TntPhysics.DoLargeTnt(this, C, rand, 4); break;
                 case Block.tntexplosion:
-                    if (rand.Next(1, 11) <= 7)
-                        AddUpdate(C.b, Block.air);
-                    break;
+                    TntPhysics.DoTntExplosion(this, C, rand); break;
                 case Block.train:
                     TrainPhysics.Do(this, C, rand); break;
                 case Block.magma:
@@ -397,12 +379,7 @@ namespace MCGalaxy {
                 case Block.birdwater:
                     BirdPhysics.Do(this, C, rand); break;
                 case Block.snaketail:
-                    if (GetTile(IntOffset(C.b, -1, 0, 0)) != Block.snake ||
-                        GetTile(IntOffset(C.b, 1, 0, 0)) != Block.snake ||
-                        GetTile(IntOffset(C.b, 0, 0, 1)) != Block.snake ||
-                        GetTile(IntOffset(C.b, 0, 0, -1)) != Block.snake)
-                        C.data = "revert 0";
-                    break;
+                    SnakePhysics.DoTail(this, C); break;
                 case Block.snake:
                     SnakePhysics.Do(this, C, rand); break;
                 case Block.birdred:
@@ -423,14 +400,9 @@ namespace MCGalaxy {
                 case Block.firework:
                     FireworkPhysics.Do(this, C, rand); break;
                 case Block.zombiehead:
-                    if (GetTile(IntOffset(C.b, 0, -1, 0)) != Block.zombiebody &&
-                        GetTile(IntOffset(C.b, 0, -1, 0)) != Block.creeper)
-                        C.data = "revert 0";
-                    break;
-                case Block.zombiebody:
+                    ZombiePhysics.DoHead(this, C); break;
                 case Block.creeper:
                     ZombiePhysics.Do(this, C, rand); break;
-
                 case Block.c4:
                     C4.C4s c4 = C4.Find(this, ((Player)C.data).c4circuitNumber);
                     if (c4 != null) {
@@ -677,87 +649,6 @@ namespace MCGalaxy {
                     break;
             }
         }
-
-        bool PhysSand(int b, byte type) { //also does gravel
-            if (b == -1 || physics == 0 || physics == 5) return false;
-
-            int tempb = b;
-            bool blocked = false, moved = false;
-
-            do
-            {
-                tempb = IntOffset(tempb, 0, -1, 0); //Get block below each loop
-                if (GetTile(tempb) != Block.Zero)
-                {
-                    switch (blocks[tempb])
-                    {
-                        case 0: //air lava water
-                        case 8:
-                        case 10:
-                            moved = true;
-                            break;
-
-                        case 6:
-                        case 37:
-                        case 38:
-                        case 39:
-                        case 40:
-                            if (physics > 1 && physics != 5) //Adv physics crushes plants with sand
-                            {
-                                moved = true;
-                            }
-                            else
-                            {
-                                blocked = true;
-                            }
-                            break;
-
-                        default:
-                            blocked = true;
-                            break;
-                    }
-                    if (physics > 1)
-                    {
-                        if (physics != 5)
-                        {
-                            blocked = true;
-                        }
-                    }
-                }
-                else
-                {
-                    blocked = true;
-                }
-            } while (!blocked);
-
-            if (moved)
-            {
-                AddUpdate(b, 0);
-                if (physics > 1)
-                {
-                    AddUpdate(tempb, type);
-                }
-                else
-                {
-                    AddUpdate(IntOffset(tempb, 0, 1, 0), type);
-                }
-            }
-
-            return moved;
-        }
-
-        void PhysStair(int b) {
-            int bBelow = IntOffset(b, 0, -1, 0);
-            byte tile = GetTile(bBelow);
-            
-            if (tile == Block.staircasestep) {
-                AddUpdate(b, Block.air);
-                AddUpdate(bBelow, Block.staircasefull);
-            } else if (tile == Block.cobblestoneslab) {
-                AddUpdate(b, Block.air);
-                AddUpdate(bBelow, Block.stone);
-            }
-        }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {
             for (int yy = y - 2; yy <= y + 2; ++yy) {
@@ -816,30 +707,6 @@ namespace MCGalaxy {
                     
                     if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
                         AddCheck(index);
-                }
-            }
-        }
-        
-        void PhysFloatwood(int b) {
-            int tempb = IntOffset(b, 0, -1, 0); //Get block below
-            if (GetTile(tempb) != Block.Zero)
-            {
-                if (GetTile(tempb) == Block.air)
-                {
-                    AddUpdate(b, Block.air);
-                    AddUpdate(tempb, Block.wood_float);
-                    return;
-                }
-            }
-
-            tempb = IntOffset(b, 0, 1, 0); //Get block above
-            if (GetTile(tempb) != Block.Zero)
-            {
-                if (Block.Convert(GetTile(tempb)) == Block.water)
-                {
-                    AddUpdate(b, Block.water);
-                    AddUpdate(tempb, Block.wood_float);
-                    return;
                 }
             }
         }

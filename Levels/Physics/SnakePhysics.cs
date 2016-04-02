@@ -102,6 +102,14 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
+        public static void DoTail(Level lvl, Check C) {
+            if (lvl.GetTile(lvl.IntOffset(C.b, -1, 0, 0)) != Block.snake
+                || lvl.GetTile(lvl.IntOffset(C.b, 1, 0, 0)) != Block.snake
+                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, 1)) != Block.snake
+                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, -1)) != Block.snake)
+                C.data = "revert 0";
+        }
+        
         static bool MoveSnake(Level lvl, Check C, int index) {
             if (
                 lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.air &&
