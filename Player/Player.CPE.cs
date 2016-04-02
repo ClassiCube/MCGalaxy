@@ -177,9 +177,9 @@ namespace MCGalaxy
         }
         
         public void UpdateModels() {
-        	Player[] players = PlayerInfo.Online.Items;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-        		if (p.level != level) continue;
+                if (p.level != level) continue;
                 if (p == this) {
                     if (model != "humanoid") SendChangeModel(0xFF, model);
                     continue;
@@ -197,22 +197,24 @@ namespace MCGalaxy
             }
         }
         
+        string lastUrl = "";
         public void SendCurrentMapAppearance() {
-        	byte edgeBlock = level.EdgeBlock, horBlock = level.HorizonBlock;
-        	if (edgeBlock >= Block.CpeCount && !hasBlockDefs)
-        	    edgeBlock = level.GetFallback(edgeBlock);
-        	if (horBlock >= Block.CpeCount && !hasBlockDefs)
-        	    horBlock = level.GetFallback(horBlock);  
-        	    
+            byte edgeBlock = level.EdgeBlock, horBlock = level.HorizonBlock;
+            if (edgeBlock >= Block.CpeCount && !hasBlockDefs)
+                edgeBlock = level.GetFallback(edgeBlock);
+            if (horBlock >= Block.CpeCount && !hasBlockDefs)
+                horBlock = level.GetFallback(horBlock);  
+                
             if (EnvMapAppearance == 2) {
                 string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
                 if (url == "") 
                     url = Server.defaultTexturePackUrl == "" ? Server.defaultTerrainUrl : Server.defaultTexturePackUrl;
                 
                 // reset all other textures back to client default.
-                SendSetMapAppearanceV2("", edgeBlock, horBlock, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
-                if (url != "")
-                    SendSetMapAppearanceV2(url, edgeBlock, horBlock, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
+                if (url != lastUrl)
+                    SendSetMapAppearanceV2("", edgeBlock, horBlock, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
+                SendSetMapAppearanceV2(url, edgeBlock, horBlock, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
+                lastUrl = url;
             } else {
                 string url = level.terrainUrl == "" ? Server.defaultTerrainUrl : level.terrainUrl;
                 SendSetMapAppearance(url, edgeBlock, horBlock, level.EdgeLevel);
@@ -276,8 +278,8 @@ namespace MCGalaxy
     }
     
     public enum CpeMessageType : byte {
-    	Normal = 0, Status1 = 1, Status2 = 2, Status3 = 3,
-    	BottomRight1 = 11, BottomRight2 = 12, BottomRight3 = 13,
-    	Announcement = 100,
+        Normal = 0, Status1 = 1, Status2 = 2, Status3 = 3,
+        BottomRight1 = 11, BottomRight2 = 12, BottomRight3 = 13,
+        Announcement = 100,
     }
 }
