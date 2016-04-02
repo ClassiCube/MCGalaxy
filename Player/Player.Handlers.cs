@@ -778,38 +778,6 @@ namespace MCGalaxy {
                 case Block.door_blue_air:
                 case Block.door_book_air:
                     break;
-                case Block.rocketstart:
-                    if ( level.physics < 2 || level.physics == 5 ) {
-                        RevertBlock(x, y, z);
-                    } else {
-                        int newZ = 0, newX = 0, newY = 0;
-
-                        SendBlockchange(x, y, z, Block.rocketstart);
-                        if ( rot[0] < 48 || rot[0] > ( 256 - 48 ) )
-                            newZ = -1;
-                        else if ( rot[0] > ( 128 - 48 ) && rot[0] < ( 128 + 48 ) )
-                            newZ = 1;
-
-                        if ( rot[0] > ( 64 - 48 ) && rot[0] < ( 64 + 48 ) )
-                            newX = 1;
-                        else if ( rot[0] > ( 192 - 48 ) && rot[0] < ( 192 + 48 ) )
-                            newX = -1;
-
-                        if ( rot[1] >= 192 && rot[1] <= ( 192 + 32 ) )
-                            newY = 1;
-                        else if ( rot[1] <= 64 && rot[1] >= 32 )
-                            newY = -1;
-
-                        if ( 192 <= rot[1] && rot[1] <= 196 || 60 <= rot[1] && rot[1] <= 64 ) { newX = 0; newZ = 0; }
-
-                        byte b1 = level.GetTile((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 ));
-                        byte b2 = level.GetTile((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ ));
-                        if ( b1 == Block.air && b2 == Block.air && level.CheckClear((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 )) && level.CheckClear((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ )) ) {
-                            level.Blockchange((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 ), Block.rockethead);
-                            level.Blockchange((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ ), Block.fire);
-                        }
-                    }
-                    break;
 
                 case Block.c4det:
                     Level.C4.BlowUp(new ushort[] { x, y, z }, level);

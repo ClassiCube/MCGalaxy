@@ -32,12 +32,44 @@ namespace MCGalaxy {
         internal static HandlePlace[] placeHandlers = new Block.HandlePlace[256];
         
         static void SetupCoreHandlers() {
+            deleteHandlers[Block.rocketstart] = RocketStartDelete;
             deleteHandlers[Block.firework] = FireworkDelete;
-        }        
+        }
+
+        static bool RocketStartDelete(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (p.level.physics < 2 || p.level.physics == 5) { p.RevertBlock(x, y, z); return true; }
+            
+            int newZ = 0, newX = 0, newY = 0;
+            p.SendBlockchange(x, y, z, Block.rocketstart);
+            if ( p.rot[0] < 48 || p.rot[0] > ( 256 - 48 ) )
+                newZ = -1;
+            else if ( p.rot[0] > ( 128 - 48 ) && p.rot[0] < ( 128 + 48 ) )
+                newZ = 1;
+
+            if ( p.rot[0] > ( 64 - 48 ) && p.rot[0] < ( 64 + 48 ) )
+                newX = 1;
+            else if ( p.rot[0] > ( 192 - 48 ) && p.rot[0] < ( 192 + 48 ) )
+                newX = -1;
+
+            if ( p.rot[1] >= 192 && p.rot[1] <= ( 192 + 32 ) )
+                newY = 1;
+            else if ( p.rot[1] <= 64 && p.rot[1] >= 32 )
+                newY = -1;
+
+            if ( 192 <= p.rot[1] && p.rot[1] <= 196 || 60 <= p.rot[1] && p.rot[1] <= 64 ) { newX = 0; newZ = 0; }
+
+            byte b1 = p.level.GetTile((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 ));
+            byte b2 = p.level.GetTile((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ ));
+            if ( b1 == Block.air && b2 == Block.air && p.level.CheckClear((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 )) 
+                && p.level.CheckClear((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ )) ) {
+                p.level.Blockchange((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 ), Block.rockethead);
+                p.level.Blockchange((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ ), Block.fire);
+            }
+            return false;
+        }
         
         static bool FireworkDelete(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (p.level.physics == 5) { p.RevertBlock(x, y, z); return true; }
-            if (p.level.physics == 0) { p.RevertBlock(x, y, z); return true; }
+            if (p.level.physics == 0 || p.level.physics == 5) { p.RevertBlock(x, y, z); return true; }
             
             Random rand = new Random();
             ushort x2 = (ushort)(x + rand.Next(0, 2) - 1);
@@ -45,12 +77,12 @@ namespace MCGalaxy {
             byte b1 = p.level.GetTile(x2, (ushort)(y + 2), z2);
             byte b2 = p.level.GetTile(x2, (ushort)(y + 1), z2);
             
-            if (b1 == Block.air && b2 == Block.air && p.level.CheckClear(x2, (ushort)(y + 1), z2) 
+            if (b1 == Block.air && b2 == Block.air && p.level.CheckClear(x2, (ushort)(y + 1), z2)
                 && p.level.CheckClear(x2, (ushort)(y + 2), z2)) {
                 p.level.Blockchange(x2, (ushort)(y + 2), z2, Block.firework);
                 p.level.Blockchange(x2, (ushort)(y + 1), z2, Block.lavastill, false, "wait 1 dissipate 100");
             }
-            p.RevertBlock(x, y, z); return true;
-        }        
+            p.RevertBlock(x, y, z); return false;
+        }
     }
 }

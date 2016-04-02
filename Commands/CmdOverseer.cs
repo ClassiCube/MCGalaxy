@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands
             } else if (cmd == "ZONE") {
                 HandleZoneCommand(p, arg, arg2);
             } else if (cmd == "KICKALL") {
-            	Player[] players = PlayerInfo.Online.Items;
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level == p.level && pl.name != p.name)
                         Command.all.Find("goto").Use(pl, Server.mainLevel.name);
@@ -98,45 +98,10 @@ namespace MCGalaxy.Commands
         }
         
         void HandleEnvCommand(Player p, string type, string value) {
-            if (type == "FOG") {
-                if (value.Length != 6 && value != "") {
-                    Player.SendMessage(p, "Fog color must be a 6 digit color hex code."); return;
-                }
-                string col = value == "" ? "-1" : value;
-                Command.all.Find("env").Use(p, "l fog " + col);
-            } else if (type == "CLOUD") {
-                if (value.Length != 6 && value != "") {
-                    Player.SendMessage(p, "Clouds color must be a 6 digit color hex code."); return;
-                }
-                string col = value == "" ? "-1" : value;
-                Command.all.Find("env").Use(p, "l clouds " + col);
-            } else if (type == "SKY") {
-                if (value.Length != 6 && value != "") {
-                    Player.SendMessage(p, "Sky color must be a 6 digit color hex code."); return;
-                }
-                string col = value == "" ? "-1" : value;
-                Command.all.Find("env").Use(p, "l sky " + col);
-            } else if (type == "SHADOW") {
-                if (value.Length != 6 && value != "") {
-                    Player.SendMessage(p, "Shadow color must be a 6 digit color hex code."); return;
-                }
-                string col = value == "" ? "-1" : value;
-                Command.all.Find("env").Use(p, "l shadow " + col);
-            } else if (type == "SUN") {
-                if (value.Length != 6 && value != "") {
-                    Player.SendMessage(p, "Sun color must be a 6 digit color hex code."); return;
-                }
-                string col = value == "" ? "-1" : value;
-                Command.all.Find("env").Use(p, "l sun " + col);
-            } else if (type == "LEVEL") {
-                string level = value == "" ? "normal" : value;
-                Command.all.Find("env").Use(p, "l level " + level);
-            } else if (type == "HORIZON") {
-                string block = value == "" ? "normal" : value;
-                Command.all.Find("env").Use(p, "l horizon " + block);
-            } else if (type == "BORDER") {
-                string block = value == "" ? "normal" : value;
-                Command.all.Find("env").Use(p, "l border " + block);
+            if (type == "FOG" || type == "CLOUD" || type == "SKY" || type == "SHADOW" || type == "SUN" || 
+                type == "LEVEL" || type == "CLOUDHEIGHT" || type == "HORIZON" || type == "BORDER" || type == "MAXFOG") {
+                string col = value == "" ? "normal" : value;
+                Command.all.Find("env").Use(p, "l " + type.ToLower() + " " + col);
             } else if (type == "WEATHER") {
                 if (value == "SUN" || value == "NORMAL") {
                     Command.all.Find("env").Use(p, "weather 0");
@@ -150,8 +115,10 @@ namespace MCGalaxy.Commands
             } else {
                 Player.SendMessage(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
                 Player.SendMessage(p, "/os env level -- Sets the water height of your map");
+                Player.SendMessage(p, "/os env cloudheight -- Sets the cloud height of your map");
+                Player.SendMessage(p, "/os env maxcfog -- Sets the max fog distance in your map");
                 Player.SendMessage(p, "/os env horizon -- Sets what block the \"ocean\" shows outside your map");
-                Player.SendMessage(p, "/os env border -- Sets what block replaces the bedrock below sea level in your map");
+                Player.SendMessage(p, "/os env border -- Sets what block replaces the \"bedrock\" below sea level in your map");
                 Player.SendMessage(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
                 Player.SendMessage(p, "  Warning: Shrub,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock.");
                 Player.SendMessage(p, "  Note: If no hex or block is given, the default will be used.");
@@ -171,7 +138,7 @@ namespace MCGalaxy.Commands
                 string level = p.name.ToLower();
                 if (LevelInfo.ExistsOffline(level) || LevelInfo.ExistsOffline(level + "00")) {
                     for (int i = 2; i < p.group.OverseerMaps + 2; i++) {
-                		if (LevelInfo.ExistsOffline(p.name.ToLower() + i)) continue;
+                        if (LevelInfo.ExistsOffline(p.name.ToLower() + i)) continue;
                         if(i > p.group.OverseerMaps) {
                             p.SendMessage("You have reached the limit for your overseer maps."); return;
                         }
