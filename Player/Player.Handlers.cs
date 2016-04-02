@@ -877,7 +877,7 @@ return;
                     Block.HandleWalkthrough handler = Block.walkthroughHandlers[b];
                     if (handler != null && handler(this, b, x, y, z)) return;
                     handler = Block.walkthroughHandlers[b1];
-                    if (handler != null && handler(this, b, x, y, z)) return;
+                    if (handler != null && handler(this, b, x, (ushort)(y - 1), z)) return;
                 }
             }
             if ( ( b == Block.tntexplosion || b1 == Block.tntexplosion ) && PlayingTntWars ) { }
