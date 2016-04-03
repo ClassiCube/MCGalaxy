@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text.RegularExpressions;
 using MCGalaxy.SQL;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdBanip : Command {
         public override string name { get { return "banip"; } }

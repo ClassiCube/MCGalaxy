@@ -102,7 +102,7 @@ namespace MCGalaxy {
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     try {
-                        if (!line.StartsWith("#") && line.Contains(':')) {
+                        if (!line.StartsWith("#") && line.IndexOf(':') >= 0) {
                             string[] parts = line.ToLower().Split(':');
                             Command cmd = Command.all.Find(parts[0]);
                             

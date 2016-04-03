@@ -16,12 +16,9 @@ http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace MCGalaxy.Gui.Utils {
 

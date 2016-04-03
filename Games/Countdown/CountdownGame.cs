@@ -254,12 +254,12 @@ namespace MCGalaxy.Games {
         void MessagePlayersLeft() {
             switch (playersleftlist.Count) {
                 case 1:
-                    mapon.ChatLevel(playersleftlist.Last().color + playersleftlist.Last().name + Server.DefaultColor + " is the winner!!");
-                    End(playersleftlist.Last());
+        			mapon.ChatLevel(playersleftlist[0].color + playersleftlist[0].name + Server.DefaultColor + " is the winner!!");
+        			End(playersleftlist[0]);
                     break;
                 case 2:
                     mapon.ChatLevel("Only 2 Players left:");
-                    mapon.ChatLevel(playersleftlist.First().color + playersleftlist.First().name + Server.DefaultColor + " and " + playersleftlist.Last().color + playersleftlist.Last().name);
+                    mapon.ChatLevel(playersleftlist[0].color + playersleftlist[0].name + Server.DefaultColor + " and " + playersleftlist[1].color + playersleftlist[1].name);
                     break;
                 case 5:
                     mapon.ChatLevel("Only 5 Players left:");

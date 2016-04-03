@@ -14,7 +14,6 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
 namespace MCGalaxy {

@@ -16,23 +16,14 @@
 	permissions and limitations under the Licenses.
 */
 using System;
-using System.Windows.Forms;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
-using MCGalaxy;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Threading;
-using System.Text.RegularExpressions;
+using System.IO;
 using System.Net;
 using System.Reflection;
-
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
+using MCGalaxy;
 
 namespace MCGalaxy_.Gui
 {

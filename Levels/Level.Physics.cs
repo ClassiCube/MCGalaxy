@@ -16,12 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using MCGalaxy.BlockPhysics;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Games;
 
 namespace MCGalaxy {

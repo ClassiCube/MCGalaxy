@@ -1,7 +1,4 @@
 using System;
-using System.Data;
-using System.Linq;
-using MCGalaxy.SQL;
 
 namespace MCGalaxy {
     public class WhoWas {

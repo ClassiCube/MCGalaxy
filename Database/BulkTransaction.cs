@@ -16,13 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using MySql.Data.MySqlClient;
-using MCGalaxy.SQL.Native;
 
 namespace MCGalaxy.SQL {
     
