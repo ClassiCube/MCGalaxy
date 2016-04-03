@@ -73,8 +73,9 @@ namespace MCGalaxy.Commands
                 else message = message.Substring(message.IndexOf(' ') + 1);
             }
 
-            if (p != null)
-                if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) { Player.SendMessage(p, "Setting map options is reserved to " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + "+"); return; }
+            if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
+                MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 1), "to set map options."); return;
+            }
 
             string foundStart;
             if (message.IndexOf(' ') == -1) foundStart = message.ToLower();

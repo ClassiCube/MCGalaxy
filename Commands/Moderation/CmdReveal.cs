@@ -43,11 +43,9 @@ namespace MCGalaxy.Commands {
             }
 
             if (parts[0] == "all") {
-                if (lvl == null) {
-                    Player.SendMessage(p, "Level not found."); return;
-                }            
-                if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) { 
-                    Player.SendMessage(p, "Reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + "+"); return; 
+                if (lvl == null) { Player.SendMessage(p, "Level not found."); return; }            
+                if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
+            	    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "reload all players in a map."); return;
                 }
 
             	Player[] players = PlayerInfo.Online.Items;

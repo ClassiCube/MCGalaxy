@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
         
         void HandleSetup(Player p, string message, string[] args) {
             if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-                Player.SendMessage(p, "%cYou are not allowed to use %f/eco setup"); return;
+        	    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "setup the economy."); return;
             }
             
         	switch (args[0].ToLower()) {

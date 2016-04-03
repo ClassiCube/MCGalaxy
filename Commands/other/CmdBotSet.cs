@@ -69,7 +69,9 @@ namespace MCGalaxy.Commands
                 }
                 else if (foundPath == "kill")
                 {
-                    if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) { Player.SendMessage(p, "Only a " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + "+ may toggle killer instinct."); return; }
+                    if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
+                	    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "to toggle bot killer instinct."); return;
+                	}
                     Pb.kill = !Pb.kill;
                     if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + Server.DefaultColor + "'s kill instinct: " + Pb.kill, false);
                     Server.s.Log(Pb.name + "'s kill instinct: " + Pb.kill);

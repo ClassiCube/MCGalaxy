@@ -89,8 +89,8 @@ namespace MCGalaxy.Commands
                 if (who.group.Permission > p.group.Permission) {
                     Player.SendMessage(p, "Cannot undo a user of higher or equal rank"); return;
                 }
-                if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 1)) {
-                    Player.SendMessage(p, "Only an " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 1)).name + "+ may undo other people's actions"); return;
+                if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
+                    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "to undo other players."); return;
                 }
             }
             
@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands
         
         void UndoOfflinePlayer(Player p, long seconds, string whoName) {
             if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-                Player.SendMessage(p, "Reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + "+"); return;
+                MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "to undo other players."); return;
             }
 
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();
@@ -130,7 +130,7 @@ namespace MCGalaxy.Commands
         
         void UndoLevelPhysics(Player p, long seconds) {
             if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this, 2)) {
-                Player.SendMessage(p, "Reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 2)).name + "+"); return;
+        		MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 2), "to undo physics."); return;
             }
             if (p != null && !p.group.CanExecute("physics")) {
                 Player.SendMessage(p, "You can only undo physics if you can use /physics."); return;

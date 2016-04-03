@@ -63,8 +63,7 @@ namespace MCGalaxy.Commands
                 {
                     if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this))
                     {
-                        Player.SendMessage(p, "You must be at least " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " to send the changelog to all players.");
-                        return;
+                        MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "to send the changelog to all players."); return;
                     }
                     for (int k = 0; k < strArray.Length; k++)
                     {

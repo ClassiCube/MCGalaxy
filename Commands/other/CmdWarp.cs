@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { Player.SendMessage(p, "You can't use that because you aren't a" + Group.findPermInt(CommandOtherPerms.GetPerm(this, 1)).name + "+"); return; }
+                else { MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 1), "to create warps."); return; }
             }
 
             if (par0 == "delete" || par0 == "remove" || par0 == "d" || par0 == "r")
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { Player.SendMessage(p, "You can't use that because you aren't a" + Group.findPermInt(CommandOtherPerms.GetPerm(this, 2)).name + "+"); return; }
+                else { MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 2), "to delete warps"); return; }
             }
 
             if (par0 == "move" || par0 == "change" || par0 == "edit" || par0 == "m" || par0 == "e")
@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { Player.SendMessage(p, "You can't use that because you aren't a " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 3)).name + "+"); return; }
+                else { MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 3), "to move warps."); return; }
             }
 
             else

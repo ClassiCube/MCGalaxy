@@ -34,9 +34,6 @@ namespace MCGalaxy.Commands
             if (number != 1) { Help(p); return; }
 
             Player who = PlayerInfo.Find(message);
-
-            string error = "You are not allowed to undo this player";
-
             if (who == null || p == null || !(who.group.Permission >= LevelPermission.Operator && p.group.Permission < LevelPermission.Operator))
             {
                 //This executes if who doesn't exist, if who is lower than Operator, or if the user is an op+.
@@ -44,7 +41,7 @@ namespace MCGalaxy.Commands
                 Command.all.Find("undo").Use(p, ((who == null) ? message : who.name) + " all"); //Who null check
                 return;
             }
-            Player.SendMessage(p, error);
+            Player.SendMessage(p, "You are not allowed to undo this player");
         }
 
 
