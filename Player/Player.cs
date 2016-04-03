@@ -475,27 +475,30 @@ namespace MCGalaxy {
             	if ((p.hidden || p.Game.Referee) && !self) continue;
                 
                 if (p != other) {
-                    SpawnEntity(p, other, p.id, x, y, z, rotx, roty, possession);
+                    other.SpawnEntity(p, p.id, x, y, z, rotx, roty, possession);
                 } else if (self) {
                     other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
                     other.oldpos = other.pos; other.basepos = other.pos; other.oldrot = other.rot;
-                    SpawnEntity(p, other, 0xFF, x, y, z, rotx, roty, possession);
+                    other.SpawnEntity(other, 0xFF, x, y, z, rotx, roty, possession);
                 }
             }
         }
         
-        internal static void SpawnEntity(Player p, Player dst, byte id, ushort x, ushort y, ushort z, 
+        internal void SpawnEntity(Player p, byte id, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, string possession = "") {
             if (!Server.zombie.Running || !p.Game.Infected) {
-                dst.SendSpawn(id, p.color + p.truename + possession, x, y, z, rotx, roty); return;
+                string col = p.color;
+                if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !HasCpeExt(CpeExt.TextColors))
+                    col = "&" + Colors.GetFallback(col[1]);
+                SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty); return;
             }
             
-            if (Server.zombie.ZombieName != "" && !dst.Game.Aka)
-                dst.SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
+            if (Server.zombie.ZombieName != "" && !Game.Aka)
+                SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
             else
-                dst.SendSpawn(id, Colors.red + p.truename + possession, x, y, z, rotx, roty);
-            if (dst.HasCpeExt(CpeExt.ChangeModel) && id != 0xFF)
-                dst.SendChangeModel(id, "zombie");
+                SendSpawn(id, Colors.red + p.truename + possession, x, y, z, rotx, roty);
+            if (HasCpeExt(CpeExt.ChangeModel) && id != 0xFF)
+                SendChangeModel(id, "zombie");
         }
         
         public static void GlobalDespawn(Player p, bool self) {

@@ -33,7 +33,7 @@ namespace MCGalaxy {
         internal static HandlePlace[] placeHandlers = new Block.HandlePlace[256];
         
         /// <summary> Returns whether this block handles the player walking through this block at the given coordinates. </summary>
-        /// <remarks>If this returns true, the usual 'checking dirt/grass below' behaviour is skipped. </remarks>
+        /// <remarks>If this returns true, the usual 'death check' behaviour is skipped. </remarks>
         public delegate bool HandleWalkthrough(Player p, byte block, ushort x, ushort y, ushort z);
         internal static HandleWalkthrough[] walkthroughHandlers = new Block.HandleWalkthrough[256];
         

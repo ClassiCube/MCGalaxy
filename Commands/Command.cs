@@ -63,7 +63,7 @@ namespace MCGalaxy
         }
         
         protected void MessageNeedPerms(Player p, string action, int num = 1) {
-            int perm = CommandOtherPerms.GetPerm(this, num)
+            int perm = CommandOtherPerms.GetPerm(this, num);
             Group grp = Group.findPermInt(perm);
             if (grp == null)
                 Player.SendMessage(p, "Onlys rank with a permission level greater than &a" + perm + "%Scan " + action);

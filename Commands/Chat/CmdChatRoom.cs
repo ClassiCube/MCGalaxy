@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleCreate(Player p, string[] parts) {
-        	if (!CheckAdditionalPerm(p, 1)) { MessageNeedPerms(p, "can create a chatroom.", 1); return; }
+            if (!CheckAdditionalPerm(p, 1)) { MessageNeedPerms(p, "can create a chatroom.", 1); return; }
             if (parts.Length <= 1) {
                 Player.SendMessage(p, "You need to provide a new chatroom name.");
                 return;
@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (!canDeleteForce) {
-            	Player[] players = PlayerInfo.Online.Items; 
+                Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player pl in players) {
                     if (pl != p && pl.Chatroom == room) {
                         Player.SendMessage(p, "Sorry, someone else is in the chatroom");

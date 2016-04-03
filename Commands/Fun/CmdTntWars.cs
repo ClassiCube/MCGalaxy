@@ -269,7 +269,7 @@ namespace MCGalaxy.Commands
                         case "lvl":
                         case "map":
                         case "m":
-							if ((CheckAdditionalPerm(p))
+							if (CheckAdditionalPerm(p))
                             {
                                 foreach (Player who in p.level.players)
                                 {
@@ -289,7 +289,7 @@ namespace MCGalaxy.Commands
                         case "pls":
                         case "pl":
 						case "p":
-							if CheckAdditionalPerm(p))
+							if (CheckAdditionalPerm(p))
                             {
                                 TntWarsGame gm = TntWarsGame.GetTntWarsGame(p);
                                 if (gm == null)

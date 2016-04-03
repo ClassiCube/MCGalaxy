@@ -89,7 +89,7 @@ namespace MCGalaxy.Games
                 ushort y1 = (ushort)((1 + y) * 32);
                 ushort z1 = (ushort)((0.5 + z) * 32);
                 rotx = spawns[rnd].rotx;
-                p.SendSpawn(0xFF, p.name, x1, y1, z1, (byte)rotx, 0);
+                p.SpawnEntity(p, 0xFF, x1, y1, z1, (byte)rotx, 0);
                 //p.health = 100;
             }
             else
@@ -99,7 +99,7 @@ namespace MCGalaxy.Games
                 ushort z = (ushort)((0.5 + mapOn.spawnz) * 32);
                 ushort rotx = mapOn.rotx;
                 ushort roty = mapOn.roty;
-                p.SendSpawn(0xFF, p.name, x, y, z, (byte)rotx, (byte)roty);
+                p.SpawnEntity(p, 0xFF, x, y, z, (byte)rotx, (byte)roty);
             }
             //p.spawning = false;
         }

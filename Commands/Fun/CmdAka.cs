@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             foreach (Player pl in players) {
                 if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.Game.Referee) continue;                
                 p.SendDespawn(pl.id);
-                Player.SpawnEntity(pl, p, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
+                p.SpawnEntity(pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }
         }
         

@@ -65,7 +65,7 @@ namespace MCGalaxy.Games {
                     player.SendMessage("Sending you to the correct map.");
                     Command.all.Find("goto").Use(player, mapon.name);
                 }
-                player.SendSpawn(0xFF, player.color + player.truename, x1, y1, z1, (byte)0, (byte)0);
+                p.SpawnEntity(p, 0xFF, x1, y1, z1, 0, 0);
             }
             
             squaresLeft.Clear();
