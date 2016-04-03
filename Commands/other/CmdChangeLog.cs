@@ -61,15 +61,11 @@ namespace MCGalaxy.Commands
 
                 if (split[0] == "all")
                 {
-                    if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this))
-                    {
-                        MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "to send the changelog to all players."); return;
-                    }
+                	if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can send the changelog to all players."); return; }
                     for (int k = 0; k < strArray.Length; k++)
                     {
                         Player.GlobalMessage(strArray[k]);
-                    }
-                    
+                    }                   
                     return;
                 }
                 else
@@ -84,8 +80,7 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(player, strArray[l]);
                     }
                     
-                    Player.SendMessage(p, "The Changelog was successfully sent to " + player.name + ".");
-                    
+                    Player.SendMessage(p, "The Changelog was successfully sent to " + player.name + ".");                 
                     return;
                 }
             }

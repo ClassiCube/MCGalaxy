@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands
 
             if (par0 == "create" || par0 == "add" || par0 == "c" || par0 == "a")
             {
-                if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
+            	if (CheckAdditionalPerm(p, 1))
                 {
                     if (par1 == null) { Player.SendMessage(p, "You didn't specify a name for the warp!"); return; }
                     if (Warp.WarpExists(par1)) { Player.SendMessage(p, "Warp has already been created!!"); return; }
@@ -85,12 +85,12 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 1), "to create warps."); return; }
+                else { MessageNeedPerms(p, "can create warps.", 1); return; }
             }
 
             if (par0 == "delete" || par0 == "remove" || par0 == "d" || par0 == "r")
             {
-                if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 2))
+                if (CheckAdditionalPerm(p, 2))
                 {
                     if (par1 == null) { Player.SendMessage(p, "You didn't specify a warp to delete!"); return; }
                     if (!Warp.WarpExists(par1)) { Player.SendMessage(p, "Warp doesn't exist!!"); return; }
@@ -110,12 +110,12 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 2), "to delete warps"); return; }
+                else { MessageNeedPerms(p, "can delete warps.", 2); return; }
             }
 
             if (par0 == "move" || par0 == "change" || par0 == "edit" || par0 == "m" || par0 == "e")
             {
-                if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 3))
+                if (CheckAdditionalPerm(p, 3))
                 {
                     if (par1 == null) { Player.SendMessage(p, "You didn't specify a warp to be moved!"); return; }
                     if (!Warp.WarpExists(par1)) { Player.SendMessage(p, "Warp doesn't exist!!"); return; }
@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 3), "to move warps."); return; }
+                else { MessageNeedPerms(p, "can move warps.", 3); return; }
             }
 
             else
@@ -173,18 +173,12 @@ namespace MCGalaxy.Commands
         {
             Player.SendMessage(p, "/warp [name] - warp to that warp");
             Player.SendMessage(p, "/warp list - list all the warps");
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
-            {
+            if (CheckAdditionalPerm(p, 1))
                 Player.SendMessage(p, "/warp create [name] <player> - create a warp, if a <player> is given, it will be created where they are");
-            }
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 2))
-            {
+            if (CheckAdditionalPerm(p, 2))
                 Player.SendMessage(p, "/warp delete [name] - delete a warp");
-            }
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 3))
-            {
+            if (CheckAdditionalPerm(p, 3))
                 Player.SendMessage(p, "/warp move [name] <player> - move a warp, if a <player> is given, it will be created where they are");
-            }
         }
     }
 }

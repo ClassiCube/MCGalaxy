@@ -58,7 +58,12 @@ namespace MCGalaxy
             Player.SendMessage(p, "/" + name + " can only be used in-game.");
         }
         
-        protected void MessageNeedPerms(Player p, int perm, string action) {
+        protected bool CheckAdditionalPerm(Player p, int num = 1) {
+            return p == null || (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, num);
+        }
+        
+        protected void MessageNeedPerms(Player p, string action, int num = 1) {
+            int perm = CommandOtherPerms.GetPerm(this, num)
             Group grp = Group.findPermInt(perm);
             if (grp == null)
                 Player.SendMessage(p, "Onlys rank with a permission level greater than &a" + perm + "%Scan " + action);

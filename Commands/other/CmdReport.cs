@@ -57,9 +57,7 @@ namespace MCGalaxy.Commands {
         }
 
         void HandleList(Player p, string[] args) {
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-                Player.SendMessage(p, "%cYour rank cannot see the list of reports."); return;
-            }
+        	if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can see the list of reports."); return; }
 
             bool foundone = false;
             FileInfo[] fi = new DirectoryInfo("extra/reported").GetFiles("*.txt");
@@ -82,9 +80,7 @@ namespace MCGalaxy.Commands {
             if (args.Length != 2) {
                 Player.SendMessage(p, "You need to provide a player's name."); return;
             }
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-                Player.SendMessage(p, "%cYour rank cannot view the details of a report."); return;
-            }
+            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can view the details of a report."); return; }
             if (!Player.ValidName(args[1])) {
                 Player.SendMessage(p, "\"" + args[1] + "\" is not a valid player name."); return;
             }
@@ -100,9 +96,7 @@ namespace MCGalaxy.Commands {
             if (args.Length != 2) {
                 Player.SendMessage(p, "You need to provide a player's name."); return;
             }
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-                Player.SendMessage(p, "%cYour rank cannot delete a report."); return;
-            }
+            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can delete reports."); return; }
             if (!Player.ValidName(args[1])) {
                 Player.SendMessage(p, "\"" + args[1] + "\" is not a valid player name."); return;
             }
@@ -122,9 +116,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleClear(Player p, string[] args) {
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-                Player.SendMessage(p, "%cYour rank cannot clear the reports list."); return;
-            }
+            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can clear the list of reports."); return; }
             
             FileInfo[] fi = new DirectoryInfo("extra/reported").GetFiles("*.txt");
             foreach (FileInfo file in fi) {
@@ -160,7 +152,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/report [Player] [Reason] %H- Reports that player for the given reason.");
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this)) return;
+            if (!CheckAdditionalPerm(p)) return;
             Player.SendMessage(p, "%T/report list %H- Outputs the list of reported players.");
             Player.SendMessage(p, "%T/report check [Player] %H- View the report for the given player.");
             Player.SendMessage(p, "%T/report delete [Player] %H- Deletes the report for the given player.");

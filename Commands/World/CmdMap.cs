@@ -72,10 +72,7 @@ namespace MCGalaxy.Commands
                 if (lvl == null || message.Split(' ')[0].ToLower() == "ps" || message.Split(' ')[0].ToLower() == "rp") lvl = p.level;
                 else message = message.Substring(message.IndexOf(' ') + 1);
             }
-
-            if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-                MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 1), "to set map options."); return;
-            }
+            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can set map options."); return; }
 
             string foundStart;
             if (message.IndexOf(' ') == -1) foundStart = message.ToLower();

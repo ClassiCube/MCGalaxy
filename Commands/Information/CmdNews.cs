@@ -46,9 +46,7 @@ namespace MCGalaxy.Commands
             
             string[] args = message.Split(' ');
             if (args[0] == "all") {
-                if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-            	    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "to send the server news to all players."); return;
-                }
+            	if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can send the server news to all players."); return; }
                 foreach (string line in lines)
                     Player.GlobalMessage(line);
                 return;

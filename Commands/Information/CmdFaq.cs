@@ -38,8 +38,7 @@ namespace MCGalaxy.Commands {
 
             Player who = p;
             if (message != "") {
-                if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) { 
-                    Player.SendMessage(p, "Your rank cannot send the FAQ to other players."); return; }
+                if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can send the FAQ to a player."); return; }
                 who = PlayerInfo.FindOrShowMatches(p, message);
                 if (who == null) return;
             }

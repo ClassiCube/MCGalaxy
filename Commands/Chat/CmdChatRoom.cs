@@ -105,10 +105,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleCreate(Player p, string[] parts) {
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 1)) {
-                Player.SendMessage(p, "You aren't a high enough rank to create a chatroon.");
-                return;
-            }
+        	if (!CheckAdditionalPerm(p, 1)) { MessageNeedPerms(p, "can create a chatroom.", 1); return; }
             if (parts.Length <= 1) {
                 Player.SendMessage(p, "You need to provide a new chatroom name.");
                 return;
@@ -129,8 +126,8 @@ namespace MCGalaxy.Commands {
                 return;
             }
             string room = parts[1];
-            bool canDeleteForce = (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 3);
-            bool canDelete = (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 2);
+            bool canDeleteForce = CheckAdditionalPerm(p, 3);
+            bool canDelete = CheckAdditionalPerm(p, 2);
             if (!canDelete && !canDeleteForce) {
                 Player.SendMessage(p, "You aren't a high enough rank to delete a chatroon.");
                 return;
@@ -173,11 +170,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleSpy(Player p, string[] parts) {
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 4)) {
-                Player.SendMessage(p, "You aren't a high enough rank to spy " +
-                                   "on a chatroon.");
-                return;
-            }
+            if (!CheckAdditionalPerm(p, 4)) { MessageNeedPerms(p, "can spy on a chatroom.", 4); return; }
             if (parts.Length <= 1) {
                 Player.SendMessage(p, "You need to provide a chatroom name to spy on.");
                 return;
@@ -201,11 +194,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleForceJoin(Player p, string[] parts) {
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 5)) {
-                Player.SendMessage(p, "You aren't a high enough rank to force " +
-                                   "players to join a chatroon.");
-                return;
-            }
+            if (!CheckAdditionalPerm(p, 5)) { MessageNeedPerms(p, "can force players to join a chatroom.", 5); return; }
             if (parts.Length <= 2) {
                 Player.SendMessage(p, "You need to provide a player name, then a chatroom name.");
                 return;
@@ -235,10 +224,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleKick(Player p, string[] parts) {
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 6)) {
-                Player.SendMessage(p, "You aren't a high enough rank to kick someone from a chatroon.");
-                return;
-            }
+            if (!CheckAdditionalPerm(p, 6)) { MessageNeedPerms(p, "can kick players from a chatroom.", 6); return; }
             if (parts.Length <= 1) {
                 Player.SendMessage(p, "You need to provide a player name.");
                 return;
@@ -261,7 +247,7 @@ namespace MCGalaxy.Commands {
         void HandleAll(Player p, string[] parts, string message) {
             int length = parts.Length > 1 ? parts[0].Length + 1 : parts[0].Length;
             message = message.Substring( length );
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 7)) {
+            if (CheckAdditionalPerm(p, 7)) {
                 Chat.GlobalChatRoom(p, message, true);
                 return;
             }
@@ -296,21 +282,21 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "/chatroom join [room] - joins a room");
             Player.SendMessage(p, "/chatroom leave [room] - leaves a room");
             
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
+            if (CheckAdditionalPerm(p, 1))
                 Player.SendMessage(p, "/chatroom create [room] - creates a new room");
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 3))
+            if (CheckAdditionalPerm(p, 3))
                 Player.SendMessage(p, "/chatroom delete [room] - deletes a room");
-            else if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 2))
-                Player.SendMessage(p, "/chatroom delete [room] - deletes a room if all people have left");
+            else if (CheckAdditionalPerm(p, 2))
+                Player.SendMessage(p, "/chatroom delete [room] - deletes a room only if all people have left");
             
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 4))
+            if (CheckAdditionalPerm(p, 4))
                 Player.SendMessage(p, "/chatroom spy [room] - spy on a chatroom");
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 5))
+            if (CheckAdditionalPerm(p, 5))
                 Player.SendMessage(p, "/chatroom forcejoin [player] [room] - forces a player to join a room");
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 6))
+            if (CheckAdditionalPerm(p, 6))
                 Player.SendMessage(p, "/chatroom kick [player] - kicks the player from their current room");
             
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 7))
+            if (CheckAdditionalPerm(p, 7))
                 Player.SendMessage(p, "/chatroom all [message] - sends a global message to all rooms");
             else
                 Player.SendMessage(p, "/chatroom all [message] - sends a global message to all rooms " +

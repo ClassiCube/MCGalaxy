@@ -248,7 +248,7 @@ namespace MCGalaxy.Commands
 						case "all":
 						case "a":
                         case "everyone":
-							if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
+							if (CheckAdditionalPerm(p))
                             {
 								Player[] players = PlayerInfo.Online.Items;
                                 foreach (Player who in players)
@@ -269,7 +269,7 @@ namespace MCGalaxy.Commands
                         case "lvl":
                         case "map":
                         case "m":
-                            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
+							if ((CheckAdditionalPerm(p))
                             {
                                 foreach (Player who in p.level.players)
                                 {
@@ -289,7 +289,7 @@ namespace MCGalaxy.Commands
                         case "pls":
                         case "pl":
 						case "p":
-                            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
+							if CheckAdditionalPerm(p))
                             {
                                 TntWarsGame gm = TntWarsGame.GetTntWarsGame(p);
                                 if (gm == null)
@@ -315,7 +315,7 @@ namespace MCGalaxy.Commands
 							break;
 
 						default:
-                            if (text[1] != null && (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
+							if (text[1] != null && CheckAdditionalPerm(p))
                             {
                                 Player who = PlayerInfo.FindOrShowMatches(p, text[1]);
                                 if (who != null)
@@ -465,7 +465,7 @@ namespace MCGalaxy.Commands
 
 				case "setup":
 				case "s":
-					if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
+					if (CheckAdditionalPerm(p))
 					{
 						bool justcreated = false;
 						TntWarsGame it = TntWarsGame.FindFromGameNumber(p.CurrentTntGameNumber);
@@ -1813,7 +1813,7 @@ namespace MCGalaxy.Commands
 			Player.SendMessage(p, "/tw scores <top/team/me> - view the top score/team scores/your scores");
 			Player.SendMessage(p, "/tw players {p} - view the current players in your game");
 			Player.SendMessage(p, "/tw health {hp} - view your currrent amount of health left");
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1))
+			if (CheckAdditionalPerm(p))
             {
                 Player.SendMessage(p, "/tw rules <all/level/players/<playername>> - send the rules to yourself, all, your map, all players in your game or to one person!");
                 Player.SendMessage(p, "/tw setup {s} - setup the game (do '/tntwars setup help' for more info!");

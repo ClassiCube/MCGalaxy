@@ -45,9 +45,9 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Place a block where you would like to check for zones.");
                 return;
             }
-            else if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 1))
+            else if (!CheckAdditionalPerm(p, 1))
             {
-                MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 1), "to delete zones."); return;
+                MessageNeedPerms(p, "can delete zones.", 1); return;
             }
 
             if (message.IndexOf(' ') == -1)
@@ -77,9 +77,9 @@ namespace MCGalaxy.Commands
 
             if (message.ToLower() == "del all")
             {
-                if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 2))
+            	if (!CheckAdditionalPerm(p, 2))
                 {
-                    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 2), "to delete all zones."); return;
+                    MessageNeedPerms(p, "can delete all zones.", 2); return;
                 }
                 else
                 {
@@ -100,9 +100,9 @@ namespace MCGalaxy.Commands
             }
 
 
-            if ((int)p.group.Permission < CommandOtherPerms.GetPerm(this, 3))
+            if (!CheckAdditionalPerm(p, 3))
             {
-            	MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 3), "to create zones."); return;
+            	MessageNeedPerms(p, "can create zones.", 3); return;
             }
 
             if (Group.Find(message.Split(' ')[1]) != null)

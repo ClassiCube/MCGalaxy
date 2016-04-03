@@ -52,35 +52,35 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "Tnt usage is not allowed at the moment!"); return;
                 }
                 
-                if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 1)) {
+            	if (CheckAdditionalPerm(p, 1)) {
                     p.modeType = Block.bigtnt;
                     Player.SendMessage(p, "TNT (Big) mode is now &aON%S.");
                 } else {
-                    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 1), "to use big TNT mode."); return;
+                    MessageNeedPerms(p, "can use big TNT mode.", 1); return;
                 }
             } else if (message.ToLower() == "nuke") {
                 if (!p.allowTnt) {
                     Player.SendMessage(p, "Tnt usage is not allowed at the moment!"); return;
                 }
                 
-                if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 3)) {
+            	if (CheckAdditionalPerm(p, 3)) {
                     p.modeType = Block.nuketnt;
                     Player.SendMessage(p, "TNT (Nuke) mode is now &aON%S.");
                 } else {
-                    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 3), "to use nuke TNT mode."); return;
+                    MessageNeedPerms(p, "can use nuke TNT mode.", 3); return;
                 }
             } else if (message.ToLower() == "allow") {
-                if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 2)) {
+            	if (CheckAdditionalPerm(p, 2)) {
                     p.allowTnt = true; Player.SendMessage(p, "&cTnt usage has now been enabled!");
                 } else {
-                    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 2), "to allow TNT usage."); return;
+                    MessageNeedPerms(p, "can allow TNT usage.", 2); return;
                 }                
                 return;
             } else if (message.ToLower() == "disallow") {
-                if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 2)) {                 
+            	if (CheckAdditionalPerm(p, 2)) {
                     p.allowTnt = false; Player.SendMessage(p, "&cTnt usage has now been disabled!");
                 } else {
-                    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this, 2), "to disallow TNT usage."); return;
+                    MessageNeedPerms(p, "can disallow TNT usage.", 2); return;
                 }               
                 return;
             } else {
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands
         public override void Help(Player p) {
             Player.SendMessage(p, "/tnt [small/big/nuke] - Creates exploding TNT (with Physics 3).");
             Player.SendMessage(p, "Big and Nuke TNT is reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 3)).name + "+");
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this, 2)) {
+            if (CheckAdditionalPerm(p, 2)) {
                 Player.SendMessage(p, "/tnt allow - Allows the use of tnt server-wide.");
                 Player.SendMessage(p, "/tnt disallow - Disallows the use of tnt server-wide.");
             }

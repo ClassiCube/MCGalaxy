@@ -42,9 +42,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleSetup(Player p, string message, string[] args) {
-            if (p != null && (int)p.group.Permission < CommandOtherPerms.GetPerm(this)) {
-        	    MessageNeedPerms(p, CommandOtherPerms.GetPerm(this), "setup the economy."); return;
-            }
+        	if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can setup the economy."); return; }
             
         	switch (args[0].ToLower()) {
                 case "apply":
@@ -84,7 +82,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.SendMessage(p, "%cMost commands have been removed from /economy, " +
                                "use the appropriate command from %T/help economy %cinstead.");
-            if ((int)p.group.Permission >= CommandOtherPerms.GetPerm(this)) {
+        	if (CheckAdditionalPerm(p)) {
                 Player.SendMessage(p, "%f/eco <type> %e- to setup economy");
                 Player.SendMessage(p, "%f/eco help %e- get more specific help for setting up the economy");
             }

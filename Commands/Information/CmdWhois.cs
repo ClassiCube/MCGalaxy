@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandPerm[] AdditionalPerms {
-        	get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank which can see the target player's ip and if they are whitelisted") }; }
+            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank which can see the target player's ip and if they are whitelisted") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -60,14 +60,13 @@ namespace MCGalaxy.Commands
             if (who.isDev) Player.SendMessage(p, "> > Player is a &9Developer");
             else if (who.isMod) Player.SendMessage(p, "> > Player is a &9MCGalaxy Moderator");
 
-            if (p == null || (int)p.group.Permission >= CommandOtherPerms.GetPerm(this)) {
-                string givenIP;
-                if (Server.bannedIP.Contains(who.ip)) givenIP = "&8" + who.ip + ", which is banned";
-                else givenIP = who.ip;
-                Player.SendMessage(p, "> > the IP of " + givenIP);
-                if (Server.useWhitelist&& Server.whiteList.Contains(who.name))
-                    Player.SendMessage(p, "> > Player is &fWhitelisted");
-            }        
+            if (!CheckAdditionalPerm(p)) return;
+            string givenIP;
+            if (Server.bannedIP.Contains(who.ip)) givenIP = "&8" + who.ip + ", which is banned";
+            else givenIP = who.ip;
+            Player.SendMessage(p, "> > the IP of " + givenIP);
+            if (Server.useWhitelist&& Server.whiteList.Contains(who.name))
+                Player.SendMessage(p, "> > Player is &fWhitelisted");
         }
         
         public override void Help(Player p) {
