@@ -137,7 +137,7 @@ namespace MCGalaxy {
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
                             if (info == "" || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
-                                DoorPhysics.Do(this, C);
+                                DoorPhysics.Do(this, C, true);
                         } catch {
                             listCheckExists.Set(x, y, z, false);
                             ListCheck.Remove(C);
@@ -284,42 +284,8 @@ namespace MCGalaxy {
                     ExtLiquidPhysics.DoMagma(this, C); break;
                 case Block.geyser:
                     ExtLiquidPhysics.DoGeyser(this, C); break;
-                case Block.birdblack:
-                case Block.birdwhite:
-                case Block.birdlava:
-                case Block.birdwater:
-                    BirdPhysics.Do(this, C); break;
-                case Block.snaketail:
-                    SnakePhysics.DoTail(this, C); break;
-                case Block.snake:
-                    SnakePhysics.Do(this, C); break;
-                case Block.birdred:
-                case Block.birdblue:
-                case Block.birdkill:
-                    HunterPhysics.DoKiller(this, C, Block.air); break;
-                case Block.fishbetta:
-                case Block.fishshark:
-                    HunterPhysics.DoKiller(this, C, Block.water); break;
-                case Block.fishgold:
-                case Block.fishsalmon:
-                case Block.fishsponge:
-                    HunterPhysics.DoFlee(this, C, Block.water); break;
-                case Block.fishlavashark:
-                    HunterPhysics.DoKiller(this, C, Block.lava); break;
-                case Block.rockethead:
-                    RocketPhysics.Do(this, C); break;
-                case Block.firework:
-                    FireworkPhysics.Do(this, C); break;
-                case Block.zombiehead:
-                    ZombiePhysics.DoHead(this, C); break;
-                case Block.creeper:
-                    ZombiePhysics.Do(this, C); break;
-                case Block.c4:
-                    C4Physics.DoC4(this, C); break;
-                case Block.c4det:
-                    C4Physics.DoC4Det(this, C); break;
                 default:
-                    DoorPhysics.Do(this, C); break;
+                    DoorPhysics.Do(this, C, false); break;
             }
         }
         

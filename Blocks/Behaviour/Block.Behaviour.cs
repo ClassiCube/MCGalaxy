@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2015 MCGalaxy
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.BlockBehaviour;
+using MCGalaxy.BlockPhysics;
 
 namespace MCGalaxy {
     
@@ -36,6 +37,11 @@ namespace MCGalaxy {
         /// <remarks>If this returns true, the usual 'death check' behaviour is skipped. </remarks>
         public delegate bool HandleWalkthrough(Player p, byte block, ushort x, ushort y, ushort z);
         internal static HandleWalkthrough[] walkthroughHandlers = new Block.HandleWalkthrough[256];
+        
+        /// <summary> Called to handle the physics for this particular block. </summary>
+        /// <remarks>If this returns true, the usual 'death check' behaviour is skipped. </remarks>
+        public delegate void HandlePhysics(Level lvl, Check C);
+        internal static HandlePhysics[] physicsHandlers = new Block.HandlePhysics[256];
         
         static void SetupCoreHandlers() {
             deleteHandlers[Block.rocketstart] = DeleteBehaviour.RocketStart;
@@ -64,6 +70,34 @@ namespace MCGalaxy {
                     deleteHandlers[i] = DeleteBehaviour.Door;
                 }
             }
+            SetupCorePhysicsHandlers();
+        }
+        
+        static void SetupCorePhysicsHandlers() {
+            physicsHandlers[Block.birdblack] = BirdPhysics.Do;
+            physicsHandlers[Block.birdwhite] = BirdPhysics.Do;
+            physicsHandlers[Block.birdlava] = BirdPhysics.Do;
+            physicsHandlers[Block.birdwater] = BirdPhysics.Do;
+            physicsHandlers[Block.birdred] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.air);
+            physicsHandlers[Block.birdblue] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.air);
+            physicsHandlers[Block.birdkill] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.air);
+            
+            physicsHandlers[Block.snaketail] = SnakePhysics.DoTail;
+            physicsHandlers[Block.snake] = SnakePhysics.Do;
+            physicsHandlers[Block.rockethead] = RocketPhysics.Do;
+            physicsHandlers[Block.firework] = FireworkPhysics.Do;
+            physicsHandlers[Block.zombiebody] = ZombiePhysics.Do;
+            physicsHandlers[Block.zombiehead] = ZombiePhysics.DoHead;
+            physicsHandlers[Block.creeper] = ZombiePhysics.Do;
+            physicsHandlers[Block.c4] = C4Physics.DoC4;
+            physicsHandlers[Block.c4det] = C4Physics.DoC4Det;
+
+            physicsHandlers[Block.fishbetta] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.water);
+            physicsHandlers[Block.fishshark] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.water);
+            physicsHandlers[Block.fishlavashark] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.lava);
+            physicsHandlers[Block.fishgold] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
+            physicsHandlers[Block.fishsalmon] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
+            physicsHandlers[Block.fishsponge] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
         }
     }
 }

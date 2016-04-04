@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class DoorPhysics {
         
-        public static void Do(Level lvl, Check C) {
+        public static void Do(Level lvl, Check C, bool doorsOnly) {
             switch (lvl.blocks[C.b]) {
 
                     //Change any door blocks nearby into door_air
@@ -84,6 +84,8 @@ namespace MCGalaxy.BlockPhysics {
                     odoorPhysics(lvl, C);
                     break;
                 default:
+                    Block.HandlePhysics handler = Block.physicsHandlers[lvl.blocks[C.b]];
+                    if (!doorsOnly && handler != null) { handler(lvl, C); return; }
                     //non special blocks are then ignored, maybe it would be better to avoid getting here and cutting down the list
                     if (!(C.data is string) || !((string)C.data).Contains("wait"))
                         C.time = 255;
