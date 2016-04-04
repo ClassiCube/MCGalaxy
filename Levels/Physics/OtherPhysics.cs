@@ -23,12 +23,13 @@ namespace MCGalaxy.BlockPhysics {
 
     public static class OtherPhysics {
         
-        public static void DoFalling(Level lvl, Check C, byte type) {
+        public static void DoFalling(Level lvl, Check C) {
             if (lvl.physics == 0 || lvl.physics == 5) { C.time = 255; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             int index = C.b;
             bool movedDown = false;
+            byte type = lvl.blocks[C.b];
             
             do {
                 index = lvl.IntOffset(index, 0, -1, 0); //Get block below each loop

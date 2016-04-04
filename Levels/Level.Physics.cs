@@ -136,7 +136,7 @@ namespace MCGalaxy {
                             
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
-                            if (info == "" || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
+                            if (info.Length == 0 || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
                                 DoorPhysics.Do(this, C, true);
                         } catch {
                             listCheckExists.Set(x, y, z, false);
@@ -155,8 +155,8 @@ namespace MCGalaxy {
                                 PhysicsUpdate(x, y, z, C.time, info, this);
                             if (OnPhysicsUpdateEvent.events.Count > 0)
                                 OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);
-                            if (info == "" || ExtraInfoPhysics.DoComplex(this, C))
-                                DoNormalPhysics(x, y, z, C);
+                            if (info.Length == 0 || ExtraInfoPhysics.DoComplex(this, C))
+                                DoorPhysics.Do(this, C, false);
                         } catch {
                             listCheckExists.Set(x, y, z, false);
                             ListCheck.Remove(C);
@@ -187,105 +187,6 @@ namespace MCGalaxy {
             } catch (Exception e) {
                 Server.s.Log("Level physics error");
                 Server.ErrorLog(e);
-            }
-        }
-        
-        void DoNormalPhysics(ushort x, ushort y, ushort z, Check C) {
-            switch (blocks[C.b]) {
-                case Block.air:
-                    AirPhysics.DoAir(this, C); break;
-                case Block.dirt:
-                    OtherPhysics.DoDirt(this, C); break;
-                case Block.leaf:
-                    LeafPhysics.DoLeaf(this, C); break;
-                case Block.shrub:
-                    OtherPhysics.DoShrub(this, C); break;
-                case Block.water:
-                case Block.activedeathwater:
-                    SimpleLiquidPhysics.DoWater(this, C); break;
-                case Block.WaterDown:
-                    ExtLiquidPhysics.DoWaterfall(this, C); break;
-                case Block.LavaDown:
-                    ExtLiquidPhysics.DoLavafall(this, C); break;
-                case Block.WaterFaucet:
-                    ExtLiquidPhysics.DoFaucet(this, C, Block.WaterDown); break;
-                case Block.LavaFaucet:
-                    ExtLiquidPhysics.DoFaucet(this, C, Block.LavaDown); break;
-                case Block.lava:
-                case Block.activedeathlava:
-                    SimpleLiquidPhysics.DoLava(this, C); break;
-                case Block.fire:
-                    FirePhysics.Do(this, C); break;
-                case Block.finiteWater:
-                case Block.finiteLava:
-                    FinitePhysics.DoWaterOrLava(this, C); break;
-                case Block.finiteFaucet:
-                    FinitePhysics.DoFaucet(this, C); break;
-                case Block.sand:
-                case Block.gravel:
-                    OtherPhysics.DoFalling(this, C, blocks[C.b]); break;
-                case Block.sponge:
-                    OtherPhysics.DoSponge(this, C, false); break;
-                case Block.lava_sponge:
-                    OtherPhysics.DoSponge(this, C, true); break;                  
-                //Adv physics updating anything placed next to water or lava
-                case Block.wood: //Wood to die in lava
-                case Block.trunk: //Wood to die in lava
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-               case Block.bookcase:
-                case Block.red:
-                case Block.orange:
-                case Block.yellow:
-                case Block.lightgreen:
-                case Block.green:
-                case Block.aquagreen:
-                case Block.cyan:
-                case Block.lightblue:
-                case Block.blue:
-                case Block.purple:
-                case Block.lightpurple:
-                case Block.pink:
-                case Block.darkpink:
-                case Block.darkgrey:
-                case Block.lightgrey:
-                case Block.white:
-                    OtherPhysics.DoOther(this, C); break;
-                case Block.staircasestep:
-                case Block.cobblestoneslab:
-                    OtherPhysics.DoStairs(this, C); break;
-                case Block.wood_float:
-                    OtherPhysics.DoFloatwood(this, C); break;
-                case Block.lava_fast:
-                case Block.fastdeathlava:
-                    SimpleLiquidPhysics.DoFastLava(this, C); break;
-                //Special blocks that are not saved
-                case Block.air_flood:
-                    AirPhysics.DoFlood(this, C, AirFlood.Full, Block.air_flood); break;
-                case Block.air_flood_layer:
-                    AirPhysics.DoFlood(this, C, AirFlood.Layer, Block.air_flood_layer); break;
-                case Block.air_flood_down:
-                    AirPhysics.DoFlood(this, C, AirFlood.Down, Block.air_flood_down); break;
-                case Block.air_flood_up:
-                    AirPhysics.DoFlood(this, C, AirFlood.Up, Block.air_flood_up); break;
-                case Block.smalltnt:
-                    TntPhysics.DoSmallTnt(this, C); break;
-                case Block.bigtnt:
-                    TntPhysics.DoLargeTnt(this, C, 1); break;
-                case Block.nuketnt:
-                    TntPhysics.DoLargeTnt(this, C, 4); break;
-                case Block.tntexplosion:
-                    TntPhysics.DoTntExplosion(this, C); break;
-                case Block.train:
-                    TrainPhysics.Do(this, C); break;
-                case Block.magma:
-                    ExtLiquidPhysics.DoMagma(this, C); break;
-                case Block.geyser:
-                    ExtLiquidPhysics.DoGeyser(this, C); break;
-                default:
-                    DoorPhysics.Do(this, C, false); break;
             }
         }
         

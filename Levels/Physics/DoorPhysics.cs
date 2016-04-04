@@ -55,35 +55,8 @@ namespace MCGalaxy.BlockPhysics {
                     AnyDoor(lvl, C, 4, true); break;
                 case Block.door_tnt_air:
                     AnyDoor(lvl, C, 4); break;
-
-                case Block.odoor1_air:
-                case Block.odoor2_air:
-                case Block.odoor3_air:
-                case Block.odoor4_air:
-                case Block.odoor5_air:
-                case Block.odoor6_air:
-                case Block.odoor7_air:
-                case Block.odoor8_air:
-                case Block.odoor9_air:
-                case Block.odoor10_air:
-                case Block.odoor11_air:
-                case Block.odoor12_air:
-
-                case Block.odoor1:
-                case Block.odoor2:
-                case Block.odoor3:
-                case Block.odoor4:
-                case Block.odoor5:
-                case Block.odoor6:
-                case Block.odoor7:
-                case Block.odoor8:
-                case Block.odoor9:
-                case Block.odoor10:
-                case Block.odoor11:
-                case Block.odoor12:
-                    odoorPhysics(lvl, C);
-                    break;
                 default:
+                    // TODO: door only selector
                     Block.HandlePhysics handler = Block.physicsHandlers[lvl.blocks[C.b]];
                     if (!doorsOnly && handler != null) { handler(lvl, C); return; }
                     //non special blocks are then ignored, maybe it would be better to avoid getting here and cutting down the list
@@ -94,10 +67,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void odoorPhysics(Level lvl, Check C) {
-            if (C.time != 0) {
-                C.time = 0;
-                return;
-            }
+            if (C.time != 0) { C.time = 0; return; }
             
             odoorNeighbour(lvl, C, lvl.IntOffset(C.b, -1, 0, 0));
             odoorNeighbour(lvl, C, lvl.IntOffset(C.b, +1, 0, 0));

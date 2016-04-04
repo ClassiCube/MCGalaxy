@@ -42,6 +42,7 @@ namespace MCGalaxy {
         /// <remarks>If this returns true, the usual 'death check' behaviour is skipped. </remarks>
         public delegate void HandlePhysics(Level lvl, Check C);
         internal static HandlePhysics[] physicsHandlers = new Block.HandlePhysics[256];
+        internal static HandlePhysics[] physicsDoorsHandlers = new Block.HandlePhysics[256];
         
         static void SetupCoreHandlers() {
             deleteHandlers[Block.rocketstart] = DeleteBehaviour.RocketStart;
@@ -98,6 +99,69 @@ namespace MCGalaxy {
             physicsHandlers[Block.fishgold] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
             physicsHandlers[Block.fishsalmon] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
             physicsHandlers[Block.fishsponge] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
+            
+            physicsHandlers[Block.water] = SimpleLiquidPhysics.DoWater;
+            physicsHandlers[Block.activedeathwater] = SimpleLiquidPhysics.DoWater;
+            physicsHandlers[Block.lava] = SimpleLiquidPhysics.DoLava;
+            physicsHandlers[Block.activedeathlava] = SimpleLiquidPhysics.DoLava;
+            physicsHandlers[Block.WaterDown] = ExtLiquidPhysics.DoWaterfall;
+            physicsHandlers[Block.LavaDown] = ExtLiquidPhysics.DoLavafall;
+            physicsHandlers[Block.WaterFaucet] = (lvl, C) => 
+            	ExtLiquidPhysics.DoFaucet(lvl, C, Block.WaterDown);
+            physicsHandlers[Block.LavaFaucet] = (lvl, C) => 
+            	ExtLiquidPhysics.DoFaucet(lvl, C, Block.LavaDown);
+            physicsHandlers[Block.finiteWater] = FinitePhysics.DoWaterOrLava;
+            physicsHandlers[Block.finiteLava] = FinitePhysics.DoWaterOrLava;
+            physicsHandlers[Block.finiteFaucet] = FinitePhysics.DoFaucet;
+            physicsHandlers[Block.magma] = ExtLiquidPhysics.DoMagma;
+            physicsHandlers[Block.geyser] = ExtLiquidPhysics.DoGeyser;
+            physicsHandlers[Block.lava_fast] = SimpleLiquidPhysics.DoFastLava;
+            physicsHandlers[Block.fastdeathlava] = SimpleLiquidPhysics.DoFastLava;
+            
+            physicsHandlers[Block.air] = AirPhysics.DoAir;
+            physicsHandlers[Block.dirt] = OtherPhysics.DoDirt;
+            physicsHandlers[Block.leaf] = LeafPhysics.DoLeaf;
+            physicsHandlers[Block.shrub] = OtherPhysics.DoShrub;
+            physicsHandlers[Block.fire] = FirePhysics.Do;
+            physicsHandlers[Block.sand] = OtherPhysics.DoFalling;
+            physicsHandlers[Block.gravel] = OtherPhysics.DoFalling;
+            physicsHandlers[Block.cobblestoneslab] = OtherPhysics.DoStairs;
+            physicsHandlers[Block.staircasestep] = OtherPhysics.DoStairs;
+            physicsHandlers[Block.wood_float] = OtherPhysics.DoFloatwood;
+
+            physicsHandlers[Block.sponge] = (lvl, C) => OtherPhysics.DoSponge(lvl, C, false);
+            physicsHandlers[Block.lava_sponge] = (lvl, C) => OtherPhysics.DoSponge(lvl, C, true);
+
+            //Special blocks that are not saved
+            physicsHandlers[Block.air_flood] = (lvl, C) => 
+                AirPhysics.DoFlood(lvl, C, AirFlood.Full, Block.air_flood);
+            physicsHandlers[Block.air_flood_layer] = (lvl, C) => 
+                AirPhysics.DoFlood(lvl, C, AirFlood.Layer, Block.air_flood_layer);
+            physicsHandlers[Block.air_flood_down] = (lvl, C) => 
+                AirPhysics.DoFlood(lvl, C, AirFlood.Down, Block.air_flood_down);
+            physicsHandlers[Block.air_flood_up] = (lvl, C) => 
+                AirPhysics.DoFlood(lvl, C, AirFlood.Up, Block.air_flood_up);
+            
+            physicsHandlers[Block.smalltnt] = TntPhysics.DoSmallTnt;
+            physicsHandlers[Block.bigtnt] = (lvl, C) => TntPhysics.DoLargeTnt(lvl, C, 1);
+            physicsHandlers[Block.nuketnt] = (lvl, C) => TntPhysics.DoLargeTnt(lvl, C, 4);
+            physicsHandlers[Block.tntexplosion] = TntPhysics.DoTntExplosion;
+            physicsHandlers[Block.train] = TrainPhysics.Do;
+            
+            for (int i = 0; i < 256; i++) {
+            	//Adv physics updating anything placed next to water or lava
+            	if ((i >= Block.red && i <= Block.redmushroom) || i == Block.wood ||
+            	    i == Block.trunk || i == Block.bookcase) {
+            		physicsHandlers[i] = OtherPhysics.DoOther;
+            		continue;
+            	}
+            	
+            	byte odoor = Block.odoor((byte)i);
+            	if (odoor != Block.Zero) {
+            		physicsHandlers[i] = DoorPhysics.odoorPhysics;
+            		physicsDoorsHandlers[i] = DoorPhysics.odoorPhysics;
+            	}
+            }
         }
     }
 }
