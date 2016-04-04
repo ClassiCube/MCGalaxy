@@ -167,6 +167,7 @@ namespace MCGalaxy
         public LevelPermission permissionvisit = LevelPermission.Guest;
         public LevelPermission pervisitmax = LevelPermission.Nobody;
 
+        public Random physRandom = new Random();
         public bool physPause;
         public DateTime physResume;
         public Thread physThread;

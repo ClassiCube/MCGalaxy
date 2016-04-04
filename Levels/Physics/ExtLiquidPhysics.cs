@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class ExtLiquidPhysics {
         
-        public static void DoMagma(Level lvl, Check C, Random rand) {
+		public static void DoMagma(Level lvl, Check C) {
             C.time++;
             if (C.time < 3) return;
             ushort x, y, z;
@@ -59,7 +59,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoGeyser(Level lvl, Check C, Random rand) {
+        public static void DoGeyser(Level lvl, Check C) {
             C.time++;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -96,7 +96,8 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoWaterfall(Level lvl, Check C, Random rand) {
+        public static void DoWaterfall(Level lvl, Check C) {
+            Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);
@@ -125,7 +126,8 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoLavafall(Level lvl, Check C, Random rand) {
+        public static void DoLavafall(Level lvl, Check C) {
+            Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);
@@ -154,7 +156,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoFaucet(Level lvl, Check C, Random rand, byte target) {
+        public static void DoFaucet(Level lvl, Check C, byte target) {
             C.time++;
             if (C.time < 2) return;
             C.time = 0;
@@ -163,7 +165,8 @@ namespace MCGalaxy.BlockPhysics {
             lvl.IntToPos(C.b, out x, out y, out z);
             int index = lvl.PosToInt(x, (ushort)(y - 1), z);
             if (index < 0) return;
-            
+
+            Random rand = lvl.physRandom;            
             byte block = lvl.blocks[index];
             if (block == Block.air || block == target) {
                 if (rand.Next(1, 10) > 7)

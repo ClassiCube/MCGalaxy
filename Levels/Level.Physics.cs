@@ -121,7 +121,7 @@ namespace MCGalaxy {
             return "";
         }
 
-        public unsafe void CalcPhysics() {
+        public void CalcPhysics() {
             if (physics == 0) return;
             try {
                 ushort x, y, z;
@@ -144,7 +144,6 @@ namespace MCGalaxy {
                         }
                     }
                 } else {
-                    Random rand = new Random();
                     for (int i = 0; i < ListCheck.Count; i++) {
                         Check C = ListCheck.Items[i];
                         IntToPos(C.b, out x, out y, out z);
@@ -156,8 +155,8 @@ namespace MCGalaxy {
                                 PhysicsUpdate(x, y, z, C.time, info, this);
                             if (OnPhysicsUpdateEvent.events.Count > 0)
                                 OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);
-                            if (info == "" || ExtraInfoPhysics.DoComplex(this, C, rand))
-                                DoNormalPhysics(x, y, z, rand, C);
+                            if (info == "" || ExtraInfoPhysics.DoComplex(this, C))
+                                DoNormalPhysics(x, y, z, C);
                         } catch {
                             listCheckExists.Set(x, y, z, false);
                             ListCheck.Remove(C);
@@ -191,37 +190,37 @@ namespace MCGalaxy {
             }
         }
         
-        void DoNormalPhysics(ushort x, ushort y, ushort z, Random rand, Check C) {
+        void DoNormalPhysics(ushort x, ushort y, ushort z, Check C) {
             switch (blocks[C.b]) {
                 case Block.air:
-                    AirPhysics.DoAir(this, C, rand); break;
+                    AirPhysics.DoAir(this, C); break;
                 case Block.dirt:
                     OtherPhysics.DoDirt(this, C); break;
                 case Block.leaf:
-                    LeafPhysics.DoLeaf(this, C, rand); break;
+                    LeafPhysics.DoLeaf(this, C); break;
                 case Block.shrub:
-                    OtherPhysics.DoShrub(this, C, rand); break;
+                    OtherPhysics.DoShrub(this, C); break;
                 case Block.water:
                 case Block.activedeathwater:
-                    SimpleLiquidPhysics.DoWater(this, C, rand); break;
+                    SimpleLiquidPhysics.DoWater(this, C); break;
                 case Block.WaterDown:
-                    ExtLiquidPhysics.DoWaterfall(this, C, rand); break;
+                    ExtLiquidPhysics.DoWaterfall(this, C); break;
                 case Block.LavaDown:
-                    ExtLiquidPhysics.DoLavafall(this, C, rand); break;
+                    ExtLiquidPhysics.DoLavafall(this, C); break;
                 case Block.WaterFaucet:
-                    ExtLiquidPhysics.DoFaucet(this, C, rand, Block.WaterDown); break;
+                    ExtLiquidPhysics.DoFaucet(this, C, Block.WaterDown); break;
                 case Block.LavaFaucet:
-                    ExtLiquidPhysics.DoFaucet(this, C, rand, Block.LavaDown); break;
+                    ExtLiquidPhysics.DoFaucet(this, C, Block.LavaDown); break;
                 case Block.lava:
                 case Block.activedeathlava:
-                    SimpleLiquidPhysics.DoLava(this, C, rand); break;
+                    SimpleLiquidPhysics.DoLava(this, C); break;
                 case Block.fire:
-                    FirePhysics.Do(this, C, rand); break;
+                    FirePhysics.Do(this, C); break;
                 case Block.finiteWater:
                 case Block.finiteLava:
-                    FinitePhysics.DoWaterOrLava(this, C, rand); break;
+                    FinitePhysics.DoWaterOrLava(this, C); break;
                 case Block.finiteFaucet:
-                    FinitePhysics.DoFaucet(this, C, rand); break;
+                    FinitePhysics.DoFaucet(this, C); break;
                 case Block.sand:
                 case Block.gravel:
                     OtherPhysics.DoFalling(this, C, blocks[C.b]); break;
@@ -261,64 +260,64 @@ namespace MCGalaxy {
                     OtherPhysics.DoFloatwood(this, C); break;
                 case Block.lava_fast:
                 case Block.fastdeathlava:
-                    SimpleLiquidPhysics.DoFastLava(this, C, rand); break;
+                    SimpleLiquidPhysics.DoFastLava(this, C); break;
                 //Special blocks that are not saved
                 case Block.air_flood:
-                    AirPhysics.DoFlood(this, C, rand, AirFlood.Full, Block.air_flood); break;
+                    AirPhysics.DoFlood(this, C, AirFlood.Full, Block.air_flood); break;
                 case Block.air_flood_layer:
-                    AirPhysics.DoFlood(this, C, rand, AirFlood.Layer, Block.air_flood_layer); break;
+                    AirPhysics.DoFlood(this, C, AirFlood.Layer, Block.air_flood_layer); break;
                 case Block.air_flood_down:
-                    AirPhysics.DoFlood(this, C, rand, AirFlood.Down, Block.air_flood_down); break;
+                    AirPhysics.DoFlood(this, C, AirFlood.Down, Block.air_flood_down); break;
                 case Block.air_flood_up:
-                    AirPhysics.DoFlood(this, C, rand, AirFlood.Up, Block.air_flood_up); break;
+                    AirPhysics.DoFlood(this, C, AirFlood.Up, Block.air_flood_up); break;
                 case Block.smalltnt:
-                    TntPhysics.DoSmallTnt(this, C, rand); break;
+                    TntPhysics.DoSmallTnt(this, C); break;
                 case Block.bigtnt:
-                    TntPhysics.DoLargeTnt(this, C, rand, 1); break;
+                    TntPhysics.DoLargeTnt(this, C, 1); break;
                 case Block.nuketnt:
-                    TntPhysics.DoLargeTnt(this, C, rand, 4); break;
+                    TntPhysics.DoLargeTnt(this, C, 4); break;
                 case Block.tntexplosion:
-                    TntPhysics.DoTntExplosion(this, C, rand); break;
+                    TntPhysics.DoTntExplosion(this, C); break;
                 case Block.train:
-                    TrainPhysics.Do(this, C, rand); break;
+                    TrainPhysics.Do(this, C); break;
                 case Block.magma:
-                    ExtLiquidPhysics.DoMagma(this, C, rand); break;
+                    ExtLiquidPhysics.DoMagma(this, C); break;
                 case Block.geyser:
-                    ExtLiquidPhysics.DoGeyser(this, C, rand); break;
+                    ExtLiquidPhysics.DoGeyser(this, C); break;
                 case Block.birdblack:
                 case Block.birdwhite:
                 case Block.birdlava:
                 case Block.birdwater:
-                    BirdPhysics.Do(this, C, rand); break;
+                    BirdPhysics.Do(this, C); break;
                 case Block.snaketail:
                     SnakePhysics.DoTail(this, C); break;
                 case Block.snake:
-                    SnakePhysics.Do(this, C, rand); break;
+                    SnakePhysics.Do(this, C); break;
                 case Block.birdred:
                 case Block.birdblue:
                 case Block.birdkill:
-                    HunterPhysics.DoKiller(this, C, rand, Block.air); break;
+                    HunterPhysics.DoKiller(this, C, Block.air); break;
                 case Block.fishbetta:
                 case Block.fishshark:
-                    HunterPhysics.DoKiller(this, C, rand, Block.water); break;
+                    HunterPhysics.DoKiller(this, C, Block.water); break;
                 case Block.fishgold:
                 case Block.fishsalmon:
                 case Block.fishsponge:
-                    HunterPhysics.DoFlee(this, C, rand, Block.water); break;
+                    HunterPhysics.DoFlee(this, C, Block.water); break;
                 case Block.fishlavashark:
-                    HunterPhysics.DoKiller(this, C, rand, Block.lava); break;
+                    HunterPhysics.DoKiller(this, C, Block.lava); break;
                 case Block.rockethead:
-                    RocketPhysics.Do(this, C, rand); break;
+                    RocketPhysics.Do(this, C); break;
                 case Block.firework:
-                    FireworkPhysics.Do(this, C, rand); break;
+                    FireworkPhysics.Do(this, C); break;
                 case Block.zombiehead:
                     ZombiePhysics.DoHead(this, C); break;
                 case Block.creeper:
-                    ZombiePhysics.Do(this, C, rand); break;
+                    ZombiePhysics.Do(this, C); break;
                 case Block.c4:
-                    C4Physics.DoC4(this, C, rand); break;
+                    C4Physics.DoC4(this, C); break;
                 case Block.c4det:
-                    C4Physics.DoC4Det(this, C, rand); break;
+                    C4Physics.DoC4Det(this, C); break;
                 default:
                     DoorPhysics.Do(this, C); break;
             }

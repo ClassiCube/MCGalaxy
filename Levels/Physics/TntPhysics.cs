@@ -32,12 +32,14 @@ namespace MCGalaxy.BlockPhysics {
             lvl.Blockchange(x, y, (ushort)(z - 1), lvl.GetTile(x, y, (ushort)(z - 1)) == Block.lavastill ? Block.air : Block.lavastill);
         }
         
-        public static void DoTntExplosion(Level lvl, Check C, Random rand) {
+        public static void DoTntExplosion(Level lvl, Check C) {
+            Random rand = lvl.physRandom;			
             if (rand.Next(1, 11) <= 7)
                 lvl.AddUpdate(C.b, Block.air);
         }
 		
-        public static void DoLargeTnt(Level lvl, Check C, Random rand, int power) {
+        public static void DoLargeTnt(Level lvl, Check C, int power) {
+            Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -53,10 +55,12 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoSmallTnt(Level lvl, Check C, Random rand) {
+        public static void DoSmallTnt(Level lvl, Check C) {
+            Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             Player p = C.data as Player;
+            
             if (p != null && p.PlayingTntWars) {
                 int power = 2, threshold = 3;
                 TntWarsGame game = TntWarsGame.GetTntWarsGame(p);

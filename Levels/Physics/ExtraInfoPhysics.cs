@@ -75,7 +75,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static bool DoComplex(Level lvl, Check C, Random rand) {
+        public static bool DoComplex(Level lvl, Check C) {
             string info = C.data as string;
             if (info == null) return true;
             if (!info.Contains("wait") && lvl.blocks[C.b] == Block.air)
@@ -126,17 +126,18 @@ namespace MCGalaxy.BlockPhysics {
                     C.data =
                         info.Substring(0, waitIndex) +
                         info.Substring(info.IndexOf(' ', waitIndex + 5) + 1);
-                    DoOther(lvl, C, rand, ref args);
+                    DoOther(lvl, C, ref args);
                     return false;
                 }
                 C.time++;
                 return true;
             }
-            DoOther(lvl, C, rand, ref args);
+            DoOther(lvl, C, ref args);
             return false;
         }
         
-        static void DoOther(Level lvl, Check C, Random rand, ref ExtraInfoArgs args) {
+        static void DoOther(Level lvl, Check C, ref ExtraInfoArgs args) {
+            Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             

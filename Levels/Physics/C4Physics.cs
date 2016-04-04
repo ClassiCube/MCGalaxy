@@ -22,13 +22,13 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class C4Physics {
         
-        public static void DoC4(Level lvl, Check C, Random rand) {
+		public static void DoC4(Level lvl, Check C) {
             C4Data c4 = Find(lvl, ((Player)C.data).c4circuitNumber);
             if (c4 != null) c4.list.Add(C.b);
             C.time = 255;
         }
         
-        public static void DoC4Det(Level lvl, Check C, Random rand) {
+        public static void DoC4Det(Level lvl, Check C) {
             C4Data c4 = Find(lvl, ((Player)C.data).c4circuitNumber);
             if (c4 != null) c4.detIndex = C.b;
             ((Player)C.data).c4circuitNumber = -1;

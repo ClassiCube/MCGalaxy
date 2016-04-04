@@ -21,7 +21,8 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class HunterPhysics {
         
-        public static void DoKiller(Level lvl, Check C, Random rand, byte target) {
+        public static void DoKiller(Level lvl, Check C, byte target) {
+            Random rand = lvl.physRandom;			
             Player closest = AIPhysics.ClosestPlayer(lvl, C);
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -65,7 +66,8 @@ namespace MCGalaxy.BlockPhysics {
             RandomlyMove(lvl, C, rand, x, y, z, target);
         }
         
-        public static void DoFlee(Level lvl, Check C, Random rand, byte target) {
+        public static void DoFlee(Level lvl, Check C, byte target) {
+            Random rand = lvl.physRandom;			
             Player closest = AIPhysics.ClosestPlayer(lvl, C);
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);

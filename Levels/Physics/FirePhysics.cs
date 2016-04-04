@@ -54,7 +54,7 @@ namespace MCGalaxy.BlockPhysics {
 				lvl.MakeExplosion((ushort)x, (ushort)y, (ushort)z, -1);
 		}
 		
-		public static void Do(Level lvl, Check C, Random rand) {
+		public static void Do(Level lvl, Check C) {
 			ushort x, y, z;
 			lvl.IntToPos(C.b, out x, out y, out z);
 			if (C.time < 2) {
@@ -62,6 +62,7 @@ namespace MCGalaxy.BlockPhysics {
 				return;
 			}
 
+            Random rand = lvl.physRandom;
 			if (rand.Next(1, 20) == 1 && C.time % 2 == 0) {
 				int max = rand.Next(1, 18);
 

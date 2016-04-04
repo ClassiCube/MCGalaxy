@@ -21,7 +21,8 @@ namespace MCGalaxy.BlockPhysics {
 
     public static class LeafPhysics {
         
-        public static void DoLeaf(Level lvl, Check C, Random rand) {
+        public static void DoLeaf(Level lvl, Check C) {
+            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava

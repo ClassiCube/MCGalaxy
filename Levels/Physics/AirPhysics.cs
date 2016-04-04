@@ -22,7 +22,8 @@ namespace MCGalaxy.BlockPhysics {
     public enum AirFlood { Full, Layer, Down, Up, }
     public static class AirPhysics {
         
-        public static void DoAir(Level lvl, Check C, Random rand) {
+        public static void DoAir(Level lvl, Check C) {
+            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -43,7 +44,8 @@ namespace MCGalaxy.BlockPhysics {
                 C.time = 255;
         }
         
-        public static void DoFlood(Level lvl, Check C, Random rand, AirFlood mode, byte block) {
+        public static void DoFlood(Level lvl, Check C, AirFlood mode, byte block) {
+            Random rand = lvl.physRandom;    		
             if (C.time >= 1) {
                 lvl.AddUpdate(C.b, Block.air);
                 C.time = 255; return;
