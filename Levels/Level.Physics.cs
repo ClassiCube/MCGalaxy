@@ -132,12 +132,17 @@ namespace MCGalaxy {
                         IntToPos(C.b, out x, out y, out z);
                         try {
                             string info = C.data as string;
-                            if (info == null) info = "";
-                            
+                            if (info == null) info = "";                          
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
-                            if (info.Length == 0 || ExtraInfoPhysics.DoDoorsOnly(this, C, null))
-                                DoorPhysics.Do(this, C, true);
+                            
+                            if (info.Length == 0 || ExtraInfoPhysics.DoDoorsOnly(this, C, null)) {
+                                Block.HandlePhysics handler = Block.physicsDoorsHandlers[blocks[C.b]];
+                                if (handler != null)
+                                    handler(this, C);
+                                else if (info.Length == 0 || !info.Contains("wait"))
+                                    C.time = 255;
+                            }
                         } catch {
                             listCheckExists.Set(x, y, z, false);
                             ListCheck.Remove(C);
@@ -149,14 +154,19 @@ namespace MCGalaxy {
                         IntToPos(C.b, out x, out y, out z);
                         try {
                             string info = C.data as string;
-                            if (info == null) info = "";
-                            
+                            if (info == null) info = "";                            
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
                             if (OnPhysicsUpdateEvent.events.Count > 0)
                                 OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);
-                            if (info.Length == 0 || ExtraInfoPhysics.DoComplex(this, C))
-                                DoorPhysics.Do(this, C, false);
+                            
+                            if (info.Length == 0 || ExtraInfoPhysics.DoComplex(this, C)) {
+                                Block.HandlePhysics handler = Block.physicsHandlers[blocks[C.b]];
+                                if (handler != null)
+                                    handler(this, C);
+                                else if (info.Length == 0 || !info.Contains("wait"))
+                                    C.time = 255;
+                            }
                         } catch {
                             listCheckExists.Set(x, y, z, false);
                             ListCheck.Remove(C);

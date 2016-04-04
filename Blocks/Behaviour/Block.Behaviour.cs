@@ -107,9 +107,9 @@ namespace MCGalaxy {
             physicsHandlers[Block.WaterDown] = ExtLiquidPhysics.DoWaterfall;
             physicsHandlers[Block.LavaDown] = ExtLiquidPhysics.DoLavafall;
             physicsHandlers[Block.WaterFaucet] = (lvl, C) => 
-            	ExtLiquidPhysics.DoFaucet(lvl, C, Block.WaterDown);
+                ExtLiquidPhysics.DoFaucet(lvl, C, Block.WaterDown);
             physicsHandlers[Block.LavaFaucet] = (lvl, C) => 
-            	ExtLiquidPhysics.DoFaucet(lvl, C, Block.LavaDown);
+                ExtLiquidPhysics.DoFaucet(lvl, C, Block.LavaDown);
             physicsHandlers[Block.finiteWater] = FinitePhysics.DoWaterOrLava;
             physicsHandlers[Block.finiteLava] = FinitePhysics.DoWaterOrLava;
             physicsHandlers[Block.finiteFaucet] = FinitePhysics.DoFaucet;
@@ -149,18 +149,28 @@ namespace MCGalaxy {
             physicsHandlers[Block.train] = TrainPhysics.Do;
             
             for (int i = 0; i < 256; i++) {
-            	//Adv physics updating anything placed next to water or lava
-            	if ((i >= Block.red && i <= Block.redmushroom) || i == Block.wood ||
-            	    i == Block.trunk || i == Block.bookcase) {
-            		physicsHandlers[i] = OtherPhysics.DoOther;
-            		continue;
-            	}
-            	
-            	byte odoor = Block.odoor((byte)i);
-            	if (odoor != Block.Zero) {
-            		physicsHandlers[i] = DoorPhysics.odoorPhysics;
-            		physicsDoorsHandlers[i] = DoorPhysics.odoorPhysics;
-            	}
+                //Adv physics updating anything placed next to water or lava
+                if ((i >= Block.red && i <= Block.redmushroom) || i == Block.wood ||
+                    i == Block.trunk || i == Block.bookcase) {
+                    physicsHandlers[i] = OtherPhysics.DoOther;
+                    continue;
+                }
+                
+                byte odoor = Block.odoor((byte)i);
+                byte door = Block.DoorAirs((byte)i);
+                if (odoor != Block.Zero) {
+                    physicsHandlers[i] = DoorPhysics.odoorPhysics;
+                    physicsDoorsHandlers[i] = DoorPhysics.odoorPhysics;
+                } else if (door == Block.door_tnt_air) {
+                    physicsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 4);
+                    physicsDoorsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 4);
+                } else if (door == Block.air_switch_air || door == Block.air_door_air) {
+                    physicsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 4, true);
+                    physicsDoorsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 4, true);
+                } else if (door != Block.air) {
+                    physicsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 16);
+                    physicsDoorsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 16);
+                }
             }
         }
     }

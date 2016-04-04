@@ -21,51 +21,6 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class DoorPhysics {
         
-        public static void Do(Level lvl, Check C, bool doorsOnly) {
-            switch (lvl.blocks[C.b]) {
-
-                    //Change any door blocks nearby into door_air
-                case Block.door_tree_air:
-                case Block.door_obsidian_air:
-                case Block.door_glass_air:
-                case Block.door_stone_air:
-                case Block.door_leaves_air:
-                case Block.door_sand_air:
-                case Block.door_wood_air:
-                case Block.door_green_air:
-                case Block.door_stair_air:
-                case Block.water_door_air:
-                case Block.lava_door_air:
-                case Block.door_iron_air:
-                case Block.door_gold_air:
-                case Block.door_cobblestone_air:
-                case Block.door_red_air:
-                case Block.door_darkpink_air:
-                case Block.door_darkgrey_air:
-                case Block.door_lightgrey_air:
-                case Block.door_white_air:
-
-                case Block.door_dirt_air:
-                case Block.door_grass_air:
-                case Block.door_blue_air:
-                case Block.door_book_air:
-                    AnyDoor(lvl, C, 16); break;
-                case Block.air_switch_air:
-                case Block.air_door_air:
-                    AnyDoor(lvl, C, 4, true); break;
-                case Block.door_tnt_air:
-                    AnyDoor(lvl, C, 4); break;
-                default:
-                    // TODO: door only selector
-                    Block.HandlePhysics handler = Block.physicsHandlers[lvl.blocks[C.b]];
-                    if (!doorsOnly && handler != null) { handler(lvl, C); return; }
-                    //non special blocks are then ignored, maybe it would be better to avoid getting here and cutting down the list
-                    if (!(C.data is string) || !((string)C.data).Contains("wait"))
-                        C.time = 255;
-                    break;
-            }
-        }
-        
         public static void odoorPhysics(Level lvl, Check C) {
             if (C.time != 0) { C.time = 0; return; }
             
@@ -86,7 +41,8 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(index, block, true);
         }
         
-        static void AnyDoor(Level lvl, Check C, int timer, bool instaUpdate = false) {
+		//Change any door blocks nearby into door_air
+        public static void AnyDoor(Level lvl, Check C, int timer, bool instaUpdate = false) {
 			ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             if (C.time != 0) {
