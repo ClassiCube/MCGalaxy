@@ -109,6 +109,7 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\Block.ID.cs" />
     <Compile Include="Blocks\Block.Permissions.cs" />
+    <Compile Include="Blocks\BlockProps.cs" />
     <Compile Include="Commands\Building\CmdAbort.cs" />
     <Compile Include="Commands\Building\CmdBind.cs" />
     <Compile Include="Commands\building\CmdBrush.cs" />

@@ -227,7 +227,7 @@ namespace MCGalaxy {
         public int[] BcVar;
 
         //Movement
-        public int oldIndex = -1, oldFallY = 10000;
+        public int oldIndex = -1, lastWalkthrough = -1, oldFallY = 10000;
         public int fallCount = 0, drownCount = 0;
 
         //Games

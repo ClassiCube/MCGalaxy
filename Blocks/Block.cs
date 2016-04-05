@@ -202,25 +202,7 @@ namespace MCGalaxy
 
         public static bool Mover(byte type)
         {
-            switch (type)
-            {
-                case Block.air_portal:
-                case Block.water_portal:
-                case Block.lava_portal:
-
-                case Block.air_switch:
-                case Block.water_door:
-                case Block.lava_door:
-
-                case Block.MsgAir:
-                case Block.MsgWater:
-                case Block.MsgLava:
-
-                case Block.flagbase:
-                case Block.checkpoint:
-                    return true;
-            }
-            return false;
+        	return walkthroughHandlers[type] != null;
         }
 
         public static bool FireKill(byte type) {

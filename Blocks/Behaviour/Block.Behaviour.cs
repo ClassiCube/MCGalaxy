@@ -25,12 +25,12 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether this block handles the player placing a block at the given coordinates. </summary>
         /// <remarks>If this returns true, the usual 'dirt/grass below' behaviour and 'adding to the BlockDB' is skipped. </remarks>
-        public delegate bool HandleDelete(Player p, byte block, ushort x, ushort y, ushort z);
+        public delegate bool HandleDelete(Player p, byte oldBlock, ushort x, ushort y, ushort z);
         internal static HandleDelete[] deleteHandlers = new HandleDelete[256];
         
         /// <summary> Returns whether this block handles the player deleting a block at the given coordinates. </summary>
         /// <remarks>If this returns true, the usual 'checking dirt/grass below' and 'adding to the BlockDB' is skipped. </remarks>
-        public delegate bool HandlePlace(Player p, byte block, ushort x, ushort y, ushort z);
+        public delegate bool HandlePlace(Player p, byte oldBlock, ushort x, ushort y, ushort z);
         internal static HandlePlace[] placeHandlers = new Block.HandlePlace[256];
         
         /// <summary> Returns whether this block handles the player walking through this block at the given coordinates. </summary>
@@ -51,14 +51,21 @@ namespace MCGalaxy {
             deleteHandlers[Block.c4det] = DeleteBehaviour.C4Det;
             placeHandlers[Block.dirt] = PlaceBehaviour.Dirt;
             placeHandlers[Block.staircasestep] = PlaceBehaviour.Stairs;
+            walkthroughHandlers[Block.air_switch] = WalkthroughBehaviour.Door;
+            walkthroughHandlers[Block.water_door] = WalkthroughBehaviour.Door;
+            walkthroughHandlers[Block.lava_door] = WalkthroughBehaviour.Door;
             
             for (int i = 0; i < 256; i++) {
                 if (Block.mb((byte)i)) {
-                    walkthroughHandlers[i] = WalkthroughBehaviour.MessageBlock;
-                    deleteHandlers[i] = WalkthroughBehaviour.MessageBlock;
+                    walkthroughHandlers[i] = (p, block, x, y, z) => 
+                        WalkthroughBehaviour.MessageBlock(p, block, x, y, z, true);
+                    deleteHandlers[i] = (p, block, x, y, z) => 
+                        WalkthroughBehaviour.MessageBlock(p, block, x, y, z, false);
                 } else if (Block.portal((byte)i)) {
-                    walkthroughHandlers[i] = WalkthroughBehaviour.Portal;
-                    deleteHandlers[i] = WalkthroughBehaviour.Portal;
+                    walkthroughHandlers[i] = (p, block, x, y, z) => 
+                        WalkthroughBehaviour.Portal(p, block, x, y, z, true);
+                    deleteHandlers[i] = (p, block, x, y, z) => 
+                        WalkthroughBehaviour.Portal(p, block, x, y, z, false);
                 }
                 
                 byte doorAir = Block.DoorAirs((byte)i); // if not 0, means i is a door block

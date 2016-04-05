@@ -122,7 +122,7 @@ namespace MCGalaxy {
             }
             //else
             if ( !painting && action == 0 ) {
-                bP.flags |= 1;             
+                bP.flags |= 1;
                 if (DeleteBlock(b, x, y, z, type, extType))
                     level.blockCache.Add(bP);
             } else {
@@ -155,7 +155,7 @@ namespace MCGalaxy {
             
             Block.HandlePlace handler = Block.placeHandlers[type];
             if (handler != null) {
-                if (handler(this, type, x, y, z)) return false;
+                if (handler(this, b, x, y, z)) return false;
             } else {
                 ChangeBlock(x, y, z, type, extType);
             }
@@ -794,19 +794,16 @@ return;
             byte bHead = level.GetTile(x, y, z);
             byte bFeet = level.GetTile(x, (ushort)(y - 1), z);
 
-            if ( Block.Mover(bHead) || Block.Mover(bFeet) ) {
-                if ( Block.DoorAirs(bHead) != 0 )
-                    level.Blockchange(x, y, z, Block.DoorAirs(bHead));
-                if ( Block.DoorAirs(bFeet) != 0 )
-                    level.Blockchange(x, (ushort)(y - 1), z, Block.DoorAirs(bFeet));
-
-                if (level.PosToInt(x, y, z) != oldIndex) {
-                    Block.HandleWalkthrough handler = Block.walkthroughHandlers[bHead];
-                    if (handler != null && handler(this, bHead, x, y, z)) return;
-                    handler = Block.walkthroughHandlers[bFeet];
-                    if (handler != null && handler(this, bFeet, x, (ushort)(y - 1), z)) return;
-                }
+            Block.HandleWalkthrough handler = Block.walkthroughHandlers[bHead];
+            if (handler != null && handler(this, bHead, x, y, z)) {
+                lastWalkthrough = level.PosToInt(x, y, z); return;
             }
+            handler = Block.walkthroughHandlers[bFeet];
+            if (handler != null && handler(this, bFeet, x, (ushort)(y - 1), z)) {
+                lastWalkthrough = level.PosToInt(x, (ushort)(y - 1), z); return;
+            }
+            
+            lastWalkthrough = level.PosToInt(x, y, z);
             if ( ( bHead == Block.tntexplosion || bFeet == Block.tntexplosion ) && PlayingTntWars ) { }
             else if ( Block.Death(bHead) ) HandleDeath(bHead); 
             else if ( Block.Death(bFeet) ) HandleDeath(bFeet);
