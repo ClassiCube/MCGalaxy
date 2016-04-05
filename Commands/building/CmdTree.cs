@@ -64,7 +64,6 @@ namespace MCGalaxy.Commands {
             TreeDrawOp op = new TreeDrawOp();
             op.Type = cpos.mode;
             op.random = p.random;
-            op.overwrite = true;
             Brush brush = null;
             
             if (cpos.brushMsg != "") {
