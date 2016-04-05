@@ -103,11 +103,11 @@ namespace MCGalaxy.Commands
                 string col = value == "" ? "normal" : value;
                 Command.all.Find("env").Use(p, "l " + type.ToLower() + " " + col);
             } else if (type == "WEATHER") {
-                if (value == "SUN" || value == "NORMAL") {
+        		if (value.CaselessEq("SUN") || value.CaselessEq("NORMAL")) {
                     Command.all.Find("env").Use(p, "weather 0");
-                } else if (value == "RAIN") {
+        		} else if (value.CaselessEq("RAIN")) {
                     Command.all.Find("env").Use(p, "weather 1");
-                } else if (value == "SNOW") {
+        		} else if (value.CaselessEq("SNOW")) {
                     Command.all.Find("env").Use(p, "weather 2");
                 } else {
                     Player.SendMessage(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
                 Player.SendMessage(p, "/os env level -- Sets the water height of your map");
                 Player.SendMessage(p, "/os env cloudheight -- Sets the cloud height of your map");
-                Player.SendMessage(p, "/os env maxcfog -- Sets the max fog distance in your map");
+                Player.SendMessage(p, "/os env maxfog -- Sets the max fog distance in your map");
                 Player.SendMessage(p, "/os env horizon -- Sets what block the \"ocean\" shows outside your map");
                 Player.SendMessage(p, "/os env border -- Sets what block replaces the \"bedrock\" below sea level in your map");
                 Player.SendMessage(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");

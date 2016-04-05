@@ -30,7 +30,24 @@ namespace MCGalaxy.Blocks {
 		/// <summary> Block name used for in commands. </summary>
 		public string Name;
 		
+		/// <summary> Whether this block is considered a tdoor. </summary>
+		public bool IsTDoor;
+		/// <summary> Whether this block is considered a message block. </summary>
+		public bool IsMessageBlock;
+		/// <summary> Whether this block is considered a portal. </summary>
+		public bool IsPortal;
+		
+		/// <summary> Whether walkinhg through this block causes the death of that player. </summary>
+		public bool CausesDeath;
+		
+		/// <summary> Whether light passes through this block. </summary>
+		public bool LightPasses;
+		
+		/// <summary> Whether this block is an OP block (cannot be replaced by physics changes). </summary>
+		public bool OPBlock;
+		
 		public BlockProps(byte type) {
+			this = default(BlockProps);
 			ConvertId = type;
 			SaveConvertId = type;
 			Name = "unknown";
