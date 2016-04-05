@@ -106,6 +106,7 @@
     <Compile Include="Blocks\Behaviour\PlaceBehaviour.cs" />
     <Compile Include="Blocks\Behaviour\WalkthroughBehaviour.cs" />
     <Compile Include="Blocks\Block.Convert.cs" />
+    <Compile Include="Blocks\Block.CoreProps.cs" />
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\Block.ID.cs" />
     <Compile Include="Blocks\Block.Permissions.cs" />

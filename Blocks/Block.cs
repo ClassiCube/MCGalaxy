@@ -1,19 +1,19 @@
 /*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 
@@ -61,7 +61,7 @@ namespace MCGalaxy
                 case Block.door_tnt:
                 case Block.door_stair:
                 case door_iron:
-				case door_gold:
+                case door_gold:
                 case door_dirt:
                 case door_grass:
                 case door_blue:
@@ -102,14 +102,14 @@ namespace MCGalaxy
         {
             switch (type)
             {
-                //				case Block.air:
-                //				case Block.grass:
-						case Block.blackrock:
-						case Block.water:
-						case Block.waterstill:
-						case Block.lava:
-						case Block.lavastill:
-								return false;
+                //                case Block.air:
+                //                case Block.grass:
+                        case Block.blackrock:
+                        case Block.water:
+                        case Block.waterstill:
+                        case Block.lava:
+                        case Block.lavastill:
+                                return false;
             }
             return type < Block.CpeCount;
         }
@@ -129,26 +129,7 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool OPBlocks(byte type)
-        {
-            switch (type)
-            {
-                case Block.blackrock:
-                case Block.op_air:
-                case Block.op_brick:
-                case Block.op_cobblestone:
-                case Block.op_glass:
-                case Block.op_stone:
-                case Block.op_water:
-                case Block.op_lava:
-                case Block.opsidian:
-                case Block.rocketstart:
-
-                case Block.Zero:
-                    return true;
-            }
-            return false;
-        }
+        public static bool OPBlocks(byte type) { return Properties[type].OPBlock; }
 
         public static bool Death(byte type)
         {
@@ -202,18 +183,18 @@ namespace MCGalaxy
 
         public static bool Mover(byte type)
         {
-        	return walkthroughHandlers[type] != null;
+            return walkthroughHandlers[type] != null;
         }
 
         public static bool FireKill(byte type) {
-        	return type != Block.air && LavaKill(type);
+            return type != Block.air && LavaKill(type);
         }
         
         public static bool LavaKill(byte type)
         {
             switch (type)
             {
-            	case Block.air:
+                case Block.air:
                 case Block.wood:
                 case Block.shrub:
                 case Block.trunk:
@@ -318,32 +299,9 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool portal(byte type)
-        {
-            switch (type)
-            {
-                case Block.blue_portal:
-                case Block.orange_portal:
-                case Block.air_portal:
-                case Block.water_portal:
-                case Block.lava_portal:
-                    return true;
-            }
-            return false;
-        }
-        public static bool mb(byte type)
-        {
-            switch (type)
-            {
-                case Block.MsgAir:
-                case Block.MsgWater:
-                case Block.MsgLava:
-                case Block.MsgBlack:
-                case Block.MsgWhite:
-                    return true;
-            }
-            return false;
-        }
+        public static bool portal(byte type) { return Properties[type].IsPortal; }
+        
+        public static bool mb(byte type) { return Properties[type].IsMessageBlock; }
 
         public static bool Physics(byte type)   //returns false if placing block cant actualy cause any physics to happen
         {
@@ -385,7 +343,7 @@ namespace MCGalaxy
                 case Block.door_tnt:
                 case Block.door_stair:
                 case door_iron:
-				case door_gold:
+                case door_gold:
                 case door_dirt:
                 case door_grass:
                 case door_blue:
@@ -469,7 +427,7 @@ namespace MCGalaxy
                 case lava_door: return lava_door_air;
                 case air_door: return air_door_air;
                 case door_iron: return door_iron_air;
-				case door_gold: return door_gold_air;
+                case door_gold: return door_gold_air;
                 case door_dirt: return door_dirt_air;
                 case door_grass: return door_grass_air;
                 case door_blue: return door_blue_air;
@@ -484,27 +442,7 @@ namespace MCGalaxy
             }
         }
 
-        public static bool tDoor(byte b)
-        {
-            switch (b)
-            {
-                case tdoor:
-                case tdoor2:
-                case tdoor3:
-                case tdoor4:
-                case tdoor5:
-                case tdoor6:
-                case tdoor7:
-                case tdoor8:
-                case tdoor9:
-                case tdoor10:
-                case tdoor11:
-                case tdoor12:
-                case tdoor13:
-                    return true;
-            }
-            return false;
-        }
+        public static bool tDoor(byte type) { return Properties[type].IsTDoor; }
 
         public static byte odoor(byte b)
         {

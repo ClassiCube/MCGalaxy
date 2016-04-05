@@ -18,39 +18,43 @@
 using System;
 
 namespace MCGalaxy.Blocks {
-	
-	public struct BlockProps {
-		
-		/// <summary> Standard block id sent to clients in map and block update packets. </summary>
-		public byte ConvertId;
-		
-		/// <summary> Block id converted to when the map is saved to a .lvl file. </summary>
-		public byte SaveConvertId;
-		
-		/// <summary> Block name used for in commands. </summary>
-		public string Name;
-		
-		/// <summary> Whether this block is considered a tdoor. </summary>
-		public bool IsTDoor;
-		/// <summary> Whether this block is considered a message block. </summary>
-		public bool IsMessageBlock;
-		/// <summary> Whether this block is considered a portal. </summary>
-		public bool IsPortal;
-		
-		/// <summary> Whether walkinhg through this block causes the death of that player. </summary>
-		public bool CausesDeath;
-		
-		/// <summary> Whether light passes through this block. </summary>
-		public bool LightPasses;
-		
-		/// <summary> Whether this block is an OP block (cannot be replaced by physics changes). </summary>
-		public bool OPBlock;
-		
-		public BlockProps(byte type) {
-			this = default(BlockProps);
-			ConvertId = type;
-			SaveConvertId = type;
-			Name = "unknown";
-		}
-	}
+    
+    public struct BlockProps {
+        
+        /// <summary> ID of block these properties are associated with. </summary>
+        public byte BlockId;
+        
+        /// <summary> Standard block id sent to clients in map and block update packets. </summary>
+        public byte ConvertId;
+        
+        /// <summary> Block id converted to when the map is saved to a .lvl file. </summary>
+        public byte SaveConvertId;
+        
+        /// <summary> Block name used for in commands. </summary>
+        public string Name;
+        
+        /// <summary> Whether this block is considered a tdoor. </summary>
+        public bool IsTDoor;
+        /// <summary> Whether this block is considered a message block. </summary>
+        public bool IsMessageBlock;
+        /// <summary> Whether this block is considered a portal. </summary>
+        public bool IsPortal;
+        
+        /// <summary> Whether walkinhg through this block causes the death of that player. </summary>
+        public bool CausesDeath;
+        
+        /// <summary> Whether light passes through this block. </summary>
+        public bool LightPasses;
+        
+        /// <summary> Whether this block is an OP block (cannot be replaced by physics changes). </summary>
+        public bool OPBlock;
+        
+        public BlockProps(byte type) {
+            this = default(BlockProps);
+            BlockId = type;
+            ConvertId = type;
+            SaveConvertId = type;
+            Name = "unknown";
+        }
+    }
 }

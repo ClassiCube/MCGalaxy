@@ -46,8 +46,10 @@ namespace MCGalaxy
         }
 
         public static void SetBlocks() {
-            SetupCoreHandlers();
+        	SetCoreProperties();
+            SetupCoreHandlers();          
             InitDefaults();
+            
             // Custom permissions set by the user.
             if (File.Exists("properties/block.properties")) {
                 string[] lines = File.ReadAllLines("properties/block.properties");
