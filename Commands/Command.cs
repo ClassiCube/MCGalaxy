@@ -70,6 +70,17 @@ namespace MCGalaxy
             else
                 Player.SendMessage(p, "Only " + grp.color + grp.name + "%s+ can " + action);
         }
+        
+        protected void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
+        	MessageTooHighRank(p, action, p.group, canAffectOwnRank);
+        }
+        
+        protected void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
+            if (canAffectGroup)
+            	 Player.SendMessage(p, "Can only " + action + " players ranked " + grp.color + grp.name + " %Sor below");
+            else
+            	 Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.color + grp.name);
+        }
     }
     
     public struct CommandPerm {

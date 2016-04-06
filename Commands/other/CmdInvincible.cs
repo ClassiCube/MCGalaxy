@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
         	if (who == null) return;
 
             if (p != null && who.group.Permission > p.group.Permission) {
-                Player.SendMessage(p, "Cannot toggle invincibility for someone of higher rank");return;
+                MessageTooHighRank(p, "toggle invinciblity", true); return;
             }
 
             if (who.invincible)

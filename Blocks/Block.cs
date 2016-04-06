@@ -21,23 +21,9 @@ namespace MCGalaxy
 {
     public sealed partial class Block
     {
-        public static bool Walkthrough(byte type)
-        {
-            switch (type)
-            {
-                case air:
-                case water:
-                case waterstill:
-                case lava:
-                case lavastill:
-                case yellowflower:
-                case redflower:
-                case mushroom:
-                case redmushroom:
-                case shrub:
-                    return true;
-            }
-            return false;
+        public static bool Walkthrough(byte type) {
+			return type == air || type == shrub || (type >= water && type <= lavastill) 
+			    && (type >= yelllowflower && type <= redmushroom);
         }
 
         public static bool AllowBreak(byte type)
@@ -98,35 +84,14 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool Placable(byte type)
-        {
-            switch (type)
-            {
-                //                case Block.air:
-                //                case Block.grass:
-                        case Block.blackrock:
-                        case Block.water:
-                        case Block.waterstill:
-                        case Block.lava:
-                        case Block.lavastill:
-                                return false;
-            }
-            return type < Block.CpeCount;
+        public static bool Placable(byte type) {
+            return !(type == blackrock || (type >= water && type <= lavstill) 
+			    && type < Block.CpeCount;
         }
 
-        public static bool RightClick(byte type, bool countAir = false)
-        {
+        public static bool RightClick(byte type, bool countAir = false) {
             if (countAir && type == Block.air) return true;
-
-            switch (type)
-            {
-                case Block.water:
-                case Block.lava:
-                case Block.waterstill:
-                case Block.lavastill:
-                    return true;
-            }
-            return false;
+            return type >= water && type <= lavastill;			
         }
 
         public static bool OPBlocks(byte type) { return Properties[type].OPBlock; }
@@ -169,60 +134,17 @@ namespace MCGalaxy
         public static bool BuildIn(byte type)
         {
             if (type == op_water || type == op_lava || Block.portal(type) || Block.mb(type)) return false;
-
-            switch (Block.Convert(type))
-            {
-                case water:
-                case lava:
-                case waterstill:
-                case lavastill:
-                    return true;
-            }
-            return false;
+			type = Block.Convert(type);
+			return type >= water && type <= lavastill;
         }
 
-        public static bool Mover(byte type) {
-            return walkthroughHandlers[type] != null;
-        }
+        public static bool Mover(byte type) { return walkthroughHandlers[type] != null; }
 
-        public static bool FireKill(byte type) {
-            return type != Block.air && LavaKill(type);
-        }
+        public static bool FireKill(byte type) { return type != air && Properties[type].KilledByLava; }
         
-        public static bool LavaKill(byte type)
-        {
-            switch (type)
-            {
-                case Block.air:
-                case Block.wood:
-                case Block.shrub:
-                case Block.trunk:
-                case Block.leaf:
-                case Block.sponge:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                case Block.bookcase:
-                    return true;
-            }
-            return Properties[type].KilledByLava;
-        }
-        public static bool WaterKill(byte type)
-        {
-            switch (type)
-            {
-                case Block.air:
-                case Block.shrub:
-                case Block.leaf:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                    return true;
-            }
-            return Properties[type].KilledByWater;
-        }
+        public static bool LavaKill(byte type) { return Properties[type].KilledByLava; }
+		
+        public static bool WaterKill(byte type) { return Properties[type].KilledByWater; }
 
         public static bool LightPass(byte type, byte extType, BlockDefinition[] defs) {
             switch (Convert(type)) {

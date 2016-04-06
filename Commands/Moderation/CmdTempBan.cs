@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             if (!Player.ValidName(target)) { Player.SendMessage(p, "Invalid name \"" + target + "\"."); return; }
             Group grp = who == null ? PlayerInfo.GetGroup(target) : who.group;
             if (p != null && grp.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "Cannot temp ban someone of the same or higher rank."); return;
+                MessageTooHighRank(p, "temp ban", false); return;
             }
             
             int minutes = 60;

@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             if (p != null && who.group.Permission > p.group.Permission) {
-                Player.SendMessage(p, "You cannot slap someone ranked higher than you!"); return;
+                MessageTooHighRank(p, "slap", true); return;
             }
 
             ushort curX = (ushort)(who.pos[0] / 32), curY = (ushort)(who.pos[1] / 32), curZ = (ushort)(who.pos[2] / 32);

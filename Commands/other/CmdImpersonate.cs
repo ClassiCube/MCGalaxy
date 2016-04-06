@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             if (p == null || p == who || p.group.Permission > who.group.Permission) {
                 Player.SendChatFrom(who, args[1]);
             } else {
-                Player.SendMessage(p, "You cannot impersonate a player of equal or greater rank.");
+                MessageTooHighRank(p, "impersonate", false); return;
             }
         }
         

@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
                     Player.SendMessage(p, "You cannot %cdeath-hug %Sat your current rank."); return;
                 }
                 if (p != null && who.group.Permission > p.group.Permission) {
-                    Player.SendMessage(p, "You can't %cdeath-hug %Ssomeone of greater rank."); return;
+                    MessageTooHighRank(p, "&cdeath-hug%S", true); return;
                 }
                 who.HandleDeath(Block.rock, " died from a %cdeadly hug.");
             }

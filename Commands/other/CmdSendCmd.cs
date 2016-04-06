@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             Player target = PlayerInfo.FindOrShowMatches(p, parts[0]);
             if (target == null) return;        
             if (p != null && p.group.Permission < target.group.Permission) {
-                Player.SendMessage(p, "Cannot use this on someone of equal or greater rank."); return;
+                MessageTooHighRank(p, "send commands for", true); return;
             }
             if (parts.Length == 1) {
                 Player.SendMessage(p, "No command name given."); return;

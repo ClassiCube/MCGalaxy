@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands
             }
             if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
             else if (who == p) { Player.SendMessage(p, "Cannot follow yourself."); return; }
-            else if (who.group.Permission >= p.group.Permission) { Player.SendMessage(p, "Cannot follow someone of equal or greater rank."); return; }
+            else if (who.group.Permission >= p.group.Permission) { MessageTooHighRank(p, "follow", false); return;}
             else if (who.following != "") { Player.SendMessage(p, who.DisplayName + " is already following " + who.following); return; }
 
             if (!p.hidden) Command.all.Find("hide").Use(p, "");

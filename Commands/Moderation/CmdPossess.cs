@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands {
                 Player who = PlayerInfo.FindOrShowMatches(p, message);
                 if (who == null) return;
                 if (who.group.Permission >= p.group.Permission) {
-                    Player.SendMessage(p, "Cannot possess someone of equal or greater rank."); return;
+                    MessageTooHighRank(p, "possess", false); return;
                 }
                 
                 if (who.possess != "") {

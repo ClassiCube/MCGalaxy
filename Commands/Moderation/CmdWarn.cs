@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             if (who == null) return;
             if (who == p) { Player.SendMessage(p, "you can't warn yourself"); return; }
             if (p != null && p.group.Permission <= who.group.Permission) {
-                Player.SendMessage(p, "Cannot warn a player of equal or higher rank."); return;
+                MessageTooHighRank(p, "warn", false); return;
             }
             
             string reason = args.Length == 1 ? "you know why." : args[1];
