@@ -181,8 +181,7 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool Mover(byte type)
-        {
+        public static bool Mover(byte type) {
             return walkthroughHandlers[type] != null;
         }
 
@@ -200,22 +199,6 @@ namespace MCGalaxy
                 case Block.trunk:
                 case Block.leaf:
                 case Block.sponge:
-                case Block.red:
-                case Block.orange:
-                case Block.yellow:
-                case Block.lightgreen:
-                case Block.green:
-                case Block.aquagreen:
-                case Block.cyan:
-                case Block.lightblue:
-                case Block.blue:
-                case Block.purple:
-                case Block.lightpurple:
-                case Block.pink:
-                case Block.darkpink:
-                case Block.darkgrey:
-                case Block.lightgrey:
-                case Block.white:
                 case Block.yellowflower:
                 case Block.redflower:
                 case Block.mushroom:
@@ -223,7 +206,7 @@ namespace MCGalaxy
                 case Block.bookcase:
                     return true;
             }
-            return false;
+            return Properties[type].KilledByLava;
         }
         public static bool WaterKill(byte type)
         {
@@ -238,7 +221,7 @@ namespace MCGalaxy
                 case Block.redmushroom:
                     return true;
             }
-            return false;
+            return Properties[type].KilledByWater;
         }
 
         public static bool LightPass(byte type, byte extType, BlockDefinition[] defs) {
@@ -444,37 +427,6 @@ namespace MCGalaxy
 
         public static bool tDoor(byte type) { return Properties[type].IsTDoor; }
 
-        public static byte odoor(byte b)
-        {
-            switch (b)
-            {
-                case odoor1: return odoor1_air;
-                case odoor2: return odoor2_air;
-                case odoor3: return odoor3_air;
-                case odoor4: return odoor4_air;
-                case odoor5: return odoor5_air;
-                case odoor6: return odoor6_air;
-                case odoor7: return odoor7_air;
-                case odoor8: return odoor8_air;
-                case odoor9: return odoor9_air;
-                case odoor10: return odoor10_air;
-                case odoor11: return odoor11_air;
-                case odoor12: return odoor12_air;
-
-                case odoor1_air: return odoor1;
-                case odoor2_air: return odoor2;
-                case odoor3_air: return odoor3;
-                case odoor4_air: return odoor4;
-                case odoor5_air: return odoor5;
-                case odoor6_air: return odoor6;
-                case odoor7_air: return odoor7;
-                case odoor8_air: return odoor8;
-                case odoor9_air: return odoor9;
-                case odoor10_air: return odoor10;
-                case odoor11_air: return odoor11;
-                case odoor12_air: return odoor12;
-            }
-            return Zero;
-        }
+        public static byte odoor(byte type) { return Properties[type].ODoorId; }
     }
 }
