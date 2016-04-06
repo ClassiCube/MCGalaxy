@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
         	                   "%S, which is based on &bMCForge %Sand &bMCLawl%S.");
         	Command.all.Find("devs").Use(p, "");
         	
-        	TimeSpan up = DateTime.Now - Server.timeOnline;
+        	TimeSpan up = DateTime.UtcNow - Server.StartTime;
         	string upTime = "Time online: &b";
         	if (up.Days == 1) upTime += up.Days + " day, ";
         	else if (up.Days > 0) upTime += up.Days + " days, ";

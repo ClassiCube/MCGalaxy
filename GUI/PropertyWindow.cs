@@ -403,10 +403,6 @@ namespace MCGalaxy.Gui {
                     txtCheap.Text = value;
                     break;
 
-                case "rank-super":
-                    chkrankSuper.Checked = ( value.ToLower() == "true" );
-                    break;
-
                 case "custom-ban":
                     chkBanMessage.Checked = ( value.ToLower() == "true" );
                     break;
@@ -600,9 +596,6 @@ namespace MCGalaxy.Gui {
                         color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
                     }
                     cmbGlobalChatColor.SelectedIndex = cmbGlobalChatColor.Items.IndexOf(Colors.Name(color)); break;
-                case "premium-only":
-                    chkPrmOnly.Checked = value.ToLower() == "true";
-                    break;
                 case "view":
                     Server.reviewview = Level.PermissionFromName(value.ToLower());
                     break;
@@ -695,7 +688,6 @@ namespace MCGalaxy.Gui {
             Server.logbeat = chkLogBeat.Checked;
             Server.forceCuboid = chkForceCuboid.Checked;
             Server.profanityFilter = chkProfanityFilter.Checked;
-            Server.notifyOnJoinLeave = chkNotifyOnJoinLeave.Checked;
             Server.repeatMessage = chkRepeatMessages.Checked;
             Server.ZallState = txtHost.Text;
             Server.agreetorulesonentry = chkAgreeToRules.Checked;
@@ -751,7 +743,6 @@ namespace MCGalaxy.Gui {
 
             Server.cheapMessage = chkCheap.Checked;
             Server.cheapMessageGiven = txtCheap.Text;
-            Server.rankSuper = chkrankSuper.Checked;
             Server.defaultRank = cmbDefaultRank.SelectedItem.ToString();
             
             Server.DownloadBeta = chkUseBeta.Checked;
@@ -772,8 +763,6 @@ namespace MCGalaxy.Gui {
 
             Server.UseGlobalChat = chkGlobalChat.Checked;
             Server.GlobalChatColor = cmbGlobalChatColor.SelectedItem.ToString();
-
-            Server.PremiumPlayersOnly = chkPrmOnly.Checked;
 
             Server.reviewview = Group.GroupList.Find(grp => grp.name == cmbViewQueue.SelectedItem.ToString()).Permission;
             Server.reviewenter = Group.GroupList.Find(grp => grp.name == cmbEnterQueue.SelectedItem.ToString()).Permission;

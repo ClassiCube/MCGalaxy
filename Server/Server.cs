@@ -131,7 +131,6 @@ namespace MCGalaxy
         public static List<string> ircafkset = new List<string>();
         public static List<string> messages = new List<string>();
 
-        public static DateTime timeOnline;
         public static string IP;
         //auto updater stuff
         public static bool autoupdate;
@@ -223,10 +222,8 @@ namespace MCGalaxy
         public static bool AutoLoad = false;
         public static int physUndo = 20000;
         public static int totalUndo = 200;
-        public static bool rankSuper = true;
         public static bool parseSmiley = true;
         public static bool useWhitelist = false;
-        public static bool PremiumPlayersOnly = false;
         public static bool forceCuboid = false;
         public static bool profanityFilter = false;
         public static bool notifyOnJoinLeave = false;
@@ -261,8 +258,6 @@ namespace MCGalaxy
         public static int afkminutes = 10;
         public static int afkkick = 45;
         public static LevelPermission afkkickperm = LevelPermission.AdvBuilder;
-        //public static int RemotePort = 1337; // Never used
-
         public static string defaultRank = "guest";
 
         public static bool dollarNames = true;
@@ -273,8 +268,6 @@ namespace MCGalaxy
         public static string customBanMessage = "You're banned!";
         public static bool customShutdown = false;
         public static string customShutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
-        public static bool customGrieferStone = false;
-        public static string customGrieferStoneMessage = "Oh noes! You were caught griefing!";
         public static string customPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
         public static string customDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
         public static string moneys = "moneys";
@@ -438,7 +431,6 @@ namespace MCGalaxy
             if (!Server.zombie.LevelList.Contains("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)"))
                 Server.zombie.LevelList.Add("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
 
-            timeOnline = DateTime.Now;
             {//MYSQL stuff
                 try
                 {

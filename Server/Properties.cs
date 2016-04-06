@@ -257,22 +257,11 @@ namespace MCGalaxy {
 				case "custom-shutdown-message":
 					if ( value != "" ) Server.customShutdownMessage = value;
 					break;
-				case "custom-griefer-stone":
-					try { Server.customGrieferStone = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
-				case "custom-griefer-stone-message":
-					if ( value != "" ) Server.customGrieferStoneMessage = value;
-					break;
 				case "custom-promote-message":
 					if ( value != "" ) Server.customPromoteMessage = value;
 					break;
 				case "custom-demote-message":
 					if ( value != "" ) Server.customDemoteMessage = value;
-					break;
-				case "rank-super":
-					try { Server.rankSuper = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
 					break;
 				case "default-rank":
 					try { Server.defaultRank = value.ToLower(); }
@@ -335,9 +324,6 @@ namespace MCGalaxy {
 					break;
 				case "use-whitelist":
 					Server.useWhitelist = value.ToLower() == "true";
-					break;
-				case "premium-only":
-					Server.PremiumPlayersOnly = value.ToLower() == "true";
 					break;
 				case "allow-tp-to-higher-ranks":
 					Server.higherranktp = value.ToLower() == "true";
@@ -752,7 +738,6 @@ namespace MCGalaxy {
 			w.WriteLine("parse-emotes = " + Server.parseSmiley.ToString().ToLower());
 			w.WriteLine("dollar-before-dollar = " + Server.dollarNames.ToString().ToLower());
 			w.WriteLine("use-whitelist = " + Server.useWhitelist.ToString().ToLower());
-			w.WriteLine("premium-only = " + Server.PremiumPlayersOnly.ToString().ToLower());
 			w.WriteLine("money-name = " + Server.moneys);
 			w.WriteLine("opchat-perm = " + ( (sbyte)Server.opchatperm ).ToString());
 			w.WriteLine("adminchat-perm = " + ( (sbyte)Server.adminchatperm ).ToString());
@@ -802,23 +787,17 @@ namespace MCGalaxy {
 			w.WriteLine("defaultColor = " + Server.DefaultColor);
 			w.WriteLine("irc-color = " + Server.IRCColour);
 			w.WriteLine();
-			/*w.WriteLine("#Running on mono?");
-			w.WriteLine("mono = " + Server.mono);
-			w.WriteLine();*/
 			w.WriteLine("#Custom Messages");
 			w.WriteLine("custom-ban = " + Server.customBan.ToString().ToLower());
 			w.WriteLine("custom-ban-message = " + Server.customBanMessage);
 			w.WriteLine("custom-shutdown = " + Server.customShutdown.ToString().ToLower());
 			w.WriteLine("custom-shutdown-message = " + Server.customShutdownMessage);
-			w.WriteLine("custom-griefer-stone = " + Server.customGrieferStone.ToString().ToLower());
-			w.WriteLine("custom-griefer-stone-message = " + Server.customGrieferStoneMessage);
 			w.WriteLine("custom-promote-message = " + Server.customPromoteMessage);
 			w.WriteLine("custom-demote-message = " + Server.customDemoteMessage);
 			w.WriteLine("allow-tp-to-higher-ranks = " + Server.higherranktp.ToString().ToLower());
 			w.WriteLine();
 			w.WriteLine("cheapmessage = " + Server.cheapMessage.ToString().ToLower());
 			w.WriteLine("cheap-message-given = " + Server.cheapMessageGiven);
-			w.WriteLine("rank-super = " + Server.rankSuper.ToString().ToLower());
 			try { w.WriteLine("default-rank = " + Server.defaultRank); }
 			catch { w.WriteLine("default-rank = guest"); }
 			w.WriteLine();

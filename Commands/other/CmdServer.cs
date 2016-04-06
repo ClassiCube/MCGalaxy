@@ -245,7 +245,6 @@ namespace MCGalaxy.Commands
             Server.AutoLoad = false;
             Server.physUndo = 20000;
             Server.totalUndo = 200;
-            Server.rankSuper = true;
             Server.parseSmiley = true;
             Server.useWhitelist = false;
             Server.forceCuboid = false;
@@ -287,8 +286,6 @@ namespace MCGalaxy.Commands
             Server.customBanMessage = "You're banned!";
             Server.customShutdown = false;
             Server.customShutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
-            Server.customGrieferStone = false;
-            Server.customGrieferStoneMessage = "Oh noes! You were caught griefing!";
             Server.customPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
             Server.customDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
             Server.moneys = "moneys";

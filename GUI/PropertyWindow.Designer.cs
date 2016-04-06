@@ -87,7 +87,6 @@ namespace MCGalaxy.Gui
             this.chkPhysicsRest = new System.Windows.Forms.CheckBox();
             this.chkDeath = new System.Windows.Forms.CheckBox();
             this.chkCheap = new System.Windows.Forms.CheckBox();
-            this.chkrankSuper = new System.Windows.Forms.CheckBox();
             this.txtBackup = new System.Windows.Forms.TextBox();
             this.txtafk = new System.Windows.Forms.TextBox();
             this.txtAFKKick = new System.Windows.Forms.TextBox();
@@ -174,8 +173,6 @@ namespace MCGalaxy.Gui
             this.label85 = new System.Windows.Forms.Label();
             this.pageMisc = new System.Windows.Forms.TabPage();
             this.buttonEco = new System.Windows.Forms.Button();
-            this.grpAccess = new System.Windows.Forms.GroupBox();
-            this.chkPrmOnly = new System.Windows.Forms.CheckBox();
             this.grpGlobalChat = new System.Windows.Forms.GroupBox();
             this.lblGlobalChatColor = new System.Windows.Forms.Label();
             this.chkGlobalChat = new System.Windows.Forms.CheckBox();
@@ -414,7 +411,6 @@ namespace MCGalaxy.Gui
             this.gbRankGeneral.SuspendLayout();
             this.gbRankSettings.SuspendLayout();
             this.pageMisc.SuspendLayout();
-            this.grpAccess.SuspendLayout();
             this.grpGlobalChat.SuspendLayout();
             this.grpExtra.SuspendLayout();
             this.grpMessages.SuspendLayout();
@@ -920,18 +916,6 @@ namespace MCGalaxy.Gui
             this.chkCheap.Text = "Cheap message:";
             this.toolTip.SetToolTip(this.chkCheap, "Is immortality cheap and unfair?");
             this.chkCheap.UseVisualStyleBackColor = true;
-            // 
-            // chkrankSuper
-            // 
-            this.chkrankSuper.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkrankSuper.AutoSize = true;
-            this.chkrankSuper.Location = new System.Drawing.Point(18, 84);
-            this.chkrankSuper.Name = "chkrankSuper";
-            this.chkrankSuper.Size = new System.Drawing.Size(195, 23);
-            this.chkrankSuper.TabIndex = 24;
-            this.chkrankSuper.Text = "SuperOPs can appoint other SuperOPs";
-            this.toolTip.SetToolTip(this.chkrankSuper, "Does what it says on the tin");
-            this.chkrankSuper.UseVisualStyleBackColor = true;
             // 
             // txtBackup
             // 
@@ -1900,7 +1884,6 @@ namespace MCGalaxy.Gui
             // 
             this.pageMisc.BackColor = System.Drawing.SystemColors.Control;
             this.pageMisc.Controls.Add(this.buttonEco);
-            this.pageMisc.Controls.Add(this.grpAccess);
             this.pageMisc.Controls.Add(this.grpGlobalChat);
             this.pageMisc.Controls.Add(this.grpExtra);
             this.pageMisc.Controls.Add(this.grpMessages);
@@ -1927,29 +1910,6 @@ namespace MCGalaxy.Gui
             this.buttonEco.Text = "Economy Settings";
             this.buttonEco.UseVisualStyleBackColor = true;
             this.buttonEco.Click += new System.EventHandler(this.buttonEco_Click);
-            // 
-            // grpAccess
-            // 
-            this.grpAccess.AutoSize = true;
-            this.grpAccess.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpAccess.Controls.Add(this.chkPrmOnly);
-            this.grpAccess.Location = new System.Drawing.Point(369, 394);
-            this.grpAccess.Name = "grpAccess";
-            this.grpAccess.Size = new System.Drawing.Size(116, 77);
-            this.grpAccess.TabIndex = 42;
-            this.grpAccess.TabStop = false;
-            this.grpAccess.Text = "Access to server";
-            // 
-            // chkPrmOnly
-            // 
-            this.chkPrmOnly.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkPrmOnly.Location = new System.Drawing.Point(6, 20);
-            this.chkPrmOnly.Name = "chkPrmOnly";
-            this.chkPrmOnly.Size = new System.Drawing.Size(104, 37);
-            this.chkPrmOnly.TabIndex = 47;
-            this.chkPrmOnly.Text = "Premium Players Only";
-            this.chkPrmOnly.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.chkPrmOnly.UseVisualStyleBackColor = true;
             // 
             // grpGlobalChat
             // 
@@ -1994,7 +1954,6 @@ namespace MCGalaxy.Gui
             this.grpExtra.Controls.Add(this.chkDeath);
             this.grpExtra.Controls.Add(this.txtRestartTime);
             this.grpExtra.Controls.Add(this.txtMoneys);
-            this.grpExtra.Controls.Add(this.chkrankSuper);
             this.grpExtra.Controls.Add(this.chkRestartTime);
             this.grpExtra.Controls.Add(this.chk17Dollar);
             this.grpExtra.Controls.Add(this.chkSmile);
@@ -4388,7 +4347,6 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.PerformLayout();
             this.pageMisc.ResumeLayout(false);
             this.pageMisc.PerformLayout();
-            this.grpAccess.ResumeLayout(false);
             this.grpGlobalChat.ResumeLayout(false);
             this.grpGlobalChat.PerformLayout();
             this.grpExtra.ResumeLayout(false);
@@ -4543,7 +4501,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox chkForceCuboid;
         private System.Windows.Forms.CheckBox chkShutdown;
         private System.Windows.Forms.CheckBox chkBanMessage;
-        private System.Windows.Forms.CheckBox chkrankSuper;
         private System.Windows.Forms.CheckBox chkCheap;
         private System.Windows.Forms.CheckBox chkDeath;
         private System.Windows.Forms.CheckBox chk17Dollar;
@@ -4750,8 +4707,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox chkEnableChangingLevels;
         private System.Windows.Forms.CheckBox chkZombieOnlyServer;
         private System.Windows.Forms.CheckBox chkUseLevelList;
-        private System.Windows.Forms.GroupBox grpAccess;
-        private System.Windows.Forms.CheckBox chkPrmOnly;
         private System.Windows.Forms.TabPage pageReview;
         private System.Windows.Forms.GroupBox gbReviewQueue;
         private System.Windows.Forms.ListBox listBox1;
