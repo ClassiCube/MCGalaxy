@@ -232,10 +232,6 @@ namespace MCGalaxy {
 					try { Server.profanityFilter = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
 					break;
-				case "notify-on-join-leave":
-					try { Server.notifyOnJoinLeave = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
 				case "cheapmessage":
 					try { Server.cheapMessage = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
@@ -744,7 +740,6 @@ namespace MCGalaxy {
 			w.WriteLine("log-heartbeat = " + Server.logbeat.ToString());
 			w.WriteLine("force-cuboid = " + Server.forceCuboid.ToString());
 			w.WriteLine("profanity-filter = " + Server.profanityFilter.ToString());
-			w.WriteLine("notify-on-join-leave = " + Server.notifyOnJoinLeave.ToString());
 			w.WriteLine("repeat-messages = " + Server.repeatMessage.ToString());
 			w.WriteLine("host-state = " + Server.ZallState.ToString());
 			w.WriteLine("agree-to-rules-on-entry = " + Server.agreetorulesonentry.ToString().ToLower());

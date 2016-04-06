@@ -178,7 +178,6 @@ namespace MCGalaxy.Gui
             this.chkGlobalChat = new System.Windows.Forms.CheckBox();
             this.grpExtra = new System.Windows.Forms.GroupBox();
             this.chkShowEmptyRanks = new System.Windows.Forms.CheckBox();
-            this.chkNotifyOnJoinLeave = new System.Windows.Forms.CheckBox();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
             this.txtRestartTime = new System.Windows.Forms.TextBox();
             this.txtMoneys = new System.Windows.Forms.TextBox();
@@ -1949,7 +1948,6 @@ namespace MCGalaxy.Gui
             this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
             this.grpExtra.Controls.Add(this.chkShowEmptyRanks);
-            this.grpExtra.Controls.Add(this.chkNotifyOnJoinLeave);
             this.grpExtra.Controls.Add(this.chkRepeatMessages);
             this.grpExtra.Controls.Add(this.chkDeath);
             this.grpExtra.Controls.Add(this.txtRestartTime);
@@ -1975,17 +1973,6 @@ namespace MCGalaxy.Gui
             this.chkShowEmptyRanks.TabIndex = 41;
             this.chkShowEmptyRanks.Text = "Empty ranks in /players";
             this.chkShowEmptyRanks.UseVisualStyleBackColor = true;
-            // 
-            // chkNotifyOnJoinLeave
-            // 
-            this.chkNotifyOnJoinLeave.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkNotifyOnJoinLeave.AutoSize = true;
-            this.chkNotifyOnJoinLeave.Location = new System.Drawing.Point(18, 27);
-            this.chkNotifyOnJoinLeave.Name = "chkNotifyOnJoinLeave";
-            this.chkNotifyOnJoinLeave.Size = new System.Drawing.Size(140, 23);
-            this.chkNotifyOnJoinLeave.TabIndex = 31;
-            this.chkNotifyOnJoinLeave.Text = "Notify popup on join/leave";
-            this.chkNotifyOnJoinLeave.UseVisualStyleBackColor = true;
             // 
             // chkRepeatMessages
             // 
@@ -4495,7 +4482,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox txtCheap;
         private System.Windows.Forms.TextBox txtRestartTime;
         private System.Windows.Forms.CheckBox hackrank_kick;
-        private System.Windows.Forms.CheckBox chkNotifyOnJoinLeave;
         private System.Windows.Forms.CheckBox chkProfanityFilter;
         private System.Windows.Forms.CheckBox chkRepeatMessages;
         private System.Windows.Forms.CheckBox chkForceCuboid;

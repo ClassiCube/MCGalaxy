@@ -249,7 +249,6 @@ namespace MCGalaxy.Commands
             Server.useWhitelist = false;
             Server.forceCuboid = false;
             Server.profanityFilter = false;
-            Server.notifyOnJoinLeave = false;
             Server.repeatMessage = false;
             Server.DrawReloadLimit = 10000;
             Server.MapGenLimit = 30 * 1000 * 1000;

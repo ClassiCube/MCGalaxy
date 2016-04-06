@@ -354,10 +354,6 @@ namespace MCGalaxy.Gui {
                     chkProfanityFilter.Checked = ( value.ToLower() == "true" );
                     break;
 
-                case "notify-on-join-leave":
-                    chkNotifyOnJoinLeave.Checked = ( value.ToLower() == "true" );
-                    break;
-
                 case "backup-time":
                     txtBackup.Text = Convert.ToInt32(value) > 1 ? value : "300";
                     break;
@@ -657,7 +653,7 @@ namespace MCGalaxy.Gui {
             Server.players = (byte)numPlayers.Value;
             Server.maxGuests = (byte)numGuests.Value;
             Server.worldChat = chkWorld.Checked;
-            Server.autonotify = chkNotifyOnJoinLeave.Checked;
+            Server.autonotify = notifyInGameUpdate.Checked;
             Server.AutoLoad = chkAutoload.Checked;
             Server.autorestart = chkRestartTime.Checked;
             try { Server.restarttime = DateTime.Parse(txtRestartTime.Text); }

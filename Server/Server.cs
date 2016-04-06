@@ -226,7 +226,6 @@ namespace MCGalaxy
         public static bool useWhitelist = false;
         public static bool forceCuboid = false;
         public static bool profanityFilter = false;
-        public static bool notifyOnJoinLeave = false;
         public static bool repeatMessage = false;
 
         public static bool checkUpdates = true;
