@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             if (message == "")
             {
                 Player.SendMessage(p, "Basic blocks: ");
-                for (byte i = 0; i < 50; i++)
+                for (byte i = 0; i < Block.CpeCount; i++)
                 {
                     message += ", " + Block.Name(i);
                 }
@@ -41,8 +41,9 @@ namespace MCGalaxy.Commands
             }
             else if (message.ToLower() == "all")
             {
+                message = "";
                 Player.SendMessage(p, "Complex blocks: ");
-                for (byte i = 50; i < 255; i++)
+                for (byte i = Block.CpeCount; i < 255; i++)
                 {
                     if (Block.Name(i).ToLower() != "unknown") message += ", " + Block.Name(i);
                 }
@@ -72,9 +73,9 @@ namespace MCGalaxy.Commands
                 if (Block.Byte(message) != Block.Zero)
                 {
                     byte b = Block.Byte(message);
-                    if (b < 51)
+                    if (b < Block.CpeCount)
                     {
-                        for (byte i = 51; i < 255; i++)
+                        for (byte i = Block.CpeCount; i < 255; i++)
                         {
                             if (Block.Convert(i) == b)
                                 printMessage += Block.Name(i) + ", ";
@@ -116,7 +117,8 @@ namespace MCGalaxy.Commands
                     LevelPermission Perm = Group.Find(message).Permission;
                     foreach (Block.Blocks bL in Block.BlockList)
                     {
-                        if (Block.canPlace(Perm, bL.type) && Block.Name(bL.type).ToLower() != "unknown") printMessage += Block.Name(bL.type) + ", ";
+                        if (Block.canPlace(Perm, bL.type) && Block.Name(bL.type).ToLower() != "unknown") 
+                        	printMessage += Block.Name(bL.type) + ", ";
                     }
 
                     if (printMessage != ">>>&b")
