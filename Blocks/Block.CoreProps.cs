@@ -71,7 +71,7 @@ namespace MCGalaxy {
             string[] names = { "air", "stone", "grass", "dirt", "cobblestone", "wood", "plant", 
                 "adminium", "active_water", "water", "active_lava", "lava", "sand", "gravel", 
                 "gold_ore", "iron_ore", "coal", "tree", "leaves", "sponge", "glass", "red", 
-                "orange", "yellow", "greenyellow", "green", "springgreen", "cyan", "blue", 
+                "orange", "yellow", "lime", "green", "springgreen", "cyan", "blue", 
                 "blueviolet", "indigo", "purple", "magenta", "pink", "black", "gray", "white", 
                 "yellow_flower", "red_flower", "brown_shroom", "red_shroom", "gold", "iron", 
                 "double_stair", "stair", "brick", "tnt", "bookcase", "mossy_cobblestone", 
@@ -110,14 +110,19 @@ namespace MCGalaxy {
                 "train", "creeper", "zombie", "zombie_head", "unknown", "dove", "pidgeon", "duck", 
                 "phoenix", "red_robin", "blue_bird", "unknown", "killer_phoenix", "unknown", "unknown", 
                 "goldfish", "sea_sponge", "shark", "salmon", "betta_fish", "lava_shark", "snake", 
-                "snake_tail", "door_gold", "door_gold_air", "unknown" };
-            
+                "snake_tail", "door_gold", "door_gold_air", "unknown" };            
             for (int i = 0; i < names.Length; i++) {
                 Properties[i].Name = names[i];
                 if (names[i] != "unknown") 
                     Aliases[names[i]] = (byte)i;
             }
+            
+            // Add old MCGalaxy aliases
+            Aliases["greenyellow"] = lightgreen;
             // Add other aliases
+            Aliases["planks"] = wood; Aliases["log"] = trunk;
+            Aliases["stairs"] = staircasestep; Aliases["slab"] = staircasestep;
+            Aliases["doubleslab"] = staircasefull; Aliases["slabfull"] = staircasefull;
             Aliases["solid"] = blackrock; Aliases["admintite"] = blackrock;
             Aliases["blackrock"] = blackrock; Aliases["activewater"] = water;
             Aliases["activelava"] = lava; Aliases["fhl"] = fastdeathlava;
