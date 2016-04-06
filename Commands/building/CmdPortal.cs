@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands {
             } else {
                 for (int i = 0; i < Portals.Rows.Count; i++) {
                     DataRow row = Portals.Rows[i];
-                    if (Portals.Rows[i]["ExitMap"].ToString() == p.level.name)
+                    if (row["ExitMap"].ToString() == p.level.name)
                         p.RevertBlock(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]));
                     p.RevertBlock(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]));
                 }

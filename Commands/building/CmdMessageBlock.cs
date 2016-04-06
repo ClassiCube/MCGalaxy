@@ -112,12 +112,16 @@ namespace MCGalaxy.Commands {
             //safe against SQL injections because no user input is given here
             using (DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name + "`")) {
                 if (p.showMBs) {
-                    for (int i = 0; i < Messages.Rows.Count; i++)
-                        p.SendBlockchange(ushort.Parse(Messages.Rows[i]["X"].ToString()), ushort.Parse(Messages.Rows[i]["Y"].ToString()), ushort.Parse(Messages.Rows[i]["Z"].ToString()), Block.MsgWhite);
+                    for (int i = 0; i < Messages.Rows.Count; i++) {
+                        DataRow row = Messages.Rows[i];
+                        p.SendBlockchange(ushort.Parse(row["X"].ToString()), ushort.Parse(row["Y"].ToString()), ushort.Parse(row["Z"].ToString()), Block.MsgWhite);
+                    }
                     Player.SendMessage(p, "Now showing &a" + Messages.Rows.Count + " %SMBs.");
                 } else {
-                    for (int i = 0; i < Messages.Rows.Count; i++)
-                        p.SendBlockchange(ushort.Parse(Messages.Rows[i]["X"].ToString()), ushort.Parse(Messages.Rows[i]["Y"].ToString()), ushort.Parse(Messages.Rows[i]["Z"].ToString()), p.level.GetTile(ushort.Parse(Messages.Rows[i]["X"].ToString()), ushort.Parse(Messages.Rows[i]["Y"].ToString()), ushort.Parse(Messages.Rows[i]["Z"].ToString())));
+                    for (int i = 0; i < Messages.Rows.Count; i++) {
+                        DataRow row = Messages.Rows[i];
+                        p.RevertBlock(ushort.Parse(row["X"].ToString()), ushort.Parse(row["Y"].ToString()), ushort.Parse(row["Z"].ToString()));
+                    }
                     Player.SendMessage(p, "Now hiding MBs.");
                 }
             }

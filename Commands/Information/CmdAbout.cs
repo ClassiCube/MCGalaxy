@@ -65,16 +65,16 @@ namespace MCGalaxy.Commands
             for (int i = 0; i < Blocks.Rows.Count; i++)
             {
                 foundOne = true;
-                Username = Blocks.Rows[i]["Username"].ToString();
-                TimePerformed = DateTime.Parse(Blocks.Rows[i]["TimePerformed"].ToString()).ToString("yyyy-MM-dd HH:mm:ss");
-                //Server.s.Log(Blocks.Rows[i]["Type"].ToString());
-                BlockUsed = Block.Name(Convert.ToByte(Blocks.Rows[i]["Type"])).ToString();
-                Deleted = Convert.ToBoolean(Blocks.Rows[i]["Deleted"]);
+                DataRow row = Blocks.Rows[i];
+                Username = row["Username"].ToString().Trim();
+                TimePerformed = DateTime.Parse(row["TimePerformed"].ToString()).ToString("yyyy-MM-dd HH:mm:ss");
+                BlockUsed = Block.Name(Convert.ToByte(row["Type"])).ToString();
+                Deleted = Convert.ToBoolean(row["Deleted"]);
 
                 if (!Deleted)
-                    Player.SendMessage(p, "&3Created by " + Server.FindColor(Username.Trim()) + Username.Trim() + "%S, using &3" + BlockUsed);
+                    Player.SendMessage(p, "&3Created by " + Server.FindColor(Username) + Username + "%S, using &3" + BlockUsed);
                 else
-                    Player.SendMessage(p, "&4Destroyed by " + Server.FindColor(Username.Trim()) + Username.Trim()+ "%S, using &3" + BlockUsed);
+                    Player.SendMessage(p, "&4Destroyed by " + Server.FindColor(Username) + Username + "%S, using &3" + BlockUsed);
                 Player.SendMessage(p, "Date and time modified: &2" + TimePerformed);
             }
 

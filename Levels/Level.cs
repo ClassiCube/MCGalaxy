@@ -609,13 +609,14 @@ namespace MCGalaxy
                         Zone Zn;
                         for (int i = 0; i < ZoneDB.Rows.Count; ++i)
                         {
-                            Zn.smallX = ushort.Parse(ZoneDB.Rows[i]["SmallX"].ToString());
-                            Zn.smallY = ushort.Parse(ZoneDB.Rows[i]["SmallY"].ToString());
-                            Zn.smallZ = ushort.Parse(ZoneDB.Rows[i]["SmallZ"].ToString());
-                            Zn.bigX = ushort.Parse(ZoneDB.Rows[i]["BigX"].ToString());
-                            Zn.bigY = ushort.Parse(ZoneDB.Rows[i]["BigY"].ToString());
-                            Zn.bigZ = ushort.Parse(ZoneDB.Rows[i]["BigZ"].ToString());
-                            Zn.Owner = ZoneDB.Rows[i]["Owner"].ToString();
+                            DataRow row = ZoneDB.Rows[i];
+                            Zn.smallX = ushort.Parse(row["SmallX"].ToString());
+                            Zn.smallY = ushort.Parse(row["SmallY"].ToString());
+                            Zn.smallZ = ushort.Parse(row["SmallZ"].ToString());
+                            Zn.bigX = ushort.Parse(row["BigX"].ToString());
+                            Zn.bigY = ushort.Parse(row["BigY"].ToString());
+                            Zn.bigZ = ushort.Parse(row["BigZ"].ToString());
+                            Zn.Owner = row["Owner"].ToString();
                             level.ZoneList.Add(Zn);
                         }
                     }
@@ -632,37 +633,39 @@ namespace MCGalaxy
                     //        level.StartPhysics();
                     //};
                     //level.physChecker.Start();
-                    //level.season = new SeasonsCore(level);
+
                     try
                     {
                         DataTable foundDB = Database.fillData("SELECT * FROM `Portals" + givenName + "`");
 
                         for (int i = 0; i < foundDB.Rows.Count; ++i)
                         {
+                            DataRow row = foundDB.Rows[i];
                             if (
-                                !Block.portal(level.GetTile(ushort.Parse(foundDB.Rows[i]["EntryX"].ToString()),
-                                                            ushort.Parse(foundDB.Rows[i]["EntryY"].ToString()),
-                                                            ushort.Parse(foundDB.Rows[i]["EntryZ"].ToString()))))
+                                !Block.portal(level.GetTile(ushort.Parse(row["EntryX"].ToString()),
+                                                            ushort.Parse(row["EntryY"].ToString()),
+                                                            ushort.Parse(row["EntryZ"].ToString()))))
                             {
                                 Database.executeQuery("DELETE FROM `Portals" + givenName + "` WHERE EntryX=" +
-                                                      foundDB.Rows[i]["EntryX"] + " AND EntryY=" +
-                                                      foundDB.Rows[i]["EntryY"] + " AND EntryZ=" +
-                                                      foundDB.Rows[i]["EntryZ"]);
+                                                      row["EntryX"] + " AND EntryY=" +
+                                                      row["EntryY"] + " AND EntryZ=" +
+                                                      row["EntryZ"]);
                             }
                         }
                         foundDB = Database.fillData("SELECT * FROM `Messages" + givenName + "`");
 
                         for (int i = 0; i < foundDB.Rows.Count; ++i)
                         {
+                            DataRow row = foundDB.Rows[i];                        	
                             if (
-                                !Block.mb(level.GetTile(ushort.Parse(foundDB.Rows[i]["X"].ToString()),
-                                                        ushort.Parse(foundDB.Rows[i]["Y"].ToString()),
-                                                        ushort.Parse(foundDB.Rows[i]["Z"].ToString()))))
+                                !Block.mb(level.GetTile(ushort.Parse(row["X"].ToString()),
+                                                        ushort.Parse(row["Y"].ToString()),
+                                                        ushort.Parse(row["Z"].ToString()))))
                             {
                                 //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
                                 Database.executeQuery("DELETE FROM `Messages" + givenName + "` WHERE X=" +
-                                                      foundDB.Rows[i]["X"] + " AND Y=" + foundDB.Rows[i]["Y"] +
-                                                      " AND Z=" + foundDB.Rows[i]["Z"]);
+                                                      row["X"] + " AND Y=" + row["Y"] +
+                                                      " AND Z=" + row["Z"]);
                             }
                         }
                         foundDB.Dispose();
