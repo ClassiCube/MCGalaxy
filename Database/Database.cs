@@ -229,7 +229,7 @@ namespace MCGalaxy
                 return tableNames;
             }// end:CopyDatabase()
 
-            [Obsolete("Use DatabasedParameterisedQuery instead, which is threadsafe.")]
+            [Obsolete("Use DatabaseParameterisedQuery instead, which is threadsafe.")]
             public static void AddParams(string name, object param) {
                 if (Server.useMySQL) MySQL.AddParams(name, param);
                 else SQLite.AddParams(name, param);

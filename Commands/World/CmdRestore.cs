@@ -72,8 +72,7 @@ namespace MCGalaxy.Commands
                         File.Copy(LevelInfo.BackupPath(lvl.name, text[0]), LevelInfo.LevelPath(lvl.name), true);
                         Level temp = Level.Load(lvl.name);
                         temp.StartPhysics();
-                        if (temp != null)
-                        {
+                        if (temp != null) {
                             lvl.spawnx = temp.spawnx;
                             lvl.spawny = temp.spawny;
                             lvl.spawnz = temp.spawnz;
@@ -83,13 +82,12 @@ namespace MCGalaxy.Commands
                             lvl.Length = temp.Length; lvl.length = temp.Length; lvl.height = temp.Length;
                             
                             lvl.blocks = temp.blocks;
+                            lvl.CustomBlocks = temp.CustomBlocks;
                             lvl.setPhysics(0);
                             lvl.ClearPhysics();
 
                             Command.all.Find("reveal").Use(null, "all " + text[1]);
-                        }
-                        else
-                        {
+                        } else {
                             Server.s.Log("Restore nulled");
                             File.Copy(LevelInfo.LevelPath(lvl.name) + ".backup", LevelInfo.LevelPath(lvl.name), true);
                         }
