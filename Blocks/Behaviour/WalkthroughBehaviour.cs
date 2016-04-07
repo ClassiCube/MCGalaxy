@@ -85,7 +85,8 @@ namespace MCGalaxy.BlockBehaviour {
             p.checkpointX = x; p.checkpointY = y; p.checkpointZ = z;
             int index = p.level.PosToInt(x, y, z);
             if (index != p.lastCheckpointIndex) {
-                p.SpawnEntity(p, 0xFF, p.pos[0], (ushort)((y - 1) * 32 + 51), p.pos[2], p.rot[0], p.rot[1]);
+            	int sendY = (p.pos[1] / 32) * 32 + 10;
+            	p.SpawnEntity(p, 0xFF, p.pos[0], (ushort)sendY, p.pos[2], p.rot[0], p.rot[1]);
                 p.lastCheckpointIndex = index;
             }
             return true;

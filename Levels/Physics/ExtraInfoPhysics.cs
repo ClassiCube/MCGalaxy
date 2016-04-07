@@ -41,8 +41,7 @@ namespace MCGalaxy.BlockPhysics {
                         door = true; break;
                 }
             }
-            if (!wait)
-                return false;
+            if (!wait) return false;
             
             if (door && C.time < 2) {
                 // TODO: perhaps do proper bounds checking
