@@ -23,7 +23,7 @@ namespace MCGalaxy
     {
         public static bool Walkthrough(byte type) {
 			return type == air || type == shrub || (type >= water && type <= lavastill) 
-			    && (type >= yelllowflower && type <= redmushroom);
+			    && (type >= yellowflower && type <= redmushroom);
         }
 
         public static bool AllowBreak(byte type)
@@ -85,7 +85,7 @@ namespace MCGalaxy
         }
 
         public static bool Placable(byte type) {
-            return !(type == blackrock || (type >= water && type <= lavstill) 
+        	return !(type == blackrock || (type >= water && type <= lavastill))
 			    && type < Block.CpeCount;
         }
 

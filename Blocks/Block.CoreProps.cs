@@ -56,7 +56,7 @@ namespace MCGalaxy {
                 
                 if (i >= red && i <= white)
                     Properties[i].KilledByLava = true;
-                if (i == air || i == shrub || (i >= yellowflower && i <= redmushroom) {
+                if (i == air || i == shrub || (i >= yellowflower && i <= redmushroom)) {
                     Properties[i].KilledByLava = true;
                     Properties[i].KilledByWater = true;
                 }

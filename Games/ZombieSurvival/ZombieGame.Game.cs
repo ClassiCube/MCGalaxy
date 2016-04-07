@@ -87,7 +87,7 @@ namespace MCGalaxy.Games {
                 Player[] players = p.Game.Infected ? Infected.Items : Alive.Items;
                 string type = p.Game.Infected ? " &cto zombies%S: " : " &ato humans%S: ";
                 foreach (Player pl in players)
-                	pl.SendMessage(p.color + p.DisplayName + type + message.Substring(1));
+                    pl.SendMessage(p.color + p.DisplayName + type + message.Substring(1));
                 return true;
             } else if (message[0] == '`' && message.Length > 1) {
                 if (p.Game.Team == null) {
@@ -122,7 +122,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) {
-		    p.SendCpeMessage(CpeMessageType.BottomRight2, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight2, "");
             p.SendCpeMessage(CpeMessageType.BottomRight1, "");
             if (RoundInProgress && lvl.name.CaselessEq(CurLevelName)) {
                 if (Running && p != null) {
@@ -152,30 +152,36 @@ namespace MCGalaxy.Games {
                 return;
             }
             
-            p.SendCpeMessage(CpeMessageType.Status1, "");
-            p.SendCpeMessage(CpeMessageType.Status2, "");
-            p.SendCpeMessage(CpeMessageType.Status3, "");
+            ResetCpeMessages(p);
             Alive.Remove(p);
             Infected.Remove(p);
             if (oldLvl != null && oldLvl.name.CaselessEq(CurLevelName))
                 UpdateAllPlayerStatus();
         }
-		
+        
+        void ResetCpeMessages(Player p) {
+            p.SendCpeMessage(CpeMessageType.Status1, "");
+            p.SendCpeMessage(CpeMessageType.Status2, "");
+            p.SendCpeMessage(CpeMessageType.Status3, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight1, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight2, "");
+        }
+        
         public override bool PlayerCanJoinLevel(Player p, Level lvl, Level oldLvl) {
-			if (!oldLvl.name.CaselessEq(CurLevelName)) return true;
-			if (lvl.name.CaselessEq(CurLevelName)) return true;
-			
-			if (RoundInProgress && !p.Game.Referee) {
-				p.SendMessage("Sorry, you cannot leave a zombie survival map until the current round has ended.");
-				return false;
-			}
-			return true;
+            if (!oldLvl.name.CaselessEq(CurLevelName)) return true;
+            if (lvl.name.CaselessEq(CurLevelName)) return true;
+            
+            if (RoundInProgress && !p.Game.Referee) {
+                p.SendMessage("Sorry, you cannot leave a zombie survival map until the current round has ended.");
+                return false;
+            }
+            return true;
         }
         
         public override void PlayerMoneyChanged(Player p) {
             if (!Running || !p.level.name.CaselessEq(CurLevelName)) return;
-		    string moneyMsg = "&a" + p.money + " %S" + Server.moneys;
-		    string stateMsg = " and you are " + (p.Game.Infected ? "&cdead" : "&aalive");
+            string moneyMsg = "&a" + p.money + " %S" + Server.moneys;
+            string stateMsg = " and you are " + (p.Game.Infected ? "&cdead" : "&aalive");
             p.SendCpeMessage(CpeMessageType.Status3, moneyMsg + stateMsg);
         }
     }
