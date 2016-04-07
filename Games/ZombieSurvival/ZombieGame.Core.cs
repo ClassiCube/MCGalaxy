@@ -27,6 +27,21 @@ namespace MCGalaxy.Games {
     public sealed partial class ZombieGame {
         
         void MainLoop() {
+            // Make sure that in the worst case, we do not crash the entire server.
+            try {
+                MainLoopCore();
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                Player.GlobalMessage("&cZombie survival disabled due to an error.");
+                try {
+                    ResetState();
+                } catch (Exception ex2) {
+                    Server.ErrorLog(ex2);
+                }
+            }
+        }
+        
+        void MainLoopCore() {
             if (Status == ZombieGameStatus.NotStarted) return;
             if (!initialChangeLevel) {
                 ChooseNextLevel();

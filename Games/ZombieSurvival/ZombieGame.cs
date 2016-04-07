@@ -215,10 +215,6 @@ namespace MCGalaxy.Games {
             LastLevelName = "";
             CurLevelName = "";
             CurLevel = null;
-            foreach (Player pl in online) {
-                pl.Game.RatedMap = false;
-                pl.Game.PledgeSurvive = false;
-            }
         }
         
         void UpdatePlayerStatus(Player p) {
