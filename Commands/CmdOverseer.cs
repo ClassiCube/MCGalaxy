@@ -206,7 +206,7 @@ namespace MCGalaxy.Commands
                     Level.SaveSettings(p.level);
                 }
             } else if (cmd == "GUNS") {
-                Command.all.Find("allowguns").Use(p, null);
+                Command.all.Find("allowguns").Use(p, "");
             } else if (cmd == "PERVISIT") {
                 string rank = value == "" ? Server.defaultRank : value;
                 Command.all.Find("pervisit").Use(p, rank);

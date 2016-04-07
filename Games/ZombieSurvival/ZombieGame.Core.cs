@@ -125,19 +125,19 @@ namespace MCGalaxy.Games {
         List<Player> DoRoundCountdown() {
             while (true) {
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
-                CurLevel.ChatLevel("%4Round Start:%f 30...");
+                CurLevel.ChatLevel("&4Round Start:&f 30...");
                 Thread.Sleep(20000); if (!Running) return null;
-                CurLevel.ChatLevel("%4Round Start:%f 10...");
+                CurLevel.ChatLevel("&4Round Start:&f 10...");
                 Thread.Sleep(10000); if (!Running) return null;
-                CurLevel.ChatLevel("%4Round Start:%f 5...");
+                CurLevel.ChatLevel("&4Round Start:&f 5...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("%4Round Start:%f 4...");
+                CurLevel.ChatLevel("&4Round Start:&f 4...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("%4Round Start:%f 3...");
+                CurLevel.ChatLevel("&4Round Start:&f 3...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("%4Round Start:%f 2...");
+                CurLevel.ChatLevel("&4Round Start:&f 2...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("%4Round Start:%f 1...");
+                CurLevel.ChatLevel("&4Round Start:&f 1...");
                 Thread.Sleep(1000); if (!Running) return null;
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
@@ -151,7 +151,7 @@ namespace MCGalaxy.Games {
                 }
                 
                 if (nonRefPlayers >= 2) return players;
-                CurLevel.ChatLevel(Colors.red + "ERROR: Need 2 or more players to play");
+                CurLevel.ChatLevel("&cNeed 2 or more players to start a round.");
             }
         }
         
