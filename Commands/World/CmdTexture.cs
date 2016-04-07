@@ -30,19 +30,21 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
             string scope = args[0].ToLower();
+            if (scope == "local") scope = "level";
+            if (scope == "localzip") scope = "levelzip";
             
             if (args.Length == 1) {
-            	if (scope == "level")
-            		Player.SendMessage(p, "Level terrain: " + GetPath(p.level.terrainUrl));
-            	else if (scope == "levelzip")
+                if (scope == "level")
+                    Player.SendMessage(p, "Level terrain: " + GetPath(p.level.terrainUrl));
+                else if (scope == "levelzip")
                     Player.SendMessage(p, "Level tex pack: " + GetPath(p.level.texturePackUrl));
                 else if (scope == "global")
-            		Player.SendMessage(p, "Global terrain: " + GetPath(Server.defaultTerrainUrl));
-            	else if (scope == "globalzip")
-            		Player.SendMessage(p, "Global tex pack: " + GetPath(Server.defaultTexturePackUrl));
-            	else
-            		Help(p);
-            	return; 
+                    Player.SendMessage(p, "Global terrain: " + GetPath(Server.defaultTerrainUrl));
+                else if (scope == "globalzip")
+                    Player.SendMessage(p, "Global tex pack: " + GetPath(Server.defaultTexturePackUrl));
+                else
+                    Help(p);
+                return; 
             }
             
             string url = args[1];            
@@ -58,6 +60,7 @@ namespace MCGalaxy.Commands {
             if ((scope == "globalzip" || scope == "levelzip") && !(url == "" || url.EndsWith(".zip"))) {
                 p.SendMessage("The texture pack URL must end in a .zip"); return;
             }
+            if (url.Length > 64) { p.SendMessage("The URL must be 64 characters or less."); return; }
             
             if (scope == "global") {
                 Server.defaultTerrainUrl = url;
@@ -75,15 +78,15 @@ namespace MCGalaxy.Commands {
                 p.level.texturePackUrl = url;
                 p.SendMessage("Set level's texture pack to " + args[1]);
                 UpdateLevel(p, true);
+            } else {
+                Help(p);
             }
         }
         
-        static string GetPath(string url) {
-        	return url == "" ? "(none)" : url;
-        }
+        static string GetPath(string url) { return url == "" ? "(none)" : url; }
         
         void UpdateGlobally(Player p, bool zip) {
-        	Player[] players = PlayerInfo.Online.Items;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 bool hasExt = pl.HasCpeExt(CpeExt.EnvMapAppearance) || pl.HasCpeExt(CpeExt.EnvMapAppearance, 2);
                 string url = zip ? pl.level.texturePackUrl : pl.level.terrainUrl;
@@ -94,7 +97,7 @@ namespace MCGalaxy.Commands {
         }
         
         void UpdateLevel(Player p, bool zip) {
-        	Player[] players = PlayerInfo.Online.Items;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 bool hasExt = pl.HasCpeExt(CpeExt.EnvMapAppearance) || pl.HasCpeExt(CpeExt.EnvMapAppearance, 2);
                 if (hasExt && pl.level == p.level)
