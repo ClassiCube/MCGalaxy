@@ -28,6 +28,9 @@ namespace MCGalaxy.Commands {
             if (message == "" && p == null) { Help(p); return; }
             Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
+            if (p != null && who.group.Permission > p.group.Permission) {
+                MessageTooHighRank(p, "voice", true); return;
+            }
             
             if (who.voice) {
                 Player.SendMessage(p, "Removing voice status from " + who.color + who.DisplayName);

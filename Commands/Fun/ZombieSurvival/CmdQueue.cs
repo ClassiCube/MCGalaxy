@@ -37,19 +37,19 @@ namespace MCGalaxy.Commands
                 Player who = PlayerInfo.FindOrShowMatches(p, value);
                 if (who == null) return;
                 
-                p.SendMessage(value + " was queued.");
+                Player.SendMessage(p, value + " was queued.");
                 Server.zombie.QueuedZombie = value;
             } else if (args[0].CaselessEq("level")) {
                 if (LevelInfo.ExistsOffline(value)) {
-                    p.SendMessage(value + " was queued.");
+                    Player.SendMessage(p, value + " was queued.");
                     Server.zombie.QueuedLevel = value.ToLower();
                     if (Server.zombie.CurLevel != null)
                         Server.zombie.CurLevel.ChatLevel(value + " was queued as the next map.");
                 } else {
-                    p.SendMessage("Level does not exist.");
+                    Player.SendMessage(p, "Level does not exist.");
                 }
             } else {
-                p.SendMessage("You did not enter a valid option.");
+                Player.SendMessage(p, "You did not enter a valid option.");
             }
         }
 
