@@ -115,7 +115,7 @@ namespace MCGalaxy
         public static List<string> Opstats { get { return new List<string>(opstats); } }
 
         public static List<TempBan> tempBans = new List<TempBan>();
-        public struct TempBan { public string name; public DateTime expiryTime; }
+        public struct TempBan { public string name, reason; public DateTime expiryTime; }
 
         public static PerformanceCounter PCCounter = null;
         public static PerformanceCounter ProcessCounter = null;

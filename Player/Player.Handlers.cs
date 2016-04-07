@@ -309,10 +309,12 @@ namespace MCGalaxy {
 
                 try {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
-                    if (tBan.expiryTime < DateTime.Now) {
+                    if (tBan.expiryTime < DateTime.UtcNow) {
                         Server.tempBans.Remove(tBan);
                     } else {
-                        Kick("You're still banned (temporary ban)!", true);
+                    	string reason = String.IsNullOrEmpty(tBan.reason) ? "" :
+                    	    " (" + tBan.reason + ")";
+                        Kick("You're still temp banned!" + reason, true);
                     }
                 } catch { }
 

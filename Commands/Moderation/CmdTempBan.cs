@@ -26,10 +26,11 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.Split(trimChars, 3);
             Player who = PlayerInfo.Find(args[0]);
             
             string target = who == null ? args[0] : who.name;
@@ -48,15 +49,20 @@ namespace MCGalaxy.Commands {
             
             Server.TempBan tBan;
             tBan.name = target;
-            tBan.expiryTime = DateTime.Now.AddMinutes(minutes);
+            tBan.reason = args.Length > 2 ? args[2] : "";
+            tBan.expiryTime = DateTime.UtcNow.AddMinutes(minutes);
             Server.tempBans.Add(tBan);
-            if (who != null)
-                who.Kick("Banned for " + minutes + " minutes!");
+            
+            if (who != null) {
+            	string reason = String.IsNullOrEmpty(tBan.reason) ? ""
+            	    : " - (" + tBan.reason + ")";
+                who.Kick("Banned for " + minutes + " minutes!" + reason);
+            }
             Player.SendMessage(p, "Temp banned " + target + " for " + minutes + " minutes.");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/tempban <name> <minutes> - Bans <name> for <minutes>");
+            Player.SendMessage(p, "/tempban <name> <minutes> [reason] - Bans <name> for <minutes>");
             Player.SendMessage(p, "Max time is 1440 (1 day). Default is 60");
             Player.SendMessage(p, "Temp bans will reset on server restart");
         }
