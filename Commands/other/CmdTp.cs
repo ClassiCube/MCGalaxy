@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             }
         
             if (!Server.higherranktp && p.group.Permission < target.group.Permission) {
-                Player.SendMessage(p, "You cannot teleport to a player of higher rank!"); return;
+                MessageTooHighRank(p, "teleport to", true); return;
             }
             p.beforeTeleportMap = p.level.name;
             p.beforeTeleportPos = p.pos;

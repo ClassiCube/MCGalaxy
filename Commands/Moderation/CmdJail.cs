@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             
             if (!who.jailed) {
                 if (p != null &&who.group.Permission >= p.group.Permission) { 
-                    Player.SendMessage(p, "Cannot jail someone of equal or greater rank."); return;
+                    MessageTooHighRank(p, "jail", false); return;
                 }
                 Player.SendMessage(p, "You jailed " + who.DisplayName);
                 Player.GlobalDespawn(who, false);

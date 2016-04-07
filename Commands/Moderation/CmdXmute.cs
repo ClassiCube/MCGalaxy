@@ -40,8 +40,7 @@ namespace MCGalaxy.Commands
 
             if (p != null && muter.group.Permission > p.group.Permission)
             {
-                Player.SendMessage(p, "You cannot xmute someone ranked higher than you!");
-                return;
+                MessageTooHighRank(p, "xmute", true); return;
             }
             if (p == muter)
             {

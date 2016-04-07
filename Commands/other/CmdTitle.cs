@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, parts[0]);
             if (who == null) return;
             if (p != null && who.group.Permission > p.group.Permission) {
-                Player.SendMessage(p, "Cannot change the title of someone of greater rank"); return;
+                MessageTooHighRank(p, "change the title of", true); return;
             }
             
             string newTitle = parts.Length > 1 ? parts[1] : "";

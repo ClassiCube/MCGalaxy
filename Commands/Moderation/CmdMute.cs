@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
                 Extensions.DeleteLineWord("ranks/muted.txt", who.name.ToLower());
             } else  {
                 if (p != null && who.group.Permission >= p.group.Permission) { 
-                    Player.SendMessage(p, "Cannot mute someone of a higher or equal rank."); return;
+                    MessageTooHighRank(p, "mute", false); return;
                 }
                 who.muted = true;
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Shas been &8muted", false);

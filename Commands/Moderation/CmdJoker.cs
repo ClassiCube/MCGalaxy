@@ -37,7 +37,9 @@ namespace MCGalaxy.Commands {
 
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
-            if (p != null && who.group.Permission > p.group.Permission) { Player.SendMessage(p, "Cannot joker someone of equal or greater rank."); return; }
+            if (p != null && who.group.Permission > p.group.Permission) { 
+                MessageTooHighRank(p, "joker", true); return;
+            }
 
             if (!who.joker) {
                 if (stealth) { 

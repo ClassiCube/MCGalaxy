@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
             
             if (source == null || target == null) return;
             if (p.group.Permission < source.group.Permission) {
-                Player.SendMessage(p, "You cannot force a player of higher rank to tp to another player."); return;
+                MessageTooHighRank(p, "teleport", true); return;            	
             }
             Player.SendMessage(p, "Attempting to teleport " + source.name + " to " + target.name + ".");
             Command.all.Find("tp").Use(source, target.name);            

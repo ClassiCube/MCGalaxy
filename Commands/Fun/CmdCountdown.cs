@@ -204,7 +204,7 @@ namespace MCGalaxy.Commands {
                 Player who = PlayerInfo.FindOrShowMatches(p, target);
                 if (who == null) return;
                 if (p.group.Permission < who.group.Permission) {
-                    Player.SendMessage(p, "You can't send rules to someone of a higher rank than yourself!!"); return;
+                    MessageTooHighRank(p, "send countdown rules", true); return;                	
                 } else {
                     Player.SendMessage(who, "Countdown rules sent to you by " + p.color + p.name);
                     Player.SendMessage(who, "The aim of the game is to stay alive the longest.");

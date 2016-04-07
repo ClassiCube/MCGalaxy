@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
                 who = PlayerInfo.FindOrShowMatches(p, message);
                 if (who == null) return;
                 if (p != null && p.group.Permission < who.group.Permission) {
-                    Player.SendMessage(p, "You cannot send /oprules to a higher or same ranked player."); return;
+                    MessageTooHighRank(p, "send /oprules", false); return;
                 }
             }
 

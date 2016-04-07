@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
             }
             if (who.group.Permission >= p.group.Permission)
             {
-                Player.SendMessage(p, "Cannot use this on someone of equal or greater rank."); return;
+                MessageTooHighRank(p, "hide", false); return;
             }
             Command.all.Find("hide").Use(who, "");
             Player.SendMessage(p, "Used /hide on " + who.color + who.name + "%S.");

@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands {
         
         void UndoOnlinePlayer(Player p, Player who, CatchPos cpos, ushort x, ushort y, ushort z) {
             if (p != who && who.group.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "Cannot undo a user of higher or equal rank"); return;
+                MessageTooHighRank(p, "undo", false); return;
             }
             
             UndoOnlineDrawOp op = new UndoOnlineDrawOp();
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands {
         void UndoOfflinePlayer(Player p, string whoName, CatchPos cpos, ushort x, ushort y, ushort z) {
             Group group = Group.findPlayerGroup(whoName);
             if (group.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "Cannot undo a user of higher or equal rank"); return;
+                MessageTooHighRank(p, "undo", false); return;
             }
             
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();

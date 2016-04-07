@@ -203,15 +203,18 @@ namespace MCGalaxy.Games {
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player pl in online) {
+            	pl.Game.RatedMap = false;
+            	pl.Game.PledgeSurvive = false;
+            	if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))
+            		continue;
+            	ResetCpeMessages(pl);
+            }
+            
             LastLevelName = "";
             CurLevelName = "";
             CurLevel = null;
-            
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player pl in online) {
-                pl.Game.RatedMap = false;
-                pl.Game.PledgeSurvive = false;
-            }
         }
         
         void UpdatePlayerStatus(Player p) {

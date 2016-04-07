@@ -76,8 +76,11 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Cannot change the rank to or from \"" + banned.name + "\"."); return false;
             }
             if (p != null && (group.Permission >= p.group.Permission || newRank.Permission >= p.group.Permission)) {
-                Player.SendMessage(p, "Cannot change the rank of someone of or to a rank equal or higher to yours."); return false;
+                MessageTooHighRank(p, "change the rank of", false); return false;
             }
+            if (p != null && (newRank.Permission >= p.group.Permission)) {           	
+                Player.SendMessage(p, "Cannot change the rank of a player to a rank equal or higher to yours."); return false;
+            }            
             
             if (who != null) {
                 Group.because(who, newRank);

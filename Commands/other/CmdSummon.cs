@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
             if (p.group.Permission < who.group.Permission) {
-                Player.SendMessage(p, "You cannot summon someone ranked higher than you!"); return;
+                MessageTooHighRank(p, "summon", true); return;
             }
             
             if (p.level != who.level)

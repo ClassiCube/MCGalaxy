@@ -208,8 +208,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             if (pl.group.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "You can't force someone of a higher or equal rank to join a chatroom.");
-                return;
+                MessageTooHighRank(p, "force-join", false); return;
             }
             
             if (pl.spyChatRooms.Contains(room)) {
@@ -234,8 +233,7 @@ namespace MCGalaxy.Commands {
             Player pl = PlayerInfo.FindOrShowMatches(p, name);
             if (pl == null) return;
             if (pl.group.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "You can't kick someone of a higher or equal rank from a chatroom.");
-                return;
+            	MessageTooHighRank(p, "kick from a chatroom", false); return;
             }
             
             Player.SendMessage(pl, "You were kicked from the chat room '" + pl.Chatroom + "'");

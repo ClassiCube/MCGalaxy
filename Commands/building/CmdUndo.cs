@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands
         void UndoOnlinePlayer(Player p, long seconds, Player who) {
             if (p != null && p != who) {
                 if (who.group.Permission > p.group.Permission) {
-                    Player.SendMessage(p, "Cannot undo a user of higher or equal rank"); return;
+                    MessageTooHighRank(p, "undo", true); return;
                 }
         		if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can undo other players."); return; }
             }

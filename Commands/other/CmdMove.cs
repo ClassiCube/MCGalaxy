@@ -51,7 +51,9 @@ namespace MCGalaxy.Commands
                 Level where = LevelInfo.Find(param[1]);
                 if (who == null) return;
                 if (where == null) { Player.SendMessage(p, "Could not find level specified"); return; }
-                if (p != null && who.group.Permission > p.group.Permission) { Player.SendMessage(p, "Cannot move someone of greater rank"); return; }
+                if (p != null && who.group.Permission > p.group.Permission) { 
+                    MessageTooHighRank(p, "move", true); return;
+                }
 
                 Command.all.Find("goto").Use(who, where.name);
                 if (who.level == where)
@@ -70,7 +72,9 @@ namespace MCGalaxy.Commands
                 {
                     who = PlayerInfo.FindOrShowMatches(p, param[0]);
                     if (who == null) return;
-                    if (p != null && who.group.Permission > p.group.Permission) { Player.SendMessage(p, "Cannot move someone of greater rank"); return; }
+                    if (p != null && who.group.Permission > p.group.Permission) { 
+                        MessageTooHighRank(p, "move", true); return; 
+                    }
                     message = message.Substring(message.IndexOf(' ') + 1);
                 }
                 else

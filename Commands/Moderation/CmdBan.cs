@@ -95,14 +95,14 @@ namespace MCGalaxy.Commands {
         
         bool CheckPerms(string name, Group group, Player p) {
             if ((int)group.Permission >= CommandOtherPerms.GetPerm(this)) {
-                string highest = Group.findPermInt(CommandOtherPerms.GetPerm(this)).name;
-                Player.SendMessage(p, "You can't ban players ranked " + highest + " or higher!"); return false;
+                Group grp = Group.findPermInt(CommandOtherPerms.GetPerm(this));
+                MessageTooHighRank(p, "ban", grp, false); return false;
             }
             if (group.Permission == LevelPermission.Banned) {
                 Player.SendMessage(p, name + " is already banned."); return false;
             }
             if (p != null && group.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "You cannot ban a person ranked equal or higher than you."); return false;
+        	    MessageTooHighRank(p, "ban", false); return false;
             }
             
             group.playerList.Remove(name);

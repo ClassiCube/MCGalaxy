@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             if (who == null) return;
             if (p == who) { Player.SendMessage(p, "Cannot freeze yourself."); return; }
             if (p != null && who.group.Permission >= p.group.Permission) { 
-            	Player.SendMessage(p, "Cannot freeze someone of equal or greater rank."); return; 
+                MessageTooHighRank(p, "freeze", false); return; 
             }
             
             string frozenby = (p == null) ? "(console)" : p.ColoredName;

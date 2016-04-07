@@ -56,7 +56,14 @@ namespace MCGalaxy {
                 
                 if (i >= red && i <= white)
                     Properties[i].KilledByLava = true;
+                if (i == air || i == shrub || (i >= yellowflower && i <= redmushroom)) {
+                    Properties[i].KilledByLava = true;
+                    Properties[i].KilledByWater = true;
+                }
             }
+            // Block specific properties
+            Properties[wood].KilledByLava = true; Properties[trunk].KilledByLava = true;
+            Properties[sponge].KilledByLava = true; Properties[bookcase].KilledByLava = true;
             SetupDefaultNames();
         }
         

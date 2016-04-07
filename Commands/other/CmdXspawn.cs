@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Use /spawn to respawn yourself."); return;
             }
             if (p != null && pl.group.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "Cannot respawn someone of greater or same rank"); return;
+                MessageTooHighRank(p, "respawn", false); return;
             }
             
             Command.all.Find("spawn").Use(pl, "");
