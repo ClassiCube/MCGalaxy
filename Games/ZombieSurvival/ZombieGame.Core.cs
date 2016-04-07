@@ -76,6 +76,7 @@ namespace MCGalaxy.Games {
         void DoRound() {
             if (!Running) return;
             List<Player> players = DoRoundCountdown();
+            if (players == null) return;
             RoundInProgress = true;
             Random random = new Random();
             Player first = PickFirstZombie(random, players);
@@ -125,6 +126,7 @@ namespace MCGalaxy.Games {
         List<Player> DoRoundCountdown() {
             while (true) {
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
+                if (!Running) return null;
                 CurLevel.ChatLevel("&4Round Start:&f 30...");
                 Thread.Sleep(20000); if (!Running) return null;
                 CurLevel.ChatLevel("&4Round Start:&f 10...");
@@ -150,6 +152,7 @@ namespace MCGalaxy.Games {
                     }
                 }
                 
+                if (!Running) return null;
                 if (nonRefPlayers >= 2) return players;
                 CurLevel.ChatLevel("&cNeed 2 or more players to start a round.");
             }

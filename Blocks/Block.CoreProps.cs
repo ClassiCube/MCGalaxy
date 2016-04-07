@@ -114,7 +114,9 @@ namespace MCGalaxy {
             for (int i = 0; i < names.Length; i++) {
                 Properties[i].Name = names[i];
                 if (names[i] != "unknown") 
-                    Aliases[names[i]] = (byte)i;
+                    Aliases[names[i]] = (byte)i;               
+                if (names[i].IndexOf('_') >= 0)
+                	Aliases[names[i].Replace("_", "")] = (byte)i;
             }
             
             // Add old MCGalaxy aliases
