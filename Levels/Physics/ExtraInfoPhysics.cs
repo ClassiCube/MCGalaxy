@@ -179,7 +179,7 @@ namespace MCGalaxy.BlockPhysics {
             if (rainbownum > 2) {
                 byte block = lvl.blocks[C.b];
                 if (block < Block.red || block > Block.darkpink) {
-                    lvl.AddUpdate(C.b, Block.red, true, C.data);
+                    lvl.AddUpdate(C.b, Block.red, false, C.data);
                 } else {
                     byte next = block == Block.darkpink ? Block.red : (byte)(block + 1);
                     lvl.AddUpdate(C.b, next);
