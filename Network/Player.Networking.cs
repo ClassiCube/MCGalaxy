@@ -49,7 +49,7 @@ namespace MCGalaxy {
                 if ( !p.disconnected )
                     p.socket.BeginReceive(p.tempbuffer, 0, p.tempbuffer.Length, SocketFlags.None,
                                           new AsyncCallback(Receive), p);
-            }catch ( SocketException ) {
+            } catch ( SocketException ) {
                 p.Disconnect();
             }  catch ( ObjectDisposedException ) {
                 // Player is no longer connected, socket was closed
@@ -405,8 +405,7 @@ namespace MCGalaxy {
                     for (int i = 0; i < level.blocks.Length; ++i) {
                         byte block = level.blocks[i];
                         if (block == Block.custom_block) {
-                            if (hasBlockDefs) buffer[bIndex] = level.GetExtTile(i);
-                            else buffer[bIndex] = level.GetFallbackExtTile(i);
+                            buffer[bIndex] = hasBlockDefs ? level.GetExtTile(i) : level.GetFallbackExtTile(i);
                         } else {
                             buffer[bIndex] = conv[block];
                         }
@@ -420,8 +419,8 @@ namespace MCGalaxy {
                     for (int i = 0; i < level.blocks.Length; ++i) {
                         byte block = level.blocks[i];
                         if (block == Block.custom_block) {
-                            if (hasBlockDefs) buffer[bIndex] = convCPE[level.GetExtTile(i)];
-                            else buffer[bIndex] = convCPE[level.GetFallbackExtTile(i)];
+                            block = hasBlockDefs ? level.GetExtTile(i) : level.GetFallbackExtTile(i);
+                            buffer[bIndex] = convCPE[block];
                         } else {
                             buffer[bIndex] = convCPE[conv[block]];
                         }
@@ -507,10 +506,8 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (type == Block.custom_block) {
-                if (hasBlockDefs)
-                    buffer[7] = level.GetExtTile(x, y, z);
-                else
-                    buffer[7] = level.GetFallbackExtTile(x, y, z);
+                buffer[7] = hasBlockDefs ? level.GetExtTile(x, y, z) 
+                    : level.GetFallbackExtTile(x, y, z);
             } else if (hasCustomBlocks) {
                 buffer[7] = Block.Convert(type);
             } else {
@@ -531,10 +528,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (type == Block.custom_block) {
-                if (hasBlockDefs)
-                    buffer[7] = extType;
-                else
-                    buffer[7] = level.GetFallback(extType);
+                buffer[7] = hasBlockDefs ? extType : level.GetFallback(extType);
             } else if (hasCustomBlocks) {
                 buffer[7] = Block.Convert(type);
             } else {

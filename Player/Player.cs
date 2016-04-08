@@ -298,7 +298,7 @@ namespace MCGalaxy {
         }
         
         public static bool CanSee(Player p, Player who) {
-            if (p == null || !who.hidden) return true;
+            if (p == null || !who.hidden || p == who) return true;
             return p.group.Permission > who.group.Permission;
         }
         
