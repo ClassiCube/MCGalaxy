@@ -54,8 +54,8 @@ namespace MCGalaxy.Commands {
             Server.tempBans.Add(tBan);
             
             if (who != null) {
-            	string reason = String.IsNullOrEmpty(tBan.reason) ? ""
-            	    : " - (" + tBan.reason + ")";
+                string reason = String.IsNullOrEmpty(tBan.reason) ? ""
+                    : " - (" + tBan.reason + ")";
                 who.Kick("Banned for " + minutes + " minutes!" + reason);
             }
             Player.SendMessage(p, "Temp banned " + target + " for " + minutes + " minutes.");

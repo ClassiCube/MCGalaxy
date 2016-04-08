@@ -360,7 +360,6 @@ namespace MCGalaxy
             CheckFile("Newtonsoft.Json.dll");
             CheckFile("LibNoise.dll");
 
-            //UpdateGlobalSettings();
             if (!Directory.Exists("properties")) Directory.CreateDirectory("properties");
             if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
             if (!Directory.Exists("bots")) Directory.CreateDirectory("bots");
@@ -370,19 +369,6 @@ namespace MCGalaxy
             if (!File.Exists("text/transexceptions.txt")) File.CreateText("text/transexceptions.txt").Dispose();
             if (!File.Exists("text/gcaccepted.txt")) File.CreateText("text/gcaccepted.txt").Dispose();
             if (!File.Exists("text/bans.txt")) File.CreateText("text/bans.txt").Dispose();
-            // DO NOT STICK ANYTHING IN BETWEEN HERE!!!!!!!!!!!!!!!
-            else
-            {
-                string bantext = File.ReadAllText("text/bans.txt");
-                if (!bantext.Contains("%20") && bantext != "")
-                {
-                    bantext = bantext.Replace("~", "%20");
-                    bantext = bantext.Replace("-", "%20");
-                    File.WriteAllText("text/bans.txt", bantext);
-                }
-            }
-
-
 
             if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");
             if (!Directory.Exists("extra/undo")) Directory.CreateDirectory("extra/undo");
@@ -407,15 +393,10 @@ namespace MCGalaxy
             catch { }
             Chat.LoadCustomTokens();
 
-            if (File.Exists("text/emotelist.txt"))
-            {
+            if (File.Exists("text/emotelist.txt")) {
                 foreach (string s in File.ReadAllLines("text/emotelist.txt"))
-                {
                     Player.emoteList.Add(s);
-                }
-            }
-            else
-            {
+            } else {
                 File.Create("text/emotelist.txt").Dispose();
             }
 
@@ -535,19 +516,18 @@ namespace MCGalaxy
                 if (p == null || p == "")
                     return "Error";
                 var whois = new WhoWas(p);
-                if (whois.rank.Contains("banned"))
+                Group grp = Group.Find(whois.rank);
+                if (grp != null && grp.Permission == LevelPermission.Banned)
                     whois.banned = true;
                 else
                     whois.banned = Ban.IsBanned(p);
-                string[] bandata;
-                if (whois.banned)
-                {
-                    bandata = Ban.GetBanData(p);
-                    whois.banned_by = bandata[0];
-                    whois.ban_reason = bandata[1].Replace("%20", " ");
-                    whois.banned_time = bandata[2].Replace("%20", " ");
-                }
                 
+                if (whois.banned) {
+                	string[] bandata = Ban.GetBanData(p);
+                    whois.banned_by = bandata[0];
+                    whois.ban_reason = bandata[1];
+                    whois.banned_time = bandata[2];
+                }                
                 return JsonConvert.SerializeObject(whois, Formatting.Indented);
             }
             catch(Exception e)

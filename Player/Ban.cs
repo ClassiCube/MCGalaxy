@@ -59,22 +59,19 @@ namespace MCGalaxy {
 		}
 		
 		/// <summary> Gives info about the ban of user, as a string array of
-		/// { banned by, ban reason, stealth ban, date and time, previous rank }. </summary>
+		/// {banned by, ban reason, date and time, previous rank, stealth},
+		/// or null if no ban data was found. </summary>
 		public static string[] GetBanData(string who) {
 			who = who.ToLower();
-			string bannedby = "", reason = "", timedate = "", oldrank = "", stealth = "";
 			foreach (string line in File.ReadAllLines("text/bans.txt")) {
 				string[] parts = line.Split(' ');
-				if (parts.Length <= 5) continue;
-				if (parts[1] == who) {
-					bannedby = parts[0];
-					reason = CP437Reader.ConvertToRaw(parts[2]);
-					stealth = parts[3];
-					timedate = parts[4];
-					oldrank = parts[5];
-				}
+				if (parts.Length <= 5 || parts[1] != who) continue;
+				
+				parts[2] = CP437Reader.ConvertToRaw(parts[2]).Replace("%20", " ");
+				parts[4] = parts[4].Replace("%20", " ");
+				return new[] { parts[0], parts[2], parts[4], parts[5], parts[3] };
 			}
-			return new[] { bannedby, reason, timedate, oldrank, stealth };
+			return null;
 		}
 		
 		/// <summary> Unbans the given user, returning whether the player was originally banned.
@@ -97,6 +94,7 @@ namespace MCGalaxy {
 		/// <summary> Change the ban reason for the given user. </summary>
 		public static string EditReason(string who, string reason) {
 			who = who.ToLower();
+			reason = reason.Replace(" ", "%20");
 			bool found = false;
 			StringBuilder sb = new StringBuilder();
 			

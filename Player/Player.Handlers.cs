@@ -312,8 +312,8 @@ namespace MCGalaxy {
                     if (tBan.expiryTime < DateTime.UtcNow) {
                         Server.tempBans.Remove(tBan);
                     } else {
-                    	string reason = String.IsNullOrEmpty(tBan.reason) ? "" :
-                    	    " (" + tBan.reason + ")";
+                        string reason = String.IsNullOrEmpty(tBan.reason) ? "" :
+                            " (" + tBan.reason + ")";
                         Kick("You're still temp banned!" + reason, true);
                     }
                 } catch { }
@@ -327,8 +327,8 @@ namespace MCGalaxy {
                 
                 if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Banned)) {
                     if (!Server.useWhitelist || !onWhitelist) {
-                        if (Ban.IsBanned(name)) {
-                            string[] data = Ban.GetBanData(name);
+                        string[] data = Ban.GetBanData(name);
+                        if (data != null) {
                             Kick("Banned for \"" + data[1] + "\" by " + data[0], true);
                         } else {
                             Kick(Server.customBanMessage, true);

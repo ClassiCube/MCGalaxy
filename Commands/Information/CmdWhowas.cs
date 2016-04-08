@@ -61,10 +61,9 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "> > first logged into the server on &a" + target.firstLogin);
             Player.SendMessage(p, "> > logged in &a" + target.logins + " %Stimes, &c" + target.kicks + " %Sof which ended in a kick.");
             Player.SendMessage(p, "> > " + Awards.awardAmount(message) + " awards");
-            if (Ban.IsBanned(message)) {
-                string[] data = Ban.GetBanData(message);
+            string[] data = Ban.GetBanData(message);
+            if (data != null)
                 Player.SendMessage(p, "> > was banned by " + data[0] + " for " + data[1] + " on " + data[2]);
-            }
 
             if (Server.Devs.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9Developer");
             else if (Server.Mods.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9MCGalaxy Moderator");

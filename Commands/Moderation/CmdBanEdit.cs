@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         	string[] args = message.Split(trimChars, 2);
             if (args.Length < 2) { Help(p); return; }
 
-            string err = Ban.EditReason(args[0], args[1].Replace(" ", "%20"));
+            string err = Ban.EditReason(args[0], args[1]);
             if (err != "")
                 Player.SendMessage(p, err);
             else
