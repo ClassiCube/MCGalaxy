@@ -996,7 +996,6 @@ namespace MCGalaxy.Gui
             this.txtNick.Size = new System.Drawing.Size(106, 21);
             this.txtNick.TabIndex = 16;
             this.toolTip.SetToolTip(this.txtNick, "The Nick that the IRC bot will try and use.");
-            this.txtNick.TextChanged += new System.EventHandler(this.txtNick_TextChanged);
             // 
             // txtIRCServer
             // 
@@ -1256,7 +1255,6 @@ namespace MCGalaxy.Gui
                                     0,
                                     0,
                                     0});
-            this.lsNudVoteTime.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
             // 
             // lsCmbSetupRank
             // 
@@ -2452,7 +2450,6 @@ namespace MCGalaxy.Gui
             this.chkIrcId.TabIndex = 27;
             this.chkIrcId.Text = "Identify with NickServ";
             this.chkIrcId.UseVisualStyleBackColor = true;
-            this.chkIrcId.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // label6
             // 
@@ -2780,7 +2777,6 @@ namespace MCGalaxy.Gui
             this.autoUpdate.TabIndex = 6;
             this.autoUpdate.Text = "Auto Update";
             this.autoUpdate.UseVisualStyleBackColor = true;
-            this.autoUpdate.CheckedChanged += new System.EventHandler(this.AutoUpdateCheckedChanged);
             // 
             // chkUpdates
             // 
@@ -3177,7 +3173,6 @@ namespace MCGalaxy.Gui
             this.label55.Size = new System.Drawing.Size(62, 13);
             this.label55.TabIndex = 2;
             this.label55.Text = "Vote Count:";
-            this.label55.Click += new System.EventHandler(this.label55_Click);
             // 
             // groupBox20
             // 
@@ -3910,7 +3905,6 @@ namespace MCGalaxy.Gui
             this.chkZombieOnServerStart.TabIndex = 0;
             this.chkZombieOnServerStart.Text = "Start on server start";
             this.chkZombieOnServerStart.UseVisualStyleBackColor = true;
-            this.chkZombieOnServerStart.CheckedChanged += new System.EventHandler(this.chkZombieOnServerStart_CheckedChanged);
             // 
             // pageSecurity
             // 
@@ -3957,7 +3951,6 @@ namespace MCGalaxy.Gui
                                     0,
                                     0,
                                     0});
-            this.numCountReset.ValueChanged += new System.EventHandler(this.numCountReset_ValueChanged);
             // 
             // label69
             // 
