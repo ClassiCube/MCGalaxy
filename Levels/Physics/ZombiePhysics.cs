@@ -22,7 +22,7 @@ namespace MCGalaxy.BlockPhysics {
     public static class ZombiePhysics {
         
         public static void Do(Level lvl, Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -107,8 +107,11 @@ namespace MCGalaxy.BlockPhysics {
         
         public static void DoHead(Level lvl, Check C) {
             if (lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.zombiebody
-                && lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.creeper)
-                C.data = "revert 0";
+                && lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.creeper) {
+                PhysicsArgs args = default(PhysicsArgs);
+                args.Type1 = PhysicsArgs.Revert; args.Value1 = Block.air;
+                C.data = default(PhysicsArgs);
+            }
         }
         
         static bool MoveZombie(Level lvl, Check C, int index) {

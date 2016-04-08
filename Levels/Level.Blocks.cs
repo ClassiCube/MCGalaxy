@@ -340,8 +340,8 @@ namespace MCGalaxy {
                     SetExtTileNoCheck(x, y, z, extType);
 
                 errorLocation = "Adding physics";
-                if (p.PlayingTntWars && type == Block.smalltnt) AddCheck(PosToInt(x, y, z), false, p);
-                if (physics > 0) if (Block.Physics(type)) AddCheck(PosToInt(x, y, z), false, p);
+                if (p.PlayingTntWars && type == Block.smalltnt) AddCheck(PosToInt(x, y, z), false);
+                if (physics > 0) if (Block.Physics(type)) AddCheck(PosToInt(x, y, z), false);
 
                 changed = true;
                 backedup = false;
@@ -363,29 +363,33 @@ namespace MCGalaxy {
             }
         }
         
-        public void Blockchange(int b, byte type, bool overRide = false, string extraInfo = "", byte extType = 0, bool addUndo = true) { //Block change made by physics
-            if (DoPhysicsBlockchange(b, type, overRide, extraInfo, extType, addUndo))
+        public void Blockchange(int b, byte type, bool overRide = false, 
+                                PhysicsArgs data = default(PhysicsArgs),
+                                byte extType = 0, bool addUndo = true) { //Block change made by physics
+            if (DoPhysicsBlockchange(b, type, overRide, data, extType, addUndo))
                 Player.GlobalBlockchange(this, b, type, extType);
         }
         
         public void Blockchange(ushort x, ushort y, ushort z, byte type, bool overRide = false, 
-                                string extraInfo = "", byte extType = 0, bool addUndo = true) {
-            Blockchange(PosToInt(x, y, z), type, overRide, extraInfo, extType, addUndo); //Block change made by physics
+                                PhysicsArgs data = default(PhysicsArgs),
+                                byte extType = 0, bool addUndo = true) {
+            Blockchange(PosToInt(x, y, z), type, overRide, data, extType, addUndo); //Block change made by physics
         }
         
         public void Blockchange(ushort x, ushort y, ushort z, byte type, byte extType) {
-            Blockchange(PosToInt(x, y, z), type, false, "", extType); //Block change made by physics
+            Blockchange(PosToInt(x, y, z), type, false, default(PhysicsArgs), extType); //Block change made by physics
         }
         
         internal bool DoPhysicsBlockchange(int b, byte type, bool overRide = false, 
-                                           string extraInfo = "", byte extType = 0, bool addUndo = true) {
+                                           PhysicsArgs data = default(PhysicsArgs), 
+                                           byte extType = 0, bool addUndo = true) {
             if (b < 0 || b >= blocks.Length || blocks == null) return false;
             byte oldBlock = blocks[b];
             byte oldExtType = oldBlock == Block.custom_block ? GetExtTile(b) : (byte)0;
             try
             {
                 if (!overRide)
-                    if (Block.OPBlocks(oldBlock) || (Block.OPBlocks(type) && extraInfo != "")) return false;
+                    if (Block.OPBlocks(oldBlock) || (Block.OPBlocks(type) && data.Raw != 0)) return false;
 
                 if (b == Block.sponge && physics > 0 && type != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, b);
@@ -420,8 +424,8 @@ namespace MCGalaxy {
                     IntToPos(b, out x, out y, out z);
                     RevertExtTileNoCheck(x, y, z);
                 }                
-                if (physics > 0 && ((Block.Physics(type) || extraInfo != "")))
-                    AddCheck(b, false, extraInfo);
+                if (physics > 0 && ((Block.Physics(type) || data.Raw != 0)))
+                    AddCheck(b, false, data);
                 
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.
                 bool diffBlock = Block.Convert(oldBlock) != Block.Convert(type);

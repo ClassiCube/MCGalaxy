@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.BlockPhysics;
 
 namespace MCGalaxy {
     
@@ -93,7 +94,7 @@ namespace MCGalaxy {
         internal OnPhysicsUpdateEvent(Level.OnPhysicsUpdate method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(ushort x, ushort y, ushort z, byte time, string extraInfo, Level l) {
+        public static void Call(ushort x, ushort y, ushort z, byte time, PhysicsArgs extraInfo, Level l) {
             events.ForEach(
                 pl => {
                     try {

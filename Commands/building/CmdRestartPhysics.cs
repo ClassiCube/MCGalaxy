@@ -17,6 +17,8 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.BlockPhysics;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdRestartPhysics : Command
@@ -31,7 +33,6 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             CatchPos cpos = default(CatchPos);
             message = message.ToLower();
-            cpos.extraInfo = "";
             if (message != "" && !ParseArgs(p, message, ref cpos)) return;
 
             p.blockchangeObject = cpos;
@@ -40,44 +41,55 @@ namespace MCGalaxy.Commands
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        bool ParseArgs(Player p, string args, ref CatchPos cpos) {
-            string[] parts = args.Split(' ');
+        bool ParseArgs(Player p, string message, ref CatchPos cpos) {
+            string[] parts = message.Split(' ');
             if (parts.Length % 2 == 1) {
                 Player.SendMessage(p, "Number of parameters must be even");
                 Help(p); return false;
+            }          
+            PhysicsArgs args = default(PhysicsArgs);
+            byte type = 0, value = 0;
+            
+            if (parts.Length >= 2) {
+                if (!Parse(p, parts[0], parts[1], ref type, ref value)) return false;
+                args.Type1 = type; args.Value1 = value;
             }
-
-            for (int i = 0; i < parts.Length; i++) {
-                string s = parts[i];
-                if (i % 2 != 0) {
-                    int value;
-                    if (!int.TryParse(s, out value)) {
-                        Player.SendMessage(p, "/rp [type1] [num] [type2] [num]..."); return false;
-                    }
-                    if (value < 0) { Player.SendMessage(p, "Values must be above 0"); return false; }
-                    continue;
-                }
-                
-                switch (s) {
-                    case "drop":
-                    case "explode":
-                    case "dissipate":
-                    case "wait":
-                    case "rainbow":
-                        break;
-                        
-                    case "revert":
-                        byte block = Block.Byte(parts[i + 1]);
-                        if (block == Block.Zero) { Player.SendMessage(p, "Invalid block type."); return false; }
-                        parts[i + 1] = block.ToString();
-                        break;
-                    default:
-                        Player.SendMessage(p, s + " type is not supported.");
-                        return false;
-                }
+            if (parts.Length >= 4) {
+                if (!Parse(p, parts[2], parts[3], ref type, ref value)) return false;
+                args.Type2 = type; args.Value2 = value;
             }
-            cpos.extraInfo = string.Join(" ", parts);
-            return true;
+            if (parts.Length >= 6) {
+                Player.SendMessage(p, "You can only use up to two types of physics."0; return false;
+            }
+            cpos.extraInfo = args; return true;
+        }
+        
+        bool Parse(Player p, string name, string arg, ref byte type, ref byte value) {
+            if (name == "revert") {
+                byte block = Block.Byte(arg);
+                if (block == Block.Zero) { Player.SendMessage(p, "Invalid block type."); return false; }
+                type = PhysicsArgs.Revert; value = block;
+                return true;
+            }
+            
+            int temp;
+            if (!int.TryParse(arg, out temp)) {
+                Player.SendMessage(p, "/rp [type1] [num] [type2] [num]..."); return false;
+            }
+            if (temp < 0 || temp > 255) {
+                Player.SendMessage(p, "Values must be between 0 and 255."); return false;
+            }
+            value = (byte)temp;
+            
+            switch (name) {
+                case "drop": type = PhysicsArgs.Drop; return true;
+                case "explode": type = PhysicsArgs.Explode; return true;
+                case "dissipate": type = PhysicsArgs.Dissipate; return true;
+                case "wait": type = PhysicsArgs.Wait; return true;
+                case "rainbow": type = PhysicsArgs.Rainbow; return true;
+            }
+            Player.SendMessage(p, name + " type is not supported.");
+            return false;
         }
         
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -94,14 +106,14 @@ namespace MCGalaxy.Commands
             
             for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
                 for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
-                    for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)                        
+                    for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
             {
                 int index = p.level.PosToInt(xx, yy, zz);
                 if (index >= 0 && p.level.blocks[index] != Block.air)
                     buffer.Add(index);
             }
 
-            if (cpos.extraInfo == "") {
+            if (cpos.extraInfo.Raw == 0) {
                 if (buffer.Count > Server.rpNormLimit) {
                     Player.SendMessage(p, "Cannot restart more than " + Server.rpNormLimit + " blocks.");
                     Player.SendMessage(p, "Tried to restart " + buffer.Count + " blocks.");
@@ -120,10 +132,10 @@ namespace MCGalaxy.Commands
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
 
-        struct CatchPos { public ushort x, y, z; public string extraInfo; }
+        struct CatchPos { public ushort x, y, z; public PhysicsArgs extraInfo; }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/restartphysics ([type] [num]) ([type2] [num2]) (...) - Restarts every physics block in an area");
+            Player.SendMessage(p, "/restartphysics ([type] [num]) ([type2] [num2]) - Restarts every physics block in an area");
             Player.SendMessage(p, "[type] will set custom physics for selected blocks");
             Player.SendMessage(p, "Possible [types]: drop, explode, dissipate, wait, rainbow, revert");
             Player.SendMessage(p, "/rp revert takes block names");

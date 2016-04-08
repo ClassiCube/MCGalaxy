@@ -22,7 +22,7 @@ namespace MCGalaxy.BlockPhysics {
     public static class SnakePhysics {
         
         public static void Do(Level lvl, Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             int dirsVisited = 0, index = 0;
@@ -106,8 +106,11 @@ namespace MCGalaxy.BlockPhysics {
             if (lvl.GetTile(lvl.IntOffset(C.b, -1, 0, 0)) != Block.snake
                 || lvl.GetTile(lvl.IntOffset(C.b, 1, 0, 0)) != Block.snake
                 || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, 1)) != Block.snake
-                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, -1)) != Block.snake)
-                C.data = "revert 0";
+                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, -1)) != Block.snake) {
+                PhysicsArgs args = default(PhysicsArgs);
+                args.Type1 = PhysicsArgs.Revert; args.Value1 = Block.air;
+                C.data = args;
+            }
         }
         
         static bool MoveSnake(Level lvl, Check C, int index) {
@@ -125,7 +128,10 @@ namespace MCGalaxy.BlockPhysics {
             }
 
             if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
-                lvl.AddUpdate(C.b, Block.snaketail, true, "wait 5 revert 0");
+                PhysicsArgs args = default(PhysicsArgs);
+                args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
+                args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.air;
+                lvl.AddUpdate(C.b, Block.snaketail, true, args);
                 return true;
             }
             return false;
@@ -140,7 +146,10 @@ namespace MCGalaxy.BlockPhysics {
                 (blockAbove == Block.grass ||
                  blockAbove == Block.dirt && block2Above == Block.air)) {
                 if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
-                    lvl.AddUpdate(C.b, Block.snaketail, true, "wait 5 revert 0");
+                    PhysicsArgs args = default(PhysicsArgs);
+                    args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
+                    args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.air;
+                    lvl.AddUpdate(C.b, Block.snaketail, true, args);
                     return true;
                 }            
             }

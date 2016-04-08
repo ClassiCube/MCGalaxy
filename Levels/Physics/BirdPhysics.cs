@@ -72,7 +72,9 @@ namespace MCGalaxy.BlockPhysics {
 				case Block.op_air:
 					break;
 				default:
-					lvl.AddUpdate(C.b, Block.red, false, "dissipate 25");
+					PhysicsArgs args = default(PhysicsArgs);
+					args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 25;
+					lvl.AddUpdate(C.b, Block.red, false, args);
 					break;
 			}
 		}

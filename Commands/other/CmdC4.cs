@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             
             if (p.level.physics >= 1 && p.level.physics < 5) {
                 sbyte numb = C4Physics.NextCircuit(p.level);
-                C4Physics.C4Data c4 = new C4Physics.C4Data(numb);
+                C4Data c4 = new C4Data(numb);
                 p.level.C4list.Add(c4);
                 p.c4circuitNumber = numb;
                 Player.SendMessage(p, "Place any block for c4 and place a " + Colors.red + "red" + Server.DefaultColor + " block for the detonator!");

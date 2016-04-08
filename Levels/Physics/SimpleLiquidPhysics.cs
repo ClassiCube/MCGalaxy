@@ -110,13 +110,11 @@ namespace MCGalaxy.BlockPhysics {
                     blocked[4] = true;
             } else { //was placed near sponge
                 lvl.liquids.TryGetValue(C.b, out blocked);
-                lvl.AddUpdate(C.b, Block.air);
-                
-                if (((string)C.data).IndexOf("wait", comp) == -1)
-                    C.time = 255;
+                lvl.AddUpdate(C.b, Block.air);                
+                if (!C.data.HasWait) C.time = 255;
             }
 
-            if (((string)C.data).IndexOf("wait", comp) == -1 && blocked != null)
+            if (!C.data.HasWait && blocked != null)
                 if (blocked[0] && blocked[1] && blocked[2] && blocked[3] && blocked[4])
             {
                 lvl.liquids.Remove(C.b);
@@ -142,9 +140,7 @@ namespace MCGalaxy.BlockPhysics {
             } else { //was placed near sponge
                 lvl.AddUpdate(C.b, Block.air);
             }
-
-            if (((string)C.data).IndexOf("wait", comp) == -1)
-                C.time = 255;
+            if (!C.data.HasWait) C.time = 255;
         }
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
@@ -226,11 +222,11 @@ namespace MCGalaxy.BlockPhysics {
             } else { //was placed near sponge
                 lvl.liquids.TryGetValue(C.b, out blocked);
                 lvl.AddUpdate(C.b, Block.air);
-                if (!checkWait || ((string)C.data).IndexOf("wait", comp) == -1)
+                if (!checkWait || !C.data.HasWait)
                     C.time = 255;
             }
 
-            if (blocked != null && (!checkWait || ((string)C.data).IndexOf("wait", comp) == -1))
+            if (blocked != null && (!checkWait || !C.data.HasWait))
                 if (blocked[0] && blocked[1] && blocked[2] && blocked[3] && blocked[4])
             {
                 lvl.liquids.Remove(C.b);
@@ -239,7 +235,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void DoLavaUniformFlow(Level lvl, Check C, bool checkWait) {
-            Random rand = lvl.physRandom;        	
+            Random rand = lvl.physRandom;
             lvl.liquids.Remove(C.b);
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -254,9 +250,7 @@ namespace MCGalaxy.BlockPhysics {
             } else { //was placed near sponge
                 lvl.AddUpdate(C.b, Block.air);
             }
-
-            if (!checkWait || ((string)C.data).IndexOf("wait", comp) == -1)
-                C.time = 255;
+            if (!checkWait || !C.data.HasWait) C.time = 255;
         }
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {

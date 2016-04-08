@@ -22,19 +22,6 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class C4Physics {
         
-		public static void DoC4(Level lvl, Check C) {
-            C4Data c4 = Find(lvl, ((Player)C.data).c4circuitNumber);
-            if (c4 != null) c4.list.Add(C.b);
-            C.time = 255;
-        }
-        
-        public static void DoC4Det(Level lvl, Check C) {
-            C4Data c4 = Find(lvl, ((Player)C.data).c4circuitNumber);
-            if (c4 != null) c4.detIndex = C.b;
-            ((Player)C.data).c4circuitNumber = -1;
-            C.time = 255;
-        }
-        
         public static void BlowUp(ushort[] pos, Level lvl) {
             int srcIndex = lvl.PosToInt(pos[0], pos[1], pos[2]);
             try {
@@ -64,15 +51,15 @@ namespace MCGalaxy.BlockPhysics {
             }
             return null;
         }
-        
-        public class C4Data {
-            public sbyte CircuitID;
-            public int detIndex = -1;
-            public List<int> list = new List<int>();
+    }
+    
+    public class C4Data {
+        public sbyte CircuitID;
+        public int detIndex = -1;
+        public List<int> list = new List<int>();
 
-            public C4Data(sbyte num) {
-                CircuitID = num;
-            }
+        public C4Data(sbyte num) {
+            CircuitID = num;
         }
     }
 }

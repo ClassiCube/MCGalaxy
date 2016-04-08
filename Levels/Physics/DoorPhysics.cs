@@ -91,7 +91,9 @@ namespace MCGalaxy.BlockPhysics {
                     
                     if (unblocked) {
                         lvl.AddUpdate(b2, Block.firework);
-                        lvl.AddUpdate(b1, Block.lavastill, false, "dissipate 100");
+                        PhysicsArgs args = default(PhysicsArgs);
+					    args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 100;
+                        lvl.AddUpdate(b1, Block.lavastill, false, args);
                     }
                 } else if (b == Block.tnt) {
                     lvl.MakeExplosion((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz), 0);
@@ -122,8 +124,13 @@ namespace MCGalaxy.BlockPhysics {
                 return;
             }
 
-            if (Block.tDoor(rawBlock))
-                lvl.AddUpdate(index, Block.air, false, "wait 16 door 1 revert " + rawBlock.ToString());
+            if (Block.tDoor(rawBlock)) {
+            	PhysicsArgs args = default(PhysicsArgs);
+                args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
+                args.Type2 = PhysicsArgs.Revert; args.Value2 = rawBlock;
+                args.Door = true;
+                lvl.AddUpdate(index, Block.air, false, args);
+            }
             byte oDoor = Block.odoor(rawBlock);
             if (oDoor != Block.Zero)
                 lvl.AddUpdate(index, oDoor, true);

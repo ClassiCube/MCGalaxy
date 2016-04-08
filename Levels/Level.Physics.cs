@@ -111,14 +111,14 @@ namespace MCGalaxy {
             physThread.Abort();
         }
 
-        public string foundInfo(ushort x, ushort y, ushort z) {
+        public PhysicsArgs foundInfo(ushort x, ushort y, ushort z) {
             int index = PosToInt(x, y, z);
             for (int i = 0; i < ListCheck.Count; i++) {
                 Check C = ListCheck.Items[i];
                 if (C.b != index) continue;
-                return (C.data is string) ? (string)C.data : "";
+                return C.data;
             }
-            return "";
+            return default(PhysicsArgs);
         }
 
         public void CalcPhysics() {
@@ -131,16 +131,15 @@ namespace MCGalaxy {
                         Check C = ListCheck.Items[i];
                         IntToPos(C.b, out x, out y, out z);
                         try {
-                            string info = C.data as string;
-                            if (info == null) info = "";                          
+                            PhysicsArgs info = C.data;                        
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
                             
-                            if (info.Length == 0 || ExtraInfoPhysics.DoDoorsOnly(this, C, null)) {
+                            if (info.Raw == 0 || ExtraInfoPhysics.DoDoorsOnly(this, C, null)) {
                                 Block.HandlePhysics handler = Block.physicsDoorsHandlers[blocks[C.b]];
                                 if (handler != null)
                                     handler(this, C);
-                                else if (info.Length == 0 || !info.Contains("wait"))
+                                else if (info.Raw == 0 || !info.HasWait)
                                     C.time = 255;
                             }
                         } catch {
@@ -153,18 +152,17 @@ namespace MCGalaxy {
                         Check C = ListCheck.Items[i];
                         IntToPos(C.b, out x, out y, out z);
                         try {
-                            string info = C.data as string;
-                            if (info == null) info = "";                            
+                            PhysicsArgs info = C.data;                          
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
                             if (OnPhysicsUpdateEvent.events.Count > 0)
                                 OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);
                             
-                            if (info.Length == 0 || ExtraInfoPhysics.DoComplex(this, C)) {
+                            if (info.Raw == 0 || ExtraInfoPhysics.DoComplex(this, C)) {
                                 Block.HandlePhysics handler = Block.physicsHandlers[blocks[C.b]];
                                 if (handler != null)
                                     handler(this, C);
-                                else if (info.Length == 0 || !info.Contains("wait"))
+                                else if (info.Raw == 0 || !info.HasWait)
                                     C.time = 255;
                             }
                         } catch {
@@ -182,8 +180,7 @@ namespace MCGalaxy {
                 for (int i = 0; i < ListUpdate.Count; i++) {
                     Update C = ListUpdate.Items[i];
                     try {
-                        string info = C.data as string;
-                        if (info == null) info = "";
+                        PhysicsArgs info = C.data;
                         if (DoPhysicsBlockchange(C.b, C.type, false, info, 0, true))
                             bulkSender.Add(C.b, C.type, 0);
                     } catch {
@@ -200,9 +197,11 @@ namespace MCGalaxy {
             }
         }
         
-        public void AddCheck(int b, bool overRide = false) { AddCheck(b, overRide, ""); }
+        public void AddCheck(int b, bool overRide = false) { 
+            AddCheck(b, overRide, default(PhysicsArgs));
+        }
         
-        public void AddCheck(int b, bool overRide, object data) {
+        public void AddCheck(int b, bool overRide, PhysicsArgs data) {
             try {
                 int x = b % Width;
                 int y = (b / Width) / Length;
@@ -229,9 +228,11 @@ namespace MCGalaxy {
             }
         }
 
-        internal bool AddUpdate(int b, int type, bool overRide = false) { return AddUpdate(b, type, overRide, ""); }
+        internal bool AddUpdate(int b, int type, bool overRide = false) { 
+            return AddUpdate(b, type, overRide, default(PhysicsArgs));
+        }
         
-        internal bool AddUpdate(int b, int type, bool overRide, object data) {
+        internal bool AddUpdate(int b, int type, bool overRide, PhysicsArgs data) {
             try {
                 int x = b % Width;
                 int y = (b / Width) / Length;
@@ -240,9 +241,7 @@ namespace MCGalaxy {
                 
                 if (overRide) {
                     AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
-                    string info = data as string;
-                    if (info == null) info = "";
-                    Blockchange((ushort)x, (ushort)y, (ushort)z, (byte)type, true, info);
+                    Blockchange((ushort)x, (ushort)y, (ushort)z, (byte)type, true, data);
                     return true;
                 }
 
@@ -326,15 +325,12 @@ namespace MCGalaxy {
             }
 
             try {
-                string info = C.data as string;
-                if (info != null && info.Contains("revert")) {
-                    string[] parts = info.Split(' ');
-                    for (int i = 0; i < parts.Length; i++) {
-                        if (parts[i] == "revert") {
-                            Blockchange(x, y, z, Byte.Parse(parts[i + 1]), true); break;
-                        }
-                    }
-                }
+                if (!(C.data is PhysicsArgs)) return;
+                PhysicsArgs args = (PhysicsArgs)C.data;
+                if (args.Type1 == PhysicsArgs.Revert)
+                    Blockchange(x, y, z, args.Value1, true);
+                if (args.Type2 == PhysicsArgs.Revert)
+                    Blockchange(x, y, z, args.Value2, true);
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
@@ -378,31 +374,20 @@ namespace MCGalaxy {
     public class Check {
         public int b;
         public byte time;
-        public object data;
+        public PhysicsArgs data;
 
-        public Check(int b, object data) {
+        public Check(int b, PhysicsArgs data = default(PhysicsArgs)) {
             this.b = b;
             this.data = data;
-        }
-        
-        public Check(int b, string extraInfo = "") {
-            this.b = b;
-            this.data = extraInfo;
         }
     }
 
     public class Update {
         public int b;
-        public object data;
+        public PhysicsArgs data;
         public byte type;
 
-        public Update(int b, byte type) {
-            this.b = b;
-            this.type = type;
-            this.data = "";
-        }
-        
-        public Update(int b, byte type, object data) {
+        public Update(int b, byte type, PhysicsArgs data = default(PhysicsArgs)) {
             this.b = b;
             this.type = type;
             this.data = data;

@@ -56,7 +56,7 @@ namespace MCGalaxy
 
         public delegate void OnLevelUnload(Level l);
 
-        public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, byte time, string extraInfo, Level l);
+        public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, byte time, PhysicsArgs args, Level l);
 
         public delegate void OnPhysicsStateChanged(object sender, PhysicsState state);
 
@@ -201,7 +201,7 @@ namespace MCGalaxy
         private readonly object physThreadLock = new object();
         BufferedBlockSender bulkSender;
 
-        public List<C4Physics.C4Data> C4list = new List<C4Physics.C4Data>();
+        public List<C4Data> C4list = new List<C4Data>();
         // Games fields
         public int Likes, Dislikes;
         public string Authors = "";

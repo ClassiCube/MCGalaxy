@@ -54,8 +54,6 @@ namespace MCGalaxy.Commands
             string message = "Block (" + x + "," + y + "," + z + "): ";
             message += "&f" + b + " = " + Block.Name(b);
             Player.SendMessage(p, message + "%S.");
-            message = p.level.foundInfo(x, y, z);
-            if (message != "") Player.SendMessage(p, "Physics information: &a" + message);
 
             //safe against SQL injections because no user input is given here
             DataTable Blocks = Database.fillData("SELECT * FROM `Block" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z); 

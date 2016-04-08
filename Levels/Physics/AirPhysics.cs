@@ -39,9 +39,7 @@ namespace MCGalaxy.BlockPhysics {
                 if (x == 0 || x == lvl.Width - 1 || z == 0 || z == lvl.Length - 1)
                     lvl.AddUpdate(C.b, Block.water);
             }
-
-            if (!(C.data is string) || !((string)C.data).Contains("wait"))
-                C.time = 255;
+            if (!C.data.HasWait) C.time = 255;
         }
         
         public static void DoFlood(Level lvl, Check C, AirFlood mode, byte block) {

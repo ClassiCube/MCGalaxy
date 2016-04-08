@@ -22,7 +22,7 @@ namespace MCGalaxy.BlockPhysics {
     public static class FireworkPhysics {
         
         public static void Do(Level lvl, Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -38,9 +38,13 @@ namespace MCGalaxy.BlockPhysics {
                     int bAbove = lvl.PosToInt(x, (ushort)(y + 1), z);
                     bool unblocked = bAbove < 0 || !lvl.listUpdateExists.Get(x, y + 1, z);
                     if (unblocked) {
+                        PhysicsArgs args = default(PhysicsArgs);
+                        args.Type1 = PhysicsArgs.Wait; args.Value1 = 1;
+                        args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
+                        
                         lvl.AddUpdate(bAbove, Block.firework, false);
-                        lvl.AddUpdate(C.b, Block.lavastill, false, "wait 1 dissipate 100");
-                        C.data = "wait 1 dissipate 100";
+                        lvl.AddUpdate(C.b, Block.lavastill, false, args);
+                        C.data = args;
                         return;
                     }
                 }
@@ -61,9 +65,13 @@ namespace MCGalaxy.BlockPhysics {
                 for (ushort zz = (ushort)(z - (size + 1)); zz <= (ushort)(z + (size + 1)); ++zz)
                     for (ushort xx = (ushort)(x - (size + 1)); xx <= (ushort)(x + (size + 1)); ++xx)
             {
-                if (lvl.GetTile(xx, yy, zz) == Block.air && rand.Next(1, 40) < 2)
-                    lvl.AddUpdate(lvl.PosToInt(xx, yy, zz), (byte)rand.Next(min, max), 
-                                  false, "drop 100 dissipate 25");
+                int index = lvl.PosToInt(xx, yy, zz);
+                if (index >= 0 && lvl.blocks[index] == Block.air && rand.Next(1, 40) < 2) {
+                    PhysicsArgs args = default(PhysicsArgs);
+                    args.Type1 = PhysicsArgs.Drop; args.Value1 = 100;
+                    args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 25;
+                    lvl.AddUpdate(index, (byte)rand.Next(min, max), false, args);
+                }
             }
         }
     }

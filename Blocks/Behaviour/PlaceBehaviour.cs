@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.BlockPhysics;
 using System;
 
 namespace MCGalaxy.BlockBehaviour {
@@ -46,6 +47,24 @@ namespace MCGalaxy.BlockBehaviour {
             p.SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
             p.ChangeBlock(x, (ushort)(y - 1), z, Block.staircasefull, 0);
             return false;
+        }
+        
+        internal static bool C4(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (p.level.physics == 0 || p.level.physics == 5) return false;
+            
+            C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
+            if (c4 != null) c4.list.Add(p.level.PosToInt(x, y, z));
+            return false;
+        }
+        
+        internal static bool C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (p.level.physics == 0 || p.level.physics == 5) {
+                p.c4circuitNumber = -1; return false;
+            }
+            
+            C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
+            if (c4 != null) c4.detIndex = p.level.PosToInt(x, y, z);
+            p.c4circuitNumber = -1; return false;
         }
     }
 }

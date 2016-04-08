@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using MCGalaxy.BlockPhysics;
 using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
@@ -43,8 +44,8 @@ namespace MCGalaxy {
             if ( level.IsMuseum && Blockchange == null ) { return; }
 
             if ( !deleteMode ) {
-                string info = level.foundInfo(x, y, z);
-                if ( info.Contains("wait") ) return;
+                PhysicsArgs args = level.foundInfo(x, y, z);
+                if (args.HasWait) return;
             }
 
             if ( !canBuild ) { RevertBlock(x, y, z); return; }

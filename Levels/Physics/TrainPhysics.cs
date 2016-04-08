@@ -43,8 +43,10 @@ namespace MCGalaxy.BlockPhysics {
 					lvl.AddUpdate(C.b, Block.air);
 					
 					byte newBlock = tileBelow == Block.red ? Block.obsidian : Block.glass;
-					lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), newBlock, true,
-					          "wait 5 revert " + tileBelow.ToString());
+					PhysicsArgs args = default(PhysicsArgs);
+			        args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
+			        args.Type2 = PhysicsArgs.Revert; args.Value2 = tileBelow;
+			        lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), newBlock, true, args);
 					return;
 				}
 			}

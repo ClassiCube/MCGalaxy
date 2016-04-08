@@ -22,24 +22,15 @@ namespace MCGalaxy.BlockPhysics {
     public static class ExtraInfoPhysics {
         
         public static bool DoDoorsOnly(Level lvl, Check C, Random rand) {
-            string info = C.data as string;
-            if (info == null) return true;
-            if (!info.Contains("wait") && lvl.blocks[C.b] == Block.air)
-                C.data = "";
+            if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
+                C.data = default(PhysicsArgs);
 
-            bool wait = false, door = false;
+            bool wait = false, door = C.data.Door;
             int waitTime = 0;
-            string[] parts = info.Split(' ');
-            for (int i = 0; i < parts.Length; i++) {
-                if (i % 2 != 0) continue;
-                
-                switch (parts[i]) {
-                    case "wait":
-                        waitTime = int.Parse(parts[i + 1]);
-                        wait = true; break;
-                    case "door":
-                        door = true; break;
-                }
+            if (C.data.Type1 == PhysicsArgs.Wait) {
+                wait = true; waitTime = C.data.Value1;
+            } else if (C.data.Type2 == PhysicsArgs.Wait) {
+                wait = true; waitTime = C.data.Value2;
             }
             if (!wait) return false;
             
@@ -54,10 +45,8 @@ namespace MCGalaxy.BlockPhysics {
             }
 
             if (C.time > waitTime) {
-                int waitIndex = info.IndexOf("wait ");
-                C.data =
-                    info.Substring(0, waitIndex) +
-                    info.Substring(info.IndexOf(' ', waitIndex + 5) + 1);
+                if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
+                if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
                 return false;
             }
             C.time++;
@@ -69,47 +58,23 @@ namespace MCGalaxy.BlockPhysics {
             byte block = lvl.blocks[index];
             
             if (Block.tDoor(block)) {
-                lvl.AddUpdate(index, Block.air, false,
-                              "wait 10 door 1 revert " + block.ToString());
+                PhysicsArgs args = default(PhysicsArgs);
+                args.Type1 = PhysicsArgs.Wait; args.Value1 = 10;
+                args.Type2 = PhysicsArgs.Revert; args.Value2 = block;
+                args.Door = true;
+                lvl.AddUpdate(index, Block.air, false, args);
             }
         }
         
         public static bool DoComplex(Level lvl, Check C) {
-            string info = C.data as string;
-            if (info == null) return true;
-            if (!info.Contains("wait") && lvl.blocks[C.b] == Block.air)
-                C.data = "";
+            if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
+                C.data = default(PhysicsArgs);
 
             ExtraInfoArgs args = default(ExtraInfoArgs);
-            string[] parts = info.Split(' ');
+            args.Door = C.data.Door;
+            ParseType(C.data.Type1, ref args, C.data.Value1);
+            ParseType(C.data.Type2, ref args, C.data.Value2);
             
-            for (int i = 0; i < parts.Length; i++) {
-                if (i % 2 != 0) continue;
-                
-                switch (parts[i]) {
-                    case "wait":
-                        args.WaitTime = int.Parse(parts[i + 1]);
-                        args.Wait = true; break;
-                    case "drop":
-                        args.DropNum = int.Parse(parts[i + 1]);
-                        args.Drop = true; break;
-                    case "dissipate":
-                        args.DissipateNum = int.Parse(parts[i + 1]);
-                        args.Dissipate = true; break;
-                    case "revert":
-                        args.RevertType = byte.Parse(parts[i + 1]);
-                        args.Revert = true; break;
-                    case "door":
-                        args.Door = true; break;
-                    case "explode":
-                        args.ExplodeNum = int.Parse(parts[i + 1]);
-                        args.Explode = true; break;
-                    case "rainbow":
-                        args.RainbowNum = int.Parse(parts[i + 1]);
-                        args.Rainbow = true; break;
-                }
-            }
-
             if (args.Wait) {
                 if (args.Door && C.time < 2) {
                     Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
@@ -121,10 +86,8 @@ namespace MCGalaxy.BlockPhysics {
                 }
 
                 if (C.time > args.WaitTime) {
-                    int waitIndex = info.IndexOf("wait ");
-                    C.data =
-                        info.Substring(0, waitIndex) +
-                        info.Substring(info.IndexOf(' ', waitIndex + 5) + 1);
+                    if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
+                    if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
                     DoOther(lvl, C, ref args);
                     return false;
                 }
@@ -135,8 +98,25 @@ namespace MCGalaxy.BlockPhysics {
             return false;
         }
         
+        static void ParseType(byte type, ref ExtraInfoArgs args, byte value) {
+            switch (type) {
+                case PhysicsArgs.Wait:
+                    args.Wait = true; args.WaitTime = value; break;
+                case PhysicsArgs.Drop:
+                    args.Drop = true; args.DropNum = value; break;
+                case PhysicsArgs.Dissipate:
+                    args.Dissipate = true; args.DissipateNum = value; break;
+                case PhysicsArgs.Revert:
+                    args.Revert = true; args.RevertType = value; break;
+                case PhysicsArgs.Explode:
+                    args.Explode = true; args.ExplodeNum = value; break;
+                case PhysicsArgs.Rainbow:
+                    args.Rainbow = true; args.RainbowNum = value; break;
+            }
+        }
+        
         static void DoOther(Level lvl, Check C, ref ExtraInfoArgs args) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -145,15 +125,15 @@ namespace MCGalaxy.BlockPhysics {
             }
             if (args.Revert) {
                 lvl.AddUpdate(C.b, args.RevertType);
-                C.data = "";
+                C.data = default(PhysicsArgs);
             }
             
             // Not setting drop = false can cause occasional leftover blocks, since C.extraInfo is emptied, so
             // drop can generate another block with no dissipate/explode information.
             if (args.Dissipate && rand.Next(1, 100) <= args.DissipateNum) {
-            	if (!lvl.listUpdateExists.Get(x, y, z)) {
+                if (!lvl.listUpdateExists.Get(x, y, z)) {
                     lvl.AddUpdate(C.b, Block.air);
-                    C.data = "";
+                    C.data = default(PhysicsArgs);
                     args.Drop = false;
                 } else {
                     lvl.AddUpdate(C.b, lvl.blocks[C.b], false, C.data);
@@ -162,7 +142,7 @@ namespace MCGalaxy.BlockPhysics {
             
             if (args.Explode && rand.Next(1, 100) <= args.ExplodeNum) {
                 lvl.MakeExplosion(x, y, z, 0);
-                C.data = "";
+                C.data = default(PhysicsArgs);
                 args.Drop = false;
             }
             
@@ -171,9 +151,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void DoRainbow(Level lvl, Check C, Random rand, int rainbownum) {
-            if (C.time < 4) {
-                C.time++; return;
-            }
+            if (C.time < 4) { C.time++; return; }
             
             if (rainbownum > 2) {
                 byte block = lvl.blocks[C.b];
@@ -198,7 +176,7 @@ namespace MCGalaxy.BlockPhysics {
             
             if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], false, C.data)) {
                 lvl.AddUpdate(C.b, Block.air);
-                C.data = "";
+                C.data = default(PhysicsArgs);
             }
         }
         

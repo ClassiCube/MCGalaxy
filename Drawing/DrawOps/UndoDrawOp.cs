@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.BlockPhysics;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Util;
 
@@ -151,7 +152,7 @@ namespace MCGalaxy.Drawing.Ops {
                 lvl.currentUndo = undoIndex;
                 byte oldType = (undo.flags & 1) != 0 ? Block.custom_block : undo.oldRawType;
                 byte oldExtType = (undo.flags & 1) != 0 ? undo.oldRawType : (byte)0;
-                lvl.Blockchange(x, y, z, oldType, true, "", oldExtType, false);
+                lvl.Blockchange(x, y, z, oldType, true, default(PhysicsArgs), oldExtType, false);
             }
             return true;
         }

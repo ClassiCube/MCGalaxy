@@ -58,7 +58,13 @@ namespace MCGalaxy.BlockPhysics {
             get { return (Raw & (1u << 30)) != 0; }
             set { Raw &= ~(1u << 30);
                 Raw |= (value ? 1u : 0u) << 30; }
-        }        
+        }
+        
+        public bool HasWait {
+            get { byte value = (byte)Raw;
+                return (value & 0x7) == Wait || ((value & 0x38) == Wait << 3);
+            }
+        }
         // TODO: what to do with last bit
         
         /// <summary> No special action is performed. </summary>

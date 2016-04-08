@@ -66,7 +66,10 @@ namespace MCGalaxy.BlockBehaviour {
             if (b1 == Block.air && b2 == Block.air && p.level.CheckClear(x2, (ushort)(y + 1), z2)
                 && p.level.CheckClear(x2, (ushort)(y + 2), z2)) {
                 p.level.Blockchange(x2, (ushort)(y + 2), z2, Block.firework);
-                p.level.Blockchange(x2, (ushort)(y + 1), z2, Block.lavastill, false, "wait 1 dissipate 100");
+                PhysicsArgs args = default(PhysicsArgs);
+                args.Type1 = PhysicsArgs.Wait; args.Value1 = 1;
+                args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
+                p.level.Blockchange(x2, (ushort)(y + 1), z2, Block.lavastill, false, args);
             }
             p.RevertBlock(x, y, z); return false;
         }

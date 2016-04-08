@@ -46,11 +46,15 @@ namespace MCGalaxy {
         
         static void SetupCoreHandlers() {
             deleteHandlers[Block.rocketstart] = DeleteBehaviour.RocketStart;
-            deleteHandlers[Block.firework] = DeleteBehaviour.Firework;
-            walkthroughHandlers[Block.checkpoint] = WalkthroughBehaviour.Checkpoint;
+            deleteHandlers[Block.firework] = DeleteBehaviour.Firework;           
             deleteHandlers[Block.c4det] = DeleteBehaviour.C4Det;
+            
             placeHandlers[Block.dirt] = PlaceBehaviour.Dirt;
             placeHandlers[Block.staircasestep] = PlaceBehaviour.Stairs;
+            placeHandlers[Block.c4] = PlaceBehaviour.C4;
+            placeHandlers[Block.c4det] = PlaceBehaviour.C4Det;
+            
+            walkthroughHandlers[Block.checkpoint] = WalkthroughBehaviour.Checkpoint;
             walkthroughHandlers[Block.air_switch] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.water_door] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.lava_door] = WalkthroughBehaviour.Door;
@@ -97,8 +101,6 @@ namespace MCGalaxy {
             physicsHandlers[Block.zombiebody] = ZombiePhysics.Do;
             physicsHandlers[Block.zombiehead] = ZombiePhysics.DoHead;
             physicsHandlers[Block.creeper] = ZombiePhysics.Do;
-            physicsHandlers[Block.c4] = C4Physics.DoC4;
-            physicsHandlers[Block.c4det] = C4Physics.DoC4Det;
 
             physicsHandlers[Block.fishbetta] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.water);
             physicsHandlers[Block.fishshark] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.water);

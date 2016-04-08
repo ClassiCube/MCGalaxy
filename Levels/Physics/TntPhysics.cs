@@ -59,7 +59,7 @@ namespace MCGalaxy.BlockPhysics {
             Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            Player p = C.data as Player;
+            Player p = null; // TODO: C.data as Player;
             
             if (p != null && p.PlayingTntWars) {
                 int power = 2, threshold = 3;
@@ -138,12 +138,16 @@ namespace MCGalaxy.BlockPhysics {
                     }
                     
                     int mode = rand.Next(1, 11);
-                    if (mode <= 4)
+                    if (mode <= 4) {
                         lvl.AddUpdate(index, Block.tntexplosion);
-                    else if (mode <= 8)
+                    } else if (mode <= 8) {
                         lvl.AddUpdate(index, Block.air);
-                    else
-                        lvl.AddCheck(index, false, "drop 50 dissipate 8");
+                    } else {
+                    	PhysicsArgs args = default(PhysicsArgs);
+					    args.Type1 = PhysicsArgs.Drop; args.Value1 = 50;
+					    args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 8;
+					    lvl.AddCheck(index, false, args);
+                    }
                 } else if (b == Block.tnt) {
                     lvl.AddUpdate(index, Block.smalltnt);
                 } else if (b == Block.smalltnt || b == Block.bigtnt || b == Block.nuketnt) {
