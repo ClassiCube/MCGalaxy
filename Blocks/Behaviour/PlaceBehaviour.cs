@@ -50,21 +50,24 @@ namespace MCGalaxy.BlockBehaviour {
         }
         
         internal static bool C4(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (p.level.physics == 0 || p.level.physics == 5) return false;
+            if (p.level.physics == 0 || p.level.physics == 5) {
+                p.RevertBlock(x, y, z); return false;
+            }
             
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
             if (c4 != null) c4.list.Add(p.level.PosToInt(x, y, z));
-            return false;
+            p.ChangeBlock(x, y, z, Block.c4, 0); return false;
         }
         
         internal static bool C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
-                p.c4circuitNumber = -1; return false;
+                p.c4circuitNumber = -1; p.RevertBlock(x, y, z); return false;
             }
             
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
             if (c4 != null) c4.detIndex = p.level.PosToInt(x, y, z);
-            p.c4circuitNumber = -1; return false;
+            p.c4circuitNumber = -1; 
+            p.ChangeBlock(x, y, z, Block.c4det, 0); return false;
         }
     }
 }

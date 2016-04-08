@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
                 args.Type2 = type; args.Value2 = value;
             }
             if (parts.Length >= 6) {
-                Player.SendMessage(p, "You can only use up to two types of physics."0; return false;
+            	Player.SendMessage(p, "You can only use up to two types of physics."); return false;
             }
             cpos.extraInfo = args; return true;
         }
