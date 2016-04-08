@@ -180,9 +180,10 @@ namespace MCGalaxy {
                 for (int i = 0; i < ListUpdate.Count; i++) {
                     Update C = ListUpdate.Items[i];
                     try {
-                        PhysicsArgs info = C.data;
-                        if (DoPhysicsBlockchange(C.b, C.type, false, info, 0, true))
-                            bulkSender.Add(C.b, C.type, 0);
+                        byte type = C.data.Data;
+                        C.data.Data = 0;
+                        if (DoPhysicsBlockchange(C.b, type, false, C.data, 0, true))
+                            bulkSender.Add(C.b, type, 0);
                     } catch {
                         Server.s.Log("Phys update issue");
                     }
@@ -382,15 +383,14 @@ namespace MCGalaxy {
         }
     }
 
-    public class Update {
+    public struct Update {
         public int b;
         public PhysicsArgs data;
-        public byte type;
 
         public Update(int b, byte type, PhysicsArgs data = default(PhysicsArgs)) {
             this.b = b;
-            this.type = type;
             this.data = data;
+            this.data.Data = type;
         }
     }
 }

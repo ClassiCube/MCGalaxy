@@ -137,11 +137,11 @@ namespace MCGalaxy {
 					break;
 
 				case "rplimit":
-					try { Server.rpLimit = Convert.ToInt16(value); }
+					try { Server.rpLimit = Convert.ToUInt16(value); }
 					catch { Server.s.Log("rpLimit invalid! setting to default."); }
 					break;
 				case "rplimit-norm":
-					try { Server.rpNormLimit = Convert.ToInt16(value); }
+					try { Server.rpNormLimit = Convert.ToUInt16(value); }
 					catch { Server.s.Log("rpLimit-norm invalid! setting to default."); }
 					break;
 

@@ -48,7 +48,7 @@ namespace MCGalaxy.BlockPhysics {
                 Raw |= (uint)value << 14; }
         }
         
-        public byte Time {
+        public byte Data {
             get { return (byte)(Raw >> 22); }
             set { Raw &= ~(0xFFu << 22);
                 Raw |= (uint)value << 22; }
