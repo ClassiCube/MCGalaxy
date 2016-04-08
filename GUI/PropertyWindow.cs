@@ -432,9 +432,6 @@ namespace MCGalaxy.Gui {
                 case "check-updates":
                     chkUpdates.Checked = ( value.ToLower() == "true" );
                     break;
-                case "use-beta-version":
-                    chkUseBeta.Checked = ( value.ToLower() == "true" );
-                    break;
                 case "auto-update":
                     autoUpdate.Checked = ( value.ToLower() == "true" );
                     break;
@@ -740,8 +737,6 @@ namespace MCGalaxy.Gui {
             Server.cheapMessage = chkCheap.Checked;
             Server.cheapMessageGiven = txtCheap.Text;
             Server.defaultRank = cmbDefaultRank.SelectedItem.ToString();
-            
-            Server.DownloadBeta = chkUseBeta.Checked;
 
             Server.hackrank_kick = hackrank_kick.Checked;
             Server.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
@@ -2172,20 +2167,6 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         void AutoUpdateCheckedChanged(object sender, EventArgs e)
         {
         	
-        }
-        
-        void UsebetaCheckedChanged(object sender, EventArgs e)
-        {
-        	
-        }
-        
-        void UsebetaClick(object sender, EventArgs e)
-        {
-        	if (chkUseBeta.Checked) {
-        		DialogResult d = MessageBox.Show("Would you like to check for beta versions now?", "Check for updates.", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-        		if (d == DialogResult.Yes)
-        			MCGalaxy_.Gui.Program.UpdateCheck();
-        	}
         }
 
         private void buttonEco_Click(object sender, EventArgs e) {

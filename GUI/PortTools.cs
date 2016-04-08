@@ -27,15 +27,10 @@ using MCGalaxy.Core;
 namespace MCGalaxy.Gui.Popups {
     public partial class PortTools : Form {
 
-        private readonly BackgroundWorker mWorkerChecker;
         private readonly BackgroundWorker mWorkerForwarder;
 
         public PortTools() {
             InitializeComponent();
-            mWorkerChecker = new BackgroundWorker { WorkerSupportsCancellation = true };
-            mWorkerChecker.DoWork += mWorker_DoWork;
-            mWorkerChecker.RunWorkerCompleted += mWorker_RunWorkerCompleted;
-
             mWorkerForwarder = new BackgroundWorker { WorkerSupportsCancellation = true };
             mWorkerForwarder.DoWork += mWorkerForwarder_DoWork;
             mWorkerForwarder.RunWorkerCompleted += mWorkerForwarder_RunWorkerCompleted;
@@ -46,81 +41,7 @@ namespace MCGalaxy.Gui.Popups {
             catch { }
         }
 
-        private void linkHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            try { Process.Start( "http://www.mcgalaxy.ml" ); }
-            catch { }
-        }
-
-        private void btnCheck_Click(object sender, EventArgs e) {
-            int port = 25565;
-            if (String.IsNullOrEmpty(txtPort.Text.Trim()))
-                txtPort.Text = "25565";
-
-            try {
-                port = int.Parse(txtPort.Text);
-            }
-            catch {
-                txtPort.Text = "25565";
-            }
-
-            btnCheck.Enabled = false;
-            txtPort.Enabled = false;
-            lblStatus.Text = "Checking...";
-            mWorkerChecker.RunWorkerAsync(port);
-        }
-
-        void mWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
-            if (e.Cancelled)
-                return;
-
-            btnCheck.Enabled = true;
-            txtPort.Enabled = true;
-
-            int result = (int)e.Result;
-            switch (result) {
-                case 0:
-                    lblStatus.Text = "Problems Occurred";
-                    lblStatus.ForeColor = Color.Red;
-                    return;
-                case 1:
-                    lblStatus.Text = "Open";
-                    lblStatus.ForeColor = Color.Green;
-                    return;
-                case 2:
-                    lblStatus.Text = "Closed";
-                    lblStatus.ForeColor = Color.Red;
-                    return;
-                case 3:
-                    lblStatus.Text = "Web site error";
-                    lblStatus.ForeColor = Color.Yellow;
-                    return;
-            }
-        }
-
-        void mWorker_DoWork(object sender, DoWorkEventArgs e) {
-            try {
-                using (var webClient = new WebClient()) {
-                    string response = webClient.DownloadString("http://www.comingsoon.tk/ports.php?port=" + e.Argument);
-                    switch (response.ToLower()) {
-                        case "open":
-                            e.Result = 1;
-                            return;
-                        case "closed":
-                            e.Result = 2;
-                            return;
-                        default:
-                            e.Result = 3;
-                            return;
-                    }
-                }
-            }
-            catch {
-                e.Result = 0;
-            }
-        }
-
         private void PortChecker_FormClosing(object sender, FormClosingEventArgs e) {
-            mWorkerChecker.CancelAsync();
             mWorkerForwarder.CancelAsync();
         }
 

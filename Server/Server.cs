@@ -38,7 +38,6 @@ namespace MCGalaxy
         public static bool canceladmin = false;
         public static bool cancellog = false;
         public static bool canceloplog = false;
-        public static bool DownloadBeta = false;
         public static string apppath = Application.StartupPath;
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;

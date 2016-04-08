@@ -250,7 +250,6 @@ namespace MCGalaxy.Gui
             this.label10 = new System.Windows.Forms.Label();
             this.ChkPort = new System.Windows.Forms.Button();
             this.grpUpdate = new System.Windows.Forms.GroupBox();
-            this.chkUseBeta = new System.Windows.Forms.CheckBox();
             this.forceUpdateBtn = new System.Windows.Forms.Button();
             this.updateTimeNumeric = new System.Windows.Forms.NumericUpDown();
             this.lblUpdateSeconds = new System.Windows.Forms.Label();
@@ -2709,7 +2708,6 @@ namespace MCGalaxy.Gui
             // 
             this.grpUpdate.AutoSize = true;
             this.grpUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpUpdate.Controls.Add(this.chkUseBeta);
             this.grpUpdate.Controls.Add(this.forceUpdateBtn);
             this.grpUpdate.Controls.Add(this.updateTimeNumeric);
             this.grpUpdate.Controls.Add(this.lblUpdateSeconds);
@@ -2722,19 +2720,6 @@ namespace MCGalaxy.Gui
             this.grpUpdate.TabIndex = 44;
             this.grpUpdate.TabStop = false;
             this.grpUpdate.Text = "Update Settings";
-            // 
-            // chkUseBeta
-            // 
-            this.chkUseBeta.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkUseBeta.AutoSize = true;
-            this.chkUseBeta.Location = new System.Drawing.Point(194, 20);
-            this.chkUseBeta.Name = "chkUseBeta";
-            this.chkUseBeta.Size = new System.Drawing.Size(96, 23);
-            this.chkUseBeta.TabIndex = 30;
-            this.chkUseBeta.Text = "Use Beta Version";
-            this.chkUseBeta.UseVisualStyleBackColor = true;
-            this.chkUseBeta.CheckedChanged += new System.EventHandler(this.UsebetaCheckedChanged);
-            this.chkUseBeta.Click += new System.EventHandler(this.UsebetaClick);
             // 
             // forceUpdateBtn
             // 
@@ -4421,7 +4406,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.GroupBox gbRankSettings;
         private System.Windows.Forms.GroupBox gbRankGeneral;
-        private System.Windows.Forms.CheckBox chkUseBeta;
 
         #endregion
 

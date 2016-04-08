@@ -327,13 +327,6 @@ namespace MCGalaxy_.Gui
                 try
                 {
                 	string raw = Client.DownloadString(Program.CurrentVersionFile);
-                	if (raw.EndsWith("b") && !Server.DownloadBeta) {
-                		Player.SendMessage(p, "Beta version found!");
-                		Player.SendMessage(p, "But server set to use release build!");
-                		return;
-                	}
-                	else if (raw.EndsWith("b") && Server.DownloadBeta)
-                		raw = raw.Substring(0, raw.Length - 1);
                     Version availableUpdateVersion = new Version(raw);
                     if (availableUpdateVersion > Server.Version)
                     {

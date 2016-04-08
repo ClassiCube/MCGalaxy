@@ -292,9 +292,6 @@ namespace MCGalaxy {
 				case "auto-update":
 					Server.autoupdate = value.ToLower() == "true";
 					break;
-				case "use-beta-version":
-					Server.DownloadBeta = value.ToLower() == "true";
-					break;
 				case "in-game-update-notify":
 					Server.notifyPlayers = value.ToLower() == "true";
 					break;
@@ -700,7 +697,6 @@ namespace MCGalaxy {
 			w.WriteLine("world-chat = " + Server.worldChat.ToString().ToLower());
 			w.WriteLine("check-updates = " + Server.checkUpdates.ToString().ToLower());
 			w.WriteLine("auto-update = " + Server.autoupdate.ToString().ToLower());
-			w.WriteLine("use-beta-version = " + Server.DownloadBeta.ToString().ToLower());
 			w.WriteLine("in-game-update-notify = " + Server.notifyPlayers.ToString().ToLower());
 			w.WriteLine("update-countdown = " + Server.restartcountdown.ToString().ToLower());
 			w.WriteLine("autoload = " + Server.AutoLoad.ToString().ToLower());
