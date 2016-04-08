@@ -24,78 +24,57 @@ namespace MCGalaxy.BlockPhysics {
     public struct PhysicsArgs {
         public uint Raw;
         
-        // Flags        
-        /// <summary> Whether this physics item should wait before performing its other arguments. </summary>
-        public bool Wait {
-            get { return (Raw & (1u << 0)) != 0; }
-            set { Raw &= ~(1u << 0);
-                Raw |= (value ? 1u : 0u) << 0; }
+        public byte Type1 {
+            get { return (byte)(Raw & 0x7); }
+            set { Raw &= ~(0x7u << 0);
+                Raw |= (uint)value << 0; }
         }
         
-        /// <summary> Whether this physics item should randomly drop downards. </summary>
-        public bool Drop {
-            get { return (Raw & (1u << 1)) != 0; }
-            set { Raw &= ~(1u << 1);
-                Raw |= (value ? 1u : 0u) << 1; }
-        }
-        
-        /// <summary> Whether this physics item should randomly convert back into air. </summary>
-        public bool Dissipate {
-            get { return (Raw & (1u << 2)) != 0; }
-            set { Raw &= ~(1u << 2);
-                Raw |= (value ? 1u : 0u) << 2; }
-        }
-        
-        /// <summary> Whether this physics item should revert back into the given block id. </summary>
-        public bool Revert {
-            get { return (Raw & (1u << 3)) != 0; }
-            set { Raw &= ~(1u << 3);
-                Raw |= (value ? 1u : 0u) << 3; }
-        }        
-        
-        /// <summary> Whether this physics item should check itself and its neighbours for tdoor activation. </summary>
-        public bool Door {
-            get { return (Raw & (1u << 4)) != 0; }
-            set { Raw &= ~(1u << 4);
-                Raw |= (value ? 1u : 0u) << 4; }
-        }
-        
-        /// <summary> Whether this physics item should randomly explode. </summary>
-        public bool Explode {
-            get { return (Raw & (1u << 5)) != 0; }
-            set { Raw &= ~(1u << 5);
-                Raw |= (value ? 1u : 0u) << 5; }
-        }
-        
-        /// <summary> Whether this physics update should have a rainbow affect applied. </summary>
-        public bool Rainbow {
-            get { return (Raw & (1u << 6)) != 0; }
-            set { Raw &= ~(1u << 6);
-                Raw |= (value ? 1u : 0u) << 6; }
-        }
-        
-        // Data
-        public bool RandomRainbow {
-            get { return (Raw & (1u << 7)) != 0; }
-            set { Raw |= (value ? 1u : 0u) << 7; }
+        public byte Type2 {
+            get { return (byte)((Raw >> 3) & 0x7); }
+            set { Raw &= ~(0x7u << 3);
+                Raw |= (uint)value << 3; }
         }
         
         public byte Value1 {
-            get { return (byte)(Raw >> 8); }
-            set { Raw &= ~(0xFFu << 8);
-                Raw |= (uint)value << 8; }
+            get { return (byte)(Raw >> 6); }
+            set { Raw &= ~(0xFFu << 6);
+                Raw |= (uint)value << 6; }
         }
         
         public byte Value2 {
-            get { return (byte)(Raw >> 16); }
-            set { Raw &= ~(0xFFu << 16);
-                Raw |= (uint)value << 16; }
+            get { return (byte)(Raw >> 14); }
+            set { Raw &= ~(0xFFu << 14);
+                Raw |= (uint)value << 14; }
         }
         
-        public byte Value3 {
-            get { return (byte)(Raw >> 24); }
-            set { Raw &= ~(0xFFu << 24);
-                Raw |= (uint)value << 24; }
+        public byte Time {
+            get { return (byte)(Raw >> 22); }
+            set { Raw &= ~(0xFFu << 22);
+                Raw |= (uint)value << 22; }
         }
+        
+        public bool Door {
+            get { return (Raw & (1u << 30)) != 0; }
+            set { Raw &= ~(1u << 30);
+                Raw |= (value ? 1u : 0u) << 30; }
+        }        
+        // TODO: what to do with last bit
+        
+        /// <summary> No special action is performed. </summary>
+        public const byte None = 0;
+        /// <summary> A specified action will be delayed for a certain time. </summary>
+        public const byte Wait = 1;
+        /// <summary> Reverts the block in the map back into the specified block id. </summary>
+        public const byte Revert = 2;
+        /// <summary> Randomly converts this physics item back into air. </summary>
+        public const byte Dissipate = 3;
+        /// <summary> Randomly causes this physics item to move down one block. </summary>
+        public const byte Drop = 4;
+        /// <summary> Randomly causes this physics item to create an explosion. </summary>
+        public const byte Explode = 5;
+        /// <summary> Causes this physics item to iterate through the 'rainbow' wool 
+        /// block ids in either sequential or random order. </summary>
+        public const byte Rainbow = 6;
     }
 }
