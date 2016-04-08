@@ -117,16 +117,17 @@ namespace MCGalaxy.BlockPhysics {
         
         static void DoOther(Level lvl, Check C, ref ExtraInfoArgs args) {
             Random rand = lvl.physRandom;            
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            
             if (args.Rainbow) {
-                DoRainbow(lvl, C, rand, args.RainbowNum); return;
+            	if (C.time < 4) C.time++;
+            	else DoRainbow(lvl, C, rand, args.RainbowNum); 
+            	return;
             }
             if (args.Revert) {
                 lvl.AddUpdate(C.b, args.RevertType);
                 C.data = default(PhysicsArgs);
             }
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
             
             // Not setting drop = false can cause occasional leftover blocks, since C.extraInfo is emptied, so
             // drop can generate another block with no dissipate/explode information.
@@ -150,9 +151,7 @@ namespace MCGalaxy.BlockPhysics {
                 DoDrop(lvl, C, rand, args.DropNum, x, y, z);
         }
         
-        static void DoRainbow(Level lvl, Check C, Random rand, int rainbownum) {
-            if (C.time < 4) { C.time++; return; }
-            
+        static void DoRainbow(Level lvl, Check C, Random rand, int rainbownum) {          
             if (rainbownum > 2) {
                 byte block = lvl.blocks[C.b];
                 if (block < Block.red || block > Block.darkpink) {
