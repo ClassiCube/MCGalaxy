@@ -171,7 +171,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/goto <mapname> - Teleports yourself to a different level.");
+            Player.SendMessage(p, "%T/goto <mapname>");
+            Player.SendMessage(p, "%HTeleports yourself to a different level.");
         }
     }
 }

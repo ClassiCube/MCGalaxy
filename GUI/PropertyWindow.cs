@@ -29,8 +29,10 @@ using Microsoft.Win32;
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         string lsLoadedMap = "";
+        ZombieSettings zSettings = new ZombieSettings();
 
         public PropertyWindow() {
+            zSettings.LoadFromServer();
             InitializeComponent();
             SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
             this.Font = SystemFonts.IconTitleFont;
@@ -798,6 +800,7 @@ namespace MCGalaxy.Gui {
                                 return;
                             }
 
+            zSettings.ApplyToServer();
             Save("properties/server.properties");
             SaveRanks();
             SaveCommands();

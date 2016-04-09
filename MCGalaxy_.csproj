@@ -459,6 +459,7 @@
     <Compile Include="GUI\PropertyWindow.Games.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\ZombieSettings.cs" />
     <Compile Include="Levels\BufferedBlockSender.cs" />
     <Compile Include="Levels\Generator\MapGen.cs" />
     <Compile Include="Levels\Generator\NoiseGen.cs" />

@@ -84,8 +84,8 @@ namespace MCGalaxy.Commands {
 
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/wrt [scale] [spacing] [message]");
-            Player.SendMessage(p, "%TWrites the given message in blocks.");
-            Player.SendMessage(p, "%Tspacing specifies the number of blocks between each letter.");
+            Player.SendMessage(p, "%HWrites the given message in blocks.");
+            Player.SendMessage(p, "%Hspacing specifies the number of blocks between each letter.");
         }
     }
     

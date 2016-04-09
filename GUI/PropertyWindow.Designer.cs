@@ -351,6 +351,7 @@ namespace MCGalaxy.Gui
             this.EditTntWarsGameBT = new System.Windows.Forms.Button();
             this.TntWarsGamesList = new System.Windows.Forms.ListBox();
             this.tabPage11 = new System.Windows.Forms.TabPage();
+            this.propsZG = new System.Windows.Forms.PropertyGrid();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.levelList = new System.Windows.Forms.TextBox();
             this.label78 = new System.Windows.Forms.Label();
@@ -3909,6 +3910,7 @@ namespace MCGalaxy.Gui
             // tabPage11
             // 
             this.tabPage11.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage11.Controls.Add(this.propsZG);
             this.tabPage11.Controls.Add(this.groupBox16);
             this.tabPage11.Location = new System.Drawing.Point(4, 22);
             this.tabPage11.Name = "tabPage11";
@@ -3916,6 +3918,14 @@ namespace MCGalaxy.Gui
             this.tabPage11.Size = new System.Drawing.Size(468, 473);
             this.tabPage11.TabIndex = 1;
             this.tabPage11.Text = "Zombie survival";
+            // 
+            // propsZG
+            // 
+            this.propsZG.Location = new System.Drawing.Point(184, 29);
+            this.propsZG.Name = "propsZG";
+            this.propsZG.SelectedObject = this.zSettings;
+            this.propsZG.Size = new System.Drawing.Size(255, 380);
+            this.propsZG.TabIndex = 42;
             // 
             // groupBox16
             // 
@@ -3933,7 +3943,7 @@ namespace MCGalaxy.Gui
             this.groupBox16.Controls.Add(this.chkZombieOnServerStart);
             this.groupBox16.Location = new System.Drawing.Point(6, 6);
             this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(236, 457);
+            this.groupBox16.Size = new System.Drawing.Size(155, 457);
             this.groupBox16.TabIndex = 41;
             this.groupBox16.TabStop = false;
             this.groupBox16.Text = "Zombie Survival";
@@ -4909,5 +4919,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label chat_lblDemote;
         private System.Windows.Forms.Label chat_lblPromote;
         private System.Windows.Forms.Label chat_lblBan;
+        private System.Windows.Forms.PropertyGrid propsZG;
     }
 }

@@ -403,10 +403,6 @@ namespace MCGalaxy
 
             LoadAllSettings();
 
-            //derp
-            if (!Server.zombie.LevelList.Contains("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)"))
-                Server.zombie.LevelList.Add("#(Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
-
             {//MYSQL stuff
                 try
                 {
