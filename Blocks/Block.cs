@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using MCGalaxy.Blocks;
 
 namespace MCGalaxy
 {
@@ -27,7 +28,7 @@ namespace MCGalaxy
         }
 
         public static bool AllowBreak(byte type)
-        {
+        {	
             switch (type)
             {
                 case Block.blue_portal:
@@ -313,39 +314,7 @@ namespace MCGalaxy
             }
         }
         
-        public static byte DoorAirs(byte b)
-        {
-            switch (b)
-            {
-                case door_tree: return door_tree_air;
-                case door_obsidian: return door_obsidian_air;
-                case door_glass: return door_glass_air;
-                case door_stone: return door_stone_air;
-                case door_leaves: return door_leaves_air;
-                case door_sand: return door_sand_air;
-                case door_wood: return door_wood_air;
-                case door_green: return door_green_air;
-                case door_tnt: return door_tnt_air;
-                case door_stair: return door_stair_air;
-                case air_switch: return air_switch_air;
-                case water_door: return water_door_air;
-                case lava_door: return lava_door_air;
-                case air_door: return air_door_air;
-                case door_iron: return door_iron_air;
-                case door_gold: return door_gold_air;
-                case door_dirt: return door_dirt_air;
-                case door_grass: return door_grass_air;
-                case door_blue: return door_blue_air;
-                case door_book: return door_book_air;
-                case door_cobblestone: return door_cobblestone_air;
-                case door_red: return door_red_air;
-                case door_darkpink: return door_darkpink_air;
-                case door_darkgrey: return door_darkgrey_air;
-                case door_lightgrey: return door_lightgrey_air; 
-                case door_white: return door_white_air;
-                default: return 0;
-            }
-        }
+        public static byte DoorAirs(byte b) { return Properties[b].DoorAirId; }
 
         public static bool tDoor(byte type) { return Properties[type].IsTDoor; }
 

@@ -263,57 +263,7 @@ namespace MCGalaxy
                     return b < CpeCount ? b : orange;
             }
         }
-        public static byte SaveConvert(byte b)
-        {
-            switch (b)
-            {
-                case air_flood:
-                case air_flood_layer:
-                case air_flood_down:
-                case air_flood_up:
-                    return air; //air_flood must be converted to air on save to prevent issues
-                case door_tree_air: return door_tree;
-                case door_obsidian_air: return door_obsidian;
-                case door_glass_air: return door_glass;
-                case door_stone_air: return door_stone;
-                case door_leaves_air: return door_leaves;
-                case door_sand_air: return door_sand;
-                case door_wood_air: return door_wood;
-                case door_green_air: return door_green;
-                case door_tnt_air: return door_tnt;
-                case door_stair_air: return door_stair;
-                case air_switch_air: return air_switch;
-                case water_door_air: return water_door;
-                case lava_door_air: return lava_door;
-                case air_door_air: return air_door;
-                case door_iron_air: return door_iron;
-                case door_gold_air: return door_gold;
-                case door_dirt_air: return door_dirt;
-                case door_grass_air: return door_grass;
-                case door_blue_air: return door_blue;
-                case door_book_air: return door_book;
-                case door_cobblestone_air: return door_cobblestone;
-                case door_red_air: return door_red;
-                case door_darkpink_air: return door_darkpink;
-                case door_darkgrey_air: return door_darkgrey;
-                case door_lightgrey_air: return door_lightgrey; 
-                case door_white_air: return door_white; 
-                
-                case odoor1_air: return odoor1;
-                case odoor2_air: return odoor2;
-                case odoor3_air: return odoor3;
-                case odoor4_air: return odoor4;
-                case odoor5_air: return odoor5;
-                case odoor6_air: return odoor6;
-                case odoor7_air: return odoor7;
-                case odoor8_air: return odoor8;
-                case odoor9_air: return odoor9;
-                case odoor10_air: return odoor10;
-                case odoor11_air: return odoor11;
-                case odoor12_air: return odoor12;
-
-                default: return b;
-            }
-        }
+        
+        public static byte SaveConvert(byte b) { return Properties[b].SaveConvertId; }
     }
 }

@@ -105,7 +105,7 @@ namespace MCGalaxy.BlockPhysics {
             if (C.time < timer) {
                 C.time++;
             } else {
-                lvl.AddUpdate(C.b, Block.SaveConvert(lvl.blocks[C.b])); //turn back into door
+				lvl.AddUpdate(C.b, Block.Properties[lvl.blocks[C.b]].DoorId);
                 C.time = 255;
             }
         }
@@ -124,7 +124,7 @@ namespace MCGalaxy.BlockPhysics {
                 return;
             }
 
-            if (Block.tDoor(rawBlock)) {
+            if (Block.Properties[rawBlock].IsTDoor) {
             	PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
                 args.Type2 = PhysicsArgs.Revert; args.Value2 = rawBlock;

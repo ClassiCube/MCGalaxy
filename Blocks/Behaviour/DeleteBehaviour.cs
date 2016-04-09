@@ -87,15 +87,15 @@ namespace MCGalaxy.BlockBehaviour {
         
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics != 0) {
-                p.level.Blockchange(x, y, z, Block.DoorAirs(block), 0); return false;
+				p.level.Blockchange(x, y, z, Block.Properties[block].DoorAirId, 0); return false;
             } else {
                 p.RevertBlock(x, y, z); return true;
             }
         }
         
         internal static bool ODoor(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (block == Block.odoor8 || block == Block.odoor8_air ) {
-                p.level.Blockchange(x, y, z, Block.odoor(block), 0); return false;
+            if (block == Block.odoor8 || block == Block.odoor8_air) {
+				p.level.Blockchange(x, y, z, Block.Properties[block].ODoorId, 0); return false;
             } else {
                 p.RevertBlock(x, y, z); return true;
             }

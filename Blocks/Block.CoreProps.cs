@@ -49,10 +49,14 @@ namespace MCGalaxy {
                     Properties[i].ODoorId = (byte)(odoor1_air + (i - odoor1));
                 if (i >= odoor8 && i <= odoor12)
                     Properties[i].ODoorId = (byte)(odoor8_air + (i - odoor8));
-                if (i >= odoor1_air && i <= odoor7_air)
+                if (i >= odoor1_air && i <= odoor7_air) {
                     Properties[i].ODoorId = (byte)(odoor1 + (i - odoor1_air));
-                if (i >= odoor8_air && i <= odoor12_air)
+                    Properties[i].SaveConvertId = Properties[i].ODoorId;
+                }                    
+                if (i >= odoor8_air && i <= odoor12_air) {
                     Properties[i].ODoorId = (byte)(odoor8 + (i - odoor8_air));
+                    Properties[i].SaveConvertId = Properties[i].ODoorId;
+                }
                 
                 if (i >= red && i <= white)
                     Properties[i].KilledByLava = true;
@@ -60,11 +64,40 @@ namespace MCGalaxy {
                     Properties[i].KilledByLava = true;
                     Properties[i].KilledByWater = true;
                 }
+                
+                // Door blocks
+                if (i >= door_obsidian && i <= door_stair)
+                    Door((byte)i, (byte)(door_obsidian_air + (i - door_obsidian)));
+                if (i >= door_iron && i <= door_book)
+                     Door((byte)i, (byte)(door_iron_air + (i - door_iron)));
+                if (i >= door_darkpink && i <= door_white)
+                    Door((byte)i, (byte)(door_darkpink_air + (i - door_darkpink)));
             }
+            // Other door blocks, since they aren't in a consistent order
+            Door(door_tree, door_tree_air);
+            Door(door_red, door_red_air);
+            Door(door_cobblestone, door_cobblestone_air);
+            Door(door_gold, door_gold_air);
+            Door(air_door, air_door_air);
+            Door(air_switch, air_switch_air);
+            Door(water_door, water_door_air);
+            Door(lava_door, lava_door_air);
+            
             // Block specific properties
+            Properties[air_flood].SaveConvertId = air;
+            Properties[air_flood_down].SaveConvertId = air;
+            Properties[air_flood_layer].SaveConvertId = air;
+            Properties[air_flood_up].SaveConvertId = air;
             Properties[wood].KilledByLava = true; Properties[trunk].KilledByLava = true;
             Properties[sponge].KilledByLava = true; Properties[bookcase].KilledByLava = true;
             SetupDefaultNames();
+        }
+        
+        static void Door(byte doorId, byte airId, bool saveConvert = true) {
+            Properties[doorId].DoorAirId = airId;
+            Properties[airId].DoorId = doorId;
+            if (saveConvert)
+                Properties[airId].SaveConvertId = doorId;
         }
         
         static void SetupDefaultNames() {
@@ -116,7 +149,7 @@ namespace MCGalaxy {
                 if (names[i] != "unknown") 
                     Aliases[names[i]] = (byte)i;               
                 if (names[i].IndexOf('_') >= 0)
-                	Aliases[names[i].Replace("_", "")] = (byte)i;
+                    Aliases[names[i].Replace("_", "")] = (byte)i;
             }
             
             // Add old MCGalaxy aliases

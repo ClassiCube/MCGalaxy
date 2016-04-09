@@ -341,7 +341,7 @@ namespace MCGalaxy {
 
                 errorLocation = "Adding physics";
                 if (p.PlayingTntWars && type == Block.smalltnt) AddCheck(PosToInt(x, y, z), false);
-                if (physics > 0) if (Block.Physics(type)) AddCheck(PosToInt(x, y, z), false);
+                if (physics > 0 && Block.Physics(type)) AddCheck(PosToInt(x, y, z), false);
 
                 changed = true;
                 backedup = false;
@@ -389,7 +389,8 @@ namespace MCGalaxy {
             try
             {
                 if (!overRide)
-                    if (Block.OPBlocks(oldBlock) || (Block.OPBlocks(type) && data.Raw != 0)) return false;
+                	if (Block.Properties[oldBlock].OPBlock || (Block.Properties[type].OPBlock && data.Raw != 0)) 
+                	    return false;
 
                 if (b == Block.sponge && physics > 0 && type != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, b);

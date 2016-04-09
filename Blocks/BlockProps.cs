@@ -37,6 +37,8 @@ namespace MCGalaxy.Blocks {
         public bool IsTDoor;
         /// <summary> Block id this block is converted to when toggled by a neighbouring door. </summary>
         public byte ODoorId;
+        public byte DoorId;
+        public byte DoorAirId;
         
         /// <summary> Whether this block is considered a message block. </summary>
         public bool IsMessageBlock;

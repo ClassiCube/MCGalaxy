@@ -57,7 +57,7 @@ namespace MCGalaxy.BlockPhysics {
             if (index < 0 || index >= lvl.blocks.Length) return;
             byte block = lvl.blocks[index];
             
-            if (Block.tDoor(block)) {
+            if (Block.Properties[block].IsTDoor) {
                 PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 10;
                 args.Type2 = PhysicsArgs.Revert; args.Value2 = block;

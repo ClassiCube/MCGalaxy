@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Blocks;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdBlocks : Command
@@ -92,6 +94,7 @@ namespace MCGalaxy.Commands
                     {
                         Player.SendMessage(p, "&bComplex information for \"" + message + "\":");
                         Player.SendMessage(p, "&cBlock will appear as a \"" + Block.Name(Block.Convert(b)) + "\" block");
+                        BlockProps props = Block.Properties[b];
 
                         if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs))
                             Player.SendMessage(p, "Block will allow light through");
@@ -99,15 +102,15 @@ namespace MCGalaxy.Commands
                         else Player.SendMessage(p, "Block will not affect physics in any way"); //It's AFFECT!
                         if (Block.NeedRestart(b)) Player.SendMessage(p, "The block's physics will auto-start");
 
-                        if (Block.OPBlocks(b)) Player.SendMessage(p, "Block is unaffected by explosions");
+                        if (props.OPBlock) Player.SendMessage(p, "Block is unaffected by explosions");
 
                         if (Block.AllowBreak(b)) Player.SendMessage(p, "Anybody can activate the block");
                         if (Block.Walkthrough(b)) Player.SendMessage(p, "Block can be walked through");
                         if (Block.Death(b)) Player.SendMessage(p, "Walking through block will kill you");
 
-                        if (Block.DoorAirs(b) != (byte)0) Player.SendMessage(p, "Block is an ordinary door");
-                        if (Block.tDoor(b)) Player.SendMessage(p, "Block is a tdoor, which allows other blocks through when open");
-                        if (Block.odoor(b) != Block.Zero) Player.SendMessage(p, "Block is an odoor, which toggles (GLITCHY)");
+                        if (props.DoorAirId != 0) Player.SendMessage(p, "Block is an ordinary door");
+                        if (props.IsTDoor) Player.SendMessage(p, "Block is a tdoor, which allows other blocks through when open");
+                        if (props.ODoorId != Block.Zero) Player.SendMessage(p, "Block is an odoor, which toggles (GLITCHY)");
 
                         if (Block.Mover(b)) Player.SendMessage(p, "Block can be activated by walking through it");
                     }
