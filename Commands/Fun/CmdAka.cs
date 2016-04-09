@@ -28,9 +28,9 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
         public override void Use(Player p, string message) {
-            bool showInfected = p.Game.Aka; 
             p.Game.Aka = !p.Game.Aka;
             Player[] players = PlayerInfo.Online.Items;
+            Player.SendMessage(p, "AKA mode is now: " + (p.Game.Aka ? "&aon" : "&coff"));
             
             foreach (Player pl in players) {
                 if (pl.level != p.level || p == pl || !Player.CanSee(p, pl) || pl.Game.Referee) continue;                

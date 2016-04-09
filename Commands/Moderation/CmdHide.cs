@@ -49,8 +49,9 @@ namespace MCGalaxy.Commands
                 if (messageOps)
                     Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + "%S- is now &finvisible%S.");
                 
-                Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + PlayerDB.GetLogoutMessage(p), false);
-                Server.IRC.Say(p.DisplayName + " left the game (Disconnected.)");
+                string discMsg = PlayerDB.GetLogoutMessage(p);
+                Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + discMsg, false);
+                Server.IRC.Say(p.DisplayName + " left the game (" + discMsg + ")");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
             } else {
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);

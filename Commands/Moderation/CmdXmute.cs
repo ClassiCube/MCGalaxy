@@ -18,60 +18,49 @@
 */
 using System;
 using System.Threading;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdXmute : Command
-    {
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdXmute : Command {
+		
         public override string name { get { return "xmute"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override void Use(Player p, string message)
-        {
+        
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (p == null) {
                 Player.SendMessage(p, "This command can only be used in-game. Use /mute [Player] instead."); return;
             }
 
-            var split = message.Split(' ');
-            Player muter = PlayerInfo.FindOrShowMatches(p, split[0]);
+            string[] args = message.Split(' ');
+            Player muter = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (muter == null) return;
 
-            if (p != null && muter.group.Permission > p.group.Permission)
-            {
+            if (p != null && muter.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "xmute", true); return;
             }
-            if (p == muter)
-            {
-                Player.SendMessage(p, "You cannot use xmute on yourself!");
-                return;
+            if (p == muter) {
+                Player.SendMessage(p, "You cannot use xmute on yourself!"); return;
             }
             Command.all.Find("mute").Use(p, muter.name);
 
             int time = 120;
-            try
-            {
-                time = Convert.ToInt32(message.Split(' ')[1]);
+            if (!int.TryParse(args[1], out time)) { 
+            	Player.SendMessage(p, "Invalid time given."); Help(p); return; 
             }
-            catch/* (Exception ex)*/
-            {
-                Player.SendMessage(p, "Invalid time given.");
-                Help(p);
-                return;
+            if (time <= 0) {
+            	Player.SendMessage(p, "Time must be positive and greater than zero."); return;
             }
-
-            Player.GlobalMessage(muter.color + muter.DisplayName + Server.DefaultColor + " has been muted for " + time + " seconds");
+            
+            Player.GlobalMessage(muter.color + muter.DisplayName + " %Shas been muted for " + time + " seconds");
             Player.SendMessage(muter, "You have been muted for " + time + " seconds");
-
             Thread.Sleep(time * 1000);
-
             Command.all.Find("mute").Use(p, muter.name);
         }
-
-        // This one controls what happens when you use /help [commandname].
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/xmute <player> <seconds> - Mutes <player> for <seconds> seconds");
         }
     }

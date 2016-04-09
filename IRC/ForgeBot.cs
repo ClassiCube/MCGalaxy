@@ -140,14 +140,14 @@ namespace MCGalaxy {
             if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
             reason = Colors.MinecraftToIrcColors(reason);
             if (!p.hidden)
-                connection.Sender.PublicMessage(channel, p.name + " left the game (" + reason + ")");
+                connection.Sender.PublicMessage(channel, p.DisplayName + " left the game (" + reason + ")");
         }
 
         void Player_PlayerConnect(Player p) {
             if (!Server.irc || !IsConnected()) return;
             if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest) return;
             if (!p.hidden)
-                connection.Sender.PublicMessage(channel, p.name + " joined the game");
+                connection.Sender.PublicMessage(channel, p.DisplayName + " joined the game");
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
@@ -155,7 +155,7 @@ namespace MCGalaxy {
             RemoveNick(user.Nick, chanNicks);
             if (user.Nick == nick) return;
             Server.s.Log(user.Nick + " has left IRC");
-            Player.GlobalMessage("%I" + user.Nick + Server.DefaultColor + " has left IRC");
+            Player.GlobalMessage("%I[IRC] " + user.Nick + " has left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
@@ -394,6 +394,8 @@ namespace MCGalaxy {
         void Listener_OnKick(UserInfo user, string channel, string kickee, string reason) {
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
+            Server.s.Log(kickee + " kicked " + user.Nick + " from IRC");
+            Player.GlobalMessage("%I[IRC] " + kickee + " kicked " + user.Nick);           
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {
