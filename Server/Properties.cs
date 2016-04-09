@@ -405,7 +405,20 @@ namespace MCGalaxy {
 				case "zombie-save-blockchanges":
 					try { Server.zombie.SaveLevelBlockchanges = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;					
+					break;
+				case "zombie-hitbox-precision":
+					try { Server.zombie.HitboxPrecision = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.zombie.HitboxPrecision = 32; }
+					break;	
+				case "zombie-maxmove-distance":
+					try { Server.zombie.MaxMoveDistance = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.zombie.HitboxPrecision = 70; }
+					break;
+				case "zombie-ignore-personalworlds":
+					try { Server.zombie.IgnorePersonalWorlds = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
+					
 				case "guest-limit-notify":
 					try { Server.guestLimitNotify = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
@@ -730,6 +743,8 @@ namespace MCGalaxy {
 			w.WriteLine("agree-to-rules-on-entry = " + Server.agreetorulesonentry.ToString().ToLower());
 			w.WriteLine("admins-join-silent = " + Server.adminsjoinsilent.ToString().ToLower());
 			w.WriteLine("server-owner = " + Server.server_owner.ToString());
+			
+			w.WriteLine("#Zombie settings");
 			w.WriteLine("zombie-on-server-start = " + Server.zombie.StartImmediately);
 			w.WriteLine("no-respawning-during-zombie = " + Server.zombie.noRespawn);
 			w.WriteLine("no-pillaring-during-zombie = " + Server.zombie.noPillaring);
@@ -739,6 +754,11 @@ namespace MCGalaxy {
 			w.WriteLine("zombie-levels-list = " + string.Join(",", Server.zombie.LevelList));
 			w.WriteLine("zombie-ignores-list = " + string.Join(",", Server.zombie.IgnoredLevelList));
 			w.WriteLine("zombie-save-blockchanges = " + Server.zombie.SaveLevelBlockchanges);
+			w.WriteLine("zombie-hitbox-precision = " + Server.zombie.HitboxPrecision);
+			w.WriteLine("zombie-maxmove-distance = " + Server.zombie.MaxMoveDistance);
+			w.WriteLine("zombie-ignore-personalworlds = " + Server.zombie.IgnorePersonalWorlds);
+			w.WriteLine();
+			
 			w.WriteLine("guest-limit-notify = " + Server.guestLimitNotify.ToString().ToLower());
 			w.WriteLine("guest-join-notify = " + Server.guestJoinNotify.ToString().ToLower());
 			w.WriteLine("guest-leave-notify = " + Server.guestLeaveNotify.ToString().ToLower());

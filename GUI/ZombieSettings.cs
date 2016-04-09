@@ -28,7 +28,12 @@ namespace MCGalaxy.Gui {
         [Category("Levels settings")]
         public bool ChangeLevels { get; set; }
         
-        [Description("Comma separated list of levels that are never used for zombie survival. (e.g. main,spawn)")]
+        [Description("Whether worlds with a '+' in their name (i.e. from /os map add) are ignored " +
+                     "when choosing levels for zombie survival.")]
+        [Category("Levels settings")]
+        public bool IgnorePersonalWorlds { get; set; }
+        
+        [Description("Comma separated list of levels that are never chosen for zombie survival. (e.g. main,spawn)")]
         [Category("Levels settings")]
         public string IgnoredLevelsList { get; set; }
         
@@ -66,17 +71,32 @@ namespace MCGalaxy.Gui {
         [Category("General settings")]
         public bool StartImmediately { get; set; }
         
+        
+        [Description("Max distance players are allowed to move between packets (for speedhack detection). " +
+                     "32 units equals one block.")]
+        [Category("Other settings")]
+        public int MaxMoveDistance { get; set; }
+        
+        [Description("Distance between players before they are considered to have 'collided'. (for infecting). " +
+                     "32 units equals one block.")]
+        [Category("Other settings")]
+        public int HitboxPrecision { get; set; }
+        
         public void LoadFromServer() {
             ChangeLevels = Server.zombie.ChangeLevels;
             IgnoredLevelsList = String.Join(",", Server.zombie.IgnoredLevelList);
             LevelsList = String.Join(",", Server.zombie.LevelList);
             SaveZombieLevelChanges = Server.zombie.SaveLevelBlockchanges;
+            IgnorePersonalWorlds = Server.zombie.IgnorePersonalWorlds;
             
             InfectedName = Server.zombie.ZombieName;
             Pillaring = !Server.zombie.noPillaring;
             Respawning = !Server.zombie.noRespawn;
             SetMainLevel = Server.zombie.SetMainLevel;
             StartImmediately = Server.zombie.StartImmediately;
+            
+            MaxMoveDistance = Server.zombie.MaxMoveDistance;
+            HitboxPrecision = Server.zombie.HitboxPrecision;
         }
         
         public void ApplyToServer() {
@@ -84,17 +104,21 @@ namespace MCGalaxy.Gui {
             string list = IgnoredLevelsList.Replace(" ", "");
             if (list == "") Server.zombie.IgnoredLevelList = new List<string>();
             else Server.zombie.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
-            	
+                
             list = LevelsList.Replace(" ", "");
             if (list == "") Server.zombie.LevelList = new List<string>();
             else Server.zombie.LevelList = new List<string>(list.Replace(" ", "").Split(','));
             Server.zombie.SaveLevelBlockchanges = SaveZombieLevelChanges;
+            Server.zombie.IgnorePersonalWorlds = IgnorePersonalWorlds;
             
             Server.zombie.ZombieName = InfectedName;
             Server.zombie.noPillaring = !Pillaring;
             Server.zombie.noRespawn = !Respawning;
             Server.zombie.SetMainLevel = SetMainLevel;
             Server.zombie.StartImmediately = StartImmediately;
+            
+            Server.zombie.MaxMoveDistance = MaxMoveDistance;
+            Server.zombie.HitboxPrecision = HitboxPrecision;
         }
     }
 }

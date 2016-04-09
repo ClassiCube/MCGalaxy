@@ -183,6 +183,8 @@ namespace MCGalaxy.Commands
             Server.zombie.ChangeLevels = true;
             Server.zombie.LevelList.Clear();
             Server.zombie.SetMainLevel = false;
+            Server.zombie.SaveLevelBlockchanges = false;
+            Server.zombie.IgnorePersonalWorlds = true;
             //Settings
             #region Server Settings
             Server.salt = "";

@@ -39,6 +39,7 @@ namespace MCGalaxy.Commands
                     case "stop": HandleStop(p, message, args); break;
                     case "force": HandleForceStop(p, message, args); break;
                     case "hitbox": HandleHitbox(p, message, args); break;
+                    case "maxmove": HandleMaxMove(p, message, args); break;
             }
         }
         
@@ -99,7 +100,21 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "Hitbox detection must be an integer between 0 and 256.");
             } else {
                 Server.zombie.HitboxPrecision = precision;
-                Player.SendMessage(p, "Hitbox detection set to &a" + Server.zombie.HitboxPrecision + " %Sunits apart.");
+                Player.SendMessage(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
+                SrvProperties.Save();
+            }
+        }
+        
+        static void HandleMaxMove(Player p, string message, string[] args) {
+            byte distance;
+            if (args.Length == 1) {
+                Player.SendMessage(p, "Maxmium move distance is currently &a" + Server.zombie.MaxMoveDistance + " %Sunits apart.");
+            } else if (!byte.TryParse(args[1], out distance)) {
+                Player.SendMessage(p, "Maximum move distance must be an integer between 0 and 256.");
+            } else {
+                Server.zombie.MaxMoveDistance = distance;
+                Player.SendMessage(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
+                SrvProperties.Save();
             }
         }
         
@@ -110,7 +125,9 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "/zg stop - Stops the Zombie Survival game after the round has finished.");
             Player.SendMessage(p, "/zg force - Force stops the Zombie Survival game immediately.");
             Player.SendMessage(p, "/zg hitbox [distance] - Sets how far apart players need to be before " +
-                               "they are considered a 'hit' (32 units = 1 block).");
+                               "they are considered a 'collision'. (32 units = 1 block).");
+            Player.SendMessage(p, "/zg maxmove [distance] - Sets how far apart players are allowed to move in a" +
+                               "movement packet before they are considered speedhacking. (32 units = 1 block).");
         }
     }
 }

@@ -67,11 +67,7 @@ namespace MCGalaxy.Games {
                                              byte rotX, byte rotY) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (!p.Game.Referee && noRespawn) {
-                if (p.pos[0] >= x + 70 || p.pos[0] <= x - 70 ) {
-                    p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
-                    return true;
-                }
-                if (p.pos[2] >= z + 70 || p.pos[2] <= z - 70) {
+            	if (Math.Abs(p.pos[0] - x) >= MaxMoveDistance || Math.Abs(p.pos[2] - z) >= MaxMoveDistance) {
                     p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                     return true;
                 }

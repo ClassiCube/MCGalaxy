@@ -364,11 +364,9 @@ namespace MCGalaxy.Gui {
                     break;
 
                 case "physicsrestart":
-                    chkPhysicsRest.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkPhysicsRest.Checked = value.ToLower() == "true"; break;
                 case "deathcount":
-                    chkDeath.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkDeath.Checked = value.ToLower() == "true"; break;
 
                 case "defaultcolor":
                     ParseColor(value, chat_cmbDefault); break;
@@ -389,8 +387,7 @@ namespace MCGalaxy.Gui {
                     break;
 
                 case "cheapmessage":
-                    chat_chkCheap.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chat_chkCheap.Checked = value.ToLower() == "true"; break;
                 case "cheap-message-given":
                     chat_txtCheap.Text = value; break;
                 case "custom-ban-message":
@@ -403,11 +400,9 @@ namespace MCGalaxy.Gui {
                     chat_txtDemote.Text = value; break;
                     
                 case "auto-restart":
-                    chkRestartTime.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkRestartTime.Checked = value.ToLower() == "true"; break;
                 case "restarttime":
-                    txtRestartTime.Text = value;
-                    break;
+                    txtRestartTime.Text = value; break;
                 case "afk-minutes":
                     try { txtafk.Text = Convert.ToInt16(value).ToString(); }
                     catch { txtafk.Text = "10"; }
@@ -417,39 +412,29 @@ namespace MCGalaxy.Gui {
                     catch { txtAFKKick.Text = "45"; }
                     break;
                 case "check-updates":
-                    chkUpdates.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkUpdates.Checked = value.ToLower() == "true"; break;
                 case "auto-update":
-                    autoUpdate.Checked = ( value.ToLower() == "true" );
-                    break;
+                    autoUpdate.Checked = value.ToLower() == "true"; break;
                 case "in-game-update-notify":
-                    notifyInGameUpdate.Checked = ( value.ToLower() == "true" );
-                    break;
+                    notifyInGameUpdate.Checked = value.ToLower() == "true"; break;
                 case "update-countdown":
                     try { updateTimeNumeric.Value = Convert.ToDecimal(value); }
                     catch { updateTimeNumeric.Value = 10; }
                     break;
                 case "autoload":
-                    chkAutoload.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkAutoload.Checked = ( value.ToLower() == "true" ); break;
                 case "parse-emotes":
-                    chkSmile.Checked = value.ToLower() == "true";
-                    break;
+                    chkSmile.Checked = value.ToLower() == "true"; break;
                 case "allow-tp-to-higher-ranks":
-                    chkTpToHigherRanks.Checked = value.ToLower() == "true";
-                    break;
+                    chkTpToHigherRanks.Checked = value.ToLower() == "true"; break;
                 case "agree-to-rules-on-entry":
-                    chkAgreeToRules.Checked = value.ToLower() == "true";
-                    break;
+                    chkAgreeToRules.Checked = value.ToLower() == "true"; break;
                 case "admins-join-silent":
-                    chkAdminsJoinSilent.Checked = value.ToLower() == "true";
-                    break;
+                    chkAdminsJoinSilent.Checked = value.ToLower() == "true"; break;
                 case "main-name":
-                    txtMain.Text = value;
-                    break;
+                    txtMain.Text = value; break;
                 case "dollar-before-dollar":
-                    chk17Dollar.Checked = value.ToLower() == "true";
-                    break;
+                    chk17Dollar.Checked = value.ToLower() == "true"; break;
                 case "money-name":
                     txtMoneys.Text = value;
                     break;
@@ -466,50 +451,42 @@ namespace MCGalaxy.Gui {
                     if ( value != "" ) chat_txtConsole.Text = value;
                     break;
                 case "kick-on-hackrank":
-                    hackrank_kick.Checked = value.ToLower() == "true";
-                    break;
+                    hackrank_kick.Checked = value.ToLower() == "true"; break;
                 case "hackrank-kick-time":
-                    hackrank_kick_time.Text = value;
-                    break;
+                    hackrank_kick_time.Text = value; break;
                 case "server-owner":
-                    txtServerOwner.Text = value;
-                    break;
+                    txtServerOwner.Text = value; break;
                 case "zombie-on-server-start":
-                    zSettings.StartImmediately = value.ToLower() == "true";
-                    break;
+                    zSettings.StartImmediately = value.ToLower() == "true"; break;
                 case "no-respawning-during-zombie":
-                    zSettings.Respawning = value.ToLower() != "true";
-                    break;
+                    zSettings.Respawning = value.ToLower() != "true"; break;
                 case "no-level-saving-during-zombie":
-                    zSettings.SaveZombieLevelChanges = value.ToLower() != "true";
-                    break;
+                    zSettings.SaveZombieLevelChanges = value.ToLower() != "true"; break;
                 case "no-pillaring-during-zombie":
-                    zSettings.Pillaring = value.ToLower() != "true";
-                    break;
+                    zSettings.Pillaring = value.ToLower() != "true"; break;
                 case "zombie-name-while-infected":
-                    zSettings.InfectedName = value;
-                    break;
+                    zSettings.InfectedName = value; break;
                 case "enable-changing-levels":
-                    zSettings.ChangeLevels = value.ToLower() == "true";
-                    break;
+                    zSettings.ChangeLevels = value.ToLower() == "true"; break;
                 case "zombie-survival-only-server":
-                    zSettings.SetMainLevel = value.ToLower() == "true";
-                    break;
+                    zSettings.SetMainLevel = value.ToLower() == "true"; break;
                 case "zombie-levels-list":
-                    zSettings.LevelsList = value.Replace(" ", "");
-                    break;
+                    zSettings.LevelsList = value.Replace(" ", ""); break;
                 case "zombie-save-blockchanges":
-                    zSettings.SaveZombieLevelChanges = value.ToLower() == "true";
-                    break;
+                    zSettings.SaveZombieLevelChanges = value.ToLower() == "true"; break;
+                case "zombie-hitbox-precision":
+                    zSettings.HitboxPrecision = int.Parse(value); break;
+                case "zombie-maxmove-distance":
+                    zSettings.MaxMoveDistance = int.Parse(value); break;
+                case "zombie-ignore-personalworlds":
+                    zSettings.IgnorePersonalWorlds = value.ToLower() == "true"; break;
+                    
                 case "guest-limit-notify":
-                    chkGuestLimitNotify.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkGuestLimitNotify.Checked = value.ToLower() == "true"; break;
                 case "admin-verification":
-                    chkEnableVerification.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkEnableVerification.Checked = value.ToLower() == "true"; break;
                 case "usemysql":
-                    chkUseSQL.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkUseSQL.Checked = value.ToLower() == "true"; break;
                 case "username":
                     if ( value != "" ) txtSQLUsername.Text = value;
                     break;
