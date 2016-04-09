@@ -27,15 +27,15 @@ namespace MCGalaxy {
 	public static class SrvProperties {
 		
 		public static void Load(string givenPath, bool skipsalt = false) {
-            RandomNumberGenerator prng = RandomNumberGenerator.Create();
-            StringBuilder sb = new StringBuilder();
-            byte[] oneChar = new byte[1];
-            while (sb.Length < 16) {
-                prng.GetBytes(oneChar);
-                if (Char.IsLetterOrDigit((char)oneChar[0]))
-                    sb.Append((char)oneChar[0]);
-            }
-            Server.salt = sb.ToString();
+			RandomNumberGenerator prng = RandomNumberGenerator.Create();
+			StringBuilder sb = new StringBuilder();
+			byte[] oneChar = new byte[1];
+			while (sb.Length < 16) {
+				prng.GetBytes(oneChar);
+				if (Char.IsLetterOrDigit((char)oneChar[0]))
+					sb.Append((char)oneChar[0]);
+			}
+			Server.salt = sb.ToString();
 
 			if (PropertiesFile.Read(givenPath, LineProcessor))
 				Server.s.SettingsUpdate();
@@ -187,19 +187,16 @@ namespace MCGalaxy {
 					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
 					break;
 				case "defaultcolor":
-					color = Colors.Parse(value);
-					if ( color == "" ) {
-						color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-					}
-					Server.DefaultColor = color;
-					break;
+					ParseColor(value, ref Server.DefaultColor); break;
 				case "irc-color":
-					color = Colors.Parse(value);
-					if ( color == "" ) {
-						color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-					}
-					Server.IRCColour = color;
-					break;
+					ParseColor(value, ref Server.IRCColour); break;
+				case "global-chat-color":
+					ParseColor(value, ref Server.GlobalChatColor); break;
+				case "help-syntax-color":
+					ParseColor(value, ref Server.HelpSyntaxColor); break;
+				case "help-desc-color":
+					ParseColor(value, ref Server.HelpDescriptionColor); break;
+					
 				case "opchat-perm":
 					try {
 						sbyte parsed = sbyte.Parse(value);
@@ -239,25 +236,17 @@ namespace MCGalaxy {
 				case "cheap-message-given":
 					if ( value != "" ) Server.cheapMessageGiven = value;
 					break;
-				case "custom-ban":
-					try { Server.customBan = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
 				case "custom-ban-message":
-					if ( value != "" ) Server.customBanMessage = value;
-					break;
-				case "custom-shutdown":
-					try { Server.customShutdown = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
+					if ( value != "" ) Server.defaultBanMessage = value;
 					break;
 				case "custom-shutdown-message":
-					if ( value != "" ) Server.customShutdownMessage = value;
+					if ( value != "" ) Server.shutdownMessage = value;
 					break;
 				case "custom-promote-message":
-					if ( value != "" ) Server.customPromoteMessage = value;
+					if ( value != "" ) Server.defaultPromoteMessage = value;
 					break;
 				case "custom-demote-message":
-					if ( value != "" ) Server.customDemoteMessage = value;
+					if ( value != "" ) Server.defaultDemoteMessage = value;
 					break;
 				case "default-rank":
 					try { Server.defaultRank = value.ToLower(); }
@@ -470,14 +459,6 @@ namespace MCGalaxy {
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 
-				case "global-chat-color":
-					color = Colors.Parse(value);
-					if ( color == "" ) {
-						color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-					}
-					Server.GlobalChatColor = color;
-					break;
-
 				case "total-undo":
 					try { Server.totalUndo = int.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
@@ -497,7 +478,7 @@ namespace MCGalaxy {
 				case "map-gen-limit-admin":
 					try { Server.MapGenLimitAdmin = int.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.MapGenLimitAdmin = 225 * 1000 * 1000; }
-					break;					
+					break;
 					
 				case "review-view-perm":
 					try {
@@ -561,14 +542,14 @@ namespace MCGalaxy {
 					}
 					catch { Server.s.Log("Invalid " + key + ". Using default."); }
 					break;
-                case "disabledstandardtokens":
-                    {
-                        if (value == "") return;
-                        string[] tokens = value.Split(',');
-                        foreach (string token in tokens)
-                            Chat.standardTokens.Remove(token);
-                        Chat.disabledTokens = value;
-                    } break;
+				case "disabledstandardtokens":
+					{
+						if (value == "") return;
+						string[] tokens = value.Split(',');
+						foreach (string token in tokens)
+							Chat.standardTokens.Remove(token);
+						Chat.disabledTokens = value;
+					} break;
 				case "enable-http-api":
 					try {
 						Server.EnableHttpApi = bool.Parse(value);
@@ -576,6 +557,16 @@ namespace MCGalaxy {
 					catch { Server.s.Log("Invalid " + key + ". Using default."); }
 					break;
 			}
+		}
+		
+		static void ParseColor(string value, ref string target) {
+			string color = Colors.Parse(value);
+			if (color == "") {
+				color = Colors.Name(value);
+				if (color != "") color = value;
+				else { Server.s.Log("Could not find " + value); return; }
+			}
+			target = color;
 		}
 		
 		public static bool ValidString(string str, string allowed) {
@@ -756,7 +747,7 @@ namespace MCGalaxy {
 			w.WriteLine("physics-undo-max = " + Server.physUndo);
 			w.WriteLine("draw-reload-limit = " + Server.DrawReloadLimit);
 			w.WriteLine("map-gen-limit = " + Server.MapGenLimit);
-			w.WriteLine("map-gen-limit-admin = " + Server.MapGenLimitAdmin);			
+			w.WriteLine("map-gen-limit-admin = " + Server.MapGenLimitAdmin);
 			w.WriteLine();
 			w.WriteLine("# backup options");
 			w.WriteLine("backup-time = " + Server.backupInterval.ToString());
@@ -777,14 +768,15 @@ namespace MCGalaxy {
 			w.WriteLine("#Colors");
 			w.WriteLine("defaultColor = " + Server.DefaultColor);
 			w.WriteLine("irc-color = " + Server.IRCColour);
+			w.WriteLine("global-chat-color = " + Server.GlobalChatColor);
+			w.WriteLine("help-syntax-color = " + Server.HelpSyntaxColor);
+			w.WriteLine("help-desc-color = " + Server.HelpDescriptionColor);
 			w.WriteLine();
 			w.WriteLine("#Custom Messages");
-			w.WriteLine("custom-ban = " + Server.customBan.ToString().ToLower());
-			w.WriteLine("custom-ban-message = " + Server.customBanMessage);
-			w.WriteLine("custom-shutdown = " + Server.customShutdown.ToString().ToLower());
-			w.WriteLine("custom-shutdown-message = " + Server.customShutdownMessage);
-			w.WriteLine("custom-promote-message = " + Server.customPromoteMessage);
-			w.WriteLine("custom-demote-message = " + Server.customDemoteMessage);
+			w.WriteLine("custom-ban-message = " + Server.defaultBanMessage);
+			w.WriteLine("custom-shutdown-message = " + Server.shutdownMessage);
+			w.WriteLine("custom-promote-message = " + Server.defaultPromoteMessage);
+			w.WriteLine("custom-demote-message = " + Server.defaultDemoteMessage);
 			w.WriteLine("allow-tp-to-higher-ranks = " + Server.higherranktp.ToString().ToLower());
 			w.WriteLine();
 			w.WriteLine("cheapmessage = " + Server.cheapMessage.ToString().ToLower());
@@ -805,13 +797,6 @@ namespace MCGalaxy {
 			w.WriteLine("spam-mute-time = " + Server.mutespamtime.ToString());
 			w.WriteLine("spam-counter-reset-time = " + Server.spamcountreset.ToString());
 			w.WriteLine();
-			w.WriteLine("#Show Empty Ranks in /players");
-			w.WriteLine("show-empty-ranks = " + Server.showEmptyRanks.ToString().ToLower());
-			w.WriteLine();
-			w.WriteLine("#Global Chat Settings");
-			w.WriteLine("global-chat-enabled = " + Server.UseGlobalChat.ToString().ToLower());
-			w.WriteLine("global-chat-color = " + Server.GlobalChatColor);
-			w.WriteLine();
 			w.WriteLine("#Review settings");
 			w.WriteLine("review-view-perm = " + ( (sbyte)Server.reviewview ).ToString());
 			w.WriteLine("review-enter-perm = " + ( (sbyte)Server.reviewenter ).ToString());
@@ -821,6 +806,8 @@ namespace MCGalaxy {
 			w.WriteLine("review-next-perm = " + ( (sbyte)Server.reviewnext ).ToString());
 			w.WriteLine("bufferblocks = " + Server.bufferblocks);
 			w.WriteLine();
+			w.WriteLine("global-chat-enabled = " + Server.UseGlobalChat.ToString().ToLower());
+			w.WriteLine("show-empty-ranks = " + Server.showEmptyRanks.ToString().ToLower());
 			w.WriteLine("disabledstandardtokens = " + Chat.disabledTokens);
 		}
 	}

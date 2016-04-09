@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands {
                 Help(p);  return;
             }
             
-            string reason = args.Length == 1 ? Server.customPromoteMessage : args[1];    
+            string reason = args.Length == 1 ? Server.defaultPromoteMessage : args[1];    
             Group next = null;
             int index = Group.GroupList.IndexOf(target.group);
             if (index < Group.GroupList.Count - 1) {

@@ -168,8 +168,8 @@ namespace MCGalaxy {
         	}
         	
             if (color == 's' || color == 'S') { color = Server.DefaultColor[1]; return true; }
-            if (color == 'h' || color == 'H') { color = 'e'; return true; }
-            if (color == 't' || color == 'T') { color = 'a'; return true; }
+            if (color == 'h' || color == 'H') { color = Server.HelpDescriptionColor[1]; return true; }
+            if (color == 't' || color == 'T') { color = Server.HelpSyntaxColor[1]; return true; }
             if (color == 'i' || color == 'I') { color = Server.IRCColour[1]; return true; }
             if (color == 'g' || color == 'G') { color = Server.GlobalChatColor[1]; return true; }
             if (color == 'r' || color == 'R') { color = 'f'; return true; }            

@@ -16,7 +16,6 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -55,10 +54,12 @@ namespace MCGalaxy.Gui {
         		colors.Add(Colors.ExtColors[i].Name);
         	}
         	string[] colorsArray = colors.ToArray();
-            cmbDefaultColour.Items.AddRange(colorsArray);
-            cmbIRCColour.Items.AddRange(colorsArray);
-            cmbColor.Items.AddRange(colorsArray);
-            cmbGlobalChatColor.Items.AddRange(colorsArray);
+            chat_cmbDefault.Items.AddRange(colorsArray);
+            chat_cmbIRC.Items.AddRange(colorsArray);
+            chat_cmbGlobal.Items.AddRange(colorsArray);
+            chat_cmbSyntax.Items.AddRange(colorsArray);
+            chat_cmbDesc.Items.AddRange(colorsArray);
+            cmbColor.Items.AddRange(colorsArray); 
 
             grpIRC.BackColor = Server.irc ? Color.White : Color.LightGray;
             grpSQL.BackColor = Server.useMySQL ? Color.White : Color.LightGray;
@@ -248,7 +249,6 @@ namespace MCGalaxy.Gui {
         }
         
         void LineProcessor(string key, string value) {
-            string color = "";
             switch (key.ToLower()) {
                 case "server-name":
                     if ( ValidString(value, "![]:.,{}~-+()?_/\\' ") ) txtName.Text = value;
@@ -367,19 +367,15 @@ namespace MCGalaxy.Gui {
                     break;
 
                 case "defaultcolor":
-                    color = Colors.Parse(value);
-
-                    if ( color == "" ) {
-                        color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-                    }
-                    cmbDefaultColour.SelectedIndex = cmbDefaultColour.Items.IndexOf(Colors.Name(color)); break;
-
+                    ParseColor(value, chat_cmbDefault); break;
                 case "irc-color":
-                    color = Colors.Parse(value);
-                    if ( color == "" ) {
-                        color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-                    }
-                    cmbIRCColour.SelectedIndex = cmbIRCColour.Items.IndexOf(Colors.Name(color)); break;
+                    ParseColor(value, chat_cmbIRC); break;
+                case "global-chat-color":
+                    ParseColor(value, chat_cmbGlobal); break; 
+                case "help-syntax-color":
+                    ParseColor(value, chat_cmbSyntax); break;
+                case "help-desc-color":
+                    ParseColor(value, chat_cmbDesc); break;                       
                 case "default-rank":
                     try {
                         if ( cmbDefaultRank.Items.IndexOf(value.ToLower()) != -1 )
@@ -389,28 +385,19 @@ namespace MCGalaxy.Gui {
                     break;
 
                 case "cheapmessage":
-                    chkCheap.Checked = ( value.ToLower() == "true" );
+                    chat_chkCheap.Checked = ( value.ToLower() == "true" );
                     break;
                 case "cheap-message-given":
-                    txtCheap.Text = value;
-                    break;
-
-                case "custom-ban":
-                    chkBanMessage.Checked = ( value.ToLower() == "true" );
-                    break;
-
+                    chat_txtCheap.Text = value; break;
                 case "custom-ban-message":
-                    txtBanMessage.Text = value;
-                    break;
-
-                case "custom-shutdown":
-                    chkShutdown.Checked = ( value.ToLower() == "true" );
-                    break;
-
+                    chat_txtBan.Text = value; break;
                 case "custom-shutdown-message":
-                    txtShutdown.Text = value;
-                    break;
-
+                    chat_txtShutdown.Text = value; break;
+                case "custom-promote-message":
+                    chat_txtPromote.Text = value; break;
+                case "custom-demote-message":
+                    chat_txtDemote.Text = value; break;
+                    
                 case "auto-restart":
                     chkRestartTime.Checked = ( value.ToLower() == "true" );
                     break;
@@ -472,7 +459,7 @@ namespace MCGalaxy.Gui {
                     chkRepeatMessages.Checked = value.ToLower() == "true";
                     break;
                 case "host-state":
-                    if ( value != "" ) txtHost.Text = value;
+                    if ( value != "" ) chat_txtConsole.Text = value;
                     break;
                 case "kick-on-hackrank":
                     hackrank_kick.Checked = value.ToLower() == "true";
@@ -576,15 +563,9 @@ namespace MCGalaxy.Gui {
                     break;
 
                 case "global-chat-enabled":
-                    chkGlobalChat.Checked = value.ToLower() == "true";
+                    chat_chkGlobal.Checked = value.ToLower() == "true";
                     break;
 
-                case "global-chat-color":
-                    color = Colors.Parse(value);
-                    if ( color == "" ) {
-                        color = Colors.Name(value); if ( color != "" ) color = value; else { Server.s.Log("Could not find " + value); return; }
-                    }
-                    cmbGlobalChatColor.SelectedIndex = cmbGlobalChatColor.Items.IndexOf(Colors.Name(color)); break;
                 case "view":
                     Server.reviewview = Level.PermissionFromName(value.ToLower());
                     break;
@@ -610,6 +591,16 @@ namespace MCGalaxy.Gui {
                     Server.reviewnext = Level.PermissionFromName(value.ToLower());
                     break;
             }
+        }
+        
+        void ParseColor(string value, ComboBox target) {
+            string color = Colors.Parse(value);
+            if (color == "") {
+                color = Colors.Name(value);
+                if (color != "") color = value;
+                else { Server.s.Log("Could not find " + value); return; }
+            }
+            target.SelectedIndex = target.Items.IndexOf(Colors.Name(color));
         }
         
         public bool ValidString(string str, string allowed) {
@@ -678,7 +669,7 @@ namespace MCGalaxy.Gui {
             Server.forceCuboid = chkForceCuboid.Checked;
             Server.profanityFilter = chkProfanityFilter.Checked;
             Server.repeatMessage = chkRepeatMessages.Checked;
-            Server.ZallState = txtHost.Text;
+            Server.ZallState = chat_txtConsole.Text;
             Server.agreetorulesonentry = chkAgreeToRules.Checked;
             Server.adminsjoinsilent = chkAdminsJoinSilent.Checked;
             Server.server_owner = txtServerOwner.Text;
@@ -714,30 +705,26 @@ namespace MCGalaxy.Gui {
             Server.MySQLDatabaseName = txtSQLDatabase.Text;
             //Server.MySQLPooling = ; // No setting for this?
 
-
-            Server.DefaultColor = cmbDefaultColour.SelectedItem.ToString();
-            Server.IRCColour = cmbIRCColour.SelectedItem.ToString();
-
-
-            //Server.mono = chkMono.Checked;
-
-
-            Server.customBan = chkBanMessage.Checked;
-            Server.customBanMessage = txtBanMessage.Text;
-            Server.customShutdown = chkShutdown.Checked;
-            Server.customShutdownMessage = txtShutdown.Text;
+            Server.DefaultColor = Colors.Parse(chat_cmbDefault.SelectedItem.ToString());
+            Server.IRCColour = Colors.Parse(chat_cmbIRC.SelectedItem.ToString());
+            Server.GlobalChatColor = Colors.Parse(chat_cmbGlobal.SelectedItem.ToString());
+            Server.HelpSyntaxColor = Colors.Parse(chat_cmbSyntax.SelectedItem.ToString());
+            Server.HelpDescriptionColor = Colors.Parse(chat_cmbDesc.SelectedItem.ToString());
+           
             Server.higherranktp = chkTpToHigherRanks.Checked;
-
             Server.checkUpdates = chkUpdates.Checked;
 
-            Server.cheapMessage = chkCheap.Checked;
-            Server.cheapMessageGiven = txtCheap.Text;
+            Server.cheapMessage = chat_chkCheap.Checked;
+            Server.cheapMessageGiven = chat_txtCheap.Text;
+            Server.defaultBanMessage = chat_txtBan.Text;
+            Server.shutdownMessage = chat_txtShutdown.Text;
+            Server.defaultDemoteMessage = chat_txtDemote.Text;
+            Server.defaultPromoteMessage = chat_txtPromote.Text;
+            
             Server.defaultRank = cmbDefaultRank.SelectedItem.ToString();
 
             Server.hackrank_kick = hackrank_kick.Checked;
             Server.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
-
-
             Server.verifyadmins = chkEnableVerification.Checked;
             Server.verifyadminsrank = Group.GroupList.Find(grp => grp.name == cmbVerificationRank.SelectedItem.ToString()).Permission;
 
@@ -747,9 +734,7 @@ namespace MCGalaxy.Gui {
             Server.spamcountreset = (int)numCountReset.Value;
 
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
-
-            Server.UseGlobalChat = chkGlobalChat.Checked;
-            Server.GlobalChatColor = cmbGlobalChatColor.SelectedItem.ToString();
+            Server.UseGlobalChat = chat_chkGlobal.Checked;
 
             Server.reviewview = Group.GroupList.Find(grp => grp.name == cmbViewQueue.SelectedItem.ToString()).Permission;
             Server.reviewenter = Group.GroupList.Find(grp => grp.name == cmbEnterQueue.SelectedItem.ToString()).Permission;
@@ -759,17 +744,25 @@ namespace MCGalaxy.Gui {
             Server.reviewcooldown = (int)nudCooldownTime.Value;
         }
 
-        private void cmbDefaultColour_SelectedIndexChanged(object sender, EventArgs e) {
-            lblDefault.BackColor = GetColor(cmbDefaultColour.Items[cmbDefaultColour.SelectedIndex].ToString());
+        private void chat_cmbDefault_SelectedIndexChanged(object sender, EventArgs e) {
+            chat_colDefault.BackColor = GetColor(chat_cmbDefault.Items[chat_cmbDefault.SelectedIndex].ToString());
         }
 
-        private void cmbIRCColour_SelectedIndexChanged(object sender, EventArgs e) {
-            lblIRC.BackColor = GetColor(cmbIRCColour.Items[cmbIRCColour.SelectedIndex].ToString());
+        private void chat_cmbIRC_SelectedIndexChanged(object sender, EventArgs e) {
+            chat_colIRC.BackColor = GetColor(chat_cmbIRC.Items[chat_cmbIRC.SelectedIndex].ToString());
         }
         
-        private void cmbGlobalChatColor_SelectedIndexChanged(object sender, EventArgs e) {
-            lblGlobalChatColor.BackColor = GetColor(cmbGlobalChatColor.Items[cmbGlobalChatColor.SelectedIndex].ToString());
+        private void chat_cmbGlobal_SelectedIndexChanged(object sender, EventArgs e) {
+            chat_colGlobal.BackColor = GetColor(chat_cmbGlobal.Items[chat_cmbGlobal.SelectedIndex].ToString());
         }
+        
+        private void chat_cmbSyntax_SelectedIndexChanged(object sender, EventArgs e) {
+            chat_colSyntax.BackColor = GetColor(chat_cmbSyntax.Items[chat_cmbSyntax.SelectedIndex].ToString());
+        }
+
+        private void chat_cmbDesc_SelectedIndexChanged(object sender, EventArgs e) {
+            chat_colDesc.BackColor = GetColor(chat_cmbDesc.Items[chat_cmbDesc.SelectedIndex].ToString());
+        }        
         
         Color GetColor(string name) {
         	string code = Colors.Parse(name);
@@ -863,7 +856,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         #region rankTab
         private void cmbColor_SelectedIndexChanged(object sender, EventArgs e) {
-            lblColor.BackColor = Color.FromName(cmbColor.Items[cmbColor.SelectedIndex].ToString());
+            lblColor.BackColor = GetColor(cmbColor.Items[cmbColor.SelectedIndex].ToString());
             storedRanks[listRanks.SelectedIndex].color = Colors.Parse(cmbColor.Items[cmbColor.SelectedIndex].ToString());
         }
 

@@ -575,16 +575,11 @@ namespace MCGalaxy_.Gui
             	Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player p in players)
                 {
-                    if (restarting) {
-                        string msg = Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.";
-                        p.LeaveServer(msg, msg);
-                    } else {
-                        const string msg = "Server restarted. Sign in again and rejoin.";
-                        p.LeaveServer(msg, msg);
-                    }
+                    string msg = restarting ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
+                    p.LeaveServer(msg, msg);
                 }
             }
-            catch (Exception exc) { Server.ErrorLog(exc); }
+            catch (Exception ex) { Server.ErrorLog(ex); }
 
             try
             {

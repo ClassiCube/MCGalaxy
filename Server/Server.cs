@@ -239,7 +239,10 @@ namespace MCGalaxy
 
         public static string DefaultColor = "&e";
         public static string IRCColour = "&5";
-
+        public static string GlobalChatColor = "&6";
+        public static string HelpSyntaxColor = "&a";
+        public static string HelpDescriptionColor = "&e";
+                
         public static bool UseGlobalChat = true;
         public static string GlobalChatNick()
         {
@@ -250,9 +253,6 @@ namespace MCGalaxy
             }
             return serverName;
         }
-        public static string GlobalChatColor = "&6";
-
-
         public static int afkminutes = 10;
         public static int afkkick = 45;
         public static LevelPermission afkkickperm = LevelPermission.AdvBuilder;
@@ -262,12 +262,10 @@ namespace MCGalaxy
         public static bool unsafe_plugin = true;
         public static bool cheapMessage = true;
         public static string cheapMessageGiven = " is now being cheap and being immortal";
-        public static bool customBan = false;
-        public static string customBanMessage = "You're banned!";
-        public static bool customShutdown = false;
-        public static string customShutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
-        public static string customPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
-        public static string customDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
+        public static string defaultBanMessage = "You're banned!";
+        public static string shutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
+        public static string defaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
+        public static string defaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
         public static string moneys = "moneys";
         public static LevelPermission opchatperm = LevelPermission.Operator;
         public static LevelPermission adminchatperm = LevelPermission.Admin;
@@ -275,7 +273,6 @@ namespace MCGalaxy
         public static bool adminsjoinsilent = false;
         public static bool mono { get { return (Type.GetType("Mono.Runtime") != null); } }
         public static string server_owner = "Notch";
-        public static bool UseSeasons = false;
         public static bool guestLimitNotify = false;
         public static bool guestJoinNotify = true;
         public static bool guestLeaveNotify = true;
@@ -605,13 +602,8 @@ namespace MCGalaxy
             foreach (Player p in players) { p.save(); }
             foreach (Player p in players)
             {
-            	if (!AutoRestart) {
-            		string msg = Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.";
-            		p.LeaveServer(msg, msg);
-            	} else {
-            		const string msg = "Server restarted. Sign in again and rejoin.";
-            		p.LeaveServer(msg, msg);
-            	}
+                string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage; 
+                p.LeaveServer(msg, msg);
             }
             if (APIServer != null) APIServer.Stop();
             if (InfoServer != null) InfoServer.Stop();
@@ -619,13 +611,8 @@ namespace MCGalaxy
             Player.connections.ForEach(
             delegate(Player p)
             {
-            	if (!AutoRestart) {
-            		string msg = Server.customShutdown ? Server.customShutdownMessage : "Server shutdown. Rejoin in 10 seconds.";
-            		p.LeaveServer(msg, msg);
-            	} else {
-            		const string msg = "Server restarted. Sign in again and rejoin.";
-            		p.LeaveServer(msg, msg);
-            	}
+            	string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage; 
+            	p.LeaveServer(msg, msg);
             }
             );
             Plugin.Unload();

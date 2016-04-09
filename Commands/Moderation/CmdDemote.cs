@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands {
                 Help(p); return;
             }
             
-            string reason = args.Length == 1 ? Server.customDemoteMessage : args[1];    
+            string reason = args.Length == 1 ? Server.defaultDemoteMessage : args[1];    
             Group next = null;
             int index = Group.GroupList.IndexOf(target.group);
             if (index > 0) {

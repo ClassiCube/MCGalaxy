@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             }
             
             string[] args = message.Split(trimChars, 2);
-            string reason = args.Length > 1 ? args[1] : "-";
+            string reason = args.Length > 1 ? args[1] : Server.defaultBanMessage;
             string banReason = reason == "-" ? "" : " (" + reason + ")";
             if (reason == "-") reason = "&c-";    
             reason = reason.Replace(" ", "%20");

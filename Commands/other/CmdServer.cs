@@ -266,10 +266,10 @@ namespace MCGalaxy.Commands
 
             Server.DefaultColor = "&e";
             Server.IRCColour = "&5";
-
-            Server.UseGlobalChat = true;
             Server.GlobalChatColor = "&6";
-
+            Server.HelpSyntaxColor = "&a";
+            Server.HelpDescriptionColor = "&e";
+            Server.UseGlobalChat = true;
 
             Server.afkminutes = 10;
             Server.afkkick = 45;
@@ -281,12 +281,10 @@ namespace MCGalaxy.Commands
             Server.unsafe_plugin = true;
             Server.cheapMessage = true;
             Server.cheapMessageGiven = " is now being cheap and being immortal";
-            Server.customBan = false;
-            Server.customBanMessage = "You're banned!";
-            Server.customShutdown = false;
-            Server.customShutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
-            Server.customPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
-            Server.customDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
+            Server.defaultBanMessage = "You're banned!";
+            Server.shutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
+            Server.defaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
+            Server.defaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
             Server.moneys = "moneys";
             Server.opchatperm = LevelPermission.Operator;
             Server.adminchatperm = LevelPermission.Admin;

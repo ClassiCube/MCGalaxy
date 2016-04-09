@@ -323,7 +323,7 @@ namespace MCGalaxy {
                 
                 // ban check
                 if (Server.bannedIP.Contains(ip) && (!Server.useWhitelist || !onWhitelist)) {
-                    Kick(Server.customBanMessage, true);  return;
+                    Kick(Server.defaultBanMessage, true);  return;
                 }
                 
                 if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Banned)) {
@@ -332,7 +332,7 @@ namespace MCGalaxy {
                         if (data != null) {
                             Kick("Banned for \"" + data[1] + "\" by " + data[0], true);
                         } else {
-                            Kick(Server.customBanMessage, true);
+                            Kick(Server.defaultBanMessage, true);
                         }
                         return;
                     }
