@@ -32,8 +32,10 @@ namespace MCGalaxy.Gui {
         ZombieSettings zSettings = new ZombieSettings();
 
         public PropertyWindow() {
-            zSettings.LoadFromServer();
-            InitializeComponent();
+        	InitializeComponent();
+        	this.propsZG.SelectedObject = zSettings;
+        	this.zSettings.LoadFromServer();
+        	this.propsZG.Invalidate();
             SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
             this.Font = SystemFonts.IconTitleFont;
         }
@@ -473,37 +475,31 @@ namespace MCGalaxy.Gui {
                     txtServerOwner.Text = value;
                     break;
                 case "zombie-on-server-start":
-                    chkZombieOnServerStart.Checked = value.ToLower() == "true";
+                    zSettings.StartImmediately = value.ToLower() == "true";
                     break;
                 case "no-respawning-during-zombie":
-                    chkNoRespawnDuringZombie.Checked = value.ToLower() == "true";
+                    zSettings.Respawning = value.ToLower() != "true";
                     break;
                 case "no-level-saving-during-zombie":
-                    chkNoLevelSavingDuringZombie.Checked = value.ToLower() == "true";
+                    zSettings.SaveZombieLevelChanges = value.ToLower() != "true";
                     break;
                 case "no-pillaring-during-zombie":
-                    chkNoPillaringDuringZombie.Checked = value.ToLower() == "true";
+                    zSettings.Pillaring = value.ToLower() != "true";
                     break;
                 case "zombie-name-while-infected":
-                    ZombieName.Text = value;
+                    zSettings.InfectedName = value;
                     break;
                 case "enable-changing-levels":
-                    chkEnableChangingLevels.Checked = value.ToLower() == "true";
+                    zSettings.ChangeLevels = value.ToLower() == "true";
                     break;
                 case "zombie-survival-only-server":
-                    chkZombieOnlyServer.Checked = value.ToLower() == "true";
+                    zSettings.SetMainLevel = value.ToLower() == "true";
                     break;
                 case "use-level-list":
-                    chkUseLevelList.Checked = value.ToLower() == "true";
+                    zSettings.UseLevelList = value.ToLower() == "true";
                     break;
                 case "zombie-level-list":
-                    if ( value != "" ) {
-                        string input = value.Replace(" ", "").ToString();
-                        int itndex = input.IndexOf("#");
-                        if ( itndex > 0 )
-                            input = input.Substring(0, itndex);
-                        levelList.Text = input;
-                    }
+                    zSettings.LevelsList = value.Replace(" ", "");
                     break;
                 case "guest-limit-notify":
                     chkGuestLimitNotify.Checked = ( value.ToLower() == "true" );
@@ -675,23 +671,8 @@ namespace MCGalaxy.Gui {
             Server.agreetorulesonentry = chkAgreeToRules.Checked;
             Server.adminsjoinsilent = chkAdminsJoinSilent.Checked;
             Server.server_owner = txtServerOwner.Text;
-            Server.startZombieModeOnStartup = chkZombieOnServerStart.Checked;
-            Server.zombie.noRespawn = chkNoRespawnDuringZombie.Checked;
-            Server.zombie.noPillaring = chkNoPillaringDuringZombie.Checked;
-            Server.zombie.ZombieName = ZombieName.Text;
-            Server.zombie.ChangeLevels = chkEnableChangingLevels.Checked;
-
-            string input = levelList.Text.Replace(" ", "").ToString();
-            int itndex = input.IndexOf("#");
-            if ( itndex > 0 )
-                input = input.Substring(0, itndex);
-
-            Server.zombie.LevelList = input.Split(',').ToList<string>();
-
-            Server.ZombieOnlyServer = chkZombieOnlyServer.Checked;
-            Server.zombie.UseLevelList = chkUseLevelList.Checked;
+            zSettings.ApplyToServer();
             Server.guestLimitNotify = chkGuestLimitNotify.Checked;
-
 
             Server.backupInterval = int.Parse(txtBackup.Text);
             Server.backupLocation = txtBackupLocation.Text;
@@ -800,7 +781,6 @@ namespace MCGalaxy.Gui {
                                 return;
                             }
 
-            zSettings.ApplyToServer();
             Save("properties/server.properties");
             SaveRanks();
             SaveCommands();
