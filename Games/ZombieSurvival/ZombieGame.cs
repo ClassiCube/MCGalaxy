@@ -85,6 +85,15 @@ namespace MCGalaxy.Games {
         /// <summary> Name of the level queued to be used for the next round. </summary>
         public string QueuedLevel;
         
+        /// <summary> Whether the server's main level should be set to the current level at the end of each round. </summary>
+        public bool SetMainLevel;
+        
+        /// <summary> Whether zombie survival should start upon server startup. </summary>
+        public bool StartImmediately;
+        
+        /// <summary> Whether changes made during a round of zombie survival should be permanently saved. </summary>
+        public bool SaveLevelBlockchanges;
+        
         static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
             "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
             "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
@@ -93,11 +102,16 @@ namespace MCGalaxy.Games {
         
         internal bool noRespawn = true, noPillaring = true;
         internal string ZombieName = "";
-        internal bool ChangeLevels = true, UseLevelList = false;
+        internal bool ChangeLevels = true;
         
+        /// <summary> List of levels that are randomly picked for zombie survival. 
+        /// If this left blank, then all level files are picked from instead. </summary>
         internal List<string> LevelList = new List<string>();
+        
+        /// <summary> List of levels that are never picked for zombie survival. </summary>
+        internal List<string> IgnoredLevelList = new List<string>();
+        
         string lastLevel1 = "", lastLevel2 = "";
-
         int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;
         
         string lastPlayerToInfect = "";
@@ -105,8 +119,6 @@ namespace MCGalaxy.Games {
         public Dictionary<string, BountyData> Bounties = new Dictionary<string, BountyData>();
         
         public void Start(ZombieGameStatus status, int amount) {
-            if (UseLevelList && LevelList == null)
-                ChangeLevels = false;
             Status = status;
             RoundInProgress = false;
             initialChangeLevel = false;
@@ -179,7 +191,7 @@ namespace MCGalaxy.Games {
             QueuedLevel = null;
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
             CurLevel = LevelInfo.Find(next);
-            if (Server.ZombieOnlyServer)
+            if (Server.zombie.SetMainLevel)
                 Server.mainLevel = CurLevel;
             
             online = PlayerInfo.Online.Items;

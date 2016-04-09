@@ -151,8 +151,6 @@ namespace MCGalaxy
 
         //Zombie
         public static ZombieGame zombie;
-        public static bool startZombieModeOnStartup = false;
-        public static bool ZombieOnlyServer = true;
         public static bool bufferblocks = true;
 
         public static int YesVotes = 0;

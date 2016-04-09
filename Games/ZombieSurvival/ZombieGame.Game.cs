@@ -116,7 +116,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedServer(Player p) {
-            if (!Running || Server.ZombieOnlyServer) return;
+            if (!Running || Server.zombie.SetMainLevel) return;
             Player.SendMessage(p, "A Zombie Survival game is running! " +
                                "Type %T/g " + CurLevelName + " %Sto join.");
         }

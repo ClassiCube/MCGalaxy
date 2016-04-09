@@ -495,11 +495,11 @@ namespace MCGalaxy.Gui {
                 case "zombie-survival-only-server":
                     zSettings.SetMainLevel = value.ToLower() == "true";
                     break;
-                case "use-level-list":
-                    zSettings.UseLevelList = value.ToLower() == "true";
-                    break;
-                case "zombie-level-list":
+                case "zombie-levels-list":
                     zSettings.LevelsList = value.Replace(" ", "");
+                    break;
+                case "zombie-save-blockchanges":
+                    zSettings.SaveZombieLevelChanges = value.ToLower() == "true";
                     break;
                 case "guest-limit-notify":
                     chkGuestLimitNotify.Checked = ( value.ToLower() == "true" );

@@ -176,14 +176,13 @@ namespace MCGalaxy.Commands
 
             //Zombie
             Server.zombie.ResetState();
-            Server.startZombieModeOnStartup = false;
+            Server.zombie.StartImmediately = false;
             Server.zombie.noRespawn = true;
             Server.zombie.noPillaring = true;
             Server.zombie.ZombieName = "";
-            Server.zombie.ChangeLevels = false;
+            Server.zombie.ChangeLevels = true;
             Server.zombie.LevelList.Clear();
-            Server.ZombieOnlyServer = false;
-            Server.zombie.UseLevelList = true;
+            Server.zombie.SetMainLevel = false;
             //Settings
             #region Server Settings
             Server.salt = "";

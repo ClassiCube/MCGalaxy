@@ -359,10 +359,13 @@ namespace MCGalaxy.Games {
             
             try
             {
+                bool useLevelList = LevelList.Count > 0;
                 List<string> levels = GetCandidateLevels();
-                if (levels.Count <= 2 && !UseLevelList) { Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return; }
-
-                if (levels.Count <= 2 && UseLevelList) { Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return; }
+                foreach (string ignore in IgnoredLevelList)
+                    levels.Remove(ignore);
+                
+                if (levels.Count <= 2 && !useLevelList) { Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return; }
+                if (levels.Count <= 2 && useLevelList) { Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return; }
 
                 string picked1 = "", picked2 = "";
                 Random r = new Random();
@@ -423,7 +426,7 @@ namespace MCGalaxy.Games {
         }
         
         List<string> GetCandidateLevels() {
-            if (UseLevelList) return LevelList;
+            if (LevelList.Count > 0) return LevelList;
             
             List<string> maps = new List<string>();
             DirectoryInfo di = new DirectoryInfo("levels/");

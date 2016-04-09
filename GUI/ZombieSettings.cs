@@ -32,7 +32,8 @@ namespace MCGalaxy.Gui {
         [Category("Levels settings")]
         public string IgnoredLevelsList { get; set; }
         
-        [Description("Comma separated list of levels to use for zombie survival. (e.g. map1,map2,map3)")]
+        [Description("Comma separated list of levels to use for zombie survival. (e.g. map1,map2,map3) " +
+                     "If this is left blank, then all levels are used.")]
         [Category("Levels settings")]
         public string LevelsList { get; set; }
         
@@ -40,10 +41,6 @@ namespace MCGalaxy.Gui {
                      "It is HIGHLY recommended that you leave this as false.")]
         [Category("Levels settings")]
         public bool SaveZombieLevelChanges { get; set; }
-        
-        [Description("Whether the specified list of levels should be used. If this is false, then all levels are used.")]
-        [Category("Levels settings")]
-        public bool UseLevelList { get; set; }
         
         
         [Description("Name to show above infected players. If this is left blank, then the player's name is used instead.")]
@@ -71,31 +68,33 @@ namespace MCGalaxy.Gui {
         
         public void LoadFromServer() {
             ChangeLevels = Server.zombie.ChangeLevels;
-            // TODO: Ignored level list
+            IgnoredLevelsList = String.Join(",", Server.zombie.IgnoredLevelList);
             LevelsList = String.Join(",", Server.zombie.LevelList);
-            // TODO: Save level zombie changes
-            UseLevelList = Server.zombie.UseLevelList;
+            SaveZombieLevelChanges = Server.zombie.SaveLevelBlockchanges;
             
             InfectedName = Server.zombie.ZombieName;
             Pillaring = !Server.zombie.noPillaring;
             Respawning = !Server.zombie.noRespawn;
-            SetMainLevel = Server.ZombieOnlyServer;
-            StartImmediately = Server.startZombieModeOnStartup;
+            SetMainLevel = Server.zombie.SetMainLevel;
+            StartImmediately = Server.zombie.StartImmediately;
         }
         
         public void ApplyToServer() {
-            Server.zombie.UseLevelList = UseLevelList;
-            // TODO: Ignored level list
-            string list = LevelsList.Replace(" ", "");
-            Server.zombie.LevelList = new List<string>(list.Split(','));
-            // TODO: Save level zombie changes
-            Server.zombie.UseLevelList = UseLevelList;
+            Server.zombie.ChangeLevels = ChangeLevels;
+            string list = IgnoredLevelsList.Replace(" ", "");
+            if (list == "") Server.zombie.IgnoredLevelList = new List<string>();
+            else Server.zombie.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
+            	
+            list = LevelsList.Replace(" ", "");
+            if (list == "") Server.zombie.LevelList = new List<string>();
+            else Server.zombie.LevelList = new List<string>(list.Replace(" ", "").Split(','));
+            Server.zombie.SaveLevelBlockchanges = SaveZombieLevelChanges;
             
             Server.zombie.ZombieName = InfectedName;
             Server.zombie.noPillaring = !Pillaring;
             Server.zombie.noRespawn = !Respawning;
-            Server.ZombieOnlyServer = SetMainLevel;
-            Server.startZombieModeOnStartup = StartImmediately;
+            Server.zombie.SetMainLevel = SetMainLevel;
+            Server.zombie.StartImmediately = StartImmediately;
         }
     }
 }
