@@ -48,20 +48,17 @@ namespace MCGalaxy.Gui {
         }
 
         private void PropertyWindow_Load(object sender, EventArgs e) {
-
-            Object[] colors = new Object[16];
-            colors[0] = ( "black" ); colors[1] = ( "navy" );
-            colors[2] = ( "green" ); colors[3] = ( "teal" );
-            colors[4] = ( "maroon" ); colors[5] = ( "purple" );
-            colors[6] = ( "gold" ); colors[7] = ( "silver" );
-            colors[8] = ( "gray" ); colors[9] = ( "blue" );
-            colors[10] = ( "lime" ); colors[11] = ( "aqua" );
-            colors[12] = ( "red" ); colors[13] = ( "pink" );
-            colors[14] = ( "yellow" ); colors[15] = ( "white" );
-            cmbDefaultColour.Items.AddRange(colors);
-            cmbIRCColour.Items.AddRange(colors);
-            cmbColor.Items.AddRange(colors);
-            cmbGlobalChatColor.Items.AddRange(colors);
+        	List<string> colors = new List<string>() { "black", "navy", "green", "teal", "maroon", 
+        		"purple", "gold", "silver", "gray", "blue", "lime", "aqua", "red", "pink", "yellow", "white" };
+        	for (int i = 0; i < 256; i++) {
+        		if (Colors.ExtColors[i].Undefined) continue;
+        		colors.Add(Colors.ExtColors[i].Name);
+        	}
+        	string[] colorsArray = colors.ToArray();
+            cmbDefaultColour.Items.AddRange(colorsArray);
+            cmbIRCColour.Items.AddRange(colorsArray);
+            cmbColor.Items.AddRange(colorsArray);
+            cmbGlobalChatColor.Items.AddRange(colorsArray);
 
             grpIRC.BackColor = Server.irc ? Color.White : Color.LightGray;
             grpSQL.BackColor = Server.useMySQL ? Color.White : Color.LightGray;
@@ -763,11 +760,24 @@ namespace MCGalaxy.Gui {
         }
 
         private void cmbDefaultColour_SelectedIndexChanged(object sender, EventArgs e) {
-            lblDefault.BackColor = Color.FromName(cmbDefaultColour.Items[cmbDefaultColour.SelectedIndex].ToString());
+            lblDefault.BackColor = GetColor(cmbDefaultColour.Items[cmbDefaultColour.SelectedIndex].ToString());
         }
 
         private void cmbIRCColour_SelectedIndexChanged(object sender, EventArgs e) {
-            lblIRC.BackColor = Color.FromName(cmbIRCColour.Items[cmbIRCColour.SelectedIndex].ToString());
+            lblIRC.BackColor = GetColor(cmbIRCColour.Items[cmbIRCColour.SelectedIndex].ToString());
+        }
+        
+        private void cmbGlobalChatColor_SelectedIndexChanged(object sender, EventArgs e) {
+            lblGlobalChatColor.BackColor = GetColor(cmbGlobalChatColor.Items[cmbGlobalChatColor.SelectedIndex].ToString());
+        }
+        
+        Color GetColor(string name) {
+        	string code = Colors.Parse(name);
+        	if (code == "") return SystemColors.Control;
+        	if (Colors.IsStandardColor(code[1])) return Color.FromName(name);
+        	
+        	CustomColor col = Colors.ExtColors[code[1]];
+        	return Color.FromArgb(col.R, col.G, col.B);
         }
 
         void removeDigit(TextBox foundTxt) {
@@ -1325,10 +1335,6 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             if ( chkUseSQL.Checked.ToString().ToLower() == "true" ) {
                 grpSQL.BackColor = Color.White;
             }
-        }
-
-        private void cmbGlobalChatColor_SelectedIndexChanged(object sender, EventArgs e) {
-            lblGlobalChatColor.BackColor = Color.FromName(cmbGlobalChatColor.Items[cmbGlobalChatColor.SelectedIndex].ToString());
         }
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {

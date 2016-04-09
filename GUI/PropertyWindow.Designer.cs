@@ -46,7 +46,28 @@ namespace MCGalaxy.Gui
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TabPage tabChat;
+            this.tabChat = new System.Windows.Forms.TabPage();
+            this.chat_gbMessages = new System.Windows.Forms.GroupBox();
+            this.txtBanMessage = new System.Windows.Forms.TextBox();
+            this.chkCheap = new System.Windows.Forms.CheckBox();
+            this.txtCheap = new System.Windows.Forms.TextBox();
+            this.chkBanMessage = new System.Windows.Forms.CheckBox();
+            this.txtShutdown = new System.Windows.Forms.TextBox();
+            this.chkShutdown = new System.Windows.Forms.CheckBox();
+            this.chat_gbOther = new System.Windows.Forms.GroupBox();
+            this.chkGlobalChat = new System.Windows.Forms.CheckBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.txtHost = new System.Windows.Forms.TextBox();
+            this.chat_gbColors = new System.Windows.Forms.GroupBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.cmbGlobalChatColor = new System.Windows.Forms.ComboBox();
+            this.lblGlobalChatColor = new System.Windows.Forms.Label();
+            this.lblDefault = new System.Windows.Forms.Label();
+            this.lblIRC = new System.Windows.Forms.Label();
+            this.cmbIRCColour = new System.Windows.Forms.ComboBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.cmbDefaultColour = new System.Windows.Forms.ComboBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnDiscard = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
@@ -87,14 +108,12 @@ namespace MCGalaxy.Gui
             this.label24 = new System.Windows.Forms.Label();
             this.chkPhysicsRest = new System.Windows.Forms.CheckBox();
             this.chkDeath = new System.Windows.Forms.CheckBox();
-            this.chkCheap = new System.Windows.Forms.CheckBox();
             this.txtBackup = new System.Windows.Forms.TextBox();
             this.txtafk = new System.Windows.Forms.TextBox();
             this.txtAFKKick = new System.Windows.Forms.TextBox();
             this.chkForceCuboid = new System.Windows.Forms.CheckBox();
             this.hackrank_kick = new System.Windows.Forms.CheckBox();
             this.chkIRC = new System.Windows.Forms.CheckBox();
-            this.cmbIRCColour = new System.Windows.Forms.ComboBox();
             this.txtNick = new System.Windows.Forms.TextBox();
             this.txtIRCServer = new System.Windows.Forms.TextBox();
             this.txtChannel = new System.Windows.Forms.TextBox();
@@ -103,7 +122,6 @@ namespace MCGalaxy.Gui
             this.chkWorld = new System.Windows.Forms.CheckBox();
             this.chkAutoload = new System.Windows.Forms.CheckBox();
             this.chkPublic = new System.Windows.Forms.CheckBox();
-            this.cmbDefaultColour = new System.Windows.Forms.ComboBox();
             this.txtName = new System.Windows.Forms.TextBox();
             this.txtMOTD = new System.Windows.Forms.TextBox();
             this.txtPort = new System.Windows.Forms.TextBox();
@@ -112,7 +130,6 @@ namespace MCGalaxy.Gui
             this.cmbVerificationRank = new System.Windows.Forms.ComboBox();
             this.chkEnableVerification = new System.Windows.Forms.CheckBox();
             this.chkSpamControl = new System.Windows.Forms.CheckBox();
-            this.cmbGlobalChatColor = new System.Windows.Forms.ComboBox();
             this.lsChkSendAFKMain = new System.Windows.Forms.CheckBox();
             this.lsChkStartOnStartup = new System.Windows.Forms.CheckBox();
             this.lsNudVoteCount = new System.Windows.Forms.NumericUpDown();
@@ -174,9 +191,6 @@ namespace MCGalaxy.Gui
             this.label85 = new System.Windows.Forms.Label();
             this.pageMisc = new System.Windows.Forms.TabPage();
             this.buttonEco = new System.Windows.Forms.Button();
-            this.grpGlobalChat = new System.Windows.Forms.GroupBox();
-            this.lblGlobalChatColor = new System.Windows.Forms.Label();
-            this.chkGlobalChat = new System.Windows.Forms.CheckBox();
             this.grpExtra = new System.Windows.Forms.GroupBox();
             this.chkShowEmptyRanks = new System.Windows.Forms.CheckBox();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
@@ -187,13 +201,8 @@ namespace MCGalaxy.Gui
             this.chkSmile = new System.Windows.Forms.CheckBox();
             this.label34 = new System.Windows.Forms.Label();
             this.grpMessages = new System.Windows.Forms.GroupBox();
-            this.chkShutdown = new System.Windows.Forms.CheckBox();
-            this.txtShutdown = new System.Windows.Forms.TextBox();
             this.hackrank_kick_time = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
-            this.txtBanMessage = new System.Windows.Forms.TextBox();
-            this.txtCheap = new System.Windows.Forms.TextBox();
-            this.chkBanMessage = new System.Windows.Forms.CheckBox();
             this.grpPhysics = new System.Windows.Forms.GroupBox();
             this.txtRP = new System.Windows.Forms.TextBox();
             this.label28 = new System.Windows.Forms.Label();
@@ -227,9 +236,7 @@ namespace MCGalaxy.Gui
             this.txtIrcId = new System.Windows.Forms.TextBox();
             this.chkIrcId = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.lblIRC = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.pageServer = new System.Windows.Forms.TabPage();
@@ -237,18 +244,14 @@ namespace MCGalaxy.Gui
             this.label27 = new System.Windows.Forms.Label();
             this.txtMain = new System.Windows.Forms.TextBox();
             this.grpAdvanced = new System.Windows.Forms.GroupBox();
-            this.label30 = new System.Windows.Forms.Label();
             this.editTxtsBt = new System.Windows.Forms.Button();
-            this.txtHost = new System.Windows.Forms.TextBox();
             this.chkRestart = new System.Windows.Forms.CheckBox();
             this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.txtServerOwner = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.lblDefault = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.ChkPort = new System.Windows.Forms.Button();
             this.grpUpdate = new System.Windows.Forms.GroupBox();
             this.forceUpdateBtn = new System.Windows.Forms.Button();
@@ -384,11 +387,10 @@ namespace MCGalaxy.Gui
             this.gbReviewQueue = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.chat_gbColors = new System.Windows.Forms.GroupBox();
-            this.chat_gbOther = new System.Windows.Forms.GroupBox();
-            this.chat_gbMessages = new System.Windows.Forms.GroupBox();
-            tabChat = new System.Windows.Forms.TabPage();
-            tabChat.SuspendLayout();
+            this.tabChat.SuspendLayout();
+            this.chat_gbMessages.SuspendLayout();
+            this.chat_gbOther.SuspendLayout();
+            this.chat_gbColors.SuspendLayout();
             this.pageCommands.SuspendLayout();
             this.pageCommandsList.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -415,7 +417,6 @@ namespace MCGalaxy.Gui
             this.gbRankGeneral.SuspendLayout();
             this.gbRankSettings.SuspendLayout();
             this.pageMisc.SuspendLayout();
-            this.grpGlobalChat.SuspendLayout();
             this.grpExtra.SuspendLayout();
             this.grpMessages.SuspendLayout();
             this.grpPhysics.SuspendLayout();
@@ -473,16 +474,225 @@ namespace MCGalaxy.Gui
             // 
             // tabChat
             // 
-            tabChat.BackColor = System.Drawing.SystemColors.Control;
-            tabChat.Controls.Add(this.chat_gbMessages);
-            tabChat.Controls.Add(this.chat_gbOther);
-            tabChat.Controls.Add(this.chat_gbColors);
-            tabChat.Location = new System.Drawing.Point(4, 22);
-            tabChat.Name = "tabChat";
-            tabChat.Padding = new System.Windows.Forms.Padding(3);
-            tabChat.Size = new System.Drawing.Size(488, 509);
-            tabChat.TabIndex = 10;
-            tabChat.Text = "Chat";
+            this.tabChat.BackColor = System.Drawing.SystemColors.Control;
+            this.tabChat.Controls.Add(this.chat_gbMessages);
+            this.tabChat.Controls.Add(this.chat_gbOther);
+            this.tabChat.Controls.Add(this.chat_gbColors);
+            this.tabChat.Location = new System.Drawing.Point(4, 22);
+            this.tabChat.Name = "tabChat";
+            this.tabChat.Padding = new System.Windows.Forms.Padding(3);
+            this.tabChat.Size = new System.Drawing.Size(488, 509);
+            this.tabChat.TabIndex = 10;
+            this.tabChat.Text = "Chat";
+            // 
+            // chat_gbMessages
+            // 
+            this.chat_gbMessages.Controls.Add(this.txtBanMessage);
+            this.chat_gbMessages.Controls.Add(this.chkCheap);
+            this.chat_gbMessages.Controls.Add(this.txtCheap);
+            this.chat_gbMessages.Controls.Add(this.chkBanMessage);
+            this.chat_gbMessages.Controls.Add(this.txtShutdown);
+            this.chat_gbMessages.Controls.Add(this.chkShutdown);
+            this.chat_gbMessages.Location = new System.Drawing.Point(8, 239);
+            this.chat_gbMessages.Name = "chat_gbMessages";
+            this.chat_gbMessages.Size = new System.Drawing.Size(474, 224);
+            this.chat_gbMessages.TabIndex = 2;
+            this.chat_gbMessages.TabStop = false;
+            this.chat_gbMessages.Text = "Messages";
+            // 
+            // txtBanMessage
+            // 
+            this.txtBanMessage.Location = new System.Drawing.Point(147, 72);
+            this.txtBanMessage.MaxLength = 128;
+            this.txtBanMessage.Name = "txtBanMessage";
+            this.txtBanMessage.Size = new System.Drawing.Size(200, 21);
+            this.txtBanMessage.TabIndex = 33;
+            // 
+            // chkCheap
+            // 
+            this.chkCheap.AutoSize = true;
+            this.chkCheap.Location = new System.Drawing.Point(10, 47);
+            this.chkCheap.Name = "chkCheap";
+            this.chkCheap.Size = new System.Drawing.Size(103, 17);
+            this.chkCheap.TabIndex = 31;
+            this.chkCheap.Text = "Cheap message:";
+            this.toolTip.SetToolTip(this.chkCheap, "Is immortality cheap and unfair?");
+            this.chkCheap.UseVisualStyleBackColor = true;
+            // 
+            // txtCheap
+            // 
+            this.txtCheap.Location = new System.Drawing.Point(147, 45);
+            this.txtCheap.Name = "txtCheap";
+            this.txtCheap.Size = new System.Drawing.Size(200, 21);
+            this.txtCheap.TabIndex = 30;
+            // 
+            // chkBanMessage
+            // 
+            this.chkBanMessage.AutoSize = true;
+            this.chkBanMessage.Location = new System.Drawing.Point(10, 74);
+            this.chkBanMessage.Name = "chkBanMessage";
+            this.chkBanMessage.Size = new System.Drawing.Size(129, 17);
+            this.chkBanMessage.TabIndex = 32;
+            this.chkBanMessage.Text = "Custom ban message:";
+            this.chkBanMessage.UseVisualStyleBackColor = true;
+            // 
+            // txtShutdown
+            // 
+            this.txtShutdown.Location = new System.Drawing.Point(147, 18);
+            this.txtShutdown.MaxLength = 128;
+            this.txtShutdown.Name = "txtShutdown";
+            this.txtShutdown.Size = new System.Drawing.Size(200, 21);
+            this.txtShutdown.TabIndex = 29;
+            // 
+            // chkShutdown
+            // 
+            this.chkShutdown.AutoSize = true;
+            this.chkShutdown.Location = new System.Drawing.Point(10, 20);
+            this.chkShutdown.Name = "chkShutdown";
+            this.chkShutdown.Size = new System.Drawing.Size(158, 17);
+            this.chkShutdown.TabIndex = 27;
+            this.chkShutdown.Text = "Custom shutdown message:";
+            this.chkShutdown.UseVisualStyleBackColor = true;
+            // 
+            // chat_gbOther
+            // 
+            this.chat_gbOther.Controls.Add(this.chkGlobalChat);
+            this.chat_gbOther.Controls.Add(this.label30);
+            this.chat_gbOther.Controls.Add(this.txtHost);
+            this.chat_gbOther.Location = new System.Drawing.Point(8, 137);
+            this.chat_gbOther.Name = "chat_gbOther";
+            this.chat_gbOther.Size = new System.Drawing.Size(474, 96);
+            this.chat_gbOther.TabIndex = 1;
+            this.chat_gbOther.TabStop = false;
+            this.chat_gbOther.Text = "Other";
+            // 
+            // chkGlobalChat
+            // 
+            this.chkGlobalChat.Appearance = System.Windows.Forms.Appearance.Button;
+            this.chkGlobalChat.AutoSize = true;
+            this.chkGlobalChat.Location = new System.Drawing.Point(10, 57);
+            this.chkGlobalChat.Name = "chkGlobalChat";
+            this.chkGlobalChat.Size = new System.Drawing.Size(82, 23);
+            this.chkGlobalChat.TabIndex = 5;
+            this.chkGlobalChat.Text = "Use Global Chat";
+            this.chkGlobalChat.UseVisualStyleBackColor = true;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(10, 28);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(77, 13);
+            this.label30.TabIndex = 4;
+            this.label30.Text = "Console name:";
+            // 
+            // txtHost
+            // 
+            this.txtHost.Location = new System.Drawing.Point(77, 25);
+            this.txtHost.Name = "txtHost";
+            this.txtHost.Size = new System.Drawing.Size(142, 21);
+            this.txtHost.TabIndex = 3;
+            this.txtHost.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
+            // 
+            // chat_gbColors
+            // 
+            this.chat_gbColors.Controls.Add(this.label22);
+            this.chat_gbColors.Controls.Add(this.cmbGlobalChatColor);
+            this.chat_gbColors.Controls.Add(this.lblGlobalChatColor);
+            this.chat_gbColors.Controls.Add(this.lblDefault);
+            this.chat_gbColors.Controls.Add(this.lblIRC);
+            this.chat_gbColors.Controls.Add(this.cmbIRCColour);
+            this.chat_gbColors.Controls.Add(this.label23);
+            this.chat_gbColors.Controls.Add(this.label10);
+            this.chat_gbColors.Controls.Add(this.cmbDefaultColour);
+            this.chat_gbColors.Location = new System.Drawing.Point(8, 6);
+            this.chat_gbColors.Name = "chat_gbColors";
+            this.chat_gbColors.Size = new System.Drawing.Size(474, 125);
+            this.chat_gbColors.TabIndex = 0;
+            this.chat_gbColors.TabStop = false;
+            this.chat_gbColors.Text = "Colors";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(17, 93);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(64, 13);
+            this.label22.TabIndex = 29;
+            this.label22.Text = "Global chat:";
+            // 
+            // cmbGlobalChatColor
+            // 
+            this.cmbGlobalChatColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGlobalChatColor.FormattingEnabled = true;
+            this.cmbGlobalChatColor.Location = new System.Drawing.Point(77, 90);
+            this.cmbGlobalChatColor.Name = "cmbGlobalChatColor";
+            this.cmbGlobalChatColor.Size = new System.Drawing.Size(72, 21);
+            this.cmbGlobalChatColor.TabIndex = 27;
+            this.toolTip.SetToolTip(this.cmbGlobalChatColor, "The color of Global Chat text in-game.");
+            this.cmbGlobalChatColor.SelectedIndexChanged += new System.EventHandler(this.cmbGlobalChatColor_SelectedIndexChanged);
+            // 
+            // lblGlobalChatColor
+            // 
+            this.lblGlobalChatColor.Location = new System.Drawing.Point(157, 90);
+            this.lblGlobalChatColor.Name = "lblGlobalChatColor";
+            this.lblGlobalChatColor.Size = new System.Drawing.Size(18, 18);
+            this.lblGlobalChatColor.TabIndex = 28;
+            // 
+            // lblDefault
+            // 
+            this.lblDefault.Location = new System.Drawing.Point(157, 20);
+            this.lblDefault.Name = "lblDefault";
+            this.lblDefault.Size = new System.Drawing.Size(18, 18);
+            this.lblDefault.TabIndex = 26;
+            // 
+            // lblIRC
+            // 
+            this.lblIRC.Location = new System.Drawing.Point(157, 55);
+            this.lblIRC.Name = "lblIRC";
+            this.lblIRC.Size = new System.Drawing.Size(18, 18);
+            this.lblIRC.TabIndex = 25;
+            // 
+            // cmbIRCColour
+            // 
+            this.cmbIRCColour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbIRCColour.FormattingEnabled = true;
+            this.cmbIRCColour.Location = new System.Drawing.Point(77, 55);
+            this.cmbIRCColour.Name = "cmbIRCColour";
+            this.cmbIRCColour.Size = new System.Drawing.Size(74, 21);
+            this.cmbIRCColour.TabIndex = 24;
+            this.toolTip.SetToolTip(this.cmbIRCColour, "The colour of the IRC nicks used in the IRC.");
+            this.cmbIRCColour.SelectedIndexChanged += new System.EventHandler(this.cmbIRCColour_SelectedIndexChanged);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(7, 58);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(74, 13);
+            this.label23.TabIndex = 22;
+            this.label23.Text = "IRC messages:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(10, 23);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(71, 13);
+            this.label10.TabIndex = 11;
+            this.label10.Text = "Default color:";
+            // 
+            // cmbDefaultColour
+            // 
+            this.cmbDefaultColour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDefaultColour.FormattingEnabled = true;
+            this.cmbDefaultColour.Location = new System.Drawing.Point(77, 20);
+            this.cmbDefaultColour.Name = "cmbDefaultColour";
+            this.cmbDefaultColour.Size = new System.Drawing.Size(74, 21);
+            this.cmbDefaultColour.TabIndex = 10;
+            this.toolTip.SetToolTip(this.cmbDefaultColour, "The colour of the default chat used in the server.\nFor example, when you are aske" +
+        "d to select two corners in a cuboid.");
+            this.cmbDefaultColour.SelectedIndexChanged += new System.EventHandler(this.cmbDefaultColour_SelectedIndexChanged);
             // 
             // btnSave
             // 
@@ -923,20 +1133,9 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.chkDeath, "\"Bob has died 10 times.\"");
             this.chkDeath.UseVisualStyleBackColor = true;
             // 
-            // chkCheap
-            // 
-            this.chkCheap.AutoSize = true;
-            this.chkCheap.Location = new System.Drawing.Point(12, 75);
-            this.chkCheap.Name = "chkCheap";
-            this.chkCheap.Size = new System.Drawing.Size(103, 17);
-            this.chkCheap.TabIndex = 23;
-            this.chkCheap.Text = "Cheap message:";
-            this.toolTip.SetToolTip(this.chkCheap, "Is immortality cheap and unfair?");
-            this.chkCheap.UseVisualStyleBackColor = true;
-            // 
             // txtBackup
             // 
-            this.txtBackup.Location = new System.Drawing.Point(89, 58);
+            this.txtBackup.Location = new System.Drawing.Point(81, 58);
             this.txtBackup.Name = "txtBackup";
             this.txtBackup.Size = new System.Drawing.Size(41, 21);
             this.txtBackup.TabIndex = 5;
@@ -997,17 +1196,6 @@ namespace MCGalaxy.Gui
             this.chkIRC.UseVisualStyleBackColor = true;
             this.chkIRC.CheckedChanged += new System.EventHandler(this.chkIRC_CheckedChanged);
             // 
-            // cmbIRCColour
-            // 
-            this.cmbIRCColour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbIRCColour.FormattingEnabled = true;
-            this.cmbIRCColour.Location = new System.Drawing.Point(69, 166);
-            this.cmbIRCColour.Name = "cmbIRCColour";
-            this.cmbIRCColour.Size = new System.Drawing.Size(74, 21);
-            this.cmbIRCColour.TabIndex = 23;
-            this.toolTip.SetToolTip(this.cmbIRCColour, "The colour of the IRC nicks used in the IRC.");
-            this.cmbIRCColour.SelectedIndexChanged += new System.EventHandler(this.cmbIRCColour_SelectedIndexChanged);
-            // 
             // txtNick
             // 
             this.txtNick.Location = new System.Drawing.Point(48, 60);
@@ -1045,7 +1233,7 @@ namespace MCGalaxy.Gui
             // 
             this.chkVerify.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkVerify.AutoSize = true;
-            this.chkVerify.Location = new System.Drawing.Point(67, 18);
+            this.chkVerify.Location = new System.Drawing.Point(11, 18);
             this.chkVerify.Name = "chkVerify";
             this.chkVerify.Size = new System.Drawing.Size(78, 23);
             this.chkVerify.TabIndex = 4;
@@ -1082,25 +1270,13 @@ namespace MCGalaxy.Gui
             // 
             this.chkPublic.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkPublic.AutoSize = true;
-            this.chkPublic.Location = new System.Drawing.Point(10, 18);
+            this.chkPublic.Location = new System.Drawing.Point(274, 118);
             this.chkPublic.Name = "chkPublic";
             this.chkPublic.Size = new System.Drawing.Size(46, 23);
             this.chkPublic.TabIndex = 4;
             this.chkPublic.Text = "Public";
             this.toolTip.SetToolTip(this.chkPublic, "Whether or not the server will appear on the server list.");
             this.chkPublic.UseVisualStyleBackColor = true;
-            // 
-            // cmbDefaultColour
-            // 
-            this.cmbDefaultColour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDefaultColour.FormattingEnabled = true;
-            this.cmbDefaultColour.Location = new System.Drawing.Point(324, 113);
-            this.cmbDefaultColour.Name = "cmbDefaultColour";
-            this.cmbDefaultColour.Size = new System.Drawing.Size(57, 21);
-            this.cmbDefaultColour.TabIndex = 9;
-            this.toolTip.SetToolTip(this.cmbDefaultColour, "The colour of the default chat used in the server.\nFor example, when you are aske" +
-        "d to select two corners in a cuboid.");
-            this.cmbDefaultColour.SelectedIndexChanged += new System.EventHandler(this.cmbDefaultColour_SelectedIndexChanged);
             // 
             // txtName
             // 
@@ -1133,7 +1309,7 @@ namespace MCGalaxy.Gui
             // 
             this.chkLogBeat.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkLogBeat.AutoSize = true;
-            this.chkLogBeat.Location = new System.Drawing.Point(10, 61);
+            this.chkLogBeat.Location = new System.Drawing.Point(111, 54);
             this.chkLogBeat.Name = "chkLogBeat";
             this.chkLogBeat.Size = new System.Drawing.Size(89, 23);
             this.chkLogBeat.TabIndex = 24;
@@ -1193,17 +1369,6 @@ namespace MCGalaxy.Gui
             this.chkSpamControl.Text = "Enable";
             this.toolTip.SetToolTip(this.chkSpamControl, "If enabled it mutes a player for spamming. Default false.\r\n");
             this.chkSpamControl.UseVisualStyleBackColor = true;
-            // 
-            // cmbGlobalChatColor
-            // 
-            this.cmbGlobalChatColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGlobalChatColor.FormattingEnabled = true;
-            this.cmbGlobalChatColor.Location = new System.Drawing.Point(9, 76);
-            this.cmbGlobalChatColor.Name = "cmbGlobalChatColor";
-            this.cmbGlobalChatColor.Size = new System.Drawing.Size(72, 21);
-            this.cmbGlobalChatColor.TabIndex = 11;
-            this.toolTip.SetToolTip(this.cmbGlobalChatColor, "The color of Global Chat text in-game.");
-            this.cmbGlobalChatColor.SelectedIndexChanged += new System.EventHandler(this.cmbGlobalChatColor_SelectedIndexChanged);
             // 
             // lsChkSendAFKMain
             // 
@@ -1899,7 +2064,6 @@ namespace MCGalaxy.Gui
             // 
             this.pageMisc.BackColor = System.Drawing.SystemColors.Control;
             this.pageMisc.Controls.Add(this.buttonEco);
-            this.pageMisc.Controls.Add(this.grpGlobalChat);
             this.pageMisc.Controls.Add(this.grpExtra);
             this.pageMisc.Controls.Add(this.grpMessages);
             this.pageMisc.Controls.Add(this.grpPhysics);
@@ -1925,38 +2089,6 @@ namespace MCGalaxy.Gui
             this.buttonEco.Text = "Economy Settings";
             this.buttonEco.UseVisualStyleBackColor = true;
             this.buttonEco.Click += new System.EventHandler(this.buttonEco_Click);
-            // 
-            // grpGlobalChat
-            // 
-            this.grpGlobalChat.AutoSize = true;
-            this.grpGlobalChat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpGlobalChat.Controls.Add(this.cmbGlobalChatColor);
-            this.grpGlobalChat.Controls.Add(this.lblGlobalChatColor);
-            this.grpGlobalChat.Controls.Add(this.chkGlobalChat);
-            this.grpGlobalChat.Location = new System.Drawing.Point(368, 283);
-            this.grpGlobalChat.Name = "grpGlobalChat";
-            this.grpGlobalChat.Size = new System.Drawing.Size(111, 117);
-            this.grpGlobalChat.TabIndex = 41;
-            this.grpGlobalChat.TabStop = false;
-            this.grpGlobalChat.Text = "Global Chat";
-            // 
-            // lblGlobalChatColor
-            // 
-            this.lblGlobalChatColor.Location = new System.Drawing.Point(84, 76);
-            this.lblGlobalChatColor.Name = "lblGlobalChatColor";
-            this.lblGlobalChatColor.Size = new System.Drawing.Size(21, 21);
-            this.lblGlobalChatColor.TabIndex = 12;
-            // 
-            // chkGlobalChat
-            // 
-            this.chkGlobalChat.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkGlobalChat.AutoSize = true;
-            this.chkGlobalChat.Location = new System.Drawing.Point(13, 20);
-            this.chkGlobalChat.Name = "chkGlobalChat";
-            this.chkGlobalChat.Size = new System.Drawing.Size(92, 23);
-            this.chkGlobalChat.TabIndex = 0;
-            this.chkGlobalChat.Text = "Use Global Chat";
-            this.chkGlobalChat.UseVisualStyleBackColor = true;
             // 
             // grpExtra
             // 
@@ -2061,39 +2193,15 @@ namespace MCGalaxy.Gui
             // 
             this.grpMessages.AutoSize = true;
             this.grpMessages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpMessages.Controls.Add(this.chkShutdown);
-            this.grpMessages.Controls.Add(this.txtShutdown);
             this.grpMessages.Controls.Add(this.hackrank_kick);
             this.grpMessages.Controls.Add(this.hackrank_kick_time);
             this.grpMessages.Controls.Add(this.label36);
-            this.grpMessages.Controls.Add(this.txtBanMessage);
-            this.grpMessages.Controls.Add(this.chkCheap);
-            this.grpMessages.Controls.Add(this.txtCheap);
-            this.grpMessages.Controls.Add(this.chkBanMessage);
             this.grpMessages.Location = new System.Drawing.Point(146, 119);
             this.grpMessages.Name = "grpMessages";
-            this.grpMessages.Size = new System.Drawing.Size(329, 142);
+            this.grpMessages.Size = new System.Drawing.Size(329, 86);
             this.grpMessages.TabIndex = 39;
             this.grpMessages.TabStop = false;
             this.grpMessages.Text = "Messages";
-            // 
-            // chkShutdown
-            // 
-            this.chkShutdown.AutoSize = true;
-            this.chkShutdown.Location = new System.Drawing.Point(12, 20);
-            this.chkShutdown.Name = "chkShutdown";
-            this.chkShutdown.Size = new System.Drawing.Size(158, 17);
-            this.chkShutdown.TabIndex = 26;
-            this.chkShutdown.Text = "Custom shutdown message:";
-            this.chkShutdown.UseVisualStyleBackColor = true;
-            // 
-            // txtShutdown
-            // 
-            this.txtShutdown.Location = new System.Drawing.Point(176, 18);
-            this.txtShutdown.MaxLength = 128;
-            this.txtShutdown.Name = "txtShutdown";
-            this.txtShutdown.Size = new System.Drawing.Size(145, 21);
-            this.txtShutdown.TabIndex = 28;
             // 
             // hackrank_kick_time
             // 
@@ -2111,31 +2219,6 @@ namespace MCGalaxy.Gui
             this.label36.Size = new System.Drawing.Size(46, 13);
             this.label36.TabIndex = 34;
             this.label36.Text = "Seconds";
-            // 
-            // txtBanMessage
-            // 
-            this.txtBanMessage.Location = new System.Drawing.Point(147, 101);
-            this.txtBanMessage.MaxLength = 128;
-            this.txtBanMessage.Name = "txtBanMessage";
-            this.txtBanMessage.Size = new System.Drawing.Size(173, 21);
-            this.txtBanMessage.TabIndex = 27;
-            // 
-            // txtCheap
-            // 
-            this.txtCheap.Location = new System.Drawing.Point(121, 73);
-            this.txtCheap.Name = "txtCheap";
-            this.txtCheap.Size = new System.Drawing.Size(200, 21);
-            this.txtCheap.TabIndex = 1;
-            // 
-            // chkBanMessage
-            // 
-            this.chkBanMessage.AutoSize = true;
-            this.chkBanMessage.Location = new System.Drawing.Point(12, 104);
-            this.chkBanMessage.Name = "chkBanMessage";
-            this.chkBanMessage.Size = new System.Drawing.Size(129, 17);
-            this.chkBanMessage.TabIndex = 25;
-            this.chkBanMessage.Text = "Custom ban message:";
-            this.chkBanMessage.UseVisualStyleBackColor = true;
             // 
             // grpPhysics
             // 
@@ -2254,7 +2337,7 @@ namespace MCGalaxy.Gui
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(16, 61);
+            this.label9.Location = new System.Drawing.Point(14, 61);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(67, 13);
             this.label9.TabIndex = 7;
@@ -2408,19 +2491,16 @@ namespace MCGalaxy.Gui
             this.grpIRC.Controls.Add(this.txtIrcId);
             this.grpIRC.Controls.Add(this.chkIrcId);
             this.grpIRC.Controls.Add(this.label6);
-            this.grpIRC.Controls.Add(this.lblIRC);
             this.grpIRC.Controls.Add(this.txtOpChannel);
-            this.grpIRC.Controls.Add(this.cmbIRCColour);
             this.grpIRC.Controls.Add(this.txtIRCServer);
             this.grpIRC.Controls.Add(this.label31);
-            this.grpIRC.Controls.Add(this.label23);
             this.grpIRC.Controls.Add(this.txtChannel);
             this.grpIRC.Controls.Add(this.label4);
             this.grpIRC.Controls.Add(this.txtNick);
             this.grpIRC.Controls.Add(this.label5);
             this.grpIRC.Location = new System.Drawing.Point(22, 43);
             this.grpIRC.Name = "grpIRC";
-            this.grpIRC.Size = new System.Drawing.Size(284, 232);
+            this.grpIRC.Size = new System.Drawing.Size(284, 205);
             this.grpIRC.TabIndex = 27;
             this.grpIRC.TabStop = false;
             this.grpIRC.Text = "IRC";
@@ -2444,7 +2524,7 @@ namespace MCGalaxy.Gui
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(138, 203);
+            this.label49.Location = new System.Drawing.Point(138, 173);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(56, 13);
             this.label49.TabIndex = 29;
@@ -2452,7 +2532,7 @@ namespace MCGalaxy.Gui
             // 
             // txtIrcId
             // 
-            this.txtIrcId.Location = new System.Drawing.Point(200, 200);
+            this.txtIrcId.Location = new System.Drawing.Point(200, 170);
             this.txtIrcId.Name = "txtIrcId";
             this.txtIrcId.PasswordChar = '*';
             this.txtIrcId.Size = new System.Drawing.Size(69, 21);
@@ -2463,7 +2543,7 @@ namespace MCGalaxy.Gui
             // 
             this.chkIrcId.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkIrcId.AutoSize = true;
-            this.chkIrcId.Location = new System.Drawing.Point(15, 198);
+            this.chkIrcId.Location = new System.Drawing.Point(15, 168);
             this.chkIrcId.Name = "chkIrcId";
             this.chkIrcId.Size = new System.Drawing.Size(117, 23);
             this.chkIrcId.TabIndex = 27;
@@ -2479,13 +2559,6 @@ namespace MCGalaxy.Gui
             this.label6.TabIndex = 19;
             this.label6.Text = "Server:";
             // 
-            // lblIRC
-            // 
-            this.lblIRC.Location = new System.Drawing.Point(147, 164);
-            this.lblIRC.Name = "lblIRC";
-            this.lblIRC.Size = new System.Drawing.Size(26, 23);
-            this.lblIRC.TabIndex = 24;
-            // 
             // label31
             // 
             this.label31.AutoSize = true;
@@ -2494,15 +2567,6 @@ namespace MCGalaxy.Gui
             this.label31.Size = new System.Drawing.Size(64, 13);
             this.label31.TabIndex = 25;
             this.label31.Text = "Op Channel:";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(12, 169);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(51, 13);
-            this.label23.TabIndex = 21;
-            this.label23.Text = "IRC color:";
             // 
             // label4
             // 
@@ -2572,35 +2636,23 @@ namespace MCGalaxy.Gui
             // 
             this.grpAdvanced.AutoSize = true;
             this.grpAdvanced.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpAdvanced.Controls.Add(this.label30);
             this.grpAdvanced.Controls.Add(this.editTxtsBt);
-            this.grpAdvanced.Controls.Add(this.txtHost);
             this.grpAdvanced.Controls.Add(this.chkRestart);
-            this.grpAdvanced.Controls.Add(this.chkPublic);
             this.grpAdvanced.Controls.Add(this.chkVerify);
             this.grpAdvanced.Controls.Add(this.chkLogBeat);
             this.grpAdvanced.Location = new System.Drawing.Point(8, 263);
             this.grpAdvanced.Name = "grpAdvanced";
-            this.grpAdvanced.Size = new System.Drawing.Size(364, 104);
+            this.grpAdvanced.Size = new System.Drawing.Size(206, 97);
             this.grpAdvanced.TabIndex = 42;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "Advanced Configuration";
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(135, 66);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(75, 13);
-            this.label30.TabIndex = 3;
-            this.label30.Text = "Console State:";
             // 
             // editTxtsBt
             // 
             this.editTxtsBt.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.editTxtsBt.Cursor = System.Windows.Forms.Cursors.Hand;
             this.editTxtsBt.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.editTxtsBt.Location = new System.Drawing.Point(277, 18);
+            this.editTxtsBt.Location = new System.Drawing.Point(12, 54);
             this.editTxtsBt.Name = "editTxtsBt";
             this.editTxtsBt.Size = new System.Drawing.Size(80, 23);
             this.editTxtsBt.TabIndex = 35;
@@ -2608,19 +2660,11 @@ namespace MCGalaxy.Gui
             this.editTxtsBt.UseVisualStyleBackColor = true;
             this.editTxtsBt.Click += new System.EventHandler(this.editTxtsBt_Click_1);
             // 
-            // txtHost
-            // 
-            this.txtHost.Location = new System.Drawing.Point(216, 63);
-            this.txtHost.Name = "txtHost";
-            this.txtHost.Size = new System.Drawing.Size(142, 21);
-            this.txtHost.TabIndex = 2;
-            this.txtHost.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
-            // 
             // chkRestart
             // 
             this.chkRestart.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkRestart.AutoSize = true;
-            this.chkRestart.Location = new System.Drawing.Point(165, 18);
+            this.chkRestart.Location = new System.Drawing.Point(108, 18);
             this.chkRestart.Name = "chkRestart";
             this.chkRestart.Size = new System.Drawing.Size(92, 23);
             this.chkRestart.TabIndex = 4;
@@ -2633,19 +2677,17 @@ namespace MCGalaxy.Gui
             this.grpGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.grpGeneral.Controls.Add(this.label3);
             this.grpGeneral.Controls.Add(this.label7);
+            this.grpGeneral.Controls.Add(this.chkPublic);
             this.grpGeneral.Controls.Add(this.txtServerOwner);
             this.grpGeneral.Controls.Add(this.label1);
             this.grpGeneral.Controls.Add(this.txtName);
-            this.grpGeneral.Controls.Add(this.lblDefault);
             this.grpGeneral.Controls.Add(this.label2);
             this.grpGeneral.Controls.Add(this.txtMOTD);
-            this.grpGeneral.Controls.Add(this.cmbDefaultColour);
-            this.grpGeneral.Controls.Add(this.label10);
             this.grpGeneral.Controls.Add(this.txtPort);
             this.grpGeneral.Controls.Add(this.ChkPort);
             this.grpGeneral.Location = new System.Drawing.Point(6, 6);
             this.grpGeneral.Name = "grpGeneral";
-            this.grpGeneral.Size = new System.Drawing.Size(411, 154);
+            this.grpGeneral.Size = new System.Drawing.Size(390, 161);
             this.grpGeneral.TabIndex = 41;
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = "General Configuration";
@@ -2662,7 +2704,7 @@ namespace MCGalaxy.Gui
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(5, 116);
+            this.label7.Location = new System.Drawing.Point(5, 121);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(72, 13);
             this.label7.TabIndex = 26;
@@ -2670,7 +2712,7 @@ namespace MCGalaxy.Gui
             // 
             // txtServerOwner
             // 
-            this.txtServerOwner.Location = new System.Drawing.Point(83, 112);
+            this.txtServerOwner.Location = new System.Drawing.Point(83, 118);
             this.txtServerOwner.Name = "txtServerOwner";
             this.txtServerOwner.Size = new System.Drawing.Size(119, 21);
             this.txtServerOwner.TabIndex = 0;
@@ -2684,13 +2726,6 @@ namespace MCGalaxy.Gui
             this.label1.TabIndex = 1;
             this.label1.Text = "Name:";
             // 
-            // lblDefault
-            // 
-            this.lblDefault.Location = new System.Drawing.Point(384, 113);
-            this.lblDefault.Name = "lblDefault";
-            this.lblDefault.Size = new System.Drawing.Size(21, 21);
-            this.lblDefault.TabIndex = 0;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -2699,15 +2734,6 @@ namespace MCGalaxy.Gui
             this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "MOTD:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(247, 116);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(71, 13);
-            this.label10.TabIndex = 3;
-            this.label10.Text = "Default color:";
             // 
             // ChkPort
             // 
@@ -2891,7 +2917,7 @@ namespace MCGalaxy.Gui
             // tabControl
             // 
             this.tabControl.Controls.Add(this.pageServer);
-            this.tabControl.Controls.Add(tabChat);
+            this.tabControl.Controls.Add(this.tabChat);
             this.tabControl.Controls.Add(this.pageIRC);
             this.tabControl.Controls.Add(this.pageMisc);
             this.tabControl.Controls.Add(this.pageGames);
@@ -4279,33 +4305,6 @@ namespace MCGalaxy.Gui
             this.listBox1.Size = new System.Drawing.Size(129, 459);
             this.listBox1.TabIndex = 0;
             // 
-            // chat_gbColors
-            // 
-            this.chat_gbColors.Location = new System.Drawing.Point(23, 22);
-            this.chat_gbColors.Name = "chat_gbColors";
-            this.chat_gbColors.Size = new System.Drawing.Size(200, 100);
-            this.chat_gbColors.TabIndex = 0;
-            this.chat_gbColors.TabStop = false;
-            this.chat_gbColors.Text = "Colors";
-            // 
-            // chat_gbOther
-            // 
-            this.chat_gbOther.Location = new System.Drawing.Point(23, 149);
-            this.chat_gbOther.Name = "chat_gbOther";
-            this.chat_gbOther.Size = new System.Drawing.Size(200, 100);
-            this.chat_gbOther.TabIndex = 1;
-            this.chat_gbOther.TabStop = false;
-            this.chat_gbOther.Text = "Other";
-            // 
-            // chat_gbMessages
-            // 
-            this.chat_gbMessages.Location = new System.Drawing.Point(23, 290);
-            this.chat_gbMessages.Name = "chat_gbMessages";
-            this.chat_gbMessages.Size = new System.Drawing.Size(200, 100);
-            this.chat_gbMessages.TabIndex = 2;
-            this.chat_gbMessages.TabStop = false;
-            this.chat_gbMessages.Text = "Messages";
-            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4324,7 +4323,13 @@ namespace MCGalaxy.Gui
             this.Text = "Properties";
             this.Load += new System.EventHandler(this.PropertyWindow_Load);
             this.Disposed += new System.EventHandler(this.PropertyWindow_Unload);
-            tabChat.ResumeLayout(false);
+            this.tabChat.ResumeLayout(false);
+            this.chat_gbMessages.ResumeLayout(false);
+            this.chat_gbMessages.PerformLayout();
+            this.chat_gbOther.ResumeLayout(false);
+            this.chat_gbOther.PerformLayout();
+            this.chat_gbColors.ResumeLayout(false);
+            this.chat_gbColors.PerformLayout();
             this.pageCommands.ResumeLayout(false);
             this.pageCommandsList.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
@@ -4361,8 +4366,6 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.PerformLayout();
             this.pageMisc.ResumeLayout(false);
             this.pageMisc.PerformLayout();
-            this.grpGlobalChat.ResumeLayout(false);
-            this.grpGlobalChat.PerformLayout();
             this.grpExtra.ResumeLayout(false);
             this.grpExtra.PerformLayout();
             this.grpMessages.ResumeLayout(false);
@@ -4639,7 +4642,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.TextBox txtIRCPort;
         private System.Windows.Forms.CheckBox chkShowEmptyRanks;
-        private System.Windows.Forms.GroupBox grpGlobalChat;
         private System.Windows.Forms.CheckBox chkGlobalChat;
         private System.Windows.Forms.ComboBox cmbGlobalChatColor;
         private System.Windows.Forms.Label lblGlobalChatColor;
@@ -4789,5 +4791,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox chat_gbMessages;
         private System.Windows.Forms.GroupBox chat_gbOther;
         private System.Windows.Forms.GroupBox chat_gbColors;
+        private System.Windows.Forms.TabPage tabChat;
+        private System.Windows.Forms.Label label22;
     }
 }
