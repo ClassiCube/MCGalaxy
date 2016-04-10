@@ -188,20 +188,17 @@ namespace MCGalaxy.Drawing.Ops {
             entry.DrawOpName = op.Name;
             entry.LevelName = p.level.name;
             entry.Start = DateTime.UtcNow;
+            // Use same time method as DoBlockchange writing to undo buffer
+            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
+            entry.Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
             
             bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
             op.Perform(marks, p, p.level, brush);
-            entry.End = DateTime.UtcNow;
+            timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
+            entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
             
-            if (entry.Start > p.UndoBuffer.LastClear) {
-                UndoDrawOpEntry[] items = p.UndoDrawOps.Items;
-                if (items.Length == 25)
-                    p.UndoDrawOps.Remove(items[0]);
-            } else { // UndoBuffer has been cleared during the draw op.
-                entry.Start = p.UndoBuffer.LastClear;
-                p.RemoveInvalidUndos();
-            }
-            p.UndoDrawOps.Add(entry);
+            if (op.Name != "UndoSelf")
+                p.UndoDrawOps.Add(entry);
             DoReload(p, needReveal);
             return true;
         }

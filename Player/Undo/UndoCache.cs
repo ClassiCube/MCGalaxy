@@ -151,7 +151,7 @@ namespace MCGalaxy.Util {
     }
     
     public sealed class UndoDrawOpEntry {
-        public string DrawOpName;
+        public string DrawOpName, UndoDrawOpName;
         public string LevelName;
         public DateTime Start, End;
     }

@@ -23,6 +23,10 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Drawing.Ops {
 
+	public class UndoSelfDrawOp : UndoOnlineDrawOp {		
+		public override string Name { get { return "UndoSelf"; } }
+	}
+	
     public class UndoOnlineDrawOp : DrawOp {
         
         public override string Name { get { return "UndoOnline"; } }
