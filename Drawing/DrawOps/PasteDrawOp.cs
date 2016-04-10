@@ -46,8 +46,8 @@ namespace MCGalaxy.Drawing.Ops {
                 state.GetCoords(i, out locX, out locY, out locZ);
                 
                 ushort x = (ushort)(locX + offX), y = (ushort)(locY + offY), z = (ushort)(locZ + offZ);
-                byte type = p.level.GetTile(x, y, z), extType = 0;
-                if (type == Block.custom_block) extType = p.level.GetExtTile(x, y, z);
+                byte type = lvl.GetTile(x, y, z), extType = 0;
+                if (type == Block.custom_block) extType = lvl.GetExtTile(x, y, z);
                 
                 bool place = lvl.InBound(x, y, z) && (b != type || (b == Block.custom_block && extB != extType));
                 if ((b != Block.air || pasteAir) && place)
@@ -83,8 +83,8 @@ namespace MCGalaxy.Drawing.Ops {
                 state.GetCoords(i, out locX, out locY, out locZ);
                 
                 ushort x = (ushort)(locX + offX), y = (ushort)(locY + offY), z = (ushort)(locZ + offZ);
-                byte type = p.level.GetTile(x, y, z), extType = 0;
-                if (type == Block.custom_block) extType = p.level.GetExtTile(x, y, z);
+                byte type = lvl.GetTile(x, y, z), extType = 0;
+                if (type == Block.custom_block) extType = lvl.GetExtTile(x, y, z);
                 
                 bool place = lvl.InBound(x, y, z) && (b != type || (b == Block.custom_block && extB != extType));
                 if (!place || (b == Block.air && !pasteAir)) continue;

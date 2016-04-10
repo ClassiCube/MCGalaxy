@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
                 double curRadius = Radius * ((double)curHeight / (double)Height);
                 if (Math.Abs(xx) > curRadius || Math.Abs(zz) > curRadius)
                     continue;
-                byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
+                byte ctile = lvl.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
                 if (ctile != 0) continue;
                 PlaceBlock(p, lvl, (ushort)cx, (ushort)cy, (ushort)cz, brush);
             }
@@ -86,7 +86,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (absx > curRadius || absz > curRadius) continue;
                 if (absx < (curRadius - 1) && absz < (curRadius - 1)) continue;
 
-                byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
+                byte ctile = lvl.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
                 if (ctile != 0) continue;
                 PlaceBlock(p, lvl, (ushort)cx, (ushort)cy, (ushort)cz, brush);
             }

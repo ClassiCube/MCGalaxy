@@ -215,7 +215,9 @@ namespace MCGalaxy {
         //Undo
         public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public int timeDelta; }
         public UndoCache UndoBuffer = new UndoCache();
-        public VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>(false);
+        internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>(false);
+        internal readonly object pendingDrawOpsLock = new object();
+        internal List<PendingDrawOp> PendingDrawOps = new List<PendingDrawOp>();
 
         public bool showPortals = false;
         public bool showMBs = false;

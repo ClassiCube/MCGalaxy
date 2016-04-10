@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
                 
-                byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
+                byte ctile = lvl.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
                 if (ctile != 0) continue;
                 PlaceBlock(p, lvl, (ushort)cx, (ushort)cy, (ushort)cz, brush);
             }
@@ -86,7 +86,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (dist > curRadius * curRadius || dist < (curRadius - 1) * (curRadius - 1))
                     continue;
                 
-                byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
+                byte ctile = lvl.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
                 if (ctile != 0) continue;
                 PlaceBlock(p, lvl, (ushort)cx, (ushort)cy, (ushort)cz, brush);
             }
@@ -119,7 +119,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius)continue;
                 
-                byte ctile = p.level.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
+                byte ctile = lvl.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
                 if (ctile != 0) continue;
                 bool layer = dist >= (curRadius - 1) * (curRadius - 1);
                 byte type = layer ? Block.grass : Block.lavastill;

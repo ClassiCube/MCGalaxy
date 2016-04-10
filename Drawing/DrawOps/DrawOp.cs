@@ -16,9 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Brushes;
-using MCGalaxy.Util;
 
 namespace MCGalaxy {
     
@@ -35,7 +33,7 @@ namespace MCGalaxy {
 
 namespace MCGalaxy.Drawing.Ops {
     
-    public abstract class DrawOp {
+    public abstract partial class DrawOp {
         
         //public int TotalAffected; // blocks affected by the draw operation
         public int TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
@@ -149,71 +147,5 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal const int M_PBlockQueue = 0, M_PBlockChange = 1, M_PSetTile = 2;
         internal const int M_BlockChange = 3, M_SetTile = 4;
-        
-        public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
-                                    ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            Vec3U16[] marks = new [] { new Vec3U16(x1, y1, z1), new Vec3U16(x2, y2, z2) };
-            if (op.MinMaxCoords) {
-                marks[0].X = Math.Min(x1, x2); marks[1].X = Math.Max(x1, x2);
-                marks[0].Y = Math.Min(y1, y2); marks[1].Y = Math.Max(y1, y2);
-                marks[0].Z = Math.Min(z1, z2); marks[1].Z = Math.Max(z1, z2);
-            }
-            return DoDrawOp(op, brush, p, marks);
-        }
-        
-        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, Vec3U16[] marks) {
-            op.Origin = marks[0]; op.Min = marks[0]; op.Max = marks[0];
-            for (int i = 1; i < marks.Length; i++) {
-                op.Min = Vec3U16.Min(op.Min, marks[i]);
-                op.Max = Vec3U16.Max(op.Max, marks[i]);
-            }
-            op.Level = p.level;
-            if (!op.Level.DrawingAllowed) {
-                Player.SendMessage(p, "Drawing commands are turned off on this map.");
-                return false;
-            }
-            
-            long affected = 0;
-            if (!op.CanDraw(marks, p, out affected))
-                return false;
-            if (brush != null && affected != -1) {
-                const string format = "{0}({1}): affecting up to {2} blocks";
-                Player.SendMessage(p, String.Format(format, op.Name, brush.Name, affected));
-            } else if (affected != -1) {
-                const string format = "{0}: affecting up to {1} blocks";
-                Player.SendMessage(p, String.Format(format, op.Name, affected));
-            }
-            
-            UndoDrawOpEntry entry = new UndoDrawOpEntry();
-            entry.DrawOpName = op.Name;
-            entry.LevelName = p.level.name;
-            entry.Start = DateTime.UtcNow;
-            // Use same time method as DoBlockchange writing to undo buffer
-            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            entry.Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
-            
-            bool needReveal = op.DetermineDrawOpMethod(p.level, affected);
-            op.Perform(marks, p, p.level, brush);
-            timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
-            
-            p.DrawOps.Add(entry);
-            if (p.DrawOps.Count > 200)
-            	p.DrawOps.RemoveFirst();
-            DoReload(p, needReveal);
-            return true;
-        }
-        
-        static void DoReload(Player p, bool needReveal) {
-            if (!needReveal) return;
-            
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level.name.CaselessEq(p.level.name))
-                    CmdReveal.ReloadMap(p, pl, true);
-            }
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
     }
 }

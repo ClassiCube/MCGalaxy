@@ -127,7 +127,7 @@ namespace MCGalaxy.Drawing.Ops {
                     } catch { }
                 }
             } else {
-                int count = p.level.currentUndo;
+                int count = lvl.currentUndo;
                 for (int i = count; i >= 0; i--) {
                     try {
                         if (!CheckBlockPhysics(p, lvl, seconds, i)) break;
@@ -151,7 +151,7 @@ namespace MCGalaxy.Drawing.Ops {
             if (b == newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                 ushort x, y, z;
                 lvl.IntToPos(undo.index, out x, out y, out z);
-                int undoIndex = p.level.currentUndo;
+                int undoIndex = lvl.currentUndo;
                 lvl.currentUndo = i;
                 lvl.currentUndo = undoIndex;
                 byte oldType = (undo.flags & 1) != 0 ? Block.custom_block : undo.oldRawType;
