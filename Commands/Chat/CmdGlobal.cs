@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
             if (p != null)
             {
             	if (p.muted) { Player.SendMessage(p, "You are muted."); return; }
-            	if (p.ignoreGlobalChat || p.ignoreAll) { Player.SendMessage(p, "You cannot use Global Chat while you have it muted."); return; }
+            	if (p.ignoreGlobal || p.ignoreAll) { Player.SendMessage(p, "You cannot use Global Chat while you have it muted."); return; }
             	if (Server.chatmod && !p.voice) { Player.SendMessage(p, "You cannot use Global Chat while in Chat Moderation!"); return; }
             	if (!Server.gcaccepted.Contains(p.name.ToLower())) { ShowRules(p, true); return; }
             }            //Server.GlobalChat.Say((p != null ? p.name + ": " : "Console: ") + message, p);

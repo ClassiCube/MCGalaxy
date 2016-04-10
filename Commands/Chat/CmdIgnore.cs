@@ -37,16 +37,21 @@ namespace MCGalaxy.Commands {
                 p.ignoreAll = !p.ignoreAll;
                 Player.SendMessage(p, p.ignoreAll ? "&cAll chat is now ignored!" : "&aAll chat is no longer ignored!");
                 CreateIgnoreFile(p); return;
+            } else if (action == "irc") {
+                p.ignoreIRC = !p.ignoreIRC;
+                Player.SendMessage(p, p.ignoreIRC ? "&cIRC chat is now ignored!" : "&aIRC chat is no longer ignored!");
+                CreateIgnoreFile(p); return;
             } else if (action == "global") {
-                p.ignoreGlobalChat = !p.ignoreGlobalChat;
-                Player.SendMessage(p, p.ignoreGlobalChat ? "&cGlobal Chat is now ignored!" : "&aGlobal Chat is no longer ignored!");
+                p.ignoreGlobal = !p.ignoreGlobal;
+                Player.SendMessage(p, p.ignoreGlobal ? "&cGlobal Chat is now ignored!" : "&aGlobal Chat is no longer ignored!");
                 CreateIgnoreFile(p); return;
             } else if (action == "list") {
                 Player.SendMessage(p, "&cCurrently ignoring the following players:");
                 string names = string.Join(", ", p.listignored);
                 if (names != "") Player.SendMessage(p, names);
-                if (p.ignoreGlobalChat) Player.SendMessage(p, "&cIgnoring global chat.");
                 if (p.ignoreAll) Player.SendMessage(p, "&cIgnoring all chat.");
+                if (p.ignoreIRC) Player.SendMessage(p, "&cIgnoring IRC chat.");
+                if (p.ignoreGlobal) Player.SendMessage(p, "&cIgnoring global chat.");                
                 return;
             }
             
@@ -75,6 +80,7 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "%HUsing the same name again will unignore.");
             Player.SendMessage(p, "%H  If name is \"all\", all chat is ignored.");
             Player.SendMessage(p, "%H  If name is \"global\", MCGalaxy global chat is ignored.");
+            Player.SendMessage(p, "%H  If name is \"irc\", IRC chat is ignored.");
             Player.SendMessage(p, "%H  Otherwise, the online player matching the name is ignored.");            
         }
     }

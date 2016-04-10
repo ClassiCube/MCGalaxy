@@ -132,7 +132,8 @@ namespace MCGalaxy {
 
         void DoJoinLeaveMessage(string who, string verb, string channel) {
             Server.s.Log(String.Format("{0} has {1} channel {2}", who, verb, channel));
-            Player.GlobalMessage(String.Format("%I[IRC] {0} has {1} the{2} channel", who, verb, (channel.ToLower() == opchannel.ToLower() ? " operator" : "")));
+            string which = channel.CaselessEq(opchannel) ? " operator" : "";
+            Player.GlobalIRCMessage(String.Format("%I[IRC] {0} has {1} the{2} channel", who, verb, which));
         }
         
         void Player_PlayerDisconnect(Player p, string reason) {
@@ -155,7 +156,7 @@ namespace MCGalaxy {
             RemoveNick(user.Nick, chanNicks);
             if (user.Nick == nick) return;
             Server.s.Log(user.Nick + " has left IRC");
-            Player.GlobalMessage("%I[IRC] " + user.Nick + " has left");
+            Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " has left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
@@ -238,12 +239,12 @@ namespace MCGalaxy {
             if (String.IsNullOrEmpty(message.Trim()))
                 message = ".";
 
-            if (channel.ToLower() == opchannel.ToLower()) {
+            if (channel.CaselessEq(opchannel)) {
                 Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
                 Chat.GlobalMessageOps(String.Format("To Ops &f-%I[IRC] {0}&f- {1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             } else {
                 Server.s.Log(String.Format("[IRC] {0}: {1}", user.Nick, message));
-                Player.GlobalMessage(String.Format("%I[IRC] {0}: &f{1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
+                Player.GlobalIRCMessage(String.Format("%I[IRC] {0}: &f{1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             }
         }
 
@@ -316,18 +317,17 @@ namespace MCGalaxy {
                 if (key != null && key != "") {
                     switch (key) {
                         case "AFK":
-                            Player.GlobalMessage("[IRC] %I" + user.Nick + Server.DefaultColor + " is AFK"); Server.ircafkset.Add(user.Nick); break;
+                            Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " %Sis AFK"); Server.ircafkset.Add(user.Nick); break;
                         case "Away":
-                            Player.GlobalMessage("[IRC] %I" + user.Nick + Server.DefaultColor + " is Away"); Server.ircafkset.Add(user.Nick); break;
+                            Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " %Sis Away"); Server.ircafkset.Add(user.Nick); break;
                     }
                 }
-            }
-            else if (Server.ircafkset.Contains(newNick)) {
-                Player.GlobalMessage("[IRC] %I" + newNick + Server.DefaultColor + " is back");
+            } else if (Server.ircafkset.Contains(newNick)) {
+                Player.GlobalIRCMessage("%I[IRC] " + newNick + " %Sis back");
                 Server.ircafkset.Remove(newNick);
+            } else {
+                Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " %Sis now known as " + newNick);
             }
-            else
-                Player.GlobalMessage("[IRC] %I" + user.Nick + Server.DefaultColor + " is now known as " + newNick);
         }
         
         void Player_PlayerChat(Player p, string message) {    
@@ -395,7 +395,7 @@ namespace MCGalaxy {
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
             Server.s.Log(kickee + " kicked " + user.Nick + " from IRC");
-            Player.GlobalMessage("%I[IRC] " + kickee + " kicked " + user.Nick);           
+            Player.GlobalIRCMessage("%I[IRC] " + kickee + " kicked " + user.Nick);           
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {

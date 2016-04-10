@@ -154,7 +154,7 @@ namespace MCGalaxy.Games {
                 
                 if (!Running) return null;
                 if (nonRefPlayers >= 2) return players;
-                CurLevel.ChatLevel("&cNeed 2 or more players to start a round.");
+                CurLevel.ChatLevel("&cNeed 2 or more non-ref players to start a round.");
             }
         }
         

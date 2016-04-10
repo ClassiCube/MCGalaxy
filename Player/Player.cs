@@ -124,7 +124,7 @@ namespace MCGalaxy {
         public bool onWhitelist = false;
         public bool whisper = false;
         public string whisperTo = "";
-        public bool ignoreAll = false;
+        public bool ignoreAll, ignoreGlobal, ignoreIRC;
 
         public string storedMessage = "";
 
@@ -284,7 +284,6 @@ namespace MCGalaxy {
         public Random random = new Random();
 
         //Global Chat
-        public bool ignoreGlobalChat;
         public bool loggedIn;
         public bool InGlobalChat;
 
@@ -460,10 +459,21 @@ namespace MCGalaxy {
             
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
-                if (p.ignoreAll || (global && p.ignoreGlobalChat)) continue;
+                if (p.ignoreAll || (global && p.ignoreGlobal)) continue;
                 
                 if (p.level.worldChat && p.Chatroom == null)
                     p.SendMessage(message, !global);
+            }
+        }
+        
+        public static void GlobalIRCMessage(string message) {
+            message = Colors.EscapeColors(message);            
+            Player[] players = PlayerInfo.Online.Items; 
+            foreach (Player p in players) {
+                if (p.ignoreAll || p.ignoreIRC) continue;
+                
+                if (p.level.worldChat && p.Chatroom == null)
+                    p.SendMessage(message, true);
             }
         }
         
@@ -898,8 +908,10 @@ Next: continue;
             
             try {
                 using (StreamWriter w = new StreamWriter(path)) {
-            	    if (ignoreGlobalChat) w.WriteLine("&global");
-                    if (ignoreAll) w.WriteLine("&all");                    
+            		if (ignoreAll) w.WriteLine("&all");
+            	    if (ignoreGlobal) w.WriteLine("&global");
+            	    if (ignoreIRC) w.WriteLine("&irc");
+            	    
                     foreach (string line in listignored)
                         w.WriteLine(line);
                 }
@@ -916,15 +928,16 @@ Next: continue;
             try {
                 string[] lines = File.ReadAllLines(path);
                 foreach (string line in lines) {
-                    if (line == "&global") ignoreGlobalChat = true;
+                    if (line == "&global") ignoreGlobal = true;
                     else if (line == "&all") ignoreAll = true;
+                    else if (line == "&irc") ignoreIRC = true;                    
                     else listignored.Add(line);
                 }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 Server.s.Log("Failed to load ignore list for: " + name);
             }
-            if (ignoreAll || ignoreGlobalChat || listignored.Count > 0) {
+            if (ignoreAll || ignoreGlobal || ignoreIRC || listignored.Count > 0) {
                 SendMessage("&cYou are still ignoring some people from your last login.");
                 SendMessage("&cType &a/ignore list &cto see the list.");
             }
