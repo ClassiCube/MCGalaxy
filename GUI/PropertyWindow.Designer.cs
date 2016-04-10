@@ -654,7 +654,7 @@ namespace MCGalaxy.Gui
             // 
             // chat_colDesc
             // 
-            this.chat_colDesc.Location = new System.Drawing.Point(445, 55);
+            this.chat_colDesc.Location = new System.Drawing.Point(99, 125);
             this.chat_colDesc.Name = "chat_colDesc";
             this.chat_colDesc.Size = new System.Drawing.Size(18, 18);
             this.chat_colDesc.TabIndex = 34;
@@ -662,9 +662,9 @@ namespace MCGalaxy.Gui
             // chat_cmbDesc
             // 
             this.chat_cmbDesc.FormattingEnabled = true;
-            this.chat_cmbDesc.Location = new System.Drawing.Point(101, 125);
+            this.chat_cmbDesc.Location = new System.Drawing.Point(120, 125);
             this.chat_cmbDesc.Name = "chat_cmbDesc";
-            this.chat_cmbDesc.Size = new System.Drawing.Size(114, 21);
+            this.chat_cmbDesc.Size = new System.Drawing.Size(95, 21);
             this.chat_cmbDesc.TabIndex = 33;
             this.toolTip.SetToolTip(this.chat_cmbDesc, "The colour of the /cmdname [args] in /help.");
             this.chat_cmbDesc.SelectedIndexChanged += new System.EventHandler(this.chat_cmbDesc_SelectedIndexChanged);
@@ -680,7 +680,7 @@ namespace MCGalaxy.Gui
             // 
             // chat_colSyntax
             // 
-            this.chat_colSyntax.Location = new System.Drawing.Point(445, 20);
+            this.chat_colSyntax.Location = new System.Drawing.Point(99, 98);
             this.chat_colSyntax.Name = "chat_colSyntax";
             this.chat_colSyntax.Size = new System.Drawing.Size(18, 18);
             this.chat_colSyntax.TabIndex = 35;
@@ -688,9 +688,9 @@ namespace MCGalaxy.Gui
             // chat_cmbSyntax
             // 
             this.chat_cmbSyntax.FormattingEnabled = true;
-            this.chat_cmbSyntax.Location = new System.Drawing.Point(101, 98);
+            this.chat_cmbSyntax.Location = new System.Drawing.Point(120, 98);
             this.chat_cmbSyntax.Name = "chat_cmbSyntax";
-            this.chat_cmbSyntax.Size = new System.Drawing.Size(114, 21);
+            this.chat_cmbSyntax.Size = new System.Drawing.Size(95, 21);
             this.chat_cmbSyntax.TabIndex = 30;
             this.toolTip.SetToolTip(this.chat_cmbSyntax, "The colour for the description of a command in /help.");
             this.chat_cmbSyntax.SelectedIndexChanged += new System.EventHandler(this.chat_cmbSyntax_SelectedIndexChanged);
@@ -707,7 +707,7 @@ namespace MCGalaxy.Gui
             // chat_colGlobal
             // 
             this.chat_colGlobal.BackColor = System.Drawing.Color.Black;
-            this.chat_colGlobal.Location = new System.Drawing.Point(101, 71);
+            this.chat_colGlobal.Location = new System.Drawing.Point(99, 71);
             this.chat_colGlobal.Name = "chat_colGlobal";
             this.chat_colGlobal.Size = new System.Drawing.Size(18, 18);
             this.chat_colGlobal.TabIndex = 28;
@@ -735,7 +735,7 @@ namespace MCGalaxy.Gui
             // 
             this.chat_colIRC.BackColor = System.Drawing.Color.Black;
             this.chat_colIRC.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chat_colIRC.Location = new System.Drawing.Point(101, 44);
+            this.chat_colIRC.Location = new System.Drawing.Point(99, 44);
             this.chat_colIRC.Name = "chat_colIRC";
             this.chat_colIRC.Size = new System.Drawing.Size(18, 18);
             this.chat_colIRC.TabIndex = 25;
@@ -762,7 +762,7 @@ namespace MCGalaxy.Gui
             // chat_colDefault
             // 
             this.chat_colDefault.BackColor = System.Drawing.Color.Black;
-            this.chat_colDefault.Location = new System.Drawing.Point(101, 15);
+            this.chat_colDefault.Location = new System.Drawing.Point(99, 15);
             this.chat_colDefault.Name = "chat_colDefault";
             this.chat_colDefault.Size = new System.Drawing.Size(18, 18);
             this.chat_colDefault.TabIndex = 26;
