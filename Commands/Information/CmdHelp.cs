@@ -14,6 +14,8 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
+using System.Text;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdHelp : Command
@@ -29,7 +31,7 @@ namespace MCGalaxy.Commands
         {
             switch (message.ToLower())
             {
-                case "":                 
+                case "":
                     Player.SendMessage(p, "Command Categories:");
                     Player.SendMessage(p, "  %aBuilding Chat Economy Games Info Moderation Other World");
                     Player.SendMessage(p, "Other Categories:");
@@ -52,27 +54,27 @@ namespace MCGalaxy.Commands
                     break;
                 case "build":
                 case "building":
-                    PrintHelpForGroup(p, "build", "Building" ); break;
+                    PrintHelpForGroup(p, "build", "Building"); break;
                 case "chat":
-                    PrintHelpForGroup(p, "chat", "Chat" ); break;
+                    PrintHelpForGroup(p, "chat", "Chat"); break;
                 case "eco":
                 case "economy":
-                    PrintHelpForGroup(p, "eco", "Economy" ); break;
+                    PrintHelpForGroup(p, "eco", "Economy"); break;
                 case "mod":
                 case "moderation":
-                    PrintHelpForGroup(p, "mod", "Moderation" ); break;
+                    PrintHelpForGroup(p, "mod", "Moderation"); break;
                 case "info":
                 case "information":
-                    PrintHelpForGroup(p, "info", "Information" ); break;
+                    PrintHelpForGroup(p, "info", "Information"); break;
                 case "game":
                 case "games":
-                    PrintHelpForGroup(p, "game", "Game" ); break;
+                    PrintHelpForGroup(p, "game", "Game"); break;
                 case "other":
                 case "others":
-                    PrintHelpForGroup(p, "other", "Other" );  break;
+                    PrintHelpForGroup(p, "other", "Other");  break;
                 case "maps":
                 case "world":
-                    PrintHelpForGroup(p, "world", "World" ); break;
+                    PrintHelpForGroup(p, "world", "World"); break;
                 case "short":
                 case "shortcut":
                 case "shortcuts":
@@ -82,25 +84,7 @@ namespace MCGalaxy.Commands
                 case "short 2":
                 case "shortcut 2":
                 case "shortcuts 2":
-                    bool list1 = message[message.Length - 1] != '2';
-                    message = "";
-                    List<string> shortcuts = new List<string>();
-                    foreach (Command comm in Command.all.commands)
-                        if (p == null || p.group.CanExecute(comm))
-                            if (comm.shortcut != "") shortcuts.Add(", &b" + comm.shortcut + " %S[" + comm.name + "]");
-                    int top = list1 ? shortcuts.Count / 2 : shortcuts.Count;
-                    for (int i = list1 ? 0 : shortcuts.Count / 2; i < top; i++)
-                        message += shortcuts[i];
-                    if (list1) {
-                        Player.SendMessage(p, "Available shortcuts (1):");
-                        Player.SendMessage(p, message.Remove(0, 2));
-                        Player.SendMessage(p, "%bType %f/help shortcuts 2%b to view the rest of the list ");
-                    } else {
-                        Player.SendMessage(p, "Available shortcuts (2):");
-                        Player.SendMessage(p, message.Remove(0, 2));
-                        Player.SendMessage(p, "%bType %f/help shortcuts 1%b to view the rest of the list ");
-                    }
-                    break;
+                    PrintShortcuts(p, message); break;
                 case "colours":
                 case "colors":
                     Player.SendMessage(p, "&fTo use a color, put a '%' and then put the color code.");
@@ -115,100 +99,143 @@ namespace MCGalaxy.Commands
                 case "oldmenu":
                 case "commands":
                 case "command":
-                    string commandsFound = "";
-                    foreach (Command comm in Command.all.commands) {
-                    	string disabled = Command.GetDisabledReason(comm.Enabled);
-                        if (p == null || p.group.CanExecute(comm) && disabled == null)
-                            try { commandsFound += ", " + comm.name; } catch { }
-                    }
-                    Player.SendMessage(p, "Available commands:");
-                    Player.SendMessage(p, commandsFound.Remove(0, 2));
-                    Player.SendMessage(p, "Type \"/help <command>\" for more help.");
-                    Player.SendMessage(p, "Type \"/help shortcuts\" for shortcuts.");
-                    Player.SendMessage(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
-                    break;
+                    Group pGroup = p != null ? p.group : Group.findPerm(LevelPermission.Nobody);
+                    PrintRankCommands(p, pGroup, true); break;
                 case "commandsall":
                 case "commandall":
-                    string commandsAllFound = "";
-                    foreach (Command comm in Command.all.commands)
-                        try { commandsAllFound += ", " + getColor(comm.name) + comm.name; } catch { }
-                    Player.SendMessage(p, "All commands:");
-                    Player.SendMessage(p, commandsAllFound.Remove(0, 2));
-                    Player.SendMessage(p, "Type \"/help <command>\" for more help.");
-                    Player.SendMessage(p, "Type \"/help shortcuts\" for shortcuts.");
-                    Player.SendMessage(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
-                    break;                   
+                    PrintAllCommands(p); break;
                 default:
-                    Command cmd = Command.all.Find(message);
-                    if (cmd != null)
-                    {
-                        cmd.Help(p);
-                        string foundRank = Level.PermissionToName(GrpCommands.allowedCommands.Find(grpComm => grpComm.commandName == cmd.name).lowestRank);
-                        Player.SendMessage(p, "Rank needed: " + getColor(cmd.name) + foundRank);
-                        if (!String.IsNullOrEmpty(cmd.shortcut))
-                            Player.SendMessage(p, "Shortcut: /" + cmd.shortcut);
-                        return;
-                    }
-                    byte b = Block.Byte(message);
-                    if (b != Block.Zero)
-                    {
-                        Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b)));
-                        Group foundRank = Group.findPerm(Block.BlockList[b].lowestRank);
-                        Player.SendMessage(p, "Rank needed: " + foundRank.color + foundRank.name);
-                        return;
-                    }
-                    Plugin plugin = null;
-                    foreach (Plugin p1 in Plugin.all)
-                    {
-                        if (p1.name.ToLower() == message.ToLower())
-                        {
-                            plugin = p1;
-                            break;
-                        }
-                    }
-                    if (plugin != null)
-                    {
-                        plugin.Help(p);
-                    }
+                    if (ParseCommand(p, message) || ParseBlock(p, message) || ParsePlugin(p, message)) return;
                     Player.SendMessage(p, "Could not find command, plugin or block specified.");
                     break;
             }
         }
         
-        static void PrintHelpForGroup(Player p, string typeName, string typeTitle) {
-            string message = "";
+        static void PrintShortcuts(Player p, string message) {
+            bool list1 = message[message.Length - 1] != '2';
+            List<string> shortcuts = new List<string>();
             foreach (Command c in Command.all.commands) {
-            	string disabled = Command.GetDisabledReason(c.Enabled);
-            	if (p == null || p.group.CanExecute(c) && disabled == null) {
-                    if (c.type.Contains(typeName))
-                        message += ", " + getColor(c.name) + c.name;
+                if (p != null && !p.group.CanExecute(c) || c.shortcut == "") continue;
+                shortcuts.Add(c.shortcut + " %S[" + c.name + "]");
+            }
+            
+            int top = list1 ? shortcuts.Count / 2 : shortcuts.Count;
+            StringBuilder cmds = new StringBuilder();
+            for (int i = list1 ? 0 : shortcuts.Count / 2; i < top; i++)
+                cmds.Append(", &b").Append(shortcuts[i]);
+            
+            if (list1) {
+                Player.SendMessage(p, "Available shortcuts (1):");
+                Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2));
+                Player.SendMessage(p, "%bType %f/help shortcuts 2%b to view the rest of the list ");
+            } else {
+                Player.SendMessage(p, "Available shortcuts (2):");
+                Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2));
+                Player.SendMessage(p, "%bType %f/help shortcuts 1%b to view the rest of the list ");
+            }
+        }
+        
+        static void PrintRankCommands(Player p, Group group, bool colors) {
+            StringBuilder cmds = new StringBuilder();
+            foreach (Command c in Command.all.commands) {
+                string disabled = Command.GetDisabledReason(c.Enabled);
+                if (!group.CanExecute(c) || disabled != null) continue;
+                if (c.name == null) continue;
+                
+                if (!colors) cmds.Append(", ").Append(c.name);
+                else cmds.Append(", ").Append(GetColor(c.name)).Append(c.name);
+            }
+            
+            Player.SendMessage(p, "Available commands:");
+            Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2));
+            Player.SendMessage(p, "Type \"/help <command>\" for more help.");
+            Player.SendMessage(p, "Type \"/help shortcuts\" for shortcuts.");
+            Player.SendMessage(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
+        }
+        
+        static void PrintAllCommands(Player p) {
+            StringBuilder cmds = new StringBuilder();
+            foreach (Command c in Command.all.commands) {
+                if (c.name == null) continue;
+                cmds.Append(", ").Append(GetColor(c.name)).Append(c.name);
+            }
+
+            Player.SendMessage(p, "All commands:");
+            Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2));
+            Player.SendMessage(p, "Type \"/help <command>\" for more help.");
+            Player.SendMessage(p, "Type \"/help shortcuts\" for shortcuts.");
+            Player.SendMessage(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
+        }
+        
+        static void PrintHelpForGroup(Player p, string typeName, string typeTitle) {
+            StringBuilder cmds = new StringBuilder();
+            foreach (Command c in Command.all.commands) {
+                string disabled = Command.GetDisabledReason(c.Enabled);
+                if (p == null || p.group.CanExecute(c) && disabled == null) {
+                    if (!c.type.Contains(typeName) || c.name == null) continue;
+                    cmds.Append(", ").Append(GetColor(c.name)).Append(c.name);
                 }
             }
             
-            if (message == "") {
+            if (cmds.Length == 0) {
                 Player.SendMessage(p, "No commands of this type are available to you.");
             } else {
                 Player.SendMessage(p, typeTitle + " commands you may use:");
-                Player.SendMessage(p, message.Remove(0, 2) + ".");
+                Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2) + ".");
             }
         }
-
-        private static string getColor(string commName)
-        {
-            foreach (GrpCommands.rankAllowance aV in GrpCommands.allowedCommands)
-            {
-                if (aV.commandName == commName)
-                {
-                    if (Group.findPerm(aV.lowestRank) != null)
-                        return Group.findPerm(aV.lowestRank).color;
+        
+        bool ParseCommand(Player p, string message) {
+            Command cmd = Command.all.Find(message);
+            if (cmd == null) return false;
+            cmd.Help(p);            
+            LevelPermission minPerm = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name).lowestRank;          
+            Player.SendMessage(p, "Rank needed: " + GetColoredRank(minPerm));
+            
+            if (!String.IsNullOrEmpty(cmd.shortcut))
+                Player.SendMessage(p, "Shortcut: /" + cmd.shortcut);            
+            CommandPerm[] perms = cmd.AdditionalPerms;
+            if (perms == null) return true;
+            
+            Player.SendMessage(p, "%TAdditional permissions:");
+            foreach (CommandPerm perm in perms) {
+                Player.SendMessage(p, GetColoredRank(perm.Perm) + " %S- " + perm.Description);
+            }
+            return true;
+        }
+        
+        bool ParseBlock(Player p, string message) {
+            byte b = Block.Byte(message);
+            if (b == Block.Zero) return false;
+            
+            Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b)));
+            Group foundRank = Group.findPerm(Block.BlockList[b].lowestRank);
+            Player.SendMessage(p, "Rank needed: " + foundRank.color + foundRank.name);
+            return true;
+        }
+        
+        bool ParsePlugin(Player p, string message) {
+            foreach (Plugin plugin in Plugin.all) {
+                if (plugin.name.CaselessEq(message)) {
+                    plugin.Help(p); return true;
                 }
             }
-
-            return "&f";
+            return false;
         }
 
-        public override void Help(Player p)
-        {
+        static string GetColor(string cmd) {
+            LevelPermission perm = GrpCommands.allowedCommands.Find(C => C.commandName == cmd).lowestRank;
+            Group grp = Group.findPerm(perm);
+            return grp == null ? "&f" : grp.color;
+        }
+        
+        static string GetColoredRank(LevelPermission perm) {
+            Group grp = Group.findPerm(perm);
+            string col = grp == null ? "&f" : grp.color;
+            return col + Level.PermissionToName(perm);
+        }
+
+        public override void Help(Player p) {
             Player.SendMessage(p, "...really? Wow. Just...wow.");
         }
     }
