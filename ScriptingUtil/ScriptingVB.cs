@@ -53,7 +53,7 @@ namespace MCGalaxy
 			  
 						 Environment.NewLine +
 						 "Namespace MCGalaxy" + Environment.NewLine +
-						 "\tPublic Class " + ClassName(CmdName) + Environment.NewLine +
+						 "\tPublic Class " + CmdName.Capitalize() + Environment.NewLine +
 						 "\t\tInherits Command " + Environment.NewLine +
 						 "' The command's name, IN ALL LOWERCASE.  What you'll be putting behind the slash when using it." + Environment.NewLine +
 
@@ -105,14 +105,9 @@ namespace MCGalaxy
 						 "\t\tEnd Sub" + Environment.NewLine +
 						 "\tEnd Class" + Environment.NewLine +
 						 "End Namespace"
-
 					);
-
 			}
 		}
-
-		
-
 	   
 		public static bool Compile(string commandName)
 		{
@@ -210,11 +205,8 @@ namespace MCGalaxy
 			string[] autocmds = File.ReadAllLines("text/cmdautoloadVB.txt");
 			foreach (string cmd in autocmds)
 			{
-				if (cmd == "")
-				{
-					continue;
-				}
-				string error = ScriptingVB.Load("Cmd" + cmd.ToLower());
+				if (cmd == "") continue;
+				string error = Scripting.Load("Cmd" + cmd.ToLower());
 				if (error != null)
 				{
 					Server.s.Log(error);
@@ -224,65 +216,8 @@ namespace MCGalaxy
 				Server.s.Log("AUTOLOAD: Loaded [VB] " + cmd.ToLower() + ".dll");
 			}
 		}
-
 	   
-		public static string Load(string command)
-		{
-			if (command.Length < 3 || command.Substring(0, 3).ToLower() != "cmd")
-			{
-				return "Invalid command name specified.";
-			}
-			try
-			{
-
-				Assembly asm = Assembly.LoadFrom("extra/commands/dll/" + command + ".dll");
-
-				Type type = asm.GetTypes()[5];
-
-				var instance = Activator.CreateInstance(type);
-
-				Command.all.Add((Command)instance);
-
-			}
-			catch (FileNotFoundException e)
-			{
-				Server.ErrorLog(e);
-				return command + ".dll does not exist in the DLL folder, or is missing a dependency.  Details in the error log.";
-			}
-			catch (BadImageFormatException e)
-			{
-				Server.ErrorLog(e);
-				return command + ".dll is not a valid assembly, or has an invalid dependency.  Details in the error log.";
-			}
-			catch (PathTooLongException)
-			{
-				return "Class name is too long.";
-			}
-			catch (FileLoadException e)
-			{
-				Server.ErrorLog(e);
-				return command + ".dll or one of its dependencies could not be loaded.  Details in the error log.";
-			}
-			
-			catch (InvalidCastException e)
-			{
-				//if the structure of the code is wrong, or it has syntax error or other code problems
-				Server.ErrorLog(e);
-				return command + ".dll has invalid code structure, please check code again for errors.";
-			}
-			catch (Exception e)
-			{
-				Server.ErrorLog(e);
-				return "An unknown error occured and has been logged.";
-			}
-			return null;
-		}
-
-		private static string ClassName(string name)
-		{
-			char[] conv = name.ToCharArray();
-			conv[0] = char.ToUpper(conv[0]);
-			return "Cmd" + new string(conv);
-		}
+		[Obsolete("Use Scripting.Load, as it is language independent.")]
+		public static string Load(string command) { return Scripting.Load(command); }
 	}
 }

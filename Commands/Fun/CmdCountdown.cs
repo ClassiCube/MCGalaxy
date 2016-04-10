@@ -33,8 +33,8 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can send the countdown rules to everybody", 1),
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)", 2),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank that can send the countdown rules to everybody"),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)"),
                 }; }
         }
 

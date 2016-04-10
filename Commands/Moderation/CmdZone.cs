@@ -29,9 +29,9 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank to delete zones", 1),
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank to delete all zones", 2),
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank to create zones", 3),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank to delete zones"),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank to delete all zones"),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank to create zones"),
                 }; }
         }
 

@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             Command.all.Find("mute").Use(p, muter.name);
 
             int time = 120;
-            if (!int.TryParse(args[1], out time)) { 
+            if (args.Length > 1 && !int.TryParse(args[1], out time)) { 
             	Player.SendMessage(p, "Invalid time given."); Help(p); return; 
             }
             if (time <= 0) {

@@ -104,14 +104,9 @@ namespace MCGalaxy
     public struct CommandPerm {
         public LevelPermission Perm;
         public string Description;
-        public int Number;
         
         public CommandPerm(LevelPermission perm, string desc) {
-            Perm = perm; Description = desc; Number = 1;
-        }
-        
-        public CommandPerm(LevelPermission perm, string desc, int num) {
-            Perm = perm; Description = desc; Number = num;
+            Perm = perm; Description = desc;
         }
     }
     

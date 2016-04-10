@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank to undo other players actions", 1),
-                    new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank to be able to undo physics", 2),
+                    new CommandPerm(LevelPermission.Operator, "The lowest rank to undo other players actions"),
+                    new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank to be able to undo physics"),
                 }; }
         }
 

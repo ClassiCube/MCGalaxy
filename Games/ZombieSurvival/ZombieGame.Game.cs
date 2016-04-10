@@ -51,7 +51,7 @@ namespace MCGalaxy.Games {
             if (action == 1 || (action == 0 && p.painting)) {
                 if (!p.level.name.CaselessEq(CurLevelName) || p.Game.Referee) return false;
                 
-                if (p.Game.BlocksLeft == 0 ) {
+                if (p.Game.BlocksLeft == 0) {
                     p.SendMessage("You have no blocks left.");
                     p.RevertBlock(x, y, z); return true;
                 }

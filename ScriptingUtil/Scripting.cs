@@ -1,22 +1,22 @@
 /*
-	Copyright 2010 MCLawl Team - Written by Valek (Modified by MCGalaxy)
+    Copyright 2010 MCLawl Team - Written by Valek (Modified by MCGalaxy)
 
-	Edited for use with MCGalaxy
+    Edited for use with MCGalaxy
  
-    Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.CodeDom.Compiler;
 using System.IO;
@@ -59,7 +59,7 @@ namespace MCGalaxy
                     Environment.NewLine +
                     "namespace MCGalaxy" + Environment.NewLine +
                     "{" + Environment.NewLine +
-                    "\tpublic class " + ClassName(CmdName) + " : Command" + Environment.NewLine +
+                    "\tpublic class " + CmdName.Capitalize() + " : Command" + Environment.NewLine +
                     "\t{" + Environment.NewLine +
                     "\t\t// The command's name, in all lowercase.  What you'll be putting behind the slash when using it." + Environment.NewLine +
                     "\t\tpublic override string name { get { return \"" + CmdName.ToLower() + "\"; } }" + Environment.NewLine +
@@ -192,10 +192,7 @@ namespace MCGalaxy
             string[] autocmds = File.ReadAllLines("text/cmdautoload.txt");
             foreach (string cmd in autocmds)
             {
-                if (cmd == "")
-                {
-                    continue;
-                }
+                if (cmd == "") continue;
                 string error = Scripting.Load("Cmd" + cmd.ToLower());
                 if (error != null)
                 {
@@ -209,104 +206,47 @@ namespace MCGalaxy
             //ScriptingVB.Autoload();
         }
 
-        /// <summary>
-        /// Loads a command for use on the server.
-        /// </summary>
+        /// <summary> Loads a command for use on the server. </summary>
         /// <param name="command">Name of the command to be loaded (make sure it's prefixed by Cmd before bringing it in here or you'll have problems).</param>
         /// <returns>Error string on failure, null on success.</returns>
-        public static string Load(string command)
-        {
+        public static string Load(string command) {
             if (command.Length < 3 || command.Substring(0, 3).ToLower() != "cmd")
-            {
                 return "Invalid command name specified.";
-            }
-            try
-            {
+            try {
                 //Allows unloading and deleting dlls without server restart
-                object instance = null;
-                Assembly lib = null;
-                using (FileStream fs = File.Open("extra/commands/dll/" + command + ".dll", FileMode.Open))
-                {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        byte[] buffer = new byte[1024];
-                        int read = 0;
-                        while ((read = fs.Read(buffer, 0, 1024)) > 0)
-                            ms.Write(buffer, 0, read);
-                        lib = Assembly.Load(ms.ToArray());
-                        ms.Close();
-                        ms.Dispose();
-                    }
-                    fs.Close();
-                    fs.Dispose();
-                }
-                try
-                {
-                    foreach (Type t in lib.GetTypes())
-                    {
-                        if (t.BaseType == typeof(Command))
-                        {
-                            instance = Activator.CreateInstance(t);
-                            Command.all.Add((Command)instance);
-                        }
-                    }
-                }
-                catch { }
-                if (instance == null)
-                {
-                    Server.s.Log("The command " + command + " couldnt be loaded!");
-                    throw new BadImageFormatException();
-                }
-                /*Assembly asm = Assembly.LoadFrom("extra/commands/dll/" + command + ".dll");
-                Type[] types = asm.GetTypes();
-                foreach(var type in types)
-                {
-                    if(type.BaseType == typeof(Command))
-                    {
-                        object instance = Activator.CreateInstance(type);
-                        Command.all.Add((Command)instance);
-                    }
-                }
-                //Type type = asm.GetTypes()[0];*/
+                byte[] data = File.ReadAllBytes(dllpath + command + ".dll");
+                Assembly lib = Assembly.Load(data);
                 
-            }
-            catch (FileNotFoundException e)
-            {
+                foreach (Type t in lib.GetTypes()) {
+                    if (t.BaseType != typeof(Command)) continue;
+                    object instance = Activator.CreateInstance(t);
+                    
+                    if (instance == null) {
+                        Server.s.Log("The command " + command + " couldn't be loaded!");
+                        throw new BadImageFormatException();
+                    }
+                    Command.all.Add((Command)instance);
+                }
+            } catch (FileNotFoundException e) {
                 Server.ErrorLog(e);
-                return command + ".dll does not exist in the DLL folder, or is missing a dependency.  Details in the error log.";
-            }
-            catch (BadImageFormatException e)
-            {
+                return command + ".dll does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
+            } catch (BadImageFormatException e) {
                 Server.ErrorLog(e);
-                return command + ".dll is not a valid assembly, or has an invalid dependency.  Details in the error log.";
-            }
-            catch (PathTooLongException)
-            {
+                return command + ".dll is not a valid assembly, or has an invalid dependency. Details in the error log.";
+            } catch (PathTooLongException) {
                 return "Class name is too long.";
-            }
-            catch (FileLoadException e)
-            {
+            } catch (FileLoadException e) {
                 Server.ErrorLog(e);
-                return command + ".dll or one of its dependencies could not be loaded.  Details in the error log.";
-            }
-            catch (Exception e)
-            {
+                return command + ".dll or one of its dependencies could not be loaded. Details in the error log.";
+            } catch (InvalidCastException e) {
+                //if the structure of the code is wrong, or it has syntax error or other code problems
+                Server.ErrorLog(e);
+                return command + ".dll has invalid code structure, please check code again for errors.";
+            } catch (Exception e) {
                 Server.ErrorLog(e);
                 return "An unknown error occured and has been logged.";
             }
             return null;
-        }
-
-        /// <summary>
-        /// Creates a class name from the given string.
-        /// </summary>
-        /// <param name="name">String to convert to an MCGalaxy class name.</param>
-        /// <returns>Successfully generated class name.</returns>
-        private static string ClassName(string name)
-        {
-            char[] conv = name.ToCharArray();
-            conv[0] = char.ToUpper(conv[0]);
-            return "Cmd" + new string(conv);
         }
     }
 }

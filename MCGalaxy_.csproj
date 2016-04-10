@@ -211,6 +211,7 @@
     <Compile Include="Commands\Fun\ZombieSurvival\CmdInfected.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdQueue.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdReferee.cs" />
+    <Compile Include="Commands\Fun\ZombieSurvival\CmdShowQueue.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdZombieGame.cs" />
     <Compile Include="Commands\Information\CmdAbout.cs" />
     <Compile Include="Commands\Information\CmdAfk.cs" />

@@ -27,13 +27,13 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] { 
-                    new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank that can create chatrooms", 1),
-                    new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank that can delete a chatroom if empty", 2),
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can delete a chatroom", 3),
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can spy on a chatroom", 4),
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can force a player to join a chatroom", 5),
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can kick a player from a chatroom", 6),
-                    new CommandPerm(LevelPermission.Operator, "The lowest rank that can send a global message to a chatroom (without any delay)", 7),
+                    new CommandPerm(LevelPermission.AdvBuilder, "Lowest rank that can create chatrooms"),
+                    new CommandPerm(LevelPermission.AdvBuilder, "Lowest rank that can delete a chatroom if empty"),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank that can delete a chatroom"),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank that can spy on a chatroom"),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank that can force a player to join a chatroom"),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank that can kick a player from a chatroom"),
+                    new CommandPerm(LevelPermission.Operator, "Lowest rank that can send a global message to a chatroom (without any delay)"),
                 }; }
         }
         
