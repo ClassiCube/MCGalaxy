@@ -1,20 +1,20 @@
 /*
-	Copyright 2011 MCForge
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2011 MCForge
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -43,80 +43,61 @@ namespace MCGalaxy.Commands
 
             Player.SendMessage(p, "You are now flying. &cJump!");
 
-            Thread flyThread = new Thread(new ThreadStart(delegate
-            {
-                Vec3U16 pos;
-                ushort[] oldpos = new ushort[3];
-                List<Vec3U16> buffer = new List<Vec3U16>();
-                while (p.isFlying)
-                {
-                    Thread.Sleep(20);
-                    if (p.pos == oldpos) continue;
-                    try
-                    {
-                        List<Vec3U16> tempBuffer = new List<Vec3U16>();
-                        List<Vec3U16> toRemove = new List<Vec3U16>();
-                        ushort x = (ushort)((p.pos[0]) / 32);
-                        ushort y = (ushort)((p.pos[1] - 60) / 32);
-                        ushort z = (ushort)((p.pos[2]) / 32);
+            Thread flyThread = new Thread(new ThreadStart(
+                () => {
+                    ushort[] oldpos = new ushort[3];
+                    List<Vec3U16> last = new List<Vec3U16>(), next = new List<Vec3U16>();
+                    while (p.isFlying)
+                        DoFly(p, oldpos, last, next);
 
-                        try
-                        {
-                            for (ushort xx = (ushort)(x - 1); xx <= x + 1; xx++)
-                            {
-                                for (ushort yy = (ushort)(y - 1); yy <= y; yy++)
-                                {
-                                    for (ushort zz = (ushort)(z - 1); zz <= z + 1; zz++)
-                                    {
-                                        if (p.level.GetTile(xx, yy, zz) == Block.air)
-                                        {
-                                            pos.X = xx; pos.Y = yy; pos.Z = zz;
-                                            tempBuffer.Add(pos);
-                                        }
-                                    }
-                                }
-                            }
-                            foreach (Vec3U16 cP in tempBuffer)
-                            {
-                                if (!buffer.Contains(cP))
-                                {
-                                    buffer.Add(cP);
-                                    p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.glass);
-                                }
-                            }
-                            foreach (Vec3U16 cP in buffer)
-                            {
-                                if (!tempBuffer.Contains(cP))
-                                {
-                                    p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air);
-                                    toRemove.Add(cP);
-                                }
-                            }
-                            foreach (Vec3U16 cP in toRemove)
-                            {
-                                buffer.Remove(cP);
-                            }
-                            tempBuffer.Clear();
-                            toRemove.Clear();
-                        }
-                        catch { }
-                    }
-                    catch { }
-                    p.pos.CopyTo(oldpos, 0);
-                }
-
-                foreach (Vec3U16 cP in buffer)
-                {
-                    p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air);
-                }
-
-                Player.SendMessage(p, "Stopped flying");
-            }));
+                    foreach (Vec3U16 cP in last)
+                        p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air);
+                    Player.SendMessage(p, "Stopped flying");
+                }));
             flyThread.Name = "MCG_Fly";
             flyThread.Start();
         }
-        public override void Help(Player p)
-        {
+        
+        void DoFly(Player p, ushort[] old, List<Vec3U16> last, List<Vec3U16> next) {
+            Thread.Sleep(20);
+            if (p.pos[0] == old[0] && p.pos[1] == old[1] && p.pos[2] == old[2]) return;
+            
+            try {
+                ushort x = (ushort)((p.pos[0]) / 32);
+                ushort y = (ushort)((p.pos[1] - 60) / 32);
+                ushort z = (ushort)((p.pos[2]) / 32);
+
+                for (int yy = y - 1; yy <= y; yy++)
+                    for (int zz = z - 2; zz <= z + 2; zz++)
+                        for (int xx = x - 2; xx <= x + 2; xx++)
+                {
+                    ushort offX = (ushort)xx, offY = (ushort)yy, offZ = (ushort)zz;
+                    if (p.level.GetTile(offX, offY, offZ) != Block.air) continue;
+                    
+                    Vec3U16 pos;
+                    pos.X = offX; pos.Y = offY; pos.Z = offZ;
+                    next.Add(pos);
+                }
+                
+                foreach (Vec3U16 P in next) {
+                    if (last.Contains(P)) continue;
+                    last.Add(P);
+                    p.SendBlockchange(P.X, P.Y, P.Z, Block.glass);
+                }
+                
+                for (int i = 0; i < last.Count; i++) {
+                    Vec3U16 P = last[i];
+                    if (next.Contains(P)) continue;
+                    
+                    p.SendBlockchange(P.X, P.Y, P.Z, Block.air);
+                    last.RemoveAt(i); i--;
+                }
+                next.Clear();
+            } catch (Exception ex) { Server.ErrorLog(ex); }
+            old[0] = p.pos[0]; old[1] = p.pos[1]; old[2] = p.pos[2];
+        }
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/fly - The old method of flight before custom clients.");
             Player.SendMessage(p, "May not work at all depending on your connection.");
         }

@@ -82,6 +82,11 @@ namespace MCGalaxy.Gui {
         [Category("Other settings")]
         public int HitboxPrecision { get; set; }
         
+        [Description("Whether the current map's name is included when a hearbeat is sent. " +
+                     "This means it shows up on the classicube.net server list as: \"Server name (current map name)\"")]
+        [Category("Other settings")]
+        public bool IncludeMapInHeartbeat { get; set; }        
+        
         public void LoadFromServer() {
             ChangeLevels = Server.zombie.ChangeLevels;
             IgnoredLevelsList = String.Join(",", Server.zombie.IgnoredLevelList);
@@ -97,6 +102,7 @@ namespace MCGalaxy.Gui {
             
             MaxMoveDistance = Server.zombie.MaxMoveDistance;
             HitboxPrecision = Server.zombie.HitboxPrecision;
+            IncludeMapInHeartbeat = Server.zombie.IncludeMapInHeartbeat;
         }
         
         public void ApplyToServer() {
@@ -119,6 +125,7 @@ namespace MCGalaxy.Gui {
             
             Server.zombie.MaxMoveDistance = MaxMoveDistance;
             Server.zombie.HitboxPrecision = HitboxPrecision;
+            Server.zombie.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
         }
     }
 }

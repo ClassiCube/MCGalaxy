@@ -480,6 +480,8 @@ namespace MCGalaxy.Gui {
                     zSettings.MaxMoveDistance = int.Parse(value); break;
                 case "zombie-ignore-personalworlds":
                     zSettings.IgnorePersonalWorlds = value.ToLower() == "true"; break;
+                case "zombie-map-inheartbeat":
+                    zSettings.IncludeMapInHeartbeat = value.ToLower() == "true"; break;                    
                     
                 case "guest-limit-notify":
                     chkGuestLimitNotify.Checked = value.ToLower() == "true"; break;

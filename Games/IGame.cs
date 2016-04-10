@@ -59,5 +59,8 @@ namespace MCGalaxy.Games {
         
         /// <summary> Raised when a player's money amount changes. </summary>
         public virtual void PlayerMoneyChanged(Player p) { }
+        
+        /// <summary> Raised when the server is about to send a heartbeat. </summary>
+        public virtual void OnHeartbeat(ref string name) { }
     }
 }

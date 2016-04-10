@@ -185,6 +185,7 @@ namespace MCGalaxy.Commands
             Server.zombie.SetMainLevel = false;
             Server.zombie.SaveLevelBlockchanges = false;
             Server.zombie.IgnorePersonalWorlds = true;
+            Server.zombie.IncludeMapInHeartbeat = false;
             //Settings
             #region Server Settings
             Server.salt = "";

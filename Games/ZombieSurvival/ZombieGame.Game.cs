@@ -67,7 +67,7 @@ namespace MCGalaxy.Games {
                                              byte rotX, byte rotY) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (!p.Game.Referee && noRespawn) {
-            	if (Math.Abs(p.pos[0] - x) >= MaxMoveDistance || Math.Abs(p.pos[2] - z) >= MaxMoveDistance) {
+                if (Math.Abs(p.pos[0] - x) >= MaxMoveDistance || Math.Abs(p.pos[2] - z) >= MaxMoveDistance) {
                     p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                     return true;
                 }
@@ -179,6 +179,11 @@ namespace MCGalaxy.Games {
             string moneyMsg = "&a" + p.money + " %S" + Server.moneys;
             string stateMsg = " and you are " + (p.Game.Infected ? "&cdead" : "&aalive");
             p.SendCpeMessage(CpeMessageType.Status3, moneyMsg + stateMsg);
+        }
+        
+        public override void OnHeartbeat(ref string name) {
+            if (!Running || !IncludeMapInHeartbeat || CurLevelName == null) return;
+            name += " (" + CurLevelName + ")";
         }
     }
 }

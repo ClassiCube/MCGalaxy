@@ -418,7 +418,10 @@ namespace MCGalaxy {
 					try { Server.zombie.IgnorePersonalWorlds = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
-					
+				case "zombie-map-inheartbeat":
+					try { Server.zombie.IncludeMapInHeartbeat = bool.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); }
+					break;
 				case "guest-limit-notify":
 					try { Server.guestLimitNotify = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
@@ -757,6 +760,7 @@ namespace MCGalaxy {
 			w.WriteLine("zombie-hitbox-precision = " + Server.zombie.HitboxPrecision);
 			w.WriteLine("zombie-maxmove-distance = " + Server.zombie.MaxMoveDistance);
 			w.WriteLine("zombie-ignore-personalworlds = " + Server.zombie.IgnorePersonalWorlds);
+			w.WriteLine("zombie-map-inheartbeat = " + Server.zombie.IncludeMapInHeartbeat);
 			w.WriteLine();
 			
 			w.WriteLine("guest-limit-notify = " + Server.guestLimitNotify.ToString().ToLower());

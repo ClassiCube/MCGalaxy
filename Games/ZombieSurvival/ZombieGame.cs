@@ -100,6 +100,9 @@ namespace MCGalaxy.Games {
         /// <summary> Whether maps with '+' in their name are ignored when choosing levels for the next round. </summary>
         public bool IgnorePersonalWorlds = true;
         
+        /// <summary> Whether the current level name should be shown in the heartbeats sent. </summary>
+        public bool IncludeMapInHeartbeat = false;
+        
         static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
             "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
             "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
