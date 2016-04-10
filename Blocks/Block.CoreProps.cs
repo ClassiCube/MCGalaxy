@@ -27,8 +27,9 @@ namespace MCGalaxy {
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
         
         static void SetCoreProperties() {
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < 256; i++)
                 Properties[i] = new BlockProps((byte)i);
+            for (int i = 0; i < 256; i++) {
                 // Fallback for unrecognised physics blocks
                 if (i >= CpeCount) Properties[i].ConvertId = Block.orange;
                 
