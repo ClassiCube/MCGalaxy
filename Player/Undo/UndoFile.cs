@@ -126,7 +126,6 @@ namespace MCGalaxy.Util {
                     buffer.Add(lvl.PosToInt(Pos.x, Pos.y, Pos.z), Pos.newtype, Pos.newExtType);
                     buffer.CheckIfSend(false);
                 }
-                if (p != null) p.RedoBuffer.Add(lvl, Pos);
             }
         }
         

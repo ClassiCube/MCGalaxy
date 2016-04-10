@@ -16,7 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
+using System;
+using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands {
@@ -32,39 +33,32 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
-            PerformRedo(p, p.RedoBuffer);
-            Player.SendMessage(p, "Redo performed.");
+            PerformRedo(p);
         }
         
-        static void PerformRedo(Player p, UndoCache cache) {
-            UndoCacheNode node = cache.Tail;
-            if (node == null) return;
-            
-            while (node != null) {
-                Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl == null) { node = node.Prev; continue; }
-                List<UndoCacheItem> items = node.Items;
-                BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-                
-                for (int i = items.Count - 1; i >= 0; i--) {
-                    UndoCacheItem item = items[i];                    
-                    ushort x, y, z;
-                    node.Unpack(item.Index, out x, out y, out z);                    
-                    byte tile, extTile;
-                    item.GetExtBlock(out tile, out extTile);
-                    
-                    if (lvl.DoBlockchange(p, x, y, z, tile, extTile)) {
-                        buffer.Add(lvl.PosToInt(x, y, z), tile, extTile);
-                        buffer.CheckIfSend(false);
-                    }
-                }
-                buffer.CheckIfSend(true);
-                node = node.Prev;
-            }
+        static void PerformRedo(Player p) {
+        	UndoDrawOpEntry[] entries = p.DrawOps.Items;
+			if (entries.Length == 0) {
+				Player.SendMessage(p, "You have no %T/undo%S or %T/undo <seconds>%S to redo."); return;
+			}
+			
+			for (int i = entries.Length - 1; i >= 0; i--) {
+				UndoDrawOpEntry entry = entries[i];
+				if (entry.DrawOpName != "UndoSelf") continue;
+				p.DrawOps.Remove(entry);
+				
+				RedoSelfDrawOp op = new RedoSelfDrawOp();
+				op.Start = entry.Start; op.End = entry.End;
+				DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal });
+				Player.SendMessage(p, "Redo performed.");
+				return;
+			}      	
+        	Player.SendMessage(p, "No %T/undo%S or %T/undo <seconds>%S calls were " +
+        	                   "found in the last 200 draw operations.");
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/redo - Redoes the Undo you just performed.");
+            Player.SendMessage(p, "/redo - Redoes the last /undo or /undo <seconds> you performed.");
         }
     }
 }

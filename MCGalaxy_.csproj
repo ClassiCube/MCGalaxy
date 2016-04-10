@@ -424,6 +424,7 @@
     <Compile Include="Drawing\DrawOps\LineDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\MazeDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PasteDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\RedoDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\ReplaceDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />

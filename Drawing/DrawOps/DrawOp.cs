@@ -197,8 +197,9 @@ namespace MCGalaxy.Drawing.Ops {
             timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
             
-            if (op.Name != "UndoSelf")
-                p.UndoDrawOps.Add(entry);
+            p.DrawOps.Add(entry);
+            if (p.DrawOps.Count > 200)
+            	p.DrawOps.RemoveFirst();
             DoReload(p, needReveal);
             return true;
         }

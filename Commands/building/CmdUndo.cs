@@ -38,7 +38,6 @@ namespace MCGalaxy.Commands
 		}
 
 		public override void Use(Player p, string message) {
-			if (p != null) p.RedoBuffer.Clear();
 			int ignored = 0;
 			if (message == "") {
 				if (p == null) { Player.SendMessage(null, "Console doesn't have an undo buffer."); return; }
@@ -85,7 +84,7 @@ namespace MCGalaxy.Commands
 		}
 		
 		void UndoSelf(Player p) {
-			UndoDrawOpEntry[] entries = p.UndoDrawOps.Items;
+			UndoDrawOpEntry[] entries = p.DrawOps.Items;
 			if (entries.Length == 0) {
 				Player.SendMessage(p, "You have no draw operations to undo.");
 				Player.SendMessage(p, "Try using %T/undo <seconds> %Sinstead.");
@@ -95,18 +94,18 @@ namespace MCGalaxy.Commands
 			for (int i = entries.Length - 1; i >= 0; i--) {
 				UndoDrawOpEntry entry = entries[i];
 				if (entry.DrawOpName == "UndoSelf") continue;
+				p.DrawOps.Remove(entry);
 				
 				UndoSelfDrawOp op = new UndoSelfDrawOp();
 				op.who = p;
 				op.Start = entry.Start; op.End = entry.End;
 				DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
-				
-				entry.UndoDrawOpName = entry.DrawOpName;
-				entry.DrawOpName = "UndoSelf";
+				Player.SendMessage(p, "Undo performed.");
 				return;
 			}
 			
-			Player.SendMessage(p, "Max number of draw operations that can be undone reached.");
+			Player.SendMessage(p, "Unable to undo any draw operations, as all of the " +
+			                   "past 50 draw operations are %T/undo%S or %T/undo <seconds>.");
 			Player.SendMessage(p, "Try using %T/undo <seconds> %Sinstead.");
 		}
 		
@@ -118,7 +117,9 @@ namespace MCGalaxy.Commands
 				if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can undo other players."); return; }
 			}
 			
-			UndoOnlineDrawOp op = new UndoOnlineDrawOp();
+			UndoOnlineDrawOp op;
+			if (p == who) op = new UndoSelfDrawOp();
+			else op = new UndoOnlineDrawOp();
 			op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
 			op.who = who;
 			DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );

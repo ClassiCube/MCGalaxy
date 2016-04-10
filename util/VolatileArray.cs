@@ -66,6 +66,18 @@ namespace MCGalaxy {
             }
         }
         
+        public void RemoveFirst() {
+            lock (locker) {
+                if (useList) list.RemoveAt(0);
+                if (Items.Length == 0) return;
+                
+                T[] newItems = new T[Items.Length - 1];
+                for (int i = 1; i < Items.Length; i++)
+                    newItems[i - 1] = Items[i];
+                Items = newItems;
+            }
+        }
+        
         public void Clear() {
             lock (locker) {
                 if (useList) list.Clear();

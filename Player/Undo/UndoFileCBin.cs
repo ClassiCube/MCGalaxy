@@ -123,8 +123,8 @@ namespace MCGalaxy.Util {
                         
                         item.Type = r.ReadByte();
                         item.NewType = r.ReadByte();
-                        item.GetExtBlock(out Pos.type, out Pos.extType);
-                        item.GetNewExtBlock(out Pos.newtype, out Pos.newExtType);
+                        item.GetBlock(out Pos.type, out Pos.extType);
+                        item.GetNewBlock(out Pos.newtype, out Pos.newExtType);
                         buffer.Add(Pos);
                     }
                 }
@@ -177,8 +177,8 @@ namespace MCGalaxy.Util {
                         
                         item.Type = temp[offset + 6];
                         item.NewType = temp[offset + 7];
-                        item.GetExtBlock(out Pos.type, out Pos.extType);
-                        item.GetNewExtBlock(out Pos.newtype, out Pos.newExtType);
+                        item.GetBlock(out Pos.type, out Pos.extType);
+                        item.GetNewBlock(out Pos.newtype, out Pos.newExtType);
                         UndoBlock(p, lvl, Pos, timeDelta, buffer);
                     }
                     buffer.CheckIfSend(true);

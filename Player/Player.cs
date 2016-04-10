@@ -215,8 +215,7 @@ namespace MCGalaxy {
         //Undo
         public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public int timeDelta; }
         public UndoCache UndoBuffer = new UndoCache();
-        public UndoCache RedoBuffer = new UndoCache();
-        public VolatileArray<UndoDrawOpEntry> UndoDrawOps = new VolatileArray<UndoDrawOpEntry>(false);
+        public VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>(false);
 
         public bool showPortals = false;
         public bool showMBs = false;
@@ -642,8 +641,7 @@ namespace MCGalaxy {
             Extras.Clear();
             if (CopyBuffer != null)
                 CopyBuffer.Clear();
-            RedoBuffer.Clear();
-            UndoDrawOps.Clear();
+            DrawOps.Clear();
             UndoBuffer.Clear();
             spamBlockLog.Clear();
             //spamChatLog.Clear();
@@ -931,10 +929,10 @@ Next: continue;
         }
         
         internal void RemoveInvalidUndos() {
-            UndoDrawOpEntry[] items = UndoDrawOps.Items;
+            UndoDrawOpEntry[] items = DrawOps.Items;
             for (int i = 0; i < items.Length; i++) {
                 if (items[i].End < UndoBuffer.LastClear)
-                    UndoDrawOps.Remove(items[i]);
+                    DrawOps.Remove(items[i]);
             }
         }
     }

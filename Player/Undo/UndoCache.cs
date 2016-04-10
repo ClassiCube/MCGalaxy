@@ -109,7 +109,7 @@ namespace MCGalaxy.Util {
             }
         }
         
-        public void GetExtBlock(out byte type, out byte extType) {
+        public void GetBlock(out byte type, out byte extType) {
             if ((Flags & (1 << 14)) != 0) {
                 type = Block.custom_block; extType = Type;
             } else {
@@ -117,7 +117,7 @@ namespace MCGalaxy.Util {
             }
         }
         
-        public void GetNewExtBlock(out byte type, out byte extType) {
+        public void GetNewBlock(out byte type, out byte extType) {
             if ((Flags & (1 << 15)) != 0) {
                 type = Block.custom_block; extType = NewType;
             } else {
@@ -151,7 +151,7 @@ namespace MCGalaxy.Util {
     }
     
     public sealed class UndoDrawOpEntry {
-        public string DrawOpName, UndoDrawOpName;
+        public string DrawOpName;
         public string LevelName;
         public DateTime Start, End;
     }

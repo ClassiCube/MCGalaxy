@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands {
                     if (time < DateTime.UtcNow) return;
                     
                     byte newTile = 0, newExtTile = 0;
-                    item.GetNewExtBlock(out newTile, out newExtTile);
+                    item.GetNewBlock(out newTile, out newExtTile);
                     p.SendBlockchange(x, y, z, newTile == Block.air ? Block.red : Block.green);
                 }
                 node = node.Prev;

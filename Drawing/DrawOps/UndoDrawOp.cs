@@ -83,8 +83,8 @@ namespace MCGalaxy.Drawing.Ops {
                     if (time > End) continue;
                     if (time < Start) { buffer.CheckIfSend(true); return; }
                     
-                    item.GetNewExtBlock(out Pos.newtype, out Pos.newExtType);
-                    item.GetExtBlock(out Pos.type, out Pos.extType);
+                    item.GetNewBlock(out Pos.newtype, out Pos.newExtType);
+                    item.GetBlock(out Pos.type, out Pos.extType);
                     UndoFile.UndoBlock(p, lvl, Pos, timeDelta, buffer);
                 }
                 buffer.CheckIfSend(true);
