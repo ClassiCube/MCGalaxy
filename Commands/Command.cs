@@ -32,7 +32,7 @@ namespace MCGalaxy
         public abstract void Use(Player p, string message);
         public abstract void Help(Player p);
         public virtual CommandPerm[] AdditionalPerms { get { return null; } }
-        public virtual bool Enabled { get { return true; } }
+        public virtual CommandEnable Enabled { get { return CommandEnable.Always; } }
 
         public static CommandList all = new CommandList();
         public static CommandList core = new CommandList();
@@ -47,6 +47,23 @@ namespace MCGalaxy
             }            
             core.commands = new List<Command>(all.commands);
             Scripting.Autoload();
+        }
+        
+        #region Helpers
+
+        const CommandEnable bothFlags = CommandEnable.Lava | CommandEnable.Zombie;
+        public static string GetDisabledReason(CommandEnable enable) {
+            if (enable == CommandEnable.Always) return null;
+            if (enable == CommandEnable.Economy && !Economy.Enabled)
+                return "economy is disabled.";
+            
+            if (enable == bothFlags && !(Server.zombie.Running || Server.lava.active))
+                return "neither zombie nor lava survival is running.";
+            if (enable == CommandEnable.Zombie && !Server.zombie.Running)
+                return "zombie survival is not running.";
+            if (enable == CommandEnable.Lava)
+                return "lava survival is not running.";
+            return null;
         }
         
         protected static void RevertAndClearState(Player p, ushort x, ushort y, ushort z) {
@@ -72,15 +89,16 @@ namespace MCGalaxy
         }
         
         protected void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
-        	MessageTooHighRank(p, action, p.group, canAffectOwnRank);
+            MessageTooHighRank(p, action, p.group, canAffectOwnRank);
         }
         
         protected void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
             if (canAffectGroup)
-            	 Player.SendMessage(p, "Can only " + action + " players ranked " + grp.color + grp.name + " %Sor below");
+                 Player.SendMessage(p, "Can only " + action + " players ranked " + grp.color + grp.name + " %Sor below");
             else
-            	 Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.color + grp.name);
+                 Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.color + grp.name);
         }
+        #endregion
     }
     
     public struct CommandPerm {
@@ -95,6 +113,11 @@ namespace MCGalaxy
         public CommandPerm(LevelPermission perm, string desc, int num) {
             Perm = perm; Description = desc; Number = num;
         }
+    }
+    
+    [Flags]
+    public enum CommandEnable {
+        Always = 0, Economy = 1, Zombie = 2, Lava = 4,
     }
     
     public sealed class CommandTypes {

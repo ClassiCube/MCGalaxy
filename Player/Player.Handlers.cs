@@ -1289,9 +1289,9 @@ return;
             if (!group.CanExecute(command)) {
                 SendMessage("You are not allowed to use \"" + cmd + "\"."); return;
             }
-            if (!command.Enabled) {
-                SendMessage("The game or economy associated with this command is not running, " +
-                            "so this command is disabled."); return;
+        	string reason = Command.GetDisabledReason(command.Enabled);
+            if (reason != null) {
+                SendMessage("Command is disabled as " + reason); return;
             }
             if (!(cmd == "repeat" || cmd == "pass" || cmd == "setpass")) {
                 lastCMD = cmd + " " + message;

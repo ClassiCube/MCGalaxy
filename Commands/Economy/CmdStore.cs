@@ -25,11 +25,11 @@ namespace MCGalaxy.Commands {
     /// <summary> Economy Beta v1.0 QuantumHive  </summary>
     public sealed class CmdStore : Command {
         public override string name { get { return "store"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "shop"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public override bool Enabled { get { return Economy.Enabled; } }
+        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
 
         public override void Use(Player p, string message) {
             if (message == "") {

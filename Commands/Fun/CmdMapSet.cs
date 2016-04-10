@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override bool Enabled { get { return Server.zombie.Running || Server.lava.active; } }
+        public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         static char[] trimChars = {' '};
         
         public override void Use(Player p, string message) {

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public override bool Enabled { get { return Economy.Enabled; } }
+        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
