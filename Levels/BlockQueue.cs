@@ -48,11 +48,9 @@ namespace MCGalaxy {
         public static void Pause() { blocktimer.Enabled = false; }
         public static void Resume() { blocktimer.Enabled = true; }
 
-        public static void Addblock(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
-            int index = p.level.PosToInt(x, y, z);
-            if (index < 0) return;
+        public static void Addblock(Player p, int index, byte type, byte extType = 0) {
+        	if (index == -1) return;
             block item;
-            
             item.p = p; item.index = index;
             item.type = type; item.extType = extType;
             p.level.blockqueue.Add(item);
@@ -65,21 +63,11 @@ namespace MCGalaxy {
                 int count = blockupdates;
                 if (lvl.blockqueue.Count < blockupdates || !lvl.HasPlayers())
                     count = lvl.blockqueue.Count;
-                Level.BlockPos bP = default(Level.BlockPos);
 
                 for (int c = 0; c < count; c++) {
                     block item = lvl.blockqueue[c];
-                    bP.name = item.p.name;
-                    ushort x, y, z;
-                    lvl.IntToPos(item.index, out x, out y, out z);
-                    
-                    bP.index = item.index;
-                    bP.SetData(item.type, item.extType, item.type == 0);
-                    if (lvl.DoBlockchange(item.p, x, y, z, item.type, item.extType)) {
-                        bulkSender.Add(item.index, item.type, item.extType);
-                        bulkSender.CheckIfSend(false);
-                        lvl.blockCache.Add(bP);
-                    }                    
+                    bulkSender.Add(item.index, item.type, item.extType);
+                    bulkSender.CheckIfSend(false);             
                 }
                 bulkSender.CheckIfSend(true);
                 lvl.blockqueue.RemoveRange(0, count);

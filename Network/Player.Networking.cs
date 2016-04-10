@@ -496,7 +496,7 @@ namespace MCGalaxy {
         }
         
         public void SendBlockchange(ushort x, ushort y, ushort z, byte type) {
-            if (x < 0 || y < 0 || z < 0) return;
+            //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
             byte[] buffer = new byte[8];
@@ -518,7 +518,7 @@ namespace MCGalaxy {
         
         // Duplicated as this packet needs to have maximum optimisation.
         public void SendBlockchange(ushort x, ushort y, ushort z, byte type, byte extType) {
-            if (x < 0 || y < 0 || z < 0) return;
+            //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
             byte[] buffer = new byte[8];

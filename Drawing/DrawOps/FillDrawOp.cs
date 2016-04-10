@@ -31,6 +31,16 @@ namespace MCGalaxy.Drawing.Ops {
             return Positions.Count;
         }
         
+        public override bool CanDraw(Vec3U16[] marks, Player p, out long affected) {
+            affected = GetBlocksAffected(p.level, marks);
+            if (affected > p.group.maxBlocks) {
+                Player.SendMessage(p, "You tried to fill over " + p.group.maxBlocks + " blocks.");
+                Player.SendMessage(p, "You cannot fill more than " + p.group.maxBlocks + ".");
+                return false;
+            }
+            return true;
+        }
+        
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             ushort x, y, z;
             foreach (int pos in Positions) {

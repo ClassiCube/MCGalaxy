@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands {
 
         void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, byte oldExtType, DrawMode fillType,
                        SparseBitSet bits, List<int> buffer, List<int> origins, int depth) {
-            if (bits.Get(x, y, z)) return;
+            if (bits.Get(x, y, z) || buffer.Count > p.group.maxBlocks) return;
             int index = p.level.PosToInt(x, y, z);
             if (depth > 2000) { origins.Add(index); return; }
             bits.Set(x, y, z, true);

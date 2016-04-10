@@ -70,7 +70,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public abstract void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush);
         
-        public bool CanDraw(Vec3U16[] marks, Player p, out long affected) {
+        public virtual bool CanDraw(Vec3U16[] marks, Player p, out long affected) {
             affected = GetBlocksAffected(p.level, marks);
             if (affected > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
@@ -103,15 +103,28 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type, byte extType) {
+            Level.BlockPos bP = default(Level.BlockPos);            
             switch (method) {
                 case M_PBlockQueue:
-                    BlockQueue.Addblock(p, x, y, z, type, extType);
+                    if (!lvl.DoBlockchange(p, x, y, z, type, extType)) return;
+                    bP.name = p.name;
+                    bP.index = lvl.PosToInt(x, y, z);
+                    bP.SetData(type, extType, type == 0);
+                    
+                    lvl.blockCache.Add(bP);                   
+                    BlockQueue.Addblock(p, bP.index, type, extType);
                     TotalModified++;
-                    break;
+                    break; 
                 case M_PBlockChange:
-                    lvl.Blockchange(p, x, y, z, type, extType);
+                    if (!lvl.DoBlockchange(p, x, y, z, type, extType)) return;
+                    bP.name = p.name;
+                    bP.index = lvl.PosToInt(x, y, z);
+                    
+                    bP.SetData(type, extType, type == 0);
+                    lvl.blockCache.Add(bP);                
+                    Player.GlobalBlockchange(lvl, x, y, z, type, extType);
                     TotalModified++;
-                    break;
+                    break;                    
                 case M_PSetTile:
                     byte old = lvl.GetTile(x, y, z);
                     if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
@@ -120,7 +133,7 @@ namespace MCGalaxy.Drawing.Ops {
                     p.loginBlocks++;
                     p.overallBlocks++;
                     TotalModified++;
-                    break;
+                    break;                    
                 case M_BlockChange:
                     lvl.Blockchange(x, y, z, type, extType);
                     TotalModified++;

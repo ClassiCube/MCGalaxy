@@ -389,8 +389,8 @@ namespace MCGalaxy {
             try
             {
                 if (!overRide)
-                	if (Block.Properties[oldBlock].OPBlock || (Block.Properties[type].OPBlock && data.Raw != 0)) 
-                	    return false;
+                    if (Block.Properties[oldBlock].OPBlock || (Block.Properties[type].OPBlock && data.Raw != 0)) 
+                        return false;
 
                 if (b == Block.sponge && physics > 0 && type != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, b);
@@ -462,8 +462,17 @@ namespace MCGalaxy {
         }
         
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if (bufferblocks) BlockQueue.Addblock(p, x, y, z, type, extType);
-            else Blockchange(p, x, y, z, type, extType);
+            if (!DoBlockchange(p, x, y, z, type, extType)) return;          
+            BlockPos bP = default(BlockPos);
+            bP.name = p.name;
+            bP.index = PosToInt(x, y, z);
+            bP.SetData(type, extType, type == 0);
+            blockCache.Add(bP);
+            
+            if (bufferblocks) 
+                BlockQueue.Addblock(p, bP.index, type, extType);
+            else 
+                Player.GlobalBlockchange(this, x, y, z, type, extType);
         }
     }
 }
