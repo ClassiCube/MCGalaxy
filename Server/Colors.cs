@@ -177,14 +177,14 @@ namespace MCGalaxy {
         }        
         
         public static string StripColours(string value) {
-            if (value.IndexOf('%') == -1)
+        	if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1)
                 return value;
             char[] output = new char[value.Length];
             int usedChars = 0;
             
             for (int i = 0; i < value.Length; i++) {
                 char token = value[i];
-                if( token == '%' ) {
+                if( token == '%' || token == '&' ) {
                     i++; // Skip over the following colour code.
                 } else {
                     output[usedChars++] = token;

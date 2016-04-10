@@ -672,7 +672,7 @@ catch { }*/
         public static Player FindExact(string name) { return PlayerInfo.FindExact(name); }
         
         [Obsolete("Use PlayerInfo.FindNick(name)")]
-        public static Player FindNick(string name) { return PlayerInfo.FindNick(name); }
+        public static Player FindNick(string name) { return PlayerInfo.FindNick(null, name); }
         
         static byte FreeId() {
             /*

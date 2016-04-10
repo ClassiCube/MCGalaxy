@@ -94,14 +94,18 @@ namespace MCGalaxy {
             return null;
         }
         
-        public static Player FindNick(string nick) {
-        	Player[] players = PlayerInfo.Online.Items;
+        public static Player FindNick(Player p, string nick) {
+            nick = Colors.StripColours(nick);
+            Player[] players = PlayerInfo.Online.Items;
             Player match = null; int matches = 0;
 
-            foreach (Player p in players) {
-                if (p.DisplayName.Equals(nick, comp)) return p;
-                if (p.DisplayName.IndexOf(nick, comp) >= 0) {
-                    match = p; matches++;
+            foreach (Player pl in players) {
+                if (!Player.CanSee(p, pl)) continue;
+                string name = Colors.StripColours(nick);
+                
+                if (name.Equals(nick, comp)) return pl;
+                if (name.IndexOf(nick, comp) >= 0) {
+                    match = pl; matches++;
                 }
             }
             return matches == 1 ? match : null;
