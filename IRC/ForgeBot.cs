@@ -52,24 +52,25 @@ namespace MCGalaxy {
                 connection = new Connection(new UTF8Encoding(false), con);
 
                 // Regster events for outgoing
-                Player.PlayerChat += new Player.OnPlayerChat(Player_PlayerChat);
-                Player.PlayerConnect += new Player.OnPlayerConnect(Player_PlayerConnect);
-                Player.PlayerDisconnect += new Player.OnPlayerDisconnect(Player_PlayerDisconnect);
+                Player.PlayerChat += Player_PlayerChat;
+                Player.PlayerConnect += Player_PlayerConnect;
+                Player.PlayerDisconnect += Player_PlayerDisconnect;
 
                 // Regster events for incoming
-                connection.Listener.OnNick += new NickEventHandler(Listener_OnNick);
-                connection.Listener.OnRegistered += new RegisteredEventHandler(Listener_OnRegistered);
-                connection.Listener.OnPublic += new PublicMessageEventHandler(Listener_OnPublic);
-                connection.Listener.OnPrivate += new PrivateMessageEventHandler(Listener_OnPrivate);
-                connection.Listener.OnError += new ErrorMessageEventHandler(Listener_OnError);
-                connection.Listener.OnQuit += new QuitEventHandler(Listener_OnQuit);
-                connection.Listener.OnJoin += new JoinEventHandler(Listener_OnJoin);
-                connection.Listener.OnPart += new PartEventHandler(Listener_OnPart);
-                connection.Listener.OnDisconnected += new DisconnectedEventHandler(Listener_OnDisconnected);
-                connection.Listener.OnChannelModeChange += new ChannelModeChangeEventHandler(Listener_OnChannelModeChange);
-                connection.Listener.OnNames += new NamesEventHandler(Listener_OnNames);
-                connection.Listener.OnKick += new KickEventHandler(Listener_OnKick);
-                connection.Listener.OnKill += new KillEventHandler(Listener_OnKill);
+                connection.Listener.OnNick += Listener_OnNick;
+                connection.Listener.OnRegistered += Listener_OnRegistered;
+                connection.Listener.OnAction += Listener_OnAction;
+                connection.Listener.OnPublic += Listener_OnPublic;
+                connection.Listener.OnPrivate += Listener_OnPrivate;
+                connection.Listener.OnError += Listener_OnError;
+                connection.Listener.OnQuit += Listener_OnQuit;
+                connection.Listener.OnJoin += Listener_OnJoin;
+                connection.Listener.OnPart += Listener_OnPart;
+                connection.Listener.OnDisconnected += Listener_OnDisconnected;
+                connection.Listener.OnChannelModeChange += Listener_OnChannelModeChange;
+                connection.Listener.OnNames += Listener_OnNames;
+                connection.Listener.OnKick += Listener_OnKick;
+                connection.Listener.OnKill += Listener_OnKill;
 
                 // Load banned commands list
                 if (File.Exists("text/ircbancmd.txt")) { // Backwards compatibility            
@@ -118,6 +119,83 @@ namespace MCGalaxy {
             Connect();
         }
         
+        public void Connect() {
+            if (!Server.irc || Server.shuttingDown) return;
+
+            /*new Thread(new ThreadStart(delegate
+            {
+                try { connection.Connect(); }
+                catch (Exception e)
+                {
+                    Server.s.Log("Failed to connect to IRC");
+                    Server.ErrorLog(e);
+                }
+            })).Start();*/
+
+            Server.s.Log("Connecting to IRC...");
+
+            try { connection.Connect(); }
+            catch (Exception e) {
+                Server.s.Log("Failed to connect to IRC!");
+                Server.ErrorLog(e);
+            }
+        }
+        
+        public void Disconnect(string reason) {
+            if (IsConnected()) { 
+                connection.Disconnect(reason); 
+                Server.s.Log("Disconnected from IRC!");
+                users.Clear();
+            }
+        }
+        
+        public bool IsConnected() {
+            if (!Server.irc) return false;
+            try { return connection.Connected; }
+            catch { return false; }
+        }
+        
+        #region In-game event handlers
+        
+        void Player_PlayerDisconnect(Player p, string reason) {
+            if (!Server.irc || !IsConnected()) return;
+            if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
+            
+            string msg = p.DisplayName + " left the game (" + reason + ")";
+            msg = ConvertMessage(msg, true);
+            if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
+        }
+
+        void Player_PlayerConnect(Player p) {
+            if (!Server.irc || !IsConnected()) return;
+            if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest) return;
+            
+            string msg = p.DisplayName + " joined the game";
+            msg = ConvertMessage(msg, true);
+            if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
+        }
+        
+        void Player_PlayerChat(Player p, string message) {    
+            if (String.IsNullOrEmpty(message.Trim())) {
+                Player.SendMessage(p, "You cannot send that message");
+                return;
+            }
+
+            if (Server.ircColorsEnable && Server.irc && IsConnected())
+                Say(p.FullName + "%r: " + message, p.opchat);
+            if (!Server.ircColorsEnable && Server.irc && IsConnected())
+            {
+                Say(p.DisplayName + ": " + message, p.opchat);
+            }
+        }        
+        #endregion
+        
+        #region IRC event handlers
+        
+        void Listener_OnAction(UserInfo user, string channel, string description) {
+            Player.GlobalIRCMessage(String.Format("%I[IRC] * {0} {1}", user.Nick, description));
+        }
+        
         void Listener_OnJoin(UserInfo user, string channel) {
             connection.Sender.Names(channel);
             DoJoinLeaveMessage(user.Nick, "joined", channel);
@@ -134,21 +212,6 @@ namespace MCGalaxy {
             Server.s.Log(String.Format("{0} has {1} channel {2}", who, verb, channel));
             string which = channel.CaselessEq(opchannel) ? " operator" : "";
             Player.GlobalIRCMessage(String.Format("%I[IRC] {0} has {1} the{2} channel", who, verb, which));
-        }
-        
-        void Player_PlayerDisconnect(Player p, string reason) {
-            if (!Server.irc || !IsConnected()) return;
-            if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
-            reason = Colors.MinecraftToIrcColors(reason);
-            if (!p.hidden)
-                connection.Sender.PublicMessage(channel, p.DisplayName + " left the game (" + reason + ")");
-        }
-
-        void Player_PlayerConnect(Player p) {
-            if (!Server.irc || !IsConnected()) return;
-            if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest) return;
-            if (!p.hidden)
-                connection.Sender.PublicMessage(channel, p.DisplayName + " joined the game");
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
@@ -249,26 +312,26 @@ namespace MCGalaxy {
         }
 
         bool CheckUserAndCommand(UserInfo user, string cmdName, string message, out string error) {
-        	List<string> chanNicks;
-        	error = null;
-        	if (!Server.ircControllers.Contains(user.Nick))
+            List<string> chanNicks;
+            error = null;
+            if (!Server.ircControllers.Contains(user.Nick))
                 return false;
-        	if (!users.TryGetValue(channel, out chanNicks))
-        		return false;
-        	
-        	int index = GetNickIndex(user.Nick, chanNicks);
-        	if (index < 0) {
-        		error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
-        	}
-        	string prefix = GetPrefix(chanNicks[index]);
-        	if (prefix == "" || prefix == "+") {
-        		error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
-        	}
-        	
-        	if (banCmd.Contains(cmdName)) {
-        		error = "You are not allowed to use this command from IRC."; return false;
-        	}
-        	return true;
+            if (!users.TryGetValue(channel, out chanNicks))
+                return false;
+            
+            int index = GetNickIndex(user.Nick, chanNicks);
+            if (index < 0) {
+                error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
+            }
+            string prefix = GetPrefix(chanNicks[index]);
+            if (prefix == "" || prefix == "+") {
+                error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
+            }
+            
+            if (banCmd.Contains(cmdName)) {
+                error = "You are not allowed to use this command from IRC."; return false;
+            }
+            return true;
         }
         
         void Listener_OnRegistered() {
@@ -330,58 +393,7 @@ namespace MCGalaxy {
             }
         }
         
-        void Player_PlayerChat(Player p, string message) {    
-            if (String.IsNullOrEmpty(message.Trim())) {
-                Player.SendMessage(p, "You cannot send that message");
-                return;
-            }
-
-            if (Server.ircColorsEnable && Server.irc && IsConnected())
-                Say(p.FullName + "%r: " + message, p.opchat);
-            if (Server.ircColorsEnable == false && Server.irc && IsConnected())
-            {
-                Say(p.DisplayName + ": " + message, p.opchat);
-            }
-        }
-        
-        public void Connect() {
-            if (!Server.irc || Server.shuttingDown) return;
-
-            /*new Thread(new ThreadStart(delegate
-            {
-                try { connection.Connect(); }
-                catch (Exception e)
-                {
-                    Server.s.Log("Failed to connect to IRC");
-                    Server.ErrorLog(e);
-                }
-            })).Start();*/
-
-            Server.s.Log("Connecting to IRC...");
-
-            try { connection.Connect(); }
-            catch (Exception e) {
-                Server.s.Log("Failed to connect to IRC!");
-                Server.ErrorLog(e);
-            }
-        }
-        
-        public void Disconnect(string reason) {
-            if (IsConnected()) { 
-                connection.Disconnect(reason); 
-                Server.s.Log("Disconnected from IRC!");
-                users.Clear();
-            }
-        }
-        
-        public bool IsConnected() {
-            if (!Server.irc) return false;
-            try { return connection.Connected; }
-            catch { return false; }
-        }
-        
-                
-        void Listener_OnNames(string channel, string[] nicks, bool last) {
+         void Listener_OnNames(string channel, string[] nicks, bool last) {
             List<string> chanNicks = GetNicks(channel);
             foreach (string n in nicks)
                 UpdateNick(n, chanNicks);
@@ -459,5 +471,7 @@ namespace MCGalaxy {
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
                 c == '[' || c == ']' || c == '{' || c == '}' || c == '^' || c == '`' || c == '_' || c == '|';
         }
+        
+        #endregion
     }
 }
