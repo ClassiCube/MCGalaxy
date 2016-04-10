@@ -54,18 +54,11 @@ namespace MCGalaxy.Commands
             lvl.jailrotx = lvl.rotx; lvl.jailroty = lvl.roty;
 
             p.Loading = true;
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) if (p.level == pl.level && p != pl) p.SendDespawn(pl.id);
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots) if (p.level == b.level) p.SendDespawn(b.id);
-
-            Player.GlobalDespawn(p, true);
-
+            CmdReveal.DespawnEntities(p);
             Level oldLevel = p.level;
             p.level = lvl;
             p.SendMotd();
-            if (!p.SendRawMap(oldLevel, lvl))
-                return;
+            if (!p.SendRawMap(oldLevel, lvl)) return;
 
             ushort x = (ushort)((0.5 + lvl.spawnx) * 32);
             ushort y = (ushort)((1 + lvl.spawny) * 32);

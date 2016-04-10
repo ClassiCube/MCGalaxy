@@ -501,23 +501,52 @@ namespace MCGalaxy {
                 string col = p.color;
                 if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !HasCpeExt(CpeExt.TextColors))
                     col = "&" + Colors.GetFallback(col[1]);
-                SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty); return;
+                
+                if (HasCpeExt(CpeExt.ExtPlayerList, 2)) {
+                	SendExtAddEntity2(id, p.truename, col + p.truename + possession, x, y, z, rotx, roty);
+                	SendExtAddPlayerName(id, p.truename, col + p.truename, "&fPlayers", 0);
+                } else {
+                	SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty); 
+                }       
+                return;
             }
             
-            if (Server.zombie.ZombieName != "" && !Game.Aka)
-                SendSpawn(id, Colors.red + Server.zombie.ZombieName + possession, x, y, z, rotx, roty);
-            else
-                SendSpawn(id, Colors.red + p.truename + possession, x, y, z, rotx, roty);
+        	string spawnName = p.truename;
+        	if (Server.zombie.ZombieName != "" && !Game.Aka)
+        		spawnName = Server.zombie.ZombieName;
+        	
+        	if (HasCpeExt(CpeExt.ExtPlayerList, 2)) {
+        		SendExtAddEntity2(id, spawnName, Colors.red + spawnName + possession, x, y, z, rotx, roty);
+        		SendExtAddPlayerName(id, spawnName, Colors.red + spawnName, "&cZombies", 0);
+        	} else {
+        		SendSpawn(id, Colors.red + spawnName + possession, x, y, z, rotx, roty);
+        	}
+            
             if (HasCpeExt(CpeExt.ChangeModel) && id != 0xFF)
                 SendChangeModel(id, "zombie");
+        }
+        
+        internal void SpawnEntity(PlayerBot b) {
+        	if (HasCpeExt(CpeExt.ExtPlayerList, 2)) {
+        		SendExtAddEntity2(b.id, b.name, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+        		SendExtAddPlayerName(b.id, b.name, b.color + b.name, "Bots", 0);
+        	} else {
+        		SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+        	}
+        }
+        
+        internal void DespawnEntity(byte id) {
+        	SendRaw(Opcode.RemoveEntity, id);
+        	if (HasCpeExt(CpeExt.ExtPlayerList, 2))
+        		SendExtRemovePlayerName(id);
         }
         
         public static void GlobalDespawn(Player p, bool self) {
         	Player[] players = PlayerInfo.Online.Items; 
         	foreach (Player other in players) {
                 if (p.level != other.level || (p.hidden && !self) ) continue;
-                if (p != other) { other.SendDespawn(p.id); }
-                else if (self) { other.SendDespawn(255); }
+                if (p != other) { other.DespawnEntity(p.id); }
+                else if (self) { other.DespawnEntity(255); }
             }
         }
 

@@ -397,7 +397,7 @@ namespace MCGalaxy {
         }
         
         void SendCpeExtensions() {
-            SendExtInfo(19);
+            SendExtInfo(20);
             SendExtEntry(CpeExt.ClickDistance, 1);
             SendExtEntry(CpeExt.CustomBlocks, 1);
             SendExtEntry(CpeExt.HeldBlock, 1);
@@ -423,6 +423,7 @@ namespace MCGalaxy {
             SendExtEntry(CpeExt.BulkBlockUpdate, 1);
             
             SendExtEntry(CpeExt.MessageTypes, 1);
+            SendExtEntry(CpeExt.ExtPlayerList, 2);
         }
         
         bool CheckWhitelist() {

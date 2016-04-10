@@ -398,14 +398,14 @@ namespace MCGalaxy {
         public void GlobalSpawn() {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
-                if (p.level == level) p.SendSpawn(id, color + name, pos[0], pos[1], pos[2], rot[0], rot[1]);
+            	if (p.level == level) p.SpawnEntity(this);
             }
         }
 
         public void GlobalDespawn() {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level == level) p.SendDespawn(id);
+            	if (p.level == level) p.DespawnEntity(id);
             }
         }
 
@@ -453,14 +453,6 @@ namespace MCGalaxy {
         public static void GlobalUpdatePosition() {
         	PlayerBot[] bots = Bots.Items;
         	foreach (PlayerBot b in bots) b.UpdatePosition();
-        }
-        
-        public static void GlobalUpdate() {
-            while (true) {
-                Thread.Sleep(100);
-                PlayerBot[] bots = PlayerBot.Bots.Items;
-                foreach (PlayerBot b in bots) b.Update();
-            }
         }
     }
 }

@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
                 if (lvl == null) { Player.SendMessage(p, "Level not found."); return; }            
                 if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can reload all players in a map."); return; }
 
-            	Player[] players = PlayerInfo.Online.Items;
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player who in players) {
                     if (who.level == lvl)
                         ReloadMap(p, who, true);
@@ -64,14 +64,22 @@ namespace MCGalaxy.Commands {
             GC.WaitForPendingFinalizers();
         }
         
+        /// <summary> Despawns this player to all other players, and despawns all others players to this player. </summary>
+        internal static void DespawnEntities(Player who) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (who.level == pl.level && who != pl) who.DespawnEntity(pl.id);
+            }
+            PlayerBot[] bots = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in bots) {
+                if (who.level == b.level) who.DespawnEntity(b.id);
+            }
+            Player.GlobalDespawn(who, true);
+        }
+        
         internal static void ReloadMap(Player p, Player who, bool showMessage) {
             who.Loading = true;
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) if (who.level == pl.level && who != pl) who.SendDespawn(pl.id);
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots) if (who.level == b.level) who.SendDespawn(b.id);
-
-            Player.GlobalDespawn(who, true);
+            DespawnEntities(who);
             who.SendUserMOTD(); who.SendMap(who.level);            
             CmdGoto.SpawnEntities(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
             who.Loading = false;
@@ -88,8 +96,8 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "/reveal all <map> - Reloads for all players in <map>");
         }
     }
-	
-	public sealed class CmdReload : Command {
+    
+    public sealed class CmdReload : Command {
         
         public override string name { get { return "reload"; } }
         public override string shortcut { get { return "rd"; } }
@@ -98,7 +106,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
-        	if (p == null) { MessageInGameOnly(p); return; }
+            if (p == null) { MessageInGameOnly(p); return; }
             CmdReveal.ReloadMap(p, p, false);    
         }
         

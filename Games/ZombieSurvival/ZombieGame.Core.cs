@@ -253,8 +253,8 @@ namespace MCGalaxy.Games {
         static void UpdatePlayerColor(Player p, string color) {
             if (p.Game.lastSpawnColor == color) return;
             p.Game.lastSpawnColor = color;
-            Player.GlobalDespawn(p, false);
-            Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
+            Player.GlobalDespawn(p, true);
+            Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], true);
         }
         
         void EndRound(object sender, ElapsedEventArgs e) {
@@ -308,8 +308,8 @@ namespace MCGalaxy.Games {
                 if (!pl.level.name.CaselessEq(CurLevelName)) continue;
                 int money = GetMoney(pl, alive, rand);
                 
-                Player.GlobalDespawn(pl, false);
-                Player.GlobalSpawn(pl, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], false);
+                Player.GlobalDespawn(pl, true);
+                Player.GlobalSpawn(pl, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], true);
                 if (money == -1) {
                     pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you."); money = 0;
                 } else if (money > 0) {
@@ -432,10 +432,10 @@ namespace MCGalaxy.Games {
             FileInfo[] fi = di.GetFiles("*.lvl");
             
             foreach (FileInfo fil in fi) {
-            	string mapName = Path.GetFileNameWithoutExtension(fil.Name);
-            	if (mapName.IndexOf('+') >= 0 && IgnorePersonalWorlds) 
-            		continue;
-            	maps.Add(mapName);
+                string mapName = Path.GetFileNameWithoutExtension(fil.Name);
+                if (mapName.IndexOf('+') >= 0 && IgnorePersonalWorlds) 
+                    continue;
+                maps.Add(mapName);
             }
             return maps;
         }

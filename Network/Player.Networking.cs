@@ -490,7 +490,6 @@ namespace MCGalaxy {
             SendRaw(Opcode.SetPermission, op ? (byte)100 : (byte)0);
         }
         
-        //TODO: Figure a way to SendPos without changing rotation
         public void SendDespawn(byte id) {
             SendRaw(Opcode.RemoveEntity, id);
         }
@@ -592,18 +591,6 @@ namespace MCGalaxy {
             buffer[133] = mods;
             SendRaw(buffer);
         }
-        
-        public void SendExtAddPlayerName(short id, string name, Group grp, string displayname = "") {
-            byte[] buffer = new byte[196];
-            buffer[0] = Opcode.CpeExtAddPlayerName;
-            NetUtils.WriteI16(id, buffer, 1);
-            NetUtils.WriteAscii(name, buffer, 3);
-            if (displayname == "") displayname = name;
-            NetUtils.WriteAscii(displayname, buffer, 67);
-            NetUtils.WriteAscii(grp.color + grp.name.ToUpper() + "s:", buffer, 131);
-            buffer[195] = (byte)grp.Permission.GetHashCode();
-            SendRaw(buffer);
-        }
 
         public void SendExtAddEntity(byte id, string name, string displayname = "") {
             byte[] buffer = new byte[130];
@@ -615,7 +602,40 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
-        public void SendDeletePlayerName( byte id ) {
+        public void SendExtAddEntity2(byte id, string skinName, string displayName, ushort x, ushort y, ushort z, byte rotx, byte roty) {
+            byte[] buffer = new byte[138];
+            buffer[0] = Opcode.CpeExtAddEntity2;
+            buffer[1] = id;
+            NetUtils.WriteAscii(displayName.TrimEnd('+'), buffer, 2);
+            NetUtils.WriteAscii(skinName.TrimEnd('+'), buffer, 66);
+            NetUtils.WriteU16(x, buffer, 130);
+            NetUtils.WriteU16(y, buffer, 132);
+            NetUtils.WriteU16(z, buffer, 134);
+            buffer[136] = rotx;
+            buffer[137] = roty;
+            SendRaw(buffer);
+
+            if (HasCpeExt(CpeExt.ChangeModel))
+                UpdateModels();
+        }
+        
+        public void SendExtAddPlayerName(byte id, string listName, string displayName, Group grp) {
+            byte grpRank = (byte)grp.Permission.GetHashCode();
+            SendExtAddPlayerName(id, listName, displayName, grp.color + grp.name + "s:", grpRank);
+        }
+        
+        public void SendExtAddPlayerName(byte id, string listName, string displayName, string grp, byte grpRank) {
+            byte[] buffer = new byte[196];
+            buffer[0] = Opcode.CpeExtAddPlayerName;
+            NetUtils.WriteI16(id, buffer, 1);
+            NetUtils.WriteAscii(listName, buffer, 3);
+            NetUtils.WriteAscii(displayName, buffer, 67);
+            NetUtils.WriteAscii(grp, buffer, 131);
+            buffer[195] = grpRank;
+            SendRaw(buffer);
+        }
+        
+        public void SendExtRemovePlayerName(byte id) {
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeExtRemovePlayerName;
             NetUtils.WriteI16(id, buffer, 1);
