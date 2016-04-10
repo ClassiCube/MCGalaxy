@@ -130,7 +130,7 @@ namespace MCGalaxy.Games {
                 CurLevel.ChatLevel("&4Round Start:&f 30...");
                 Thread.Sleep(20000); if (!Running) return null;
                 CurLevel.ChatLevel("&4Round Start:&f 10...");
-                Thread.Sleep(10000); if (!Running) return null;
+                Thread.Sleep(5000); if (!Running) return null;
                 CurLevel.ChatLevel("&4Round Start:&f 5...");
                 Thread.Sleep(1000); if (!Running) return null;
                 CurLevel.ChatLevel("&4Round Start:&f 4...");
