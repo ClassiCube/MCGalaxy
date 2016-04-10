@@ -502,7 +502,7 @@ namespace MCGalaxy {
                 if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !HasCpeExt(CpeExt.TextColors))
                     col = "&" + Colors.GetFallback(col[1]);
                 
-                if (HasCpeExt(CpeExt.ExtPlayerList, 2)) {
+                if (hasExtList) {
                 	SendExtAddEntity2(id, p.truename, col + p.truename + possession, x, y, z, rotx, roty);
                 	SendExtAddPlayerName(id, p.truename, col + p.truename, "&fPlayers", 0);
                 } else {
@@ -515,19 +515,19 @@ namespace MCGalaxy {
         	if (Server.zombie.ZombieName != "" && !Game.Aka)
         		spawnName = Server.zombie.ZombieName;
         	
-        	if (HasCpeExt(CpeExt.ExtPlayerList, 2)) {
+        	if (hasExtList) {
         		SendExtAddEntity2(id, spawnName, Colors.red + spawnName + possession, x, y, z, rotx, roty);
         		SendExtAddPlayerName(id, spawnName, Colors.red + spawnName, "&cZombies", 0);
         	} else {
         		SendSpawn(id, Colors.red + spawnName + possession, x, y, z, rotx, roty);
         	}
             
-            if (HasCpeExt(CpeExt.ChangeModel) && id != 0xFF)
+            if (hasChangeModel && id != 0xFF)
                 SendChangeModel(id, "zombie");
         }
         
         internal void SpawnEntity(PlayerBot b) {
-        	if (HasCpeExt(CpeExt.ExtPlayerList, 2)) {
+        	if (hasExtList) {
         		SendExtAddEntity2(b.id, b.name, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
         		SendExtAddPlayerName(b.id, b.name, b.color + b.name, "Bots", 0);
         	} else {
@@ -537,7 +537,7 @@ namespace MCGalaxy {
         
         internal void DespawnEntity(byte id) {
         	SendRaw(Opcode.RemoveEntity, id);
-        	if (HasCpeExt(CpeExt.ExtPlayerList, 2))
+        	if (hasExtList)
         		SendExtRemovePlayerName(id);
         }
         

@@ -42,6 +42,9 @@ namespace MCGalaxy
         public int BlockDefinitionsExt = 0;
         public int TextColors = 0;
         public int BulkBlockUpdate = 0;
+        
+        public bool hasCustomBlocks, hasBlockDefs, 
+        hasTextColors, hasChangeModel, hasExtList;
 
         public void AddExtension(string Extension, int version)
         {
@@ -52,14 +55,14 @@ namespace MCGalaxy
                 case CpeExt.CustomBlocks:
                     CustomBlocks = version;
                     if (version == 1) SendCustomBlockSupportLevel(1);
-                    hasCustomBlocks = true;
-                    break;
+                    hasCustomBlocks = true; break;
                 case CpeExt.HeldBlock:
                     HeldBlock = version; break;
                 case CpeExt.TextHotkey:
                     TextHotKey = version; break;
                 case CpeExt.ExtPlayerList:
-                    ExtPlayerList = version; break;
+                    ExtPlayerList = version; 
+                    hasExtList = version == 2; break;
                 case CpeExt.EnvColors:
                     EnvColors = version; break;
                 case CpeExt.SelectionCuboid:
@@ -68,7 +71,8 @@ namespace MCGalaxy
                     BlockPermissions = version; break;
                 case CpeExt.ChangeModel:
                     UpdateModels();
-                    ChangeModel = version; break;
+                    ChangeModel = version; 
+                    hasChangeModel = true; break;
                 case CpeExt.EnvMapAppearance:
                     EnvMapAppearance = version; break;
                 case CpeExt.EnvWeatherType:
@@ -139,7 +143,7 @@ namespace MCGalaxy
                 }
                 
                 if (p.model != "humanoid") SendChangeModel(p.id, p.model);
-                if (p.HasCpeExt(CpeExt.ChangeModel) && model != "humanoid")
+                if (hasChangeModel && model != "humanoid")
                     p.SendChangeModel(id, model);
             }
             

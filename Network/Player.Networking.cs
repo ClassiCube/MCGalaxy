@@ -64,7 +64,7 @@ namespace MCGalaxy {
             }
         }
         
-        public bool hasCpe, hasCustomBlocks, hasBlockDefs, hasTextColors, finishedCpeLogin = false;
+        public bool hasCpe, finishedCpeLogin = false;
         public string appName;
         public int extensionCount;
         public List<string> extensions = new List<string>();
@@ -458,8 +458,7 @@ namespace MCGalaxy {
             buffer[73] = roty;
             SendRaw(buffer);
 
-            if (HasCpeExt(CpeExt.ChangeModel))
-                UpdateModels();
+            if (hasChangeModel) UpdateModels();
         }
         
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
@@ -615,8 +614,7 @@ namespace MCGalaxy {
             buffer[137] = roty;
             SendRaw(buffer);
 
-            if (HasCpeExt(CpeExt.ChangeModel))
-                UpdateModels();
+            if (hasChangeModel) UpdateModels();
         }
         
         public void SendExtAddPlayerName(byte id, string listName, string displayName, Group grp) {
@@ -733,22 +731,37 @@ namespace MCGalaxy {
         
         void UpdatePosition() {
             //pingDelayTimer.Stop();
-            byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, MakePitch(), false);
-            oldpos = pos; oldrot = rot;
+            byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, 
+                                                       oldrot, MakePitch(), false);            
             if (packet == null) return;
+            byte[] oldPacket = null;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p != this && p.level == level) p.SendRaw(packet);
+                if (p == this || p.level != level) continue;
+                
+                // For clients that don't support ChangeModel, we still need to provide
+                // some visual indication that they are infected.
+                if (!p.hasChangeModel && oldPacket == null) {
+                    oldPacket = NetUtils.GetPositionPacket(id, pos, oldpos, rot, 
+                                                           oldrot, MakeClassicPitch(), false);
+                }
+                p.SendRaw(p.hasChangeModel ? packet : oldPacket);
             }
+            oldpos = pos; oldrot = rot;
         }
         
         byte MakePitch() {
             if (Server.flipHead || flipHead)
-                if (rot[1] > 64 && rot[1] < 192)
-                    return rot[1];
-                else
-                    return 128;
+                if (rot[1] > 64 && rot[1] < 192) return rot[1];
+                else return 128;
+            return rot[1];
+        }
+        
+        byte MakeClassicPitch() {
+            if (Server.flipHead || flipHead || Game.Infected)
+                if (rot[1] > 64 && rot[1] < 192) return rot[1];
+                else return 128;
             return rot[1];
         }
 
