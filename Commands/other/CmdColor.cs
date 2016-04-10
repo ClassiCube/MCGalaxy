@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
                 Database.executeQuery(query, "UPDATE Players SET color = @Color WHERE name = @Name");
             }
             Player.GlobalDespawn(who, false);
-            Player.GlobalSpawn(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1], false);
+            Player.GlobalSpawn(who, false);
             who.SetPrefix();
         }
         

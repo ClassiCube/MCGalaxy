@@ -58,7 +58,7 @@ namespace MCGalaxy {
 
         public static bool storeHelp = false;
         public static string storedHelp = "";
-        internal string truename;
+        internal string truename, skinName;
         internal bool dontmindme = false;
         public Socket socket;
         System.Timers.Timer timespent = new System.Timers.Timer(1000);
@@ -477,13 +477,17 @@ namespace MCGalaxy {
             }
         }
         
+        public static void GlobalSpawn(Player p, bool self, string possession = "") {
+            GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], self, possession);
+        }
+        
         public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
             p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;
             foreach (Player other in players) {
-            	if ((other.Loading && p != other) || p.level != other.level) continue;
-            	if ((p.hidden || p.Game.Referee) && !self) continue;
+                if ((other.Loading && p != other) || p.level != other.level) continue;
+                if ((p.hidden || p.Game.Referee) && !self) continue;
                 
                 if (p != other) {
                     other.SpawnEntity(p, p.id, x, y, z, rotx, roty, possession);
@@ -503,24 +507,25 @@ namespace MCGalaxy {
                     col = "&" + Colors.GetFallback(col[1]);
                 
                 if (hasExtList) {
-                	SendExtAddEntity2(id, p.truename, col + p.truename + possession, x, y, z, rotx, roty);
-                	SendExtAddPlayerName(id, p.truename, col + p.truename, "&fPlayers", 0);
+                    SendExtAddEntity2(id, p.skinName, col + p.truename + possession, x, y, z, rotx, roty);
+                    SendExtAddPlayerName(id, p.skinName, col + p.truename, "&fPlayers", 0);
                 } else {
-                	SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty); 
+                    SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty); 
                 }       
                 return;
             }
             
-        	string spawnName = p.truename;
-        	if (Server.zombie.ZombieName != "" && !Game.Aka)
-        		spawnName = Server.zombie.ZombieName;
-        	
-        	if (hasExtList) {
-        		SendExtAddEntity2(id, spawnName, Colors.red + spawnName + possession, x, y, z, rotx, roty);
-        		SendExtAddPlayerName(id, spawnName, Colors.red + spawnName, "&cZombies", 0);
-        	} else {
-        		SendSpawn(id, Colors.red + spawnName + possession, x, y, z, rotx, roty);
-        	}
+            string name = p.truename, skinName = p.skinName;
+            if (Server.zombie.ZombieName != "" && !Game.Aka) {
+                name = Server.zombie.ZombieName; skinName = name;
+            }
+            
+            if (hasExtList) {
+                SendExtAddEntity2(id, skinName, Colors.red + name + possession, x, y, z, rotx, roty);
+                SendExtAddPlayerName(id, skinName, Colors.red + name, "&cZombies", 0);
+            } else {
+                SendSpawn(id, Colors.red + name + possession, x, y, z, rotx, roty);
+            }
             
             if (hasChangeModel && id != 0xFF)
                 SendChangeModel(id, "zombie");
@@ -528,10 +533,10 @@ namespace MCGalaxy {
         
         internal void SpawnEntity(PlayerBot b) {
         	if (hasExtList) {
-        		SendExtAddEntity2(b.id, b.name, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
-        		SendExtAddPlayerName(b.id, b.name, b.color + b.name, "Bots", 0);
+        		SendExtAddEntity2(b.id, b.skinName, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+        		SendExtAddPlayerName(b.id, b.skinName, b.color + b.name, "Bots", 0);
         	} else {
-        		SendSpawn(b.id, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+        		SendSpawn(b.id, b.color + b.skinName, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
         	}
         }
         
@@ -558,7 +563,7 @@ namespace MCGalaxy {
             }
         	
             GlobalDespawn(this, true);
-            GlobalSpawn(this, pos[0], pos[1], pos[2], rot[0], rot[1], true, marker);
+            GlobalSpawn(this, true, marker);
             return true;
         }
 

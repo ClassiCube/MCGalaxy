@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
                     isBot = false;
                     who = PlayerInfo.FindOrShowMatches(p, args[0]);
                     if (who == null) return;
-                }                
+                }
             } else if (p == null) { 
                 Player.SendMessage(p, "Console can't use this command on itself."); return;
             }

@@ -275,6 +275,7 @@ namespace MCGalaxy {
                 byte version = message[0];
                 name = enc.GetString(message, 1, 64).Trim();
                 truename = name;
+                skinName = name;
                 
                 lock (pendingLock) {
                     pendingNames.Add(name);

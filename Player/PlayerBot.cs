@@ -32,7 +32,7 @@ namespace MCGalaxy {
         public bool hunt = false, kill = false;
 
         public string AIName = "";
-        public string name;
+        public string name, skinName;
         public string model = "humanoid";
         public byte id;
         public string color;
@@ -57,6 +57,7 @@ namespace MCGalaxy {
         #region == constructors ==
         public PlayerBot(string n, Level lvl, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             name = n;
+            skinName = n;
             color = "&1";
             id = FreeId();
             

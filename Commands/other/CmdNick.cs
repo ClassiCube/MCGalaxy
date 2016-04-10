@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
 			}
 			
 			Player.GlobalDespawn(who, false);
-			Player.GlobalSpawn(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1], false);
+			Player.GlobalSpawn(who, false);
             PlayerDB.Save(who);
 		}
 		

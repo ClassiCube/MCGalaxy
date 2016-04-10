@@ -254,7 +254,7 @@ namespace MCGalaxy.Games {
             if (p.Game.lastSpawnColor == color) return;
             p.Game.lastSpawnColor = color;
             Player.GlobalDespawn(p, true);
-            Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], true);
+            Player.GlobalSpawn(p, true);
         }
         
         void EndRound(object sender, ElapsedEventArgs e) {
@@ -309,7 +309,7 @@ namespace MCGalaxy.Games {
                 int money = GetMoney(pl, alive, rand);
                 
                 Player.GlobalDespawn(pl, true);
-                Player.GlobalSpawn(pl, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], true);
+                Player.GlobalSpawn(pl, true);
                 if (money == -1) {
                     pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you."); money = 0;
                 } else if (money > 0) {

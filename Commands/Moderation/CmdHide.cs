@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
                 Server.IRC.Say(p.DisplayName + " left the game (" + discMsg + ")");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
             } else {
-                Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
+                Player.GlobalSpawn(p, false);
                 if (messageOps)
                     Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + "%S- is now &8visible%S.");
                 

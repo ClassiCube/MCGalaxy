@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
                 Player.SendChatFrom(p, p.FullName + " %Sis no longer a referee", false);
                 if (p.level == Server.zombie.CurLevel)
                     Server.zombie.PlayerJoinedLevel(p, Server.zombie.CurLevel, Server.zombie.CurLevel);
-                Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], true, "");
+                Player.GlobalSpawn(p, true, "");
             } else {
                 Player.SendChatFrom(p, p.FullName + " %Sis now a referee", false);               
                 Server.zombie.PlayerLeftServer(p);
