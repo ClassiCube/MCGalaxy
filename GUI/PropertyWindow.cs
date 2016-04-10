@@ -63,10 +63,10 @@ namespace MCGalaxy.Gui {
             chat_cmbGlobal.Items.AddRange(colorsArray);
             chat_cmbSyntax.Items.AddRange(colorsArray);
             chat_cmbDesc.Items.AddRange(colorsArray);
-            cmbColor.Items.AddRange(colorsArray); 
+            cmbColor.Items.AddRange(colorsArray);
 
-            grpIRC.BackColor = Server.irc ? Color.White : Color.LightGray;
-            grpSQL.BackColor = Server.useMySQL ? Color.White : Color.LightGray;
+            toggleIrcSettings(Server.irc);
+            toggleMySQLSettings(Server.useMySQL);
 
             string opchatperm = String.Empty;
             string adminchatperm = String.Empty;
@@ -799,12 +799,8 @@ namespace MCGalaxy.Gui {
         }
 
         private void chkIRC_CheckedChanged(object sender, EventArgs e) {
-            if ( !chkIRC.Checked ) {
-                grpIRC.BackColor = Color.LightGray;
-            }
-            else {
-                grpIRC.BackColor = Color.White;
-            }
+
+            toggleIrcSettings(chkIRC.Checked);
         }
 
         private void btnBackup_Click(object sender, EventArgs e) {
@@ -1284,12 +1280,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
 
         private void chkUseSQL_CheckedChanged(object sender, EventArgs e) {
-            if ( chkUseSQL.Checked.ToString().ToLower() == "false" ) {
-                grpSQL.BackColor = Color.LightGray;
-            }
-            if ( chkUseSQL.Checked.ToString().ToLower() == "true" ) {
-                grpSQL.BackColor = Color.White;
-            }
+            toggleMySQLSettings(chkUseSQL.Checked);
         }
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {
@@ -1380,6 +1371,36 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         
         private void lstCommands_SelectedIndexChanged ( object sender, EventArgs e ) {
             btnUnload.Enabled = lstCommands.SelectedIndex != -1;
+        }
+
+
+        /// <summary>
+        /// Toggles enabled state for IRC options.
+        /// </summary>
+        /// <param name="enabled"></param>
+        protected void toggleIrcSettings(bool enabled)
+        {
+            txtIRCServer.Enabled = enabled;
+            txtIRCPort.Enabled = enabled;
+            txtNick.Enabled = enabled;
+            txtChannel.Enabled = enabled;
+            txtOpChannel.Enabled = enabled;
+            txtIrcId.Enabled = enabled;
+            chkIrcId.Enabled = enabled;
+        }
+
+
+        /// <summary>
+        /// Toggles enabeld state for MySQL options.
+        /// </summary>
+        /// <param name="enabled"></param>
+        protected void toggleMySQLSettings(bool enabled)
+        {
+            txtSQLUsername.Enabled = enabled;
+            txtSQLPassword.Enabled = enabled;
+            txtSQLPort.Enabled = enabled;
+            txtSQLHost.Enabled = enabled;
+            txtSQLDatabase.Enabled = enabled;
         }
     }
 }
