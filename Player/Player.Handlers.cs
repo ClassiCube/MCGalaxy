@@ -599,7 +599,7 @@ namespace MCGalaxy {
         }
         
         void CheckIfMuted() {
-            if (File.Exists("ranks/muted.txt")) {
+            if (!File.Exists("ranks/muted.txt")) {
                 File.Create("ranks/muted.txt").Close(); return;
             }
             
