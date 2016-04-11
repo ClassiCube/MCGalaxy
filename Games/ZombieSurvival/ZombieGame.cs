@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {
     
@@ -123,11 +124,11 @@ namespace MCGalaxy.Games {
             RoundEnd = DateTime.MinValue;
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-            	pl.Game.RatedMap = false;
-            	pl.Game.PledgeSurvive = false;
-            	if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))
-            		continue;
-            	ResetCpeMessages(pl);
+                pl.Game.RatedMap = false;
+                pl.Game.PledgeSurvive = false;
+                if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))
+                    continue;
+                ResetCpeMessages(pl);
             }
             
             LastLevelName = "";
@@ -157,20 +158,40 @@ namespace MCGalaxy.Games {
 
         string GetStatusMessage(string timespan) {
             if (timespan.Length > 0) {
-                const string format = "&a{0} %Salive, &c{1} %Sinfected ({2})";                
+                const string format = "&a{0} %Salive, &c{1} %Sinfected ({2})";
                 return String.Format(format, Alive.Count, Infected.Count, timespan);
             } else {
-                const string format = "&a{0} %Salive, &c{1} %Sinfected";                
+                const string format = "&a{0} %Salive, &c{1} %Sinfected";
                 return String.Format(format, Alive.Count, Infected.Count);
             }
         }
 
         string GetTimespan(int seconds) {
-            if (seconds < 0) return "";           
+            if (seconds < 0) return "";
             if (seconds <= 10) return "10 secs left";
             if (seconds <= 30) return "30 secs left";
             if (seconds <= 60) return "1 min left";
             return ((seconds + 59) / 60) + " mins left";
+        }
+        
+        const string createSyntax =
+            @"CREATE TABLE if not exists ZombieStats (
+ID INTEGER {0}{2} NOT NULL,
+Name CHAR(20),
+TotalRounds INT,
+MaxRounds INT,
+TotalInfected INT,
+MaxInfected INT,
+Additional1 INT,
+Additional2 INT,
+Additional3 INT,
+Additional4 INT{1};"; // reserve space for possible future additions
+        
+        public void CheckTableExists() {
+            string primKey = Server.useMySQL ? "" : "PRIMARY KEY ";
+            string autoInc = Server.useMySQL ? "AUTO_INCREMENT" : "AUTOINCREMENT";
+            string primKey2 = Server.useMySQL ? ", PRIMARY KEY (ID)" : "";
+            Database.executeQuery(string.Format(createSyntax, primKey, autoInc, primKey2));
         }
     }
 }

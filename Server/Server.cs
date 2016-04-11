@@ -372,6 +372,7 @@ namespace MCGalaxy
 
             InitDatabase();
             Economy.LoadDatabase();
+            Server.zombie.CheckTableExists();
 
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded)
