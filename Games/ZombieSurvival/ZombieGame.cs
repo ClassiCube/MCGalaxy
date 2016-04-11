@@ -110,7 +110,7 @@ namespace MCGalaxy.Games {
             "{0} transplanted {1}'s living brain" };
         
         internal bool noRespawn = true, noPillaring = true;
-        internal string ZombieName = "";
+        internal string ZombieName = "", ZombieModel = "zombie";
         internal bool ChangeLevels = true;
         
         /// <summary> List of levels that are randomly picked for zombie survival. 

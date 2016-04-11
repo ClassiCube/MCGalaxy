@@ -465,7 +465,9 @@ namespace MCGalaxy.Gui {
                 case "no-pillaring-during-zombie":
                     zSettings.Pillaring = value.ToLower() != "true"; break;
                 case "zombie-name-while-infected":
-                    zSettings.InfectedName = value; break;
+                    zSettings.Name = value; break;
+                case "zombie-model-while-infected":
+                    zSettings.Model = value; break;                    
                 case "enable-changing-levels":
                     zSettings.ChangeLevels = value.ToLower() == "true"; break;
                 case "zombie-survival-only-server":

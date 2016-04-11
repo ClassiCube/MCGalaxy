@@ -528,7 +528,7 @@ namespace MCGalaxy {
             }
             
             if (hasChangeModel && id != 0xFF)
-                SendChangeModel(id, "zombie");
+                SendChangeModel(id, Server.zombie.ZombieModel);
         }
         
         internal void SpawnEntity(PlayerBot b) {

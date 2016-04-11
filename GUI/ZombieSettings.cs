@@ -48,10 +48,6 @@ namespace MCGalaxy.Gui {
         public bool SaveZombieLevelChanges { get; set; }
         
         
-        [Description("Name to show above infected players. If this is left blank, then the player's name is used instead.")]
-        [Category("General settings")]
-        public string InfectedName { get; set; }
-        
         [Description("Whether players are allowed to pillar in zombie survival. " +
                      "Note this can be overriden for specific maps using /mset.")]
         [Category("General settings")]
@@ -85,7 +81,15 @@ namespace MCGalaxy.Gui {
         [Description("Whether the current map's name is included when a hearbeat is sent. " +
                      "This means it shows up on the classicube.net server list as: \"Server name (current map name)\"")]
         [Category("Other settings")]
-        public bool IncludeMapInHeartbeat { get; set; }        
+        public bool IncludeMapInHeartbeat { get; set; }
+
+        [Description("Name to show above infected players. If this is left blank, then the player's name is used instead.")]
+        [Category("Zombie settings")]
+        public string Name { get; set; }
+
+        [Description("Model to use for infected players. If this is left blank, then 'zombie' model is used.")]
+        [Category("Zombie settings")]
+        public string Model { get; set; }        
         
         public void LoadFromServer() {
             ChangeLevels = Server.zombie.ChangeLevels;
@@ -94,7 +98,6 @@ namespace MCGalaxy.Gui {
             SaveZombieLevelChanges = Server.zombie.SaveLevelBlockchanges;
             IgnorePersonalWorlds = Server.zombie.IgnorePersonalWorlds;
             
-            InfectedName = Server.zombie.ZombieName;
             Pillaring = !Server.zombie.noPillaring;
             Respawning = !Server.zombie.noRespawn;
             SetMainLevel = Server.zombie.SetMainLevel;
@@ -103,6 +106,9 @@ namespace MCGalaxy.Gui {
             MaxMoveDistance = Server.zombie.MaxMoveDistance;
             HitboxPrecision = Server.zombie.HitboxPrecision;
             IncludeMapInHeartbeat = Server.zombie.IncludeMapInHeartbeat;
+            
+            Name = Server.zombie.ZombieName;
+            Model = Server.zombie.ZombieModel;
         }
         
         public void ApplyToServer() {
@@ -117,7 +123,6 @@ namespace MCGalaxy.Gui {
             Server.zombie.SaveLevelBlockchanges = SaveZombieLevelChanges;
             Server.zombie.IgnorePersonalWorlds = IgnorePersonalWorlds;
             
-            Server.zombie.ZombieName = InfectedName;
             Server.zombie.noPillaring = !Pillaring;
             Server.zombie.noRespawn = !Respawning;
             Server.zombie.SetMainLevel = SetMainLevel;
@@ -126,6 +131,11 @@ namespace MCGalaxy.Gui {
             Server.zombie.MaxMoveDistance = MaxMoveDistance;
             Server.zombie.HitboxPrecision = HitboxPrecision;
             Server.zombie.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
+            
+            Server.zombie.ZombieName = Name.Trim();
+            Server.zombie.ZombieModel = Model.Trim();
+            if (Server.zombie.ZombieModel == "")
+                Server.zombie.ZombieModel = "zombie";
         }
     }
 }

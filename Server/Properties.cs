@@ -383,9 +383,11 @@ namespace MCGalaxy {
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-name-while-infected":
-					if ( value != "" )
-						Server.zombie.ZombieName = value;
+					if (value != "") Server.zombie.ZombieName = value;
 					break;
+				case "zombie-model-while-infected":
+					if (value != "") Server.zombie.ZombieModel = value;
+					break;					
 				case "enable-changing-levels":
 					try { Server.zombie.ChangeLevels = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
@@ -752,6 +754,7 @@ namespace MCGalaxy {
 			w.WriteLine("no-respawning-during-zombie = " + Server.zombie.noRespawn);
 			w.WriteLine("no-pillaring-during-zombie = " + Server.zombie.noPillaring);
 			w.WriteLine("zombie-name-while-infected = " + Server.zombie.ZombieName);
+			w.WriteLine("zombie-model-while-infected = " + Server.zombie.ZombieModel);
 			w.WriteLine("enable-changing-levels = " + Server.zombie.ChangeLevels);
 			w.WriteLine("zombie-survival-only-server = " + Server.zombie.SetMainLevel);
 			w.WriteLine("zombie-levels-list = " + string.Join(",", Server.zombie.LevelList));
