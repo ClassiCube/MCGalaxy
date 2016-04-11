@@ -155,7 +155,8 @@ namespace MCGalaxy.Commands
                 string type = noTypeArg ? "flat" : args[args.Length - 1];
                 if (MapGen.IsRecognisedFormat(type)) {
                     Player.SendMessage(p, "Creating a new map for you: " + level);
-                    string cmdArgs = args.Length == 1 ? "128 64 128 flat" : (noTypeArg ? value + " flat" : value);
+                    string cmdArgs = args.Length <= 1 ? "128 64 128" : value;
+                    if (args.Length <= 3) cmdArgs += " " + type;
                     Command.all.Find("newlvl").Use(p, level + " " + cmdArgs);
                 } else {
                     Player.SendMessage(p, "Invalid map type was specified.");
