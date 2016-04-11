@@ -274,6 +274,9 @@ namespace MCGalaxy {
 
                 byte version = message[0];
                 name = enc.GetString(message, 1, 64).Trim();
+                if (name.Length > 16) {
+                    Kick("Usernames must be 16 characters or less", true); return;
+                }
                 truename = name;
                 skinName = name;
                 
@@ -292,8 +295,9 @@ namespace MCGalaxy {
                 string verify = enc.GetString(message, 65, 32).Trim();
                 verifiedName = false;
                 if (Server.verify) {
-                    string hash = BitConverter.ToString(md5.ComputeHash(enc.GetBytes(Server.salt + truename)));
-                    if (!verify.CaselessEq(hash.Replace("-", ""))) {
+                    byte[] hash = md5.ComputeHash(enc.GetBytes(Server.salt + truename));
+                    string hashHex = BitConverter.ToString(hash);
+                    if (!verify.CaselessEq(hashHex.Replace("-", ""))) {
                         if (!IPInPrivateRange(ip)) {
                             Kick("Login failed! Try signing in again.", true); return;
                         }
