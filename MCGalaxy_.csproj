@@ -459,6 +459,7 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.Core.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
+    <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
     <Compile Include="GUI\LevelCollection.cs" />
     <Compile Include="GUI\PropertyWindow.Games.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>

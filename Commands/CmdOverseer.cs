@@ -241,7 +241,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "/os map buildable -- Sets whether any blocks can be placed");
                 Player.SendMessage(p, "/os map deletable -- Sets whether any blocks can be deleted");
                 Player.SendMessage(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
-                Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountians, ocean, pixel, empty and space");
+                Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountains, ocean, pixel, empty and space");
                 Player.SendMessage(p, "  Motd: If no message is provided, the default message will be used.");
             }
         }

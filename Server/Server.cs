@@ -354,6 +354,41 @@ namespace MCGalaxy
             CheckFile("Newtonsoft.Json.dll");
             CheckFile("LibNoise.dll");
 
+            EnsureFilesExist();
+            MoveOutdatedFiles();
+            Chat.LoadCustomTokens();
+
+            if (File.Exists("text/emotelist.txt")) {
+                foreach (string s in File.ReadAllLines("text/emotelist.txt"))
+                    Player.emoteList.Add(s);
+            } else {
+                File.Create("text/emotelist.txt").Dispose();
+            }
+
+            lava = new LavaSurvival();
+            zombie = new ZombieGame();
+            Countdown = new CountdownGame();
+            LoadAllSettings();
+
+            InitDatabase();
+            Economy.LoadDatabase();
+
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level l in loaded)
+            	l.Unload();
+            ml.Queue(LoadMainLevel);
+            Plugin.Load();
+            ml.Queue(LoadPlayerLists);
+            ml.Queue(LoadAutoloadCommands);
+            ml.Queue(LoadGCAccepted);
+
+            ml.Queue(InitTimers);
+            ml.Queue(InitRest);
+            ml.Queue(InitHeartbeat);
+            UpdateStaffList();
+        }
+        
+        void EnsureFilesExist() {
             if (!Directory.Exists("properties")) Directory.CreateDirectory("properties");
             if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
             if (!Directory.Exists("bots")) Directory.CreateDirectory("bots");
@@ -371,9 +406,10 @@ namespace MCGalaxy
             if (!Directory.Exists("extra/copyBackup/")) Directory.CreateDirectory("extra/copyBackup/");
             if (!Directory.Exists("extra/Waypoints")) Directory.CreateDirectory("extra/Waypoints");
             if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
-
-            try
-            {
+        }
+        
+        void MoveOutdatedFiles() {
+            try {
                 if (File.Exists("blocks.json")) File.Move("blocks.json", "blockdefs/global.json");
                 if (File.Exists("server.properties")) File.Move("server.properties", "properties/server.properties");
                 if (File.Exists("rules.txt")) File.Move("rules.txt", "text/rules.txt");
@@ -385,100 +421,68 @@ namespace MCGalaxy
                 if (useWhitelist && File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
             }
             catch { }
-            Chat.LoadCustomTokens();
-
-            if (File.Exists("text/emotelist.txt")) {
-                foreach (string s in File.ReadAllLines("text/emotelist.txt"))
-                    Player.emoteList.Add(s);
-            } else {
-                File.Create("text/emotelist.txt").Dispose();
+        }
+        
+        void InitDatabase() {
+            try {
+                if (Server.useMySQL)
+                    Database.executeQuery("CREATE DATABASE if not exists `" + MySQLDatabaseName + "`", true);
+            } catch (Exception e) {
+                ErrorLog(e);
+                s.Log("MySQL settings have not been set! Please Setup using the properties window.");
+                //process.Kill();
+                return;
             }
-
-
-            lava = new LavaSurvival();
-            zombie = new ZombieGame();
-            Countdown = new CountdownGame();
-
-            LoadAllSettings();
-
-            {//MYSQL stuff
-                try
-                {
-                	if (Server.useMySQL)
-                		Database.executeQuery("CREATE DATABASE if not exists `" + MySQLDatabaseName + "`", true);
-                }
-                //catch (MySql.Data.MySqlClient.MySqlException e)
-                //{
-                //    Server.s.Log("MySQL settings have not been set! Many features will not be available if MySQL is not enabled");
-                //  //  Server.ErrorLog(e);
-                //}
-                catch (Exception e)
-                {
-                    ErrorLog(e);
-                    s.Log("MySQL settings have not been set! Please Setup using the properties window.");
-                    //process.Kill();
-                    return;
-                }
-                Database.executeQuery(string.Format("CREATE TABLE if not exists Players (ID INTEGER {0}AUTO{1}INCREMENT NOT NULL, Name TEXT, IP CHAR(15), FirstLogin DATETIME, LastLogin DATETIME, totalLogin MEDIUMINT, Title CHAR(20), TotalDeaths SMALLINT, Money MEDIUMINT UNSIGNED, totalBlocks BIGINT, totalCuboided BIGINT, totalKicked MEDIUMINT, TimeSpent VARCHAR(20), color VARCHAR(6), title_color VARCHAR(6){2});", (useMySQL ? "" : "PRIMARY KEY "), (useMySQL ? "_" : ""), (Server.useMySQL ? ", PRIMARY KEY (ID)" : "")));
-                Database.executeQuery(string.Format("CREATE TABLE if not exists Opstats (ID INTEGER {0}AUTO{1}INCREMENT NOT NULL, Time DATETIME, Name TEXT, Cmd VARCHAR(40), Cmdmsg VARCHAR(40){2});", (useMySQL ? "" : "PRIMARY KEY "), (useMySQL ? "_" : ""), (Server.useMySQL ? ", PRIMARY KEY (ID)" : "")));
-                if (!File.Exists("extra/alter.txt") && Server.useMySQL) {
-                	Database.executeQuery("ALTER TABLE Players MODIFY Name TEXT");
-                	Database.executeQuery("ALTER TABLE Opstats MODIFY Name TEXT");
-                	File.Create("extra/alter.txt");
-                }
-                //since 5.5.11 we are cleaning up the table Playercmds
-                string query = Server.useMySQL ? "SHOW TABLES LIKE 'Playercmds'" : "SELECT name FROM sqlite_master WHERE type='table' AND name='Playercmds';";
-                DataTable playercmds = Database.fillData(query); DataTable opstats = Database.fillData("SELECT * FROM Opstats");
-                //if Playercmds exists copy-filter to Ostats and remove Playercmds
-                if (playercmds.Rows.Count != 0) {
-                    foreach (string cmd in Server.Opstats)
-                        Database.executeQuery(string.Format("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE cmd = '{0}';", cmd));
-                    Database.executeQuery("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE cmd = 'review' AND cmdmsg = 'next';");
-                    Database.fillData("DROP TABLE Playercmds");
-                }
-                playercmds.Dispose(); opstats.Dispose();
-
-                // Here, since SQLite is a NEW thing from 5.3.0.0, we do not have to check for existing tables in SQLite.
-                if (useMySQL)
-                {
-                    // Check if the color column exists.
-                    DataTable colorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='color'");
-                    if (colorExists.Rows.Count == 0)
-                        Database.executeQuery("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
-                    colorExists.Dispose();
-
-                    DataTable tcolorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
-                    if (tcolorExists.Rows.Count == 0)
-                        Database.executeQuery("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
-                    tcolorExists.Dispose();
-
-                    DataTable timespent = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
-                    if (timespent.Rows.Count == 0)
-                        Database.executeQuery("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked");
-                    timespent.Dispose();
-
-                    DataTable totalCuboided = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
-                    if (totalCuboided.Rows.Count == 0)
-                        Database.executeQuery("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks"); 
-                    totalCuboided.Dispose();
-                }
+            
+            string autoInc = useMySQL ? "AUTO_INCREMENT" : "AUTOINCREMENT";
+            Database.executeQuery(string.Format("CREATE TABLE if not exists Players (ID INTEGER {0}" + autoInc + " NOT NULL, " +
+                                                "Name TEXT, IP CHAR(15), FirstLogin DATETIME, LastLogin DATETIME, totalLogin MEDIUMINT, " +
+                                                "Title CHAR(20), TotalDeaths SMALLINT, Money MEDIUMINT UNSIGNED, totalBlocks BIGINT, " +
+                                                "totalCuboided BIGINT, totalKicked MEDIUMINT, TimeSpent VARCHAR(20), color VARCHAR(6), " +
+                                                "title_color VARCHAR(6){1});", (useMySQL ? "" : "PRIMARY KEY "), (useMySQL ? ", PRIMARY KEY (ID)" : "")));
+            Database.executeQuery(string.Format("CREATE TABLE if not exists Opstats (ID INTEGER {0}" + autoInc + " NOT NULL, " +
+                                                "Time DATETIME, Name TEXT, Cmd VARCHAR(40), Cmdmsg VARCHAR(40){1});", 
+                                                (useMySQL ? "" : "PRIMARY KEY "), (useMySQL ? ", PRIMARY KEY (ID)" : "")));
+            if (!File.Exists("extra/alter.txt") && useMySQL) {
+                Database.executeQuery("ALTER TABLE Players MODIFY Name TEXT");
+                Database.executeQuery("ALTER TABLE Opstats MODIFY Name TEXT");
+                File.Create("extra/alter.txt");
             }
+            
+            //since 5.5.11 we are cleaning up the table Playercmds
+            string query = Server.useMySQL ? "SHOW TABLES LIKE 'Playercmds'" : "SELECT name FROM sqlite_master WHERE type='table' AND name='Playercmds';";
+            DataTable playercmds = Database.fillData(query), opstats = Database.fillData("SELECT * FROM Opstats");
+            //if Playercmds exists copy-filter to Ostats and remove Playercmds
+            if (playercmds.Rows.Count != 0) {
+                foreach (string cmd in Server.Opstats)
+                    Database.executeQuery(string.Format("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE cmd = '{0}';", cmd));
+                Database.executeQuery("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE cmd = 'review' AND cmdmsg = 'next';");
+                Database.fillData("DROP TABLE Playercmds");
+            }
+            playercmds.Dispose(); opstats.Dispose();
 
-            Economy.LoadDatabase();
+            // Here, since SQLite is a NEW thing from 5.3.0.0, we do not have to check for existing tables in SQLite.
+            if (!useMySQL) return;
+            // Check if the color column exists.
+            DataTable colorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='color'");
+            if (colorExists.Rows.Count == 0)
+                Database.executeQuery("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
+            colorExists.Dispose();
 
-            Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level l in loaded)
-            	l.Unload();
-            ml.Queue(LoadMainLevel);
-            Plugin.Load();
-            ml.Queue(LoadPlayerLists);
-            ml.Queue(LoadAutoloadCommands);
-            ml.Queue(LoadGCAccepted);
+            DataTable tcolorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
+            if (tcolorExists.Rows.Count == 0)
+                Database.executeQuery("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
+            tcolorExists.Dispose();
 
-            ml.Queue(InitTimers);
-            ml.Queue(InitRest);
-            ml.Queue(InitHeartbeat);
-            UpdateStaffList();
+            DataTable timespent = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
+            if (timespent.Rows.Count == 0)
+                Database.executeQuery("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked");
+            timespent.Dispose();
+
+            DataTable totalCuboided = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
+            if (totalCuboided.Rows.Count == 0)
+                Database.executeQuery("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks");
+            totalCuboided.Dispose();
         }
         
         public static string SendResponse(HttpListenerRequest request)
