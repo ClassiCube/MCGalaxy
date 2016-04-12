@@ -186,14 +186,13 @@ namespace MCGalaxy
         public static bool worldChat = true;
 
         //Spam Prevention
+        [ConfigBool("mute-on-spam", "Spam control", null, false)]        
         public static bool checkspam = false;
         public static int spamcounter = 8;
         public static int mutespamtime = 60;
         public static int spamcountreset = 5;
 
         public static string ZallState = "Alive";
-
-        //public static string[] userMOTD;
 
         public static string level = "main";
         public static string errlog = "error.log";
@@ -204,12 +203,13 @@ namespace MCGalaxy
         public static bool irc = false;
         [ConfigBool("irc-colorsenable", "IRC bot", null, true)]
         public static bool ircColorsEnable = true;
+        [ConfigInt("irc-port", "IRC bot", null, 6667, 0, 65535)]        
         public static int ircPort = 6667;
         public static string ircNick = "ForgeBot";
         public static string ircServer = "irc.geekshed.net";
         public static string ircChannel = "#changethis";
         public static string ircOpChannel = "#changethistoo";
-        [ConfigBool("irc-identify", "IRC bot", null, false)]           
+        [ConfigBool("irc-identify", "IRC bot", null, false)]
         public static bool ircIdentify = false;
         public static string ircPassword = "";
         public static bool verifyadmins = true;
@@ -217,7 +217,6 @@ namespace MCGalaxy
         public static LevelPermission verifyadminsrank = LevelPermission.Operator;
 
         public static bool restartOnError = true;
-        public static int Overload = 1500;
         public static int rpLimit = 500;
         public static int rpNormLimit = 10000;
 
@@ -225,15 +224,21 @@ namespace MCGalaxy
         public static int blockInterval = 60;
         public static string backupLocation = Application.StartupPath + "/levels/backups";
 
+        [ConfigBool("physicsrestart", "Other", null, true)]          
         public static bool physicsRestart = true;
+        [ConfigBool("deathcount", "Other", null, true)]
         public static bool deathcount = true;
         [ConfigBool("autoload", "Server", null, false)]
         public static bool AutoLoad = false;
         public static int physUndo = 20000;
         public static int totalUndo = 200;
+        [ConfigBool("parse-emotes", "Other", null, true)]          
         public static bool parseSmiley = true;
+        [ConfigBool("use-whitelist", "Other", null, false)]          
         public static bool useWhitelist = false;
+        [ConfigBool("force-cuboid", "Other", null, false)]        
         public static bool forceCuboid = false;
+        [ConfigBool("profanity-filter", "Other", null, false)]        
         public static bool profanityFilter = false;
         [ConfigBool("repeat-messages", "Other", null, false)]
         public static bool repeatMessage = false;
@@ -241,12 +246,14 @@ namespace MCGalaxy
         [ConfigBool("check-updates", "Update", null, false)]
         public static bool checkUpdates = true;
 
+        [ConfigBool("UseMySQL", "Database", null, false)] 
         public static bool useMySQL = false;
         public static string MySQLHost = "127.0.0.1";
         public static string MySQLPort = "3306";
         public static string MySQLUsername = "root";
         public static string MySQLPassword = "password";
         public static string MySQLDatabaseName = "MCZallDB";
+        [ConfigBool("Pooling", "Database", null, true)]          
         public static bool DatabasePooling = true;
 
         public static string DefaultColor = "&e";
@@ -288,6 +295,7 @@ namespace MCGalaxy
         public static LevelPermission opchatperm = LevelPermission.Operator;
         [ConfigPerm("adminchat-perm", "Other", null, LevelPermission.Admin)]        
         public static LevelPermission adminchatperm = LevelPermission.Admin;
+        [ConfigBool("log-heartbeat", "Other", null, false)]        
         public static bool logbeat = false;
         [ConfigBool("admins-join-silent", "Other", null, false)]        
         public static bool adminsjoinsilent = false;

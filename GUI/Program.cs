@@ -332,7 +332,7 @@ namespace MCGalaxy_.Gui
                     {
                         if (Server.autoupdate || p != null)
                         {
-                            if (Server.autonotify || p != null)
+                            if (Server.notifyPlayers || p != null)
                             {
                                 //if (p != null) Server.restartcountdown = "20";  This is set by the user.  Why change it?
                                 Player.GlobalMessage("Update found. Prepare for restart in &f" + Server.restartcountdown + Server.DefaultColor + " seconds.");

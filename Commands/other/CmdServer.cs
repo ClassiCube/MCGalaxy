@@ -233,8 +233,6 @@ namespace MCGalaxy.Commands
             Server.verifyadminsrank = LevelPermission.Operator;
 
             Server.restartOnError = true;
-
-            Server.Overload = 1500;
             Server.rpLimit = 500;
             Server.rpNormLimit = 10000;
 

@@ -105,7 +105,7 @@ namespace MCGalaxy {
                     char col;
                     char.TryParse(value, out col);
 
-                    if ((col >= '0' && col <= '9') || (col >= 'a' && col <= 'f')) {
+                    if (Colors.IsStandardColor(col) || Colors.GetFallback(col) != '\0') {
                         grp.color = col.ToString(CultureInfo.InvariantCulture);
                     } else {
                         Server.s.Log("Invalid color code at " + s);

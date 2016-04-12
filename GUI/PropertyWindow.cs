@@ -616,7 +616,7 @@ namespace MCGalaxy.Gui {
             Server.players = (byte)numPlayers.Value;
             Server.maxGuests = (byte)numGuests.Value;
             Server.worldChat = chkWorld.Checked;
-            Server.autonotify = notifyInGameUpdate.Checked;
+            Server.notifyPlayers = notifyInGameUpdate.Checked;
             Server.AutoLoad = chkAutoload.Checked;
             Server.autorestart = chkRestartTime.Checked;
             try { Server.restarttime = DateTime.Parse(txtRestartTime.Text); }

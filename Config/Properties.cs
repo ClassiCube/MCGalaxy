@@ -73,14 +73,6 @@ namespace MCGalaxy {
 				case "irc-opchannel":
 					Server.ircOpChannel = value;
 					break;
-				case "irc-port":
-					try {
-						Server.ircPort = Convert.ToInt32(value);
-					}
-					catch {
-						Server.s.Log("irc-port invalid! setting to default.");
-					}
-					break;
 				case "irc-password":
 					Server.ircPassword = value;
 					break;
@@ -94,7 +86,6 @@ namespace MCGalaxy {
 					catch { Server.s.Log("rpLimit-norm invalid! setting to default."); }
 					break;
 
-
 				case "report-back":
 					Server.reportBack = value.ToLower() == "true";
 					break;
@@ -105,16 +96,7 @@ namespace MCGalaxy {
 					if (!value.Contains("System.Windows.Forms.TextBox, Text:"))
 						Server.backupLocation = value;
 					if (!Directory.Exists(value))
-						Server.backupLocation = Application.StartupPath + "/levels/backups";;
-					break;
-				case "physicsrestart":
-					Server.physicsRestart = value.ToLower() == "true";
-					break;
-				case "deathcount":
-					Server.deathcount = value.ToLower() == "true";
-					break;
-				case "usemysql":
-					Server.useMySQL = value.ToLower() == "true";
+						Server.backupLocation = Application.StartupPath + "/levels/backups";
 					break;
 				case "host":
 					Server.MySQLHost = value;
@@ -131,10 +113,6 @@ namespace MCGalaxy {
 				case "databasename":
 					Server.MySQLDatabaseName = value;
 					break;
-				case "pooling":
-					try { Server.DatabasePooling = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
 				case "defaultcolor":
 					ParseColor(value, ref Server.DefaultColor); break;
 				case "irc-color":
@@ -146,18 +124,6 @@ namespace MCGalaxy {
 				case "help-desc-color":
 					ParseColor(value, ref Server.HelpDescriptionColor); break;
 					
-				case "log-heartbeat":
-					try { Server.logbeat = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-					break;
-				case "force-cuboid":
-					try { Server.forceCuboid = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-					break;
-				case "profanity-filter":
-					try { Server.profanityFilter = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
 				case "cheapmessage":
 					try { Server.cheapMessage = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
@@ -181,13 +147,6 @@ namespace MCGalaxy {
 					try { Server.defaultRank = value.ToLower(); }
 					catch { }
 					break;
-				case "check-updates":
-					try { Server.autonotify = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
-				case "auto-update":
-					Server.autoupdate = value.ToLower() == "true";
-					break;
 				case "in-game-update-notify":
 					Server.notifyPlayers = value.ToLower() == "true";
 					break;
@@ -202,13 +161,6 @@ namespace MCGalaxy {
 				case "restarttime":
 					try { Server.restarttime = DateTime.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using defualt."); break; }
-					break;
-				case "parse-emotes":
-					try { Server.parseSmiley = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
-				case "use-whitelist":
-					Server.useWhitelist = value.ToLower() == "true";
 					break;
 				case "allow-tp-to-higher-ranks":
 					Server.higherranktp = value.ToLower() == "true";
@@ -325,10 +277,6 @@ namespace MCGalaxy {
 				case "admin-verification":
 					try { Server.verifyadmins = bool.Parse(value); }
 					catch { Server.s.Log("invalid " + key + ". Using default"); }
-					break;
-				case "mute-on-spam":
-					try { Server.checkspam = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "spam-messages":
 					try { Server.spamcounter = int.Parse(value); }
