@@ -7,8 +7,8 @@ namespace MCGalaxy.Config {
         /// <summary> Key used for writing/reading from the property file. </summary>
         public string Name;
         
-        /// <summary> Group in the property file this config entry is part of. </summary>
-        public string Group;
+        /// <summary> Section/Group in the property file this config entry is part of. </summary>
+        public string Section;
         
         /// <summary> Comment shown in the property file above the key-value entry. </summary>
         public string Description;
@@ -19,9 +19,9 @@ namespace MCGalaxy.Config {
         /// <summary> Returns either the parsed form of the given value, or some other value if validation fails. </summary>
         public abstract object Parse(string value);
         
-        public ConfigAttribute(string name, string group, string desc, object defValue) {
+        public ConfigAttribute(string name, string section, string desc, object defValue) {
             Name = name; Description = desc; 
-            Group = group; DefaultValue = defValue;
+            Section = section; DefaultValue = defValue;
         }
     }
     
@@ -33,9 +33,9 @@ namespace MCGalaxy.Config {
         /// <summary> Maximum value integer allowed for a value. </summary>
         public int MaxValue;
         
-        public ConfigIntAttribute(string name, string group, string desc, int defValue,
+        public ConfigIntAttribute(string name, string section, string desc, int defValue,
                                   int min = int.MinValue, int max = int.MaxValue) 
-            : base(name, group, desc, defValue) {
+            : base(name, section, desc, defValue) {
             MinValue = min; MaxValue = max;
         }
         
@@ -61,8 +61,8 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigBoolAttribute : ConfigAttribute {
         
-        public ConfigBoolAttribute(string name, string group, string desc, bool defValue) 
-            : base(name, group, desc, defValue) {
+        public ConfigBoolAttribute(string name, string section, string desc, bool defValue) 
+            : base(name, section, desc, defValue) {
         }
         
         public override object Parse(string value) {
@@ -73,6 +73,40 @@ namespace MCGalaxy.Config {
                 return DefaultValue;
             }
             return boolValue;
+        }
+    }
+    
+    public sealed class ConfigPermAttribute : ConfigAttribute {
+        
+        public ConfigPermAttribute(string name, string section, string desc, LevelPermission defValue) 
+            : base(name, section, desc, defValue) {
+        }
+        
+        public override object Parse(string value) {
+            sbyte permNum;
+            LevelPermission perm;
+            if (!sbyte.TryParse(value, out permNum)) {
+                // Try parse the permission as name.
+                Group grp = Group.Find(value);
+                if (grp == null) {
+                    Server.s.Log("Config key \"" + Name + "\" is not a valid permission, " +
+                                 "using default of " + DefaultValue);
+                    return DefaultValue;
+                }
+                perm = grp.Permission;
+            } else {
+                perm = (LevelPermission)permNum;
+            }
+            
+            if (perm < LevelPermission.Banned) {
+                Server.s.Log("Config key \"" + Name + "\" cannot be below banned rank.");
+                return LevelPermission.Banned;
+            }
+            if (perm > LevelPermission.Nobody) {
+                Server.s.Log("Config key \"" + Name + "\" cannot be above nobody rank.");
+                return LevelPermission.Nobody;
+            }
+            return perm;
         }
     }
 }

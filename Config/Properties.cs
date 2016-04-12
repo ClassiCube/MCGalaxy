@@ -61,52 +61,6 @@ namespace MCGalaxy {
 					}
 					else { Server.s.Log("motd invalid! setting to default."); }
 					break;
-				case "port":
-					try { Server.port = Convert.ToInt32(value); }
-					catch { Server.s.Log("port invalid! setting to default."); }
-					break;
-				case "verify-names":
-					Server.verify = value.ToLower() == "true";
-					break;
-				case "public":
-					Server.pub = value.ToLower() == "true";
-					break;
-				case "world-chat":
-					Server.worldChat = value.ToLower() == "true";
-					break;
-					//case "guest-goto":
-					//    Server.guestGoto = value.ToLower() == "true";
-					//    break;
-				case "max-players":
-					try {
-						if ( Convert.ToByte(value) > 128 ) {
-							value = "128"; Server.s.Log("Max players has been lowered to 128.");
-						}
-						else if ( Convert.ToByte(value) < 1 ) {
-							value = "1"; Server.s.Log("Max players has been increased to 1.");
-						}
-						Server.players = Convert.ToByte(value);
-					}
-					catch { Server.s.Log("max-players invalid! setting to default."); }
-					break;
-				case "max-guests":
-					try {
-						if ( Convert.ToByte(value) > Server.players ) {
-							value = Server.players.ToString(); Server.s.Log("Max guests has been lowered to " + Server.players.ToString());
-						}
-						else if ( Convert.ToByte(value) < 0 ) {
-							value = "0"; Server.s.Log("Max guests has been increased to 0.");
-						}
-						Server.maxGuests = Convert.ToByte(value);
-					}
-					catch { Server.s.Log("max-guests invalid! setting to default."); }
-					break;
-				case "irc":
-					Server.irc = value.ToLower() == "true";
-					break;
-				case "irc-colorsenable":
-					Server.ircColorsEnable = value.ToLower() == "true";
-					break;
 				case "irc-server":
 					Server.ircServer = value;
 					break;
@@ -125,14 +79,6 @@ namespace MCGalaxy {
 					}
 					catch {
 						Server.s.Log("irc-port invalid! setting to default.");
-					}
-					break;
-				case "irc-identify":
-					try {
-						Server.ircIdentify = Convert.ToBoolean(value);
-					}
-					catch {
-						Server.s.Log("irc-identify boolean value invalid! Setting to the default of: " + Server.ircIdentify + ".");
 					}
 					break;
 				case "irc-password":
@@ -200,26 +146,6 @@ namespace MCGalaxy {
 				case "help-desc-color":
 					ParseColor(value, ref Server.HelpDescriptionColor); break;
 					
-				case "opchat-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.opchatperm = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-					break;
-				case "adminchat-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.adminchatperm = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-					break;
 				case "log-heartbeat":
 					try { Server.logbeat = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
@@ -255,28 +181,6 @@ namespace MCGalaxy {
 					try { Server.defaultRank = value.ToLower(); }
 					catch { }
 					break;
-				case "afk-minutes":
-					try {
-						Server.afkminutes = Convert.ToInt32(value);
-					}
-					catch {
-						Server.s.Log("irc-port invalid! setting to default.");
-					}
-					break;
-				case "afk-kick":
-					try { Server.afkkick = Convert.ToInt32(value); }
-					catch { Server.s.Log("irc-port invalid! setting to default."); }
-					break;
-				case "afk-kick-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.afkkickperm = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-					break;
 				case "check-updates":
 					try { Server.autonotify = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
@@ -290,10 +194,6 @@ namespace MCGalaxy {
 				case "update-countdown":
 					try { Server.restartcountdown = Convert.ToInt32(value).ToString(); }
 					catch { Server.restartcountdown = "10"; }
-					break;
-				case "autoload":
-					try { Server.AutoLoad = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
 					break;
 				case "auto-restart":
 					try { Server.autorestart = bool.Parse(value); }
@@ -317,10 +217,6 @@ namespace MCGalaxy {
 					try { Server.agreetorulesonentry = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
-				case "admins-join-silent":
-					try { Server.adminsjoinsilent = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
 				case "main-name":
 					if ( Player.ValidName(value) ) Server.level = value;
 					else Server.s.Log("Invalid main name");
@@ -337,23 +233,11 @@ namespace MCGalaxy {
 					else
 						Server.defaultTexturePackUrl = value;
 					break;
-				case "dollar-before-dollar":
-					try { Server.dollarNames = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
 				case "money-name":
 					if ( value != "" ) Server.moneys = value;
 					break;
-					/*case "mono":
-								try { Server.mono = bool.Parse(value); }
-								catch { Server.s.Log("Invalid " + key + ". Using default."); }
-								break;*/
 				case "restart-on-error":
 					try { Server.restartOnError = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
-				case "repeat-messages":
-					try { Server.repeatMessage = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default."); }
 					break;
 				case "host-state":
@@ -442,16 +326,6 @@ namespace MCGalaxy {
 					try { Server.verifyadmins = bool.Parse(value); }
 					catch { Server.s.Log("invalid " + key + ". Using default"); }
 					break;
-				case "verify-admin-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.verifyadminsrank = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ".  Using default."); break; }
-					break;
 				case "mute-on-spam":
 					try { Server.checkspam = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
@@ -470,10 +344,6 @@ namespace MCGalaxy {
 					break;
 				case "show-empty-ranks":
 					try { Server.showEmptyRanks = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "global-chat-enabled":
-					try { Server.UseGlobalChat = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 
@@ -498,62 +368,6 @@ namespace MCGalaxy {
 					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.MapGenLimitAdmin = 225 * 1000 * 1000; }
 					break;
 					
-				case "review-view-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.reviewview = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
-				case "review-enter-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.reviewenter = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
-				case "review-leave-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.reviewleave = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
-				case "review-cooldown":
-					try {
-						Server.reviewcooldown = Convert.ToInt32(value.ToLower());
-					}
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
-				case "review-clear-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.reviewclear = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
-				case "review-next-perm":
-					try {
-						sbyte parsed = sbyte.Parse(value);
-						if ( parsed < -50 || parsed > 120 ) {
-							throw new FormatException();
-						}
-						Server.reviewnext = (LevelPermission)parsed;
-					}
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
 				case "bufferblocks":
 					try {
 						Server.bufferblocks = bool.Parse(value);
@@ -573,6 +387,14 @@ namespace MCGalaxy {
 						Server.EnableHttpApi = bool.Parse(value);
 					}
 					catch { Server.s.Log("Invalid " + key + ". Using default."); }
+					break;
+				default:
+					for (int i = 0; i < elements.Length; i++) {
+						ConfigElement elem = elements[i];
+						if (!elem.Attribute.Name.CaselessEq(key)) continue;
+						
+						elem.Field.SetValue(null, elem.Attribute.Parse(value));
+					}
 					break;
 			}
 		}

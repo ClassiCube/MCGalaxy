@@ -172,9 +172,9 @@ namespace MCGalaxy
         public static string name = "[MCGalaxy] Default";
         public static string motd = "Welcome!";
         [ConfigInt("max-players", "Server", null, 12, 1, 128)]
-        public static byte players = 12;
+        public static int players = 12;
         [ConfigInt("max-guests", "Server", null, 10, 1, 128)]
-        public static byte maxGuests = 10;
+        public static int maxGuests = 10;
 
         [ConfigInt("port", "Server", null, 25565, 0, 65535)]
         public static int port = 25565;
@@ -200,16 +200,20 @@ namespace MCGalaxy
 
         public static bool reportBack = true;
 
+        [ConfigBool("irc", "IRC bot", null, false)]
         public static bool irc = false;
+        [ConfigBool("irc-colorsenable", "IRC bot", null, true)]
         public static bool ircColorsEnable = true;
         public static int ircPort = 6667;
         public static string ircNick = "ForgeBot";
         public static string ircServer = "irc.geekshed.net";
         public static string ircChannel = "#changethis";
         public static string ircOpChannel = "#changethistoo";
+        [ConfigBool("irc-identify", "IRC bot", null, false)]           
         public static bool ircIdentify = false;
         public static string ircPassword = "";
         public static bool verifyadmins = true;
+        [ConfigPerm("verify-admin-perm", "Admin", null, LevelPermission.Operator)]
         public static LevelPermission verifyadminsrank = LevelPermission.Operator;
 
         public static bool restartOnError = true;
@@ -231,6 +235,7 @@ namespace MCGalaxy
         public static bool useWhitelist = false;
         public static bool forceCuboid = false;
         public static bool profanityFilter = false;
+        [ConfigBool("repeat-messages", "Other", null, false)]
         public static bool repeatMessage = false;
 
         [ConfigBool("check-updates", "Update", null, false)]
@@ -250,6 +255,7 @@ namespace MCGalaxy
         public static string HelpSyntaxColor = "&a";
         public static string HelpDescriptionColor = "&e";
         
+        [ConfigBool("global-chat-enabled", "Other", null, true)]
         public static bool UseGlobalChat = true;
         public static string GlobalChatNick()
         {
@@ -260,11 +266,15 @@ namespace MCGalaxy
             }
             return serverName;
         }
+        [ConfigInt("afk-minutes", "Other", null, 10)] 
         public static int afkminutes = 10;
+        [ConfigInt("afk-kick", "Other", null, 45)]
         public static int afkkick = 45;
+        [ConfigPerm("afk-kick-perm", "Other", null, LevelPermission.AdvBuilder)]
         public static LevelPermission afkkickperm = LevelPermission.AdvBuilder;
         public static string defaultRank = "guest";
 
+        [ConfigBool("dollar-before-dollar", "Other", null, true)]
         public static bool dollarNames = true;
         public static bool unsafe_plugin = true;
         public static bool cheapMessage = true;
@@ -274,9 +284,12 @@ namespace MCGalaxy
         public static string defaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
         public static string defaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
         public static string moneys = "moneys";
+        [ConfigPerm("opchat-perm", "Other", null, LevelPermission.Operator)]                
         public static LevelPermission opchatperm = LevelPermission.Operator;
+        [ConfigPerm("adminchat-perm", "Other", null, LevelPermission.Admin)]        
         public static LevelPermission adminchatperm = LevelPermission.Admin;
         public static bool logbeat = false;
+        [ConfigBool("admins-join-silent", "Other", null, false)]        
         public static bool adminsjoinsilent = false;
         public static bool mono { get { return (Type.GetType("Mono.Runtime") != null); } }
         public static string server_owner = "Notch";
@@ -297,11 +310,17 @@ namespace MCGalaxy
         public static bool showEmptyRanks = false;
 
         //reviewoptions intitialize
+        [ConfigInt("review-cooldown", "Review", null, 600)]
         public static int reviewcooldown = 600;
+        [ConfigPerm("review-enter-perm", "Review", null, LevelPermission.Guest)]        
         public static LevelPermission reviewenter = LevelPermission.Guest;
+        [ConfigPerm("review-leave-perm", "Review", null, LevelPermission.Guest)]        
         public static LevelPermission reviewleave = LevelPermission.Guest;
+        [ConfigPerm("review-view-perm", "Review", null, LevelPermission.Operator)]        
         public static LevelPermission reviewview = LevelPermission.Operator;
+        [ConfigPerm("review-next-perm", "Review", null, LevelPermission.Operator)]        
         public static LevelPermission reviewnext = LevelPermission.Operator;
+        [ConfigPerm("review-clear-perm", "Review", null, LevelPermission.Operator)]
         public static LevelPermission reviewclear = LevelPermission.Operator;
 
         public static int DrawReloadLimit = 10000;

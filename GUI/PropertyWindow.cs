@@ -559,7 +559,7 @@ namespace MCGalaxy.Gui {
                         Server.reviewcooldown = Convert.ToInt32(value.ToLower()) < 600 ? Convert.ToInt32(value.ToLower()) : 600;
                     }
                     catch {
-                        Server.reviewcooldown = 60;
+                        Server.reviewcooldown = 600;
                         Server.s.Log("An error occurred reading the review cooldown value");
                     }
                     break;
