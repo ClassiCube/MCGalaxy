@@ -140,8 +140,7 @@ namespace MCGalaxy
         public static bool autoupdate;
         public static bool autonotify;
         public static bool notifyPlayers;
-        public static string restartcountdown = "";
-        public static string selectedrevision = "";
+        public static int restartcountdown = 10;
         [ConfigBool("auto-restart", "Server", null, false)]    
         public static bool autorestart;
         public static DateTime restarttime;
@@ -232,6 +231,7 @@ namespace MCGalaxy
         [ConfigInt("rplimit-norm", "Other", null, 10000, 0, 50000)] 
         public static int rpNormLimit = 10000;
 
+        [ConfigInt("backup-time", "Backup", null, 300, 1)] 
         public static int backupInterval = 300;
         public static int blockInterval = 60;
         public static string backupLocation = Application.StartupPath + "/levels/backups";
@@ -270,10 +270,15 @@ namespace MCGalaxy
         [ConfigBool("Pooling", "Database", null, true)]          
         public static bool DatabasePooling = true;
 
+        [ConfigColor("defaultColor", "Colors", null, "&e")]
         public static string DefaultColor = "&e";
+        [ConfigColor("irc-color", "Colors", null, "&5")]
         public static string IRCColour = "&5";
+        [ConfigColor("global-chat-color", "Colors", null, "&6")]        
         public static string GlobalChatColor = "&6";
+        [ConfigColor("help-syntax-color", "IRC bot", null, "&a")]        
         public static string HelpSyntaxColor = "&a";
+        [ConfigColor("help-desc-color", "IRC bot", null, "&e")]        
         public static string HelpDescriptionColor = "&e";
         
         [ConfigBool("global-chat-enabled", "Other", null, true)]
@@ -298,6 +303,7 @@ namespace MCGalaxy
         [ConfigBool("dollar-before-dollar", "Other", null, true)]
         public static bool dollarNames = true;
         public static bool unsafe_plugin = true;
+        [ConfigBool("cheapmessage", "Other", null, true)]        
         public static bool cheapMessage = true;
         public static string cheapMessageGiven = " is now being cheap and being immortal";
         public static string defaultBanMessage = "You're banned!";

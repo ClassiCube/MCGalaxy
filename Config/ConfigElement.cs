@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using MCGalaxy.Config;
 
@@ -44,16 +45,38 @@ namespace MCGalaxy {
             return elems.ToArray();
         }
         
-        public static bool Parse(ConfigElement[] elems,
+        public static bool Parse(ConfigElement[] elements,
                                  string key, string value, object instance) {
-            for (int i = 0; i < elems.Length; i++) {
-                ConfigElement elem = elems[i];
+            foreach (ConfigElement elem in elements) {
                 if (!elem.Attrib.Name.CaselessEq(key)) continue;
                 
                 elem.Field.SetValue(instance, elem.Attrib.Parse(value));
                 return true;
             }
             return false;
+        }
+        
+        public static void Serialise(ConfigElement[] elements, string suffix,
+                                     StreamWriter dst, object instance) {
+            Dictionary<string, List<ConfigElement>> sections 
+                = new Dictionary<string, List<ConfigElement>>();
+            
+            foreach (ConfigElement elem in elements) {
+                List<ConfigElement> members;
+                if (!sections.TryGetValue(elem.Attrib.Section, out members)) {
+                    members = new List<ConfigElement>();
+                    sections[elem.Attrib.Section] = members;
+                }
+                members.Add(elem);
+            }
+            
+            foreach (var kvp in sections) {
+                dst.WriteLine(kvp.Key + suffix);
+                foreach (ConfigElement elem in kvp.Value) {
+                    dst.WriteLine(elem.Attrib.Name + " = " + elem.Field.GetValue(instance));
+                }
+                dst.WriteLine();
+            }
         }
     }
 }

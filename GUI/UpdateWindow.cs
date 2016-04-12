@@ -130,9 +130,7 @@ namespace MCGalaxy.Gui
 
 
         private void listRevisions_SelectedValueChanged(object sender, EventArgs e)
-        {
-            Server.selectedrevision = listRevisions.SelectedItem.ToString();
-            
+        {   
         }
 
     }

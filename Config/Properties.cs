@@ -83,9 +83,6 @@ namespace MCGalaxy {
 				case "report-back":
 					Server.reportBack = value.ToLower() == "true";
 					break;
-				case "backup-time":
-					if ( Convert.ToInt32(value) > 1 ) { Server.backupInterval = Convert.ToInt32(value); }
-					break;
 				case "backup-location":
 					if (!value.Contains("System.Windows.Forms.TextBox, Text:"))
 						Server.backupLocation = value;
@@ -107,21 +104,7 @@ namespace MCGalaxy {
 				case "databasename":
 					Server.MySQLDatabaseName = value;
 					break;
-				case "defaultcolor":
-					ParseColor(value, ref Server.DefaultColor); break;
-				case "irc-color":
-					ParseColor(value, ref Server.IRCColour); break;
-				case "global-chat-color":
-					ParseColor(value, ref Server.GlobalChatColor); break;
-				case "help-syntax-color":
-					ParseColor(value, ref Server.HelpSyntaxColor); break;
-				case "help-desc-color":
-					ParseColor(value, ref Server.HelpDescriptionColor); break;
 					
-				case "cheapmessage":
-					try { Server.cheapMessage = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
 				case "cheap-message-given":
 					if ( value != "" ) Server.cheapMessageGiven = value;
 					break;
@@ -145,8 +128,8 @@ namespace MCGalaxy {
 					Server.notifyPlayers = value.ToLower() == "true";
 					break;
 				case "update-countdown":
-					try { Server.restartcountdown = Convert.ToInt32(value).ToString(); }
-					catch { Server.restartcountdown = "10"; }
+					try { Server.restartcountdown = Convert.ToInt32(value); }
+					catch { Server.restartcountdown = 10; }
 					break;
 				case "restarttime":
 					try { Server.restarttime = DateTime.Parse(value); }
@@ -247,16 +230,6 @@ namespace MCGalaxy {
 						Server.s.Log("\"" + key + "\" was not a recognised config key.");
 					break;
 			}
-		}
-		
-		static void ParseColor(string value, ref string target) {
-			string color = Colors.Parse(value);
-			if (color == "") {
-				color = Colors.Name(value);
-				if (color != "") color = value;
-				else { Server.s.Log("Could not find " + value); return; }
-			}
-			target = color;
 		}
 		
 		public static bool ValidString(string str, string allowed) {

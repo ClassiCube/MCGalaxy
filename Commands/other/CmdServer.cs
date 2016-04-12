@@ -165,9 +165,7 @@ namespace MCGalaxy.Commands
             Server.ircafkset = new List<string>();
             Server.messages = new List<string>();
 
-            Server.restartcountdown = "";
-            Server.selectedrevision = "";
-
+            Server.restartcountdown = 10;
             Server.chatmod = false;
 
             //Global VoteKick In Progress Flag

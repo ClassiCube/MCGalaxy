@@ -34,7 +34,7 @@ namespace MCGalaxy {
                 case "notify":
                     Server.notifyPlayers = value.ToLower() == "true"; break;
                 case "restartcountdown":
-                    Server.restartcountdown = value; break;
+                    Server.restartcountdown = int.Parse(value); break;
             }
         }
     }

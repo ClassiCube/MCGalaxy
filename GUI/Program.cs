@@ -337,9 +337,7 @@ namespace MCGalaxy_.Gui
                                 //if (p != null) Server.restartcountdown = "20";  This is set by the user.  Why change it?
                                 Player.GlobalMessage("Update found. Prepare for restart in &f" + Server.restartcountdown + Server.DefaultColor + " seconds.");
                                 Server.s.Log("Update found. Prepare for restart in " + Server.restartcountdown + " seconds.");
-                                double nxtTime = Convert.ToDouble(Server.restartcountdown);
-                                DateTime nextupdate = DateTime.Now.AddMinutes(nxtTime);
-                                int timeLeft = Convert.ToInt32(Server.restartcountdown);
+                                int timeLeft = Server.restartcountdown;
                                 System.Timers.Timer countDown = new System.Timers.Timer();
                                 countDown.Interval = 1000;
                                 countDown.Start();

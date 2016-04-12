@@ -400,6 +400,7 @@
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Config\ConfigAttribute.cs" />
+    <Compile Include="Config\ConfigAttributes.cs" />
     <Compile Include="Config\ConfigElement.cs" />
     <Compile Include="Config\Properties.cs" />
     <Compile Include="Config\PropertiesFile.cs" />
