@@ -44,7 +44,6 @@ namespace MCGalaxy {
 		}
 		
 		static void LineProcessor(string key, string value) {
-			string color = "";
 			switch (key.ToLower()) {
 				case "server-name":
 					if ( ValidString(value, "![]:.,{}~-+()?_/\\' ") ) {

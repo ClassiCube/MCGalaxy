@@ -25,6 +25,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.Config;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 using MonoTorrent.Client;
@@ -169,13 +170,17 @@ namespace MCGalaxy
 
         public static string name = "[MCGalaxy] Default";
         public static string motd = "Welcome!";
+        [ConfigInt("max-players", null, 12, 1, 128)]
         public static byte players = 12;
-        //for the limiting no. of guests:
+        [ConfigInt("max-guests", null, 10, 1, 128)]
         public static byte maxGuests = 10;
 
         public static int port = 25565;
+        [ConfigBool("public", null, true)]
         public static bool pub = true;
+        [ConfigBool("verify-names", null, true)]
         public static bool verify = true;
+        [ConfigBool("world-chat", null, true)]
         public static bool worldChat = true;
 
         //Spam Prevention
@@ -193,7 +198,9 @@ namespace MCGalaxy
 
         public static bool reportBack = true;
 
+        [ConfigBool("irc", null, false)]
         public static bool irc = false;
+        [ConfigBool("irc-colorsenable", null, false)]
         public static bool ircColorsEnable = true;
         public static int ircPort = 6667;
         public static string ircNick = "ForgeBot";
