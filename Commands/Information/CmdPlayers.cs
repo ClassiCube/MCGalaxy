@@ -31,10 +31,12 @@ namespace MCGalaxy.Commands
         public CmdPlayers() { }
 
         public override void Use(Player p, string message) {
-            DisplayPlayers(p, message, text => Player.SendMessage(p, text), true);
+            DisplayPlayers(p, message, text => Player.SendMessage(p, text), 
+        	               true, Server.showEmptyRanks);
         }
         
-        public static void DisplayPlayers(Player p, string message, Action<string> output, bool showHidden) {
+        public static void DisplayPlayers(Player p, string message, Action<string> output, 
+                                          bool showHidden, bool showEmptyRanks) {
             if (message != "") {
                 Group grp = Group.Find(message);
                 if( grp == null ) {
@@ -96,7 +98,7 @@ namespace MCGalaxy.Commands
             modsSec.Print(output, false);
             
             for (int i = playerList.Count - 1; i >= 0; i--)
-                playerList[i].Print(output, Server.showEmptyRanks);
+                playerList[i].Print(output, showEmptyRanks);
         }
         
         struct Section {

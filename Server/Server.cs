@@ -71,6 +71,7 @@ namespace MCGalaxy
         public static WebServer APIServer;
         public static WebServer InfoServer;
         public static DateTime StartTime, StartTimeLocal;
+        [ConfigBool("enable-http-api", "Server", null, false)]        
         public static bool EnableHttpApi = false;
 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
@@ -94,7 +95,9 @@ namespace MCGalaxy
         //Chatrooms
         public static List<string> Chatrooms = new List<string>();
         //Other
+        [ConfigBool("allow-tp-to-higher-ranks", "Other", null, true)]        
         public static bool higherranktp = true;
+        [ConfigBool("agree-to-rules-on-entry", "Other", null, false)]        
         public static bool agreetorulesonentry = false;
         public static bool UseCTF = false;
         public static bool ServerSetupFinished = false;
@@ -139,6 +142,7 @@ namespace MCGalaxy
         public static bool notifyPlayers;
         public static string restartcountdown = "";
         public static string selectedrevision = "";
+        [ConfigBool("auto-restart", "Server", null, false)]    
         public static bool autorestart;
         public static DateTime restarttime;
 
@@ -153,8 +157,9 @@ namespace MCGalaxy
 
         //Zombie
         public static ZombieGame zombie;
+        
+        [ConfigBool("bufferblocks", "Other", null, false)]        
         public static bool bufferblocks = true;
-
         public static int YesVotes = 0;
         public static int NoVotes = 0;
         public static bool voting = false;
@@ -188,8 +193,11 @@ namespace MCGalaxy
         //Spam Prevention
         [ConfigBool("mute-on-spam", "Spam control", null, false)]        
         public static bool checkspam = false;
+        [ConfigInt("spam-messages", "Spam control", null, 8)]
         public static int spamcounter = 8;
+        [ConfigInt("spam-mute-time", "Spam control", null, 60)]        
         public static int mutespamtime = 60;
+        [ConfigInt("spam-counter-reset-time", "Spam control", null, 5)]        
         public static int spamcountreset = 5;
 
         public static string ZallState = "Alive";
@@ -212,12 +220,16 @@ namespace MCGalaxy
         [ConfigBool("irc-identify", "IRC bot", null, false)]
         public static bool ircIdentify = false;
         public static string ircPassword = "";
+        [ConfigBool("admin-verification", "Admin", null, true)]        
         public static bool verifyadmins = true;
         [ConfigPerm("verify-admin-perm", "Admin", null, LevelPermission.Operator)]
         public static LevelPermission verifyadminsrank = LevelPermission.Operator;
 
+        [ConfigBool("restart-on-error", "Server", null, true)]           
         public static bool restartOnError = true;
+        [ConfigInt("rplimit", "Other", null, 500, 0, 50000)]
         public static int rpLimit = 500;
+        [ConfigInt("rplimit-norm", "Other", null, 10000, 0, 50000)] 
         public static int rpNormLimit = 10000;
 
         public static int backupInterval = 300;
@@ -230,7 +242,9 @@ namespace MCGalaxy
         public static bool deathcount = true;
         [ConfigBool("autoload", "Server", null, false)]
         public static bool AutoLoad = false;
+        [ConfigInt("physics-undo-max", "Other", null, 20000)]          
         public static int physUndo = 20000;
+        [ConfigInt("total-undo", "Other", null, 200)]          
         public static int totalUndo = 200;
         [ConfigBool("parse-emotes", "Other", null, true)]          
         public static bool parseSmiley = true;
@@ -295,14 +309,19 @@ namespace MCGalaxy
         public static LevelPermission opchatperm = LevelPermission.Operator;
         [ConfigPerm("adminchat-perm", "Other", null, LevelPermission.Admin)]        
         public static LevelPermission adminchatperm = LevelPermission.Admin;
-        [ConfigBool("log-heartbeat", "Other", null, false)]        
+        
+        [ConfigBool("log-heartbeat", "Other", null, false)]
         public static bool logbeat = false;
-        [ConfigBool("admins-join-silent", "Other", null, false)]        
+        [ConfigBool("admins-join-silent", "Other", null, false)]
         public static bool adminsjoinsilent = false;
         public static bool mono { get { return (Type.GetType("Mono.Runtime") != null); } }
         public static string server_owner = "Notch";
+        
+        [ConfigBool("guest-limit-notify", "Other", null, false)]        
         public static bool guestLimitNotify = false;
+        [ConfigBool("guest-join-notify", "Other", null, true)]        
         public static bool guestJoinNotify = true;
+        [ConfigBool("guest-leave-notify", "Other", null, true)]        
         public static bool guestLeaveNotify = true;
         public static string defaultTerrainUrl = "", defaultTexturePackUrl = "";
 
@@ -312,9 +331,11 @@ namespace MCGalaxy
         public static bool restarting = false;
 
         //hackrank stuff
+        [ConfigBool("kick-on-hackrank", "Other", null, true)]
         public static bool hackrank_kick = true;
+        [ConfigInt("kick-on-hackrank-time", "Other", null, 5)]        
         public static int hackrank_kick_time = 5; //seconds, it converts it to milliseconds in the command.
-
+        [ConfigBool("show-empty-ranks", "Other", null, false)]  
         public static bool showEmptyRanks = false;
 
         //reviewoptions intitialize
@@ -331,8 +352,11 @@ namespace MCGalaxy
         [ConfigPerm("review-clear-perm", "Review", null, LevelPermission.Operator)]
         public static LevelPermission reviewclear = LevelPermission.Operator;
 
+        [ConfigInt("draw-reload-limit", "Other", null, 10000)]
         public static int DrawReloadLimit = 10000;
+        [ConfigInt("map-gen-limit-admin", "Other", null, 225 * 1000 * 1000)]
         public static int MapGenLimitAdmin = 225 * 1000 * 1000;
+        [ConfigInt("map-gen-limit", "Other", null, 30 * 1000 * 1000)] 
         public static int MapGenLimit = 30 * 1000 * 1000;
         #endregion
 

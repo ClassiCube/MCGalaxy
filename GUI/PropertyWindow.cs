@@ -657,8 +657,6 @@ namespace MCGalaxy.Gui {
 
             Server.backupInterval = int.Parse(txtBackup.Text);
             Server.backupLocation = txtBackupLocation.Text;
-
-
             //Server.reportBack = ;  //No setting for this?
 
             Server.useMySQL = chkUseSQL.Checked;

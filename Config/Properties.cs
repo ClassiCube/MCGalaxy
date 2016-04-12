@@ -77,15 +77,6 @@ namespace MCGalaxy {
 					Server.ircPassword = value;
 					break;
 
-				case "rplimit":
-					try { Server.rpLimit = Convert.ToUInt16(value); }
-					catch { Server.s.Log("rpLimit invalid! setting to default."); }
-					break;
-				case "rplimit-norm":
-					try { Server.rpNormLimit = Convert.ToUInt16(value); }
-					catch { Server.s.Log("rpLimit-norm invalid! setting to default."); }
-					break;
-
 				case "report-back":
 					Server.reportBack = value.ToLower() == "true";
 					break;
@@ -154,20 +145,9 @@ namespace MCGalaxy {
 					try { Server.restartcountdown = Convert.ToInt32(value).ToString(); }
 					catch { Server.restartcountdown = "10"; }
 					break;
-				case "auto-restart":
-					try { Server.autorestart = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); break; }
-					break;
 				case "restarttime":
 					try { Server.restarttime = DateTime.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using defualt."); break; }
-					break;
-				case "allow-tp-to-higher-ranks":
-					Server.higherranktp = value.ToLower() == "true";
-					break;
-				case "agree-to-rules-on-entry":
-					try { Server.agreetorulesonentry = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "main-name":
 					if ( Player.ValidName(value) ) Server.level = value;
@@ -188,21 +168,9 @@ namespace MCGalaxy {
 				case "money-name":
 					if ( value != "" ) Server.moneys = value;
 					break;
-				case "restart-on-error":
-					try { Server.restartOnError = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
 				case "host-state":
 					if ( value != "" )
 						Server.ZallState = value;
-					break;
-				case "kick-on-hackrank":
-					try { Server.hackrank_kick = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "hackrank-kick-time":
-					try { Server.hackrank_kick_time = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "server-owner":
 					if ( value != "" )
@@ -262,66 +230,7 @@ namespace MCGalaxy {
 					try { Server.zombie.IncludeMapInHeartbeat = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
-				case "guest-limit-notify":
-					try { Server.guestLimitNotify = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "guest-join-notify":
-					try { Server.guestJoinNotify = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "guest-leave-notify":
-					try { Server.guestLeaveNotify = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "admin-verification":
-					try { Server.verifyadmins = bool.Parse(value); }
-					catch { Server.s.Log("invalid " + key + ". Using default"); }
-					break;
-				case "spam-messages":
-					try { Server.spamcounter = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "spam-mute-time":
-					try { Server.mutespamtime = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "spam-counter-reset-time":
-					try { Server.spamcountreset = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "show-empty-ranks":
-					try { Server.showEmptyRanks = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-
-				case "total-undo":
-					try { Server.totalUndo = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "phys-max-undo":
-					try { Server.physUndo = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.physUndo = 20000; }
-					break;
-				case "draw-reload-limit":
-					try { Server.DrawReloadLimit = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.DrawReloadLimit = 10000; }
-					break;
-				case "map-gen-limit":
-					try { Server.MapGenLimit = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.MapGenLimit = 30 * 1000 * 1000; }
-					break;
-				case "map-gen-limit-admin":
-					try { Server.MapGenLimitAdmin = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.MapGenLimitAdmin = 225 * 1000 * 1000; }
-					break;
 					
-				case "bufferblocks":
-					try {
-						Server.bufferblocks = bool.Parse(value);
-					}
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
 				case "disabledstandardtokens":
 					{
 						if (value == "") return;
@@ -330,12 +239,6 @@ namespace MCGalaxy {
 							Chat.standardTokens.Remove(token);
 						Chat.disabledTokens = value;
 					} break;
-				case "enable-http-api":
-					try {
-						Server.EnableHttpApi = bool.Parse(value);
-					}
-					catch { Server.s.Log("Invalid " + key + ". Using default."); }
-					break;
 				default:
 					for (int i = 0; i < elements.Length; i++) {
 						ConfigElement elem = elements[i];

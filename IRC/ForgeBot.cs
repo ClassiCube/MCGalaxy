@@ -233,7 +233,7 @@ namespace MCGalaxy {
             string ircCmd = parts[0].ToLower();
             if (ircCmd == ".who" || ircCmd == ".players") {
                 try {
-                    CmdPlayers.DisplayPlayers(null, "", text => Pm(user.Nick, text), false);
+                    CmdPlayers.DisplayPlayers(null, "", text => Pm(user.Nick, text), false, false);
                 } catch (Exception e) {
                     Server.ErrorLog(e);
                 }
@@ -269,7 +269,7 @@ namespace MCGalaxy {
             string ircCmd = parts[0].ToLower();
             if (ircCmd == ".who" || ircCmd == ".players") {
                 try {
-                    CmdPlayers.DisplayPlayers(null, "", text => Say(text, false, true), false);
+                    CmdPlayers.DisplayPlayers(null, "", text => Say(text, false, true), false, false);
                 } catch (Exception e) {
                     Server.ErrorLog(e);
                 }
