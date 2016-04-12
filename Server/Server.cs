@@ -140,6 +140,7 @@ namespace MCGalaxy
         public static bool autoupdate;
         public static bool autonotify;
         public static bool notifyPlayers;
+        [ConfigInt("update-countdown", "Update", null, 10)]        
         public static int restartcountdown = 10;
         [ConfigBool("auto-restart", "Server", null, false)]    
         public static bool autorestart;
@@ -198,12 +199,13 @@ namespace MCGalaxy
         public static int mutespamtime = 60;
         [ConfigInt("spam-counter-reset-time", "Spam control", null, 5)]        
         public static int spamcountreset = 5;
-
+        [ConfigString("host-state", "Other", null, "Alive")]
         public static string ZallState = "Alive";
 
         public static string level = "main";
         public static string errlog = "error.log";
 
+        [ConfigBool("report-back", "Error handling", null, true)]
         public static bool reportBack = true;
 
         [ConfigBool("irc", "IRC bot", null, false)]
@@ -211,20 +213,26 @@ namespace MCGalaxy
         [ConfigBool("irc-colorsenable", "IRC bot", null, true)]
         public static bool ircColorsEnable = true;
         [ConfigInt("irc-port", "IRC bot", null, 6667, 0, 65535)]        
-        public static int ircPort = 6667;
+        public static int ircPort = 6667;        
+        [ConfigString("irc-nick", "IRC bot", null, "ForgeBot")]
         public static string ircNick = "ForgeBot";
+        [ConfigString("irc-server", "IRC bot", null, "irc.geekshed.net")]        
         public static string ircServer = "irc.geekshed.net";
+        [ConfigString("irc-channel", "IRC bot", null, "#changethis")]        
         public static string ircChannel = "#changethis";
-        public static string ircOpChannel = "#changethistoo";
+        [ConfigString("irc-opchannel", "IRC bot", null, "#changethistoo", true)]        
+        public static string ircOpChannel = "#changethistoo";      
         [ConfigBool("irc-identify", "IRC bot", null, false)]
         public static bool ircIdentify = false;
+        [ConfigString("irc-password", "IRC bot", null, "", true)]        
         public static string ircPassword = "";
+        
         [ConfigBool("admin-verification", "Admin", null, true)]        
         public static bool verifyadmins = true;
         [ConfigPerm("verify-admin-perm", "Admin", null, LevelPermission.Operator)]
         public static LevelPermission verifyadminsrank = LevelPermission.Operator;
 
-        [ConfigBool("restart-on-error", "Server", null, true)]           
+        [ConfigBool("restart-on-error", "Error handling", null, true)]           
         public static bool restartOnError = true;
         [ConfigInt("rplimit", "Other", null, 500, 0, 50000)]
         public static int rpLimit = 500;
@@ -262,10 +270,15 @@ namespace MCGalaxy
 
         [ConfigBool("UseMySQL", "Database", null, false)] 
         public static bool useMySQL = false;
+        [ConfigString("host", "Database", null, "127.0.0.1")]        
         public static string MySQLHost = "127.0.0.1";
+        [ConfigString("SQLPort", "Database", null, "3306")]          
         public static string MySQLPort = "3306";
+        [ConfigString("Username", "Database", null, "root", true)]          
         public static string MySQLUsername = "root";
+        [ConfigString("Password", "Database", null, "password", true)]          
         public static string MySQLPassword = "password";
+        [ConfigString("DatabaseName", "Database", null, "MCZallDB")]          
         public static string MySQLDatabaseName = "MCZallDB";
         [ConfigBool("Pooling", "Database", null, true)]          
         public static bool DatabasePooling = true;
@@ -305,11 +318,19 @@ namespace MCGalaxy
         public static bool unsafe_plugin = true;
         [ConfigBool("cheapmessage", "Other", null, true)]        
         public static bool cheapMessage = true;
+        
+        [ConfigString("cheap-message-given", "Messages", null, " is now being cheap and being immortal")]
         public static string cheapMessageGiven = " is now being cheap and being immortal";
+        [ConfigString("custom-ban-message", "Messages", null, "You're banned!")]
         public static string defaultBanMessage = "You're banned!";
+        [ConfigString("custom-shutdown-message", "Messages", null, "Server shutdown. Rejoin in 10 seconds.")]
         public static string shutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
+        [ConfigString("custom-promote-message", "Messages", null, "&6Congratulations for working hard and getting &2PROMOTED!")]
         public static string defaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
+        [ConfigString("custom-demote-message", "Messages", null, "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(")]
         public static string defaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
+
+        [ConfigString("money-name", "Other", null, "moneys")]        
         public static string moneys = "moneys";
         [ConfigPerm("opchat-perm", "Other", null, LevelPermission.Operator)]                
         public static LevelPermission opchatperm = LevelPermission.Operator;
@@ -321,6 +342,7 @@ namespace MCGalaxy
         [ConfigBool("admins-join-silent", "Other", null, false)]
         public static bool adminsjoinsilent = false;
         public static bool mono { get { return (Type.GetType("Mono.Runtime") != null); } }
+        [ConfigString("server-owner", "Other", null, "Notch")]        
         public static string server_owner = "Notch";
         
         [ConfigBool("guest-limit-notify", "Other", null, false)]        

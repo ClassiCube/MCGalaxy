@@ -64,72 +64,20 @@ namespace MCGalaxy {
 					}
 					else { Server.s.Log("motd invalid! setting to default."); }
 					break;
-				case "irc-server":
-					Server.ircServer = value;
-					break;
-				case "irc-nick":
-					Server.ircNick = value;
-					break;
-				case "irc-channel":
-					Server.ircChannel = value;
-					break;
-				case "irc-opchannel":
-					Server.ircOpChannel = value;
-					break;
-				case "irc-password":
-					Server.ircPassword = value;
-					break;
 
-				case "report-back":
-					Server.reportBack = value.ToLower() == "true";
-					break;
 				case "backup-location":
 					if (!value.Contains("System.Windows.Forms.TextBox, Text:"))
 						Server.backupLocation = value;
 					if (!Directory.Exists(value))
 						Server.backupLocation = Application.StartupPath + "/levels/backups";
 					break;
-				case "host":
-					Server.MySQLHost = value;
-					break;
-				case "sqlport":
-					Server.MySQLPort = value;
-					break;
-				case "username":
-					Server.MySQLUsername = value;
-					break;
-				case "password":
-					Server.MySQLPassword = value;
-					break;
-				case "databasename":
-					Server.MySQLDatabaseName = value;
-					break;
-					
-				case "cheap-message-given":
-					if ( value != "" ) Server.cheapMessageGiven = value;
-					break;
-				case "custom-ban-message":
-					if ( value != "" ) Server.defaultBanMessage = value;
-					break;
-				case "custom-shutdown-message":
-					if ( value != "" ) Server.shutdownMessage = value;
-					break;
-				case "custom-promote-message":
-					if ( value != "" ) Server.defaultPromoteMessage = value;
-					break;
-				case "custom-demote-message":
-					if ( value != "" ) Server.defaultDemoteMessage = value;
-					break;
+
 				case "default-rank":
 					try { Server.defaultRank = value.ToLower(); }
 					catch { }
 					break;
 				case "in-game-update-notify":
 					Server.notifyPlayers = value.ToLower() == "true";
-					break;
-				case "update-countdown":
-					try { Server.restartcountdown = Convert.ToInt32(value); }
-					catch { Server.restartcountdown = 10; }
 					break;
 				case "restarttime":
 					try { Server.restarttime = DateTime.Parse(value); }
@@ -150,17 +98,6 @@ namespace MCGalaxy {
 						Server.defaultTexturePackUrl = "";
 					else
 						Server.defaultTexturePackUrl = value;
-					break;
-				case "money-name":
-					if ( value != "" ) Server.moneys = value;
-					break;
-				case "host-state":
-					if ( value != "" )
-						Server.ZallState = value;
-					break;
-				case "server-owner":
-					if ( value != "" )
-						Server.server_owner = value;
 					break;
 				case "zombie-on-server-start":
 					try { Server.zombie.StartImmediately = bool.Parse(value); }

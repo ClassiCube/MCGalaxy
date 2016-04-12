@@ -122,4 +122,28 @@ namespace MCGalaxy.Config {
             return color;
         }
     }
+	
+    public sealed class ConfigStringAttribute : ConfigAttribute {
+        
+		/// <summary> Whether the empty string is an allowed, or if is treated as the default value. </summary>
+		public bool AllowEmpty;
+		
+        public ConfigStringAttribute(string name, string section, string desc, string defValue,
+		                            bool allowEmpty = false, string allowedChars = null)
+            : base(name, section, desc, defValue) {
+			AllowEmpty = allowEmpty;
+        }
+        
+        public override object Parse(string value) {
+            string color = Colors.Parse(value);
+            if (value == "") {
+            	if (!AllowEmpty) {
+            		  Server.s.Log("Config key \"" + Name + "\" has no value, using default of " + DefaultValue);
+            		  return DefaultValue;
+            	}
+                return "";
+            }
+            return value;
+        }
+    }	
 }
