@@ -100,7 +100,7 @@ namespace MCGalaxy {
         public int ponycount = 0;
         public int rdcount = 0;
         public bool hasreadrules = false;
-        public bool canusereview = true;
+        public DateTime NextReviewTime;
         public float ReachDistance = 5;
         public bool hackrank;
         
@@ -889,13 +889,6 @@ Next: continue;
         public void OnMoneyChanged() {
             if (Server.zombie.Running) Server.zombie.PlayerMoneyChanged(this);
             if (Server.lava.active) Server.lava.PlayerMoneyChanged(this);
-        }
-        
-        public void ReviewTimer() {
-            this.canusereview = false;
-            System.Timers.Timer Clock = new System.Timers.Timer(1000 * Server.reviewcooldown);
-            Clock.Elapsed += delegate { this.canusereview = true; Clock.Dispose(); };
-            Clock.Start();
         }
 
         public void TntAtATime() {

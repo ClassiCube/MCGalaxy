@@ -18,6 +18,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
+using System;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdReview : Command
@@ -29,66 +31,60 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdReview() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (p != null && message == "")
-            {
-                message = "enter";
-            }
+        public override void Use(Player p, string message) {
+            if (p != null && message == "") message = "enter";
+        	
             switch (message.ToLower())
             {
                 case "enter":
-                    if (p == null)
-                    {
+                    if (p == null) {
                         Player.SendMessage(p, "You can't execute this command as Console!");
                         return;
                     }
-                    if (p.canusereview)
+                    if (DateTime.UtcNow < p.NextReviewTime) {
+                    	Player.SendMessage(p, "You have to wait " + Server.reviewcooldown + " seconds everytime you use this command");
+                    	return;
+                    }
+            		
+                    Group gre = Group.findPerm(Server.reviewenter);
+                    if (gre == null) { MessageNoPerm(p, Server.reviewenter); return; }
+                    if (p.group.Permission >= gre.Permission)
                     {
-                        Group gre = Group.findPerm(Server.reviewenter);
-                        if (gre == null) { MessageNoPerm(p, Server.reviewenter); return; }
-                        if (p.group.Permission >= gre.Permission)
+                        foreach (string testwho in Server.reviewlist)
                         {
-                            foreach (string testwho in Server.reviewlist)
+                            if (testwho == p.name)
                             {
-                                if (testwho == p.name)
-                                {
-                                    Player.SendMessage(p, "You already entered the review queue!");
-                                    return;
-                                }
-                            }
-
-                            bool isopson = false;
-                            Player[] players = PlayerInfo.Online.Items;
-                            foreach (Player pl in players) {
-                            	if (pl.group.Permission >= Server.reviewnext && Player.CanSee(p, pl)) {
-                                    isopson = true; break;
-                                }
-                            }
-                            
-                            if (isopson)
-                            {
-                                Server.reviewlist.Add(p.name);
-                                int reviewlistpos = Server.reviewlist.IndexOf(p.name);
-                                if (reviewlistpos > 1) { Player.SendMessage(p, "You entered the &creview %Squeue. You have &c" + reviewlistpos + " %Speople in front of you in the queue"); }
-                                if (reviewlistpos == 1) { Player.SendMessage(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
-                                if (reviewlistpos == 0) { Player.SendMessage(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
-                                Player.SendMessage(p, "The Online Operators have been notified. Someone should be with you shortly.");
-                                
-                                string start = reviewlistpos > 0 ? "There are now &c" + (reviewlistpos + 1) + " %Speople" : "There is now &c1 %Sperson";
-                                Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", Server.reviewnext);
-                                Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", Server.reviewnext);
-                                p.ReviewTimer();
-                            }
-                            else
-                            {
-                                Player.SendMessage(p, "&cThere are no operators on to review your build. Please wait for one to come on and try again.");
+                                Player.SendMessage(p, "You already entered the review queue!");
+                                return;
                             }
                         }
-                    }
-                    else
-                    {
-                        Player.SendMessage(p, "You have to wait " + Server.reviewcooldown + " seconds everytime you use this command");
+
+                        bool isopson = false;
+                        Player[] players = PlayerInfo.Online.Items;
+                        foreach (Player pl in players) {
+                            if (pl.group.Permission >= Server.reviewnext && Player.CanSee(p, pl)) {
+                                isopson = true; break;
+                            }
+                        }
+                        
+                        if (isopson)
+                        {
+                            Server.reviewlist.Add(p.name);
+                            int reviewlistpos = Server.reviewlist.IndexOf(p.name);
+                            if (reviewlistpos > 1) { Player.SendMessage(p, "You entered the &creview %Squeue. You have &c" + reviewlistpos + " %Speople in front of you in the queue"); }
+                            if (reviewlistpos == 1) { Player.SendMessage(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
+                            if (reviewlistpos == 0) { Player.SendMessage(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
+                            Player.SendMessage(p, "The Online Operators have been notified. Someone should be with you shortly.");
+                            
+                            string start = reviewlistpos > 0 ? "There are now &c" + (reviewlistpos + 1) + " %Speople" : "There is now &c1 %Sperson";
+                            Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", Server.reviewnext);
+                            Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", Server.reviewnext);
+                            p.NextReviewTime = DateTime.UtcNow.AddSeconds(Server.reviewcooldown);
+                        }
+                        else
+                        {
+                            Player.SendMessage(p, "&cThere are no operators on to review your build. Please wait for one to come on and try again.");
+                        }
                     }
                     break;
 
