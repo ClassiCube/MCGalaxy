@@ -333,7 +333,7 @@ namespace MCGalaxy
         //hackrank stuff
         [ConfigBool("kick-on-hackrank", "Other", null, true)]
         public static bool hackrank_kick = true;
-        [ConfigInt("kick-on-hackrank-time", "Other", null, 5)]        
+        [ConfigInt("hackrank-kick-time", "Other", null, 5)]        
         public static int hackrank_kick_time = 5; //seconds, it converts it to milliseconds in the command.
         [ConfigBool("show-empty-ranks", "Other", null, false)]  
         public static bool showEmptyRanks = false;

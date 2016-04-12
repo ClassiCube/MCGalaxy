@@ -29,6 +29,8 @@ namespace MCGalaxy {
 	
 	public static class SrvProperties {
 		
+		static ConfigElement[] elements;
+		
 		public static void Load(string givenPath, bool skipsalt = false) {
 			RandomNumberGenerator prng = RandomNumberGenerator.Create();
 			StringBuilder sb = new StringBuilder();
@@ -39,7 +41,8 @@ namespace MCGalaxy {
 					sb.Append((char)oneChar[0]);
 			}
 			Server.salt = sb.ToString();
-			if (elements == null) InitConfigElements();
+			if (elements == null)
+				elements = ConfigElement.GetAll(typeof(Server));
 
 			if (PropertiesFile.Read(givenPath, LineProcessor))
 				Server.s.SettingsUpdate();
@@ -240,12 +243,8 @@ namespace MCGalaxy {
 						Chat.disabledTokens = value;
 					} break;
 				default:
-					for (int i = 0; i < elements.Length; i++) {
-						ConfigElement elem = elements[i];
-						if (!elem.Attribute.Name.CaselessEq(key)) continue;
-						
-						elem.Field.SetValue(null, elem.Attribute.Parse(value));
-					}
+					if (!ConfigElement.Parse(elements, key, value, null))
+						Server.s.Log("\"" + key + "\" was not a recognised config key.");
 					break;
 			}
 		}
@@ -510,29 +509,6 @@ namespace MCGalaxy {
 			w.WriteLine("global-chat-enabled = " + Server.UseGlobalChat.ToString().ToLower());
 			w.WriteLine("show-empty-ranks = " + Server.showEmptyRanks.ToString().ToLower());
 			w.WriteLine("disabledstandardtokens = " + Chat.disabledTokens);
-		}
-		
-		struct ConfigElement {
-			public ConfigAttribute Attribute;
-			public FieldInfo Field;
-		}		
-		static ConfigElement[] elements;
-		
-		static void InitConfigElements() {
-			FieldInfo[] fields = typeof(Server).GetFields();
-			List<ConfigElement> elems = new List<ConfigElement>();
-			
-			for (int i = 0; i < fields.Length; i++) {
-				FieldInfo field = fields[i];
-				Attribute[] attributes = Attribute.GetCustomAttributes(field, typeof(ConfigAttribute));
-				if (attributes.Length == 0) continue;
-				
-				ConfigElement elem;
-				elem.Field = field;
-				elem.Attribute = (ConfigAttribute)attributes[0];
-				elems.Add(elem);
-			}
-			elements = elems.ToArray();
 		}
 	}
 }
