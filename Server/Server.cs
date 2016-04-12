@@ -1,20 +1,20 @@
 /*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -77,7 +77,7 @@ namespace MCGalaxy
 
         public static string VersionString {
             get {
-            	Version v = Version;
+                Version v = Version;
                 return v.Major + "." + v.Minor + "." + v.Build;
             }
         }
@@ -133,6 +133,7 @@ namespace MCGalaxy
 
         public static string IP;
         //auto updater stuff
+        [ConfigBool("auto-update", "Update", null, false)]
         public static bool autoupdate;
         public static bool autonotify;
         public static bool notifyPlayers;
@@ -170,17 +171,18 @@ namespace MCGalaxy
 
         public static string name = "[MCGalaxy] Default";
         public static string motd = "Welcome!";
-        [ConfigInt("max-players", null, 12, 1, 128)]
+        [ConfigInt("max-players", "Server", null, 12, 1, 128)]
         public static byte players = 12;
-        [ConfigInt("max-guests", null, 10, 1, 128)]
+        [ConfigInt("max-guests", "Server", null, 10, 1, 128)]
         public static byte maxGuests = 10;
 
+        [ConfigInt("port", "Server", null, 25565, 0, 65535)]
         public static int port = 25565;
-        [ConfigBool("public", null, true)]
+        [ConfigBool("public", "Server", null, true)]
         public static bool pub = true;
-        [ConfigBool("verify-names", null, true)]
+        [ConfigBool("verify-names", "Server", null, true)]
         public static bool verify = true;
-        [ConfigBool("world-chat", null, true)]
+        [ConfigBool("world-chat", "Server", null, true)]
         public static bool worldChat = true;
 
         //Spam Prevention
@@ -198,9 +200,7 @@ namespace MCGalaxy
 
         public static bool reportBack = true;
 
-        [ConfigBool("irc", null, false)]
         public static bool irc = false;
-        [ConfigBool("irc-colorsenable", null, false)]
         public static bool ircColorsEnable = true;
         public static int ircPort = 6667;
         public static string ircNick = "ForgeBot";
@@ -223,6 +223,7 @@ namespace MCGalaxy
 
         public static bool physicsRestart = true;
         public static bool deathcount = true;
+        [ConfigBool("autoload", "Server", null, false)]
         public static bool AutoLoad = false;
         public static int physUndo = 20000;
         public static int totalUndo = 200;
@@ -232,6 +233,7 @@ namespace MCGalaxy
         public static bool profanityFilter = false;
         public static bool repeatMessage = false;
 
+        [ConfigBool("check-updates", "Update", null, false)]
         public static bool checkUpdates = true;
 
         public static bool useMySQL = false;
@@ -247,13 +249,13 @@ namespace MCGalaxy
         public static string GlobalChatColor = "&6";
         public static string HelpSyntaxColor = "&a";
         public static string HelpDescriptionColor = "&e";
-                
+        
         public static bool UseGlobalChat = true;
         public static string GlobalChatNick()
         {
             string serverName = Server.name.Replace(" ", "").Replace("'", "").Replace("!", "");;
             if(serverName.Length > 28)
-            { 
+            {
                 serverName.Substring(0, 28);
             }
             return serverName;
@@ -383,7 +385,7 @@ namespace MCGalaxy
 
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded)
-            	l.Unload();
+                l.Unload();
             ml.Queue(LoadMainLevel);
             Plugin.Load();
             ml.Queue(LoadPlayerLists);
@@ -449,7 +451,7 @@ namespace MCGalaxy
                                                 "totalCuboided BIGINT, totalKicked MEDIUMINT, TimeSpent VARCHAR(20), color VARCHAR(6), " +
                                                 "title_color VARCHAR(6){1});", (useMySQL ? "" : "PRIMARY KEY "), (useMySQL ? ", PRIMARY KEY (ID)" : "")));
             Database.executeQuery(string.Format("CREATE TABLE if not exists Opstats (ID INTEGER {0}" + autoInc + " NOT NULL, " +
-                                                "Time DATETIME, Name TEXT, Cmd VARCHAR(40), Cmdmsg VARCHAR(40){1});", 
+                                                "Time DATETIME, Name TEXT, Cmd VARCHAR(40), Cmdmsg VARCHAR(40){1});",
                                                 (useMySQL ? "" : "PRIMARY KEY "), (useMySQL ? ", PRIMARY KEY (ID)" : "")));
             if (!File.Exists("extra/alter.txt") && useMySQL) {
                 Database.executeQuery("ALTER TABLE Players MODIFY Name TEXT");
@@ -525,11 +527,11 @@ namespace MCGalaxy
                     whois.banned = Ban.IsBanned(p);
                 
                 if (whois.banned) {
-                	string[] bandata = Ban.GetBanData(p);
+                    string[] bandata = Ban.GetBanData(p);
                     whois.banned_by = bandata[0];
                     whois.ban_reason = bandata[1];
                     whois.banned_time = bandata[2];
-                }                
+                }
                 return JsonConvert.SerializeObject(whois, Formatting.Indented);
             }
             catch(Exception e)
@@ -604,22 +606,22 @@ namespace MCGalaxy
 
         public static void Exit(bool AutoRestart)
         {
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }
             foreach (Player p in players)
             {
-                string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage; 
+                string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
                 p.LeaveServer(msg, msg);
             }
             if (APIServer != null) APIServer.Stop();
             if (InfoServer != null) InfoServer.Stop();
             //PlayerInfo.players.ForEach(delegate(Player p) { p.Kick("Server shutdown. Rejoin in 10 seconds."); });
             Player.connections.ForEach(
-            delegate(Player p)
-            {
-            	string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage; 
-            	p.LeaveServer(msg, msg);
-            }
+                delegate(Player p)
+                {
+                    string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
+                    p.LeaveServer(msg, msg);
+                }
             );
             Plugin.Unload();
             if (listen != null)
@@ -641,7 +643,7 @@ namespace MCGalaxy
         [Obsolete("Use LevelInfo.Loaded.Add()")]
         public static void addLevel(Level level)
         {
-        	LevelInfo.Loaded.Add(level);
+            LevelInfo.Loaded.Add(level);
         }
 
         public void PlayerListUpdate()
@@ -661,7 +663,7 @@ namespace MCGalaxy
 
         public void Log(string message, bool systemMsg = false)
         {
-        	message = CP437Writer.ConvertToUnicode(message);
+            message = CP437Writer.ConvertToUnicode(message);
             if (ServerLog != null)
             {
                 ServerLog(message);
@@ -689,7 +691,7 @@ namespace MCGalaxy
         }
         public void OpLog(string message, bool systemMsg = false)
         {
-        	message = CP437Writer.ConvertToUnicode(message);
+            message = CP437Writer.ConvertToUnicode(message);
             if (ServerOpLog != null)
             {
                 OpLog(message);
@@ -716,7 +718,7 @@ namespace MCGalaxy
 
         public void AdminLog(string message, bool systemMsg = false)
         {
-        	message = CP437Writer.ConvertToUnicode(message);
+            message = CP437Writer.ConvertToUnicode(message);
             if (ServerAdminLog != null)
             {
                 ServerAdminLog(message);
@@ -749,7 +751,7 @@ namespace MCGalaxy
 
         public void CommandUsed(string message)
         {
-        	message = CP437Writer.ConvertToUnicode(message);
+            message = CP437Writer.ConvertToUnicode(message);
             if (OnCommand != null) OnCommand(DateTime.Now.ToString("(HH:mm:ss) ") + message);
             Logger.Write(DateTime.Now.ToString("(HH:mm:ss) ") + message + Environment.NewLine);
         }

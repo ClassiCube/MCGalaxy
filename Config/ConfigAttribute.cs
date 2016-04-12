@@ -7,6 +7,9 @@ namespace MCGalaxy.Config {
         /// <summary> Key used for writing/reading from the property file. </summary>
         public string Name;
         
+        /// <summary> Group in the property file this config entry is part of. </summary>
+        public string Group;
+        
         /// <summary> Comment shown in the property file above the key-value entry. </summary>
         public string Description;
         
@@ -14,10 +17,11 @@ namespace MCGalaxy.Config {
         public object DefaultValue;
         
         /// <summary> Returns either the parsed form of the given value, or some other value if validation fails. </summary>
-        public abstract object Validate(string value);
+        public abstract object Parse(string value);
         
-        public ConfigAttribute(string name, string desc, object defValue) {
-            Name = name; Description = desc; DefaultValue = defValue;
+        public ConfigAttribute(string name, string group, string desc, object defValue) {
+            Name = name; Description = desc; 
+            Group = group; DefaultValue = defValue;
         }
     }
     
@@ -29,13 +33,13 @@ namespace MCGalaxy.Config {
         /// <summary> Maximum value integer allowed for a value. </summary>
         public int MaxValue;
         
-        public ConfigIntAttribute(string name, string desc, int defValue,
+        public ConfigIntAttribute(string name, string group, string desc, int defValue,
                                   int min = int.MinValue, int max = int.MaxValue) 
-            : base(name, desc, defValue) {
+            : base(name, group, desc, defValue) {
             MinValue = min; MaxValue = max;
         }
         
-        public override object Validate(string value) {
+        public override object Parse(string value) {
             int intValue;
             if (!int.TryParse(value, out intValue)) {
                 Server.s.Log("Config key \"" + Name + "\" is not a valid integer, " +
@@ -57,11 +61,11 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigBoolAttribute : ConfigAttribute {
         
-        public ConfigBoolAttribute(string name, string desc, bool defValue) 
-            : base(name, desc, defValue) {
+        public ConfigBoolAttribute(string name, string group, string desc, bool defValue) 
+            : base(name, group, desc, defValue) {
         }
         
-        public override object Validate(string value) {
+        public override object Parse(string value) {
             bool boolValue;
             if (!bool.TryParse(value, out boolValue)) {
                 Server.s.Log("Config key \"" + Name + "\" is not a valid boolean, " +

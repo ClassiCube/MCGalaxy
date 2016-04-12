@@ -29,30 +29,33 @@ namespace MCGalaxy.Commands {
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
-            if (message == "") message = "normal";
+            if (message == "") {
+                if (p == null) {
+                    Player.SendMessage(p, "Console must provide a player or bot name."); return;
+                }
+                message = p.name;
+            }
+            
             Player who = p;
             PlayerBot pBot = null;
             bool isBot = message.CaselessStarts("bot ");
             string[] args = message.Split(trimChars, isBot ? 3 : 2);
+            string skin = null;
 
-            if (args.Length > 1) {
-                if (isBot && args.Length > 2) {
-                    pBot = PlayerBot.Find(args[1]);
-                    if (pBot == null) { Player.SendMessage(p, "There is no bot with that name."); return; }
-                } else {
-                    isBot = false;
-                    who = PlayerInfo.FindOrShowMatches(p, args[0]);
-                    if (who == null) return;
-                }                
-            } else if (p == null) { 
-                Player.SendMessage(p, "Console can't use this command on itself."); return;
+            if (isBot && args.Length > 2) {
+                pBot = PlayerBot.Find(args[1]);
+                if (pBot == null) { Player.SendMessage(p, "There is no bot with that name."); return; }
+                skin = args[2];
+            } else {
+                isBot = false;
+                who = PlayerInfo.FindOrShowMatches(p, args[0]);
+                if (who == null) return;
+                skin = args.Length >= 2 ? args[1] : who.truename;
             }
 
-            string skin = args[args.Length - 1];
             if (!Player.ValidName(skin)) {
                 Player.SendMessage(p, "\"" + skin + "\" is not a valid skin name."); return;
             }
-            
             if (isBot) {
                 pBot.skinName = skin;
                 pBot.GlobalDespawn();
@@ -63,7 +66,7 @@ namespace MCGalaxy.Commands {
                 Player.GlobalDespawn(who, true);
                 Player.GlobalSpawn(who, true);
                 Player.GlobalMessage(who.color + who.DisplayName + "'s %Sskin was changed to &c" + skin);
-            }           
+            }
         }
 
         public override void Help(Player p) {

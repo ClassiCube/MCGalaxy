@@ -19,9 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using MCGalaxy.Config;
 
 namespace MCGalaxy {
 	
@@ -37,6 +39,7 @@ namespace MCGalaxy {
 					sb.Append((char)oneChar[0]);
 			}
 			Server.salt = sb.ToString();
+			if (elements == null) InitConfigElements();
 
 			if (PropertiesFile.Read(givenPath, LineProcessor))
 				Server.s.SettingsUpdate();
@@ -834,6 +837,29 @@ namespace MCGalaxy {
 			w.WriteLine("global-chat-enabled = " + Server.UseGlobalChat.ToString().ToLower());
 			w.WriteLine("show-empty-ranks = " + Server.showEmptyRanks.ToString().ToLower());
 			w.WriteLine("disabledstandardtokens = " + Chat.disabledTokens);
+		}
+		
+		struct ConfigElement {
+			public ConfigAttribute Attribute;
+			public FieldInfo Field;
+		}		
+		static ConfigElement[] elements;
+		
+		static void InitConfigElements() {
+			FieldInfo[] fields = typeof(Server).GetFields();
+			List<ConfigElement> elems = new List<ConfigElement>();
+			
+			for (int i = 0; i < fields.Length; i++) {
+				FieldInfo field = fields[i];
+				Attribute[] attributes = Attribute.GetCustomAttributes(field, typeof(ConfigAttribute));
+				if (attributes.Length == 0) continue;
+				
+				ConfigElement elem;
+				elem.Field = field;
+				elem.Attribute = (ConfigAttribute)attributes[0];
+				elems.Add(elem);
+			}
+			elements = elems.ToArray();
 		}
 	}
 }

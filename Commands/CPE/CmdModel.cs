@@ -29,26 +29,30 @@ namespace MCGalaxy.Commands {
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
-            if (message == "") message = "normal";
+            if (message == "") {
+                if (p == null) {
+                    Player.SendMessage(p, "Console must provide a player or bot name."); return;
+                }
+                message = p.name;
+            }
+            
             Player who = p;
             PlayerBot pBot = null;
             bool isBot = message.CaselessStarts("bot ");
             string[] args = message.Split(trimChars, isBot ? 3 : 2);
+            string model = null;
 
-            if (args.Length > 1) {
-                if (isBot && args.Length > 2) {
-                    pBot = PlayerBot.Find(args[1]);
-                    if (pBot == null) { Player.SendMessage(p, "There is no bot with that name."); return; }
-                } else {
-                    isBot = false;
-                    who = PlayerInfo.FindOrShowMatches(p, args[0]);
-                    if (who == null) return;
-                }
-            } else if (p == null) { 
-                Player.SendMessage(p, "Console can't use this command on itself."); return;
+            if (isBot && args.Length > 2) {
+                pBot = PlayerBot.Find(args[1]);
+                if (pBot == null) { Player.SendMessage(p, "There is no bot with that name."); return; }
+                model = args[2];
+            } else {
+                isBot = false;
+                who = PlayerInfo.FindOrShowMatches(p, args[0]);
+                if (who == null) return;
+                model = args.Length >= 2 ? args[1] : "humanoid";
             }
 
-            string model = args[args.Length - 1];
             if (isBot) {
                 pBot.model = model;
                 UpdateModel(pBot.id, model, pBot.level, null);
@@ -57,7 +61,7 @@ namespace MCGalaxy.Commands {
                 who.model = model;
                 UpdateModel(who.id, model, who.level, who);
                 Player.GlobalMessage(who.color + who.DisplayName + "'s %Smodel was changed to a &c" + model);
-            }           
+            }
         }
         
         void UpdateModel(byte id, string model, Level level, Player who) {
@@ -96,5 +100,5 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
             Player.SendMessage(p, "You can also place a block ID instead of a model name, to change your model into a block!");
         }
-    } 
+    }
 }

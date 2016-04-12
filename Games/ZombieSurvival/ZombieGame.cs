@@ -176,7 +176,7 @@ namespace MCGalaxy.Games {
         
         const string createSyntax =
             @"CREATE TABLE if not exists ZombieStats (
-ID INTEGER {0}{2} NOT NULL,
+ID INTEGER {0}{1} NOT NULL,
 Name CHAR(20),
 TotalRounds INT,
 MaxRounds INT,
@@ -185,7 +185,7 @@ MaxInfected INT,
 Additional1 INT,
 Additional2 INT,
 Additional3 INT,
-Additional4 INT{1};"; // reserve space for possible future additions
+Additional4 INT{2});"; // reserve space for possible future additions
         
         public void CheckTableExists() {
             string primKey = Server.useMySQL ? "" : "PRIMARY KEY ";
