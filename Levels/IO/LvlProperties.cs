@@ -116,53 +116,31 @@ namespace MCGalaxy.Levels.IO {
         
         
         public static void Load(Level level, string path) {
-            foreach (string line in File.ReadAllLines(path)) {
-                try {
-                    if (line.Length == 0 || line[0] == '#') continue;
-                    int sepIndex = line.IndexOf(" = ");
-                    if (sepIndex < 0) continue;
-                    
-                    string key = line.Substring(0, sepIndex).ToLower();
-                    string value = line.Substring(sepIndex + 3);
-                    ParseProperty(level, key, value);
-                } catch (Exception e) {
-                    Server.ErrorLog(e);
-                }
-            }
+            PropertiesFile.Read(path, ref level, PropLineProcessor);
         }
         
         public static void LoadEnv(Level level, string name) {
             string path = "levels/level properties/" + name + ".env";
-            if (!File.Exists(path)) return;
-            
-            foreach (string line in File.ReadAllLines(path)) {
-                try {
-                    if (line[0] == '#') continue;
-                    int sepIndex = line.IndexOf(" = ");
-                    if (sepIndex < 0) continue;
-                    string value = line.Substring(sepIndex + 3);
-
-                    switch (line.Substring(0, sepIndex).ToLower())
-                    {
-                            case "cloudcolor": level.CloudColor = value; break;
-                            case "fogcolor": level.FogColor = value; break;
-                            case "skycolor": level.SkyColor = value; break;
-                            case "shadowcolor": level.ShadowColor = value; break;
-                            case "lightcolor": level.LightColor = value; break;
-                            case "edgeblock": level.EdgeBlock = byte.Parse(value); break;
-                            case "edgelevel": level.EdgeLevel = short.Parse(value); break;
-                            case "cloudsheight": level.CloudsHeight = short.Parse(value); break;
-                            case "maxfog": level.MaxFogDistance = short.Parse(value); break;
-                            case "horizonblock": level.HorizonBlock = byte.Parse(value); break;
-                    }
-                } catch {
-                }
+            PropertiesFile.Read(path, ref level, EnvLineProcessor);
+        }
+        
+        static void EnvLineProcessor(string key, string value, ref Level level) {
+            switch (key.ToLower()) {
+                case "cloudcolor": level.CloudColor = value; break;
+                case "fogcolor": level.FogColor = value; break;
+                case "skycolor": level.SkyColor = value; break;
+                case "shadowcolor": level.ShadowColor = value; break;
+                case "lightcolor": level.LightColor = value; break;
+                case "edgeblock": level.EdgeBlock = byte.Parse(value); break;
+                case "edgelevel": level.EdgeLevel = short.Parse(value); break;
+                case "cloudsheight": level.CloudsHeight = short.Parse(value); break;
+                case "maxfog": level.MaxFogDistance = short.Parse(value); break;
+                case "horizonblock": level.HorizonBlock = byte.Parse(value); break;
             }
         }
         
-        static void ParseProperty(Level level, string key, string value) {
-            switch (key)
-            {
+        static void PropLineProcessor(string key, string value, ref Level level) {
+            switch (key) {
                 case "theme":
                     level.theme = value; break;
                 case "physics":
