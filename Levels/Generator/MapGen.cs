@@ -51,12 +51,19 @@ namespace MCGalaxy {
             
             switch (type) {
                 case "flat":
-                    for (int y = 0; y <= half; ++y)
-                        for (int z = 0; z < length; ++z)
-                            for (int x = 0; x < width; ++x)
-                    {
-                        blocks[index++] = y < half ? Block.dirt : Block.grass;
-                    } return;
+                    int grassHeight = height / 2;
+                    if (useSeed && seed >= 0 && seed < height) {
+                        lvl.EdgeLevel = (short)seed;
+                        grassHeight = seed;
+                    }
+                    
+                    int dirtEnd = grassHeight * width * length;
+                    int grassEnd = (grassHeight + 1) * width * length;
+                    for (int i = 0; i < dirtEnd; i++)
+                        blocks[i] = Block.dirt;
+                    for (int i = dirtEnd; i < grassEnd; i++)
+                        blocks[i] = Block.grass;
+                    return;
                 case "pixel":
                     for (int y = 0; y < height; ++y)
                         for (int z = 0; z < length; ++z)

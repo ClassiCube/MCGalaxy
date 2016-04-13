@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands
             MapGen.PrintValidFormats(p);
             Player.SendMessage(p, "The seed is optional, and controls how the level is generated.");
             Player.SendMessage(p, "If the seed is the same, the generated level will be the same.");
-            Player.SendMessage(p, "The seed does not do anything on flat and pixel type maps.");
+            Player.SendMessage(p, "For flat maps the seed (if given) is used for the grass level.");
         }
     }
 }
