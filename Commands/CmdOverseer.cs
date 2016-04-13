@@ -150,18 +150,15 @@ namespace MCGalaxy.Commands
                     }
                 }
                 
-                string[] args = value.Split(' ');
-                bool noTypeArg = value == "" || args.Length == 3;
-                string type = noTypeArg ? "flat" : args[args.Length - 1];
-                if (MapGen.IsRecognisedFormat(type)) {
-                    Player.SendMessage(p, "Creating a new map for you: " + level);
-                    string cmdArgs = args.Length <= 1 ? "128 64 128" : value;
-                    if (args.Length <= 3) cmdArgs += " " + type;
-                    Command.all.Find("newlvl").Use(p, level + " " + cmdArgs);
-                } else {
-                    Player.SendMessage(p, "Invalid map type was specified.");
-                    MapGen.PrintValidFormats(p);
-                }
+
+                if (value == "") value = "128 64 128 flat";
+                else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
+                
+                string[] args = value.TrimEnd().Split(' ');
+                if (args.Length == 3) value += " flat";
+                	
+                Player.SendMessage(p, "Creating a new map for you: " + level);
+                Command.all.Find("newlvl").Use(p, level + " " + value);
             } else if (cmd == "PHYSICS") {
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5")
                     Command.all.Find("physics").Use(p, p.level.name + " " + value);
