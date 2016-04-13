@@ -98,7 +98,7 @@ namespace MCGalaxy.Games {
             QueuedLevel = null;
             Command.all.Find("load").Use(null, next.ToLower() + " 0");
             CurLevel = LevelInfo.Find(next);
-            if (Server.zombie.SetMainLevel)
+            if (ZombieGame.SetMainLevel)
                 Server.mainLevel = CurLevel;
             
             online = PlayerInfo.Online.Items;

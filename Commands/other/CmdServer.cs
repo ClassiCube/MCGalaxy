@@ -76,12 +76,12 @@ namespace MCGalaxy.Commands
                     }
                     Player.SendMessage(p, "Done!  Restoring defaults...");
                     //We set he defaults here, then go to reload the settings.
-                    setToDefault();
+                    SetToDefault();
                     goto case "reload";
                 case "reload":  // For security, only the owner and Console can use this.
                     if (p != null && !Server.server_owner.ToLower().Equals(p.name.ToLower()) || Server.server_owner.Equals("Notch"))
                     {
-                        p.SendMessage("Sorry.  You must be the Server Owner or Console to reload the server settings.");
+                        Player.SendMessage(p, "Sorry. You must be the Server Owner or Console to reload the server settings.");
                         return;
                     }
                     Player.SendMessage(p, "Reloading settings...");
@@ -119,7 +119,7 @@ namespace MCGalaxy.Commands
                 case "restore":
                     if (p != null && !Server.server_owner.ToLower().Equals(p.name.ToLower()) || Server.server_owner.Equals("Notch"))
                     {
-                        p.SendMessage("Sorry.  You must be the defined Server Owner or Console to restore the server.");
+                        Player.SendMessage(p, "Sorry. You must be the defined Server Owner or Console to restore the server.");
                         return;
                     }
                     Thread extract = new Thread(new ParameterizedThreadStart(ExtractPackage));
@@ -153,156 +153,33 @@ namespace MCGalaxy.Commands
             doWork.Start(param);
         }
 
-        private void setToDefault()
-        { // could do this elsewhere, but will worry about that later.
-            //Other
-            Server.higherranktp = true;
-            Server.agreetorulesonentry = false;
+        void SetToDefault() { 
+        	ConfigElement[] elements = ConfigElement.GetAll(typeof(Server));
+        	foreach (var elem in elements)
+        		elem.Field.SetValue(null, elem.Attrib.DefaultValue);
 
             Server.tempBans = new List<Server.TempBan>();
-
             Server.afkset = new List<string>();
             Server.ircafkset = new List<string>();
             Server.messages = new List<string>();
-
-            Server.restartcountdown = 10;
             Server.chatmod = false;
 
-            //Global VoteKick In Progress Flag
             Server.voteKickInProgress = false;
             Server.voteKickVotesNeeded = 0;
 
-            //Zombie
             Server.zombie.ResetState();
-            Server.zombie.StartImmediately = false;
-            Server.zombie.noRespawn = true;
-            Server.zombie.noPillaring = true;
-            Server.zombie.ZombieName = "";
-            Server.zombie.ChangeLevels = true;
-            Server.zombie.LevelList.Clear();
-            Server.zombie.SetMainLevel = false;
-            Server.zombie.SaveLevelBlockchanges = false;
-            Server.zombie.IgnorePersonalWorlds = true;
-            Server.zombie.IncludeMapInHeartbeat = false;
-            //Settings
-            #region Server Settings
             Server.salt = "";
 
-            Server.name = "[MCGalaxy] Default";
-            Server.motd = "Welcome!";
-            Server.players = 12;
-            //for the limiting no. of guests:
-            Server.maxGuests = 10;
-
-            Server.port = 25565;
-            Server.pub = true;
-            Server.verify = true;
-            Server.worldChat = true;
-            //            Server.guestGoto = false; //Never used
-
-            Server.autorestart = false;
             Server.restarttime = DateTime.Now;
-
-            //Spam Prevention
-            Server.checkspam = false;
-            Server.spamcounter = 8;
-            Server.mutespamtime = 60;
-            Server.spamcountreset = 5;
-
-            Server.ZallState = "Alive";
-
             Server.level = "main";
-            Server.errlog = "error.log";
-
-            //Server.console = false;
-            Server.reportBack = true;
-
-            Server.irc = false;
-            Server.ircColorsEnable = false;
-            //            Server.safemode = false;
-            Server.ircPort = 6667;
-            Server.ircNick = "ForgeBot";
-            Server.ircServer = "irc.esper.net";
-            Server.ircChannel = "#changethis";
-            Server.ircOpChannel = "#changethistoo";
-            Server.ircIdentify = false;
-            Server.ircPassword = "";
-            Server.verifyadmins = true;
-            Server.verifyadminsrank = LevelPermission.Operator;
-
-            Server.restartOnError = true;
-            Server.rpLimit = 500;
-            Server.rpNormLimit = 10000;
 
             Server.backupLocation = System.Windows.Forms.Application.StartupPath + "/levels/backups";
-            Server.backupInterval = 300;
             Server.blockInterval = 60;
 
-            Server.physicsRestart = true;
-            Server.deathcount = true;
-            Server.AutoLoad = false;
-            Server.physUndo = 20000;
-            Server.totalUndo = 200;
-            Server.parseSmiley = true;
-            Server.useWhitelist = false;
-            Server.forceCuboid = false;
-            Server.profanityFilter = false;
-            Server.repeatMessage = false;
-            Server.DrawReloadLimit = 10000;
-            Server.MapGenLimit = 30 * 1000 * 1000;
-            Server.MapGenLimitAdmin = 225 * 1000 * 1000;
-
-            Server.checkUpdates = true;
-
-            Server.useMySQL = false;
-            Server.MySQLHost = "127.0.0.1";
-            Server.MySQLPort = "3306";
-            Server.MySQLUsername = "root";
-            Server.MySQLPassword = "password";
-            Server.MySQLDatabaseName = "MCZallDB";
-            Server.DatabasePooling = true;
-
-            Server.DefaultColor = "&e";
-            Server.IRCColour = "&5";
-            Server.GlobalChatColor = "&6";
-            Server.HelpSyntaxColor = "&a";
-            Server.HelpDescriptionColor = "&e";
-            Server.UseGlobalChat = true;
-
-            Server.afkminutes = 10;
-            Server.afkkick = 45;
-            //Server.RemotePort = 1337;
-
-            Server.defaultRank = "guest";
-
-            Server.dollarNames = true;
             Server.unsafe_plugin = true;
-            Server.cheapMessage = true;
-            Server.cheapMessageGiven = " is now being cheap and being immortal";
-            Server.defaultBanMessage = "You're banned!";
-            Server.shutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
-            Server.defaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
-            Server.defaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
-            Server.moneys = "moneys";
-            Server.opchatperm = LevelPermission.Operator;
-            Server.adminchatperm = LevelPermission.Admin;
-            Server.logbeat = false;
-            Server.adminsjoinsilent = false;
-            //Server.mono = false;
-            Server.server_owner = "Notch";
-
             Server.flipHead = false;
-
             Server.shuttingDown = false;
             Server.restarting = false;
-
-            //hackrank stuff
-            Server.hackrank_kick = true;
-            Server.hackrank_kick_time = 5; //seconds, it converts it to milliseconds in the command.
-
-            Server.showEmptyRanks = false;
-
-            #endregion
         }
 
         public override void Help(Player p)

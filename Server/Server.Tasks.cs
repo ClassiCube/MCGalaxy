@@ -186,7 +186,7 @@ namespace MCGalaxy {
             {
                 if (Server.lava.startOnStartup)
                     Server.lava.Start();
-                if (Server.zombie.StartImmediately)
+                if (ZombieGame.StartImmediately)
                     Server.zombie.Start(ZombieGameStatus.InfiniteRounds, 0);
                 //This doesnt use the main map
                 if (Server.UseCTF)

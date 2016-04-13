@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
 
@@ -92,50 +93,50 @@ namespace MCGalaxy.Gui {
         public string Model { get; set; }        
         
         public void LoadFromServer() {
-            ChangeLevels = Server.zombie.ChangeLevels;
-            IgnoredLevelsList = String.Join(",", Server.zombie.IgnoredLevelList);
-            LevelsList = String.Join(",", Server.zombie.LevelList);
-            SaveZombieLevelChanges = Server.zombie.SaveLevelBlockchanges;
-            IgnorePersonalWorlds = Server.zombie.IgnorePersonalWorlds;
+            ChangeLevels = ZombieGame.ChangeLevels;
+            IgnoredLevelsList = String.Join(",", ZombieGame.IgnoredLevelList);
+            LevelsList = String.Join(",", ZombieGame.LevelList);
+            SaveZombieLevelChanges = ZombieGame.SaveLevelBlockchanges;
+            IgnorePersonalWorlds = ZombieGame.IgnorePersonalWorlds;
             
-            Pillaring = !Server.zombie.noPillaring;
-            Respawning = !Server.zombie.noRespawn;
-            SetMainLevel = Server.zombie.SetMainLevel;
-            StartImmediately = Server.zombie.StartImmediately;
+            Pillaring = !ZombieGame.noPillaring;
+            Respawning = !ZombieGame.noRespawn;
+            SetMainLevel = ZombieGame.SetMainLevel;
+            StartImmediately = ZombieGame.StartImmediately;
             
-            MaxMoveDistance = Server.zombie.MaxMoveDistance;
-            HitboxPrecision = Server.zombie.HitboxPrecision;
-            IncludeMapInHeartbeat = Server.zombie.IncludeMapInHeartbeat;
+            MaxMoveDistance = ZombieGame.MaxMoveDistance;
+            HitboxPrecision = ZombieGame.HitboxPrecision;
+            IncludeMapInHeartbeat = ZombieGame.IncludeMapInHeartbeat;
             
-            Name = Server.zombie.ZombieName;
-            Model = Server.zombie.ZombieModel;
+            Name = ZombieGame.ZombieName;
+            Model = ZombieGame.ZombieModel;
         }
         
         public void ApplyToServer() {
-            Server.zombie.ChangeLevels = ChangeLevels;
+            ZombieGame.ChangeLevels = ChangeLevels;
             string list = IgnoredLevelsList.Replace(" ", "");
-            if (list == "") Server.zombie.IgnoredLevelList = new List<string>();
-            else Server.zombie.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
+            if (list == "") ZombieGame.IgnoredLevelList = new List<string>();
+            else ZombieGame.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
                 
             list = LevelsList.Replace(" ", "");
-            if (list == "") Server.zombie.LevelList = new List<string>();
-            else Server.zombie.LevelList = new List<string>(list.Replace(" ", "").Split(','));
-            Server.zombie.SaveLevelBlockchanges = SaveZombieLevelChanges;
-            Server.zombie.IgnorePersonalWorlds = IgnorePersonalWorlds;
+            if (list == "") ZombieGame.LevelList = new List<string>();
+            else ZombieGame.LevelList = new List<string>(list.Replace(" ", "").Split(','));
+            ZombieGame.SaveLevelBlockchanges = SaveZombieLevelChanges;
+            ZombieGame.IgnorePersonalWorlds = IgnorePersonalWorlds;
             
-            Server.zombie.noPillaring = !Pillaring;
-            Server.zombie.noRespawn = !Respawning;
-            Server.zombie.SetMainLevel = SetMainLevel;
-            Server.zombie.StartImmediately = StartImmediately;
+            ZombieGame.noPillaring = !Pillaring;
+            ZombieGame.noRespawn = !Respawning;
+            ZombieGame.SetMainLevel = SetMainLevel;
+            ZombieGame.StartImmediately = StartImmediately;
             
-            Server.zombie.MaxMoveDistance = MaxMoveDistance;
-            Server.zombie.HitboxPrecision = HitboxPrecision;
-            Server.zombie.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
+            ZombieGame.MaxMoveDistance = MaxMoveDistance;
+            ZombieGame.HitboxPrecision = HitboxPrecision;
+            ZombieGame.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
             
-            Server.zombie.ZombieName = Name.Trim();
-            Server.zombie.ZombieModel = Model.Trim();
-            if (Server.zombie.ZombieModel == "")
-                Server.zombie.ZombieModel = "zombie";
+            ZombieGame.ZombieName = Name.Trim();
+            ZombieGame.ZombieModel = Model.Trim();
+            if (ZombieGame.ZombieModel == "")
+                ZombieGame.ZombieModel = "zombie";
         }
     }
 }

@@ -516,8 +516,8 @@ namespace MCGalaxy {
             }
             
             string name = p.truename, skinName = p.skinName;
-            if (Server.zombie.ZombieName != "" && !Game.Aka) {
-                name = Server.zombie.ZombieName; skinName = name;
+            if (ZombieGame.ZombieName != "" && !Game.Aka) {
+                name = ZombieGame.ZombieName; skinName = name;
             }
             
             if (hasExtList) {
@@ -528,7 +528,7 @@ namespace MCGalaxy {
             }
             
             if (hasChangeModel && id != 0xFF)
-                SendChangeModel(id, Server.zombie.ZombieModel);
+                SendChangeModel(id, ZombieGame.ZombieModel);
         }
         
         internal void SpawnEntity(PlayerBot b) {

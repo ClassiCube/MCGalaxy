@@ -311,6 +311,7 @@ namespace MCGalaxy
         public static int afkkick = 45;
         [ConfigPerm("afk-kick-perm", "Other", null, LevelPermission.AdvBuilder)]
         public static LevelPermission afkkickperm = LevelPermission.AdvBuilder;
+        [ConfigString("default-rank", "General", null, "guest")]
         public static string defaultRank = "guest";
 
         [ConfigBool("dollar-before-dollar", "Other", null, true)]
@@ -418,7 +419,10 @@ namespace MCGalaxy
             }
         }
         
+        internal static ConfigElement[] serverConfig;        
         public void Start() {
+        	serverConfig = ConfigElement.GetAll(typeof(Server));
+        	
             PlayerInfo.players = PlayerInfo.Online.list;
             Player.players = PlayerInfo.Online.list;
             Server.levels = LevelInfo.Loaded.list;

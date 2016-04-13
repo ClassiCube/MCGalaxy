@@ -205,7 +205,7 @@ namespace MCGalaxy
         // Games fields
         public int Likes, Dislikes;
         public string Authors = "";
-        public bool Pillaring = !Server.zombie.noPillaring;
+        public bool Pillaring = !ZombieGame.noPillaring;
         public BuildType BuildType = BuildType.Normal;
         public bool CanPlace { get { return Buildable && BuildType != BuildType.NoModify; } }
         public bool CanDelete { get { return Deletable && BuildType != BuildType.NoModify; } }
@@ -223,7 +223,7 @@ namespace MCGalaxy
             if (Length < 16) Length = 16;
             width = Width;
             length = Height;
-            height = Length; depth = Length;                   
+            height = Length; depth = Length;
 
             CustomBlockDefs = new BlockDefinition[256];
             for (int i = 0; i < CustomBlockDefs.Length; i++)
@@ -286,7 +286,7 @@ namespace MCGalaxy
         public static event OnLevelLoaded LevelLoaded;
 
         public bool ShouldSaveLevelFile() {
-        	if (Server.zombie.Running && !Server.zombie.SaveLevelBlockchanges &&
+        	if (Server.zombie.Running && !ZombieGame.SaveLevelBlockchanges &&
         	    (name.CaselessEq(Server.zombie.CurLevelName)
         	     || name.CaselessEq(Server.zombie.LastLevelName))) return false;
         	if (Server.lava.active && Server.lava.HasMap(name)) return false;
