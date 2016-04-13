@@ -1153,7 +1153,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             Command[] commands = null;
 
             using(FileDialog fileDialog = new OpenFileDialog()) {
-
+                fileDialog.RestoreDirectory = true;
                 fileDialog.Filter = "Accepted File Types (*.cs, *.vb, *.dll)|*.cs;*.vb;*.dll|C# Source (*.cs)|*.cs|Visual Basic Source (*.vb)|*.vb|.NET Assemblies (*.dll)|*.dll";
 
                 if ( fileDialog.ShowDialog() == DialogResult.OK ) {
