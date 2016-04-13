@@ -44,10 +44,10 @@ namespace MCGalaxy.Games {
         public int MaxRounds = 0;
         
         /// <summary> How precise collision detection is between alive and dead players. (Where 1 block = 32 units) </summary>
-        public int HitboxPrecision = 32;
+        public static int HitboxPrecision = 32;
         
         /// <summary> The maximum distance a player is allowed to move between movement packets. </summary>
-        public int MaxMoveDistance = 70;
+        public static int MaxMoveDistance = 70;
         
         /// <summary> Current round status of the game. </summary>
         public ZombieGameStatus Status = ZombieGameStatus.NotStarted;
@@ -89,19 +89,19 @@ namespace MCGalaxy.Games {
         public string QueuedLevel;
         
         /// <summary> Whether the server's main level should be set to the current level at the end of each round. </summary>
-        public bool SetMainLevel;
+        public static bool SetMainLevel;
         
         /// <summary> Whether zombie survival should start upon server startup. </summary>
-        public bool StartImmediately;
+        public static bool StartImmediately;
         
         /// <summary> Whether changes made during a round of zombie survival should be permanently saved. </summary>
-        public bool SaveLevelBlockchanges;
+        public static bool SaveLevelBlockchanges;
         
         /// <summary> Whether maps with '+' in their name are ignored when choosing levels for the next round. </summary>
-        public bool IgnorePersonalWorlds = true;
+        public static bool IgnorePersonalWorlds = true;
         
         /// <summary> Whether the current level name should be shown in the heartbeats sent. </summary>
-        public bool IncludeMapInHeartbeat = false;
+        public static bool IncludeMapInHeartbeat = false;
         
         static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
             "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
@@ -109,16 +109,16 @@ namespace MCGalaxy.Games {
             "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
             "{0} transplanted {1}'s living brain" };
         
-        internal bool noRespawn = true, noPillaring = true;
-        internal string ZombieName = "", ZombieModel = "zombie";
-        internal bool ChangeLevels = true;
+        static internal bool noRespawn = true, noPillaring = true;
+        static internal string ZombieName = "", ZombieModel = "zombie";
+        static internal bool ChangeLevels = true;
         
         /// <summary> List of levels that are randomly picked for zombie survival. 
         /// If this left blank, then all level files are picked from instead. </summary>
-        internal List<string> LevelList = new List<string>();
+        internal static List<string> LevelList = new List<string>();
         
         /// <summary> List of levels that are never picked for zombie survival. </summary>
-        internal List<string> IgnoredLevelList = new List<string>();
+        internal static List<string> IgnoredLevelList = new List<string>();
         
         string lastLevel1 = "", lastLevel2 = "";
         int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;

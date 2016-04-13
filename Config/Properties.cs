@@ -24,12 +24,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using MCGalaxy.Config;
+using MCGalaxy.Games;
 
 namespace MCGalaxy {
 	
 	public static class SrvProperties {
-		
-		static ConfigElement[] elements;
 		
 		public static void Load(string givenPath, bool skipsalt = false) {
 			RandomNumberGenerator prng = RandomNumberGenerator.Create();
@@ -41,8 +40,6 @@ namespace MCGalaxy {
 					sb.Append((char)oneChar[0]);
 			}
 			Server.salt = sb.ToString();
-			if (elements == null)
-				elements = ConfigElement.GetAll(typeof(Server));
 
 			if (PropertiesFile.Read(givenPath, LineProcessor))
 				Server.s.SettingsUpdate();
@@ -72,10 +69,6 @@ namespace MCGalaxy {
 						Server.backupLocation = Application.StartupPath + "/levels/backups";
 					break;
 
-				case "default-rank":
-					try { Server.defaultRank = value.ToLower(); }
-					catch { }
-					break;
 				case "in-game-update-notify":
 					Server.notifyPlayers = value.ToLower() == "true";
 					break;
@@ -100,57 +93,57 @@ namespace MCGalaxy {
 						Server.defaultTexturePackUrl = value;
 					break;
 				case "zombie-on-server-start":
-					try { Server.zombie.StartImmediately = bool.Parse(value); }
+					try { ZombieGame.StartImmediately = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "no-respawning-during-zombie":
-					try { Server.zombie.noRespawn = bool.Parse(value); }
+					try { ZombieGame.noRespawn = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "no-pillaring-during-zombie":
-					try { Server.zombie.noPillaring = bool.Parse(value); }
+					try { ZombieGame.noPillaring = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-name-while-infected":
-					if (value != "") Server.zombie.ZombieName = value;
+					if (value != "") ZombieGame.ZombieName = value;
 					break;
 				case "zombie-model-while-infected":
-					if (value != "") Server.zombie.ZombieModel = value;
+					if (value != "") ZombieGame.ZombieModel = value;
 					break;					
 				case "enable-changing-levels":
-					try { Server.zombie.ChangeLevels = bool.Parse(value); }
+					try { ZombieGame.ChangeLevels = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-survival-only-server":
-					try { Server.zombie.SetMainLevel = bool.Parse(value); }
+					try { ZombieGame.SetMainLevel = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-levels-list":
-					if (value == "") Server.zombie.LevelList = new List<string>();
-					else Server.zombie.LevelList = value.Replace(" ", "").Split(',').ToList<string>();
+					if (value == "") ZombieGame.LevelList = new List<string>();
+					else ZombieGame.LevelList = value.Replace(" ", "").Split(',').ToList<string>();
 					break;
 				case "zombie-ignores-list":
-					if (value == "") Server.zombie.IgnoredLevelList = new List<string>();
-					else Server.zombie.IgnoredLevelList = value.Replace(" ", "").Split(',').ToList<string>();
+					if (value == "") ZombieGame.IgnoredLevelList = new List<string>();
+					else ZombieGame.IgnoredLevelList = value.Replace(" ", "").Split(',').ToList<string>();
 					break;
 				case "zombie-save-blockchanges":
-					try { Server.zombie.SaveLevelBlockchanges = bool.Parse(value); }
+					try { ZombieGame.SaveLevelBlockchanges = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-hitbox-precision":
-					try { Server.zombie.HitboxPrecision = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.zombie.HitboxPrecision = 32; }
+					try { ZombieGame.HitboxPrecision = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); ZombieGame.HitboxPrecision = 32; }
 					break;	
 				case "zombie-maxmove-distance":
-					try { Server.zombie.MaxMoveDistance = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); Server.zombie.HitboxPrecision = 70; }
+					try { ZombieGame.MaxMoveDistance = int.Parse(value); }
+					catch { Server.s.Log("Invalid " + key + ". Using default"); ZombieGame.HitboxPrecision = 70; }
 					break;
 				case "zombie-ignore-personalworlds":
-					try { Server.zombie.IgnorePersonalWorlds = bool.Parse(value); }
+					try { ZombieGame.IgnorePersonalWorlds = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 				case "zombie-map-inheartbeat":
-					try { Server.zombie.IncludeMapInHeartbeat = bool.Parse(value); }
+					try { ZombieGame.IncludeMapInHeartbeat = bool.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 					
@@ -163,7 +156,7 @@ namespace MCGalaxy {
 						Chat.disabledTokens = value;
 					} break;
 				default:
-					if (!ConfigElement.Parse(elements, key, value, null))
+					if (!ConfigElement.Parse(Server.serverConfig, key, value, null))
 						Server.s.Log("\"" + key + "\" was not a recognised config key.");
 					break;
 			}
@@ -334,20 +327,20 @@ namespace MCGalaxy {
 			w.WriteLine("server-owner = " + Server.server_owner.ToString());
 			
 			w.WriteLine("#Zombie settings");
-			w.WriteLine("zombie-on-server-start = " + Server.zombie.StartImmediately);
-			w.WriteLine("no-respawning-during-zombie = " + Server.zombie.noRespawn);
-			w.WriteLine("no-pillaring-during-zombie = " + Server.zombie.noPillaring);
-			w.WriteLine("zombie-name-while-infected = " + Server.zombie.ZombieName);
-			w.WriteLine("zombie-model-while-infected = " + Server.zombie.ZombieModel);
-			w.WriteLine("enable-changing-levels = " + Server.zombie.ChangeLevels);
-			w.WriteLine("zombie-survival-only-server = " + Server.zombie.SetMainLevel);
-			w.WriteLine("zombie-levels-list = " + string.Join(",", Server.zombie.LevelList));
-			w.WriteLine("zombie-ignores-list = " + string.Join(",", Server.zombie.IgnoredLevelList));
-			w.WriteLine("zombie-save-blockchanges = " + Server.zombie.SaveLevelBlockchanges);
-			w.WriteLine("zombie-hitbox-precision = " + Server.zombie.HitboxPrecision);
-			w.WriteLine("zombie-maxmove-distance = " + Server.zombie.MaxMoveDistance);
-			w.WriteLine("zombie-ignore-personalworlds = " + Server.zombie.IgnorePersonalWorlds);
-			w.WriteLine("zombie-map-inheartbeat = " + Server.zombie.IncludeMapInHeartbeat);
+			w.WriteLine("zombie-on-server-start = " + ZombieGame.StartImmediately);
+			w.WriteLine("no-respawning-during-zombie = " + ZombieGame.noRespawn);
+			w.WriteLine("no-pillaring-during-zombie = " + ZombieGame.noPillaring);
+			w.WriteLine("zombie-name-while-infected = " + ZombieGame.ZombieName);
+			w.WriteLine("zombie-model-while-infected = " + ZombieGame.ZombieModel);
+			w.WriteLine("enable-changing-levels = " + ZombieGame.ChangeLevels);
+			w.WriteLine("zombie-survival-only-server = " + ZombieGame.SetMainLevel);
+			w.WriteLine("zombie-levels-list = " + string.Join(",", ZombieGame.LevelList));
+			w.WriteLine("zombie-ignores-list = " + string.Join(",", ZombieGame.IgnoredLevelList));
+			w.WriteLine("zombie-save-blockchanges = " + ZombieGame.SaveLevelBlockchanges);
+			w.WriteLine("zombie-hitbox-precision = " + ZombieGame.HitboxPrecision);
+			w.WriteLine("zombie-maxmove-distance = " + ZombieGame.MaxMoveDistance);
+			w.WriteLine("zombie-ignore-personalworlds = " + ZombieGame.IgnorePersonalWorlds);
+			w.WriteLine("zombie-map-inheartbeat = " + ZombieGame.IncludeMapInHeartbeat);
 			w.WriteLine();
 			
 			w.WriteLine("guest-limit-notify = " + Server.guestLimitNotify.ToString().ToLower());
@@ -391,8 +384,7 @@ namespace MCGalaxy {
 			w.WriteLine();
 			w.WriteLine("cheapmessage = " + Server.cheapMessage.ToString().ToLower());
 			w.WriteLine("cheap-message-given = " + Server.cheapMessageGiven);
-			try { w.WriteLine("default-rank = " + Server.defaultRank); }
-			catch { w.WriteLine("default-rank = guest"); }
+			w.WriteLine("default-rank = " + Server.defaultRank);
 			w.WriteLine();
 			w.WriteLine("kick-on-hackrank = " + Server.hackrank_kick.ToString().ToLower());
 			w.WriteLine("hackrank-kick-time = " + Server.hackrank_kick_time.ToString());

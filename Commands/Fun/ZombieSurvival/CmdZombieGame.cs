@@ -28,6 +28,9 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override CommandAlias[] Aliases {
+        	get { return new[] { new CommandAlias("zs"), new CommandAlias("zombiesurvival") }; }
+        }        
         public CmdZombieGame() { }
         
         public override void Use(Player p, string message) {
@@ -95,11 +98,11 @@ namespace MCGalaxy.Commands
         static void HandleHitbox(Player p, string message, string[] args) {
             byte precision;
             if (args.Length == 1) {
-                Player.SendMessage(p, "Hitbox detection is currently &a" + Server.zombie.HitboxPrecision + " %Sunits apart.");
+                Player.SendMessage(p, "Hitbox detection is currently &a" + ZombieGame.HitboxPrecision + " %Sunits apart.");
             } else if (!byte.TryParse(args[1], out precision)) {
                 Player.SendMessage(p, "Hitbox detection must be an integer between 0 and 256.");
             } else {
-                Server.zombie.HitboxPrecision = precision;
+                ZombieGame.HitboxPrecision = precision;
                 Player.SendMessage(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
                 SrvProperties.Save();
             }
@@ -108,11 +111,11 @@ namespace MCGalaxy.Commands
         static void HandleMaxMove(Player p, string message, string[] args) {
             byte distance;
             if (args.Length == 1) {
-                Player.SendMessage(p, "Maxmium move distance is currently &a" + Server.zombie.MaxMoveDistance + " %Sunits apart.");
+                Player.SendMessage(p, "Maxmium move distance is currently &a" + ZombieGame.MaxMoveDistance + " %Sunits apart.");
             } else if (!byte.TryParse(args[1], out distance)) {
                 Player.SendMessage(p, "Maximum move distance must be an integer between 0 and 256.");
             } else {
-                Server.zombie.MaxMoveDistance = distance;
+                ZombieGame.MaxMoveDistance = distance;
                 Player.SendMessage(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
                 SrvProperties.Save();
             }

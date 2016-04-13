@@ -168,6 +168,7 @@
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\Command.Helpers.cs" />
     <Compile Include="Commands\CommandKeywords.cs" />
     <Compile Include="Commands\CommandList.cs" />
     <Compile Include="Commands\CommandOtherPerms.cs" />
@@ -595,12 +596,6 @@
     <Compile Include="GUI\PropertyWindow.Designer.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\UpdateWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\UpdateWindow.Designer.cs">
-      <DependentUpon>UpdateWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Database\MySQL.cs" />
@@ -649,10 +644,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PropertyWindow.resx">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\UpdateWindow.resx">
-      <DependentUpon>UpdateWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Window.resx">

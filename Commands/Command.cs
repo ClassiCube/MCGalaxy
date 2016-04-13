@@ -18,12 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using MCGalaxy.Commands;
 
-namespace MCGalaxy
-{
-    public abstract partial class Command
-    {
+namespace MCGalaxy {
+    
+    public abstract partial class Command {
+        
         public abstract string name { get; }
         public abstract string shortcut { get; }
         public abstract string type { get; }
@@ -33,6 +32,7 @@ namespace MCGalaxy
         public abstract void Help(Player p);
         public virtual CommandPerm[] AdditionalPerms { get { return null; } }
         public virtual CommandEnable Enabled { get { return CommandEnable.Always; } }
+        public virtual CommandAlias[] Aliases { get { return null; } }
 
         public static CommandList all = new CommandList();
         public static CommandList core = new CommandList();
@@ -42,67 +42,20 @@ namespace MCGalaxy
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();
             for (int i = 0; i < types.Length; i++) {
                 Type type = types[i];
-                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;
-                all.Add((Command)Activator.CreateInstance(type));
+                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;                
+                Command cmd = (Command)Activator.CreateInstance(type);
+                all.Add(cmd);
+                
+                CommandAlias[] aliases = cmd.Aliases;
+                if (aliases == null) continue;                
+                foreach (CommandAlias alias in aliases) {
+                    string target = cmd.name + " " + alias.Args;
+                    Alias.coreAliases.Add(new Alias(alias.Trigger, target));
+                }
             }            
             core.commands = new List<Command>(all.commands);
             Scripting.Autoload();
         }
-        
-        #region Helpers
-
-        const CommandEnable bothFlags = CommandEnable.Lava | CommandEnable.Zombie;
-        public static string GetDisabledReason(CommandEnable enable) {
-            if (enable == CommandEnable.Always) return null;
-            if (enable == CommandEnable.Economy && !Economy.Enabled)
-                return "economy is disabled.";
-            
-            if (enable == bothFlags && !(Server.zombie.Running || Server.lava.active))
-                return "neither zombie nor lava survival is running.";
-            if (enable == CommandEnable.Zombie && !Server.zombie.Running)
-                return "zombie survival is not running.";
-            if (enable == CommandEnable.Lava)
-                return "lava survival is not running.";
-            return null;
-        }
-        
-        protected static void RevertAndClearState(Player p, ushort x, ushort y, ushort z) {
-            p.ClearBlockchange();
-            p.RevertBlock(x, y, z);
-        }
-        
-        protected void MessageInGameOnly(Player p) {
-            Player.SendMessage(p, "/" + name + " can only be used in-game.");
-        }
-        
-        protected bool CheckAdditionalPerm(Player p, int num = 1) {
-            return p == null || (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, num);
-        }
-        
-        protected void MessageNeedPerms(Player p, string action, int num = 1) {
-            int perm = CommandOtherPerms.GetPerm(this, num);
-            MessageNeedMinPerm(p, action, perm);
-        }
-        
-        protected void MessageNeedMinPerm(Player p, string action, int perm) {
-            Group grp = Group.findPermInt(perm);
-            if (grp == null)
-                Player.SendMessage(p, "Onlys rank with a permission level greater than &a" + perm + "%Scan " + action);
-            else
-                Player.SendMessage(p, "Only " + grp.color + grp.name + "%s+ can " + action);
-        }
-        
-        protected void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
-            MessageTooHighRank(p, action, p.group, canAffectOwnRank);
-        }
-        
-        protected void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
-            if (canAffectGroup)
-                 Player.SendMessage(p, "Can only " + action + " players ranked " + grp.color + grp.name + " %Sor below");
-            else
-                 Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.color + grp.name);
-        }
-        #endregion
     }
     
     public struct CommandPerm {
@@ -114,19 +67,20 @@ namespace MCGalaxy
         }
     }
     
+    public struct CommandAlias {
+        public string Trigger, Args;
+        
+        public CommandAlias(string cmd) {
+            Trigger = cmd; Args = "";
+        }
+        
+        public CommandAlias(string cmd, string args) {
+            Trigger = cmd; Args = args;
+        }
+    }
+    
     [Flags]
     public enum CommandEnable {
         Always = 0, Economy = 1, Zombie = 2, Lava = 4,
-    }
-    
-    public sealed class CommandTypes {
-        public const string Building = "build";
-        public const string Chat = "chat";
-        public const string Economy = "economy";
-        public const string Games = "game";
-        public const string Information = "information";
-        public const string Moderation = "mod";
-        public const string Other = "other";
-        public const string World = "world";
     }
 }

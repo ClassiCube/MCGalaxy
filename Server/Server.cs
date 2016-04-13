@@ -311,6 +311,7 @@ namespace MCGalaxy
         public static int afkkick = 45;
         [ConfigPerm("afk-kick-perm", "Other", null, LevelPermission.AdvBuilder)]
         public static LevelPermission afkkickperm = LevelPermission.AdvBuilder;
+        [ConfigString("default-rank", "General", null, "guest")]
         public static string defaultRank = "guest";
 
         [ConfigBool("dollar-before-dollar", "Other", null, true)]
@@ -418,7 +419,10 @@ namespace MCGalaxy
             }
         }
         
+        internal static ConfigElement[] serverConfig;        
         public void Start() {
+        	serverConfig = ConfigElement.GetAll(typeof(Server));
+        	
             PlayerInfo.players = PlayerInfo.Online.list;
             Player.players = PlayerInfo.Online.list;
             Server.levels = LevelInfo.Loaded.list;
@@ -622,6 +626,7 @@ namespace MCGalaxy
         public static void LoadAllSettings()
         {
             Colors.LoadExtColors();
+            Alias.Load();
             BlockDefinition.LoadGlobal();
             SrvProperties.Load("properties/server.properties");
             Updater.Load("properties/update.properties");
@@ -633,8 +638,7 @@ namespace MCGalaxy
             Economy.Load();
             Warp.LOAD();
             CommandOtherPerms.Load();
-            ProfanityFilter.Init();
-            Alias.Load();
+            ProfanityFilter.Init();         
             Team.LoadList();
         }
 
