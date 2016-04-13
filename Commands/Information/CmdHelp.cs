@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("ranks", "ranks"), new CommandAlias("cmdhelp"),
+            get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks"), ,
                     new CommandAlias("cmdlist", "commands"), new CommandAlias("commands", "commands") }; }
         }
         public CmdHelp() { }
@@ -195,9 +195,8 @@ namespace MCGalaxy.Commands
             cmd.Help(p);            
             LevelPermission minPerm = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name).lowestRank;          
             Player.SendMessage(p, "Rank needed: " + GetColoredRank(minPerm));
+            PrintAliases(p, cmd);
             
-            if (!String.IsNullOrEmpty(cmd.shortcut))
-                Player.SendMessage(p, "Shortcut: /" + cmd.shortcut);            
             CommandPerm[] perms = cmd.AdditionalPerms;
             if (perms == null) return true;
             
@@ -206,6 +205,32 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, GetColoredRank(perm.Perm) + " %S- " + perm.Description);
             }
             return true;
+        }
+        
+        void PrintAliases(Player p, Command cmd) {
+            StringBuilder dst = new StringBuilder("Shortcuts: ");
+            if (!String.IsNullOrEmpty(cmd.shortcut)) {
+                dst.Append('/').Append(cmd.shortcut).Append(", ");
+            }
+            FindAliases(Alias.coreAliases, cmd, dst);
+            FindAliases(Alias.aliases, cmd, dst);
+            
+            if (dst.Length == "Shortcuts: ".Length) return;
+            Player.SendMessage(p, dst.ToString(0, dst.Length - 2));
+        }
+        
+        void FindAliases(List<Alias> aliases, Command cmd, StringBuilder dst) {
+            foreach (Alias a in aliases) {
+                if (!a.Target.CaselessEq(cmd.name)) continue;
+                
+                dst.Append('/').Append(a.Trigger);
+                if (a.Args != null) {
+                    string name = String.IsNullOrEmpty(cmd.shortcut) 
+                        ? cmd.name : cmd.shortcut;
+                    dst.Append(" for /").Append(name + " " + a.Args);
+                }                
+                dst.Append(", ");
+            }
         }
         
         bool ParseBlock(Player p, string message) {

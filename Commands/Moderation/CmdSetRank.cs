@@ -25,14 +25,7 @@ namespace MCGalaxy.Commands
         public override string shortcut { get { return "rank"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("operator", "operator"), 
-                    new CommandAlias("op", "operator"), new CommandAlias("adv", "advbuilder"),
-                    new CommandAlias("super", "superop"), new CommandAlias("superop", "superop"),
-                    new CommandAlias("builder", "builder"), new CommandAlias("guest", "guest"),
-                    new CommandAlias("advbuilder", "advbuilder" ) }; }
-        }        
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }       
         public CmdSetRank() { }
         static char[] trimChars = { ' ' };
 
