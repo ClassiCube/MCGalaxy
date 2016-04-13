@@ -139,6 +139,7 @@ namespace MCGalaxy
         [ConfigBool("auto-update", "Update", null, false)]
         public static bool autoupdate;
         public static bool autonotify;
+        [ConfigBool("in-game-update-notify", "Server", null, false)]        
         public static bool notifyPlayers;
         [ConfigInt("update-countdown", "Update", null, 10)]        
         public static int restartcountdown = 10;
@@ -419,9 +420,9 @@ namespace MCGalaxy
             }
         }
         
-        internal static ConfigElement[] serverConfig;        
+        internal static ConfigElement[] serverConfig;
         public void Start() {
-        	serverConfig = ConfigElement.GetAll(typeof(Server));
+        	serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGame));
         	
             PlayerInfo.players = PlayerInfo.Online.list;
             Player.players = PlayerInfo.Online.list;

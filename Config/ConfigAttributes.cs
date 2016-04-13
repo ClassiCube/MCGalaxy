@@ -122,28 +122,45 @@ namespace MCGalaxy.Config {
             return color;
         }
     }
-	
+    
     public sealed class ConfigStringAttribute : ConfigAttribute {
         
-		/// <summary> Whether the empty string is an allowed, or if is treated as the default value. </summary>
-		public bool AllowEmpty;
-		
+        /// <summary> Whether the empty string is an allowed, or if is treated as the default value. </summary>
+        public bool AllowEmpty;
+        
+        /// <summary> Specifies the restricted set of characters (asides from alphanumeric characters) 
+        /// that this field is allowed to have. </summary>
+        public string AllowedChars;
+        
         public ConfigStringAttribute(string name, string section, string desc, string defValue,
-		                            bool allowEmpty = false, string allowedChars = null)
+                                    bool allowEmpty = false, string allowedChars = null)
             : base(name, section, desc, defValue) {
-			AllowEmpty = allowEmpty;
+            AllowEmpty = allowEmpty;
+            AllowedChars = allowedChars;
         }
         
         public override object Parse(string value) {
-            string color = Colors.Parse(value);
             if (value == "") {
-            	if (!AllowEmpty) {
-            		  Server.s.Log("Config key \"" + Name + "\" has no value, using default of " + DefaultValue);
-            		  return DefaultValue;
-            	}
+                if (!AllowEmpty) {
+                      Server.s.Log("Config key \"" + Name + "\" has no value, using default of " + DefaultValue);
+                      return DefaultValue;
+                }
                 return "";
+            } else if (AllowedChars == null) {
+                return value;
+            }
+            
+            foreach (char c in value) {
+                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+                    continue;
+                
+                if (AllowedChars.IndexOf(c) == -1) {
+                      Server.s.Log("Config key \"" + Name + "\" contains " +
+                                 "a non-allowed character, using default of " + DefaultValue);
+                      return DefaultValue;                    
+                }
             }
             return value;
         }
-    }	
+    }    
 }

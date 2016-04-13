@@ -153,9 +153,8 @@ namespace MCGalaxy.Commands
             doWork.Start(param);
         }
 
-        void SetToDefault() { 
-        	ConfigElement[] elements = ConfigElement.GetAll(typeof(Server));
-        	foreach (var elem in elements)
+        void SetToDefault() {
+        	foreach (var elem in Server.serverConfig)
         		elem.Field.SetValue(null, elem.Attrib.DefaultValue);
 
             Server.tempBans = new List<Server.TempBan>();

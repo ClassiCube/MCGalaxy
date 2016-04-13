@@ -69,9 +69,6 @@ namespace MCGalaxy {
 						Server.backupLocation = Application.StartupPath + "/levels/backups";
 					break;
 
-				case "in-game-update-notify":
-					Server.notifyPlayers = value.ToLower() == "true";
-					break;
 				case "restarttime":
 					try { Server.restarttime = DateTime.Parse(value); }
 					catch { Server.s.Log("Invalid " + key + ". Using defualt."); break; }
@@ -91,33 +88,7 @@ namespace MCGalaxy {
 						Server.defaultTexturePackUrl = "";
 					else
 						Server.defaultTexturePackUrl = value;
-					break;
-				case "zombie-on-server-start":
-					try { ZombieGame.StartImmediately = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "no-respawning-during-zombie":
-					try { ZombieGame.noRespawn = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "no-pillaring-during-zombie":
-					try { ZombieGame.noPillaring = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "zombie-name-while-infected":
-					if (value != "") ZombieGame.ZombieName = value;
-					break;
-				case "zombie-model-while-infected":
-					if (value != "") ZombieGame.ZombieModel = value;
-					break;					
-				case "enable-changing-levels":
-					try { ZombieGame.ChangeLevels = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "zombie-survival-only-server":
-					try { ZombieGame.SetMainLevel = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
+					break;			
 				case "zombie-levels-list":
 					if (value == "") ZombieGame.LevelList = new List<string>();
 					else ZombieGame.LevelList = value.Replace(" ", "").Split(',').ToList<string>();
@@ -125,26 +96,6 @@ namespace MCGalaxy {
 				case "zombie-ignores-list":
 					if (value == "") ZombieGame.IgnoredLevelList = new List<string>();
 					else ZombieGame.IgnoredLevelList = value.Replace(" ", "").Split(',').ToList<string>();
-					break;
-				case "zombie-save-blockchanges":
-					try { ZombieGame.SaveLevelBlockchanges = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "zombie-hitbox-precision":
-					try { ZombieGame.HitboxPrecision = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); ZombieGame.HitboxPrecision = 32; }
-					break;	
-				case "zombie-maxmove-distance":
-					try { ZombieGame.MaxMoveDistance = int.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); ZombieGame.HitboxPrecision = 70; }
-					break;
-				case "zombie-ignore-personalworlds":
-					try { ZombieGame.IgnorePersonalWorlds = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
-					break;
-				case "zombie-map-inheartbeat":
-					try { ZombieGame.IncludeMapInHeartbeat = bool.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using default"); }
 					break;
 					
 				case "disabledstandardtokens":
