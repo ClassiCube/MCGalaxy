@@ -1264,10 +1264,9 @@ return;
 
                 Alias alias = Alias.Find(cmd);
                 if (alias != null) {
-                    string[] pars = alias.Command.Split(trimChars, 2);
-                    cmd = pars[0];
-                    if (pars.Length > 1)
-                        message = message == "" ? pars[1] : pars[1] + " " + message;                  
+                    cmd = alias.Target;
+                    if (alias.Args != null)
+                        message = message == "" ? alias.Args : alias.Args + " " + message;                  
                 }
                 
                 if (OnCommand != null) OnCommand(cmd, this, message);
@@ -1282,8 +1281,6 @@ return;
                     UseCommand(command, cmd, message);
                 } else if (Block.Byte(cmd.ToLower()) != Block.Zero) {
                     HandleCommand("mode", cmd.ToLower());
-                } else if (MapCommand(ref cmd, ref message)) {
-                    HandleCommand(cmd, message);
                 } else {
                     SendMessage("Unknown command \"" + cmd + "\"!");
                 }
@@ -1337,46 +1334,6 @@ return;
                                 }));
             thread.Name = "MCG_Command";
             thread.Start();
-        }
-        
-        bool MapCommand(ref string cmd, ref string message) {
-            switch (cmd) {
-                case "guest":
-                case "builder":
-                case "advbuilder":
-                case "adv":
-                case "operator":
-                case "op":
-                case "super":
-                case "superop": message = cmd + " " + message; cmd = "setrank"; return true;
-                case "cut": cmd = "copy"; message = "cut"; return true;
-                case "admins": message = "superop"; cmd = "viewranks"; return true;
-                case "ops": message = "op"; cmd = "viewranks"; return true;
-                case "banned": message = cmd; cmd = "viewranks"; return true;
-                case "ps": message = "ps " + message; cmd = "map"; return true;
-
-                case "bhb":
-                case "hbox": cmd = "cuboid"; message = "hollow"; return true;
-                case "blb":
-                case "box": cmd = "cuboid"; return true;
-                case "sphere": cmd = "spheroid"; return true;
-                case "cmdlist":
-                case "commands": cmd = "help"; message = "commands"; return true;
-                case "cmdhelp": cmd = "help"; return true;
-                case "worlds":
-                case "mapsave": cmd = "save"; return true;
-                case "mapload": cmd = "load"; return true;
-                case "colour": cmd = "color"; return true;
-                case "materials": cmd = "blocks"; return true;
-                case "zz": cmd = "static"; message = "cuboid " + message; return true;
-                case "fetch": cmd = "summon"; return true;
-                case "ranks": cmd = "help"; message = "ranks"; return true;
-                case "j":
-                case "join": cmd = "goto"; return true;
-                case "zs": cmd = "zombiegame"; return true;
-                case "zombiesurvival": cmd = "zombiegame"; return true;               
-            }
-            return false;
         }
     }
 }

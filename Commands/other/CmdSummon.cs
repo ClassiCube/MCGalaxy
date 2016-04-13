@@ -26,6 +26,9 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("fetch") }; }
+        }
         public CmdSummon() { }
 
         public override void Use(Player p, string message)

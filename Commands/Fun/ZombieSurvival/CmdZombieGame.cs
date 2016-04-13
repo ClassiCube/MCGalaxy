@@ -28,6 +28,9 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override CommandAlias[] Aliases {
+        	get { return new[] { new CommandAlias("zs"), new CommandAlias("zombiesurvival") }; }
+        }        
         public CmdZombieGame() { }
         
         public override void Use(Player p, string message) {

@@ -21,12 +21,15 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "map"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.World; } }
+        public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can edit map options") }; }
         }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("ps", "ps") }; }
+        }        
 
         public override void Use(Player p, string message)
         {

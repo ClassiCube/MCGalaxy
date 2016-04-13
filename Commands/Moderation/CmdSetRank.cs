@@ -26,6 +26,13 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("operator", "operator"), 
+                    new CommandAlias("op", "operator"), new CommandAlias("adv", "advbuilder"),
+                    new CommandAlias("super", "superop"), new CommandAlias("superop", "superop"),
+                    new CommandAlias("builder", "builder"), new CommandAlias("guest", "guest"),
+                    new CommandAlias("advbuilder", "advbuilder" ) }; }
+        }        
         public CmdSetRank() { }
         static char[] trimChars = { ' ' };
 
@@ -77,7 +84,7 @@ namespace MCGalaxy.Commands
             if (p != null && (group.Permission >= p.group.Permission || newRank.Permission >= p.group.Permission)) {
                 MessageTooHighRank(p, "change the rank of", false); return false;
             }
-            if (p != null && (newRank.Permission >= p.group.Permission)) {           	
+            if (p != null && (newRank.Permission >= p.group.Permission)) {               
                 Player.SendMessage(p, "Cannot change the rank of a player to a rank equal or higher to yours."); return false;
             }            
             
@@ -101,7 +108,7 @@ namespace MCGalaxy.Commands
             string assigner = p == null ? "(console)" : p.name;
 
             string line = name + " " + assigner + " " + minute + " " + hour + " " + day + " " + month
-            	+ " " + year + " " + newRank.name + " " + group.name + " " + reason.Replace(" ", "%20");
+                + " " + year + " " + newRank.name + " " + group.name + " " + reason.Replace(" ", "%20");
             using (StreamWriter sw = File.AppendText("text/rankinfo.txt"))
                 sw.WriteLine(CP437Writer.ConvertToUnicode(line));
             return true;

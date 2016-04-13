@@ -622,6 +622,7 @@ namespace MCGalaxy
         public static void LoadAllSettings()
         {
             Colors.LoadExtColors();
+            Alias.Load();
             BlockDefinition.LoadGlobal();
             SrvProperties.Load("properties/server.properties");
             Updater.Load("properties/update.properties");
@@ -633,8 +634,7 @@ namespace MCGalaxy
             Economy.Load();
             Warp.LOAD();
             CommandOtherPerms.Load();
-            ProfanityFilter.Init();
-            Alias.Load();
+            ProfanityFilter.Init();         
             Team.LoadList();
         }
 
