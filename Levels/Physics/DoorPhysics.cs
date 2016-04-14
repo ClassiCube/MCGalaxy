@@ -21,19 +21,19 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class DoorPhysics {
         
-        public static void odoorPhysics(Level lvl, Check C) {
+        public static void odoorPhysics(Level lvl, ref Check C) {
             if (C.data.Data != 0) { C.data.Data = 0; return; }
             
-            odoorNeighbour(lvl, C, lvl.IntOffset(C.b, -1, 0, 0));
-            odoorNeighbour(lvl, C, lvl.IntOffset(C.b, +1, 0, 0));
-            odoorNeighbour(lvl, C, lvl.IntOffset(C.b, 0, -1, 0));
-            odoorNeighbour(lvl, C, lvl.IntOffset(C.b, 0, +1, 0));
-            odoorNeighbour(lvl, C, lvl.IntOffset(C.b, 0, 0, -1));
-            odoorNeighbour(lvl, C, lvl.IntOffset(C.b, 0, 0, +1));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, -1, 0, 0));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, +1, 0, 0));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, -1, 0));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, +1, 0));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, -1));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, +1));
             C.data.Data++;
         }
         
-        static void odoorNeighbour(Level lvl, Check C, int offset) {
+        static void odoorNeighbour(Level lvl, ref Check C, int offset) {
             int index = C.b + offset;
             byte block = Block.odoor(lvl.GetTile(index));
             
@@ -42,11 +42,11 @@ namespace MCGalaxy.BlockPhysics {
         }
         
 		//Change any door blocks nearby into door_air
-        public static void AnyDoor(Level lvl, Check C, int timer, bool instaUpdate = false) {
+        public static void AnyDoor(Level lvl, ref Check C, int timer, bool instaUpdate = false) {
 			ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             if (C.data.Data != 0) {
-                CheckDoorRevert(lvl, C, timer); return;
+                CheckDoorRevert(lvl, ref C, timer); return;
             }
             
             PhysDoor(lvl, (ushort)(x + 1), y, z, instaUpdate);
@@ -57,15 +57,15 @@ namespace MCGalaxy.BlockPhysics {
             PhysDoor(lvl, x, (ushort)(y + 1), z, instaUpdate);
             
             if (lvl.blocks[C.b] != Block.door_green_air) {
-                CheckDoorRevert(lvl, C, timer); return;
+                CheckDoorRevert(lvl, ref C, timer); return;
             }
             
             if (lvl.physics != 5)
-                ActivateNeighbours(lvl, C, x, y, z);           
-            CheckDoorRevert(lvl, C, timer);
+                ActivateNeighbours(lvl, ref C, x, y, z);           
+            CheckDoorRevert(lvl, ref C, timer);
         }
         
-        static void ActivateNeighbours(Level lvl, Check C, ushort x, ushort y, ushort z) {
+        static void ActivateNeighbours(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
             for (int xx = -1; xx <= 1; xx++)
                 for (int yy = -1; yy <= 1; yy++)
                     for (int zz = -1; zz <= 1; zz++)
@@ -101,7 +101,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
 
-        static void CheckDoorRevert(Level lvl, Check C, int timer) {
+        static void CheckDoorRevert(Level lvl, ref Check C, int timer) {
             if (C.data.Data < timer) {
                 C.data.Data++;
             } else {

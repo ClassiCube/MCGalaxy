@@ -64,6 +64,13 @@ namespace MCGalaxy {
             return true;
         }
         
+        public void RemoveAt(int index) {
+            Count--;
+            if (index < Count)
+                Array.Copy(Items, index + 1, Items, index, Count - index);
+            Items[Count] = default(T);
+        }
+        
         public void RemoveAll(Predicate<T> condition) {
             int j = 0;
             for (int i = 0; i < Count; i++) {

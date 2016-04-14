@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
 
     public static class LeafPhysics {
         
-        public static void DoLeaf(Level lvl, Check C) {
+        public static void DoLeaf(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -41,11 +41,11 @@ namespace MCGalaxy.BlockPhysics {
                 if (rand.Next(10) == 0) C.data.Data++;
                 return;
             }
-            if (DoLeafDecay(lvl, C)) lvl.AddUpdate(C.b, Block.air);
+            if (DoLeafDecay(lvl, ref C)) lvl.AddUpdate(C.b, Block.air);
             C.data.Data = 255;
         }
         
-        static bool DoLeafDecay(Level lvl, Check C) {
+        static bool DoLeafDecay(Level lvl, ref Check C) {
             const int dist = 4;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);

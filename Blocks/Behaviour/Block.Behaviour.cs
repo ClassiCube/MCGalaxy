@@ -40,7 +40,7 @@ namespace MCGalaxy {
         
         /// <summary> Called to handle the physics for this particular block. </summary>
         /// <remarks>If this returns true, the usual 'death check' behaviour is skipped. </remarks>
-        public delegate void HandlePhysics(Level lvl, Check C);
+        public delegate void HandlePhysics(Level lvl, ref Check C);
         internal static HandlePhysics[] physicsHandlers = new Block.HandlePhysics[256];
         internal static HandlePhysics[] physicsDoorsHandlers = new Block.HandlePhysics[256];
         
@@ -90,9 +90,9 @@ namespace MCGalaxy {
             physicsHandlers[Block.birdwhite] = BirdPhysics.Do;
             physicsHandlers[Block.birdlava] = BirdPhysics.Do;
             physicsHandlers[Block.birdwater] = BirdPhysics.Do;
-            physicsHandlers[Block.birdred] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.air);
-            physicsHandlers[Block.birdblue] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.air);
-            physicsHandlers[Block.birdkill] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.air);
+            physicsHandlers[Block.birdred] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);
+            physicsHandlers[Block.birdblue] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);
+            physicsHandlers[Block.birdkill] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);
             
             physicsHandlers[Block.snaketail] = SnakePhysics.DoTail;
             physicsHandlers[Block.snake] = SnakePhysics.Do;
@@ -102,12 +102,12 @@ namespace MCGalaxy {
             physicsHandlers[Block.zombiehead] = ZombiePhysics.DoHead;
             physicsHandlers[Block.creeper] = ZombiePhysics.Do;
 
-            physicsHandlers[Block.fishbetta] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.water);
-            physicsHandlers[Block.fishshark] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.water);
-            physicsHandlers[Block.fishlavashark] = (lvl, C) => HunterPhysics.DoKiller(lvl, C, Block.lava);
-            physicsHandlers[Block.fishgold] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
-            physicsHandlers[Block.fishsalmon] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
-            physicsHandlers[Block.fishsponge] = (lvl, C) => HunterPhysics.DoFlee(lvl, C, Block.water);
+            physicsHandlers[Block.fishbetta] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.water);
+            physicsHandlers[Block.fishshark] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.water);
+            physicsHandlers[Block.fishlavashark] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.lava);
+            physicsHandlers[Block.fishgold] = (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
+            physicsHandlers[Block.fishsalmon] = (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
+            physicsHandlers[Block.fishsponge] = (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
             
             physicsHandlers[Block.water] = SimpleLiquidPhysics.DoWater;
             physicsHandlers[Block.activedeathwater] = SimpleLiquidPhysics.DoWater;
@@ -115,10 +115,10 @@ namespace MCGalaxy {
             physicsHandlers[Block.activedeathlava] = SimpleLiquidPhysics.DoLava;
             physicsHandlers[Block.WaterDown] = ExtLiquidPhysics.DoWaterfall;
             physicsHandlers[Block.LavaDown] = ExtLiquidPhysics.DoLavafall;
-            physicsHandlers[Block.WaterFaucet] = (lvl, C) => 
-                ExtLiquidPhysics.DoFaucet(lvl, C, Block.WaterDown);
-            physicsHandlers[Block.LavaFaucet] = (lvl, C) => 
-                ExtLiquidPhysics.DoFaucet(lvl, C, Block.LavaDown);
+            physicsHandlers[Block.WaterFaucet] = (Level lvl, ref Check C) => 
+                ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.WaterDown);
+            physicsHandlers[Block.LavaFaucet] = (Level lvl, ref Check C) => 
+                ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.LavaDown);
             physicsHandlers[Block.finiteWater] = FinitePhysics.DoWaterOrLava;
             physicsHandlers[Block.finiteLava] = FinitePhysics.DoWaterOrLava;
             physicsHandlers[Block.finiteFaucet] = FinitePhysics.DoFaucet;
@@ -138,22 +138,22 @@ namespace MCGalaxy {
             physicsHandlers[Block.staircasestep] = OtherPhysics.DoStairs;
             physicsHandlers[Block.wood_float] = OtherPhysics.DoFloatwood;
 
-            physicsHandlers[Block.sponge] = (lvl, C) => OtherPhysics.DoSponge(lvl, C, false);
-            physicsHandlers[Block.lava_sponge] = (lvl, C) => OtherPhysics.DoSponge(lvl, C, true);
+            physicsHandlers[Block.sponge] = (Level lvl, ref Check C) => OtherPhysics.DoSponge(lvl, ref C, false);
+            physicsHandlers[Block.lava_sponge] = (Level lvl, ref Check C) => OtherPhysics.DoSponge(lvl, ref C, true);
 
             //Special blocks that are not saved
-            physicsHandlers[Block.air_flood] = (lvl, C) => 
-                AirPhysics.DoFlood(lvl, C, AirFlood.Full, Block.air_flood);
-            physicsHandlers[Block.air_flood_layer] = (lvl, C) => 
-                AirPhysics.DoFlood(lvl, C, AirFlood.Layer, Block.air_flood_layer);
-            physicsHandlers[Block.air_flood_down] = (lvl, C) => 
-                AirPhysics.DoFlood(lvl, C, AirFlood.Down, Block.air_flood_down);
-            physicsHandlers[Block.air_flood_up] = (lvl, C) => 
-                AirPhysics.DoFlood(lvl, C, AirFlood.Up, Block.air_flood_up);
+            physicsHandlers[Block.air_flood] = (Level lvl, ref Check C) => 
+                AirPhysics.DoFlood(lvl, ref C, AirFlood.Full, Block.air_flood);
+            physicsHandlers[Block.air_flood_layer] = (Level lvl, ref Check C) => 
+                AirPhysics.DoFlood(lvl, ref C, AirFlood.Layer, Block.air_flood_layer);
+            physicsHandlers[Block.air_flood_down] = (Level lvl, ref Check C) => 
+                AirPhysics.DoFlood(lvl, ref C, AirFlood.Down, Block.air_flood_down);
+            physicsHandlers[Block.air_flood_up] = (Level lvl, ref Check C) => 
+                AirPhysics.DoFlood(lvl, ref C, AirFlood.Up, Block.air_flood_up);
             
             physicsHandlers[Block.smalltnt] = TntPhysics.DoSmallTnt;
-            physicsHandlers[Block.bigtnt] = (lvl, C) => TntPhysics.DoLargeTnt(lvl, C, 1);
-            physicsHandlers[Block.nuketnt] = (lvl, C) => TntPhysics.DoLargeTnt(lvl, C, 4);
+            physicsHandlers[Block.bigtnt] = (Level lvl, ref Check C) => TntPhysics.DoLargeTnt(lvl, ref C, 1);
+            physicsHandlers[Block.nuketnt] = (Level lvl, ref Check C) => TntPhysics.DoLargeTnt(lvl, ref C, 4);
             physicsHandlers[Block.tntexplosion] = TntPhysics.DoTntExplosion;
             physicsHandlers[Block.train] = TrainPhysics.Do;
             
@@ -171,14 +171,14 @@ namespace MCGalaxy {
                     physicsHandlers[i] = DoorPhysics.odoorPhysics;
                     physicsDoorsHandlers[i] = DoorPhysics.odoorPhysics;
                 } else if (door == Block.door_tnt_air) {
-                    physicsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 4);
-                    physicsDoorsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 4);
+                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4);
+                    physicsDoorsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4);
                 } else if (door == Block.air_switch_air || door == Block.air_door_air) {
-                    physicsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 4, true);
-                    physicsDoorsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 4, true);
+                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4, true);
+                    physicsDoorsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4, true);
                 } else if (door != Block.air) {
-                    physicsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 16);
-                    physicsDoorsHandlers[door] = (lvl, C) => DoorPhysics.AnyDoor(lvl, C, 16);
+                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 16);
+                    physicsDoorsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 16);
                 }
             }
         }

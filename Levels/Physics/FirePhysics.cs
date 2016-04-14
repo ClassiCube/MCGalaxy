@@ -54,7 +54,7 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.MakeExplosion((ushort)x, (ushort)y, (ushort)z, -1);
         }
         
-        public static void Do(Level lvl, Check C) {
+        public static void Do(Level lvl, ref Check C) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             if (C.data.Data < 2) {

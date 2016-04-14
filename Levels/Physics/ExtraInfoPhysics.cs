@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class ExtraInfoPhysics {
         
-        public static bool DoDoorsOnly(Level lvl, Check C, Random rand) {
+        public static bool DoDoorsOnly(Level lvl, ref Check C, Random rand) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
             	C.data.ResetTypes();
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
@@ -67,7 +67,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static bool DoComplex(Level lvl, Check C) {
+        public static bool DoComplex(Level lvl, ref Check C) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
             	C.data.ResetTypes();
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
@@ -90,13 +90,13 @@ namespace MCGalaxy.BlockPhysics {
                 if (C.data.Data > args.WaitTime) {
                     if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
                     if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
-                    DoOther(lvl, C, ref args);
+                    DoOther(lvl, ref C, ref args);
                     return false;
                 }
                 C.data.Data++;
                 return true;
             }
-            DoOther(lvl, C, ref args);
+            DoOther(lvl, ref C, ref args);
             return false;
         }
         
@@ -117,11 +117,11 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        static void DoOther(Level lvl, Check C, ref ExtraInfoArgs args) {
+        static void DoOther(Level lvl, ref Check C, ref ExtraInfoArgs args) {
             Random rand = lvl.physRandom;            
             if (args.Rainbow) {
             	if (C.data.Data < 4) C.data.Data++;
-            	else DoRainbow(lvl, C, rand, args.RainbowNum); 
+            	else DoRainbow(lvl, ref C, rand, args.RainbowNum); 
             	return;
             }
             if (args.Revert) {
@@ -150,10 +150,10 @@ namespace MCGalaxy.BlockPhysics {
             }
             
             if (args.Drop && rand.Next(1, 100) <= args.DropNum)
-                DoDrop(lvl, C, rand, args.DropNum, x, y, z);
+                DoDrop(lvl, ref C, rand, args.DropNum, x, y, z);
         }
         
-        static void DoRainbow(Level lvl, Check C, Random rand, int rainbownum) {          
+        static void DoRainbow(Level lvl, ref Check C, Random rand, int rainbownum) {          
             if (rainbownum > 2) {
                 byte block = lvl.blocks[C.b];
                 if (block < Block.red || block > Block.darkpink) {
@@ -167,7 +167,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        static void DoDrop(Level lvl, Check C, Random rand, int dropnum, ushort x, ushort y, ushort z) {
+        static void DoDrop(Level lvl, ref Check C, Random rand, int dropnum, ushort x, ushort y, ushort z) {
             int index = lvl.PosToInt(x, (ushort)(y - 1), z);
             if (index < 0) return;
             

@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
 	
 	public static class BirdPhysics {
 		
-		public static void Do(Level lvl, Check C) {
+		public static void Do(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;			
 			ushort x, y, z;
 			lvl.IntToPos(C.b, out x, out y, out z);
@@ -40,27 +40,27 @@ namespace MCGalaxy.BlockPhysics {
 				case 3:
 				case 4:
 				case 5:
-					FlyTo(lvl, C, x - 1, y, z);
+					FlyTo(lvl, ref C, x - 1, y, z);
 					break;
 				case 6:
 				case 7:
 				case 8:
-					FlyTo(lvl, C, x + 1, y, z);
+					FlyTo(lvl, ref C, x + 1, y, z);
 					break;
 				case 9:
 				case 10:
 				case 11:
-					FlyTo(lvl, C, x, y, z - 1);
+					FlyTo(lvl, ref C, x, y, z - 1);
 					break;
 				default:
-					FlyTo(lvl, C, x, y, z + 1);
+					FlyTo(lvl, ref C, x, y, z + 1);
 					break;
 			}
 			lvl.AddUpdate(C.b, Block.air);
 			C.data.Data = 255;
 		}
 		
-		static void FlyTo(Level lvl, Check C, int x, int y, int z) {
+		static void FlyTo(Level lvl, ref Check C, int x, int y, int z) {
 			int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
 			if (index < 0) 
 				return;

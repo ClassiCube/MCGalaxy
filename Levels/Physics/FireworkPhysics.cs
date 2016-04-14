@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class FireworkPhysics {
         
-        public static void Do(Level lvl, Check C) {
+        public static void Do(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);

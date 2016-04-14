@@ -23,7 +23,7 @@ namespace MCGalaxy.BlockPhysics {
 
     public static class OtherPhysics {
         
-        public static void DoFalling(Level lvl, Check C) {
+        public static void DoFalling(Level lvl, ref Check C) {
             if (lvl.physics == 0 || lvl.physics == 5) { C.data.Data = 255; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -73,7 +73,7 @@ namespace MCGalaxy.BlockPhysics {
             C.data.Data = 255;
         }
 
-        public static void DoStairs(Level lvl, Check C) {
+        public static void DoStairs(Level lvl, ref Check C) {
             int bBelow = lvl.IntOffset(C.b, 0, -1, 0);
             byte tile = lvl.GetTile(bBelow);
             
@@ -87,7 +87,7 @@ namespace MCGalaxy.BlockPhysics {
             C.data.Data = 255;
         }
         
-        public static void DoFloatwood(Level lvl, Check C) {
+        public static void DoFloatwood(Level lvl, ref Check C) {
             int index = lvl.IntOffset(C.b, 0, -1, 0);
             if (lvl.GetTile(index) == Block.air) {
                 lvl.AddUpdate(C.b, Block.air);
@@ -102,7 +102,7 @@ namespace MCGalaxy.BlockPhysics {
             C.data.Data = 255;
         }
         
-        public static void DoShrub(Level lvl, Check C) {
+        public static void DoShrub(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -127,7 +127,7 @@ namespace MCGalaxy.BlockPhysics {
             C.data.Data = 255;
         }
         
-        public static void DoDirt(Level lvl, Check C) {
+        public static void DoDirt(Level lvl, ref Check C) {
             if (!lvl.GrassGrow) { C.data.Data = 255; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -145,7 +145,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
 		
-        public static void DoSponge(Level lvl, Check C, bool lava) {
+        public static void DoSponge(Level lvl, ref Check C, bool lava) {
             for (int y = -2; y <= +2; ++y)
                 for (int z = -2; z <= +2; ++z)
                     for (int x = -2; x <= +2; ++x)
@@ -177,7 +177,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoOther(Level lvl, Check C) {
+        public static void DoOther(Level lvl, ref Check C) {
             if (lvl.physics <= 1) { C.data.Data = 255; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);

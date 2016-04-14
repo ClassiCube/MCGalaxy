@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
 	
 	public static class TrainPhysics {
 		
-		public static void Do(Level lvl, Check C) {
+		public static void Do(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;
 			int dirX = rand.Next(1, 10) <= 5 ? 1 : -1;
 			int dirY = rand.Next(1, 10) <= 5 ? 1 : -1;

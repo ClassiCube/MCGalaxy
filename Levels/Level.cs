@@ -56,7 +56,7 @@ namespace MCGalaxy
 
         public delegate void OnLevelUnload(Level l);
 
-        public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, byte time, PhysicsArgs args, Level l);
+        public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, PhysicsArgs args, Level l);
 
         public delegate void OnPhysicsStateChanged(object sender, PhysicsState state);
 

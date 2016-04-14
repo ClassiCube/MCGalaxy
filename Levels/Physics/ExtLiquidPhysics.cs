@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class ExtLiquidPhysics {
         
-		public static void DoMagma(Level lvl, Check C) {
+		public static void DoMagma(Level lvl, ref Check C) {
             C.data.Data++;
             if (C.data.Data < 3) return;
             ushort x, y, z;
@@ -59,7 +59,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoGeyser(Level lvl, Check C) {
+        public static void DoGeyser(Level lvl, ref Check C) {
             C.data.Data++;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -96,7 +96,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoWaterfall(Level lvl, Check C) {
+        public static void DoWaterfall(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -124,7 +124,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoLavafall(Level lvl, Check C) {
+        public static void DoLavafall(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;			
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -152,7 +152,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static void DoFaucet(Level lvl, Check C, byte target) {
+        public static void DoFaucet(Level lvl, ref Check C, byte target) {
             C.data.Data++;
             if (C.data.Data < 2) return;
             C.data.Data = 0;

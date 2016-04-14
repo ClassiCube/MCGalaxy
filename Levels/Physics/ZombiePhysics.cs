@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class ZombiePhysics {
         
-        public static void Do(Level lvl, Check C) {
+        public static void Do(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -35,21 +35,21 @@ namespace MCGalaxy.BlockPhysics {
             }
             bool checkTime = true;
             int index = 0;
-            Player closest = AIPhysics.ClosestPlayer(lvl, C);
+            Player closest = AIPhysics.ClosestPlayer(lvl, ref C);
 
             if (closest != null && rand.Next(1, 20) < 18) {
                 if (rand.Next(1, 7) <= 3) {
                     index = lvl.PosToInt((ushort)(x + Math.Sign((closest.pos[0] / 32) - x)), y, z);
-                    if (index != C.b && MoveZombie(lvl, C, index)) return;
+                    if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                     
                     index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.pos[2] / 32) - z)));
-                    if (index != C.b && MoveZombie(lvl, C, index)) return;
+                    if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                 } else {
                     index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.pos[2] / 32) - z)));
-                    if (index != C.b && MoveZombie(lvl, C, index)) return;
+                    if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                     
                     index = lvl.PosToInt((ushort)(x + Math.Sign((closest.pos[0] / 32) - x)), y, z);
-                    if (index != C.b && MoveZombie(lvl, C, index)) return;
+                    if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                 }
                 checkTime = false;
             }
@@ -66,7 +66,7 @@ namespace MCGalaxy.BlockPhysics {
                 case 2:
                 case 3:
                     index = lvl.IntOffset(C.b, -1, 0, 0);
-                    if (MoveZombie(lvl, C, index)) return;
+                    if (MoveZombie(lvl, ref C, index)) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -76,7 +76,7 @@ namespace MCGalaxy.BlockPhysics {
                 case 5:
                 case 6:
                     index = lvl.IntOffset(C.b, 1, 0, 0);
-                    if (MoveZombie(lvl, C, index)) return;
+                    if (MoveZombie(lvl, ref C, index)) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -86,7 +86,7 @@ namespace MCGalaxy.BlockPhysics {
                 case 8:
                 case 9:
                     index = lvl.IntOffset(C.b, 0, 0, 1);
-                    if (MoveZombie(lvl, C, index)) return;
+                    if (MoveZombie(lvl, ref C, index)) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -95,7 +95,7 @@ namespace MCGalaxy.BlockPhysics {
                 case 11:
                 case 12:
                     index = lvl.IntOffset(C.b, 0, 0, -1);
-                    if (MoveZombie(lvl, C, index)) return;
+                    if (MoveZombie(lvl, ref C, index)) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -105,14 +105,14 @@ namespace MCGalaxy.BlockPhysics {
             lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.air);
         }
         
-        public static void DoHead(Level lvl, Check C) {
+        public static void DoHead(Level lvl, ref Check C) {
             if (lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.zombiebody
                 && lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.creeper) {
 			    C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.air;
             }
         }
         
-        static bool MoveZombie(Level lvl, Check C, int index) {
+        static bool MoveZombie(Level lvl, ref Check C, int index) {
             if(
                 lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.air &&
                 lvl.GetTile(index) == Block.air) {

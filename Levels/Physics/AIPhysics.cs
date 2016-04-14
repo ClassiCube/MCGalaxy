@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
 
 	public static class AIPhysics {
 		
-		public static Player ClosestPlayer(Level lvl, Check C) {
+		public static Player ClosestPlayer(Level lvl, ref Check C) {
 			if (!lvl.ai) return null;
 			
 			int closestDist = 75;

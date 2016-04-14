@@ -22,46 +22,46 @@ namespace MCGalaxy.BlockPhysics {
     public static class SimpleLiquidPhysics {
         
         const StringComparison comp = StringComparison.Ordinal;
-        public static void DoWater(Level lvl, Check C) {
+        public static void DoWater(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;        	
             if (lvl.finite) {
                 lvl.liquids.Remove(C.b);
-                FinitePhysics.DoWaterOrLava(lvl, C);
+                FinitePhysics.DoWaterOrLava(lvl, ref C);
                 return;
             }        
             if (lvl.randomFlow)
-                DoWaterRandowFlow(lvl, C);
+                DoWaterRandowFlow(lvl, ref C);
             else
-                DoWaterUniformFlow(lvl, C);
+                DoWaterUniformFlow(lvl, ref C);
         }
         
-        public static void DoLava(Level lvl, Check C) {
+        public static void DoLava(Level lvl, ref Check C) {
             if (C.data.Data < 4) {
                 C.data.Data++; return;
             }
             if (lvl.finite) {
                 lvl.liquids.Remove(C.b);
-                FinitePhysics.DoWaterOrLava(lvl, C);
+                FinitePhysics.DoWaterOrLava(lvl, ref C);
                 return;
             }
             if (lvl.randomFlow)
-                DoLavaRandowFlow(lvl, C, true);
+                DoLavaRandowFlow(lvl, ref C, true);
             else
-                DoLavaUniformFlow(lvl, C, true);
+                DoLavaUniformFlow(lvl, ref C, true);
         }
         
-        public static void DoFastLava(Level lvl, Check C) {
+        public static void DoFastLava(Level lvl, ref Check C) {
             if (lvl.randomFlow) {
                 byte oldTime = C.data.Data;
-                DoLavaRandowFlow(lvl, C, false);
+                DoLavaRandowFlow(lvl, ref C, false);
                 if (C.data.Data != 255)
                     C.data.Data = oldTime;
             } else {
-                DoLavaUniformFlow(lvl, C, false);
+                DoLavaUniformFlow(lvl, ref C, false);
             }
         }
         
-        static void DoWaterRandowFlow(Level lvl, Check C) {
+        static void DoWaterRandowFlow(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;        	
             bool[] blocked = null;
             ushort x, y, z;
@@ -122,7 +122,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        static void DoWaterUniformFlow(Level lvl, Check C) {
+        static void DoWaterUniformFlow(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;        	
             lvl.liquids.Remove(C.b);
             ushort x, y, z;
@@ -174,7 +174,7 @@ namespace MCGalaxy.BlockPhysics {
             return true;
         }
         
-        static void DoLavaRandowFlow(Level lvl, Check C, bool checkWait) {
+        static void DoLavaRandowFlow(Level lvl, ref Check C, bool checkWait) {
             Random rand = lvl.physRandom;        	
             bool[] blocked = null;
             ushort x, y, z;
@@ -234,7 +234,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        static void DoLavaUniformFlow(Level lvl, Check C, bool checkWait) {
+        static void DoLavaUniformFlow(Level lvl, ref Check C, bool checkWait) {
             Random rand = lvl.physRandom;
             lvl.liquids.Remove(C.b);
             ushort x, y, z;

@@ -22,7 +22,7 @@ namespace MCGalaxy.BlockPhysics {
 	
 	public static class FinitePhysics {
 		
-		public unsafe static void DoWaterOrLava(Level lvl, Check C) {
+		public unsafe static void DoWaterOrLava(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;			
 			ushort x, y, z;
 			lvl.IntToPos(C.b, out x, out y, out z);
@@ -86,7 +86,7 @@ namespace MCGalaxy.BlockPhysics {
 			return false;
 		}
 		
-		public unsafe static void DoFaucet(Level lvl, Check C) {
+		public unsafe static void DoFaucet(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;			
 			ushort x, y, z;
 			lvl.IntToPos(C.b, out x, out y, out z);

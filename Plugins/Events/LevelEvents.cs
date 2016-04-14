@@ -94,11 +94,11 @@ namespace MCGalaxy {
         internal OnPhysicsUpdateEvent(Level.OnPhysicsUpdate method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(ushort x, ushort y, ushort z, byte time, PhysicsArgs extraInfo, Level l) {
+        public static void Call(ushort x, ushort y, ushort z, PhysicsArgs extraInfo, Level l) {
             events.ForEach(
                 pl => {
                     try {
-                        pl.method(x, y, z, time, extraInfo, l);
+                        pl.method(x, y, z, extraInfo, l);
                     } catch (Exception e) {
                         Server.s.Log("Plugin " + pl.plugin.name + " errored when calling PhysicsUpdate Event."); Server.ErrorLog(e);
                     }
