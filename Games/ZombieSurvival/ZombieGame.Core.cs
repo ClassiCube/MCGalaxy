@@ -409,13 +409,13 @@ namespace MCGalaxy.Games {
         void MoveToNextLevel(Random r, List<string> levels, string picked1, string picked2) {
             if (Level1Vote >= Level2Vote) {
                 if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
-                    ChangeLevel(levels[r.Next(0, levels.Count)]);
+                    ChangeLevel(GetRandomLevel(r, levels));
                 } else {
                     ChangeLevel(picked1);
                 }
             } else {
                 if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
-                    ChangeLevel(levels[r.Next(0, levels.Count)]);
+					ChangeLevel(GetRandomLevel(r, levels));
                 } else {
                     ChangeLevel(picked2);
                 }
@@ -423,6 +423,14 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online)
                 pl.voted = false;
+        }
+        
+        string GetRandomLevel(Random r, List<string> levels) {
+            for (int i = 0; i < 100; i++) {
+                string lvl = levels[r.Next(0, levels.Count)];
+                if (!lvl.CaselessEq(CurLevelName)) return lvl;
+            }
+            return levels[r.Next(0, levels.Count)];
         }
         
         List<string> GetCandidateLevels() {
