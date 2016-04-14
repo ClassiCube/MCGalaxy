@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands
             List<Awards.Award> awardList = new List<Awards.Award>();
             if (foundPlayer == "")
             {
-                awardList = Awards.Awards;
+                awardList = Awards.AwardsList;
             }
             else
             {

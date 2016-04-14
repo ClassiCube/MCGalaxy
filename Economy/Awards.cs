@@ -29,10 +29,11 @@ namespace MCGalaxy {
         public class Award { public string Name, Description; }
         
         /// <summary> List of all awards the server has. </summary>
-        public static List<Award> Awards = new List<Award>();
+        public static List<Award> AwardsList = new List<Award>();
 
         /// <summary> List of all players who have awards. </summary>
         public static List<PlayerAward> PlayerAwards = new List<PlayerAward>();
+        
 
         #region I/O
         
@@ -49,7 +50,7 @@ namespace MCGalaxy {
                 }
             }
 
-            Awards = new List<Award>();
+            AwardsList = new List<Award>();
             PropertiesFile.Read("text/awardsList.txt", AwardsListLineProcessor, ':');
             PlayerAwards = new List<PlayerAward>();
             PropertiesFile.Read("text/playerAwards.txt", PlayerAwardsLineProcessor, ':');
@@ -61,7 +62,7 @@ namespace MCGalaxy {
             Award award = new Award();
             award.Name = key;
             award.Description = value;
-            Awards.Add(award);
+            AwardsList.Add(award);
         }
         
         static void PlayerAwardsLineProcessor(string key, string value) {
@@ -84,7 +85,7 @@ namespace MCGalaxy {
                 SW.WriteLine("# Format is:");
                 SW.WriteLine("# AwardName : Description of award goes after the colon");
                 SW.WriteLine();
-                foreach (Award award in Awards)
+                foreach (Award award in AwardsList)
                     SW.WriteLine(award.Name + " : " + award.Description);
             }
             
@@ -103,18 +104,18 @@ namespace MCGalaxy {
             foreach (PlayerAward pl in PlayerAwards) {
                 if (!pl.Name.CaselessEq(playerName)) continue;
                 
-                foreach (Award award in pl.Awards) {
-                    if (award.Name.CaselessEq(name)) return false;
+                foreach (string award in pl.Awards) {
+                    if (award.CaselessEq(name)) return false;
                 }
                 pl.Awards.Add(name);
                 return true;
             }
 
-            PlayerAward pl;
-            pl.Name = playerName;
-            pl.Awards = new List<string>();
-            pl.Awards.Add(name);
-            PlayerAwards.Add(pl);
+            PlayerAward newPl;
+            newPl.Name = playerName;
+            newPl.Awards = new List<string>();
+            newPl.Awards.Add(name);
+            PlayerAwards.Add(newPl);
             return true;
         }
         
@@ -135,12 +136,13 @@ namespace MCGalaxy {
         
         /// <summary> Returns the percentage of all the awards that the given player has. </summary>
         public static string AwardAmount(string playerName) {
-        	foreach (PlayerAward pl in PlayerAwards) {
-        		if (!pl.Name.CaselessEq(playerName)) continue;
-        		double percentage = Math.Round(((double)pA.Awards.Count / Awards.Count) * 100, 2);
-        		return "&f" + pA.Awards.Count + "/" + Awards.Count + " (" + percentage + "%)" + Server.DefaultColor;
-        	}
-            return "&f0/" + Awards.Count + " (0%)" + Server.DefaultColor;
+            int numAwards = AwardsList.Count;
+            foreach (PlayerAward pl in PlayerAwards) {
+                if (!pl.Name.CaselessEq(playerName)) continue;
+                double percentage = Math.Round(((double)pl.Awards.Count / numAwards) * 100, 2);
+                return "&f" + pl.Awards.Count + "/" + numAwards + " (" + percentage + "%)" + Server.DefaultColor;
+            }
+            return "&f0/" + numAwards + " (0%)" + Server.DefaultColor;
         }
         
         /// <summary> Finds the list of awards that the given player has. </summary>
@@ -161,15 +163,15 @@ namespace MCGalaxy {
             Award award = new Award();
             award.Name = name;
             award.Description = desc;
-            Awards.Add(award);
+            AwardsList.Add(award);
             return true;
         }
         
         /// <summary> Removes the award with the given name. </summary>
         public static bool RemoveAward(string name) {
-            foreach (Award award in Awards) {
+            foreach (Award award in AwardsList) {
                 if (!award.Name.CaselessEq(name)) continue;
-                Awards.Remove(award);
+                AwardsList.Remove(award);
                 return true;
             }
             return false;
@@ -177,7 +179,7 @@ namespace MCGalaxy {
         
         /// <summary> Whether an award with that name exists. </summary>
         public static bool ExistsAward(string name) {
-            foreach (Award award in Awards)
+            foreach (Award award in AwardsList)
                 if (award.Name.CaselessEq(name)) return true;
             return false;
         }
@@ -185,10 +187,8 @@ namespace MCGalaxy {
         /// <summary> Gets the description of the award matching the given name, 
         /// or an empty string if no matching award was found. </summary>
         public static string GetDescription(string name) {
-            foreach (Award award in Awards)
-                if (award.Name.CaselessEq(name))
-                    return award.Description;
-
+            foreach (Award award in AwardsList)
+                if (award.Name.CaselessEq(name)) return award.Description;
             return "";
         }
         #endregion
