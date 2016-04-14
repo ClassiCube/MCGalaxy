@@ -29,6 +29,9 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override CommandAlias[] Aliases {
+        	get { return new[] { new CommandAlias("pn", "not") }; }
+        }
         
         public override void Use(Player p, string message) {
             if (p.CopyBuffer == null) { Player.SendMessage(p, "You haven't copied anything yet"); return; }

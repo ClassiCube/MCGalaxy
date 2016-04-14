@@ -16,15 +16,11 @@
 	permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using MCGalaxy.Config;
-using MCGalaxy.Games;
 
 namespace MCGalaxy {
 	
@@ -64,8 +60,7 @@ namespace MCGalaxy {
 						SaveProps(w);
 					}
 				}
-			}
-			catch(Exception ex) {
+			} catch(Exception ex) {
 				Server.ErrorLog(ex);
 				Server.s.Log("SAVE FAILED! " + givenPath);
 			}
