@@ -512,6 +512,7 @@ namespace MCGalaxy
             if (!Directory.Exists("extra/copyBackup/")) Directory.CreateDirectory("extra/copyBackup/");
             if (!Directory.Exists("extra/Waypoints")) Directory.CreateDirectory("extra/Waypoints");
             if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
+            if (!Directory.Exists("text/rankreqs")) Directory.CreateDirectory("text/rankreqs");
         }
         
         void MoveOutdatedFiles() {
