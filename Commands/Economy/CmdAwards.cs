@@ -15,66 +15,62 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
 using System.Collections.Generic;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdAwards : Command
-    {
+
+namespace MCGalaxy.Commands {
+	
+    public sealed class CmdAwards : Command {
+		
         public override string name { get { return "awards"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
-            // /awards
-            // /awards 1
-            // /awards bob
-            // /awards bob 1
 
             int page = 0;
-            string pl = "";
+            string plName = "";
             if (args.Length == 2) {
-                pl = args[0];
-                Player who = PlayerInfo.Find(pl);
-                if (who != null) pl = who.name;
+                plName = args[0];
+                Player who = PlayerInfo.Find(plName);
+                if (who != null) plName = who.name;
                 
                 if (!int.TryParse(args[1], out page)) { Help(p); return; }
             } else if (message != "") {
                 if (!int.TryParse(args[0], out page)) {
-                    pl = args[0];
-                    Player who = PlayerInfo.Find(pl);
-                    if (who != null) pl = who.name;
+                    plName = args[0];
+                    Player who = PlayerInfo.Find(plName);
+                    if (who != null) plName = who.name;
                 }
             }
             if (page < 0) {
                 Player.SendMessage(p, "Cannot display pages less than 0"); return;
             }
 
-            List<Awards.Award> awards = GetAwards(pl);
+            List<Awards.Award> awards = GetAwards(plName);
             if (awards.Count == 0) {
-                if (pl != "") Player.SendMessage(p, "The player has no awards!");
+                if (plName != "") Player.SendMessage(p, "The player has no awards!");
                 else Player.SendMessage(p, "There are no awards in this server yet");
                 return;
             }
 
-            int max = page * 5, start = (page - 1) * 5;
+            int start = (page - 1) * 5;
             if (start > awards.Count) {
                 Player.SendMessage(p, "There aren't that many awards, try a smaller number.");
                 return;
             }
-            if (max > awards.Count) max = awards.Count;
-            OutputAwards(p, pl, page, awards);
+            OutputAwards(p, page, start, plName, awards);
         }
         
-        static List<Awards.Award> GetAwards(string pl) {
-            if (pl != "") return Awards.AwardsList;
+        static List<Awards.Award> GetAwards(string plName) {
+            if (plName != "") return Awards.AwardsList;
             
-            List<Awards.AwardsList> awards = new List<Awards.Award>();
-            foreach (string s in Awards.GetPlayerAwards(pl)) {
+            List<Awards.Award> awards = new List<Awards.Award>();
+            foreach (string s in Awards.GetPlayerAwards(plName)) {
                 Awards.Award award = new Awards.Award();
                 award.Name = s;
                 award.Description = Awards.GetDescription(s);
@@ -83,10 +79,10 @@ namespace MCGalaxy.Commands
             return awards;
         }
         
-        static void OutputAwards(Player p, string pl, 
-                                 int page, List<Awards.Award> awards) {
-            if (pl != "")
-                Player.SendMessage(p, Server.FindColor(pl) + pl + " %Shas the following awards:");
+        static void OutputAwards(Player p, int page, int start,
+                                 string plName, List<Awards.Award> awards) {
+            if (plName != "")
+                Player.SendMessage(p, Server.FindColor(plName) + plName + " %Shas the following awards:");
             else
                 Player.SendMessage(p, "Awards available: ");
 
@@ -95,9 +91,9 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "&6" + award.Name + ": &7" + award.Description);
 
                 if (awards.Count > 8) 
-                    Player.SendMessage(p, "&5Use &b/awards " + message + " 1/2/3/... &5for a more ordered list");
+                    Player.SendMessage(p, "&5Use &b/awards " + plName + " 1/2/3/... &5for a more ordered list");
             } else {
-                for (int i = start; i < max; i++) {
+                for (int i = start; i < Math.Min(awards.Count, start + 5); i++) {
                     Awards.Award award = awards[i];
                     Player.SendMessage(p, "&6" + award.Name + ": &7" + award.Description);
                 }

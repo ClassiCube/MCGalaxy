@@ -30,9 +30,9 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
             string[] args = message.Split(trimChars, 3);           
-            string pl = args[args.Length - 2];
-            Player who = PlayerInfo.Find(pl);
-            if (who != null) pl = who.name;
+            string plName = args[args.Length - 2];
+            Player who = PlayerInfo.Find(plName);
+            if (who != null) plName = who.name;
             
             string award = args[args.Length - 1];
             if (!Awards.ExistsAward(award)) {
@@ -42,14 +42,14 @@ namespace MCGalaxy.Commands {
             }
 
             if (args.Length == 2 || !args[0].CaselessEq("take")) {
-                if (Awards.GiveAward(pl, award)) {
-                    Player.GlobalMessage(Server.FindColor(pl) + pl + " %Swas awarded: &b" + award);
+                if (Awards.GiveAward(plName, award)) {
+                    Player.GlobalMessage(Server.FindColor(plName) + plName + " %Swas awarded: &b" + award);
                 } else {
                     Player.SendMessage(p, "The player already has that award."); return;
                 }
             } else {
-                if (Awards.TakeAward(pl, award)) {
-                    Player.GlobalMessage(Server.FindColor(pl) + pl + " %Shad their &b" + award + " %Saward removed");
+                if (Awards.TakeAward(plName, award)) {
+                    Player.GlobalMessage(Server.FindColor(plName) + plName + " %Shad their &b" + award + " %Saward removed");
                 } else {
                     Player.SendMessage(p, "The player didn't have the award you tried to take"); return;
                 }
@@ -58,9 +58,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/award <give/take> [player] [award] - Gives [player] the [award]");
-            Player.SendMessage(p, "If no Give or Take is given, Give is used");
-            Player.SendMessage(p, "[award] needs to be the full award's name. Not partial");
+            Player.SendMessage(p, "%T/award <give/take> [player] [award] %H- Gives/Takes [player] the [award]");
+            Player.SendMessage(p, "%HIf only [player] and [aware] are given, Give is used.");
+            Player.SendMessage(p, "%H[award] needs to be the full award's name. Not partial");
         }
     }
 }
