@@ -84,18 +84,18 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            List<Awards.awardData> awardList = new List<Awards.awardData>();
+            List<Awards.Award> awardList = new List<Awards.Award>();
             if (foundPlayer == "")
             {
-                awardList = Awards.allAwards;
+                awardList = Awards.Awards;
             }
             else
             {
-                foreach (string s in Awards.getPlayersAwards(foundPlayer))
+                foreach (string s in Awards.GetPlayerAwards(foundPlayer))
                 {
-                    Awards.awardData aD = new Awards.awardData();
-                    aD.awardName = s;
-                    aD.description = Awards.getDescription(s);
+                    Awards.Award aD = new Awards.Award();
+                    aD.Name = s;
+                    aD.Description = Awards.GetDescription(s);
                     awardList.Add(aD);
                 }
             }
@@ -127,8 +127,8 @@ namespace MCGalaxy.Commands
 
             if (totalCount == 0)
             {
-                foreach (Awards.awardData aD in awardList)
-                    Player.SendMessage(p, "&6" + aD.awardName + ": &7" + aD.description);
+                foreach (Awards.Award aD in awardList)
+                    Player.SendMessage(p, "&6" + aD.Name + ": &7" + aD.Description);
 
                 if (awardList.Count > 8) Player.SendMessage(p, "&5Use &b/awards " + message + " 1/2/3/... &5for a more ordered list");
             }
@@ -136,8 +136,8 @@ namespace MCGalaxy.Commands
             {
                 for (int i = start; i < max; i++)
                 {
-                    Awards.awardData aD = awardList[i];
-                    Player.SendMessage(p, "&6" + aD.awardName + ": &7" + aD.description);
+                    Awards.Award aD = awardList[i];
+                    Player.SendMessage(p, "&6" + aD.Name + ": &7" + aD.Description);
                 }
             }
         }

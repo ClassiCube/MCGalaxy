@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
             Player who = PlayerInfo.Find(message);
             if (who != null) foundPlayer = who.name;
             string awardName = message.Substring(message.IndexOf(' ') + 1);
-            if (!Awards.awardExists(awardName))
+            if (!Awards.ExistsAward(awardName))
             {
                 Player.SendMessage(p, "The award you entered doesn't exist");
                 Player.SendMessage(p, "Use /awards for a list of awards");
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands
 
             if (give)
             {
-                if (Awards.giveAward(foundPlayer, awardName))
+                if (Awards.GiveAward(foundPlayer, awardName))
                 {
                     Player.GlobalMessage(Server.FindColor(foundPlayer) + foundPlayer + " %Swas awarded: &b" + Awards.camelCase(awardName));
                 }
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                if (Awards.takeAward(foundPlayer, awardName))
+                if (Awards.TakeAward(foundPlayer, awardName))
                 {
                     Player.GlobalMessage(Server.FindColor(foundPlayer) + foundPlayer + " %Shad their &b" + Awards.camelCase(awardName) + " %Saward removed");
                 }

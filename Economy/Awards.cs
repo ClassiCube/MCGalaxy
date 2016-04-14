@@ -14,34 +14,34 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy
-{
-    public sealed class Awards
-    {
-        public struct playerAwards { public string playerName; public List<string> awards; }
-        public class awardData
-        {
-            public string awardName, description;
-            public void setAward(string name) { awardName = camelCase(name); }
-        }
+namespace MCGalaxy {
+    
+    /// <summary> Manages the awards the server has, and which players have which awards. </summary>
+    public static class Awards {
+        
+        public struct PlayerAward { public string Name; public List<string> Awards; }
+        
+        public class Award { public string Name, Description; }
+        
+        /// <summary> List of all awards the server has. </summary>
+        public static List<Award> Awards = new List<Award>();
 
-        public static List<Awards.playerAwards> playersAwards = new List<Awards.playerAwards>();
-        public static List<Awards.awardData> allAwards = new List<Awards.awardData>();
+        /// <summary> List of all players who have awards. </summary>
+        public static List<PlayerAward> PlayerAwards = new List<PlayerAward>();
 
-        public static void Load()
-        {
-            if (!File.Exists("text/awardsList.txt"))
-            {
-                using (StreamWriter SW = File.CreateText("text/awardsList.txt"))
-                {
+        #region I/O
+        
+        public static void Load() {
+            if (!File.Exists("text/awardsList.txt")) {
+                using (StreamWriter SW = File.CreateText("text/awardsList.txt")) {
                     SW.WriteLine("#This is a full list of awards. The server will load these and they can be awarded as you please");
                     SW.WriteLine("#Format is:");
-                    SW.WriteLine("# awardName : Description of award goes after the colon");
+                    SW.WriteLine("# AwardName : Description of award goes after the colon");
                     SW.WriteLine();
                     SW.WriteLine("Gotta start somewhere : Built your first house");
                     SW.WriteLine("Climbing the ladder : Earned a rank advancement");
@@ -49,155 +49,148 @@ namespace MCGalaxy
                 }
             }
 
-            allAwards = new List<awardData>();
+            Awards = new List<Award>();
             PropertiesFile.Read("text/awardsList.txt", AwardsListLineProcessor, ':');
-            playersAwards = new List<playerAwards>();
+            PlayerAwards = new List<PlayerAward>();
             PropertiesFile.Read("text/playerAwards.txt", PlayerAwardsLineProcessor, ':');
             Save();
         }
         
         static void AwardsListLineProcessor(string key, string value) {
             if (value == "") return;
-            awardData aD = new awardData();
-            aD.setAward(key);
-            aD.description = value;
-            allAwards.Add(aD);
+            Award award = new Award();
+            award.Name = key;
+            award.Description = value;
+            Awards.Add(award);
         }
         
         static void PlayerAwardsLineProcessor(string key, string value) {
             if (value == "") return;
-            playerAwards pA;
-            pA.playerName = key.ToLower();
-            pA.awards = new List<string>();
+            PlayerAward pl;
+            pl.Name = key.ToLower();
+            pl.Awards = new List<string>();
             
             if (value.IndexOf(',') != -1)
-                foreach (string a in value.Split(','))
-                    pA.awards.Add(camelCase(a));
+                foreach (string award in value.Split(','))
+                    pl.Awards.Add(award);
             else if (value != "")
-                pA.awards.Add(camelCase(value));
-            playersAwards.Add(pA);
+                pl.Awards.Add(value);
+            PlayerAwards.Add(pl);
         }
 
-        public static void Save()
-        {
-            using (StreamWriter SW = File.CreateText("text/awardsList.txt"))
-            {
-                SW.WriteLine("#This is a full list of awards. The server will load these and they can be awarded as you please");
-                SW.WriteLine("#Format is:");
-                SW.WriteLine("# awardName : Description of award goes after the colon");
+        public static void Save() {
+            using (StreamWriter SW = File.CreateText("text/awardsList.txt"))  {
+                SW.WriteLine("# This is a full list of awards. The server will load these and they can be awarded as you please");
+                SW.WriteLine("# Format is:");
+                SW.WriteLine("# AwardName : Description of award goes after the colon");
                 SW.WriteLine();
-                foreach (awardData aD in allAwards)
-                    SW.WriteLine(camelCase(aD.awardName) + " : " + aD.description);
+                foreach (Award award in Awards)
+                    SW.WriteLine(award.Name + " : " + award.Description);
             }
-            using (StreamWriter SW = File.CreateText("text/playerAwards.txt"))
-            {
-                foreach (playerAwards pA in playersAwards)
-                    SW.WriteLine(pA.playerName.ToLower() + " : " + string.Join(",", pA.awards.ToArray()));
+            
+            using (StreamWriter SW = File.CreateText("text/playerAwards.txt")) {
+                foreach (PlayerAward pA in PlayerAwards)
+                    SW.WriteLine(pA.Name.ToLower() + " : " + string.Join(",", pA.Awards.ToArray()));
             }
         }
-
-        public static bool giveAward(string playerName, string awardName)
-        {
-            foreach (playerAwards pA in playersAwards)
-            {
-                if (pA.playerName == playerName.ToLower())
-                {
-                    if (pA.awards.Contains(camelCase(awardName)))
-                        return false;
-                    pA.awards.Add(camelCase(awardName));
-                    return true;
+        #endregion
+        
+        
+        #region Player awards
+        
+        /// <summary> Adds the given award to that player's list of awards. </summary>
+        public static bool GiveAward(string playerName, string name) {
+            foreach (PlayerAward pl in PlayerAwards) {
+                if (!pl.Name.CaselessEq(playerName)) continue;
+                
+                foreach (Award award in pl.Awards) {
+                    if (award.Name.CaselessEq(name)) return false;
                 }
+                pl.Awards.Add(name);
+                return true;
             }
 
-            playerAwards newPlayer;
-            newPlayer.playerName = playerName.ToLower();
-            newPlayer.awards = new List<string>();
-            newPlayer.awards.Add(camelCase(awardName));
-            playersAwards.Add(newPlayer);
+            PlayerAward pl;
+            pl.Name = playerName;
+            pl.Awards = new List<string>();
+            pl.Awards.Add(name);
+            PlayerAwards.Add(pl);
             return true;
         }
-        public static bool takeAward(string playerName, string awardName)
-        {
-            foreach (playerAwards pA in playersAwards)
-            {
-                if (pA.playerName == playerName.ToLower())
-                {
-                    if (!pA.awards.Contains(camelCase(awardName)))
-                        return false;
-                    pA.awards.Remove(camelCase(awardName));
+        
+        /// <summary> Removes the given award from that player's list of awards. </summary>
+        public static bool TakeAward(string playerName, string name) {
+            foreach (PlayerAward pl in PlayerAwards) {
+                if (!pl.Name.CaselessEq(playerName)) continue;
+                
+                for (int i = 0; i < pl.Awards.Count; i++) {
+                    if (!pl.Awards[i].CaselessEq(name)) continue;
+                    pl.Awards.RemoveAt(i); 
                     return true;
                 }
+                return false;
             }
-
             return false;
         }
-        public static List<string> getPlayersAwards(string playerName)
-        {
-            foreach (playerAwards pA in playersAwards)
-                if (pA.playerName == playerName.ToLower())
-                    return pA.awards;
-
+        
+        /// <summary> Returns the percentage of all the awards that the given player has. </summary>
+        public static string AwardAmount(string playerName) {
+        	foreach (PlayerAward pl in PlayerAwards) {
+        		if (!pl.Name.CaselessEq(playerName)) continue;
+        		double percentage = Math.Round(((double)pA.Awards.Count / Awards.Count) * 100, 2);
+        		return "&f" + pA.Awards.Count + "/" + Awards.Count + " (" + percentage + "%)" + Server.DefaultColor;
+        	}
+            return "&f0/" + Awards.Count + " (0%)" + Server.DefaultColor;
+        }
+        
+        /// <summary> Finds the list of awards that the given player has. </summary>
+        public static List<string> GetPlayerAwards(string name) {
+            foreach (PlayerAward pl in PlayerAwards)
+                if (pl.Name.CaselessEq(name)) return pl.Awards;
             return new List<string>();
         }
-        public static string getDescription(string awardName)
-        {
-            foreach (awardData aD in allAwards)
-                if (camelCase(aD.awardName) == camelCase(awardName))
-                    return aD.description;
+        #endregion
+        
+        
+        #region Awards management
+        
+        /// <summary> Adds a new award with the given name. </summary>
+        public static bool AddAward(string name, string desc) {
+            if (ExistsAward(name)) return false;
+
+            Award award = new Award();
+            award.Name = name;
+            award.Description = desc;
+            Awards.Add(award);
+            return true;
+        }
+        
+        /// <summary> Removes the award with the given name. </summary>
+        public static bool RemoveAward(string name) {
+            foreach (Award award in Awards) {
+                if (!award.Name.CaselessEq(name)) continue;
+                Awards.Remove(award);
+                return true;
+            }
+            return false;
+        }
+        
+        /// <summary> Whether an award with that name exists. </summary>
+        public static bool ExistsAward(string name) {
+            foreach (Award award in Awards)
+                if (award.Name.CaselessEq(name)) return true;
+            return false;
+        }
+        
+        /// <summary> Gets the description of the award matching the given name, 
+        /// or an empty string if no matching award was found. </summary>
+        public static string GetDescription(string name) {
+            foreach (Award award in Awards)
+                if (award.Name.CaselessEq(name))
+                    return award.Description;
 
             return "";
         }
-        public static string awardAmount(string playerName)
-        {
-            foreach (playerAwards pA in playersAwards)
-                if (pA.playerName == playerName.ToLower())
-                    return "&f" + pA.awards.Count + "/" + allAwards.Count + " (" + Math.Round((double)((double)pA.awards.Count / allAwards.Count) * 100, 2) + "%)" + Server.DefaultColor;
-
-            return "&f0/" + allAwards.Count + " (0%)" + Server.DefaultColor;
-        }
-        public static bool addAward(string awardName, string awardDescription)
-        {
-            if (awardExists(awardName)) return false;
-
-            awardData aD = new awardData();
-            aD.awardName = camelCase(awardName);
-            aD.description = awardDescription;
-            allAwards.Add(aD);
-            return true;
-        }
-        public static bool removeAward(string awardName)
-        {
-            foreach (awardData aD in allAwards)
-            {
-                if (camelCase(aD.awardName) == camelCase(awardName))
-                {
-                    allAwards.Remove(aD);
-                    return true;
-                }
-            }
-            return false;
-        }
-        public static bool awardExists(string awardName)
-        {
-            foreach (awardData aD in allAwards)
-                if (camelCase(aD.awardName) == camelCase(awardName))
-                    return true;
-
-            return false;
-        }
-
-
-        public static string camelCase(string givenName)
-        {
-            string returnString = "";
-            if (givenName != "")
-                foreach (string s in givenName.Split(' '))
-                    if (s.Length > 1)
-                        returnString += s[0].ToString().ToUpper() + s.Substring(1).ToLower() + " ";
-                    else
-                        returnString += s.ToUpper() + " ";
-
-            return returnString.Trim();
-        }
+        #endregion
     }
 }

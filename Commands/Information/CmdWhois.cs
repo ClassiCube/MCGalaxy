@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "> > been logged in for &a" + storedTime);
             Player.SendMessage(p, "> > first logged into the server on &a" + who.firstLogin.ToString("yyyy-MM-dd") + " at " + who.firstLogin.ToString("HH:mm:ss"));
             Player.SendMessage(p, "> > logged in &a" + who.totalLogins + " %Stimes, &c" + who.totalKicked + " %Sof which ended in a kick.");
-            Player.SendMessage(p, "> > " + Awards.awardAmount(who.name) + " awards");
+            Player.SendMessage(p, "> > " + Awards.AwardAmount(who.name) + " awards");
             string[] data = Ban.GetBanData(who.name);
             if (data != null)               
                 Player.SendMessage(p, "> > is banned for " + data[1] + " by " + data[0]);

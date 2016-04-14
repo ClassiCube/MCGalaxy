@@ -90,7 +90,7 @@ namespace MCGalaxy {
             
             try {
                 if ( !Group.Find("Nobody").commands.Contains("award") && !Group.Find("Nobody").commands.Contains("awards") && !Group.Find("Nobody").commands.Contains("awardmod") )
-                    SendMessage("You have " + Awards.awardAmount(name) + " awards.");
+                    SendMessage("You have " + Awards.AwardAmount(name) + " awards.");
             } catch {
             }
             

@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "> > " + TotalTime(target.totalTime));
             Player.SendMessage(p, "> > first logged into the server on &a" + target.firstLogin);
             Player.SendMessage(p, "> > logged in &a" + target.logins + " %Stimes, &c" + target.kicks + " %Sof which ended in a kick.");
-            Player.SendMessage(p, "> > " + Awards.awardAmount(message) + " awards");
+            Player.SendMessage(p, "> > " + Awards.AwardAmount(message) + " awards");
             string[] data = Ban.GetBanData(message);
             if (data != null)
                 Player.SendMessage(p, "> > was banned by " + data[0] + " for " + data[1] + " on " + data[2]);

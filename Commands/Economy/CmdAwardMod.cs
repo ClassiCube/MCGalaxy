@@ -47,14 +47,14 @@ namespace MCGalaxy.Commands
                 string awardName = message.Split(':')[0].Trim();
                 string description = message.Split(':')[1].Trim();
 
-                if (!Awards.addAward(awardName, description))
+                if (!Awards.AddAward(awardName, description))
                     Player.SendMessage(p, "This award already exists!");
                 else
                     Player.GlobalMessage("Award added: &6" + awardName + " : " + description);
             }
             else
             {
-                if (!Awards.removeAward(message))
+                if (!Awards.RemoveAward(message))
                     Player.SendMessage(p, "This award doesn't exist!");
                 else
                     Player.GlobalMessage("Award removed: &6" + message);
