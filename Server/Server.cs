@@ -145,6 +145,7 @@ namespace MCGalaxy
         public static int restartcountdown = 10;
         [ConfigBool("auto-restart", "Server", null, false)]    
         public static bool autorestart;
+        [ConfigDateTime("restarttime", "Server", null)]
         public static DateTime restarttime;
 
         public static bool chatmod = false;
@@ -175,7 +176,11 @@ namespace MCGalaxy
         public const byte version = 7;
         public static string salt = "";
 
+        [ConfigString("server-name", "General", null, 
+                      "[MCGalaxy] Default", false, "![]:.,{}~-+()?_/\\' ")]
         public static string name = "[MCGalaxy] Default";
+        [ConfigString("motd", "General", null, "Welcome",
+                     false,  "=![]&:.,{}~-+()?_/\\' ")]
         public static string motd = "Welcome!";
         [ConfigInt("max-players", "Server", null, 12, 1, 128)]
         public static int players = 12;
@@ -203,6 +208,7 @@ namespace MCGalaxy
         [ConfigString("host-state", "Other", null, "Alive")]
         public static string ZallState = "Alive";
 
+        [ConfigString("main-name", "General", null, "main", false, "._+")]
         public static string level = "main";
         public static string errlog = "error.log";
 
@@ -243,7 +249,10 @@ namespace MCGalaxy
         [ConfigInt("backup-time", "Backup", null, 300, 1)] 
         public static int backupInterval = 300;
         public static int blockInterval = 60;
+        [ConfigString("backup-location", "Backup", null, "")]
         public static string backupLocation = Application.StartupPath + "/levels/backups";
+        [ConfigStringList("disabledstandardtokens", "Other", null)]
+        internal static List<string> disabledChatTokens = new List<string>();
 
         [ConfigBool("physicsrestart", "Other", null, true)]          
         public static bool physicsRestart = true;
@@ -353,7 +362,10 @@ namespace MCGalaxy
         public static bool guestJoinNotify = true;
         [ConfigBool("guest-leave-notify", "Other", null, true)]        
         public static bool guestLeaveNotify = true;
-        public static string defaultTerrainUrl = "", defaultTexturePackUrl = "";
+        [ConfigString("default-texture-url", "General", null, "", true)]
+        public static string defaultTerrainUrl = "";
+        [ConfigString("default-texture-pack-url", "General", null, "", true)]        
+        public static string defaultTexturePackUrl = "";
 
         public static bool flipHead = false;
 

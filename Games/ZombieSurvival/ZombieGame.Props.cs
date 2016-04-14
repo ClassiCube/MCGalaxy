@@ -121,7 +121,7 @@ namespace MCGalaxy.Games {
         internal static bool noRespawn = true;
         [ConfigBool("no-pillaring-during-zombie", "Zombie", null, true)]
         internal static bool noPillaring = true;
-        [ConfigString("zombie-name-while-infected", "Zombie", null, "")]
+        [ConfigString("zombie-name-while-infected", "Zombie", null, "", true)]
         internal static string ZombieName = "";
         [ConfigString("zombie-model-while-infected", "Zombie", null, "zombie")]
         internal static string ZombieModel = "zombie";
@@ -130,9 +130,11 @@ namespace MCGalaxy.Games {
         
         /// <summary> List of levels that are randomly picked for zombie survival. 
         /// If this left blank, then all level files are picked from instead. </summary>
+        [ConfigStringList("zombie-levels-list", "Zombie", null)]
         internal static List<string> LevelList = new List<string>();
         
         /// <summary> List of levels that are never picked for zombie survival. </summary>
+        [ConfigStringList("zombie-ignores-list", "Zombie", null)]
         internal static List<string> IgnoredLevelList = new List<string>();
         
         string lastLevel1 = "", lastLevel2 = "";

@@ -99,9 +99,9 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                if (Directory.Exists(@Server.backupLocation + "/" + p.level.name))
+                if (Directory.Exists(Server.backupLocation + "/" + p.level.name))
                 {
-                    string[] directories = Directory.GetDirectories(@Server.backupLocation + "/" + p.level.name);
+                    string[] directories = Directory.GetDirectories(Server.backupLocation + "/" + p.level.name);
                     int backupNumber = directories.Length;
                     Player.SendMessage(p, p.level.name + " has " + backupNumber + " backups .");
 

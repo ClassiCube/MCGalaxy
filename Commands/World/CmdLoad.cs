@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands
                         if (level == null)
                         {
                             Player.SendMessage(p, "Loading backup failed.");
-                            string backupPath = @Server.backupLocation;
+                            string backupPath = Server.backupLocation;
                             if (Directory.Exists(backupPath + "/" + message))
                             {
                                 int backupNumber = Directory.GetDirectories(backupPath + "/" + message).Length;

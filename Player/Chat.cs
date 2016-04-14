@@ -104,6 +104,7 @@ namespace MCGalaxy {
                 if (sb[i] != '$') continue;
                 
                 foreach (var token in standardTokens) {
+                    if (Server.disabledChatTokens.Contains(token.Key)) continue;
                     string value = token.Value(colorParse, p);
                     if (value == null) continue;
                     sb.Replace(token.Key, value);
@@ -135,7 +136,6 @@ namespace MCGalaxy {
             { "$banned", (c, p) => Player.GetBannedCount().ToString() },
             { "$irc", (c, p) => Server.ircServer + " > " + Server.ircChannel },
         };
-		internal static string disabledTokens = "";
         public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();
         
         internal static void LoadCustomTokens() {

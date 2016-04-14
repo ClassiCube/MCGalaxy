@@ -87,8 +87,8 @@ namespace MCGalaxy.Commands
                     }
                     else
                     {
-                        if (DirectoryEmpty(@Server.backupLocation + "/" + foundLevel.name + "/"))
-                            Directory.Delete(@Server.backupLocation + "/" + foundLevel.name + "/");
+                        if (DirectoryEmpty(Server.backupLocation + "/" + foundLevel.name + "/"))
+                            Directory.Delete(Server.backupLocation + "/" + foundLevel.name + "/");
                         break;
                     }
                 }

@@ -43,83 +43,15 @@ namespace MCGalaxy {
 
 			if (PropertiesFile.Read(givenPath, LineProcessor))
 				Server.s.SettingsUpdate();
+			
+			if (!Directory.Exists(Server.backupLocation))
+				Server.backupLocation = Application.StartupPath + "/levels/backups";
 			Save(givenPath);
 		}
 		
 		static void LineProcessor(string key, string value) {
-			switch (key.ToLower()) {
-				case "server-name":
-					if ( ValidString(value, "![]:.,{}~-+()?_/\\' ") ) {
-						Server.name = value;
-					}
-					else { Server.s.Log("server-name invalid! setting to default."); }
-					break;
-				case "motd":
-					if ( ValidString(value, "=![]&:.,{}~-+()?_/\\' ") ) // allow = in the motd
-					{
-						Server.motd = value;
-					}
-					else { Server.s.Log("motd invalid! setting to default."); }
-					break;
-
-				case "backup-location":
-					if (!value.Contains("System.Windows.Forms.TextBox, Text:"))
-						Server.backupLocation = value;
-					if (!Directory.Exists(value))
-						Server.backupLocation = Application.StartupPath + "/levels/backups";
-					break;
-
-				case "restarttime":
-					try { Server.restarttime = DateTime.Parse(value); }
-					catch { Server.s.Log("Invalid " + key + ". Using defualt."); break; }
-					break;
-				case "main-name":
-					if ( Player.ValidName(value) ) Server.level = value;
-					else Server.s.Log("Invalid main name");
-					break;
-				case "default-texture-url":
-					if (!value.StartsWith("http://") && !value.StartsWith("https://"))
-						Server.defaultTerrainUrl = "";
-					else
-						Server.defaultTerrainUrl = value;
-					break;
-				case "default-texture-pack-url":
-					if (!value.StartsWith("http://") && !value.StartsWith("https://"))
-						Server.defaultTexturePackUrl = "";
-					else
-						Server.defaultTexturePackUrl = value;
-					break;			
-				case "zombie-levels-list":
-					if (value == "") ZombieGame.LevelList = new List<string>();
-					else ZombieGame.LevelList = value.Replace(" ", "").Split(',').ToList<string>();
-					break;
-				case "zombie-ignores-list":
-					if (value == "") ZombieGame.IgnoredLevelList = new List<string>();
-					else ZombieGame.IgnoredLevelList = value.Replace(" ", "").Split(',').ToList<string>();
-					break;
-					
-				case "disabledstandardtokens":
-					{
-						if (value == "") return;
-						string[] tokens = value.Split(',');
-						foreach (string token in tokens)
-							Chat.standardTokens.Remove(token);
-						Chat.disabledTokens = value;
-					} break;
-				default:
-					if (!ConfigElement.Parse(Server.serverConfig, key, value, null))
-						Server.s.Log("\"" + key + "\" was not a recognised config key.");
-					break;
-			}
-		}
-		
-		public static bool ValidString(string str, string allowed) {
-			string allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890" + allowed;
-			foreach ( char ch in str ) {
-				if ( allowedchars.IndexOf(ch) == -1 ) {
-					return false;
-				}
-			} return true;
+			if (!ConfigElement.Parse(Server.serverConfig, key, value, null))
+				Server.s.Log("\"" + key + "\" was not a recognised config key.");
 		}
 		
 		public static void Save() { Save("properties/server.properties"); }
@@ -221,147 +153,8 @@ namespace MCGalaxy {
 			w.WriteLine("#   spam-counter-reset-time\t\t= 2");
 			w.WriteLine("#   bufferblocks\t\t\t= Should buffer blocks by default for maps?");
 			w.WriteLine();
-			w.WriteLine("# Server options");
-			w.WriteLine("server-name = " + Server.name);
-			w.WriteLine("motd = " + Server.motd);
-			w.WriteLine("port = " + Server.port.ToString());
-			w.WriteLine("verify-names = " + Server.verify.ToString().ToLower());
-			w.WriteLine("public = " + Server.pub.ToString().ToLower());
-			w.WriteLine("max-players = " + Server.players.ToString());
-			w.WriteLine("max-guests = " + Server.maxGuests.ToString());
-			w.WriteLine("world-chat = " + Server.worldChat.ToString().ToLower());
-			w.WriteLine("check-updates = " + Server.checkUpdates.ToString().ToLower());
-			w.WriteLine("auto-update = " + Server.autoupdate.ToString().ToLower());
-			w.WriteLine("in-game-update-notify = " + Server.notifyPlayers.ToString().ToLower());
-			w.WriteLine("update-countdown = " + Server.restartcountdown.ToString().ToLower());
-			w.WriteLine("autoload = " + Server.AutoLoad.ToString().ToLower());
-			w.WriteLine("auto-restart = " + Server.autorestart.ToString().ToLower());
-			w.WriteLine("restarttime = " + Server.restarttime.ToShortTimeString());
-			w.WriteLine("restart-on-error = " + Server.restartOnError);
-			w.WriteLine("main-name = " + Server.level);
-			w.WriteLine("default-texture-url = " + Server.defaultTerrainUrl);
-			w.WriteLine("default-texture-pack-url = " + Server.defaultTexturePackUrl);
-			w.WriteLine("enable-http-api = " + Server.EnableHttpApi);
-			w.WriteLine();
-			w.WriteLine("# irc bot options");
-			w.WriteLine("irc = " + Server.irc.ToString().ToLower());
-			w.WriteLine("irc-colorsenable = " + Server.ircColorsEnable.ToString().ToLower());
-			w.WriteLine("irc-nick = " + Server.ircNick);
-			w.WriteLine("irc-server = " + Server.ircServer);
-			w.WriteLine("irc-channel = " + Server.ircChannel);
-			w.WriteLine("irc-opchannel = " + Server.ircOpChannel);
-			w.WriteLine("irc-port = " + Server.ircPort.ToString());
-			w.WriteLine("irc-identify = " + Server.ircIdentify.ToString());
-			w.WriteLine("irc-password = " + Server.ircPassword);
-			w.WriteLine();
-			w.WriteLine("# other options");
-			w.WriteLine("rplimit = " + Server.rpLimit.ToString().ToLower());
-			w.WriteLine("rplimit-norm = " + Server.rpNormLimit.ToString().ToLower());
-			w.WriteLine("physicsrestart = " + Server.physicsRestart.ToString().ToLower());
-			w.WriteLine("deathcount = " + Server.deathcount.ToString().ToLower());
-			w.WriteLine("afk-minutes = " + Server.afkminutes.ToString());
-			w.WriteLine("afk-kick = " + Server.afkkick.ToString());
-			w.WriteLine("afk-kick-perm = " + ( (sbyte)Server.afkkickperm ).ToString());
-			w.WriteLine("parse-emotes = " + Server.parseSmiley.ToString().ToLower());
-			w.WriteLine("dollar-before-dollar = " + Server.dollarNames.ToString().ToLower());
-			w.WriteLine("use-whitelist = " + Server.useWhitelist.ToString().ToLower());
-			w.WriteLine("money-name = " + Server.moneys);
-			w.WriteLine("opchat-perm = " + ( (sbyte)Server.opchatperm ).ToString());
-			w.WriteLine("adminchat-perm = " + ( (sbyte)Server.adminchatperm ).ToString());
-			w.WriteLine("log-heartbeat = " + Server.logbeat.ToString());
-			w.WriteLine("force-cuboid = " + Server.forceCuboid.ToString());
-			w.WriteLine("profanity-filter = " + Server.profanityFilter.ToString());
-			w.WriteLine("repeat-messages = " + Server.repeatMessage.ToString());
-			w.WriteLine("host-state = " + Server.ZallState.ToString());
-			w.WriteLine("agree-to-rules-on-entry = " + Server.agreetorulesonentry.ToString().ToLower());
-			w.WriteLine("admins-join-silent = " + Server.adminsjoinsilent.ToString().ToLower());
-			w.WriteLine("server-owner = " + Server.server_owner.ToString());
 			
-			w.WriteLine("#Zombie settings");
-			w.WriteLine("zombie-on-server-start = " + ZombieGame.StartImmediately);
-			w.WriteLine("no-respawning-during-zombie = " + ZombieGame.noRespawn);
-			w.WriteLine("no-pillaring-during-zombie = " + ZombieGame.noPillaring);
-			w.WriteLine("zombie-name-while-infected = " + ZombieGame.ZombieName);
-			w.WriteLine("zombie-model-while-infected = " + ZombieGame.ZombieModel);
-			w.WriteLine("enable-changing-levels = " + ZombieGame.ChangeLevels);
-			w.WriteLine("zombie-survival-only-server = " + ZombieGame.SetMainLevel);
-			w.WriteLine("zombie-levels-list = " + string.Join(",", ZombieGame.LevelList));
-			w.WriteLine("zombie-ignores-list = " + string.Join(",", ZombieGame.IgnoredLevelList));
-			w.WriteLine("zombie-save-blockchanges = " + ZombieGame.SaveLevelBlockchanges);
-			w.WriteLine("zombie-hitbox-precision = " + ZombieGame.HitboxPrecision);
-			w.WriteLine("zombie-maxmove-distance = " + ZombieGame.MaxMoveDistance);
-			w.WriteLine("zombie-ignore-personalworlds = " + ZombieGame.IgnorePersonalWorlds);
-			w.WriteLine("zombie-map-inheartbeat = " + ZombieGame.IncludeMapInHeartbeat);
-			w.WriteLine();
-			
-			w.WriteLine("guest-limit-notify = " + Server.guestLimitNotify.ToString().ToLower());
-			w.WriteLine("guest-join-notify = " + Server.guestJoinNotify.ToString().ToLower());
-			w.WriteLine("guest-leave-notify = " + Server.guestLeaveNotify.ToString().ToLower());
-			w.WriteLine("total-undo = " + Server.totalUndo);
-			w.WriteLine("physics-undo-max = " + Server.physUndo);
-			w.WriteLine("draw-reload-limit = " + Server.DrawReloadLimit);
-			w.WriteLine("map-gen-limit = " + Server.MapGenLimit);
-			w.WriteLine("map-gen-limit-admin = " + Server.MapGenLimitAdmin);
-			w.WriteLine();
-			w.WriteLine("# backup options");
-			w.WriteLine("backup-time = " + Server.backupInterval.ToString());
-			w.WriteLine("backup-location = " + Server.backupLocation);
-			w.WriteLine();
-			w.WriteLine("#Error logging");
-			w.WriteLine("report-back = " + Server.reportBack.ToString().ToLower());
-			w.WriteLine();
-			w.WriteLine("#MySQL information");
-			w.WriteLine("UseMySQL = " + Server.useMySQL);
-			w.WriteLine("Host = " + Server.MySQLHost);
-			w.WriteLine("SQLPort = " + Server.MySQLPort);
-			w.WriteLine("Username = " + Server.MySQLUsername);
-			w.WriteLine("Password = " + Server.MySQLPassword);
-			w.WriteLine("DatabaseName = " + Server.MySQLDatabaseName);
-			w.WriteLine("Pooling = " + Server.DatabasePooling);
-			w.WriteLine();
-			w.WriteLine("#Colors");
-			w.WriteLine("defaultColor = " + Server.DefaultColor);
-			w.WriteLine("irc-color = " + Server.IRCColour);
-			w.WriteLine("global-chat-color = " + Server.GlobalChatColor);
-			w.WriteLine("help-syntax-color = " + Server.HelpSyntaxColor);
-			w.WriteLine("help-desc-color = " + Server.HelpDescriptionColor);
-			w.WriteLine();
-			w.WriteLine("#Custom Messages");
-			w.WriteLine("custom-ban-message = " + Server.defaultBanMessage);
-			w.WriteLine("custom-shutdown-message = " + Server.shutdownMessage);
-			w.WriteLine("custom-promote-message = " + Server.defaultPromoteMessage);
-			w.WriteLine("custom-demote-message = " + Server.defaultDemoteMessage);
-			w.WriteLine("allow-tp-to-higher-ranks = " + Server.higherranktp.ToString().ToLower());
-			w.WriteLine();
-			w.WriteLine("cheapmessage = " + Server.cheapMessage.ToString().ToLower());
-			w.WriteLine("cheap-message-given = " + Server.cheapMessageGiven);
-			w.WriteLine("default-rank = " + Server.defaultRank);
-			w.WriteLine();
-			w.WriteLine("kick-on-hackrank = " + Server.hackrank_kick.ToString().ToLower());
-			w.WriteLine("hackrank-kick-time = " + Server.hackrank_kick_time.ToString());
-			w.WriteLine();
-			w.WriteLine("#Admin Verification");
-			w.WriteLine("admin-verification = " + Server.verifyadmins.ToString().ToLower());
-			w.WriteLine("verify-admin-perm = " + ( (sbyte)Server.verifyadminsrank ).ToString());
-			w.WriteLine();
-			w.WriteLine("#Spam Control");
-			w.WriteLine("mute-on-spam = " + Server.checkspam.ToString().ToLower());
-			w.WriteLine("spam-messages = " + Server.spamcounter.ToString());
-			w.WriteLine("spam-mute-time = " + Server.mutespamtime.ToString());
-			w.WriteLine("spam-counter-reset-time = " + Server.spamcountreset.ToString());
-			w.WriteLine();
-			w.WriteLine("#Review settings");
-			w.WriteLine("review-view-perm = " + ( (sbyte)Server.reviewview ).ToString());
-			w.WriteLine("review-enter-perm = " + ( (sbyte)Server.reviewenter ).ToString());
-			w.WriteLine("review-leave-perm = " + ( (sbyte)Server.reviewleave ).ToString());
-			w.WriteLine("review-cooldown = " + Server.reviewcooldown.ToString());
-			w.WriteLine("review-clear-perm = " + ( (sbyte)Server.reviewclear ).ToString());
-			w.WriteLine("review-next-perm = " + ( (sbyte)Server.reviewnext ).ToString());
-			w.WriteLine("bufferblocks = " + Server.bufferblocks);
-			w.WriteLine();
-			w.WriteLine("global-chat-enabled = " + Server.UseGlobalChat.ToString().ToLower());
-			w.WriteLine("show-empty-ranks = " + Server.showEmptyRanks.ToString().ToLower());
-			w.WriteLine("disabledstandardtokens = " + Chat.disabledTokens);
+			ConfigElement.Serialise(Server.serverConfig, " options", w, null);
 		}
 	}
 }

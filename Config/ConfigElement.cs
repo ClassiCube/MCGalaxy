@@ -27,10 +27,12 @@ namespace MCGalaxy {
         public ConfigAttribute Attrib;
         public FieldInfo Field;
         
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static |
+            BindingFlags.Public | BindingFlags.NonPublic;
         public static ConfigElement[] GetAll(params Type[] types) {
             List<ConfigElement> elems = new List<ConfigElement>();
             foreach (Type type in types) {
-                FieldInfo[] fields = type.GetFields();
+                FieldInfo[] fields = type.GetFields(flags);
                 for (int i = 0; i < fields.Length; i++) {
                     FieldInfo field = fields[i];
                     Attribute[] attributes = Attribute.GetCustomAttributes(field, typeof(ConfigAttribute));
@@ -71,9 +73,10 @@ namespace MCGalaxy {
             }
             
             foreach (var kvp in sections) {
-                dst.WriteLine(kvp.Key + suffix);
+                dst.WriteLine("# " + kvp.Key + suffix);
                 foreach (ConfigElement elem in kvp.Value) {
-                    dst.WriteLine(elem.Attrib.Name + " = " + elem.Field.GetValue(instance));
+                    object value = elem.Field.GetValue(instance);
+                    dst.WriteLine(elem.Attrib.Name + " = " + elem.Attrib.Serialise(value));
                 }
                 dst.WriteLine();
             }

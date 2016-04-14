@@ -36,6 +36,9 @@ namespace MCGalaxy.Config {
         /// <summary> Returns either the parsed form of the given value, or some other value if validation fails. </summary>
         public abstract object Parse(string value);
         
+        /// <summary> Converts the given value into its serialised string form. </summary>
+        public virtual string Serialise(object value) { return value.ToString(); }
+        
         public ConfigAttribute(string name, string section, string desc, object defValue) {
             Name = name; Description = desc; 
             Section = section; DefaultValue = defValue;
