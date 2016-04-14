@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "torus"; } }
         public override string shortcut { get { return "tor"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("donut"), new CommandAlias("bagel")  }; }
+            get { return new[] { new CommandAlias("donut"), new CommandAlias("bagel") }; }
         }
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);

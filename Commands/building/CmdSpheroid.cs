@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "spheroid"; } }
         public override string shortcut { get { return "e"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("sphere") }; }
+        	get { return new[] { new CommandAlias("sphere"), new CommandAlias("eh", "hollow"),
+        		    new CommandAlias("cylinder", "vertical") }; }
         }        
 
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
