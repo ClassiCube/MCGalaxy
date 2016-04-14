@@ -59,7 +59,7 @@ namespace MCGalaxy {
                     Properties[i].SaveConvertId = Properties[i].ODoorId;
                 }
                 
-                if (i >= red && i <= white)
+                if ((i >= red && i <= white) || (i >= lightpink && i <= turquoise)
                     Properties[i].KilledByLava = true;
                 if (i == air || i == shrub || (i >= yellowflower && i <= redmushroom)) {
                     Properties[i].KilledByLava = true;
@@ -91,6 +91,7 @@ namespace MCGalaxy {
             Properties[air_flood_up].SaveConvertId = air;
             Properties[wood].KilledByLava = true; Properties[trunk].KilledByLava = true;
             Properties[sponge].KilledByLava = true; Properties[bookcase].KilledByLava = true;
+            Properties[leaf].KilledByLava = true;
             SetupDefaultNames();
         }
         
