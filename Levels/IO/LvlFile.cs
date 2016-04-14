@@ -97,7 +97,7 @@ namespace MCGalaxy.Levels.IO {
                 vars[1] = BitConverter.ToUInt16(header, offset);
                 vars[2] = BitConverter.ToUInt16(header, offset + 2);
 
-                Level level = new Level(name, vars[0], vars[2], vars[1], "full_empty");
+                Level level = new Level(name, vars[0], vars[2], vars[1]);
                 level.spawnx = BitConverter.ToUInt16(header, offset + 4);
                 level.spawnz = BitConverter.ToUInt16(header, offset + 6);
                 level.spawny = BitConverter.ToUInt16(header, offset + 8);

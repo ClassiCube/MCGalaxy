@@ -43,7 +43,7 @@ namespace MCGalaxy.Levels.IO {
         public static Level Load(Stream stream, string name)
         {
             byte[] temp = new byte[8];
-            using (Level lvl = new Level(name, 0, 0, 0, "empty"))
+            using (Level lvl = new Level(name, 0, 0, 0))
             {
                 stream.Seek(-4, SeekOrigin.End);
                 stream.Read(temp, 0, sizeof(int));

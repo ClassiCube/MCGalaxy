@@ -24,6 +24,7 @@ namespace MCGalaxy.BlockPhysics {
         public static bool DoDoorsOnly(Level lvl, Check C, Random rand) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
                 C.data = default(PhysicsArgs);
+            if (C.data.Type1 == PhysicsArgs.TntWars) return true;
 
             bool wait = false, door = C.data.Door;
             int waitTime = 0;
@@ -69,7 +70,8 @@ namespace MCGalaxy.BlockPhysics {
         public static bool DoComplex(Level lvl, Check C) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
                 C.data = default(PhysicsArgs);
-
+            if (C.data.Type1 == PhysicsArgs.TntWars) return true;
+            
             ExtraInfoArgs args = default(ExtraInfoArgs);
             args.Door = C.data.Door;
             ParseType(C.data.Type1, ref args, C.data.Value1);

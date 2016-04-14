@@ -66,9 +66,9 @@ namespace MCGalaxy
         public static bool cancelload;
         public static bool cancelsave;
         public static bool cancelphysics;
-        internal readonly FastList<Check> ListCheck = new FastList<Check>(); //A list of blocks that need to be updated
-        internal readonly FastList<Update> ListUpdate = new FastList<Update>(); //A list of block to change after calculation
-        internal readonly SparseBitSet listCheckExists, listUpdateExists;
+        internal FastList<Check> ListCheck = new FastList<Check>(); //A list of blocks that need to be updated
+        internal FastList<Update> ListUpdate = new FastList<Update>(); //A list of block to change after calculation
+        internal SparseBitSet listCheckExists, listUpdateExists;
 
         internal readonly Dictionary<int, sbyte> leaves = new Dictionary<int, sbyte>();
         // Holds block state for leaf decay
@@ -212,8 +212,16 @@ namespace MCGalaxy
         public int MinRoundTime = 4, MaxRoundTime = 7;
         public bool DrawingAllowed = true;
         
-        public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false)
-        {
+        public Level(string n, ushort x, ushort y, ushort z) {
+        	Init(n, x, y, z);
+        }
+        
+        public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false) {
+            Init(n, x, y, z);
+            MapGen.Generate(this, type, seed, useSeed);
+        }
+        
+        void Init(string n, ushort x, ushort y, ushort z) {
             //onLevelSave += null;
             Width = x;
             Height = y;
@@ -227,7 +235,7 @@ namespace MCGalaxy
 
             CustomBlockDefs = new BlockDefinition[256];
             for (int i = 0; i < CustomBlockDefs.Length; i++)
-            	CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
+                CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
             name = n;
             EdgeLevel = (short)(y / 2);
             CloudsHeight = (short)(y + 2);
@@ -238,7 +246,6 @@ namespace MCGalaxy
             CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
             ZoneList = new List<Zone>();
 
-            MapGen.Generate(this, type, seed, useSeed);
             spawnx = (ushort)(Width / 2);
             spawny = (ushort)(Height * 0.75f);
             spawnz = (ushort)(Length / 2);

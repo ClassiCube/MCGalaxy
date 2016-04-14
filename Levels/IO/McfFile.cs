@@ -41,7 +41,7 @@ namespace MCGalaxy.Levels.IO {
             ushort length = BitConverter.ToUInt16(header, 2);
             ushort height = BitConverter.ToUInt16(header, 4);
 
-            Level lvl = new Level(name, width, height, length, "full_empty");
+            Level lvl = new Level(name, width, height, length);
             lvl.permissionbuild = (LevelPermission)30;
             lvl.spawnx = BitConverter.ToUInt16(header, 6);
             lvl.spawnz = BitConverter.ToUInt16(header, 8);

@@ -56,10 +56,10 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoSmallTnt(Level lvl, Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            Player p = null; // TODO: C.data as Player;
+            Player p = GetPlayer(ref C.data);
             
             if (p != null && p.PlayingTntWars) {
                 int power = 2, threshold = 3;
@@ -105,6 +105,17 @@ namespace MCGalaxy.BlockPhysics {
                     MakeExplosion(lvl, x, y, z, 0);
                 }
             }
+        }
+        
+        static Player GetPlayer(ref PhysicsArgs args) {
+            if (args.Type1 != PhysicsArgs.TntWars) return null;
+            
+            int id = args.Value1 | args.Value2 << 8 | args.Data << 16;
+            Player[] players = PlayerInfo.Online.Items;
+            for (int i = 0; i < players.Length; i++) {
+                if (players[i].tntWarsUuid == id) return players[i];
+            }
+            return null;
         }
         
         public static void MakeExplosion(Level lvl, ushort x, ushort y, ushort z, int size,

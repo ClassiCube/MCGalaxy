@@ -340,8 +340,8 @@ namespace MCGalaxy {
                     SetExtTileNoCheck(x, y, z, extType);
 
                 errorLocation = "Adding physics";
-                if (p.PlayingTntWars && type == Block.smalltnt) AddCheck(PosToInt(x, y, z), false);
-                if (physics > 0 && Block.Physics(type)) AddCheck(PosToInt(x, y, z), false);
+                if (p.PlayingTntWars && type == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
+                if (physics > 0 && Block.Physics(type)) AddCheck(PosToInt(x, y, z));
 
                 changed = true;
                 backedup = false;
@@ -361,6 +361,15 @@ namespace MCGalaxy {
                 Server.s.Log("Error location: " + errorLocation);
                 return false;
             }
+        }
+        
+        void AddTntCheck(int b, Player p) {
+            PhysicsArgs args = default(PhysicsArgs);
+            args.Type1 = PhysicsArgs.TntWars;
+            args.Value1 = (byte)p.tntWarsUuid;
+            args.Value2 = (byte)(p.tntWarsUuid >> 8);
+            args.Data = (byte)(p.tntWarsUuid >> 16);
+            AddCheck(b, false, args);
         }
         
         public void Blockchange(int b, byte type, bool overRide = false, 

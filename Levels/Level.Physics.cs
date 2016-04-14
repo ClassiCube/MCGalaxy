@@ -152,7 +152,7 @@ namespace MCGalaxy {
                         Check C = ListCheck.Items[i];
                         IntToPos(C.b, out x, out y, out z);
                         try {
-                            PhysicsArgs info = C.data;                          
+                            PhysicsArgs info = C.data;
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.time, info, this);
                             if (OnPhysicsUpdateEvent.events.Count > 0)

@@ -22,7 +22,7 @@ namespace MCGalaxy.Games {
     public static class CountdownMapGen {
         
         public static Level Generate(int width, int height, int length) {
-			Level lvl = new Level("countdown", (ushort)width, (ushort)height, (ushort)length, "empty");
+			Level lvl = new Level("countdown", (ushort)width, (ushort)height, (ushort)length);
             MakeBoundaries(lvl);
             MakeViewAreaRoof(lvl);
             MakeViewAreaWalls(lvl);

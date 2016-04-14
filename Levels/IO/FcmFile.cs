@@ -34,7 +34,7 @@ namespace MCGalaxy.Levels.IO {
 			ushort width = reader.ReadUInt16();
 			ushort height = reader.ReadUInt16();
 			ushort length = reader.ReadUInt16();
-			Level lvl = new Level(name, width, height, length, "full_empty");
+			Level lvl = new Level(name, width, height, length);
 
 			lvl.spawnx = (ushort)(reader.ReadInt32() / 32);
 			lvl.spawny = (ushort)(reader.ReadInt32() / 32);

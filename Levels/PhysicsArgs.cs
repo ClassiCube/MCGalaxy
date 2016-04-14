@@ -82,5 +82,7 @@ namespace MCGalaxy.BlockPhysics {
         /// <summary> Causes this physics item to iterate through the 'rainbow' wool 
         /// block ids in either sequential or random order. </summary>
         public const byte Rainbow = 6;
+        /// <summary> TNT block placed in tnt wars. </summary>
+        public const byte TntWars = 7;
     }
 }
