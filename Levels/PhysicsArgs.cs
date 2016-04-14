@@ -65,6 +65,8 @@ namespace MCGalaxy.BlockPhysics {
                 return (value & 0x7) == Wait || ((value & 0x38) == Wait << 3);
             }
         }
+        
+        public void ResetTypes() { Raw &= ~0x3Fu; }
         // TODO: what to do with last bit
         
         /// <summary> No special action is performed. </summary>

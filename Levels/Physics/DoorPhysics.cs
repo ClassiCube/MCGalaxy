@@ -22,7 +22,7 @@ namespace MCGalaxy.BlockPhysics {
     public static class DoorPhysics {
         
         public static void odoorPhysics(Level lvl, Check C) {
-            if (C.time != 0) { C.time = 0; return; }
+            if (C.data.Data != 0) { C.data.Data = 0; return; }
             
             odoorNeighbour(lvl, C, lvl.IntOffset(C.b, -1, 0, 0));
             odoorNeighbour(lvl, C, lvl.IntOffset(C.b, +1, 0, 0));
@@ -30,7 +30,7 @@ namespace MCGalaxy.BlockPhysics {
             odoorNeighbour(lvl, C, lvl.IntOffset(C.b, 0, +1, 0));
             odoorNeighbour(lvl, C, lvl.IntOffset(C.b, 0, 0, -1));
             odoorNeighbour(lvl, C, lvl.IntOffset(C.b, 0, 0, +1));
-            C.time++;
+            C.data.Data++;
         }
         
         static void odoorNeighbour(Level lvl, Check C, int offset) {
@@ -45,7 +45,7 @@ namespace MCGalaxy.BlockPhysics {
         public static void AnyDoor(Level lvl, Check C, int timer, bool instaUpdate = false) {
 			ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            if (C.time != 0) {
+            if (C.data.Data != 0) {
                 CheckDoorRevert(lvl, C, timer); return;
             }
             
@@ -102,11 +102,11 @@ namespace MCGalaxy.BlockPhysics {
         }
 
         static void CheckDoorRevert(Level lvl, Check C, int timer) {
-            if (C.time < timer) {
-                C.time++;
+            if (C.data.Data < timer) {
+                C.data.Data++;
             } else {
 				lvl.AddUpdate(C.b, Block.Properties[lvl.blocks[C.b]].DoorId);
-                C.time = 255;
+                C.data.Data = 255;
             }
         }
 

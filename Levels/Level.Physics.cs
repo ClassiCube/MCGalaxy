@@ -133,14 +133,14 @@ namespace MCGalaxy {
                         try {
                             PhysicsArgs info = C.data;                        
                             if (PhysicsUpdate != null)
-                                PhysicsUpdate(x, y, z, C.time, info, this);
+                                PhysicsUpdate(x, y, z, C.data.Data, info, this);
                             
-                            if (info.Raw == 0 || ExtraInfoPhysics.DoDoorsOnly(this, C, null)) {
+                            if ((info.Raw & 0x3F) == 0 || ExtraInfoPhysics.DoDoorsOnly(this, C, null)) {
                                 Block.HandlePhysics handler = Block.physicsDoorsHandlers[blocks[C.b]];
                                 if (handler != null)
                                     handler(this, C);
-                                else if (info.Raw == 0 || !info.HasWait)
-                                    C.time = 255;
+                                else if ((info.Raw & 0x3F) == 0 || !info.HasWait)
+                                    C.data.Data = 255;
                             }
                         } catch {
                             listCheckExists.Set(x, y, z, false);
@@ -154,16 +154,16 @@ namespace MCGalaxy {
                         try {
                             PhysicsArgs info = C.data;
                             if (PhysicsUpdate != null)
-                                PhysicsUpdate(x, y, z, C.time, info, this);
+                                PhysicsUpdate(x, y, z, C.data.Data, info, this);
                             if (OnPhysicsUpdateEvent.events.Count > 0)
-                                OnPhysicsUpdateEvent.Call(x, y, z, C.time, info, this);
+                                OnPhysicsUpdateEvent.Call(x, y, z, C.data.Data, info, this);
                             
-                            if (info.Raw == 0 || ExtraInfoPhysics.DoComplex(this, C)) {
+                            if ((info.Raw & 0x3F) == 0 || ExtraInfoPhysics.DoComplex(this, C)) {
                                 Block.HandlePhysics handler = Block.physicsHandlers[blocks[C.b]];
                                 if (handler != null)
                                     handler(this, C);
-                                else if (info.Raw == 0 || !info.HasWait)
-                                    C.time = 255;
+                                else if ((info.Raw & 0x3F) == 0 || !info.HasWait)
+                                    C.data.Data = 255;
                             }
                         } catch {
                             listCheckExists.Set(x, y, z, false);
@@ -271,7 +271,7 @@ namespace MCGalaxy {
             ushort x, y, z;
             
             for (int i = 0; i < count; i++) {
-                if (items[i].time == 255) {
+                if (items[i].data.Data == 255) {
                     IntToPos(items[i].b, out x, out y, out z);
                     listCheckExists.Set(x, y, z, false);
                     continue;
@@ -374,7 +374,6 @@ namespace MCGalaxy {
     
     public class Check {
         public int b;
-        public byte time;
         public PhysicsArgs data;
 
         public Check(int b, PhysicsArgs data = default(PhysicsArgs)) {

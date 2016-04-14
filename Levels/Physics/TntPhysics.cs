@@ -46,8 +46,8 @@ namespace MCGalaxy.BlockPhysics {
             if (lvl.physics < 3) {
                 lvl.Blockchange(x, y, z, Block.air);
             } else {
-                if (C.time < 5 && lvl.physics == 3) {
-                    C.time++;
+                if (C.data.Data < 5 && lvl.physics == 3) {
+                    C.data.Data++;
                     ShowWarningFuse(lvl, x, y, z);
                     return;
                 }
@@ -73,8 +73,8 @@ namespace MCGalaxy.BlockPhysics {
                         power = 3; break;
                 }
                 
-                if (C.time < threshold) {
-                    C.time++;
+                if (C.data.Data < threshold) {
+                    C.data.Data++;
                     lvl.Blockchange(x, (ushort)(y + 1), z, lvl.GetTile(x, (ushort)(y + 1), z) == Block.lavastill
                                     ? Block.air : Block.lavastill);
                     return;
@@ -96,8 +96,8 @@ namespace MCGalaxy.BlockPhysics {
                 if (lvl.physics < 3) {
                     lvl.Blockchange(x, y, z, Block.air);
                 } else {
-                    if (C.time < 5 && lvl.physics == 3) {
-                        C.time++;
+                    if (C.data.Data < 5 && lvl.physics == 3) {
+                        C.data.Data++;
                         lvl.Blockchange(x, (ushort)(y + 1), z, lvl.GetTile(x, (ushort)(y + 1), z) == Block.lavastill
                                         ? Block.air : Block.lavastill);
                         return;

@@ -44,6 +44,7 @@ namespace MCGalaxy.BlockPhysics {
                         
                         lvl.AddUpdate(bAbove, Block.firework, false);
                         lvl.AddUpdate(C.b, Block.lavastill, false, args);
+                        args.Data = C.data.Data;
                         C.data = args;
                         return;
                     }

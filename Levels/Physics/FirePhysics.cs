@@ -57,13 +57,13 @@ namespace MCGalaxy.BlockPhysics {
         public static void Do(Level lvl, Check C) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            if (C.time < 2) {
-                C.time++;
+            if (C.data.Data < 2) {
+                C.data.Data++;
                 return;
             }
 
             Random rand = lvl.physRandom;
-            if (rand.Next(1, 20) == 1 && C.time % 2 == 0) {
+            if (rand.Next(1, 20) == 1 && C.data.Data % 2 == 0) {
                 int max = rand.Next(1, 18);
 
                 if (max <= 3 && ExpandSimple(lvl, x - 1, y, z)) {
@@ -82,8 +82,8 @@ namespace MCGalaxy.BlockPhysics {
             }
 
             if (lvl.physics >= 2) {
-                if (C.time < 4) {
-                    C.time++;
+                if (C.data.Data < 4) {
+                    C.data.Data++;
                     return;
                 }
                 
@@ -95,25 +95,22 @@ namespace MCGalaxy.BlockPhysics {
                 ExpandAvanced(lvl, x, y, z + 1);
             }
 
-            C.time++;
-            if (C.time > 5) {
+            C.data.Data++;
+            if (C.data.Data > 5) {
                 int dropType = rand.Next(1, 10);
                 if (dropType <= 2) {
                     lvl.AddUpdate(C.b, Block.coal);
-                    PhysicsArgs args = default(PhysicsArgs);
-                    args.Type1 = PhysicsArgs.Drop; args.Value1 = 63;
-                    args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 10;
-                    C.data = args;
+                    C.data.Type1 = PhysicsArgs.Drop; C.data.Value1 = 63;
+                    C.data.Type2 = PhysicsArgs.Dissipate; C.data.Value2 = 10;
                 } else if (dropType <= 4) {
                     lvl.AddUpdate(C.b, Block.obsidian);
-                    PhysicsArgs args = default(PhysicsArgs);
-                    args.Type1 = PhysicsArgs.Drop; args.Value1 = 63;
-                    args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 10;
-                    C.data = args;
-                } else if (dropType <= 8)
+                    C.data.Type1 = PhysicsArgs.Drop; C.data.Value1 = 63;
+                    C.data.Type2 = PhysicsArgs.Dissipate; C.data.Value2 = 10;
+                } else if (dropType <= 8) {
                     lvl.AddUpdate(C.b, Block.air);
-                else
-                    C.time = 3;
+                } else {
+                    C.data.Data = 3;
+                }
             }
         }
     }

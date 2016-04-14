@@ -23,7 +23,7 @@ namespace MCGalaxy.BlockPhysics {
         
         public static bool DoDoorsOnly(Level lvl, Check C, Random rand) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
-                C.data = default(PhysicsArgs);
+            	C.data.ResetTypes();
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
 
             bool wait = false, door = C.data.Door;
@@ -35,7 +35,7 @@ namespace MCGalaxy.BlockPhysics {
             }
             if (!wait) return false;
             
-            if (door && C.time < 2) {
+            if (door && C.data.Data < 2) {
                 // TODO: perhaps do proper bounds checking
                 Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
                 Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
@@ -45,12 +45,12 @@ namespace MCGalaxy.BlockPhysics {
                 Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, 1));
             }
 
-            if (C.time > waitTime) {
+            if (C.data.Data > waitTime) {
                 if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
                 if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
                 return false;
             }
-            C.time++;
+            C.data.Data++;
             return true;
         }
         
@@ -69,7 +69,7 @@ namespace MCGalaxy.BlockPhysics {
         
         public static bool DoComplex(Level lvl, Check C) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
-                C.data = default(PhysicsArgs);
+            	C.data.ResetTypes();
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
             
             ExtraInfoArgs args = default(ExtraInfoArgs);
@@ -78,7 +78,7 @@ namespace MCGalaxy.BlockPhysics {
             ParseType(C.data.Type2, ref args, C.data.Value2);
             
             if (args.Wait) {
-                if (args.Door && C.time < 2) {
+                if (args.Door && C.data.Data < 2) {
                     Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
                     Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
                     Checktdoor(lvl, lvl.IntOffset(C.b, 0, -1, 0));
@@ -87,13 +87,13 @@ namespace MCGalaxy.BlockPhysics {
                     Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, 1));
                 }
 
-                if (C.time > args.WaitTime) {
+                if (C.data.Data > args.WaitTime) {
                     if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
                     if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
                     DoOther(lvl, C, ref args);
                     return false;
                 }
-                C.time++;
+                C.data.Data++;
                 return true;
             }
             DoOther(lvl, C, ref args);
@@ -120,13 +120,13 @@ namespace MCGalaxy.BlockPhysics {
         static void DoOther(Level lvl, Check C, ref ExtraInfoArgs args) {
             Random rand = lvl.physRandom;            
             if (args.Rainbow) {
-            	if (C.time < 4) C.time++;
+            	if (C.data.Data < 4) C.data.Data++;
             	else DoRainbow(lvl, C, rand, args.RainbowNum); 
             	return;
             }
             if (args.Revert) {
                 lvl.AddUpdate(C.b, args.RevertType);
-                C.data = default(PhysicsArgs);
+                C.data.ResetTypes();
             }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -136,7 +136,7 @@ namespace MCGalaxy.BlockPhysics {
             if (args.Dissipate && rand.Next(1, 100) <= args.DissipateNum) {
                 if (!lvl.listUpdateExists.Get(x, y, z)) {
                     lvl.AddUpdate(C.b, Block.air);
-                    C.data = default(PhysicsArgs);
+                    C.data.ResetTypes();
                     args.Drop = false;
                 } else {
                     lvl.AddUpdate(C.b, lvl.blocks[C.b], false, C.data);
@@ -145,7 +145,7 @@ namespace MCGalaxy.BlockPhysics {
             
             if (args.Explode && rand.Next(1, 100) <= args.ExplodeNum) {
                 lvl.MakeExplosion(x, y, z, 0);
-                C.data = default(PhysicsArgs);
+                C.data.ResetTypes();
                 args.Drop = false;
             }
             
@@ -177,7 +177,7 @@ namespace MCGalaxy.BlockPhysics {
             
             if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], false, C.data)) {
                 lvl.AddUpdate(C.b, Block.air);
-                C.data = default(PhysicsArgs);
+                C.data.ResetTypes();
             }
         }
         

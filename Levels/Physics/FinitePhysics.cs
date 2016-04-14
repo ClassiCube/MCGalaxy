@@ -31,10 +31,10 @@ namespace MCGalaxy.BlockPhysics {
 			if (tileBelow == Block.air) {
 				lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b], false, C.data);
 				lvl.AddUpdate(C.b, Block.air);
-				C.data = default(PhysicsArgs);
+				C.data.ResetTypes();
 			} else if (tileBelow == Block.waterstill || tileBelow == Block.lavastill) {
 				lvl.AddUpdate(C.b, Block.air);
-				C.data = default(PhysicsArgs);
+				C.data.ResetTypes();
 			} else {
 				const int count = 25;
 				int* indices = stackalloc int[count];
@@ -69,7 +69,7 @@ namespace MCGalaxy.BlockPhysics {
 						    lvl.AddUpdate(index, lvl.blocks[C.b], false, C.data))
 						{
 							lvl.AddUpdate(C.b, Block.air);
-							C.data = default(PhysicsArgs);
+							C.data.ResetTypes();
 							return;
 						}
 					}

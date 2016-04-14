@@ -35,14 +35,14 @@ namespace MCGalaxy.BlockPhysics {
 
             if (!lvl.leafDecay) {
                 lvl.leaves.Clear();
-                C.time = 255; return;
+                C.data.Data = 255; return;
             }
-            if (C.time < 5) {
-                if (rand.Next(10) == 0) C.time++;
+            if (C.data.Data < 5) {
+                if (rand.Next(10) == 0) C.data.Data++;
                 return;
             }
             if (DoLeafDecay(lvl, C)) lvl.AddUpdate(C.b, Block.air);
-            C.time = 255;
+            C.data.Data = 255;
         }
         
         static bool DoLeafDecay(Level lvl, Check C) {

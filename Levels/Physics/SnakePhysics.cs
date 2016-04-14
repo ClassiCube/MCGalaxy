@@ -107,9 +107,7 @@ namespace MCGalaxy.BlockPhysics {
                 || lvl.GetTile(lvl.IntOffset(C.b, 1, 0, 0)) != Block.snake
                 || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, 1)) != Block.snake
                 || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, -1)) != Block.snake) {
-                PhysicsArgs args = default(PhysicsArgs);
-                args.Type1 = PhysicsArgs.Revert; args.Value1 = Block.air;
-                C.data = args;
+                C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.air;
             }
         }
         

@@ -22,8 +22,8 @@ namespace MCGalaxy.BlockPhysics {
     public static class ExtLiquidPhysics {
         
 		public static void DoMagma(Level lvl, Check C) {
-            C.time++;
-            if (C.time < 3) return;
+            C.data.Data++;
+            if (C.data.Data < 3) return;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);
@@ -38,8 +38,8 @@ namespace MCGalaxy.BlockPhysics {
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
             }
 
-            if (lvl.physics <= 1 || C.time <= 10) return;
-            C.time = 0;
+            if (lvl.physics <= 1 || C.data.Data <= 10) return;
+            C.data.Data = 0;
             bool flowUp = false;
             
             MagmaFlow(lvl, x - 1, y, z, ref flowUp);
@@ -60,7 +60,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoGeyser(Level lvl, Check C) {
-            C.time++;
+            C.data.Data++;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);
@@ -75,8 +75,8 @@ namespace MCGalaxy.BlockPhysics {
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
             }
 
-            if (lvl.physics <= 1 || C.time <= 10) return;
-            C.time = 0;
+            if (lvl.physics <= 1 || C.data.Data <= 10) return;
+            C.data.Data = 0;
             bool flowUp = false;
             
             GeyserFlow(lvl, x - 1, y, z, ref flowUp);
@@ -106,7 +106,7 @@ namespace MCGalaxy.BlockPhysics {
             {
                 case Block.air:
                     lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.WaterDown);
-                    if (!C.data.HasWait) C.time = 255;
+                    if (!C.data.HasWait) C.data.Data = 255;
                     break;
                 case Block.air_flood_down:
                 case Block.lavastill:
@@ -119,7 +119,7 @@ namespace MCGalaxy.BlockPhysics {
                     LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
                     LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1),block);
                     LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
-                    if (!C.data.HasWait) C.time = 255;
+                    if (!C.data.HasWait) C.data.Data = 255;
                     break;
             }
         }
@@ -134,7 +134,7 @@ namespace MCGalaxy.BlockPhysics {
             {
                 case Block.air:
                     lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.LavaDown);
-                    if (!C.data.HasWait) C.time = 255;
+                    if (!C.data.HasWait) C.data.Data = 255;
                     break;
                 case Block.air_flood_down:
                 case Block.lavastill:
@@ -147,15 +147,15 @@ namespace MCGalaxy.BlockPhysics {
                     LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1),block);
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
-                    if (!C.data.HasWait) C.time = 255;
+                    if (!C.data.HasWait) C.data.Data = 255;
                     break;
             }
         }
         
         public static void DoFaucet(Level lvl, Check C, byte target) {
-            C.time++;
-            if (C.time < 2) return;
-            C.time = 0;
+            C.data.Data++;
+            if (C.data.Data < 2) return;
+            C.data.Data = 0;
             
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);

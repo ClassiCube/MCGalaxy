@@ -39,14 +39,14 @@ namespace MCGalaxy.BlockPhysics {
                 if (x == 0 || x == lvl.Width - 1 || z == 0 || z == lvl.Length - 1)
                     lvl.AddUpdate(C.b, Block.water);
             }
-            if (!C.data.HasWait) C.time = 255;
+            if (!C.data.HasWait) C.data.Data = 255;
         }
         
         public static void DoFlood(Level lvl, Check C, AirFlood mode, byte block) {
             Random rand = lvl.physRandom;    		
-            if (C.time >= 1) {
+            if (C.data.Data >= 1) {
                 lvl.AddUpdate(C.b, Block.air);
-                C.time = 255; return;
+                C.data.Data = 255; return;
             }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -70,7 +70,7 @@ namespace MCGalaxy.BlockPhysics {
                     FloodAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z), block);
                     break;
             }
-            C.time++;
+            C.data.Data++;
         }
         
         static void FloodAir(Level lvl, int b, byte type) {
