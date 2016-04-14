@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
         }
         
         static List<Awards.Award> GetAwards(string plName) {
-            if (plName != "") return Awards.AwardsList;
+            if (plName == "") return Awards.AwardsList;
             
             List<Awards.Award> awards = new List<Awards.Award>();
             foreach (string s in Awards.GetPlayerAwards(plName)) {
