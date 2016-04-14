@@ -1,20 +1,20 @@
 /*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System.Collections.Generic;
 namespace MCGalaxy.Commands
 {
@@ -28,124 +28,86 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (message.Split(' ').Length > 2) { Help(p); return; }
+            string[] args = message.Split(' ');
+            if (args.Length > 2) { Help(p); return; }
             // /awards
             // /awards 1
             // /awards bob
             // /awards bob 1
 
-            int totalCount = 0;
-            string foundPlayer = "";
-
-            if (message != "")
-            {
-                if (message.Split(' ').Length == 2)
-                {
-                    foundPlayer = message.Split(' ')[0];
-                    Player who = PlayerInfo.Find(foundPlayer);
-                    if (who != null) foundPlayer = who.name;
-                    try
-                    {
-                        totalCount = int.Parse(message.Split(' ')[1]);
-                    }
-                    catch
-                    {
-                        Help(p);
-                        return;
-                    }
-                }
-                else
-                {
-                    if (message.Length <= 3)
-                    {
-                        try
-                        {
-                            totalCount = int.Parse(message);
-                        }
-                        catch
-                        {
-                            foundPlayer = message;
-                            Player who = PlayerInfo.Find(foundPlayer);
-                            if (who != null) foundPlayer = who.name;
-                        }
-                    }
-                    else
-                    {
-                        foundPlayer = message;
-                        Player who = PlayerInfo.Find(foundPlayer);
-                        if (who != null) foundPlayer = who.name;
-                    }
+            int page = 0;
+            string pl = "";
+            if (args.Length == 2) {
+                pl = args[0];
+                Player who = PlayerInfo.Find(pl);
+                if (who != null) pl = who.name;
+                
+                if (!int.TryParse(args[1], out page)) { Help(p); return; }
+            } else if (message != "") {
+                if (!int.TryParse(args[0], out page)) {
+                    pl = args[0];
+                    Player who = PlayerInfo.Find(pl);
+                    if (who != null) pl = who.name;
                 }
             }
+            if (page < 0) {
+                Player.SendMessage(p, "Cannot display pages less than 0"); return;
+            }
 
-            if (totalCount < 0)
-            {
-                Player.SendMessage(p, "Cannot display pages less than 0");
+            List<Awards.Award> awards = GetAwards(pl);
+            if (awards.Count == 0) {
+                if (pl != "") Player.SendMessage(p, "The player has no awards!");
+                else Player.SendMessage(p, "There are no awards in this server yet");
                 return;
             }
 
-            List<Awards.Award> awardList = new List<Awards.Award>();
-            if (foundPlayer == "")
-            {
-                awardList = Awards.AwardsList;
-            }
-            else
-            {
-                foreach (string s in Awards.GetPlayerAwards(foundPlayer))
-                {
-                    Awards.Award aD = new Awards.Award();
-                    aD.Name = s;
-                    aD.Description = Awards.GetDescription(s);
-                    awardList.Add(aD);
-                }
-            }
-
-            if (awardList.Count == 0)
-            {
-                if (foundPlayer != "")
-                    Player.SendMessage(p, "The player has no awards!");
-                else
-                    Player.SendMessage(p, "There are no awards in this server yet");
-
+            int max = page * 5, start = (page - 1) * 5;
+            if (start > awards.Count) {
+                Player.SendMessage(p, "There aren't that many awards, try a smaller number.");
                 return;
             }
-
-            int max = totalCount * 5;
-            int start = (totalCount - 1) * 5;
-            if (start > awardList.Count)
-            {
-                Player.SendMessage(p, "There aren't that many awards. Enter a smaller number");
-                return;
+            if (max > awards.Count) max = awards.Count;
+            OutputAwards(p, pl, page, awards);
+        }
+        
+        static List<Awards.Award> GetAwards(string pl) {
+            if (pl != "") return Awards.AwardsList;
+            
+            List<Awards.AwardsList> awards = new List<Awards.Award>();
+            foreach (string s in Awards.GetPlayerAwards(pl)) {
+                Awards.Award award = new Awards.Award();
+                award.Name = s;
+                award.Description = Awards.GetDescription(s);
+                awards.Add(award);
             }
-            if (max > awardList.Count) 
-                max = awardList.Count;
-
-            if (foundPlayer != "")
-                Player.SendMessage(p, Server.FindColor(foundPlayer) + foundPlayer + Server.DefaultColor + " has the following awards:");
+            return awards;
+        }
+        
+        static void OutputAwards(Player p, string pl, 
+                                 int page, List<Awards.Award> awards) {
+            if (pl != "")
+                Player.SendMessage(p, Server.FindColor(pl) + pl + " %Shas the following awards:");
             else
                 Player.SendMessage(p, "Awards available: ");
 
-            if (totalCount == 0)
-            {
-                foreach (Awards.Award aD in awardList)
-                    Player.SendMessage(p, "&6" + aD.Name + ": &7" + aD.Description);
+            if (page == 0) {
+                foreach (Awards.Award award in awards)
+                    Player.SendMessage(p, "&6" + award.Name + ": &7" + award.Description);
 
-                if (awardList.Count > 8) Player.SendMessage(p, "&5Use &b/awards " + message + " 1/2/3/... &5for a more ordered list");
-            }
-            else
-            {
-                for (int i = start; i < max; i++)
-                {
-                    Awards.Award aD = awardList[i];
-                    Player.SendMessage(p, "&6" + aD.Name + ": &7" + aD.Description);
+                if (awards.Count > 8) 
+                    Player.SendMessage(p, "&5Use &b/awards " + message + " 1/2/3/... &5for a more ordered list");
+            } else {
+                for (int i = start; i < max; i++) {
+                    Awards.Award award = awards[i];
+                    Player.SendMessage(p, "&6" + award.Name + ": &7" + award.Description);
                 }
             }
         }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "/awards [player] - Gives a full list of awards");
-            Player.SendMessage(p, "If [player] is specified, shows awards for that player");
-            Player.SendMessage(p, "Use 1/2/3/... to get an ordered list");
+        
+        public override void Help(Player p) {
+            Player.SendMessage(p, "%T/awards [player] %H- Gives a list of awards that player has.");
+            Player.SendMessage(p, "$HIf [player] is not given, lists all awards the server has.");
+            Player.SendMessage(p, "%HSpecify 1/2/3/... after to get an ordered list.");
         }
     }
 }
