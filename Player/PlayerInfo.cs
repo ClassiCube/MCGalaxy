@@ -101,7 +101,7 @@ namespace MCGalaxy {
 
             foreach (Player pl in players) {
                 if (!Player.CanSee(p, pl)) continue;
-                string name = Colors.StripColours(nick);
+                string name = Colors.StripColours(pl.DisplayName);
                 
                 if (name.Equals(nick, comp)) return pl;
                 if (name.IndexOf(nick, comp) >= 0) {

@@ -606,9 +606,7 @@ namespace MCGalaxy
                 try
                 {
                     Level level = LvlFile.Load(givenName, path);
-                    level.permissionbuild = LevelPermission.Builder;
                     level.setPhysics(phys);
-                    //level.textures = new LevelTextures(level);
                     level.backedup = true;
 
                     using (DataTable ZoneDB = Database.fillData("SELECT * FROM `Zone" + givenName + "`"))

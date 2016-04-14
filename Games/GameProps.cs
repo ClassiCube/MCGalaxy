@@ -63,5 +63,24 @@ namespace MCGalaxy.Games {
         
         /// <summary> List of custom infect messages this player has. </summary>
         internal List<string> InfectMessages = null;
+        
+        
+        /// <summary> The total number of rounds this player has survived. </summary>
+        public int TotalRoundsSurvived;
+        
+        /// <summary> The maximum number of rounds this player has consecutively survived. </summary>
+        public int MaxRoundsSurvived;
+        
+        /// <summary> The current number of rounds this player has consecutively survived. </summary>
+        public int CurrentRoundsSurvived;
+        
+        /// <summary> The total number of other players this player has infected. </summary>
+        public int TotalInfected;
+        
+        /// <summary> Maximum number of players this player infected in the current round. </summary>
+        public int MaxInfected;
+        
+        /// <summary> The current number of other players this player infected in the current round. </summary>
+        public int CurrentInfected;
     }
 }
