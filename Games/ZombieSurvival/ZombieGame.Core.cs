@@ -202,7 +202,9 @@ namespace MCGalaxy.Games {
                             }
                             
                             lastPlayerToInfect = pKiller.name;
-                            pKiller.Game.NumInfected++;
+                            pKiller.Game.CurrentInfected++;
+                            pKiller.Game.TotalInfected++;
+                            pKiller.Game.MaxInfected = Math.Max(pKiller.Game.CurrentInfected, pKiller.Game.MaxInfected);
                             ShowInfectMessage(random, pAlive, pKiller);
                             CheckHumanPledge(pAlive);
                             CheckBounty(pAlive, pKiller);
@@ -297,6 +299,9 @@ namespace MCGalaxy.Games {
                         pl.money += 5;
                         pl.OnMoneyChanged();
                     }
+                    pl.Game.CurrentRoundsSurvived++;
+                    pl.Game.TotalRoundsSurvived++;
+                    pl.Game.MaxRoundsSurvived = Math.Max(pl.Game.CurrentRoundsSurvived, pl.Game.MaxRoundsSurvived);
                     ResetPlayer(pl, ref playersString);
                 }
             }
@@ -317,7 +322,7 @@ namespace MCGalaxy.Games {
                 }
                 
                 pl.Game.BlocksLeft = 50;
-                pl.Game.NumInfected = 0;
+                pl.Game.CurrentInfected = 0;
                 pl.money += money;
                 pl.Game.Infected = false;
                 if (pl.Game.Referee) {
@@ -335,7 +340,7 @@ namespace MCGalaxy.Games {
             if (pl.CheckIfInsideBlock()) return -1;
             
             if (alive.Length == 0) {
-                return rand.Next(1 + pl.Game.NumInfected, 5 + pl.Game.NumInfected);
+                return rand.Next(1 + pl.Game.CurrentInfected, 5 + pl.Game.CurrentInfected);
             } else if (alive.Length == 1 && !pl.Game.Infected) {
                 return rand.Next(5, 10);
             } else if (alive.Length > 1 && !pl.Game.Infected) {
@@ -347,7 +352,7 @@ namespace MCGalaxy.Games {
         void ResetPlayer(Player p, ref string playersString) {
             p.Game.BlocksLeft = 50;
             p.Game.Infected = false;
-            p.Game.NumInfected = 0;
+            p.Game.CurrentInfected = 0;
             
             if (p.level.name.CaselessEq(CurLevelName))
                 playersString += p.color + p.DisplayName + Colors.white + ", ";

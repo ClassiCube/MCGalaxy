@@ -42,6 +42,7 @@ namespace MCGalaxy {
 			
 			if (!Directory.Exists(Server.backupLocation))
 				Server.backupLocation = Application.StartupPath + "/levels/backups";
+			Server.updateTimer.Interval = Server.PositionInterval;
 			Save(givenPath);
 		}
 		

@@ -71,8 +71,10 @@ namespace MCGalaxy
         public static WebServer APIServer;
         public static WebServer InfoServer;
         public static DateTime StartTime, StartTimeLocal;
-        [ConfigBool("enable-http-api", "Server", null, false)]        
+        [ConfigBool("enable-http-api", "Server", null, false)]
         public static bool EnableHttpApi = false;
+        [ConfigInt("position-interval", "Server", null, 100, 20, 2000)]
+        public static int PositionInterval = 100;
 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
 

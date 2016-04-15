@@ -1,19 +1,19 @@
 /*
-	Copyright 2011 MCForge
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCForge
+        
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands
 {
@@ -26,24 +26,33 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdLowlag() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message != "") { Help(p); return; }
-
-            if (Server.updateTimer.Interval > 1000)
-            {
-                Server.updateTimer.Interval = 100;
-                Player.GlobalMessage("&dLow lag " + Server.DefaultColor + "mode was turned &cOFF" + Server.DefaultColor + ".");
+        public override void Use(Player p, string message) {
+            if (message == "" && Server.updateTimer.Interval > 1000) {
+                Server.PositionInterval = 100;
+                Player.GlobalMessage("&dLow lag %Sturned &cOFF %S- positions update every &b100%S ms.");
+            } else if (message == "") {
+                Server.PositionInterval = 2000;
+                Player.GlobalMessage("&dLow lag %Sturned &aON %S- positions update every &b2000%S ms.");
+            } else {
+                int interval;
+                if (!int.TryParse(message, out interval)) {
+                    Player.SendMessage(p, "Interval given must be an integer."); return;
+                }
+                if (interval < 20 || interval > 2000) {
+                    Player.SendMessage(p, "Interval must be between 20 and 2000 milliseconds."); return;
+                }
+                Server.PositionInterval = interval;
+                Player.GlobalMessage("Positions now update every &b" + interval + " %Smilliseconds.");
             }
-            else
-            {
-                Server.updateTimer.Interval = 10000;
-                Player.GlobalMessage("&dLow lag " + Server.DefaultColor + "mode was turned &aON" + Server.DefaultColor + ".");
-            }
+            Server.updateTimer.Interval = Server.PositionInterval;
+            SrvProperties.Save();
         }
-        public override void Help(Player p)
-        {
-            Player.SendMessage(p, "/lowlag - Turns lowlag mode on or off");
+
+        public override void Help(Player p) {
+            Player.SendMessage(p, "%T/lowlag [interval in milliseconds]");
+            Player.SendMessage(p, "%HSets the interval between sending of position packets.");
+            Player.SendMessage(p, "%HIf no interval is given, then 2000 ms is used if the current interval" + 
+                               " is less than 1000 ms, otherwise 200 ms is used for the interval.");
         }
     }
 }

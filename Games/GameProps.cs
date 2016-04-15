@@ -55,9 +55,6 @@ namespace MCGalaxy.Games {
         /// <summary> Whether the real names of zombies are always shown to the player. </summary>
         public bool Aka = false;
         
-        /// <summary> Number of other players infected this round. </summary>
-        internal int NumInfected = 0;
-        
         /// <summary> Last name colour sent to other players from a call to GlobalSpawn. </summary>
         internal string lastSpawnColor = "";
         
