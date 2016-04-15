@@ -128,6 +128,10 @@ namespace MCGalaxy {
                         osmaps = 3;
                     grp.OverseerMaps = osmaps;
                     break;
+                case "prefix":
+                    grp.prefix = value;
+                    break;
+                    
             }
         }
         
@@ -141,7 +145,7 @@ namespace MCGalaxy {
 
             Group.GroupList.Add(
                 new Group(grp.Permission, grp.maxBlocks, grp.maxUndo, grp.trueName,
-                          grp.color[0], grp.MOTD, grp.fileName, grp.OverseerMaps));
+                          grp.color[0], grp.MOTD, grp.fileName, grp.OverseerMaps, grp.prefix));
             grp = null;
         }
         
@@ -181,6 +185,9 @@ namespace MCGalaxy {
                 SW.WriteLine("#OSMaps = num");
                 SW.WriteLine("#\tThe number of maps the players will have in /os");
                 SW.WriteLine("#\tDefaults to 2 if invalid number (number has to be between 0-128");
+                SW.WriteLine("#Prefix = string");
+                SW.WriteLine("#\tCharacters that appear directly before a player's name in chat.");
+                SW.WriteLine("#\tLeave blank to have no characters before the names of players.");                
                 SW.WriteLine();
                 SW.WriteLine();
                 
@@ -195,6 +202,7 @@ namespace MCGalaxy {
                     SW.WriteLine("MOTD = " + grp.MOTD);
                     SW.WriteLine("FileName = " + grp.fileName);
                     SW.WriteLine("OSMaps = " + grp.OverseerMaps);
+                    SW.WriteLine("Prefix = " + grp.prefix);
                     SW.WriteLine();
                 }
             }

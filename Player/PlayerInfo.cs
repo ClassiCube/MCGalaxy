@@ -129,7 +129,7 @@ namespace MCGalaxy {
             const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) " +
                 "VALUES ('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')";
             Database.executeQuery(String.Format(query, p.name, p.ip, p.firstLogin, DateTime.Now, p.totalLogins, 
-                                                p.prefix, p.overallDeath, p.money, p.loginBlocks, p.totalKicked, p.time.ToDBTime()));
+                                                p.title, p.overallDeath, p.money, p.loginBlocks, p.totalKicked, p.time.ToDBTime()));
             string ecoQuery = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + p.name + "', " + p.money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
             Database.executeQuery(ecoQuery);
         }

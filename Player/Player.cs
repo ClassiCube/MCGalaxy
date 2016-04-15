@@ -304,13 +304,17 @@ namespace MCGalaxy {
         }
         
         public void SetPrefix() {
-        	Team team = Game.Team;
-        	prefix = team != null ? "<" + team.Color + team.Name + color + "> " : "";
-        		
-            string viptitle = isDev ? string.Format("{1}[{0}Dev{1}] ", Colors.blue, color) : 
-        		isMod ? string.Format("{1}[{0}Mod{1}] ", Colors.lime, color) : "";
-        	prefix = prefix + viptitle;
-            prefix = (title == "") ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";            
+            Team team = Game.Team;
+            prefix = team != null ? "<" + team.Color + team.Name + color + "> " : "";
+            if (group.prefix != "")
+                prefix += "&f" + group.prefix + color;
+            
+            bool isOwner = Server.server_owner != "" && Server.server_owner.CaselessEq(name);
+            string viptitle = isDev ? string.Format("{0}[&9Dev{0}] ", color) : 
+        		isMod ? string.Format("{0}[{&aMod{0}] ", color) :
+            	isOwner ? string.Format("{0}[{&cOwner{0}] ", color) : "";
+            prefix = prefix + viptitle;
+            prefix = (title == "") ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
         }
         
         public bool CheckIfInsideBlock() {

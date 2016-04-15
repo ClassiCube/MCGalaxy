@@ -513,12 +513,6 @@ namespace MCGalaxy {
             SetPrefix();
             playerDb.Dispose();
 
-            if (Server.server_owner != "" && Server.server_owner.CaselessEq(name)) {
-                if (color == Group.standard.color) color = "&c";
-                if (title == "") title = "Owner";
-                SetPrefix();
-            }
-
             if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank)
                 adminpen = true;
             if (emoteList.Contains(name)) parseSmiley = false;

@@ -821,16 +821,18 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         bool skip = false;
         private void listRanks_SelectedIndexChanged(object sender, EventArgs e) {
             if ( skip ) return;
-            Group foundRank = storedRanks.Find(grp => grp.trueName == listRanks.Items[listRanks.SelectedIndex].ToString().Split('=')[0].Trim());
-            if ( foundRank.Permission == LevelPermission.Nobody ) { listRanks.SelectedIndex = 0; return; }
+            Group grp = storedRanks.Find(G => G.trueName == listRanks.Items[listRanks.SelectedIndex].ToString().Split('=')[0].Trim());
+            if ( grp.Permission == LevelPermission.Nobody ) { listRanks.SelectedIndex = 0; return; }
 
-            txtRankName.Text = foundRank.trueName;
-            txtPermission.Text = ( (int)foundRank.Permission ).ToString();
-            txtLimit.Text = foundRank.maxBlocks.ToString();
-            txtMaxUndo.Text = foundRank.maxUndo.ToString();
-            cmbColor.SelectedIndex = cmbColor.Items.IndexOf(Colors.Name(foundRank.color));
-            txtGrpMOTD.Text = String.IsNullOrEmpty(foundRank.MOTD) ? String.Empty : foundRank.MOTD;
-            txtFileName.Text = foundRank.fileName;
+            txtRankName.Text = grp.trueName;
+            txtPermission.Text = ( (int)grp.Permission ).ToString();
+            txtLimit.Text = grp.maxBlocks.ToString();
+            txtMaxUndo.Text = grp.maxUndo.ToString();
+            cmbColor.SelectedIndex = cmbColor.Items.IndexOf(Colors.Name(grp.color));
+            txtGrpMOTD.Text = String.IsNullOrEmpty(grp.MOTD) ? String.Empty : grp.MOTD;
+            txtFileName.Text = grp.fileName;
+            txtOSMaps.Text = grp.OverseerMaps.ToString();
+            txtPrefix.Text = grp.prefix;
         }
 
         private void txtRankName_TextChanged(object sender, EventArgs e) {
@@ -845,10 +847,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         private void txtPermission_TextChanged(object sender, EventArgs e) {
             if ( txtPermission.Text != "" ) {
                 int foundPerm;
-                try {
-                    foundPerm = int.Parse(txtPermission.Text);
-                }
-                catch {
+                if (!int.TryParse(txtPermission.Text, out foundPerm)) {
                     if ( txtPermission.Text != "-" )
                         txtPermission.Text = txtPermission.Text.Remove(txtPermission.Text.Length - 1);
                     return;
@@ -866,43 +865,51 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         private void txtLimit_TextChanged(object sender, EventArgs e) {
             if ( txtLimit.Text != "" ) {
-                int foundLimit;
-                try {
-                    foundLimit = int.Parse(txtLimit.Text);
-                }
-                catch {
+                int drawLimit;
+                if (!int.TryParse(txtLimit.Text, out drawLimit)) {
                     txtLimit.Text = txtLimit.Text.Remove(txtLimit.Text.Length - 1);
                     return;
                 }
 
-                if ( foundLimit < 1 ) { txtLimit.Text = "1"; return; }
+                if ( drawLimit < 1 ) { txtLimit.Text = "1"; return; }
 
-                storedRanks[listRanks.SelectedIndex].maxBlocks = foundLimit;
+                storedRanks[listRanks.SelectedIndex].maxBlocks = drawLimit;
             }
         }
 
         private void txtMaxUndo_TextChanged(object sender, EventArgs e) {
             if ( txtMaxUndo.Text != "" ) {
-                long foundMax;
-                try {
-                    foundMax = long.Parse(txtMaxUndo.Text);
-                }
-                catch {
+                long maxUndo;
+                if (!long.TryParse(txtMaxUndo.Text, out maxUndo)) {
                     txtMaxUndo.Text = txtMaxUndo.Text.Remove(txtMaxUndo.Text.Length - 1);
                     return;
                 }
 
-                if ( foundMax < -1 ) { txtMaxUndo.Text = "0"; return; }
+                if ( maxUndo < -1 ) { txtMaxUndo.Text = "0"; return; }
 
-                storedRanks[listRanks.SelectedIndex].maxUndo = foundMax;
+                storedRanks[listRanks.SelectedIndex].maxUndo = maxUndo;
             }
-
         }
+        
+        private void txtOSMaps_TextChanged(object sender, EventArgs e) {
+            if ( txtOSMaps.Text != "" ) {
+                byte maxMaps;
+                if (!byte.TryParse(txtOSMaps.Text, out maxMaps)) {
+                    txtOSMaps.Text = txtOSMaps.Text.Remove(txtOSMaps.Text.Length - 1);
+                    return;
+                }
+                storedRanks[listRanks.SelectedIndex].OverseerMaps = maxMaps;
+            }
+        }        
 
         private void txtFileName_TextChanged(object sender, EventArgs e) {
             if ( txtFileName.Text != "" ) {
                 storedRanks[listRanks.SelectedIndex].fileName = txtFileName.Text;
             }
+        }
+        
+        private void txtPrefix_TextChanged(object sender, EventArgs e) {
+            storedRanks[listRanks.SelectedIndex].prefix = txtPrefix.Text;
         }
 
         private void btnAddRank_Click(object sender, EventArgs e) {

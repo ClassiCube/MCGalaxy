@@ -48,6 +48,7 @@ namespace MCGalaxy
         public string trueName;
         public string color;
         public byte OverseerMaps = 3;
+        public string prefix = "";
         public LevelPermission Permission;
         public int maxBlocks;
         public long maxUndo;
@@ -74,7 +75,7 @@ namespace MCGalaxy
         /// <param name="newColor">The color of the group (Not including the &)</param>
         /// <param name="motd">the custom MOTD for the group</param>
         /// <param name="file">The file path where the current players of this group are stored</param>
-        public Group(LevelPermission Perm, int maxB, long maxUn, string fullName, char newColor, string motd, string file, byte maps = 3)
+        public Group(LevelPermission Perm, int maxB, long maxUn, string fullName, char newColor, string motd, string file, byte maps = 3, string prefix = "")
         {
             Permission = Perm;
             maxBlocks = maxB;
@@ -85,6 +86,7 @@ namespace MCGalaxy
             MOTD = motd;
             fileName = file;
             OverseerMaps = maps;
+            this.prefix = prefix;
             playerList = name != "nobody" ? PlayerList.Load(fileName, this) : new PlayerList();
             if (OnGroupLoaded != null)
                 OnGroupLoaded(this);

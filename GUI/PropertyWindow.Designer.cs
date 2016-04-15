@@ -180,6 +180,10 @@ namespace MCGalaxy.Gui
             this.lblOpChat = new System.Windows.Forms.Label();
             this.label37 = new System.Windows.Forms.Label();
             this.gbRankSettings = new System.Windows.Forms.GroupBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtOSMaps = new System.Windows.Forms.TextBox();
+            this.txtPrefix = new System.Windows.Forms.TextBox();
             this.txtLimit = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.lblColor = new System.Windows.Forms.Label();
@@ -775,7 +779,7 @@ namespace MCGalaxy.Gui
             this.chat_cmbDefault.Size = new System.Drawing.Size(95, 21);
             this.chat_cmbDefault.TabIndex = 10;
             this.toolTip.SetToolTip(this.chat_cmbDefault, "The colour of the default chat used in the server.\nFor example, when you are aske" +
-        "d to select two corners in a cuboid.");
+                        "d to select two corners in a cuboid.");
             this.chat_cmbDefault.SelectedIndexChanged += new System.EventHandler(this.chat_cmbDefault_SelectedIndexChanged);
             // 
             // chat_lblDefault
@@ -1138,23 +1142,23 @@ namespace MCGalaxy.Gui
             // 
             this.extracmdpermnumber.Location = new System.Drawing.Point(188, 16);
             this.extracmdpermnumber.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.extracmdpermnumber.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.extracmdpermnumber.Name = "extracmdpermnumber";
             this.extracmdpermnumber.Size = new System.Drawing.Size(120, 21);
             this.extracmdpermnumber.TabIndex = 43;
             this.extracmdpermnumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.extracmdpermnumber.ValueChanged += new System.EventHandler(this.extracmdpermnumber_ValueChanged);
             // 
             // label72
@@ -1240,7 +1244,7 @@ namespace MCGalaxy.Gui
             this.txtafk.Size = new System.Drawing.Size(66, 21);
             this.txtafk.TabIndex = 10;
             this.toolTip.SetToolTip(this.txtafk, "How long the server should wait before declaring someone ask afk. (0 = No timer a" +
-        "t all)");
+                        "t all)");
             // 
             // txtAFKKick
             // 
@@ -1260,7 +1264,7 @@ namespace MCGalaxy.Gui
             this.chkForceCuboid.TabIndex = 29;
             this.chkForceCuboid.Text = "Force Cuboid";
             this.toolTip.SetToolTip(this.chkForceCuboid, "When true, runs an attempted cuboid despite cuboid limits, until it hits the grou" +
-        "p limit for that user.");
+                        "p limit for that user.");
             this.chkForceCuboid.UseVisualStyleBackColor = true;
             // 
             // hackrank_kick
@@ -1283,7 +1287,7 @@ namespace MCGalaxy.Gui
             this.chkIRC.TabIndex = 22;
             this.chkIRC.Text = "Use IRC";
             this.toolTip.SetToolTip(this.chkIRC, "Whether to use the IRC bot or not.\nIRC stands for Internet Relay Chat and allows " +
-        "for communication with the server while outside Minecraft.");
+                        "for communication with the server while outside Minecraft.");
             this.chkIRC.UseVisualStyleBackColor = true;
             this.chkIRC.CheckedChanged += new System.EventHandler(this.chkIRC_CheckedChanged);
             // 
@@ -1302,7 +1306,7 @@ namespace MCGalaxy.Gui
             this.txtIRCServer.Size = new System.Drawing.Size(106, 21);
             this.txtIRCServer.TabIndex = 15;
             this.toolTip.SetToolTip(this.txtIRCServer, "The IRC server to be used.\nDefault = irc.geekshed.net\nAnother choice = irc.esper." +
-        "netd.net");
+                        "netd.net");
             // 
             // txtChannel
             // 
@@ -1340,7 +1344,7 @@ namespace MCGalaxy.Gui
             this.chkWorld.TabIndex = 4;
             this.chkWorld.Text = "World chat";
             this.toolTip.SetToolTip(this.chkWorld, "If disabled, every map has isolated chat.\nIf enabled, every map is able to commun" +
-        "icate without special letters.");
+                        "icate without special letters.");
             this.chkWorld.UseVisualStyleBackColor = true;
             // 
             // chkAutoload
@@ -1380,7 +1384,7 @@ namespace MCGalaxy.Gui
             this.txtMOTD.Size = new System.Drawing.Size(387, 21);
             this.txtMOTD.TabIndex = 0;
             this.toolTip.SetToolTip(this.txtMOTD, "The MOTD of the server.\nUse \"+hax\" to allow any WoM hack, \"-hax\" to disallow any " +
-        "hacks at all and use \"-fly\" and whatnot to disallow other things.");
+                        "hacks at all and use \"-fly\" and whatnot to disallow other things.");
             // 
             // txtPort
             // 
@@ -1389,7 +1393,7 @@ namespace MCGalaxy.Gui
             this.txtPort.Size = new System.Drawing.Size(63, 21);
             this.txtPort.TabIndex = 2;
             this.toolTip.SetToolTip(this.txtPort, "The port that the server will output on.\nDefault = 25565\n\nChanging will reset you" +
-        "r ExternalURL.");
+                        "r ExternalURL.");
             this.txtPort.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
             // 
             // chkLogBeat
@@ -1401,7 +1405,7 @@ namespace MCGalaxy.Gui
             this.chkLogBeat.TabIndex = 24;
             this.chkLogBeat.Text = "Log Heartbeat?";
             this.toolTip.SetToolTip(this.chkLogBeat, "Debugging feature -- Toggles whether to log heartbeat activity.\r\nUseful when your" +
-        " server gets a URL slowly or not at all.");
+                        " server gets a URL slowly or not at all.");
             this.chkLogBeat.UseVisualStyleBackColor = true;
             // 
             // chkUseSQL
@@ -1412,11 +1416,11 @@ namespace MCGalaxy.Gui
             this.chkUseSQL.Size = new System.Drawing.Size(77, 17);
             this.chkUseSQL.TabIndex = 28;
             this.chkUseSQL.Tag = "Whether or not the use of MySQL is enabled. You will need to have installed it fo" +
-    "r this to work. MySQL includes features such as block tracking, colors, titles a" +
-    "nd player info.";
+            "r this to work. MySQL includes features such as block tracking, colors, titles a" +
+            "nd player info.";
             this.chkUseSQL.Text = "Use MySQL";
             this.toolTip.SetToolTip(this.chkUseSQL, "Whether to use the IRC bot or not.\nIRC stands for Internet Relay Chat and allows " +
-        "for communication with the server while outside Minecraft.");
+                        "for communication with the server while outside Minecraft.");
             this.chkUseSQL.UseVisualStyleBackColor = true;
             this.chkUseSQL.CheckedChanged += new System.EventHandler(this.chkUseSQL_CheckedChanged);
             // 
@@ -1440,7 +1444,7 @@ namespace MCGalaxy.Gui
             this.chkEnableVerification.TabIndex = 23;
             this.chkEnableVerification.Text = "Enable";
             this.toolTip.SetToolTip(this.chkEnableVerification, "Whether or not the server will ask for verification from admins before they can u" +
-        "se commands.");
+                        "se commands.");
             this.chkEnableVerification.UseVisualStyleBackColor = true;
             // 
             // chkSpamControl
@@ -1483,47 +1487,47 @@ namespace MCGalaxy.Gui
             // 
             this.lsNudVoteCount.Location = new System.Drawing.Point(71, 78);
             this.lsNudVoteCount.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+                                    10,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudVoteCount.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudVoteCount.Name = "lsNudVoteCount";
             this.lsNudVoteCount.Size = new System.Drawing.Size(95, 21);
             this.lsNudVoteCount.TabIndex = 3;
             this.toolTip.SetToolTip(this.lsNudVoteCount, "How many maps to put in the next map vote.");
             this.lsNudVoteCount.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             // 
             // lsNudVoteTime
             // 
             this.lsNudVoteTime.Location = new System.Drawing.Point(71, 106);
             this.lsNudVoteTime.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudVoteTime.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudVoteTime.Name = "lsNudVoteTime";
             this.lsNudVoteTime.Size = new System.Drawing.Size(95, 21);
             this.lsNudVoteTime.TabIndex = 5;
             this.toolTip.SetToolTip(this.lsNudVoteTime, "Time until the next map vote ends.");
             this.lsNudVoteTime.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             // 
             // lsCmbSetupRank
             // 
@@ -1579,111 +1583,111 @@ namespace MCGalaxy.Gui
             // 
             this.lsNudLayerHeight.Location = new System.Drawing.Point(211, 20);
             this.lsNudLayerHeight.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudLayerHeight.Name = "lsNudLayerHeight";
             this.lsNudLayerHeight.Size = new System.Drawing.Size(61, 21);
             this.lsNudLayerHeight.TabIndex = 12;
             this.toolTip.SetToolTip(this.lsNudLayerHeight, "Height of each layer.");
             this.lsNudLayerHeight.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             // 
             // lsNudLayerCount
             // 
             this.lsNudLayerCount.Location = new System.Drawing.Point(211, 47);
             this.lsNudLayerCount.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudLayerCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudLayerCount.Name = "lsNudLayerCount";
             this.lsNudLayerCount.Size = new System.Drawing.Size(61, 21);
             this.lsNudLayerCount.TabIndex = 14;
             this.toolTip.SetToolTip(this.lsNudLayerCount, "Number of layers to flood.");
             this.lsNudLayerCount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             // 
             // lsNudLayerTime
             // 
             this.lsNudLayerTime.Location = new System.Drawing.Point(211, 74);
             this.lsNudLayerTime.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudLayerTime.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudLayerTime.Name = "lsNudLayerTime";
             this.lsNudLayerTime.Size = new System.Drawing.Size(61, 21);
             this.lsNudLayerTime.TabIndex = 16;
             this.toolTip.SetToolTip(this.lsNudLayerTime, "Time between each layer.");
             this.lsNudLayerTime.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             // 
             // lsNudRoundTime
             // 
             this.lsNudRoundTime.Location = new System.Drawing.Point(211, 102);
             this.lsNudRoundTime.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudRoundTime.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudRoundTime.Name = "lsNudRoundTime";
             this.lsNudRoundTime.Size = new System.Drawing.Size(61, 21);
             this.lsNudRoundTime.TabIndex = 18;
             this.toolTip.SetToolTip(this.lsNudRoundTime, "Time until the round ends.");
             this.lsNudRoundTime.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             // 
             // lsNudFloodTime
             // 
             this.lsNudFloodTime.Location = new System.Drawing.Point(211, 128);
             this.lsNudFloodTime.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudFloodTime.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudFloodTime.Name = "lsNudFloodTime";
             this.lsNudFloodTime.Size = new System.Drawing.Size(61, 21);
             this.lsNudFloodTime.TabIndex = 20;
             this.toolTip.SetToolTip(this.lsNudFloodTime, "Time until the map is flooded.");
             this.lsNudFloodTime.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             // 
             // lsCmbControlRank
             // 
@@ -1699,20 +1703,20 @@ namespace MCGalaxy.Gui
             // 
             this.lsNudLives.Location = new System.Drawing.Point(71, 133);
             this.lsNudLives.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
             this.lsNudLives.Name = "lsNudLives";
             this.lsNudLives.Size = new System.Drawing.Size(95, 21);
             this.lsNudLives.TabIndex = 10;
             this.toolTip.SetToolTip(this.lsNudLives, "The number of times a player can die before being out of the round. Set to 0 for " +
-        "unlimited.");
+                        "unlimited.");
             this.lsNudLives.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             // 
             // cmbAFKKickPerm
             // 
@@ -1950,6 +1954,10 @@ namespace MCGalaxy.Gui
             // 
             this.gbRankSettings.AutoSize = true;
             this.gbRankSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbRankSettings.Controls.Add(this.label22);
+            this.gbRankSettings.Controls.Add(this.label10);
+            this.gbRankSettings.Controls.Add(this.txtOSMaps);
+            this.gbRankSettings.Controls.Add(this.txtPrefix);
             this.gbRankSettings.Controls.Add(this.txtLimit);
             this.gbRankSettings.Controls.Add(this.label12);
             this.gbRankSettings.Controls.Add(this.lblColor);
@@ -1971,6 +1979,42 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.TabIndex = 18;
             this.gbRankSettings.TabStop = false;
             this.gbRankSettings.Text = "Rank settings";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(40, 253);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(37, 13);
+            this.label22.TabIndex = 20;
+            this.label22.Text = "Prefix:";
+            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(26, 199);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 13);
+            this.label10.TabIndex = 18;
+            this.label10.Text = "/os maps:";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtOSMaps
+            // 
+            this.txtOSMaps.Location = new System.Drawing.Point(85, 196);
+            this.txtOSMaps.Name = "txtOSMaps";
+            this.txtOSMaps.Size = new System.Drawing.Size(100, 21);
+            this.txtOSMaps.TabIndex = 19;
+            this.txtOSMaps.TextChanged += new System.EventHandler(this.txtOSMaps_TextChanged);
+            // 
+            // txtPrefix
+            // 
+            this.txtPrefix.Location = new System.Drawing.Point(85, 250);
+            this.txtPrefix.Name = "txtPrefix";
+            this.txtPrefix.Size = new System.Drawing.Size(100, 21);
+            this.txtPrefix.TabIndex = 21;
+            this.txtPrefix.TextChanged += new System.EventHandler(this.txtPrefix_TextChanged);            
             // 
             // txtLimit
             // 
@@ -1994,7 +2038,7 @@ namespace MCGalaxy.Gui
             // 
             this.lblColor.Location = new System.Drawing.Point(170, 128);
             this.lblColor.Name = "lblColor";
-            this.lblColor.Size = new System.Drawing.Size(21, 21);
+            this.lblColor.Size = new System.Drawing.Size(18, 18);
             this.lblColor.TabIndex = 13;
             // 
             // txtGrpMOTD
@@ -2016,7 +2060,7 @@ namespace MCGalaxy.Gui
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(23, 212);
+            this.label14.Location = new System.Drawing.Point(23, 225);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(54, 13);
             this.label14.TabIndex = 3;
@@ -2043,7 +2087,7 @@ namespace MCGalaxy.Gui
             // 
             // txtFileName
             // 
-            this.txtFileName.Location = new System.Drawing.Point(85, 209);
+            this.txtFileName.Location = new System.Drawing.Point(85, 223);
             this.txtFileName.Name = "txtFileName";
             this.txtFileName.Size = new System.Drawing.Size(100, 21);
             this.txtFileName.TabIndex = 4;
@@ -2052,7 +2096,7 @@ namespace MCGalaxy.Gui
             // lblMOTD
             // 
             this.lblMOTD.AutoSize = true;
-            this.lblMOTD.Location = new System.Drawing.Point(39, 158);
+            this.lblMOTD.Location = new System.Drawing.Point(39, 159);
             this.lblMOTD.Name = "lblMOTD";
             this.lblMOTD.Size = new System.Drawing.Size(38, 13);
             this.lblMOTD.TabIndex = 16;
@@ -2859,18 +2903,18 @@ namespace MCGalaxy.Gui
             // 
             this.updateTimeNumeric.Location = new System.Drawing.Point(129, 89);
             this.updateTimeNumeric.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.updateTimeNumeric.Name = "updateTimeNumeric";
             this.updateTimeNumeric.Size = new System.Drawing.Size(39, 21);
             this.updateTimeNumeric.TabIndex = 29;
             this.updateTimeNumeric.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+                                    10,
+                                    0,
+                                    0,
+                                    0});
             // 
             // lblUpdateSeconds
             // 
@@ -2939,18 +2983,18 @@ namespace MCGalaxy.Gui
             // 
             this.numPlayers.Location = new System.Drawing.Point(84, 20);
             this.numPlayers.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.numPlayers.Name = "numPlayers";
             this.numPlayers.Size = new System.Drawing.Size(60, 21);
             this.numPlayers.TabIndex = 29;
             this.numPlayers.Value = new decimal(new int[] {
-            12,
-            0,
-            0,
-            0});
+                                    12,
+                                    0,
+                                    0,
+                                    0});
             this.numPlayers.ValueChanged += new System.EventHandler(this.numPlayers_ValueChanged);
             // 
             // chkAgreeToRules
@@ -2977,23 +3021,23 @@ namespace MCGalaxy.Gui
             // 
             this.numGuests.Location = new System.Drawing.Point(83, 47);
             this.numGuests.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.numGuests.Name = "numGuests";
             this.numGuests.Size = new System.Drawing.Size(60, 21);
             this.numGuests.TabIndex = 28;
             this.numGuests.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+                                    10,
+                                    0,
+                                    0,
+                                    0});
             // 
             // tabControl
             // 
             this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+                                    | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.pageServer);
             this.tabControl.Controls.Add(this.tabChat);
             this.tabControl.Controls.Add(this.pageIRC);
@@ -3535,10 +3579,10 @@ namespace MCGalaxy.Gui
             // 
             this.TntWrsDiffCombo.FormattingEnabled = true;
             this.TntWrsDiffCombo.Items.AddRange(new object[] {
-            "Easy",
-            "Normal",
-            "Hard",
-            "Extreme"});
+                                    "Easy",
+                                    "Normal",
+                                    "Hard",
+                                    "Extreme"});
             this.TntWrsDiffCombo.Location = new System.Drawing.Point(6, 20);
             this.TntWrsDiffCombo.Name = "TntWrsDiffCombo";
             this.TntWrsDiffCombo.Size = new System.Drawing.Size(166, 21);
@@ -3618,23 +3662,23 @@ namespace MCGalaxy.Gui
             // 
             this.TntWrsGraceTimeChck.Location = new System.Drawing.Point(89, 43);
             this.TntWrsGraceTimeChck.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
+                                    300,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsGraceTimeChck.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+                                    10,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsGraceTimeChck.Name = "TntWrsGraceTimeChck";
             this.TntWrsGraceTimeChck.Size = new System.Drawing.Size(57, 21);
             this.TntWrsGraceTimeChck.TabIndex = 1;
             this.TntWrsGraceTimeChck.Value = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
+                                    30,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsGraceTimeChck.ValueChanged += new System.EventHandler(this.TntWrsGraceTimeChck_ValueChanged);
             // 
             // TntWrsGracePrdChck
@@ -3684,23 +3728,23 @@ namespace MCGalaxy.Gui
             // 
             this.TntWrsMltiKlScPrUpDown.Location = new System.Drawing.Point(140, 101);
             this.TntWrsMltiKlScPrUpDown.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
+                                    10000,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsMltiKlScPrUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsMltiKlScPrUpDown.Name = "TntWrsMltiKlScPrUpDown";
             this.TntWrsMltiKlScPrUpDown.Size = new System.Drawing.Size(38, 21);
             this.TntWrsMltiKlScPrUpDown.TabIndex = 7;
             this.TntWrsMltiKlScPrUpDown.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+                                    5,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsMltiKlScPrUpDown.ValueChanged += new System.EventHandler(this.TntWrsMltiKlScPrUpDown_ValueChanged);
             // 
             // TntWrsAsstChck
@@ -3720,23 +3764,23 @@ namespace MCGalaxy.Gui
             // 
             this.TntWrsAstsScrUpDwn.Location = new System.Drawing.Point(140, 74);
             this.TntWrsAstsScrUpDwn.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
+                                    10000,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsAstsScrUpDwn.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsAstsScrUpDwn.Name = "TntWrsAstsScrUpDwn";
             this.TntWrsAstsScrUpDwn.Size = new System.Drawing.Size(38, 21);
             this.TntWrsAstsScrUpDwn.TabIndex = 4;
             this.TntWrsAstsScrUpDwn.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+                                    5,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsAstsScrUpDwn.ValueChanged += new System.EventHandler(this.TntWrsAstsScrUpDwn_ValueChanged);
             // 
             // label89
@@ -3752,23 +3796,23 @@ namespace MCGalaxy.Gui
             // 
             this.TntWrsScrPrKlUpDwn.Location = new System.Drawing.Point(140, 47);
             this.TntWrsScrPrKlUpDwn.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
+                                    10000,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsScrPrKlUpDwn.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsScrPrKlUpDwn.Name = "TntWrsScrPrKlUpDwn";
             this.TntWrsScrPrKlUpDwn.Size = new System.Drawing.Size(38, 21);
             this.TntWrsScrPrKlUpDwn.TabIndex = 2;
             this.TntWrsScrPrKlUpDwn.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+                                    10,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsScrPrKlUpDwn.ValueChanged += new System.EventHandler(this.TntWrsScrPrKlUpDwn_ValueChanged);
             // 
             // label88
@@ -3784,23 +3828,23 @@ namespace MCGalaxy.Gui
             // 
             this.TntWrsScrLmtUpDwn.Location = new System.Drawing.Point(140, 20);
             this.TntWrsScrLmtUpDwn.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
+                                    10000000,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsScrLmtUpDwn.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+                                    10,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsScrLmtUpDwn.Name = "TntWrsScrLmtUpDwn";
             this.TntWrsScrLmtUpDwn.Size = new System.Drawing.Size(38, 21);
             this.TntWrsScrLmtUpDwn.TabIndex = 0;
             this.TntWrsScrLmtUpDwn.Value = new decimal(new int[] {
-            150,
-            0,
-            0,
-            0});
+                                    150,
+                                    0,
+                                    0,
+                                    0});
             this.TntWrsScrLmtUpDwn.ValueChanged += new System.EventHandler(this.TntWrsScrLmtUpDwn_ValueChanged);
             // 
             // groupBox30
@@ -3928,19 +3972,19 @@ namespace MCGalaxy.Gui
             // 
             this.numCountReset.Location = new System.Drawing.Point(170, 143);
             this.numCountReset.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.numCountReset.Name = "numCountReset";
             this.numCountReset.Size = new System.Drawing.Size(60, 21);
             this.numCountReset.TabIndex = 34;
             this.numCountReset.Tag = "The number of seconds before the message counter is reset.";
             this.numCountReset.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+                                    5,
+                                    0,
+                                    0,
+                                    0});
             // 
             // label69
             // 
@@ -3955,19 +3999,19 @@ namespace MCGalaxy.Gui
             // 
             this.numSpamMute.Location = new System.Drawing.Point(158, 104);
             this.numSpamMute.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.numSpamMute.Name = "numSpamMute";
             this.numSpamMute.Size = new System.Drawing.Size(60, 21);
             this.numSpamMute.TabIndex = 32;
             this.numSpamMute.Tag = "The number of seconds a player is muted for, for spamming.";
             this.numSpamMute.Value = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
+                                    60,
+                                    0,
+                                    0,
+                                    0});
             // 
             // label45
             // 
@@ -3982,19 +4026,19 @@ namespace MCGalaxy.Gui
             // 
             this.numSpamMessages.Location = new System.Drawing.Point(106, 67);
             this.numSpamMessages.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.numSpamMessages.Name = "numSpamMessages";
             this.numSpamMessages.Size = new System.Drawing.Size(60, 21);
             this.numSpamMessages.TabIndex = 30;
             this.numSpamMessages.Tag = "The amount of messages that have to be sent before a player is muted.";
             this.numSpamMessages.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
+                                    8,
+                                    0,
+                                    0,
+                                    0});
             // 
             // label44
             // 
@@ -4085,18 +4129,18 @@ namespace MCGalaxy.Gui
             // 
             this.nudCooldownTime.Location = new System.Drawing.Point(202, 19);
             this.nudCooldownTime.Maximum = new decimal(new int[] {
-            86400,
-            0,
-            0,
-            0});
+                                    86400,
+                                    0,
+                                    0,
+                                    0});
             this.nudCooldownTime.Name = "nudCooldownTime";
             this.nudCooldownTime.Size = new System.Drawing.Size(120, 21);
             this.nudCooldownTime.TabIndex = 1;
             this.nudCooldownTime.Value = new decimal(new int[] {
-            600,
-            0,
-            0,
-            0});
+                                    600,
+                                    0,
+                                    0,
+                                    0});
             // 
             // label84
             // 
@@ -4388,8 +4432,11 @@ namespace MCGalaxy.Gui
             this.gbReviewPerms.PerformLayout();
             this.gbReviewQueue.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
+        private System.Windows.Forms.TextBox txtPrefix;
+        private System.Windows.Forms.TextBox txtOSMaps;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.GroupBox gbRankSettings;
         private System.Windows.Forms.GroupBox gbRankGeneral;
