@@ -162,7 +162,7 @@ namespace MCGalaxy {
             }
         }
         
-        internal static bool HandleModes(Player p, string text) {
+        public static bool HandleModes(Player p, string text) {
             if (text.Length >= 2 && text[0] == '@' && text[1] == '@') {
                 text = text.Remove(0, 2);
                 if (text.Length < 1) { Player.SendMessage(p, "No message entered"); return true; }

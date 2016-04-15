@@ -86,7 +86,8 @@ namespace MCGalaxy
         public bool ai = true;
         public bool backedup;
         public List<BlockPos> blockCache = new List<BlockPos>();
-        public bool Buildable = true, Deletable = true;
+        public bool Buildable = true;
+        public bool Deletable = true;
         
         public byte weather;
         public string terrainUrl = "", texturePackUrl = "";

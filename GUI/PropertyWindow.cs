@@ -1287,7 +1287,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             forceUpdateBtn.Enabled = false;
             if ( MessageBox.Show("Would you like to force update MCGalaxy now?", "Force Update", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK ) {
                 saveStuff();
-                MCGalaxy_.Gui.Program.PerformUpdate();
+                MCGalaxy.Gui.App.PerformUpdate();
                 Dispose();
             }
             else {

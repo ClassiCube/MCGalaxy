@@ -118,24 +118,24 @@ namespace MCGalaxy.Games {
             "{0} transplanted {1}'s living brain" };
 
         [ConfigBool("no-respawning-during-zombie", "Zombie", null, true)]
-        internal static bool noRespawn = true;
+        public static bool noRespawn = true;
         [ConfigBool("no-pillaring-during-zombie", "Zombie", null, true)]
-        internal static bool noPillaring = true;
+        public static bool noPillaring = true;
         [ConfigString("zombie-name-while-infected", "Zombie", null, "", true)]
-        internal static string ZombieName = "";
+        public static string ZombieName = "";
         [ConfigString("zombie-model-while-infected", "Zombie", null, "zombie")]
-        internal static string ZombieModel = "zombie";
+        public static string ZombieModel = "zombie";
         [ConfigBool("enable-changing-levels", "Zombie", null, true)]
-        internal static bool ChangeLevels = true;
+        public static bool ChangeLevels = true;
         
         /// <summary> List of levels that are randomly picked for zombie survival. 
         /// If this left blank, then all level files are picked from instead. </summary>
         [ConfigStringList("zombie-levels-list", "Zombie", null)]
-        internal static List<string> LevelList = new List<string>();
+        public static List<string> LevelList = new List<string>();
         
         /// <summary> List of levels that are never picked for zombie survival. </summary>
         [ConfigStringList("zombie-ignores-list", "Zombie", null)]
-        internal static List<string> IgnoredLevelList = new List<string>();
+        public static List<string> IgnoredLevelList = new List<string>();
         
         string lastLevel1 = "", lastLevel2 = "";
         int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;

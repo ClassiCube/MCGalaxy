@@ -154,7 +154,7 @@ namespace MCGalaxy.Eco {
             return FindRank(nextGroup.name);
         }
         
-        internal void UpdatePrices() {
+        public void UpdatePrices() {
             int lasttrueprice = 0;
             foreach (Group group in Group.GroupList) {
                 if (group.Permission > Group.Find(MaxRank).Permission) break;

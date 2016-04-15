@@ -61,7 +61,7 @@ namespace Starter
         }
         static void openServer(string[] args)
         {
-            MCGalaxy_.Gui.Program.Main(args);
+            MCGalaxy.Gui.Program.Main(args);
         }
     }
 }

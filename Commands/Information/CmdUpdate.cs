@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
         {
             if (message.ToLower() != "force" && message.ToLower() != "help")
             {
-                if (p == null || p.group.Permission > defaultRank) MCGalaxy_.Gui.Program.UpdateCheck(false, p);
+                if (p == null || p.group.Permission > defaultRank) MCGalaxy.Gui.App.UpdateCheck(false, p);
                 else Player.SendMessage(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
             }
             else if (message.ToLower() == "help")
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                if (p == null || p.group.Permission > defaultRank) MCGalaxy_.Gui.Program.PerformUpdate();
+                if (p == null || p.group.Permission > defaultRank) MCGalaxy.Gui.App.PerformUpdate();
                 else Player.SendMessage(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
             }
         }

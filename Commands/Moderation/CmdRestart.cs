@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message != "") { Help(p); return; }
-            MCGalaxy_.Gui.Program.ExitProgram(true);
+            MCGalaxy.Gui.App.ExitProgram(true);
         }
         public override void Help(Player p)
         {

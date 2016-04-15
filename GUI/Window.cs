@@ -448,13 +448,13 @@ namespace MCGalaxy.Gui
         {
             if (e.CloseReason == CloseReason.WindowsShutDown)
             {
-                MCGalaxy_.Gui.Program.ExitProgram(false);
+                MCGalaxy.Gui.App.ExitProgram(false);
             }
             if (Server.shuttingDown || MessageBox.Show("Really Shutdown the Server? All Connections will break!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 if (!Server.shuttingDown)
                 {
-                    MCGalaxy_.Gui.Program.ExitProgram(false);
+                    MCGalaxy.Gui.App.ExitProgram(false);
                 }
             }
             else
@@ -735,7 +735,7 @@ namespace MCGalaxy.Gui
         {
             if (MessageBox.Show("Are you sure you want to restart?", "Restart", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                MCGalaxy_.Gui.Program.ExitProgram(true);
+                MCGalaxy.Gui.App.ExitProgram(true);
             }
 
         }

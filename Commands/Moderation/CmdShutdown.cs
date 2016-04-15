@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
                     if (!File.Exists(file)) { Player.GlobalMessage("%4Server shutdown in " + t + " seconds"); Server.s.Log("Server shutdown in " + t + " seconds"); Thread.Sleep(1000); }
                     else { File.Delete(file); Player.GlobalMessage("Shutdown cancelled"); Server.s.Log("Shutdown cancelled"); return; }
                 }
-                if (!File.Exists(file)) { MCGalaxy_.Gui.Program.ExitProgram(false); return; }
+                if (!File.Exists(file)) { MCGalaxy.Gui.App.ExitProgram(false); return; }
                 else { File.Delete(file); Player.GlobalMessage("Shutdown cancelled"); Server.s.Log("Shutdown cancelled"); return; }
             }
             return;

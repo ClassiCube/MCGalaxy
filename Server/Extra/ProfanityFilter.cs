@@ -26,7 +26,7 @@ using System.Text.RegularExpressions;
 
 namespace MCGalaxy
 {
-    static class ProfanityFilter
+    public static class ProfanityFilter
     {
         private static Dictionary<string, string> RegexReduce;
         private static IEnumerable<string> BadWords;

@@ -468,11 +468,6 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
-    <Compile Include="GUI\LevelCollection.cs" />
-    <Compile Include="GUI\PropertyWindow.Games.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\ZombieSettings.cs" />
     <Compile Include="Levels\BufferedBlockSender.cs" />
     <Compile Include="Levels\Generator\MapGen.cs" />
     <Compile Include="Levels\Generator\NoiseGen.cs" />
@@ -541,45 +536,12 @@
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Levels\BlockDefinitions.cs" />
     <Compile Include="API\ChatMessage.cs" />
-    <Compile Include="GUI\ColoredTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="GUI\ColoredTextBox.Designer.cs">
-      <DependentUpon>ColoredTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Eco\EcoLevelWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Eco\EcoLevelWindow.Designer.cs">
-      <DependentUpon>EcoLevelWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Eco\EconomyWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Eco\EconomyWindow.Designer.cs">
-      <DependentUpon>EconomyWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Games\CTF\Setup.cs" />
-    <Compile Include="GUI\PortTools.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\PortTools.Designer.cs">
-      <DependentUpon>PortTools.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Win32\Margins.cs" />
-    <Compile Include="GUI\Win32\Natives.cs" />
-    <Compile Include="GUI\Win32\RECT.cs" />
     <Compile Include="Database\BulkTransaction.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\Auto_CTF.cs" />
     <Compile Include="IRC\GlobalChatBot.cs" />
     <Compile Include="IRC\ForgeBot.cs" />
-    <Compile Include="GUI\EditText.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\EditText.Designer.cs">
-      <DependentUpon>EditText.cs</DependentUpon>
-    </Compile>
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Database\MySQLBulkTransaction.cs" />
     <Compile Include="Player\Player.Events.cs" />
@@ -592,16 +554,9 @@
     <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Player\PlayerCollection.cs" />
-    <Compile Include="GUI\PropertyWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\PropertyWindow.Designer.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Database\MySQL.cs" />
-    <Compile Include="GUI\Program.cs" />
     <Compile Include="Server\Extra\Heart.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
@@ -610,48 +565,20 @@
     <Compile Include="Server\Extra\ProfanityFilter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GUI\Window.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Window.Designer.cs">
-      <DependentUpon>Window.cs</DependentUpon>
-    </Compile>
     <Compile Include="ScriptingUtil\Scripting.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.Tasks.cs" />
     <Compile Include="Server\Server.Threads.cs" />
     <Compile Include="Server\ServerSettings.cs" />
     <Compile Include="Server\Updater.cs" />
-    <Compile Include="GUI\AutoScrollTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Player\VIP.cs" />
     <Compile Include="Server\Extra\Warp.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\FastList.cs" />
+    <Compile Include="util\App.cs" />
     <Compile Include="util\SparseBitSet.cs" />
     <Compile Include="util\Vectors.cs" />
     <Compile Include="util\VolatileArray.cs" />
-    <EmbeddedResource Include="GUI\Eco\EcoLevelWindow.resx">
-      <DependentUpon>EcoLevelWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Eco\EconomyWindow.resx">
-      <DependentUpon>EconomyWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\EditText.resx">
-      <DependentUpon>EditText.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\PortTools.resx">
-      <DependentUpon>PortTools.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\PropertyWindow.resx">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Window.resx">
-      <DependentUpon>Window.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <Compile Include="SharkBite.Thresher\ChannelModeInfo.cs" />
     <Compile Include="SharkBite.Thresher\CommandBuilder.cs" />
     <Compile Include="SharkBite.Thresher\Connection.cs" />
