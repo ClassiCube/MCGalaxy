@@ -455,7 +455,7 @@ namespace MCGalaxy.Games {
         
         void SendVoteMessage(Player p, string lvl1, string lvl2) {
             const string line1 = "&eLevel vote - type &a1&e, &c2&e or &93";
-            string line2 = "&eLevels: &a" + lvl1 + "&e, &c" + lvl2 + "&e, &9random";
+            string line2 = "&a" + lvl1 + "&e, &c" + lvl2 + "&e, &9random";
             if (p.HasCpeExt(CpeExt.MessageTypes)) {
                 p.SendCpeMessage(CpeMessageType.BottomRight2, line1, true);
                 p.SendCpeMessage(CpeMessageType.BottomRight1, line2, true);
