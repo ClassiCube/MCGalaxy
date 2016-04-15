@@ -46,7 +46,7 @@
   <ItemGroup>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-  </ItemGroup>  
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="GUI\Program.cs" />
     <Compile Include="GUI\Window.cs">
@@ -60,7 +60,7 @@
     </Compile>
     <Compile Include="GUI\Win32\Margins.cs" />
     <Compile Include="GUI\Win32\Natives.cs" />
-    <Compile Include="GUI\Win32\RECT.cs" />  
+    <Compile Include="GUI\Win32\RECT.cs" />
     <Compile Include="GUI\LevelCollection.cs" />
     <Compile Include="GUI\PropertyWindow.Games.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
@@ -123,7 +123,7 @@
     <EmbeddedResource Include="GUI\Window.resx">
       <DependentUpon>Window.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>	
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

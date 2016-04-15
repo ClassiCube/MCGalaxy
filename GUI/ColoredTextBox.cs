@@ -151,17 +151,13 @@ namespace MCGalaxy.Gui.Components {
 
             if ( !Colorize ) {
                 AppendText(text);
-
-                if ( AutoScroll )
-                    ScrollToEnd();
+                if ( AutoScroll ) ScrollToEnd();
                 return;
             }
             if ( !text.Contains('&') && !text.Contains('%') ) {
                 Append(text, foreColor, BackColor);
 
-                if ( AutoScroll )
-                    ScrollToEnd();
-
+                if ( AutoScroll ) ScrollToEnd();
                 return;
             }
 
@@ -174,10 +170,7 @@ namespace MCGalaxy.Gui.Components {
                 Color? color = GetColor(split[0]);
                 Append(color != null ? split.Substring(1) : split, color ?? foreColor, BackColor);
             }
-
-            if ( AutoScroll )
-                ScrollToEnd();
-
+            if ( AutoScroll ) ScrollToEnd();
         }
 
         /// <summary>
@@ -186,9 +179,6 @@ namespace MCGalaxy.Gui.Components {
         /// <param name="text">The text to log.</param>
         public void AppendLog(string text) {
             AppendLog(text, ForeColor);
-
-            if ( AutoScroll )
-                ScrollToEnd();
         }
 
         /// <summary>
