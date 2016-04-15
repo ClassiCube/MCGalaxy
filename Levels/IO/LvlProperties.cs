@@ -140,7 +140,7 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void PropLineProcessor(string key, string value, ref Level level) {
-            switch (key) {
+            switch (key.ToLower()) {
                 case "theme":
                     level.theme = value; break;
                 case "physics":
