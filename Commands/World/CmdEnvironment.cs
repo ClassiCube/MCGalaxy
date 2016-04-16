@@ -251,15 +251,15 @@ namespace MCGalaxy.Commands {
             }
             
             if( preset != null ) {
-                SendEnvColorPacket(p, 0, preset.Sky);
+                SendEnvColorPackets(p, 0, preset.Sky);
                 p.level.SkyColor = preset.Sky;
-                SendEnvColorPacket(p, 1, preset.Clouds);
+                SendEnvColorPackets(p, 1, preset.Clouds);
                 p.level.CloudColor = preset.Clouds;
-                SendEnvColorPacket(p, 2, preset.Fog);
+                SendEnvColorPackets(p, 2, preset.Fog);
                 p.level.FogColor = preset.Fog;
-                SendEnvColorPacket(p, 3, preset.Shadow);
+                SendEnvColorPackets(p, 3, preset.Shadow);
                 p.level.ShadowColor = preset.Shadow;
-                SendEnvColorPacket(p, 4, preset.Sun);
+                SendEnvColorPackets(p, 4, preset.Sun);
                 p.level.LightColor = preset.Sun;
                 
                 if (value.CaselessEq("normal")) {
