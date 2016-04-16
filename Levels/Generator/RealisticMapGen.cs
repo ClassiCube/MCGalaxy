@@ -230,16 +230,17 @@ namespace MCGalaxy {
                 float c = ((float)rand.NextDouble()) * 2 * d - d;
 
                 int index = 0;
-                for (ushort z = 0; z < Lvl.Length; z++)
-                    for (ushort x = 0; x < Lvl.Width; x++)
-                {
-                    bool pos = (z - halfZ) * cosPhi + (x - halfX) * sinPhi + c > 0;
-                    float sum = array[index] + (pos ? disp : -disp);
-                    if (sum > 1) sum = 1;
-                    if (sum < 0) sum = 0;
-                    array[index] = sum;
-                    index++;
+                for (ushort z = 0; z < Lvl.Length; z++) {
+                    float value = (z - halfZ) * cosPhi + (0 - halfX) * sinPhi + c;
+                	for (ushort x = 0; x < Lvl.Width; x++) {
+                		float sum = array[index] + (value > 0 ? disp : -disp);
+                		sum = sum > 1 ? 1 : sum;
+                		sum = sum < 0 ? 0 : sum;
+                		array[index] = sum; index++;
+                		value += sinPhi;
+                	}
                 }
+                
                 disp += dispStep;
                 if (disp < -dispMax) 
                     disp = dispMax;
