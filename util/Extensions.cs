@@ -169,5 +169,34 @@ namespace MCGalaxy {
         public static bool CaselessStarts(this string a, string b) {
             return a.StartsWith(b, StringComparison.OrdinalIgnoreCase);
         }
+        
+        public static unsafe void memset( IntPtr srcPtr, byte value, int startIndex, int bytes ) {
+            byte* srcByte = (byte*)srcPtr + startIndex;
+            // Make sure we do an aligned write/read for the bulk copy
+            while( bytes > 0 && ( startIndex & 0x7 ) != 0  ) {
+                *srcByte = value; srcByte++; bytes--;
+                startIndex++; 
+            }
+            uint valueInt = (uint)( ( value << 24 ) | ( value << 16 ) | ( value << 8 ) | value );
+            
+            if( IntPtr.Size == 8 ) {
+                ulong valueLong = ( (ulong)valueInt << 32 ) | valueInt;
+                ulong* srcLong = (ulong*)srcByte;
+                while( bytes >= 8 ) {
+                    *srcLong = valueLong; srcLong++; bytes -= 8;
+                }
+                srcByte = (byte*)srcLong;
+            } else {
+                uint* srcInt = (uint*)srcByte;
+                while( bytes >= 4 ) {
+                    *srcInt = valueInt; srcInt++; bytes -= 4;
+                }
+                srcByte = (byte*)srcInt;
+            }
+            
+            for( int i = 0; i < bytes; i++ ) {
+                *srcByte = value; srcByte++;
+            }
+        }
     }
 }

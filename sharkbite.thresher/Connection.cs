@@ -65,8 +65,6 @@ namespace Sharkbite.Irc
 		private readonly Regex propertiesRegex;
 		private Listener listener;
 		private Sender sender;
-		private bool ctcpEnabled;
-		private bool dccEnabled;
 		private Thread socketListenThread;
 		private StreamReader reader;
 		private DateTime timeLastSent;
@@ -97,7 +95,7 @@ namespace Sharkbite.Irc
 			sender = new Sender( this );
 			listener = new Listener( );
 			RegisterDelegates();
-			timeLastSent = DateTime.Now;
+			timeLastSent = DateTime.UtcNow;
 			TextEncoding = Encoding.Default;
 		}
 
@@ -168,7 +166,7 @@ namespace Sharkbite.Irc
 		/// sent a command to the IRC server.
 		/// </summary>
 		/// <value>Read only TimeSpan</value>
-		public TimeSpan IdleTime { get { return DateTime.Now - timeLastSent; } }
+		public TimeSpan IdleTime { get { return DateTime.UtcNow - timeLastSent; } }
 		/// <summary>
 		/// The object used to send commands to the IRC server.
 		/// </summary>
@@ -407,7 +405,7 @@ namespace Sharkbite.Irc
 			{
 				writer.WriteLine( command.ToString() );
 				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceVerbose,"[" + Thread.CurrentThread.Name +"] Connection::SendCommand() sent= " + command);
-				timeLastSent = DateTime.Now;
+				timeLastSent = DateTime.UtcNow;
 			}
 			catch( Exception e )
 			{

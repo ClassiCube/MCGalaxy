@@ -41,8 +41,14 @@ namespace MCGalaxy {
             return len == 16 || len == 32 || len == 64 || len == 128 || len == 256 ||
                 len == 512 || len == 1024 || len == 2048 || len == 4096 || len == 8192;
         }
+        
+        unsafe static void MapSet(int width, int length, byte* ptr, int yStart, int yEnd, byte block) {
+            int start = yStart * length * width;
+            int end = (yEnd * length + (length - 1)) * width + (width - 1);
+            Extensions.memset((IntPtr)ptr, block, start, end - start + 1);
+        }
 
-        public static void Generate(Level lvl, string type, int seed, bool useSeed) {
+        public unsafe static void Generate(Level lvl, string type, int seed, bool useSeed) {
             int index = 0, width = lvl.Width, height = lvl.Height, length = lvl.Length;
             byte[] blocks = lvl.blocks;
             int half = height / 2;
@@ -57,12 +63,12 @@ namespace MCGalaxy {
                         grassHeight = seed;
                     }
                     
-                    int dirtEnd = grassHeight * width * length;
-                    int grassEnd = (grassHeight + 1) * width * length;
-                    for (int i = 0; i < dirtEnd; i++)
-                        blocks[i] = Block.dirt;
-                    for (int i = dirtEnd; i < grassEnd; i++)
-                        blocks[i] = Block.grass;
+                    fixed (byte* ptr = blocks) {
+                        if (grassHeight > 0)
+                            MapSet(lvl.Width, lvl.Length, ptr, 0, grassHeight - 1, Block.dirt);
+                        if (grassHeight < lvl.Height)
+                            MapSet(lvl.Width, lvl.Length, ptr, grassHeight, grassHeight, Block.grass);
+                    }
                     return;
                 case "pixel":
                     for (int y = 0; y < height; ++y)

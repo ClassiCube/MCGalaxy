@@ -25,7 +25,7 @@ namespace MCGalaxy
         /// <param name="e">The event to check</param>
         /// <param name="p">The Player that event is related to</param>
         /// <returns>This returns true or false, true means its stopped, false means its not</returns>
-        public static bool IsPlayerEventCancled(PlayerEvents e, Player p)
+        public static bool IsPlayerEventCanceled(PlayerEvents e, Player p)
         {
             switch (e)
             {
