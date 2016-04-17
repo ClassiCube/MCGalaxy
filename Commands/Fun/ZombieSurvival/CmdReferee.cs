@@ -31,12 +31,12 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (p.Game.Referee) {
-                Player.SendChatFrom(p, p.FullName + " %Sis no longer a referee", false);
+                Player.SendChatFrom(p, p.ColoredName + " %Sis no longer a referee", false);
                 if (p.level == Server.zombie.CurLevel)
                     Server.zombie.PlayerJoinedLevel(p, Server.zombie.CurLevel, Server.zombie.CurLevel);
                 Player.GlobalSpawn(p, true, "");
             } else {
-                Player.SendChatFrom(p, p.FullName + " %Sis now a referee", false);               
+                Player.SendChatFrom(p, p.ColoredName + " %Sis now a referee", false);               
                 Server.zombie.PlayerLeftServer(p);
                 Player.GlobalDespawn(p, false);
             }

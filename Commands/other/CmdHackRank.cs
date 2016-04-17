@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             p.color = newRank.color;
 
             p.hackrank = true;
-            Player.GlobalMessage(p.FullName + "%S's rank was set to " + newRank.color + newRank.name + "%S. (Congratulations!)");
+            Player.GlobalMessage(p.ColoredName + "%S's rank was set to " + newRank.color + newRank.name + "%S. (Congratulations!)");
             p.SendMessage("You are now ranked " + newRank.color + newRank.name + "%S, type /help for your new set of commands.");
             DoKick(p, newRank);
         }

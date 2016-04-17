@@ -39,11 +39,11 @@ namespace MCGalaxy.Commands {
             if (message[0] == '#') {
                 message = message.Remove(0, 1).Trim();
                 stealth = true;
-                Server.s.Log("Stealth ban Attempted by " + (p == null ? "Console" : p.FullName));
+                Server.s.Log("Stealth ban Attempted by " + (p == null ? "Console" : p.ColoredName));
             } else if (message[0] == '@') {
                 message = message.Remove(0, 1).Trim();
                 totalBan = true;
-                Server.s.Log("Total ban Attempted by " + (p == null ? "Console" : p.FullName));
+                Server.s.Log("Total ban Attempted by " + (p == null ? "Console" : p.ColoredName));
             }
             
             string[] args = message.Split(trimChars, 2);
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;
             if (!CheckPerms(target, group, p)) return;
             
-            string banner = p == null ? "(console)" : p.FullName;
+            string banner = p == null ? "(console)" : p.ColoredName;
             string banMsg = null;
             if (who == null) {
             	banMsg = target + " &f(offline) %Swas &8banned %Sby " + banner + "%S." + banReason;

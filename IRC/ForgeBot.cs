@@ -161,7 +161,7 @@ namespace MCGalaxy {
             if (!Server.irc || !IsConnected()) return;
             if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
             
-            string msg = p.DisplayName + " left the game (" + reason + ")";
+            string msg = p.DisplayName + " %rleft the game (" + reason + ")";
             msg = ConvertMessage(msg, true);
             if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
         }
@@ -170,7 +170,7 @@ namespace MCGalaxy {
             if (!Server.irc || !IsConnected()) return;
             if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest) return;
             
-            string msg = p.DisplayName + " joined the game";
+            string msg = p.DisplayName + " %rjoined the game";
             msg = ConvertMessage(msg, true);
             if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
         }

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             }
             PlayerDB.SetLogoutMessage(name, args[1]);
             
-            string fullName = target != null ? target.FullName : name;
+            string fullName = target != null ? target.ColoredName : name;
             Player.SendMessage(p, "The logout message of " + fullName + " %Shas been changed to: " + args[1]);
             string changer = p == null ? "(console)" : p.name;
             Server.s.Log(changer + " changed " + name + "'s logout message to:");

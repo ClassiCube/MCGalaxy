@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
 
             string taker = null, takerRaw = null;
             if (p == null) { takerRaw = "(console)"; taker = "(console)"; }
-            else { takerRaw = p.color + p.name; taker = p.FullName; }
+            else { takerRaw = p.color + p.name; taker = p.ColoredName; }
 
             int amount = 0;
             bool all = args[1].CaselessEq("all");

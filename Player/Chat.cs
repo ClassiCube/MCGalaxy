@@ -243,15 +243,15 @@ namespace MCGalaxy {
         static void DoFakePM(Player p, Player who, string message) {
             string name = p == null ? "(console)" : p.name;
             Server.s.Log(name + " @" + who.name + ": " + message);
-            Player.SendMessage(p, "[<] " + who.FullName + ": &f" + message);
+            Player.SendMessage(p, "[<] " + who.ColoredName + ": &f" + message);
         }
         
         static void DoPM(Player p, Player who, string message) {
             string name = p == null ? "(console)" : p.name;
-            string fullName = p == null ? "%S(console)" : p.FullName;
+            string fullName = p == null ? "%S(console)" : p.ColoredName;
             
             Server.s.Log(name + " @" + who.name + ": " + message);
-            Player.SendMessage(p, Server.DefaultColor + "[<] " + who.FullName + ": &f" + message);
+            Player.SendMessage(p, Server.DefaultColor + "[<] " + who.ColoredName + ": &f" + message);
             Player.SendMessage(who, "&9[>] " + fullName + ": &f" + message);
         }
     }

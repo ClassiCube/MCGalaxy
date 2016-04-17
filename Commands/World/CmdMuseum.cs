@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands
                 lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + " " + args[1] + ")";
 
             if (!p.hidden)
-                Player.GlobalMessage(p.FullName + " %Swent to the " + lvl.name);
+                Player.GlobalMessage(p.ColoredName + " %Swent to the " + lvl.name);
         }
         
         public override void Help(Player p) {

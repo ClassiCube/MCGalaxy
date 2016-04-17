@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
                 foreach (var pair in bounties) {
                     Player pl = PlayerInfo.FindExact(pair.Key);
                     if (pl == null) continue;
-                    Player.SendMessage(p, "Bounty for " + pl.FullName + " %Sis &a" 
+                    Player.SendMessage(p, "Bounty for " + pl.ColoredName + " %Sis &a" 
                                        + pair.Value.Amount + "%S" + Server.moneys + ".");
                 }
             }

@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
             } else {
                 if (!ChangeRank(who.name, who.group, newRank, who, p, reason)) return;
 
-                rankMsg = who.FullName + "%S's rank was set to " + newRank.color + newRank.name + rankReason;
+                rankMsg = who.ColoredName + "%S's rank was set to " + newRank.color + newRank.name + rankReason;
                 Player.GlobalMessage(rankMsg);
                 
                 string oldcolor = who.group.color;

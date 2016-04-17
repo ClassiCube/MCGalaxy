@@ -46,7 +46,7 @@ namespace MCGalaxy.Games {
         }
         
         public void Action(Player source, string message) {
-            string toSend = "Team - " + source.FullName + " %S" + message;
+            string toSend = "Team - " + source.ColoredName + " %S" + message;
             foreach (string name in Members) {
                 Player p = PlayerInfo.FindExact(name);
                 if (p == null) continue;

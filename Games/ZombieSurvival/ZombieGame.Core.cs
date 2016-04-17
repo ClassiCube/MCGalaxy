@@ -195,7 +195,7 @@ namespace MCGalaxy.Games {
                                     pKiller.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
                                     pKiller.money += 2 + infectCombo;
                                     pKiller.OnMoneyChanged();
-                                    CurLevel.ChatLevel(pKiller.FullName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                                    CurLevel.ChatLevel(pKiller.ColoredName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
                                 }
                             } else {
                                 infectCombo = 0;
@@ -220,7 +220,7 @@ namespace MCGalaxy.Games {
         void CheckHumanPledge(Player pAlive) {
             if (!pAlive.Game.PledgeSurvive) return;
             pAlive.Game.PledgeSurvive = false;
-            CurLevel.ChatLevel(pAlive.FullName + "%Sbroke their pledge of not being infected.");
+            CurLevel.ChatLevel(pAlive.ColoredName + "%Sbroke their pledge of not being infected.");
             pAlive.money = Math.Max(pAlive.money - 2, 0);
             pAlive.OnMoneyChanged();
         }
@@ -243,8 +243,8 @@ namespace MCGalaxy.Games {
             if (Bounties.TryGetValue(pAlive.name, out bounty))
                 Bounties.Remove(pAlive.name);
             if (bounty != null) {
-                CurLevel.ChatLevel(pKiller.FullName + " %Scollected the bounty of &a" +
-                                   bounty.Amount + " %S" + Server.moneys + " on " + pAlive.FullName + "%S.");
+                CurLevel.ChatLevel(pKiller.ColoredName + " %Scollected the bounty of &a" +
+                                   bounty.Amount + " %S" + Server.moneys + " on " + pAlive.ColoredName + "%S.");
                 bounty.Origin.money = Math.Max(0, bounty.Origin.money - bounty.Amount);
                 bounty.Origin.OnMoneyChanged();
                 pKiller.money += bounty.Amount;

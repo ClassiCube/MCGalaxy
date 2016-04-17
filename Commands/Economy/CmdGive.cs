@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             if (args.Length != 2) { Help(p); return; }
             string giver = null, giverRaw = null;
             if (p == null) { giverRaw = "(console)"; giver = "(console)"; } 
-            else { giverRaw = p.color + p.name; giver = p.FullName; }
+            else { giverRaw = p.color + p.name; giver = p.ColoredName; }
 
             int amount;
             if (!int.TryParse(args[1], out amount)) {
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands
                 who.money += amount;
                 who.OnMoneyChanged();
                 ecos = Economy.RetrieveEcoStats(who.name);
-                Player.GlobalMessage(giver + " %Sgave " + who.FullName + " %f" + amount + " %3" + Server.moneys);
+                Player.GlobalMessage(giver + " %Sgave " + who.ColoredName + " %f" + amount + " %3" + Server.moneys);
             }
             
             ecos.money += amount;

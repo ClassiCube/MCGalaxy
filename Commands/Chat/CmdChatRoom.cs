@@ -217,9 +217,9 @@ namespace MCGalaxy.Commands {
                 pl.spyChatRooms.Remove(room);
             }
             Player.SendMessage(pl, "You've been forced to join the chat room '" + room + "'");
-            Chat.ChatRoom(pl, pl.FullName + " %Shas force joined your chat room", false, room);
+            Chat.ChatRoom(pl, pl.ColoredName + " %Shas force joined your chat room", false, room);
             pl.Chatroom = room;
-            Player.SendMessage(p, pl.FullName + " %Swas forced to join the chatroom '" + room + "' by you");
+            Player.SendMessage(p, pl.ColoredName + " %Swas forced to join the chatroom '" + room + "' by you");
         }
         
         void HandleKick(Player p, string[] parts) {

@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
             }
             
             if (grp.Permission == LevelPermission.Banned) {
-                string banner = p == null ? "console" : p.FullName;
+                string banner = p == null ? "console" : p.ColoredName;
                 Player.GlobalMessage(who.ColoredName + " %Swas &8banned %Sby " + banner + "%S.");
             } else {
                 Player.GlobalMessage(who.ColoredName + "%S's rank was set to " + 

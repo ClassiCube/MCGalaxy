@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands {
             }
             
             if (old == null) {
-                Player.GlobalMessage("Looks like someone really wants the brains of " + who.FullName
+                Player.GlobalMessage("Looks like someone really wants the brains of " + who.ColoredName
                                      + "%S! A bounty of &a" + amount + " %S" + Server.moneys + " was placed on them.");
             } else {
-                Player.GlobalMessage(who.FullName + " %Sis popular! The bounty on them was increased from &a" + old.Amount + 
+                Player.GlobalMessage(who.ColoredName + " %Sis popular! The bounty on them was increased from &a" + old.Amount + 
                                      " %Sto &a" + amount + " %S" + Server.moneys + ".");
             }
             Server.zombie.Bounties[who.name] = new BountyData(p, amount);

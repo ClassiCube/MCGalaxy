@@ -56,7 +56,7 @@ namespace MCGalaxy.Games {
             }
             
             Player zombie = alive[index];
-            CurLevel.ChatLevel(zombie.FullName + " %Scontinued the infection!");
+            CurLevel.ChatLevel(zombie.ColoredName + " %Scontinued the infection!");
             InfectPlayer(zombie);
         }
 

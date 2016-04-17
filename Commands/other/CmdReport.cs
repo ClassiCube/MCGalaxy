@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands {
             
             File.Move("extra/reported/" + args[1] + ".txt", "extra/reportedbackups/" + args[1] + ".txt");
             Player.SendMessage(p, "%a" + args[1] + "'s report has been deleted.");
-            Chat.GlobalMessageOps(p.FullName + " %Sdeleted " + args[1] + "'s report.");
+            Chat.GlobalMessageOps(p.ColoredName + " %Sdeleted " + args[1] + "'s report.");
             Server.s.Log(args[1] + "'s report has been deleted by " + p.name);
         }
         
@@ -125,7 +125,7 @@ namespace MCGalaxy.Commands {
                 file.MoveTo("extra/reportedbackups/" + file.Name);
             }
             Player.SendMessage(p, "%aYou have cleared all reports!");
-            Chat.GlobalMessageOps(p.FullName + "%c cleared ALL reports!");
+            Chat.GlobalMessageOps(p.ColoredName + "%c cleared ALL reports!");
             Server.s.Log(p.name + " cleared ALL reports!");
         }
         
@@ -147,7 +147,7 @@ namespace MCGalaxy.Commands {
             }
             File.WriteAllText("extra/reported/" + target + ".txt", reason + " - Reported by " + p.name + " on " + DateTime.Now);
             Player.SendMessage(p, "%aYour report has been sent, it should be viewed when an operator is online!");
-            Chat.GlobalMessageOps(p.FullName + " %Shas made a report, view it with %T/report check " + target);
+            Chat.GlobalMessageOps(p.ColoredName + " %Shas made a report, view it with %T/report check " + target);
         }
         
         public override void Help(Player p) {

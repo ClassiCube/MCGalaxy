@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
             if (who == null) return;
             team.Owner = who.name;
-            team.Action(who, "set the team owner to " + who.FullName);
+            team.Action(who, "set the team owner to " + who.ColoredName);
             Team.SaveList();
         }
 
@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands {
             p.SetPrefix();
             Team.TeamsList[team.Name] = team;
             Team.SaveList();
-            Player.GlobalMessage(p.FullName + " %Sjust created the &a" + args[1] + " %Steam.");
+            Player.GlobalMessage(p.ColoredName + " %Sjust created the &a" + args[1] + " %Steam.");
         }
         
         void HandleJoin(Player p, string[] args) {
@@ -152,8 +152,8 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
             if (who == null) return;
             
-            Player.SendMessage(p, "Invited " + who.FullName + " %Sto join your team.");
-            Player.SendMessage(who, p.color + p.DisplayName + " %Sinvited you to join the " + team.Color + team.Name + " %Steam.");
+            Player.SendMessage(p, "Invited " + who.ColoredName + " %Sto join your team.");
+            Player.SendMessage(who, p.ColoredName + " %Sinvited you to join the " + team.Color + team.Name + " %Steam.");
             who.Game.TeamInvite = team.Name;
         }
         

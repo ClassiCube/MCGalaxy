@@ -196,7 +196,7 @@ namespace MCGalaxy.Commands
                 if (motd == "") motd = "ignore";
                 
                 if (motd.Length > 64) {
-                    Player.SendMessage(p, "Your motd can be no longer than %b64" + Server.DefaultColor + " characters.");
+                    Player.SendMessage(p, "Your motd can be no longer than %b64 %Scharacters.");
                 } else {
                     p.level.motd = motd;
                     p.level.ChatLevel("Map's MOTD was changed to: &b" + p.level.motd);
