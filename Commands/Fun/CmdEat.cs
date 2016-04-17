@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             }
             if (Economy.Enabled && p.money < 1) {
                 Player.SendMessage(p, "You need to have at least 1 &3" + Server.moneys + 
-                                   " %Sto be able to purchase a snack."); return;
+                                   " %Sto purchase a snack."); return;
             }
             if (p.muted) {
                 Player.SendMessage(p, "You cannot use this command while muted."); return;
