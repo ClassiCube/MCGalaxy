@@ -297,11 +297,6 @@ namespace MCGalaxy {
             return "active";
         }
         
-        public static bool CanSee(Player p, Player who) {
-            if (p == null || !who.hidden || p == who) return true;
-            return p.group.Permission > who.group.Permission;
-        }
-        
         public void SetPrefix() {
             Team team = Game.Team;
             prefix = team != null ? "<" + team.Color + team.Name + color + "> " : "";

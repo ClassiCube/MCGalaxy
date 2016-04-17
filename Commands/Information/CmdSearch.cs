@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands {
             StringBuilder players = new StringBuilder();
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player who in online) {
-                if (who.name.IndexOf(keyword, comp) >= 0 && Player.CanSee(p, who))
+                if (who.name.IndexOf(keyword, comp) >= 0 && Entities.CanSee(p, who))
                     players.Append(", ").Append(who.color).Append(who.name);
             }
             if (players.Length == 0) { Player.SendMessage(p, "No usernames found containing &b" + keyword); return; }

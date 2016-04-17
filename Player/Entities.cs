@@ -102,6 +102,21 @@ namespace MCGalaxy {
                 dst.SendExtRemovePlayerName(id);
         }
         
+
+        
+        /// <summary> Returns whether the given player is able to see the other player (e.g. in /who). </summary>
+        public static bool CanSee(Player p, Player who) {
+            if (p == null || !who.hidden || p == who) return true;
+            return p.group.Permission > who.group.Permission;
+        }
+        
+        /// <summary> Returns whether the given player is able to see the other player as an in-game entity. </summary>
+        public static bool CanSeeEntity(Player p, Player who) {
+            bool mayBeHidden = who.hidden || who.Game.Referee;
+            if (p == null || !mayBeHidden || p == who) return true;
+            if (who.Game.Referee && !p.group.CanExecute("referee")) return false;
+            return p.group.Permission > who.group.Permission;
+        }
         
         public static byte[] GetPositionPacket(byte id, ushort[] pos, ushort[] oldpos,
                                                byte[] rot, byte[] oldrot, byte realPitch, bool bot) {

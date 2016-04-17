@@ -34,18 +34,17 @@ namespace MCGalaxy.Commands {
             Dictionary<string, List<Player>> clients = new Dictionary<string, List<Player>>();
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-            	if (Player.CanSee(p, pl)) {
-                    string appName = pl.appName;
-                    if (String.IsNullOrEmpty(appName))
-                        appName = "(unknown)";
+            	if (!Entities.CanSee(p, pl)) continue;
+                string appName = pl.appName;
+                if (String.IsNullOrEmpty(appName))
+                    appName = "(unknown)";
                     
-                    List<Player> usingClient;
-                    if (!clients.TryGetValue(appName, out usingClient)) {
-                        usingClient = new List<Player>();
-                        clients[appName] = usingClient;
-                    }
-                    usingClient.Add(pl);
+               List<Player> usingClient;
+               if (!clients.TryGetValue(appName, out usingClient)) {
+                    usingClient = new List<Player>();
+                    clients[appName] = usingClient;
                 }
+                usingClient.Add(pl);
             }
             
             Player.SendMessage(p, "Players using:");

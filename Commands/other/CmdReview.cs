@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands
             bool opsOn = false;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.group.Permission >= Server.reviewnext && Player.CanSee(p, pl)) {
+                if (pl.group.Permission >= Server.reviewnext && Entities.CanSee(p, pl)) {
                     opsOn = true; break;
                 }
             }

@@ -64,7 +64,7 @@ namespace MCGalaxy {
             StringBuilder matchNames = new StringBuilder();
 
             foreach (Player p in players) {
-                if (onlyCanSee && !Player.CanSee(pl, p)) continue;
+                if (onlyCanSee && !Entities.CanSee(pl, p)) continue;
                 if (p.name.Equals(name, comp)) return p;
                 if (p.name.IndexOf(name, comp) >= 0) {
                     match = p; matches++;
@@ -100,7 +100,7 @@ namespace MCGalaxy {
             Player match = null; int matches = 0;
 
             foreach (Player pl in players) {
-                if (!Player.CanSee(p, pl)) continue;
+                if (!Entities.CanSee(p, pl)) continue;
                 string name = Colors.StripColours(pl.DisplayName);
                 
                 if (name.Equals(nick, comp)) return pl;

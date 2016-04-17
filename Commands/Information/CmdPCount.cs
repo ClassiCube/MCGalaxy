@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (!Player.CanSee(p, pl)) continue;
+                if (!Entities.CanSee(p, pl)) continue;
                 count++;
                 if (pl.hidden) hiddenCount++;
             }

@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
             if (message == "list") {
                 foreach (string s in Server.afkset) {
             	    Player pl = PlayerInfo.FindExact(s);
-            	    if (pl == null || !Player.CanSee(p, pl)) continue;
+            	    if (pl == null || !Entities.CanSee(p, pl)) continue;
                     Player.SendMessage(p, s);
                 }
                 return;

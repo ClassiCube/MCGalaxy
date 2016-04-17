@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
             Random random = new Random();
             int index = random.Next(getpatrol.Count);
             string value = getpatrol[index];
-            Player who = PlayerInfo.Find(value);
+            Player who = PlayerInfo.FindExact(value);
             Command.all.Find("tp").Use(p, who.name);
             Player.SendMessage(p, "You are now visiting " + who.color + who.name + "!");
         }
