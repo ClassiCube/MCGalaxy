@@ -100,7 +100,7 @@ namespace MCGalaxy {
         public int ponycount = 0;
         public int rdcount = 0;
         public bool hasreadrules = false;
-        public DateTime NextReviewTime;
+        public DateTime NextReviewTime, NextEat;
         public float ReachDistance = 5;
         public bool hackrank;
         
