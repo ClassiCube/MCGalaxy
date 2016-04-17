@@ -46,11 +46,16 @@ namespace MCGalaxy.Commands {
                 pBot = PlayerBot.Find(args[1]);
                 if (pBot == null) { Player.SendMessage(p, "There is no bot with that name."); return; }
                 model = args[2];
-            } else {
+            } else if (args.Length > 1) {
                 isBot = false;
                 who = PlayerInfo.FindOrShowMatches(p, args[0]);
                 if (who == null) return;
                 model = args.Length >= 2 ? args[1] : "humanoid";
+            } else {
+                isBot = false;
+                who = p;
+                if (who == null) { Player.SendMessage(p, "Console must provide a player name."); return; }
+                model = message;
             }
 
             if (isBot) {

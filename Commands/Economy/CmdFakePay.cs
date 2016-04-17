@@ -22,8 +22,9 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "fakepay"; } }
         public override string shortcut { get { return "fpay"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return true; } }        
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }        
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
