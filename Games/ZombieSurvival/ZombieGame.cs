@@ -126,6 +126,10 @@ namespace MCGalaxy.Games {
             foreach (Player pl in online) {
                 pl.Game.RatedMap = false;
                 pl.Game.PledgeSurvive = false;
+                
+                if (pl.Game.Referee) {
+                    pl.Game.Referee = false; pl.SetPrefix();
+                }
                 if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))
                     continue;
                 ResetCpeMessages(pl);

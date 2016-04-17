@@ -41,6 +41,7 @@ namespace MCGalaxy.Commands {
                 Player.GlobalDespawn(p, false);
             }
             p.Game.Referee = !p.Game.Referee;
+            p.SetPrefix();
         }
         
         public override void Help(Player p) {

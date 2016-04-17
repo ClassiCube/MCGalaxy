@@ -299,9 +299,9 @@ namespace MCGalaxy {
         
         public void SetPrefix() {
             Team team = Game.Team;
-            prefix = team != null ? "<" + team.Color + team.Name + color + "> " : "";
-            if (group.prefix != "")
-                prefix += "&f" + group.prefix + color;
+            prefix = Game.Referee ? "&2[Ref] " : "";
+            prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
+            if (group.prefix != "") prefix += "&f" + group.prefix + color;
             
             bool isOwner = Server.server_owner != "" && Server.server_owner.CaselessEq(name);
             string viptitle = isDev ? string.Format("{0}[&9Dev{0}] ", color) : 
@@ -433,12 +433,8 @@ namespace MCGalaxy {
 
 
             Last50Chat.Add(chatmessage);
-            if (showname) {
-                string referee = "";
-                if (from.Game.Referee)
-                    referee = Colors.green + "[Ref] ";
-                message = referee + from.color + from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
-            }
+            if (showname)
+                message = from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
             
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {

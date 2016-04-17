@@ -85,6 +85,7 @@ namespace MCGalaxy.Commands
 
                     if (pl.hidden) name += "(hidden)";
                     if (pl.muted) name += "(muted)";
+                    if (pl.Game.Referee) name += "-ref";
                     if (Server.afkset.Contains(pl.name)) name += "-afk";
 
                     if (pl.isDev) devSec.Append(pl, name);
