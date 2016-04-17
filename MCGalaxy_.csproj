@@ -505,6 +505,7 @@
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
     <Compile Include="Player\Chat.cs" />
+    <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupCommands.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />

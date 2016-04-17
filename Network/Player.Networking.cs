@@ -731,7 +731,7 @@ namespace MCGalaxy {
         
         void UpdatePosition() {
             //pingDelayTimer.Stop();
-            byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, 
+            byte[] packet = Entities.GetPositionPacket(id, pos, oldpos, rot, 
                                                        oldrot, MakePitch(), false);            
             if (packet == null) return;
             byte[] oldPacket = null;
@@ -743,7 +743,7 @@ namespace MCGalaxy {
                 // For clients that don't support ChangeModel, we still need to provide
                 // some visual indication that they are infected.
                 if (!p.hasChangeModel && oldPacket == null) {
-                    oldPacket = NetUtils.GetPositionPacket(id, pos, oldpos, rot, 
+                    oldPacket = Entities.GetPositionPacket(id, pos, oldpos, rot, 
                                                            oldrot, MakeClassicPitch(), false);
                 }
                 p.SendRaw(p.hasChangeModel ? packet : oldPacket);

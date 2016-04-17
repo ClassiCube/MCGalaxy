@@ -399,21 +399,21 @@ namespace MCGalaxy {
         public void GlobalSpawn() {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
-            	if (p.level == level) p.SpawnEntity(this);
+            	if (p.level == level) Entities.Spawn(p, this);
             }
         }
 
         public void GlobalDespawn() {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-            	if (p.level == level) p.DespawnEntity(id);
+            	if (p.level == level) Entities.Despawn(p, id);
             }
         }
 
         public void Update() { }
 
         void UpdatePosition() {
-            byte[] packet = NetUtils.GetPositionPacket(id, pos, oldpos, rot, oldrot, rot[1], true);
+            byte[] packet = Entities.GetPositionPacket(id, pos, oldpos, rot, oldrot, rot[1], true);
             oldpos = pos; oldrot = rot;
             if (packet == null) return;
 

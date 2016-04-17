@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands {
             
             PlayerBot[] bots = PlayerBot.Bots.Items;
             foreach (PlayerBot b in bots)
-            	if (b.level == p.level) p.SpawnEntity(b);
+            	if (b.level == p.level) Entities.Spawn(p, b);
         }
         
         internal static void CheckGamesJoin(Player p, Level oldLvl) {

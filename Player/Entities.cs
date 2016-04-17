@@ -1,0 +1,155 @@
+﻿/*
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Dual-licensed under the Educational Community License, Version 2.0 and
+the GNU General Public License, Version 3 (the "Licenses"); you may
+not use this file except in compliance with the Licenses. You may
+obtain a copy of the Licenses at
+http://www.opensource.org/licenses/ecl2.php
+http://www.gnu.org/licenses/gpl-3.0.html
+Unless required by applicable law or agreed to in writing,
+software distributed under the Licenses are distributed on an "AS IS"
+BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied. See the Licenses for the specific language governing
+permissions and limitations under the Licenses.
+*/
+using System;
+using MCGalaxy.Games;
+
+namespace MCGalaxy {
+
+    /// <summary> Contains methods related to the management of entities (such as players). </summary>
+    public static class Entities {
+
+        /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>        
+        public static void GlobalSpawn(Player p, bool self, string possession = "") {
+            GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], self, possession);
+        }
+        
+        /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
+        public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
+                                       byte rotx, byte roty, bool self, string possession = "") {
+            Player[] players = PlayerInfo.Online.Items;
+            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;
+            foreach (Player other in players) {
+                if ((other.Loading && p != other) || p.level != other.level) continue;
+                if ((p.hidden || p.Game.Referee) && !self) continue;
+                
+                if (p != other) {
+                    other.SpawnEntity(p, p.id, x, y, z, rotx, roty, possession);
+                } else if (self) {
+                    other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
+                    other.oldpos = other.pos; other.oldrot = other.rot;
+                    other.SpawnEntity(other, 0xFF, x, y, z, rotx, roty, possession);
+                }
+            }
+        }
+        
+        /// <summary> Despawns this player to all other players that can see the player in the current world. </summary>
+        public static void GlobalDespawn(Player p, bool self) {
+            Player[] players = PlayerInfo.Online.Items; 
+            foreach (Player other in players) {
+                if (p.level != other.level || (p.hidden && !self) ) continue;
+                if (p != other) { other.DespawnEntity(p.id); }
+                else if (self) { other.DespawnEntity(255); }
+            }
+        }
+        
+        
+        internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z, 
+                                       byte rotx, byte roty, string possession = "") {
+            if (!Server.zombie.Running || !p.Game.Infected) {
+                string col = p.color;
+                if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
+                    col = "&" + Colors.GetFallback(col[1]);
+                
+                if (dst.hasExtList) {
+                    dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, x, y, z, rotx, roty);
+                    dst.SendExtAddPlayerName(id, p.skinName, col + p.truename, "&fPlayers", 0);
+                } else {
+                    dst.SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty); 
+                }       
+                return;
+            }
+            
+            string name = p.truename, skinName = p.skinName;
+            if (ZombieGame.ZombieName != "" && !dst.Game.Aka) {
+                name = ZombieGame.ZombieName; skinName = name;
+            }
+            
+            if (dst.hasExtList) {
+                dst.SendExtAddEntity2(id, skinName, Colors.red + name + possession, x, y, z, rotx, roty);
+                dst.SendExtAddPlayerName(id, skinName, Colors.red + name, "&cZombies", 0);
+            } else {
+                dst.SendSpawn(id, Colors.red + name + possession, x, y, z, rotx, roty);
+            }
+            
+            if (dst.hasChangeModel && id != 0xFF)
+                dst.SendChangeModel(id, ZombieGame.ZombieModel);
+        }
+        
+        internal static void Spawn(Player dst, PlayerBot b) {
+            if (dst.hasExtList) {
+                dst.SendExtAddEntity2(b.id, b.skinName, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+                dst.SendExtAddPlayerName(b.id, b.skinName, b.color + b.name, "Bots", 0);
+            } else {
+                dst.SendSpawn(b.id, b.color + b.skinName, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+            }
+        }
+        
+        internal static void Despawn(Player dst, byte id) {
+            dst.SendRaw(Opcode.RemoveEntity, id);
+            if (dst.hasExtList)
+                dst.SendExtRemovePlayerName(id);
+        }
+        
+        
+        public static byte[] GetPositionPacket(byte id, ushort[] pos, ushort[] oldpos,
+                                               byte[] rot, byte[] oldrot, byte realPitch, bool bot) {
+            bool posChanged = false, oriChanged = false, absPosUpdate = false;
+            if (oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2])
+                posChanged = true;
+            if (oldrot[0] != rot[0] || oldrot[1] != rot[1])
+                oriChanged = true;
+            if (Math.Abs(pos[0] - oldpos[0]) > 32 || Math.Abs(pos[1] - oldpos[1]) > 32 || Math.Abs(pos[2] - oldpos[2]) > 32)
+                absPosUpdate = true;
+            // TODO: not sure why this is necessary for bots
+            if (bot) 
+                absPosUpdate = true;
+
+            byte[] buffer = null;
+            if (absPosUpdate) {
+                buffer = new byte[10];
+                buffer[0] = Opcode.EntityTeleport;
+                buffer[1] = id;
+                NetUtils.WriteU16(pos[0], buffer, 2);
+                NetUtils.WriteU16(pos[1], buffer, 4);
+                NetUtils.WriteU16(pos[2], buffer, 6);
+                buffer[8] = rot[0];
+                buffer[9] = realPitch;
+            } else if (posChanged && oriChanged) {
+                buffer = new byte[7];
+                buffer[0] = Opcode.RelPosAndOrientationUpdate;
+                buffer[1] = id;
+                buffer[2] = (byte)(pos[0] - oldpos[0]);
+                buffer[3] = (byte)(pos[1] - oldpos[1]);
+                buffer[4] = (byte)(pos[2] - oldpos[2]);
+                buffer[5] = rot[0];
+                buffer[6] = realPitch;
+            } else if (posChanged) {
+                buffer = new byte[5]; 
+                buffer[0] = Opcode.RelPosUpdate;
+                buffer[1] = id;
+                buffer[2] = (byte)(pos[0] - oldpos[0]);
+                buffer[3] = (byte)(pos[1] - oldpos[1]);
+                buffer[4] = (byte)(pos[2] - oldpos[2]);
+            } else if (oriChanged) {
+                buffer = new byte[4];
+                buffer[0] = Opcode.OrientationUpdate;
+                buffer[1] = id;
+                buffer[2] = rot[0];
+                buffer[3] = realPitch;
+            }
+            return buffer;
+        }        
+    }
+}

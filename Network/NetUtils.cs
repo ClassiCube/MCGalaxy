@@ -69,54 +69,5 @@ namespace MCGalaxy {
 			array[index++] = (byte)(value >> 8);
 			array[index++] = (byte)(value);
 		}
-		
-		public static byte[] GetPositionPacket(byte id, ushort[] pos, ushort[] oldpos,
-		                                       byte[] rot, byte[] oldrot, byte realPitch, bool bot) {
-			bool posChanged = false, oriChanged = false, absPosUpdate = false;
-        	if (oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2])
-        		posChanged = true;
-        	if (oldrot[0] != rot[0] || oldrot[1] != rot[1])
-        		oriChanged = true;
-        	if (Math.Abs(pos[0] - oldpos[0]) > 32 || Math.Abs(pos[1] - oldpos[1]) > 32 || Math.Abs(pos[2] - oldpos[2]) > 32)
-        		absPosUpdate = true;
-        	// TODO: not sure why this is necessary for bots
-        	if (bot) 
-        		absPosUpdate = true;
-
-        	byte[] buffer = null;
-        	if (absPosUpdate) {
-        		buffer = new byte[10];
-        		buffer[0] = Opcode.EntityTeleport;
-        		buffer[1] = id;
-        		NetUtils.WriteU16(pos[0], buffer, 2);
-        		NetUtils.WriteU16(pos[1], buffer, 4);
-        		NetUtils.WriteU16(pos[2], buffer, 6);
-        		buffer[8] = rot[0];
-        		buffer[9] = realPitch;
-        	} else if (posChanged && oriChanged) {
-        		buffer = new byte[7];
-        		buffer[0] = Opcode.RelPosAndOrientationUpdate;
-        		buffer[1] = id;
-        		buffer[2] = (byte)(pos[0] - oldpos[0]);
-        		buffer[3] = (byte)(pos[1] - oldpos[1]);
-        		buffer[4] = (byte)(pos[2] - oldpos[2]);
-        		buffer[5] = rot[0];
-        		buffer[6] = realPitch;
-        	} else if (posChanged) {
-        		buffer = new byte[5]; 
-        		buffer[0] = Opcode.RelPosUpdate;
-        		buffer[1] = id;
-        		buffer[2] = (byte)(pos[0] - oldpos[0]);
-        		buffer[3] = (byte)(pos[1] - oldpos[1]);
-        		buffer[4] = (byte)(pos[2] - oldpos[2]);
-        	} else if (oriChanged) {
-        		buffer = new byte[4];
-        		buffer[0] = Opcode.OrientationUpdate;
-        		buffer[1] = id;
-        		buffer[2] = rot[0];
-        		buffer[3] = realPitch;
-        	}
-        	return buffer;
-		}
     }
 }
