@@ -47,14 +47,11 @@ namespace MCGalaxy.Commands
                 who.jailed = true;
                 Player.GlobalSpawn(who, who.level.jailx, who.level.jaily, who.level.jailz, who.level.jailrotx, who.level.jailroty, true);
                 
-                if (!File.Exists("ranks/jailed.txt")) File.Create("ranks/jailed.txt").Close();
-                Extensions.DeleteLineWord("ranks/jailed.txt", who.name);
-                using (StreamWriter writer = new StreamWriter("ranks/jailed.txt", true))
-                    writer.WriteLine(who.name.ToLower() + " " + who.level.name);
+                Server.Jailed.DeleteWord(who.name.ToLower());
+                Server.Jailed.Append(who.name.ToLower() + " " + who.level.name);
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Swas &8jailed", false);
             } else {
-                if (!File.Exists("ranks/jailed.txt")) File.Create("ranks/jailed.txt").Close();
-                Extensions.DeleteLineWord("ranks/jailed.txt", who.name.ToLower());
+                Server.Jailed.DeleteWord(who.name.ToLower());
                 who.jailed = false;
                 Command.all.Find("spawn").Use(who, "");
                 Player.SendMessage(p, "You freed " + who.name + " from jail");

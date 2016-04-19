@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
                 if (Server.muted.Contains(message)) {
                     Server.muted.Remove(message);
                     Player.GlobalMessage(message + Server.DefaultColor + " is not online but is now &bun-muted");
-                    Extensions.DeleteLineWord("ranks/muted.txt", who.name.ToLower());
+                    Server.Muted.DeleteWord(who.name.ToLower());
                 }
                 return;
             }
@@ -45,16 +45,14 @@ namespace MCGalaxy.Commands
             if (who.muted) {
                 who.muted = false;
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Shas been &bun-muted", false);
-                Extensions.DeleteLineWord("ranks/muted.txt", who.name.ToLower());
+                Server.Muted.DeleteWord(who.name.ToLower());
             } else  {
                 if (p != null && who.group.Permission >= p.group.Permission) { 
                     MessageTooHighRank(p, "mute", false); return;
                 }
                 who.muted = true;
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Shas been &8muted", false);
-                using (StreamWriter writer = new StreamWriter("ranks/muted.txt", true)) {
-                    writer.WriteLine(who.name.ToLower());
-                }
+                Server.Muted.Append(who.name.ToLower());
                 Server.s.Log("SAVED: ranks/muted.txt");
             }
         }

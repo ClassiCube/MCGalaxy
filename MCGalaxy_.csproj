@@ -511,6 +511,7 @@
     <Compile Include="Player\Group\GroupProperties.cs" />
     <Compile Include="Player\Player.Handlers.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
+    <Compile Include="Player\PlayersFile.cs" />
     <Compile Include="Player\Undo\UndoCache.cs" />
     <Compile Include="Player\Undo\UndoFileCBin.cs" />
     <Compile Include="Player\Waypoint.cs" />

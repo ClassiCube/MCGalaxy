@@ -74,12 +74,12 @@ namespace MCGalaxy {
         	if (text == null) return null;
         	if (text.Length == 0) return "";
         	
-        	bool hasEmotes = false;
+        	bool hasCP437 = false;
         	for (int i = 0; i < text.Length; i++) {
         		if (text[i] < 0x20 || text[i] >= 0x7F)
-        			hasEmotes = true;
+        			hasCP437 = true;
         	}
-        	if( !hasEmotes ) return text;
+        	if( !hasCP437 ) return text;
         	
         	char[] c = text.ToCharArray();
         	for (int i = 0; i < text.Length; i++)

@@ -64,9 +64,9 @@ namespace MCGalaxy.Commands {
 
             DateTime now = DateTime.Now;
             string assigner = p == null ? "Console" : p.name;
-            using (StreamWriter sw = new StreamWriter("text/tempranks.txt", true))
-                sw.WriteLine(player + " " + rank + " " + pGroup.name + " " + period + " " + now.Minute + " " +
-                             now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner);
+            string data = player + " " + rank + " " + pGroup.name + " " + period + " " + now.Minute + " " +
+                             now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner;
+            Server.TempRanks.Append(data);
             
             Command.all.Find("setrank").Use(null, who.name + " " + group.name + " assigning temp rank");
             Player.SendMessage(p, "Temporary rank (" + rank + ") assigned succesfully to " + player + " for " + period + " hours");

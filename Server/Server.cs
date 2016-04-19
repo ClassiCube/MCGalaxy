@@ -76,6 +76,10 @@ namespace MCGalaxy
         [ConfigInt("position-interval", "Server", null, 100, 20, 2000)]
         public static int PositionInterval = 100;
 
+        public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
+        public static PlayersFile Muted = new PlayersFile("ranks/muted.txt");
+        public static PlayersFile Jailed = new PlayersFile("ranks/jailed.txt");
+        public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");        
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
 
         public static string VersionString {

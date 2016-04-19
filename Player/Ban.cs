@@ -25,6 +25,8 @@ namespace MCGalaxy {
 	/// and add / remove someone to the baninfo (NOT THE BANNED.TXT !) </summary>
 	public static class Ban {
 		
+		static PlayersFile file = new PlayersFile("text/bans.txt");
+		
 		/// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
 		public static void BanPlayer(Player p, string who, string reason, bool stealth, string oldrank) {
 			string dayname = DateTime.Now.DayOfWeek.ToString();
@@ -40,11 +42,8 @@ namespace MCGalaxy {
 		}
 		
 		static void AddEntry(string pl, string who, string reason, string stealth, string datetime, string oldrank) {
-			if (!File.Exists("text/bans.txt"))
-				File.CreateText("text/bans.txt").Close();
-			
-			reason = CP437Writer.ConvertToUnicode(reason);
-			File.AppendAllText("text/bans.txt", pl + " " + who + " " + reason + " " + stealth + " " + datetime + " " + oldrank + "\r\n");
+			string data = pl + " " + who + " " + reason + " " + stealth + " " + datetime + " " + oldrank;
+			file.Append(data);
 		}
 		
 		/// <summary> Returns whether the given user is banned. </summary>
