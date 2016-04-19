@@ -58,7 +58,10 @@ namespace MCGalaxy.Commands {
                     : " - (" + tBan.reason + ")";
                 who.Kick("Banned for " + minutes + " minutes!" + reason);
             }
+            
             Player.SendMessage(p, "Temp banned " + target + " for " + minutes + " minutes.");
+            if (args.Length <= 2) Player.AddNote(target, p, "T");
+            else Player.AddNote(target, p, "T", args[2]);
         }
         
         public override void Help(Player p) {

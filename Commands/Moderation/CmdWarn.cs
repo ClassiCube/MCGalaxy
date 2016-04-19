@@ -52,7 +52,10 @@ namespace MCGalaxy.Commands {
                 Player.GlobalMessage(who.color + who.DisplayName + " %Swas warn-kicked by " + warnedby);
                 who.Kick("KICKED BECAUSE " + reason + "");
             }
+            
             who.warn++;
+            if (args.Length == 1) Player.AddNote(who.name, p, "W");
+            else Player.AddNote(who.name, p, "W", args[1]);
         }
         
         public override void Help(Player p) {

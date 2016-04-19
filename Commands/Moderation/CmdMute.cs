@@ -15,7 +15,9 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System;
 using System.IO;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdMute : Command
@@ -54,11 +56,11 @@ namespace MCGalaxy.Commands
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Shas been &8muted", false);
                 Server.Muted.Append(who.name.ToLower());
                 Server.s.Log("SAVED: ranks/muted.txt");
+                Player.AddNote(who.name, p, "M");
             }
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/mute <player> - Mutes or unmutes the player.");
         }
     }

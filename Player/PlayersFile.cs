@@ -34,6 +34,8 @@ namespace MCGalaxy {
         
         /// <summary> Finds all lines which start with the given name. </summary>
         public IEnumerable<string> Find(string name) {
+            if (!File.Exists(file)) yield break;
+        	
             using (StreamReader r = new StreamReader(file)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {

@@ -201,8 +201,10 @@ namespace MCGalaxy.Commands
             if (perms == null) return true;
             
             Player.SendMessage(p, "%TAdditional permissions:");
-            foreach (CommandPerm perm in perms) {
-                Player.SendMessage(p, GetColoredRank(perm.Perm) + " %S- " + perm.Description);
+            for (int i = 0; i < perms.Length; i++) {
+                var addition = CommandOtherPerms.Find(cmd, i + 1);
+                LevelPermission perm = (LevelPermission)addition.Permission;
+                Player.SendMessage(p, GetColoredRank(perm) + " %S- " + addition.Description);
             }
             return true;
         }

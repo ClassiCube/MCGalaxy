@@ -79,7 +79,8 @@ namespace MCGalaxy
         public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
         public static PlayersFile Muted = new PlayersFile("ranks/muted.txt");
         public static PlayersFile Jailed = new PlayersFile("ranks/jailed.txt");
-        public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");        
+        public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");
+        public static PlayersFile Notes = new PlayersFile("text/notes.txt");        
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
 
         public static string VersionString {
@@ -155,6 +156,8 @@ namespace MCGalaxy
         public static DateTime restarttime;
 
         public static bool chatmod = false;
+        [ConfigBool("log-notes", "Other", null, true)]    
+        public static bool LogNotes = true;
 
         //Global VoteKick In Progress Flag
         public static bool voteKickInProgress = false;

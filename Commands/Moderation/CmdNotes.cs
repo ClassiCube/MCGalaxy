@@ -1,0 +1,108 @@
+﻿/*
+    Copyright 2015 MCGalaxy
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
+using System;
+
+namespace MCGalaxy.Commands {
+    
+    public class CmdNotes : Command {
+        
+        public override string name { get { return "notes"; } }
+        public override string shortcut { get { return ""; } }
+        public override string type { get { return CommandTypes.Moderation; } }
+        public override bool museumUsable { get { return true; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+
+        public override void Use(Player p, string message) {
+        	if (!Server.LogNotes) {
+        		Player.SendMessage(p, "The server does not have notes logging enabled."); return;
+        	}
+            if (message == "") {
+                if (p == null) {
+                    Player.SendMessage(p, "Console must provide a player name."); return;
+                }
+                message = p.name;
+            }
+            
+            int matches = 1;
+            Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message, out matches);
+            if (matches > 1) return;
+            if (who != null) message = who.name;
+            
+            Player.SendMessage(p, "Notes for " + message + ":");
+            bool foundAny = false;
+            foreach (string line in Server.Notes.Find(message)) {
+                foundAny = true;
+                string[] args = line.Split(' ');
+                if (args.Length <= 3) continue;
+                
+                if (args.Length == 4)
+                	Player.SendMessage(p, Action(args[1]) + " by " + args[2] + " on " + args[3]);
+                else
+                    Player.SendMessage(p, Action(args[1]) + " by " + args[2] + " on " + args[3]
+                	                   + " - " + args[4].Replace("%20", " "));
+            }
+            if (!foundAny)
+                Player.SendMessage(p, "No notes found.");
+        }
+        
+        static string Action(string arg) {
+            if (arg.CaselessEq("W")) return "Warned";
+            if (arg.CaselessEq("K")) return "Kicked";
+            if (arg.CaselessEq("M")) return "Muted";
+            if (arg.CaselessEq("B")) return "Banned";
+            if (arg.CaselessEq("W")) return "Warned";
+            if (arg.CaselessEq("J")) return "Jailed";
+            if (arg.CaselessEq("F")) return "Frozen";
+            if (arg.CaselessEq("T")) return "Temp-Banned";
+            return arg;
+        }
+        
+        void UpdateModel(byte id, string model, Level level, Player who) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != level || !pl.HasCpeExt(CpeExt.ChangeModel)) continue;
+                byte sendId = (pl == who) ? (byte)0xFF : id;
+                pl.SendChangeModel(sendId, model);
+            }
+        }
+
+        public override void Help(Player p) {
+           Player.SendMessage(p, "%T/notes [name] %H- views that player's notes.");
+           Player.SendMessage(p, "%HNotes are things such as bans, kicks, warns, mutes.");
+        }
+    }
+    
+    public class CmdMyNotes : Command {
+        
+        public override string name { get { return "mynotes"; } }
+        public override string shortcut { get { return ""; } }
+        public override string type { get { return CommandTypes.Other; } }
+        public override bool museumUsable { get { return true; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+
+        public override void Use(Player p, string message) {
+            if (p == null) { MessageInGameOnly(p); }
+            Command.all.Find("notes").Use(p, p.name);
+        }
+
+        public override void Help(Player p) {
+            Player.SendMessage(p, "%T/mynotes %H- views your own notes.");
+            Player.SendMessage(p, "%HNotes are things such as bans, kicks, warns, mutes.");
+        }
+    }
+}

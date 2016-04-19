@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
+
 namespace MCGalaxy.Commands {
     
     public sealed class CmdKick : Command {
@@ -42,7 +44,10 @@ namespace MCGalaxy.Commands {
                                     + who.color + who.DisplayName + "%S but failed.", false);
                 return;
             }
+            
             who.Kick(message);
+            if (args.Length == 1) Player.AddNote(who.name, p, "K");
+            else Player.AddNote(who.name, p, "K", message);
         }
         
         public override void Help(Player p) {

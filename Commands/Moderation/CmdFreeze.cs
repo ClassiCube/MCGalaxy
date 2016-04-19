@@ -39,6 +39,7 @@ namespace MCGalaxy.Commands
             if (!who.frozen) {
                 Player.SendChatFrom(who, who.ColoredName + " %Shas been &bfrozen %Sby " + frozenby + "%S.", false);
             	Server.s.Log(who.name + " has been frozen by " + frozenby);
+                Player.AddNote(who.name, p, "F");            	
             } else {
                 Player.SendChatFrom(who, who.ColoredName + " %Shas been &adefrosted %Sby " + frozenby + "%S.", false);
                 Server.s.Log(who.name + " has been defrosted by " + frozenby);

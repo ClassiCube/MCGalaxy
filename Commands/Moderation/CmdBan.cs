@@ -26,9 +26,6 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "The highest rank that can be banned") }; }
-        }
         
         static char[] trimChars = { ' ' };
 
@@ -85,7 +82,10 @@ namespace MCGalaxy.Commands {
             Ban.BanPlayer(p, target.ToLower(), reason, stealth, oldgroup);
             Group.findPerm(LevelPermission.Banned).playerList.Save();
             
+            if (args.Length == 1) Player.AddNote(target, p, "B");
+            else Player.AddNote(target, p, "B", args[1]);
             Server.IRC.Say(banMsg);
+            
             Server.s.Log("BANNED: " + target.ToLower() + " by " + banner);
             if (totalBan) {
                 Command.all.Find("undo").Use(p, target + " 0");
@@ -94,10 +94,6 @@ namespace MCGalaxy.Commands {
         }
         
         bool CheckPerms(string name, Group group, Player p) {
-            if ((int)group.Permission >= CommandOtherPerms.GetPerm(this)) {
-                Group grp = Group.findPermInt(CommandOtherPerms.GetPerm(this));
-                MessageTooHighRank(p, "ban", grp, false); return false;
-            }
             if (group.Permission == LevelPermission.Banned) {
                 Player.SendMessage(p, name + " is already banned."); return false;
             }

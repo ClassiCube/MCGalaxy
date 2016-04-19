@@ -918,5 +918,22 @@ Next: continue;
                     DrawOps.Remove(items[i]);
             }
         }
+        
+        internal static void AddNote(string target, Player who, string type) {
+             if (!Server.LogNotes) return;
+             string src = who == null ? "(console)" : who.name;
+             
+             string time = DateTime.UtcNow.ToString("dd/mm/yyyy");
+             Server.Notes.Append(target + " " + type + " " + src + " " + time);
+        }
+        
+        internal static void AddNote(string target, Player who, string type, string reason) {
+             if (!Server.LogNotes) return;
+             string src = who == null ? "(console)" : who.name;
+             
+             string time = DateTime.UtcNow.ToString("dd/mm/yyyy");
+             reason = reason.Replace(" ", "%20");
+             Server.Notes.Append(target + " " + type + " " + src + " " + time + " " + reason);
+        }
     }
 }
