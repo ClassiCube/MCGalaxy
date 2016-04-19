@@ -537,6 +537,9 @@ namespace MCGalaxy.Gui {
                         numSpamMute.Value = 60;
                     }
                     break;
+                case "log-notes":
+                    cbLogNotes.Checked = value.ToLower() == "true";
+                    break;
                 case "show-empty-ranks":
                     chkShowEmptyRanks.Checked = value.ToLower() == "true";
                     break;
@@ -694,6 +697,7 @@ namespace MCGalaxy.Gui {
             Server.spamcounter = (int)numSpamMessages.Value;
             Server.mutespamtime = (int)numSpamMute.Value;
             Server.spamcountreset = (int)numCountReset.Value;
+            Server.LogNotes = cbLogNotes.Checked;
 
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
             Server.UseGlobalChat = chat_chkGlobal.Checked;
