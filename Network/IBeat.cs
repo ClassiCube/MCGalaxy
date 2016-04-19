@@ -19,31 +19,19 @@ namespace MCGalaxy
 {
 	public interface IBeat
 	{
-		/// <summary>
-		/// Gets or sets the URL.
-		/// </summary>
-		/// <value>
-		/// The URL.
-		/// </value>
+		/// <summary> Gets or sets the URL. </summary>
+		/// <value> The URL. </value>
 		string URL {get; }
 
-		/// <summary>
-		/// Prepares this instance.
-		/// </summary>
+		/// <summary> Prepares this instance. </summary>
 		/// <returns></returns>
 		string Prepare();
 
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="IBeat"/> is persistance.
-		/// </summary>
-		/// <value>
-		///   <c>true</c> if persistance; otherwise, <c>false</c>.
-		/// </value>
+		/// <summary> Gets a value indicating whether this <see cref="IBeat"/> is persistance. </summary>
+		/// <value> <c>true</c> if persistance; otherwise, <c>false</c>. </value>
 		bool Persistance {get; }
 
-		/// <summary>
-		/// Called when a response is recieved.
-		/// </summary>
+		/// <summary> Called when a response is recieved. </summary>
 		/// <param name="resonse">The resonse.</param>
 		void OnResponse(string resonse);
 	}

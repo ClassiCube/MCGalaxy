@@ -1,3 +1,38 @@
+v 1.8.5.0
+- More work on zombie survival.
+- /mark works properly when you are outside the map.
+- /clones uses proper casing of names, and shows which ones are banned.
+- /os env - can also change maxfog and cloudsheight
+- Modularise block data and block physics internally. (Not yet configurable)
+- /tree should not overwrite existing blocks.
+- Made various messages more consistent.
+- Fixed /restore not copying custom blocks.
+- /texture now warns if url is > 64 characters, and also if you use a non-existent scope.
+- Fixed /os map guns throwing a NullReferenceException.
+- Optimised /rs rainbow to send block updates more efficiently.
+- Optimised block physics to use packed Int32 instead of strings, and \replace
+-    classes with structs. (Less pressure on GC)
+- Fixed /queue not working from console.
+- Allow providing a reason for /tempbans.
+- Fix being unable to use some commands while hidden.
+- /undo and /redo now behave like fCraft when not given arguments. (undo/redo last drawop)
+- Fix /fly not working when your X or Z coordinate is 0.
+- Added /showqueue command for zombie survival.
+- /help for a command now shows its additional permissions (if any)
+- Added /skin to allow changing skins of players and bots.
+- Rewritten gui to be nicer. (Much thanks to UclCommander)
+- Initial implementation of ExtPlayerList, so players are grouped separately from bots.
+- Command aliases are now less hardcoded, add fCraft aliases.
+- Show command aliases in their respective /help command.
+- Fix /unflood reloading the map 8 times.
+- 'seed' for flatgrass map type specifies the grass level.
+- Don't call ScrollToEnd() twice, makes gui slightly more responsive.
+- Can show rank prefixes in chat.
+- Add /eat command.
+- Optimise map generation to be slightly faster.
+- Fix /env preset not showing changes for all players.
+- Show player's title in less places to reduce visual clutter. 
+
 v 1.8.4.0
 - Fixed /resetpass not working at all.
 - Show a warning to outdated ClassicalSharp clients, suggesting they update.
