@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+ using MCGalaxy.Games;
+ 
 namespace MCGalaxy.Commands {
     
     public sealed class CmdTp : Command {
@@ -38,13 +40,20 @@ namespace MCGalaxy.Commands {
             if (!Server.higherranktp && p.group.Permission < target.group.Permission) {
                 MessageTooHighRank(p, "teleport to", true); return;
             }
+            
+            IGame game = target.level.CurrentGame();
+            if (!p.Game.Referee && !game.TeleportAllowed) {
+                Player.SendMessage(p, "You can only teleport to players who are " +
+                                   "playing a game when you are in referee mode."); return;
+            }
+            
             p.beforeTeleportMap = p.level.name;
             p.beforeTeleportPos = p.pos;
             
             if (p.level != target.level)
                 Command.all.Find("goto").Use(p, target.level.name);            
             if (target.Loading) {
-                Player.SendMessage(p, "Waiting for " + target.color + target.DisplayName + Server.DefaultColor + " to spawn...");
+                Player.SendMessage(p, "Waiting for " + target.ColoredName + " %Sto spawn...");
                 target.BlockUntilLoad(10);
             }
             p.BlockUntilLoad(10);  //Wait for player to spawn in new map

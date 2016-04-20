@@ -293,12 +293,24 @@ namespace MCGalaxy
         [Obsolete("Please use OnLevelUnloadEvent.Register()")]
         public static event OnLevelLoaded LevelLoaded;
 
+        /// <summary> Whether block changes made on this level should be 
+        /// saved to the BlockDB and .lvl files. </summary>
         public bool ShouldSaveChanges() {
         	if (Server.zombie.Running && !ZombieGame.SaveLevelBlockchanges &&
         	    (name.CaselessEq(Server.zombie.CurLevelName)
         	     || name.CaselessEq(Server.zombie.LastLevelName))) return false;
         	if (Server.lava.active && Server.lava.HasMap(name)) return false;
         	return true;
+        }
+        
+        /// <summary> The currently active game running on this map, 
+        /// or null if there is no game running. </summary>
+        public IGame CurrentGame() {
+            if (Server.zombie.Running && name.CaselessEq(Server.zombie.CurLevelName))
+                return Server.zombie;
+            if (Server.lava.active && Server.lava.HasMap(name)) 
+                return Server.lava;
+            return null;
         }
         
         public bool Unload(bool silent = false, bool save = true)

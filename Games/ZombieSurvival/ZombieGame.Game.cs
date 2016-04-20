@@ -21,6 +21,9 @@ using System;
 namespace MCGalaxy.Games {
     
     public sealed partial class ZombieGame : IGame {
+		
+		/// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
+		public override bool TeleportAllowed { get { return !RoundInProgress; } }
         
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte tile, byte b) {
