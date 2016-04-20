@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using MCGalaxy.SQL;
 
@@ -196,6 +197,25 @@ Additional4 INT{2});"; // reserve space for possible future additions
             string autoInc = Server.useMySQL ? "AUTO_INCREMENT" : "AUTOINCREMENT";
             string primKey2 = Server.useMySQL ? ", PRIMARY KEY (ID)" : "";
             Database.executeQuery(string.Format(createSyntax, primKey, autoInc, primKey2));
+        }
+        
+        static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
+            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
+            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
+            "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
+            "{0} transplanted {1}'s living brain" };
+        
+        public void LoadInfectMessages() {
+            messages.Clear();
+            try {
+                if (!File.Exists("text/infectmessages.txt"))
+                    File.WriteAllLines("text/infectmessages.txt", defMessages);
+                messages = CP437Reader.ReadAllLines("text/infectmessages.txt");
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
+            if (messages.Count == 0)
+                messages = new List<string>(defMessages);
         }
     }
 }

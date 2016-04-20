@@ -231,7 +231,7 @@ namespace MCGalaxy.Games {
             if (infectMsgs != null && random.Next(0, 10) < 5)
                 text = infectMsgs[random.Next(infectMsgs.Count)];
             else
-                text = messages[random.Next(messages.Length)];
+                text = messages[random.Next(messages.Count)];
             
             CurLevel.ChatLevel(String.Format(text,
                                              Colors.red + pKiller.DisplayName + Colors.yellow,

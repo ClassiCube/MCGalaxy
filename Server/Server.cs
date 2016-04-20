@@ -646,8 +646,9 @@ namespace MCGalaxy
             }
             return "Error";
         }
-        public static void LoadAllSettings()
-        {
+        
+        public static void LoadAllSettings() {
+            zombie.LoadInfectMessages();
             Colors.LoadExtColors();
             Alias.Load();
             BlockDefinition.LoadGlobal();

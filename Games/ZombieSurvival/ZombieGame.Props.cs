@@ -111,11 +111,7 @@ namespace MCGalaxy.Games {
         [ConfigBool("zombie-map-inheartbeat", "Zombie", null, false)]
         public static bool IncludeMapInHeartbeat = false;
         
-        static string[] messages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
-            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
-            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
-            "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
-            "{0} transplanted {1}'s living brain" };
+        List<string> messages = new List<string>();
 
         [ConfigBool("no-respawning-during-zombie", "Zombie", null, true)]
         public static bool noRespawn = true;

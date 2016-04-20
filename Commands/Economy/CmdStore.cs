@@ -30,6 +30,9 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("item") }; }
+        }        
 
         public override void Use(Player p, string message) {
             if (message == "") {
