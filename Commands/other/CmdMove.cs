@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands
 
                 Command.all.Find("goto").Use(who, where.name);
                 if (who.level == where)
-                    Player.SendMessage(p, "Sent " + who.color + who.name + Server.DefaultColor + " to " + where.name);
+                    Player.SendMessage(p, "Sent " + who.ColoredName + " %Sto " + where.name);
                 else
                     Player.SendMessage(p, where.name + " is not loaded");
             }

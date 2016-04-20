@@ -29,19 +29,27 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
-            string[] args = message.Split(trimChars, 3);           
-            string plName = args[args.Length - 2];
+            bool take = false;
+            if (message.CaselessStarts("give ")) {
+            	message = message.Substring(5);
+            } else if (message.CaselessStarts("take ")) {
+            	message = message.Substring(5); take = true;
+            }
+            		
+            string[] args = message.Split(trimChars, 2);
+            string plName = args[0];
             Player who = PlayerInfo.Find(plName);
             if (who != null) plName = who.name;
             
-            string award = args[args.Length - 1];
-            if (!Awards.ExistsAward(award)) {
+            string award = args.Length > 1 ? args[1] : "";
+            award = Awards.Find(award);
+            if (award == null) {
                 Player.SendMessage(p, "The award you entered doesn't exist");
                 Player.SendMessage(p, "Use /awards for a list of awards");
                 return;
             }
 
-            if (args.Length == 2 || !args[0].CaselessEq("take")) {
+            if (!take) {
                 if (Awards.GiveAward(plName, award)) {
                     Player.GlobalMessage(Server.FindColor(plName) + plName + " %Swas awarded: &b" + award);
                 } else {

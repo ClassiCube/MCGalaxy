@@ -224,8 +224,9 @@ namespace MCGalaxy.Gui
 
                 Level[] levels = LevelInfo.Loaded.Items;
                 foreach (Level lvl in levels) {
-                	if (lvl.ShouldSaveLevelFile()) lvl.Save();
-                	lvl.saveChanges();
+                    if (!lvl.ShouldSaveChanges()) continue;
+                    lvl.Save(); 
+                    lvl.saveChanges();
                 }
 
                 Player[] players = PlayerInfo.Online.Items;
@@ -308,16 +309,14 @@ namespace MCGalaxy.Gui
             {
                 string level = null;
                 Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level lvl in loaded)
-                {
-                	if (lvl.ShouldSaveLevelFile()) {
-                        level = level + lvl.name + "=" + lvl.physics + Environment.NewLine;
-                        lvl.Save(false, true);
-                    }
+                foreach (Level lvl in loaded) {
+                	if (!lvl.ShouldSaveChanges()) continue;
+                    level = level + lvl.name + "=" + lvl.physics + Environment.NewLine;
+                    lvl.Save(false, true);
                     lvl.saveChanges();
                 }
-                if (Server.ServerSetupFinished && !Server.AutoLoad)
-                {
+                
+                if (Server.ServerSetupFinished && !Server.AutoLoad) {
                     File.WriteAllText("text/autoload.txt", level);
                 }
             }
