@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             {
                 if (parts[0].CaselessEq(alias)) {
                     if (!item.Enabled) {
-                        Player.SendMessage(p, "%c" + item.Name + "s are not enabled for the economy system."); return;
+                        Player.SendMessage(p, "%cThe " + item.Name + " item is not currently buyable."); return;
                     }
                     item.OnBuyCommand(this, p, message, parts); 
                     return;

@@ -213,7 +213,34 @@ namespace MCGalaxy.Games {
                     }
                     if (aliveChanged) alive = Alive.Items;
                 }
+                
+                CheckInvisibilityTime(Alive.Items);
                 Thread.Sleep(25);
+            }
+        }
+        
+        void CheckInvisibilityTime(Player[] alive) {
+            DateTime now = DateTime.UtcNow;
+            foreach (Player p in alive) {
+                if (!p.Game.Invisible) continue;
+                DateTime end = p.Game.InvisibilityEnd;
+                
+                if (now >= end) {
+                    p.SendCpeMessage(CpeMessageType.BottomRight2, "", false);
+                    p.Game.ResetInvisibility();
+                    Entities.GlobalSpawn(p, false);
+                    continue;
+                }
+                
+                int left = (int)Math.Ceiling((end - now).TotalSeconds);
+                if (left == p.Game.InvisibilityTime) continue;
+                p.Game.InvisibilityTime = left;
+                
+                string msg = "&bInvisibility for &a" + left;
+                if (p.HasCpeExt(CpeExt.MessageTypes))
+                    p.SendCpeMessage(CpeMessageType.BottomRight2, msg, true);
+                else
+                    p.SendMessage(msg, true);
             }
         }
         
@@ -310,6 +337,7 @@ namespace MCGalaxy.Games {
             online = PlayerInfo.Online.Items;
             Random rand = new Random();
             foreach (Player pl in online) {
+                pl.Game.ResetInvisibility();
                 if (!pl.level.name.CaselessEq(CurLevelName)) continue;
                 int money = GetMoney(pl, alive, rand);
                 
@@ -420,7 +448,7 @@ namespace MCGalaxy.Games {
                 }
             } else {
                 if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
-					ChangeLevel(GetRandomLevel(r, levels));
+                    ChangeLevel(GetRandomLevel(r, levels));
                 } else {
                     ChangeLevel(picked2);
                 }

@@ -119,9 +119,13 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether the given player is able to see the other player as an in-game entity. </summary>
         public static bool CanSeeEntity(Player p, Player who) {
-            bool mayBeHidden = who.hidden || who.Game.Referee;
+            bool mayBeHidden = who.hidden;
+            mayBeHidden |= (who.Game.Referee || who.Game.Invisible) && Server.zombie.Running;
             if (p == null || !mayBeHidden || p == who) return true;
-            if (who.Game.Referee && !p.Game.Referee) return false;
+            if (who.Game.Referee && !p.Game.Referee 
+                && Server.zombie.Running) return false;
+            if (who.Game.Invisible && !p.Game.Referee 
+                && Server.zombie.Running) return false;
             return p.group.Permission >= who.group.Permission;
         }
         

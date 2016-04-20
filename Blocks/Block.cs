@@ -24,7 +24,7 @@ namespace MCGalaxy
     {
         public static bool Walkthrough(byte type) {
 			return type == air || type == shrub || (type >= water && type <= lavastill) 
-			    || (type >= yellowflower && type <= redmushroom);
+			    || (type >= yellowflower && type <= redmushroom) || type == rope;
         }
 
         public static bool AllowBreak(byte type)

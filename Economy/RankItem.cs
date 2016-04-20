@@ -87,10 +87,10 @@ namespace MCGalaxy.Eco {
         protected internal override void OnSetupCommand(Player p, string[] args) {
             switch (args[1].ToLower()) {
                 case "enable":
-                    Player.SendMessage(p, "%a" + Name + "s are now enabled for the economy system.");
+                    Player.SendMessage(p, "%aThe " + Name + " item is now enabled.");
                     Enabled = true; break;
                 case "disable":
-                    Player.SendMessage(p, "%a" + Name + "s are now disabled for the economy system.");
+                    Player.SendMessage(p, "%aThe " + Name + " item is now disabled.");
                     Enabled = false; break;
                 case "price":
                     Rank rnk = FindRank(args[2]);

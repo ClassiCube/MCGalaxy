@@ -61,6 +61,22 @@ namespace MCGalaxy.Games {
         /// <summary> List of custom infect messages this player has. </summary>
         internal List<string> InfectMessages = null;
         
+        /// <summary> Whether this player is currently using an invisibility potion. </summary>
+        public bool Invisible;
+        
+        /// <summary> Point in time at which the invisibility potion expires. </summary>
+        public DateTime InvisibilityEnd;
+        
+        /// <summary> Last 'invisible for X more seconds' time sent to the player. </summary>
+        public int InvisibilityTime = -1;
+        
+        /// <summary> Resets all the invisibility variables back to default. </summary>
+        public void ResetInvisibility() {
+            Invisible = false;
+            InvisibilityEnd = DateTime.MinValue;
+            InvisibilityTime = -1;
+        }
+        
         
         /// <summary> The total number of rounds this player has survived. </summary>
         public int TotalRoundsSurvived;

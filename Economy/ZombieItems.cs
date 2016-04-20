@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Eco {
     
@@ -109,5 +110,41 @@ namespace MCGalaxy.Eco {
             if ((i + 2) >= text.Length) return false;
             return (text[i + 1] == '0' || text[i + 1] == '1') && text[i + 2] == '}';
         }
+    }
+	
+	public sealed class InvisibilityItem : SimpleItem {
+        
+        public InvisibilityItem() {
+            Aliases = new[] { "invisibility", "invisible", "invis" };
+            Price = 3;
+        }
+        
+        public override string Name { get { return "Invisibility"; } }
+        
+        protected internal override void OnBuyCommand(Command cmd, Player p, 
+                                             string message, string[] args) {
+        	if (p.money < Price) {
+                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
+            }
+            if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
+                Player.SendMessage(p, "You can only buy an invisiblity potion " +
+        		                   "when a round of zombie survival is in progress."); return;
+            }
+            DateTime end = Server.zombie.RoundEnd;
+            if (DateTime.UtcNow.AddSeconds(60) > end) {
+            	Player.SendMessage(p, "You cannot buy an invisibility potion " +
+            	                   "during the last minute of a round."); return;
+            }          
+            int duration = ZombieGame.InvisibilityDuration;
+            p.Game.Invisible = true;
+            p.Game.InvisibilityEnd = DateTime.UtcNow.AddSeconds(duration);
+            
+            Player.SendMessage(p, "%aInvisibility lasts for " + duration + " seconds");
+            Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
+            Player.GlobalDespawn(p, false);
+            MakePurchase(p, Price, "%3Invisibility: " + duration);
+        }
+        
+        protected override void OnBuyCommand(Player p, string message, string[] args) { }
     }
 }

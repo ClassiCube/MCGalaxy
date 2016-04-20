@@ -83,6 +83,7 @@ namespace MCGalaxy.Gui {
                      "This means it shows up on the classicube.net server list as: \"Server name (current map name)\"")]
         [Category("Other settings")]
         public bool IncludeMapInHeartbeat { get; set; }
+        
 
         [Description("Name to show above infected players. If this is left blank, then the player's name is used instead.")]
         [Category("Zombie settings")]
@@ -90,7 +91,12 @@ namespace MCGalaxy.Gui {
 
         [Description("Model to use for infected players. If this is left blank, then 'zombie' model is used.")]
         [Category("Zombie settings")]
-        public string Model { get; set; }        
+        public string Model { get; set; }
+        
+
+        [Description("How long an invisibility potion bought using /buy invisibility lasts.")]
+        [Category("Human settings")]        
+        public int InvisibilityDuration { get; set; }
         
         public void LoadFromServer() {
             ChangeLevels = ZombieGame.ChangeLevels;
@@ -110,6 +116,7 @@ namespace MCGalaxy.Gui {
             
             Name = ZombieGame.ZombieName;
             Model = ZombieGame.ZombieModel;
+            InvisibilityDuration = ZombieGame.InvisibilityDuration;
         }
         
         public void ApplyToServer() {
@@ -137,6 +144,7 @@ namespace MCGalaxy.Gui {
             ZombieGame.ZombieModel = Model.Trim();
             if (ZombieGame.ZombieModel == "")
                 ZombieGame.ZombieModel = "zombie";
+            ZombieGame.InvisibilityDuration = InvisibilityDuration;
         }
     }
 }
