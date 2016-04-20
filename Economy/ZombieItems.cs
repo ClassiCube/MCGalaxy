@@ -45,8 +45,8 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-        	Player.SendMessage(p, "Syntax: %T/buy 10blocks [num]");
-        	Player.SendMessage(p, "Increases the blocks you are able to place by 10 * [num].");
+            Player.SendMessage(p, "Syntax: %T/buy 10blocks [num]");
+            Player.SendMessage(p, "Increases the blocks you are able to place by 10 * [num].");
             Player.SendMessage(p, "Costs %f" + Price + " * [num] %3" + Server.moneys);
         }        
     }
@@ -111,8 +111,8 @@ namespace MCGalaxy.Eco {
             return (text[i + 1] == '0' || text[i + 1] == '1') && text[i + 2] == '}';
         }
     }
-	
-	public sealed class InvisibilityItem : SimpleItem {
+    
+    public sealed class InvisibilityItem : SimpleItem {
         
         public InvisibilityItem() {
             Aliases = new[] { "invisibility", "invisible", "invis" };
@@ -123,17 +123,21 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Command cmd, Player p, 
                                              string message, string[] args) {
-        	if (p.money < Price) {
+            if (p.money < Price) {
                 Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
+            }
+            if (p.Game.Invisible) {
+                Player.SendMessage(p, "You are already invisible."); return;
             }
             if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
                 Player.SendMessage(p, "You can only buy an invisiblity potion " +
-        		                   "when a round of zombie survival is in progress."); return;
+                                   "when a round of zombie survival is in progress."); return;
             }
+            
             DateTime end = Server.zombie.RoundEnd;
             if (DateTime.UtcNow.AddSeconds(60) > end) {
-            	Player.SendMessage(p, "You cannot buy an invisibility potion " +
-            	                   "during the last minute of a round."); return;
+                Player.SendMessage(p, "You cannot buy an invisibility potion " +
+                                   "during the last minute of a round."); return;
             }          
             int duration = ZombieGame.InvisibilityDuration;
             p.Game.Invisible = true;
@@ -146,5 +150,12 @@ namespace MCGalaxy.Eco {
         }
         
         protected override void OnBuyCommand(Player p, string message, string[] args) { }
+        
+        protected internal override void OnStoreCommand(Player p) {
+            int duration = ZombieGame.InvisibilityDuration;
+            Player.SendMessage(p, "Syntax: %T/buy " + Name);
+            Player.SendMessage(p, "%HLasts for " duration + " seconds before you reappear.");
+            Player.SendMessage(p, "Costs %f" + Price + " %3" + Server.moneys + " %Seach time the item is bought.");
+        }
     }
 }
