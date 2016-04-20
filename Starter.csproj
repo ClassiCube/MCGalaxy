@@ -58,9 +58,7 @@
     <Compile Include="GUI\AutoScrollTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\Win32\Margins.cs" />
     <Compile Include="GUI\Win32\Natives.cs" />
-    <Compile Include="GUI\Win32\RECT.cs" />
     <Compile Include="GUI\LevelCollection.cs" />
     <Compile Include="GUI\PropertyWindow.Games.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>

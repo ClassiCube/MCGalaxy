@@ -131,4 +131,48 @@ namespace MCGalaxy.Gui.Utils {
 
         #endregion
     }
+	
+    /// <summary> Native Rectangle </summary>
+    internal struct RECT {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+        
+        public RECT( int left, int right, int top, int bottom ) {
+            Top = top;
+            Bottom = bottom;
+            Right = right;
+            Left = left;
+        }
+        
+        public static implicit operator RECT( Margins margs ) {
+            return new RECT( margs.Left, margs.Right, margs.Top, margs.Bottom );
+        }
+        
+        public void Inflate( int width, int height ) {
+            Left -= width; Top -= height;
+            Right += width; Bottom += height;
+        }
+    }
+    
+    /// <summary> Native margins </summary>
+    [StructLayout( LayoutKind.Sequential )]
+    internal struct Margins {
+        public int Left;
+        public int Right;
+        public int Top;
+        public int Bottom;
+
+        public Margins( int left, int right, int top, int bottom ) {
+            Top = top;
+            Bottom = bottom;
+            Right = right;
+            Left = left;
+        }
+
+        public static implicit operator Margins( RECT margs ) {
+            return new Margins( margs.Left, margs.Right, margs.Top, margs.Bottom );
+        }
+    }
 }
