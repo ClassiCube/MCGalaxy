@@ -27,7 +27,7 @@ namespace MCGalaxy.Eco {
             Price = 1;
         }
         
-        public override string Name { get { return "Blocks"; } }
+        public override string Name { get { return "10Blocks"; } }
 
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             byte count = 1;
@@ -40,8 +40,14 @@ namespace MCGalaxy.Eco {
             }
             
             p.Game.BlocksLeft += 10 * count;
-            MakePurchase(p, Price * count, "%3Blocks: " + (10 * count));
+            MakePurchase(p, Price * count, "%310Blocks: " + (10 * count));
         }
+        
+        protected internal override void OnStoreCommand(Player p) {
+        	Player.SendMessage(p, "Syntax: %T/buy 10blocks [num]");
+        	Player.SendMessage(p, "Increases the blocks you are able to place by 10 * [num].");
+            Player.SendMessage(p, "Costs %f" + Price + " * [num] %3" + Server.moneys);
+        }        
     }
     
     public sealed class QueueLevelItem : SimpleItem {

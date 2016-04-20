@@ -35,8 +35,9 @@ namespace MCGalaxy.Commands {
             if (message == "") {
                 foreach (Item item in Economy.Items) {
                     if (!item.Enabled) continue;
-                    item.OnStoreCommand(p); 
+                    item.OnStoreOverview(p); 
                 }
+        		Player.SendMessage(p, "%HUse %T/store [item] %Hto see more information about that item.");
                 return;
             }
             

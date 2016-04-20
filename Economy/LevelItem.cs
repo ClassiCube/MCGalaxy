@@ -225,6 +225,10 @@ namespace MCGalaxy.Eco {
             }
         }
         
+        protected internal override void OnStoreOverview(Player p) {
+        	Player.SendMessage(p, "Maps - see /store maps");
+        }
+        
         protected internal override void OnStoreCommand(Player p) {
             Player.SendMessage(p, "%aAvailable maps to buy:");
             if (Presets.Count == 0) {

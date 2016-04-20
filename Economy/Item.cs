@@ -44,6 +44,8 @@ namespace MCGalaxy.Eco {
                                                       string message, string[] args);
 
         protected internal abstract void OnSetupCommand(Player p, string[] args);
+
+        protected internal abstract void OnStoreOverview(Player p);
         
         protected internal abstract void OnStoreCommand(Player p);
         
@@ -117,9 +119,13 @@ namespace MCGalaxy.Eco {
             }
         }
         
+        protected internal override void OnStoreOverview(Player p) {
+            Player.SendMessage(p, Name + " - costs %f" + Price + " %3" + Server.moneys);
+        }
+        
         protected internal override void OnStoreCommand(Player p) {
-            string plural = Name[Name.Length - 1] == 's' ? Name : Name + "s";
-            Player.SendMessage(p, plural + " cost %f" + Price + " %3" + Server.moneys + " %Seach");
+        	Player.SendMessage(p, "Syntax: %T/buy " + Name + " [value]");
+            Player.SendMessage(p, "Costs %f" + Price + " %3" + Server.moneys + " %Seach time the item is bought.");
         }
     }
 }

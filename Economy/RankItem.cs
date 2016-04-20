@@ -25,10 +25,10 @@ namespace MCGalaxy.Eco {
     public sealed class RankItem : Item {
         
         public RankItem() {
-            Aliases = new [] { "rank", "ranks" };
+            Aliases = new [] { "rank", "ranks", "rankup" };
         }
         
-        public override string Name { get { return "Rank"; } }
+        public override string Name { get { return "Rankup"; } }
         
         public string MaxRank = Group.findPerm(LevelPermission.AdvBuilder).name;
         
@@ -118,11 +118,21 @@ namespace MCGalaxy.Eco {
                     Player.SendMessage(p, "Supported actions: enable, disable, price [rank] [pcost], maxrank [rank]"); break;
             }
         }
+
+        protected internal override void OnStoreOverview(Player p) {
+        	Group maxrank = Group.Find(MaxRank);
+            if (p.group.Permission >= maxrank.Permission) {
+                Player.SendMessage(p, "Rankup - &calready at max rank."); return;
+            }
+        	Rank rnk = NextRank(p);
+            Player.SendMessage(p, "Rankup to " + rnk.group.color + rnk.group.name + " %S- costs &f" + rnk.price + " &3" + Server.moneys);
+        }
         
         protected internal override void OnStoreCommand(Player p) {
             Group maxrank = Group.Find(MaxRank);
-            Player.SendMessage(p, "%fThe maximum buyable rank is: " + maxrank.color + maxrank.name);
-            Player.SendMessage(p, "%cRanks purchased will be bought in order.");
+        	Player.SendMessage(p, "Syntax: %T/buy rankup");            
+            Player.SendMessage(p, "%fThe max buyable rank is: " + maxrank.color + maxrank.name);
+            Player.SendMessage(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
             foreach (Rank rnk in RanksList) {
                 Player.SendMessage(p, rnk.group.color + rnk.group.name + " costs &f" + rnk.price + " &3" + Server.moneys);
