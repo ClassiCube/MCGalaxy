@@ -503,17 +503,11 @@ namespace MCGalaxy {
                 marker = " (" + controller.color + controller.name + color + ")";
             }
         	
-            GlobalDespawn(this, true);
-            GlobalSpawn(this, true, marker);
+            Entities.GlobalDespawn(this, true);
+            Entities.GlobalSpawn(this, true, marker);
             return true;
         }
 
-        public static void GlobalUpdate() { 
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (!p.hidden) p.UpdatePosition();
-            }
-        }
         #endregion
         #region == DISCONNECTING ==
         
@@ -579,7 +573,7 @@ namespace MCGalaxy {
                 	tntwarsgame.SendAllPlayersMessage("TNT Wars: " + color + name + Server.DefaultColor + " has left TNT Wars!");
                 }
 
-                GlobalDespawn(this, false);
+                Entities.GlobalDespawn(this, false);
                 if (discMsg != null) {
                 	if (!hidden) {
                 		string leavem = "&c- " + FullName + " %S" + discMsg;

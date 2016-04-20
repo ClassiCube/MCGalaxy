@@ -43,7 +43,7 @@ namespace MCGalaxy.Games
             {
                 if (p.Game.team != null) { p.Game.team.RemoveMember(p); }
                 p.Game.team = this;
-                Player.GlobalDespawn(p, false);
+                Entities.GlobalDespawn(p, false);
                 //p.CTFtempcolor = p.color;
                 //p.CTFtempprefix = p.prefix;
                 p.color = "&" + color;
@@ -52,7 +52,7 @@ namespace MCGalaxy.Games
                 p.prefix = p.color + "[" + Colors.Name("&" + color).ToUpper() + "] ";
                 players.Add(p);
                 mapOn.ChatLevel(p.ColoredName + " %Shas joined the " + teamstring + ".");
-                Player.GlobalSpawn(p, false);
+                Entities.GlobalSpawn(p, false);
             }
         }
 
@@ -61,14 +61,14 @@ namespace MCGalaxy.Games
             if (p.Game.team == this)
             {
                 p.Game.team = null;
-                Player.GlobalDespawn(p, false);
+                Entities.GlobalDespawn(p, false);
                 //p.color = p.CTFtempcolor;
                 //p.prefix = p.CTFtempprefix;
                 //p.carryingFlag = false;
                 p.Game.hasflag = null;
                 players.Remove(p);
                 mapOn.ChatLevel(p.ColoredName + " %Shas left the " + teamstring + ".");
-                Player.GlobalSpawn(p, false);
+                Entities.GlobalSpawn(p, false);
             }
         }
 

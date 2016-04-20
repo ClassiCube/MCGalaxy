@@ -60,11 +60,11 @@ namespace MCGalaxy.Commands
                 if (who.color == "" || who.color == oldcolor)
                     who.color = who.group.color;
                 who.SetPrefix();
-                Player.GlobalDespawn(who, false);
+                Entities.GlobalDespawn(who, false);
 
                 who.SendMessage("You are now ranked " + newRank.color + newRank.name + Server.DefaultColor + ", type /help for your new set of commands.");
                 who.SendUserType(Block.canPlace(who.group.Permission, Block.blackrock));              
-                Player.GlobalSpawn(who, false);
+                Entities.GlobalSpawn(who, false);
             }
             Server.IRC.Say(rankMsg);
         }

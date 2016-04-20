@@ -68,8 +68,8 @@ namespace MCGalaxy.Commands {
                 Player.GlobalMessage("Bot " + pBot.name + "'s %Sskin was changed to &c" + skin);
             } else {
                 who.skinName = skin;
-                Player.GlobalDespawn(who, true);
-                Player.GlobalSpawn(who, true);
+                Entities.GlobalDespawn(who, true);
+                Entities.GlobalSpawn(who, true);
                 Player.GlobalMessage(who.color + who.DisplayName + "'s %Sskin was changed to &c" + skin);
             }
         }

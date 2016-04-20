@@ -73,8 +73,8 @@ namespace MCGalaxy.Commands {
                 
                 who.group = Group.findPerm(LevelPermission.Banned);
                 who.color = who.group.color;
-                Player.GlobalDespawn(who, false);
-                Player.GlobalSpawn(who, false);
+                Entities.GlobalDespawn(who, false);
+                Entities.GlobalSpawn(who, false);
             }
             
             string oldgroup = group.name.ToString();

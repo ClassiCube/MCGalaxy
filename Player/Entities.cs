@@ -11,7 +11,7 @@ software distributed under the Licenses are distributed on an "AS IS"
 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using MCGalaxy.Games;
 
@@ -20,23 +20,24 @@ namespace MCGalaxy {
     /// <summary> Contains methods related to the management of entities (such as players). </summary>
     public static class Entities {
 
-        /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>        
+        #region Spawning / Despawning
+        
+        /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
         public static void GlobalSpawn(Player p, bool self, string possession = "") {
             GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], self, possession);
         }
         
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
-        public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
+        public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z,
                                        byte rotx, byte roty, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
             p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;
             foreach (Player other in players) {
                 if ((other.Loading && p != other) || p.level != other.level) continue;
-                if ((p.hidden || p.Game.Referee) && !self) continue;
                 
-                if (p != other) {
+                if (p != other && Entities.CanSeeEntity(other, p)) {
                     other.SpawnEntity(p, p.id, x, y, z, rotx, roty, possession);
-                } else if (self) {
+                } else if (p == other && self) {
                     other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
                     other.oldpos = other.pos; other.oldrot = other.rot;
                     other.SpawnEntity(other, 0xFF, x, y, z, rotx, roty, possession);
@@ -46,28 +47,33 @@ namespace MCGalaxy {
         
         /// <summary> Despawns this player to all other players that can see the player in the current world. </summary>
         public static void GlobalDespawn(Player p, bool self) {
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
-                if (p.level != other.level || (p.hidden && !self) ) continue;
-                if (p != other) { other.DespawnEntity(p.id); }
-                else if (self) { other.DespawnEntity(255); }
+                if (p.level != other.level ) continue;
+                
+                if (p != other && !Entities.CanSeeEntity(other, p)) {
+                    other.DespawnEntity(p.id);
+                } else if (p == other && self) {
+                    other.DespawnEntity(255);
+                }
             }
         }
         
-        
-        internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z, 
-                                       byte rotx, byte roty, string possession = "") {
+
+        internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z,
+                                   byte rotx, byte roty, string possession = "") {
             if (!Server.zombie.Running || !p.Game.Infected) {
                 string col = p.color;
                 if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
                     col = "&" + Colors.GetFallback(col[1]);
+                string group = p.Game.Referee ? "&2Referees" : "&fPlayers";
                 
                 if (dst.hasExtList) {
                     dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, x, y, z, rotx, roty);
-                    dst.SendExtAddPlayerName(id, p.skinName, col + p.truename, "&fPlayers", 0);
+                    dst.SendExtAddPlayerName(id, p.skinName, col + p.truename, group, 0);
                 } else {
-                    dst.SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty); 
-                }       
+                    dst.SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty);
+                }
                 return;
             }
             
@@ -102,6 +108,7 @@ namespace MCGalaxy {
                 dst.SendExtRemovePlayerName(id);
         }
         
+        #endregion      
 
         
         /// <summary> Returns whether the given player is able to see the other player (e.g. in /who). </summary>
@@ -114,9 +121,12 @@ namespace MCGalaxy {
         public static bool CanSeeEntity(Player p, Player who) {
             bool mayBeHidden = who.hidden || who.Game.Referee;
             if (p == null || !mayBeHidden || p == who) return true;
-            if (who.Game.Referee && !p.group.CanExecute("referee")) return false;
-            return p.group.Permission > who.group.Permission;
+            if (who.Game.Referee && !p.Game.Referee) return false;
+            return p.group.Permission >= who.group.Permission;
         }
+        
+        
+        #region Position updates
         
         public static byte[] GetPositionPacket(byte id, ushort[] pos, ushort[] oldpos,
                                                byte[] rot, byte[] oldrot, byte realPitch, bool bot) {
@@ -128,7 +138,7 @@ namespace MCGalaxy {
             if (Math.Abs(pos[0] - oldpos[0]) > 32 || Math.Abs(pos[1] - oldpos[1]) > 32 || Math.Abs(pos[2] - oldpos[2]) > 32)
                 absPosUpdate = true;
             // TODO: not sure why this is necessary for bots
-            if (bot) 
+            if (bot)
                 absPosUpdate = true;
 
             byte[] buffer = null;
@@ -151,7 +161,7 @@ namespace MCGalaxy {
                 buffer[5] = rot[0];
                 buffer[6] = realPitch;
             } else if (posChanged) {
-                buffer = new byte[5]; 
+                buffer = new byte[5];
                 buffer[0] = Opcode.RelPosUpdate;
                 buffer[1] = id;
                 buffer[2] = (byte)(pos[0] - oldpos[0]);
@@ -165,6 +175,49 @@ namespace MCGalaxy {
                 buffer[3] = realPitch;
             }
             return buffer;
-        }        
+        }
+        
+        public static void GlobalUpdate() {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players)
+                UpdatePosition(p);
+        }
+        
+        static void UpdatePosition(Player p) {
+            //pingDelayTimer.Stop();
+            byte[] packet = Entities.GetPositionPacket(p.id, p.pos, p.oldpos, p.rot, 
+                                                       p.oldrot, MakePitch(p), false);            
+            if (packet == null) return;
+            byte[] oldPacket = null;
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl == p || pl.level != p.level || !CanSeeEntity(pl, p)) continue;
+                
+                // For clients that don't support ChangeModel, we still need to provide
+                // some visual indication that they are infected.
+                if (!pl.hasChangeModel && oldPacket == null) {
+                    oldPacket = Entities.GetPositionPacket(p.id, p.pos, p.oldpos, p.rot, 
+                                                           p.oldrot, MakeClassicPitch(p), false);
+                }
+                pl.SendRaw(pl.hasChangeModel ? packet : oldPacket);
+            }
+            p.oldpos = p.pos; p.oldrot = p.rot;
+        }
+        
+        static byte MakePitch(Player p) {
+            if (Server.flipHead || p.flipHead)
+                if (p.rot[1] > 64 && p.rot[1] < 192) return p.rot[1];
+                else return 128;
+            return p.rot[1];
+        }
+        
+        static byte MakeClassicPitch(Player p) {
+            if (Server.flipHead || p.flipHead || p.Game.Infected)
+                if (p.rot[1] > 64 && p.rot[1] < 192) return p.rot[1];
+                else return 128;
+            return p.rot[1];
+        }
+        #endregion
     }
 }

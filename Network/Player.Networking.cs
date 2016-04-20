@@ -728,42 +728,6 @@ namespace MCGalaxy {
             NetUtils.WriteI16(maxjumpheight, buffer, 6);
             SendRaw(buffer);
         }
-        
-        void UpdatePosition() {
-            //pingDelayTimer.Stop();
-            byte[] packet = Entities.GetPositionPacket(id, pos, oldpos, rot, 
-                                                       oldrot, MakePitch(), false);            
-            if (packet == null) return;
-            byte[] oldPacket = null;
-            
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p == this || p.level != level) continue;
-                
-                // For clients that don't support ChangeModel, we still need to provide
-                // some visual indication that they are infected.
-                if (!p.hasChangeModel && oldPacket == null) {
-                    oldPacket = Entities.GetPositionPacket(id, pos, oldpos, rot, 
-                                                           oldrot, MakeClassicPitch(), false);
-                }
-                p.SendRaw(p.hasChangeModel ? packet : oldPacket);
-            }
-            oldpos = pos; oldrot = rot;
-        }
-        
-        byte MakePitch() {
-            if (Server.flipHead || flipHead)
-                if (rot[1] > 64 && rot[1] < 192) return rot[1];
-                else return 128;
-            return rot[1];
-        }
-        
-        byte MakeClassicPitch() {
-            if (Server.flipHead || flipHead || Game.Infected)
-                if (rot[1] > 64 && rot[1] < 192) return rot[1];
-                else return 128;
-            return rot[1];
-        }
 
         internal void CloseSocket() {
             // Try to close the socket.

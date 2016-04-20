@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands
             ushort z = (ushort)((0.5 + lvl.spawnz) * 32);
 
             p.aiming = false;
-            Player.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true);
+            Entities.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true);
             p.ClearBlockchange();
             p.Loading = false;
 

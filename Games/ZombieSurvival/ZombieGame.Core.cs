@@ -255,8 +255,8 @@ namespace MCGalaxy.Games {
         static void UpdatePlayerColor(Player p, string color) {
             if (p.Game.lastSpawnColor == color) return;
             p.Game.lastSpawnColor = color;
-            Player.GlobalDespawn(p, true);
-            Player.GlobalSpawn(p, true);
+            Entities.GlobalDespawn(p, true);
+            Entities.GlobalSpawn(p, true);
         }
         
         void EndRound(object sender, ElapsedEventArgs e) {
@@ -313,8 +313,8 @@ namespace MCGalaxy.Games {
                 if (!pl.level.name.CaselessEq(CurLevelName)) continue;
                 int money = GetMoney(pl, alive, rand);
                 
-                Player.GlobalDespawn(pl, true);
-                Player.GlobalSpawn(pl, true);
+                Entities.GlobalDespawn(pl, true);
+                Entities.GlobalSpawn(pl, true);
                 if (money == -1) {
                     pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you."); money = 0;
                 } else if (money > 0) {

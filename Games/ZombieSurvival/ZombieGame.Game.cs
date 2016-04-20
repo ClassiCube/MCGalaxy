@@ -107,6 +107,7 @@ namespace MCGalaxy.Games {
         public override void PlayerLeftServer(Player p) {
             Alive.Remove(p);
             Infected.Remove(p);
+            p.Game.Infected = false;
             AssignFirstZombie();
             UpdateAllPlayerStatus();
         }

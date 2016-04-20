@@ -128,7 +128,7 @@ namespace MCGalaxy {
         
         void InitTimers() {
             updateTimer.Elapsed += delegate {
-                Player.GlobalUpdate();
+                Entities.GlobalUpdate();
                 PlayerBot.GlobalUpdatePosition();
             };
             updateTimer.Start();

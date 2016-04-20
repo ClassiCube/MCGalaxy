@@ -50,8 +50,8 @@ namespace MCGalaxy.Commands {
 				who.DisplayName = newName;
 			}
 			
-			Player.GlobalDespawn(who, false);
-			Player.GlobalSpawn(who, false);
+			Entities.GlobalDespawn(who, false);
+			Entities.GlobalSpawn(who, false);
             PlayerDB.Save(who);
 		}
 		

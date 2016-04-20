@@ -136,8 +136,8 @@ namespace MCGalaxy.Commands
                         Server.IRC.Say(message + " was unbanned by console.");
                     }
                     who.group = Group.standard; who.color = who.group.color; 
-                    Player.GlobalDespawn(who, false);
-                    Player.GlobalSpawn(who, false);
+                    Entities.GlobalDespawn(who, false);
+                    Entities.GlobalSpawn(who, false);
                     Group.findPerm(LevelPermission.Banned).playerList.Remove(message);
                 }
             }
