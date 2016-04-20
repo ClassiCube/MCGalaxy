@@ -110,7 +110,6 @@ namespace MCGalaxy {
                 pl.Awards.Add(name);
                 return true;
             }
-
             PlayerAward newPl;
             newPl.Name = playerName;
             newPl.Awards = new List<string>();
@@ -157,8 +156,8 @@ namespace MCGalaxy {
         #region Awards management
         
         /// <summary> Adds a new award with the given name. </summary>
-        public static bool AddAward(string name, string desc) {
-            if (ExistsAward(name)) return false;
+        public static bool Add(string name, string desc) {
+            if (Exists(name)) return false;
 
             Award award = new Award();
             award.Name = name;
@@ -168,7 +167,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Removes the award with the given name. </summary>
-        public static bool RemoveAward(string name) {
+        public static bool Remove(string name) {
             foreach (Award award in AwardsList) {
                 if (!award.Name.CaselessEq(name)) continue;
                 AwardsList.Remove(award);
@@ -178,10 +177,17 @@ namespace MCGalaxy {
         }
         
         /// <summary> Whether an award with that name exists. </summary>
-        public static bool ExistsAward(string name) {
+        public static bool Exists(string name) {
             foreach (Award award in AwardsList)
                 if (award.Name.CaselessEq(name)) return true;
             return false;
+        }
+        
+        /// <summary> Whether an award with that name exists. </summary>
+        public static string Find(string name) {
+            foreach (Award award in AwardsList)
+                if (award.Name.CaselessEq(name)) return award.Name;
+            return null;
         }
         
         /// <summary> Gets the description of the award matching the given name, 

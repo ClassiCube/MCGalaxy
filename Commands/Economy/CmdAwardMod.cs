@@ -39,13 +39,13 @@ namespace MCGalaxy.Commands {
                     Help(p); return; 
                 }
 
-                if (!Awards.AddAward(args[0], args[1])) {
+                if (!Awards.Add(args[0], args[1])) {
                     Player.SendMessage(p, "This award already exists."); return;
                 } else {
                     Player.GlobalMessage("Award added: &6" + args[0] + " : " + args[1]);
                 }
             } else {
-                if (!Awards.RemoveAward(args[1])) {
+                if (!Awards.Remove(args[1])) {
                     Player.SendMessage(p, "This award does not exist."); return;
                 } else {
                     Player.GlobalMessage("Award removed: &6" + args[1]);
