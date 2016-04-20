@@ -62,8 +62,7 @@ namespace MCGalaxy
                 foreach (Level l in loaded) {
                     try
                     {
-                        if (!l.changed) return;
-                        if (!l.ShouldSaveLevelFile()) { l.saveChanges(); return; }
+                    	if (!l.changed || !l.ShouldSaveChanges()) return;
 
                         l.Save();
                         if (count == 0)

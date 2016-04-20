@@ -36,8 +36,8 @@ namespace MCGalaxy.Commands {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level l in loaded) {
                     try {
-                		if (l.ShouldSaveLevelFile()) l.Save();
-                        else { Server.s.Log("The level \"" + l.name + "\" is running a game, only saving block change history."); l.saveChanges(); }
+                		if (l.ShouldSaveChanges()) l.Save();
+                        else { Server.s.Log("The level \"" + l.name + "\" is running a game, not saving."); }
                 	} catch (Exception ex) {
                 		Server.ErrorLog(ex);
                 	}

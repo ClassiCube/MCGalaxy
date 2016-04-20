@@ -293,7 +293,7 @@ namespace MCGalaxy
         [Obsolete("Please use OnLevelUnloadEvent.Register()")]
         public static event OnLevelLoaded LevelLoaded;
 
-        public bool ShouldSaveLevelFile() {
+        public bool ShouldSaveChanges() {
         	if (Server.zombie.Running && !ZombieGame.SaveLevelBlockchanges &&
         	    (name.CaselessEq(Server.zombie.CurLevelName)
         	     || name.CaselessEq(Server.zombie.LastLevelName))) return false;
@@ -316,8 +316,8 @@ namespace MCGalaxy
             }
             MovePlayersToMain();
 
-            if (changed) {
-            	if (ShouldSaveLevelFile()) Save(false, true);
+            if (changed && ShouldSaveChanges()) {
+                Save(false, true);
                 saveChanges();
             }
             if (TntWarsGame.Find(this) != null)
