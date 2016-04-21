@@ -65,15 +65,13 @@ namespace MCGalaxy.Commands {
         }
         
         void AddAlt(string value, List<string> alts) {
-            for (int i = 0; i < alts.Count; i++) {
-                if (alts[i].CaselessEq(value)) return;
-            }
+            if (alts.CaselessContains(value)) return;
         	
-        	Group grp = Group.findPerm(LevelPermission.Banned);
-        	if (Ban.IsBanned(value))
-        		alts.Add(grp.color + value + "%S");
-        	else
-        		alts.Add(value);
+            Group grp = Group.findPerm(LevelPermission.Banned);
+            if (Ban.IsBanned(value))
+                alts.Add(grp.color + value + "%S");
+            else
+                alts.Add(value);
         }
 
         public override void Help(Player p) {

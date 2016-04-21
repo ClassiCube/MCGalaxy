@@ -16,52 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 
 namespace MCGalaxy.Commands {
-    
-    static class CmdPermissions {
-        
-        public static void Use(Player p, string[] args, bool skipNobodyPerm, string target,
-                               Func<Level, LevelPermission> getter, Action<Level, LevelPermission> setter) {
-            if (args.Length == 1 && p == null) {
-                Player.SendMessage(p, "You must provide a level name when running this command from console.");
-                return;
-            }
-            
-            Level level = args.Length == 1 ? p.level : LevelInfo.Find(args[0]);
-            if (level == null) {
-                Player.SendMessage(p, "There is no level \"" + args[0] + "\" loaded."); return;
-            }
-            string rank = args.Length == 1 ? args[0] : args[1];
-            LevelPermission newRank = Level.PermissionFromName(rank);
-            if (newRank == LevelPermission.Null) {
-                Player.SendMessage(p, "Not a valid rank"); return;
-            }
-
-            if (p != null && getter(level) > p.group.Permission) {
-                if (skipNobodyPerm || (getter(level) != LevelPermission.Nobody)) {
-                    Player.SendMessage(p, "You cannot change the " + target + " of a level " +
-                                       "with a " + target + " higher than your rank.");
-                    return;
-                }
-            }
-            
-            if (p != null && newRank > p.group.Permission) {
-                if (skipNobodyPerm || (newRank != LevelPermission.Nobody)) {
-                    Player.SendMessage(p, "You cannot change the " + target + " of a level " +
-                                       "to a " + target + " higher than your rank.");
-                    return;
-                }
-            }
-            
-            setter(level, newRank);
-            Level.SaveSettings(level);
-            Server.s.Log(level.name + " " + target + " permission changed to " + newRank + ".");
-            Chat.GlobalMessageLevel(level, target + " permission changed to " + newRank + ".");
-            if (p == null || p.level != level)
-                Player.SendMessage(p, target + " permission changed to " + newRank + " on " + level.name + ".");
-        }
-    }
     
     public sealed class CmdPerbuildMax : Command {
         
@@ -74,11 +31,9 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length < 1 || args.Length > 2) {
-                Help(p); return;
-            }
+            if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
-            CmdPermissions.Use(
+            PermissionCmd.Use(
                 p, args, false, "perbuildmax", l => l.perbuildmax,
                 (l, v) => l.perbuildmax = v);
         }
@@ -100,11 +55,9 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length < 1 || args.Length > 2) {
-                Help(p); return;
-            }
+            if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
-            CmdPermissions.Use(
+            PermissionCmd.Use(
                 p, args, true, "perbuild", l => l.permissionbuild,
                 (l, v) => l.permissionbuild = v);
         }
@@ -126,11 +79,9 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length < 1 || args.Length > 2) {
-                Help(p); return;
-            }
+            if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
-            CmdPermissions.Use(
+            PermissionCmd.Use(
                 p, args, false, "pervisitmax", l => l.pervisitmax,
                 (l, v) => l.pervisitmax = v);
         }
@@ -152,11 +103,15 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length < 1 || args.Length > 2) {
-                Help(p); return;
+            if (args.Length < 1 || args.Length > 2) { Help(p); return; }
+            
+            string name = args[args.Length - 1];
+            if (name.Length > 0 && (name[0] == '+' || name[0] == '-')) {
+                PermissionCmd.UseList(p, args, "pervisit", l => l.permissionvisit,
+                                       l => l.VisitWhitelist, l => l.VisitBlacklist); return;
             }
             
-            CmdPermissions.Use(
+            PermissionCmd.Use(
                 p, args, true, "pervisit", l => l.permissionvisit,
                 (l, v) => l.permissionvisit = v);
         }
@@ -164,6 +119,10 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.SendMessage(p, "%T/pervisit [level] [rank]");
             Player.SendMessage(p, "%HSets the lowest rank able to visit the given level.");
+            Player.SendMessage(p, "%T/pervisit [level] +[name]");
+            Player.SendMessage(p, "%HAllows [name] to visit the map, even if their rank cannot.");
+            Player.SendMessage(p, "%T/pervisit [level] -[name]");
+            Player.SendMessage(p, "%HPrevents [name] from visiting the map, even if their rank can.");
         }
     }
 }

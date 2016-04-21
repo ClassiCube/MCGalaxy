@@ -170,6 +170,21 @@ namespace MCGalaxy {
             return a.StartsWith(b, StringComparison.OrdinalIgnoreCase);
         }
         
+        public static bool CaselessContains(this List<string> items, string value) {
+            foreach (string item in items) {
+                if (item.CaselessEq(value)) return true;
+            }
+            return false;
+        }
+        
+        public static bool CaselessRemove(this List<string> items, string value) {
+            for (int i = 0; i < items.Count; i++) {
+                if (!items[i].CaselessEq(value)) continue;
+                items.RemoveAt(i); return true;
+            }
+            return false;
+        }
+        
         public static unsafe void memset( IntPtr srcPtr, byte value, int startIndex, int bytes ) {
             byte* srcByte = (byte*)srcPtr + startIndex;
             // Make sure we do an aligned write/read for the bulk copy

@@ -198,7 +198,12 @@ namespace MCGalaxy
         public LevelPermission permissionvisit = LevelPermission.Guest;
         [ConfigPerm("PerVisitMax", "Permissions", null, LevelPermission.Nobody, true)]
         public LevelPermission pervisitmax = LevelPermission.Nobody;
-
+        // Other blacklists/whitelists
+        [ConfigStringList("VisitWhitelist", "Permissions", null)]
+        public List<string> VisitWhitelist = new List<string>();
+        [ConfigStringList("VisitBlacklist", "Permissions", null)]
+        public List<string> VisitBlacklist = new List<string>();
+        
         public Random physRandom = new Random();
         public bool physPause;
         public DateTime physResume;

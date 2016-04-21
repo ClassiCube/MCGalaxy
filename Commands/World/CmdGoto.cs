@@ -104,13 +104,16 @@ namespace MCGalaxy.Commands {
         
         bool GoToLevel(Player p, Level lvl, string message) {
             if (p.level == lvl) { Player.SendMessage(p, "You are already in \"" + lvl.name + "\"."); return false; }
-            if (Player.BlacklistCheck(p.name, message)) {
+            if (Player.BlacklistCheck(p.name, message) || lvl.VisitBlacklist.CaselessContains(p.name)) {
                 Player.SendMessage(p, "You are blacklisted from " + lvl.name + "."); return false;
             }
-            if (!p.ignorePermission && p.group.Permission < lvl.permissionvisit) {
+            
+            bool whitelisted = lvl.VisitWhitelist.CaselessContains(p.name);
+            if (!p.ignorePermission && !whitelisted && p.group.Permission < lvl.permissionvisit) {
                 Player.SendMessage(p, "You're not allowed to go to " + lvl.name + "."); return false;
             }
-            if (!p.ignorePermission && p.group.Permission > lvl.pervisitmax && !p.group.CanExecute("pervisitmax")) {
+            if (!p.ignorePermission && !whitelisted && p.group.Permission > lvl.pervisitmax 
+                && !p.group.CanExecute("pervisitmax")) {
                 Player.SendMessage(p, "Your rank must be " + lvl.pervisitmax + " or lower to go there!"); return false;
             }
             if (File.Exists("text/lockdown/map/" + message.ToLower())) {
