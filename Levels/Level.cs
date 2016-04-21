@@ -246,6 +246,7 @@ namespace MCGalaxy
         public string Authors = "";
         [ConfigBool("Pillaring", "Game", null, false)]
         public bool Pillaring = !ZombieGame.noPillaring;
+        
         public BuildType BuildType = BuildType.Normal;
         public bool CanPlace { get { return Buildable && BuildType != BuildType.NoModify; } }
         public bool CanDelete { get { return Deletable && BuildType != BuildType.NoModify; } }
@@ -256,9 +257,17 @@ namespace MCGalaxy
         public int MaxRoundTime = 7;
         [ConfigBool("DrawingAllowed", "Game", null, true)]        
         public bool DrawingAllowed = true;
+        [ConfigInt("RoundsPlayed", "Game", null, 0)]
+        public int RoundsPlayed = 0;
+        [ConfigInt("RoundsHumanWon", "Game", null, 0)]
+        public int RoundsHumanWon = 0;
+        
+        public int WinChance {
+            get { return RoundsPlayed == 0 ? 100 : (RoundsHumanWon * 100) / RoundsPlayed; }
+        }
         
         public Level(string n, ushort x, ushort y, ushort z) {
-        	Init(n, x, y, z);
+            Init(n, x, y, z);
         }
         
         public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false) {

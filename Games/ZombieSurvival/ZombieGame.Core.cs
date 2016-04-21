@@ -313,12 +313,14 @@ namespace MCGalaxy.Games {
             timer.Enabled = false;
             string playersString = "";
             Player[] online = null;
+            CurLevel.RoundsPlayed++;
             
             if (alive.Length == 0) {
                 online = PlayerInfo.Online.Items;
                 foreach (Player pl in online)
                     ResetPlayer(pl, ref playersString);
             } else {
+               CurLevel.RoundsHumanWon++;
                 foreach (Player pl in alive) {
                     if (pl.Game.PledgeSurvive) {
                         pl.SendMessage("You received &a5 %3" + Server.moneys +

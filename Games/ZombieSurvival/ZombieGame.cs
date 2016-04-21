@@ -92,11 +92,7 @@ namespace MCGalaxy.Games {
         void ChangeLevel(string next) {
             Player[] online = PlayerInfo.Online.Items;
             if (CurLevel != null) {
-                bool saveSettings = false;
-                foreach (Player pl in online)
-                    saveSettings |= pl.Game.RatedMap;
-                if (saveSettings) Level.SaveSettings(CurLevel);
-                
+                Level.SaveSettings(CurLevel);               
                 CurLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
                 CurLevel.ChatLevel("Please wait while you are transfered.");
             }

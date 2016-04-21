@@ -138,6 +138,7 @@ namespace MCGalaxy.Games {
                     p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
                 p.SendMessage("This map has &a" + CurLevel.Likes + 
                               " likes %Sand &c" + CurLevel.Dislikes + " dislikes");
+                p.SendMessage("This map's win chance is &a" + CurLevel.WinChance + "%S%");
                 p.SendCpeMessage(CpeMessageType.Status2, 
                                  "%SPillaring " + (CurLevel.Pillaring ? "&aYes" : "&cNo") +
                                  "%S, Type is &a" + CurLevel.BuildType);
