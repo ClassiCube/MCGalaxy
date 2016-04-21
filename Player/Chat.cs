@@ -135,6 +135,9 @@ namespace MCGalaxy {
             { "$motd", (c, p) => Server.motd },
             { "$banned", (c, p) => Player.GetBannedCount().ToString() },
             { "$irc", (c, p) => Server.ircServer + " > " + Server.ircChannel },
+            
+            { "$infected", (c, p) => p.Game.TotalInfected.ToString() },
+            { "$survived", (c, p) => p.Game.TotalRoundsSurvived.ToString() },            
         };
         public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();
         

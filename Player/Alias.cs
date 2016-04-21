@@ -65,8 +65,7 @@ namespace MCGalaxy {
                         sw.WriteLine(a.Trigger + " : " + a.Target);
                     else
                         sw.WriteLine(a.Trigger + " : " + a.Target + " " + a.Args);
-                }
-                    
+                }                   
             }
         }
 

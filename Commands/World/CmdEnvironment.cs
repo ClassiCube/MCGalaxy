@@ -134,7 +134,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        void SetEnvWeather(Player p, string value, ref byte target) {
+        void SetEnvWeather(Player p, string value, ref int target) {
             byte weather = 255;
             if (IsResetString(value)) {
                 p.SendMessage(string.Format("Reset weather for {0}&S to 0 (sun)", p.level.name));

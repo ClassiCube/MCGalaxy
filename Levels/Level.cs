@@ -28,6 +28,7 @@ using System.Threading;
 using MCGalaxy.SQL;
 using Timer = System.Timers.Timer;
 using MCGalaxy.BlockPhysics;
+using MCGalaxy.Config;
 using MCGalaxy.Games;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.SQL.Native;
@@ -76,21 +77,30 @@ namespace MCGalaxy
         internal readonly Dictionary<int, bool[]> liquids = new Dictionary<int, bool[]>();
         // Holds random flow data for liqiud physics
         bool physicssate = false;
+        [ConfigBool("Survival death", "General", null, false)]        
         public bool Death;
         public ExtrasCollection Extras = new ExtrasCollection();
         public bool GrassDestroy = true;
         public bool GrassGrow = true;
+        [ConfigBool("Killer blocks", "General", null, true)]        
         public bool Killer = true;
         public List<UndoPos> UndoBuffer = new List<UndoPos>();
         public List<Zone> ZoneList;
+        [ConfigBool("Animal AI", "General", null, true)]
         public bool ai = true;
         public bool backedup;
         public List<BlockPos> blockCache = new List<BlockPos>();
+        [ConfigBool("Buildable", "Permissions", null, true)]        
         public bool Buildable = true;
+        [ConfigBool("Deletable", "Permissions", null, true)]
         public bool Deletable = true;
-        
-        public byte weather;
-        public string terrainUrl = "", texturePackUrl = "";
+
+        [ConfigInt("Weather", "Env", null, 0, 0, 2)]        
+        public int weather;
+        [ConfigString("Texture", "Env", null, "", true)]
+        public string terrainUrl = "";
+        [ConfigString("TexturePack", "Env", null, "", true)]
+        public string texturePackUrl = "";
 
         public bool cancelsave1;
         public bool cancelunload;
@@ -113,14 +123,20 @@ namespace MCGalaxy
         public bool IsMuseum { 
             get { return name.StartsWith("&cMuseum " + Server.DefaultColor, StringComparison.Ordinal); } 
         }
-        
+
+        [ConfigInt("Drown", "General", null, 70)]   
         public int drown = 70;
+        [ConfigBool("Edge water", "General", null, true)]
         public bool edgeWater;
+        [ConfigInt("Fall", "General", null, 9)]
         public int fall = 9;
+        [ConfigBool("Finite mode", "General", null, false)] 
         public bool finite;
-        public bool fishstill;
+        [ConfigBool("GrowTrees", "General", null, false)]
         public bool growTrees;
+        [ConfigBool("Guns", "General", null, true)]
         public bool guns = true;
+        
         public byte jailrotx, jailroty;
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
         public string CloudColor = null;
@@ -154,18 +170,33 @@ namespace MCGalaxy
         
         public BlockDefinition[] CustomBlockDefs;
         
-        public ushort jailx, jaily, jailz;
+        [ConfigInt("JailX", "Jail", null, 0, 0, 65535)]
+        public int jailx;
+        [ConfigInt("JailY", "Jail", null, 0, 0, 65535)]
+        public int jaily;
+        [ConfigInt("JailZ", "Jail", null, 0, 0, 65535)]
+        public int jailz;
+        
         public int lastCheck;
         public int lastUpdate;
+        [ConfigBool("LeafDecay", "General", null, false)]        
         public bool leafDecay;
+        [ConfigBool("LoadOnGoto", "General", null, true)]
         public bool loadOnGoto = true;
+        [ConfigString("MOTD", "General", null, "ignore", true)]
         public string motd = "ignore";
         public string name;
+        [ConfigInt("Physics overload", "General", null, 250)]        
         public int overload = 1500;
+        
+        [ConfigPerm("PerBuildMax", "Permissions", null, LevelPermission.Nobody, true)]
         public LevelPermission perbuildmax = LevelPermission.Nobody;
+        [ConfigPerm("PerBuild", "Permissions", null, LevelPermission.Guest, true)]
         public LevelPermission permissionbuild = LevelPermission.Guest;
         // What ranks can go to this map (excludes banned)
+        [ConfigPerm("PerVisit", "Permissions", null, LevelPermission.Guest, true)]
         public LevelPermission permissionvisit = LevelPermission.Guest;
+        [ConfigPerm("PerVisitMax", "Permissions", null, LevelPermission.Nobody, true)]
         public LevelPermission pervisitmax = LevelPermission.Nobody;
 
         public Random physRandom = new Random();
@@ -185,17 +216,20 @@ namespace MCGalaxy
             }
         }
         int Physicsint;
+        [ConfigBool("RandomFlow", "General", null, true)]        
         public bool randomFlow = true;
-        public bool realistic = true;
         public byte rotx;
         public byte roty;
-        public bool rp = true;
         public ushort spawnx, spawny, spawnz;
 
+        [ConfigInt("Physics speed", "General", null, 250)]
         public int speedPhysics = 250;
 
+        [ConfigString("Theme", "General", null, "Normal", true)]
         public string theme = "Normal";
+        [ConfigBool("Unload", "General", null, true)]
         public bool unload = true;
+        [ConfigBool("WorldChat", "General", null, true)]        
         public bool worldChat = true;
         public bool bufferblocks = Server.bufferblocks;
         public List<BlockQueue.block> blockqueue = new List<BlockQueue.block>();
@@ -204,13 +238,23 @@ namespace MCGalaxy
 
         public List<C4Data> C4list = new List<C4Data>();
         // Games fields
-        public int Likes, Dislikes;
+        [ConfigInt("Likes", "Game", null, 0)]
+        public int Likes;
+        [ConfigInt("Dislikes", "Game", null, 0)]
+        public int Dislikes;
+        [ConfigString("Authors", "Game", null, "", true)]
         public string Authors = "";
+        [ConfigBool("Pillaring", "Game", null, false)]
         public bool Pillaring = !ZombieGame.noPillaring;
         public BuildType BuildType = BuildType.Normal;
         public bool CanPlace { get { return Buildable && BuildType != BuildType.NoModify; } }
         public bool CanDelete { get { return Deletable && BuildType != BuildType.NoModify; } }
-        public int MinRoundTime = 4, MaxRoundTime = 7;
+        
+        [ConfigInt("MinRoundTime", "Game", null, 4)]
+        public int MinRoundTime = 4;
+        [ConfigInt("MaxRoundTime", "Game", null, 7)]
+        public int MaxRoundTime = 7;
+        [ConfigBool("DrawingAllowed", "Game", null, true)]        
         public bool DrawingAllowed = true;
         
         public Level(string n, ushort x, ushort y, ushort z) {

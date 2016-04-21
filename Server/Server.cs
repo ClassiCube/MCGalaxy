@@ -441,9 +441,10 @@ namespace MCGalaxy
             }
         }
         
-        internal static ConfigElement[] serverConfig;
+        internal static ConfigElement[] serverConfig, levelConfig;
         public void Start() {
-        	serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGame));
+            serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGame));
+            levelConfig = ConfigElement.GetAll(typeof(Level));
         	
             PlayerInfo.players = PlayerInfo.Online.list;
             Player.players = PlayerInfo.Online.list;

@@ -60,7 +60,6 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "Killer blocks: " + GetBool(lvl.Killer));
                     Player.SendMessage(p, "Unload: " + GetBool(lvl.unload));
                     Player.SendMessage(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
-                    Player.SendMessage(p, "Auto physics: " + GetBool(lvl.rp));
                     Player.SendMessage(p, "RP chat: " + GetBool(!lvl.worldChat));
                     Player.SendMessage(p, "Guns: " + GetBool(lvl.guns));
                     Player.SendMessage(p, "Buildable: " + GetBool(lvl.Buildable));
@@ -120,9 +119,6 @@ namespace MCGalaxy.Commands
                     case "drown": lvl.drown = int.Parse(message.Split(' ')[1]); lvl.ChatLevel("Drown time: &b" + ((float)lvl.drown / 10)); break;
                     case "unload":
                         SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
-                    case "rp":
-                    case "restartphysics":
-                        SetBool(p, lvl, ref lvl.rp, "Auto physics: "); break;
                     case "chat":
                         SetBool(p, lvl, ref lvl.worldChat, "RP chat: "); break;
                     case "load":
@@ -187,7 +183,6 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Killer turns killer blocks on and off.");
             Player.SendMessage(p, "Unload sets whether the map unloads when no one's there.");
             Player.SendMessage(p, "Load on /goto sets whether the map can be loaded when some uses /goto. Only works if the load on /goto server option is enabled.");
-            Player.SendMessage(p, "RP sets whether the physics auto-start for the map");
             Player.SendMessage(p, "Buildable sets whether any blocks can be placed by any player");
             Player.SendMessage(p, "Deletable sets whether any blocks can be deleted by any player");
         }

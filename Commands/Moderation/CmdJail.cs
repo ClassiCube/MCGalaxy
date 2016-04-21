@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "You jailed " + who.DisplayName);
                 Entities.GlobalDespawn(who, false);
                 who.jailed = true;
-                Entities.GlobalSpawn(who, who.level.jailx, who.level.jaily, who.level.jailz, who.level.jailrotx, who.level.jailroty, true);
+                Entities.GlobalSpawn(who, (ushort)who.level.jailx, (ushort)who.level.jaily, (ushort)who.level.jailz,
+                                     who.level.jailrotx, who.level.jailroty, true);
                 
                 Server.Jailed.DeleteWord(who.name.ToLower());
                 Server.Jailed.Append(who.name.ToLower() + " " + who.level.name);

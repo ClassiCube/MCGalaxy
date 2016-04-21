@@ -712,8 +712,8 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
-        public void SendSetMapWeather( byte weather ) { // 0 - sunny; 1 - raining; 2 - snowing
-            SendRaw(Opcode.CpeEnvWeatherType, weather);
+        public void SendSetMapWeather(int weather) { // 0 - sunny; 1 - raining; 2 - snowing
+        	SendRaw(Opcode.CpeEnvWeatherType, (byte)weather);
         }
         
         void SendHackControl( byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning,

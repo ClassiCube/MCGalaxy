@@ -41,58 +41,12 @@ namespace MCGalaxy.Levels.IO {
             }
         }
         
-        static void WriteLevelProperties(Level level, StreamWriter writer) {
-            writer.WriteLine("#Level properties for " + level.name);
-            writer.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
-            writer.WriteLine("Theme = " + level.theme);
-            writer.WriteLine("Physics = " + level.physics);
-            writer.WriteLine("Physics speed = " + level.speedPhysics);
-            writer.WriteLine("Physics overload = " + level.overload);
-            writer.WriteLine("Finite mode = " + level.finite);
-            writer.WriteLine("Animal AI = " + level.ai);
-            writer.WriteLine("Edge water = " + level.edgeWater);
-            writer.WriteLine("Survival death = " + level.Death);
-            writer.WriteLine("Fall = " + level.fall);
-            writer.WriteLine("Drown = " + level.drown);
-            writer.WriteLine("MOTD = " + level.motd);
-            writer.WriteLine("JailX = " + level.jailx);
-            writer.WriteLine("JailY = " + level.jaily);
-            writer.WriteLine("JailZ = " + level.jailz);
-            writer.WriteLine("Unload = " + level.unload);
-            writer.WriteLine("WorldChat = " + level.worldChat);
-            
-            writer.WriteLine("#Permission settings");
-            writer.WriteLine("PerBuild = " + GetName(level.permissionbuild));
-            writer.WriteLine("PerVisit = " + GetName(level.permissionvisit));
-            writer.WriteLine("PerBuildMax = " + GetName(level.perbuildmax));
-            writer.WriteLine("PerVisitMax = " + GetName(level.pervisitmax));
-            writer.WriteLine("Buildable = " + level.Buildable);
-            writer.WriteLine("Deletable = " + level.Deletable);
-            
-            writer.WriteLine("Guns = " + level.guns);
-            writer.WriteLine("LoadOnGoto = " + level.loadOnGoto);
-            writer.WriteLine("LeafDecay = " + level.leafDecay);
-            writer.WriteLine("RandomFlow = " + level.randomFlow);
-            writer.WriteLine("GrowTrees = " + level.growTrees);
-            writer.WriteLine("Weather = " + level.weather);
-            writer.WriteLine("Texture = " + level.terrainUrl);
-            writer.WriteLine("TexturePack = " + level.texturePackUrl);
-            
-            writer.WriteLine("#Game settings");
-            writer.WriteLine("Likes = " + level.Likes);
-            writer.WriteLine("Dislikes = " + level.Dislikes);
-            writer.WriteLine("Authors = " + level.Authors);
-            writer.WriteLine("Pillaring = " + level.Pillaring);
-            writer.WriteLine("BuildType = " + level.BuildType);
-            writer.WriteLine("MinRoundTime = " + level.MinRoundTime);
-            writer.WriteLine("MaxRoundTime = " + level.MaxRoundTime);
-            writer.WriteLine("DrawingAllowed = " + level.DrawingAllowed);
-        }
-        
-        static string GetName(LevelPermission perm) {
-            string permName = Level.PermissionToName(perm).ToLower();
-            return Group.Exists(permName) ? permName :
-                Level.PermissionToName(LevelPermission.Nobody);
+        static void WriteLevelProperties(Level level, StreamWriter w) {
+            w.WriteLine("#Level properties for " + level.name);
+            w.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
+            w.WriteLine("Physics = " + level.physics);
+            w.WriteLine("BuildType = " + level.BuildType);            
+            ConfigElement.Serialise(Server.levelConfig, " settings", w, level);
         }
         
         static void WriteEnvProperties(Level level, StreamWriter writer) {
@@ -141,86 +95,15 @@ namespace MCGalaxy.Levels.IO {
         
         static void PropLineProcessor(string key, string value, ref Level level) {
             switch (key.ToLower()) {
-                case "theme":
-                    level.theme = value; break;
                 case "physics":
                     level.setPhysics(int.Parse(value)); break;
-                case "physics speed":
-                    level.speedPhysics = int.Parse(value); break;
-                case "physics overload":
-                    level.overload = int.Parse(value); break;
-                case "finite mode":
-                    level.finite = bool.Parse(value); break;
-                case "animal ai":
-                    level.ai = bool.Parse(value); break;
-                case "edge water":
-                    level.edgeWater = bool.Parse(value); break;
-                case "survival death":
-                    level.Death = bool.Parse(value); break;
-                case "fall":
-                    level.fall = int.Parse(value); break;
-                case "drown":
-                    level.drown = int.Parse(value); break;
-                case "motd":
-                    level.motd = value; break;
-                case "jailx":
-                    level.jailx = ushort.Parse(value); break;
-                case "jaily":
-                    level.jaily = ushort.Parse(value); break;
-                case "jailz":
-                    level.jailz = ushort.Parse(value); break;
-                case "unload":
-                    level.unload = bool.Parse(value); break;
-                case "worldchat":
-                    level.worldChat = bool.Parse(value); break;
-                case "perbuild":
-                    level.permissionbuild = GetPerm(value); break;
-                case "pervisit":
-                    level.permissionvisit = GetPerm(value); break;
-                case "perbuildmax":
-                    level.perbuildmax = GetPerm(value); break;
-                case "pervisitmax":
-                    level.pervisitmax = GetPerm(value); break;
-                case "guns":
-                    level.guns = bool.Parse(value); break;
-                case "loadongoto":
-                    level.loadOnGoto = bool.Parse(value); break;
-                case "leafdecay":
-                    level.leafDecay = bool.Parse(value); break;
-                case "randomflow":
-                    level.randomFlow = bool.Parse(value); break;
-                case "growtrees":
-                    level.growTrees = bool.Parse(value); break;
-                case "weather":
-                    level.weather = byte.Parse(value); break;
-                case "texture":
-                    level.terrainUrl = value; break;
-                case "texturepack":
-                    level.texturePackUrl = value; break;
-                case "buildable":
-                    level.Buildable = bool.Parse(value); break;
-                case "deletable":
-                    level.Deletable = bool.Parse(value); break;
-                case "likes":
-                    level.Likes = int.Parse(value); break;
-                case "dislikes":
-                    level.Dislikes = int.Parse(value); break;
-                case "authors":
-                    level.Authors = value; break;
-                case "pillaring":
-                    level.Pillaring = bool.Parse(value); break;
                 case "buildtype":
                     level.BuildType = (BuildType)Enum.Parse(typeof(BuildType), value); break;
-                case "minroundtime":
-                    level.MinRoundTime = int.Parse(value); break;
-                case "maxroundtime":
-                    level.MaxRoundTime = int.Parse(value); break;                 
+                default:
+                    if (!ConfigElement.Parse(Server.levelConfig, key, value, level))
+				        Server.s.Log("\"" + key + "\" was not a recognised level property key.");
+                    break;
             }
-        }
-        
-        static LevelPermission GetPerm(string value) {
-            LevelPermission perm = Level.PermissionFromName(value);
-            return perm != LevelPermission.Null ? perm : LevelPermission.Guest;
         }
     }
 }
