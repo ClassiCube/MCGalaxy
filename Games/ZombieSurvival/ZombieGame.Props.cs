@@ -121,10 +121,14 @@ namespace MCGalaxy.Games {
         public static string ZombieName = "";
         [ConfigString("zombie-model-while-infected", "Zombie", null, "zombie")]
         public static string ZombieModel = "zombie";
+        
         [ConfigInt("zombie-invisibility-duration", "Zombie", null, 7, 1)]
         public static int InvisibilityDuration = 7;       
         [ConfigBool("enable-changing-levels", "Zombie", null, true)]
         public static bool ChangeLevels = true;
+        [ConfigBool("zombie-awards", "Zombie", null, false)]
+        public static bool UseAwards = false;       
+        
         
         /// <summary> List of levels that are randomly picked for zombie survival. 
         /// If this left blank, then all level files are picked from instead. </summary>

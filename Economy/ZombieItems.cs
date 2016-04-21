@@ -69,6 +69,7 @@ namespace MCGalaxy.Eco {
             }
             
             Command.all.Find("queue").Use(p, "level " + message);
+            ZombieAwards.Give(p, ZombieAwards.buyQueue, Server.zombie);
             MakePurchase(p, Price, "%3QueueLevel: " + message);
         }
     }

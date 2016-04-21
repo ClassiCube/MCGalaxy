@@ -182,9 +182,13 @@ namespace MCGalaxy.Games {
                             || Math.Abs(pAlive.pos[2] - pKiller.pos[2]) > HitboxPrecision)
                             continue;
                         
-                        if (!pAlive.Game.Infected && pKiller.Game.Infected && !pAlive.Game.Referee && !pKiller.Game.Referee && pKiller != pAlive
-                            && pKiller.level.name.CaselessEq(CurLevelName) && pAlive.level.name.CaselessEq(CurLevelName))
+                        if (!pAlive.Game.Infected && pKiller.Game.Infected && !pAlive.Game.Referee 
+                            && !pKiller.Game.Referee && pKiller != pAlive
+                            && pKiller.level.name.CaselessEq(CurLevelName) 
+                            && pAlive.level.name.CaselessEq(CurLevelName))
                         {
+                            if (pAlive.Game.Invisible)
+                                ZombieAwards.Give(pKiller, ZombieAwards.killInvisHuman, this);
                             InfectPlayer(pAlive);
                             aliveChanged = true;
                             pAlive.Game.BlocksLeft = 25;
