@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
 		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
         	get { return new[] { new CommandAlias("cut", "cut") }; }
-        }		
+        }
 		public CmdCopy() { }
 
 		public override void Use(Player p, string message) {

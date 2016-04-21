@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -24,31 +24,32 @@ namespace MCGalaxy.Commands {
     public sealed class CmdMapInfo : Command {
         
         public override string name { get { return "mapinfo"; } }
-        public override string shortcut { get { return "status"; } }
+        public override string shortcut { get { return "winfo"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("worldinfo") }; }
+        }
+        
         public override void Use(Player p, string message) {
             Level lvl = message == "" ? p.level : LevelInfo.Find(message);
             MapInfoData data = new MapInfoData();
             if (lvl != null) {
-            	data.FromOnlineLevel(lvl);
+                data.FromOnlineLevel(lvl);
             } else if (LevelInfo.ExistsOffline(message)) {
-            	data.FromOfflineLevel(message);
+                data.FromOfflineLevel(message);
             } else {
-            	Player.SendMessage(p, "Could not find specified level."); return;
+                Player.SendMessage(p, "Could not find specified level."); return;
             }
-            
+            ShowNormal(p, data);
+        }
+        
+        void ShowNormal(Player p, MapInfoData data) {
             Player.SendMessage(p, "&b" + data.name + "%S: Width=" + data.Width + " Height=" + data.Height + " Depth=" + data.Length);
             string physicsState = CmdPhysics.states[data.physics];
             Player.SendMessage(p, "Physics are " + physicsState + Server.DefaultColor + " on &b" + data.name);
-
-            Player.SendMessage(p, "Build rank = " + Group.findPerm(data.build).color + Group.findPerm(data.build).trueName +
-                               " %S: Visit rank = " + Group.findPerm(data.visit).color + Group.findPerm(data.visit).trueName);
-
-            Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).color + Group.findPerm(data.buildmax).trueName +
-                               " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).color + Group.findPerm(data.visitmax).trueName);
+            ShowPermissions(p, data);
 
             string gunStatus = data.guns ? "&aonline" : "&coffline";
             Player.SendMessage(p, "&cGuns &eare " + gunStatus + " &eon " + data.name + ".");
@@ -60,11 +61,26 @@ namespace MCGalaxy.Commands {
             } else {
                 Player.SendMessage(p, "No backups for this map exist yet.");
             }
-            
+            ShowEnv(p, data);
+        }
+        
+        void ShowPermissions(Player p, MapInfoData data) {
+            Player.SendMessage(p, "Build rank = " + Group.findPerm(data.build).color + Group.findPerm(data.build).trueName +
+                               " %S: Visit rank = " + Group.findPerm(data.visit).color + Group.findPerm(data.visit).trueName);
+            Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).color + Group.findPerm(data.buildmax).trueName +
+                               " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).color + Group.findPerm(data.visitmax).trueName);
+        }
+        
+        void ShowEnv(Player p, MapInfoData data) {
             if (data.terrainUrl != "")
-                Player.SendMessage(p, "TexturePack: %b" + data.terrainUrl);
+                Player.SendMessage(p, "Texture: %b" + data.terrainUrl);
             else
-                Player.SendMessage(p, "No textures for this map exist yet.");
+                Player.SendMessage(p, "No custom texture set for this map.");
+            
+            if (data.textureUrl != "")
+                Player.SendMessage(p, "Texture pack: %b" + data.textureUrl);
+            else
+                Player.SendMessage(p, "No custom texture pack set for this map.");
             
             const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
             Player.SendMessage(p, String.Format(format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
@@ -81,7 +97,7 @@ namespace MCGalaxy.Commands {
             public int physics;
             public LevelPermission visit, build, visitmax, buildmax;
             public bool guns;
-            public string name, terrainUrl;
+            public string name, terrainUrl, textureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
             public short EdgeLevel, CloudsHeight, MaxFogDistance;
             public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
@@ -99,10 +115,10 @@ namespace MCGalaxy.Commands {
                 MaxFogDistance = lvl.MaxFogDistance;
                 EdgeBlock = lvl.EdgeBlock; HorizonBlock = lvl.HorizonBlock;
                 
-                if (lvl.terrainUrl != "")
-                    terrainUrl = lvl.terrainUrl;
-                else if (lvl == Server.mainLevel && Server.defaultTerrainUrl != "")
-                    terrainUrl = lvl.terrainUrl;
+                terrainUrl = lvl.terrainUrl != "" ?
+                    lvl.terrainUrl : Server.defaultTerrainUrl;
+                textureUrl = lvl.texturePackUrl != "" ?
+                    lvl.texturePackUrl : Server.defaultTextureUrl;
             }
             
             public void FromOfflineLevel(string name) {
@@ -121,18 +137,20 @@ namespace MCGalaxy.Commands {
             }
             
             void ParseProperty(string key, string value) {
-            	switch (key.ToLower()) {
+                switch (key.ToLower()) {
                     case "physics": physics = int.Parse(value); break;
                     case "perbuild": build = GetPerm(value); break;
                     case "pervisit": visit = GetPerm(value); break;
                     case "perbuildmax": buildmax = GetPerm(value); break;
                     case "pervisitmax": visitmax = GetPerm(value); break;
                     case "guns": guns = bool.Parse(value); break;
+                    case "texture": terrainUrl = value; break;
+                    case "texturepack": textureUrl = value; break;
                 }
             }
             
             void ParseEnv(string key, string value) {
-            	switch (key.ToLower()) {
+                switch (key.ToLower()) {
                     case "cloudcolor": Clouds = value; break;
                     case "fogcolor": Fog = value; break;
                     case "skycolor": Sky = value; break;
@@ -153,7 +171,7 @@ namespace MCGalaxy.Commands {
         }
         
         static string Color(string src) {
-            return (src == null || src == "-1") ? "%bnone%e" : "%b" + src + "%e";
+            return (src == null || src == "" || src == "-1") ? "%bnone%e" : "%b" + src + "%e";
         }
         
         public override void Help(Player p)  {

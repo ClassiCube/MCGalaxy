@@ -374,7 +374,7 @@ namespace MCGalaxy
         [ConfigString("default-texture-url", "General", null, "", true)]
         public static string defaultTerrainUrl = "";
         [ConfigString("default-texture-pack-url", "General", null, "", true)]        
-        public static string defaultTexturePackUrl = "";
+        public static string defaultTextureUrl = "";
 
         public static bool flipHead = false;
 

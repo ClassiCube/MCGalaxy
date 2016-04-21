@@ -165,7 +165,7 @@ namespace MCGalaxy
             if (EnvMapAppearance == 2) {
                 string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
                 if (url == "") 
-                    url = Server.defaultTexturePackUrl == "" ? Server.defaultTerrainUrl : Server.defaultTexturePackUrl;
+                    url = Server.defaultTextureUrl == "" ? Server.defaultTerrainUrl : Server.defaultTextureUrl;
                 
                 // reset all other textures back to client default.
                 if (url != lastUrl)
