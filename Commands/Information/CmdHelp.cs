@@ -243,40 +243,36 @@ namespace MCGalaxy.Commands
             if (message == "door")
             {
                 Player.SendMessage(p, "Door can be used as an 'openable' block if physics are enabled, will automatically toggle back to closed after a few seconds. door_green toggles to red instead of air - also see, odoor and tdoor");
-                return true;
             }
-            if (message == "odoor")
+            else if (message == "odoor")
             {
                 Player.SendMessage(p, "Odoor behaves like a user togglable door, does not auto close.  Needs to be opened with a normal /door of any type and touched by other physics blocks, such as air_door to work.");
-                return true;
             }
-            if (message == "tdoor")
+            else if (message == "tdoor")
             {
                 Player.SendMessage(p, "Tdoor behaves like a regular /door, but allows physics blocks, e.g. active_water to flow through when opened");
-                return true;
             }
-            if (message == "active_water" || message == "acw" || message == "geyser" || message =="active_cold_water")
+            else if (message == "active_water" || message == "acw" || message == "geyser" || message =="active_cold_water")
             {
                 Player.SendMessage(p, "active_water flows horizontally through the map, active_cold_water and geyser kill players, geyser flows upwards.");
-                return true;
             }
-            if (message == "active_lava" || message == "ahl" || message == "magma" || message == "active_hot_lava")
+            else if (message == "active_lava" || message == "ahl" || message == "magma" || message == "active_hot_lava")
             {
                 Player.SendMessage(p, "active_lava flows horizontally through the map, active_hot_lava and magma kill players, magma flows upwards slowly if it is placed in a spot where it cannot flow then broken out.");
-                return true;
             }
-            if (message == "fire")
+            else if (message == "fire")
             {
                 Player.SendMessage(p, "Fire blocks burn through wood and temporarily leaves coal and obsidian behind");
-                return true;
             }
-            if (message == "nerve_gas")
+            else if (message == "nerve_gas")
             {
                 Player.SendMessage(p, "Nerve gas is an invisible, killer, static block");
-                return true;
+            }
+            else
+            {
+                Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b)));
             }
             
-            Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b)));
             Group foundRank = Group.findPerm(Block.BlockList[b].lowestRank);
             Player.SendMessage(p, "Rank needed: " + foundRank.color + foundRank.name);
             return true;
