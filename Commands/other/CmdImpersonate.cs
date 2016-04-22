@@ -27,10 +27,11 @@ namespace MCGalaxy.Commands {
         static char[] trimChars = { ' ' };
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (!message.Contains(" ")) { Help(p); return; }
             string[] args = message.Split(trimChars, 2);
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
-            if (who == null) return;
+            if (who == null || message == "") {Help(p); return; }
+            if (who.muted) { Player.SendMessage(p, "Cannot impersonate a muted player"); return; }
             
             if (p == null || p == who || p.group.Permission > who.group.Permission) {
                 Player.SendChatFrom(who, args[1]);
