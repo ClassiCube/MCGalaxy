@@ -80,8 +80,8 @@ namespace MCGalaxy.Eco {
             }
             
             Command.all.Find("promote").Use(null, p.name);
-            Player.SendMessage(p, "%aYou've successfully bought the rank " + p.group.color + p.group.name);
-            MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.color + p.group.name);
+            Player.SendMessage(p, "%aYou've successfully bought the rank " + p.group.ColoredName);
+            MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.ColoredName);
         }
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
@@ -111,7 +111,7 @@ namespace MCGalaxy.Eco {
                     if (grp == null) { Player.SendMessage(p, "%cThat wasn't a rank!"); return; }
                     if (p != null && p.group.Permission < grp.Permission) { Player.SendMessage(p, "%cCan't set a maxrank that is higher than yours!"); return; }
                     MaxRank = args[2].ToLower();
-                    Player.SendMessage(p, "%aSuccessfully set max rank to: " + grp.color + grp.name);
+                    Player.SendMessage(p, "%aSuccessfully set max rank to: " + grp.ColoredName);
                     UpdatePrices();
                     break;
                 default:
@@ -131,7 +131,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreCommand(Player p) {
             Group maxrank = Group.Find(MaxRank);
         	Player.SendMessage(p, "Syntax: %T/buy rankup");            
-            Player.SendMessage(p, "%fThe max buyable rank is: " + maxrank.color + maxrank.name);
+            Player.SendMessage(p, "%fThe max buyable rank is: " + maxrank.ColoredName);
             Player.SendMessage(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
             foreach (Rank rnk in RanksList) {

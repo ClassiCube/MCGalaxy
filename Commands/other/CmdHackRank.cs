@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands {
             p.color = newRank.color;
 
             p.hackrank = true;
-            Player.GlobalMessage(p.ColoredName + "%S's rank was set to " + newRank.color + newRank.name + "%S. (Congratulations!)");
-            p.SendMessage("You are now ranked " + newRank.color + newRank.name + "%S, type /help for your new set of commands.");
+            Player.GlobalMessage(p.ColoredName + "%S's rank was set to " + newRank.ColoredName + "%S. (Congratulations!)");
+            p.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             DoKick(p, newRank);
         }
 
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
             messageTimer.Start();
             messageTimer.Elapsed += delegate
             {
-                string msg = "You have been kicked for hacking the rank " + newRank.color + newRank.name;
+                string msg = "You have been kicked for hacking the rank " + newRank.ColoredName;
                 p.LeaveServer(msg, msg);
                 p.color = oldCol;
                 messageTimer.Stop();

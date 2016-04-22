@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
                     foreach (Group grp in Group.GroupList)
                     {
                         if (grp.Permission < LevelPermission.Nobody) // Note that -1 means max undo.  Undo anything and everything.
-                            Player.SendMessage(p, grp.color + grp.name + " - &bCmd: " + grp.maxBlocks + " - &2Undo: " + ((grp.maxUndo != -1) ? grp.maxUndo.ToString() : "max") + " - &cPerm: " + (int)grp.Permission);
+                            Player.SendMessage(p, grp.ColoredName + " - &bCmd: " + grp.maxBlocks + " - &2Undo: " + ((grp.maxUndo != -1) ? grp.maxUndo.ToString() : "max") + " - &cPerm: " + (int)grp.Permission);
                     }
                     break;
                 case "build":
@@ -241,7 +241,7 @@ namespace MCGalaxy.Commands
             
             Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b)));
             Group foundRank = Group.findPerm(Block.BlockList[b].lowestRank);
-            Player.SendMessage(p, "Rank needed: " + foundRank.color + foundRank.name);
+            Player.SendMessage(p, "Rank needed: " + foundRank.ColoredName);
             return true;
         }
         

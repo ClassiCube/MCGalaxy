@@ -129,7 +129,7 @@ namespace MCGalaxy.Commands
 
                     if (printMessage != ">>>&b")
                     {
-                        Player.SendMessage(p, "Blocks which " + Group.Find(message).color + Group.Find(message).name + Server.DefaultColor + " can place: ");
+                        Player.SendMessage(p, "Blocks which " + Group.Find(message).ColoredName + " %Scan place: ");
                         Player.SendMessage(p, printMessage.Remove(printMessage.Length - 2));
                     }
                     else Player.SendMessage(p, "No blocks are specific to this rank");

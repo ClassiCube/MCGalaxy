@@ -47,6 +47,7 @@ namespace MCGalaxy
         public string name;
         public string trueName;
         public string color;
+        public string ColoredName { get { return color + name; } }
         public byte OverseerMaps = 3;
         public string prefix = "";
         public LevelPermission Permission;

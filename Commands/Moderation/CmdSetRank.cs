@@ -45,14 +45,14 @@ namespace MCGalaxy.Commands
                 Group group = Group.findPlayerGroup(args[0]);
                 if (!ChangeRank(args[0], group, newRank, null, p, reason)) return;
                 
-                rankMsg = args[0] + " &f(offline)" + "%S's rank was set to " + newRank.color + newRank.name + rankReason;
+                rankMsg = args[0] + " &f(offline)" + "%S's rank was set to " + newRank.ColoredName + rankReason;
                 Player.GlobalMessage(rankMsg);
             } else if (who == p) {
                 Player.SendMessage(p, "Cannot change your own rank."); return;
             } else {
                 if (!ChangeRank(who.name, who.group, newRank, who, p, reason)) return;
 
-                rankMsg = who.ColoredName + "%S's rank was set to " + newRank.color + newRank.name + rankReason;
+                rankMsg = who.ColoredName + "%S's rank was set to " + newRank.ColoredName + rankReason;
                 Player.GlobalMessage(rankMsg);
                 
                 string oldcolor = who.group.color;
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
                 who.SetPrefix();
                 Entities.GlobalDespawn(who, false);
 
-                who.SendMessage("You are now ranked " + newRank.color + newRank.name + Server.DefaultColor + ", type /help for your new set of commands.");
+                who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
                 who.SendUserType(Block.canPlace(who.group.Permission, Block.blackrock));              
                 Entities.GlobalSpawn(who, false);
             }

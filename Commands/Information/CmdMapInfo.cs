@@ -65,10 +65,10 @@ namespace MCGalaxy.Commands {
         }
         
         void ShowPermissions(Player p, MapInfoData data) {
-            Player.SendMessage(p, "Build rank = " + Group.findPerm(data.build).color + Group.findPerm(data.build).trueName +
-                               " %S: Visit rank = " + Group.findPerm(data.visit).color + Group.findPerm(data.visit).trueName);
-            Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).color + Group.findPerm(data.buildmax).trueName +
-                               " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).color + Group.findPerm(data.visitmax).trueName);
+            Player.SendMessage(p, "Build rank = " + Group.findPerm(data.build).ColoredName +
+        	                   " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
+            Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
+                               " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
         }
         
         void ShowEnv(Player p, MapInfoData data) {

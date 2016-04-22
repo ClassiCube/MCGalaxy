@@ -46,9 +46,9 @@ namespace MCGalaxy.Commands
                 builder.Append(s).Append(", ");
             
             if (builder.Length == 0) {
-                Player.SendMessage(p, "No one has the rank of " + grp.color + grp.name);
+                Player.SendMessage(p, "No one has the rank of " + grp.ColoredName);
             } else {
-                Player.SendMessage(p, "People with the rank of " + grp.color + grp.name + ":");
+                Player.SendMessage(p, "People with the rank of " + grp.ColoredName + ":");
                 Player.SendMessage(p, builder.ToString(0, builder.Length - 2));
             }
         }

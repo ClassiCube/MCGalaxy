@@ -191,8 +191,8 @@ namespace MCGalaxy.Commands
 						if (s.Length < 3)
 						{
 							Player.SendMessage(p, "Maps: &b" + Server.lava.Maps.Concatenate(", "));
-							Player.SendMessage(p, "Setup rank: " + Group.findPerm(Server.lava.setupRank).color + Group.findPerm(Server.lava.setupRank).trueName);
-							Player.SendMessage(p, "Control rank: " + Group.findPerm(Server.lava.controlRank).color + Group.findPerm(Server.lava.controlRank).trueName);
+							Player.SendMessage(p, "Setup rank: " + Group.findPerm(Server.lava.setupRank).ColoredName);
+							Player.SendMessage(p, "Control rank: " + Group.findPerm(Server.lava.controlRank).ColoredName);
 							Player.SendMessage(p, "Start on server startup: " + (Server.lava.startOnStartup ? "&aON" : "&cOFF"));
 							Player.SendMessage(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
 							Player.SendMessage(p, "Vote count: &b" + Server.lava.voteCount);

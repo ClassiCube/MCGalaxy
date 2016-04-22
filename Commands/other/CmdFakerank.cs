@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
                 Player.GlobalMessage(who.ColoredName + " %Swas &8banned %Sby " + banner + "%S.");
             } else {
                 Player.GlobalMessage(who.ColoredName + "%S's rank was set to " + 
-                                     grp.color + grp.name + "%S. (Congratulations!)");
+                                     grp.ColoredName + "%S. (Congratulations!)");
                 who.SendMessage("You are now ranked " + grp.color + grp.name + "%S, type /help for your new set of commands.");
             }
         }
