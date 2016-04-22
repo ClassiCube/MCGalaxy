@@ -336,6 +336,7 @@ namespace MCGalaxy.Games {
                     pl.Game.TotalRoundsSurvived++;
                     pl.Game.MaxRoundsSurvived = Math.Max(pl.Game.CurrentRoundsSurvived, pl.Game.MaxRoundsSurvived);
                     ResetPlayer(pl, ref playersString);
+                    pl.SetPrefix();
                 }
             }
             
@@ -386,7 +387,6 @@ namespace MCGalaxy.Games {
         void ResetPlayer(Player p, ref string playersString) {
             p.Game.BlocksLeft = 50;
             p.Game.Infected = false;
-            p.Game.CurrentInfected = 0;
             
             if (p.level.name.CaselessEq(CurLevelName))
                 playersString += p.color + p.DisplayName + Colors.white + ", ";

@@ -298,10 +298,10 @@ namespace MCGalaxy {
         }
         
         public void SetPrefix() {
-            Team team = Game.Team;
             prefix = Game.Referee ? "&2[Ref] " : "";
-            prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
-            if (group.prefix != "") prefix += "&f" + group.prefix + color;
+            if (group.prefix != "") prefix += "&f" + group.prefix + color; 
+            IGame game = level == null ? null : level.CurrentGame();
+            if (game != null) game.AdjustPrefix(this, ref prefix);
             
             bool isOwner = Server.server_owner != "" && Server.server_owner.CaselessEq(name);
             string viptitle = isDev ? string.Format("{0}[&9Dev{0}] ", color) : 

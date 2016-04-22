@@ -65,8 +65,8 @@ namespace MCGalaxy.Commands
             if (data != null)
                 Player.SendMessage(p, "> > was banned by " + data[0] + " for " + data[1] + " on " + data[2]);
 
-            if (Server.Devs.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9Developer");
-            else if (Server.Mods.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9MCGalaxy Moderator");
+            if (Server.Devs.CaselessContains(message)) Player.SendMessage(p, "> > Player is a &9Developer");
+            else if (Server.Mods.CaselessContains(message)) Player.SendMessage(p, "> > Player is a &9MCGalaxy Moderator");
 
             if (!CheckAdditionalPerm(p)) return;
             if (Server.bannedIP.Contains(target.ip))

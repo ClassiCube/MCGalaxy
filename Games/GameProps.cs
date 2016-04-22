@@ -77,6 +77,14 @@ namespace MCGalaxy.Games {
             InvisibilityTime = -1;
         }
         
+        /// <summary> Resets all the zombie game round variables back to default. </summary>
+        public void ResetZombieState() {
+            Referee = false;
+            Infected = false;
+            RatedMap = false;
+            PledgeSurvive = false;
+        }
+        
         
         /// <summary> The total number of rounds this player has survived. </summary>
         public int TotalRoundsSurvived;

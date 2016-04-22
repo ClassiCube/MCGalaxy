@@ -65,6 +65,8 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress || p == null) return;
             Infected.Add(p);
             Alive.Remove(p);
+            p.Game.CurrentRoundsSurvived = 0;
+            p.SetPrefix();
             
             if (p.Game.Invisible) {
                 p.SendCpeMessage(CpeMessageType.BottomRight2, "", false);            	
@@ -128,17 +130,14 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             
             foreach (Player pl in online) {
-                pl.Game.RatedMap = false;
-                pl.Game.PledgeSurvive = false;
+            	pl.Game.ResetZombieState();
                 
                 if (pl.Game.Invisible) {
                 	pl.Game.ResetInvisibility();
                     Entities.GlobalSpawn(pl, false);
-                }              
-                if (pl.Game.Referee) {
-                    pl.Game.Referee = false; 
-                    pl.SetPrefix();
                 }
+            	pl.SetPrefix();
+            	
                 if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))
                     continue;
                 ResetCpeMessages(pl);
