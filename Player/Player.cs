@@ -573,7 +573,7 @@ namespace MCGalaxy {
                 	tntwarsgame.SendAllPlayersMessage("TNT Wars: " + color + name + Server.DefaultColor + " has left TNT Wars!");
                 }
 
-                Entities.GlobalDespawn(this, false);
+                Entities.GlobalDespawn(this, false, true);
                 if (discMsg != null) {
                 	if (!hidden) {
                 		string leavem = "&c- " + FullName + " %S" + discMsg;

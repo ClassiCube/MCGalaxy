@@ -46,12 +46,15 @@ namespace MCGalaxy {
         }
         
         /// <summary> Despawns this player to all other players that can see the player in the current world. </summary>
-        public static void GlobalDespawn(Player p, bool self) {
+        public static void GlobalDespawn(Player p, bool self, bool diffWorld = false) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
-                if (p.level != other.level ) continue;
+                if (p.level != other.level) continue;
                 
-                if (p != other && !Entities.CanSeeEntity(other, p)) {
+                // If same world, despawn if we can't see them.
+                bool despawn = Entities.CanSeeEntity(other, p);
+                if (!diffWorld) despawn = !despawn;
+                if (p != other && despawn) {
                     other.DespawnEntity(p.id);
                 } else if (p == other && self) {
                     other.DespawnEntity(255);

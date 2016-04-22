@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands {
             }
             
             List<string> lines = CP437Reader.ReadAllLines(path);
-            Player.SendMessage(p, "Rank requirements for " + grp.color + grp.name + "%S:");
+            Player.SendMessage(p, "Rank requirements for " + grp.ColoredName + "%S:");
             foreach (string line in lines)
                 Player.SendMessage(p, line);
         }

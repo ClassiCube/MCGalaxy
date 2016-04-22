@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
             foreach (PlayerBot b in bots) {
                 if (who.level == b.level) who.DespawnEntity(b.id);
             }
-            Entities.GlobalDespawn(who, true);
+            Entities.GlobalDespawn(who, true, true);
         }
         
         internal static void ReloadMap(Player p, Player who, bool showMessage) {

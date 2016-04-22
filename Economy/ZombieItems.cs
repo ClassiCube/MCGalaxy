@@ -146,7 +146,7 @@ namespace MCGalaxy.Eco {
             
             Player.SendMessage(p, "%aInvisibility lasts for " + duration + " seconds");
             Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
-            Player.GlobalDespawn(p, false);
+            Entities.GlobalDespawn(p, false);
             MakePurchase(p, Price, "%3Invisibility: " + duration);
         }
         
