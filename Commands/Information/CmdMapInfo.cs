@@ -24,12 +24,12 @@ namespace MCGalaxy.Commands {
     public sealed class CmdMapInfo : Command {
         
         public override string name { get { return "mapinfo"; } }
-        public override string shortcut { get { return "winfo"; } }
+        public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("worldinfo") }; }
+            get { return new[] { new CommandAlias("winfo"), new CommandAlias("worldinfo") }; }
         }
         
         public override void Use(Player p, string message) {
