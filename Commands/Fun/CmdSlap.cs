@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (foundHeight == ushort.MaxValue) {
-                who.level.ChatLevel(who.color + who.DisplayName + " %Swas slapped sky high by " + src);
+                who.level.ChatLevel(who.ColoredName + " %Swas slapped sky high by " + src);
                 foundHeight = 1000;
             }
             who.SendPos(0xFF, who.pos[0], (ushort)(foundHeight * 32), who.pos[2], who.rot[0], who.rot[1]);

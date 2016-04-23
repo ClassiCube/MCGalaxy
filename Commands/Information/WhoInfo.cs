@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
         public int Money, Deaths;
         public long TotalBlocks, LoginBlocks;
         public TimeSpan TimeSpent, TimeOnline;
-        public DateTime FirstLogin, LastLogin;
+        public DateTime First, Last;
         public int Logins, Kicks;
         public string IP;
         
@@ -34,25 +34,31 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, ">> Rank of " + who.Group.ColoredName);
             
             if (Economy.Enabled)
-                Player.SendMessage(p, ">> &a" + who.Deaths + " &cdeaths%S, &a" + who.Money + 
+                Player.SendMessage(p, ">> &a" + who.Deaths + " &cdeaths%S, &a" + who.Money +
                                    " %S" + Server.moneys +", " + Awards.AwardAmount(who.Name) + " awards");
             else
                 Player.SendMessage(p, ">> &a" + who.Deaths + " &cdeaths%s, " + Awards.AwardAmount(who.Name) + " awards");
             
             if (who.LoginBlocks >= 0)
-                Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &echanged since login.");
+                Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &e since login.");
             else
-                Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks");
+                Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks");        
+
+            if (who.TimeOnline.Ticks > 0)
+                Player.SendMessage(p, ">> Spent " + Shorten(who.TimeSpent) + " on the server, " + Shorten(who.TimeOnline) + " this session");
+            else
+                Player.SendMessage(p, ">> Spent " + Shorten(who.TimeSpent) + " on the server");
             
-            //string storedTime = Convert.ToDateTime(DateTime.Now.Subtract(who.timeLogged).ToString()).ToString("HH:mm:ss");
-           // TimeSpan time = who.time;
-           // Player.SendMessage(p, "> time spent on server: " + time.Days + " Days, " + time.Hours + " Hours, " + time.Minutes + " Minutes, " + time.Seconds + " Seconds.");
-           // Player.SendMessage(p, "> been logged in for &a" + storedTime);
-           // Player.SendMessage(p, "> first logged into the server on &a" + who.firstLogin.ToString("yyyy-MM-dd") + " at " + who.firstLogin.ToString("HH:mm:ss"));
-            Player.SendMessage(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick.");
+            if (who.Last.Ticks > 0)
+                Player.SendMessage(p, ">> First login &a" + who.First.ToString("yyyy-MM-dd") 
+                                   + "%S, last login &a" + who.Last.ToString("yyyy-MM-dd"));
+            else
+                Player.SendMessage(p, ">> First login on &a" + who.First.ToString("yyyy-MM-dd") 
+                                   + "%S, and is currently &aonline");
             
+            Player.SendMessage(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick.");            
             string[] data = Ban.GetBanData(who.Name);
-            if (data != null)               
+            if (data != null)
                 Player.SendMessage(p, ">> is banned for " + data[1] + " by " + data[0]);
 
             if (Server.Devs.CaselessContains(who.Name))
@@ -66,6 +72,12 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, ">> The IP of " + ipMsg);
             if (Server.useWhitelist&& Server.whiteList.Contains(who.Name))
                 Player.SendMessage(p, ">> Player is &fWhitelisted");
+        }
+        
+        static string Shorten(TimeSpan value) {
+            if (value.Days >= 1) return value.Days + "d " + value.Hours + "h " + value.Minutes + "m";
+            if (value.Hours >= 1) return value.Hours + "h " + value.Minutes + "m";
+            return value.Minutes + "m";
         }
     }
 }

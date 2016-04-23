@@ -99,9 +99,9 @@ namespace MCGalaxy.Commands {
             if (pl == null) return false;
             
             if (p.level.physics >= 3 && bp.ending >= EndType.Explode)
-                pl.HandleDeath(Block.stone, " was blown up by " + p.color + p.DisplayName, true);
+                pl.HandleDeath(Block.stone, " was blown up by " + p.ColoredName, true);
             else
-                pl.HandleDeath(Block.stone, " was shot by " + p.color + p.DisplayName);
+                pl.HandleDeath(Block.stone, " was shot by " + p.ColoredName);
             return true;
         }
         

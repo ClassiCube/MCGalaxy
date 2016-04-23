@@ -57,8 +57,8 @@ namespace MCGalaxy.Commands {
             info.Money = int.Parse(target.money); info.Deaths = int.Parse(target.deaths);
             info.TotalBlocks = long.Parse(target.blocks); info.LoginBlocks = -1;
             info.TimeSpent = target.totalTime.ParseDBTime();
-            info.FirstLogin = DateTime.Parse(target.firstLogin); 
-            info.LastLogin = DateTime.Parse(target.lastLogin);
+            info.First = DateTime.Parse(target.firstLogin); 
+            info.Last = DateTime.Parse(target.lastLogin);
             info.Logins = int.Parse(target.logins); info.Kicks = int.Parse(target.kicks);
             info.IP = target.ip;
             WhoInfo.Output(p, info, CheckAdditionalPerm(p));

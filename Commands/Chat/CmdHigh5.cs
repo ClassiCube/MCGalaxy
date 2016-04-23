@@ -33,9 +33,9 @@ namespace MCGalaxy.Commands
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
 
-			string giver = (p == null) ? "(console)" : p.color + p.DisplayName;
+			string giver = (p == null) ? "(console)" : p.ColoredName;
             Player.SendMessage(who, giver + " just highfived you");
-            Player.GlobalMessage(giver + " %Sjust highfived " + who.color + who.DisplayName);
+            Player.GlobalMessage(giver + " %Sjust highfived " + who.ColoredName);
         }
 
         public override void Help(Player p) {

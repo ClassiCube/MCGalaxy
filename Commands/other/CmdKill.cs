@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }         
             bool explode = false;
             string deathMessage;
-            string killer = p == null ? "(console)" : p.color + p.DisplayName;
+            string killer = p == null ? "(console)" : p.ColoredName;
             string[] args = message.Split(trimChars, 2);
             
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);

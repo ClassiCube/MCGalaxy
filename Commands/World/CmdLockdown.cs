@@ -66,10 +66,10 @@ namespace MCGalaxy.Commands {
                         Command.all.Find("goto").Use(who, p.level.name);
                         who.BlockUntilLoad(500);
                     }
-                    Player.GlobalMessage(who.color + who.DisplayName + " %Shas been locked down!");
+                    Player.GlobalMessage(who.ColoredName + " %Shas been locked down!");
                     Chat.GlobalMessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
                 } else {
-                    Player.GlobalMessage(who.color + who.DisplayName + " %Shas been unlocked.");
+                    Player.GlobalMessage(who.ColoredName + " %Shas been unlocked.");
                     Chat.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
                 who.jailed = !who.jailed;

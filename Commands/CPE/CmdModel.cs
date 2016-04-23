@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
             } else {
                 who.model = model;
                 UpdateModel(who.id, model, who.level, who);
-                Player.GlobalMessage(who.color + who.DisplayName + "'s %Smodel was changed to a &c" + model);
+                Player.GlobalMessage(who.ColoredName + "'s %Smodel was changed to a &c" + model);
             }
         }
         

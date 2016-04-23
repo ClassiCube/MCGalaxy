@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
             info.Money = who.money; info.Deaths = who.overallDeath;
             info.TotalBlocks = who.overallBlocks; info.LoginBlocks = who.loginBlocks;
             info.TimeSpent = who.time; info.TimeOnline = DateTime.Now - who.timeLogged;
-            info.FirstLogin = who.firstLogin;
+            info.First = who.firstLogin;
             info.Logins = who.totalLogins; info.Kicks = who.totalKicked;
             info.IP = who.ip;
             WhoInfo.Output(p, info, CheckAdditionalPerm(p));
