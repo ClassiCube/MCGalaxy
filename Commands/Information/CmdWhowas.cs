@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
             string prefix = target.title == "" ? "" : "[" + target.titleColor + target.title + color + "] ";
             
             WhoInfo info = new WhoInfo();
-            info.FullName = prefix + target.name.TrimEnd('+'); 
+            info.FullName = prefix + color + target.name.TrimEnd('+'); 
             info.Name = target.name;
             info.Group = group;
             info.Money = int.Parse(target.money); info.Deaths = int.Parse(target.deaths);

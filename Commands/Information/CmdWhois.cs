@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             
             WhoInfo info = new WhoInfo();
             string prefix = who.title == "" ? "" : "[" + who.titlecolor + who.title + who.color + "] ";            
-            info.FullName = prefix + who.DisplayName; 
+            info.FullName = prefix + who.ColoredName;
             info.Name = who.name;
             info.Group = who.group;
             info.Money = who.money; info.Deaths = who.overallDeath;

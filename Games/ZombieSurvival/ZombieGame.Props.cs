@@ -67,7 +67,6 @@ namespace MCGalaxy.Games {
         /// <summary> Time at which the next round is scheduled to end. </summary>
         public DateTime RoundEnd;
         
-        public static System.Timers.Timer timer;
         public bool initialChangeLevel = false;
         
         /// <summary> The name of the level that the last round of zombie survival was played on. </summary>

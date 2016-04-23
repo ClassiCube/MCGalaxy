@@ -91,10 +91,7 @@ namespace MCGalaxy.Games {
             string suffix = roundMins == 1 ? " %Sminute!" : " %Sminutes!";
             CurLevel.ChatLevel("The round will last for &a" + roundMins + suffix);
             RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
-            timer = new System.Timers.Timer(roundMins * 60 * 1000);
-            timer.Elapsed += new ElapsedEventHandler(EndRound);
-            timer.Enabled = true;
-
+            
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
                 if (p.level == null || p.level != CurLevel || p.Game.Referee) continue;
@@ -161,10 +158,19 @@ namespace MCGalaxy.Games {
         void DoCoreGame(Random random) {
             Player[] alive = null;
             string lastTimespan = null;
-            while ((alive = Alive.Items).Length > 0) {
+            int lastTime = -1;
+            
+            while ((alive = Alive.Items).Length > 0 && Running) {
                 Player[] infected = Infected.Items;
-                // Update the round time left shown in the top right
+                // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
+                if (seconds <= 0) { HandOutRewards(); return; }
+                if (seconds <= 5 && seconds != lastTime) {
+                     CurLevel.ChatLevel("%4Round End:%f " + seconds);
+                     lastTime = seconds;
+                }
+                
+                // Update the round time left shown in the top right
                 string timespan = GetTimespan(seconds);
                 if (lastTimespan != timespan) {
                     UpdateAllPlayerStatus(timespan);
@@ -289,16 +295,6 @@ namespace MCGalaxy.Games {
             Entities.GlobalDespawn(p, true);
             Entities.GlobalSpawn(p, true);
         }
-        
-        void EndRound(object sender, ElapsedEventArgs e) {
-            if (!Running) return;
-            CurLevel.ChatLevel("%4Round End:%f 5"); Thread.Sleep(1000);
-            CurLevel.ChatLevel("%4Round End:%f 4"); Thread.Sleep(1000);
-            CurLevel.ChatLevel("%4Round End:%f 3"); Thread.Sleep(1000);
-            CurLevel.ChatLevel("%4Round End:%f 2"); Thread.Sleep(1000);
-            CurLevel.ChatLevel("%4Round End:%f 1"); Thread.Sleep(1000);
-            HandOutRewards();
-        }
 
         public void HandOutRewards() {
             if (!RoundInProgress) return;
@@ -314,7 +310,6 @@ namespace MCGalaxy.Games {
             else if (alive.Length == 1) CurLevel.ChatLevel(Colors.green + "Congratulations to the sole survivor:");
             else CurLevel.ChatLevel(Colors.green + "Congratulations to the survivors:");
             
-            timer.Enabled = false;
             string playersString = "";
             Player[] online = null;
             CurLevel.RoundsPlayed++;

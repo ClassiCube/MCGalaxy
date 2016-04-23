@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, ">> &a" + who.Deaths + " &cdeaths%s, " + Awards.AwardAmount(who.Name) + " awards");
             
             if (who.LoginBlocks >= 0)
-                Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &e since login.");
+                Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &esince login");
             else
                 Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks");        
 
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, ">> First login on &a" + who.First.ToString("yyyy-MM-dd") 
                                    + "%S, and is currently &aonline");
             
-            Player.SendMessage(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick.");            
+            Player.SendMessage(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick");            
             string[] data = Ban.GetBanData(who.Name);
             if (data != null)
                 Player.SendMessage(p, ">> is banned for " + data[1] + " by " + data[0]);
