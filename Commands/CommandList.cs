@@ -45,13 +45,14 @@ namespace MCGalaxy
 
         public bool Remove(Command cmd) { return commands.Remove(cmd); }
         public bool Contains(Command cmd) { return commands.Contains(cmd); }
-        public bool Contains(string name)
-        {
-            name = name.ToLower();
-            return commands.Any(cmd => cmd.name == name.ToLower());
+        public bool Contains(string name) {
+            foreach (Command cmd in commands) {
+                if (cmd.name.CaselessEq(name)) return true;
+            }
+            return false;
         }
-        public Command Find(string name)
-        {
+        
+        public Command Find(string name) {
             name = name.ToLower();
             return commands.FirstOrDefault(cmd => cmd.name == name || cmd.shortcut == name);
         }

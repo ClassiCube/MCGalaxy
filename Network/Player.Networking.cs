@@ -261,19 +261,21 @@ namespace MCGalaxy {
         }
         
         void ParseColors(StringBuilder sb) {
-            for (int i = 0; i < 128; i++) {
-                if (Colors.IsStandardColor((char)i)) {
-                    if (i >= 'A' && i <= 'F') // WoM does not work with uppercase color codes.
-                        sb.Replace("&" + (char)i, "&" + (char)(i + ' '));
-                    continue;
-                }
+            for (int i = 0; i < sb.Length; i++) {
+                char c = sb[i];
+                if (c != '&' || i == sb.Length - 1) continue;
                 
-                CustomColor col = Colors.ExtColors[i];
-                if (col.Undefined) {
-                    sb.Replace("&" + (char)i, ""); continue;
-                }
-                if (!hasTextColors) {
-                    sb.Replace("&" + (char)i, "&" + col.Fallback); continue;
+                char code = sb[i + 1];
+                if (Colors.IsStandardColor(code)) {
+                    if (code >= 'A' && code <= 'F')
+                        sb[i + 1] += ' '; // WoM does not work with uppercase color codes.
+                } else {
+                    CustomColor col = Colors.ExtColors[i];
+                    if (col.Undefined) {
+                        sb.Remove(i, 2); i--; // now need to check char at i again
+                    } else if (!hasTextColors) {
+                        sb[i + 1] = col.Fallback;
+                    }
                 }
             }
         }

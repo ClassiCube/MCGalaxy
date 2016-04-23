@@ -639,40 +639,28 @@ namespace MCGalaxy {
         
         void CheckLoginJailed() {
             //very very sloppy, yes I know.. but works for the time
-            bool gotoJail = false;
-            string gotoJailMap = "", gotoJailName = "";
             try  {
-                if (File.Exists("ranks/jailed.txt"))
-                {
-                    using (StreamReader read = new StreamReader("ranks/jailed.txt"))
-                    {
-                        string line;
-                        while ((line = read.ReadLine()) != null)
-                        {
-                            string[] parts = line.Split();
-                            if (parts[0].ToLower() == this.name.ToLower())
-                            {
-                                gotoJail = true;
-                                gotoJailName = parts[0];
-                                gotoJailMap = parts[1];
-                                break;
-                            }
+                if (!File.Exists("ranks/jailed.txt")) {
+                    File.Create("ranks/jailed.txt").Close(); return;
+                }
+                
+                using (StreamReader read = new StreamReader("ranks/jailed.txt")) {
+                    string line;
+                    while ((line = read.ReadLine()) != null) {
+                        string[] parts = line.Split();
+                        if (!parts[0].CaselessEq(name)) continue;
+                    
+                        try {
+                            Command.all.Find("goto").Use(this, parts[1]);
+                            Command.all.Find("jail").Use(null, parts[0]);
+                        } catch (Exception e) {
+                            Kick(e.ToString());
                         }
+                        return;
+                        break;
                     }
-                } else { 
-                    File.Create("ranks/jailed.txt").Close(); 
                 }
             } catch {
-                gotoJail = false;
-            }
-            
-            if (gotoJail) {
-                try {
-                    Command.all.Find("goto").Use(this, gotoJailMap);
-                    Command.all.Find("jail").Use(null, gotoJailName);
-                } catch (Exception e) {
-                    Kick(e.ToString());
-                }
             }
         }
 
