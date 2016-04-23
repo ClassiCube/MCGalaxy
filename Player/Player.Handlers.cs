@@ -936,10 +936,14 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 });
 }
 } */
-        
+        DateTime lastSpamReset;
         void HandleChat(byte[] message) {
             try {
                 if ( !loggedIn ) return;
+                if ((DateTime.UtcNow - lastSpamReset).TotalSeconds > Server.spamcountreset) {
+                    lastSpamReset = DateTime.UtcNow;
+                    consecutivemessages = 0;
+                }
                 byte continued = message[0];
                 string text = GetString(message, 1);
 
@@ -1049,10 +1053,6 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if ( Server.chatmod && !voice ) { this.SendMessage("Chat moderation is on, you cannot speak."); return; }
 
                 if ( Server.checkspam ) {
-                    //if (consecutivemessages == 0)
-                    //{
-                    // consecutivemessages++;
-                    //}
                     if ( Player.lastMSG == this.name ) {
                         consecutivemessages++;
                     } else {

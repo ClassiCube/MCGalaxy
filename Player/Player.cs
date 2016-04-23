@@ -263,7 +263,6 @@ namespace MCGalaxy {
         Queue<DateTime> spamBlockLog = new Queue<DateTime>(spamBlockCount);
 
         public int consecutivemessages;
-        private System.Timers.Timer resetSpamCount = new System.Timers.Timer(Server.spamcountreset * 1000);
         //public static int spamChatCount = 3;
         //public static int spamChatTimer = 4;
         //Queue<DateTime> spamChatLog = new Queue<DateTime>(spamChatCount);
