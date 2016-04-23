@@ -233,10 +233,7 @@ Additional4 INT{2});"; // reserve space for possible future additions
         	query.AddParam("@Name", p.name);
             DataTable table = Database.fillData(query, "SELECT * FROM ZombieStats WHERE Name=@Name");
             if (table.Rows.Count > 0) {
-            	Server.s.Log("GOTTEM" );
             	DataRow row = table.Rows[0];
-            	foreach (var t in row.ItemArray)
-            		Server.s.Log(t.ToString());
             	p.Game.TotalRoundsSurvived = int.Parse(row["TotalRounds"].ToString());
             	p.Game.MaxRoundsSurvived = int.Parse(row["MaxRounds"].ToString());
             	p.Game.TotalInfected = int.Parse(row["TotalInfected"].ToString());
