@@ -376,7 +376,8 @@ namespace MCGalaxy {
                 Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
                 ecos.money = money;
                 Economy.UpdateEcoStats(ecos);
-            }           	
+            }
+            Server.zombie.SaveZombieStats(this);
 
             try {
                 if ( !smileySaved ) {

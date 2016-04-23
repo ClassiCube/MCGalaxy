@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands {
             ParameterisedQuery query = ParameterisedQuery.Create();
             DataTable Messages = Database.fillData(query, "SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
             
-            query.AddParam("@Message", cpos.message);           
+            query.AddParam("@Message", cpos.message);
             if (Messages.Rows.Count == 0)
                 Database.executeQuery(query, "INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (" + x + ", " + y + ", " + z + ", @Message)");
             else

@@ -504,6 +504,7 @@ namespace MCGalaxy {
                 InitPlayerStats(playerDb);
             else
                 LoadPlayerStats(playerDb);
+            Server.zombie.LoadZombieStats(this);
             
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
