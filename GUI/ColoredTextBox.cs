@@ -55,7 +55,7 @@ namespace MCGalaxy.Gui.Components {
             set {
                 _autoScroll = value;
                 if ( value )
-                    ScrollToEnd();
+                    ScrollToEnd(0);
             }
         }
 
@@ -148,16 +148,16 @@ namespace MCGalaxy.Gui.Components {
 
             if ( DateStamp )
                 Append(dateStamp, Color.Gray, BackColor);
-
-            if ( !Colorize ) {
-                AppendText(text);
-                if ( AutoScroll ) ScrollToEnd();
+            int line = GetLineFromCharIndex(Math.Max(0, TextLength - 1));
+            
+            if ( !Colorize ) {                
+                AppendText(text);                
+                if ( AutoScroll ) ScrollToEnd(line);
                 return;
             }
             if ( !text.Contains('&') && !text.Contains('%') ) {
-                Append(text, foreColor, BackColor);
-
-                if ( AutoScroll ) ScrollToEnd();
+                Append(text, foreColor, BackColor);              
+                if ( AutoScroll ) ScrollToEnd(line);
                 return;
             }
 
@@ -170,7 +170,7 @@ namespace MCGalaxy.Gui.Components {
                 Color? color = GetColor(split[0]);
                 Append(color != null ? split.Substring(1) : split, color ?? foreColor, BackColor);
             }
-            if ( AutoScroll ) ScrollToEnd();
+            if ( AutoScroll ) ScrollToEnd(line);
         }
 
         /// <summary>
@@ -214,19 +214,16 @@ namespace MCGalaxy.Gui.Components {
 
         }
 
-        /// <summary>
-        /// Scrolls to the end of the log
-        /// </summary>
-        public void ScrollToEnd() {
+        /// <summary> Scrolls to the end of the log </summary>
+        public void ScrollToEnd(int startIndex) {
             if ( InvokeRequired ) {
-                Invoke((MethodInvoker)ScrollToEnd);
+                Invoke((MethodInvoker)(() => ScrollToEnd(startIndex)));
                 return;
             }
-
-            Select(TextLength - 1, 1);
-            ScrollToCaret();
+            int lines = GetLineFromCharIndex(TextLength - 1) - startIndex + 1;
+            for (int i = 0; i < lines; i++)
+                Natives.SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);         
             Invalidate();
-            Refresh();
         }
 
 
@@ -363,7 +360,7 @@ namespace MCGalaxy.Gui.Components {
         
         /// <summary> Gets a color from a char. </summary>
         public static Color? GetColor( char c ) {
-        	Colors.MapColor( ref c );
+            Colors.MapColor( ref c );
             switch ( c ) {
                 case '0': return Color.Black;
                 case '1': return Color.FromArgb( 255, 0, 0, 161 );
