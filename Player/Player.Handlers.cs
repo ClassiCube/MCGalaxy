@@ -644,20 +644,21 @@ namespace MCGalaxy {
                     File.Create("ranks/jailed.txt").Close(); return;
                 }
                 
-                using (StreamReader read = new StreamReader("ranks/jailed.txt")) {
+                using (StreamReader reader = new StreamReader("ranks/jailed.txt")) {
                     string line;
-                    while ((line = read.ReadLine()) != null) {
+                    while ((line = reader.ReadLine()) != null) {
                         string[] parts = line.Split();
                         if (!parts[0].CaselessEq(name)) continue;
+                        reader.Dispose();
                     
                         try {
                             Command.all.Find("goto").Use(this, parts[1]);
                             Command.all.Find("jail").Use(null, parts[0]);
-                        } catch (Exception e) {
-                            Kick(e.ToString());
+                        } catch (Exception ex) {
+                            Kick("Error occured");
+                            Server.ErrorLog(ex);
                         }
                         return;
-                        break;
                     }
                 }
             } catch {

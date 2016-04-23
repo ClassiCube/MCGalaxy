@@ -270,11 +270,11 @@ namespace MCGalaxy {
                     if (code >= 'A' && code <= 'F')
                         sb[i + 1] += ' '; // WoM does not work with uppercase color codes.
                 } else {
-                    CustomColor col = Colors.ExtColors[i];
-                    if (col.Undefined) {
+                    char fallback = Colors.GetFallback(code);
+                    if (fallback == '\0') {
                         sb.Remove(i, 2); i--; // now need to check char at i again
                     } else if (!hasTextColors) {
-                        sb[i + 1] = col.Fallback;
+                        sb[i + 1] = fallback;
                     }
                 }
             }
