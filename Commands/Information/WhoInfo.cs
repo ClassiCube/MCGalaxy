@@ -28,6 +28,8 @@ namespace MCGalaxy.Commands {
         public DateTime First, Last;
         public int Logins, Kicks;
         public string IP;
+        public int RoundsTotal, RoundsMax;
+        public int InfectedTotal, InfectedMax;
         
         public static void Output(Player p, WhoInfo who, bool canSeeIP) {
             Player.SendMessage(p, who.FullName + " %S(" + who.Name + ") has:");
@@ -42,7 +44,7 @@ namespace MCGalaxy.Commands {
             if (who.LoginBlocks >= 0)
                 Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &esince login");
             else
-                Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks");        
+                Player.SendMessage(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks");
 
             if (who.TimeOnline.Ticks > 0)
                 Player.SendMessage(p, ">> Spent " + Shorten(who.TimeSpent) + " on the server, " + Shorten(who.TimeOnline) + " this session");
@@ -50,13 +52,13 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, ">> Spent " + Shorten(who.TimeSpent) + " on the server");
             
             if (who.Last.Ticks > 0)
-                Player.SendMessage(p, ">> First login &a" + who.First.ToString("yyyy-MM-dd") 
+                Player.SendMessage(p, ">> First login &a" + who.First.ToString("yyyy-MM-dd")
                                    + "%S, last login &a" + who.Last.ToString("yyyy-MM-dd"));
             else
-                Player.SendMessage(p, ">> First login on &a" + who.First.ToString("yyyy-MM-dd") 
+                Player.SendMessage(p, ">> First login on &a" + who.First.ToString("yyyy-MM-dd")
                                    + "%S, and is currently &aonline");
             
-            Player.SendMessage(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick");            
+            Player.SendMessage(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick");
             string[] data = Ban.GetBanData(who.Name);
             if (data != null)
                 Player.SendMessage(p, ">> is banned for " + data[1] + " by " + data[0]);
@@ -66,12 +68,19 @@ namespace MCGalaxy.Commands {
             if (Server.Mods.CaselessContains(who.Name))
                 Player.SendMessage(p, ">> Player is a &9MCGalaxy Moderator");
 
-            if (!canSeeIP) return;
-            string ipMsg = who.IP;
-            if (Server.bannedIP.Contains(who.IP)) ipMsg = "&8" + who.IP + ", which is banned";
-            Player.SendMessage(p, ">> The IP of " + ipMsg);
-            if (Server.useWhitelist&& Server.whiteList.Contains(who.Name))
-                Player.SendMessage(p, ">> Player is &fWhitelisted");
+            if (canSeeIP) {
+                string ipMsg = who.IP;
+                if (Server.bannedIP.Contains(who.IP)) ipMsg = "&8" + who.IP + ", which is banned";
+                Player.SendMessage(p, ">> The IP of " + ipMsg);
+                if (Server.useWhitelist&& Server.whiteList.Contains(who.Name))
+                    Player.SendMessage(p, ">> Player is &fWhitelisted");
+            }
+            
+            if (!Server.zombie.Running) return;
+            Player.SendMessage(p, ">> Survived &a" + who.RoundsTotal +
+                               " %Srounds total, most in a row was &e" + who.RoundsMax);
+            Player.SendMessage(p, ">> Infected &a" + who.InfectedTotal +
+                               " %Splayers total, most in a round was &e" + who.InfectedMax);
         }
         
         static string Shorten(TimeSpan value) {

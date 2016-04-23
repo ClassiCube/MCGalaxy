@@ -89,7 +89,7 @@ namespace MCGalaxy.Games {
             RoundInProgress = true;
             int roundMins = random.Next(CurLevel.MinRoundTime, CurLevel.MaxRoundTime);
             string suffix = roundMins == 1 ? " %Sminute!" : " %Sminutes!";
-            CurLevel.ChatLevel("The round will last for &a" + roundMins + suffix);
+            CurLevel.ChatLevel("This round will last for &a" + roundMins + suffix);
             RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
             
             Player[] online = PlayerInfo.Online.Items;
@@ -124,19 +124,19 @@ namespace MCGalaxy.Games {
             while (true) {
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
                 if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 30...");
+                SendLevelRaw("&4Round Start:&f 30...");
                 Thread.Sleep(20000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 10...");
+                SendLevelRaw("&4Round Start:&f 10...");
                 Thread.Sleep(5000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 5...");
+                SendLevelRaw("&4Round Start:&f 5...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 4...");
+                SendLevelRaw("&4Round Start:&f 4...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 3...");
+                SendLevelRaw("&4Round Start:&f 3...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 2...");
+                SendLevelRaw("&4Round Start:&f 2...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 1...");
+                SendLevelRaw("&4Round Start:&f 1...");
                 Thread.Sleep(1000); if (!Running) return null;
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
@@ -166,7 +166,7 @@ namespace MCGalaxy.Games {
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
                 if (seconds <= 0) { HandOutRewards(); return; }
                 if (seconds <= 5 && seconds != lastTime) {
-                     CurLevel.ChatLevel("%4Round End:%f " + seconds);
+                     SendLevelRaw("&4Round End:&f " + seconds);
                      lastTime = seconds;
                 }
                 
@@ -226,6 +226,14 @@ namespace MCGalaxy.Games {
                 
                 CheckInvisibilityTime(Alive.Items);
                 Thread.Sleep(25);
+            }
+        }
+        
+        void SendLevelRaw(string message) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != CurLevel) continue;
+                p.SendRawMessage(CpeMessageType.Normal, message);
             }
         }
         

@@ -48,6 +48,11 @@ namespace MCGalaxy.Commands {
             info.First = who.firstLogin;
             info.Logins = who.totalLogins; info.Kicks = who.totalKicked;
             info.IP = who.ip;
+            
+            info.RoundsTotal = who.Game.TotalRoundsSurvived;
+            info.RoundsMax = who.Game.MaxRoundsSurvived;
+            info.InfectedTotal = who.Game.TotalInfected;
+            info.InfectedMax = who.Game.MaxInfected;
             WhoInfo.Output(p, info, CheckAdditionalPerm(p));
         }
         

@@ -225,10 +225,15 @@ namespace MCGalaxy {
                 else return;
             }
             message = ConvertMessage(message, colorParse);
-            
+            SendRawMessage(id, message);
+        }
+        
+        /// <summary> Sends a raw message without performing any token resolving, emoticon parsing, or color parsing. </summary>
+        public void SendRawMessage(CpeMessageType id, string message) {
             byte[] buffer = new byte[66];
             buffer[0] = Opcode.Message;
             buffer[1] = (byte)id;
+            
             if (HasCpeExt(CpeExt.FullCP437))
                 NetUtils.WriteCP437(message, buffer, 2);
             else

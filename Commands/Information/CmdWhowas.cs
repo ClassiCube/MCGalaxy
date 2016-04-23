@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {
     
@@ -61,6 +62,12 @@ namespace MCGalaxy.Commands {
             info.Last = DateTime.Parse(target.lastLogin);
             info.Logins = int.Parse(target.logins); info.Kicks = int.Parse(target.kicks);
             info.IP = target.ip;
+            
+            if (Server.zombie.Running) {
+                ZombieStats stats = Server.zombie.LoadZombieStats(target.name);
+                info.RoundsTotal = stats.TotalRounds; info.InfectedTotal = stats.TotalInfected;
+                info.RoundsMax = stats.MaxRounds; info.InfectedMax = stats.MaxInfected;
+            }
             WhoInfo.Output(p, info, CheckAdditionalPerm(p));
         }
 

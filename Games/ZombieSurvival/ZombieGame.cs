@@ -25,6 +25,10 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {
     
+    public struct ZombieStats {
+        public int TotalRounds, MaxRounds, TotalInfected, MaxInfected;
+    }
+    
     public sealed partial class ZombieGame {
         
         public void Start(ZombieGameStatus status, int amount) {
@@ -206,6 +210,13 @@ namespace MCGalaxy.Games {
                 messages = new List<string>(defMessages);
         }
         
+        public bool IsZombieMap(string name) {
+            if (!Running) return false;
+            if (IgnorePersonalWorlds && name.IndexOf('+') >= 0) return false;
+            if (IgnoredLevelList.CaselessContains(name)) return false;
+            return LevelList.Count == 0 ? true : LevelList.CaselessContains(name);
+        }
+        
         #region Database
         
         const string createSyntax =
@@ -228,18 +239,21 @@ Additional4 INT{2});"; // reserve space for possible future additions
             Database.executeQuery(string.Format(createSyntax, primKey, autoInc, primKey2));
         }
         
-        public void LoadZombieStats(Player p) {
-        	ParameterisedQuery query = ParameterisedQuery.Create();
-        	query.AddParam("@Name", p.name);
+        public ZombieStats LoadZombieStats(string name) {
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@Name", name);
             DataTable table = Database.fillData(query, "SELECT * FROM ZombieStats WHERE Name=@Name");
+            ZombieStats stats = default(ZombieStats);
+            
             if (table.Rows.Count > 0) {
-            	DataRow row = table.Rows[0];
-            	p.Game.TotalRoundsSurvived = int.Parse(row["TotalRounds"].ToString());
-            	p.Game.MaxRoundsSurvived = int.Parse(row["MaxRounds"].ToString());
-            	p.Game.TotalInfected = int.Parse(row["TotalInfected"].ToString());
-            	p.Game.MaxInfected = int.Parse(row["MaxInfected"].ToString());
+                DataRow row = table.Rows[0];
+                stats.TotalRounds = int.Parse(row["TotalRounds"].ToString());
+                stats.MaxRounds = int.Parse(row["MaxRounds"].ToString());
+                stats.TotalInfected = int.Parse(row["TotalInfected"].ToString());
+                stats.MaxInfected = int.Parse(row["MaxInfected"].ToString());
             }
             table.Dispose();
+            return stats;
         }
         
         public void SaveZombieStats(Player p) {
@@ -256,7 +270,7 @@ Additional4 INT{2});"; // reserve space for possible future additions
             
             if (table.Rows.Count == 0)
                 Database.executeQuery(query, "INSERT INTO ZombieStats (TotalRounds, MaxRounds, " +
-            	                      "TotalInfected, MaxInfected, Name) VALUES (@TR, @MR, @TI, @MI, @Name)");
+                                      "TotalInfected, MaxInfected, Name) VALUES (@TR, @MR, @TI, @MI, @Name)");
             else
                 Database.executeQuery(query, "UPDATE ZombieStats SET TotalRounds=@TR, MaxRounds=@MR, " +
                                       "TotalInfected=@TI, MaxInfected=@MI WHERE Name=@NAME");
