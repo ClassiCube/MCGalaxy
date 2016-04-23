@@ -363,6 +363,7 @@ namespace MCGalaxy.Games {
                 pl.Game.CurrentInfected = 0;
                 pl.money += money;
                 pl.Game.Infected = false;
+                pl.Game.InvisibilityPotions = 0;
                 if (pl.Game.Referee) {
                     pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
                     pl.money++;
