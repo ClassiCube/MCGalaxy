@@ -134,8 +134,8 @@ namespace MCGalaxy
         public bool finite;
         [ConfigBool("GrowTrees", "General", null, false)]
         public bool growTrees;
-        [ConfigBool("Guns", "General", null, true)]
-        public bool guns = true;
+        [ConfigBool("Guns", "General", null, false)]
+        public bool guns = false;
         
         public byte jailrotx, jailroty;
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
