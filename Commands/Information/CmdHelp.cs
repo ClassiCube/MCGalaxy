@@ -239,7 +239,77 @@ namespace MCGalaxy.Commands
             byte b = Block.Byte(message);
             if (b == Block.Zero) return false;
             
-            Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b)));
+            //give more useful help messages for doors and other physics blocks and killer blocks
+            switch (message.ToLower())
+            {
+                case "door":
+                    Player.SendMessage(p, "Door can be used as an 'openable' block if physics are enabled, will automatically toggle back to closed after a few seconds. door_green toggles to red instead of air - also see, odoor and tdoor."); break;
+                case "odoor":
+                    Player.SendMessage(p, "Odoor behaves like a user togglable door, does not auto close.  Needs to be opened with a normal /door of any type and touched by other physics blocks, such as air_door to work."); break;
+                case "tdoor":
+                    Player.SendMessage(p, "Tdoor behaves like a regular /door, but allows physics blocks, e.g. active_water to flow through when opened."); break;
+                case "air_switch":
+                    Player.SendMessage(p, "Air_switch can be placed in front of doors to act as an automatic door opener when the player walks into the air_switch block."); break;
+                case "fire":
+                    Player.SendMessage(p, "Fire blocks burn through wood and temporarily leaves coal and obsidian behind."); break;
+                case "nerve_gas":
+                    Player.SendMessage(p, "Nerve gas is an invisible, killer, static block."); break;
+                case "train":
+                    Player.SendMessage(p, "Place a train on red wool and it will move with physics on. Can ride with /ride."); break;
+                case "snake":
+                    Player.SendMessage(p, "Snake crawls along the ground and kills players it touches if physics are on."); break;
+                case "zombie":
+                    Player.SendMessage(p, "Place a zombie on the map. Moves with physics and kills players on touch"); break;
+                case "creeper":
+                    Player.SendMessage(p, "Place a creeper on the map. Moves with physics and kills players on touch, also explodes like tnt."); break;
+                case "firework":
+                    Player.SendMessage(p, "Place a firework. Left click to send a firework into the sky, which explodes into different colored wool."); break;
+                case "rocketstart":
+                    Player.SendMessage(p, "Place a rocket starter. Left click to fire, explodes like tnt."); break;
+                case "finite_faucet":
+                    Player.SendMessage(p, "Place a faucet block which spews out and places water on the map a few blocks at a time."); break;
+                case "water_faucet":
+                case "lava_faucet":
+                    Player.SendMessage(p, "Place a faucet block, which water, or lava will come out of.  Works like water/lavafall but water/lava disappears and is redropped periodically."); break;
+                case "waterfall":
+                case "lavafall":
+                    Player.SendMessage(p, "Waterfall and lavafall flow straight down, catch them at the bottom, or they will flood the map like regular active_water/lava."); break;
+                case "finite_water":
+                case "finite_lava":
+                    Player.SendMessage(p, "Finite water and lava flow like active_water/lava, but never create more blocks than you place."); break;
+                case "hot_lava":
+                case "cold_water":
+                    Player.SendMessage(p, "Hot lava and cold water are nonmoving killer blocks which kill players on touch."); break;
+                case "active_water":
+                case "acw":
+                case "geyser":
+                case "active_cold_water":
+                    Player.SendMessage(p, "Active_water flows horizontally through the map, active_cold_water and geyser kill players, geyser flows upwards."); break;
+                case "active_lava":
+                case "ahl":
+                case "magma":
+                case "active_hot_lava":
+                case "fast_hot_lava":
+                case "lava_fast":
+                    Player.SendMessage(p, "Active_lava and its fast counterparts flow horizontally through the map, active_hot_lava and magma kill players, magma flows upwards slowly if it is placed in a spot where it cannot flow then broken out."); break;
+                case "shark":
+                case "lava_shark":
+                case "goldfish":
+                case "sea_sponge":
+                case "salmon":
+                case "betta_fish":
+                    Player.SendMessage(p, "The fish blocks are different colored blocks that swim around in active_water (lava_shark in active_lava), sharks and lava sharks players they touch."); break;
+                case "phoenix":
+                case "killer_phoenix":
+                case "dove":
+                case "blue_bird":
+                case "red_robin":
+                case "pidgeon":
+                case "duck":
+                    Player.SendMessage(p, "The bird blocks are different colored blocks that fly through the air if physics is on. Killer_phoenix kills players it touches"); break;
+                default:
+                    Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b))); break;
+            }
             Group foundRank = Group.findPerm(Block.BlockList[b].lowestRank);
             Player.SendMessage(p, "Rank needed: " + foundRank.ColoredName);
             return true;
