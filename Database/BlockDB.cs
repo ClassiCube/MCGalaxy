@@ -52,7 +52,7 @@ namespace MCGalaxy {
                     WriteI32(entry.TimeDelta, bulk, j * entrySize + 4);
                     WriteI32(entry.Index, bulk, j * entrySize + 8);
                     bulk[j * entrySize + 12] = entry.Old;
-                    bulk[j * entry + 13] = entry.New;
+                    bulk[j * entrySize + 13] = entry.New;
                     WriteU16(entry.Flags, bulk, j * entrySize + 14);
                 }
                 stream.Write(bulk, 0, count * entrySize);
