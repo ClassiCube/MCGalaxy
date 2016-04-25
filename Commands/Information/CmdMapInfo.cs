@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Levels.IO;
 
@@ -44,8 +45,8 @@ namespace MCGalaxy.Commands {
             MapInfoData data = new MapInfoData();
             if (lvl != null) {
                 data.FromOnlineLevel(lvl);
-            } else if (LevelInfo.ExistsOffline(message)) {
-                data.FromOfflineLevel(message);
+            } else if (LevelInfo.ExistsOffline(level)) {
+                data.FromOfflineLevel(level);
             } else {
                 Player.SendMessage(p, "Could not find specified level."); return;
             }
@@ -59,7 +60,6 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "&b" + data.Name + "%S: Width=" + data.Width + " Height=" + data.Height + " Depth=" + data.Length);
             string physicsState = CmdPhysics.states[data.Physics];
             Player.SendMessage(p, "Physics are " + physicsState + " %Son &b" + data.Name);
-            ShowPermissions(p, data);
 
             string gunStatus = data.Guns ? "&aonline" : "&coffline";
             if (p == null || p.group.CanExecute("gun"))
@@ -88,30 +88,24 @@ namespace MCGalaxy.Commands {
                                " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
             Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
                                " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
-            GetBlacklistedPlayers(p, data.Name);
+            List<string> whitelist = data.VisitWhitelist;
+            List<string> blacklist = data.VisitBlacklist;
+            GetBlacklistedPlayers(data.Name, blacklist);
+            if (whitelist.Count > 0)
+                Player.SendMessage(p, "Visit whitelist: &a" + String.Join("%S, &a", whitelist));
+            if (blacklist.Count > 0)
+                Player.SendMessage(p, "Visit blacklist: &c" + String.Join("%S, &c", blacklist));
         }
         
-        private void GetBlacklistedPlayers(Player p, string l)
-        {
+        void GetBlacklistedPlayers(string l, List<string> blacklist) {
             string path = "levels/blacklists/" + l + ".txt";
-            string text;
-            if (!File.Exists(path))
-            {
-                return;
+            if (!File.Exists(path)) return;
+            
+            string[] lines = File.ReadAllLines(path);
+            foreach (string line in lines) {
+                if (line.IndexOf(' ') < 0) continue;
+                blacklist.Add(line.Split(' ')[1]);
             }
-            if (File.ReadAllText(path) == "")
-            {
-                File.Delete(path); return;
-            }
-                string blocked = "";
-                string[] lines = File.ReadAllLines(path);
-                foreach (string line in lines)
-                {
-                    string player = line.Split(' ')[1];
-                    blocked += "%b" + player + "%S, ";
-                }
-                text = "%SBlacklisted Players = " + blocked;
-                Player.SendMessage(p, text);
         }
         
         void ShowEnv(Player p, MapInfoData data) {
@@ -138,12 +132,14 @@ namespace MCGalaxy.Commands {
             
             public ushort Width, Height, Length;
             public int Physics;
-            public LevelPermission visit, build, visitmax, buildmax;
             public bool Guns;
             public string Name, TerrainUrl, TextureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
             public short EdgeLevel, CloudsHeight, MaxFogDistance;
             public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
+            public LevelPermission visit, build, visitmax, buildmax;
+            public List<string> VisitWhitelist = new List<string>();
+            public List<string> VisitBlacklist = new List<string>();
             // Zombie data
             public string Authors;
             public int TotalRounds, HumanRounds;
@@ -155,6 +151,8 @@ namespace MCGalaxy.Commands {
                 Physics = lvl.physics; Guns = lvl.guns;
                 visit = lvl.permissionvisit; build = lvl.permissionbuild;
                 visitmax = lvl.pervisitmax; buildmax = lvl.perbuildmax;
+                VisitWhitelist = new List<string>(lvl.VisitWhitelist);
+                VisitBlacklist = new List<string>(lvl.VisitBlacklist);
                 
                 Fog = lvl.FogColor; Sky = lvl.SkyColor; Clouds = lvl.CloudColor;
                 Light = lvl.LightColor; Shadow = lvl.ShadowColor;
@@ -177,12 +175,10 @@ namespace MCGalaxy.Commands {
                 LvlFile.LoadDimensions(LevelInfo.LevelPath(name),
                                        out Width, out Height, out Length);
                 string path = LevelInfo.GetPropertiesPath(name);
-                Server.s.Log(path);
                 if (path != null)
                     PropertiesFile.Read(path, ParseProperty, '=');
                 
                 path = "levels/level properties/" + name + ".env";
-                Server.s.Log(path);
                 if (File.Exists(path))
                     PropertiesFile.Read(path, ParseEnv, '=');
                 if (Authors == null) Authors = "";
@@ -191,13 +187,18 @@ namespace MCGalaxy.Commands {
             void ParseProperty(string key, string value) {
                 switch (key.ToLower()) {
                     case "physics": Physics = int.Parse(value); break;
+                    case "guns": Guns = bool.Parse(value); break;
+                    case "texture": TerrainUrl = value; break;
+                    case "texturepack": TextureUrl = value; break;
+                    
                     case "perbuild": build = GetPerm(value); break;
                     case "pervisit": visit = GetPerm(value); break;
                     case "perbuildmax": buildmax = GetPerm(value); break;
                     case "pervisitmax": visitmax = GetPerm(value); break;
-                    case "guns": Guns = bool.Parse(value); break;
-                    case "texture": TerrainUrl = value; break;
-                    case "texturepack": TextureUrl = value; break;
+                    case "visitwhitelist":
+                        VisitWhitelist = new List<string>(value.Split(',')); break;
+                    case "visitblacklist":
+                        VisitBlacklist = new List<string>(value.Split(',')); break;
                     
                     case "authors": Authors = value; break;
                     case "roundsplayed": TotalRounds = int.Parse(value); break;
