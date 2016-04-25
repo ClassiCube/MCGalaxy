@@ -410,6 +410,7 @@
     <Compile Include="Config\Properties.cs" />
     <Compile Include="Config\PropertiesFile.cs" />
     <Compile Include="Config\StringAttributes.cs" />
+    <Compile Include="Database\BlockDB.cs" />
     <Compile Include="Database\Native\NativeParamsList.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />
     <Compile Include="Database\MySQLParameterisedQuery.cs" />
