@@ -34,8 +34,11 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
+            string level;
             bool env = args[0].CaselessEq("env");
-            string level = env ? (args.Length > 1 ? args[1] : "") : args[0];
+            level = env ? (args.Length > 1 ? args[1] : "") : args[0];
+            bool perms = args[0].CaselessEq("perms");
+            level = perms ? (args.Length > 1 ? args[1] : "") : args[0];
             
             Level lvl = level == "" ? p.level : LevelInfo.Find(level);
             MapInfoData data = new MapInfoData();
@@ -48,6 +51,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (env) ShowEnv(p, data);
+            else if (perms) ShowPermissions(p, data);
             else ShowNormal(p, data);
         }
         
@@ -69,6 +73,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "No backups for this map exist yet.");
             }
             Player.SendMessage(p, "Use %T/mi env " + data.Name + " %Sto see environment settings.");
+            Player.SendMessage(p, "Use %T/mi perms " + data.Name + " %Sto see permission settings.");
             
             if (!Server.zombie.IsZombieMap(data.Name)) return;
             Player.SendMessage(p, "Map authors: " + data.Authors);
@@ -83,6 +88,30 @@ namespace MCGalaxy.Commands {
                                " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
             Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
                                " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
+            GetBlacklistedPlayers(p, data.Name);
+        }
+        
+        private void GetBlacklistedPlayers(Player p, string l)
+        {
+            string path = "levels/blacklists/" + l + ".txt";
+            string text;
+            if (!File.Exists(path))
+            {
+                return;
+            }
+            if (File.ReadAllText(path) == "")
+            {
+                File.Delete(path); return;
+            }
+                string blocked = "";
+                string[] lines = File.ReadAllLines(path);
+                foreach (string line in lines)
+                {
+                    string player = line.Split(' ')[1];
+                    blocked += "%b" + player + "%S, ";
+                }
+                text = "%SBlacklisted Players = " + blocked;
+                Player.SendMessage(p, text);
         }
         
         void ShowEnv(Player p, MapInfoData data) {
@@ -206,6 +235,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p)  {
             Player.SendMessage(p, "/mapinfo <map> - Display details of <map>");
             Player.SendMessage(p, "/mapinfo env <map> - Display environment details of <map>");
+            Player.SendMessage(p, "/mapinfo perms <map> - Display permission details of <map>");
         }
     }
 }
