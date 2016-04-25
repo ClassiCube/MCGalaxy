@@ -41,9 +41,9 @@ namespace MCGalaxy.Commands {
         
         static void ShowLastCommand(Player p, Player who) {
             if (who.lastCMD == "")
-                Player.SendMessage(p, who.color + who.DisplayName + " %Shas not used any commands yet.");
+                Player.SendMessage(p, who.ColoredName + " %Shas not used any commands yet.");
             else
-                Player.SendMessage(p, who.color + who.DisplayName + " %Slast used \"" + who.lastCMD + "\" on " + who.lastCmdTime);
+                Player.SendMessage(p, who.ColoredName + " %Slast used \"" + who.lastCMD + "\" on " + who.lastCmdTime);
         }
         
         public override void Help(Player p) {

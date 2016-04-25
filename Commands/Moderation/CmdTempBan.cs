@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
             tBan.name = target;
             tBan.reason = args.Length > 2 ? args[2] : "";
             tBan.expiryTime = DateTime.UtcNow.AddMinutes(minutes);
-            Server.tempBans.Add(tBan);
+            AddTempban(tBan);
             
             if (who != null) {
                 string reason = String.IsNullOrEmpty(tBan.reason) ? ""
@@ -62,6 +62,15 @@ namespace MCGalaxy.Commands {
             Player.SendMessage(p, "Temp banned " + target + " for " + minutes + " minutes.");
             if (args.Length <= 2) Player.AddNote(target, p, "T");
             else Player.AddNote(target, p, "T", args[2]);
+        }
+        
+        void AddTempban(Server.TempBan tBan) {
+            for (int i = 0; i < Server.tempBans.Count; i++) {
+                if (!Server.tempBans[i].name.CaselessEq(tBan.name)) continue;
+                Server.tempBans[i] = tBan;
+                return;
+            }            
+            Server.tempBans.Add(tBan);
         }
         
         public override void Help(Player p) {

@@ -144,13 +144,7 @@ namespace MCGalaxy {
             for (int i = 0; i < complete.Length; i++)
                 complete[i] = complete[i].ToLower();
             File.WriteAllLines(file, complete);
-        }
-        
-        public static bool ContainsInsensitive(this List<string> list, string value) {
-            foreach (string item in list)
-                if (item.Equals(value, StringComparison.OrdinalIgnoreCase)) return true;
-            return false;
-        }     
+        }    
         
         public static string ToDBTime(this TimeSpan value) {
         	return value.Days + " " + value.Hours + " " + value.Minutes + " " + value.Seconds;
@@ -162,24 +156,21 @@ namespace MCGalaxy {
         	                    int.Parse(parts[2]), int.Parse(parts[3]));
         }
         
-        public static bool CaselessEq(this string a, string b) {
-            return a.Equals(b, StringComparison.OrdinalIgnoreCase);
-        }
+        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
+        public static bool CaselessEq(this string a, string b) { return a.Equals(b, comp); }
         
-        public static bool CaselessStarts(this string a, string b) {
-            return a.StartsWith(b, StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool CaselessStarts(this string a, string b) { return a.StartsWith(b, comp);  }
         
         public static bool CaselessContains(this List<string> items, string value) {
             foreach (string item in items) {
-                if (item.CaselessEq(value)) return true;
+        		if (item.Equals(value, comp)) return true;
             }
             return false;
         }
         
         public static bool CaselessRemove(this List<string> items, string value) {
             for (int i = 0; i < items.Count; i++) {
-                if (!items[i].CaselessEq(value)) continue;
+                if (!items[i].Equals(value, comp)) continue;
                 items.RemoveAt(i); return true;
             }
             return false;

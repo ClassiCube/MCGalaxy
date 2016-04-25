@@ -310,8 +310,8 @@ namespace MCGalaxy {
                 name += "+";
                 byte type = message[129];
 
-                isDev = Server.Devs.ContainsInsensitive(name);
-                isMod = Server.Mods.ContainsInsensitive(name);
+                isDev = Server.Devs.CaselessContains(name);
+                isMod = Server.Mods.CaselessContains(name);
 
                 try {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
@@ -504,6 +504,9 @@ namespace MCGalaxy {
                 InitPlayerStats(playerDb);
             else
                 LoadPlayerStats(playerDb);
+            ZombieStats stats = Server.zombie.LoadZombieStats(name);
+            Game.MaxInfected = stats.MaxInfected; Game.TotalInfected = stats.TotalInfected;
+            Game.MaxRoundsSurvived = stats.MaxRounds; Game.TotalRoundsSurvived = stats.TotalRounds;
             
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
@@ -636,40 +639,29 @@ namespace MCGalaxy {
         
         void CheckLoginJailed() {
             //very very sloppy, yes I know.. but works for the time
-            bool gotoJail = false;
-            string gotoJailMap = "", gotoJailName = "";
             try  {
-                if (File.Exists("ranks/jailed.txt"))
-                {
-                    using (StreamReader read = new StreamReader("ranks/jailed.txt"))
-                    {
-                        string line;
-                        while ((line = read.ReadLine()) != null)
-                        {
-                            string[] parts = line.Split();
-                            if (parts[0].ToLower() == this.name.ToLower())
-                            {
-                                gotoJail = true;
-                                gotoJailName = parts[0];
-                                gotoJailMap = parts[1];
-                                break;
-                            }
+                if (!File.Exists("ranks/jailed.txt")) {
+                    File.Create("ranks/jailed.txt").Close(); return;
+                }
+                
+                using (StreamReader reader = new StreamReader("ranks/jailed.txt")) {
+                    string line;
+                    while ((line = reader.ReadLine()) != null) {
+                        string[] parts = line.Split();
+                        if (!parts[0].CaselessEq(name)) continue;
+                        reader.Dispose();
+                    
+                        try {
+                            Command.all.Find("goto").Use(this, parts[1]);
+                            Command.all.Find("jail").Use(null, parts[0]);
+                        } catch (Exception ex) {
+                            Kick("Error occured");
+                            Server.ErrorLog(ex);
                         }
+                        return;
                     }
-                } else { 
-                    File.Create("ranks/jailed.txt").Close(); 
                 }
             } catch {
-                gotoJail = false;
-            }
-            
-            if (gotoJail) {
-                try {
-                    Command.all.Find("goto").Use(this, gotoJailMap);
-                    Command.all.Find("jail").Use(null, gotoJailName);
-                } catch (Exception e) {
-                    Kick(e.ToString());
-                }
             }
         }
 
@@ -933,10 +925,14 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 });
 }
 } */
-        
+        DateTime lastSpamReset;
         void HandleChat(byte[] message) {
             try {
                 if ( !loggedIn ) return;
+                if ((DateTime.UtcNow - lastSpamReset).TotalSeconds > Server.spamcountreset) {
+                    lastSpamReset = DateTime.UtcNow;
+                    consecutivemessages = 0;
+                }
                 byte continued = message[0];
                 string text = GetString(message, 1);
 
@@ -1046,10 +1042,6 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if ( Server.chatmod && !voice ) { this.SendMessage("Chat moderation is on, you cannot speak."); return; }
 
                 if ( Server.checkspam ) {
-                    //if (consecutivemessages == 0)
-                    //{
-                    // consecutivemessages++;
-                    //}
                     if ( Player.lastMSG == this.name ) {
                         consecutivemessages++;
                     } else {

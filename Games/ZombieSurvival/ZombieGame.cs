@@ -18,11 +18,16 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Threading;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {
+    
+    public struct ZombieStats {
+        public int TotalRounds, MaxRounds, TotalInfected, MaxInfected;
+    }
     
     public sealed partial class ZombieGame {
         
@@ -65,9 +70,11 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress || p == null) return;
             Infected.Add(p);
             Alive.Remove(p);
+            p.Game.CurrentRoundsSurvived = 0;
+            p.SetPrefix();
             
             if (p.Game.Invisible) {
-                p.SendCpeMessage(CpeMessageType.BottomRight2, "", false);            	
+                p.SendCpeMessage(CpeMessageType.BottomRight2, "", false);
                 Player.GlobalSpawn(p, false);
                 p.Game.ResetInvisibility();
             }
@@ -92,7 +99,7 @@ namespace MCGalaxy.Games {
         void ChangeLevel(string next) {
             Player[] online = PlayerInfo.Online.Items;
             if (CurLevel != null) {
-                Level.SaveSettings(CurLevel);               
+                Level.SaveSettings(CurLevel);
                 CurLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
                 CurLevel.ChatLevel("Please wait while you are transfered.");
             }
@@ -128,17 +135,14 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             
             foreach (Player pl in online) {
-                pl.Game.RatedMap = false;
-                pl.Game.PledgeSurvive = false;
+                pl.Game.ResetZombieState();
                 
                 if (pl.Game.Invisible) {
-                	pl.Game.ResetInvisibility();
+                    pl.Game.ResetInvisibility();
                     Entities.GlobalSpawn(pl, false);
-                }              
-                if (pl.Game.Referee) {
-                    pl.Game.Referee = false; 
-                    pl.SetPrefix();
                 }
+                pl.SetPrefix();
+                
                 if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))
                     continue;
                 ResetCpeMessages(pl);
@@ -187,6 +191,34 @@ namespace MCGalaxy.Games {
             return ((seconds + 59) / 60) + " mins left";
         }
         
+        static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
+            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
+            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
+            "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
+            "{0} transplanted {1}'s living brain" };
+        
+        public void LoadInfectMessages() {
+            messages.Clear();
+            try {
+                if (!File.Exists("text/infectmessages.txt"))
+                    File.WriteAllLines("text/infectmessages.txt", defMessages);
+                messages = CP437Reader.ReadAllLines("text/infectmessages.txt");
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
+            if (messages.Count == 0)
+                messages = new List<string>(defMessages);
+        }
+        
+        public bool IsZombieMap(string name) {
+            if (!Running) return false;
+            if (IgnorePersonalWorlds && name.IndexOf('+') >= 0) return false;
+            if (IgnoredLevelList.CaselessContains(name)) return false;
+            return LevelList.Count == 0 ? true : LevelList.CaselessContains(name);
+        }
+        
+        #region Database
+        
         const string createSyntax =
             @"CREATE TABLE if not exists ZombieStats (
 ID INTEGER {0}{1} NOT NULL,
@@ -207,23 +239,43 @@ Additional4 INT{2});"; // reserve space for possible future additions
             Database.executeQuery(string.Format(createSyntax, primKey, autoInc, primKey2));
         }
         
-        static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
-            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
-            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
-            "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
-            "{0} transplanted {1}'s living brain" };
-        
-        public void LoadInfectMessages() {
-            messages.Clear();
-            try {
-                if (!File.Exists("text/infectmessages.txt"))
-                    File.WriteAllLines("text/infectmessages.txt", defMessages);
-                messages = CP437Reader.ReadAllLines("text/infectmessages.txt");
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
+        public ZombieStats LoadZombieStats(string name) {
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@Name", name);
+            DataTable table = Database.fillData(query, "SELECT * FROM ZombieStats WHERE Name=@Name");
+            ZombieStats stats = default(ZombieStats);
+            
+            if (table.Rows.Count > 0) {
+                DataRow row = table.Rows[0];
+                stats.TotalRounds = int.Parse(row["TotalRounds"].ToString());
+                stats.MaxRounds = int.Parse(row["MaxRounds"].ToString());
+                stats.TotalInfected = int.Parse(row["TotalInfected"].ToString());
+                stats.MaxInfected = int.Parse(row["MaxInfected"].ToString());
             }
-            if (messages.Count == 0)
-                messages = new List<string>(defMessages);
+            table.Dispose();
+            return stats;
         }
+        
+        public void SaveZombieStats(Player p) {
+            if (p.Game.TotalRoundsSurvived == 0 && p.Game.TotalInfected == 0) return;
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@Name", p.name);
+            DataTable table = Database.fillData(query, "SELECT * FROM ZombieStats WHERE Name=@Name");
+            
+            query.AddParam("@Name", p.name);
+            query.AddParam("@TR", p.Game.TotalRoundsSurvived);
+            query.AddParam("@MR", p.Game.MaxRoundsSurvived);
+            query.AddParam("@TI", p.Game.TotalInfected);
+            query.AddParam("@MI", p.Game.MaxInfected);
+            
+            if (table.Rows.Count == 0)
+                Database.executeQuery(query, "INSERT INTO ZombieStats (TotalRounds, MaxRounds, " +
+                                      "TotalInfected, MaxInfected, Name) VALUES (@TR, @MR, @TI, @MI, @Name)");
+            else
+                Database.executeQuery(query, "UPDATE ZombieStats SET TotalRounds=@TR, MaxRounds=@MR, " +
+                                      "TotalInfected=@TI, MaxInfected=@MI WHERE Name=@NAME");
+            table.Dispose();
+        }
+        #endregion
     }
 }

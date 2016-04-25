@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands
             
             if (who != null && who.name != p.name) {
                 Player.SendMessage(p, "Sent the rules to " + who.color + who.DisplayName + "%S.");
-                Player.SendMessage(who, p.color + p.DisplayName + " %Ssent you the rules.");
+                Player.SendMessage(who, p.ColoredName + " %Ssent you the rules.");
             }
         }
 

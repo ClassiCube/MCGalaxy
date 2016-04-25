@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands
             }
             who = PlayerInfo.Find(message);
             p.following = who.name;
-            Player.SendMessage(p, "Following " + who.color + who.DisplayName + "%S. Use \"/follow\" to stop.");
+            Player.SendMessage(p, "Following " + who.ColoredName + "%S. Use \"/follow\" to stop.");
             p.DespawnEntity(who.id);
         }
         

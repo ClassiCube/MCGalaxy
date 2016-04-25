@@ -94,9 +94,13 @@ namespace MCGalaxy.Gui {
         public string Model { get; set; }
         
 
-        [Description("How long an invisibility potion bought using /buy invisibility lasts.")]
-        [Category("Human settings")]        
+        [Description("How many seconds an invisibility potion bought using /buy invisibility lasts.")]
+        [Category("Human settings")]
         public int InvisibilityDuration { get; set; }
+        
+        [Description("Maximum number of invisibility potions a human is allowed to buy in a round.")]
+        [Category("Human settings")]        
+        public int InvisibilityPotions { get; set; }
         
         public void LoadFromServer() {
             ChangeLevels = ZombieGame.ChangeLevels;
@@ -117,6 +121,7 @@ namespace MCGalaxy.Gui {
             Name = ZombieGame.ZombieName;
             Model = ZombieGame.ZombieModel;
             InvisibilityDuration = ZombieGame.InvisibilityDuration;
+            InvisibilityPotions = ZombieGame.InvisibilityPotions;
         }
         
         public void ApplyToServer() {
@@ -145,6 +150,7 @@ namespace MCGalaxy.Gui {
             if (ZombieGame.ZombieModel == "")
                 ZombieGame.ZombieModel = "zombie";
             ZombieGame.InvisibilityDuration = InvisibilityDuration;
+            ZombieGame.InvisibilityPotions = InvisibilityPotions;
         }
     }
 }

@@ -36,12 +36,6 @@ namespace MCGalaxy {
             afkTimer.Elapsed += AfkTimerElapsed;
             if (Server.afkminutes > 0)
                 afkTimer.Start();
-            
-            resetSpamCount.Elapsed += delegate {
-                if (consecutivemessages > 0)
-                    consecutivemessages = 0;
-            };
-            resetSpamCount.Start();
         }
 
         static readonly TimeSpan delta = TimeSpan.FromSeconds(1);

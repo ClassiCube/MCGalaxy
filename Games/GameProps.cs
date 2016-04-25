@@ -70,11 +70,23 @@ namespace MCGalaxy.Games {
         /// <summary> Last 'invisible for X more seconds' time sent to the player. </summary>
         public int InvisibilityTime = -1;
         
+        /// <summary> Number of invisibility potions bought this round. </summary>
+        public int InvisibilityPotions = 0;
+        
         /// <summary> Resets all the invisibility variables back to default. </summary>
         public void ResetInvisibility() {
             Invisible = false;
             InvisibilityEnd = DateTime.MinValue;
             InvisibilityTime = -1;
+        }
+        
+        /// <summary> Resets all the zombie game round variables back to default. </summary>
+        public void ResetZombieState() {
+            Referee = false;
+            Infected = false;
+            RatedMap = false;
+            PledgeSurvive = false;
+            InvisibilityPotions = 0;
         }
         
         

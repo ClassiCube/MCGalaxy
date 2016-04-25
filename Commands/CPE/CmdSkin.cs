@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
                 who.skinName = skin;
                 Entities.GlobalDespawn(who, true);
                 Entities.GlobalSpawn(who, true);
-                Player.GlobalMessage(who.color + who.DisplayName + "'s %Sskin was changed to &c" + skin);
+                Player.GlobalMessage(who.ColoredName + "'s %Sskin was changed to &c" + skin);
             }
         }
 

@@ -24,16 +24,20 @@ namespace MCGalaxy.Commands {
     public sealed class CmdMapInfo : Command {
         
         public override string name { get { return "mapinfo"; } }
-        public override string shortcut { get { return "winfo"; } }
+        public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("worldinfo") }; }
+            get { return new[] { new CommandAlias("winfo"), new CommandAlias("worldinfo") }; }
         }
         
         public override void Use(Player p, string message) {
-            Level lvl = message == "" ? p.level : LevelInfo.Find(message);
+            string[] args = message.Split(' ');
+            bool env = args[0].CaselessEq("env");
+            string level = env ? (args.Length > 1 ? args[1] : "") : args[0];
+            
+            Level lvl = level == "" ? p.level : LevelInfo.Find(level);
             MapInfoData data = new MapInfoData();
             if (lvl != null) {
                 data.FromOnlineLevel(lvl);
@@ -42,43 +46,53 @@ namespace MCGalaxy.Commands {
             } else {
                 Player.SendMessage(p, "Could not find specified level."); return;
             }
-            ShowNormal(p, data);
+            
+            if (env) ShowEnv(p, data);
+            else ShowNormal(p, data);
         }
         
         void ShowNormal(Player p, MapInfoData data) {
-            Player.SendMessage(p, "&b" + data.name + "%S: Width=" + data.Width + " Height=" + data.Height + " Depth=" + data.Length);
-            string physicsState = CmdPhysics.states[data.physics];
-            Player.SendMessage(p, "Physics are " + physicsState + Server.DefaultColor + " on &b" + data.name);
+            Player.SendMessage(p, "&b" + data.Name + "%S: Width=" + data.Width + " Height=" + data.Height + " Depth=" + data.Length);
+            string physicsState = CmdPhysics.states[data.Physics];
+            Player.SendMessage(p, "Physics are " + physicsState + " %Son &b" + data.Name);
             ShowPermissions(p, data);
 
-            string gunStatus = data.guns ? "&aonline" : "&coffline";
-            Player.SendMessage(p, "&cGuns &eare " + gunStatus + " &eon " + data.name + ".");
+            string gunStatus = data.Guns ? "&aonline" : "&coffline";
+            if (p == null || p.group.CanExecute("gun"))
+                Player.SendMessage(p, "&cGuns &eare " + gunStatus + " &eon " + data.Name + ".");
 
-            if (Directory.Exists(Server.backupLocation + "/" + data.name)) {
-                int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.name).Length;
-                DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.name, latestBackup.ToString()));
+            if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
+                int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
+                DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.Name, latestBackup.ToString()));
                 Player.SendMessage(p, "Latest backup: &a" + latestBackup + " %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"));
             } else {
                 Player.SendMessage(p, "No backups for this map exist yet.");
             }
-            ShowEnv(p, data);
+            Player.SendMessage(p, "Use %T/mi env " + data.Name + " %Sto see environment settings.");
+            
+            if (!Server.zombie.IsZombieMap(data.Name)) return;
+            Player.SendMessage(p, "Map authors: " + data.Authors);
+            int winChance = data.TotalRounds == 0 ? 100 : (data.HumanRounds * 100) / data.TotalRounds;
+            Player.SendMessage(p, "&a" + data.TotalRounds + " %Srounds played total, with a &a" 
+                               + winChance + "% %Swin chance for humans.");
+            Player.SendMessage(p, "This map has &a" + data.Likes + " likes %Sand &c" + data.Dislikes + " dislikes");
         }
         
         void ShowPermissions(Player p, MapInfoData data) {
             Player.SendMessage(p, "Build rank = " + Group.findPerm(data.build).ColoredName +
-        	                   " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
+                               " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
             Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
                                " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
         }
         
         void ShowEnv(Player p, MapInfoData data) {
-            if (data.terrainUrl != "")
-                Player.SendMessage(p, "Texture: %b" + data.terrainUrl);
+            if (data.TerrainUrl != "")
+                Player.SendMessage(p, "Texture: %b" + data.TerrainUrl);
             else
                 Player.SendMessage(p, "No custom texture set for this map.");
             
-            if (data.textureUrl != "")
-                Player.SendMessage(p, "Texture pack: %b" + data.textureUrl);
+            if (data.TextureUrl != "")
+                Player.SendMessage(p, "Texture pack: %b" + data.TextureUrl);
             else
                 Player.SendMessage(p, "No custom texture pack set for this map.");
             
@@ -94,18 +108,22 @@ namespace MCGalaxy.Commands {
         class MapInfoData {
             
             public ushort Width, Height, Length;
-            public int physics;
+            public int Physics;
             public LevelPermission visit, build, visitmax, buildmax;
-            public bool guns;
-            public string name, terrainUrl, textureUrl;
+            public bool Guns;
+            public string Name, TerrainUrl, TextureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
             public short EdgeLevel, CloudsHeight, MaxFogDistance;
             public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
+            // Zombie data
+            public string Authors;
+            public int TotalRounds, HumanRounds;
+            public int Likes, Dislikes;
 
             public void FromOnlineLevel(Level lvl) {
-                name = lvl.name;
+                Name = lvl.name;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
-                physics = lvl.physics; guns = lvl.guns;
+                Physics = lvl.physics; Guns = lvl.guns;
                 visit = lvl.permissionvisit; build = lvl.permissionbuild;
                 visitmax = lvl.pervisitmax; buildmax = lvl.perbuildmax;
                 
@@ -115,14 +133,18 @@ namespace MCGalaxy.Commands {
                 MaxFogDistance = lvl.MaxFogDistance;
                 EdgeBlock = lvl.EdgeBlock; HorizonBlock = lvl.HorizonBlock;
                 
-                terrainUrl = lvl.terrainUrl != "" ?
+                TerrainUrl = lvl.terrainUrl != "" ?
                     lvl.terrainUrl : Server.defaultTerrainUrl;
-                textureUrl = lvl.texturePackUrl != "" ?
+                TextureUrl = lvl.texturePackUrl != "" ?
                     lvl.texturePackUrl : Server.defaultTextureUrl;
+                
+                Authors = lvl.Authors;
+                TotalRounds = lvl.RoundsPlayed; HumanRounds = lvl.RoundsHumanWon;
+                Likes = lvl.Likes; Dislikes = lvl.Dislikes;
             }
             
             public void FromOfflineLevel(string name) {
-                this.name = name;
+                this.Name = name;
                 LvlFile.LoadDimensions(LevelInfo.LevelPath(name),
                                        out Width, out Height, out Length);
                 string path = LevelInfo.GetPropertiesPath(name);
@@ -134,18 +156,25 @@ namespace MCGalaxy.Commands {
                 Server.s.Log(path);
                 if (File.Exists(path))
                     PropertiesFile.Read(path, ParseEnv, '=');
+                if (Authors == null) Authors = "";
             }
             
             void ParseProperty(string key, string value) {
                 switch (key.ToLower()) {
-                    case "physics": physics = int.Parse(value); break;
+                    case "physics": Physics = int.Parse(value); break;
                     case "perbuild": build = GetPerm(value); break;
                     case "pervisit": visit = GetPerm(value); break;
                     case "perbuildmax": buildmax = GetPerm(value); break;
                     case "pervisitmax": visitmax = GetPerm(value); break;
-                    case "guns": guns = bool.Parse(value); break;
-                    case "texture": terrainUrl = value; break;
-                    case "texturepack": textureUrl = value; break;
+                    case "guns": Guns = bool.Parse(value); break;
+                    case "texture": TerrainUrl = value; break;
+                    case "texturepack": TextureUrl = value; break;
+                    
+                    case "authors": Authors = value; break;
+                    case "roundsplayed": TotalRounds = int.Parse(value); break;
+                    case "RoundsHumanWon": HumanRounds = int.Parse(value); break;
+                    case "likes": Likes = int.Parse(value); break;
+                    case "dislikes": Dislikes = int.Parse(value); break;
                 }
             }
             
@@ -176,6 +205,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p)  {
             Player.SendMessage(p, "/mapinfo <map> - Display details of <map>");
+            Player.SendMessage(p, "/mapinfo env <map> - Display environment details of <map>");
         }
     }
 }

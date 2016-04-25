@@ -89,12 +89,9 @@ namespace MCGalaxy.Games {
             RoundInProgress = true;
             int roundMins = random.Next(CurLevel.MinRoundTime, CurLevel.MaxRoundTime);
             string suffix = roundMins == 1 ? " %Sminute!" : " %Sminutes!";
-            CurLevel.ChatLevel("The round will last for &a" + roundMins + suffix);
+            CurLevel.ChatLevel("This round will last for &a" + roundMins + suffix);
             RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
-            timer = new System.Timers.Timer(roundMins * 60 * 1000);
-            timer.Elapsed += new ElapsedEventHandler(EndRound);
-            timer.Enabled = true;
-
+            
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
                 if (p.level == null || p.level != CurLevel || p.Game.Referee) continue;
@@ -127,19 +124,19 @@ namespace MCGalaxy.Games {
             while (true) {
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
                 if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 30...");
+                SendLevelRaw("&4Round Start:&f 30...");
                 Thread.Sleep(20000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 10...");
+                SendLevelRaw("&4Round Start:&f 10...");
                 Thread.Sleep(5000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 5...");
+                SendLevelRaw("&4Round Start:&f 5...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 4...");
+                SendLevelRaw("&4Round Start:&f 4...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 3...");
+                SendLevelRaw("&4Round Start:&f 3...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 2...");
+                SendLevelRaw("&4Round Start:&f 2...");
                 Thread.Sleep(1000); if (!Running) return null;
-                CurLevel.ChatLevel("&4Round Start:&f 1...");
+                SendLevelRaw("&4Round Start:&f 1...");
                 Thread.Sleep(1000); if (!Running) return null;
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
@@ -161,10 +158,19 @@ namespace MCGalaxy.Games {
         void DoCoreGame(Random random) {
             Player[] alive = null;
             string lastTimespan = null;
-            while ((alive = Alive.Items).Length > 0) {
+            int lastTime = -1;
+            
+            while ((alive = Alive.Items).Length > 0 && Running) {
                 Player[] infected = Infected.Items;
-                // Update the round time left shown in the top right
+                // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
+                if (seconds <= 0) { HandOutRewards(); return; }
+                if (seconds <= 5 && seconds != lastTime) {
+                     SendLevelRaw("&4Round End:&f " + seconds);
+                     lastTime = seconds;
+                }
+                
+                // Update the round time left shown in the top right
                 string timespan = GetTimespan(seconds);
                 if (lastTimespan != timespan) {
                     UpdateAllPlayerStatus(timespan);
@@ -220,6 +226,14 @@ namespace MCGalaxy.Games {
                 
                 CheckInvisibilityTime(Alive.Items);
                 Thread.Sleep(25);
+            }
+        }
+        
+        void SendLevelRaw(string message) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != CurLevel) continue;
+                p.SendRawMessage(CpeMessageType.Normal, message);
             }
         }
         
@@ -289,16 +303,6 @@ namespace MCGalaxy.Games {
             Entities.GlobalDespawn(p, true);
             Entities.GlobalSpawn(p, true);
         }
-        
-        void EndRound(object sender, ElapsedEventArgs e) {
-            if (!Running) return;
-            CurLevel.ChatLevel("%4Round End:%f 5"); Thread.Sleep(1000);
-            CurLevel.ChatLevel("%4Round End:%f 4"); Thread.Sleep(1000);
-            CurLevel.ChatLevel("%4Round End:%f 3"); Thread.Sleep(1000);
-            CurLevel.ChatLevel("%4Round End:%f 2"); Thread.Sleep(1000);
-            CurLevel.ChatLevel("%4Round End:%f 1"); Thread.Sleep(1000);
-            HandOutRewards();
-        }
 
         public void HandOutRewards() {
             if (!RoundInProgress) return;
@@ -314,7 +318,6 @@ namespace MCGalaxy.Games {
             else if (alive.Length == 1) CurLevel.ChatLevel(Colors.green + "Congratulations to the sole survivor:");
             else CurLevel.ChatLevel(Colors.green + "Congratulations to the survivors:");
             
-            timer.Enabled = false;
             string playersString = "";
             Player[] online = null;
             CurLevel.RoundsPlayed++;
@@ -336,6 +339,7 @@ namespace MCGalaxy.Games {
                     pl.Game.TotalRoundsSurvived++;
                     pl.Game.MaxRoundsSurvived = Math.Max(pl.Game.CurrentRoundsSurvived, pl.Game.MaxRoundsSurvived);
                     ResetPlayer(pl, ref playersString);
+                    pl.SetPrefix();
                 }
             }
             
@@ -359,6 +363,7 @@ namespace MCGalaxy.Games {
                 pl.Game.CurrentInfected = 0;
                 pl.money += money;
                 pl.Game.Infected = false;
+                pl.Game.InvisibilityPotions = 0;
                 if (pl.Game.Referee) {
                     pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
                     pl.money++;
@@ -386,7 +391,6 @@ namespace MCGalaxy.Games {
         void ResetPlayer(Player p, ref string playersString) {
             p.Game.BlocksLeft = 50;
             p.Game.Infected = false;
-            p.Game.CurrentInfected = 0;
             
             if (p.level.name.CaselessEq(CurLevelName))
                 playersString += p.color + p.DisplayName + Colors.white + ", ";

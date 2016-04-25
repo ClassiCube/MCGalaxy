@@ -263,7 +263,6 @@ namespace MCGalaxy {
         Queue<DateTime> spamBlockLog = new Queue<DateTime>(spamBlockCount);
 
         public int consecutivemessages;
-        private System.Timers.Timer resetSpamCount = new System.Timers.Timer(Server.spamcountreset * 1000);
         //public static int spamChatCount = 3;
         //public static int spamChatTimer = 4;
         //Queue<DateTime> spamChatLog = new Queue<DateTime>(spamChatCount);
@@ -298,10 +297,10 @@ namespace MCGalaxy {
         }
         
         public void SetPrefix() {
-            Team team = Game.Team;
             prefix = Game.Referee ? "&2[Ref] " : "";
-            prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
-            if (group.prefix != "") prefix += "&f" + group.prefix + color;
+            if (group.prefix != "") prefix += "&f" + group.prefix + color; 
+            IGame game = level == null ? null : level.CurrentGame();
+            if (game != null) game.AdjustPrefix(this, ref prefix);
             
             bool isOwner = Server.server_owner != "" && Server.server_owner.CaselessEq(name);
             string viptitle = isDev ? string.Format("{0}[&9Dev{0}] ", color) : 
@@ -376,7 +375,8 @@ namespace MCGalaxy {
                 Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
                 ecos.money = money;
                 Economy.UpdateEcoStats(ecos);
-            }           	
+            }
+            Server.zombie.SaveZombieStats(this);
 
             try {
                 if ( !smileySaved ) {

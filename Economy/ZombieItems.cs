@@ -130,6 +130,9 @@ namespace MCGalaxy.Eco {
             if (p.Game.Invisible) {
                 Player.SendMessage(p, "You are already invisible."); return;
             }
+        	if (p.Game.InvisibilityPotions >= ZombieGame.InvisibilityPotions) {
+        		Player.SendMessage(p, "You cannot buy any more invisibility potions this round."); return;
+        	}
             if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
                 Player.SendMessage(p, "You can only buy an invisiblity potion " +
                                    "when a round of zombie survival is in progress."); return;
@@ -143,8 +146,10 @@ namespace MCGalaxy.Eco {
             int duration = ZombieGame.InvisibilityDuration;
             p.Game.Invisible = true;
             p.Game.InvisibilityEnd = DateTime.UtcNow.AddSeconds(duration);
+            p.Game.InvisibilityPotions++;
+            int left = ZombieGame.InvisibilityPotions - p.Game.InvisibilityPotions;
             
-            Player.SendMessage(p, "%aInvisibility lasts for " + duration + " seconds");
+            Player.SendMessage(p, "Lasts for &a" + duration + " %Sseconds. You can buy &a" + left + " %Smore this round.");
             Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false);
             MakePurchase(p, Price, "%3Invisibility: " + duration);

@@ -301,7 +301,7 @@ namespace MCGalaxy {
                 Player.GlobalBlockchange(this, x, y, z, type, extType);
         }
         
-        internal bool DoBlockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
+        public bool DoBlockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
             string errorLocation = "start";
         retry:
             try
