@@ -172,6 +172,7 @@ namespace MCGalaxy {
         public bool useCheckpointSpawn = false;
         public int lastCheckpointIndex = -1;
         public ushort checkpointX, checkpointY, checkpointZ;
+        public byte checkpointRotX, checkpointRotY;
         public bool voted = false;
         public bool flipHead = false;
         public GameProps Game = new GameProps();
