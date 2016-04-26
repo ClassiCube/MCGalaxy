@@ -78,7 +78,6 @@ namespace MCGalaxy {
         public TimeSpan time;
         public string name;
         public string DisplayName;
-        public string SkinName;
         public string realName;
         public int warn = 0;
         public byte id;

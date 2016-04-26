@@ -71,6 +71,10 @@ namespace MCGalaxy.Commands {
                 Entities.GlobalDespawn(who, true);
                 Entities.GlobalSpawn(who, true);
                 Player.GlobalMessage(who.ColoredName + "'s %Sskin was changed to &c" + skin);
+                
+                Server.Skins.DeleteStartsWith(who.name + " ");
+                if (skin != who.truename)
+                    Server.Skins.Append(who.name + " " + skin);
             }
         }
 

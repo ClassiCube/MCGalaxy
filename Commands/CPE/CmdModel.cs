@@ -57,24 +57,20 @@ namespace MCGalaxy.Commands {
                 if (who == null) { Player.SendMessage(p, "Console must provide a player name."); return; }
                 model = message;
             }
+            model = model.ToLower();
 
             if (isBot) {
                 pBot.model = model;
-                UpdateModel(pBot.id, model, pBot.level, null);
+                Entities.UpdateModel(pBot.id, model, pBot.level, null);
                 Player.GlobalMessage("Bot " + pBot.name + "'s %Smodel was changed to a &c" + model);
             } else {
                 who.model = model;
-                UpdateModel(who.id, model, who.level, who);
+                Entities.UpdateModel(who.id, model, who.level, who);
                 Player.GlobalMessage(who.ColoredName + "'s %Smodel was changed to a &c" + model);
-            }
-        }
-        
-        void UpdateModel(byte id, string model, Level level, Player who) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level != level || !pl.HasCpeExt(CpeExt.ChangeModel)) continue;
-                byte sendId = (pl == who) ? (byte)0xFF : id;
-                pl.SendChangeModel(sendId, model);
+                
+                Server.Models.DeleteStartsWith(who.name + " ");
+                if (model != "humanoid")
+                    Server.Models.Append(who.name + " " + model);
             }
         }
 
@@ -96,7 +92,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); }
-            string model = message == "" ? "normal" : message;
+            string model = message == "" ? "humanoid" : message;
             Command.all.Find("model").Use(p, p.name + " " + model);
         }
 

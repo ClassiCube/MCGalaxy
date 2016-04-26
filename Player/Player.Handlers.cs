@@ -306,7 +306,6 @@ namespace MCGalaxy {
                     }
                 }
                 DisplayName = name;
-                SkinName = name;
                 name += "+";
                 byte type = message[129];
 
@@ -390,7 +389,7 @@ namespace MCGalaxy {
 
                 group = Group.findPlayerGroup(name);
                 Loading = true;
-                if (disconnected) return;             
+                if (disconnected) return;
                 id = FreeId();
                 
                 if (type != 0x42)
@@ -515,7 +514,8 @@ namespace MCGalaxy {
             Game.Team = Team.FindTeam(this);
             SetPrefix();
             playerDb.Dispose();
-
+            LoadCpeData();
+            
             if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank)
                 adminpen = true;
             if (emoteList.Contains(name)) parseSmiley = false;
@@ -587,6 +587,28 @@ namespace MCGalaxy {
             }
             CmdGoto.CheckGamesJoin(this, null);
             Loading = false;
+        }
+        
+        void LoadCpeData() {
+            try {
+                foreach (string line in Server.Skins.Find(name)) {
+                    string[] parts = line.Split(trimChars, 2);
+                    if (parts.Length == 1) continue;
+                    skinName = parts[1];
+                }
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
+            
+            try {
+                foreach (string line in Server.Models.Find(name)) {
+                    string[] parts = line.Split(trimChars, 2);
+                    if (parts.Length == 1) continue;
+                    model = parts[1];
+                }
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
         }
         
         void CheckOutdatedClient() {

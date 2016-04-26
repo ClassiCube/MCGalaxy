@@ -132,6 +132,17 @@ namespace MCGalaxy {
             return p.group.Permission >= who.group.Permission;
         }
         
+        /// <summary> Updates the model of the entity with the specified id to all other players. </summary>
+        public static void UpdateModel(byte id, string model, Level lvl, Player who) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != lvl || !pl.HasCpeExt(CpeExt.ChangeModel)) continue;
+                if (who != null && !CanSeeEntity(pl, who)) continue;
+                
+                byte sendId = (pl.id == id) ? (byte)0xFF : id;
+                pl.SendChangeModel(sendId, model);
+            }
+        }
         
         #region Position updates
         
