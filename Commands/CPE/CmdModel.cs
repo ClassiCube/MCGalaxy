@@ -66,7 +66,8 @@ namespace MCGalaxy.Commands {
             } else {
                 who.model = model;
                 Entities.UpdateModel(who.id, model, who.level, who);
-                Player.GlobalMessage(who.ColoredName + "'s %Smodel was changed to a &c" + model);
+                if (p != who)
+                    Player.GlobalMessage(who.ColoredName + "'s %Smodel was changed to a &c" + model);
                 
                 Server.Models.DeleteStartsWith(who.name + " ");
                 if (model != "humanoid")
