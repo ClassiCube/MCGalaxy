@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
 
             if (p.hidden)
             {
-                Player.GlobalDespawn(p, true);
+                Entities.GlobalDespawn(p, true);
                 if (messageOps && !p.otherRankHidden)
                     Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + "%S- is now &finvisible%S.");
                 string discMsg = PlayerDB.GetLogoutMessage(p);
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player.GlobalSpawn(p, false);
+                Entities.GlobalSpawn(p, false);
                 p.hidden = false;
                 p.otherRankHidden = false;
                 if(messageOps)
