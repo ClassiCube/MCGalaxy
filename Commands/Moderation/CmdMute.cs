@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
                 if (Server.muted.Contains(message)) {
                     Server.muted.Remove(message);
                     Player.GlobalMessage(message + Server.DefaultColor + " is not online but is now &bun-muted");
-                    Server.Muted.DeleteWord(who.name.ToLower());
+                    Server.Muted.DeleteContains(who.name.ToLower());
                 }
                 return;
             }
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
             if (who.muted) {
                 who.muted = false;
                 Player.SendChatFrom(who, who.color + who.DisplayName + " %Shas been &bun-muted", false);
-                Server.Muted.DeleteWord(who.name.ToLower());
+                Server.Muted.DeleteContains(who.name.ToLower());
             } else  {
                 if (p != null && who.group.Permission >= p.group.Permission) { 
                     MessageTooHighRank(p, "mute", false); return;

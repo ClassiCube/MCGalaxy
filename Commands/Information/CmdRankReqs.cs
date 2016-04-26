@@ -63,12 +63,12 @@ namespace MCGalaxy.Commands {
                 string path = "text/rankreqs/" + grp.name + ".txt";
                 if (args.Length == 2) {
                     File.Delete(path);
-                    Player.SendMessage(p, "Deleted rank requirements for " + grp.color + grp.name + "%S.");
+                    Player.SendMessage(p, "Deleted rank requirements for " + grp.ColoredName + "%S.");
                 } else {
                     string[] lines = args[2].Split(new [] { "\\n" },
                                                    StringSplitOptions.RemoveEmptyEntries);
                     CP437Writer.WriteAllLines(path, lines);
-                    Player.SendMessage(p, "Updated rank requirements for " + grp.color + grp.name + "%S.");
+                    Player.SendMessage(p, "Updated rank requirements for " + grp.ColoredName + "%S.");
                 }
             } else {
                 Group grp = Group.Find(message);
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands {
             }
             
             List<string> lines = CP437Reader.ReadAllLines(path);
-            Player.SendMessage(p, "Rank requirements for " + grp.color + grp.name + "%S:");
+            Player.SendMessage(p, "Rank requirements for " + grp.ColoredName + "%S:");
             foreach (string line in lines)
                 Player.SendMessage(p, line);
         }

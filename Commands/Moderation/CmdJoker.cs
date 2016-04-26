@@ -43,18 +43,18 @@ namespace MCGalaxy.Commands {
 
             if (!who.joker) {
                 if (stealth) { 
-                    Chat.GlobalMessageOps(who.color + who.DisplayName + " %Sis now STEALTH jokered."); 
+                    Chat.GlobalMessageOps(who.ColoredName + " %Sis now STEALTH jokered."); 
                 } else {
-                     Player.SendChatFrom(who, who.color + who.DisplayName + " %Sis now a &aJ&bo&ck&5e&9r%S.", false);              
+                     Player.SendChatFrom(who, who.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S.", false);              
                 }
-                Server.IRC.Say(who.color + who.DisplayName + " %Sis now a &aJ&bo&ck&5e&9r%S.", stealth);
+                Server.IRC.Say(who.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S.", stealth);
             } else {
                 if (stealth) { 
-                    Chat.GlobalMessageOps(who.color + who.DisplayName + " %Sis now STEALTH unjokered.");
+                    Chat.GlobalMessageOps(who.ColoredName + " %Sis now STEALTH unjokered.");
                 } else {
-                    Player.SendChatFrom(who, who.color + who.DisplayName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", false);
+                    Player.SendChatFrom(who, who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", false);
                 }
-                Server.IRC.Say(who.color + who.DisplayName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", stealth);
+                Server.IRC.Say(who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", stealth);
             }
             who.joker = !who.joker;
         }

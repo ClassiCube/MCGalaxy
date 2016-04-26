@@ -65,5 +65,8 @@ namespace MCGalaxy.Games {
         
         /// <summary> Raised when the server is about to send a heartbeat. </summary>
         public virtual void OnHeartbeat(ref string name) { }
+        
+        /// <summary> Adjusts the prefix (e.g. title) shown before the player's name in chat. </summary>
+        public virtual void AdjustPrefix(Player p, ref string prefix) { }
     }
 }

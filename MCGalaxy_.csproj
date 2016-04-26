@@ -252,6 +252,7 @@
     <Compile Include="Commands\Information\CmdWhois.cs" />
     <Compile Include="Commands\Information\CmdWhoNick.cs" />
     <Compile Include="Commands\Information\CmdWhowas.cs" />
+    <Compile Include="Commands\Information\WhoInfo.cs" />
     <Compile Include="Commands\Moderation\CmdAllowGuns.cs" />
     <Compile Include="Commands\Moderation\CmdBan.cs" />
     <Compile Include="Commands\Moderation\CmdBanEdit.cs" />
@@ -410,6 +411,7 @@
     <Compile Include="Config\Properties.cs" />
     <Compile Include="Config\PropertiesFile.cs" />
     <Compile Include="Config\StringAttributes.cs" />
+    <Compile Include="Database\BlockDB.cs" />
     <Compile Include="Database\Native\NativeParamsList.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />
     <Compile Include="Database\MySQLParameterisedQuery.cs" />

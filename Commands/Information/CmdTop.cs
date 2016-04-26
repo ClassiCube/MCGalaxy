@@ -85,6 +85,22 @@ namespace MCGalaxy.Commands {
                     columnName = "TotalKicked";
                     title = "&aTop " + strLimit + " number of kicks:";
                     break;
+                case "8":
+                    columnName = "TotalInfected";
+                    title = "&aTop total infections:";
+                    table = "ZombieStats"; break;
+                case "9":
+                    columnName = "TotalRounds";
+                    title = "&aTop rounds survived:";
+                    table = "ZombieStats"; break;
+                case "10":
+                    columnName = "MaxInfected";
+                    title = "&aTop consecutive infections:";
+                    table = "ZombieStats"; break;
+                case "11":
+                    columnName = "MaxRounds";
+                    title = "&aTop consecutive rounds survived:";
+                    table = "ZombieStats"; break;
                 default:
                     Player.SendMessage(p, string.Format("/Top: Unrecognised type \"{0}\".", args[0]));
                     return;
@@ -92,7 +108,7 @@ namespace MCGalaxy.Commands {
             
             const string query = "SELECT distinct {0}, {1} from {2} order by {3} {4} limit {5}";
             DataTable db = Database.fillData(
-                string.Format(query, select, columnName.ToLower(), table, 
+                string.Format(query, select, columnName.ToLower(), table,
                               columnName.ToLower(), order, limit));
             
             Player.SendMessage(p, title);
@@ -108,13 +124,13 @@ namespace MCGalaxy.Commands {
         }
         
         internal static void SendRecognisedTypes(Player p) {
-            Player.SendMessage(p, "1) Number of Logins");
-            Player.SendMessage(p, "2) Number of Deaths");
-            Player.SendMessage(p, "3) Money");
-            Player.SendMessage(p, "4) First Players");
-            Player.SendMessage(p, "5) Recent Players");
-            Player.SendMessage(p, "6) Blocks Modified");
-            Player.SendMessage(p, "7) Number of Kicks");
+            Player.SendMessage(p, "1) Most logins   2) Most deaths");
+            Player.SendMessage(p, "3) Money   4) First Players");
+            Player.SendMessage(p, "5) Recent Players   6) Blocks Modified");
+            Player.SendMessage(p, "7) Most kicks");
+            if (!Server.zombie.Running) return;
+            Player.SendMessage(p, "8) Most infected   9) Most rounds survived");
+            Player.SendMessage(p, "10) Max infected   11) Max rounds survived");
         }
     }
     

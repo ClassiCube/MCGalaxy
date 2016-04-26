@@ -75,10 +75,9 @@ namespace MCGalaxy.Commands {
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            p.level.Blockchange(p, x, y, z, cpos.type);
             
-            if (p.level.GetTile(x, y, z) == cpos.type) {
-                p.SendBlockchange(x, y, z, cpos.type);
+            if (p.level.DoBlockchange(p, x, y, z, cpos.type, 0)) {
+                Player.GlobalBlockchange(p.level, x, y, z, cpos.type, 0);
                 UpdateDatabase(p, cpos, x, y, z);
                 Player.SendMessage(p, "Message block created.");
             } else {
@@ -96,7 +95,7 @@ namespace MCGalaxy.Commands {
             ParameterisedQuery query = ParameterisedQuery.Create();
             DataTable Messages = Database.fillData(query, "SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
             
-            query.AddParam("@Message", cpos.message);           
+            query.AddParam("@Message", cpos.message);
             if (Messages.Rows.Count == 0)
                 Database.executeQuery(query, "INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (" + x + ", " + y + ", " + z + ", @Message)");
             else

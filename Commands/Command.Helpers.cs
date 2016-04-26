@@ -59,7 +59,7 @@ namespace MCGalaxy {
             if (grp == null)
                 Player.SendMessage(p, "Onlys rank with a permission level greater than &a" + perm + "%Scan " + action);
             else
-                Player.SendMessage(p, "Only " + grp.color + grp.name + "%s+ can " + action);
+                Player.SendMessage(p, "Only " + grp.ColoredName + "%s+ can " + action);
         }
         
         protected void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
@@ -68,9 +68,9 @@ namespace MCGalaxy {
         
         protected void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
             if (canAffectGroup)
-                 Player.SendMessage(p, "Can only " + action + " players ranked " + grp.color + grp.name + " %Sor below");
+                 Player.SendMessage(p, "Can only " + action + " players ranked " + grp.ColoredName + " %Sor below");
             else
-                 Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.color + grp.name);
+                 Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.ColoredName);
         }
     }
     

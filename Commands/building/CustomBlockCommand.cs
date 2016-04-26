@@ -101,7 +101,8 @@ namespace MCGalaxy.Commands {
         }
         
         void CopyHandler(Player p, string[] parts, bool global) {
-            int srcId, dstId;
+            if (parts.Length <= 2) { Help(p); return; }          
+            int srcId, dstId;            
             if (!CheckBlockId(p, parts[1], global, out srcId)) return;
             if (!CheckBlockId(p, parts[2], global, out dstId)) return;
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;

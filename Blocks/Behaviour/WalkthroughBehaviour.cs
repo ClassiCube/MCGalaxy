@@ -83,6 +83,8 @@ namespace MCGalaxy.BlockBehaviour {
         internal static bool Checkpoint(Player p, byte block, ushort x, ushort y, ushort z) {
             p.useCheckpointSpawn = true;
             p.checkpointX = x; p.checkpointY = y; p.checkpointZ = z;
+            p.checkpointRotX = p.rot[0]; p.checkpointRotY = p.rot[1];
+            
             int index = p.level.PosToInt(x, y, z);
             if (index != p.lastCheckpointIndex) {
             	int sendY = (p.pos[1] / 32) * 32 + 10;

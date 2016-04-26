@@ -90,8 +90,7 @@ namespace MCGalaxy.Commands
                         if (AddMe) { pos.X = xx; pos.Y = yy; pos.Z = zz; buffer.Add(pos); }
                     }
 
-            if (buffer.Count > p.group.maxBlocks)
-            {
+            if (buffer.Count > p.group.maxBlocks) {
                 Player.SendMessage(p, "You tried to hollow more than " + buffer.Count + " blocks.");
                 Player.SendMessage(p, "You cannot hollow more than " + p.group.maxBlocks + ".");
                 return;

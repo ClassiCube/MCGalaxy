@@ -21,9 +21,9 @@ using System;
 namespace MCGalaxy.Games {
     
     public sealed partial class ZombieGame : IGame {
-		
-		/// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
-		public override bool TeleportAllowed { get { return !RoundInProgress; } }
+        
+        /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
+        public override bool TeleportAllowed { get { return !RoundInProgress; } }
         
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte tile, byte b) {
@@ -152,7 +152,8 @@ namespace MCGalaxy.Games {
                     SendVoteMessage(p, lastLevel1, lastLevel2);
                 return;
             }
-            
+
+            p.SetPrefix();
             ResetCpeMessages(p);
             Alive.Remove(p);
             Infected.Remove(p);
@@ -189,6 +190,17 @@ namespace MCGalaxy.Games {
         public override void OnHeartbeat(ref string name) {
             if (!Running || !IncludeMapInHeartbeat || CurLevelName == null) return;
             name += " (" + CurLevelName + ")";
+        }
+        
+        public override void AdjustPrefix(Player p, ref string prefix) {
+            Team team = p.Game.Team;
+            prefix += team != null ? "<" + team.Color + team.Name + p.color + "> " : "";
+            int winStreak = p.Game.CurrentRoundsSurvived;
+            
+            if (winStreak == 1) prefix += "&4*" + p.color;
+            else if (winStreak == 2) prefix += "&7*"+ p.color;
+            else if (winStreak == 3) prefix += "&6*"+ p.color;
+            else if (winStreak > 0) prefix += "&6" + winStreak + p.color;
         }
     }
 }

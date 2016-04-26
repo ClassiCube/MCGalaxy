@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands {
                 string reason = parts.Length <= 9 ? "(no reason given)" :
                 	CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));
                
-                Player.SendMessage(p, "&aFrom " + oldRank.color + oldRank.name 
-                                   + " &ato " + newRank.color + newRank.name + " &aon %S" + timeRanked);
+                Player.SendMessage(p, "&aFrom " + oldRank.ColoredName 
+                                   + " &ato " + newRank.ColoredName + " &aon %S" + timeRanked);
                 Player.SendMessage(p, "&aBy %S" + parts[1] + " &awith reason: %S" + reason);
                 found = true;
             }

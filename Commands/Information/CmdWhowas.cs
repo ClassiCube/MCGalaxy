@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -16,19 +16,18 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
-using MCGalaxy.SQL;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdWhowas : Command
-    {
+using MCGalaxy.Games;
+
+namespace MCGalaxy.Commands {
+    
+    public sealed class CmdWhowas : Command {        
         public override string name { get { return "whowas"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank which can see the target player's ip and if they are whitelisted") }; }
+            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank which can see a player's ip and if they are whitelisted") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -43,46 +42,37 @@ namespace MCGalaxy.Commands
 
             if (!Player.ValidName(message)) { Player.SendMessage(p, "\"" + message + "\" is not a valid player name."); return; }
             OfflinePlayer target = PlayerInfo.FindOffline(message, true);
+            if (target == null) { 
+                Player.SendMessage(p, "\"" + message + "\" was not found in the database."); 
+                Player.SendMessage(p, "Note you must use a player's full account name."); return; 
+            }
             
-            string plGroup = Group.findPlayer(message.ToLower());
-            Group group = Group.Find(plGroup);
-            if (target == null) { Player.SendMessage(p, group.color + message + " %Shas the rank of " + group.color + plGroup); return; }
+            Group group = Group.Find(Group.findPlayer(message));
             string color = target.color == "" ? group.color : target.color;
             string prefix = target.title == "" ? "" : "[" + target.titleColor + target.title + color + "] ";
-            Player.SendMessage(p, color + prefix + target.name + " %Shas :");
-            Player.SendMessage(p, "> > the rank of " + group.color + plGroup);
-            if (Economy.Enabled)
-                Player.SendMessage(p, "> > &a" + target.money + " %S" + Server.moneys);
             
-            Player.SendMessage(p, "> > &cdied &a" + target.deaths + " %Stimes");
-            Player.SendMessage(p, "> > &bmodified &a" + target.blocks + " &eblocks.");
-            Player.SendMessage(p, "> > was last seen on &a" + target.lastLogin);
-            Player.SendMessage(p, "> > " + TotalTime(target.totalTime));
-            Player.SendMessage(p, "> > first logged into the server on &a" + target.firstLogin);
-            Player.SendMessage(p, "> > logged in &a" + target.logins + " %Stimes, &c" + target.kicks + " %Sof which ended in a kick.");
-            Player.SendMessage(p, "> > " + Awards.AwardAmount(message) + " awards");
-            string[] data = Ban.GetBanData(message);
-            if (data != null)
-                Player.SendMessage(p, "> > was banned by " + data[0] + " for " + data[1] + " on " + data[2]);
-
-            if (Server.Devs.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9Developer");
-            else if (Server.Mods.ContainsInsensitive(message)) Player.SendMessage(p, "> > Player is a &9MCGalaxy Moderator");
-
-            if (!CheckAdditionalPerm(p)) return;
-            if (Server.bannedIP.Contains(target.ip))
-                target.ip = "&8" + target.ip + ", which is banned";
-            Player.SendMessage(p, "> > the IP of " + target.ip);
-            if (Server.useWhitelist&& Server.whiteList.Contains(message))
-                Player.SendMessage(p, "> > Player is &fWhitelisted");
+            WhoInfo info = new WhoInfo();
+            info.FullName = prefix + color + target.name.TrimEnd('+'); 
+            info.Name = target.name;
+            info.Group = group;
+            info.Money = int.Parse(target.money); info.Deaths = int.Parse(target.deaths);
+            info.TotalBlocks = long.Parse(target.blocks); info.LoginBlocks = -1;
+            info.TimeSpent = target.totalTime.ParseDBTime();
+            info.First = DateTime.Parse(target.firstLogin); 
+            info.Last = DateTime.Parse(target.lastLogin);
+            info.Logins = int.Parse(target.logins); info.Kicks = int.Parse(target.kicks);
+            info.IP = target.ip;
+            
+            if (Server.zombie.Running) {
+                ZombieStats stats = Server.zombie.LoadZombieStats(target.name);
+                info.RoundsTotal = stats.TotalRounds; info.InfectedTotal = stats.TotalInfected;
+                info.RoundsMax = stats.MaxRounds; info.InfectedMax = stats.MaxInfected;
+            }
+            WhoInfo.Output(p, info, CheckAdditionalPerm(p));
         }
-        
-        string TotalTime(string time) {
-            TimeSpan value = time.ParseDBTime();
-            return "time spent on server: " + value.Days + " Days, " + value.Hours + " Hours, " + value.Minutes + " Minutes, " + value.Seconds + " Seconds.";
-        }
-        
+
         public override void Help(Player p) {
-            Player.SendMessage(p, "/whowas <name> - Displays information about someone who left.");
+            Player.SendMessage(p, "/whowas <name> - Displays information about an offline player.");
         }
     }
 }

@@ -77,27 +77,20 @@ namespace MCGalaxy.Commands {
             }
             dbnames.Dispose();
 
-            if (opNamesWithThatIP != null && opNamesWithThatIP.Count > 0) {
+            if (p != null && opNamesWithThatIP != null && opNamesWithThatIP.Count > 0) {
                 // We have at least one op+ with a matching IP
                 // Check permissions of everybody who matched that IP
                 foreach (string opname in opNamesWithThatIP) {
-                    // Console can ban anybody else, so skip this section
-                    if (p != null) {
-                        // If one of these guys matches a player with a higher rank don't allow the ipban to proceed! 
-                        Group grp = Group.findPlayerGroup(opname);
-                        if (grp != null) {
-                            if (grp.Permission >= p.group.Permission) {
-                                Player.SendMessage(p, "You can only ipban IPs used by players with a lower rank.");
-                                Player.SendMessage(p, opname + "(" + grp.color + grp.name + Server.DefaultColor + ") uses that IP.");
-                                Server.s.Log(p.name + "failed to ipban " + message + " - IP is also used by: " + opname + "(" + grp.name + ")");
-                                return;
-                            }
-                        }
-                    }
+                    // If one of these guys matches a player with a higher rank don't allow the ipban to proceed!
+                    Group grp = Group.findPlayerGroup(opname);
+                    if (grp == null || grp.Permission < p.group.Permission) continue;
+                    
+                    Player.SendMessage(p, "You can only ipban IPs used by players with a lower rank.");
+                    Player.SendMessage(p, opname + "(" + grp.ColoredName + "%S) uses that IP.");
+                    Server.s.Log(p.name + "failed to ipban " + message + " - IP is also used by: " + opname + "(" + grp.name + ")");
+                    return;
                 }
             }
-
-
 
             if (p != null) {
                 Server.IRC.Say(message.ToLower() + " was ip-banned by " + p.name + ".");

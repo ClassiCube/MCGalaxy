@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
                 if (p == null) {
                     Player.SendMessage(p, "Console must provide a player or bot name."); return;
                 }
-                message = p.name;
+                message = p.truename;
             }
             
             Player who = p;
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
                 pBot = PlayerBot.Find(args[1]);
                 if (pBot == null) { Player.SendMessage(p, "There is no bot with that name."); return; }
                 skin = args[2];
-            } else if (args.Length > 1) {
+            } else if (args.Length >= 2) {
                 isBot = false;
                 who = PlayerInfo.FindOrShowMatches(p, args[0]);
                 if (who == null) return;
@@ -70,7 +70,12 @@ namespace MCGalaxy.Commands {
                 who.skinName = skin;
                 Entities.GlobalDespawn(who, true);
                 Entities.GlobalSpawn(who, true);
-                Player.GlobalMessage(who.color + who.DisplayName + "'s %Sskin was changed to &c" + skin);
+                if (p != who)
+                    Player.GlobalMessage(who.ColoredName + "'s %Sskin was changed to &c" + skin);
+                
+                Server.Skins.DeleteStartsWith(who.name + " ");
+                if (skin != who.truename)
+                    Server.Skins.Append(who.name + " " + skin);
             }
         }
 

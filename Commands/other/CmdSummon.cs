@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
                         pl.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
                     }
                 }
-                Player.GlobalMessage(p.color + p.DisplayName + Server.DefaultColor + " summoned everyone!");
+                Player.GlobalMessage(p.ColoredName + " %Ssummoned everyone!");
                 return;
             }
 

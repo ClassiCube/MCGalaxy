@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands
             if (p == who) {
                 Player.SendMessage(p, "Undid your actions for the past &b" + seconds + " %Sseconds.");
             } else {
-                Player.SendChatFrom(who, who.color + who.DisplayName + "%S's actions for the past &b" + seconds + " seconds were undone.", false);
+                Player.SendChatFrom(who, who.ColoredName + "%S's actions for the past &b" + seconds + " seconds were undone.", false);
             }
             Server.s.Log(who.name + "'s actions for the past " + seconds + " seconds were undone.");
             if (saveLevel != null) saveLevel.Save(true);

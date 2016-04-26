@@ -268,8 +268,8 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "You did not specify a name to blacklist from your map."); return;
                 }
                 Player blocked = PlayerInfo.Find(value);
-                if (blocked.name.StartsWith(p.name)) { Player.SendMessage(p, "You can't blacklist yourself"); return; }
                 if (blocked == null) { Player.SendMessage(p, "Cannot find player."); return; }
+                if (blocked.name.CaselessEq(p.name)) { Player.SendMessage(p, "You can't blacklist yourself"); return; }                
                 
                 string path = "levels/blacklists/" + p.level.name + ".txt";
                 if (File.Exists(path) && File.ReadAllText(path).Contains(blocked.name)) {

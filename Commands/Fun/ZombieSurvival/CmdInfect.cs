@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "Cannot infect player");
             } else if (!who.Game.Referee) {
                 Server.zombie.InfectPlayer(who);
-                Player.GlobalMessage(who.color + who.DisplayName + " %Swas infected!");
+                Player.GlobalMessage(who.ColoredName + " %Swas infected!");
             }
         }
         

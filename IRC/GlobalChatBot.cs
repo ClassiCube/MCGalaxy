@@ -316,9 +316,9 @@ namespace MCGalaxy
             if (OnNewRecieveGlobalMessage != null)
                 OnNewRecieveGlobalMessage(user.Nick, message);
             
-            if (Server.Devs.ContainsInsensitive(message.Split(':')[0]) && !message.StartsWith("[Dev]") && !message.StartsWith("[Developer]")) 
+            if (Server.Devs.CaselessContains(message.Split(':')[0]) && !message.StartsWith("[Dev]") && !message.StartsWith("[Developer]")) 
                 message = "[Dev]" + message;
-            else if(Server.Mods.ContainsInsensitive(message.Split(':')[0]) && !message.StartsWith("[Mod]") && !message.StartsWith("[Moderator]"))
+            else if(Server.Mods.CaselessContains(message.Split(':')[0]) && !message.StartsWith("[Mod]") && !message.StartsWith("[Moderator]"))
                 message = "[Mod]" + message;
 
             /*try { 

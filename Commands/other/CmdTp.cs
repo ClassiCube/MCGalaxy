@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             }
             
             IGame game = target.level.CurrentGame();
-            if (!p.Game.Referee && !game.TeleportAllowed) {
+            if (!p.Game.Referee && game != null && !game.TeleportAllowed) {
                 Player.SendMessage(p, "You can only teleport to players who are " +
                                    "playing a game when you are in referee mode."); return;
             }
