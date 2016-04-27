@@ -130,6 +130,7 @@ namespace MCGalaxy {
                 && Server.zombie.Running) return false;
             if (who.Game.Invisible && !p.Game.Referee 
                 && Server.zombie.Running) return false;
+            if (who.otherRankHidden) return p.group.Permission >= who.oHideRank;            
             return p.group.Permission >= who.group.Permission;
         }
         

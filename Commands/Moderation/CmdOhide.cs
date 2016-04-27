@@ -30,38 +30,26 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             
-            string[] args = message.Split(' ');
-            
-            message = args[0];
-            
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            string[] args = message.Split(' ');           
+            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (who == null) return;
-            if (who == p)
-            {
-                Player.SendMessage(p, "On yourself?  Really?  Just use /hide.");
-                return;
-            }
-            if (who.group.Permission >= p.group.Permission)
-            {
+            if (who.group.Permission >= p.group.Permission) {
                 MessageTooHighRank(p, "hide", false); return;
             }
-            if (args.Length >= 2 && args[1].ToLower() == "myrank")
-            {
+            
+            if (args.Length >= 2 && args[1].CaselessEq("myrank")) {
                 who.oHideRank = p.group.Permission;
                 Command.all.Find("hide").Use(who, "myrank");
-                Player.SendMessage(p, "Used /hide myrank on " + who.color + who.name + "%S.");
-            }
-            else
-            {
+                Player.SendMessage(p, "Used /hide myrank on " + who.ColoredName + "%S.");
+            } else {
                 Command.all.Find("hide").Use(who, "");
-                Player.SendMessage(p, "Used /hide on " + who.color + who.name + "%S.");
+                Player.SendMessage(p, "Used /hide on " + who.ColoredName + "%S.");
             }
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/ohide <player> - Hides/unhides the player specified.");
-            Player.SendMessage(p, "/ohide <player> <myrank> - Hides/unhides the player specified to players below your rank.");
+            Player.SendMessage(p, "/ohide <player> myrank - Hides/unhides the player specified to players below your rank.");
             Player.SendMessage(p, "Only works on players of lower rank.");
         }
     }
