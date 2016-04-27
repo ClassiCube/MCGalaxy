@@ -44,19 +44,30 @@ namespace MCGalaxy.Commands
             Command adminchat = Command.all.Find("adminchat");
             p.hidden = !p.hidden;
             
-            if (p.hidden) {
-                Entities.GlobalDespawn(p, false);
-                if (messageOps)
+            //Possible to use /hide myrank, but it accomplishes the same as regular /hide if you use it on yourself.
+            if (message.ToLower() == "myrank")
+            {
+                p.otherRankHidden = !p.otherRankHidden;
+                p.hidden = p.otherRankHidden;
+            }
+
+            if (p.hidden)
+            {
+                Entities.GlobalDespawn(p, true);
+                if (messageOps && !p.otherRankHidden)
                     Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + "%S- is now &finvisible%S.");
-                
                 string discMsg = PlayerDB.GetLogoutMessage(p);
                 Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + discMsg, false);
                 Server.IRC.Say(p.DisplayName + " left the game (" + discMsg + ")");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
-            } else {
+            }
+            else
+            {
                 Entities.GlobalSpawn(p, false);
-                if (messageOps)
-                    Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + "%S- is now &8visible%S.");
+                p.hidden = false;
+                p.otherRankHidden = false;
+                if(messageOps)
+                    Chat.GlobalMessageAdmins("To Admins -" + p.color + p.DisplayName + "%S- is now &fvisible%S.");
                 
                 Player.SendChatFrom(p, "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p), false);
                 Server.IRC.Say(p.DisplayName + " joined the game");
@@ -64,9 +75,13 @@ namespace MCGalaxy.Commands
                 if (p.adminchat) adminchat.Use(p, message);
             }
         }
-        
-        public override void Help(Player p) {
+
+        public override void Help(Player p)
+        {
             Player.SendMessage(p, "/hide - Toggles your visibility to other players, also toggles opchat.");
+            Player.SendMessage(p, "/hide check - Checks your hidden status.");
+            Player.SendMessage(p, "Use /xhide to hide without sending a message to other ops/admins.");
+            Player.SendMessage(p, "Use /ohide to hide other players.");
         }
     }
     

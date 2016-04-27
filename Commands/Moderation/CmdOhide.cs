@@ -29,7 +29,11 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            message = message.Split(' ')[0];
+            
+            string[] args = message.Split(' ');
+            
+            message = args[0];
+            
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
             if (who == p)
@@ -41,13 +45,23 @@ namespace MCGalaxy.Commands
             {
                 MessageTooHighRank(p, "hide", false); return;
             }
-            Command.all.Find("hide").Use(who, "");
-            Player.SendMessage(p, "Used /hide on " + who.color + who.name + "%S.");
+            if (args.Length >= 2 && args[1].ToLower() == "myrank")
+            {
+                who.oHideRank = p.group.Permission;
+                Command.all.Find("hide").Use(who, "myrank");
+                Player.SendMessage(p, "Used /hide myrank on " + who.color + who.name + "%S.");
+            }
+            else
+            {
+                Command.all.Find("hide").Use(who, "");
+                Player.SendMessage(p, "Used /hide on " + who.color + who.name + "%S.");
+            }
         }
 
         public override void Help(Player p)
         {
             Player.SendMessage(p, "/ohide <player> - Hides/unhides the player specified.");
+            Player.SendMessage(p, "/ohide <player> <myrank> - Hides/unhides the player specified to players below your rank.");
             Player.SendMessage(p, "Only works on players of lower rank.");
         }
     }

@@ -85,6 +85,8 @@ namespace MCGalaxy {
         public string ip;
         public string color;
         public Group group;
+        public LevelPermission oHideRank;
+        public bool otherRankHidden = false;
         public bool hidden = false;
         public bool painting = false;
         public bool muted = false;
