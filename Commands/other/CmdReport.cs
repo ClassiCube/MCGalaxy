@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank which can check, view and delete reports") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "Lowest rank which can check, view and delete reports") }; }
         }
         static char[] trimChars = {' '};
 

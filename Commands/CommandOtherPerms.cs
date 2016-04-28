@@ -77,7 +77,7 @@ namespace MCGalaxy {
                 w.WriteLine("#     LAYOUT:");
                 w.WriteLine("#     [commandname]:[additionalpermissionnumber]:[permissionlevel]:[description]");
                 w.WriteLine("#     I.E:");
-                w.WriteLine("#     countdown:2:80:The lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)");
+                w.WriteLine("#     countdown:2:80:Lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)");
                 w.WriteLine("#");
                 w.WriteLine("#     Please also note that descriptions cannot contain ':' and permissions cannot be above 120");
                 w.WriteLine("#");

@@ -25,49 +25,54 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override CommandPerm[] AdditionalPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Admin, 
+                                                     "Lowest rank that can hide/unhide without showing a message to ops") }; }
+        }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("xhide", "silent") }; }
+        }        
         public CmdHide() { }
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            DoHide(p, message, true);
-        }
-        
-        internal static void DoHide(Player p, string message, bool messageOps) {
             if (message == "check") {
                 string state = p.hidden ? "" : "not ";
                 Player.SendMessage(p, "You are " + state + "currently hidden!"); return;
             }
             if (message != "" && p.possess != "") {
                 Player.SendMessage(p, "Stop your current possession first."); return;
-            }            
+            }
+            bool messageOps = true;
+            if (message.CaselessEq("silent")) {
+                if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can hide silently"); return; }
+                messageOps = false;
+            }
+            
             Command opchat = Command.all.Find("opchat");
             Command adminchat = Command.all.Find("adminchat");
             p.hidden = !p.hidden;
-            
+
             //Possible to use /hide myrank, but it accomplishes the same as regular /hide if you use it on yourself.
-            if (message.ToLower() == "myrank")
-            {
+            if (message.CaselessEq("myrank")) {
                 p.otherRankHidden = !p.otherRankHidden;
                 p.hidden = p.otherRankHidden;
             }
 
-            if (p.hidden)
-            {
+            if (p.hidden) {
                 Entities.GlobalDespawn(p, true);
                 if (messageOps && !p.otherRankHidden)
-                    Chat.GlobalMessageOps("To Ops -" + p.color + p.DisplayName + "%S- is now &finvisible%S.");
+                    Chat.GlobalMessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
                 string discMsg = PlayerDB.GetLogoutMessage(p);
                 Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + discMsg, false);
                 Server.IRC.Say(p.DisplayName + " left the game (" + discMsg + ")");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
-            }
-            else
-            {
+            } else {
                 Entities.GlobalSpawn(p, false);
                 p.hidden = false;
                 p.otherRankHidden = false;
-                if(messageOps)
-                    Chat.GlobalMessageAdmins("To Admins -" + p.color + p.DisplayName + "%S- is now &fvisible%S.");
+                if (messageOps)
+                    Chat.GlobalMessageAdmins("To Admins -" + p.ColoredName + "%S- is now &fvisible%S.");
                 
                 Player.SendChatFrom(p, "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p), false);
                 Server.IRC.Say(p.DisplayName + " joined the game");
@@ -76,29 +81,11 @@ namespace MCGalaxy.Commands
             }
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.SendMessage(p, "/hide - Toggles your visibility to other players, also toggles opchat.");
             Player.SendMessage(p, "/hide check - Checks your hidden status.");
-            Player.SendMessage(p, "Use /xhide to hide without sending a message to other ops/admins.");
+            Player.SendMessage(p, "/hide silent - hides without sending a message to other ops/admins.");
             Player.SendMessage(p, "Use /ohide to hide other players.");
-        }
-    }
-    
-    public sealed class CmdXhide : Command {
-        public override string name { get { return "xhide"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-
-        public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
-            CmdHide.DoHide(p, message, false);
-        }
-        
-        public override void Help(Player p) {
-            Player.SendMessage(p, "/xhide - like /hide, only it doesn't send a message to ops.");
         }
     }
 }

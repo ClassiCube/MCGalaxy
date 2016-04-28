@@ -87,5 +87,26 @@ namespace MCGalaxy.SQL.Native {
         public void RemoveAt(int index) { args.RemoveAt(index); }
         
         public IEnumerator GetEnumerator() { return args.GetEnumerator(); }
+        
+        
+        public void AddParamWithVaue(string key, object value) {
+            NativeParameter arg = new NativeParameter();
+            arg.ParameterName = key;
+            Type type = value.GetType();
+            
+            if (type == typeof(string)) {
+                arg.SetString((string)value);
+                arg.DbType = DbType.String;
+            } else if (type == typeof(byte)) {
+                arg.U8Value = (byte)value;
+                arg.DbType = DbType.Byte;
+            } else if (type == typeof(ushort)) {
+                arg.U16Value = (ushort)value;
+                arg.DbType = DbType.UInt16;
+            } else {
+                throw new NotSupportedException("Unsupported type: " + type);
+            }
+            args.Add(arg);
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can send the changelog to everybody") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "Lowest rank that can send the changelog to everybody") }; }
         }
         
         public override void Use(Player p, string message)

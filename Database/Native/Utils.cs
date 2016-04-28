@@ -134,5 +134,11 @@ namespace MCGalaxy.SQL.Native {
 
         [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr sqlite3_column_text16(IntPtr stmt, int iCol);
+
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]        
+        public static extern IntPtr sqlite3_column_name(IntPtr stmt, int iCol);
+
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]        
+        public static extern IntPtr sqlite3_column_name16(IntPtr stmt, int iCol);
     }
 }

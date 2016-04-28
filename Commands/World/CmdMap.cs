@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "The lowest rank that can edit map options") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "Lowest rank that can edit map options") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ps", "ps") }; }

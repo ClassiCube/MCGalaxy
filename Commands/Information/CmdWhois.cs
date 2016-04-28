@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "The lowest rank which can see a player's ip and if they are whitelisted") }; }
+            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "Lowest rank which can see a player's ip and if whitelisted") }; }
         }
 
         public override void Use(Player p, string message) {
