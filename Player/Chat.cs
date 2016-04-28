@@ -142,6 +142,7 @@ namespace MCGalaxy {
         public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();
         
         internal static void LoadCustomTokens() {
+            CustomTokens.Clear();
             if (File.Exists("text/custom$s.txt")) {
                 using (StreamReader r = new StreamReader("text/custom$s.txt")) {
                     string line;

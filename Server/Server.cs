@@ -473,7 +473,6 @@ namespace MCGalaxy
 
             EnsureFilesExist();
             MoveOutdatedFiles();
-            Chat.LoadCustomTokens();
 
             if (File.Exists("text/emotelist.txt")) {
                 foreach (string s in File.ReadAllLines("text/emotelist.txt"))
@@ -667,6 +666,7 @@ namespace MCGalaxy
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Team.LoadList();
+            Chat.LoadCustomTokens();
         }
 
         public static void Setup()
