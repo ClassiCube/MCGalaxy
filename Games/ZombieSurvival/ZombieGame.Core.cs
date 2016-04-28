@@ -313,10 +313,10 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             
             Player[] alive = Alive.Items;
-            CurLevel.ChatLevel(Colors.lime + "The game has ended!");
-            if (alive.Length == 0) CurLevel.ChatLevel(Colors.maroon + "Zombies have won this round.");
-            else if (alive.Length == 1) CurLevel.ChatLevel(Colors.green + "Congratulations to the sole survivor:");
-            else CurLevel.ChatLevel(Colors.green + "Congratulations to the survivors:");
+            CurLevel.ChatLevel("&aThe game has ended!");
+            if (alive.Length == 0) CurLevel.ChatLevel("&4Zombies have won this round.");
+            else if (alive.Length == 1) CurLevel.ChatLevel("&2Congratulations to the sole survivor:");
+            else CurLevel.ChatLevel("&2Congratulations to the survivors:");
             
             string playersString = "";
             Player[] online = null;
@@ -370,9 +370,41 @@ namespace MCGalaxy.Games {
                 }
                 pl.OnMoneyChanged();
             }
+            
+            DoLottery();
             UpdateAllPlayerStatus();
             Alive.Clear();
             Infected.Clear();
+        }
+        
+        void DoLottery() {
+            string[] players = Lottery.Items;
+            if (players.Length == 0) return;
+            
+            // Ensure the players are actually online
+            List<Player> online = new List<Player>(players.Length);
+            foreach (string name in players) {
+                Player pl = PlayerInfo.FindExact(name);
+                if (pl == null) continue;
+                online.Add(pl);
+            }
+            if (online.Count == 0) return;
+            
+            int amount = 10;
+            Player winner = online[0];
+            if (online.Count == 1) {
+                winner.SendMessage("Your money was refunded as you were " +
+                                      "the only player still in the lottery.");
+            } else {
+                Random rand = new Random();
+                winner = online[rand.Next(online.Count)];
+                amount = 9 * online.Count;
+                CurLevel.ChatLevel(winner.ColoredName + " %Swon the lottery for &6" 
+                                   + amount + " " + Server.moneys);
+            }
+            Lottery.Clear();
+            winner.money += 10;
+            winner.OnMoneyChanged();
         }
         
         int GetMoney(Player pl, Player[] alive, Random rand) {

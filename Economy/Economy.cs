@@ -15,8 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using MCGalaxy.Eco;
@@ -144,8 +146,9 @@ namespace MCGalaxy {
             query.AddParam("@Payment", es.payment);
             query.AddParam("@Salary", es.salary);
             query.AddParam("@Fine", es.fine);
-            Database.executeQuery(query, string.Format("{0} Economy (player, money, total, purchase, payment, salary, fine) VALUES " +
-                                                       "(@Name, @Money, @Total, @Purchase, @Payment, @Salary, @Fine)", (Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO")));
+            string type = Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO";
+            Database.executeQuery(query, type + " Economy (player, money, total, purchase, payment, salary, fine) VALUES " +
+                                  "(@Name, @Money, @Total, @Purchase, @Payment, @Salary, @Fine)");
         }
         
         public static Item[] Items = { new ColorItem(), new TitleColorItem(), 
@@ -176,5 +179,17 @@ namespace MCGalaxy {
         public static SimpleItem Title { get { return (SimpleItem)Items[2]; } }
         public static RankItem Ranks { get { return (RankItem)Items[3]; } }
         public static LevelItem Levels { get { return (LevelItem)Items[4]; } }
+        
+        public static void MakePurchase(Player p, int cost, string item) {
+            Economy.EcoStats ecos = RetrieveEcoStats(p.name);
+            p.money -= cost;
+            p.OnMoneyChanged();
+            ecos.money = p.money;
+            ecos.totalSpent += cost;
+            ecos.purchase = item + "%3 - Price: %f" + cost + " %3" + Server.moneys +
+                " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            UpdateEcoStats(ecos);
+            Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
+        }
     }
 }

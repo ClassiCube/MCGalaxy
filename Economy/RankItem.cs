@@ -81,7 +81,7 @@ namespace MCGalaxy.Eco {
             
             Command.all.Find("promote").Use(null, p.name);
             Player.SendMessage(p, "%aYou've successfully bought the rank " + p.group.ColoredName);
-            MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.ColoredName);
+            Economy.MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.ColoredName);
         }
         
         protected internal override void OnSetupCommand(Player p, string[] args) {

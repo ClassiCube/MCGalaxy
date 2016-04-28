@@ -195,6 +195,7 @@
     <Compile Include="Commands\Fun\CmdFlipHeads.cs" />
     <Compile Include="Commands\Fun\CmdGun.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
+    <Compile Include="Commands\Fun\CmdLottery.cs" />
     <Compile Include="Commands\Fun\CmdMapSet.cs" />
     <Compile Include="Commands\Fun\CmdMissile.cs" />
     <Compile Include="Commands\Fun\CmdSlap.cs" />

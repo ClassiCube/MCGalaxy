@@ -48,18 +48,6 @@ namespace MCGalaxy.Eco {
         protected internal abstract void OnStoreOverview(Player p);
         
         protected internal abstract void OnStoreCommand(Player p);
-        
-        protected static void MakePurchase(Player p, int cost, string item) {
-            Economy.EcoStats ecos = Economy.RetrieveEcoStats(p.name);
-            p.money -= cost;
-            p.OnMoneyChanged();
-            ecos.money = p.money;
-            ecos.totalSpent += cost;
-            ecos.purchase = item + "%3 - Price: %f" + cost + " %3" + Server.moneys +
-                " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            Economy.UpdateEcoStats(ecos);
-            Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
-        }
     }
     
     /// <summary> Simple item, in that it only has one cost value. </summary>

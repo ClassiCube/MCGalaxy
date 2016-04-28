@@ -146,5 +146,8 @@ namespace MCGalaxy.Games {
         string lastPlayerToInfect = "";
         int infectCombo = 0;
         public Dictionary<string, BountyData> Bounties = new Dictionary<string, BountyData>();
+        
+        /// <summary> List of players who are in the lottery. </summary>
+        public VolatileArray<string> Lottery = new VolatileArray<string>(false);
     }
 }

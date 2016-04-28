@@ -112,7 +112,7 @@ namespace MCGalaxy.Eco {
             } catch {
                 Player.SendMessage(p, "%cSomething went wrong, Money untouchred"); return;
             }
-            MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
+            Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
         }
         
         protected internal override void OnSetupCommand(Player p, string[] args) {

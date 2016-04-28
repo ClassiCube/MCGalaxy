@@ -45,7 +45,7 @@ namespace MCGalaxy.Eco {
             }
             Command.all.Find("loginmessage").Use(null, p.name + " " + text);
             Player.SendMessage(p, "%aYour login message was changed to: %f" + text);
-            MakePurchase(p, Price, "%3LoginMessage: %f" + text);
+            Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + text);
         }
     }
     
@@ -75,7 +75,7 @@ namespace MCGalaxy.Eco {
             }            
             Command.all.Find("logoutmessage").Use(null, p.name + " " + text);
             Player.SendMessage(p, "%aYour logout message was changed to: %f" + text);
-            MakePurchase(p, Price, "%3LogoutMessage: %f" + text);
+            Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + text);
         }
     }
 }

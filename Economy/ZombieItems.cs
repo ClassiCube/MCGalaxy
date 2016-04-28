@@ -41,7 +41,7 @@ namespace MCGalaxy.Eco {
             }
             
             p.Game.BlocksLeft += 10 * count;
-            MakePurchase(p, Price * count, "%310Blocks: " + (10 * count));
+            Economy.MakePurchase(p, Price * count, "%310Blocks: " + (10 * count));
         }
         
         protected internal override void OnStoreCommand(Player p) {
@@ -70,7 +70,7 @@ namespace MCGalaxy.Eco {
             
             Command.all.Find("queue").Use(p, "level " + message);
             ZombieAwards.Give(p, ZombieAwards.buyQueue, Server.zombie);
-            MakePurchase(p, Price, "%3QueueLevel: " + message);
+            Economy.MakePurchase(p, Price, "%3QueueLevel: " + message);
         }
     }
     
@@ -101,7 +101,7 @@ namespace MCGalaxy.Eco {
             if (p.Game.InfectMessages == null) p.Game.InfectMessages = new List<string>();
             p.Game.InfectMessages.Add(text);
             Player.SendMessage(p, "%aAdded infect message: %f" + text);
-            MakePurchase(p, Price, "%3InfectMessage: " + message);
+            Economy.MakePurchase(p, Price, "%3InfectMessage: " + message);
         }
         
         static bool CheckEscape(string text, int i, ref bool hasAToken) {
@@ -152,7 +152,7 @@ namespace MCGalaxy.Eco {
             Player.SendMessage(p, "Lasts for &a" + duration + " %Sseconds. You can buy &a" + left + " %Smore this round.");
             Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false);
-            MakePurchase(p, Price, "%3Invisibility: " + duration);
+            Economy.MakePurchase(p, Price, "%3Invisibility: " + duration);
         }
         
         protected override void OnBuyCommand(Player p, string message, string[] args) { }

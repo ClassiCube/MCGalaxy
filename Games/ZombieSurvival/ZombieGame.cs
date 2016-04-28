@@ -133,6 +133,8 @@ namespace MCGalaxy.Games {
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
             Player[] online = PlayerInfo.Online.Items;
+            Lottery.Clear();
+            Bounties.Clear();
             
             foreach (Player pl in online) {
                 pl.Game.ResetZombieState();
