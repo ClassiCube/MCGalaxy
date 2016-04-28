@@ -43,7 +43,7 @@ namespace MCGalaxy.SQL.Native {
             byte[] sql = NativeUtils.MakeUTF8(CommandText);
             IntPtr db = ((NativeConnection)Connection).DB;
             IntPtr tail;
-            int code = sqlite3_prepare_v2(db, sql, sql.Length, out Statement, out tail);
+            int code = NativeUtils.sqlite3_prepare_v2(db, sql, sql.Length, out Statement, out tail);
             if (code > 0) throw new NativeException(code);
         }
         
@@ -51,15 +51,15 @@ namespace MCGalaxy.SQL.Native {
             foreach (IDataParameter param in args)
                 BindParam(param);
             
-            int code = sqlite3_step(Statement);
+            int code = NativeUtils.sqlite3_step(Statement);
             if (code > 0 && code != 101) throw new NativeException(code);
-            code = sqlite3_reset(Statement);
+            code = NativeUtils.sqlite3_reset(Statement);
             if (code > 0) throw new NativeException(code);
             return 0;
         }
         
         public void Dispose() {
-            int code = sqlite3_finalize(Statement);
+            int code = NativeUtils.sqlite3_finalize(Statement);
             if (code > 0) throw new NativeException(code);
         }
         
@@ -70,17 +70,17 @@ namespace MCGalaxy.SQL.Native {
             int code = 0;
             switch (nParam.type) {
                 case DbType.AnsiStringFixedLength:
-                    code = sqlite3_bind_text(Statement, nParam.Index, nParam.StringPtr, 
+                    code = NativeUtils.sqlite3_bind_text(Statement, nParam.Index, nParam.StringPtr, 
                                              nParam.StringCount - 1, IntPtr.Zero);
                     break;
                 case DbType.UInt16:
-                    code = sqlite3_bind_int(Statement, nParam.Index, nParam.U16Value);
+                    code = NativeUtils.sqlite3_bind_int(Statement, nParam.Index, nParam.U16Value);
                     break;                    
                 case DbType.Byte:
-                    code = sqlite3_bind_int(Statement, nParam.Index, nParam.U8Value);
+                    code = NativeUtils.sqlite3_bind_int(Statement, nParam.Index, nParam.U8Value);
                     break;
                 case DbType.Boolean:
-                    code = sqlite3_bind_int(Statement, nParam.Index, nParam.BoolValue ? 1 : 0);
+                    code = NativeUtils.sqlite3_bind_int(Statement, nParam.Index, nParam.BoolValue ? 1 : 0);
                     break;
             }
             if (code > 0) throw new NativeException(code);
@@ -88,28 +88,7 @@ namespace MCGalaxy.SQL.Native {
         
         void BindIndex(NativeParameter nParam) {
             byte[] name = NativeUtils.MakeUTF8(nParam.ParameterName);
-            nParam.Index = sqlite3_bind_parameter_index(Statement, name);
+            nParam.Index = NativeUtils.sqlite3_bind_parameter_index(Statement, name);
         }
-
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_bind_int(IntPtr stmt, int index, int value);
-        
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_bind_parameter_index(IntPtr stmt, byte[] name);
-
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_bind_text(IntPtr stmt, int index, byte* text, int textLen, IntPtr reserved);
-        
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_finalize(IntPtr stmt);
-        
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_prepare_v2(IntPtr db, byte[] sql, int nBytes, out IntPtr stmt, out IntPtr sqlTail);
-        
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_reset(IntPtr stmt);
-        
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_step(IntPtr stmt);
     }
 }

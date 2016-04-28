@@ -24,13 +24,10 @@ namespace MCGalaxy.SQL {
     public abstract class ParameterisedQuery {
         
 		protected Dictionary<string, object> parameters = new Dictionary<string, object>();
-		public void AddParam(string name, object param) {
-			parameters.Add(name, param);
-		}
-        
-		public void ClearParams() {
-			parameters.Clear();
-		}
+		
+		public void AddParam(string name, object param) { parameters.Add(name, param); }
+		
+		public void ClearParams() { parameters.Clear(); }
         
         public abstract void Execute(string query, bool createDB = false);
         
