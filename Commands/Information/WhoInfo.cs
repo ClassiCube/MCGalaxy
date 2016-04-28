@@ -58,10 +58,14 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, ">> First login on &a" + who.First.ToString("yyyy-MM-dd")
                                    + "%S, and is currently &aonline");
             
-            Player.SendMessage(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick");
-            string[] data = Ban.GetBanData(who.Name);
-            if (data != null)
-                Player.SendMessage(p, ">> is banned for " + data[1] + " by " + data[0]);
+            Player.SendMessage(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick");        
+            if (who.Group.Permission == LevelPermission.Banned) {
+                string[] data = Ban.GetBanData(who.Name);
+                if (data != null)
+                    Player.SendMessage(p, ">> is banned for " + data[1] + " by " + data[0]);
+                else
+                    Player.SendMessage(p, ">> is banned");
+            }                
 
             if (Server.Devs.CaselessContains(who.Name))
                 Player.SendMessage(p, ">> Player is a &9Developer");
