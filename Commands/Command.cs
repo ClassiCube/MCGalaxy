@@ -38,8 +38,11 @@ namespace MCGalaxy {
         public static CommandList core = new CommandList();
         
         public static void InitAll() {
+            all.commands.Clear();
+            core.commands.Clear();
             all.AddOtherPerms = true;
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+            
             for (int i = 0; i < types.Length; i++) {
                 Type type = types[i];
                 if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;                

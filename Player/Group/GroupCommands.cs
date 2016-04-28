@@ -44,118 +44,91 @@ namespace MCGalaxy {
             allowedCommands = new List<rankAllowance>();
 
             rankAllowance allowVar;
-
-            foreach (Command cmd in Command.all.All())
-            {
+            foreach (Command cmd in Command.all.All()) {
                 allowVar = new rankAllowance();
                 allowVar.commandName = cmd.name;
                 allowVar.lowestRank = cmd.defaultRank;
                 allowedCommands.Add(allowVar);
             }
 
-            if (File.Exists("properties/command.properties"))
-            {
+            if (File.Exists("properties/command.properties")) {
                 string[] lines = File.ReadAllLines("properties/command.properties");
-
                 //if (lines.Length == 0) ; // this is useless?
-                /*else */
-                if (lines[0] == "#Version 2")
-                {
-                    string[] colon = new[] { " : " };
-                    foreach (string line in lines)
-                    {
-                        allowVar = new rankAllowance();
-                        if (line == "" || line[0] == '#') continue;
-                        //Name : Lowest : Disallow : Allow
-                        string[] command = line.Split(colon, StringSplitOptions.None);
-
-                        if (!foundCommands.Contains(command[0]))
-                        {
-                            Server.s.Log("Incorrect command name: " + command[0]);
-                            continue;
-                        }
-                        allowVar.commandName = command[0];
-
-                        string[] disallow = new string[0];
-                        if (command[2] != "")
-                            disallow = command[2].Split(',');
-                        string[] allow = new string[0];
-                        if (command[3] != "")
-                            allow = command[3].Split(',');
-
-                        try
-                        {
-                            allowVar.lowestRank = (LevelPermission)int.Parse(command[1]);
-                            foreach (string s in disallow) { allowVar.disallow.Add((LevelPermission)int.Parse(s)); }
-                            foreach (string s in allow) { allowVar.allow.Add((LevelPermission)int.Parse(s)); }
-                        }
-                        catch
-                        {
-                            Server.s.Log("Hit an error on the command " + line);
-                            continue;
-                        }
-
-                        int current = 0;
-                        foreach (rankAllowance aV in allowedCommands)
-                        {
-                            if (command[0] == aV.commandName)
-                            {
-                                allowedCommands[current] = allowVar;
-                                break;
-                            }
-                            current++;
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (string line in lines.Where(line => line != "" && line[0] != '#'))
-                    {
-                        allowVar = new rankAllowance();
-                        string key = line.Split('=')[0].Trim().ToLower();
-                        string value = line.Split('=')[1].Trim().ToLower();
-
-                        if (!foundCommands.Contains(key))
-                        {
-                            Server.s.Log("Incorrect command name: " + key);
-                        }
-                        else if (Level.PermissionFromName(value) == LevelPermission.Null)
-                        {
-                            Server.s.Log("Incorrect value given for " + key + ", using default value.");
-                        }
-                        else
-                        {
-                            allowVar.commandName = key;
-                            allowVar.lowestRank = Level.PermissionFromName(value);
-
-                            int current = 0;
-                            foreach (rankAllowance aV in allowedCommands)
-                            {
-                                if (key == aV.commandName)
-                                {
-                                    allowedCommands[current] = allowVar;
-                                    break;
-                                }
-                                current++;
-                            }
-                        }
-                    }
-                }
+                if (lines[0] == "#Version 2") ReadVersion2(lines);
+                else ReadVersion1(lines);
+                Save(allowedCommands);
+            } else {
                 Save(allowedCommands);
             }
-            else Save(allowedCommands);
 
             foreach (Group grp in Group.GroupList)
-            {
                 grp.fillCommands();
+        }
+        
+        static void ReadVersion2(string[] lines) {
+            string[] colon = new[] { " : " };
+            foreach (string line in lines) {
+                if (line == "" || line[0] == '#') continue;
+                rankAllowance allowVar = new rankAllowance();
+                //Name : Lowest : Disallow : Allow
+                string[] command = line.Split(colon, StringSplitOptions.None);
+
+                if (!foundCommands.Contains(command[0])) {
+                    Server.s.Log("Incorrect command name: " + command[0]); continue;
+                }
+                allowVar.commandName = command[0];
+
+                string[] disallow = new string[0];
+                if (command[2] != "")
+                    disallow = command[2].Split(',');
+                string[] allow = new string[0];
+                if (command[3] != "")
+                    allow = command[3].Split(',');
+
+                try {
+                    allowVar.lowestRank = (LevelPermission)int.Parse(command[1]);
+                    foreach (string s in disallow) { allowVar.disallow.Add((LevelPermission)int.Parse(s)); }
+                    foreach (string s in allow) { allowVar.allow.Add((LevelPermission)int.Parse(s)); }
+                } catch {
+                    Server.s.Log("Hit an error on the command " + line); continue;
+                }
+
+                for (int i = 0; i < allowedCommands.Count; i++) {
+                    if (command[0] == allowedCommands[i].commandName) {
+                        allowedCommands[i] = allowVar; break;
+                    }
+                }
+            }
+        }
+        
+        static void ReadVersion1(string[] lines) {
+            foreach (string line in lines) {
+                if (line == "" || line[0] == '#') continue;
+                rankAllowance allowVar = new rankAllowance();
+                string key = line.Split('=')[0].Trim().ToLower();
+                string value = line.Split('=')[1].Trim().ToLower();
+
+                if (!foundCommands.Contains(key)) {
+                    Server.s.Log("Incorrect command name: " + key);
+                } else if (Level.PermissionFromName(value) == LevelPermission.Null) {
+                    Server.s.Log("Incorrect value given for " + key + ", using default value.");
+                } else{
+                    allowVar.commandName = key;
+                    allowVar.lowestRank = Level.PermissionFromName(value);
+
+                    for (int i = 0; i < allowedCommands.Count; i++) {
+                        if (key == allowedCommands[i].commandName) {
+                            allowedCommands[i] = allowVar; break;
+                        }
+                    }
+                }
             }
         }
 
         public static void Save(List<rankAllowance> givenList) {
             try {
                 File.Create("properties/command.properties").Dispose();
-                using (StreamWriter w = File.CreateText("properties/command.properties"))
-                {
+                using (StreamWriter w = File.CreateText("properties/command.properties")) {
                     w.WriteLine("#Version 2");
                     w.WriteLine("#   This file contains a reference to every command found in the server software");
                     w.WriteLine("#   Use this file to specify which ranks get which commands");
@@ -165,8 +138,8 @@ namespace MCGalaxy {
                     w.WriteLine("#   CommandName : LowestRank : Disallow : Allow");
                     w.WriteLine("#   gun : 60 : 80,67 : 40,41,55");
                     w.WriteLine("");
-                    foreach (rankAllowance aV in givenList)
-                    {
+
+                    foreach (rankAllowance aV in givenList) {
                         w.WriteLine(aV.commandName + " : " + (int)aV.lowestRank + " : " + getInts(aV.disallow) + " : " + getInts(aV.allow));
                     }
                 }

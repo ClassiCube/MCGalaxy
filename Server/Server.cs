@@ -665,7 +665,7 @@ namespace MCGalaxy
             Economy.Load();
             Warp.LOAD();
             CommandOtherPerms.Load();
-            ProfanityFilter.Init();         
+            ProfanityFilter.Init();
             Team.LoadList();
         }
 

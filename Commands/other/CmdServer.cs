@@ -55,10 +55,8 @@ namespace MCGalaxy.Commands
                     Server.s.Log("Server is now private!");
                     break;
                 case "reset":  //made so ONLY the owner or console can use this command.
-                    if (p != null && !Server.server_owner.ToLower().Equals(p.name.ToLower()) || Server.server_owner.Equals("Notch"))
-                    {
-                        Player.SendMessage(p, "Sorry. You must be the Server Owner or Console to reset the server.");
-                        return;
+                    if (!CheckPerms(p)) {
+                        Player.SendMessage(p, "Only Console or the Server Owner can reset the server."); return;
                     }
                     //restting to default properties is dangerous... but recoverable.
                     //We save the old files to <name>.bkp, then delete them.
@@ -79,10 +77,8 @@ namespace MCGalaxy.Commands
                     SetToDefault();
                     goto case "reload";
                 case "reload":  // For security, only the owner and Console can use this.
-                    if (p != null && !Server.server_owner.ToLower().Equals(p.name.ToLower()) || Server.server_owner.Equals("Notch"))
-                    {
-                        Player.SendMessage(p, "Sorry. You must be the Server Owner or Console to reload the server settings.");
-                        return;
+                    if (!CheckPerms(p)) {
+                        Player.SendMessage(p, "Only Console or the Server Owner can reload the server settings."); return;
                     }
                     Player.SendMessage(p, "Reloading settings...");
                     Server.LoadAllSettings();
@@ -117,9 +113,8 @@ namespace MCGalaxy.Commands
                     Save(false, p);
                     break;
                 case "restore":
-                    if (p != null && !Server.server_owner.ToLower().Equals(p.name.ToLower()) || Server.server_owner.Equals("Notch"))
-                    {
-                        Player.SendMessage(p, "Sorry. You must be the defined Server Owner or Console to restore the server.");
+                    if (!CheckPerms(p)) {
+                        Player.SendMessage(p, "Only Console or the Server Owner can restore the server.");
                         return;
                     }
                     Thread extract = new Thread(new ParameterizedThreadStart(ExtractPackage));
@@ -135,10 +130,13 @@ namespace MCGalaxy.Commands
             }
         }
 
-        private void Save(bool withDB, Player p)
-        {
-            Save(true, withDB, p);
+        static bool CheckPerms(Player p) {
+            if (p == null) return true;
+            if (Server.server_owner.CaselessEq("Notch")) return false;
+            return p.name.CaselessEq(Server.server_owner);
         }
+        
+        private void Save(bool withDB, Player p) { Save(true, withDB, p); }
 
         private void Save(bool withFiles, bool withDB, Player p)
         {
