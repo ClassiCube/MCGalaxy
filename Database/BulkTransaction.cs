@@ -29,8 +29,6 @@ namespace MCGalaxy.SQL {
             else return SQLiteBulkTransaction.Create(SQLite.connString);
         }
 
-        public abstract bool Execute(string query);
-        
         public abstract IDbCommand CreateCommand(string query);
         
         public abstract IDataParameter CreateParam(string paramName, DbType type);
@@ -61,6 +59,11 @@ namespace MCGalaxy.SQL {
             connection.Dispose();
             transaction = null;
             connection = null;
+        }
+        
+        public bool Execute(string query) {
+            using (IDbCommand cmd = CreateCommand(query))
+                return Execute(query, cmd);
         }
         
         public static bool Execute(string query, IDbCommand cmd) {

@@ -43,20 +43,6 @@ namespace MCGalaxy.SQL {
                 return null;
             }
         }
-
-        public override bool Execute(string query) {
-            try {
-                using (SQLiteCommand cmd = new SQLiteCommand(
-                    query, (SQLiteConnection)connection, (SQLiteTransaction)transaction)) {
-                    cmd.ExecuteNonQuery();
-                }
-            } catch (Exception e) {
-                System.IO.File.AppendAllText("MySQL_error.log", DateTime.Now + " " + query + "\r\n");
-                Server.ErrorLog(e);
-                return false;
-            }
-            return true;
-        }
 		
         public override IDbCommand CreateCommand(string query) {
             return new SQLiteCommand(query, (SQLiteConnection)connection, (SQLiteTransaction)transaction);

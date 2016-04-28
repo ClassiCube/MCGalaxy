@@ -42,10 +42,6 @@ namespace MCGalaxy.SQL.Native {
                 return null;
             }
         }
-
-        public override bool Execute(string query) {
-            throw new NotImplementedException();
-        }
         
         public override IDbCommand CreateCommand(string query) {
             IDbCommand cmd = new NativeCommand();
