@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, value + " was queued.");
                 Server.zombie.QueuedZombie = value;
                 if (Server.zombie.CurLevel != null)
-                    Server.zombie.CurLevel.ChatLevel(who.color + who.DisplayName + " %Swas queued as the next zombie.");
+                    Server.zombie.CurLevel.ChatLevel(who.ColoredName + " %Swas queued as the next zombie.");
             } else if (args[0].CaselessEq("level")) {
                 if (LevelInfo.ExistsOffline(value)) {
                     Player.SendMessage(p, value + " was queued.");

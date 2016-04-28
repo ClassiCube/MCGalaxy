@@ -60,13 +60,13 @@ namespace MCGalaxy.Commands
             {
                 Server.IRC.Say(message.ToLower() + " was un-ip-banned by " + p.name + ".");
                 Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by " + p.name + ".");
-                Player.GlobalMessage(message + " was &8un-ip-banned" + Server.DefaultColor + " by " + p.color + p.name + Server.DefaultColor + ".");
+                Player.GlobalMessage(message + " was &8un-ip-banned %Sby " + p.ColoredName + "%S.");
             }
             else
             {
-                Server.IRC.Say(message.ToLower() + " was un-ip-banned by console.");
-                Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by console.");
-                Player.GlobalMessage(message + " was &8un-ip-banned" + Server.DefaultColor + " by console.");
+                Server.IRC.Say(message.ToLower() + " was un-ip-banned by (console).");
+                Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by (console).");
+                Player.GlobalMessage(message + " was &8un-ip-banned %Sby (console).");
             }
         }
         public override void Help(Player p)

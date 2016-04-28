@@ -198,7 +198,7 @@ namespace MCGalaxy {
             if (text[0] == '#' || (p != null && p.opchat)) {
                 if (text[0] == '#') text = text.Remove(0, 1).Trim();
 
-                string displayName = p == null ? "(console)" : p.color + p.DisplayName;
+                string displayName = p == null ? "(console)" : p.ColoredName;
                 string name = p == null ? "(console)" : p.name;
                 Chat.GlobalMessageOps("To Ops &f-" + displayName + "&f- " + text);
                 if (p != null && p.group.Permission < Server.opchatperm )
@@ -211,7 +211,7 @@ namespace MCGalaxy {
             if (text[0] == '+' || (p != null && p.adminchat)) {
                 if (text[0] == '+') text = text.Remove(0, 1).Trim();
 
-                string displayName = p == null ? "(console)" : p.color + p.DisplayName;
+                string displayName = p == null ? "(console)" : p.ColoredName;
                 string name = p == null ? "(console)" : p.name;
                 Chat.GlobalMessageAdmins("To Admins &f-" + displayName + "&f- " + text);
                 if (p != null && p.group.Permission < Server.adminchatperm)

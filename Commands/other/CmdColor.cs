@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
             	string color = Colors.Parse(args[1]);
             	if (color == "") { Player.SendMessage(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.color) { Player.SendMessage(p, p.DisplayName + " already has that color."); return; }
-                Player.SendChatFrom(who, who.color + who.DisplayName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
+                Player.SendChatFrom(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
                 
                 query.AddParam("@Color", Colors.Name(color));

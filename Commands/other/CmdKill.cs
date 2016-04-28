@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
             }
 
             if (p != null && who.group.Permission > p.group.Permission) {
-                p.HandleDeath(Block.rock, " was killed by " + who.color + who.DisplayName);
+                p.HandleDeath(Block.rock, " was killed by " + who.ColoredName);
                 MessageTooHighRank(p, "kill", true); return;
             }
             who.HandleDeath(Block.rock, deathMessage, explode);

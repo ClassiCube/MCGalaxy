@@ -41,22 +41,22 @@ namespace MCGalaxy.Commands
                     case "add":
                         if (Server.whiteList.Contains(player))
                         {
-                            Player.SendMessage(p, "&f" + player + Server.DefaultColor + " is already on the whitelist!");
+                            Player.SendMessage(p, "&f" + player + " %Sis already on the whitelist!");
                             break;
                         }
                         Server.whiteList.Add(player);
-                        Chat.GlobalMessageOps(p.color + p.prefix + p.name + Server.DefaultColor + " added &f" + player + Server.DefaultColor + " to the whitelist.");
+                        Chat.GlobalMessageOps(p.ColoredName + " %Sadded &f" + player + " %Sto the whitelist.");
                         Server.whiteList.Save("whitelist.txt", true);
                         Server.s.Log("WHITELIST: Added " + player);
                         break;
                     case "del":
                         if (!Server.whiteList.Contains(player))
                         {
-                            Player.SendMessage(p, "&f" + player + Server.DefaultColor + " is not on the whitelist!");
+                            Player.SendMessage(p, "&f" + player + " %Sis not on the whitelist!");
                             break;
                         }
                         Server.whiteList.Remove(player);
-                        Chat.GlobalMessageOps(p.color + p.prefix + p.name + Server.DefaultColor + " removed &f" + player + Server.DefaultColor + " from the whitelist.");
+                        Chat.GlobalMessageOps(p.ColoredName + " %Sremoved &f" + player + " %Sfrom the whitelist.");
                         Server.whiteList.Save("whitelist.txt", true);
                         Server.s.Log("WHITELIST: Removed " + player);
                         break;

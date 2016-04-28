@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
                 foreach (Player pl in players) {
                     if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission) {
                         pl.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
-                        pl.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
+                        pl.SendMessage("You were summoned by " + p.ColoredName + Server.DefaultColor + ".");
                     }
                 }
                 Player.GlobalMessage(p.ColoredName + " %Ssummoned everyone!");
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands
             }
 
             who.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
-            who.SendMessage("You were summoned by " + p.color + p.DisplayName + Server.DefaultColor + ".");
+            who.SendMessage("You were summoned by " + p.ColoredName + "%S.");
         }
         public override void Help(Player p)
         {

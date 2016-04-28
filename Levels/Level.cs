@@ -838,7 +838,7 @@ namespace MCGalaxy
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct BlockPos {
             public string name;
-            public int flags, index; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
+            public int flags, index; // bit 0 = is deleted, bit 1 = is ext, rest bits = time delta
             public byte rawType;
             
             public void SetData(byte type, byte extType, bool delete) {

@@ -393,7 +393,7 @@ namespace MCGalaxy.Games {
             p.Game.Infected = false;
             
             if (p.level.name.CaselessEq(CurLevelName))
-                playersString += p.color + p.DisplayName + Colors.white + ", ";
+                playersString += p.ColoredName + Colors.white + ", ";
         }
         
         void ChooseNextLevel() {

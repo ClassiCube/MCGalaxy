@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             }
             if (p != null && p.muted) { Player.SendMessage(p, "Cannot use /hug while muted."); return; }
             
-            string giver = (p == null) ? "(console)" : p.color + p.DisplayName, type = null;
+            string giver = (p == null) ? "(console)" : p.ColoredName, type = null;
             if (args.Length > 1) {
                 args[1] = args[1].ToLower();
                 if (args[1] == "loving" || args[1] == "creepy" || args[1] == "friendly" || args[1] == "deadly")

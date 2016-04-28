@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands
                     {
                         if (who != null)
                         {
-                            Player.SendMessage(p, "You have stopped following " + who.color + who.DisplayName + Server.DefaultColor + " and remained hidden.");
+                            Player.SendMessage(p, "You have stopped following " + who.ColoredName + Server.DefaultColor + " and remained hidden.");
                         }
                         else
                         {

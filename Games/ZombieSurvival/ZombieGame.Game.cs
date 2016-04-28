@@ -86,7 +86,7 @@ namespace MCGalaxy.Games {
                 Player[] players = p.Game.Infected ? Infected.Items : Alive.Items;
                 string type = p.Game.Infected ? " &cto zombies%S: " : " &ato humans%S: ";
                 foreach (Player pl in players)
-                    pl.SendMessage(p.color + p.DisplayName + type + message.Substring(1));
+                    pl.SendMessage(p.ColoredName + type + message.Substring(1));
                 return true;
             } else if (message[0] == '`' && message.Length > 1) {
                 if (p.Game.Team == null) {

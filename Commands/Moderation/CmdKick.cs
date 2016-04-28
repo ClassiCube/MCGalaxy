@@ -40,8 +40,8 @@ namespace MCGalaxy.Commands {
 
             if (p != null && p == who) { Player.SendMessage(p, "You cannot kick yourself."); return; }
             if (p != null && who.group.Permission >= p.group.Permission) {
-                Player.SendChatFrom(p, p.color + p.DisplayName + "%S tried to kick " 
-                                    + who.color + who.DisplayName + "%S but failed.", false);
+                Player.SendChatFrom(p, p.ColoredName + "%S tried to kick " 
+                                    + who.ColoredName + "%S but failed.", false);
                 return;
             }
             

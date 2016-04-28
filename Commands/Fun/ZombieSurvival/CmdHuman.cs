@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
         	
         	p.Game.PledgeSurvive = true;
         	Server.zombie.CurLevel
-        		.ChatLevel(p.color + p.DisplayName + " %Spledges that they will not succumb to the infection!");
+        		.ChatLevel(p.ColoredName + " %Spledges that they will not succumb to the infection!");
         }
         
         public override void Help(Player p) {

@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
             string action = "ate some food";
             if (actions.Count > 0)
                 action = actions[new Random().Next(actions.Count)];
-            Player.GlobalMessage(p.color + p.DisplayName + " %S" + action);           
+            Player.GlobalMessage(p.ColoredName + " %S" + action);           
         }
         
         static string[] defMessages = { "guzzled a grape", "chewed a cherry", "ate an avocado" };

@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
                 y = (ushort)(who.pos[1] / 32);
                 z = (ushort)(who.pos[2] / 32);
                 who.level.MakeExplosion(x, y, z, 1);
-                Player.SendMessage(p, who.color + who.DisplayName + Server.DefaultColor + " has been exploded!");                
+                Player.SendMessage(p, who.ColoredName + " %Shas been exploded!");                
             } else if (args.Length == 3) {
                 try {
                     x = Convert.ToUInt16(args[0]);

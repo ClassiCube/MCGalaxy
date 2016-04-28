@@ -38,12 +38,12 @@ namespace MCGalaxy.Commands
 
             if (who.group.Permission >= p.group.Permission)
             {
-                Player.SendChatFrom(p, p.color + p.DisplayName + " %Stried to votekick " + who.color + who.DisplayName + " %Sbut failed!", false);
+                Player.SendChatFrom(p, p.ColoredName + " %Stried to votekick " + who.ColoredName + " %Sbut failed!", false);
                 return;
             }
 
-            Chat.GlobalMessageOps(p.color + p.DisplayName + " %Sused &a/votekick");
-            Player.GlobalMessage("&9A vote to kick " + who.color + who.DisplayName + " %Shas been called!");
+            Chat.GlobalMessageOps(p.ColoredName + " %Sused &a/votekick");
+            Player.GlobalMessage("&9A vote to kick " + who.ColoredName + " %Shas been called!");
             Player.GlobalMessage("&9Type &aY %Sor &cN %Sto vote.");
 
             // 1/3rd of the players must vote or nothing happens
@@ -79,16 +79,16 @@ namespace MCGalaxy.Commands
 
                 if (votesYes + votesNo < Server.voteKickVotesNeeded)
                 {
-                    Player.GlobalMessage("Not enough votes were made. " + who.color + who.DisplayName + " %Sshall remain!");
+                    Player.GlobalMessage("Not enough votes were made. " + who.ColoredName + " %Sshall remain!");
                 }
                 else if (netVotesYes > 0)
                 {
-                    Player.GlobalMessage("The people have spoken, " + who.color + who.DisplayName + " %Sis gone!");
+                    Player.GlobalMessage("The people have spoken, " + who.ColoredName + " %Sis gone!");
                     who.Kick("Vote-Kick: The people have spoken!");
                 }
                 else
                 {
-                    Player.GlobalMessage(who.color + who.DisplayName + " %Sshall remain!");
+                    Player.GlobalMessage(who.ColoredName + " %Sshall remain!");
                 }
 
                 voteTimer.Dispose();

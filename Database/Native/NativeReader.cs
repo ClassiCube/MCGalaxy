@@ -24,12 +24,17 @@ namespace MCGalaxy.SQL.Native {
 
     unsafe sealed class NativeReader {
         
+		int cols;
+		int[] codes;
         public void ReadColumns(NativeCommand cmd, DataTable results) {
-            int cols = Interop.sqlite3_column_count(cmd.Statement);
+            cols = Interop.sqlite3_column_count(cmd.Statement);
+            codes = new int[cols];
+            
             for (int i = 0; i < cols; i++) {
                 IntPtr namePtr = Interop.sqlite3_column_name(cmd.Statement, i);
                 string name = new String((sbyte*)namePtr);
                 int code = Interop.sqlite3_column_type(cmd.Statement, i);
+                codes[i] = code;
                 
                 Type type = typeof(object);
                 if (code == 1) type = typeof(long);
@@ -41,7 +46,7 @@ namespace MCGalaxy.SQL.Native {
         }
         
         public void ReadRows(NativeCommand cmd, DataTable results) {
-            
+			
         }
     }
 }

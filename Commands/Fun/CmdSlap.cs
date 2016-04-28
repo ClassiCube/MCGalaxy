@@ -51,11 +51,11 @@ namespace MCGalaxy.Commands {
             ushort curX = (ushort)(who.pos[0] / 32), curY = (ushort)(who.pos[1] / 32), curZ = (ushort)(who.pos[2] / 32);
             ushort foundHeight = ushort.MaxValue;
 
-            string src = p == null ? "the Console" : p.color + p.DisplayName;
+            string src = p == null ? "(console)" : p.ColoredName;
             for (ushort yy = curY; yy <= 1000; yy++) {
                 if (!Block.Walkthrough(p.level.GetTile(curX, yy, curZ)) && p.level.GetTile(curX, yy, curZ) != Block.Zero) {
                     foundHeight = (ushort)(yy - 1);
-                    who.level.ChatLevel(who.color + who.DisplayName + " %Swas slapped into the roof by " + src);
+                    who.level.ChatLevel(who.ColoredName + " %Swas slapped into the roof by " + src);
                     break;
                 }
             }

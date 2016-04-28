@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands {
             DrawOp.DoDrawOp(op, null, p, cpos.x, cpos.y, cpos.z, x, y, z);
             
             Level saveLevel = op.saveLevel;
-            Player.SendChatFrom(who, who.color + who.DisplayName + 
+            Player.SendChatFrom(who, who.ColoredName + 
                                 "%S's actions for the past &b" + cpos.seconds + " seconds were undone.", false);
             Server.s.Log(who.name + "'s actions for the past " + cpos.seconds + " seconds were undone.");
             if (saveLevel != null) saveLevel.Save(true);

@@ -38,10 +38,10 @@ namespace MCGalaxy.Commands {
             }
             
             string reason = args.Length == 1 ? "you know why." : args[1];
-            string warnedby = (p == null) ? "<CONSOLE>" : p.color + p.DisplayName;
-            Player.GlobalMessage(warnedby + " %ewarned " + who.color + who.DisplayName + " %ebecause:");
+            string warnedby = (p == null) ? "(console)" : p.ColoredName;
+            Player.GlobalMessage(warnedby + " %ewarned " + who.ColoredName + " %ebecause:");
             Player.GlobalMessage("&c" + reason);
-            Server.IRC.Say(warnedby + " %ewarned " + who.color + who.DisplayName + " %efor: %c" + reason);
+            Server.IRC.Say(warnedby + " %ewarned " + who.ColoredName + " %efor: %c" + reason);
             Server.s.Log(warnedby + " warned " + who.name);
 
             if (who.warn == 0) {
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             } else if (who.warn == 1) {
                 Player.SendMessage(who, "Do it one more time and you will get kicked!");
             } else if (who.warn == 2) {
-                Player.GlobalMessage(who.color + who.DisplayName + " %Swas warn-kicked by " + warnedby);
+                Player.GlobalMessage(who.ColoredName + " %Swas warn-kicked by " + warnedby);
                 who.Kick("KICKED BECAUSE " + reason + "");
             }
             

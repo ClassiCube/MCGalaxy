@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
                 if (Pb.kill) message += "-kill";
             }
 
-            if (message != "") Player.SendMessage(p, "&1Bots: " + Server.DefaultColor + message.Remove(0, 2));
+            if (message != "") Player.SendMessage(p, "&1Bots: %S" + message.Remove(0, 2));
             else Player.SendMessage(p, "No bots are alive.");
         }
         public override void Help(Player p)
