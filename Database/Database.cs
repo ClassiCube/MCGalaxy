@@ -32,7 +32,6 @@ namespace MCGalaxy.SQL {
             else SQLite.AddParams(name, param);
         }
 
-        [Obsolete("Use a ParameterisedQuery instance instead, which is threadsafe.")]
         public static void executeQuery(string queryString, bool createDB = false) {
             if (Server.useMySQL) executeQuery(MySQL.query, queryString, createDB);
             else executeQuery(SQLite.query, queryString, createDB);
@@ -55,7 +54,6 @@ namespace MCGalaxy.SQL {
             query.ClearParams();
         }
         
-        [Obsolete("Use a ParameterisedQuery instance instead, which is threadsafe.")]
         public static DataTable fillData(string queryString, bool skipError = false) {
             if (Server.useMySQL) return fillData(MySQL.query, queryString, skipError);
             else return fillData(SQLite.query, queryString, skipError);
@@ -81,5 +79,27 @@ namespace MCGalaxy.SQL {
                 return results;
             }
         }
+    }
+	
+	public static class MySQL { //: Database //Extending for future improvement (Making it object oriented later)
+        
+        static string connStringFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4}";
+        public static string connString { get { return String.Format(connStringFormat, Server.MySQLHost, Server.MySQLPort, Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); } }
+        internal static ParameterisedQuery query = new MySQLParameterisedQuery();
+
+        public static void AddParams(string name, object param) { query.AddParam(name, param); }
+        
+        public static void ClearParams() { query.ClearParams(); }
+    }
+	
+	public static class SQLite {
+        
+        static string connStringFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =1000;";
+        public static string connString { get { return String.Format(connStringFormat, Server.DatabasePooling); } }       
+        internal static ParameterisedQuery query = new SQLiteParameterisedQuery();
+
+        public static void AddParams(string name, object param) { query.AddParam(name, param); }
+        
+        public static void ClearParams() { query.ClearParams(); }
     }
 }

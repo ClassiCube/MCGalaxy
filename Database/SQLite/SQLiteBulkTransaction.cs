@@ -24,24 +24,10 @@ namespace MCGalaxy.SQL {
 
     public sealed class SQLiteBulkTransaction : BulkTransaction {
 
-        private SQLiteBulkTransaction(string connString) {
-            Init(connString);
-        }
-
-        void Init(string connString) {
-            connection = new SQLiteConnection(connString);
+        public SQLiteBulkTransaction(string connString) { 
+			connection = new SQLiteConnection(connString);
             connection.Open();
-            //connection.ChangeDatabase(Server.MySQLDatabaseName);
             transaction = connection.BeginTransaction();
-        }
-
-        public static BulkTransaction Create(string connString) {
-            try {
-                return new SQLiteBulkTransaction(connString);
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                return null;
-            }
         }
 		
         public override IDbCommand CreateCommand(string query) {

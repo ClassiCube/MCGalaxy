@@ -89,7 +89,7 @@ namespace MCGalaxy.SQL.Native {
         public IEnumerator GetEnumerator() { return args.GetEnumerator(); }
         
         
-        public void AddParamWithVaue(string key, object value) {
+        public void AddWithValue(string key, object value) {
             NativeParameter arg = new NativeParameter();
             arg.ParameterName = key;
             Type type = value.GetType();
@@ -103,6 +103,9 @@ namespace MCGalaxy.SQL.Native {
             } else if (type == typeof(ushort)) {
                 arg.U16Value = (ushort)value;
                 arg.DbType = DbType.UInt16;
+            } else if (type == typeof(int)) {
+                arg.I32Value = (ushort)value;
+                arg.DbType = DbType.Int32;
             } else {
                 throw new NotSupportedException("Unsupported type: " + type);
             }

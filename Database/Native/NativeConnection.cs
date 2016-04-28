@@ -37,7 +37,7 @@ namespace MCGalaxy.SQL.Native {
         }
         
         public void Close() {
-            int code = sqlite3_close(DB);
+            int code = Interop.sqlite3_close(DB);
             DB = IntPtr.Zero;
             if (code > 0) throw new NativeException(code);
         }
@@ -56,8 +56,8 @@ namespace MCGalaxy.SQL.Native {
         string path;
         public void Open() {
         	ParseConnectionString();
-            byte[] filename = NativeUtils.MakeUTF8(path);
-            int code = sqlite3_open_v2(filename, out DB, 0x2, IntPtr.Zero);
+            byte[] filename = Interop.MakeUTF8(path);
+            int code = Interop.sqlite3_open_v2(filename, out DB, 0x2, IntPtr.Zero);
             if (code > 0) throw new NativeException(code);
         }
         
@@ -71,12 +71,6 @@ namespace MCGalaxy.SQL.Native {
 
             	if (key == "Data Source") path = value;
             }
-        }
-        
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_open_v2(byte[] filename, out IntPtr db, int flags, IntPtr vfs);
-        
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_close(IntPtr db);
+        }        
     }
 }

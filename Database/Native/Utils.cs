@@ -58,6 +58,7 @@ namespace MCGalaxy.SQL.Native {
         public DbType type;
         public int Index = -1;
         // Avoid boxing primitive types
+        public int I32Value;
         public ushort U16Value;
         public byte U8Value;
         public bool BoolValue;
@@ -82,7 +83,7 @@ namespace MCGalaxy.SQL.Native {
         }
     }
     
-    unsafe static class NativeUtils {
+    unsafe static class Interop {
         static Encoding encoding = Encoding.UTF8;
         
         public static byte[] MakeUTF8(string input) {
@@ -91,6 +92,13 @@ namespace MCGalaxy.SQL.Native {
             encoding.GetBytes(input, 0, input.Length, chars, 0);
             return chars;
         }
+        
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int sqlite3_open_v2(byte[] filename, out IntPtr db, int flags, IntPtr vfs);
+        
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int sqlite3_close(IntPtr db);
+        
         
         [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int sqlite3_bind_int(IntPtr stmt, int index, int value);
@@ -119,6 +127,10 @@ namespace MCGalaxy.SQL.Native {
 
         [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int sqlite3_column_type(IntPtr stmt, int iCol);
+        
+        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]        
+        public static extern IntPtr sqlite3_column_name(IntPtr stmt, int iCol);
+        
 
         [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]        
         public static extern double sqlite3_column_double(IntPtr stmt, int iCol);
@@ -134,11 +146,5 @@ namespace MCGalaxy.SQL.Native {
 
         [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr sqlite3_column_text16(IntPtr stmt, int iCol);
-
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]        
-        public static extern IntPtr sqlite3_column_name(IntPtr stmt, int iCol);
-
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]        
-        public static extern IntPtr sqlite3_column_name16(IntPtr stmt, int iCol);
     }
 }

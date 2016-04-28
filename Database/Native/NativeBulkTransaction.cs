@@ -23,24 +23,11 @@ namespace MCGalaxy.SQL.Native {
 
     public partial class NativeBulkTransaction : BulkTransaction {
 
-        private NativeBulkTransaction(string connString) {
-            Init(connString);
-        }
-
-        void Init(string connString) {
+        public NativeBulkTransaction(string connString) {
             connection = new NativeConnection();
             connection.ConnectionString = SQLite.connString;
             connection.Open();
             transaction = connection.BeginTransaction();
-        }
-
-        public static BulkTransaction Create(string connString) {
-            try {
-                return new NativeBulkTransaction(connString);
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                return null;
-            }
         }
         
         public override IDbCommand CreateCommand(string query) {

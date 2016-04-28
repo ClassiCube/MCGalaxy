@@ -24,7 +24,7 @@ namespace MCGalaxy.SQL.Native {
 
     unsafe sealed class NativeCommand : IDbCommand {
         public IntPtr Statement;
-        NativeParamsList args = new NativeParamsList();
+        internal NativeParamsList args = new NativeParamsList();
 
         public IDbConnection Connection { get; set; }
         public IDbTransaction Transaction { get; set; }
@@ -40,10 +40,10 @@ namespace MCGalaxy.SQL.Native {
         public object ExecuteScalar() { return null; }
         
         public void Prepare() {
-            byte[] sql = NativeUtils.MakeUTF8(CommandText);
+            byte[] sql = Interop.MakeUTF8(CommandText);
             IntPtr db = ((NativeConnection)Connection).DB;
             IntPtr tail;
-            int code = NativeUtils.sqlite3_prepare_v2(db, sql, sql.Length, out Statement, out tail);
+            int code = Interop.sqlite3_prepare_v2(db, sql, sql.Length, out Statement, out tail);
             if (code > 0) throw new NativeException(code);
         }
         
@@ -51,15 +51,15 @@ namespace MCGalaxy.SQL.Native {
             foreach (IDataParameter param in args)
                 BindParam(param);
             
-            int code = NativeUtils.sqlite3_step(Statement);
+            int code = Interop.sqlite3_step(Statement);
             if (code > 0 && code != 101) throw new NativeException(code);
-            code = NativeUtils.sqlite3_reset(Statement);
+            code = Interop.sqlite3_reset(Statement);
             if (code > 0) throw new NativeException(code);
             return 0;
         }
         
         public void Dispose() {
-            int code = NativeUtils.sqlite3_finalize(Statement);
+            int code = Interop.sqlite3_finalize(Statement);
             if (code > 0) throw new NativeException(code);
         }
         
@@ -70,25 +70,23 @@ namespace MCGalaxy.SQL.Native {
             int code = 0;
             switch (nParam.type) {
                 case DbType.AnsiStringFixedLength:
-                    code = NativeUtils.sqlite3_bind_text(Statement, nParam.Index, nParam.StringPtr, 
-                                             nParam.StringCount - 1, IntPtr.Zero);
-                    break;
+                    code = Interop.sqlite3_bind_text(Statement, nParam.Index, nParam.StringPtr, 
+                                             nParam.StringCount - 1, IntPtr.Zero); break;
+                case DbType.Int32:
+            	    code = Interop.sqlite3_bind_int(Statement, nParam.Index, nParam.I32Value); break;
                 case DbType.UInt16:
-                    code = NativeUtils.sqlite3_bind_int(Statement, nParam.Index, nParam.U16Value);
-                    break;                    
+                    code = Interop.sqlite3_bind_int(Statement, nParam.Index, nParam.U16Value); break;
                 case DbType.Byte:
-                    code = NativeUtils.sqlite3_bind_int(Statement, nParam.Index, nParam.U8Value);
-                    break;
+                    code = Interop.sqlite3_bind_int(Statement, nParam.Index, nParam.U8Value); break;
                 case DbType.Boolean:
-                    code = NativeUtils.sqlite3_bind_int(Statement, nParam.Index, nParam.BoolValue ? 1 : 0);
-                    break;
+                    code = Interop.sqlite3_bind_int(Statement, nParam.Index, nParam.BoolValue ? 1 : 0); break;
             }
             if (code > 0) throw new NativeException(code);
         }
         
         void BindIndex(NativeParameter nParam) {
-            byte[] name = NativeUtils.MakeUTF8(nParam.ParameterName);
-            nParam.Index = NativeUtils.sqlite3_bind_parameter_index(Statement, name);
+            byte[] name = Interop.MakeUTF8(nParam.ParameterName);
+            nParam.Index = Interop.sqlite3_bind_parameter_index(Statement, name);
         }
     }
 }

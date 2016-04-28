@@ -29,13 +29,9 @@ namespace MCGalaxy {
         
         public static List<Player> GetPlayers() { return new List<Player>(players); }
         
-        public static Group GetGroup(string name) {
-            return Group.findPlayerGroup(name);
-        }
+        public static Group GetGroup(string name) { return Group.findPlayerGroup(name); }
         
-        public static string GetColor(string name) {
-            return GetGroup(name).color;
-        }
+        public static string GetColor(string name) { return GetGroup(name).color; }
         
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Player Find(string name) {

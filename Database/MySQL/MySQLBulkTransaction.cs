@@ -24,10 +24,6 @@ namespace MCGalaxy.SQL {
     public sealed class MySQLBulkTransaction : BulkTransaction {
 
         public MySQLBulkTransaction(string connString) {
-            Init(connString);
-        }
-
-        void Init(string connString) {
             connection = new MySqlConnection(connString);
             connection.Open();
             connection.ChangeDatabase(Server.MySQLDatabaseName);
@@ -35,15 +31,6 @@ namespace MCGalaxy.SQL {
             transaction = connection.BeginTransaction();
         }
 
-        public static BulkTransaction Create(string connString) {
-            try {
-                return new MySQLBulkTransaction(connString);
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                return null;
-            }
-        }
-        
         public override IDbCommand CreateCommand(string query) {
             return new MySqlCommand(query, (MySqlConnection)connection, (MySqlTransaction)transaction);
         }

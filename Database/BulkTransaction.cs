@@ -25,8 +25,13 @@ namespace MCGalaxy.SQL {
         protected IDbTransaction transaction;
 
         public static BulkTransaction Create() {
-            if (Server.useMySQL) return MySQLBulkTransaction.Create(MySQL.connString);
-            else return SQLiteBulkTransaction.Create(SQLite.connString);
+            try {
+                if (Server.useMySQL) return new MySQLBulkTransaction(MySQL.connString);
+                else return new SQLiteBulkTransaction(SQLite.connString);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                return null;
+            }
         }
 
         public abstract IDbCommand CreateCommand(string query);
