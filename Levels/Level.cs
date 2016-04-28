@@ -450,9 +450,7 @@ namespace MCGalaxy
             using (BulkTransaction transaction = BulkTransaction.Create()) {
                 fixed (char* ptr = date) {
                     ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
-                    DateTime now = DateTime.UtcNow;
                     DoSaveChanges(tempCache, ptr, date, transaction);
-                    Server.s.Log( "db save   " + (DateTime.UtcNow - now).TotalSeconds );
                 }
             }
             tempCache.Clear();

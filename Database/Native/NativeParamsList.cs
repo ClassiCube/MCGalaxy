@@ -25,7 +25,7 @@ namespace MCGalaxy.SQL.Native {
     
     sealed class NativeParamsList : IDataParameterCollection {        
 
-        List<NativeParameter> args = new List<NativeParameter>();
+        internal List<NativeParameter> args = new List<NativeParameter>();
         
         public void Clear() {
             foreach (var param in args)

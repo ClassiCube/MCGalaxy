@@ -48,8 +48,9 @@ namespace MCGalaxy.SQL.Native {
         }
         
         public int ExecuteNonQuery() {
-            foreach (IDataParameter param in args)
-                BindParam(param);
+            List<NativeParameter> args = this.args.args;
+            for (int i = 0; i < args.Count; i++)
+                BindParam(args[i]);
             
             int code = Interop.sqlite3_step(Statement);
             if (code > 0 && code != 101) throw new NativeException(code);

@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 
 namespace MCGalaxy.SQL.Native {
@@ -85,6 +86,7 @@ namespace MCGalaxy.SQL.Native {
     
     unsafe static class Interop {
         static Encoding encoding = Encoding.UTF8;
+        const CallingConvention conv = CallingConvention.Cdecl;
         
         public static byte[] MakeUTF8(string input) {
             int count = encoding.GetByteCount(input) + 1; // null terminator
@@ -93,58 +95,58 @@ namespace MCGalaxy.SQL.Native {
             return chars;
         }
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_open_v2(byte[] filename, out IntPtr db, int flags, IntPtr vfs);
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_close(IntPtr db);
         
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_bind_int(IntPtr stmt, int index, int value);
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_bind_parameter_index(IntPtr stmt, byte[] name);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_bind_text(IntPtr stmt, int index, byte* text, int textLen, IntPtr reserved);
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_finalize(IntPtr stmt);
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_prepare_v2(IntPtr db, byte[] sql, int nBytes, out IntPtr stmt, out IntPtr sqlTail);
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_reset(IntPtr stmt);
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_step(IntPtr stmt);
         
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_column_count(IntPtr stmt);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_column_type(IntPtr stmt, int iCol);
         
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]        
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity] 
         public static extern IntPtr sqlite3_column_name(IntPtr stmt, int iCol);
         
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]        
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]      
         public static extern double sqlite3_column_double(IntPtr stmt, int iCol);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_column_int(IntPtr stmt, int iCol);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern long sqlite3_column_int64(IntPtr stmt, int iCol);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern IntPtr sqlite3_column_text(IntPtr stmt, int iCol);
 
-        [DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern IntPtr sqlite3_column_text16(IntPtr stmt, int iCol);
     }
 }
