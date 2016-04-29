@@ -68,6 +68,7 @@ namespace MCGalaxy {
         public System.Timers.Timer afkTimer = new System.Timers.Timer(2000);
         public int afkCount = 0;
         public DateTime afkStart;
+        public bool IsAfk { get { return Server.afkset.Contains(name); } }
         public bool cmdTimer = false;
         public bool UsingWom = false;
         public string BrushName = "normal", DefaultBrushArgs = "";

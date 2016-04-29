@@ -53,7 +53,8 @@ namespace MCGalaxy.Commands
                         string name = Colors.StripColours(pl.DisplayName);
                         if (pl.hidden) name += "(hidden)";
                         if (pl.muted) name += "(muted)";
-                        if (Server.afkset.Contains(pl.name)) name += "-afk";
+                        if (pl.Game.Referee) name += "-ref";
+                        if (pl.IsAfk) name += "-afk";
                         rankSec.Append(pl, name);
                     }
                 } 
@@ -86,7 +87,7 @@ namespace MCGalaxy.Commands
                     if (pl.hidden) name += "(hidden)";
                     if (pl.muted) name += "(muted)";
                     if (pl.Game.Referee) name += "-ref";
-                    if (Server.afkset.Contains(pl.name)) name += "-afk";
+                    if (pl.IsAfk) name += "-afk";
 
                     if (pl.isDev) devSec.Append(pl, name);
                     if (pl.isMod) modsSec.Append(pl, name);

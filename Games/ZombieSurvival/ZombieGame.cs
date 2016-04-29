@@ -79,6 +79,10 @@ namespace MCGalaxy.Games {
                 p.Game.ResetInvisibility();
             }
             
+            int delta = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
+            if (delta >= 0 && delta <= 5)
+                ZombieAwards.Give(p, ZombieAwards.infectedEnd, this);
+            
             p.Game.Infected = true;
             UpdatePlayerColor(p, Colors.red);
             UpdateAllPlayerStatus();

@@ -193,8 +193,7 @@ namespace MCGalaxy.Games {
                             && pKiller.level.name.CaselessEq(CurLevelName) 
                             && pAlive.level.name.CaselessEq(CurLevelName))
                         {
-                            if (pAlive.Game.Invisible)
-                                ZombieAwards.Give(pKiller, ZombieAwards.killInvisHuman, this);
+                            CheckKillerAwards(pAlive, pKiller);
                             InfectPlayer(pAlive);
                             aliveChanged = true;
                             pAlive.Game.BlocksLeft = 25;
@@ -270,19 +269,6 @@ namespace MCGalaxy.Games {
             pAlive.OnMoneyChanged();
         }
         
-        void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
-            string text = null;
-            List<string> infectMsgs = pKiller.Game.InfectMessages;
-            if (infectMsgs != null && random.Next(0, 10) < 5)
-                text = infectMsgs[random.Next(infectMsgs.Count)];
-            else
-                text = messages[random.Next(messages.Count)];
-            
-            CurLevel.ChatLevel(String.Format(text,
-                                             Colors.red + pKiller.DisplayName + Colors.yellow,
-                                             Colors.red + pAlive.DisplayName + Colors.yellow));
-        }
-        
         void CheckBounty(Player pAlive, Player pKiller) {
             BountyData bounty;
             if (Bounties.TryGetValue(pAlive.name, out bounty))
@@ -296,6 +282,30 @@ namespace MCGalaxy.Games {
                 pKiller.OnMoneyChanged();
             }
         }
+        
+        void CheckKillerAwards(Player pAlive, Player pKiller) {
+            if (pAlive.IsAfk) 
+                ZombieAwards.Give(pKiller, ZombieAwards.afkKiller, this);
+            if (pAlive.Game.Invisible)
+                ZombieAwards.Give(pKiller, ZombieAwards.killInvisHuman, this);
+            if (pAlive.Game.CurrentRoundsSurvived >= 3)
+                ZombieAwards.Give(pKiller, ZombieAwards.starKiller, this);
+            if (Alive.Count == 1)
+                ZombieAwards.Give(pKiller, ZombieAwards.killLastHuman, this);
+        }
+        
+        void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
+            string text = null;
+            List<string> infectMsgs = pKiller.Game.InfectMessages;
+            if (infectMsgs != null && random.Next(0, 10) < 5)
+                text = infectMsgs[random.Next(infectMsgs.Count)];
+            else
+                text = messages[random.Next(messages.Count)];
+            
+            CurLevel.ChatLevel(String.Format(text,
+                                             Colors.red + pKiller.DisplayName + Colors.yellow,
+                                             Colors.red + pAlive.DisplayName + Colors.yellow));
+        }        
 
         static void UpdatePlayerColor(Player p, string color) {
             if (p.Game.lastSpawnColor == color) return;
@@ -327,7 +337,10 @@ namespace MCGalaxy.Games {
                 foreach (Player pl in online)
                     ResetPlayer(pl, ref playersString);
             } else {
-               CurLevel.RoundsHumanWon++;
+                int winChance = CurLevel.WinChance;
+                CurLevel.RoundsHumanWon++;
+                if (alive.Length == 1)
+                    ZombieAwards.Give(alive[0], ZombieAwards.onlyHuman, this);
                 foreach (Player pl in alive) {
                     if (pl.Game.PledgeSurvive) {
                         pl.SendMessage("You received &a5 %3" + Server.moneys +
@@ -335,7 +348,12 @@ namespace MCGalaxy.Games {
                         pl.money += 5;
                         pl.OnMoneyChanged();
                     }
+                    if (winChance <= 10)
+                        ZombieAwards.Give(pl, ZombieAwards.lowWinChance, this);
+                   
                     pl.Game.CurrentRoundsSurvived++;
+                    if (pl.Game.CurrentRoundsSurvived == 5)
+                        ZombieAwards.Give(pl, ZombieAwards.survive5Rounds, this);
                     pl.Game.TotalRoundsSurvived++;
                     pl.Game.MaxRoundsSurvived = Math.Max(pl.Game.CurrentRoundsSurvived, pl.Game.MaxRoundsSurvived);
                     ResetPlayer(pl, ref playersString);
