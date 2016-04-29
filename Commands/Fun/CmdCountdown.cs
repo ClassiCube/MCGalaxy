@@ -148,29 +148,29 @@ namespace MCGalaxy.Commands {
                 case CountdownGameStatus.Enabled:
                     Player.SendMessage(p, "Players who have joined:");
                     foreach (Player plya in Server.Countdown.players)
-                        Player.SendMessage(p, plya.color + plya.name);
+                        Player.SendMessage(p, plya.ColoredName);
                     break;
 
                 case CountdownGameStatus.AboutToStart:
                     Player.SendMessage(p, "Players who are about to play:");
                     foreach (Player plya in Server.Countdown.players)
-                        Player.SendMessage(p, plya.color + plya.name);
+                    	Player.SendMessage(p, plya.ColoredName);
                     break;
 
                 case CountdownGameStatus.InProgress:
                     Player.SendMessage(p, "Players left playing:");
                     foreach (Player plya in Server.Countdown.players) {
                         if (Server.Countdown.playersleftlist.Contains(plya))
-                            Player.SendMessage(p, plya.color + plya.name + " %Swho is &aIN");
+                            Player.SendMessage(p, plya.ColoredName + " %Swho is &aIN");
                         else
-                            Player.SendMessage(p, plya.color + plya.name + " %Swho is &cOUT");
+                            Player.SendMessage(p, plya.ColoredName + " %Swho is &cOUT");
                     }
                     break;
 
                 case CountdownGameStatus.Finished:
                     Player.SendMessage(p, "Players who were playing:");
                     foreach (Player plya in Server.Countdown.players)
-                        Player.SendMessage(p, plya.color + plya.name);
+                        Player.SendMessage(p, plya.ColoredName);
                     break;
             }
         }
@@ -184,7 +184,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "The last person alive will win!!");
             } else if (hasPerm) {
                 if (target == "all") {
-                    Player.GlobalMessage("Countdown Rules being sent to everyone by " + p.color + p.name + ":");
+                    Player.GlobalMessage("Countdown Rules being sent to everyone by " + p.ColoredName + ":");
                     Player.GlobalMessage("The aim of the game is to stay alive the longest.");
                     Player.GlobalMessage("Don't fall in the lava!!");
                     Player.GlobalMessage("Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
@@ -192,7 +192,7 @@ namespace MCGalaxy.Commands {
                     Player.SendMessage(p, "Countdown rules sent to everyone");
                     return;
                 } else if (target == "map") {
-                    Chat.GlobalMessageLevel(p.level, "Countdown Rules being sent to " + p.level.name + " by " + p.color + p.name + ":");
+                    Chat.GlobalMessageLevel(p.level, "Countdown Rules being sent to " + p.level.name + " by " + p.ColoredName + ":");
                     Chat.GlobalMessageLevel(p.level, "The aim of the game is to stay alive the longest.");
                     Chat.GlobalMessageLevel(p.level, "Don't fall in the lava!!");
                     Chat.GlobalMessageLevel(p.level, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
@@ -206,12 +206,12 @@ namespace MCGalaxy.Commands {
                 if (p.group.Permission < who.group.Permission) {
                     MessageTooHighRank(p, "send countdown rules", true); return;                	
                 } else {
-                    Player.SendMessage(who, "Countdown rules sent to you by " + p.color + p.name);
+                    Player.SendMessage(who, "Countdown rules sent to you by " + p.ColoredName);
                     Player.SendMessage(who, "The aim of the game is to stay alive the longest.");
                     Player.SendMessage(who, "Don't fall in the lava!!");
                     Player.SendMessage(who, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disawhowhoering.");
                     Player.SendMessage(who, "The last person alive will win!!");
-                    Player.SendMessage(p, "Countdown rules sent to: " + who.color + who.name);
+                    Player.SendMessage(p, "Countdown rules sent to: " + who.ColoredName);
                 }
             }
         }

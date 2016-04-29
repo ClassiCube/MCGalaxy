@@ -211,7 +211,7 @@ namespace MCGalaxy.Commands
 							it.Players.Add(pl);
 							TntWarsGame.SetTitlesAndColor(pl);
 							p.CurrentTntGameNumber = it.GameNumber;
-							string msg = p.color + p.name + Server.DefaultColor + " " + "joined TNT Wars on '" + it.lvl.name + "'";
+							string msg = p.ColoredName + " %Sjoined TNT Wars on '" + it.lvl.name + "'";
 							if (pl.Red)
 							{
 								msg += " on the " + Colors.red + "red team";
@@ -235,7 +235,7 @@ namespace MCGalaxy.Commands
 					p.canBuild = true;
 					TntWarsGame game = TntWarsGame.GetTntWarsGame(p);
 					game.Players.Remove(game.FindPlayer(p));
-					game.SendAllPlayersMessage("TNT Wars: " + p.color + p.name + Server.DefaultColor + " left the TNT Wars game!");
+					game.SendAllPlayersMessage("TNT Wars: " + p.ColoredName + " %Sleft the TNT Wars game!");
 					TntWarsGame.SetTitlesAndColor(game.FindPlayer(p), true);
 					Player.SendMessage(p, "TNT Wars: You left the game");
 					break;
@@ -253,7 +253,7 @@ namespace MCGalaxy.Commands
 								Player[] players = PlayerInfo.Online.Items;
                                 foreach (Player who in players)
                                 {
-                                    Player.SendMessage(who, "TNT Wars Rules: (sent to all players by " + p.color + p.name + Server.DefaultColor + " )");
+                                    Player.SendMessage(who, "TNT Wars Rules: (sent to all players by " + p.ColoredName + " %S)");
                                     Player.SendMessage(who, "The aim of the game is to blow up people using TNT!");
                                     Player.SendMessage(who, "To place tnt simply place a TNT block and after a short delay it shall explode!");
                                     Player.SendMessage(who, "During the game the amount of TNT placable at one time may be limited!");
@@ -273,7 +273,7 @@ namespace MCGalaxy.Commands
                             {
                                 foreach (Player who in p.level.players)
                                 {
-                                    Player.SendMessage(who, "TNT Wars Rules: (sent to all players in map by " + p.color + p.name + Server.DefaultColor + " )");
+                                    Player.SendMessage(who, "TNT Wars Rules: (sent to all players in map by " + p.ColoredName + " %S)");
                                     Player.SendMessage(who, "The aim of the game is to blow up people using TNT!");
                                     Player.SendMessage(who, "To place tnt simply place a TNT block and after a short delay it shall explode!");
                                     Player.SendMessage(who, "During the game the amount of TNT placable at one time may be limited!");
@@ -301,7 +301,7 @@ namespace MCGalaxy.Commands
                                 {
                                     foreach (TntWarsGame.player who in gm.Players)
                                     {
-                                        Player.SendMessage(who.p, "TNT Wars Rules: (sent to all current players by " + p.color + p.name + Server.DefaultColor + " )");
+                                        Player.SendMessage(who.p, "TNT Wars Rules: (sent to all current players by " + p.ColoredName + " %S)");
                                         Player.SendMessage(who.p, "The aim of the game is to blow up people using TNT!");
                                         Player.SendMessage(who.p, "To place tnt simply place a TNT block and after a short delay it shall explode!");
                                         Player.SendMessage(who.p, "During the game the amount of TNT placable at one time may be limited!");
@@ -647,7 +647,7 @@ namespace MCGalaxy.Commands
                                         it.RedSpawn[2] = (ushort)(p.pos[2] / 32);
                                         it.RedSpawn[3] = p.rot[0];
                                         it.RedSpawn[4] = p.rot[1];
-                                        Player.SendMessage(p, "TNT Wars: Set " + Colors.red + "Red" + Server.DefaultColor + " spawn");
+                                        Player.SendMessage(p, "TNT Wars: Set " + Colors.red + "Red %Sspawn");
                                         break;
 
                                     case "blue":
@@ -659,7 +659,7 @@ namespace MCGalaxy.Commands
                                         it.BlueSpawn[2] = (ushort)(p.pos[2] / 32);
                                         it.BlueSpawn[3] = p.rot[0];
                                         it.BlueSpawn[4] = p.rot[1];
-                                        Player.SendMessage(p, "TNT Wars: Set " + Colors.blue + "Blue" + Server.DefaultColor + " spawn");
+                                        Player.SendMessage(p, "TNT Wars: Set " + Colors.blue + "Blue %Sspawn");
                                         break;
                                 }
                                 break;

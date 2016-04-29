@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands {
                     
                     pl.BlockUntilLoad(10);
                     if (!pl.jailed) { jail.Use(p, message); }
-                    Player.GlobalMessage(pl.color + pl.DisplayName + Server.DefaultColor + " was XJailed!");
+                    Player.GlobalMessage(pl.ColoredName + " %Swas XJailed!");
                 } else {
                     using (StreamReader readFile = new StreamReader(playerFile)) {
                         string playerMap = readFile.ReadLine();
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands {
                         jail.Use(p, message);
                         freeze.Use(p, message);
                         spawn.Use(pl, "");
-                        Player.GlobalMessage(pl.color + pl.DisplayName + Server.DefaultColor + " was released from XJail!");
+                        Player.GlobalMessage(pl.ColoredName + " %Swas released from XJail!");
                     }
                 }
             }

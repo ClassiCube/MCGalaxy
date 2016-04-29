@@ -171,7 +171,7 @@ namespace MCGalaxy {
                 text = text.Remove(0, 2);
                 if (text.Length < 1) { Player.SendMessage(p, "No message entered"); return true; }
                 
-                Player.SendMessage(p, Server.DefaultColor + "[<] Console: &f" + text);
+                Player.SendMessage(p, "[<] Console: &f" + text);
                 string name = p == null ? "(console)" : p.name;
                 Server.s.Log("[>] " + name + ": " + text);
                 return true;
@@ -255,7 +255,7 @@ namespace MCGalaxy {
             string fullName = p == null ? "%S(console)" : p.ColoredName;
             
             Server.s.Log(name + " @" + who.name + ": " + message);
-            Player.SendMessage(p, Server.DefaultColor + "[<] " + who.ColoredName + ": &f" + message);
+            Player.SendMessage(p, "[<] " + who.ColoredName + ": &f" + message);
             Player.SendMessage(who, "&9[>] " + fullName + ": &f" + message);
         }
     }

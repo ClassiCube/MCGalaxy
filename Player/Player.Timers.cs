@@ -94,7 +94,7 @@ namespace MCGalaxy {
             SendMessage("There are currently &a" + players.Length + suffix);
             
             if (Server.lava.active)
-                SendMessage("There is a &aLava Survival " + Server.DefaultColor + "game active! Join it by typing /ls go");
+                SendMessage("There is a &aLava Survival %Sgame active! Join it by typing /ls go");
             extraTimer.Dispose();
         }
         

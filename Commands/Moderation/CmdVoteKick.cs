@@ -30,14 +30,14 @@ namespace MCGalaxy.Commands
         {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
+            if (p.muted) { Player.SendMessage(p, "You cannot vote while muted."); }
 
             if (Server.voteKickInProgress) { Player.SendMessage(p, "Please wait for the current vote to finish!"); return; }
 
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
 
-            if (who.group.Permission >= p.group.Permission)
-            {
+            if (who.group.Permission >= p.group.Permission) {
                 Player.SendChatFrom(p, p.ColoredName + " %Stried to votekick " + who.ColoredName + " %Sbut failed!", false);
                 return;
             }

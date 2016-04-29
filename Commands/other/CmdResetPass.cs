@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "The player you specified does not have a password!"); return;
             }
             File.Delete("extra/passwords/" + who.name + ".dat");
-            Player.SendMessage(p, "The admin password has sucessfully been removed for " + who.color + who.name + "!");
+            Player.SendMessage(p, "The admin password has sucessfully been removed for " + who.ColoredName + "!");
         }
         
         public override void Help(Player p) {

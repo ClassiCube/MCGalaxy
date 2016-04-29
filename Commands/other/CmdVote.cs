@@ -28,20 +28,20 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
+            if (p.muted) { Player.SendMessage(p, "You cannot vote while muted."); }
             
-            if (!Server.voting) {
-                Server.voting = true;
-                Server.NoVotes = 0; Server.YesVotes = 0;
-                Player.GlobalMessage(Colors.green + " VOTE: %S" + message + "%S(" + Colors.green + "Yes" + " %S/ " + Colors.red + "No" + "%S)");
-                System.Threading.Thread.Sleep(15000);
-                
-                Server.voting = false;
-                Player.GlobalMessage("The votes are in! " + Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
-                Player[] players = PlayerInfo.Online.Items; 
-                foreach (Player pl in players) pl.voted = false;
-            }  else{
-                p.SendMessage("A vote is in progress!");
+            if (Server.voting) {
+                Player.SendMessage(p, "A vote is in progress!"); return;
             }
+            Server.voting = true;
+            Server.NoVotes = 0; Server.YesVotes = 0;
+            Player.GlobalMessage(Colors.green + " VOTE: %S" + message + "%S(" + Colors.green + "Yes" + " %S/ " + Colors.red + "No" + "%S)");
+            System.Threading.Thread.Sleep(15000);
+            
+            Server.voting = false;
+            Player.GlobalMessage("The votes are in! " + Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) pl.voted = false;
         }
         
         public override void Help(Player p) {

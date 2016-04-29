@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             if (p == null) { MessageInGameOnly(p); return; }
             if (!p.canBuild)
             {
-                Player.SendMessage(p, "You're currently being &4possessed" + Server.DefaultColor + "!");
+                Player.SendMessage(p, "You're currently being &4possessed%S!");
                 return;
             }
             
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands
                     {
                         if (who != null)
                         {
-                            Player.SendMessage(p, "You have stopped following " + who.ColoredName + Server.DefaultColor + " and remained hidden.");
+                            Player.SendMessage(p, "You have stopped following " + who.ColoredName + " %Sand remained hidden.");
                         }
                         else
                         {

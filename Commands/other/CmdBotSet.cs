@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
                     pB.kill = false;
                     pB.hunt = false;
                     pB.AIName = "";
-                    Player.SendMessage(p, pB.color + pB.name + Server.DefaultColor + "'s AI was turned off.");
+                    Player.SendMessage(p, pB.color + pB.name + "%S's AI was turned off.");
                     Server.s.Log(pB.name + "'s AI was turned off.");
                     return;
                 }

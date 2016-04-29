@@ -273,7 +273,7 @@ namespace MCGalaxy.Games
                             if (Math.Abs((p1.pos[0] / 32) - (x / 32)) < 5 && Math.Abs((p1.pos[1] / 32) - (y / 32)) < 5 && Math.Abs((p1.pos[2] / 32) - (z / 32)) < 5 && !GetPlayer(p).tagging)
                             {
                                 GetPlayer(p1).tagging = true;
-                                Player.SendMessage(p1, p.color + p.name + Server.DefaultColor + " tagged you!");
+                                Player.SendMessage(p1, p.ColoredName + " %Stagged you!");
                                 b.SendToSpawn(mainlevel, this, p1);
                                 Thread.Sleep(300);
                                 if (GetPlayer(p1).hasflag)

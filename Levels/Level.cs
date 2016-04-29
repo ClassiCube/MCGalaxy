@@ -407,27 +407,21 @@ namespace MCGalaxy
             MovePlayersToMain();
             LevelInfo.Loaded.Remove(this);
 
-            try
-            {
+            try {
                 PlayerBot.RemoveAllFromLevel(this);
                 //physChecker.Stop();
                 //physChecker.Dispose();
                 physThread.Abort();
                 physThread.Join();
 
-            }
-            catch
-            {
-            }
-
-            finally
-            {
+            } catch {
+            } finally {
                 Dispose();
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                if (!silent) Chat.GlobalMessageOps("&3" + name + Server.DefaultColor + " was unloaded.");
-                Server.s.Log(string.Format("{0} was unloaded.", name));
+                if (!silent) Chat.GlobalMessageOps("&3" + name + " %Swas unloaded.");
+                Server.s.Log(name + " was unloaded.");
             }
             return true;
         }

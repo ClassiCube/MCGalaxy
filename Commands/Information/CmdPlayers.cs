@@ -72,8 +72,8 @@ namespace MCGalaxy.Commands
                 playerList.Add(MakeSection(grp, title));
             }
 
-            Section devSec = MakeSection("#%9MCGalaxy Devs:" + Server.DefaultColor);
-            Section modsSec = MakeSection("#%2MCGalaxy Mods:" + Server.DefaultColor);
+            Section devSec = MakeSection("#&9MCGalaxy Devs:%S);
+            Section modsSec = MakeSection("#&2MCGalaxy Mods:%S);
             int totalPlayers = 0;
             
             Player[] online = PlayerInfo.Online.Items;
@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands
                 }
             }
 
-            output("There are %a" + totalPlayers + Server.DefaultColor + " players online.");
+            output("There are &a" + totalPlayers + " %Splayers online.");
             devSec.Print(output, false);
             modsSec.Print(output, false);
             
@@ -121,8 +121,7 @@ namespace MCGalaxy.Commands
             
             public void Append(Player pl, string name) {
                 builder.Append(' ');
-                if (pl.voice)
-                    builder.Append("&f+" + Server.DefaultColor);
+                if (pl.voice) builder.Append("&f+%S");
                 
                 builder.Append(name);
                 builder.Append(" (" + pl.level.name + "), ");
@@ -141,7 +140,7 @@ namespace MCGalaxy.Commands
         
         static void AppendName(Player pl, string foundName, ref string target) {
             if (pl.voice)
-                target += " " + "&f+" + Server.DefaultColor + foundName + " (" + pl.level.name + "),";
+                target += " " + "&f+%S" + foundName + " (" + pl.level.name + "),";
             else
                 target += " " + foundName + " (" + pl.level.name + "),";
         }

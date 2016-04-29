@@ -316,21 +316,21 @@ namespace MCGalaxy.Games
             //Message about winners etc.
             if (Players.Count <= 1)
             {
-                Player.GlobalMessage(Colors.red + "TNT Wars " + Server.DefaultColor + "has ended because there are no longer enough players!");
+                Player.GlobalMessage("&cTNT Wars %Shas ended because there are no longer enough players!");
             }
             else
             {
-                Player.GlobalMessage(Colors.red + "TNT Wars" + Server.DefaultColor + " has ended!!");
+                Player.GlobalMessage("&cTNT Wars %Shas ended!!");
             }
             if (GameMode == TntWarsGameMode.TDM)
             {
                 if (RedScore >= BlueScore)
                 {
-                    Player.GlobalMessage("TNT Wars: Team " + Colors.red + "Red " + Server.DefaultColor + "won " + Colors.red + "TNT Wars " + Server.DefaultColor + "by " + (RedScore - BlueScore).ToString() + " points!");
+                    Player.GlobalMessage("TNT Wars: Team &cRed %Swon &cTNT Wars %Sby " + (RedScore - BlueScore) + " points!");
                 }
                 if (BlueScore >= RedScore)
                 {
-                    Player.GlobalMessage("TNT Wars: Team " + Colors.blue + "Blue " + Server.DefaultColor + "won " + Colors.red + "TNT Wars " + Server.DefaultColor + "by " + (BlueScore - RedScore).ToString() + " points!");
+                    Player.GlobalMessage("TNT Wars: Team &9Blue %Swon &cTNT Wars %Sby " + (BlueScore - RedScore) + " points!");
                 }
                 try
                 {
@@ -338,7 +338,7 @@ namespace MCGalaxy.Games
                     {
                         if (!p.spec)
                         {
-                            Player.SendMessage(p.p, "TNT Wars: You Scored " + p.Score.ToString() + " points");
+                            Player.SendMessage(p.p, "TNT Wars: You Scored " + p.Score + " points");
                         }
                     }
                 }
@@ -437,11 +437,11 @@ namespace MCGalaxy.Games
                 {
                     if (TeamKill(Killer, Died))
                     {
-                        SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + Server.DefaultColor + " team killed " + Died.color + Died.name);
+                        SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Steam killed " + Died.ColoredName);
                     }
                     else
                     {
-                        SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + Server.DefaultColor + " killed " + Died.color + Died.name);
+                    	SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Skilled " + Died.ColoredName);
                         kills += 1;
                     }
                 }
@@ -450,11 +450,11 @@ namespace MCGalaxy.Games
                     {
                         if (TeamKill(Killer, Died))
                         {
-                            SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + Server.DefaultColor + " team killed " + Died.color + Died.name + Server.DefaultColor + " (with help from " + Died.HarmedBy.color + Died.HarmedBy.name + ")");
+                            SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Steam killed " + Died.ColoredName + " %S(with help from " + Died.HarmedBy.ColoredName + ")");
                         }
                         else
                         {
-                            SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + Server.DefaultColor + " killed " + Died.color + Died.name + Server.DefaultColor + " (with help from " + Died.HarmedBy.color + Died.HarmedBy.name + ")");
+                            SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Skilled " + Died.ColoredName + " %S(with help from " + Died.HarmedBy.ColoredName + ")");
                             kills += 1;
                         }
                     }
@@ -484,21 +484,21 @@ namespace MCGalaxy.Games
                 if (Killer.TntWarsKillStreak >= Properties.DefaultStreakOneAmount && Killer.TntWarsKillStreak < Properties.DefaultStreakTwoAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakOneAmount)
                 {
                     Player.SendMessage(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakOneMultiplier.ToString() + ")");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + Server.DefaultColor + " has a kill streak of " + Killer.TntWarsKillStreak.ToString());
+                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString());
                     Killer.TntWarsScoreMultiplier = Properties.DefaultStreakOneMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakOneAmount;
                 }
                 else if (Killer.TntWarsKillStreak >= Properties.DefaultStreakTwoAmount && Killer.TntWarsKillStreak < Properties.DefaultStreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakTwoAmount)
                 {
                     Player.SendMessage(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakTwoMultiplier.ToString() + " and a bigger explosion!)");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + Server.DefaultColor + " has a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has a bigger explosion for their TNT!");
+                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has a bigger explosion for their TNT!");
                     Killer.TntWarsScoreMultiplier = Properties.DefaultStreakTwoMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakTwoAmount;
                 }
                 else if (Killer.TntWarsKillStreak >= Properties.DefaultStreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakThreeAmount)
                 {
                     Player.SendMessage(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakThreeMultiplier.ToString() + " and you now have 1 extra health!)");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + Server.DefaultColor + " has a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has 1 extra health!");
+                    SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has 1 extra health!");
                     Killer.TntWarsScoreMultiplier = Properties.DefaultStreakThreeMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakThreeAmount;
                     if (GameDifficulty == TntWarsDifficulty.Hard || GameDifficulty == TntWarsDifficulty.Extreme)

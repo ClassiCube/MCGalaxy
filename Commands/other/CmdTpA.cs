@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (!p.Request ) {
-                Player.SendMessage(p, "&cError:" + Server.DefaultColor + " You do not have any pending teleport requests!"); return;
+                Player.SendMessage(p, "&cError: %SYou do not have any pending teleport requests!"); return;
             }
             
             Player who = PlayerInfo.FindExact(p.senderName);

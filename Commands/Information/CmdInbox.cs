@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
 
                     for (int i = 0; i < Inbox.Rows.Count; ++i)
                     {
-                        Player.SendMessage(p, i + ": From &5" + Inbox.Rows[i]["PlayerFrom"].ToString() + Server.DefaultColor + " at &a" + Inbox.Rows[i]["TimeSent"].ToString());
+                        Player.SendMessage(p, i + ": From &5" + Inbox.Rows[i]["PlayerFrom"]+ " %Sat &a" + Inbox.Rows[i]["TimeSent"]);
                     }
                     Inbox.Dispose();
                 }
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
                         Player.SendMessage(p, "\"" + FoundRecord + "\" does not exist."); Inbox.Dispose(); return;
                     }
 
-                    Player.SendMessage(p, "Message from &5" + Inbox.Rows[FoundRecord]["PlayerFrom"] + Server.DefaultColor + " sent at &a" + Inbox.Rows[FoundRecord]["TimeSent"] + ":");
+                    Player.SendMessage(p, "Message from &5" + Inbox.Rows[FoundRecord]["PlayerFrom"] + " %Ssent at &a" + Inbox.Rows[FoundRecord]["TimeSent"] + ":");
                     Player.SendMessage(p, Inbox.Rows[FoundRecord]["Contents"].ToString());
                     Inbox.Dispose();
                 }

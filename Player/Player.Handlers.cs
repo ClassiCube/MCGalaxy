@@ -1011,8 +1011,8 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if ( text != "/afk" ) {
                     if ( Server.afkset.Contains(this.name) ) {
                         Server.afkset.Remove(this.name);
-                        Player.GlobalMessage("-" + this.color + this.DisplayName + Server.DefaultColor + "- is no longer AFK");
-                        Server.IRC.Say(this.DisplayName + " is no longer AFK");
+                        Player.GlobalMessage("-" + ColoredName + "%S- is no longer AFK");
+                        Server.IRC.Say(DisplayName + " is no longer AFK");
                     }
                 }
                 // Typing //Command appears in chat as /command

@@ -572,7 +572,7 @@ namespace MCGalaxy {
                 TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
                 if ( tntwarsgame != null ) {
                 	tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
-                	tntwarsgame.SendAllPlayersMessage("TNT Wars: " + color + name + Server.DefaultColor + " has left TNT Wars!");
+                	tntwarsgame.SendAllPlayersMessage("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
                 }
 
                 Entities.GlobalDespawn(this, false, true);
@@ -584,7 +584,7 @@ namespace MCGalaxy {
                 			foreach (Player pl in players) { Player.SendMessage(pl, leavem); }
                 		}
                 	}
-                	Server.s.Log(name + "disconnected (" + discMsg + ").");
+                	Server.s.Log(name + " disconnected (" + discMsg + ").");
                 } else {
                 	totalKicked++;
                 	SendChatFrom(this, "&c- " + color + prefix + DisplayName + " %Skicked (" + kickMsg + "%S).", false);

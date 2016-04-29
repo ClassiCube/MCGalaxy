@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             Command.all.Find("spawn").Use(pl, "");
             Player.SendMessage(p, "Succesfully spawned " + pl.color + pl.DisplayName + "%S.");
             string src = p == null ? "(console)" : p.ColoredName;
-            Player.GlobalMessage(pl.color + pl.name + " %Swas respawned by " + src + "%S.");
+            Player.GlobalMessage(pl.ColoredName + " %Swas respawned by " + src + "%S.");
         }
 		
 		public override void Help(Player p) {

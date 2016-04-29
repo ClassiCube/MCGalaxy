@@ -46,10 +46,10 @@ namespace MCGalaxy.Commands
 
             if (TotalTime > 300) { Player.SendMessage(p, "Cannot have more than 5 minutes in a timer"); return; }
 
-            Chat.GlobalChatLevel(p, Server.DefaultColor + "Timer lasting for " + TotalTime + " seconds has started.", false);
+            Chat.GlobalChatLevel(p, "Timer lasting for " + TotalTime + " seconds has started.", false);
             TotalTime = (int)(TotalTime / 5);
 
-            Chat.GlobalChatLevel(p, Server.DefaultColor + message, false);
+            Chat.GlobalChatLevel(p, message, false);
 
             p.cmdTimer = true;
             messageTimer.Elapsed += delegate

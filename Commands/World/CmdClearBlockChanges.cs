@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
 				Database.executeQuery("TRUNCATE TABLE `Block" + lvl.name + "`"); 
 			else 
 				Database.executeQuery("DELETE FROM `Block" + lvl.name + "`");
-			Player.SendMessage(p, "Cleared &cALL" + Server.DefaultColor + " recorded block changes for: &d" + lvl.name);
+			Player.SendMessage(p, "Cleared &cALL %Srecorded block changes for: &d" + lvl.name);
 		}
 		
 		public override void Help(Player p) {

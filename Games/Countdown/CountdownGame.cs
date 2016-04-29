@@ -245,7 +245,7 @@ namespace MCGalaxy.Games {
         }
 
         public void Death(Player p) {
-            mapon.ChatLevel(p.color + p.name + Server.DefaultColor + " is out of countdown!!");
+            mapon.ChatLevel(p.ColoredName + " %Sis out of countdown!!");
             p.incountdown = false;
             playersleftlist.Remove(p);
             MessagePlayersLeft();
@@ -254,17 +254,17 @@ namespace MCGalaxy.Games {
         void MessagePlayersLeft() {
             switch (playersleftlist.Count) {
                 case 1:
-        			mapon.ChatLevel(playersleftlist[0].color + playersleftlist[0].name + Server.DefaultColor + " is the winner!!");
+        			mapon.ChatLevel(playersleftlist[0].ColoredName + " %Sis the winner!!");
         			End(playersleftlist[0]);
                     break;
                 case 2:
                     mapon.ChatLevel("Only 2 Players left:");
-                    mapon.ChatLevel(playersleftlist[0].color + playersleftlist[0].name + Server.DefaultColor + " and " + playersleftlist[1].color + playersleftlist[1].name);
+                    mapon.ChatLevel(playersleftlist[0].ColoredName + " %Sand " + playersleftlist[1].ColoredName);
                     break;
                 case 5:
                     mapon.ChatLevel("Only 5 Players left:");
                     foreach (Player pl in playersleftlist) {
-                        mapon.ChatLevel(pl.color + pl.name);
+                        mapon.ChatLevel(pl.ColoredName);
                         Thread.Sleep(500);
                     }
                     break;

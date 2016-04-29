@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             if (args.Length == 1 || !int.TryParse(args[1], out max)) max = 7;
             if (min > max) { int a = min; min = max; max = a; }
 
-            Player.GlobalMessage(p.color + p.name + " %Srolled a &a" + rand.Next(min, max + 1) + " %S(" + min + "|" + max + ")");
+            Player.GlobalMessage(p.ColoredName + " %Srolled a &a" + rand.Next(min, max + 1) + " %S(" + min + "|" + max + ")");
         }
         
         public override void Help(Player p) {

@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands
             //DB
 
             Player.SendMessage(p, "Message sent to &5" + whoTo + ".");
-            if (who != null) who.SendMessage("Message recieved from &5" + fromname + Server.DefaultColor + ".");
+            if (who != null) who.SendMessage("Message recieved from &5" + fromname + "%S.");
         }
         public override void Help(Player p)
         {

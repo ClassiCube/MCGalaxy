@@ -39,7 +39,7 @@ namespace MCGalaxy.Games {
         public override void PlayerLeftServer(Player p) {
             if (players.Contains(p)) {
                 if (playersleftlist.Contains(p)) {
-                    mapon.ChatLevel(p.color + p.name + Server.DefaultColor + " logged out and so is out of countdown!!");
+                    mapon.ChatLevel(p.ColoredName + " %Slogged out and so is out of countdown!!");
                     PlayerLeftGame(p);
                 }
                 players.Remove(p);
