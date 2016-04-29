@@ -777,13 +777,11 @@ namespace MCGalaxy.Gui
             e.PaintParts &= ~DataGridViewPaintParts.Focus;
         }
 
-        private void promoteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void promoteToolStripMenuItem_Click(object sender, EventArgs e) {
             playerselect("promote");
         }
 
-        private void demoteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void demoteToolStripMenuItem_Click(object sender, EventArgs e) {
             playerselect("demote");
         }
 
@@ -1227,231 +1225,68 @@ namespace MCGalaxy.Gui
             }
         }
 
-        private void PromoteBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Promote").Use(null, prpertiesofplyer.name);
-            PlayersTextBox.AppendTextAndScroll("Promoted Player");
-            return;
+        void PromoteBt_Click(object sender, EventArgs e) { DoSimple("promote", "Promoted"); }
+
+        void DemoteBt_Click(object sender, EventArgs e) { DoSimple("demote", "Demoted"); }
+
+        void HideBt_Click(object sender, EventArgs e) {
+            DoToggle("ohide", HideBt, "Hide", p => p.hidden, "Hid");
         }
 
-        private void DemoteBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Demote").Use(null, prpertiesofplyer.name);
-            PlayersTextBox.AppendTextAndScroll("Demoted Player");
-            return;
+        void SlapBt_Click(object sender, EventArgs e) { DoSimple("slap", "Slapped"); }
+
+        void JokerBt_Click(object sender, EventArgs e) {
+            DoToggle("joker", JokerBt, "Joker", p => p.joker, "Jokered");
         }
 
-        private void HideBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Hide").Use(prpertiesofplyer, "");
-            if (prpertiesofplyer.hidden)
-            {
-                PlayersTextBox.AppendTextAndScroll("Hid Player");
-                HideBt.Text = "UnHide";
-                return;
-            }
-            else
-            {
-                PlayersTextBox.AppendTextAndScroll("UnHid Player");
-                HideBt.Text = "Hide";
-                return;
-            }
+        void FreezeBt_Click(object sender, EventArgs e) {
+            DoToggle("freeze", FreezeBt, "Freeze", p => p.frozen, "Froze");
         }
 
-        private void SlapBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Slap").Use(null, prpertiesofplyer.name);
-            PlayersTextBox.AppendTextAndScroll("Slapped Player");
+        void MuteBt_Click(object sender, EventArgs e) {
+            DoToggle("mute", MuteBt, "Mute", p => p.muted, "Muted");
         }
 
-        private void JokerBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Joker").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.joker)
-            {
-                PlayersTextBox.AppendTextAndScroll("Jokered Player");
-                JokerBt.Text = "UnJoker";
-                return;
-            }
-            else
-            {
-                PlayersTextBox.AppendTextAndScroll("UnJokered Player");
-                JokerBt.Text = "Joker";
-                return;
-            }
+        void VoiceBt_Click(object sender, EventArgs e) {
+            DoToggle("voice", VoiceBt, "Voice", p => p.voice, "Voiced");
         }
 
-        private void FreezeBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Freeze").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.frozen)
-            {
-                PlayersTextBox.AppendTextAndScroll("Froze Player");
-                FreezeBt.Text = "UnFreeze";
-                return;
-            }
-            else
-            {
-                PlayersTextBox.AppendTextAndScroll("UnFroze Player");
-                FreezeBt.Text = "Freeze";
-                return;
-            }
+        void KillBt_Click(object sender, EventArgs e) { DoSimple("kill", "Killed"); }
+
+        void JailBt_Click(object sender, EventArgs e) {
+            DoToggle("jail", JailBt, "Jail", p => p.jailed, "Jailed");
         }
 
-        private void MuteBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Mute").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.muted)
-            {
-                PlayersTextBox.AppendTextAndScroll("Muted Player");
-                MuteBt.Text = "UnMute";
-                return;
-            }
-            else
-            {
-                PlayersTextBox.AppendTextAndScroll("UnMuted Player");
-                MuteBt.Text = "Mute";
-                return;
-            }
-        }
+        void WarnBt_Click(object sender, EventArgs e) { DoSimple("warn", "Warned"); }
 
-        private void VoiceBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Voice").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.voice)
-            {
-                PlayersTextBox.AppendTextAndScroll("Voiced Player");
-                VoiceBt.Text = "UnVoice";
-                return;
-            }
-            else
-            {
-                PlayersTextBox.AppendTextAndScroll("UnVoiced Player");
-                VoiceBt.Text = "Voice";
-                return;
-            }
-        }
+        void KickBt_Click(object sender, EventArgs e) { DoSimple("kick", "Kicked"); }
 
-        private void KillBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Kill").Use(null, prpertiesofplyer.name);
-            PlayersTextBox.AppendTextAndScroll("Killed Player");
-            return;
-        }
+        void BanBt_Click(object sender, EventArgs e) { DoSimple("ban", "Banned"); }
 
-        private void JailBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        void IPBanBt_Click(object sender, EventArgs e) { DoSimple("banip", "IP-Banned"); }
+        
+        void DoSimple(string cmdName, string action) {
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            Command.all.Find("Jail").Use(null, prpertiesofplyer.name);
-            if (prpertiesofplyer.jailed)
-            {
-                PlayersTextBox.AppendTextAndScroll("Jailed Player");
-                JailBt.Text = "UnJail";
-                return;
-            }
-            else
-            {
-                PlayersTextBox.AppendTextAndScroll("UnJailed Player");
-                JailBt.Text = "Jail";
-                return;
-            }
+            Command.all.Find(cmdName).Use(null, prpertiesofplyer.name);
+            PlayersTextBox.AppendTextAndScroll(action + " player");
         }
-
-        private void WarnBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        
+        void DoToggle(string cmdName, Button target, string targetDesc,
+                      Predicate<Player> getter, string action) {
+            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            Command.all.Find("Warn").Use(null, prpertiesofplyer.name);
-            PlayersTextBox.AppendTextAndScroll("Warned player");
-            return;
-        }
-
-        private void KickBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+            Command.all.Find(cmdName).Use(null, prpertiesofplyer.name);
+            
+            if (getter(prpertiesofplyer)) {
+                PlayersTextBox.AppendTextAndScroll(action + " player");
+                target.Text = "Un" + targetDesc;
+            } else {
+                PlayersTextBox.AppendTextAndScroll("Un" + action + " player");
+                target.Text = targetDesc;
             }
-            Command.all.Find("Kick").Use(null, prpertiesofplyer.name);
-            PlayersTextBox.AppendTextAndScroll("Kicked player");
-            return;
-        }
-
-        private void BanBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("Ban").Use(null, prpertiesofplyer.name);
-            PlayersTextBox.AppendTextAndScroll("Banned player");
-            return;
-        }
-
-        private void IPBanBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
-            }
-            Command.all.Find("banip").Use(null, prpertiesofplyer.name);
-            PlayersTextBox.AppendTextAndScroll("IpBanned player");
-            return;
         }
 
         private void SendRulesTxt_Click(object sender, EventArgs e)
@@ -1580,9 +1415,6 @@ namespace MCGalaxy.Gui
         }
         #endregion
 
-        /*private void txtOpInput_TextChanged(object sender, EventArgs e)
-        {
-        }*/
         #endregion
 
         private void txtOpInput_KeyDown(object sender, KeyEventArgs e)

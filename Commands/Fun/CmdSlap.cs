@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
 
             string src = p == null ? "(console)" : p.ColoredName;
             for (ushort yy = curY; yy <= 1000; yy++) {
-                if (!Block.Walkthrough(p.level.GetTile(curX, yy, curZ)) && p.level.GetTile(curX, yy, curZ) != Block.Zero) {
+                if (!Block.Walkthrough(who.level.GetTile(curX, yy, curZ)) && who.level.GetTile(curX, yy, curZ) != Block.Zero) {
                     foundHeight = (ushort)(yy - 1);
                     who.level.ChatLevel(who.ColoredName + " %Swas slapped into the roof by " + src);
                     break;
