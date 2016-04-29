@@ -72,8 +72,8 @@ namespace MCGalaxy.Commands
                 playerList.Add(MakeSection(grp, title));
             }
 
-            Section devSec = MakeSection("#&9MCGalaxy Devs:%S);
-            Section modsSec = MakeSection("#&2MCGalaxy Mods:%S);
+            Section devSec = MakeSection("#&9MCGalaxy Devs:%S");
+            Section modsSec = MakeSection("#&2MCGalaxy Mods:%S");
             int totalPlayers = 0;
             
             Player[] online = PlayerInfo.Online.Items;
