@@ -62,12 +62,12 @@ namespace MCGalaxy.Commands
 				case "l":
 					if (TntWarsGame.GameList.Count <= 0)
 					{
-						Player.SendMessage(p, "There aren't any " + Colors.red + "TNT Wars " + Server.DefaultColor + "currently running!");
+						Player.SendMessage(p, "There aren't any &cTNT Wars %Scurrently running!");
 						return;
 					}
 					else
 					{
-						Player.SendMessage(p, "Currently running " + Colors.red + "TNT Wars" + Server.DefaultColor + ":");
+						Player.SendMessage(p, "Currently running &cTNT Wars %S:");
 						foreach (TntWarsGame T in TntWarsGame.GameList)
 						{
 							string msg = "";

@@ -78,8 +78,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p){
-            Player.SendMessage(p, "&f/take [player] <amount> " + Server.DefaultColor + "- Takes <amount> of " + Server.moneys + " from [player]");
-            Player.SendMessage(p, "&f/take [player] all " + Server.DefaultColor + "- Takes all the " + Server.moneys + " from [player]");
+            Player.SendMessage(p, "&f/take [player] <amount> %S- Takes <amount> of " + Server.moneys + " from [player]");
+            Player.SendMessage(p, "&f/take [player] all %S- Takes all the " + Server.moneys + " from [player]");
         }
     }
 }

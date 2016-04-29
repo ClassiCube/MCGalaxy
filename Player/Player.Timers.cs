@@ -71,7 +71,7 @@ namespace MCGalaxy {
                     //safe against SQL injections because no user input is given here
                     DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + name + "`", true);
 
-                    SendMessage("&cYou have &f" + Inbox.Rows.Count + Server.DefaultColor + " &cmessages in /inbox");
+                    SendMessage("&cYou have &f" + Inbox.Rows.Count + " &cmessages in /inbox");
                     Inbox.Dispose();
                 }
             } catch {
@@ -89,7 +89,7 @@ namespace MCGalaxy {
             }
             
             Player[] players = PlayerInfo.Online.Items;
-            SendMessage("You have modified &a" + overallBlocks + Server.DefaultColor + " blocks!");
+            SendMessage("You have modified &a" + overallBlocks + " %Sblocks!");
             string suffix = players.Length == 1 ? " player online" : " players online";
             SendMessage("There are currently &a" + players.Length + suffix);
             

@@ -379,7 +379,7 @@ namespace MCGalaxy.Games
 
             if (OnVoteEnd != null)
                 OnVoteEnd(most.Key);
-            map.ChatLevel("The vote has ended! &5" + most.Key.Capitalize() + Server.DefaultColor + " won with &a" + most.Value + Server.DefaultColor + " vote" + (most.Value == 1 ? "" : "s") + ".");
+            map.ChatLevel("The vote has ended! &5" + most.Key.Capitalize() + " %Swon with &a" + most.Value + " %Svote" + (most.Value == 1 ? "" : "s") + ".");
             map.ChatLevel("You will be transferred in 5 seconds...");
             transferTimer = new Timer(5000);
             transferTimer.AutoReset = false;

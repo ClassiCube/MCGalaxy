@@ -161,9 +161,9 @@ namespace MCGalaxy.Commands {
                     Player.SendMessage(p, "Players left playing:");
                     foreach (Player plya in Server.Countdown.players) {
                         if (Server.Countdown.playersleftlist.Contains(plya))
-                            Player.SendMessage(p, plya.color + plya.name + Server.DefaultColor + " who is &aIN");
+                            Player.SendMessage(p, plya.color + plya.name + " %Swho is &aIN");
                         else
-                            Player.SendMessage(p, plya.color + plya.name + Server.DefaultColor + " who is &cOUT");
+                            Player.SendMessage(p, plya.color + plya.name + " %Swho is &cOUT");
                     }
                     break;
 

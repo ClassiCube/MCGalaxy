@@ -405,6 +405,8 @@ namespace MCGalaxy.Games {
             Lottery.Clear();
             winner.money += 10;
             winner.OnMoneyChanged();
+            if (online.Count == 7)
+                ZombieAwards.Give(winner, ZombieAwards.luckyNumber7, this);
         }
         
         int GetMoney(Player pl, Player[] alive, Random rand) {

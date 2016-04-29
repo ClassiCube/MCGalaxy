@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands {
     
     public sealed class CmdLottery : Command {
         public override string name { get { return "lottery"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "luck"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -39,7 +39,8 @@ namespace MCGalaxy.Commands {
             string[] players = Server.zombie.Lottery.Items;
             for (int i = 0; i < players.Length; i++) {
                 if (players[i].CaselessEq(p.name)) {
-                    Player.SendMessage(p, "You are already in the lottery."); return;
+                    Player.SendMessage(p, "You are already in the lottery, which has &a"
+            		                   + players.Length + " %Splayers in it."); return;
                 }
             }
             

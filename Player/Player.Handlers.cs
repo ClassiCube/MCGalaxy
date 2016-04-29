@@ -1130,7 +1130,7 @@ return;
                 if ( this.joker ) {
                     if ( File.Exists("text/joker.txt") ) {
                         Server.s.Log("<JOKER>: " + this.name + ": " + text);
-                        Chat.GlobalMessageOps(Server.DefaultColor + "<&aJ&bO&cK&5E&9R" + Server.DefaultColor + ">: " + this.color + this.DisplayName + ":&f " + text);
+                        Chat.GlobalMessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
                         FileInfo jokertxt = new FileInfo("text/joker.txt");
                         StreamReader stRead = jokertxt.OpenText();
                         List<string> lines = new List<string>();
