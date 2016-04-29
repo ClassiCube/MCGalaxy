@@ -503,6 +503,7 @@ namespace MCGalaxy {
                 InitPlayerStats(playerDb);
             else
                 LoadPlayerStats(playerDb);
+            CheckState();
             ZombieStats stats = Server.zombie.LoadZombieStats(name);
             Game.MaxInfected = stats.MaxInfected; Game.TotalInfected = stats.TotalInfected;
             Game.MaxRoundsSurvived = stats.MaxRounds; Game.TotalRoundsSurvived = stats.TotalRounds;
@@ -566,11 +567,6 @@ namespace MCGalaxy {
                 SendMessage("Error loading waypoints!");
                 Server.ErrorLog(ex);
             }
-            try {
-                CheckIfMuted();
-            } catch { 
-                muted = false; 
-            }
 
             Server.s.Log(name + " [" + ip + "] has joined the server.");
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
@@ -626,23 +622,6 @@ namespace MCGalaxy {
             }
         }
         
-        void CheckIfMuted() {
-            if (!File.Exists("ranks/muted.txt")) {
-                File.Create("ranks/muted.txt").Close(); return;
-            }
-            
-            using (StreamReader reader = new StreamReader("ranks/muted.txt")) {
-                string line;
-                while ((line = reader.ReadLine()) != null) {
-                    if (!line.CaselessEq(name)) continue;
-
-                    muted = true;
-                    Player.SendMessage(this, "!%cYou are still %8muted%c since your last login.");
-                    return;
-                }
-            }
-        }
-        
         void InitPlayerStats(DataTable playerDb) {
             SendMessage("Welcome " + DisplayName + "! This is your first visit.");
             PlayerInfo.CreateInfo(this);
@@ -652,11 +631,19 @@ namespace MCGalaxy {
             PlayerInfo.LoadInfo(playerDb, this);
             SendMessage("Welcome back " + color + prefix + DisplayName + "%S! " +
                         "You've been here " + totalLogins + " times!");
-            
+        }
+        
+        void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
                 GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
-            }
+                Player.SendMessage(this, "!%cYou are still %8muted%c since your last login.");
+            }           
+            if (Server.frozen.Contains(name)) {
+                frozen = true;
+                GlobalMessage(DisplayName + " is still frozen from the last time they went offline.");
+                Player.SendMessage(this, "!%cYou are still %8frozen%c since your last login.");
+            }        	
         }
         
         void CheckLoginJailed() {

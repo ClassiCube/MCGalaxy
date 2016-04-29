@@ -46,16 +46,17 @@ namespace MCGalaxy.Commands
 
             if (who.muted) {
                 who.muted = false;
-                Player.SendChatFrom(who, who.ColoredName + " %Shas been &bun-muted", false);
+                Player.SendChatFrom(who, who.ColoredName + " %Swas &bun-muted", false);
+                Server.muted.Remove(who.name);
                 Server.Muted.DeleteContains(who.name.ToLower());
             } else  {
                 if (p != null && who.group.Permission >= p.group.Permission) { 
                     MessageTooHighRank(p, "mute", false); return;
                 }
                 who.muted = true;
-                Player.SendChatFrom(who, who.ColoredName + " %Shas been &8muted", false);
+                Player.SendChatFrom(who, who.ColoredName + " %Swas &8muted", false);
+                Server.muted.Add(who.name);
                 Server.Muted.Append(who.name.ToLower());
-                Server.s.Log("SAVED: ranks/muted.txt");
                 Player.AddNote(who.name, p, "M");
             }
         }

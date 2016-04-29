@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
         {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
-            if (p.muted) { Player.SendMessage(p, "You cannot vote while muted."); }
+            if (p.muted) { Player.SendMessage(p, "You cannot start votes while muted."); }
 
             if (Server.voteKickInProgress) { Player.SendMessage(p, "Please wait for the current vote to finish!"); return; }
 

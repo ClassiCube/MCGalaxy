@@ -51,10 +51,7 @@ namespace MCGalaxy.Commands
                     if (pl.hidden && !showHidden) continue;
                     if (p == pl || Entities.CanSee(p, pl)) {
                         string name = Colors.StripColours(pl.DisplayName);
-                        if (pl.hidden) name += "(hidden)";
-                        if (pl.muted) name += "(muted)";
-                        if (pl.Game.Referee) name += "-ref";
-                        if (pl.IsAfk) name += "-afk";
+                        AddStates(pl, ref name);
                         rankSec.Append(pl, name);
                     }
                 } 
@@ -83,11 +80,7 @@ namespace MCGalaxy.Commands
             	if (p == pl || Entities.CanSee(p, pl)) {
                     totalPlayers++;
                     string name = Colors.StripColours(pl.DisplayName);
-
-                    if (pl.hidden) name += "(hidden)";
-                    if (pl.muted) name += "(muted)";
-                    if (pl.Game.Referee) name += "-ref";
-                    if (pl.IsAfk) name += "-afk";
+                    AddStates(pl, ref name);
 
                     if (pl.isDev) devSec.Append(pl, name);
                     if (pl.isMod) modsSec.Append(pl, name);
@@ -101,6 +94,14 @@ namespace MCGalaxy.Commands
             
             for (int i = playerList.Count - 1; i >= 0; i--)
                 playerList[i].Print(output, showEmptyRanks);
+        }
+        
+        static void AddStates(Player pl, ref string name) {
+        	if (pl.hidden) name += "(hidden)";
+            if (pl.muted) name += "(muted)";
+            if (pl.frozen) name += "(frozen)";
+            if (pl.Game.Referee) name += "-ref";
+            if (pl.IsAfk) name += "-afk";
         }
         
         struct Section {

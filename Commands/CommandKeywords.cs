@@ -264,7 +264,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdXban()), "ban undo admin");
             new CommandKeywords((new CmdXJail()), "extra jail undo");
             new CommandKeywords((new CmdXmute()), "mute extra");
-            new CommandKeywords((new CmdXspawn()), "extra spawn");
             new CommandKeywords((new CmdXundo()), "undo extra");
             new CommandKeywords((new CmdZombieGame()), "zombie game");
             new CommandKeywords((new CmdZone()), "area");

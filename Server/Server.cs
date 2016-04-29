@@ -76,6 +76,7 @@ namespace MCGalaxy
         [ConfigInt("position-interval", "Server", null, 100, 20, 2000)]
         public static int PositionInterval = 100;
 
+        public static PlayersFile Frozen = new PlayersFile("ranks/frozen.txt");
         public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
         public static PlayersFile Muted = new PlayersFile("ranks/muted.txt");
         public static PlayersFile Jailed = new PlayersFile("ranks/jailed.txt");
@@ -116,6 +117,7 @@ namespace MCGalaxy
         public static PlayerList ircControllers;
         public static PlayerList muted;
         public static PlayerList ignored;
+        public static PlayerList frozen;
 
         public static readonly List<string> Devs = new List<string>();
         public static readonly List<string> Mods = new List<string>();

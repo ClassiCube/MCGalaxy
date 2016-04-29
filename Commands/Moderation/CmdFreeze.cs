@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "freeze"; } }
         public override string shortcut { get { return "fz"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdFreeze() { }
@@ -37,12 +37,16 @@ namespace MCGalaxy.Commands
             
             string frozenby = (p == null) ? "(console)" : p.ColoredName;
             if (!who.frozen) {
-                Player.SendChatFrom(who, who.ColoredName + " %Shas been &bfrozen %Sby " + frozenby + "%S.", false);
-            	Server.s.Log(who.name + " has been frozen by " + frozenby);
-                Player.AddNote(who.name, p, "F");            	
+                Player.SendChatFrom(who, who.ColoredName + " %Swas &bfrozen %Sby " + frozenby + "%S.", false);
+            	Server.s.Log(who.name + " was frozen by " + frozenby);
+                Player.AddNote(who.name, p, "F");
+                Server.frozen.Add(who.name);
+                Server.Frozen.Append(who.name.ToLower());
             } else {
-                Player.SendChatFrom(who, who.ColoredName + " %Shas been &adefrosted %Sby " + frozenby + "%S.", false);
-                Server.s.Log(who.name + " has been defrosted by " + frozenby);
+                Player.SendChatFrom(who, who.ColoredName + " %Swas &adefrosted %Sby " + frozenby + "%S.", false);
+                Server.s.Log(who.name + " was defrosted by " + frozenby);
+                Server.frozen.Remove(who.name);
+                Server.Frozen.DeleteContains(who.name.ToLower());
             }
             who.frozen = !who.frozen;
         }

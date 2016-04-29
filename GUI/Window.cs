@@ -1449,7 +1449,7 @@ namespace MCGalaxy.Gui
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            Command.all.Find("IPBan").Use(null, prpertiesofplyer.name);
+            Command.all.Find("banip").Use(null, prpertiesofplyer.name);
             PlayersTextBox.AppendTextAndScroll("IpBanned player");
             return;
         }

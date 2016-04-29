@@ -69,6 +69,7 @@ namespace MCGalaxy {
             bannedIP = PlayerList.Load("banned-ip.txt", null);
             ircControllers = PlayerList.Load("IRC_Controllers.txt", null);
             muted = PlayerList.Load("muted.txt", null);
+            frozen = PlayerList.Load("frozen.txt", null);
 
             foreach (Group grp in Group.GroupList)
                 grp.playerList = PlayerList.Load(grp.fileName, grp);

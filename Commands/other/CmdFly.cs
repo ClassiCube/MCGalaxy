@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
                 () => {
                     ushort[] oldpos = new ushort[3];
                     List<Vec3U16> last = new List<Vec3U16>(), next = new List<Vec3U16>();
-                    while (p.isFlying)
+                    while (p.isFlying && !p.disconnected)
                         DoFly(p, oldpos, last, next);
 
                     foreach (Vec3U16 cP in last)
