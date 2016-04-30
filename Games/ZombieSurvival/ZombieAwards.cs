@@ -52,6 +52,7 @@ namespace MCGalaxy.Games {
         }
         
         public static void Give(Player p, string award, ZombieGame game) {
+        	Server.s.Log("AWARD: " +award + "," + p.name);
             if (!ZombieGame.UseAwards) return;
             bool awarded = Awards.GiveAward(p.name, award);
             if (awarded && game.CurLevel != null)

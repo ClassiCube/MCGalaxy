@@ -68,6 +68,10 @@ namespace MCGalaxy.Gui {
         [Category("General settings")]
         public bool StartImmediately { get; set; }
         
+        [Description("Whether awards should be given for various events/actions in zombie survival. ")]
+        [Category("General settings")]
+        public bool UseAwards { get; set; }        
+        
         
         [Description("Max distance players are allowed to move between packets (for speedhack detection). " +
                      "32 units equals one block.")]
@@ -142,6 +146,7 @@ namespace MCGalaxy.Gui {
             Respawning = !ZombieGame.noRespawn;
             SetMainLevel = ZombieGame.SetMainLevel;
             StartImmediately = ZombieGame.StartImmediately;
+            UseAwards = ZombieGame.UseAwards;
             
             MaxMoveDistance = ZombieGame.MaxMoveDistance;
             HitboxPrecision = ZombieGame.HitboxPrecision;
@@ -177,6 +182,7 @@ namespace MCGalaxy.Gui {
             ZombieGame.noRespawn = !Respawning;
             ZombieGame.SetMainLevel = SetMainLevel;
             ZombieGame.StartImmediately = StartImmediately;
+            ZombieGame.UseAwards = UseAwards;
             
             ZombieGame.MaxMoveDistance = MaxMoveDistance;
             ZombieGame.HitboxPrecision = HitboxPrecision;

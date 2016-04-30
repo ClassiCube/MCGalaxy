@@ -37,6 +37,7 @@ namespace MCGalaxy.Games {
             initialChangeLevel = false;
             MaxRounds = amount + 1;
             RoundsDone = 0;
+            if (UseAwards) ZombieAwards.AddDefaults();
 
             Thread t = new Thread(MainLoop);
             t.Name = "MCG_ZombieGame";
@@ -85,7 +86,6 @@ namespace MCGalaxy.Games {
             
             p.Game.Infected = true;
             p.Game.TimeInfected = DateTime.UtcNow;
-            p.Game.LastInfecter = p.name;
             UpdatePlayerColor(p, Colors.red);
             UpdateAllPlayerStatus();
             PlayerMoneyChanged(p);

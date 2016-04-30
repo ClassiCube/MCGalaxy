@@ -195,6 +195,7 @@ namespace MCGalaxy.Games {
                         {
                             CheckKillerAwards(pAlive, pKiller);
                             InfectPlayer(pAlive);
+                            pAlive.Game.LastInfecter = pKiller.name;
                             aliveChanged = true;
                             pAlive.Game.BlocksLeft = 25;
                             
@@ -206,6 +207,8 @@ namespace MCGalaxy.Games {
                                     pKiller.OnMoneyChanged();
                                     CurLevel.ChatLevel(pKiller.ColoredName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
                                 }
+                                if (infectCombo == 10)
+                                    ZombieAwards.Give(pKiller, ZombieAwards.humanKiller, this);
                             } else {
                                 infectCombo = 0;
                             }
