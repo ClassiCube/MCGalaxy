@@ -133,27 +133,36 @@ namespace MCGalaxy.Games {
         
         [ConfigString("revive-notime-msg", "Revive", null, 
                       "It's too late. The humans do not have enough time left to make more revive potions.")]
-        public static string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to make more revive potions.";
+        public static string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to produce more revive potions.";
         
         [ConfigInt("revive-no-time", "Revive", null, 120, 0)]
         public static int ReviveNoTime = 120;
         
         [ConfigString("revive-fewzombies-msg", "Revive", null, 
-                      "There aren't enough zombies to make it worthwhile to make revive potions.")]
-        public static string ReviveFewZombiesMessage = "There aren't enough zombies to make it worthwhile to make revive potions.";
+                      "There aren't enough zombies for it to be worthwhile to produce revive potions.")]
+        public static string ReviveFewZombiesMessage = "There aren't enough zombies for it to be worthwhile to produce revive potions.";
         
         [ConfigInt("revive-fewzombies", "Revive", null, 3, 0)]
         public static int ReviveFewZombies = 3;
         
         [ConfigString("revive-tooslow-msg", "Revive", null, 
-                      "was unable to use /revive as their brains have already turned to mush.")]
-        public static string ReviveTooSlowMessage = "was unable to use /revive as their brains have already turned to mush.";
+                      "tried using a revive potion, but their brain had already turned to mush")]
+        public static string ReviveTooSlowMessage = "tried using a revive potion, but their brain had already turned to mush";
         
-        [ConfigInt("revive-tooslow", "Revive", null, 3, 0)]
+        [ConfigInt("revive-tooslow", "Revive", null, 60, 0)]
         public static int ReviveTooSlow = 60;
         
         [ConfigInt("revive-chance", "Revive", null, 80, 0, 100)]
         public static int ReviveChance = 80;
+        
+        [ConfigInt("revive-times", "Revive", null, 1, 0)]
+        public static int ReviveTimes = 1;
+        
+        [ConfigString("revive-success", "Revive", null, "used a revive potion. &aIt was super effective!")]
+        public static string ReviveSuccessMessage = "used a revive potion. &aIt was super effective!";
+
+        [ConfigString("revive-failure", "Revive", null, "tried using a revive potion. &cIt was not very effective..")]
+        public static string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";        
         
         
         /// <summary> List of levels that are randomly picked for zombie survival. 

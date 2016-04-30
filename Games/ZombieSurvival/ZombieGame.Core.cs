@@ -292,6 +292,8 @@ namespace MCGalaxy.Games {
                 ZombieAwards.Give(pKiller, ZombieAwards.starKiller, this);
             if (Alive.Count == 1)
                 ZombieAwards.Give(pKiller, ZombieAwards.killLastHuman, this);
+            if (pAlive.Game.LastInfecter == pKiller.name)
+                ZombieAwards.Give(pKiller, ZombieAwards.killHumanTwice, this);
         }
         
         void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
@@ -350,6 +352,8 @@ namespace MCGalaxy.Games {
                     }
                     if (winChance <= 10)
                         ZombieAwards.Give(pl, ZombieAwards.lowWinChance, this);
+                    if (pl.Game.RevivesUsed > 0)
+                        ZombieAwards.Give(pl, ZombieAwards.reviveSurvive, this);
                    
                     pl.Game.CurrentRoundsSurvived++;
                     if (pl.Game.CurrentRoundsSurvived == 5)
@@ -377,11 +381,8 @@ namespace MCGalaxy.Games {
                     pl.SendMessage( Colors.gold + "You gained " + money + " " + Server.moneys);
                 }
                 
-                pl.Game.BlocksLeft = 50;
-                pl.Game.CurrentInfected = 0;
                 pl.money += money;
-                pl.Game.Infected = false;
-                pl.Game.InvisibilityPotions = 0;
+                pl.Game.ResetZombieState();
                 if (pl.Game.Referee) {
                     pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
                     pl.money++;

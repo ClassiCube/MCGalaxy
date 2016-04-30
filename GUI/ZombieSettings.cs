@@ -103,13 +103,33 @@ namespace MCGalaxy.Gui {
         public int InvisibilityPotions { get; set; }
         
         
-        [Description("The minimum number of seconds left in a round, after which revive potions will not work.")]
+        [Description("The percentage chance that a revive potion will actually disinfect a zombie.")]
+        [Category("Revive settings")]
+        public int Chance { get; set; }  
+        
+        [Description("The minimum number of seconds left in a round, below which /buy revive will not work.")]
         [Category("Revive settings")]
         public int InsufficientTime { get; set; }
         
-        [Description("Message shown when using /buy revive and the time left in a round is less than 'InsufficientTime'.")]
+        [Description("Message shown when using /buy revive and the seconds left in a round is less than 'InsufficientTime'.")]
         [Category("Revive settings")]
-        public string InsufficientTimeMessage { get; set; }  
+        public string InsufficientTimeMessage { get; set; }
+        
+        [Description("The maximum number of seconds after a human is infected, after which /buy revive will not work.")]
+        [Category("Revive settings")]
+        public int ExpiryTime { get; set; }
+        
+        [Description("Message shown when using /buy revive and the seconds since being infected is more than 'ExpiryTime'.")]
+        [Category("Revive settings")]
+        public string ExpiryTimeMessage { get; set; }
+        
+        [Description("Message shown when a player uses /buy revive, and it actually disinfects them.")]
+        [Category("Revive settings")]
+        public string SuccessMessage { get; set; }
+        
+        [Description("Message shown when a player uses /buy revive, but does not disinfect them.")]
+        [Category("Revive settings")]
+        public string FailureMessage { get; set; }        
         
         public void LoadFromServer() {
             ChangeLevels = ZombieGame.ChangeLevels;
@@ -132,8 +152,13 @@ namespace MCGalaxy.Gui {
             InvisibilityDuration = ZombieGame.InvisibilityDuration;
             InvisibilityPotions = ZombieGame.InvisibilityPotions;
             
+            Chance = ZombieGame.ReviveChance;
             InsufficientTime = ZombieGame.ReviveNoTime;
             InsufficientTimeMessage = ZombieGame.ReviveNoTimeMessage;
+            ExpiryTime = ZombieGame.ReviveTooSlow;
+            ExpiryTimeMessage = ZombieGame.ReviveTooSlowMessage;
+            FailureMessage = ZombieGame.ReviveFailureMessage;
+            SuccessMessage = ZombieGame.ReviveSuccessMessage;
         }
         
         public void ApplyToServer() {
@@ -164,8 +189,13 @@ namespace MCGalaxy.Gui {
             ZombieGame.InvisibilityDuration = InvisibilityDuration;
             ZombieGame.InvisibilityPotions = InvisibilityPotions;
             
+            ZombieGame.ReviveChance = Chance;
             ZombieGame.ReviveNoTime = InsufficientTime;
             ZombieGame.ReviveNoTimeMessage = InsufficientTimeMessage;
+            ZombieGame.ReviveTooSlow = ExpiryTime;
+            ZombieGame.ReviveTooSlowMessage = ExpiryTimeMessage;
+            ZombieGame.ReviveFailureMessage = FailureMessage;
+            ZombieGame.ReviveSuccessMessage = SuccessMessage;
         }
     }
 }

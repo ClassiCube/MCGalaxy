@@ -84,6 +84,8 @@ namespace MCGalaxy.Games {
                 ZombieAwards.Give(p, ZombieAwards.infectedEnd, this);
             
             p.Game.Infected = true;
+            p.Game.TimeInfected = DateTime.UtcNow;
+            p.Game.LastInfecter = p.name;
             UpdatePlayerColor(p, Colors.red);
             UpdateAllPlayerStatus();
             PlayerMoneyChanged(p);
@@ -141,6 +143,7 @@ namespace MCGalaxy.Games {
             Bounties.Clear();
             
             foreach (Player pl in online) {
+                pl.Game.Referee = false;
                 pl.Game.ResetZombieState();
                 
                 if (pl.Game.Invisible) {

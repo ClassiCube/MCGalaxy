@@ -27,7 +27,7 @@ namespace MCGalaxy.Games {
         internal const string killLastHuman = "Finisher";
         internal const string killInvisHuman = "The sixth sense";
         internal const string killHumanTwice = "Deja Vu";
-        internal const string reviveSurvive = "Second Chance"; // TODO: revive
+        internal const string reviveSurvive = "Second Chance";
         internal const string survive5Rounds = "Bear Grylls";
         internal const string luckyNumber7 = "Lucky Number 7";
         internal const string lowWinChance = "Impossible";

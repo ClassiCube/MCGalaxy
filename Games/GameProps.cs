@@ -52,6 +52,12 @@ namespace MCGalaxy.Games {
         /// <summary> Whether this player is currently infected/dead. </summary>
         public bool Infected = false;
         
+        /// <summary> Point in time this player was infected at. </summary>
+        public DateTime TimeInfected;
+        
+        /// <summary> Name of last player to infect this player, if any. </summary>
+        public string LastInfecter;
+        
         /// <summary> Whether the real names of zombies are always shown to the player. </summary>
         public bool Aka = false;
         
@@ -71,7 +77,10 @@ namespace MCGalaxy.Games {
         public int InvisibilityTime = -1;
         
         /// <summary> Number of invisibility potions bought this round. </summary>
-        public int InvisibilityPotions = 0;
+        public int InvisibilityPotions;
+        
+        /// <summary> Number of successful revives this round. </summary>
+        public int RevivesUsed;    
         
         /// <summary> Resets all the invisibility variables back to default. </summary>
         public void ResetInvisibility() {
@@ -82,11 +91,15 @@ namespace MCGalaxy.Games {
         
         /// <summary> Resets all the zombie game round variables back to default. </summary>
         public void ResetZombieState() {
-            Referee = false;
+            BlocksLeft = 50;
+            CurrentInfected = 0;
             Infected = false;
             RatedMap = false;
             PledgeSurvive = false;
             InvisibilityPotions = 0;
+            RevivesUsed = 0;
+            TimeInfected = DateTime.MinValue;
+            LastInfecter = null;
         }
         
         

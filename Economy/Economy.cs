@@ -154,7 +154,7 @@ namespace MCGalaxy {
         public static Item[] Items = { new ColorItem(), new TitleColorItem(), 
             new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(), 
             new LogoutMessageItem(), new BlocksItem(), new QueueLevelItem(), 
-            new InfectMessageItem(), new NickItem(), new InvisibilityItem() };
+            new InfectMessageItem(), new NickItem(), new InvisibilityItem(), new ReviveItem() };
         
         public static Item GetItem(string name) {
             foreach (Item item in Items) {

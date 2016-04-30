@@ -33,7 +33,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnBuyCommand(Command cmd, Player p, 
                                              string message, string[] args) {
             if (p.money < Price) {
-                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
+                Player.SendMessage(p, "&cYou don't have enough &3" + Server.moneys + "&c to buy a " + Name + "."); return;
             }
             if (!p.Game.Infected) {
                 Player.SendMessage(p, "You are already a human."); return;
@@ -51,13 +51,20 @@ namespace MCGalaxy.Eco {
             if (count < ZombieGame.ReviveFewZombies) {
                 Player.SendMessage(p, ZombieGame.ReviveFewZombiesMessage); return;
             }
+            if (p.Game.RevivesUsed >= ZombieGame.ReviveTimes) {
+                Player.SendMessage(p, "You cannot buy any more revive potions."); return;
+            }
+            if (p.Game.TimeInfected.AddSeconds(ZombieGame.ReviveTooSlow) < DateTime.UtcNow) {
+                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGame.ReviveTooSlowMessage); return;
+            }
             
-            // TODO: finish this
             int chance = new Random().Next(0, 101);
             if (chance <= ZombieGame.ReviveChance) {
                 Server.zombie.DisinfectPlayer(p);
+                p.Game.RevivesUsed++;
+                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGame.ReviveSuccessMessage);
             } else {
-                
+                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGame.ReviveFailureMessage);
             }
             Economy.MakePurchase(p, Price, "%3Revive:");
         }
@@ -67,9 +74,11 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreCommand(Player p) {
             base.OnStoreCommand(p);
             int time = ZombieGame.ReviveNoTime, expiry = ZombieGame.ReviveTooSlow;
+            int potions = ZombieGame.ReviveTimes;
             Player.SendMessage(p, "Syntax: %T/buy " + Name);
             Player.SendMessage(p, "%HCannot be used in the last &a" + time + " %Hseconds of a round.");
             Player.SendMessage(p, "%HCan only be used within &a" + expiry + " %Hseconds after being infected.");
+            Player.SendMessage(p, "%HYou can only buy &a" + potions + " %Hrevive potions per round.");
         }
     }
 }
