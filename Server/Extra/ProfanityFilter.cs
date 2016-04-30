@@ -1,21 +1,21 @@
 /*
-	Copyright 2011 MCForge.
-	
-	Author: fenderrock87
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCForge.
+    
+    Author: fenderrock87
+    
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace MCGalaxy
     public static class ProfanityFilter
     {
         private static Dictionary<string, string> RegexReduce;
-        private static IEnumerable<string> BadWords;
+        private static List<string> BadWords;
         public static void Init()
         {
             // Initializes the reduction dictionary and word list
@@ -51,25 +51,28 @@ namespace MCGalaxy
             RegexReduce.Add("z", "[2]");
 
             // Load/create the badwords.txt file and import them into the BadWords list
-            if (!File.Exists("text/badwords.txt"))
-            {
+            if (!File.Exists("text/badwords.txt")) {
                 // No file exists yet, so let's create one
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("# This file contains a list of bad words to remove via the profanity filter");
                 sb.AppendLine("# Each bad word should be on a new line all by itself");
                 File.WriteAllText("text/badwords.txt", sb.ToString());
             }
-
+            
             // OK the file should exist now
-            var tempBadWords = File.ReadAllLines("text/badwords.txt").Where(s => s.StartsWith("#") == false || s.Trim().Equals(String.Empty));
-
+            List<string> lines = CP437Reader.ReadAllLines("text/badwords.txt");
             // Run the badwords through the reducer to ensure things like Ls become Is and everything is lowercase
             // Also remove lines starting with a "#" since they are comments
-            BadWords = from s in tempBadWords where !s.StartsWith("#") select Reduce(s.ToLower());
+            BadWords = new List<string>();
+            foreach (string line in lines) {
+                if (line.StartsWith("#") || line.Trim().Length == 0) continue;
+                string word = Reduce(line.ToLower());
+                Server.s.Log(word);
+                BadWords.Add(word);
+            }
         }
 
-        public static string Parse(string text)
-        {
+        public static string Parse(string text) {
             //return ParseMatchWholeWords(text);
             return ParseMatchPartialWords(text);
         }

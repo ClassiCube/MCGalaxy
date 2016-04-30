@@ -144,7 +144,7 @@ namespace MCGalaxy {
         internal static void LoadCustomTokens() {
             CustomTokens.Clear();
             if (File.Exists("text/custom$s.txt")) {
-                using (StreamReader r = new StreamReader("text/custom$s.txt")) {
+                using (CP437Reader r = new CP437Reader("text/custom$s.txt")) {
                     string line;
                     while ((line = r.ReadLine()) != null)  {
                         if (line.StartsWith("//")) continue;
