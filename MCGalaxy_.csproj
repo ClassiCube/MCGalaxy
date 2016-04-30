@@ -111,6 +111,8 @@
     <Compile Include="Blocks\Block.ID.cs" />
     <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Blocks\BlockProps.cs" />
+    <Compile Include="Bots\PlayerBot.cs" />
+    <Compile Include="Bots\BotScript.cs" />
     <Compile Include="Commands\Building\CmdAbort.cs" />
     <Compile Include="Commands\Building\CmdBind.cs" />
     <Compile Include="Commands\building\CmdBrush.cs" />
@@ -569,7 +571,6 @@
     <Compile Include="Server\Extra\Heart.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
-    <Compile Include="Player\PlayerBot.cs" />
     <Compile Include="Player\PlayerList.cs" />
     <Compile Include="Server\Extra\ProfanityFilter.cs">
       <SubType>Code</SubType>
@@ -696,6 +697,7 @@
     <Folder Include="Economy" />
     <Folder Include="Blocks" />
     <Folder Include="Config" />
+    <Folder Include="Bots" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\Undo" />
     <Folder Include="Plugins" />
