@@ -458,6 +458,7 @@
     <Compile Include="Drawing\DrawOps\UndoDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
     <Compile Include="Economy\Awards.cs" />
+    <Compile Include="Economy\ReviveItem.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
     <Compile Include="Economy\Economy.cs" />
     <Compile Include="Economy\Item.cs" />

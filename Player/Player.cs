@@ -63,7 +63,7 @@ namespace MCGalaxy {
         public Socket socket;
         System.Timers.Timer timespent = new System.Timers.Timer(1000);
         System.Timers.Timer loginTimer = new System.Timers.Timer(1000);
-        public System.Timers.Timer pingTimer = new System.Timers.Timer(2000);
+        System.Timers.Timer pingTimer = new System.Timers.Timer(2000);
         System.Timers.Timer extraTimer = new System.Timers.Timer(22000);
         public System.Timers.Timer afkTimer = new System.Timers.Timer(2000);
         public int afkCount = 0;

@@ -55,10 +55,11 @@ namespace MCGalaxy.Commands
             messageTimer.Elapsed += delegate
             {
                 TotalTime--;
-                if (TotalTime < 1 || p.cmdTimer == false)
+                if (TotalTime < 1 || !p.cmdTimer)
                 {
                     Player.SendMessage(p, "Timer ended.");
                     messageTimer.Stop();
+                    messageTimer.Dispose();
                 }
                 else
                 {

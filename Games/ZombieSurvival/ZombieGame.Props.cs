@@ -35,8 +35,8 @@ namespace MCGalaxy.Games {
     public enum ZombieGameStatus { NotStarted, InfiniteRounds, SingleRound, VariableRounds, LastRound }
     
     public sealed partial class ZombieGame {
-    	
-    	public const string InfectCol = "&infect";
+        
+        public const string InfectCol = "&infect";
         
         /// <summary> The number of rounds that have been played in this game so far. </summary>
         public int RoundsDone = 0;
@@ -128,8 +128,29 @@ namespace MCGalaxy.Games {
         [ConfigBool("enable-changing-levels", "Zombie", null, true)]
         public static bool ChangeLevels = true;
         [ConfigBool("zombie-awards", "Zombie", null, false)]
-        public static bool UseAwards = false;       
+        public static bool UseAwards = false;
         
+        [ConfigString("revive-notime-msg", "Revive", null, 
+                      "It's too late. The humans do not have enough time left to make more revive potions.")]
+        public static string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to make more revive potions.";
+        
+        [ConfigInt("revive-no-time", "Revive", null, 120, 0)]
+        public static int ReviveNoTime = 120;
+        
+        [ConfigString("revive-fewzombies-msg", "Revive", null, 
+                      "There aren't enough zombies to make it worthwhile to make revive potions.")]
+        public static string ReviveFewZombiesMessage = "There aren't enough zombies to make it worthwhile to make revive potions.";
+        
+        [ConfigInt("revive-fewzombies", "Revive", null, 3, 0)]
+        public static int ReviveFewZombies = 3;
+        
+        [ConfigString("revive-tooslow-msg", "Revive", null, 
+                      "was unable to use /revive as their brains have already turned to mush.")]
+        public static string ReviveTooSlowMessage = "was unable to use /revive as their brains have already turned to mush.";
+        
+        [ConfigInt("revive-tooslow", "Revive", null, 3, 0)]
+        public static int ReviveTooSlow = 60;
+
         
         /// <summary> List of levels that are randomly picked for zombie survival. 
         /// If this left blank, then all level files are picked from instead. </summary>

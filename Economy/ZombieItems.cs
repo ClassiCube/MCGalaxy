@@ -158,10 +158,9 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
+            base.OnStoreCommand(p);
             int duration = ZombieGame.InvisibilityDuration;
-            Player.SendMessage(p, "Syntax: %T/buy " + Name);
             Player.SendMessage(p, "%HLasts for " + duration + " seconds before you reappear.");
-            Player.SendMessage(p, "Costs %f" + Price + " %3" + Server.moneys + " %Seach time the item is bought.");
         }
     }
 }
