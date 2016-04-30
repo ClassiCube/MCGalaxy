@@ -124,19 +124,19 @@ namespace MCGalaxy.Games {
             while (true) {
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
                 if (!Running) return null;
-                SendLevelRaw("&4Round Start:&f 30...");
+                SendLevelRaw("&4Starting in &f30 &4seconds", true);
                 Thread.Sleep(20000); if (!Running) return null;
-                SendLevelRaw("&4Round Start:&f 10...");
+                SendLevelRaw("&4Starting in &f10 &4seconds", true);
                 Thread.Sleep(5000); if (!Running) return null;
-                SendLevelRaw("&4Round Start:&f 5...");
+                SendLevelRaw("&4Starting in &f5 &4seconds", true);
                 Thread.Sleep(1000); if (!Running) return null;
-                SendLevelRaw("&4Round Start:&f 4...");
+                SendLevelRaw("&4Starting in &f4 &4seconds", true);
                 Thread.Sleep(1000); if (!Running) return null;
-                SendLevelRaw("&4Round Start:&f 3...");
+                SendLevelRaw("&4Starting in &f3 &4seconds", true);
                 Thread.Sleep(1000); if (!Running) return null;
-                SendLevelRaw("&4Round Start:&f 2...");
+                SendLevelRaw("&4Starting in &f2 &4seconds", true);
                 Thread.Sleep(1000); if (!Running) return null;
-                SendLevelRaw("&4Round Start:&f 1...");
+                SendLevelRaw("&4Starting in &f1 &4second", true);
                 Thread.Sleep(1000); if (!Running) return null;
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
@@ -166,8 +166,9 @@ namespace MCGalaxy.Games {
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
                 if (seconds <= 0) { HandOutRewards(); return; }
                 if (seconds <= 5 && seconds != lastTime) {
-                     SendLevelRaw("&4Round End:&f " + seconds);
-                     lastTime = seconds;
+                    string suffix = seconds == 1 ? " &4second" : " &4seconds";
+                    SendLevelRaw("&4Ending in &f " + seconds + suffix, true);
+                    lastTime = seconds;
                 }
                 
                 // Update the round time left shown in the top right
@@ -231,11 +232,13 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void SendLevelRaw(string message) {
+        void SendLevelRaw(string message, bool announce = false) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != CurLevel) continue;
-                p.SendRawMessage(CpeMessageType.Normal, message);
+                CpeMessageType type = announce && p.HasCpeExt(CpeExt.MessageTypes)
+                	? CpeMessageType.Announcement : CpeMessageType.Normal;
+                p.SendRawMessage(type, message);
             }
         }
         
