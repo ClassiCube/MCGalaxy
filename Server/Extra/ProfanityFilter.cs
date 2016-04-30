@@ -67,7 +67,6 @@ namespace MCGalaxy
             foreach (string line in lines) {
                 if (line.StartsWith("#") || line.Trim().Length == 0) continue;
                 string word = Reduce(line.ToLower());
-                Server.s.Log(word);
                 BadWords.Add(word);
             }
         }
