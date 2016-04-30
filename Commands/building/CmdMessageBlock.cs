@@ -76,11 +76,14 @@ namespace MCGalaxy.Commands {
             p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             
-            if (p.level.DoBlockchange(p, x, y, z, cpos.type, 0)) {
-                Player.GlobalBlockchange(p.level, x, y, z, cpos.type, 0);
+            byte b = p.level.GetTile(x, y, z);
+            if (p.level.CheckAffectPermissions(p, x, y, z, b, cpos.type, 0)) {
+                p.level.Blockchange(p, x, y, z, cpos.type, 0);
+                p.SendBlockchange(x, y, z, cpos.type, 0); // for when same block type but different message
                 UpdateDatabase(p, cpos, x, y, z);
                 Player.SendMessage(p, "Message block created.");
             } else {
+            	p.RevertBlock(x, y, z); 
                 Player.SendMessage(p, "Failed to create a message block.");
             }
 
