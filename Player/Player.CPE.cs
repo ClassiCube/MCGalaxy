@@ -143,7 +143,7 @@ namespace MCGalaxy
                 }
                 
                 if (p.model != "humanoid") SendChangeModel(p.id, p.model);
-                if (hasChangeModel && model != "humanoid")
+                if (p.hasChangeModel && model != "humanoid")
                     p.SendChangeModel(id, model);
             }
             
