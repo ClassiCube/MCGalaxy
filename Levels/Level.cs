@@ -408,7 +408,7 @@ namespace MCGalaxy
             LevelInfo.Loaded.Remove(this);
 
             try {
-                PlayerBot.RemoveAllFromLevel(this);
+                PlayerBot.UnloadFromLevel(this);
                 //physChecker.Stop();
                 //physChecker.Dispose();
                 physThread.Abort();
@@ -759,6 +759,8 @@ namespace MCGalaxy
                         if (defs[i] == null) continue;
                         level.CustomBlockDefs[i] = defs[i];
                     }
+                    
+                    Bots.BotsFile.LoadBots(level);
 
                     Server.s.Log(string.Format("Level \"{0}\" loaded.", level.name));
                     if (LevelLoaded != null)

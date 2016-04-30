@@ -20,12 +20,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Timers;
+using MCGalaxy.Bots;
 
 namespace MCGalaxy {
     
     public sealed class PlayerBot {
         
-	    [Obsolete("Use PlayerBot.Bots.Items instead")]
+        [Obsolete("Use PlayerBot.Bots.Items instead")]
         public static List<PlayerBot> playerbots;
         public static VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>(true);
 
@@ -374,8 +375,8 @@ namespace MCGalaxy {
             rot = new byte[2] { rotx, roty };
         }
         
-        public static void Add(PlayerBot bot) {
-        	Bots.Add(bot);
+        public static void Add(PlayerBot bot, bool save = true) {
+            Bots.Add(bot);
             bot.GlobalSpawn();
             
             Player[] players = PlayerInfo.Online.Items; 
@@ -383,40 +384,50 @@ namespace MCGalaxy {
                 if (p.level == bot.level)
                     Player.SendMessage(p, bot.color + bot.name + "%S, the bot, has been added.");
             }
+            if (save)
+                BotsFile.UpdateBot(bot);
         }
 
-        public static void Remove(PlayerBot bot) {
+        public static void Remove(PlayerBot bot, bool save = true) {
             Bots.Remove(bot);
             bot.GlobalDespawn();    
             
             bot.botTimer.Stop();
             bot.moveTimer.Stop();
             bot.jumpTimer.Stop();
+            if (save)
+                BotsFile.RemoveBot(bot);
+        }
+        
+        public static void UnloadFromLevel(Level lvl) {
+        	BotsFile.UnloadBots(lvl);
+            RemoveAll(lvl, false);           
         }
         
         public static void RemoveAllFromLevel(Level lvl) {
-            RemoveAll(lvl);
+            RemoveAll(lvl, true);
+            BotsFile.RemoveLevelBots(lvl.name);
         }
         
-        static void RemoveAll(Level lvl) {
-        	PlayerBot[] bots = Bots.Items;
+        static void RemoveAll(Level lvl, bool save) {
+            PlayerBot[] bots = Bots.Items;
             for (int i = 0; i < bots.Length; i++) {
                 PlayerBot bot = bots[i];
-                if (bots[i].level == lvl) Remove(bot);
+                if (bots[i].level == lvl) Remove(bot, save);
             }
         }
 
         public void GlobalSpawn() {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
-            	if (p.level == level) Entities.Spawn(p, this);
+                if (p.level == level) Entities.Spawn(p, this);
             }
         }
 
         public void GlobalDespawn() {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-            	if (p.level == level) Entities.Despawn(p, id);
+                if (p.level == level) Entities.Despawn(p, id);
             }
         }
 
@@ -452,7 +463,7 @@ namespace MCGalaxy {
             
             PlayerBot[] bots = Bots.Items;
             foreach (PlayerBot bot in bots) {
-            	if (bot.name.CaselessEq(name)) return bot;
+                if (bot.name.CaselessEq(name)) return bot;
                 if (bot.name.ToLower().Contains(name)) {
                     match = bot; matches++;
                 }
@@ -462,8 +473,8 @@ namespace MCGalaxy {
         #endregion
 
         public static void GlobalUpdatePosition() {
-        	PlayerBot[] bots = Bots.Items;
-        	foreach (PlayerBot b in bots) b.UpdatePosition();
+            PlayerBot[] bots = Bots.Items;
+            foreach (PlayerBot b in bots) b.UpdatePosition();
         }
     }
 }

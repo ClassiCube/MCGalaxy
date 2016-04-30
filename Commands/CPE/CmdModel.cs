@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands {
     
@@ -63,6 +64,7 @@ namespace MCGalaxy.Commands {
                 pBot.model = model;
                 Entities.UpdateModel(pBot.id, model, pBot.level, null);
                 Player.GlobalMessage("Bot " + pBot.name + "'s %Smodel was changed to a &c" + model);
+                BotsFile.UpdateBot(pBot);
             } else {
                 who.model = model;
                 Entities.UpdateModel(who.id, model, who.level, who);

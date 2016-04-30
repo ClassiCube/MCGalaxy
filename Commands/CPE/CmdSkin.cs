@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands {
     
@@ -66,6 +67,7 @@ namespace MCGalaxy.Commands {
                 pBot.GlobalDespawn();
                 pBot.GlobalSpawn();
                 Player.GlobalMessage("Bot " + pBot.name + "'s %Sskin was changed to &c" + skin);
+                BotsFile.UpdateBot(pBot);
             } else {
                 who.skinName = skin;
                 Entities.GlobalDespawn(who, true);

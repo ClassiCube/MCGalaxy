@@ -58,12 +58,14 @@ namespace MCGalaxy.Commands {
                 Pb.AIName = "";
                 if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + "%S's hunt instinct: " + Pb.hunt, false);
                 Server.s.Log(Pb.name + "'s hunt instinct: " + Pb.hunt);
+                BotsFile.UpdateBot(Pb);
                 return;
             } else if (ai == "kill") {
                 if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can toggle a bot's killer instinct."); return; }
                 Pb.kill = !Pb.kill;
                 if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + "%S's kill instinct: " + Pb.kill, false);
                 Server.s.Log(Pb.name + "'s kill instinct: " + Pb.kill);
+                BotsFile.UpdateBot(Pb);
                 return;
             }
             
@@ -71,6 +73,7 @@ namespace MCGalaxy.Commands {
             Pb.AIName = ai;
             if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + "%S's AI is now set to " + ai, false);
             Server.s.Log(Pb.name + "'s AI was set to " + ai);
+            BotsFile.UpdateBot(Pb);
         }
         
         public override void Help(Player p) {

@@ -655,6 +655,7 @@ namespace MCGalaxy
             zombie.LoadInfectMessages();
             Colors.LoadExtColors();
             Alias.Load();
+            Bots.BotsFile.Load();
             BlockDefinition.LoadGlobal();
             SrvProperties.Load("properties/server.properties");
             Updater.Load("properties/update.properties");
