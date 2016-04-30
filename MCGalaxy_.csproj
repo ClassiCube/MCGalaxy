@@ -111,6 +111,7 @@
     <Compile Include="Blocks\Block.ID.cs" />
     <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Blocks\BlockProps.cs" />
+    <Compile Include="Bots\BotsFile.cs" />
     <Compile Include="Bots\PlayerBot.cs" />
     <Compile Include="Bots\BotScript.cs" />
     <Compile Include="Commands\Building\CmdAbort.cs" />
