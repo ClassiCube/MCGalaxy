@@ -418,10 +418,18 @@ namespace MCGalaxy.Commands {
         }
         
         static byte GetFreeId(bool global, Level lvl) {
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
-            for (int i = 70; i < 255; i++) {
-                if (defs[i] == null) return (byte)i;
-            }
+            // Start from opposite ends to avoid overlap.
+            if (global) {
+                BlockDefinition[] defs = BlockDefinition.GlobalDefs;
+                for (int i = Block.CpeCount; i < 255; i++) {
+                    if (defs[i] == null) return (byte)i;
+                }
+            } else {
+                BlockDefinition[] defs = lvl.CustomBlockDefs;
+                for (int i = 254; i >= Block.CpeCount; i--) {
+                    if (defs[i] == null) return (byte)i;
+                }
+            }         
             return Block.Zero;
         }
         

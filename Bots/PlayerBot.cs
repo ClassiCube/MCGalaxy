@@ -446,7 +446,7 @@ namespace MCGalaxy {
         #region == Misc ==
         static byte FreeId()
         {
-            for (byte i = 64; i < 128; ++i)
+            for (byte i = 127; i >= 64; i--)
             {
                 foreach (PlayerBot b in playerbots)
                 {

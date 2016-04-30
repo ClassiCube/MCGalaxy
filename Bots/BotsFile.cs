@@ -51,7 +51,10 @@ namespace MCGalaxy.Bots {
                     PlayerBot bot = new PlayerBot(props.Name, lvl, props.X, props.Y, props.Z, props.RotX, props.RotY);
                     bot.skinName = props.Skin; bot.model = props.Model; bot.color = props.Color;
                     bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
+                    
                     PlayerBot.Add(bot, false);
+                    if (!String.IsNullOrEmpty(props.AI))
+                        BotScript.Parse(null, bot, "bots/" + props.AI);
                 }
             }
         }
