@@ -1287,9 +1287,7 @@ return;
         }
         
         void UseCommand(Command command, string cmd, string message) {
-            if (!group.CanExecute(command)) {
-                SendMessage("You are not allowed to use \"" + cmd + "\"."); return;
-            }
+        	if (!group.CanExecute(command)) { command.MessageCannotUse(this); return; }
         	string reason = Command.GetDisabledReason(command.Enabled);
             if (reason != null) {
                 SendMessage("Command is disabled as " + reason); return;

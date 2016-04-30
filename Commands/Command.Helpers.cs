@@ -14,11 +14,12 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
+using System.Text;
 
 namespace MCGalaxy {
-	
+    
     public abstract partial class Command {
 
         const CommandEnable bothFlags = CommandEnable.Lava | CommandEnable.Zombie;
@@ -57,9 +58,9 @@ namespace MCGalaxy {
         protected void MessageNeedMinPerm(Player p, string action, int perm) {
             Group grp = Group.findPermInt(perm);
             if (grp == null)
-                Player.SendMessage(p, "Onlys rank with a permission level greater than &a" + perm + "%Scan " + action);
+                Player.SendMessage(p, "Only ranks with permissions greater than &a" + perm + "%Scan " + action);
             else
-                Player.SendMessage(p, "Only " + grp.ColoredName + "%s+ can " + action);
+                Player.SendMessage(p, "Only " + grp.ColoredName + "%S+ can " + action);
         }
         
         protected void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
@@ -68,9 +69,37 @@ namespace MCGalaxy {
         
         protected void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
             if (canAffectGroup)
-                 Player.SendMessage(p, "Can only " + action + " players ranked " + grp.ColoredName + " %Sor below");
+                Player.SendMessage(p, "Can only " + action + " players ranked " + grp.ColoredName + " %Sor below");
             else
-                 Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.ColoredName);
+                Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.ColoredName);
+        }
+        
+        internal void MessageCannotUse(Player p) {
+            var perms = GrpCommands.allowedCommands.Find(C => C.commandName == name);
+            if (perms.disallow.Contains(p.group.Permission)) {
+                Player.SendMessage(p, "Your rank cannot use /%T" + name); return;
+            }
+            
+            StringBuilder builder = new StringBuilder("Only ");            
+            if (perms.allow.Count > 0) {
+                foreach (LevelPermission perm in perms.allow) {
+            		Group grp = Group.findPermInt((int)perm);
+                    if (grp == null) continue;
+                    builder.Append(grp.ColoredName).Append("%S, ");
+                }
+            	if (builder.Length > "Only ".Length) {
+                    builder.Remove(builder.Length - 2, 2);
+                    builder.Append(", and ");
+            	}
+            }
+            
+            Group minGrp = Group.findPermInt((int)perms.lowestRank);
+            if (minGrp == null)
+                builder.Append("ranks with permissions greater than &a" + (int)perms.lowestRank + "%S");
+            else
+                builder.Append(minGrp.ColoredName + "%S+");
+            builder.Append(" can use %T/" + name);
+            Player.SendMessage(p, builder.ToString());
         }
     }
     

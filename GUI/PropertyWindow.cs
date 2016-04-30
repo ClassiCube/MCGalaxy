@@ -197,8 +197,8 @@ namespace MCGalaxy.Gui {
             storedRanks.Clear();
             storedRanks.AddRange(Group.GroupList);
             foreach ( Group grp in storedRanks ) {
-                txtCmdRanks.Text += "\t" + grp.name + " (" + (int)grp.Permission + ")\r\n";
-                txtcmdranks2.Text += "\t" + grp.name + " (" + (int)grp.Permission + ")\r\n";
+                txtCmdRanks.Text += "    " + grp.name + " (" + (int)grp.Permission + ")\r\n";
+                txtcmdranks2.Text += "    " + grp.name + " (" + (int)grp.Permission + ")\r\n";
                 listRanks.Items.Add(grp.trueName + " = " + (int)grp.Permission);
             }
             txtBlRanks.Text = txtCmdRanks.Text;

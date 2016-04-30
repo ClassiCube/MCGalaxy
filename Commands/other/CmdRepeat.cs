@@ -35,12 +35,8 @@ namespace MCGalaxy.Commands {
             string cmdMsg = argsIndex == -1 ? "" : p.lastCMD.Substring(argsIndex + 1);
             
             Command cmd = Command.all.Find(cmdName);
-            if (cmd == null) {
-                Player.SendMessage(p, "Unknown command \"" + cmdName + "\".");
-            }
-            if (p != null && !p.group.CanExecute(cmd)) {
-                Player.SendMessage(p, "You are not allowed to use \"" + cmdName + "\"."); return;
-            }
+            if (cmd == null) { Player.SendMessage(p, "Unknown command \"" + cmdName + "\"."); }
+            if (p != null && !p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
             cmd.Use(p, cmdMsg);
         }
         
