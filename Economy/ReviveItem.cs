@@ -49,13 +49,17 @@ namespace MCGalaxy.Eco {
             }
             int count = Server.zombie.Infected.Count;
             if (count < ZombieGame.ReviveFewZombies) {
-            	Player.SendMessage(p, ZombieGame.ReviveFewZombiesMessage); return;
+                Player.SendMessage(p, ZombieGame.ReviveFewZombiesMessage); return;
             }
-            // TODO: finish this
-            return;
             
-            Server.zombie.DisinfectPlayer(p);
-            Economy.MakePurchase(p, Price, "%3Revive: " + duration);
+            // TODO: finish this
+            int chance = new Random().Next(0, 101);
+            if (chance <= ZombieGame.ReviveChance) {
+                Server.zombie.DisinfectPlayer(p);
+            } else {
+                
+            }
+            Economy.MakePurchase(p, Price, "%3Revive:");
         }
         
         protected override void OnBuyCommand(Player p, string message, string[] args) { }

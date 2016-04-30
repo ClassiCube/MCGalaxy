@@ -80,7 +80,7 @@ namespace MCGalaxy.Gui {
         public int HitboxPrecision { get; set; }
         
         [Description("Whether the current map's name is included when a hearbeat is sent. " +
-                     "This means it shows up on the classicube.net server list as: \"Server name (current map name)\"")]
+                     "This means it shows up in the server list as: \"Server name (current map name)\"")]
         [Category("Other settings")]
         public bool IncludeMapInHeartbeat { get; set; }
         
@@ -102,6 +102,15 @@ namespace MCGalaxy.Gui {
         [Category("Human settings")]        
         public int InvisibilityPotions { get; set; }
         
+        
+        [Description("The minimum number of seconds left in a round, after which revive potions will not work.")]
+        [Category("Revive settings")]
+        public int InsufficientTime { get; set; }
+        
+        [Description("Message shown when using /buy revive and the time left in a round is less than 'InsufficientTime'.")]
+        [Category("Revive settings")]
+        public string InsufficientTimeMessage { get; set; }  
+        
         public void LoadFromServer() {
             ChangeLevels = ZombieGame.ChangeLevels;
             IgnoredLevelsList = String.Join(",", ZombieGame.IgnoredLevelList);
@@ -122,6 +131,9 @@ namespace MCGalaxy.Gui {
             Model = ZombieGame.ZombieModel;
             InvisibilityDuration = ZombieGame.InvisibilityDuration;
             InvisibilityPotions = ZombieGame.InvisibilityPotions;
+            
+            InsufficientTime = ZombieGame.ReviveNoTime;
+            InsufficientTimeMessage = ZombieGame.ReviveNoTimeMessage;
         }
         
         public void ApplyToServer() {
@@ -151,6 +163,9 @@ namespace MCGalaxy.Gui {
                 ZombieGame.ZombieModel = "zombie";
             ZombieGame.InvisibilityDuration = InvisibilityDuration;
             ZombieGame.InvisibilityPotions = InvisibilityPotions;
+            
+            ZombieGame.ReviveNoTime = InsufficientTime;
+            ZombieGame.ReviveNoTimeMessage = InsufficientTimeMessage;
         }
     }
 }

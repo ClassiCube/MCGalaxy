@@ -87,10 +87,13 @@ namespace MCGalaxy.Commands {
                                " %Splayers total, most in a round was &e" + who.InfectedMax);
         }
         
-        static string Shorten(TimeSpan value) {
-            if (value.Days >= 1) return value.Days + "d " + value.Hours + "h " + value.Minutes + "m";
-            if (value.Hours >= 1) return value.Hours + "h " + value.Minutes + "m";
-            return value.Minutes + "m";
+        public static string Shorten(TimeSpan value, bool seconds = false) {
+            string time = "";
+            if (value.Days >= 1) time = value.Days + "d " + value.Hours + "h " + value.Minutes + "m";
+            if (value.Hours >= 1) time = value.Hours + "h " + value.Minutes + "m";
+            else time = value.Minutes + "m";
+            if (seconds) time += " " + value.Seconds + "s";
+            return time;
         }
     }
 }

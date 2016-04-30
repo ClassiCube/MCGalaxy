@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             string modlist = string.Join(", ", Server.Mods);
-            Player.SendMessage(p, "&9MCGalaxy Moderation Team: %S" + modlist + "&e.");
+            Player.SendMessage(p, "&9MCGalaxy mods: %S" + modlist + "&e.");
         }
 
         public override void Help(Player p) {
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             string devlist = string.Join(", ", Server.Devs);
-            Player.SendMessage(p, "&9MCGalaxy Development Team: %S" + devlist + "&e.");
+            Player.SendMessage(p, "&9MCGalaxy devs: %S" + devlist + "&e.");
         }
 
         public override void Help(Player p) {

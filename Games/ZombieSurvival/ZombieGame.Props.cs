@@ -130,6 +130,7 @@ namespace MCGalaxy.Games {
         [ConfigBool("zombie-awards", "Zombie", null, false)]
         public static bool UseAwards = false;
         
+        
         [ConfigString("revive-notime-msg", "Revive", null, 
                       "It's too late. The humans do not have enough time left to make more revive potions.")]
         public static string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to make more revive potions.";
@@ -150,7 +151,10 @@ namespace MCGalaxy.Games {
         
         [ConfigInt("revive-tooslow", "Revive", null, 3, 0)]
         public static int ReviveTooSlow = 60;
-
+        
+        [ConfigInt("revive-chance", "Revive", null, 80, 0, 100)]
+        public static int ReviveChance = 80;
+        
         
         /// <summary> List of levels that are randomly picked for zombie survival. 
         /// If this left blank, then all level files are picked from instead. </summary>

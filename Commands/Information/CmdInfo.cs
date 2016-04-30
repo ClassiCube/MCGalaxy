@@ -31,25 +31,16 @@ namespace MCGalaxy.Commands
         	if (message != "") { Help(p); return; }
         	
         	Player.SendMessage(p, "This server's name is &b" + Server.name + "%S.");
-        	Player.SendMessage(p, "There are currently " + Player.number + " players online.");
-        	Player.SendMessage(p, "There are " + Player.GetBannedCount() + " &8banned%S players.");
-        	Player.SendMessage(p, "There are currently " + LevelInfo.Loaded.Count + " levels loaded.");
+        	Player.SendMessage(p, "&a" + Player.number + " %Splayers online, &8" 
+        	                   + Player.GetBannedCount() + " banned%S players total.");
+        	Player.SendMessage(p, "&a" + LevelInfo.Loaded.Count + " %Slevels currently loaded.");
         	Player.SendMessage(p, "This server's currency is: " + Server.moneys);
-        	Player.SendMessage(p, "This server runs on &bMCGalaxy &a" + Server.VersionString + 
+        	Player.SendMessage(p, "This server runs &bMCGalaxy &a" + Server.VersionString + 
         	                   "%S, which is based on &bMCForge %Sand &bMCLawl%S.");
         	Command.all.Find("devs").Use(p, "");
         	
         	TimeSpan up = DateTime.UtcNow - Server.StartTime;
-        	string upTime = "Time online: &b";
-        	if (up.Days == 1) upTime += up.Days + " day, ";
-        	else if (up.Days > 0) upTime += up.Days + " days, ";
-        	if (up.Hours == 1) upTime += up.Hours + " hour, ";
-        	else if (up.Days > 0 || up.Hours > 0) upTime += up.Hours + " hours, ";
-        	if (up.Minutes == 1) upTime += up.Minutes + " minute and ";
-        	else if (up.Hours > 0 || up.Days > 0 || up.Minutes > 0) upTime += up.Minutes + " minutes and ";
-        	if (up.Seconds == 1) upTime += up.Seconds + " second";
-        	else upTime += up.Seconds + " seconds";
-        	Player.SendMessage(p, upTime);
+        	Player.SendMessage(p, "Time online: &b" + WhoInfo.Shorten(up, true));
         	Player.SendMessage(p, "Player positions are updated every &b" 
         	                   + Server.updateTimer.Interval + " %Smilliseconds.");
         }
