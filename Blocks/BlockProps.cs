@@ -55,6 +55,9 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether this block is an OP block (cannot be replaced by physics changes). </summary>
         public bool OPBlock;
         
+        /// <summary> Whether this block should allow trains to go over them. </summary>
+        public bool IsTrack;
+        
         public BlockProps(byte type) {
             this = default(BlockProps);
             BlockId = type;

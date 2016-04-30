@@ -36,8 +36,7 @@ namespace MCGalaxy.BlockPhysics {
 				byte tileBelow = lvl.GetTile((ushort)(x + cx),(ushort)(y + cy - 1), (ushort)(z + cz));
 				byte tile = lvl.GetTile((ushort)(x + cx),(ushort)(y + cy), (ushort)(z + cz));
 				
-				if ((tileBelow == Block.red || tileBelow == Block.op_air) &&
-				    (tile == Block.air || tile == Block.water)) {
+				if (Block.Properties[tileBelow].IsTrack && (tile == Block.air || tile == Block.water)) {
 					lvl.AddUpdate(lvl.PosToInt((ushort)(x + cx), 
 					                           (ushort)(y + cy), (ushort)(z + cz)), Block.train);
 					lvl.AddUpdate(C.b, Block.air);

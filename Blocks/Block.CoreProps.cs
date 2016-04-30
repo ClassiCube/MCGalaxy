@@ -92,6 +92,7 @@ namespace MCGalaxy {
             Properties[wood].KilledByLava = true; Properties[trunk].KilledByLava = true;
             Properties[sponge].KilledByLava = true; Properties[bookcase].KilledByLava = true;
             Properties[leaf].KilledByLava = true;
+            Properties[red].IsTrack = true; Properties[op_air].IsTrack = true;
             SetupDefaultNames();
         }
         

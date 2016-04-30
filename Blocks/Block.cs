@@ -31,22 +31,22 @@ namespace MCGalaxy
         {	
             switch (type)
             {
-                case Block.blue_portal:
-                case Block.orange_portal:
+                case blue_portal:
+                case orange_portal:
 
-                case Block.MsgWhite:
-                case Block.MsgBlack:
+                case MsgWhite:
+                case MsgBlack:
 
-                case Block.door_tree:
-                case Block.door_obsidian:
-                case Block.door_glass:
-                case Block.door_stone:
-                case Block.door_leaves:
-                case Block.door_sand:
-                case Block.door_wood:
-                case Block.door_green:
-                case Block.door_tnt:
-                case Block.door_stair:
+                case door_tree:
+                case door_obsidian:
+                case door_glass:
+                case door_stone:
+                case door_leaves:
+                case door_sand:
+                case door_wood:
+                case door_green:
+                case door_tnt:
+                case door_stair:
                 case door_iron:
                 case door_gold:
                 case door_dirt:
@@ -70,12 +70,12 @@ namespace MCGalaxy
                 case door_lightgrey:
                 case door_white:
 
-                case Block.c4:
-                case Block.smalltnt:
-                case Block.bigtnt:
-                case Block.nuketnt:
-                case Block.rocketstart:
-                case Block.firework:
+                case c4:
+                case smalltnt:
+                case bigtnt:
+                case nuketnt:
+                case rocketstart:
+                case firework:
 
                 case zombiebody:
                 case creeper:
@@ -87,11 +87,11 @@ namespace MCGalaxy
 
         public static bool Placable(byte type) {
         	return !(type == blackrock || (type >= water && type <= lavastill))
-			    && type < Block.CpeCount;
+			    && type < CpeCount;
         }
 
         public static bool RightClick(byte type, bool countAir = false) {
-            if (countAir && type == Block.air) return true;
+            if (countAir && type == air) return true;
             return type >= water && type <= lavastill;			
         }
 
@@ -101,26 +101,24 @@ namespace MCGalaxy
         {
             switch (type)
             {
-                case Block.tntexplosion:
+                case tntexplosion:
 
-                case Block.deathwater:
-                case Block.deathlava:
-                case Block.deathair:
+                case deathwater:
+                case deathlava:
+                case deathair:
                 case activedeathlava:
                 case activedeathwater:
                 case fastdeathlava:
 
-                case Block.magma:
-                case Block.geyser:
+                case magma:
+                case geyser:
 
-                case Block.birdkill:
+                case birdkill:
                 case fishshark:
                 case fishlavashark:
 
                 case train:
-
                 case snake:
-
                 case lava_fire:
                 case rockethead:
 
@@ -132,10 +130,9 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool BuildIn(byte type)
-        {
-            if (type == op_water || type == op_lava || Block.portal(type) || Block.mb(type)) return false;
-			type = Block.Convert(type);
+        public static bool BuildIn(byte type) {
+            if (type == op_water || type == op_lava || portal(type) || mb(type)) return false;
+			type = Convert(type);
 			return type >= water && type <= lavastill;
         }
 
@@ -149,17 +146,17 @@ namespace MCGalaxy
 
         public static bool LightPass(byte type, byte extType, BlockDefinition[] defs) {
             switch (Convert(type)) {
-                case Block.air:
-                case Block.glass:
-                case Block.leaf:
-                case Block.redflower:
-                case Block.yellowflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                case Block.shrub:
-                case Block.rope:
+                case air:
+                case glass:
+                case leaf:
+                case redflower:
+                case yellowflower:
+                case mushroom:
+                case redmushroom:
+                case shrub:
+                case rope:
                     return true;
-                case Block.custom_block:
+                case custom_block:
                     BlockDefinition def = defs[extType];
                     return def == null ? false : !def.BlocksLight;
                 default:
@@ -213,41 +210,41 @@ namespace MCGalaxy
         {
             switch (type)
             {
-                case Block.rock:
-                case Block.stone:
-                case Block.blackrock:
-                case Block.waterstill:
-                case Block.lavastill:
-                case Block.goldrock:
-                case Block.ironrock:
-                case Block.coal:
+                case rock:
+                case stone:
+                case blackrock:
+                case waterstill:
+                case lavastill:
+                case goldrock:
+                case ironrock:
+                case coal:
 
-                case Block.goldsolid:
-                case Block.iron:
-                case Block.staircasefull:
-                case Block.brick:
-                case Block.tnt:
-                case Block.stonevine:
-                case Block.obsidian:
+                case goldsolid:
+                case iron:
+                case staircasefull:
+                case brick:
+                case tnt:
+                case stonevine:
+                case obsidian:
 
-                case Block.op_glass:
-                case Block.opsidian:
-                case Block.op_brick:
-                case Block.op_stone:
-                case Block.op_cobblestone:
-                case Block.op_air:
-                case Block.op_water:
+                case op_glass:
+                case opsidian:
+                case op_brick:
+                case op_stone:
+                case op_cobblestone:
+                case op_air:
+                case op_water:
 
-                case Block.door_tree:
-                case Block.door_obsidian:
-                case Block.door_glass:
-                case Block.door_stone:
-                case Block.door_leaves:
-                case Block.door_sand:
-                case Block.door_wood:
-                case Block.door_green:
-                case Block.door_tnt:
-                case Block.door_stair:
+                case door_tree:
+                case door_obsidian:
+                case door_glass:
+                case door_stone:
+                case door_leaves:
+                case door_sand:
+                case door_wood:
+                case door_green:
+                case door_tnt:
+                case door_stair:
                 case door_iron:
                 case door_gold:
                 case door_dirt:
@@ -286,25 +283,25 @@ namespace MCGalaxy
                 case tdoor13:
 
                 case air_door:
-                case Block.air_switch:
-                case Block.water_door:
+                case air_switch:
+                case water_door:
                 case lava_door:
 
-                case Block.MsgAir:
-                case Block.MsgWater:
-                case Block.MsgLava:
-                case Block.MsgBlack:
-                case Block.MsgWhite:
+                case MsgAir:
+                case MsgWater:
+                case MsgLava:
+                case MsgBlack:
+                case MsgWhite:
 
-                case Block.blue_portal:
-                case Block.orange_portal:
-                case Block.air_portal:
-                case Block.water_portal:
-                case Block.lava_portal:
+                case blue_portal:
+                case orange_portal:
+                case air_portal:
+                case water_portal:
+                case lava_portal:
 
-                case Block.deathair:
-                case Block.deathlava:
-                case Block.deathwater:
+                case deathair:
+                case deathlava:
+                case deathwater:
 
                 case flagbase:
                     return false;
