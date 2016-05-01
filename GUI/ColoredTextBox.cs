@@ -222,7 +222,7 @@ namespace MCGalaxy.Gui.Components {
             }
             int lines = GetLineFromCharIndex(TextLength - 1) - startIndex + 1;
             for (int i = 0; i < lines; i++)
-                Natives.SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);         
+                Natives.SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);
             Invalidate();
         }
 
