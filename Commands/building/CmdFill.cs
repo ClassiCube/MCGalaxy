@@ -47,16 +47,9 @@ namespace MCGalaxy.Commands {
                 oldExtType = p.level.GetExtTile(x, y, z);
             p.RevertBlock(x, y, z);
             GetRealBlock(type, extType, p, ref cpos);
-
-            if (cpos.type == oldType) {
-                if (cpos.type != Block.custom_block) {
-                    Player.SendMessage(p, "Cannot fill with the same type."); return;
-                }
-                if (cpos.extType == oldExtType) {
-                    Player.SendMessage(p, "Cannot fill with the same type."); return;
-                }
+            if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { 
+            	Player.SendMessage(p, "Cannot fill with that."); return; 
             }
-            if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { Player.SendMessage(p, "Cannot fill with that."); return; }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
             List<int> buffer = new List<int>(), origins = new List<int>();
