@@ -23,11 +23,12 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override string name { get { return "punload"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override void Use(Player p, string message)
         {
-            if (Plugin.Find(message) != null)
-                Plugin.Unload(Plugin.Find(message), false);
+        	Plugin plugin = Plugin.Find(message);
+            if (plugin != null)
+                Plugin.Unload(plugin, false);
             else
                 Player.SendMessage(p, "That plugin is not loaded!");
         }

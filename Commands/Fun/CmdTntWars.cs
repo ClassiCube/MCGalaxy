@@ -110,24 +110,18 @@ namespace MCGalaxy.Commands
 						}
 						else
 						{
-							Level lvl = LevelInfo.Find(text[1]);
-							if (lvl == null)
+							Level lvl = LevelInfo.FindOrShowMatches(p, text[1]);
+							if (lvl == null) return;
+
+							it = TntWarsGame.Find(lvl);
+							if (it == null)
 							{
-								Player.SendMessage(p, "TNT Wars Error: Couldn't find level '" + text[1] + "'");
+								Player.SendMessage(p, "TNT Wars Error: There isn't a game on that level!");
 								return;
 							}
 							else
 							{
-								it = TntWarsGame.Find(lvl);
-								if (it == null)
-								{
-									Player.SendMessage(p, "TNT Wars Error: There isn't a game on that level!");
-									return;
-								}
-								else
-								{
-									text[1] = text[2]; //so the switch later on still works 
-								}
+								text[1] = text[2]; //so the switch later on still works 
 							}
 						}
 						TntWarsGame.player pl = new TntWarsGame.player(p);
@@ -673,12 +667,8 @@ namespace MCGalaxy.Commands
                                 }
                                 else
                                 {
-                                    it.lvl = LevelInfo.Find(text[2]);
-                                    if (it.lvl == null)
-                                    {
-                                        Player.SendMessage(p, "TNT Wars Error: '" + text[2] + "' is not a level!");
-                                        return;
-                                    }
+                                    it.lvl = LevelInfo.FindOrShowMatches(p, text[2]);
+                                    if (it.lvl == null) return;
                                 }
                                 Player.SendMessage(p, "TNT Wars: Level is now '" + it.lvl.name + "'");
                                 it.RedSpawn = null;

@@ -35,18 +35,16 @@ namespace MCGalaxy.Commands
                 if (parts.Length == 1) {
                     if (!int.TryParse(parts[0], out seconds)) {
                         seconds = 30;
-                        lvl = LevelInfo.Find(parts[0]);
+                        lvl = LevelInfo.FindOrShowMatches(p, parts[0]);
+                        if (lvl == null) return;
                     }
                 } else {
                     if (!int.TryParse(parts[0], out seconds)) {
                         Player.SendMessage(p, "You must specify pause time in seconds"); return;
                     }
-                    lvl = LevelInfo.Find(parts[1]);
+                    lvl = LevelInfo.FindOrShowMatches(p, parts[1]);
+                    if (lvl == null) return;
                 }
-            }
-
-            if (lvl == null) {
-                Player.SendMessage(p, "Could not find entered level."); return;
             }
             
             bool enabled = lvl.physPause;

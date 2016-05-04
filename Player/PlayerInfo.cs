@@ -54,31 +54,9 @@ namespace MCGalaxy {
         }
         
         public static Player FindOrShowMatches(Player pl, string name, out int matches, bool onlyCanSee = true) {
-            Player[] players = PlayerInfo.Online.Items;
-            Player match = null; matches = 0;
-            name = name.ToLower();
-            StringBuilder matchNames = new StringBuilder();
-
-            foreach (Player p in players) {
-                if (onlyCanSee && !Entities.CanSee(pl, p)) continue;
-                if (p.name.Equals(name, comp)) return p;
-                if (p.name.IndexOf(name, comp) >= 0) {
-                    match = p; matches++;
-                    if (matches <= 5)
-                        matchNames.Append(p.name).Append(", ");
-                    else if (matches == 6)
-                        matchNames.Append("(and more)").Append(", ");
-                }
-            }
-            if (matches == 0) {
-                Player.SendMessage(pl, "No online players found matching \"" + name + "\"."); return null;
-            } else if (matches == 1) {
-                return match;
-            } else {
-                string names = matchNames.ToString(0, matchNames.Length - 2);
-                Player.SendMessage(pl, "Multiple players found matching \"" + name + "\":");
-                Player.SendMessage(pl, names); return null;
-            }
+            return Extensions.FindOrShowMatches(pl, name, out matches, Online.Items,
+                                                p => Entities.CanSee(pl, p) || !onlyCanSee,
+                                                p => p.name, "online players");
         }
         
         public static Player FindExact(string name) {

@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
             
-            PlayerBot who = PlayerBot.Find(message);
-            if (who == null) { Player.SendMessage(p, "There is no bot " + message + "!"); return; }
+            PlayerBot who = PlayerBot.FindOrShowMatches(p, message);
+            if (who == null) return;
             if (p.level != who.level) { Player.SendMessage(p, who.name + " is in a different level."); return; }
             who.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
         }

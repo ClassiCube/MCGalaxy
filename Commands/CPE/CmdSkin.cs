@@ -44,8 +44,8 @@ namespace MCGalaxy.Commands {
             string skin = null;
 
             if (isBot && args.Length > 2) {
-                pBot = PlayerBot.Find(args[1]);
-                if (pBot == null) { Player.SendMessage(p, "There is no bot with that name."); return; }
+                pBot = PlayerBot.FindOrShowMatches(p, args[1]);
+                if (pBot == null) return;
                 skin = args[2];
             } else if (args.Length >= 2) {
                 isBot = false;

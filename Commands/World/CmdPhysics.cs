@@ -48,10 +48,8 @@ namespace MCGalaxy.Commands
             }
             
             if (args.Length == 2) {
-                level = LevelInfo.Find(args[0].ToLower());
-                if (level == null) {
-                    Player.SendMessage(p, "Could not find entered level."); return;
-                }
+                level = LevelInfo.FindOrShowMatches(p, args[0]);
+                if (level == null) return;
             }
             
             level.setPhysics(state);

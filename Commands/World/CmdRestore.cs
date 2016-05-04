@@ -46,14 +46,8 @@ namespace MCGalaxy.Commands
                 }
                 if (message.Split(' ').Length >= 2)
                 {
-
-                    lvl = LevelInfo.Find(text[1]);
-                    if (lvl == null)
-                    {
-                        Player.SendMessage(p, "Level not found!");
-                        return;
-                    }
-
+                    lvl = LevelInfo.FindOrShowMatches(p, text[1]);
+                    if (lvl == null) return;
                 }
                 else
                 {

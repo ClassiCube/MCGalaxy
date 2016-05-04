@@ -460,15 +460,21 @@ namespace MCGalaxy {
         public static PlayerBot Find(string name) {
             PlayerBot match = null; int matches = 0;
             name = name.ToLower();
-            
             PlayerBot[] bots = Bots.Items;
+
             foreach (PlayerBot bot in bots) {
-                if (bot.name.CaselessEq(name)) return bot;
+                if (bot.name.ToLower() == name) return bot;
                 if (bot.name.ToLower().Contains(name)) {
-                    match = bot; matches++;
+                	match = bot; matches++;
                 }
             }
             return matches == 1 ? match : null;
+        }
+        
+        public static PlayerBot FindOrShowMatches(Player pl, string name) {
+        	int matches = 0;
+            return Extensions.FindOrShowMatches(pl, name, out matches, Bots.Items, b => true,
+                                                b => b.name, "bots");
         }
         #endregion
 

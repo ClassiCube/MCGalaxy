@@ -106,11 +106,9 @@ namespace MCGalaxy.Commands
 					if (s[1] == "map")
 					{
 						if (s.Length < 3) { SetupHelp(p, "map"); return; }
-						Level foundLevel = LevelInfo.Find(s[2]);
-						if (foundLevel == null)
-						{
-							Player.SendMessage(p, "The level must be loaded to add/remove it.");
-							return;
+						Level foundLevel = LevelInfo.FindOrShowMatches(p, s[2]);
+						if (foundLevel == null) { 
+							return; 
 						}
 						else
 						{

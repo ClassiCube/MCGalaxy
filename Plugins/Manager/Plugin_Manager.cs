@@ -87,9 +87,7 @@ namespace MCGalaxy
         #endregion
 
         #region Plugin Find
-        /// <summary>
-        /// Look to see if a plugin is loaded
-        /// </summary>
+        /// <summary> Look to see if a plugin is loaded </summary>
         /// <param name="name">The name of the plugin</param>
         /// <returns>Returns the plugin (returns null if non is found)</returns>
         public static Plugin Find(string name)

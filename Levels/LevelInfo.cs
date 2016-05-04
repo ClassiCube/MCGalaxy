@@ -40,6 +40,16 @@ namespace MCGalaxy {
             }
             return matches == 1 ? match : null;
         }
+        
+        public static Level FindOrShowMatches(Player pl, string name) {
+            int matches = 0;
+            return FindOrShowMatches(pl, name, out matches);
+        }
+        
+        public static Level FindOrShowMatches(Player pl, string name, out int matches) {
+            return Extensions.FindOrShowMatches(pl, name, out matches, LevelInfo.Loaded.Items,
+                                                l => true, l => l.name, "loaded levels");
+        }
 
         public static Level FindExact(string name) {
             Level[] loaded = Loaded.Items;

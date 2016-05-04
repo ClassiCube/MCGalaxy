@@ -31,8 +31,8 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
             string[] args = message.Split(' ');
-            Level lvl = LevelInfo.Find(args[0]);
-            if (lvl == null) { Player.SendMessage(p, "Level not found"); return; }
+            Level lvl = LevelInfo.FindOrShowMatches(p, args[0]);
+            if (lvl == null) return;
             string newName = args[1];
             if (!Player.ValidName(newName)) {
                 Player.SendMessage(p, "\"" + newName + "\" is not a valid level name."); return;

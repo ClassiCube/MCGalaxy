@@ -32,10 +32,8 @@ namespace MCGalaxy.Commands {
 			}
 			Level lvl = p == null ? null : p.level;
 			if (message != "") {
-				lvl = LevelInfo.Find(message.ToLower());
-				if (lvl == null) {
-					Player.SendMessage(p, "Could not find the entered level."); return; 
-				}
+				lvl = LevelInfo.FindOrShowMatches(p, message);
+				if (lvl == null) return;
 			}
 			
 			if ( Server.useMySQL ) 

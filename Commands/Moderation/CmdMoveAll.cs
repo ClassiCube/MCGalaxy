@@ -25,19 +25,21 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public override void Use(Player p, string message)
-        {
-            Level level = LevelInfo.Find(message.Split(' ')[0]);
-            if (level == null) { Player.SendMessage(p, "There is no level named '" + message.Split(' ')[0] + "'."); return; }
+        public override void Use(Player p, string message) {
+        	Level level = LevelInfo.FindOrShowMatches(p, message);
+            if (level == null) return;
             
             Player[] players = PlayerInfo.Online.Items;           
             foreach (Player pl in players) { 
                 if (p == null || pl.group.Permission < p.group.Permission) 
                     Command.all.Find("move").Use(p, pl.name + " " + level.name); 
                 else 
-                    Player.SendMessage(p, "You cannot move " + pl.color + pl.name + " %Sbecause they are of equal or higher rank"); 
+                    Player.SendMessage(p, "You cannot move " + pl.ColoredName + " %Sbecause they are of equal or higher rank"); 
             }
         }
-        public override void Help(Player p) { Player.SendMessage(p, "/moveall <level> - Moves all players to the level specified."); }
+        
+        public override void Help(Player p) { 
+        	Player.SendMessage(p, "/moveall <level> - Moves all players to the level specified."); 
+        }
     }
 }

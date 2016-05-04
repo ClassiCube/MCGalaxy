@@ -33,47 +33,46 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
-
-            if (args.Length == 1) {
-                PlayerBot pB = PlayerBot.Find(message);
-                try { pB.Waypoints.Clear(); } catch { }
-                pB.kill = false;
-                pB.hunt = false;
-                pB.AIName = "";
-                Player.SendMessage(p, pB.color + pB.name + "%S's AI was turned off.");
-                Server.s.Log(pB.name + "'s AI was turned off.");
+            PlayerBot bot = PlayerBot.FindOrShowMatches(p, args[0]);
+            if (bot == null) return;
+                
+            if (args.Length == 1) {             
+                try { bot.Waypoints.Clear(); } catch { }
+                bot.kill = false;
+                bot.hunt = false;
+                bot.AIName = "";
+                Player.SendMessage(p, bot.color + bot.name + "%S's AI was turned off.");
+                Server.s.Log(bot.name + "'s AI was turned off.");
                 return;
             } else if (args.Length != 2) {
                 Help(p); return;
             }
 
-            PlayerBot Pb = PlayerBot.Find(args[0]);
-            if (Pb == null) { Player.SendMessage(p, "Could not find specified Bot"); return; }
             string ai = args[1].ToLower();
 
             if (ai == "hunt") {
-                Pb.hunt = !Pb.hunt;
-                try { Pb.Waypoints.Clear(); }
+                bot.hunt = !bot.hunt;
+                try { bot.Waypoints.Clear(); }
                 catch { }
-                Pb.AIName = "";
-                if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + "%S's hunt instinct: " + Pb.hunt, false);
-                Server.s.Log(Pb.name + "'s hunt instinct: " + Pb.hunt);
-                BotsFile.UpdateBot(Pb);
+                bot.AIName = "";
+                if (p != null) Chat.GlobalChatLevel(p, bot.color + bot.name + "%S's hunt instinct: " + bot.hunt, false);
+                Server.s.Log(bot.name + "'s hunt instinct: " + bot.hunt);
+                BotsFile.UpdateBot(bot);
                 return;
             } else if (ai == "kill") {
                 if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can toggle a bot's killer instinct."); return; }
-                Pb.kill = !Pb.kill;
-                if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + "%S's kill instinct: " + Pb.kill, false);
-                Server.s.Log(Pb.name + "'s kill instinct: " + Pb.kill);
-                BotsFile.UpdateBot(Pb);
+                bot.kill = !bot.kill;
+                if (p != null) Chat.GlobalChatLevel(p, bot.color + bot.name + "%S's kill instinct: " + bot.kill, false);
+                Server.s.Log(bot.name + "'s kill instinct: " + bot.kill);
+                BotsFile.UpdateBot(bot);
                 return;
             }
             
-            if (!BotScript.Parse(p, Pb, "bots/" + ai)) return;
-            Pb.AIName = ai;
-            if (p != null) Chat.GlobalChatLevel(p, Pb.color + Pb.name + "%S's AI is now set to " + ai, false);
-            Server.s.Log(Pb.name + "'s AI was set to " + ai);
-            BotsFile.UpdateBot(Pb);
+            if (!BotScript.Parse(p, bot, "bots/" + ai)) return;
+            bot.AIName = ai;
+            if (p != null) Chat.GlobalChatLevel(p, bot.color + bot.name + "%S's AI is now set to " + ai, false);
+            Server.s.Log(bot.name + "'s AI was set to " + ai);
+            BotsFile.UpdateBot(bot);
         }
         
         public override void Help(Player p) {

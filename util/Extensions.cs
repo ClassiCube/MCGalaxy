@@ -120,24 +120,6 @@ namespace MCGalaxy {
             return sb.ToString();
         }
 
-        public static void DeleteLine(string file, string line)
-        {
-            var complete = from selectLine in File.ReadAllLines(file) where selectLine != line select selectLine;
-            File.WriteAllLines(file, complete.ToArray());
-        }
-
-        public static void DeleteLineWord(string file, string word)
-        {
-            var complete = from selectLine in File.ReadAllLines(file) where !selectLine.Contains(word) select selectLine;
-            File.WriteAllLines(file, complete.ToArray());
-        }
-
-        public static void DeleteExactLineWord(string file, string word)
-        {
-            var complete = from selectLine in File.ReadAllLines(file) where !selectLine.Equals(word) select selectLine;
-            File.WriteAllLines(file, complete.ToArray());
-        }
-
         public static void UncapitalizeAll(string file)
         {
             string[] complete = File.ReadAllLines(file);
@@ -202,6 +184,36 @@ namespace MCGalaxy {
             
             for( int i = 0; i < bytes; i++ ) {
                 *srcByte = value; srcByte++;
+            }
+        }
+        
+        public static T FindOrShowMatches<T>(Player pl, string name, out int matches, T[] items,
+                                         Predicate<T> filter, Func<T, string> nameGetter, string type)  {
+        	T match = default(T); matches = 0;
+            name = name.ToLower();
+            StringBuilder matchNames = new StringBuilder();
+
+            foreach (T item in items) {
+            	if (!filter(item)) continue;
+            	string itemName = nameGetter(item);              
+                if (itemName.Equals(name, comp)) return item;
+                if (itemName.IndexOf(name, comp) < 0) continue;
+                
+                match = item; matches++;
+                if (matches <= 5)
+                    matchNames.Append(itemName).Append(", ");
+                else if (matches == 6)
+                    matchNames.Append("(and more)").Append(", ");
+            }
+            
+            if (matches == 0) {
+            	Player.SendMessage(pl, "No " + type + " match \"" + name + "\"."); return default(T);
+            } else if (matches == 1) {
+                return match;
+            } else {
+                string names = matchNames.ToString(0, matchNames.Length - 2);
+                Player.SendMessage(pl, "Multiple " + type + " match \"" + name + "\":");
+                Player.SendMessage(pl, names); return default(T);
             }
         }
     }

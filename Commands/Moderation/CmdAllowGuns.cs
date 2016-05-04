@@ -37,10 +37,8 @@ namespace MCGalaxy.Commands {
                 }
                 lvl = p.level;
             } else {
-                lvl = LevelInfo.Find(message);
-                if (lvl == null || !File.Exists("levels/" + message + ".lvl")) {
-                    Player.SendMessage(p, "&9The level, &c" + message + " &9does not exist!"); return;
-                }
+                lvl = LevelInfo.FindOrShowMatches(p, message);
+                if (lvl == null) return;
             }
             
             if (lvl.guns) {
