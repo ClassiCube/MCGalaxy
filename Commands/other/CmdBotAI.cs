@@ -47,6 +47,9 @@ namespace MCGalaxy.Commands
                 case "del":
                     HandleDelete(p, ai, args);
                     break;
+                case "info":
+                    HandleInfo(p, ai);
+                    break;
                 default:
                     Help(p);
                     return;
@@ -77,7 +80,7 @@ namespace MCGalaxy.Commands
                         }
 
                         File.WriteAllLines("bots/" + ai, outLines);
-                        Player.SendMessage(p, "Deleted the last waypoint from " + ai);
+                        Player.SendMessage(p, "Deleted the last instruction from " + ai);
                         return;
                     } else {
                         Help(p); return;
@@ -156,13 +159,28 @@ namespace MCGalaxy.Commands
             catch { Player.SendMessage(p, "Invalid parameter"); }
         }
         
+        void HandleInfo(Player p, string ai) {
+            if (!File.Exists("bots/" + ai)) {
+                Player.SendMessage(p, "There is no bot AI with that name."); return;
+            }
+            string[] lines = File.ReadAllLines("bots/" + ai);
+            foreach (string l in lines) {
+                if (l.Length == 0 || l[0] == '#') continue;
+                Player.SendMessage(p, l);
+            }
+        }
+        
         public override void Help(Player p) {
-            Player.SendMessage(p, "/botai <add/del> [AI name] <extra> - Adds or deletes [AI name]");
-            Player.SendMessage(p, "Extras: walk, teleport, wait, nod, speed, spin, reset, remove, reverse, linkscript, jump");
-            Player.SendMessage(p, "wait, nod and spin can have an extra '0.1 seconds' parameter");
-            Player.SendMessage(p, "nod and spin can also take a 'third' speed parameter");
-            Player.SendMessage(p, "speed sets a percentage of normal speed");
-            Player.SendMessage(p, "linkscript takes a script name as parameter");
+            Player.SendMessage(p, "%T/botai del [name] %H- deletes that AI");
+            Player.SendMessage(p, "%T/botai del [name] last%H- deletes last instruction of that AI");
+            Player.SendMessage(p, "%T/botai info [name] %H- prints list of instructions that AI has");
+            Player.SendMessage(p, "%T/botai add [name] [instruction] <args>");
+            Player.SendMessage(p, "%HInstructions: %Swalk, teleport, wait, nod, speed, " +
+                               "spin, reset, remove, reverse, linkscript, jump");
+            Player.SendMessage(p, "%Hwait, nod, spin %S- optional arg specifies '0.1 seconds'");
+            Player.SendMessage(p, "%Hnod, spin %S- optional second arg specifies 'speed'");
+            Player.SendMessage(p, "%Hspeed %S- arg specifies percentage of normal speed");
+            Player.SendMessage(p, "%Hlinkscript %S- arg specifies another AI name");
         }
     }
 }
