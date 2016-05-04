@@ -39,7 +39,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalChatRoom(Player from, string message, bool showname) {
-            string oldmessage = message;
+            string rawMessage = message;
             if ( showname ) {
                 message = "<GlobalChatRoom> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
             }
@@ -48,11 +48,11 @@ namespace MCGalaxy {
                 if (p.Chatroom != null)
                     SendMessage(p, from, message);
             }
-            Server.s.Log(oldmessage + "<GlobalChatRoom>" + from.prefix + from.name + message);
+            Server.s.Log("<GlobalChatRoom>" + from.name + ": " + rawMessage);
         }
         
         public static void ChatRoom(Player from, string message, bool showname, string chatroom) {
-            string oldmessage = message;
+            string rawMessage = message;
             string messageforspy = ( "<ChatRoomSPY: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message );
             if (showname)
                 message = "<ChatRoom: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
@@ -64,7 +64,7 @@ namespace MCGalaxy {
                 if (p.spyChatRooms.Contains(chatroom) && p.Chatroom != chatroom)
                     SendMessage(p, from, message);
             }
-            Server.s.Log(oldmessage + "<ChatRoom" + chatroom + ">" + from.prefix + from.name + message);
+            Server.s.Log("<ChatRoom " + chatroom + ">" + from.name + ": " + rawMessage);
         }
 		
         public static void GlobalMessageLevel(Level l, string message) {
