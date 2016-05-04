@@ -163,6 +163,8 @@ namespace MCGalaxy.Gui
             this.cmbOpChat = new System.Windows.Forms.ComboBox();
             this.chkTpToHigherRanks = new System.Windows.Forms.CheckBox();
             this.cmbDefaultRank = new System.Windows.Forms.ComboBox();
+            this.cbLogNotes = new System.Windows.Forms.CheckBox();
+            this.cmbOsMap = new System.Windows.Forms.ComboBox();
             this.pageBlocks = new System.Windows.Forms.TabPage();
             this.btnBlHelp = new System.Windows.Forms.Button();
             this.txtBlRanks = new System.Windows.Forms.TextBox();
@@ -207,6 +209,7 @@ namespace MCGalaxy.Gui
             this.economyGroupBox = new System.Windows.Forms.GroupBox();
             this.buttonEco = new System.Windows.Forms.Button();
             this.grpExtra = new System.Windows.Forms.GroupBox();
+            this.lblOsMap = new System.Windows.Forms.Label();
             this.chkShowEmptyRanks = new System.Windows.Forms.CheckBox();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
             this.txtRestartTime = new System.Windows.Forms.TextBox();
@@ -358,6 +361,7 @@ namespace MCGalaxy.Gui
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.propsZG = new System.Windows.Forms.PropertyGrid();
             this.pageSecurity = new System.Windows.Forms.TabPage();
+            this.gbSecOther = new System.Windows.Forms.GroupBox();
             this.gbSpamSettings = new System.Windows.Forms.GroupBox();
             this.numCountReset = new System.Windows.Forms.NumericUpDown();
             this.label69 = new System.Windows.Forms.Label();
@@ -390,8 +394,6 @@ namespace MCGalaxy.Gui
             this.gbReviewQueue = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.gbSecOther = new System.Windows.Forms.GroupBox();
-            this.cbLogNotes = new System.Windows.Forms.CheckBox();
             this.tabChat.SuspendLayout();
             this.chat_gbMessages.SuspendLayout();
             this.chat_gbOther.SuspendLayout();
@@ -464,6 +466,7 @@ namespace MCGalaxy.Gui
             this.groupBox30.SuspendLayout();
             this.tabPage11.SuspendLayout();
             this.pageSecurity.SuspendLayout();
+            this.gbSecOther.SuspendLayout();
             this.gbSpamSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numCountReset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpamMute)).BeginInit();
@@ -475,7 +478,6 @@ namespace MCGalaxy.Gui
             this.gbReviewActions.SuspendLayout();
             this.gbReviewPerms.SuspendLayout();
             this.gbReviewQueue.SuspendLayout();
-            this.gbSecOther.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChat
@@ -1783,6 +1785,26 @@ namespace MCGalaxy.Gui
             this.cmbDefaultRank.TabIndex = 44;
             this.toolTip.SetToolTip(this.cmbDefaultRank, "Default rank assigned to new visitors to the server.");
             // 
+            // cbLogNotes
+            // 
+            this.cbLogNotes.AutoSize = true;
+            this.cbLogNotes.Location = new System.Drawing.Point(15, 20);
+            this.cbLogNotes.Name = "cbLogNotes";
+            this.cbLogNotes.Size = new System.Drawing.Size(178, 17);
+            this.cbLogNotes.TabIndex = 22;
+            this.cbLogNotes.Text = "Log notes (/ban, /warn, /kick etc)";
+            this.toolTip.SetToolTip(this.cbLogNotes, "\"Bob has died 10 times.\"");
+            this.cbLogNotes.UseVisualStyleBackColor = true;
+            // 
+            // cmbOsMap
+            // 
+            this.cmbOsMap.FormattingEnabled = true;
+            this.cmbOsMap.Location = new System.Drawing.Point(143, 207);
+            this.cmbOsMap.Name = "cmbOsMap";
+            this.cmbOsMap.Size = new System.Drawing.Size(172, 21);
+            this.cmbOsMap.TabIndex = 47;
+            this.toolTip.SetToolTip(this.cmbOsMap, "Default min rank that can build on maps made with /os map add.");
+            // 
             // pageBlocks
             // 
             this.pageBlocks.BackColor = System.Drawing.Color.Transparent;
@@ -2213,7 +2235,7 @@ namespace MCGalaxy.Gui
             this.economyGroupBox.Controls.Add(this.buttonEco);
             this.economyGroupBox.Location = new System.Drawing.Point(352, 248);
             this.economyGroupBox.Name = "economyGroupBox";
-            this.economyGroupBox.Size = new System.Drawing.Size(133, 120);
+            this.economyGroupBox.Size = new System.Drawing.Size(133, 144);
             this.economyGroupBox.TabIndex = 44;
             this.economyGroupBox.TabStop = false;
             this.economyGroupBox.Text = "Economy";
@@ -2232,6 +2254,8 @@ namespace MCGalaxy.Gui
             // grpExtra
             // 
             this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.grpExtra.Controls.Add(this.lblOsMap);
+            this.grpExtra.Controls.Add(this.cmbOsMap);
             this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
             this.grpExtra.Controls.Add(this.chkShowEmptyRanks);
             this.grpExtra.Controls.Add(this.chkRepeatMessages);
@@ -2244,10 +2268,19 @@ namespace MCGalaxy.Gui
             this.grpExtra.Controls.Add(this.label34);
             this.grpExtra.Location = new System.Drawing.Point(10, 158);
             this.grpExtra.Name = "grpExtra";
-            this.grpExtra.Size = new System.Drawing.Size(332, 210);
+            this.grpExtra.Size = new System.Drawing.Size(332, 234);
             this.grpExtra.TabIndex = 40;
             this.grpExtra.TabStop = false;
             this.grpExtra.Text = "Extra";
+            // 
+            // lblOsMap
+            // 
+            this.lblOsMap.AutoSize = true;
+            this.lblOsMap.Location = new System.Drawing.Point(31, 210);
+            this.lblOsMap.Name = "lblOsMap";
+            this.lblOsMap.Size = new System.Drawing.Size(103, 13);
+            this.lblOsMap.TabIndex = 48;
+            this.lblOsMap.Text = "/os default perbuild:";
             // 
             // chkShowEmptyRanks
             // 
@@ -2317,7 +2350,7 @@ namespace MCGalaxy.Gui
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(3, 183);
+            this.label34.Location = new System.Drawing.Point(63, 183);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(71, 13);
             this.label34.TabIndex = 11;
@@ -3956,6 +3989,16 @@ namespace MCGalaxy.Gui
             this.pageSecurity.TabIndex = 7;
             this.pageSecurity.Text = "Security";
             // 
+            // gbSecOther
+            // 
+            this.gbSecOther.Controls.Add(this.cbLogNotes);
+            this.gbSecOther.Location = new System.Drawing.Point(225, 213);
+            this.gbSecOther.Name = "gbSecOther";
+            this.gbSecOther.Size = new System.Drawing.Size(248, 45);
+            this.gbSecOther.TabIndex = 2;
+            this.gbSecOther.TabStop = false;
+            this.gbSecOther.Text = "Other settings";
+            // 
             // gbSpamSettings
             // 
             this.gbSpamSettings.Controls.Add(this.numCountReset);
@@ -4297,27 +4340,6 @@ namespace MCGalaxy.Gui
             this.listBox1.Size = new System.Drawing.Size(129, 459);
             this.listBox1.TabIndex = 0;
             // 
-            // gbSecOther
-            // 
-            this.gbSecOther.Controls.Add(this.cbLogNotes);
-            this.gbSecOther.Location = new System.Drawing.Point(225, 213);
-            this.gbSecOther.Name = "gbSecOther";
-            this.gbSecOther.Size = new System.Drawing.Size(248, 45);
-            this.gbSecOther.TabIndex = 2;
-            this.gbSecOther.TabStop = false;
-            this.gbSecOther.Text = "Other settings";
-            // 
-            // cbLogNotes
-            // 
-            this.cbLogNotes.AutoSize = true;
-            this.cbLogNotes.Location = new System.Drawing.Point(15, 20);
-            this.cbLogNotes.Name = "cbLogNotes";
-            this.cbLogNotes.Size = new System.Drawing.Size(178, 17);
-            this.cbLogNotes.TabIndex = 22;
-            this.cbLogNotes.Text = "Log notes (/ban, /warn, /kick etc)";
-            this.toolTip.SetToolTip(this.cbLogNotes, "\"Bob has died 10 times.\"");
-            this.cbLogNotes.UseVisualStyleBackColor = true;
-            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4441,6 +4463,8 @@ namespace MCGalaxy.Gui
             this.groupBox30.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
             this.pageSecurity.ResumeLayout(false);
+            this.gbSecOther.ResumeLayout(false);
+            this.gbSecOther.PerformLayout();
             this.gbSpamSettings.ResumeLayout(false);
             this.gbSpamSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numCountReset)).EndInit();
@@ -4456,10 +4480,10 @@ namespace MCGalaxy.Gui
             this.gbReviewPerms.ResumeLayout(false);
             this.gbReviewPerms.PerformLayout();
             this.gbReviewQueue.ResumeLayout(false);
-            this.gbSecOther.ResumeLayout(false);
-            this.gbSecOther.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.ComboBox cmbOsMap;
+        private System.Windows.Forms.Label lblOsMap;
         private System.Windows.Forms.CheckBox cbLogNotes;
         private System.Windows.Forms.GroupBox gbSecOther;
         private System.Windows.Forms.TextBox txtPrefix;

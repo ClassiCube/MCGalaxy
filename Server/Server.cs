@@ -162,6 +162,9 @@ namespace MCGalaxy
         public static bool chatmod = false;
         [ConfigBool("log-notes", "Other", null, true)]    
         public static bool LogNotes = true;
+        
+        [ConfigPerm("os-perbuild-default", "other", null, LevelPermission.Nobody)]
+        public static LevelPermission osPerbuildDefault = LevelPermission.Nobody;
 
         //Global VoteKick In Progress Flag
         public static bool voteKickInProgress = false;

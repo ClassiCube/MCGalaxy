@@ -163,7 +163,10 @@ namespace MCGalaxy.Commands
                 Command.all.Find("load").Use(p, level);
                 Level lvl = LevelInfo.FindExact(level);
                 if (lvl != null) {
-                    LevelPermission osPerm = GrpCommands.MinPerm(this);
+                    LevelPermission osPerm = Server.osPerbuildDefault;
+                    if (osPerm == LevelPermission.Nobody)
+                        osPerm = GrpCommands.MinPerm(this);
+                    
                     Group grp = Group.findPerm(osPerm);
                     if (grp != null) {
                         Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);

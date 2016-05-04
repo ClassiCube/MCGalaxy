@@ -78,6 +78,7 @@ namespace MCGalaxy.Gui {
             string leavequeuerank = String.Empty;
             string clearqueuerank = String.Empty;
             string gotonextrank = String.Empty;
+            string osmaprank = String.Empty;
 
             foreach ( Group grp in Group.GroupList ) {
                 cmbDefaultRank.Items.Add(grp.name);
@@ -87,6 +88,7 @@ namespace MCGalaxy.Gui {
                 lsCmbSetupRank.Items.Add(grp.name);
                 lsCmbControlRank.Items.Add(grp.name);
                 cmbAFKKickPerm.Items.Add(grp.name);
+                cmbOsMap.Items.Add(grp.name);
                 cmbViewQueue.Items.Add(grp.name);
                 cmbEnterQueue.Items.Add(grp.name);
                 cmbLeaveQueue.Items.Add(grp.name);
@@ -111,6 +113,8 @@ namespace MCGalaxy.Gui {
                     clearqueuerank = grp.name;
                 if ( grp.Permission == Server.reviewnext )
                     gotonextrank = grp.name;
+                if( grp.Permission == Server.osPerbuildDefault )
+                    osmaprank = grp.name;
             }
             listPasswords.Items.Clear();
             if ( Directory.Exists("extra/passwords") ) {
@@ -131,6 +135,7 @@ namespace MCGalaxy.Gui {
             cmbViewQueue.SelectedIndex = ( viewqueuerank != String.Empty ? cmbViewQueue.Items.IndexOf(viewqueuerank) : 1 );
             cmbClearQueue.SelectedIndex = ( clearqueuerank != String.Empty ? cmbClearQueue.Items.IndexOf(clearqueuerank) : 1 );
             cmbGotoNext.SelectedIndex = ( gotonextrank != String.Empty ? cmbGotoNext.Items.IndexOf(gotonextrank) : 1 );
+            cmbOsMap.SelectedIndex = ( osmaprank != String.Empty ? cmbOsMap.Items.IndexOf(osmaprank) : 1 );
 
             //Load server stuff
             LoadProp("properties/server.properties");
@@ -645,6 +650,8 @@ namespace MCGalaxy.Gui {
             Server.dollarNames = chk17Dollar.Checked;
             //Server.useWhitelist = ; //We don't have a setting for this?
             Server.moneys = txtMoneys.Text;
+            Server.osPerbuildDefault = Group.GroupList.Find(grp => grp.name == cmbOsMap.SelectedItem.ToString()).Permission;
+            	
             Server.opchatperm = Group.GroupList.Find(grp => grp.name == cmbOpChat.SelectedItem.ToString()).Permission;
             Server.adminchatperm = Group.GroupList.Find(grp => grp.name == cmbAdminChat.SelectedItem.ToString()).Permission;
             Server.logbeat = chkLogBeat.Checked;
