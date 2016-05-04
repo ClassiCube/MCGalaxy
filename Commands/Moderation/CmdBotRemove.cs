@@ -30,16 +30,17 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
-            
             if (message.ToLower() == "all") {
-                PlayerBot.RemoveAllFromLevel(p.level);
-            } else {
-                PlayerBot who = PlayerBot.Find(message);
-                if (who == null) { Player.SendMessage(p, "There is no bot " + who + "!"); return; }
-                if (p.level != who.level) { Player.SendMessage(p, who.name + " is in a different level."); return; }
-                PlayerBot.Remove(who);
-                Player.SendMessage(p, "Removed bot.");
+                PlayerBot.RemoveAllFromLevel(p.level); return;
             }
+            
+            PlayerBot who = PlayerBot.Find(message);
+            if (who == null) { Player.SendMessage(p, "There is no bot " + who + "!"); return; }
+            if (!p.level.name.CaselessEq(who.name)) {
+                Player.SendMessage(p, who.name + " is in a different level."); return;
+            }
+            PlayerBot.Remove(who);
+            Player.SendMessage(p, "Removed bot.");
         }
         
         public override void Help(Player p) {

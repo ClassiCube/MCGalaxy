@@ -1803,7 +1803,8 @@ namespace MCGalaxy.Gui
             this.cmbOsMap.Name = "cmbOsMap";
             this.cmbOsMap.Size = new System.Drawing.Size(172, 21);
             this.cmbOsMap.TabIndex = 47;
-            this.toolTip.SetToolTip(this.cmbOsMap, "Default min rank that can build on maps made with /os map add.");
+            this.toolTip.SetToolTip(this.cmbOsMap, "Default min rank that can build on maps made with /os map add.\n" +
+            "If 'nobody' is selected, the default min rank used is the min rank that can use /os.");
             // 
             // pageBlocks
             // 
