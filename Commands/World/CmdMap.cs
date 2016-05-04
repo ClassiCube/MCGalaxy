@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "Killer blocks: " + GetBool(lvl.Killer));
                     Player.SendMessage(p, "Unload: " + GetBool(lvl.unload));
                     Player.SendMessage(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
-                    Player.SendMessage(p, "RP chat: " + GetBool(!lvl.worldChat));
+                    Player.SendMessage(p, "Role play (level only) chat: " + GetBool(!lvl.worldChat));
                     Player.SendMessage(p, "Guns: " + GetBool(lvl.guns));
                     Player.SendMessage(p, "Buildable: " + GetBool(lvl.Buildable));
                     Player.SendMessage(p, "Deletable: " + GetBool(lvl.Deletable));
@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands
                     case "unload":
                         SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
                     case "chat":
-                        SetBool(p, lvl, ref lvl.worldChat, "RP chat: "); break;
+                        SetBool(p, lvl, ref lvl.worldChat, "Role play (level only) chat: ", true); break;
                     case "load":
                     case "autoload":
                     case "loadongoto":
@@ -150,13 +150,14 @@ namespace MCGalaxy.Commands
             catch { Player.SendMessage(p, "INVALID INPUT"); }
         }
         
-        void SetBool(Player p, Level lvl, ref bool target, string message) {
+        void SetBool(Player p, Level lvl, ref bool target, string message, bool negate = false) {
             target = !target;
             Level.SaveSettings(lvl);
-            lvl.ChatLevel(message + GetBool(target));
+            bool display = negate ? !target : target;
+            lvl.ChatLevel(message + GetBool(display));
             
             if (p == null) 
-                Player.SendMessage(p, message + GetBool(target, true));
+                Player.SendMessage(p, message + GetBool(display, true));
         }
         
         string GetBool(bool value, bool console = false) {
