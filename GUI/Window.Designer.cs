@@ -191,20 +191,6 @@ namespace MCGalaxy.Gui
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.SaveMap = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.seedtxtbox = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.xtxtbox = new System.Windows.Forms.ComboBox();
-            this.ytxtbox = new System.Windows.Forms.ComboBox();
-            this.ztxtbox = new System.Windows.Forms.ComboBox();
-            this.nametxtbox = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.maptypecombo = new System.Windows.Forms.ComboBox();
-            this.CreateNewMap = new System.Windows.Forms.Button();
             this.dgvMapsTab = new System.Windows.Forms.DataGridView();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.PlayersTextBox = new MCGalaxy.Gui.AutoScrollTextBox();
@@ -319,7 +305,6 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.drownNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Fallnumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.physlvlnumeric)).BeginInit();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapsTab)).BeginInit();
             this.tabPage7.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -1154,7 +1139,6 @@ namespace MCGalaxy.Gui
             // 
             this.tabPage6.Controls.Add(this.panel3);
             this.tabPage6.Controls.Add(this.panel2);
-            this.tabPage6.Controls.Add(this.panel1);
             this.tabPage6.Controls.Add(this.dgvMapsTab);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
@@ -1567,173 +1551,7 @@ namespace MCGalaxy.Gui
             this.SaveMap.TabIndex = 9;
             this.SaveMap.Text = "Save Map Properties";
             this.SaveMap.UseVisualStyleBackColor = true;
-            this.SaveMap.Click += new System.EventHandler(this.SaveMap_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.seedtxtbox);
-            this.panel1.Controls.Add(this.label34);
-            this.panel1.Controls.Add(this.xtxtbox);
-            this.panel1.Controls.Add(this.ytxtbox);
-            this.panel1.Controls.Add(this.ztxtbox);
-            this.panel1.Controls.Add(this.nametxtbox);
-            this.panel1.Controls.Add(this.label10);
-            this.panel1.Controls.Add(this.label9);
-            this.panel1.Controls.Add(this.label8);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.maptypecombo);
-            this.panel1.Controls.Add(this.CreateNewMap);
-            this.panel1.Location = new System.Drawing.Point(249, 7);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(135, 207);
-            this.panel1.TabIndex = 45;
-            // 
-            // seedtxtbox
-            // 
-            this.seedtxtbox.Location = new System.Drawing.Point(45, 142);
-            this.seedtxtbox.Name = "seedtxtbox";
-            this.seedtxtbox.Size = new System.Drawing.Size(84, 21);
-            this.seedtxtbox.TabIndex = 16;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(4, 146);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(33, 13);
-            this.label34.TabIndex = 15;
-            this.label34.Text = "Seed:";
-            // 
-            // xtxtbox
-            // 
-            this.xtxtbox.FormattingEnabled = true;
-            this.xtxtbox.Items.AddRange(new object[] {
-            "16",
-            "32",
-            "64",
-            "128",
-            "256",
-            "512",
-            "1024"});
-            this.xtxtbox.Location = new System.Drawing.Point(45, 34);
-            this.xtxtbox.Name = "xtxtbox";
-            this.xtxtbox.Size = new System.Drawing.Size(84, 21);
-            this.xtxtbox.TabIndex = 14;
-            // 
-            // ytxtbox
-            // 
-            this.ytxtbox.FormattingEnabled = true;
-            this.ytxtbox.Items.AddRange(new object[] {
-            "16",
-            "32",
-            "64",
-            "128",
-            "256",
-            "512",
-            "1024"});
-            this.ytxtbox.Location = new System.Drawing.Point(45, 61);
-            this.ytxtbox.Name = "ytxtbox";
-            this.ytxtbox.Size = new System.Drawing.Size(84, 21);
-            this.ytxtbox.TabIndex = 13;
-            // 
-            // ztxtbox
-            // 
-            this.ztxtbox.FormattingEnabled = true;
-            this.ztxtbox.Items.AddRange(new object[] {
-            "16",
-            "32",
-            "64",
-            "128",
-            "256",
-            "512",
-            "1024"});
-            this.ztxtbox.Location = new System.Drawing.Point(45, 88);
-            this.ztxtbox.Name = "ztxtbox";
-            this.ztxtbox.Size = new System.Drawing.Size(84, 21);
-            this.ztxtbox.TabIndex = 12;
-            // 
-            // nametxtbox
-            // 
-            this.nametxtbox.Location = new System.Drawing.Point(45, 7);
-            this.nametxtbox.Name = "nametxtbox";
-            this.nametxtbox.Size = new System.Drawing.Size(84, 21);
-            this.nametxtbox.TabIndex = 9;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(4, 64);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(34, 13);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "Size Y:";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(4, 91);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(35, 13);
-            this.label9.TabIndex = 7;
-            this.label9.Text = "Size Z:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(4, 37);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(36, 13);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "Size X:";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 10);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(38, 13);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "Name:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(4, 119);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(32, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Type:";
-            // 
-            // maptypecombo
-            // 
-            this.maptypecombo.FormattingEnabled = true;
-            this.maptypecombo.Items.AddRange(new object[] {
-            "Island",
-            "Mountains",
-            "Forest",
-            "Ocean",
-            "Flat",
-            "Pixel",
-            "Desert",
-            "Space",
-            "Rainbow",
-            "Hell"});
-            this.maptypecombo.Location = new System.Drawing.Point(45, 115);
-            this.maptypecombo.Name = "maptypecombo";
-            this.maptypecombo.Size = new System.Drawing.Size(84, 21);
-            this.maptypecombo.TabIndex = 1;
-            // 
-            // CreateNewMap
-            // 
-            this.CreateNewMap.Location = new System.Drawing.Point(4, 168);
-            this.CreateNewMap.Name = "CreateNewMap";
-            this.CreateNewMap.Size = new System.Drawing.Size(125, 35);
-            this.CreateNewMap.TabIndex = 0;
-            this.CreateNewMap.Text = "Create New Map";
-            this.CreateNewMap.UseVisualStyleBackColor = true;
-            this.CreateNewMap.Click += new System.EventHandler(this.CreateNewMap_Click);
+            this.SaveMap.Click += new System.EventHandler(this.SaveMap_Click);        
             // 
             // dgvMapsTab
             // 
@@ -2595,6 +2413,7 @@ namespace MCGalaxy.Gui
             this.btnMap_Gen.TabIndex = 17;
             this.btnMap_Gen.Text = "Generate";
             this.btnMap_Gen.UseVisualStyleBackColor = true;
+            this.btnMap_Gen.Click += new System.EventHandler(this.MapGenClick);
             // 
             // lblMap_Type
             // 
@@ -2651,6 +2470,17 @@ namespace MCGalaxy.Gui
             // cmbMap_Type
             // 
             this.cmbMap_Type.FormattingEnabled = true;
+            this.cmbMap_Type.Items.AddRange(new object[] {
+            "Island",
+            "Mountains",
+            "Forest",
+            "Ocean",
+            "Flat",
+            "Pixel",
+            "Desert",
+            "Space",
+            "Rainbow",
+            "Hell"});
             this.cmbMap_Type.Location = new System.Drawing.Point(51, 75);
             this.cmbMap_Type.Name = "cmbMap_Type";
             this.cmbMap_Type.Size = new System.Drawing.Size(121, 21);
@@ -2659,6 +2489,14 @@ namespace MCGalaxy.Gui
             // cmbMap_Z
             // 
             this.cmbMap_Z.FormattingEnabled = true;
+            this.cmbMap_Z.Items.AddRange(new object[] {
+            "16",
+            "32",
+            "64",
+            "128",
+            "256",
+            "512",
+            "1024"});
             this.cmbMap_Z.Location = new System.Drawing.Point(279, 48);
             this.cmbMap_Z.Name = "cmbMap_Z";
             this.cmbMap_Z.Size = new System.Drawing.Size(60, 21);
@@ -2667,6 +2505,14 @@ namespace MCGalaxy.Gui
             // cmbMap_Y
             // 
             this.cmbMap_Y.FormattingEnabled = true;
+            this.cmbMap_Y.Items.AddRange(new object[] {
+            "16",
+            "32",
+            "64",
+            "128",
+            "256",
+            "512",
+            "1024"});
             this.cmbMap_Y.Location = new System.Drawing.Point(165, 48);
             this.cmbMap_Y.Name = "cmbMap_Y";
             this.cmbMap_Y.Size = new System.Drawing.Size(60, 21);
@@ -2675,6 +2521,14 @@ namespace MCGalaxy.Gui
             // cmbMap_X
             // 
             this.cmbMap_X.FormattingEnabled = true;
+            this.cmbMap_X.Items.AddRange(new object[] {
+            "16",
+            "32",
+            "64",
+            "128",
+            "256",
+            "512",
+            "1024"});
             this.cmbMap_X.Location = new System.Drawing.Point(52, 48);
             this.cmbMap_X.Name = "cmbMap_X";
             this.cmbMap_X.Size = new System.Drawing.Size(60, 21);
@@ -2741,8 +2595,6 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.drownNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Fallnumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.physlvlnumeric)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapsTab)).EndInit();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
@@ -2832,16 +2684,8 @@ namespace MCGalaxy.Gui
         private Label label1;
         private TabControl tabControl1;
         private TabPage tabPage6;
-        private Panel panel1;
         private Label label11;
         private Button SaveMap;
-        private Label label10;
-        private Label label9;
-        private Label label8;
-        private Label label7;
-        private Label label4;
-        private ComboBox maptypecombo;
-        private Button CreateNewMap;
         private DataGridView dgvMapsTab;
         private Panel panel2;
         private Label label13;
@@ -2855,10 +2699,6 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem demoteToolStripMenuItem;
         private Panel panel3;
         private Button ldmapbt;
-        private ComboBox xtxtbox;
-        private ComboBox ytxtbox;
-        private ComboBox ztxtbox;
-        private TextBox nametxtbox;
         private ComboBox Aicombo;
         private CheckBox edgewaterchk;
         private CheckBox grasschk;
@@ -2958,8 +2798,6 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem unloadToolStripMenuItem;
         private ToolStripMenuItem moveAllToolStripMenuItem;
         private ToolStripMenuItem reloadToolStripMenuItem;
-        private TextBox seedtxtbox;
-        private Label label34;
         private Label label16;
         private Label label35;
         private CheckBox LoadOnGotoChk;

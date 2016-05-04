@@ -900,67 +900,7 @@ namespace MCGalaxy.Gui
             UpdateMapList();
         }
 
-        private void CreateNewMap_Click(object sender, EventArgs e)
-        {
-            if (mapgen) { MessageBox.Show("Map generator already in use."); return; }
-
-            string name;
-            string x;
-            string y;
-            string z;
-            string type;
-            string seed;
-
-            try { name = nametxtbox.Text.ToLower(); }
-            catch { name = ""; }
-            try { x = xtxtbox.SelectedItem.ToString(); }
-            catch { x = ""; }
-            try { y = ytxtbox.SelectedItem.ToString(); }
-            catch { y = ""; }
-            try { z = ztxtbox.SelectedItem.ToString(); }
-            catch { z = ""; }
-            try { type = maptypecombo.SelectedItem.ToString().ToLower(); }
-            catch { type = ""; }
-            try { seed = seedtxtbox.Text; }
-            catch { seed = ""; }
-
-            if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(x) || String.IsNullOrEmpty(y) || String.IsNullOrEmpty(z) || String.IsNullOrEmpty(type))
-            {
-                MessageBox.Show("You left a box blank!");
-                return;
-            }
-
-            Thread genThread = new Thread(() =>
-            {
-                mapgen = true;
-                try
-                {
-                    Command.all.Find("newlvl").Use(null, name + " " + x + " " + y + " " + z + " " + type + (!String.IsNullOrEmpty(seed) ? " " + seed : ""));
-                }
-                catch
-                {
-                    MessageBox.Show("Level Creation Failed. Are  you sure you didn't leave a box empty?");
-                }
-
-                if (LevelInfo.ExistsOffline(name))
-                {
-                    MessageBox.Show("Created Level");
-                    try
-                    {
-                        UnloadedlistUpdate();
-                        UpdateMapList();
-                    }
-                    catch { }
-                }
-                else
-                {
-                    MessageBox.Show("Level may not have been created.");
-                }
-                mapgen = false;
-            });
-            genThread.Name = "MCG_GuiGenMap";
-            genThread.Start();
-        }
+        private void CreateNewMap_Click(object sender, EventArgs e) { }
 
         private void ldmapbt_Click(object sender, EventArgs e)
         {
@@ -1640,8 +1580,62 @@ namespace MCGalaxy.Gui
         }
         #endregion
 
+        #region Map tab
+        
+        void MapGenClick(object sender, EventArgs e) {
+            if (mapgen) { MessageBox.Show("A map is already being generated."); return; }
+            string name, x, y, z, type, seed;
 
+            try { name = txtMap_Name.Text.ToLower(); }
+            catch { name = ""; }
+            if (String.IsNullOrEmpty(name)) { MessageBox.Show("Map name cannot be blank."); return; }
+            try { x = cmbMap_X.SelectedItem.ToString(); }
+            catch { x = ""; }
+            if (String.IsNullOrEmpty(x)) { MessageBox.Show("Map width cannot be blank."); return; }
+            
+            try { y = cmbMap_Y.SelectedItem.ToString(); }
+            catch { y = ""; }
+            if (String.IsNullOrEmpty(y)) { MessageBox.Show("Map height cannot be blank."); return; }
+            
+            try { z = cmbMap_Z.SelectedItem.ToString(); }
+            catch { z = ""; }
+            if (String.IsNullOrEmpty(z)) { MessageBox.Show("Map length cannot be blank."); return; }
+            
+            try { type = cmbMap_Type.SelectedItem.ToString().ToLower(); }
+            catch { type = ""; }
+            if (String.IsNullOrEmpty(type)) { MessageBox.Show("Map type cannot be blank."); return; }
+            
+            try { seed = txtMap_Seed.Text; }
+            catch { seed = ""; }
 
+            Thread genThread = new Thread(() =>
+            {
+                mapgen = true;
+                try {
+                	string args = name + " " + x + " " + y + " " + z + " " + type;
+                	if (!String.IsNullOrEmpty(seed)) args += " " + seed;
+                    Command.all.Find("newlvl").Use(null, args);
+                } catch {
+                    MessageBox.Show("Level Creation Failed. Are  you sure you didn't leave a box empty?");
+                }
+
+                if (LevelInfo.ExistsOffline(name)) {
+                    MessageBox.Show("Created Level");
+                    try {
+                        UnloadedlistUpdate();
+                        UpdateMapList();
+                    } catch { 
+                    }
+                } else {
+                    MessageBox.Show("Level may not have been created.");
+                }
+                mapgen = false;
+            });
+            genThread.Name = "MCG_GuiGenMap";
+            genThread.Start();
+        }
+        
+        #endregion
     }
 }
 
