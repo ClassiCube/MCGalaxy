@@ -258,7 +258,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdWhitelist()), "white list allow acces server");
             new CommandKeywords((new CmdWhoip()), "who ip info");
             new CommandKeywords((new CmdWhois()), "who player info");
-            new CommandKeywords((new CmdWhowas()), "who player info");
             new CommandKeywords((new CmdWrite()), "block text");
             new CommandKeywords((new CmdWriteText()), "block text");
             new CommandKeywords((new CmdXban()), "ban undo admin");
