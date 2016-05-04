@@ -48,6 +48,9 @@ namespace MCGalaxy.Commands {
                 case "delete":
                 case "remove":
                     RemoveHandler(p, parts, global); break;
+                case "info":
+                case "about":
+                    InfoHandler(p, parts, global); break;
                 case "list":
                 case "ids":
                     ListHandler(p, parts, global); break;
@@ -102,7 +105,7 @@ namespace MCGalaxy.Commands {
         
         void CopyHandler(Player p, string[] parts, bool global) {
             if (parts.Length <= 2) { Help(p); return; }          
-            int srcId, dstId;            
+            int srcId, dstId;
             if (!CheckBlockId(p, parts[1], global, out srcId)) return;
             if (!CheckBlockId(p, parts[2], global, out dstId)) return;
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
@@ -122,6 +125,36 @@ namespace MCGalaxy.Commands {
         
         bool ExistsInScope(BlockDefinition def, int i, bool global) {
             return def != null && (global ? true : def != BlockDefinition.GlobalDefs[i]);
+        }
+        
+        void InfoHandler(Player p, string[] parts, bool global) {
+            if (parts.Length == 1) { Help(p); return; }          
+            int id;
+            if (!CheckBlockId(p, parts[1], global, out id)) return;
+            
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            string cmd = global ? "/gb" : "/lb";            
+            BlockDefinition def = defs[id];
+            if (!ExistsInScope(def, id, global)) { MessageNoBlock(p, id, global); return; }
+            
+            Player.SendMessage(p, "About " + def.Name + " (" + def.BlockID + ")");
+            Player.SendMessage(p, "  DrawType: " + def.BlockDraw + ", BlocksLight: " + 
+                               def.BlocksLight + ", Solidity: " + def.CollideType);
+            Player.SendMessage(p, "  Fallback ID: " + def.FallBack + ", Sound: " + 
+                               def.WalkSound + ", Speed: " + def.Speed.ToString("F2"));
+            
+            if (def.FogDensity == 0)
+                Player.SendMessage(p, "  Block does not use fog");
+            else
+                Player.SendMessage(p, "  Fog density: " + def.FogDensity + ", R: " + 
+                                   def.FogR + ", G: " + def.FogG + ", B: " + def.FogB);
+            
+            if (def.Shape == 0)
+                Player.SendMessage(p, "  Block is a sprite");
+            else
+                Player.SendMessage(p, "  Block is a cube from (" + 
+                                   def.MinX + "," + def.MinY + "," + def.MinZ + ") to (" 
+                                   + def.MaxX + "," + def.MaxY + "," + def.MaxZ + ")");
         }
         
         void ListHandler(Player p, string[] parts, bool global) {
@@ -576,11 +609,12 @@ namespace MCGalaxy.Commands {
             string cmd = global ? "/gb" : "/lb";
             
             Player.SendMessage(p, "%T" + fullCmd + " <add/copy/edit/list/remove>");
-            Player.SendMessage(p, "%H   " + cmd + " add [id] - begins the creation a new custom block.");
-            Player.SendMessage(p, "%H   " + cmd + " copy [source id] [new id] - clones a new custom block from the existing source block.");
-            Player.SendMessage(p, "%H   " + cmd + " edit [id] [property] [value] - edits the given property of the custom block with that id.");
-            Player.SendMessage(p, "%H   " + cmd + " list [offset] - lists all custom blocks.");
-            Player.SendMessage(p, "%H   " + cmd + " remove [id] - removes the custom block with that id."); 
+            Player.SendMessage(p, "%H  " + cmd + " add [id] - begins the creation a new custom block.");
+            Player.SendMessage(p, "%H  " + cmd + " copy [source id] [new id] - clones a new custom block from the existing source block.");
+            Player.SendMessage(p, "%H  " + cmd + " edit [id] [property] [value] - edits the given property of the custom block with that id.");
+            Player.SendMessage(p, "%H  " + cmd + " list [offset] - lists all custom blocks.");
+            Player.SendMessage(p, "%H  " + cmd + " remove [id] - removes the custom block with that id.");
+            Player.SendMessage(p, "%H  " + cmd + " info [id] - shows info about the custom block with that id."); 
             Player.SendMessage(p, "%HTo see the list of editable properties, type " + cmd + " edit.");
         }
     }

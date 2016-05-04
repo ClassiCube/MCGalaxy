@@ -152,7 +152,6 @@
     <Compile Include="Commands\Building\CmdTree.cs" />
     <Compile Include="Commands\Building\CmdUndo.cs" />
     <Compile Include="Commands\Building\CmdWrite.cs" />
-    <Compile Include="Commands\building\CustomBlockCommand.cs" />
     <Compile Include="Commands\building\DrawCmd.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
     <Compile Include="Commands\Chat\CmdChatRoom.cs" />
@@ -180,6 +179,7 @@
     <Compile Include="Commands\CPE\CmdModel.cs" />
     <Compile Include="Commands\CPE\CmdReachDistance.cs" />
     <Compile Include="Commands\CPE\CmdSkin.cs" />
+    <Compile Include="Commands\CPE\CustomBlockCommand.cs" />
     <Compile Include="Commands\Economy\CmdAward.cs" />
     <Compile Include="Commands\Economy\CmdAwardMod.cs" />
     <Compile Include="Commands\Economy\CmdAwards.cs" />
