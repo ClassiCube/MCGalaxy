@@ -12,7 +12,7 @@ v 1.8.6.0
 - Fixed: /tempban twice on same name creating new tempban instead of updating old.
 - Improved: Skins, bots, and models now persist between sessions
 - Fixed: /server reload wiping command permissions.
-- Removed: /xspawn as it was pretty much pointlesws
+- Removed: /xspawn as it was pretty much pointlesss
 - Improved: /freeze now persists across sessions
 - Fixed: 'slap', 'banip' in players tab in server gui crashing the server.
 - Improved: /help botai, also added /botai info [name].
