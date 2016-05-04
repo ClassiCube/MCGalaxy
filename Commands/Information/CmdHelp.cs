@@ -147,7 +147,7 @@ namespace MCGalaxy.Commands
                 if (c.name == null) continue;
                 
                 if (!colors) cmds.Append(", ").Append(c.name);
-                else cmds.Append(", ").Append(GetColor(c.name)).Append(c.name);
+                else cmds.Append(", ").Append(GetColor(c)).Append(c.name);
             }
             
             Player.SendMessage(p, "Available commands:");
@@ -161,7 +161,7 @@ namespace MCGalaxy.Commands
             StringBuilder cmds = new StringBuilder();
             foreach (Command c in Command.all.commands) {
                 if (c.name == null) continue;
-                cmds.Append(", ").Append(GetColor(c.name)).Append(c.name);
+                cmds.Append(", ").Append(GetColor(c)).Append(c.name);
             }
 
             Player.SendMessage(p, "All commands:");
@@ -177,7 +177,7 @@ namespace MCGalaxy.Commands
                 string disabled = Command.GetDisabledReason(c.Enabled);
                 if (p == null || p.group.CanExecute(c) && disabled == null) {
                     if (!c.type.Contains(typeName) || c.name == null) continue;
-                    cmds.Append(", ").Append(GetColor(c.name)).Append(c.name);
+                    cmds.Append(", ").Append(GetColor(c)).Append(c.name);
                 }
             }
             
@@ -192,8 +192,8 @@ namespace MCGalaxy.Commands
         bool ParseCommand(Player p, string message) {
             Command cmd = Command.all.Find(message);
             if (cmd == null) return false;
-            cmd.Help(p);            
-            LevelPermission minPerm = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name).lowestRank;          
+            cmd.Help(p);
+            LevelPermission minPerm = GrpCommands.MinPerm(cmd);
             Player.SendMessage(p, "Rank needed: " + GetColoredRank(minPerm));
             PrintAliases(p, cmd);
             
@@ -324,8 +324,8 @@ namespace MCGalaxy.Commands
             return false;
         }
 
-        static string GetColor(string cmd) {
-            LevelPermission perm = GrpCommands.allowedCommands.Find(C => C.commandName == cmd).lowestRank;
+        static string GetColor(Command cmd) {
+        	LevelPermission perm = GrpCommands.MinPerm(cmd);
             Group grp = Group.findPerm(perm);
             return grp == null ? "&f" : grp.color;
         }

@@ -35,8 +35,12 @@ namespace MCGalaxy {
 
         public static LevelPermission defaultRanks(string command) {
             Command cmd = Command.all.Find(command);
-
             return cmd != null ? cmd.defaultRank : LevelPermission.Null;
+        }
+        
+        public static LevelPermission MinPerm(Command cmd) {
+            var perms = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name);
+            return perms == null ? cmd.defaultRank : perms.lowestRank;
         }
 
         public static void fillRanks() {

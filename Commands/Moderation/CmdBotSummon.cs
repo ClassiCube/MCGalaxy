@@ -26,8 +26,7 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdBotSummon() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
             
@@ -36,8 +35,8 @@ namespace MCGalaxy.Commands
             if (p.level != who.level) { Player.SendMessage(p, who.name + " is in a different level."); return; }
             who.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.SendMessage(p, "/botsummon <name> - Summons a bot to your position.");
         }
     }

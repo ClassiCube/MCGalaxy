@@ -103,11 +103,11 @@ namespace MCGalaxy.Commands
                 string col = value == "" ? "normal" : value;
                 Command.all.Find("env").Use(p, "l " + type.ToLower() + " " + col);
             } else if (type == "WEATHER") {
-        		if (value.CaselessEq("SUN") || value.CaselessEq("NORMAL")) {
+                if (value.CaselessEq("SUN") || value.CaselessEq("NORMAL")) {
                     Command.all.Find("env").Use(p, "weather 0");
-        		} else if (value.CaselessEq("RAIN")) {
+                } else if (value.CaselessEq("RAIN")) {
                     Command.all.Find("env").Use(p, "weather 1");
-        		} else if (value.CaselessEq("SNOW")) {
+                } else if (value.CaselessEq("SNOW")) {
                     Command.all.Find("env").Use(p, "weather 2");
                 } else {
                     Player.SendMessage(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
@@ -148,17 +148,29 @@ namespace MCGalaxy.Commands
                     if (level == p.name.ToLower()) {
                         p.SendMessage("You have reached the limit for your overseer maps."); return;
                     }
-                }
-                
+                }                
 
                 if (value == "") value = "128 64 128 flat";
                 else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
                 
                 string[] args = value.TrimEnd().Split(' ');
                 if (args.Length == 3) value += " flat";
-                	
+                    
                 Player.SendMessage(p, "Creating a new map for you: " + level);
                 Command.all.Find("newlvl").Use(p, level + " " + value);
+                
+                // Set default perbuild permissions
+                Command.all.Find("load").Use(p, level);
+                Level lvl = LevelInfo.FindExact(level);
+                if (lvl != null) {
+                    LevelPermission osPerm = GrpCommands.MinPerm(this);
+                    Group grp = Group.findPerm(osPerm);
+                    if (grp != null) {
+                        Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
+                        Player.SendMessage(p, "Use %T/os zone add [name] %Sto allow " +
+                                           "players ranked below " + grp.ColoredName + " %Sto build in the map.");
+                    }
+                }
             } else if (cmd == "PHYSICS") {
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5")
                     Command.all.Find("physics").Use(p, p.level.name + " " + value);
@@ -357,6 +369,7 @@ namespace MCGalaxy.Commands
             Player.SendMessage(p, "Accepted commands:");
             Player.SendMessage(p, "go, map, spawn, zone, kick, kickall, env, " +
                                "preset, levelblock/lb");
+            Player.SendMessage(p, "/os zone add [name] - allows [name] to build in the world.");
         }
     }
 }
