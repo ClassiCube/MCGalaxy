@@ -1,19 +1,19 @@
 /*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 using System.Windows.Forms;
@@ -112,15 +112,6 @@ namespace MCGalaxy.Gui
             this.btnClose = new System.Windows.Forms.Button();
             this.Restart = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.LogsTxtBox = new System.Windows.Forms.RichTextBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.txtErrors = new System.Windows.Forms.TextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.txtChangelog = new System.Windows.Forms.TextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.txtSystem = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.Unloadempty_button = new System.Windows.Forms.Button();
             this.killphysics_button = new System.Windows.Forms.Button();
@@ -273,13 +264,21 @@ namespace MCGalaxy.Gui
             this.label33 = new System.Windows.Forms.Label();
             this.txtOpInput = new System.Windows.Forms.TextBox();
             this.txtOpLog = new MCGalaxy.Gui.AutoScrollTextBox();
+            this.tabsLogs = new System.Windows.Forms.TabControl();
+            this.tabLog_Gen = new System.Windows.Forms.TabPage();
+            this.tabLog_Sys = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.LogsTxtBox = new System.Windows.Forms.RichTextBox();
+            this.txtSystem = new System.Windows.Forms.TextBox();
+            this.tabLog_Err = new System.Windows.Forms.TabPage();
+            this.txtErrors = new System.Windows.Forms.TextBox();
+            this.tabLog_Chg = new System.Windows.Forms.TabPage();
+            this.txtChangelog = new System.Windows.Forms.TextBox();
             this.mapsStrip.SuspendLayout();
             this.playerStrip.SuspendLayout();
             this.iconContext.SuspendLayout();
             this.tabPage5.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.gBCommands.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMaps)).BeginInit();
@@ -301,6 +300,11 @@ namespace MCGalaxy.Gui
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabsLogs.SuspendLayout();
+            this.tabLog_Gen.SuspendLayout();
+            this.tabLog_Sys.SuspendLayout();
+            this.tabLog_Err.SuspendLayout();
+            this.tabLog_Chg.SuspendLayout();
             this.SuspendLayout();
             // 
             // mapsStrip
@@ -703,112 +707,13 @@ namespace MCGalaxy.Gui
             // tabPage5
             // 
             this.tabPage5.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage5.Controls.Add(this.label3);
-            this.tabPage5.Controls.Add(this.dateTimePicker1);
-            this.tabPage5.Controls.Add(this.LogsTxtBox);
+            this.tabPage5.Controls.Add(this.tabsLogs);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(767, 488);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Logs";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 11);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "View logs from:";
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(92, 5);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePicker1.TabIndex = 2;
-            this.dateTimePicker1.Value = new System.DateTime(2011, 7, 20, 18, 31, 50, 0);
-            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.DatePicker1_ValueChanged);
-            // 
-            // LogsTxtBox
-            // 
-            this.LogsTxtBox.BackColor = System.Drawing.SystemColors.Window;
-            this.LogsTxtBox.Location = new System.Drawing.Point(3, 32);
-            this.LogsTxtBox.Name = "LogsTxtBox";
-            this.LogsTxtBox.ReadOnly = true;
-            this.LogsTxtBox.Size = new System.Drawing.Size(755, 453);
-            this.LogsTxtBox.TabIndex = 0;
-            this.LogsTxtBox.Text = "";
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.BackColor = System.Drawing.Color.Transparent;
-            this.tabPage3.Controls.Add(this.txtErrors);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(767, 488);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Errors";
-            // 
-            // txtErrors
-            // 
-            this.txtErrors.BackColor = System.Drawing.Color.White;
-            this.txtErrors.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtErrors.Location = new System.Drawing.Point(7, 6);
-            this.txtErrors.Multiline = true;
-            this.txtErrors.Name = "txtErrors";
-            this.txtErrors.ReadOnly = true;
-            this.txtErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtErrors.Size = new System.Drawing.Size(754, 471);
-            this.txtErrors.TabIndex = 1;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.BackColor = System.Drawing.Color.Transparent;
-            this.tabPage2.Controls.Add(this.txtChangelog);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(767, 488);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Changelog";
-            // 
-            // txtChangelog
-            // 
-            this.txtChangelog.BackColor = System.Drawing.Color.White;
-            this.txtChangelog.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtChangelog.Location = new System.Drawing.Point(7, 6);
-            this.txtChangelog.Multiline = true;
-            this.txtChangelog.Name = "txtChangelog";
-            this.txtChangelog.ReadOnly = true;
-            this.txtChangelog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtChangelog.Size = new System.Drawing.Size(751, 471);
-            this.txtChangelog.TabIndex = 0;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.BackColor = System.Drawing.Color.Transparent;
-            this.tabPage4.Controls.Add(this.txtSystem);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(767, 488);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "System";
-            // 
-            // txtSystem
-            // 
-            this.txtSystem.BackColor = System.Drawing.Color.White;
-            this.txtSystem.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtSystem.Location = new System.Drawing.Point(7, 6);
-            this.txtSystem.Multiline = true;
-            this.txtSystem.Name = "txtSystem";
-            this.txtSystem.ReadOnly = true;
-            this.txtSystem.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtSystem.Size = new System.Drawing.Size(754, 471);
-            this.txtSystem.TabIndex = 1;
             // 
             // tabPage1
             // 
@@ -1010,7 +915,7 @@ namespace MCGalaxy.Gui
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
@@ -1084,16 +989,13 @@ namespace MCGalaxy.Gui
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.Chat);
             this.tabControl1.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabControl1.Font = new System.Drawing.Font("Calibri", 8.25F);
-            this.tabControl1.Location = new System.Drawing.Point(1, 12);
+            this.tabControl1.Location = new System.Drawing.Point(1, 11);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(775, 514);
@@ -2436,6 +2338,126 @@ namespace MCGalaxy.Gui
             this.txtOpLog.Size = new System.Drawing.Size(741, 96);
             this.txtOpLog.TabIndex = 29;
             // 
+            // tabsLogs
+            // 
+            this.tabsLogs.Controls.Add(this.tabLog_Err);
+            this.tabsLogs.Controls.Add(this.tabLog_Gen);
+            this.tabsLogs.Controls.Add(this.tabLog_Sys);
+            this.tabsLogs.Controls.Add(this.tabLog_Chg);
+            this.tabsLogs.Location = new System.Drawing.Point(-1, 1);
+            this.tabsLogs.Name = "tabsLogs";
+            this.tabsLogs.SelectedIndex = 0;
+            this.tabsLogs.Size = new System.Drawing.Size(775, 491);
+            this.tabsLogs.TabIndex = 0;
+            // 
+            // tabLog_Gen
+            // 
+            this.tabLog_Gen.Controls.Add(this.label3);
+            this.tabLog_Gen.Controls.Add(this.dateTimePicker1);
+            this.tabLog_Gen.Controls.Add(this.LogsTxtBox);
+            this.tabLog_Gen.Location = new System.Drawing.Point(4, 22);
+            this.tabLog_Gen.Name = "tabLog_Gen";
+            this.tabLog_Gen.Padding = new System.Windows.Forms.Padding(3);
+            this.tabLog_Gen.Size = new System.Drawing.Size(767, 465);
+            this.tabLog_Gen.TabIndex = 0;
+            this.tabLog_Gen.Text = "General";
+            this.tabLog_Gen.UseVisualStyleBackColor = true;
+            // 
+            // tabLog_Sys
+            // 
+            this.tabLog_Sys.Controls.Add(this.txtSystem);
+            this.tabLog_Sys.Location = new System.Drawing.Point(4, 22);
+            this.tabLog_Sys.Name = "tabLog_Sys";
+            this.tabLog_Sys.Padding = new System.Windows.Forms.Padding(3);
+            this.tabLog_Sys.Size = new System.Drawing.Size(767, 465);
+            this.tabLog_Sys.TabIndex = 1;
+            this.tabLog_Sys.Text = "System";
+            this.tabLog_Sys.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(78, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "View logs from:";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(87, 4);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 21);
+            this.dateTimePicker1.TabIndex = 5;
+            this.dateTimePicker1.Value = new System.DateTime(2011, 7, 20, 18, 31, 50, 0);
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.DatePicker1_ValueChanged);
+            // 
+            // LogsTxtBox
+            // 
+            this.LogsTxtBox.BackColor = System.Drawing.SystemColors.Window;
+            this.LogsTxtBox.Location = new System.Drawing.Point(-2, 30);
+            this.LogsTxtBox.Name = "LogsTxtBox";
+            this.LogsTxtBox.ReadOnly = true;
+            this.LogsTxtBox.Size = new System.Drawing.Size(765, 436);
+            this.LogsTxtBox.TabIndex = 4;
+            this.LogsTxtBox.Text = "";
+            // 
+            // txtSystem
+            // 
+            this.txtSystem.BackColor = System.Drawing.Color.White;
+            this.txtSystem.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtSystem.Location = new System.Drawing.Point(-2, 0);
+            this.txtSystem.Multiline = true;
+            this.txtSystem.Name = "txtSystem";
+            this.txtSystem.ReadOnly = true;
+            this.txtSystem.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtSystem.Size = new System.Drawing.Size(765, 465);
+            this.txtSystem.TabIndex = 2;
+            // 
+            // tabLog_Err
+            // 
+            this.tabLog_Err.Controls.Add(this.txtErrors);
+            this.tabLog_Err.Location = new System.Drawing.Point(4, 22);
+            this.tabLog_Err.Name = "tabLog_Err";
+            this.tabLog_Err.Size = new System.Drawing.Size(767, 465);
+            this.tabLog_Err.TabIndex = 2;
+            this.tabLog_Err.Text = "Errors";
+            this.tabLog_Err.UseVisualStyleBackColor = true;
+            // 
+            // txtErrors
+            // 
+            this.txtErrors.BackColor = System.Drawing.Color.White;
+            this.txtErrors.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtErrors.Location = new System.Drawing.Point(-2, 0);
+            this.txtErrors.Multiline = true;
+            this.txtErrors.Name = "txtErrors";
+            this.txtErrors.ReadOnly = true;
+            this.txtErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtErrors.Size = new System.Drawing.Size(765, 465);
+            this.txtErrors.TabIndex = 2;
+            // 
+            // tabLog_Chg
+            // 
+            this.tabLog_Chg.Controls.Add(this.txtChangelog);
+            this.tabLog_Chg.Location = new System.Drawing.Point(4, 22);
+            this.tabLog_Chg.Name = "tabLog_Chg";
+            this.tabLog_Chg.Size = new System.Drawing.Size(767, 465);
+            this.tabLog_Chg.TabIndex = 3;
+            this.tabLog_Chg.Text = "Changelog";
+            this.tabLog_Chg.UseVisualStyleBackColor = true;
+            // 
+            // txtChangelog
+            // 
+            this.txtChangelog.BackColor = System.Drawing.Color.White;
+            this.txtChangelog.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtChangelog.Location = new System.Drawing.Point(-2, 0);
+            this.txtChangelog.Multiline = true;
+            this.txtChangelog.Name = "txtChangelog";
+            this.txtChangelog.ReadOnly = true;
+            this.txtChangelog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtChangelog.Size = new System.Drawing.Size(765, 465);
+            this.txtChangelog.TabIndex = 1;
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2456,13 +2478,6 @@ namespace MCGalaxy.Gui
             this.playerStrip.ResumeLayout(false);
             this.iconContext.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.gBCommands.ResumeLayout(false);
@@ -2493,9 +2508,22 @@ namespace MCGalaxy.Gui
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabsLogs.ResumeLayout(false);
+            this.tabLog_Gen.ResumeLayout(false);
+            this.tabLog_Gen.PerformLayout();
+            this.tabLog_Sys.ResumeLayout(false);
+            this.tabLog_Sys.PerformLayout();
+            this.tabLog_Err.ResumeLayout(false);
+            this.tabLog_Err.PerformLayout();
+            this.tabLog_Chg.ResumeLayout(false);
+            this.tabLog_Chg.PerformLayout();
             this.ResumeLayout(false);
-
         }
+        private System.Windows.Forms.TabPage tabLog_Chg;
+        private System.Windows.Forms.TabPage tabLog_Sys;
+        private System.Windows.Forms.TabPage tabLog_Err;
+        private System.Windows.Forms.TabPage tabLog_Gen;
+        private System.Windows.Forms.TabControl tabsLogs;
 
         #endregion
 
@@ -2522,11 +2550,8 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem restartServerToolStripMenuItem;
         private TabPage tabPage5;
         private Label label3;
-        private TabPage tabPage3;
         private TextBox txtErrors;
-        private TabPage tabPage2;
         private TextBox txtChangelog;
-        private TabPage tabPage4;
         private TextBox txtSystem;
         private TabPage tabPage1;
         private GroupBox gBCommands;
