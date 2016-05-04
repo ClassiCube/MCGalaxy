@@ -112,6 +112,17 @@ namespace MCGalaxy.Gui
             this.btnClose = new System.Windows.Forms.Button();
             this.Restart = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tabsLogs = new System.Windows.Forms.TabControl();
+            this.tabLog_Err = new System.Windows.Forms.TabPage();
+            this.txtErrors = new System.Windows.Forms.TextBox();
+            this.tabLog_Gen = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.LogsTxtBox = new System.Windows.Forms.RichTextBox();
+            this.tabLog_Sys = new System.Windows.Forms.TabPage();
+            this.txtSystem = new System.Windows.Forms.TextBox();
+            this.tabLog_Chg = new System.Windows.Forms.TabPage();
+            this.txtChangelog = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.Unloadempty_button = new System.Windows.Forms.Button();
             this.killphysics_button = new System.Windows.Forms.Button();
@@ -264,21 +275,37 @@ namespace MCGalaxy.Gui
             this.label33 = new System.Windows.Forms.Label();
             this.txtOpInput = new System.Windows.Forms.TextBox();
             this.txtOpLog = new MCGalaxy.Gui.AutoScrollTextBox();
-            this.tabsLogs = new System.Windows.Forms.TabControl();
-            this.tabLog_Gen = new System.Windows.Forms.TabPage();
-            this.tabLog_Sys = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.LogsTxtBox = new System.Windows.Forms.RichTextBox();
-            this.txtSystem = new System.Windows.Forms.TextBox();
-            this.tabLog_Err = new System.Windows.Forms.TabPage();
-            this.txtErrors = new System.Windows.Forms.TextBox();
-            this.tabLog_Chg = new System.Windows.Forms.TabPage();
-            this.txtChangelog = new System.Windows.Forms.TextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.gbMap_Props = new System.Windows.Forms.GroupBox();
+            this.pgMaps = new System.Windows.Forms.PropertyGrid();
+            this.gbMap_Lded = new System.Windows.Forms.GroupBox();
+            this.lbMap_Lded = new System.Windows.Forms.ListBox();
+            this.gbMap_Unld = new System.Windows.Forms.GroupBox();
+            this.btnMap_Load = new System.Windows.Forms.Button();
+            this.lb_MapUnld = new System.Windows.Forms.ListBox();
+            this.gbMap_New = new System.Windows.Forms.GroupBox();
+            this.btnMap_Gen = new System.Windows.Forms.Button();
+            this.lblMap_Type = new System.Windows.Forms.Label();
+            this.lblMap_Seed = new System.Windows.Forms.Label();
+            this.lblMap_Z = new System.Windows.Forms.Label();
+            this.lblMap_X = new System.Windows.Forms.Label();
+            this.lblMap_Y = new System.Windows.Forms.Label();
+            this.txtMap_Seed = new System.Windows.Forms.TextBox();
+            this.cmbMap_Type = new System.Windows.Forms.ComboBox();
+            this.cmbMap_Z = new System.Windows.Forms.ComboBox();
+            this.cmbMap_Y = new System.Windows.Forms.ComboBox();
+            this.cmbMap_X = new System.Windows.Forms.ComboBox();
+            this.lblMap_Name = new System.Windows.Forms.Label();
+            this.txtMap_Name = new System.Windows.Forms.TextBox();
             this.mapsStrip.SuspendLayout();
             this.playerStrip.SuspendLayout();
             this.iconContext.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.tabsLogs.SuspendLayout();
+            this.tabLog_Err.SuspendLayout();
+            this.tabLog_Gen.SuspendLayout();
+            this.tabLog_Sys.SuspendLayout();
+            this.tabLog_Chg.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.gBCommands.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMaps)).BeginInit();
@@ -300,11 +327,11 @@ namespace MCGalaxy.Gui
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.tabsLogs.SuspendLayout();
-            this.tabLog_Gen.SuspendLayout();
-            this.tabLog_Sys.SuspendLayout();
-            this.tabLog_Err.SuspendLayout();
-            this.tabLog_Chg.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.gbMap_Props.SuspendLayout();
+            this.gbMap_Lded.SuspendLayout();
+            this.gbMap_Unld.SuspendLayout();
+            this.gbMap_New.SuspendLayout();
             this.SuspendLayout();
             // 
             // mapsStrip
@@ -715,6 +742,126 @@ namespace MCGalaxy.Gui
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Logs";
             // 
+            // tabsLogs
+            // 
+            this.tabsLogs.Controls.Add(this.tabLog_Err);
+            this.tabsLogs.Controls.Add(this.tabLog_Gen);
+            this.tabsLogs.Controls.Add(this.tabLog_Sys);
+            this.tabsLogs.Controls.Add(this.tabLog_Chg);
+            this.tabsLogs.Location = new System.Drawing.Point(-1, 1);
+            this.tabsLogs.Name = "tabsLogs";
+            this.tabsLogs.SelectedIndex = 0;
+            this.tabsLogs.Size = new System.Drawing.Size(775, 491);
+            this.tabsLogs.TabIndex = 0;
+            // 
+            // tabLog_Err
+            // 
+            this.tabLog_Err.Controls.Add(this.txtErrors);
+            this.tabLog_Err.Location = new System.Drawing.Point(4, 22);
+            this.tabLog_Err.Name = "tabLog_Err";
+            this.tabLog_Err.Size = new System.Drawing.Size(767, 465);
+            this.tabLog_Err.TabIndex = 2;
+            this.tabLog_Err.Text = "Errors";
+            this.tabLog_Err.UseVisualStyleBackColor = true;
+            // 
+            // txtErrors
+            // 
+            this.txtErrors.BackColor = System.Drawing.Color.White;
+            this.txtErrors.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtErrors.Location = new System.Drawing.Point(-2, 0);
+            this.txtErrors.Multiline = true;
+            this.txtErrors.Name = "txtErrors";
+            this.txtErrors.ReadOnly = true;
+            this.txtErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtErrors.Size = new System.Drawing.Size(765, 465);
+            this.txtErrors.TabIndex = 2;
+            // 
+            // tabLog_Gen
+            // 
+            this.tabLog_Gen.Controls.Add(this.label3);
+            this.tabLog_Gen.Controls.Add(this.dateTimePicker1);
+            this.tabLog_Gen.Controls.Add(this.LogsTxtBox);
+            this.tabLog_Gen.Location = new System.Drawing.Point(4, 22);
+            this.tabLog_Gen.Name = "tabLog_Gen";
+            this.tabLog_Gen.Padding = new System.Windows.Forms.Padding(3);
+            this.tabLog_Gen.Size = new System.Drawing.Size(767, 465);
+            this.tabLog_Gen.TabIndex = 0;
+            this.tabLog_Gen.Text = "General";
+            this.tabLog_Gen.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(78, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "View logs from:";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(87, 4);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 21);
+            this.dateTimePicker1.TabIndex = 5;
+            this.dateTimePicker1.Value = new System.DateTime(2011, 7, 20, 18, 31, 50, 0);
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.DatePicker1_ValueChanged);
+            // 
+            // LogsTxtBox
+            // 
+            this.LogsTxtBox.BackColor = System.Drawing.SystemColors.Window;
+            this.LogsTxtBox.Location = new System.Drawing.Point(-2, 30);
+            this.LogsTxtBox.Name = "LogsTxtBox";
+            this.LogsTxtBox.ReadOnly = true;
+            this.LogsTxtBox.Size = new System.Drawing.Size(765, 436);
+            this.LogsTxtBox.TabIndex = 4;
+            this.LogsTxtBox.Text = "";
+            // 
+            // tabLog_Sys
+            // 
+            this.tabLog_Sys.Controls.Add(this.txtSystem);
+            this.tabLog_Sys.Location = new System.Drawing.Point(4, 22);
+            this.tabLog_Sys.Name = "tabLog_Sys";
+            this.tabLog_Sys.Padding = new System.Windows.Forms.Padding(3);
+            this.tabLog_Sys.Size = new System.Drawing.Size(767, 465);
+            this.tabLog_Sys.TabIndex = 1;
+            this.tabLog_Sys.Text = "System";
+            this.tabLog_Sys.UseVisualStyleBackColor = true;
+            // 
+            // txtSystem
+            // 
+            this.txtSystem.BackColor = System.Drawing.Color.White;
+            this.txtSystem.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtSystem.Location = new System.Drawing.Point(-2, 0);
+            this.txtSystem.Multiline = true;
+            this.txtSystem.Name = "txtSystem";
+            this.txtSystem.ReadOnly = true;
+            this.txtSystem.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtSystem.Size = new System.Drawing.Size(765, 465);
+            this.txtSystem.TabIndex = 2;
+            // 
+            // tabLog_Chg
+            // 
+            this.tabLog_Chg.Controls.Add(this.txtChangelog);
+            this.tabLog_Chg.Location = new System.Drawing.Point(4, 22);
+            this.tabLog_Chg.Name = "tabLog_Chg";
+            this.tabLog_Chg.Size = new System.Drawing.Size(767, 465);
+            this.tabLog_Chg.TabIndex = 3;
+            this.tabLog_Chg.Text = "Changelog";
+            this.tabLog_Chg.UseVisualStyleBackColor = true;
+            // 
+            // txtChangelog
+            // 
+            this.txtChangelog.BackColor = System.Drawing.Color.White;
+            this.txtChangelog.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtChangelog.Location = new System.Drawing.Point(-2, 0);
+            this.txtChangelog.Multiline = true;
+            this.txtChangelog.Name = "txtChangelog";
+            this.txtChangelog.ReadOnly = true;
+            this.txtChangelog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtChangelog.Size = new System.Drawing.Size(765, 465);
+            this.txtChangelog.TabIndex = 1;
+            // 
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.Transparent;
@@ -993,6 +1140,7 @@ namespace MCGalaxy.Gui
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.Chat);
+            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabControl1.Font = new System.Drawing.Font("Calibri", 8.25F);
             this.tabControl1.Location = new System.Drawing.Point(1, 11);
@@ -2338,125 +2486,215 @@ namespace MCGalaxy.Gui
             this.txtOpLog.Size = new System.Drawing.Size(741, 96);
             this.txtOpLog.TabIndex = 29;
             // 
-            // tabsLogs
+            // tabPage2
             // 
-            this.tabsLogs.Controls.Add(this.tabLog_Err);
-            this.tabsLogs.Controls.Add(this.tabLog_Gen);
-            this.tabsLogs.Controls.Add(this.tabLog_Sys);
-            this.tabsLogs.Controls.Add(this.tabLog_Chg);
-            this.tabsLogs.Location = new System.Drawing.Point(-1, 1);
-            this.tabsLogs.Name = "tabsLogs";
-            this.tabsLogs.SelectedIndex = 0;
-            this.tabsLogs.Size = new System.Drawing.Size(775, 491);
-            this.tabsLogs.TabIndex = 0;
+            this.tabPage2.Controls.Add(this.gbMap_Props);
+            this.tabPage2.Controls.Add(this.gbMap_Lded);
+            this.tabPage2.Controls.Add(this.gbMap_Unld);
+            this.tabPage2.Controls.Add(this.gbMap_New);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(767, 488);
+            this.tabPage2.TabIndex = 9;
+            this.tabPage2.Text = "Maps";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // tabLog_Gen
+            // gbMap_Props
             // 
-            this.tabLog_Gen.Controls.Add(this.label3);
-            this.tabLog_Gen.Controls.Add(this.dateTimePicker1);
-            this.tabLog_Gen.Controls.Add(this.LogsTxtBox);
-            this.tabLog_Gen.Location = new System.Drawing.Point(4, 22);
-            this.tabLog_Gen.Name = "tabLog_Gen";
-            this.tabLog_Gen.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLog_Gen.Size = new System.Drawing.Size(767, 465);
-            this.tabLog_Gen.TabIndex = 0;
-            this.tabLog_Gen.Text = "General";
-            this.tabLog_Gen.UseVisualStyleBackColor = true;
+            this.gbMap_Props.Controls.Add(this.pgMaps);
+            this.gbMap_Props.Location = new System.Drawing.Point(415, 3);
+            this.gbMap_Props.Name = "gbMap_Props";
+            this.gbMap_Props.Size = new System.Drawing.Size(343, 334);
+            this.gbMap_Props.TabIndex = 5;
+            this.gbMap_Props.TabStop = false;
+            this.gbMap_Props.Text = "Properties for (none selected)";
             // 
-            // tabLog_Sys
+            // pgMaps
             // 
-            this.tabLog_Sys.Controls.Add(this.txtSystem);
-            this.tabLog_Sys.Location = new System.Drawing.Point(4, 22);
-            this.tabLog_Sys.Name = "tabLog_Sys";
-            this.tabLog_Sys.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLog_Sys.Size = new System.Drawing.Size(767, 465);
-            this.tabLog_Sys.TabIndex = 1;
-            this.tabLog_Sys.Text = "System";
-            this.tabLog_Sys.UseVisualStyleBackColor = true;
+            this.pgMaps.Location = new System.Drawing.Point(7, 20);
+            this.pgMaps.Name = "pgMaps";
+            this.pgMaps.Size = new System.Drawing.Size(330, 308);
+            this.pgMaps.TabIndex = 0;
+            this.pgMaps.ToolbarVisible = false;
             // 
-            // label3
+            // gbMap_Lded
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "View logs from:";
+            this.gbMap_Lded.Controls.Add(this.lbMap_Lded);
+            this.gbMap_Lded.Location = new System.Drawing.Point(7, 3);
+            this.gbMap_Lded.Name = "gbMap_Lded";
+            this.gbMap_Lded.Size = new System.Drawing.Size(390, 221);
+            this.gbMap_Lded.TabIndex = 4;
+            this.gbMap_Lded.TabStop = false;
+            this.gbMap_Lded.Text = "Loaded levels";
             // 
-            // dateTimePicker1
+            // lbMap_Lded
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(87, 4);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePicker1.TabIndex = 5;
-            this.dateTimePicker1.Value = new System.DateTime(2011, 7, 20, 18, 31, 50, 0);
-            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.DatePicker1_ValueChanged);
+            this.lbMap_Lded.FormattingEnabled = true;
+            this.lbMap_Lded.Location = new System.Drawing.Point(5, 15);
+            this.lbMap_Lded.MultiColumn = true;
+            this.lbMap_Lded.Name = "lbMap_Lded";
+            this.lbMap_Lded.Size = new System.Drawing.Size(379, 199);
+            this.lbMap_Lded.TabIndex = 0;
             // 
-            // LogsTxtBox
+            // gbMap_Unld
             // 
-            this.LogsTxtBox.BackColor = System.Drawing.SystemColors.Window;
-            this.LogsTxtBox.Location = new System.Drawing.Point(-2, 30);
-            this.LogsTxtBox.Name = "LogsTxtBox";
-            this.LogsTxtBox.ReadOnly = true;
-            this.LogsTxtBox.Size = new System.Drawing.Size(765, 436);
-            this.LogsTxtBox.TabIndex = 4;
-            this.LogsTxtBox.Text = "";
+            this.gbMap_Unld.Controls.Add(this.btnMap_Load);
+            this.gbMap_Unld.Controls.Add(this.lb_MapUnld);
+            this.gbMap_Unld.Location = new System.Drawing.Point(7, 227);
+            this.gbMap_Unld.Name = "gbMap_Unld";
+            this.gbMap_Unld.Size = new System.Drawing.Size(390, 258);
+            this.gbMap_Unld.TabIndex = 3;
+            this.gbMap_Unld.TabStop = false;
+            this.gbMap_Unld.Text = "Unloaded levels";
             // 
-            // txtSystem
+            // btnMap_Load
             // 
-            this.txtSystem.BackColor = System.Drawing.Color.White;
-            this.txtSystem.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtSystem.Location = new System.Drawing.Point(-2, 0);
-            this.txtSystem.Multiline = true;
-            this.txtSystem.Name = "txtSystem";
-            this.txtSystem.ReadOnly = true;
-            this.txtSystem.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtSystem.Size = new System.Drawing.Size(765, 465);
-            this.txtSystem.TabIndex = 2;
+            this.btnMap_Load.Location = new System.Drawing.Point(150, 230);
+            this.btnMap_Load.Name = "btnMap_Load";
+            this.btnMap_Load.Size = new System.Drawing.Size(75, 23);
+            this.btnMap_Load.TabIndex = 1;
+            this.btnMap_Load.Text = "Load map";
+            this.btnMap_Load.UseVisualStyleBackColor = true;
             // 
-            // tabLog_Err
+            // lb_MapUnld
             // 
-            this.tabLog_Err.Controls.Add(this.txtErrors);
-            this.tabLog_Err.Location = new System.Drawing.Point(4, 22);
-            this.tabLog_Err.Name = "tabLog_Err";
-            this.tabLog_Err.Size = new System.Drawing.Size(767, 465);
-            this.tabLog_Err.TabIndex = 2;
-            this.tabLog_Err.Text = "Errors";
-            this.tabLog_Err.UseVisualStyleBackColor = true;
+            this.lb_MapUnld.FormattingEnabled = true;
+            this.lb_MapUnld.Location = new System.Drawing.Point(5, 15);
+            this.lb_MapUnld.MultiColumn = true;
+            this.lb_MapUnld.Name = "lb_MapUnld";
+            this.lb_MapUnld.Size = new System.Drawing.Size(379, 212);
+            this.lb_MapUnld.TabIndex = 0;
             // 
-            // txtErrors
+            // gbMap_New
             // 
-            this.txtErrors.BackColor = System.Drawing.Color.White;
-            this.txtErrors.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtErrors.Location = new System.Drawing.Point(-2, 0);
-            this.txtErrors.Multiline = true;
-            this.txtErrors.Name = "txtErrors";
-            this.txtErrors.ReadOnly = true;
-            this.txtErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtErrors.Size = new System.Drawing.Size(765, 465);
-            this.txtErrors.TabIndex = 2;
+            this.gbMap_New.Controls.Add(this.btnMap_Gen);
+            this.gbMap_New.Controls.Add(this.lblMap_Type);
+            this.gbMap_New.Controls.Add(this.lblMap_Seed);
+            this.gbMap_New.Controls.Add(this.lblMap_Z);
+            this.gbMap_New.Controls.Add(this.lblMap_X);
+            this.gbMap_New.Controls.Add(this.lblMap_Y);
+            this.gbMap_New.Controls.Add(this.txtMap_Seed);
+            this.gbMap_New.Controls.Add(this.cmbMap_Type);
+            this.gbMap_New.Controls.Add(this.cmbMap_Z);
+            this.gbMap_New.Controls.Add(this.cmbMap_Y);
+            this.gbMap_New.Controls.Add(this.cmbMap_X);
+            this.gbMap_New.Controls.Add(this.lblMap_Name);
+            this.gbMap_New.Controls.Add(this.txtMap_Name);
+            this.gbMap_New.Location = new System.Drawing.Point(415, 343);
+            this.gbMap_New.Name = "gbMap_New";
+            this.gbMap_New.Size = new System.Drawing.Size(343, 142);
+            this.gbMap_New.TabIndex = 0;
+            this.gbMap_New.TabStop = false;
+            this.gbMap_New.Text = "Create new map";
             // 
-            // tabLog_Chg
+            // btnMap_Gen
             // 
-            this.tabLog_Chg.Controls.Add(this.txtChangelog);
-            this.tabLog_Chg.Location = new System.Drawing.Point(4, 22);
-            this.tabLog_Chg.Name = "tabLog_Chg";
-            this.tabLog_Chg.Size = new System.Drawing.Size(767, 465);
-            this.tabLog_Chg.TabIndex = 3;
-            this.tabLog_Chg.Text = "Changelog";
-            this.tabLog_Chg.UseVisualStyleBackColor = true;
+            this.btnMap_Gen.Location = new System.Drawing.Point(150, 112);
+            this.btnMap_Gen.Name = "btnMap_Gen";
+            this.btnMap_Gen.Size = new System.Drawing.Size(75, 23);
+            this.btnMap_Gen.TabIndex = 17;
+            this.btnMap_Gen.Text = "Generate";
+            this.btnMap_Gen.UseVisualStyleBackColor = true;
             // 
-            // txtChangelog
+            // lblMap_Type
             // 
-            this.txtChangelog.BackColor = System.Drawing.Color.White;
-            this.txtChangelog.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtChangelog.Location = new System.Drawing.Point(-2, 0);
-            this.txtChangelog.Multiline = true;
-            this.txtChangelog.Name = "txtChangelog";
-            this.txtChangelog.ReadOnly = true;
-            this.txtChangelog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtChangelog.Size = new System.Drawing.Size(765, 465);
-            this.txtChangelog.TabIndex = 1;
+            this.lblMap_Type.AutoSize = true;
+            this.lblMap_Type.Location = new System.Drawing.Point(13, 78);
+            this.lblMap_Type.Name = "lblMap_Type";
+            this.lblMap_Type.Size = new System.Drawing.Size(32, 13);
+            this.lblMap_Type.TabIndex = 16;
+            this.lblMap_Type.Text = "Type:";
+            // 
+            // lblMap_Seed
+            // 
+            this.lblMap_Seed.AutoSize = true;
+            this.lblMap_Seed.Location = new System.Drawing.Point(192, 78);
+            this.lblMap_Seed.Name = "lblMap_Seed";
+            this.lblMap_Seed.Size = new System.Drawing.Size(33, 13);
+            this.lblMap_Seed.TabIndex = 15;
+            this.lblMap_Seed.Text = "Seed:";
+            // 
+            // lblMap_Z
+            // 
+            this.lblMap_Z.AutoSize = true;
+            this.lblMap_Z.Location = new System.Drawing.Point(231, 51);
+            this.lblMap_Z.Name = "lblMap_Z";
+            this.lblMap_Z.Size = new System.Drawing.Size(42, 13);
+            this.lblMap_Z.TabIndex = 14;
+            this.lblMap_Z.Text = "Length:";
+            // 
+            // lblMap_X
+            // 
+            this.lblMap_X.AutoSize = true;
+            this.lblMap_X.Location = new System.Drawing.Point(7, 51);
+            this.lblMap_X.Name = "lblMap_X";
+            this.lblMap_X.Size = new System.Drawing.Size(39, 13);
+            this.lblMap_X.TabIndex = 13;
+            this.lblMap_X.Text = "Width:";
+            // 
+            // lblMap_Y
+            // 
+            this.lblMap_Y.AutoSize = true;
+            this.lblMap_Y.Location = new System.Drawing.Point(118, 51);
+            this.lblMap_Y.Name = "lblMap_Y";
+            this.lblMap_Y.Size = new System.Drawing.Size(41, 13);
+            this.lblMap_Y.TabIndex = 12;
+            this.lblMap_Y.Text = "Height:";
+            // 
+            // txtMap_Seed
+            // 
+            this.txtMap_Seed.Location = new System.Drawing.Point(231, 75);
+            this.txtMap_Seed.Name = "txtMap_Seed";
+            this.txtMap_Seed.Size = new System.Drawing.Size(107, 21);
+            this.txtMap_Seed.TabIndex = 11;
+            // 
+            // cmbMap_Type
+            // 
+            this.cmbMap_Type.FormattingEnabled = true;
+            this.cmbMap_Type.Location = new System.Drawing.Point(51, 75);
+            this.cmbMap_Type.Name = "cmbMap_Type";
+            this.cmbMap_Type.Size = new System.Drawing.Size(121, 21);
+            this.cmbMap_Type.TabIndex = 10;
+            // 
+            // cmbMap_Z
+            // 
+            this.cmbMap_Z.FormattingEnabled = true;
+            this.cmbMap_Z.Location = new System.Drawing.Point(279, 48);
+            this.cmbMap_Z.Name = "cmbMap_Z";
+            this.cmbMap_Z.Size = new System.Drawing.Size(60, 21);
+            this.cmbMap_Z.TabIndex = 9;
+            // 
+            // cmbMap_Y
+            // 
+            this.cmbMap_Y.FormattingEnabled = true;
+            this.cmbMap_Y.Location = new System.Drawing.Point(165, 48);
+            this.cmbMap_Y.Name = "cmbMap_Y";
+            this.cmbMap_Y.Size = new System.Drawing.Size(60, 21);
+            this.cmbMap_Y.TabIndex = 8;
+            // 
+            // cmbMap_X
+            // 
+            this.cmbMap_X.FormattingEnabled = true;
+            this.cmbMap_X.Location = new System.Drawing.Point(52, 48);
+            this.cmbMap_X.Name = "cmbMap_X";
+            this.cmbMap_X.Size = new System.Drawing.Size(60, 21);
+            this.cmbMap_X.TabIndex = 7;
+            // 
+            // lblMap_Name
+            // 
+            this.lblMap_Name.AutoSize = true;
+            this.lblMap_Name.Location = new System.Drawing.Point(7, 24);
+            this.lblMap_Name.Name = "lblMap_Name";
+            this.lblMap_Name.Size = new System.Drawing.Size(38, 13);
+            this.lblMap_Name.TabIndex = 6;
+            this.lblMap_Name.Text = "Name:";
+            // 
+            // txtMap_Name
+            // 
+            this.txtMap_Name.Location = new System.Drawing.Point(51, 21);
+            this.txtMap_Name.Name = "txtMap_Name";
+            this.txtMap_Name.Size = new System.Drawing.Size(287, 21);
+            this.txtMap_Name.TabIndex = 0;
             // 
             // Window
             // 
@@ -2478,6 +2716,15 @@ namespace MCGalaxy.Gui
             this.playerStrip.ResumeLayout(false);
             this.iconContext.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.tabsLogs.ResumeLayout(false);
+            this.tabLog_Err.ResumeLayout(false);
+            this.tabLog_Err.PerformLayout();
+            this.tabLog_Gen.ResumeLayout(false);
+            this.tabLog_Gen.PerformLayout();
+            this.tabLog_Sys.ResumeLayout(false);
+            this.tabLog_Sys.PerformLayout();
+            this.tabLog_Chg.ResumeLayout(false);
+            this.tabLog_Chg.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.gBCommands.ResumeLayout(false);
@@ -2508,17 +2755,36 @@ namespace MCGalaxy.Gui
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.tabsLogs.ResumeLayout(false);
-            this.tabLog_Gen.ResumeLayout(false);
-            this.tabLog_Gen.PerformLayout();
-            this.tabLog_Sys.ResumeLayout(false);
-            this.tabLog_Sys.PerformLayout();
-            this.tabLog_Err.ResumeLayout(false);
-            this.tabLog_Err.PerformLayout();
-            this.tabLog_Chg.ResumeLayout(false);
-            this.tabLog_Chg.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.gbMap_Props.ResumeLayout(false);
+            this.gbMap_Lded.ResumeLayout(false);
+            this.gbMap_Unld.ResumeLayout(false);
+            this.gbMap_New.ResumeLayout(false);
+            this.gbMap_New.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.TextBox txtMap_Name;
+        private System.Windows.Forms.Label lblMap_Name;
+        private System.Windows.Forms.ComboBox cmbMap_X;
+        private System.Windows.Forms.ComboBox cmbMap_Y;
+        private System.Windows.Forms.ComboBox cmbMap_Z;
+        private System.Windows.Forms.ComboBox cmbMap_Type;
+        private System.Windows.Forms.TextBox txtMap_Seed;
+        private System.Windows.Forms.Label lblMap_Y;
+        private System.Windows.Forms.Label lblMap_X;
+        private System.Windows.Forms.Label lblMap_Z;
+        private System.Windows.Forms.Label lblMap_Seed;
+        private System.Windows.Forms.Label lblMap_Type;
+        private System.Windows.Forms.Button btnMap_Gen;
+        private System.Windows.Forms.GroupBox gbMap_New;
+        private System.Windows.Forms.ListBox lb_MapUnld;
+        private System.Windows.Forms.Button btnMap_Load;
+        private System.Windows.Forms.GroupBox gbMap_Unld;
+        private System.Windows.Forms.ListBox lbMap_Lded;
+        private System.Windows.Forms.GroupBox gbMap_Lded;
+        private System.Windows.Forms.PropertyGrid pgMaps;
+        private System.Windows.Forms.GroupBox gbMap_Props;
+        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabLog_Chg;
         private System.Windows.Forms.TabPage tabLog_Sys;
         private System.Windows.Forms.TabPage tabLog_Err;
