@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
             if (!p.level.worldChat) {
                 Chat.GlobalChatLevel(p, "<Level>" + p.ColoredName + " %S" + action, false);
             } else {
-                Player.SendChatFrom(p, p.ColoredName + "%S " + action);
+                Player.SendChatFrom(p, " %S" + action);
             }      
         }
         

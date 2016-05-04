@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands
         }
         
         void HandleMapCommand(Player p, string message, string cmd, string value) {
-            bool mapOnly = cmd == "PHYSICS" || cmd == "MOTD" || cmd == "GUNS" ||
+            bool mapOnly = cmd == "PHYSICS" || cmd == "MOTD" || cmd == "GUNS" || cmd == "CHAT" || cmd == "RESTORE" ||
                 cmd == "PERVISIT" || cmd == "TEXTURE" || cmd == "BUILDABLE" || cmd == "DELETEABLE";
             if (mapOnly && !p.level.name.CaselessStarts(p.name)) {
                 Player.SendMessage(p, "You may only perform that action on your own map.");
@@ -217,6 +217,10 @@ namespace MCGalaxy.Commands
                 }
             } else if (cmd == "GUNS") {
                 Command.all.Find("allowguns").Use(p, "");
+            } else if (cmd == "CHAT") {
+                Command.all.Find("map").Use(p, "chat");
+            } else if (cmd == "RESTORE") {
+                Command.all.Find("restore").Use(p, value);
             } else if (cmd == "PERVISIT") {
                 string rank = value == "" ? Server.defaultRank : value;
                 Command.all.Find("pervisit").Use(p, rank);
@@ -241,7 +245,9 @@ namespace MCGalaxy.Commands
                 Player.SendMessage(p, "/os map add [width] [height] [length] [type] -- Creates your map");
                 Player.SendMessage(p, "/os map physics -- Sets the physics on your map.");
                 Player.SendMessage(p, "/os map delete -- Deletes your map");
+                Player.SendMessage(p, "/os map restore [num] -- Restores backup [num] of your map");
                 Player.SendMessage(p, "/os map save -- Saves your map");
+                Player.SendMessage(p, "/os map chat -- Sets whether roleplay (level only) chat is used.");
                 Player.SendMessage(p, "/os map motd -- Changes the motd of your map");
                 Player.SendMessage(p, "/os map guns -- Toggles if guns can be used on your map");
                 Player.SendMessage(p, "/os map pervisit %b[default is " + Server.defaultRank + "]%S -- Changes the pervisit of you map");

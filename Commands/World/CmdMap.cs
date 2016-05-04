@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands
                     Player.SendMessage(p, "Killer blocks: " + GetBool(lvl.Killer));
                     Player.SendMessage(p, "Unload: " + GetBool(lvl.unload));
                     Player.SendMessage(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
-                    Player.SendMessage(p, "Role play (level only) chat: " + GetBool(!lvl.worldChat));
+                    Player.SendMessage(p, "Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
                     Player.SendMessage(p, "Guns: " + GetBool(lvl.guns));
                     Player.SendMessage(p, "Buildable: " + GetBool(lvl.Buildable));
                     Player.SendMessage(p, "Deletable: " + GetBool(lvl.Deletable));
@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands
                     case "unload":
                         SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
                     case "chat":
-                        SetBool(p, lvl, ref lvl.worldChat, "Role play (level only) chat: ", true); break;
+                        SetBool(p, lvl, ref lvl.worldChat, "Roleplay (level only) chat: ", true); break;
                     case "load":
                     case "autoload":
                     case "loadongoto":
