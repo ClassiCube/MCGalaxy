@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             if (lvl == null) { Player.SendMessage(p, "Level not found"); return; }
             string newName = args[1];
             if (!Player.ValidName(newName)) {
-                Player.SendMessage("\"" + newName + "\" is not a valid level name."); return;
+                Player.SendMessage(p, "\"" + newName + "\" is not a valid level name."); return;
             }
             
             if (LevelInfo.ExistsOffline(newName)) { Player.SendMessage(p, "Level already exists."); return; }

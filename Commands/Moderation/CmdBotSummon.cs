@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             PlayerBot who = PlayerBot.Find(message);
             if (who == null) { Player.SendMessage(p, "There is no bot " + message + "!"); return; }
             if (p.level != who.level) { Player.SendMessage(p, who.name + " is in a different level."); return; }
-            who.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+            who.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
         }
         public override void Help(Player p)
         {
