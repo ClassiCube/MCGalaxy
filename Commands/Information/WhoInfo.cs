@@ -30,6 +30,7 @@ namespace MCGalaxy.Commands {
         public string IP;
         public int RoundsTotal, RoundsMax;
         public int InfectedTotal, InfectedMax;
+        public string AfkMessage;
         
         public static void Output(Player p, WhoInfo who, bool canSeeIP) {
             Player.SendMessage(p, who.FullName + " %S(" + who.Name + ") has:");
@@ -79,6 +80,8 @@ namespace MCGalaxy.Commands {
                 if (Server.useWhitelist&& Server.whiteList.Contains(who.Name))
                     Player.SendMessage(p, ">> Player is &fWhitelisted");
             }
+            if (who.AfkMessage != null)
+                Player.SendMessage(p, ">> Is &aAFK %S(" + who.AfkMessage + "%S)");
             
             if (!Server.zombie.Running) return;
             Player.SendMessage(p, ">> Survived &a" + who.RoundsTotal +

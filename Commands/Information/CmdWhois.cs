@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             info.TimeSpent = who.time; info.TimeOnline = DateTime.Now - who.timeLogged;
             info.First = who.firstLogin;
             info.Logins = who.totalLogins; info.Kicks = who.totalKicked;
-            info.IP = who.ip;
+            info.IP = who.ip; info.AfkMessage = who.afkMessage;
             
             info.RoundsTotal = who.Game.TotalRoundsSurvived;
             info.RoundsMax = who.Game.MaxRoundsSurvived;

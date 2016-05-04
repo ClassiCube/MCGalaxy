@@ -38,27 +38,24 @@ namespace MCGalaxy.Commands
 
             if (message == "list") {
                 foreach (string s in Server.afkset) {
-            	    Player pl = PlayerInfo.FindExact(s);
-            	    if (pl == null || !Entities.CanSee(p, pl)) continue;
+                    Player pl = PlayerInfo.FindExact(s);
+                    if (pl == null || !Entities.CanSee(p, pl)) continue;
                     Player.SendMessage(p, s);
                 }
                 return;
             }
             
-            if (p.joker)
-                message = "";
+            if (p.joker) message = "";
             if (!Server.afkset.Contains(p.name)) {
                 p.afkStart = DateTime.Now;
+                p.afkMessage = message;
                 Server.afkset.Add(p.name);
-                if (p.muted)
-                    message = "";
                 Player.GlobalMessage("-" + p.ColoredName + "%S- is AFK " + message);
-                //IRCBot.Say(p.name + " is AFK " + message);
                 Server.IRC.Say(p.DisplayName + " is AFK " + message);
             } else {
                 Server.afkset.Remove(p.name);
+                p.afkMessage = null;
                 Player.GlobalMessage("-" + p.ColoredName + "%S- is no longer AFK");
-                //IRCBot.Say(p.name + " is no longer AFK");
                 Server.IRC.Say(p.DisplayName + " is no longer AFK");
             }
         }
