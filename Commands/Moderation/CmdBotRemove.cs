@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             
             PlayerBot who = PlayerBot.FindOrShowMatches(p, message);
             if (who == null) return;
-            if (!p.level.name.CaselessEq(who.name)) {
+            if (!p.level.name.CaselessEq(who.level.name)) {
                 Player.SendMessage(p, who.name + " is in a different level."); return;
             }
             PlayerBot.Remove(who);
