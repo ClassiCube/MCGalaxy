@@ -179,7 +179,7 @@ namespace MCGalaxy.Gui
             {
                 UpdateMapList();
                 UpdatePlayerMapCombo();
-                UnloadedlistUpdate();
+                UpdateUnloadedList();
 
             });
 
@@ -189,7 +189,7 @@ namespace MCGalaxy.Gui
             RunOnUiThread(() =>
             {
                 UpdatePlayerMapCombo();
-                UnloadedlistUpdate();
+                UpdateUnloadedList();
 
             });
         }
@@ -383,8 +383,19 @@ namespace MCGalaxy.Gui
                 // Update the data source and control
                 //dgvPlayers.SuspendLayout();
                 lc.Clear();
+                string selectedLvl = null;
+                if (lbMap_Lded.SelectedItem != null)
+                    selectedLvl = lbMap_Lded.SelectedItem.ToString();
+                
+                lbMap_Lded.Items.Clear();
                 //lc = new LevelCollection(new LevelListView());
                 Server.levels.ForEach(l => lc.Add(l));
+                Server.levels.ForEach(l => lbMap_Lded.Items.Add(l.name));
+                
+                if (selectedLvl != null) {
+                    int index = lbMap_Lded.Items.IndexOf(selectedLvl);
+                    if (index >= 0) lbMap_Lded.SelectedIndex = index;
+                }
 
                 //dgvPlayers.Invalidate();
                 dgvMaps.DataSource = null;
@@ -712,7 +723,7 @@ namespace MCGalaxy.Gui
 
         private void tabControl1_Click(object sender, EventArgs e)
         {
-            try { UnloadedlistUpdate(); }
+            try { UpdateUnloadedList(); }
             catch { }
             try { UpdatePlyersListBox(); }
             catch { }
@@ -902,34 +913,31 @@ namespace MCGalaxy.Gui
 
         private void CreateNewMap_Click(object sender, EventArgs e) { }
 
-        private void ldmapbt_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Command.all.Find("load").Use(null, UnloadedList.SelectedItem.ToString());
-            }
-            catch { }
-        }
-
         private void dgvMapsTab_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             saveToolStripMenuItem_Click(sender, e);
             editPropertiesToolStripMenuItem_Click(sender, e);
         }
 
-        public void UnloadedlistUpdate()
+        public void UpdateUnloadedList()
         {
             RunOnUiThread(() =>
             {
-                UnloadedList.Items.Clear();
-
-                string name;
+        	    string selectedLvl = null;
+                if (lbMap_Unld.SelectedItem != null)
+                    selectedLvl = lbMap_Unld.SelectedItem.ToString();
+                
+                lbMap_Unld.Items.Clear();
                 FileInfo[] fi = new DirectoryInfo("levels/").GetFiles("*.lvl");
-                foreach (FileInfo file in fi)
-                {
-                    name = file.Name.Replace(".lvl", "");
-                    if (LevelInfo.Find(name.ToLower()) == null)
-                        UnloadedList.Items.Add(name);
+                foreach (FileInfo file in fi) {
+                    string name = file.Name.Replace(".lvl", "");
+                    if (LevelInfo.FindExact(name) == null)
+                        lbMap_Unld.Items.Add(name);
+                }
+                
+                if (selectedLvl != null) {
+                    int index = lbMap_Unld.Items.IndexOf(selectedLvl);
+                    if (index >= 0) lbMap_Unld.SelectedIndex = index;
                 }
             });
         }
@@ -1622,7 +1630,7 @@ namespace MCGalaxy.Gui
                 if (LevelInfo.ExistsOffline(name)) {
                     MessageBox.Show("Created Level");
                     try {
-                        UnloadedlistUpdate();
+                        UpdateUnloadedList();
                         UpdateMapList();
                     } catch { 
                     }
@@ -1633,6 +1641,15 @@ namespace MCGalaxy.Gui
             });
             genThread.Name = "MCG_GuiGenMap";
             genThread.Start();
+        }
+        
+       void MapLoadClick(object sender, EventArgs e) {
+            try {
+                Command.all.Find("load").Use(null, lbMap_Unld.SelectedItem.ToString());
+            } catch { 
+            }
+        	UpdateUnloadedList();
+        	UpdateMapList();
         }
         
         #endregion

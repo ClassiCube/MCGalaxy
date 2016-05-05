@@ -150,9 +150,6 @@ namespace MCGalaxy.Gui
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.UnloadedList = new System.Windows.Forms.ListBox();
-            this.ldmapbt = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.TreeGrowChk = new System.Windows.Forms.CheckBox();
             this.label39 = new System.Windows.Forms.Label();
@@ -268,7 +265,7 @@ namespace MCGalaxy.Gui
             this.lbMap_Lded = new System.Windows.Forms.ListBox();
             this.gbMap_Unld = new System.Windows.Forms.GroupBox();
             this.btnMap_Load = new System.Windows.Forms.Button();
-            this.lb_MapUnld = new System.Windows.Forms.ListBox();
+            this.lbMap_Unld = new System.Windows.Forms.ListBox();
             this.gbMap_New = new System.Windows.Forms.GroupBox();
             this.btnMap_Gen = new System.Windows.Forms.Button();
             this.lblMap_Type = new System.Windows.Forms.Label();
@@ -300,7 +297,6 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage6.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drownNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Fallnumeric)).BeginInit();
@@ -1137,7 +1133,6 @@ namespace MCGalaxy.Gui
             // 
             // tabPage6
             // 
-            this.tabPage6.Controls.Add(this.panel3);
             this.tabPage6.Controls.Add(this.panel2);
             this.tabPage6.Controls.Add(this.dgvMapsTab);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
@@ -1146,34 +1141,6 @@ namespace MCGalaxy.Gui
             this.tabPage6.Size = new System.Drawing.Size(767, 488);
             this.tabPage6.TabIndex = 6;
             this.tabPage6.Text = "Maps";
-            // 
-            // panel3
-            // 
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.UnloadedList);
-            this.panel3.Controls.Add(this.ldmapbt);
-            this.panel3.Location = new System.Drawing.Point(7, 7);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(236, 207);
-            this.panel3.TabIndex = 49;
-            // 
-            // UnloadedList
-            // 
-            this.UnloadedList.FormattingEnabled = true;
-            this.UnloadedList.Location = new System.Drawing.Point(4, 4);
-            this.UnloadedList.Name = "UnloadedList";
-            this.UnloadedList.Size = new System.Drawing.Size(227, 160);
-            this.UnloadedList.TabIndex = 1;
-            // 
-            // ldmapbt
-            // 
-            this.ldmapbt.Location = new System.Drawing.Point(4, 168);
-            this.ldmapbt.Name = "ldmapbt";
-            this.ldmapbt.Size = new System.Drawing.Size(227, 35);
-            this.ldmapbt.TabIndex = 0;
-            this.ldmapbt.Text = "Load Map";
-            this.ldmapbt.UseVisualStyleBackColor = true;
-            this.ldmapbt.Click += new System.EventHandler(this.ldmapbt_Click);
             // 
             // panel2
             // 
@@ -2322,7 +2289,7 @@ namespace MCGalaxy.Gui
             this.gbMap_Props.Controls.Add(this.pgMaps);
             this.gbMap_Props.Location = new System.Drawing.Point(415, 3);
             this.gbMap_Props.Name = "gbMap_Props";
-            this.gbMap_Props.Size = new System.Drawing.Size(343, 334);
+            this.gbMap_Props.Size = new System.Drawing.Size(343, 349);
             this.gbMap_Props.TabIndex = 5;
             this.gbMap_Props.TabStop = false;
             this.gbMap_Props.Text = "Properties for (none selected)";
@@ -2331,7 +2298,7 @@ namespace MCGalaxy.Gui
             // 
             this.pgMaps.Location = new System.Drawing.Point(7, 20);
             this.pgMaps.Name = "pgMaps";
-            this.pgMaps.Size = new System.Drawing.Size(330, 308);
+            this.pgMaps.Size = new System.Drawing.Size(330, 323);
             this.pgMaps.TabIndex = 0;
             this.pgMaps.ToolbarVisible = false;
             // 
@@ -2357,7 +2324,7 @@ namespace MCGalaxy.Gui
             // gbMap_Unld
             // 
             this.gbMap_Unld.Controls.Add(this.btnMap_Load);
-            this.gbMap_Unld.Controls.Add(this.lb_MapUnld);
+            this.gbMap_Unld.Controls.Add(this.lbMap_Unld);
             this.gbMap_Unld.Location = new System.Drawing.Point(7, 227);
             this.gbMap_Unld.Name = "gbMap_Unld";
             this.gbMap_Unld.Size = new System.Drawing.Size(390, 258);
@@ -2373,15 +2340,16 @@ namespace MCGalaxy.Gui
             this.btnMap_Load.TabIndex = 1;
             this.btnMap_Load.Text = "Load map";
             this.btnMap_Load.UseVisualStyleBackColor = true;
+            this.btnMap_Load.Click += new System.EventHandler(this.MapLoadClick);            
             // 
             // lb_MapUnld
             // 
-            this.lb_MapUnld.FormattingEnabled = true;
-            this.lb_MapUnld.Location = new System.Drawing.Point(5, 15);
-            this.lb_MapUnld.MultiColumn = true;
-            this.lb_MapUnld.Name = "lb_MapUnld";
-            this.lb_MapUnld.Size = new System.Drawing.Size(379, 212);
-            this.lb_MapUnld.TabIndex = 0;
+            this.lbMap_Unld.FormattingEnabled = true;
+            this.lbMap_Unld.Location = new System.Drawing.Point(5, 15);
+            this.lbMap_Unld.MultiColumn = true;
+            this.lbMap_Unld.Name = "lbMap_Unld";
+            this.lbMap_Unld.Size = new System.Drawing.Size(379, 212);
+            this.lbMap_Unld.TabIndex = 0;
             // 
             // gbMap_New
             // 
@@ -2398,16 +2366,16 @@ namespace MCGalaxy.Gui
             this.gbMap_New.Controls.Add(this.cmbMap_X);
             this.gbMap_New.Controls.Add(this.lblMap_Name);
             this.gbMap_New.Controls.Add(this.txtMap_Name);
-            this.gbMap_New.Location = new System.Drawing.Point(415, 343);
+            this.gbMap_New.Location = new System.Drawing.Point(415, 358);
             this.gbMap_New.Name = "gbMap_New";
-            this.gbMap_New.Size = new System.Drawing.Size(343, 142);
+            this.gbMap_New.Size = new System.Drawing.Size(343, 127);
             this.gbMap_New.TabIndex = 0;
             this.gbMap_New.TabStop = false;
             this.gbMap_New.Text = "Create new map";
             // 
             // btnMap_Gen
             // 
-            this.btnMap_Gen.Location = new System.Drawing.Point(150, 112);
+            this.btnMap_Gen.Location = new System.Drawing.Point(150, 99);
             this.btnMap_Gen.Name = "btnMap_Gen";
             this.btnMap_Gen.Size = new System.Drawing.Size(75, 23);
             this.btnMap_Gen.TabIndex = 17;
@@ -2589,7 +2557,6 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drownNumeric)).EndInit();
@@ -2629,7 +2596,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblMap_Type;
         private System.Windows.Forms.Button btnMap_Gen;
         private System.Windows.Forms.GroupBox gbMap_New;
-        private System.Windows.Forms.ListBox lb_MapUnld;
+        private System.Windows.Forms.ListBox lbMap_Unld;
         private System.Windows.Forms.Button btnMap_Load;
         private System.Windows.Forms.GroupBox gbMap_Unld;
         private System.Windows.Forms.ListBox lbMap_Lded;
@@ -2697,8 +2664,6 @@ namespace MCGalaxy.Gui
         private Label label21;
         private ToolStripMenuItem promoteToolStripMenuItem;
         private ToolStripMenuItem demoteToolStripMenuItem;
-        private Panel panel3;
-        private Button ldmapbt;
         private ComboBox Aicombo;
         private CheckBox edgewaterchk;
         private CheckBox grasschk;
@@ -2716,7 +2681,6 @@ namespace MCGalaxy.Gui
         private Label label6;
         private CheckBox AutoLoadChk;
         private Label label23;
-        public ListBox UnloadedList;
         private TabPage tabPage7;
         internal RichTextBox LogsTxtBox;
         private DateTimePicker dateTimePicker1;
