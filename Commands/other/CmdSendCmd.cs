@@ -36,20 +36,20 @@ namespace MCGalaxy.Commands {
                 MessageTooHighRank(p, "send commands for", true); return;
             }
             if (parts.Length == 1) {
-                Player.SendMessage(p, "No command name given."); return;
+                Player.Message(p, "No command name given."); return;
             }
             
             string name = parts[1], args = parts.Length > 2 ? parts[2] : "";
             Command cmd = Command.all.Find(name);
             if (cmd == null) {
-                Player.SendMessage(p, "Unknown command \"" + name + "\"."); return;
+                Player.Message(p, "Unknown command \"" + name + "\"."); return;
             }
             cmd.Use(target, args);
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/sendcmd <player> <command> [arguments] - Make another user use a command.");
-            Player.SendMessage(p, "ex: /sendcmd bob tp bob2");
+            Player.Message(p, "/sendcmd <player> <command> [arguments] - Make another user use a command.");
+            Player.Message(p, "ex: /sendcmd bob tp bob2");
         }
     }
 }

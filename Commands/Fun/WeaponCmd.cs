@@ -30,16 +30,16 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (!p.level.guns) {
-                Player.SendMessage(p, Weapon + "s cannot be used on this map!"); return;
+                Player.Message(p, Weapon + "s cannot be used on this map!"); return;
             }
             if (p.Game.hasflag != null) {
-                Player.SendMessage(p, "You can't use a " + Weapon.ToLower() + " while you have the flag!"); return;
+                Player.Message(p, "You can't use a " + Weapon.ToLower() + " while you have the flag!"); return;
             }
 
             if (p.aiming && message == "") {
                 p.aiming = false;
                 p.ClearBlockchange();
-                Player.SendMessage(p, "Disabled " + Weapon.ToLower() );
+                Player.Message(p, "Disabled " + Weapon.ToLower() );
                 return;
             }
 
@@ -65,11 +65,11 @@ namespace MCGalaxy.Commands {
             if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return EndType.Teleport;
             
             if (mode.CaselessEq("explode")) {
-                if (!p.allowTnt) Player.SendMessage(p, "Tnt usage is currently disallowed, switching to normal gun.");
+                if (!p.allowTnt) Player.Message(p, "Tnt usage is currently disallowed, switching to normal gun.");
                 return p.allowTnt ? EndType.Explode : EndType.Destroy;
             }
             if (mode.CaselessEq("laser")) {
-                if (!p.allowTnt) Player.SendMessage(p, "Tnt usage is currently disallowed, switching to normal gun.");
+                if (!p.allowTnt) Player.Message(p, "Tnt usage is currently disallowed, switching to normal gun.");
                 return p.allowTnt ? EndType.Laser : EndType.Destroy;
             }
             Help(p);

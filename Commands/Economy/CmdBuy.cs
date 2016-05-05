@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             {
                 if (parts[0].CaselessEq(alias)) {
                     if (!item.Enabled) {
-                        Player.SendMessage(p, "%cThe " + item.Name + " item is not currently buyable."); return;
+                        Player.Message(p, "%cThe " + item.Name + " item is not currently buyable."); return;
                     }
                     item.OnBuyCommand(this, p, message, parts); 
                     return;
@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {            
-            Player.SendMessage(p, "%T/buy [item] [value] <map name>");
-            Player.SendMessage(p, "%Hmap name is only used for %T/buy map%H.");
-            Player.SendMessage(p, "%HUse %T/store <type> %Hto see the information for an item.");
-            Player.SendMessage(p, "%H   Available items: %f" + Economy.GetItemNames(", "));
+            Player.Message(p, "%T/buy [item] [value] <map name>");
+            Player.Message(p, "%Hmap name is only used for %T/buy map%H.");
+            Player.Message(p, "%HUse %T/store <type> %Hto see the information for an item.");
+            Player.Message(p, "%H   Available items: %f" + Economy.GetItemNames(", "));
         }
     }
 }

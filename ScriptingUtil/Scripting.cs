@@ -82,13 +82,13 @@ namespace MCGalaxy
                     "\t\t// p is the player object for the player executing the command.  message is everything after the command invocation itself." + Environment.NewLine +
                     "\t\tpublic override void Use(Player p, string message)" + Environment.NewLine +
                     "\t\t{" + Environment.NewLine +
-                    "\t\t\tPlayer.SendMessage(p, \"Hello World!\");" + Environment.NewLine +
+                    "\t\t\tPlayer.Message(p, \"Hello World!\");" + Environment.NewLine +
                     "\t\t}" + Environment.NewLine +
                     Environment.NewLine +
                     "\t\t// This one controls what happens when you use /help [commandname]." + Environment.NewLine +
                     "\t\tpublic override void Help(Player p)" + Environment.NewLine +
                     "\t\t{" + Environment.NewLine +
-                    "\t\t\tPlayer.SendMessage(p, \"/" + CmdName.ToLower() + " - Does stuff.  Example command.\");" + Environment.NewLine +
+                    "\t\t\tPlayer.Message(p, \"/" + CmdName.ToLower() + " - Does stuff.  Example command.\");" + Environment.NewLine +
                     "\t\t}" + Environment.NewLine +
                     "\t}" + Environment.NewLine +
                     "}");

@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands
             PlayerBot who = PlayerBot.FindOrShowMatches(p, message);
             if (who == null) return;
             if (!p.level.name.CaselessEq(who.level.name)) {
-                Player.SendMessage(p, who.name + " is in a different level."); return; 
+                Player.Message(p, who.name + " is in a different level."); return; 
             }
             who.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/botsummon <name> - Summons a bot to your position.");
+            Player.Message(p, "/botsummon <name> - Summons a bot to your position.");
         }
     }
 }

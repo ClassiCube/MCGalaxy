@@ -34,14 +34,14 @@ namespace MCGalaxy.Commands
             Command CmdFly = Command.all.Find("fly");
             if (p.level.ctfmode)
             {
-                Player.SendMessage(p, "You can not fly while playing CTF, that is cheating!");
+                Player.Message(p, "You can not fly while playing CTF, that is cheating!");
                 if (p.isFlying) CmdFly.Use(p, String.Empty);
                 return;
             }
             p.isFlying = !p.isFlying;
             if (!p.isFlying) return;
 
-            Player.SendMessage(p, "You are now flying. &cJump!");
+            Player.Message(p, "You are now flying. &cJump!");
 
             Thread flyThread = new Thread(new ThreadStart(
                 () => {
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
 
                     foreach (Vec3U16 cP in last)
                         p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air);
-                    Player.SendMessage(p, "Stopped flying");
+                    Player.Message(p, "Stopped flying");
                 }));
             flyThread.Name = "MCG_Fly";
             flyThread.Start();
@@ -98,8 +98,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/fly - The old method of flight before custom clients.");
-            Player.SendMessage(p, "May not work at all depending on your connection.");
+            Player.Message(p, "/fly - The old method of flight before custom clients.");
+            Player.Message(p, "May not work at all depending on your connection.");
         }
     }
 }

@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             CatchPos cpos = default(CatchPos);
             if (p == null) { MessageInGameOnly(p); return; }
-            if (message == "") { Player.SendMessage(p, "You need to provide a player name."); return; }
+            if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
             
             string[] parts = message.Split(' ');
             cpos.message = parts[0];
             cpos.seconds = CmdUndo.GetSeconds(p, null, parts.Length > 1 ? parts[1] : "30");
             
-            Player.SendMessage(p, "Place two blocks to determine the edges.");           
+            Player.Message(p, "Place two blocks to determine the edges.");           
             p.ClearBlockchange();
             p.blockchangeObject = cpos;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
@@ -98,16 +98,16 @@ namespace MCGalaxy.Commands {
                 Server.s.Log(whoName + "'s actions for the past " + cpos.seconds + " seconds were undone.");
                 p.level.Save(true);
             } else {
-                Player.SendMessage(p, "Could not find player specified.");
+                Player.Message(p, "Could not find player specified.");
             }
         }
         
         struct CatchPos { public ushort x, y, z; public string message; public long seconds; }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/undoarea [player] [seconds] - Undoes the blockchanges made by [player] in the previous [seconds].");
+            Player.Message(p, "/undoarea [player] [seconds] - Undoes the blockchanges made by [player] in the previous [seconds].");
             if (p == null || (p.group.maxUndo <= 500000 || p.group.maxUndo == 0))
-                Player.SendMessage(p, "/undoarea [player] all - &cWill undo 68 years, 18 days, 15 hours, 28 minutes, 31 seconds for [player]");
+                Player.Message(p, "/undoarea [player] all - &cWill undo 68 years, 18 days, 15 hours, 28 minutes, 31 seconds for [player]");
         }
     }
 }

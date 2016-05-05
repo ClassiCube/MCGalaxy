@@ -29,16 +29,16 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             if (message.ToLower() != "force") {
                 if (p == null || p.group.Permission > defaultRank) MCGalaxy.Gui.App.UpdateCheck(false, p);
-                else Player.SendMessage(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
+                else Player.Message(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
             } else {
                 if (p == null || p.group.Permission > defaultRank) MCGalaxy.Gui.App.PerformUpdate();
-                else Player.SendMessage(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
+                else Player.Message(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/update - Updates the server if it's out of date");
-            Player.SendMessage(p, "/update force - Forces the server to update");
+            Player.Message(p, "/update - Updates the server if it's out of date");
+            Player.Message(p, "/update force - Forces the server to update");
         }
     }
 }

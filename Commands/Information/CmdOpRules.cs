@@ -44,13 +44,13 @@ namespace MCGalaxy.Commands
                 }
             }
 
-            Player.SendMessage(who, "Server OPRules:");
+            Player.Message(who, "Server OPRules:");
             foreach (string s in oprules)
-                Player.SendMessage(who, s);
+                Player.Message(who, s);
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/oprules [player]- Displays server oprules to a player");
+            Player.Message(p, "/oprules [player]- Displays server oprules to a player");
         }
     }
 }

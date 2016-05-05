@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/crashserver - Crash the server with a generic error");
+            Player.Message(p, "/crashserver - Crash the server with a generic error");
         }
     }
 }

@@ -71,7 +71,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == l && p.Chatroom == null)
-                    Player.SendMessage(p, message);
+                    Player.Message(p, message);
             }
         }
         
@@ -79,7 +79,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.group.Permission >= minPerm)
-                    Player.SendMessage(p, message);
+                    Player.Message(p, message);
             }
         }
         
@@ -95,7 +95,7 @@ namespace MCGalaxy {
             if (from != null && p.listignored.Contains(from.name)) return;
             
             if (!p.ignoreAll || (from != null && from == p))
-                Player.SendMessage(p, Server.DefaultColor + message);
+                Player.Message(p, Server.DefaultColor + message);
         }
         
         public static void ApplyTokens(StringBuilder sb, Player p, bool colorParse) {
@@ -169,9 +169,9 @@ namespace MCGalaxy {
         public static bool HandleModes(Player p, string text) {
             if (text.Length >= 2 && text[0] == '@' && text[1] == '@') {
                 text = text.Remove(0, 2);
-                if (text.Length < 1) { Player.SendMessage(p, "No message entered"); return true; }
+                if (text.Length < 1) { Player.Message(p, "No message entered"); return true; }
                 
-                Player.SendMessage(p, "[<] Console: &f" + text);
+                Player.Message(p, "[<] Console: &f" + text);
                 string name = p == null ? "(console)" : p.name;
                 Server.s.Log("[>] " + name + ": " + text);
                 return true;
@@ -187,7 +187,7 @@ namespace MCGalaxy {
                         string msg = text.Substring(pos + 1);
                         HandleWhisper(p, to, msg);
                     } else {
-                        Player.SendMessage(p, "No message entered");
+                        Player.Message(p, "No message entered");
                     }
                 } else {
                     HandleWhisper(p, p.whisperTo, text);
@@ -227,7 +227,7 @@ namespace MCGalaxy {
         static void HandleWhisper(Player p, string target, string message) {
             Player who = PlayerInfo.FindOrShowMatches(p, target);
             if (who == null) return;
-            if (who == p) { Player.SendMessage(p, "Trying to talk to yourself, huh?"); return; }
+            if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return; }
             
             LevelPermission perm = p == null ? LevelPermission.Nobody : p.group.Permission;
             LevelPermission whoPerm = who.group.Permission;
@@ -247,7 +247,7 @@ namespace MCGalaxy {
         static void DoFakePM(Player p, Player who, string message) {
             string name = p == null ? "(console)" : p.name;
             Server.s.Log(name + " @" + who.name + ": " + message);
-            Player.SendMessage(p, "[<] " + who.ColoredName + ": &f" + message);
+            Player.Message(p, "[<] " + who.ColoredName + ": &f" + message);
         }
         
         static void DoPM(Player p, Player who, string message) {
@@ -255,8 +255,8 @@ namespace MCGalaxy {
             string fullName = p == null ? "%S(console)" : p.ColoredName;
             
             Server.s.Log(name + " @" + who.name + ": " + message);
-            Player.SendMessage(p, "[<] " + who.ColoredName + ": &f" + message);
-            Player.SendMessage(who, "&9[>] " + fullName + ": &f" + message);
+            Player.Message(p, "[<] " + who.ColoredName + ": &f" + message);
+            Player.Message(who, "&9[>] " + fullName + ": &f" + message);
         }
     }
 }

@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
                     Server.IRC.Say(name + " was unbanned by " + src + ".");
                     return;
                 }
-                Player.SendMessage(p, "Player \"" + name + "\" is not banned.");
+                Player.Message(p, "Player \"" + name + "\" is not banned.");
             } else {
                 Player.GlobalMessage(name + " was &8(unbanned) %Sby " + srcFull + ".");
                 Server.s.Log("UNBANNED: by " + src);
@@ -63,9 +63,9 @@ namespace MCGalaxy.Commands {
                 Group.findPerm(LevelPermission.Banned).playerList.Remove(name);
                 Group.findPerm(LevelPermission.Banned).playerList.Save();
                 if (Ban.DeleteBan(name))
-                    Player.SendMessage(p, "Deleted ban information about " + name + ".");
+                    Player.Message(p, "Deleted ban information about " + name + ".");
                 else
-                    Player.SendMessage(p, "No info found about " + name + ".");
+                    Player.Message(p, "No info found about " + name + ".");
                 
                 if (who != null) {
                     who.group = Group.standard; who.color = who.group.color;
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/unban <player> - Unbans a player. This includes temporary bans.");
+            Player.Message(p, "/unban <player> - Unbans a player. This includes temporary bans.");
         }
     }
 }

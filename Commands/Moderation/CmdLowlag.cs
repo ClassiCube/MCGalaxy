@@ -36,10 +36,10 @@ namespace MCGalaxy.Commands
             } else {
                 int interval;
                 if (!int.TryParse(message, out interval)) {
-                    Player.SendMessage(p, "Interval given must be an integer."); return;
+                    Player.Message(p, "Interval given must be an integer."); return;
                 }
                 if (interval < 20 || interval > 2000) {
-                    Player.SendMessage(p, "Interval must be between 20 and 2000 milliseconds."); return;
+                    Player.Message(p, "Interval must be between 20 and 2000 milliseconds."); return;
                 }
                 Server.PositionInterval = interval;
                 Player.GlobalMessage("Positions now update every &b" + interval + " %Smilliseconds.");
@@ -49,9 +49,9 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/lowlag [interval in milliseconds]");
-            Player.SendMessage(p, "%HSets the interval between sending of position packets.");
-            Player.SendMessage(p, "%HIf no interval is given, then 2000 ms is used if the current interval" + 
+            Player.Message(p, "%T/lowlag [interval in milliseconds]");
+            Player.Message(p, "%HSets the interval between sending of position packets.");
+            Player.Message(p, "%HIf no interval is given, then 2000 ms is used if the current interval" + 
                                " is less than 1000 ms, otherwise 200 ms is used for the interval.");
         }
     }

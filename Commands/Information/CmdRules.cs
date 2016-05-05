@@ -47,24 +47,24 @@ namespace MCGalaxy.Commands
             if (who != null) {
                 who.hasreadrules = true;
                 if (who.level == Server.mainLevel && Server.mainLevel.permissionbuild == LevelPermission.Guest)
-                    Player.SendMessage(who, "You are currently on the guest map where anyone can build");
+                    Player.Message(who, "You are currently on the guest map where anyone can build");
             }
-            Player.SendMessage(who, "Server Rules:");
+            Player.Message(who, "Server Rules:");
             foreach (string s in rules)
-                Player.SendMessage(who, s);
+                Player.Message(who, s);
             
             if (who != null && who.name != p.name) {
-                Player.SendMessage(p, "Sent the rules to " + who.ColoredName + "%S.");
-                Player.SendMessage(who, p.ColoredName + " %Ssent you the rules.");
+                Player.Message(p, "Sent the rules to " + who.ColoredName + "%S.");
+                Player.Message(who, p.ColoredName + " %Ssent you the rules.");
             }
         }
 
         public override void Help(Player p) {
         	if (CheckAdditionalPerm(p)) {
-                Player.SendMessage(p, "/rules [player]- Displays server rules to a player.");
-                Player.SendMessage(p, "If no [player] is given, the rules will be sent to you.");
+                Player.Message(p, "/rules [player]- Displays server rules to a player.");
+                Player.Message(p, "If no [player] is given, the rules will be sent to you.");
             } else {
-                Player.SendMessage(p, "/rules - Displays the server rules.");
+                Player.Message(p, "/rules - Displays the server rules.");
             }
         }
     }

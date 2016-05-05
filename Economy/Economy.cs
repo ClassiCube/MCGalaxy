@@ -189,7 +189,7 @@ namespace MCGalaxy {
             ecos.purchase = item + "%3 - Price: %f" + cost + " %3" + Server.moneys +
                 " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             UpdateEcoStats(ecos);
-            Player.SendMessage(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
+            Player.Message(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
         }
     }
 }

@@ -141,7 +141,7 @@ namespace MCGalaxy.Games
                     if (p.spec)
                     {
                         p.p.canBuild = false;
-                        Player.SendMessage(p.p, "TNT Wars: Disabled building because you are a spectator!");
+                        Player.Message(p.p, "TNT Wars: Disabled building because you are a spectator!");
                     }
                     p.p.TntWarsKillStreak = 0;
                     p.p.TntWarsScoreMultiplier = 1f;
@@ -338,7 +338,7 @@ namespace MCGalaxy.Games
                     {
                         if (!p.spec)
                         {
-                            Player.SendMessage(p.p, "TNT Wars: You Scored " + p.Score + " points");
+                            Player.Message(p.p, "TNT Wars: You Scored " + p.Score + " points");
                         }
                     }
                 }
@@ -391,7 +391,7 @@ namespace MCGalaxy.Games
             {
                 foreach (player p in Players)
                 {
-                    Player.SendMessage(p.p, Message);
+                    Player.Message(p.p, Message);
 
                 }
             }
@@ -424,8 +424,8 @@ namespace MCGalaxy.Games
                 {
                     Kld.TntWarsHealth -= HealthDamage;
                     Kld.HarmedBy = Killer;
-                    Player.SendMessage(Killer, "TNT Wars: You harmed " + Kld.color + Kld.name);
-                    Player.SendMessage(Kld, "TNT Wars: You were harmed by " + Killer.color + Killer.name);
+                    Player.Message(Killer, "TNT Wars: You harmed " + Kld.color + Kld.name);
+                    Player.Message(Kld, "TNT Wars: You were harmed by " + Killer.color + Killer.name);
                 }
             }
             foreach (Player Died in Dead)
@@ -461,12 +461,12 @@ namespace MCGalaxy.Games
                     {
                         if (TeamKill(Died.HarmedBy, Died))
                         {
-                            Player.SendMessage(Died.HarmedBy, "TNT Wars: - " + ScorePerAssist.ToString() + " point(s) for team kill assist!");
+                            Player.Message(Died.HarmedBy, "TNT Wars: - " + ScorePerAssist.ToString() + " point(s) for team kill assist!");
                             ChangeScore(Died.HarmedBy, -ScorePerAssist);
                         }
                         else
                         {
-                            Player.SendMessage(Died.HarmedBy, "TNT Wars: + " + ScorePerAssist.ToString() + " point(s) for assist!");
+                            Player.Message(Died.HarmedBy, "TNT Wars: + " + ScorePerAssist.ToString() + " point(s) for assist!");
                             ChangeScore(Died.HarmedBy, ScorePerAssist);
                         }
                     }
@@ -483,21 +483,21 @@ namespace MCGalaxy.Games
             {
                 if (Killer.TntWarsKillStreak >= Properties.DefaultStreakOneAmount && Killer.TntWarsKillStreak < Properties.DefaultStreakTwoAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakOneAmount)
                 {
-                    Player.SendMessage(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakOneMultiplier.ToString() + ")");
+                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakOneMultiplier.ToString() + ")");
                     SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString());
                     Killer.TntWarsScoreMultiplier = Properties.DefaultStreakOneMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakOneAmount;
                 }
                 else if (Killer.TntWarsKillStreak >= Properties.DefaultStreakTwoAmount && Killer.TntWarsKillStreak < Properties.DefaultStreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakTwoAmount)
                 {
-                    Player.SendMessage(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakTwoMultiplier.ToString() + " and a bigger explosion!)");
+                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakTwoMultiplier.ToString() + " and a bigger explosion!)");
                     SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has a bigger explosion for their TNT!");
                     Killer.TntWarsScoreMultiplier = Properties.DefaultStreakTwoMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakTwoAmount;
                 }
                 else if (Killer.TntWarsKillStreak >= Properties.DefaultStreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakThreeAmount)
                 {
-                    Player.SendMessage(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakThreeMultiplier.ToString() + " and you now have 1 extra health!)");
+                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakThreeMultiplier.ToString() + " and you now have 1 extra health!)");
                     SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has 1 extra health!");
                     Killer.TntWarsScoreMultiplier = Properties.DefaultStreakThreeMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakThreeAmount;
@@ -512,7 +512,7 @@ namespace MCGalaxy.Games
                 }
                 else
                 {
-                    Player.SendMessage(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString());
+                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString());
                 }
             }
             AddToScore += kills * ScorePerKill;
@@ -525,12 +525,12 @@ namespace MCGalaxy.Games
             if (AddToScore > 0)
             {
                 ChangeScore(Killer, AddToScore, Killer.TntWarsScoreMultiplier);
-                Player.SendMessage(Killer, "TNT Wars: + " + ((int)(AddToScore * Killer.TntWarsScoreMultiplier)).ToString() + " point(s) for " + kills.ToString() + " kills");
+                Player.Message(Killer, "TNT Wars: + " + ((int)(AddToScore * Killer.TntWarsScoreMultiplier)).ToString() + " point(s) for " + kills.ToString() + " kills");
             }
             if (minusfromscore != 0)
             {
                 ChangeScore(Killer, - minusfromscore);
-                Player.SendMessage(Killer, "TNT Wars: - " + minusfromscore.ToString() + " point(s) for team kill(s)!");
+                Player.Message(Killer, "TNT Wars: - " + minusfromscore.ToString() + " point(s) for team kill(s)!");
             }
         }
 
@@ -576,7 +576,7 @@ namespace MCGalaxy.Games
                     NoTNTplacableZones.Remove(Z);
                     if (p != null)
                     {
-                        Player.SendMessage(p, "TNT Wars: Zone Deleted!");
+                        Player.Message(p, "TNT Wars: Zone Deleted!");
                     }
                     return;
                 }
@@ -592,14 +592,14 @@ namespace MCGalaxy.Games
                     NoBlockDeathZones.Remove(Z);
                     if (p != null)
                     {
-                        Player.SendMessage(p, "TNT Wars: Zone Deleted!");
+                        Player.Message(p, "TNT Wars: Zone Deleted!");
                     }
                     return;
                 }
             }
             catch
             {
-                Player.SendMessage(p, "TNT Wars Error: Zone not deleted!");
+                Player.Message(p, "TNT Wars Error: Zone not deleted!");
             }
 
         }
@@ -645,7 +645,7 @@ namespace MCGalaxy.Games
                         int count = 1;
                         foreach (var pl in pls)
                         {
-                            Player.SendMessage(p.p, count.ToString() + ": " + pl.p.name + " - " + pl.Score.ToString());
+                            Player.Message(p.p, count.ToString() + ": " + pl.p.name + " - " + pl.Score.ToString());
                             if (count >= max)
                             {
                                 break;
@@ -660,7 +660,7 @@ namespace MCGalaxy.Games
                 {
                     foreach (player p in Players.Where(p => !p.spec))
                     {
-                        Player.SendMessage(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score.ToString());
+                        Player.Message(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score.ToString());
                     }
                     Thread.Sleep(1000);
                 }
@@ -766,11 +766,11 @@ namespace MCGalaxy.Games
             {
                 if (GameList.Any(g => g.lvl == this.lvl && g != this))
                 {
-                    if (ReturnErrors) Player.SendMessage(p, "There is already a TNT Wars game on that map");
+                    if (ReturnErrors) Player.Message(p, "There is already a TNT Wars game on that map");
                     AllSetUp = false;
                     return false;
                 }
-                if (TellPlayerOnSuccess) Player.SendMessage(p, "TNT Wars setup is done!");
+                if (TellPlayerOnSuccess) Player.Message(p, "TNT Wars setup is done!");
                 AllSetUp = true;
                 return true;
             }
@@ -784,11 +784,11 @@ namespace MCGalaxy.Games
         {
             if (lvl == null)
             {
-                Player.SendMessage(p, "TNT Wars Error: No Level Selected");
+                Player.Message(p, "TNT Wars Error: No Level Selected");
             }
             else if (GameStatus != 0)
             {
-                Player.SendMessage(p, "Game is already in progress");
+                Player.Message(p, "Game is already in progress");
             }
         }
 

@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
             }
 
             if (parts[0] == "all") {
-                if (lvl == null) { Player.SendMessage(p, "Level not found."); return; }            
+                if (lvl == null) { Player.Message(p, "Level not found."); return; }            
                 if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can reload all players in a map."); return; }
 
                 Player[] players = PlayerInfo.Online.Items;
@@ -87,13 +87,13 @@ namespace MCGalaxy.Commands {
             if (!showMessage) return;
             if (p != null && !p.hidden) { who.SendMessage("&bMap reloaded by " + p.name); }
             if (p != null && p.hidden) { who.SendMessage("&bMap reloaded"); }
-            Player.SendMessage(p, "&4Finished reloading for " + who.name);
+            Player.Message(p, "&4Finished reloading for " + who.name);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/reveal <name> - Reloads the map for <name>.");
-            Player.SendMessage(p, "/reveal all - Reloads for all players in your map");
-            Player.SendMessage(p, "/reveal all <map> - Reloads for all players in <map>");
+            Player.Message(p, "/reveal <name> - Reloads the map for <name>.");
+            Player.Message(p, "/reveal all - Reloads for all players in your map");
+            Player.Message(p, "/reveal all <map> - Reloads for all players in <map>");
         }
     }
     
@@ -111,9 +111,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/reload");
-            Player.SendMessage(p, "%HReloads the map you in, just for you.");
-            Player.SendMessage(p, "%HUse %T/reveal %Hto reload maps for other players.");
+            Player.Message(p, "%T/reload");
+            Player.Message(p, "%HReloads the map you in, just for you.");
+            Player.Message(p, "%HUse %T/reveal %Hto reload maps for other players.");
         }
     }
 }

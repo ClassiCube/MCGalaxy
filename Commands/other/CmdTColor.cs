@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (who == null) return;
             if (p != null && who.group.Permission > p.group.Permission) {
-                Player.SendMessage(p, "Cannot change the title color of someone of greater rank"); return;
+                Player.Message(p, "Cannot change the title color of someone of greater rank"); return;
             }
             
             ParameterisedQuery query = ParameterisedQuery.Create();
@@ -46,8 +46,8 @@ namespace MCGalaxy.Commands {
                 Database.executeQuery(query, "UPDATE Players SET title_color = '' WHERE Name = @Name");
             } else  {
                 string color = Colors.Parse(args[1]);
-                if (color == "") { Player.SendMessage(p, "There is no color \"" + args[1] + "\"."); return; }
-                else if (color == who.titlecolor) { Player.SendMessage(p, who.DisplayName + " already has that title color."); return; }
+                if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+                else if (color == who.titlecolor) { Player.Message(p, who.DisplayName + " already has that title color."); return; }
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.titlecolor = color;
                 
@@ -59,10 +59,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/tcolor <player> [color] - Gives <player> the title color of [color].");
-            Player.SendMessage(p, "If no [color] is specified, title color is removed.");
-            Player.SendMessage(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
-            Player.SendMessage(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
+            Player.Message(p, "/tcolor <player> [color] - Gives <player> the title color of [color].");
+            Player.Message(p, "If no [color] is specified, title color is removed.");
+            Player.Message(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
+            Player.Message(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
         }
     }
     
@@ -81,10 +81,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/xtcolor [color] - Gives you the title color of [color].");
-            Player.SendMessage(p, "If no [color] is specified, title color is removed.");
-            Player.SendMessage(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
-            Player.SendMessage(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
+            Player.Message(p, "/xtcolor [color] - Gives you the title color of [color].");
+            Player.Message(p, "If no [color] is specified, title color is removed.");
+            Player.Message(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
+            Player.Message(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
         }
     }
 }

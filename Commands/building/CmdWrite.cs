@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (!p.group.CanExecute("write")) {
-                Player.SendMessage(p, "You must be able to use /write to use /writetext."); return;
+                Player.Message(p, "You must be able to use /write to use /writetext."); return;
             }
             
             if (message == "") { Help(p); return; }
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
             cpos.givenMessage = args[2].ToUpper();
             p.blockchangeObject = cpos;
             
-            Player.SendMessage(p, "Place two blocks to determine direction.");
+            Player.Message(p, "Place two blocks to determine direction.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             Level lvl = p.level;
-            if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
+            if (x == cpos.x && z == cpos.z) { Player.Message(p, "No direction was selected"); return; }
             
             WriteDrawOp op = new WriteDrawOp();
             op.Text = cpos.givenMessage;
@@ -83,9 +83,9 @@ namespace MCGalaxy.Commands {
         struct CatchPos { public byte scale, spacing; public ushort x, y, z; public string givenMessage; }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/wrt [scale] [spacing] [message]");
-            Player.SendMessage(p, "%HWrites the given message in blocks.");
-            Player.SendMessage(p, "%Hspacing specifies the number of blocks between each letter.");
+            Player.Message(p, "%T/wrt [scale] [spacing] [message]");
+            Player.Message(p, "%HWrites the given message in blocks.");
+            Player.Message(p, "%Hspacing specifies the number of blocks between each letter.");
         }
     }
     
@@ -102,8 +102,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/write [message] - Writes [message] in blocks");
-            Player.SendMessage(p, "Note that this command has been deprecated by /writetext.");
+            Player.Message(p, "/write [message] - Writes [message] in blocks");
+            Player.Message(p, "Note that this command has been deprecated by /writetext.");
         }
     }
 }

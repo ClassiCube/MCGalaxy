@@ -71,8 +71,8 @@ namespace MCGalaxy.Drawing.Ops {
         public virtual bool CanDraw(Vec3U16[] marks, Player p, out long affected) {
             affected = GetBlocksAffected(Level, marks);
             if (p != null && affected > p.group.maxBlocks) {
-                Player.SendMessage(p, "You tried to draw " + affected + " blocks.");
-                Player.SendMessage(p, "You cannot draw more than " + p.group.maxBlocks + ".");
+                Player.Message(p, "You tried to draw " + affected + " blocks.");
+                Player.Message(p, "You cannot draw more than " + p.group.maxBlocks + ".");
                 return false;
             }
             return true;

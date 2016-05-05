@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             } else if (LevelInfo.ExistsOffline(level)) {
                 data.FromOfflineLevel(level);
             } else {
-                Player.SendMessage(p, "Could not find specified level."); return;
+                Player.Message(p, "Could not find specified level."); return;
             }
             
             if (env) ShowEnv(p, data);
@@ -57,44 +57,44 @@ namespace MCGalaxy.Commands {
         }
         
         void ShowNormal(Player p, MapInfoData data) {
-            Player.SendMessage(p, "&b" + data.Name + "%S: Width=" + data.Width + " Height=" + data.Height + " Depth=" + data.Length);
+            Player.Message(p, "&b" + data.Name + "%S: Width=" + data.Width + " Height=" + data.Height + " Depth=" + data.Length);
             string physicsState = CmdPhysics.states[data.Physics];
-            Player.SendMessage(p, "Physics are " + physicsState + " %Son &b" + data.Name);
+            Player.Message(p, "Physics are " + physicsState + " %Son &b" + data.Name);
 
             string gunStatus = data.Guns ? "&aonline" : "&coffline";
             if (p == null || p.group.CanExecute("gun"))
-                Player.SendMessage(p, "&cGuns &eare " + gunStatus + " &eon " + data.Name + ".");
+                Player.Message(p, "&cGuns &eare " + gunStatus + " &eon " + data.Name + ".");
 
             if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
                 int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
                 DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.Name, latestBackup.ToString()));
-                Player.SendMessage(p, "Latest backup: &a" + latestBackup + " %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"));
+                Player.Message(p, "Latest backup: &a" + latestBackup + " %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"));
             } else {
-                Player.SendMessage(p, "No backups for this map exist yet.");
+                Player.Message(p, "No backups for this map exist yet.");
             }
-            Player.SendMessage(p, "Use %T/mi env " + data.Name + " %Sto see environment settings.");
-            Player.SendMessage(p, "Use %T/mi perms " + data.Name + " %Sto see permission settings.");
+            Player.Message(p, "Use %T/mi env " + data.Name + " %Sto see environment settings.");
+            Player.Message(p, "Use %T/mi perms " + data.Name + " %Sto see permission settings.");
             
             if (!Server.zombie.IsZombieMap(data.Name)) return;
-            Player.SendMessage(p, "Map authors: " + data.Authors);
+            Player.Message(p, "Map authors: " + data.Authors);
             int winChance = data.TotalRounds == 0 ? 100 : (data.HumanRounds * 100) / data.TotalRounds;
-            Player.SendMessage(p, "&a" + data.TotalRounds + " %Srounds played total, with a &a" 
+            Player.Message(p, "&a" + data.TotalRounds + " %Srounds played total, with a &a" 
                                + winChance + "% %Swin chance for humans.");
-            Player.SendMessage(p, "This map has &a" + data.Likes + " likes %Sand &c" + data.Dislikes + " dislikes");
+            Player.Message(p, "This map has &a" + data.Likes + " likes %Sand &c" + data.Dislikes + " dislikes");
         }
         
         void ShowPermissions(Player p, MapInfoData data) {
-            Player.SendMessage(p, "Build rank = " + Group.findPerm(data.build).ColoredName +
+            Player.Message(p, "Build rank = " + Group.findPerm(data.build).ColoredName +
                                " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
-            Player.SendMessage(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
+            Player.Message(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
                                " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
             List<string> whitelist = data.VisitWhitelist;
             List<string> blacklist = data.VisitBlacklist;
             GetBlacklistedPlayers(data.Name, blacklist);
             if (whitelist.Count > 0)
-                Player.SendMessage(p, "Visit whitelist: &a" + String.Join("%S, &a", whitelist));
+                Player.Message(p, "Visit whitelist: &a" + String.Join("%S, &a", whitelist));
             if (blacklist.Count > 0)
-                Player.SendMessage(p, "Visit blacklist: &c" + String.Join("%S, &c", blacklist));
+                Player.Message(p, "Visit blacklist: &c" + String.Join("%S, &c", blacklist));
         }
         
         void GetBlacklistedPlayers(string l, List<string> blacklist) {
@@ -110,22 +110,22 @@ namespace MCGalaxy.Commands {
         
         void ShowEnv(Player p, MapInfoData data) {
             if (data.TerrainUrl != "")
-                Player.SendMessage(p, "Texture: %b" + data.TerrainUrl);
+                Player.Message(p, "Texture: %b" + data.TerrainUrl);
             else
-                Player.SendMessage(p, "No custom texture set for this map.");
+                Player.Message(p, "No custom texture set for this map.");
             
             if (data.TextureUrl != "")
-                Player.SendMessage(p, "Texture pack: %b" + data.TextureUrl);
+                Player.Message(p, "Texture pack: %b" + data.TextureUrl);
             else
-                Player.SendMessage(p, "No custom texture pack set for this map.");
+                Player.Message(p, "No custom texture pack set for this map.");
             
             const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
-            Player.SendMessage(p, String.Format(format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
+            Player.Message(p, String.Format(format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
                                                 Color(data.Light), Color(data.Shadow)));
             
-            Player.SendMessage(p, "Water Level: %b" + data.EdgeLevel + "%S, Clouds height: %b" + data.CloudsHeight
+            Player.Message(p, "Water Level: %b" + data.EdgeLevel + "%S, Clouds height: %b" + data.CloudsHeight
                                + "%S, Max fog distance: %b" + data.MaxFogDistance);
-            Player.SendMessage(p, "Edge Block: %b" + data.EdgeBlock + "%S, Horizon Block: %b" + data.HorizonBlock);
+            Player.Message(p, "Edge Block: %b" + data.EdgeBlock + "%S, Horizon Block: %b" + data.HorizonBlock);
         }
         
         class MapInfoData {
@@ -234,9 +234,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p)  {
-            Player.SendMessage(p, "/mapinfo <map> - Display details of <map>");
-            Player.SendMessage(p, "/mapinfo env <map> - Display environment details of <map>");
-            Player.SendMessage(p, "/mapinfo perms <map> - Display permission details of <map>");
+            Player.Message(p, "/mapinfo <map> - Display details of <map>");
+            Player.Message(p, "/mapinfo env <map> - Display environment details of <map>");
+            Player.Message(p, "/mapinfo perms <map> - Display permission details of <map>");
         }
     }
 }

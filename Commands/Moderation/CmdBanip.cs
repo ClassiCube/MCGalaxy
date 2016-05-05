@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
                         name = message.ToLower();
                         message = target.ip;
                     } else {
-                        Player.SendMessage(p, "Unable to find an IP address for that user."); return;
+                        Player.Message(p, "Unable to find an IP address for that user."); return;
                     }
                 } else {
                     name = who.name.ToLower();
@@ -58,11 +58,11 @@ namespace MCGalaxy.Commands {
                 }
             }
 
-            if (message.Equals("127.0.0.1")) { Player.SendMessage(p, "You can't ip-ban the server!"); return; }
-            if (message.IndexOf('.') == -1) { Player.SendMessage(p, "Invalid IP!"); return; }
-            if (message.Split('.').Length != 4) { Player.SendMessage(p, "Invalid IP!"); return; }
-            if (p != null && p.ip == message) { Player.SendMessage(p, "You can't ip-ban yourself.!"); return; }
-            if (Server.bannedIP.Contains(message)) { Player.SendMessage(p, message + " is already ip-banned."); return; }
+            if (message.Equals("127.0.0.1")) { Player.Message(p, "You can't ip-ban the server!"); return; }
+            if (message.IndexOf('.') == -1) { Player.Message(p, "Invalid IP!"); return; }
+            if (message.Split('.').Length != 4) { Player.Message(p, "Invalid IP!"); return; }
+            if (p != null && p.ip == message) { Player.Message(p, "You can't ip-ban yourself.!"); return; }
+            if (Server.bannedIP.Contains(message)) { Player.Message(p, message + " is already ip-banned."); return; }
 
             // Check if IP belongs to an op+
             // First get names of active ops+ with that ip
@@ -85,8 +85,8 @@ namespace MCGalaxy.Commands {
                     Group grp = Group.findPlayerGroup(opname);
                     if (grp == null || grp.Permission < p.group.Permission) continue;
                     
-                    Player.SendMessage(p, "You can only ipban IPs used by players with a lower rank.");
-                    Player.SendMessage(p, opname + "(" + grp.ColoredName + "%S) uses that IP.");
+                    Player.Message(p, "You can only ipban IPs used by players with a lower rank.");
+                    Player.Message(p, opname + "(" + grp.ColoredName + "%S) uses that IP.");
                     Server.s.Log(p.name + "failed to ipban " + message + " - IP is also used by: " + opname + "(" + grp.name + ")");
                     return;
                 }
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands {
             }*/
         }
         public override void Help(Player p) {
-            Player.SendMessage(p, "/banip <ip/name> - Bans an ip. Also accepts a player name when you use @ before the name.");
+            Player.Message(p, "/banip <ip/name> - Bans an ip. Also accepts a player name when you use @ before the name.");
         }
     }
 }

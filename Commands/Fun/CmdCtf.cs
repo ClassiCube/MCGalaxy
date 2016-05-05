@@ -42,13 +42,13 @@ namespace MCGalaxy.Commands
                 //Prevent null errors :/
                 if (Server.ctf == null)
                 {
-                    Player.SendMessage(p, "Starting CTF..");
+                    Player.Message(p, "Starting CTF..");
                     Server.ctf = new Auto_CTF();
                     Player.GlobalMessage("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
                 }
                 else if (Server.ctf.started)
                 {
-                    Player.SendMessage(p, "A ctf is already in session!");
+                    Player.Message(p, "A ctf is already in session!");
                     return;
                 }
                 else if (!Server.ctf.started)
@@ -62,12 +62,12 @@ namespace MCGalaxy.Commands
                 //Prevent null error :/
                 if (Server.ctf == null)
                 {
-                    Player.SendMessage(p, "A ctf game isnt active!");
+                    Player.Message(p, "A ctf game isnt active!");
                     return;
                 }
                 else if (!Server.ctf.started)
                 {
-                    Player.SendMessage(p, "A ctf game isnt active!");
+                    Player.Message(p, "A ctf game isnt active!");
                     return;
                 }
                 else
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/ctf <start/stop> - Start / Stop the ctf game!");
+            Player.Message(p, "/ctf <start/stop> - Start / Stop the ctf game!");
         }
     }
 }

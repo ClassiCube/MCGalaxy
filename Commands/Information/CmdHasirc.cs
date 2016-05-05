@@ -29,16 +29,16 @@ namespace MCGalaxy.Commands {
             if (message != "") { Help(p); return; }
 
             if (Server.irc) {
-                Player.SendMessage(p, "IRC is &aEnabled %S.");
-                Player.SendMessage(p, "Location: " + Server.ircServer + " > " + Server.ircChannel);
+                Player.Message(p, "IRC is &aEnabled %S.");
+                Player.Message(p, "Location: " + Server.ircServer + " > " + Server.ircChannel);
             } else {
-                Player.SendMessage(p, "IRC is &cDisabled %S.");
+                Player.Message(p, "IRC is &cDisabled %S.");
             }
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/hasirc - Denotes whether or not the server has IRC active.");
-            Player.SendMessage(p, "If IRC is active, server and channel are also displayed.");
+            Player.Message(p, "/hasirc - Denotes whether or not the server has IRC active.");
+            Player.Message(p, "If IRC is active, server and channel are also displayed.");
         }
     }
 }

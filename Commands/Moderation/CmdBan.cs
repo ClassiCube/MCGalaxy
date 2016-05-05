@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
             
             string target = who == null ? args[0] : who.name;
             if (!Player.ValidName(target)) {
-                Player.SendMessage(p, "Invalid name \"" + target + "\"."); return;
+                Player.Message(p, "Invalid name \"" + target + "\"."); return;
             }
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;
             if (!CheckPerms(target, group, p)) return;
@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands {
         
         bool CheckPerms(string name, Group group, Player p) {
             if (group.Permission == LevelPermission.Banned) {
-                Player.SendMessage(p, name + " is already banned."); return false;
+                Player.Message(p, name + " is already banned."); return false;
             }
             if (p != null && group.Permission >= p.group.Permission) {
         	    MessageTooHighRank(p, "ban", false); return false;
@@ -107,9 +107,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/ban <player> [reason] - Bans a player without kicking them.");
-            Player.SendMessage(p, "Add # before name to stealth ban.");
-            Player.SendMessage(p, "Add @ before name to total ban.");
+            Player.Message(p, "/ban <player> [reason] - Bans a player without kicking them.");
+            Player.Message(p, "Add # before name to stealth ban.");
+            Player.Message(p, "Add @ before name to total ban.");
         }
     }
 }

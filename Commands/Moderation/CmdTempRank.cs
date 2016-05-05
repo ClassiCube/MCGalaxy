@@ -33,33 +33,33 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(player);
             if (who == null) {
                 player = PlayerInfo.FindOfflineName(player);
-                if (player == null) { Player.SendMessage(p, "&cPlayer &a" + args[0] + "&c not found."); return; }
+                if (player == null) { Player.Message(p, "&cPlayer &a" + args[0] + "&c not found."); return; }
             } else {
                 player = who.name;
             }
             
             Group group = Group.Find(rank);
-            if (group == null) { Player.SendMessage(p, "&cRank &a" + rank + "&c does not exist."); return; }
+            if (group == null) { Player.Message(p, "&cRank &a" + rank + "&c does not exist."); return; }
             int periodTime;
             if (!Int32.TryParse(period, out periodTime)) {
-                Player.SendMessage(p, "&cThe period needs to be a number."); return;
+                Player.Message(p, "&cThe period needs to be a number."); return;
             }
 
             foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
                 if (line.StartsWith(player, comp)) {
-                    Player.SendMessage(p, "&cThe player already has a temporary rank assigned!"); return;
+                    Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;
                 }
             }
             
             if (p != null && who != null && p == who) {
-                Player.SendMessage(p, "&cYou cannot assign yourself a temporary rank."); return;
+                Player.Message(p, "&cYou cannot assign yourself a temporary rank."); return;
             }
             Group pGroup = who != null ? who.group : Group.findPlayerGroup(player);
             if (p != null && pGroup.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "Cannot change the temporary rank of someone equal or higher to yourself."); return;
+                Player.Message(p, "Cannot change the temporary rank of someone equal or higher to yourself."); return;
             }
             if (p != null && group.Permission >= p.group.Permission) {
-                Player.SendMessage(p, "Cannot change the temporary rank to a higher rank than yourself."); return;
+                Player.Message(p, "Cannot change the temporary rank to a higher rank than yourself."); return;
             }
 
             DateTime now = DateTime.Now;
@@ -69,12 +69,12 @@ namespace MCGalaxy.Commands {
             Server.TempRanks.Append(data);
             
             Command.all.Find("setrank").Use(null, who.name + " " + group.name + " assigning temp rank");
-            Player.SendMessage(p, "Temporary rank (" + rank + ") assigned succesfully to " + player + " for " + period + " hours");
-            Player.SendMessage(who, "Your Temporary rank (" + rank + ") is assigned succesfully for " + period + " hours");
+            Player.Message(p, "Temporary rank (" + rank + ") assigned succesfully to " + player + " for " + period + " hours");
+            Player.Message(who, "Your Temporary rank (" + rank + ") is assigned succesfully for " + period + " hours");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/temprank <player> <rank> <period(hours)> - Sets a temporary rank for the specified player.");
+            Player.Message(p, "/temprank <player> <rank> <period(hours)> - Sets a temporary rank for the specified player.");
         }
     }
 }

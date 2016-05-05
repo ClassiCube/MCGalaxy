@@ -31,12 +31,12 @@ namespace MCGalaxy.Commands
             if (message != "") { Help(p); return; }
 
             p.deleteMode = !p.deleteMode;
-            Player.SendMessage(p, "Delete mode: &a" + p.deleteMode);
+            Player.Message(p, "Delete mode: &a" + p.deleteMode);
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/delete - Deletes any block you click");
-            Player.SendMessage(p, "\"any block\" meaning door_air, portals, mb's, etc");
+            Player.Message(p, "/delete - Deletes any block you click");
+            Player.Message(p, "\"any block\" meaning door_air, portals, mb's, etc");
         }
     }
 }

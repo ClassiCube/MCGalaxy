@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/xban [name] [message]- Bans, banips, undoes, and kicks [name] with [message], if specified.");
+            Player.Message(p, "/xban [name] [message]- Bans, banips, undoes, and kicks [name] with [message], if specified.");
         }
     }
 }

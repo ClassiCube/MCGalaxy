@@ -57,9 +57,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/triangle [brush args]");
-            Player.SendMessage(p, "%HDraws a triangle between three points.");
-            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "%T/triangle [brush args]");
+            Player.Message(p, "%HDraws a triangle between three points.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
     }*/
 }

@@ -382,7 +382,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.level == bot.level)
-                    Player.SendMessage(p, bot.color + bot.name + "%S, the bot, has been added.");
+                    Player.Message(p, bot.color + bot.name + "%S, the bot, has been added.");
             }
             if (save)
                 BotsFile.UpdateBot(bot);

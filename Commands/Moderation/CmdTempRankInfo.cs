@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
                 if (!line.Contains(message)) continue;
                 PrintTempRankInfo(p, line); return;
             }
-            Player.SendMessage(p, "&cPlayer &a" + message + "&chas not been assigned a temporary rank.");
+            Player.Message(p, "&cPlayer &a" + message + "&chas not been assigned a temporary rank.");
         }
         
         internal static void PrintTempRankInfo(Player p, string line) {
@@ -48,15 +48,15 @@ namespace MCGalaxy.Commands {
             
             DateTime assignmentDate = new DateTime(years, months, days, hours, minutes, 0);
             DateTime expireDate = assignmentDate.AddHours(Convert.ToDouble(period));
-            Player.SendMessage(p, "%STemp rank information for " + args[0] + ":");
-            Player.SendMessage(p, "%sFrom " + oldCol + oldrank + " %sto "
+            Player.Message(p, "%STemp rank information for " + args[0] + ":");
+            Player.Message(p, "%sFrom " + oldCol + oldrank + " %sto "
                                + tempCol + temprank + "%s, by " + tempranker);
-            Player.SendMessage(p, "&SRanked on &a" + assignmentDate.ToString() +
+            Player.Message(p, "&SRanked on &a" + assignmentDate.ToString() +
                                "%S, expires &a" + expireDate.ToString());
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/tri <player> - Lists the info about the temp rank of the given player");
+            Player.Message(p, "/tri <player> - Lists the info about the temp rank of the given player");
         }
     }
 }

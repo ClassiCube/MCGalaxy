@@ -41,14 +41,14 @@ namespace MCGalaxy.Commands {
         
         static void ShowLastCommand(Player p, Player who) {
             if (who.lastCMD == "")
-                Player.SendMessage(p, who.ColoredName + " %Shas not used any commands yet.");
+                Player.Message(p, who.ColoredName + " %Shas not used any commands yet.");
             else
-                Player.SendMessage(p, who.ColoredName + " %Slast used \"" + who.lastCMD + "\" on " + who.lastCmdTime);
+                Player.Message(p, who.ColoredName + " %Slast used \"" + who.lastCMD + "\" on " + who.lastCmdTime);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/last [user] - Shows last command used by [user]");
-            Player.SendMessage(p, "/last by itself will show all last commands (SPAMMY)");
+            Player.Message(p, "/last [user] - Shows last command used by [user]");
+            Player.Message(p, "/last by itself will show all last commands (SPAMMY)");
         }
     }
 }

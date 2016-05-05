@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             
             if (!message.CaselessEq("all") && Block.Byte(message) == Block.Zero) {
-                Player.SendMessage(p, "There is no block \"" + message + "\"."); return;
+                Player.Message(p, "There is no block \"" + message + "\"."); return;
             }            
             int phys = p.level.physics;
             Command.all.Find("physics").Use(p, "0");
@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/unflood [liquid]");
-            Player.SendMessage(p, "%HUnfloods the map you are currently in of [liquid].");
-            Player.SendMessage(p, "%H  If [liquid] is \"all\", unfloods the map of all liquids.");
+            Player.Message(p, "%T/unflood [liquid]");
+            Player.Message(p, "%HUnfloods the map you are currently in of [liquid].");
+            Player.Message(p, "%H  If [liquid] is \"all\", unfloods the map of all liquids.");
         }
     }
 }

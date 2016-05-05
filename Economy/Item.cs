@@ -80,7 +80,7 @@ namespace MCGalaxy.Eco {
             // Must always provide an argument.
             if (args.Length < 2) { cmd.Help(p); return; }
             if (p.money < Price) {
-                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
+                Player.Message(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
             }
             OnBuyCommand(p, message, args);
         }
@@ -90,30 +90,30 @@ namespace MCGalaxy.Eco {
         protected internal override void OnSetupCommand(Player p, string[] args) {
             switch (args[1].ToLower()) {
                 case "enable":
-                    Player.SendMessage(p, "%aThe " + Name + " item is now enabled.");
+                    Player.Message(p, "%aThe " + Name + " item is now enabled.");
                     Enabled = true; break;
                 case "disable":
-                    Player.SendMessage(p, "%aThe " + Name + " item it now enabled.");
+                    Player.Message(p, "%aThe " + Name + " item it now enabled.");
                     Enabled = false; break;
                 case "price":
                     int cost;
                     if (!int.TryParse(args[2], out cost)) {
-                        Player.SendMessage(p, "\"" + args[2] + "\" is not a valid integer."); return;
+                        Player.Message(p, "\"" + args[2] + "\" is not a valid integer."); return;
                     }
-                    Player.SendMessage(p, "%aSuccessfully changed the " + Name + " price to %f" + cost + " %3" + Server.moneys); 
+                    Player.Message(p, "%aSuccessfully changed the " + Name + " price to %f" + cost + " %3" + Server.moneys); 
                     Price = cost; break;
                 default:
-                    Player.SendMessage(p, "Supported actions: enable, disable, price [cost]"); break;
+                    Player.Message(p, "Supported actions: enable, disable, price [cost]"); break;
             }
         }
         
         protected internal override void OnStoreOverview(Player p) {
-            Player.SendMessage(p, Name + " - costs %f" + Price + " %3" + Server.moneys);
+            Player.Message(p, Name + " - costs %f" + Price + " %3" + Server.moneys);
         }
         
         protected internal override void OnStoreCommand(Player p) {
-        	Player.SendMessage(p, "Syntax: %T/buy " + Name + " [value]");
-            Player.SendMessage(p, "Costs %f" + Price + " %3" + Server.moneys + " %Seach time the item is bought.");
+        	Player.Message(p, "Syntax: %T/buy " + Name + " [value]");
+            Player.Message(p, "Costs %f" + Price + " %3" + Server.moneys + " %Seach time the item is bought.");
         }
     }
 }

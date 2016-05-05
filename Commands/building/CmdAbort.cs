@@ -46,11 +46,11 @@ namespace MCGalaxy.Commands
                 p.level.blockqueue.RemoveAll(b => b.p == p);
             }
             finally { BlockQueue.Resume(); }
-            Player.SendMessage(p, "Every toggle or action was aborted.");
+            Player.Message(p, "Every toggle or action was aborted.");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/abort - Cancels an action.");
+            Player.Message(p, "/abort - Cancels an action.");
         }
     }
 }

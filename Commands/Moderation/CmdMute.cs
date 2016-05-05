@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            if (who == p) { Player.SendMessage(p, "You cannot mute or unmute yourself."); return; }
+            if (who == p) { Player.Message(p, "You cannot mute or unmute yourself."); return; }
 
             if (who.muted) {
                 who.muted = false;
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/mute <player> - Mutes or unmutes the player.");
+            Player.Message(p, "/mute <player> - Mutes or unmutes the player.");
         }
     }
 }

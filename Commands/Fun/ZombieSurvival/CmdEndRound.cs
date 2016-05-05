@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/endround - ends the round");
+            Player.Message(p, "/endround - ends the round");
         }
     }
 }

@@ -170,10 +170,10 @@ namespace MCGalaxy {
                 return false;
             
             if (p.CurrentAmountOfTnt == game.TntPerPlayerAtATime) {
-                Player.SendMessage(p, "TNT Wars: Maximum amount of TNT placed"); return false;
+                Player.Message(p, "TNT Wars: Maximum amount of TNT placed"); return false;
             }
             if (p.CurrentAmountOfTnt > game.TntPerPlayerAtATime) {
-                Player.SendMessage(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!"); return false;
+                Player.Message(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!"); return false;
             }
             p.TntAtATime();
             type = Block.smalltnt;
@@ -213,7 +213,7 @@ namespace MCGalaxy {
                             if (toDel == null) toDel = new List<Zone>();
                             toDel.Add(zn);
 
-                            Player.SendMessage(p, "Zone deleted for &b" + zn.Owner);
+                            Player.Message(p, "Zone deleted for &b" + zn.Owner);
                             foundDel = true;
                         } else {
                             if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
@@ -236,7 +236,7 @@ namespace MCGalaxy {
 
                 if (p.zoneDel) {
                     if (!foundDel) {
-                        Player.SendMessage(p, "No zones found to delete.");
+                        Player.Message(p, "No zones found to delete.");
                     } else {
                         foreach (Zone Zn in toDel)
                             ZoneList.Remove(Zn);
@@ -248,9 +248,9 @@ namespace MCGalaxy {
                 if (!AllowBuild || p.ZoneCheck) {
                     if (p.ZoneCheck || p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
                         if (Owners != "")
-                            Player.SendMessage(p, "This zone belongs to &b" + Owners.Remove(0, 2) + ".");
+                            Player.Message(p, "This zone belongs to &b" + Owners.Remove(0, 2) + ".");
                         else
-                            Player.SendMessage(p, "This zone belongs to no one.");
+                            Player.Message(p, "This zone belongs to no one.");
                         p.ZoneSpam = DateTime.UtcNow;
                     }
                     if (p.ZoneCheck && !p.staticCommands)
@@ -264,7 +264,7 @@ namespace MCGalaxy {
         bool CheckRank(Player p, ushort x, ushort y, ushort z, bool AllowBuild, bool inZone) {
             if (p.group.Permission < permissionbuild && (!inZone || !AllowBuild)) {
                 if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
-                    Player.SendMessage(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
+                    Player.Message(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
                     p.ZoneSpam = DateTime.UtcNow;
                 }
                 return false;
@@ -272,7 +272,7 @@ namespace MCGalaxy {
             
             if (p.group.Permission > perbuildmax && (!inZone || !AllowBuild) && !p.group.CanExecute("perbuildmax")) {
                 if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
-                    Player.SendMessage(p, "Your rank must be " + perbuildmax + " or lower to build here!");
+                    Player.Message(p, "Your rank must be " + perbuildmax + " or lower to build here!");
                     p.ZoneSpam = DateTime.UtcNow;
                 }
                 return false;
@@ -349,7 +349,7 @@ namespace MCGalaxy {
                     Block.Convert(b) != Block.Convert(type);
                 return diffBlock;
             } catch (OutOfMemoryException) {
-                Player.SendMessage(p, "Undo buffer too big! Cleared!");
+                Player.Message(p, "Undo buffer too big! Cleared!");
                 p.UndoBuffer.Clear();
                 p.RemoveInvalidUndos();
                 goto retry;

@@ -35,25 +35,25 @@ namespace MCGalaxy.Commands
         {
         	if (p == null) { MessageInGameOnly(p); return; }
 
-            Player.SendMessage(p, "Break/build a block to display information.");
+            Player.Message(p, "Break/build a block to display information.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(AboutBlockchange);            
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/about - Displays information about a block.");
+            Player.Message(p, "/about - Displays information about a block.");
         }
 
         public void AboutBlockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
             if (!p.staticCommands) p.ClearBlockchange();
             byte b = p.level.GetTile(x, y, z);
-            if (b == Block.Zero) { Player.SendMessage(p, "Invalid Block(" + x + "," + y + "," + z + ")!"); return; }
+            if (b == Block.Zero) { Player.Message(p, "Invalid Block(" + x + "," + y + "," + z + ")!"); return; }
             p.SendBlockchange(x, y, z, b);
 
             string message = "Block (" + x + "," + y + "," + z + "): ";
             message += "&f" + b + " = " + Block.Name(b);
-            Player.SendMessage(p, message + "%S.");
+            Player.Message(p, message + "%S.");
 
             //safe against SQL injections because no user input is given here
             DataTable Blocks = Database.fillData("SELECT * FROM `Block" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z); 
@@ -70,10 +70,10 @@ namespace MCGalaxy.Commands
                 Deleted = Convert.ToBoolean(row["Deleted"]);
 
                 if (!Deleted)
-                    Player.SendMessage(p, "&3Created by " + Server.FindColor(Username) + Username + "%S, using &3" + BlockUsed);
+                    Player.Message(p, "&3Created by " + Server.FindColor(Username) + Username + "%S, using &3" + BlockUsed);
                 else
-                    Player.SendMessage(p, "&4Destroyed by " + Server.FindColor(Username) + Username + "%S, using &3" + BlockUsed);
-                Player.SendMessage(p, "Date and time modified: &2" + TimePerformed);
+                    Player.Message(p, "&4Destroyed by " + Server.FindColor(Username) + Username + "%S, using &3" + BlockUsed);
+                Player.Message(p, "Date and time modified: &2" + TimePerformed);
             }
 
             int bpIndex = p.level.PosToInt(x, y, z);
@@ -90,14 +90,14 @@ namespace MCGalaxy.Commands
                 BlockUsed = Block.Name(inBlock);
 
                 if (!Deleted)
-                    Player.SendMessage(p, "&3Created by " + Server.FindColor(Username.Trim()) + Username.Trim() + "%S, using &3" + BlockUsed);
+                    Player.Message(p, "&3Created by " + Server.FindColor(Username.Trim()) + Username.Trim() + "%S, using &3" + BlockUsed);
                 else
-                    Player.SendMessage(p, "&4Destroyed by " + Server.FindColor(Username.Trim()) + Username.Trim() + "%S, using &3" + BlockUsed);
-                Player.SendMessage(p, "Date and time modified: &2" + TimePerformed);
+                    Player.Message(p, "&4Destroyed by " + Server.FindColor(Username.Trim()) + Username.Trim() + "%S, using &3" + BlockUsed);
+                Player.Message(p, "Date and time modified: &2" + TimePerformed);
             }
 
             if (!foundOne)
-                Player.SendMessage(p, "This block has not been modified since the map was cleared.");
+                Player.Message(p, "This block has not been modified since the map was cleared.");
  
             Blocks.Dispose();
 

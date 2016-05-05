@@ -68,14 +68,14 @@ namespace MCGalaxy.Commands
             }
 
             if (!File.Exists("extra/images/" + bitmapLoc + ".bmp")) {
-                Player.SendMessage(p, "The URL entered was invalid!"); return;
+                Player.Message(p, "The URL entered was invalid!"); return;
             }
             CatchPos cpos = default(CatchPos);
             cpos.layer = layer;
             cpos.bitmapLoc = bitmapLoc;
             cpos.popType = popType;
             p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place two blocks to determine direction.");
+            Player.Message(p, "Place two blocks to determine direction.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -87,15 +87,15 @@ namespace MCGalaxy.Commands
             
             try {
                 using (WebClient web = new WebClient()) {
-                    Player.SendMessage(p, "Downloading file from: &f" + url);
+                    Player.Message(p, "Downloading file from: &f" + url);
                     web.DownloadFile(url, "extra/images/tempImage_" + p.name + ".bmp");
                 }
-                Player.SendMessage(p, "Finished downloading image.");
+                Player.Message(p, "Finished downloading image.");
                 return true;
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
-                Player.SendMessage(p, "&cFailed to download the image from the given url.");
-                Player.SendMessage(p, "&cThe url may need to end with its extension (such as .jpg).");
+                Player.Message(p, "&cFailed to download the image from the given url.");
+                Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
                 return false;
             }
         }
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
         void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
-            if (x == cpos.x && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
+            if (x == cpos.x && z == cpos.z) { Player.Message(p, "No direction was selected"); return; }
 
             int direction;
             if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z))
@@ -131,8 +131,8 @@ namespace MCGalaxy.Commands
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 if (bmp != null) bmp.Dispose();
-                Player.SendMessage(p, "&cThere was an error reading the downloaded image.");
-                Player.SendMessage(p, "&cThe url may need to end with its extension (such as .jpg).");
+                Player.Message(p, "&cThere was an error reading the downloaded image.");
+                Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
                 return;
             }
             
@@ -217,17 +217,17 @@ namespace MCGalaxy.Commands
             
             if (cpos.bitmapLoc == "tempImage_" + p.name)
                 File.Delete("extra/images/tempImage_" + p.name + ".bmp");
-            Player.SendMessage(p, "Finished printing image using " + ImagePalette.Names[popType]);
+            Player.Message(p, "Finished printing image using " + ImagePalette.Names[popType]);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/imageprint <switch> <localfile> - Print local file in extra/images/ folder.  Must be type .bmp, type filename without extension.");
-            Player.SendMessage(p, "/imageprint <switch> <imgurfile.extension> - Print IMGUR stored file.  Example: /i piCCm.gif will print www.imgur.com/piCCm.gif. Case-sensitive");
-            Player.SendMessage(p, "/imageprint <switch> <webfile> - Print web file in format domain.com/folder/image.jpg. Does not need http:// or www.");
-            Player.SendMessage(p, "Available switches: (&f1%S) 2-Layer Color image, (&f2%S) 1-Layer Color Image, " +
+            Player.Message(p, "/imageprint <switch> <localfile> - Print local file in extra/images/ folder.  Must be type .bmp, type filename without extension.");
+            Player.Message(p, "/imageprint <switch> <imgurfile.extension> - Print IMGUR stored file.  Example: /i piCCm.gif will print www.imgur.com/piCCm.gif. Case-sensitive");
+            Player.Message(p, "/imageprint <switch> <webfile> - Print web file in format domain.com/folder/image.jpg. Does not need http:// or www.");
+            Player.Message(p, "Available switches: (&f1%S) 2-Layer Color image, (&f2%S) 1-Layer Color Image, " +
                                "(&f3%S) 2-Layer Grayscale, (&f4%S) 1-Layer Grayscale, (%f5%S) Black and White, (&f6%S) Mathematical Grayscale");
-            Player.SendMessage(p, "Local filetypes: .bmp.   Remote Filetypes: .gif .png .jpg .bmp.  PNG and GIF may use transparency");
-            Player.SendMessage(p, "Use switch (&flayer%S) or (&fl%S) to print horizontally.");
+            Player.Message(p, "Local filetypes: .bmp.   Remote Filetypes: .gif .png .jpg .bmp.  PNG and GIF may use transparency");
+            Player.Message(p, "Use switch (&flayer%S) or (&fl%S) to print horizontally.");
         }
 
         struct CatchPos { public bool layer; public byte popType; public string bitmapLoc; public ushort x, y, z; }

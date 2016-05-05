@@ -36,40 +36,40 @@ namespace MCGalaxy.Commands
         {
             if (message == "")
             {
-                Player.SendMessage(p, "Basic blocks: ");
+                Player.Message(p, "Basic blocks: ");
                 for (byte i = 0; i < Block.CpeCount; i++)
                 {
                     message += ", " + Block.Name(i);
                 }
-                Player.SendMessage(p, message.Remove(0, 2));
-                Player.SendMessage(p, "&d/blocks all <0/1/2/3/4> %Swill show the rest.");
+                Player.Message(p, message.Remove(0, 2));
+                Player.Message(p, "&d/blocks all <0/1/2/3/4> %Swill show the rest.");
             }
             else if (message.ToLower() == "all")
             {
                 message = "";
-                Player.SendMessage(p, "Complex blocks: ");
+                Player.Message(p, "Complex blocks: ");
                 for (byte i = Block.CpeCount; i < 255; i++)
                 {
                     if (Block.Name(i).ToLower() != "unknown") message += ", " + Block.Name(i);
                 }
-                Player.SendMessage(p, message.Remove(0, 2));
-                Player.SendMessage(p, "Use &d/blocks all <0/1/2/3/4> %Sfor a readable list.");
+                Player.Message(p, message.Remove(0, 2));
+                Player.Message(p, "Use &d/blocks all <0/1/2/3/4> %Sfor a readable list.");
             }
             else if (message.ToLower().IndexOf(' ') != -1 && message.Split(' ')[0] == "all")
             {
                 int foundRange = 0;
                 try { foundRange = int.Parse(message.Split(' ')[1]); }
-                catch { Player.SendMessage(p, "Incorrect syntax"); return; }
+                catch { Player.Message(p, "Incorrect syntax"); return; }
 
-                if (foundRange >= 5 || foundRange < 0) { Player.SendMessage(p, "Number must be between 0 and 4"); return; }
+                if (foundRange >= 5 || foundRange < 0) { Player.Message(p, "Number must be between 0 and 4"); return; }
 
                 message = "";
-                Player.SendMessage(p, "Blocks between " + foundRange * 51 + " and " + (foundRange + 1) * 51);
+                Player.Message(p, "Blocks between " + foundRange * 51 + " and " + (foundRange + 1) * 51);
                 for (byte i = (byte)(foundRange * 51); i < (byte)((foundRange + 1) * 51); i++)
                 {
                     if (Block.Name(i).ToLower() != "unknown") message += ", " + Block.Name(i);
                 }
-                Player.SendMessage(p, message.Remove(0, 2));
+                Player.Message(p, message.Remove(0, 2));
             }
             else
             {
@@ -88,34 +88,34 @@ namespace MCGalaxy.Commands
 
                         if (printMessage != ">>>&b")
                         {
-                            Player.SendMessage(p, "Blocks which look like \"" + message + "\":");
-                            Player.SendMessage(p, printMessage.Remove(printMessage.Length - 2));
+                            Player.Message(p, "Blocks which look like \"" + message + "\":");
+                            Player.Message(p, printMessage.Remove(printMessage.Length - 2));
                         }
-                        else Player.SendMessage(p, "No Complex Blocks look like \"" + message + "\"");
+                        else Player.Message(p, "No Complex Blocks look like \"" + message + "\"");
                     }
                     else
                     {
-                        Player.SendMessage(p, "&bComplex information for \"" + message + "\":");
-                        Player.SendMessage(p, "&cBlock will appear as a \"" + Block.Name(Block.Convert(b)) + "\" block");
+                        Player.Message(p, "&bComplex information for \"" + message + "\":");
+                        Player.Message(p, "&cBlock will appear as a \"" + Block.Name(Block.Convert(b)) + "\" block");
                         BlockProps props = Block.Properties[b];
 
                         if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs))
-                            Player.SendMessage(p, "Block will allow light through");
-                        if (Block.Physics(b)) Player.SendMessage(p, "Block affects physics in some way"); //AFFECT!
-                        else Player.SendMessage(p, "Block will not affect physics in any way"); //It's AFFECT!
-                        if (Block.NeedRestart(b)) Player.SendMessage(p, "The block's physics will auto-start");
+                            Player.Message(p, "Block will allow light through");
+                        if (Block.Physics(b)) Player.Message(p, "Block affects physics in some way"); //AFFECT!
+                        else Player.Message(p, "Block will not affect physics in any way"); //It's AFFECT!
+                        if (Block.NeedRestart(b)) Player.Message(p, "The block's physics will auto-start");
 
-                        if (props.OPBlock) Player.SendMessage(p, "Block is unaffected by explosions");
+                        if (props.OPBlock) Player.Message(p, "Block is unaffected by explosions");
 
-                        if (Block.AllowBreak(b)) Player.SendMessage(p, "Anybody can activate the block");
-                        if (Block.Walkthrough(b)) Player.SendMessage(p, "Block can be walked through");
-                        if (Block.Death(b)) Player.SendMessage(p, "Walking through block will kill you");
+                        if (Block.AllowBreak(b)) Player.Message(p, "Anybody can activate the block");
+                        if (Block.Walkthrough(b)) Player.Message(p, "Block can be walked through");
+                        if (Block.Death(b)) Player.Message(p, "Walking through block will kill you");
 
-                        if (props.DoorAirId != 0) Player.SendMessage(p, "Block is an ordinary door");
-                        if (props.IsTDoor) Player.SendMessage(p, "Block is a tdoor, which allows other blocks through when open");
-                        if (props.ODoorId != Block.Zero) Player.SendMessage(p, "Block is an odoor, which toggles (GLITCHY)");
+                        if (props.DoorAirId != 0) Player.Message(p, "Block is an ordinary door");
+                        if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
+                        if (props.ODoorId != Block.Zero) Player.Message(p, "Block is an odoor, which toggles (GLITCHY)");
 
-                        if (Block.Mover(b)) Player.SendMessage(p, "Block can be activated by walking through it");
+                        if (Block.Mover(b)) Player.Message(p, "Block can be activated by walking through it");
                     }
                 }
                 else if (Group.Find(message) != null)
@@ -129,46 +129,46 @@ namespace MCGalaxy.Commands
 
                     if (printMessage != ">>>&b")
                     {
-                        Player.SendMessage(p, "Blocks which " + Group.Find(message).ColoredName + " %Scan place: ");
-                        Player.SendMessage(p, printMessage.Remove(printMessage.Length - 2));
+                        Player.Message(p, "Blocks which " + Group.Find(message).ColoredName + " %Scan place: ");
+                        Player.Message(p, printMessage.Remove(printMessage.Length - 2));
                     }
-                    else Player.SendMessage(p, "No blocks are specific to this rank");
+                    else Player.Message(p, "No blocks are specific to this rank");
                 }
                 else if (message.IndexOf(' ') == -1)
                 {
-                    if (message.ToLower() == "count") Player.SendMessage(p, "Blocks in this map: " + p.level.blocks.Length);
+                    if (message.ToLower() == "count") Player.Message(p, "Blocks in this map: " + p.level.blocks.Length);
                     else Help(p);
                 }
                 else if (message.Split(' ')[0].ToLower() == "count")
                 {
                     int foundNum = 0; byte foundBlock = Block.Byte(message.Split(' ')[1]);
-                    if (foundBlock == Block.Zero) { Player.SendMessage(p, "Could not find block specified"); return; }
+                    if (foundBlock == Block.Zero) { Player.Message(p, "Could not find block specified"); return; }
 
                     for (int i = 0; i < p.level.blocks.Length; i++)
                     {
                         if (foundBlock == p.level.blocks[i]) foundNum++;
                     }
 
-                    if (foundNum == 0) Player.SendMessage(p, "No blocks were of type \"" + message.Split(' ')[1] + "\"");
-                    else if (foundNum == 1) Player.SendMessage(p, "1 block was of type \"" + message.Split(' ')[1] + "\"");
-                    else Player.SendMessage(p, foundNum.ToString() + " blocks were of type \"" + message.Split(' ')[1] + "\"");
+                    if (foundNum == 0) Player.Message(p, "No blocks were of type \"" + message.Split(' ')[1] + "\"");
+                    else if (foundNum == 1) Player.Message(p, "1 block was of type \"" + message.Split(' ')[1] + "\"");
+                    else Player.Message(p, foundNum.ToString() + " blocks were of type \"" + message.Split(' ')[1] + "\"");
                 }
                 else
                 {
-                    Player.SendMessage(p, "Unable to find block or rank");
+                    Player.Message(p, "Unable to find block or rank");
                 }
             }
         }
         
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/blocks - Lists all basic blocks");
-            Player.SendMessage(p, "/blocks all - Lists all complex blocks");
-            Player.SendMessage(p, "/blocks [basic block] - Lists all blocks which look the same");
-            Player.SendMessage(p, "/blocks [complex block] - Lists specific information on block");
-            Player.SendMessage(p, "/blocks <rank> - Lists all blocks <rank> can use");
-            Player.SendMessage(p, ">> " + Group.concatList());
-            Player.SendMessage(p, "/blocks count <block> - Finds total count for <block> in map");
+            Player.Message(p, "/blocks - Lists all basic blocks");
+            Player.Message(p, "/blocks all - Lists all complex blocks");
+            Player.Message(p, "/blocks [basic block] - Lists all blocks which look the same");
+            Player.Message(p, "/blocks [complex block] - Lists specific information on block");
+            Player.Message(p, "/blocks <rank> - Lists all blocks <rank> can use");
+            Player.Message(p, ">> " + Group.concatList());
+            Player.Message(p, "/blocks count <block> - Finds total count for <block> in map");
         }
     }
 }

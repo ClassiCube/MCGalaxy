@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             
             if (who == null) return;
             if (grp == null) {
-                Player.SendMessage(p, "No rank found with the name \"" + args[1] + "\"." ); return;
+                Player.Message(p, "No rank found with the name \"" + args[1] + "\"." ); return;
             }
             
             if (grp.Permission == LevelPermission.Banned) {
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/fakerank <name> <rank> - Sends a fake rank change message.");
+            Player.Message(p, "/fakerank <name> <rank> - Sends a fake rank change message.");
         }
     }
 }

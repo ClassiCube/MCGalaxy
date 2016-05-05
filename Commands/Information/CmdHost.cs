@@ -30,11 +30,11 @@ namespace MCGalaxy.Commands
         {
             if (message != "") { Help(p); return; }
 
-            Player.SendMessage(p, "Host is currently &3" + Server.ZallState + ".");
+            Player.Message(p, "Host is currently &3" + Server.ZallState + ".");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/host - Shows what the host is up to.");
+            Player.Message(p, "/host - Shows what the host is up to.");
         }
     }
 }

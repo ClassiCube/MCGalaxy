@@ -29,11 +29,11 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
         	if (!Server.LogNotes) {
-        		Player.SendMessage(p, "The server does not have notes logging enabled."); return;
+        		Player.Message(p, "The server does not have notes logging enabled."); return;
         	}
             if (message == "") {
                 if (p == null) {
-                    Player.SendMessage(p, "Console must provide a player name."); return;
+                    Player.Message(p, "Console must provide a player name."); return;
                 }
                 message = p.name;
             }
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
             if (matches > 1) return;
             if (who != null) message = who.name;
             
-            Player.SendMessage(p, "Notes for " + message + ":");
+            Player.Message(p, "Notes for " + message + ":");
             bool foundAny = false;
             foreach (string line in Server.Notes.Find(message)) {
                 foundAny = true;
@@ -51,13 +51,13 @@ namespace MCGalaxy.Commands {
                 if (args.Length <= 3) continue;
                 
                 if (args.Length == 4)
-                	Player.SendMessage(p, Action(args[1]) + " by " + args[2] + " on " + args[3]);
+                	Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]);
                 else
-                    Player.SendMessage(p, Action(args[1]) + " by " + args[2] + " on " + args[3]
+                    Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]
                 	                   + " - " + args[4].Replace("%20", " "));
             }
             if (!foundAny)
-                Player.SendMessage(p, "No notes found.");
+                Player.Message(p, "No notes found.");
         }
         
         static string Action(string arg) {
@@ -82,8 +82,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-           Player.SendMessage(p, "%T/notes [name] %H- views that player's notes.");
-           Player.SendMessage(p, "%HNotes are things such as bans, kicks, warns, mutes.");
+           Player.Message(p, "%T/notes [name] %H- views that player's notes.");
+           Player.Message(p, "%HNotes are things such as bans, kicks, warns, mutes.");
         }
     }
     
@@ -101,8 +101,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/mynotes %H- views your own notes.");
-            Player.SendMessage(p, "%HNotes are things such as bans, kicks, warns, mutes.");
+            Player.Message(p, "%T/mynotes %H- views your own notes.");
+            Player.Message(p, "%HNotes are things such as bans, kicks, warns, mutes.");
         }
     }
 }

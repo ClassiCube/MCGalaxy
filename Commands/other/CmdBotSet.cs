@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                 bot.kill = false;
                 bot.hunt = false;
                 bot.AIName = "";
-                Player.SendMessage(p, bot.color + bot.name + "%S's AI was turned off.");
+                Player.Message(p, bot.color + bot.name + "%S's AI was turned off.");
                 Server.s.Log(bot.name + "'s AI was turned off.");
                 return;
             } else if (args.Length != 2) {
@@ -76,8 +76,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/botset <bot> <AI script> - Makes <bot> do <AI script>");
-            Player.SendMessage(p, "Special AI scripts: Kill and Hunt");
+            Player.Message(p, "/botset <bot> <AI script> - Makes <bot> do <AI script>");
+            Player.Message(p, "Special AI scripts: Kill and Hunt");
         }
     }
 }

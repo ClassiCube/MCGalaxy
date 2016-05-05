@@ -35,37 +35,37 @@ namespace MCGalaxy.Commands {
             
             if (action == "all") {
                 p.ignoreAll = !p.ignoreAll;
-                Player.SendMessage(p, p.ignoreAll ? "&cAll chat is now ignored!" : "&aAll chat is no longer ignored!");
+                Player.Message(p, p.ignoreAll ? "&cAll chat is now ignored!" : "&aAll chat is no longer ignored!");
                 CreateIgnoreFile(p); return;
             } else if (action == "irc") {
                 p.ignoreIRC = !p.ignoreIRC;
-                Player.SendMessage(p, p.ignoreIRC ? "&cIRC chat is now ignored!" : "&aIRC chat is no longer ignored!");
+                Player.Message(p, p.ignoreIRC ? "&cIRC chat is now ignored!" : "&aIRC chat is no longer ignored!");
                 CreateIgnoreFile(p); return;
             } else if (action == "global") {
                 p.ignoreGlobal = !p.ignoreGlobal;
-                Player.SendMessage(p, p.ignoreGlobal ? "&cGlobal Chat is now ignored!" : "&aGlobal Chat is no longer ignored!");
+                Player.Message(p, p.ignoreGlobal ? "&cGlobal Chat is now ignored!" : "&aGlobal Chat is no longer ignored!");
                 CreateIgnoreFile(p); return;
             } else if (action == "list") {
-                Player.SendMessage(p, "&cCurrently ignoring the following players:");
+                Player.Message(p, "&cCurrently ignoring the following players:");
                 string names = string.Join(", ", p.listignored);
-                if (names != "") Player.SendMessage(p, names);
-                if (p.ignoreAll) Player.SendMessage(p, "&cIgnoring all chat.");
-                if (p.ignoreIRC) Player.SendMessage(p, "&cIgnoring IRC chat.");
-                if (p.ignoreGlobal) Player.SendMessage(p, "&cIgnoring global chat.");                
+                if (names != "") Player.Message(p, names);
+                if (p.ignoreAll) Player.Message(p, "&cIgnoring all chat.");
+                if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat.");
+                if (p.ignoreGlobal) Player.Message(p, "&cIgnoring global chat.");                
                 return;
             }
             
             Player who = PlayerInfo.Find(action);
-            if (who == null) { Player.SendMessage(p, "Could not find player specified."); return; }
-            if (who.name == p.name) { Player.SendMessage(p, "You cannot ignore yourself."); return; }
+            if (who == null) { Player.Message(p, "Could not find player specified."); return; }
+            if (who.name == p.name) { Player.Message(p, "You cannot ignore yourself."); return; }
             CreateIgnoreFile(p);
             
             if (!p.listignored.Contains(who.name)) {
                 p.listignored.Add(who.name);
-                Player.SendMessage(p, "Player now ignored: &c" + who.DisplayName + "!");
+                Player.Message(p, "Player now ignored: &c" + who.DisplayName + "!");
             } else {
                 p.listignored.Remove(who.name);
-                Player.SendMessage(p, "Player is no longer ignored: &a" + who.DisplayName + "!");
+                Player.Message(p, "Player is no longer ignored: &a" + who.DisplayName + "!");
             }
         }
         
@@ -76,12 +76,12 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/ignore [name]");
-            Player.SendMessage(p, "%HUsing the same name again will unignore.");
-            Player.SendMessage(p, "%H  If name is \"all\", all chat is ignored.");
-            Player.SendMessage(p, "%H  If name is \"global\", MCGalaxy global chat is ignored.");
-            Player.SendMessage(p, "%H  If name is \"irc\", IRC chat is ignored.");
-            Player.SendMessage(p, "%H  Otherwise, the online player matching the name is ignored.");            
+            Player.Message(p, "%T/ignore [name]");
+            Player.Message(p, "%HUsing the same name again will unignore.");
+            Player.Message(p, "%H  If name is \"all\", all chat is ignored.");
+            Player.Message(p, "%H  If name is \"global\", MCGalaxy global chat is ignored.");
+            Player.Message(p, "%H  If name is \"irc\", IRC chat is ignored.");
+            Player.Message(p, "%H  Otherwise, the online player matching the name is ignored.");            
         }
     }
 }

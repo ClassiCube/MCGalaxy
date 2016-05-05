@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             List<string> lines = CP437Reader.ReadAllLines(newsFile);
             if (message == "") {
                 foreach (string line in lines)
-                    Player.SendMessage(p, line);
+                    Player.Message(p, line);
                 return;
             }
             
@@ -55,14 +55,14 @@ namespace MCGalaxy.Commands
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (who == null) return;
             foreach (string line in lines)
-                Player.SendMessage(who, line);
-            Player.SendMessage(p, "The News were successfully sent to " + who.name + ".");
+                Player.Message(who, line);
+            Player.Message(p, "The News were successfully sent to " + who.name + ".");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/news - Shows server news.");
-            Player.SendMessage(p, "/news <player> - Sends the News to <player>.");
-            Player.SendMessage(p, "/news all - Sends the News to everyone.");
+            Player.Message(p, "/news - Shows server news.");
+            Player.Message(p, "/news <player> - Sends the News to <player>.");
+            Player.Message(p, "/news all - Sends the News to everyone.");
         }
     }
 }

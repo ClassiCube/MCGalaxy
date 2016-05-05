@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             
             if (who == null) return;
-            if (who == p) { Player.SendMessage(p, "you can't warn yourself"); return; }
+            if (who == p) { Player.Message(p, "you can't warn yourself"); return; }
             if (p != null && p.group.Permission <= who.group.Permission) {
                 MessageTooHighRank(p, "warn", false); return;
             }
@@ -45,9 +45,9 @@ namespace MCGalaxy.Commands {
             Server.s.Log(warnedby + " warned " + who.name);
 
             if (who.warn == 0) {
-                Player.SendMessage(who, "Do it again twice and you will get kicked!");
+                Player.Message(who, "Do it again twice and you will get kicked!");
             } else if (who.warn == 1) {
-                Player.SendMessage(who, "Do it one more time and you will get kicked!");
+                Player.Message(who, "Do it one more time and you will get kicked!");
             } else if (who.warn == 2) {
                 Player.GlobalMessage(who.ColoredName + " %Swas warn-kicked by " + warnedby);
                 who.Kick("KICKED BECAUSE " + reason + "");
@@ -59,8 +59,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/warn <player> <reason> - Warns a player.");
-            Player.SendMessage(p, "Player will get kicked after 3 warnings.");
+            Player.Message(p, "/warn <player> <reason> - Warns a player.");
+            Player.Message(p, "Player will get kicked after 3 warnings.");
         }
     }
 }

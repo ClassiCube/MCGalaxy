@@ -52,30 +52,30 @@ namespace MCGalaxy.Commands {
             
             char code = args[1][0];
             if (Colors.IsStandardColor(code)) {
-                Player.SendMessage(p, code + " is a standard color code, and thus cannot be removed."); return;
+                Player.Message(p, code + " is a standard color code, and thus cannot be removed."); return;
             }
             if (code <= ' ' || code > '~' || code == '%' || code == '&') {
-                Player.SendMessage(p, code + " must be a standard ASCII character.");
-                Player.SendMessage(p, "It also cannot be a space, percentage, or ampersand.");
+                Player.Message(p, code + " must be a standard ASCII character.");
+                Player.Message(p, "It also cannot be a space, percentage, or ampersand.");
                 return;
             }
             
             char code2 = code;
             if (Colors.MapColor(ref code2)) {
-                Player.SendMessage(p, "There is already a custom or server defined color with the code " + code +
+                Player.Message(p, "There is already a custom or server defined color with the code " + code +
                                    ", you must either use a different code or use \"%T/ccols remove " + code + "%S\"");
                 return;
             }
             
             string name = args[2];
             if (Colors.Parse(name) != "") {
-            	Player.SendMessage(p, "There is already an existing standard or " +
+            	Player.Message(p, "There is already an existing standard or " +
             	                   "custom color with the name \"" + name + "\"."); return;
             }
             
             char fallback = args[3][0];           
             if (!Colors.IsStandardColor(fallback)) {
-                Player.SendMessage(p, fallback + " must be a standard color code."); return;
+                Player.Message(p, fallback + " must be a standard color code."); return;
             }
             if (fallback >= 'A' && fallback <= 'F') fallback += ' ';
             
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands {
             if (hex.Length > 0 && hex[0] == '#')
                 hex = hex.Substring(1);
             if (hex.Length != 6 || !IsValidHex(hex)) {
-                Player.SendMessage(p, "\"#" + hex + "\" is not a valid hex color."); return;
+                Player.Message(p, "\"#" + hex + "\" is not a valid hex color."); return;
             }
             
             CustomColor col = default(CustomColor);
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands {
             Color rgb = ColorTranslator.FromHtml("#" + hex);
             col.R = rgb.R; col.G = rgb.G; col.B = rgb.B;
             Colors.AddExtColor(col);
-            Player.SendMessage(p, "Successfully added a custom color.");
+            Player.Message(p, "Successfully added a custom color.");
         }
         
         void RemoveHandler(Player p, string[] args) {
@@ -100,16 +100,16 @@ namespace MCGalaxy.Commands {
             
             char code = args[1][0];
             if (Colors.IsStandardColor(code)) {
-                Player.SendMessage(p, code + " is a standard color, and thus cannot be removed."); return;
+                Player.Message(p, code + " is a standard color, and thus cannot be removed."); return;
             }
             
             if ((int)code >= 256 || Colors.ExtColors[code].Undefined) {
-                Player.SendMessage(p, "There is no custom color with the code " + code + ".");
-                Player.SendMessage(p, "Use \"%T/ccols list\" %Sto see a list of custom colors.");
+                Player.Message(p, "There is no custom color with the code " + code + ".");
+                Player.Message(p, "Use \"%T/ccols list\" %Sto see a list of custom colors.");
                 return;
             }
             Colors.RemoveExtColor(code);
-            Player.SendMessage(p, "Successfully removed a custom color.");
+            Player.Message(p, "Successfully removed a custom color.");
         }
         
         internal static void ListHandler(Player p, string[] args, bool all) {
@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands {
                     
                     if (count >= 8 && !all) {
                         const string helpFormat = "To see the next set of custom colors, type %T/ccols list {0}";
-                        Player.SendMessage(p, String.Format(helpFormat, offset + 8));
+                        Player.Message(p, String.Format(helpFormat, offset + 8));
                         return;
                     }
                 }
@@ -137,12 +137,12 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/ccols <add/remove/list>");
-            Player.SendMessage(p, "%H/ccols add [code] [name] [fallback] [hex]");
-            Player.SendMessage(p, "%H   code is in ASCII. You cannot replace the standard color codes.");
-            Player.SendMessage(p, "%H   fallback is the standard color code shown to non-supporting clients.");
-            Player.SendMessage(p, "%H/ccols remove [code]");
-            Player.SendMessage(p, "%H/ccols list [offset] - lists all custom color codes.");
+            Player.Message(p, "%T/ccols <add/remove/list>");
+            Player.Message(p, "%H/ccols add [code] [name] [fallback] [hex]");
+            Player.Message(p, "%H   code is in ASCII. You cannot replace the standard color codes.");
+            Player.Message(p, "%H   fallback is the standard color code shown to non-supporting clients.");
+            Player.Message(p, "%H/ccols remove [code]");
+            Player.Message(p, "%H/ccols list [offset] - lists all custom color codes.");
         }
         
         static bool IsValidHex(string hex) {

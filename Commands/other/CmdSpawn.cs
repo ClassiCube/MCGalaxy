@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/spawn - Teleports yourself to the spawn location.");
+            Player.Message(p, "/spawn - Teleports yourself to the spawn location.");
         }
     }
 }

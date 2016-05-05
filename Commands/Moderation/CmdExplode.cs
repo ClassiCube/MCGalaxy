@@ -40,39 +40,39 @@ namespace MCGalaxy.Commands
                 Player who = PlayerInfo.FindOrShowMatches(p, message);
                 if (who == null) return;
                 if (who.level.physics < 3 || who.level.physics == 5) {
-                    Player.SendMessage(p, "The physics on the player's level are not sufficient for exploding."); return;
+                    Player.Message(p, "The physics on the player's level are not sufficient for exploding."); return;
                 }
                 
                 x = (ushort)(who.pos[0] / 32);
                 y = (ushort)(who.pos[1] / 32);
                 z = (ushort)(who.pos[2] / 32);
                 who.level.MakeExplosion(x, y, z, 1);
-                Player.SendMessage(p, who.ColoredName + " %Shas been exploded!");                
+                Player.Message(p, who.ColoredName + " %Shas been exploded!");                
             } else if (args.Length == 3) {
                 try {
                     x = Convert.ToUInt16(args[0]);
                     y = Convert.ToUInt16(args[1]);
                     z = Convert.ToUInt16(args[2]);
                 } catch {
-                    Player.SendMessage(p, "Invalid parameters"); return;
+                    Player.Message(p, "Invalid parameters"); return;
                 }
 
                 Level level = p.level;
                 if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
 
                 if (p.level.physics < 3 || p.level.physics == 5) {
-                    Player.SendMessage(p, "The physics on this level are not sufficient for exploding!"); return;
+                    Player.Message(p, "The physics on this level are not sufficient for exploding!"); return;
                 }
                 p.level.MakeExplosion(x, y, z, 1);
-                Player.SendMessage(p, "An explosion was made at (" + x + ", " + y + ", " + z + ").");
+                Player.Message(p, "An explosion was made at (" + x + ", " + y + ", " + z + ").");
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/explode - Satisfying all your exploding needs :)");
-            Player.SendMessage(p, "/explode me - Explodes at your location");
-            Player.SendMessage(p, "/explode [Player] - Explode the specified player");
-            Player.SendMessage(p, "/explode [X] [Y] [Z] - Explode at the specified co-ordinates");
+            Player.Message(p, "/explode - Satisfying all your exploding needs :)");
+            Player.Message(p, "/explode me - Explodes at your location");
+            Player.Message(p, "/explode [Player] - Explode the specified player");
+            Player.Message(p, "/explode [X] [Y] [Z] - Explode at the specified co-ordinates");
         }
     }
 }

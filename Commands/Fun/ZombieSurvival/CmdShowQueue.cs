@@ -37,14 +37,14 @@ namespace MCGalaxy.Commands {
         
         void ShowQueued(Player p, string queued, string type) {
         	if (String.IsNullOrEmpty(queued))
-                Player.SendMessage(p, "There is no " + type + " queued.");
+                Player.Message(p, "There is no " + type + " queued.");
             else
-                Player.SendMessage(p, "\"" + queued + "\" is queued as the next " + type + ".");
+                Player.Message(p, "\"" + queued + "\" is queued as the next " + type + ".");
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/showqueue");
-            Player.SendMessage(p, "%HLists the currently queued level and zombie.");
+            Player.Message(p, "%T/showqueue");
+            Player.Message(p, "%HLists the currently queued level and zombie.");
         }
     }
 }

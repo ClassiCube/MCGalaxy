@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             OnUse(p, message, parts, ref cpos);
             
             p.blockchangeObject = cpos;           
-            Player.SendMessage(p, PlaceMessage);            
+            Player.Message(p, PlaceMessage);            
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands {
             	// try treat as a block definition id.
             	type = BlockDefinition.GetBlock(msg, p);
             	if (type == Block.Zero) {
-            		Player.SendMessage(p, "There is no block \"" + msg + "\".");
+            		Player.Message(p, "There is no block \"" + msg + "\".");
             		return Block.Zero;
             	}
             	extType = type;
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (checkPlacePerm && !Block.canPlace(p, type)) {
-                Player.SendMessage(p, "Cannot place the block \"" + msg + "\".");
+                Player.Message(p, "Cannot place the block \"" + msg + "\".");
                 return Block.Zero;
             }
             return type;

@@ -40,10 +40,10 @@ namespace MCGalaxy.Commands {
                 Player who = PlayerInfo.Find(p.possess);
                 if (who == null) {
                     p.possess = "";
-                    Player.SendMessage(p, "Possession disabled."); return;
+                    Player.Message(p, "Possession disabled."); return;
                 }
                 if (who == p) {
-                    Player.SendMessage(p, "Cannot possess yourself!"); return;
+                    Player.Message(p, "Cannot possess yourself!"); return;
                 }
                 who.following = "";
                 who.canBuild = true;
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
                 
                 p.invincible = false;
                 Command.all.Find("hide").Use(p, "");
-                Player.SendMessage(p, "Stopped possessing " + who.color + who.name + "%S.");
+                Player.Message(p, "Stopped possessing " + who.color + who.name + "%S.");
             } else {
                 Player who = PlayerInfo.FindOrShowMatches(p, message);
                 if (who == null) return;
@@ -61,10 +61,10 @@ namespace MCGalaxy.Commands {
                 }
                 
                 if (who.possess != "") {
-                    Player.SendMessage(p, "That player is currently possessing someone!"); return;
+                    Player.Message(p, "That player is currently possessing someone!"); return;
                 }
                 if (who.following != "") {
-                    Player.SendMessage(p, "That player is either following someone or already possessed."); return;
+                    Player.Message(p, "That player is either following someone or already possessed."); return;
                 }                
                 if (p.possess != "") {
                     Player prev = PlayerInfo.Find(p.possess);
@@ -85,14 +85,14 @@ namespace MCGalaxy.Commands {
                 if (!result) return;
                 p.DespawnEntity(who.id);
                 who.canBuild = false;
-                Player.SendMessage(p, "Successfully possessed " + who.color + who.name + "%S.");
+                Player.Message(p, "Successfully possessed " + who.color + who.name + "%S.");
             }
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/possess <player> [skin as #] - DEMONIC POSSESSION HUE HUE");
-            Player.SendMessage(p, "Using # after player name makes possessed keep their custom skin during possession.");
-            Player.SendMessage(p, "Not using it makes them lose their skin, and makes their name show as \"Player (YourName)\".");
+            Player.Message(p, "/possess <player> [skin as #] - DEMONIC POSSESSION HUE HUE");
+            Player.Message(p, "Using # after player name makes possessed keep their custom skin during possession.");
+            Player.Message(p, "Not using it makes them lose their skin, and makes their name show as \"Player (YourName)\".");
         }
     }
 }

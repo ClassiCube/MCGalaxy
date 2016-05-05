@@ -12,7 +12,7 @@ namespace MCGalaxy.Commands {
         public CmdCenter() { }
         
         public override void Use(Player p, string message) {
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -28,11 +28,11 @@ namespace MCGalaxy.Commands {
             Vec3U16 start = (Vec3U16)p.blockchangeObject;
             int xCen = (start.X + x) / 2, yCen = (start.Y + y) / 2, zCen = (start.Z + z) / 2;
             p.level.UpdateBlock(p, (ushort)xCen, (ushort)yCen, (ushort)zCen, Block.goldsolid, 0);
-            Player.SendMessage(p, "A gold block was placed at (" + xCen + ", " + yCen + ", " + zCen + ").");
+            Player.Message(p, "A gold block was placed at (" + xCen + ", " + yCen + ", " + zCen + ").");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/center - places a block at the center of your selection");
+            Player.Message(p, "/center - places a block at the center of your selection");
         }
     }
 }

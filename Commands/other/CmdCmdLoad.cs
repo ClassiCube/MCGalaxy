@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
 
             if (Command.all.Contains(message.Split(' ')[0]))
             {
-                Player.SendMessage(p, "That command is already loaded!");
+                Player.Message(p, "That command is already loaded!");
                 return;
             }
 
@@ -43,22 +43,22 @@ namespace MCGalaxy.Commands
                 string error = Scripting.Load(name);
                 if (error != null)
                 {
-                    Player.SendMessage(p, error);
+                    Player.Message(p, error);
                     return;
                 }
                 GrpCommands.fillRanks();
-                Player.SendMessage(p, "Command was successfully loaded.");
+                Player.Message(p, "Command was successfully loaded.");
                 return;
             } else if (param[1] == "vb") {
 
                 string error = ScriptingVB.Load(name);
                 if (error != null)
                 {
-                    Player.SendMessage(p, error);
+                    Player.Message(p, error);
                     return;
                 }
                 GrpCommands.fillRanks();
-                Player.SendMessage(p, "Command was successfully loaded.");
+                Player.Message(p, "Command was successfully loaded.");
                 return;
             }
         }
@@ -66,8 +66,8 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/cmdload <command name> - Loads a C# command into the server for use.");
-            Player.SendMessage(p, "/cmdload <command name> vb - Loads a Visual basic command into the server for use.");
+            Player.Message(p, "/cmdload <command name> - Loads a C# command into the server for use.");
+            Player.Message(p, "/cmdload <command name> vb - Loads a Visual basic command into the server for use.");
         }
     }
 }

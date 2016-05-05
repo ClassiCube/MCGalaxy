@@ -36,10 +36,10 @@ namespace MCGalaxy.Commands
                 C4Data c4 = new C4Data(numb);
                 p.level.C4list.Add(c4);
                 p.c4circuitNumber = numb;
-                Player.SendMessage(p, "Place any block for c4 and place a &cred %Sblock for the detonator!");
+                Player.Message(p, "Place any block for c4 and place a &cred %Sblock for the detonator!");
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
             } else {
-                Player.SendMessage(p, "To use c4, the physics level must be 1, 2, 3 or 4");
+                Player.Message(p, "To use c4, the physics level must be 1, 2, 3 or 4");
             }
         }
         
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
             p.ClearBlockchange();
             if (type == Block.red) {
                 p.ManualChange(x, y, z, 1, Block.c4det, 0);
-                Player.SendMessage(p, "Placed detonator block!");
+                Player.Message(p, "Placed detonator block!");
                 return;
             } else if (type != Block.air) {
                 p.ManualChange(x, y, z, 1, Block.c4, 0);
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/c4 - Place c4!");
+            Player.Message(p, "/c4 - Place c4!");
         }
     }
 }

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }            
-            if (p.usingGoto) { Player.SendMessage(p, "Cannot use /goto, already loading a map."); return; }
+            if (p.usingGoto) { Player.Message(p, "Cannot use /goto, already loading a map."); return; }
             
             Level oldLevel = p.level;
             p.usingGoto = true;
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
                 if (!LevelInfo.ExistsOffline(message)) {
                     lvl = LevelInfo.Find(message);
                     if (lvl == null) {
-                        Player.SendMessage(p, "Level \"" + message + "\" doesn't exist! Did you mean...");
+                        Player.Message(p, "Level \"" + message + "\" doesn't exist! Did you mean...");
                         Command.all.Find("search").Use(p, "levels " + message);
                         return false;
                     } else {
@@ -79,12 +79,12 @@ namespace MCGalaxy.Commands {
                     if (lvl != null) {
                         return GoToLevel(p, lvl, message);
                     } else {
-                        Player.SendMessage(p, "Level \"" + message + "\" failed to be auto-loaded.");
+                        Player.Message(p, "Level \"" + message + "\" failed to be auto-loaded.");
                         return false;
                     }
                 } else {
                     if (lvl == null) {
-                        Player.SendMessage(p, "Level \"" + message + "\" cannot be loaded using /goto.");
+                        Player.Message(p, "Level \"" + message + "\" cannot be loaded using /goto.");
                         return false;
                     } else {
                         return GoToLevel(p, lvl, message);
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands {
             } else {
                 lvl = LevelInfo.Find(message);
                 if (lvl == null) {
-                    Player.SendMessage(p, "There is no level \"" + message + "\" loaded. Did you mean..");
+                    Player.Message(p, "There is no level \"" + message + "\" loaded. Did you mean..");
                     Command.all.Find("search").Use(p, "levels " + message);
                     return false;
                 } else {
@@ -103,21 +103,21 @@ namespace MCGalaxy.Commands {
         }
         
         bool GoToLevel(Player p, Level lvl, string message) {
-            if (p.level == lvl) { Player.SendMessage(p, "You are already in \"" + lvl.name + "\"."); return false; }
+            if (p.level == lvl) { Player.Message(p, "You are already in \"" + lvl.name + "\"."); return false; }
             if (Player.BlacklistCheck(p.name, message) || lvl.VisitBlacklist.CaselessContains(p.name)) {
-                Player.SendMessage(p, "You are blacklisted from " + lvl.name + "."); return false;
+                Player.Message(p, "You are blacklisted from " + lvl.name + "."); return false;
             }
             
             bool whitelisted = lvl.VisitWhitelist.CaselessContains(p.name);
             if (!p.ignorePermission && !whitelisted && p.group.Permission < lvl.permissionvisit) {
-                Player.SendMessage(p, "You're not allowed to go to " + lvl.name + "."); return false;
+                Player.Message(p, "You're not allowed to go to " + lvl.name + "."); return false;
             }
             if (!p.ignorePermission && !whitelisted && p.group.Permission > lvl.pervisitmax 
                 && !p.group.CanExecute("pervisitmax")) {
-                Player.SendMessage(p, "Your rank must be " + lvl.pervisitmax + " or lower to go there!"); return false;
+                Player.Message(p, "Your rank must be " + lvl.pervisitmax + " or lower to go there!"); return false;
             }
             if (File.Exists("text/lockdown/map/" + message.ToLower())) {
-                Player.SendMessage(p, "The level " + message + " is locked."); return false;
+                Player.Message(p, "The level " + message + " is locked."); return false;
             }
             if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 
@@ -165,14 +165,14 @@ namespace MCGalaxy.Commands {
             if (game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished &&
                 game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
                 p.canBuild = false;
-                Player.SendMessage(p, "TNT Wars: Disabled your building because you are in a TNT Wars map!");
+                Player.Message(p, "TNT Wars: Disabled your building because you are in a TNT Wars map!");
             }
             p.inTNTwarsMap = true;
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/goto <mapname>");
-            Player.SendMessage(p, "%HTeleports yourself to a different level.");
+            Player.Message(p, "%T/goto <mapname>");
+            Player.Message(p, "%HTeleports yourself to a different level.");
         }
     }
 }

@@ -237,13 +237,13 @@ namespace MCGalaxy.Games
             {
                 double floodMinutes = Math.Ceiling((startTime.AddMinutes(mapSettings.floodTime) - DateTime.Now).TotalMinutes);
                 if (p == null && !console) map.ChatLevel("&3" + floodMinutes + " minute" + (floodMinutes == 1 ? "" : "s") + " %Suntil the flood.");
-                else Player.SendMessage(p, "&3" + floodMinutes + " minute" + (floodMinutes == 1 ? "" : "s") + " %Suntil the flood.");
+                else Player.Message(p, "&3" + floodMinutes + " minute" + (floodMinutes == 1 ? "" : "s") + " %Suntil the flood.");
             }
             if (round)
             {
                 double roundMinutes = Math.Ceiling((startTime.AddMinutes(mapSettings.roundTime) - DateTime.Now).TotalMinutes);
                 if (p == null && !console) map.ChatLevel("&3" + roundMinutes + " minute" + (roundMinutes == 1 ? "" : "s") + " %Suntil the round ends.");
-                else Player.SendMessage(p, "&3" + roundMinutes + " minute" + (roundMinutes == 1 ? "" : "s") + " %Suntil the round ends.");
+                else Player.Message(p, "&3" + roundMinutes + " minute" + (roundMinutes == 1 ? "" : "s") + " %Suntil the round ends.");
             }
         }
 
@@ -264,11 +264,11 @@ namespace MCGalaxy.Games
             }
             else
             {
-                if (mapData.water) Player.SendMessage(p, "The map will be flooded with &9water %Sthis round!");
-                if (mapData.layer) Player.SendMessage(p, "The " + (mapData.water ? "water" : "lava") + " will &aflood in layers %Sthis round!");
-                if (mapData.fast) Player.SendMessage(p, "The lava will be &cfast %Sthis round!");
-                if (mapData.killer) Player.SendMessage(p, "The " + (mapData.water ? "water" : "lava") + " will &ckill you %Sthis round!");
-                if (mapData.destroy) Player.SendMessage(p, "The " + (mapData.water ? "water" : "lava") + " will &cdestroy plants " + (mapData.water ? "" : "and flammable blocks ") + "%Sthis round!");
+                if (mapData.water) Player.Message(p, "The map will be flooded with &9water %Sthis round!");
+                if (mapData.layer) Player.Message(p, "The " + (mapData.water ? "water" : "lava") + " will &aflood in layers %Sthis round!");
+                if (mapData.fast) Player.Message(p, "The lava will be &cfast %Sthis round!");
+                if (mapData.killer) Player.Message(p, "The " + (mapData.water ? "water" : "lava") + " will &ckill you %Sthis round!");
+                if (mapData.destroy) Player.Message(p, "The " + (mapData.water ? "water" : "lava") + " will &cdestroy plants " + (mapData.water ? "" : "and flammable blocks ") + "%Sthis round!");
             }
         }
 
@@ -428,10 +428,10 @@ namespace MCGalaxy.Games
                 Player[] online = PlayerInfo.Online.Items; 
                 foreach (Player pl in online) {
                     if (pl != p && HasPlayer(pl))
-                        Player.SendMessage(pl, p.ColoredName + " &4ran out of lives, and is out of the round!");
+                        Player.Message(pl, p.ColoredName + " &4ran out of lives, and is out of the round!");
                 }
-                Player.SendMessage(p, "&4You ran out of lives, and are out of the round!");
-                Player.SendMessage(p, "&4You can still watch, but you cannot build.");
+                Player.Message(p, "&4You ran out of lives, and are out of the round!");
+                Player.Message(p, "&4You can still watch, but you cannot build.");
             }
         }
         public bool IsPlayerDead(Player p)

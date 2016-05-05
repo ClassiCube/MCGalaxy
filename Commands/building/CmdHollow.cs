@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
         {
             CatchPos cpos;
             if (message != "")
-                if (Block.Byte(message.ToLower()) == Block.Zero) { Player.SendMessage(p, "Cannot find block entered."); return; }
+                if (Block.Byte(message.ToLower()) == Block.Zero) { Player.Message(p, "Cannot find block entered."); return; }
 
             if (message != "")
             {
@@ -44,14 +44,14 @@ namespace MCGalaxy.Commands
             }
 
             cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/hollow - Hollows out an area without flooding it");
-            Player.SendMessage(p, "/hollow [block] - Hollows around [block]");
+            Player.Message(p, "/hollow - Hollows out an area without flooding it");
+            Player.Message(p, "/hollow [block] - Hollows around [block]");
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
@@ -91,14 +91,14 @@ namespace MCGalaxy.Commands
                     }
 
             if (buffer.Count > p.group.maxBlocks) {
-                Player.SendMessage(p, "You tried to hollow more than " + buffer.Count + " blocks.");
-                Player.SendMessage(p, "You cannot hollow more than " + p.group.maxBlocks + ".");
+                Player.Message(p, "You tried to hollow more than " + buffer.Count + " blocks.");
+                Player.Message(p, "You cannot hollow more than " + p.group.maxBlocks + ".");
                 return;
             }
 
             buffer.ForEach(P => p.level.UpdateBlock(p, P.X, P.Y, P.Z, Block.air, 0));
 
-            Player.SendMessage(p, "You hollowed " + buffer.Count + " blocks.");
+            Player.Message(p, "You hollowed " + buffer.Count + " blocks.");
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }

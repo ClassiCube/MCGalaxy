@@ -112,7 +112,7 @@ using System.Threading;
                 if (String.Compare(param[0], "x", true) == 0)
                 {
                      Command.all.Find("replaceall").Use(theP, "zombie air");
-                     Player.SendMessage(theP, "&aAll zombies have been destroyed.");
+                     Player.Message(theP, "&aAll zombies have been destroyed.");
                      return;
                  }
             }
@@ -131,7 +131,7 @@ using System.Threading;
                 }
                 else
                 {
-                    Player.SendMessage(theP, "Flag set must be 'r' or 'd'.");
+                    Player.Message(theP, "Flag set must be 'r' or 'd'.");
                     return;
                 }
 
@@ -147,7 +147,7 @@ using System.Threading;
                     cpos.z = 0;
                     theP.blockchangeObject = cpos;
 
-                    Player.SendMessage(theP, "Place a block for center of zombie spawn.");
+                    Player.Message(theP, "Place a block for center of zombie spawn.");
                     theP.ClearBlockchange();
                     theP.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
                 }
@@ -160,7 +160,7 @@ using System.Threading;
             }
             catch (FormatException)
             {
-                Player.SendMessage(theP, "&4All parameters must be numbers!");
+                Player.Message(theP, "&4All parameters must be numbers!");
             }
            
         }
@@ -179,12 +179,12 @@ using System.Threading;
         // This one controls what happens when you use /help [commandname].
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/zombiespawn <flag> <x> <y> <z> - Spawns waves of zombies.");
-            Player.SendMessage(p, "<flag> - 'r' for random or 'd' for diameter");
-            Player.SendMessage(p, "<x> - the number of waves");
-            Player.SendMessage(p, "<y> - the length of the waves in seconds");
-            Player.SendMessage(p, "<z> - the number of zombies spawned/diameter of spawn");
-            Player.SendMessage(p, "/zombiespawn x - Destroys all zombies.");
+            Player.Message(p, "/zombiespawn <flag> <x> <y> <z> - Spawns waves of zombies.");
+            Player.Message(p, "<flag> - 'r' for random or 'd' for diameter");
+            Player.Message(p, "<x> - the number of waves");
+            Player.Message(p, "<y> - the length of the waves in seconds");
+            Player.Message(p, "<z> - the number of zombies spawned/diameter of spawn");
+            Player.Message(p, "/zombiespawn x - Destroys all zombies.");
         }
 
         public struct CatchPos

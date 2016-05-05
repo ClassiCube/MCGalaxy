@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             if (p == null) { MessageInGameOnly(p); return; }
             if (!p.canBuild)
             {
-                Player.SendMessage(p, "You're currently being &4possessed%S!");
+                Player.Message(p, "You're currently being &4possessed%S!");
                 return;
             }
             
@@ -83,20 +83,20 @@ namespace MCGalaxy.Commands
                     {
                         if (who != null)
                         {
-                            Player.SendMessage(p, "You have stopped following " + who.ColoredName + " %Sand remained hidden.");
+                            Player.Message(p, "You have stopped following " + who.ColoredName + " %Sand remained hidden.");
                         }
                         else
                         {
-                            Player.SendMessage(p, "Following stopped.");
+                            Player.Message(p, "Following stopped.");
                         }
                     }
                     return;
                 }
             }
-            if (who == null) { Player.SendMessage(p, "Could not find player."); return; }
-            else if (who == p) { Player.SendMessage(p, "Cannot follow yourself."); return; }
+            if (who == null) { Player.Message(p, "Could not find player."); return; }
+            else if (who == p) { Player.Message(p, "Cannot follow yourself."); return; }
             else if (who.group.Permission >= p.group.Permission) { MessageTooHighRank(p, "follow", false); return;}
-            else if (who.following != "") { Player.SendMessage(p, who.DisplayName + " is already following " + who.following); return; }
+            else if (who.following != "") { Player.Message(p, who.DisplayName + " is already following " + who.following); return; }
 
             if (!p.hidden) Command.all.Find("hide").Use(p, "");
 
@@ -108,14 +108,14 @@ namespace MCGalaxy.Commands
             }
             who = PlayerInfo.Find(message);
             p.following = who.name;
-            Player.SendMessage(p, "Following " + who.ColoredName + "%S. Use \"/follow\" to stop.");
+            Player.Message(p, "Following " + who.ColoredName + "%S. Use \"/follow\" to stop.");
             p.DespawnEntity(who.id);
         }
         
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/follow <name> - Follows <name> until the command is cancelled");
-            Player.SendMessage(p, "/follow # <name> - Will cause /hide not to be toggled");
+            Player.Message(p, "/follow <name> - Follows <name> until the command is cancelled");
+            Player.Message(p, "/follow # <name> - Will cause /hide not to be toggled");
         }
     }
 }

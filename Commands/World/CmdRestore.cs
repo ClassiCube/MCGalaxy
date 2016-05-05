@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands
                     }
                     catch { Server.s.Log("Restore fail"); }
                 }
-                else { Player.SendMessage(p, "Backup " + text[0] + " does not exist."); }
+                else { Player.Message(p, "Backup " + text[0] + " does not exist."); }
             }
             else
             {
@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands
                 {
                     string[] directories = Directory.GetDirectories(Server.backupLocation + "/" + p.level.name);
                     int backupNumber = directories.Length;
-                    Player.SendMessage(p, p.level.name + " has " + backupNumber + " backups .");
+                    Player.Message(p, p.level.name + " has " + backupNumber + " backups .");
 
                     bool foundOne = false; string foundRestores = "";
                     foreach (string s in directories)
@@ -116,21 +116,21 @@ namespace MCGalaxy.Commands
 
                     if (foundOne)
                     {
-                        Player.SendMessage(p, "Custom-named restores:");
-                        Player.SendMessage(p, "> " + foundRestores.Remove(0, 2));
+                        Player.Message(p, "Custom-named restores:");
+                        Player.Message(p, "> " + foundRestores.Remove(0, 2));
                     }
                 }
                 else
                 {
-                    Player.SendMessage(p, p.level.name + " has no backups yet.");
+                    Player.Message(p, p.level.name + " has no backups yet.");
                 }
             }
         }
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/restore <number> - restores a previous backup of the current map");
-            Player.SendMessage(p, "/restore <number> <name> - restores a previous backup of the selected map");
+            Player.Message(p, "/restore <number> - restores a previous backup of the current map");
+            Player.Message(p, "/restore <number> <name> - restores a previous backup of the selected map");
         }
     }
 }

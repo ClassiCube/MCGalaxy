@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/gcbanlistupdate - Updates the global chat ban list for this server.");
+            Player.Message(p, "/gcbanlistupdate - Updates the global chat ban list for this server.");
         }
     }
 }*/

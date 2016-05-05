@@ -34,12 +34,12 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Use(Player p, string message) {
-            if (p.CopyBuffer == null) { Player.SendMessage(p, "You haven't copied anything yet"); return; }
+            if (p.CopyBuffer == null) { Player.Message(p, "You haven't copied anything yet"); return; }
             
             CatchPos cpos = default(CatchPos);
             cpos.message = message;
             p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place a block in the corner of where you want to paste.");
+            Player.Message(p, "Place a block in the corner of where you want to paste.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -75,10 +75,10 @@ namespace MCGalaxy.Commands {
         struct CatchPos { public string message; }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/paste - Pastes the stored copy.");
-            Player.SendMessage(p, "/paste [block] [block2].. - Pastes only the specified blocks from the copy.");
-            Player.SendMessage(p, "/paste not [block] [block2].. - Pastes all blocks from the copy, except for the specified blocks.");
-            Player.SendMessage(p, "&4BEWARE: %SThe blocks will always be pasted in a set direction");
+            Player.Message(p, "/paste - Pastes the stored copy.");
+            Player.Message(p, "/paste [block] [block2].. - Pastes only the specified blocks from the copy.");
+            Player.Message(p, "/paste not [block] [block2].. - Pastes all blocks from the copy, except for the specified blocks.");
+            Player.Message(p, "&4BEWARE: %SThe blocks will always be pasted in a set direction");
         }
     }
 }

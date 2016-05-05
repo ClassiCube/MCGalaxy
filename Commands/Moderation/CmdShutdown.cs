@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public override void Help(Player p) { Player.SendMessage(p, "/shutdown [time] [message] - Shuts the server down"); }
+        public override void Help(Player p) { Player.Message(p, "/shutdown [time] [message] - Shuts the server down"); }
         public override void Use(Player p, string message)
         {
             int secTime = 10;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
                         catch { secTime = 10; isNumber = false; }
                         if (split.Length > 1) { if (isNumber) { message = message.Substring(1 + split[0].Length); } }
                     }
-                    else { Player.SendMessage(p, "Countdown time cannot be zero"); return; }
+                    else { Player.Message(p, "Countdown time cannot be zero"); return; }
                 }
             }
             if (shutdown)

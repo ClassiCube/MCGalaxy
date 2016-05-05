@@ -33,8 +33,8 @@ namespace MCGalaxy {
             "voronoi", "ridgedmultifractal", "perlin3d", "perlin3dyadjust" };
 
         public static void PrintValidFormats(Player p) {
-            Player.SendMessage(p, "Valid types: " + String.Join(", ", types));
-            Player.SendMessage(p, "Advanced types: " + String.Join(", ", advTypes));
+            Player.Message(p, "Valid types: " + String.Join(", ", types));
+            Player.Message(p, "Advanced types: " + String.Join(", ", advTypes));
         }
         
         public static bool OkayAxis(int len) {

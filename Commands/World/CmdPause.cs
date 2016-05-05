@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
                     }
                 } else {
                     if (!int.TryParse(parts[0], out seconds)) {
-                        Player.SendMessage(p, "You must specify pause time in seconds"); return;
+                        Player.Message(p, "You must specify pause time in seconds"); return;
                     }
                     lvl = LevelInfo.FindOrShowMatches(p, parts[1]);
                     if (lvl == null) return;
@@ -76,10 +76,10 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/pause [map] [seconds]");
-            Player.SendMessage(p, "%HPauses physics on the given map for the specified number of seconds.");
-            Player.SendMessage(p, "%H  If no map name is given, pauses physics on the current map.");
-            Player.SendMessage(p, "%H  If no or non-numerical seconds are given, pauses physics for 30 seconds.");    
+            Player.Message(p, "%T/pause [map] [seconds]");
+            Player.Message(p, "%HPauses physics on the given map for the specified number of seconds.");
+            Player.Message(p, "%H  If no map name is given, pauses physics on the current map.");
+            Player.Message(p, "%H  If no or non-numerical seconds are given, pauses physics for 30 seconds.");    
         }
     }
 }

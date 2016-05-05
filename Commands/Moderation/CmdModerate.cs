@@ -43,8 +43,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/moderate - Toggles chat moderation status.  When enabled, only voiced");
-            Player.SendMessage(p, "players may speak.");
+            Player.Message(p, "/moderate - Toggles chat moderation status.  When enabled, only voiced");
+            Player.Message(p, "players may speak.");
         }
     }
 }

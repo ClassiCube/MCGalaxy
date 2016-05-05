@@ -46,22 +46,22 @@ namespace MCGalaxy.Commands
                     catch (Exception e)
                     {
                         Server.ErrorLog(e);
-                        Player.SendMessage(p, "An exception was thrown during compilation.");
+                        Player.Message(p, "An exception was thrown during compilation.");
                         return;
                     }
                     if (success)
                     {
-                        Player.SendMessage(p, "Compiled successfully.");
+                        Player.Message(p, "Compiled successfully.");
                     }
                     else
                     {
-                        Player.SendMessage(p, "Compilation error.  Please check compile.log for more information.");
+                        Player.Message(p, "Compilation error.  Please check compile.log for more information.");
                     }
                     return;
                 }
                 else
                 {
-                    Player.SendMessage(p, "file &9Cmd" + message + ".cs " + Server.DefaultColor + "not found!");
+                    Player.Message(p, "file &9Cmd" + message + ".cs " + Server.DefaultColor + "not found!");
                 }
             } else if (param[1] == "vb") {
                 message = message.Remove(message.Length - 3, 3);
@@ -74,22 +74,22 @@ namespace MCGalaxy.Commands
                     catch (Exception e)
                     {
                         Server.ErrorLog(e);
-                        Player.SendMessage(p, "An exception was thrown during compilation.");
+                        Player.Message(p, "An exception was thrown during compilation.");
                         return;
                     }
                     if (success)
                     {
-                        Player.SendMessage(p, "Compiled successfully.");
+                        Player.Message(p, "Compiled successfully.");
                     }
                     else
                     {
-                        Player.SendMessage(p, "Compilation error.  Please check compile.log for more information.");
+                        Player.Message(p, "Compilation error.  Please check compile.log for more information.");
                     }
                     return;
                 }
                 else
                 {
-                    Player.SendMessage(p, "file &9Cmd" + message + ".vb " + Server.DefaultColor + "not found!");
+                    Player.Message(p, "file &9Cmd" + message + ".vb " + Server.DefaultColor + "not found!");
                 }
             }
 
@@ -97,9 +97,9 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/compile <class name> - Compiles a command class file into a DLL.");
-            Player.SendMessage(p, "/compile <class name> vb - Compiles a command class (that was written in visual basic) file into a DLL.");
-            Player.SendMessage(p, "class name: &9Cmd&e<class name>&9.cs");
+            Player.Message(p, "/compile <class name> - Compiles a command class file into a DLL.");
+            Player.Message(p, "/compile <class name> vb - Compiles a command class (that was written in visual basic) file into a DLL.");
+            Player.Message(p, "class name: &9Cmd&e<class name>&9.cs");
         }
     }
 }

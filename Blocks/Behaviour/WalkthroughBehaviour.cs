@@ -35,20 +35,20 @@ namespace MCGalaxy.BlockBehaviour {
                 DataRow row = Portals.Rows[last];
                 if (p.level.name != row["ExitMap"].ToString()) {
                     if (p.level.permissionvisit > p.group.Permission) {
-                        Player.SendMessage(p, "You do not have the adequate rank to visit this map!"); return true;
+                        Player.Message(p, "You do not have the adequate rank to visit this map!"); return true;
                     }
                     
                     p.ignorePermission = true;
                     Level curLevel = p.level;
                     Command.all.Find("goto").Use(p, row["ExitMap"].ToString());
-                    if (curLevel == p.level) { Player.SendMessage(p, "The map the portal goes to isn't loaded."); return true; }
+                    if (curLevel == p.level) { Player.Message(p, "The map the portal goes to isn't loaded."); return true; }
                     p.ignorePermission = false;
                 }
                 p.BlockUntilLoad(10);
                 Command.all.Find("move").Use(p, p.name + " " + row["ExitX"].ToString() + " " + row["ExitY"].ToString() + " " + row["ExitZ"].ToString());
                 Portals.Dispose();
             } catch {
-                Player.SendMessage(p, "Portal had no exit.");
+                Player.Message(p, "Portal had no exit.");
             }
             return true;
         }
@@ -70,12 +70,12 @@ namespace MCGalaxy.BlockBehaviour {
                         string[] parts = message.Remove(0, 1).Split(trimChars, 2);
                         p.HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
                     } else {
-                        Player.SendMessage(p, message);
+                        Player.Message(p, message);
                     }
                     p.prevMsg = message;
                 }
             } catch {
-                Player.SendMessage(p, "No message was stored.");
+                Player.Message(p, "No message was stored.");
             }
             return true;
         }

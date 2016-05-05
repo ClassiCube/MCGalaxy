@@ -31,12 +31,12 @@ namespace MCGalaxy.Commands
             p.painting = !p.painting;
             
             string type = p.painting ? "&aON" : "&cOFF";
-            Player.SendMessage(p, "Painting mode: " + type + "%S.");
+            Player.Message(p, "Painting mode: " + type + "%S.");
             p.modeType = 0;
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/paint - Turns painting mode on/off.");
+            Player.Message(p, "/paint - Turns painting mode on/off.");
         }
     }
 }

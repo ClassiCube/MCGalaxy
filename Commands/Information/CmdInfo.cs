@@ -30,23 +30,23 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
         	if (message != "") { Help(p); return; }
         	
-        	Player.SendMessage(p, "This server's name is &b" + Server.name + "%S.");
-        	Player.SendMessage(p, "&a" + Player.number + " %Splayers online, &8" 
+        	Player.Message(p, "This server's name is &b" + Server.name + "%S.");
+        	Player.Message(p, "&a" + Player.number + " %Splayers online, &8" 
         	                   + Player.GetBannedCount() + " banned%S players total.");
-        	Player.SendMessage(p, "&a" + LevelInfo.Loaded.Count + " %Slevels currently loaded.");
-        	Player.SendMessage(p, "This server's currency is: " + Server.moneys);
-        	Player.SendMessage(p, "This server runs &bMCGalaxy &a" + Server.VersionString + 
+        	Player.Message(p, "&a" + LevelInfo.Loaded.Count + " %Slevels currently loaded.");
+        	Player.Message(p, "This server's currency is: " + Server.moneys);
+        	Player.Message(p, "This server runs &bMCGalaxy &a" + Server.VersionString + 
         	                   "%S, which is based on &bMCForge %Sand &bMCLawl%S.");
         	Command.all.Find("devs").Use(p, "");
         	
         	TimeSpan up = DateTime.UtcNow - Server.StartTime;
-        	Player.SendMessage(p, "Time online: &b" + WhoInfo.Shorten(up, true));
-        	Player.SendMessage(p, "Player positions are updated every &b" 
+        	Player.Message(p, "Time online: &b" + WhoInfo.Shorten(up, true));
+        	Player.Message(p, "Player positions are updated every &b" 
         	                   + Server.updateTimer.Interval + " %Smilliseconds.");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/info - Displays the server information.");
+            Player.Message(p, "/info - Displays the server information.");
         }
     }
 }

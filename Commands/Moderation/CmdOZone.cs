@@ -26,8 +26,8 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return false; } }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/ozone <rank/player> - Zones the entire map to <rank/player>");
-            Player.SendMessage(p, "To delete a zone, just use /zone del anywhere on the map");
+            Player.Message(p, "/ozone <rank/player> - Zones the entire map to <rank/player>");
+            Player.Message(p, "To delete a zone, just use /zone del anywhere on the map");
         }
         public override void Use(Player p, string message)
         {

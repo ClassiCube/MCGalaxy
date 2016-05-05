@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             string rank = args.Length == 1 ? p.group.name : args[0];
             string text = args[args.Length - 1];            
             Group grp = Group.Find(rank);
-            if (grp == null) { Player.SendMessage(p, "Could not find rank specified."); return; }
+            if (grp == null) { Player.Message(p, "Could not find rank specified."); return; }
             
             Player[] players = PlayerInfo.Online.Items;
             string toSend = p.color + p.name + ": %S" + text.Trim();
@@ -46,8 +46,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/rankmsg [Rank] [Message] - Sends a message to the specified rank.");
-            Player.SendMessage(p, "Note: If no message is given, player's rank is taken.");
+            Player.Message(p, "/rankmsg [Rank] [Message] - Sends a message to the specified rank.");
+            Player.Message(p, "Note: If no message is given, player's rank is taken.");
         }
     }
 }

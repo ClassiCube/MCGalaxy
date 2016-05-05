@@ -37,21 +37,21 @@ namespace MCGalaxy.Commands
             string t = message.Substring(0, pos).ToLower();
             string t2 = message.Substring(pos + 1).ToLower();
             byte type = Block.Byte(t);
-            if (type == 255) { Player.SendMessage(p, "There is no block \"" + t + "\"."); return; }
+            if (type == 255) { Player.Message(p, "There is no block \"" + t + "\"."); return; }
             byte type2 = Block.Byte(t2);
-            if (type2 == 255) { Player.SendMessage(p, "There is no block \"" + t2 + "\"."); return; }
-            if (!Block.canPlace(p, type2)) { Player.SendMessage(p, "Cannot place that block type."); return; }
+            if (type2 == 255) { Player.Message(p, "There is no block \"" + t2 + "\"."); return; }
+            if (!Block.canPlace(p, type2)) { Player.Message(p, "Cannot place that block type."); return; }
 
             CatchPos cpos; cpos.newType = type2; cpos.type = type;
 
             cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/outline [type] [type2] - Outlines [type] with [type2]");
+            Player.Message(p, "/outline [type] [type2] - Outlines [type] with [type2]");
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
@@ -89,13 +89,13 @@ namespace MCGalaxy.Commands
 
             if (buffer.Count > p.group.maxBlocks)
             {
-                Player.SendMessage(p, "You tried to outline more than " + buffer.Count + " blocks.");
-                Player.SendMessage(p, "You cannot outline more than " + p.group.maxBlocks + ".");
+                Player.Message(p, "You tried to outline more than " + buffer.Count + " blocks.");
+                Player.Message(p, "You cannot outline more than " + p.group.maxBlocks + ".");
                 return;
             }
 
             buffer.ForEach(P => p.level.UpdateBlock(p, P.X, P.Y, P.Z, cpos.newType, 0));
-            Player.SendMessage(p, "You outlined " + buffer.Count + " blocks.");
+            Player.Message(p, "You outlined " + buffer.Count + " blocks.");
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }

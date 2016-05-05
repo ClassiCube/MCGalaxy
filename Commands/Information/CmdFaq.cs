@@ -43,13 +43,13 @@ namespace MCGalaxy.Commands {
                 if (who == null) return;
             }
             
-            Player.SendMessage(who, "&cFAQ&f:");
+            Player.Message(who, "&cFAQ&f:");
             foreach (string line in faq)
-                Player.SendMessage(who, "&f" + line);
+                Player.Message(who, "&f" + line);
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/faq [player]- Displays frequently asked questions");
+            Player.Message(p, "/faq [player]- Displays frequently asked questions");
         }
     }
 }

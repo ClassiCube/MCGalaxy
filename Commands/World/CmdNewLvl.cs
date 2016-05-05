@@ -41,22 +41,22 @@ namespace MCGalaxy.Commands
             ushort x, y, z;
             string name = args[0].ToLower();
             if (!UInt16.TryParse(args[1], out x) || !UInt16.TryParse(args[2], out y) || !UInt16.TryParse(args[3], out z)) {
-                Player.SendMessage(p, "Invalid dimensions."); return;
+                Player.Message(p, "Invalid dimensions."); return;
             }
             
             int seed = 0; 
             bool useSeed = args.Length == 6;
             if (useSeed && !Int32.TryParse(args[5], out seed))
                 seed = args[5].GetHashCode();
-            if (!MapGen.OkayAxis(x)) { Player.SendMessage(p, "width must be a power of two >= to 16."); return; }
-            if (!MapGen.OkayAxis(y)) { Player.SendMessage(p, "height must be a power of two >= to 16."); return; }
-            if (!MapGen.OkayAxis(z)) { Player.SendMessage(p, "length must be a power of two >= to 16."); return; }
+            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be a power of two >= to 16."); return; }
+            if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be a power of two >= to 16."); return; }
+            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be a power of two >= to 16."); return; }
 
             if (!Player.ValidName(name)) { 
-                Player.SendMessage(p, "Invalid name!"); return; 
+                Player.Message(p, "Invalid name!"); return; 
             }
             if (LevelInfo.ExistsOffline(name)) {
-                Player.SendMessage(p, "Level \"" + name + "\" already exists!"); return;
+                Player.Message(p, "Level \"" + name + "\" already exists!"); return;
             }
 
             if (p != null) {
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
                     if (limit > 1000 * 1000) text += (limit / (1000 * 1000)) + " million blocks";
                     else if (limit > 1000) text += (limit / 1000) + " thousand blocks";
                     else text += limit + " blocks";
-                    Player.SendMessage(p, text); return;
+                    Player.Message(p, text); return;
                 }
             }
 
@@ -90,13 +90,13 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/newlvl - creates a new level.");
-            Player.SendMessage(p, "/newlvl mapname 128 64 128 type seed");
-            Player.SendMessage(p, "Valid sizes: 16, 32, 64, 128, 256, 512, 1024"); //Update this to add more?
+            Player.Message(p, "/newlvl - creates a new level.");
+            Player.Message(p, "/newlvl mapname 128 64 128 type seed");
+            Player.Message(p, "Valid sizes: 16, 32, 64, 128, 256, 512, 1024"); //Update this to add more?
             MapGen.PrintValidFormats(p);
-            Player.SendMessage(p, "The seed is optional, and controls how the level is generated.");
-            Player.SendMessage(p, "If the seed is the same, the generated level will be the same.");
-            Player.SendMessage(p, "For flat maps the seed (if given) is used for the grass level.");
+            Player.Message(p, "The seed is optional, and controls how the level is generated.");
+            Player.Message(p, "If the seed is the same, the generated level will be the same.");
+            Player.Message(p, "For flat maps the seed (if given) is used for the grass level.");
         }
     }
 }

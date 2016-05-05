@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
             if (brush == null) return;
             
             if (y != cpos.y) {
-                Player.SendMessage(p, "The two edges of the pyramid must be on the same level");
+                Player.Message(p, "The two edges of the pyramid must be on the same level");
                 return;
             }
 
@@ -65,10 +65,10 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/pyramid [brush args] <mode>");
-            Player.SendMessage(p, "%HDraws a square pyramid, using two points for the base.");
-            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.SendMessage(p, "   %HModes: &fsolid/hollow/reverse");            
+            Player.Message(p, "%T/pyramid [brush args] <mode>");
+            Player.Message(p, "%HDraws a square pyramid, using two points for the base.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "   %HModes: &fsolid/hollow/reverse");            
         }
     }
 }

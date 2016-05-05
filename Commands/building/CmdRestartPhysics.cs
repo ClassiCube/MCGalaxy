@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
             if (message != "" && !ParseArgs(p, message, ref cpos)) return;
 
             p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
         bool ParseArgs(Player p, string message, ref CatchPos cpos) {
             string[] parts = message.Split(' ');
             if (parts.Length % 2 == 1) {
-                Player.SendMessage(p, "Number of parameters must be even");
+                Player.Message(p, "Number of parameters must be even");
                 Help(p); return false;
             }          
             PhysicsArgs args = default(PhysicsArgs);
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
                 args.Type2 = type; args.Value2 = value;
             }
             if (parts.Length >= 6) {
-            	Player.SendMessage(p, "You can only use up to two types of physics."); return false;
+            	Player.Message(p, "You can only use up to two types of physics."); return false;
             }
             cpos.extraInfo = args; return true;
         }
@@ -67,17 +67,17 @@ namespace MCGalaxy.Commands
         bool Parse(Player p, string name, string arg, ref byte type, ref byte value) {
             if (name == "revert") {
                 byte block = Block.Byte(arg);
-                if (block == Block.Zero) { Player.SendMessage(p, "Invalid block type."); return false; }
+                if (block == Block.Zero) { Player.Message(p, "Invalid block type."); return false; }
                 type = PhysicsArgs.Revert; value = block;
                 return true;
             }
             
             int temp;
             if (!int.TryParse(arg, out temp)) {
-                Player.SendMessage(p, "/rp [type1] [num] [type2] [num]..."); return false;
+                Player.Message(p, "/rp [type1] [num] [type2] [num]..."); return false;
             }
             if (temp < 0 || temp > 255) {
-                Player.SendMessage(p, "Values must be between 0 and 255."); return false;
+                Player.Message(p, "Values must be between 0 and 255."); return false;
             }
             value = (byte)temp;
             
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
                 case "wait": type = PhysicsArgs.Wait; return true;
                 case "rainbow": type = PhysicsArgs.Rainbow; return true;
             }
-            Player.SendMessage(p, name + " type is not supported.");
+            Player.Message(p, name + " type is not supported.");
             return false;
         }
         
@@ -115,19 +115,19 @@ namespace MCGalaxy.Commands
 
             if (cpos.extraInfo.Raw == 0) {
                 if (buffer.Count > Server.rpNormLimit) {
-                    Player.SendMessage(p, "Cannot restart more than " + Server.rpNormLimit + " blocks.");
-                    Player.SendMessage(p, "Tried to restart " + buffer.Count + " blocks.");
+                    Player.Message(p, "Cannot restart more than " + Server.rpNormLimit + " blocks.");
+                    Player.Message(p, "Tried to restart " + buffer.Count + " blocks.");
                     return;
                 }
             } else if (buffer.Count > Server.rpLimit) {
-                Player.SendMessage(p, "Tried to add physics to " + buffer.Count + " blocks.");
-                Player.SendMessage(p, "Cannot add physics to more than " + Server.rpLimit + " blocks.");
+                Player.Message(p, "Tried to add physics to " + buffer.Count + " blocks.");
+                Player.Message(p, "Cannot add physics to more than " + Server.rpLimit + " blocks.");
                 return;
             }
 
             foreach (int index in buffer)
                 p.level.AddCheck(index, true, cpos.extraInfo);
-            Player.SendMessage(p, "Activated " + buffer.Count + " blocks.");
+            Player.Message(p, "Activated " + buffer.Count + " blocks.");
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -135,10 +135,10 @@ namespace MCGalaxy.Commands
         struct CatchPos { public ushort x, y, z; public PhysicsArgs extraInfo; }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/restartphysics ([type] [num]) ([type2] [num2]) - Restarts every physics block in an area");
-            Player.SendMessage(p, "[type] will set custom physics for selected blocks");
-            Player.SendMessage(p, "Possible [types]: drop, explode, dissipate, wait, rainbow, revert");
-            Player.SendMessage(p, "/rp revert takes block names");
+            Player.Message(p, "/restartphysics ([type] [num]) ([type2] [num2]) - Restarts every physics block in an area");
+            Player.Message(p, "[type] will set custom physics for selected blocks");
+            Player.Message(p, "Possible [types]: drop, explode, dissipate, wait, rainbow, revert");
+            Player.Message(p, "/rp revert takes block names");
         }
     }
 }

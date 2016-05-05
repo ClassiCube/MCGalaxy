@@ -31,23 +31,23 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             if (Command.core.Contains(message.Split(' ')[0]))
             {
-                Player.SendMessage(p, "/" + message.Split(' ')[0] + " is a core command, you cannot unload it!");
+                Player.Message(p, "/" + message.Split(' ')[0] + " is a core command, you cannot unload it!");
                 return;
             }
             Command foundCmd = Command.all.Find(message.Split(' ')[0]);
             if(foundCmd == null)
             {
-                Player.SendMessage(p, message.Split(' ')[0] + " is not a valid or loaded command.");
+                Player.Message(p, message.Split(' ')[0] + " is not a valid or loaded command.");
                 return;
             }
             Command.all.Remove(foundCmd);
             GrpCommands.fillRanks();
-            Player.SendMessage(p, "Command was successfully unloaded.");
+            Player.Message(p, "Command was successfully unloaded.");
         }
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/cmdunload <command> - Unloads a command from the server.");
+            Player.Message(p, "/cmdunload <command> - Unloads a command from the server.");
         }
     }
 }

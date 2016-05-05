@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(message);
             string target = who == null ? message : who.name;
 
-            Player.SendMessage(p, "&1Rank information for " + target);
+            Player.Message(p, "&1Rank information for " + target);
             bool found = false;
             foreach (string line in File.ReadAllLines("text/rankinfo.txt")) {
                 if (!line.CaselessStarts(target)) continue;               
@@ -49,17 +49,17 @@ namespace MCGalaxy.Commands {
                 string reason = parts.Length <= 9 ? "(no reason given)" :
                 	CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));
                
-                Player.SendMessage(p, "&aFrom " + oldRank.ColoredName 
+                Player.Message(p, "&aFrom " + oldRank.ColoredName 
                                    + " &ato " + newRank.ColoredName + " &aon %S" + timeRanked);
-                Player.SendMessage(p, "&aBy %S" + parts[1] + " &awith reason: %S" + reason);
+                Player.Message(p, "&aBy %S" + parts[1] + " &awith reason: %S" + reason);
                 found = true;
             }
             if (!found)
-                Player.SendMessage(p, "&cPlayer &a" + target + "&c has not been ranked yet.");
+                Player.Message(p, "&cPlayer &a" + target + "&c has not been ranked yet.");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/rankinfo [player] - Returns details about that person's rankings.");
+            Player.Message(p, "/rankinfo [player] - Returns details about that person's rankings.");
         }
     }
 }

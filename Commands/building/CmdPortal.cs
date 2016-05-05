@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
             	if (args[1].CaselessEq("multi")) {
                     data.Multi = true;
                 } else {
-                    Player.SendMessage(p, "Invalid parameters"); return;
+                    Player.Message(p, "Invalid parameters"); return;
                 }
             }
 
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
             else if (block == "show") { ShowPortals(p); return; }
             else { Help(p); return; }
 
-            Player.SendMessage(p, "Place an &aEntry block %Sfor the portal");
+            Player.Message(p, "Place an &aEntry block %Sfor the portal");
             p.ClearBlockchange();
             data.entries = new List<PortalPos>();
             p.blockchangeObject = data;
@@ -80,10 +80,10 @@ namespace MCGalaxy.Commands {
 
             if (!bp.Multi) {
                 p.Blockchange += ExitChange;
-                Player.SendMessage(p, "&aEntry block placed");
+                Player.Message(p, "&aEntry block placed");
             } else {
                 p.Blockchange += EntryChange;
-                Player.SendMessage(p, "&aEntry block placed. &cRed block for exit");
+                Player.Message(p, "&aEntry block placed. &cRed block for exit");
             }
         }
         
@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands {
                     p.SendBlockchange(pos.x, pos.y, pos.z, bp.type);
             }
 
-            Player.SendMessage(p, "&3Exit %Sblock placed");
+            Player.Message(p, "&3Exit %Sblock placed");
             if (!p.staticCommands)
                 return;
             bp.entries.Clear(); 
@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands {
                     p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.green);
                 }
 
-                Player.SendMessage(p, "Now showing &a" + Portals.Rows.Count + " %Sportals.");
+                Player.Message(p, "Now showing &a" + Portals.Rows.Count + " %Sportals.");
             } else {
                 for (int i = 0; i < Portals.Rows.Count; i++) {
                     DataRow row = Portals.Rows[i];
@@ -144,7 +144,7 @@ namespace MCGalaxy.Commands {
                         p.RevertBlock(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]));
                     p.RevertBlock(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]));
                 }
-                Player.SendMessage(p, "Now hiding portals.");
+                Player.Message(p, "Now hiding portals.");
             }
             Portals.Dispose();
         }
@@ -152,9 +152,9 @@ namespace MCGalaxy.Commands {
         static ushort U16(object x) { return Convert.ToUInt16(x); }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/portal [orange/blue/air/water/lava] [multi] - Activates Portal mode.");
-            Player.SendMessage(p, "/portal [type] multi - Place Entry blocks until exit is wanted.");
-            Player.SendMessage(p, "/portal show - Shows portals, green = in, red = out.");
+            Player.Message(p, "/portal [orange/blue/air/water/lava] [multi] - Activates Portal mode.");
+            Player.Message(p, "/portal [type] multi - Place Entry blocks until exit is wanted.");
+            Player.Message(p, "/portal show - Shows portals, green = in, red = out.");
         }
     }
 }

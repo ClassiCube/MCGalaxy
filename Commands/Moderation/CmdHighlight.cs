@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
 
             if (args.Length >= 2) {
                 if (!long.TryParse(args[1], out seconds)) {
-                    Player.SendMessage(p, "Invalid seconds."); return;
+                    Player.Message(p, "Invalid seconds."); return;
                 }
             } else if (long.TryParse(args[0], out seconds)) {
                 args[0] = p.name;
@@ -59,10 +59,10 @@ namespace MCGalaxy.Commands {
             DateTime start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             UndoFile.HighlightPlayer(p, name.ToLower(), start, ref FoundUser);
             if (FoundUser) {
-                Player.SendMessage(p, "Now highlighting &b" + seconds +  " %Sseconds for " + Server.FindColor(name) + name);
-                Player.SendMessage(p, "&cUse /reload to un-highlight");
+                Player.Message(p, "Now highlighting &b" + seconds +  " %Sseconds for " + Server.FindColor(name) + name);
+                Player.Message(p, "&cUse /reload to un-highlight");
             } else {
-                Player.SendMessage(p, "Could not find player specified.");
+                Player.Message(p, "Could not find player specified.");
             }
         }
         
@@ -91,9 +91,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/highlight [player] [seconds] - Highlights blocks modified by [player] in the last [seconds]");
-            Player.SendMessage(p, "/highlight [player] 0 - Will highlight 30 minutes");
-            Player.SendMessage(p, "&c/highlight cannot be disabled, you must use /reload to un-highlight");
+            Player.Message(p, "/highlight [player] [seconds] - Highlights blocks modified by [player] in the last [seconds]");
+            Player.Message(p, "/highlight [player] 0 - Will highlight 30 minutes");
+            Player.Message(p, "&c/highlight cannot be disabled, you must use /reload to un-highlight");
         }
     }
 }

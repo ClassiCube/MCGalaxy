@@ -41,11 +41,11 @@ namespace MCGalaxy.Commands
                 who.invincible = false;
                 if(p != null && who == p)
                 {
-                	Player.SendMessage( p, "You are no longer invincible.");
+                	Player.Message( p, "You are no longer invincible.");
                 }
                 else
                 {
-                	Player.SendMessage(p, who.ColoredName + " %Sis no longer invincible.");
+                	Player.Message(p, who.ColoredName + " %Sis no longer invincible.");
                 }
                 
                 if (Server.cheapMessage && !who.hidden)
@@ -55,11 +55,11 @@ namespace MCGalaxy.Commands
             {
             	if(p != null && who == p)
                 {
-                	Player.SendMessage( p, "You are now invincible.");
+                	Player.Message( p, "You are now invincible.");
                 }
                 else
                 {
-            		Player.SendMessage( p, who.ColoredName + " %Sis now invincible.");
+            		Player.Message( p, who.ColoredName + " %Sis now invincible.");
                 }
                 who.invincible = true;
                 if (Server.cheapMessage && !who.hidden)
@@ -68,9 +68,9 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/invincible [name] - Turns invincible mode on/off.");
-            Player.SendMessage(p, "If [name] is given, that player's invincibility is toggled");
-            Player.SendMessage(p, "/inv = Shortcut.");
+            Player.Message(p, "/invincible [name] - Turns invincible mode on/off.");
+            Player.Message(p, "If [name] is given, that player's invincibility is toggled");
+            Player.Message(p, "/inv = Shortcut.");
         }
     }
 }

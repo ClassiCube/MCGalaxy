@@ -30,14 +30,14 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            Player.SendMessage(p, "Forcing garbage collection...");
+            Player.Message(p, "Forcing garbage collection...");
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            Player.SendMessage(p, "Garbage collection completed!");
+            Player.Message(p, "Garbage collection completed!");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/garbage - Forces the .NET garbage collector to run, which releases unused memory. You shouldn't need to use this often.");
+            Player.Message(p, "/garbage - Forces the .NET garbage collector to run, which releases unused memory. You shouldn't need to use this often.");
         }
     }
 }

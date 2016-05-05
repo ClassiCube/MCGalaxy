@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             ParameterisedQuery query = ParameterisedQuery.Create();
             if (newTitle != "")
                 newTitle = newTitle.Replace("[", "").Replace("]", "");
-            if (newTitle.Length >= 20) { Player.SendMessage(p, "Title must be under 20 letters."); return; }
+            if (newTitle.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
 
             if (newTitle == "") {
                 Player.SendChatFrom(who, who.FullName + " %Shad their title removed.", false);
@@ -59,8 +59,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/title <player> [title] - Gives <player> the [title].");
-            Player.SendMessage(p, "If no [title] is given, the player's title is removed.");
+            Player.Message(p, "/title <player> [title] - Gives <player> the [title].");
+            Player.Message(p, "If no [title] is given, the player's title is removed.");
         }
     }
     
@@ -79,8 +79,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/xtitle [title] - Gives you the [title].");
-            Player.SendMessage(p, "If no [title] is given, your title is removed.");
+            Player.Message(p, "/xtitle [title] - Gives you the [title].");
+            Player.Message(p, "If no [title] is given, your title is removed.");
         }
     }
 }

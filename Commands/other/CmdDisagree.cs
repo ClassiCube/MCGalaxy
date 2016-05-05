@@ -33,12 +33,12 @@ namespace MCGalaxy.Commands
         	if (p == null) { MessageInGameOnly(p); return; }
             if (!Server.agreetorulesonentry)
             {
-                Player.SendMessage(p, "This command can only be used if agree-to-rules-on-entry is enabled in the console!");
+                Player.Message(p, "This command can only be used if agree-to-rules-on-entry is enabled in the console!");
                 return;
             }
             if (p.group.Permission > LevelPermission.Guest)
             {
-                Player.SendMessage(p, "Your awesomeness prevents you from using this command");
+                Player.Message(p, "Your awesomeness prevents you from using this command");
                 return;
             }
             const string msg = "If you don't agree with the rules, consider playing elsewhere.";
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/disagree - Disagree to the rules when entering the server");
+            Player.Message(p, "/disagree - Disagree to the rules when entering the server");
         }
     }
 }

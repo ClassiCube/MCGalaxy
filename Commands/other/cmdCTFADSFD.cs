@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
                                 CtfInitTeam(p, color);
                                 break;
                             default:
-                                Player.SendMessage(p, "Invalid team color chosen.");
+                                Player.Message(p, "Invalid team color chosen.");
                                 return;
                         }
                         return;
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands
                     string color = c.Parse(message.Split(' ')[1].ToLower());
                     CatchPos cpos;
                     cpos.x = 0; cpos.y = 0; cpos.z = 0; cpos.color = color; p.blockchangeObject = cpos;
-                    Player.SendMessage(p, "Place a block to determine where to place the flag.");
+                    Player.Message(p, "Place a block to determine where to place the flag.");
                     p.ClearBlockchange();
                     p.Blockchange += new Player.BlockchangeEventHandler(AddFlag);
                 }
@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands
                     Int32.TryParse(message.Split(' ')[1], out i);
                     if (i == 0) { p.SendMessage("You must indicate a numeric points value greater than 0."); return; }
                     p.level.maxroundpoints = i;
-                    Player.SendMessage(p, "Max points has been set to " + i);
+                    Player.Message(p, "Max points has been set to " + i);
                 }
 
             }
@@ -241,7 +241,7 @@ namespace MCGalaxy.Commands
             {
                 if (workLevel.teams.Find(team => team.color == teamCol).onTeam.Exists(player => player.name == newPlayer.name))
                 {
-                    Player.SendMessage(p, "That player is already on that team.");
+                    Player.Message(p, "That player is already on that team.");
                     return;
                 }
                 else
@@ -253,7 +253,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player.SendMessage(p, "That team has not been initialized on this level.");
+                Player.Message(p, "That team has not been initialized on this level.");
             }
             
         }
@@ -272,12 +272,12 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player.SendMessage(p, "That player is not on that team.");
+                    Player.Message(p, "That player is not on that team.");
                 }
             }
             else
             {
-                Player.SendMessage(p, "That team has not been initialized on this level.");
+                Player.Message(p, "That team has not been initialized on this level.");
             }
         }
         public void AddFlagbase(Player p, string color, ushort x, ushort y, ushort z)
@@ -296,7 +296,7 @@ namespace MCGalaxy.Commands
                 workFlag.z = z;
                 workFlag.team = workTeam;
                 worklevel.flags.Add(workFlag);
-                Player.SendMessage(p, workTeam.teamname + " team" +Server.DefaultColor +" flag has been set.");
+                Player.Message(p, workTeam.teamname + " team" +Server.DefaultColor +" flag has been set.");
                 workTeam.flagishome = true;
                 p.level.Blockchange(p, x, y, z, Block.flagbase);
                 p.level.Blockchange(p, x, (ushort)(y + 1), z, Block.mushroom);
@@ -304,7 +304,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player.SendMessage(p, "That team has not been initialized on this level.");
+                Player.Message(p, "That team has not been initialized on this level.");
             }
 
         }
@@ -320,12 +320,12 @@ namespace MCGalaxy.Commands
                 workTeam.spawn[2] = (ushort)(p.pos[2] / 32);
                 workTeam.spawn[3] = (ushort)(p.rot[0]);
                 workTeam.spawn[4] = 0;
-                Player.SendMessage(p, workTeam.teamname + " team" + Server.DefaultColor + " spawn has been set.");
+                Player.Message(p, workTeam.teamname + " team" + Server.DefaultColor + " spawn has been set.");
                 workTeam.spawnset = true;
             }
             else
             {
-                Player.SendMessage(p, "That team has not been initialized on this level.");
+                Player.Message(p, "That team has not been initialized on this level.");
             }
         }
 
@@ -348,8 +348,8 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "Please visit http://forums.mclawl.tk and visit the Help and How-To section for a detailed");
-            Player.SendMessage(p, "help feature for CTF.  There are too many functions and required things to list here!");
+            Player.Message(p, "Please visit http://forums.mclawl.tk and visit the Help and How-To section for a detailed");
+            Player.Message(p, "help feature for CTF.  There are too many functions and required things to list here!");
         }
         
     }

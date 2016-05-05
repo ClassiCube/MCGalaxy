@@ -37,15 +37,15 @@ namespace MCGalaxy.Commands
             }
             
             if (list.Length == 0) {
-                Player.SendMessage(p, "There are no players banned");
+                Player.Message(p, "There are no players banned");
             } else {
                 string msg = "&9Banned players: %S" + list.ToString(0, list.Length - 2) + "%S.";
-                Player.SendMessage(p, msg);
+                Player.Message(p, msg);
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/banlist - shows who is banned on the server");
+            Player.Message(p, "/banlist - shows who is banned on the server");
         }
     }
 }

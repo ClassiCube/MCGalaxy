@@ -85,18 +85,18 @@ namespace MCGalaxy.Commands
             skip:   ;                 
                 }
 
-                Player.SendMessage(p, "Dismounted");
+                Player.Message(p, "Dismounted");
                 Thread.Sleep(1000);
                 p.invincible = false;
                 p.trainGrab = false;
             }));
             trainThread.Name = "MCG_RideTrain";
             trainThread.Start();
-            Player.SendMessage(p, "Stand near a train to mount it");
+            Player.Message(p, "Stand near a train to mount it");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/ride - Rides a nearby train.");
+            Player.Message(p, "/ride - Rides a nearby train.");
         }
     }
 }

@@ -36,19 +36,19 @@ namespace MCGalaxy.Commands
                 Directory.CreateDirectory("extra/passwords");
             if (p.group.Permission < Server.verifyadminsrank)
             {
-                Player.SendMessage(p, "You do not have the &crequired rank %Sto use this command!");
+                Player.Message(p, "You do not have the &crequired rank %Sto use this command!");
                 return;
             }
             if (!Server.verifyadmins)
             {
-                Player.SendMessage(p, "Verification of admins is &cdisabled!");
+                Player.Message(p, "Verification of admins is &cdisabled!");
                 return;
             }
             if (p.adminpen)
             {
                 if (File.Exists("extra/passwords/" + p.name + ".dat"))
                 {
-                    Player.SendMessage(p, "&cYou already have a password set. %SYou &ccannot change %Sit unless &cyou verify it with &a/pass [Password]. " +
+                    Player.Message(p, "&cYou already have a password set. %SYou &ccannot change %Sit unless &cyou verify it with &a/pass [Password]. " +
                 	                   "%SIf you have &cforgotten %Syour password, contact &c" + Server.server_owner + " %Sand they can &creset it!");
                     return;
                 }
@@ -62,18 +62,18 @@ namespace MCGalaxy.Commands
             int number = message.Split(' ').Length;
             if (number > 1)
             {
-                Player.SendMessage(p, "Your password must be one word!");
+                Player.Message(p, "Your password must be one word!");
                 return;
             }
             PasswordHasher.StoreHash(p.name, message);
-            Player.SendMessage(p, "Your password has &asuccessfully &abeen set to:");
-            Player.SendMessage(p, "&c" + message);
+            Player.Message(p, "Your password has &asuccessfully &abeen set to:");
+            Player.Message(p, "&c" + message);
         }
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/setpass [Password] - Sets your admin password to [password].");
-            Player.SendMessage(p, "Note: Do NOT set this as your Minecraft password!");
+            Player.Message(p, "/setpass [Password] - Sets your admin password to [password].");
+            Player.Message(p, "Note: Do NOT set this as your Minecraft password!");
         }
     }
 }

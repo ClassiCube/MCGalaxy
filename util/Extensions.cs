@@ -207,13 +207,13 @@ namespace MCGalaxy {
             }
             
             if (matches == 0) {
-            	Player.SendMessage(pl, "No " + type + " match \"" + name + "\"."); return default(T);
+            	Player.Message(pl, "No " + type + " match \"" + name + "\"."); return default(T);
             } else if (matches == 1) {
                 return match;
             } else {
                 string names = matchNames.ToString(0, matchNames.Length - 2);
-                Player.SendMessage(pl, "Multiple " + type + " match \"" + name + "\":");
-                Player.SendMessage(pl, names); return default(T);
+                Player.Message(pl, "Multiple " + type + " match \"" + name + "\":");
+                Player.Message(pl, names); return default(T);
             }
         }
     }

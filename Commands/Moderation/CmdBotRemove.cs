@@ -37,15 +37,15 @@ namespace MCGalaxy.Commands {
             PlayerBot who = PlayerBot.FindOrShowMatches(p, message);
             if (who == null) return;
             if (!p.level.name.CaselessEq(who.level.name)) {
-                Player.SendMessage(p, who.name + " is in a different level."); return;
+                Player.Message(p, who.name + " is in a different level."); return;
             }
             PlayerBot.Remove(who);
-            Player.SendMessage(p, "Removed bot.");
+            Player.Message(p, "Removed bot.");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/botremove <name> - Remove a bot on the same level as you");
-            Player.SendMessage(p, "If 'all' is used, all bots on the current level are removed");
+            Player.Message(p, "/botremove <name> - Remove a bot on the same level as you");
+            Player.Message(p, "If 'all' is used, all bots on the current level are removed");
         }
     }
 }

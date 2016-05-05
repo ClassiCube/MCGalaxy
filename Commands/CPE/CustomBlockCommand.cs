@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands {
                 case "ids":
                     ListHandler(p, parts, global); break;
                 case "abort":
-                    Player.SendMessage(p, "Aborted the custom block creation process.");
+                    Player.Message(p, "Aborted the custom block creation process.");
                     SetBD(p, global, null); break;
                 case "edit":
                     EditHandler(p, parts, global); break;
@@ -78,14 +78,14 @@ namespace MCGalaxy.Commands {
                 BlockDefinition def = defs[targetId];
                 
                 if (ExistsInScope(def, targetId, global)) {
-                    Player.SendMessage(p, "There is already a custom block with the id " + id +
+                    Player.Message(p, "There is already a custom block with the id " + id +
                                        ", you must either use a different id or use \"" + cmd + " remove " + id + "\"");
                     return;
                 }
             } else {
                 targetId = GetFreeId(global, p == null ? null : p.level);
                 if (targetId == Block.Zero) {
-                    Player.SendMessage(p, "There are no custom block ids left, " +
+                    Player.Message(p, "There are no custom block ids left, " +
                                        "you must " + cmd +" remove a custom block first.");
                     return;
                 }
@@ -95,10 +95,10 @@ namespace MCGalaxy.Commands {
             GetBD(p, global).Version2 = true;
             GetBD(p, global).BlockID = (byte)targetId;
             SetTargetId(p, global, targetId);
-            Player.SendMessage(p, "Type '" + cmd + " abort' at anytime to abort the creation process.");
-            Player.SendMessage(p, "Type '" + cmd + " revert' to go back a step in the creation process.");
-            Player.SendMessage(p, "Use '" + cmd + " <arg>' to enter arguments for the creation process.");
-            Player.SendMessage(p, "%f----------------------------------------------------------");
+            Player.Message(p, "Type '" + cmd + " abort' at anytime to abort the creation process.");
+            Player.Message(p, "Type '" + cmd + " revert' to go back a step in the creation process.");
+            Player.Message(p, "Use '" + cmd + " <arg>' to enter arguments for the creation process.");
+            Player.Message(p, "%f----------------------------------------------------------");
             SetStep(p, global, 2);
             SendStepHelp(p, GetStep(p, global));
         }
@@ -119,7 +119,7 @@ namespace MCGalaxy.Commands {
             dst.BlockID = (byte)dstId;
             BlockDefinition.Add(dst, defs, p == null ? null : p.level);
             string scope = global ? "global" : "level";
-            Player.SendMessage(p, "Duplicated the " + scope + " custom block " +
+            Player.Message(p, "Duplicated the " + scope + " custom block " +
                                "with id \"" + srcId + "\" to \"" + dstId + "\".");
         }
         
@@ -137,22 +137,22 @@ namespace MCGalaxy.Commands {
             BlockDefinition def = defs[id];
             if (!ExistsInScope(def, id, global)) { MessageNoBlock(p, id, global); return; }
             
-            Player.SendMessage(p, "About " + def.Name + " (" + def.BlockID + ")");
-            Player.SendMessage(p, "  DrawType: " + def.BlockDraw + ", BlocksLight: " + 
+            Player.Message(p, "About " + def.Name + " (" + def.BlockID + ")");
+            Player.Message(p, "  DrawType: " + def.BlockDraw + ", BlocksLight: " + 
                                def.BlocksLight + ", Solidity: " + def.CollideType);
-            Player.SendMessage(p, "  Fallback ID: " + def.FallBack + ", Sound: " + 
+            Player.Message(p, "  Fallback ID: " + def.FallBack + ", Sound: " + 
                                def.WalkSound + ", Speed: " + def.Speed.ToString("F2"));
             
             if (def.FogDensity == 0)
-                Player.SendMessage(p, "  Block does not use fog");
+                Player.Message(p, "  Block does not use fog");
             else
-                Player.SendMessage(p, "  Fog density: " + def.FogDensity + ", R: " + 
+                Player.Message(p, "  Fog density: " + def.FogDensity + ", R: " + 
                                    def.FogR + ", G: " + def.FogG + ", B: " + def.FogB);
             
             if (def.Shape == 0)
-                Player.SendMessage(p, "  Block is a sprite");
+                Player.Message(p, "  Block is a sprite");
             else
-                Player.SendMessage(p, "  Block is a cube from (" + 
+                Player.Message(p, "  Block is a cube from (" + 
                                    def.MinX + "," + def.MinY + "," + def.MinZ + ") to (" 
                                    + def.MaxX + "," + def.MaxY + "," + def.MaxZ + ")");
         }
@@ -169,11 +169,11 @@ namespace MCGalaxy.Commands {
                 if (index >= offset) {
                     count++;
                     const string format = "Custom block %T{0} %Shas name %T{1}";
-                    Player.SendMessage(p, String.Format(format, def.BlockID, def.Name));
+                    Player.Message(p, String.Format(format, def.BlockID, def.Name));
                     
                     if (count >= 8) {
                         const string helpFormat = "To see the next set of custom blocks, type %T{1} list {0}";
-                        Player.SendMessage(p, String.Format(helpFormat, offset + 8, cmd));
+                        Player.Message(p, String.Format(helpFormat, offset + 8, cmd));
                         return;
                     }
                 }
@@ -286,16 +286,16 @@ namespace MCGalaxy.Commands {
                     bd.BlockID = GetFreeId(global, p == null ? null : p.level);
                     if (bd.BlockID == Block.Zero) {
                         string cmd = global ? "/gb" : "/lb";
-                        Player.SendMessage(p, "There are no custom block ids left, " +
+                        Player.Message(p, "There are no custom block ids left, " +
                                            "you must " + cmd + " remove a custom block first.");
                         if (!global)
-                            Player.SendMessage(p, "You may also manually specify the same existing id of a global custom block.");
+                            Player.Message(p, "You may also manually specify the same existing id of a global custom block.");
                         return;
                     }
                 }
                 
                 string scope = global ? "global" : "level";
-                Player.SendMessage(p, "Created a new " + scope + " custom block " + bd.Name + "(" + bd.BlockID + ")");
+                Player.Message(p, "Created a new " + scope + " custom block " + bd.Name + "(" + bd.BlockID + ")");
                 BlockDefinition.Add(bd, defs, p == null ? null : p.level);
                 SetBD(p, global, null);
                 SetStep(p, global, 0);
@@ -308,7 +308,7 @@ namespace MCGalaxy.Commands {
         void EditHandler(Player p, string[] parts, bool global) {
             if (parts.Length <= 3) {
                 if (parts.Length == 1)
-                    Player.SendMessage(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
+                    Player.Message(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
                                        "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
                                        "fogdensity, fogred, foggreen, fogblue, fallback, lefttex, righttex, fronttex, backtex");
                 else
@@ -428,11 +428,11 @@ namespace MCGalaxy.Commands {
                 case "fallbackblock":
                     tempX = Block.Byte(value);
                     if (tempX == Block.Zero) {
-                        Player.SendMessage(p, "'" + value + "' is not a valid standard tile."); return;
+                        Player.Message(p, "'" + value + "' is not a valid standard tile."); return;
                     }
                     def.FallBack = tempX; break;
                 default:
-                    Player.SendMessage(p, "Unrecognised property: " + parts[2]); return;
+                    Player.Message(p, "Unrecognised property: " + parts[2]); return;
             }            
             BlockDefinition.Add(def, defs, p == null ? null : p.level);    
             ReloadMap(p, global);
@@ -469,15 +469,15 @@ namespace MCGalaxy.Commands {
         static void MessageNoBlock(Player p, int id, bool global) {
             string scope = global ? "global" : "level";
             string cmd = global ? "/gb" : "/lb";
-            Player.SendMessage(p, "There is no " + scope + " custom block with the id \"" + id + "\".");
-            Player.SendMessage(p, "Type \"%T" + cmd +" list\" %Sto see a list of " + scope + " custom blocks.");
+            Player.Message(p, "There is no " + scope + " custom block with the id \"" + id + "\".");
+            Player.Message(p, "Type \"%T" + cmd +" list\" %Sto see a list of " + scope + " custom blocks.");
         }
         
         static void MessageAlreadyBlock(Player p, int id, bool global) {
             string scope = global ? "global" : "level";
             string cmd = global ? "/gb" : "/lb";
-            Player.SendMessage(p, "There is already a " + scope + " custom block with the id \"" + id + "\".");
-            Player.SendMessage(p, "Type \"%T" + cmd +" list\" %Sto see a list of " + scope + " custom blocks.");
+            Player.Message(p, "There is already a " + scope + " custom block with the id \"" + id + "\".");
+            Player.Message(p, "Type \"%T" + cmd +" list\" %Sto see a list of " + scope + " custom blocks.");
         }
         
         static bool EditByte(Player p, string arg, string propName, ref byte target) {
@@ -488,7 +488,7 @@ namespace MCGalaxy.Commands {
                              int step, int offset, byte min, byte max) {
             int temp = 0;
             if (!int.TryParse(value, out temp) || temp < min || temp > max) {
-                Player.SendMessage(p, propName + " must be an integer between " + min + " and " + max + ".");
+                Player.Message(p, propName + " must be an integer between " + min + " and " + max + ".");
                 if (step != -1) SendEditHelp(p, step, offset);
                 return false;
             }
@@ -552,25 +552,25 @@ namespace MCGalaxy.Commands {
         static void SendStepHelp(Player p, int step) {
             string[] help = stepsHelp[step];
             for (int i = 0; i < help.Length; i++)
-                Player.SendMessage(p, help[i]);
-            Player.SendMessage(p, "%f--------------------------");
+                Player.Message(p, help[i]);
+            Player.Message(p, "%f--------------------------");
         }
         
         static void SendEditHelp(Player p, int step, int offset) {
             string[] help = stepsHelp[step];
             for (int i = offset; i < help.Length; i++)
-                Player.SendMessage(p, help[i].Replace("Type", "Use"));
+                Player.Message(p, help[i].Replace("Type", "Use"));
         }
         
         static bool CheckBlockId(Player p, string arg, bool global, out int blockId) {
             if (!int.TryParse(arg, out blockId)) {
-                Player.SendMessage(p, "Provided block id is not a number."); return false;
+                Player.Message(p, "Provided block id is not a number."); return false;
             }
             if (blockId <= 0 || blockId >= 255) {
-                Player.SendMessage(p, "Block id must be between 1-254"); return false;
+                Player.Message(p, "Block id must be between 1-254"); return false;
             }
             if (!global && blockId < Block.CpeCount) {
-                Player.SendMessage(p, "You can only redefine standard blocks with /gb."); return false;
+                Player.Message(p, "You can only redefine standard blocks with /gb."); return false;
             }
             return true;
         }
@@ -608,14 +608,14 @@ namespace MCGalaxy.Commands {
             string fullCmd = global ? "/globalblock" : "/levelblock";
             string cmd = global ? "/gb" : "/lb";
             
-            Player.SendMessage(p, "%T" + fullCmd + " <add/copy/edit/list/remove>");
-            Player.SendMessage(p, "%H  " + cmd + " add [id] - begins the creation a new custom block.");
-            Player.SendMessage(p, "%H  " + cmd + " copy [source id] [new id] - clones a new custom block from the existing source block.");
-            Player.SendMessage(p, "%H  " + cmd + " edit [id] [property] [value] - edits the given property of the custom block with that id.");
-            Player.SendMessage(p, "%H  " + cmd + " list [offset] - lists all custom blocks.");
-            Player.SendMessage(p, "%H  " + cmd + " remove [id] - removes the custom block with that id.");
-            Player.SendMessage(p, "%H  " + cmd + " info [id] - shows info about the custom block with that id."); 
-            Player.SendMessage(p, "%HTo see the list of editable properties, type " + cmd + " edit.");
+            Player.Message(p, "%T" + fullCmd + " <add/copy/edit/list/remove>");
+            Player.Message(p, "%H  " + cmd + " add [id] - begins the creation a new custom block.");
+            Player.Message(p, "%H  " + cmd + " copy [source id] [new id] - clones a new custom block from the existing source block.");
+            Player.Message(p, "%H  " + cmd + " edit [id] [property] [value] - edits the given property of the custom block with that id.");
+            Player.Message(p, "%H  " + cmd + " list [offset] - lists all custom blocks.");
+            Player.Message(p, "%H  " + cmd + " remove [id] - removes the custom block with that id.");
+            Player.Message(p, "%H  " + cmd + " info [id] - shows info about the custom block with that id."); 
+            Player.Message(p, "%HTo see the list of editable properties, type " + cmd + " edit.");
         }
     }
     

@@ -27,22 +27,22 @@ namespace MCGalaxy.Commands {
         public CmdRepeat() { }
 
         public override void Use(Player p, string message) {
-            if (p.lastCMD == "") { Player.SendMessage(p, "No commands used yet."); return; }
+            if (p.lastCMD == "") { Player.Message(p, "No commands used yet."); return; }
 
-            Player.SendMessage(p, "Repeating &b/" + p.lastCMD);
+            Player.Message(p, "Repeating &b/" + p.lastCMD);
             int argsIndex = p.lastCMD.IndexOf(' ');
             string cmdName = argsIndex == -1 ? p.lastCMD : p.lastCMD.Substring(0, argsIndex);
             string cmdMsg = argsIndex == -1 ? "" : p.lastCMD.Substring(argsIndex + 1);
             
             Command cmd = Command.all.Find(cmdName);
-            if (cmd == null) { Player.SendMessage(p, "Unknown command \"" + cmdName + "\"."); }
+            if (cmd == null) { Player.Message(p, "Unknown command \"" + cmdName + "\"."); }
             if (p != null && !p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
             cmd.Use(p, cmdMsg);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/repeat");
-            Player.SendMessage(p, "%HRepeats the last used command");
+            Player.Message(p, "%T/repeat");
+            Player.Message(p, "%HRepeats the last used command");
         }
     }
 }

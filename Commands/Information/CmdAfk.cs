@@ -31,16 +31,16 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (Server.chatmod) {
-                Player.SendMessage(p, "You cannot use /afk while chat moderation is enabled");
+                Player.Message(p, "You cannot use /afk while chat moderation is enabled");
                 return;
             }
-            if (p != null && p.muted) { Player.SendMessage(p, "Cannot use /afk while muted."); return; }
+            if (p != null && p.muted) { Player.Message(p, "Cannot use /afk while muted."); return; }
 
             if (message == "list") {
                 foreach (string s in Server.afkset) {
                     Player pl = PlayerInfo.FindExact(s);
                     if (pl == null || !Entities.CanSee(p, pl)) continue;
-                    Player.SendMessage(p, s);
+                    Player.Message(p, s);
                 }
                 return;
             }
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/afk <reason> - mark yourself as AFK. Use again to mark yourself as back");
+            Player.Message(p, "/afk <reason> - mark yourself as AFK. Use again to mark yourself as back");
         }
     }
 }

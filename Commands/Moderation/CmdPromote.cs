@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands {
             if (next != null) {
                 Command.all.Find("setrank").Use(p, target.name + " " + next.name + " " + reason);
             } else {
-                Player.SendMessage(p, "No higher ranks exist");
+                Player.Message(p, "No higher ranks exist");
             }
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/promote <name> <reason> - Promotes <name> up a rank");
-            Player.SendMessage(p, "If <reason> is left blank, the server will use \"Unknown\"");
+            Player.Message(p, "/promote <name> <reason> - Promotes <name> up a rank");
+            Player.Message(p, "If <reason> is left blank, the server will use \"Unknown\"");
         }
     }
 }

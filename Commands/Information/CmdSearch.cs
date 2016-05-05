@@ -54,23 +54,23 @@ namespace MCGalaxy.Commands {
         
         static void SearchCommands(Player p, string keyword) {
             if (keyword.Length <= 2) {
-                Player.SendMessage(p, "You need to enter at least three characters to search for."); return;
+                Player.Message(p, "You need to enter at least three characters to search for."); return;
             }
             string[] keywords = keyword.Split(' ');
             string[] found = keywords.Length == 1 ?
                 CommandKeywords.Find(keyword) : CommandKeywords.Find(keywords);
             if (found == null) {
-                Player.SendMessage(p, "No commands found matching keyword(s): '" + keyword + "'"); return;
+                Player.Message(p, "No commands found matching keyword(s): '" + keyword + "'"); return;
             }
             
             StringBuilder cmds = new StringBuilder();
             bool mode = true;
-            Player.SendMessage(p, "&bCommands found: ");
+            Player.Message(p, "&bCommands found: ");
             foreach (string cmd in found) {
                 cmds.Append(mode ? "%S, &9" : "%S, &2").Append(cmd);
                 mode = !mode;
             }
-            Player.SendMessage(p, cmds.ToString(4, cmds.Length - 4));
+            Player.Message(p, cmds.ToString(4, cmds.Length - 4));
         }
         
         static void SearchBlocks(Player p, string keyword) {
@@ -83,8 +83,8 @@ namespace MCGalaxy.Commands {
                     mode = !mode;
                 }
             }
-            if (blocks.Length == 0) { Player.SendMessage(p, "No blocks found containing &b" + keyword); return; }
-            Player.SendMessage(p, blocks.ToString(4, blocks.Length - 4));
+            if (blocks.Length == 0) { Player.Message(p, "No blocks found containing &b" + keyword); return; }
+            Player.Message(p, blocks.ToString(4, blocks.Length - 4));
         }
         
         static void SearchRanks(Player p, string keyword) {
@@ -93,8 +93,8 @@ namespace MCGalaxy.Commands {
                 if (g.name.IndexOf(keyword, comp) >= 0)
                     ranks.Append(", ").Append(g.color).Append(g.name);
             }
-            if (ranks.Length == 0) { Player.SendMessage(p, "No ranks found containing &b" + keyword); return; }
-            Player.SendMessage(p, ranks.ToString(2, ranks.Length - 2));
+            if (ranks.Length == 0) { Player.Message(p, "No ranks found containing &b" + keyword); return; }
+            Player.Message(p, ranks.ToString(2, ranks.Length - 2));
         }
         
         static void SearchPlayers(Player p, string keyword) {
@@ -104,8 +104,8 @@ namespace MCGalaxy.Commands {
                 if (who.name.IndexOf(keyword, comp) >= 0 && Entities.CanSee(p, who))
                     players.Append(", ").Append(who.color).Append(who.name);
             }
-            if (players.Length == 0) { Player.SendMessage(p, "No usernames found containing &b" + keyword); return; }
-            Player.SendMessage(p, players.ToString(2, players.Length - 2));
+            if (players.Length == 0) { Player.Message(p, "No usernames found containing &b" + keyword); return; }
+            Player.Message(p, players.ToString(2, players.Length - 2));
         }
         
         static void SearchLoaded(Player p, string keyword) {
@@ -115,8 +115,8 @@ namespace MCGalaxy.Commands {
                 if (level.name.IndexOf(keyword, comp) >= 0)
                     levels.Append(", ").Append(level.name);
             }
-            if (levels.Length == 0) { Player.SendMessage(p, "No loaded levels found containing &b" + keyword); return; }
-            Player.SendMessage(p, levels.ToString(2, levels.Length - 2));
+            if (levels.Length == 0) { Player.Message(p, "No loaded levels found containing &b" + keyword); return; }
+            Player.Message(p, levels.ToString(2, levels.Length - 2));
         }
         
         static void SearchUnloaded(Player p, string keyword) {
@@ -130,17 +130,17 @@ namespace MCGalaxy.Commands {
                     searched.Append(", ").Append(level);
             }
 
-            if (searched.Length == 0) { Player.SendMessage(p, "No levels found containing &b" + keyword); return; }
-            Player.SendMessage(p, searched.ToString(2, searched.Length - 2));
+            if (searched.Length == 0) { Player.Message(p, "No levels found containing &b" + keyword); return; }
+            Player.Message(p, searched.ToString(2, searched.Length - 2));
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "&b/search &2commands &a<keywords[more]> &e- finds commands with those keywords");
-            Player.SendMessage(p, "&b/search &2blocks &a<keyword> &e- finds blocks with that keyword");
-            Player.SendMessage(p, "&b/search &2ranks &a<keyword> &e- finds blocks with that keyword");
-            Player.SendMessage(p, "&b/search &2players &a<keyword> &e- find players with that keyword");
-            Player.SendMessage(p, "&b/search &2loaded &a<keyword> &e- finds loaded levels with that keyword");
-            Player.SendMessage(p, "&b/search &2levels &a<keyword> &e- find all levels with that keyword");
+            Player.Message(p, "&b/search &2commands &a<keywords[more]> &e- finds commands with those keywords");
+            Player.Message(p, "&b/search &2blocks &a<keyword> &e- finds blocks with that keyword");
+            Player.Message(p, "&b/search &2ranks &a<keyword> &e- finds blocks with that keyword");
+            Player.Message(p, "&b/search &2players &a<keyword> &e- find players with that keyword");
+            Player.Message(p, "&b/search &2loaded &a<keyword> &e- finds loaded levels with that keyword");
+            Player.Message(p, "&b/search &2levels &a<keyword> &e- find all levels with that keyword");
         }
     }
 }

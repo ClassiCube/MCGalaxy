@@ -31,22 +31,22 @@ namespace MCGalaxy.Commands
             
             string[] data = Ban.GetBanData(message);
             if (data != null) {
-                Player.SendMessage(p, "&9User: &e" + message);
-                Player.SendMessage(p, "&9Banned by: &e" + data[0]);
-                Player.SendMessage(p, "&9Reason: &e" + data[1]);
-                Player.SendMessage(p, "&9Date and time: &e" + data[2]);
-                Player.SendMessage(p, "&9Old rank: &e" + data[3]);
+                Player.Message(p, "&9User: &e" + message);
+                Player.Message(p, "&9Banned by: &e" + data[0]);
+                Player.Message(p, "&9Reason: &e" + data[1]);
+                Player.Message(p, "&9Date and time: &e" + data[2]);
+                Player.Message(p, "&9Old rank: &e" + data[3]);
                 string stealth = data[4] == "true" ?  "&aYes" : "&cNo";
-                Player.SendMessage(p, "&9Stealth banned: " + stealth);
+                Player.Message(p, "&9Stealth banned: " + stealth);
             } else if (!Group.findPerm(LevelPermission.Banned).playerList.Contains(message)) {
-                Player.SendMessage(p, "That player isn't banned");
+                Player.Message(p, "That player isn't banned");
             } else if (data == null) {
-                Player.SendMessage(p, "Couldn't find ban info about " + message + ".");
+                Player.Message(p, "Couldn't find ban info about " + message + ".");
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/baninfo <player> - returns info about banned player.");
+            Player.Message(p, "/baninfo <player> - returns info about banned player.");
         }
     }
 }

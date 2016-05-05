@@ -51,15 +51,15 @@ namespace MCGalaxy.Commands {
 
             if (canVisit != "")
                 canVisit = canVisit.Remove(0, 2);
-            Player.SendMessage(p, "Loaded levels [physics_level]: " + canVisit);
+            Player.Message(p, "Loaded levels [physics_level]: " + canVisit);
             if (canBuild != "")
-                Player.SendMessage(p, "Loaded levsl you cannot visit: " + canBuild.Remove(0, 2));
-            Player.SendMessage(p, "Use %T/unloaded %Sfor unloaded levels.");
+                Player.Message(p, "Loaded levsl you cannot visit: " + canBuild.Remove(0, 2));
+            Player.Message(p, "Use %T/unloaded %Sfor unloaded levels.");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/levels");
-            Player.SendMessage(p, "%HLists all loaded levels and their physics levels.");
+            Player.Message(p, "%T/levels");
+            Player.Message(p, "%HLists all loaded levels and their physics levels.");
         }
     }
 }

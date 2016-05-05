@@ -48,19 +48,19 @@ namespace MCGalaxy.Commands {
                 }
             }
             if (page < 0) {
-                Player.SendMessage(p, "Cannot display pages less than 0"); return;
+                Player.Message(p, "Cannot display pages less than 0"); return;
             }
 
             List<Awards.Award> awards = GetAwards(plName);
             if (awards.Count == 0) {
-                if (plName != "") Player.SendMessage(p, "The player has no awards!");
-                else Player.SendMessage(p, "There are no awards in this server yet");
+                if (plName != "") Player.Message(p, "The player has no awards!");
+                else Player.Message(p, "There are no awards in this server yet");
                 return;
             }
 
             int start = (page - 1) * 5;
             if (start > awards.Count) {
-                Player.SendMessage(p, "There aren't that many awards, try a smaller number.");
+                Player.Message(p, "There aren't that many awards, try a smaller number.");
                 return;
             }
             OutputAwards(p, page, start, plName, awards);
@@ -82,28 +82,28 @@ namespace MCGalaxy.Commands {
         static void OutputAwards(Player p, int page, int start,
                                  string plName, List<Awards.Award> awards) {
             if (plName != "")
-                Player.SendMessage(p, Server.FindColor(plName) + plName + " %Shas the following awards:");
+                Player.Message(p, Server.FindColor(plName) + plName + " %Shas the following awards:");
             else
-                Player.SendMessage(p, "Awards available: ");
+                Player.Message(p, "Awards available: ");
 
             if (page == 0) {
                 foreach (Awards.Award award in awards)
-                    Player.SendMessage(p, "&6" + award.Name + ": &7" + award.Description);
+                    Player.Message(p, "&6" + award.Name + ": &7" + award.Description);
 
                 if (awards.Count > 8) 
-                    Player.SendMessage(p, "&5Use &b/awards " + plName + " 1/2/3/... &5for a more ordered list");
+                    Player.Message(p, "&5Use &b/awards " + plName + " 1/2/3/... &5for a more ordered list");
             } else {
                 for (int i = start; i < Math.Min(awards.Count, start + 5); i++) {
                     Awards.Award award = awards[i];
-                    Player.SendMessage(p, "&6" + award.Name + ": &7" + award.Description);
+                    Player.Message(p, "&6" + award.Name + ": &7" + award.Description);
                 }
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/awards [player] %H- Gives a list of awards that player has.");
-            Player.SendMessage(p, "$HIf [player] is not given, lists all awards the server has.");
-            Player.SendMessage(p, "%HSpecify 1/2/3/... after to get an ordered list.");
+            Player.Message(p, "%T/awards [player] %H- Gives a list of awards that player has.");
+            Player.Message(p, "$HIf [player] is not given, lists all awards the server has.");
+            Player.Message(p, "%HSpecify 1/2/3/... after to get an ordered list.");
         }
     }
 }

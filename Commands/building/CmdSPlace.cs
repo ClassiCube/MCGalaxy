@@ -34,24 +34,24 @@ namespace MCGalaxy.Commands {
             
             string[] parts = message.Split(' ');
             if (!ushort.TryParse(parts[0], out distance)) {
-                Player.SendMessage(p, "Distance must be a number less than 65536."); return;
+                Player.Message(p, "Distance must be a number less than 65536."); return;
             }
             if (parts.Length > 1 && !ushort.TryParse(parts[1], out interval)) {
-                Player.SendMessage(p, "Interval must be a number less than 65536."); return;
+                Player.Message(p, "Interval must be a number less than 65536."); return;
             }
 
             if (distance < 1) {
-                Player.SendMessage(p, "Enter a distance greater than 0."); return;
+                Player.Message(p, "Enter a distance greater than 0."); return;
             }
             if (interval >= distance) {
-                Player.SendMessage(p, "The Interval cannot be greater than the distance."); return;
+                Player.Message(p, "The Interval cannot be greater than the distance."); return;
             }
 
             CatchPos cpos = default(CatchPos);
             cpos.givenMessage = message;
             cpos.distance = distance; cpos.interval = interval;
             p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place two blocks to determine direction.");
+            Player.Message(p, "Place two blocks to determine direction.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             ushort distance = cpos.distance, interval = cpos.interval;
-            if (x == cpos.x && y == cpos.y && z == cpos.z) { Player.SendMessage(p, "No direction was selected"); return; }
+            if (x == cpos.x && y == cpos.y && z == cpos.z) { Player.Message(p, "No direction was selected"); return; }
             
             int dirX = 0, dirY = 0, dirZ = 0;
             int dx = Math.Abs(cpos.x - x), dy = Math.Abs(cpos.y - y), dz = Math.Abs(cpos.z - z);
@@ -95,9 +95,9 @@ namespace MCGalaxy.Commands {
             }
 
             if (interval > 0)
-                Player.SendMessage(p, "Placed stone blocks " + interval + " apart");
+                Player.Message(p, "Placed stone blocks " + interval + " apart");
             else
-                Player.SendMessage(p, "Placed stone blocks " + distance + " apart");
+                Player.Message(p, "Placed stone blocks " + distance + " apart");
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
@@ -107,8 +107,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/splace [distance] [interval] - Measures a set [distance] and places a stone block at each end.");
-            Player.SendMessage(p, "Optionally place a block at set [interval] between them.");
+            Player.Message(p, "/splace [distance] [interval] - Measures a set [distance] and places a stone block at each end.");
+            Player.Message(p, "Optionally place a block at set [interval] between them.");
         }
     }
 }

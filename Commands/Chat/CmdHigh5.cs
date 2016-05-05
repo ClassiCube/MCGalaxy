@@ -34,12 +34,12 @@ namespace MCGalaxy.Commands
             if (who == null) return;
 
 			string giver = (p == null) ? "(console)" : p.ColoredName;
-            Player.SendMessage(who, giver + " just highfived you");
+            Player.Message(who, giver + " just highfived you");
             Player.GlobalMessage(giver + " %Sjust highfived " + who.ColoredName);
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/high5 <player> - High five someone :D");
+            Player.Message(p, "/high5 <player> - High five someone :D");
         }
     }
 }

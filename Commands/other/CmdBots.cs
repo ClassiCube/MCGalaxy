@@ -39,12 +39,12 @@ namespace MCGalaxy.Commands
                 if (Pb.kill) message += "-kill";
             }
 
-            if (message != "") Player.SendMessage(p, "&1Bots: %S" + message.Remove(0, 2));
-            else Player.SendMessage(p, "No bots are alive.");
+            if (message != "") Player.Message(p, "&1Bots: %S" + message.Remove(0, 2));
+            else Player.Message(p, "No bots are alive.");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/bots - Shows a list of bots, their AIs and levels");
+            Player.Message(p, "/bots - Shows a list of bots, their AIs and levels");
         }
     }
 }

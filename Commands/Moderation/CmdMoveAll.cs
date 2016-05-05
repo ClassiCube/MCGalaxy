@@ -34,12 +34,12 @@ namespace MCGalaxy.Commands
                 if (p == null || pl.group.Permission < p.group.Permission) 
                     Command.all.Find("move").Use(p, pl.name + " " + level.name); 
                 else 
-                    Player.SendMessage(p, "You cannot move " + pl.ColoredName + " %Sbecause they are of equal or higher rank"); 
+                    Player.Message(p, "You cannot move " + pl.ColoredName + " %Sbecause they are of equal or higher rank"); 
             }
         }
         
         public override void Help(Player p) { 
-        	Player.SendMessage(p, "/moveall <level> - Moves all players to the level specified."); 
+        	Player.Message(p, "/moveall <level> - Moves all players to the level specified."); 
         }
     }
 }

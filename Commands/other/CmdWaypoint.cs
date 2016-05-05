@@ -44,10 +44,10 @@ namespace MCGalaxy.Commands
                 if (!WaypointList.Exists(par1, p))
                 {
                     WaypointList.Create(par1, p);
-                    Player.SendMessage(p, "Created waypoint");
+                    Player.Message(p, "Created waypoint");
                     return;
                 }
-                else { Player.SendMessage(p, "That waypoint already exists"); return; }
+                else { Player.Message(p, "That waypoint already exists"); return; }
             }
             else if (cmd == "goto")
             {
@@ -56,36 +56,36 @@ namespace MCGalaxy.Commands
                     WaypointList.Goto(par1, p);
                     return;
                 }
-                else { Player.SendMessage(p, "That waypoint doesn't exist"); return; }
+                else { Player.Message(p, "That waypoint doesn't exist"); return; }
             }
             else if (cmd == "replace" || cmd == "update" || cmd == "edit")
             {
                 if (WaypointList.Exists(par1, p))
                 {
                     WaypointList.Update(par1, p);
-                    Player.SendMessage(p, "Updated waypoint");
+                    Player.Message(p, "Updated waypoint");
                     return;
                 }
-                else { Player.SendMessage(p, "That waypoint doesn't exist"); return; }
+                else { Player.Message(p, "That waypoint doesn't exist"); return; }
             }
             else if (cmd == "delete" || cmd == "remove")
             {
                 if (WaypointList.Exists(par1, p))
                 {
                     WaypointList.Remove(par1, p);
-                    Player.SendMessage(p, "Deleted waypoint");
+                    Player.Message(p, "Deleted waypoint");
                     return;
                 }
-                else { Player.SendMessage(p, "That waypoint doesn't exist"); return; }
+                else { Player.Message(p, "That waypoint doesn't exist"); return; }
             }
             else if (cmd == "list")
             {
-                Player.SendMessage(p, "Waypoints:");
+                Player.Message(p, "Waypoints:");
                 foreach (Waypoint wp in p.Waypoints)
                 {
                     if (LevelInfo.Find(wp.lvlname) != null)
                     {
-                        Player.SendMessage(p, wp.name + ":" + wp.lvlname);
+                        Player.Message(p, wp.name + ":" + wp.lvlname);
                     }
                 }
                 return;
@@ -95,20 +95,20 @@ namespace MCGalaxy.Commands
                 if (WaypointList.Exists(cmd, p))
                 {
                     WaypointList.Goto(cmd, p);
-                    Player.SendMessage(p, "Sent you to waypoint");
+                    Player.Message(p, "Sent you to waypoint");
                     return;
                 }
-                else { Player.SendMessage(p, "That waypoint or command doesn't exist"); return; }
+                else { Player.Message(p, "That waypoint or command doesn't exist"); return; }
             }
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/waypoint [create] [name] - Create a new waypoint");
-            Player.SendMessage(p, "/waypoint [update] [name] - Update a waypoint");
-            Player.SendMessage(p, "/waypoint [remove] [name] - Remove a waypoint");
-            Player.SendMessage(p, "/waypoint [list] - Shows a list of waypoints");
-            Player.SendMessage(p, "/waypoint [goto] [name] - Goto a waypoint");
-            Player.SendMessage(p, "/waypoint [name] - Goto a waypoint");
+            Player.Message(p, "/waypoint [create] [name] - Create a new waypoint");
+            Player.Message(p, "/waypoint [update] [name] - Update a waypoint");
+            Player.Message(p, "/waypoint [remove] [name] - Remove a waypoint");
+            Player.Message(p, "/waypoint [list] - Shows a list of waypoints");
+            Player.Message(p, "/waypoint [goto] [name] - Goto a waypoint");
+            Player.Message(p, "/waypoint [name] - Goto a waypoint");
         }
     }
 }

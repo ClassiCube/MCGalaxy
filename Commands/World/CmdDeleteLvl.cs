@@ -34,23 +34,23 @@ namespace MCGalaxy.Commands {
             Level lvl = LevelInfo.Find(message);
             if (lvl != null) {
                 if (p != null && lvl.permissionbuild > p.group.Permission) {
-                    Player.SendMessage(p, "%cYou can't delete levels with a perbuild rank higher than yours!");
+                    Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!");
                     return;
                 }
                 lvl.Unload();
             }
             
-            if (!Player.ValidName(message)) { Player.SendMessage(p, "\"" + message + "\" is not a valid level name."); return; }
-            if (lvl == Server.mainLevel) { Player.SendMessage(p, "Cannot delete the main level."); return; }
+            if (!Player.ValidName(message)) { Player.Message(p, "\"" + message + "\" is not a valid level name."); return; }
+            if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }
             if (!Directory.Exists("levels/deleted")) Directory.CreateDirectory("levels/deleted");
 
             if (!LevelInfo.ExistsOffline(message)) {
-                Player.SendMessage(p, "Could not find specified level."); return;
+                Player.Message(p, "Could not find specified level."); return;
             }
 
             LevelPermission perbuild = GetPerBuildPermission(message);
             if (p != null && perbuild > p.group.Permission) {
-                Player.SendMessage(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
+                Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
             }
 
             if (File.Exists("levels/deleted/" + message + ".lvl")) {
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
             } else {
             	File.Move(LevelInfo.LevelPath(message), "levels/deleted/" + message + ".lvl");
             }
-            Player.SendMessage(p, "Created backup.");
+            Player.Message(p, "Created backup.");
 
             try { File.Delete("levels/level properties/" + message + ".properties"); } catch { }
             try { File.Delete("levels/level properties/" + message); } catch { }
@@ -86,9 +86,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-        	Player.SendMessage(p, "%T/deletelvl [map]");
-        	Player.SendMessage(p, "%HCompletely deletes [map] (portals, MBs, everything");
-            Player.SendMessage(p, "%HA backup of the map will be placed in the levels/deleted folder");
+        	Player.Message(p, "%T/deletelvl [map]");
+        	Player.Message(p, "%HCompletely deletes [map] (portals, MBs, everything");
+            Player.Message(p, "%HA backup of the map will be placed in the levels/deleted folder");
         }
     }
 }

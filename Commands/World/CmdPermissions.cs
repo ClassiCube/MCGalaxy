@@ -39,8 +39,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/perbuildmax [Level] [Rank]");
-            Player.SendMessage(p, "%HSets the highest rank able to build on the given level.");
+            Player.Message(p, "%T/perbuildmax [Level] [Rank]");
+            Player.Message(p, "%HSets the highest rank able to build on the given level.");
         }
     }
     
@@ -63,8 +63,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/perbuild [Level] [Rank]");
-            Player.SendMessage(p, "%HSets the lowest rank able to build on the given level.");
+            Player.Message(p, "%T/perbuild [Level] [Rank]");
+            Player.Message(p, "%HSets the lowest rank able to build on the given level.");
         }
     }
     
@@ -87,8 +87,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/pervisitmax [level] [rank]");
-            Player.SendMessage(p, "%HSets the highest rank able to visit the given level.");
+            Player.Message(p, "%T/pervisitmax [level] [rank]");
+            Player.Message(p, "%HSets the highest rank able to visit the given level.");
         }
     }
     
@@ -117,12 +117,12 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/pervisit [level] [rank]");
-            Player.SendMessage(p, "%HSets the lowest rank able to visit the given level.");
-            Player.SendMessage(p, "%T/pervisit [level] +[name]");
-            Player.SendMessage(p, "%HAllows [name] to visit the map, even if their rank cannot.");
-            Player.SendMessage(p, "%T/pervisit [level] -[name]");
-            Player.SendMessage(p, "%HPrevents [name] from visiting the map, even if their rank can.");
+            Player.Message(p, "%T/pervisit [level] [rank]");
+            Player.Message(p, "%HSets the lowest rank able to visit the given level.");
+            Player.Message(p, "%T/pervisit [level] +[name]");
+            Player.Message(p, "%HAllows [name] to visit the map, even if their rank cannot.");
+            Player.Message(p, "%T/pervisit [level] -[name]");
+            Player.Message(p, "%HPrevents [name] from visiting the map, even if their rank can.");
         }
     }
 }

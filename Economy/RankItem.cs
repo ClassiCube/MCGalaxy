@@ -68,39 +68,39 @@ namespace MCGalaxy.Eco {
         protected internal override void OnBuyCommand(Command cmd, Player p, 
                                                       string message, string[] args) {
             if (args.Length >= 2) {
-                Player.SendMessage(p, "%cYou cannot provide a rank name, use %a/buy rank %cto buy the NEXT rank."); return;
+                Player.Message(p, "%cYou cannot provide a rank name, use %a/buy rank %cto buy the NEXT rank."); return;
             }
             Group maxrank = Group.Find(MaxRank);
             if (p.group.Permission >= maxrank.Permission) {
-                Player.SendMessage(p, "%cYou cannot buy anymore ranks, because you passed the max buyable rank: " + maxrank.color + maxrank.name);
+                Player.Message(p, "%cYou cannot buy anymore ranks, because you passed the max buyable rank: " + maxrank.color + maxrank.name);
                 return;
             }
             if (p.money < NextRank(p).price) {
-                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy the next rank"); return;
+                Player.Message(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy the next rank"); return;
             }
             
             Command.all.Find("promote").Use(null, p.name);
-            Player.SendMessage(p, "%aYou've successfully bought the rank " + p.group.ColoredName);
+            Player.Message(p, "%aYou've successfully bought the rank " + p.group.ColoredName);
             Economy.MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.ColoredName);
         }
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
             switch (args[1].ToLower()) {
                 case "enable":
-                    Player.SendMessage(p, "%aThe " + Name + " item is now enabled.");
+                    Player.Message(p, "%aThe " + Name + " item is now enabled.");
                     Enabled = true; break;
                 case "disable":
-                    Player.SendMessage(p, "%aThe " + Name + " item is now disabled.");
+                    Player.Message(p, "%aThe " + Name + " item is now disabled.");
                     Enabled = false; break;
                 case "price":
                     Rank rnk = FindRank(args[2]);
                     if (rnk == null) {
-                        Player.SendMessage(p, "%cThat wasn't a rank or it's past the max rank (maxrank is: " + Group.Find(MaxRank).color + MaxRank + "%c)"); return; }
+                        Player.Message(p, "%cThat wasn't a rank or it's past the max rank (maxrank is: " + Group.Find(MaxRank).color + MaxRank + "%c)"); return; }
                     int cost;
                     if (!int.TryParse(args[3], out cost)) {
-                        Player.SendMessage(p, "\"" + args[3] + "\" is not a valid integer."); return;
+                        Player.Message(p, "\"" + args[3] + "\" is not a valid integer."); return;
                     }
-                    Player.SendMessage(p, "%aSuccesfully changed the rank price for " + rnk.group.color + rnk.group.name + " to: %f" + cost + " %3" + Server.moneys);
+                    Player.Message(p, "%aSuccesfully changed the rank price for " + rnk.group.color + rnk.group.name + " to: %f" + cost + " %3" + Server.moneys);
                     rnk.price = cost; break;
 
                 case "maxrank":
@@ -108,34 +108,34 @@ namespace MCGalaxy.Eco {
                 case "maximum":
                 case "maximumrank":
                     Group grp = Group.Find(args[2]);
-                    if (grp == null) { Player.SendMessage(p, "%cThat wasn't a rank!"); return; }
-                    if (p != null && p.group.Permission < grp.Permission) { Player.SendMessage(p, "%cCan't set a maxrank that is higher than yours!"); return; }
+                    if (grp == null) { Player.Message(p, "%cThat wasn't a rank!"); return; }
+                    if (p != null && p.group.Permission < grp.Permission) { Player.Message(p, "%cCan't set a maxrank that is higher than yours!"); return; }
                     MaxRank = args[2].ToLower();
-                    Player.SendMessage(p, "%aSuccessfully set max rank to: " + grp.ColoredName);
+                    Player.Message(p, "%aSuccessfully set max rank to: " + grp.ColoredName);
                     UpdatePrices();
                     break;
                 default:
-                    Player.SendMessage(p, "Supported actions: enable, disable, price [rank] [pcost], maxrank [rank]"); break;
+                    Player.Message(p, "Supported actions: enable, disable, price [rank] [pcost], maxrank [rank]"); break;
             }
         }
 
         protected internal override void OnStoreOverview(Player p) {
         	Group maxrank = Group.Find(MaxRank);
             if (p.group.Permission >= maxrank.Permission) {
-                Player.SendMessage(p, "Rankup - &calready at max rank."); return;
+                Player.Message(p, "Rankup - &calready at max rank."); return;
             }
         	Rank rnk = NextRank(p);
-            Player.SendMessage(p, "Rankup to " + rnk.group.color + rnk.group.name + " %S- costs &f" + rnk.price + " &3" + Server.moneys);
+            Player.Message(p, "Rankup to " + rnk.group.color + rnk.group.name + " %S- costs &f" + rnk.price + " &3" + Server.moneys);
         }
         
         protected internal override void OnStoreCommand(Player p) {
             Group maxrank = Group.Find(MaxRank);
-        	Player.SendMessage(p, "Syntax: %T/buy rankup");            
-            Player.SendMessage(p, "%fThe max buyable rank is: " + maxrank.ColoredName);
-            Player.SendMessage(p, "%cYou can only buy ranks one at a time, in sequential order.");
+        	Player.Message(p, "Syntax: %T/buy rankup");            
+            Player.Message(p, "%fThe max buyable rank is: " + maxrank.ColoredName);
+            Player.Message(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
             foreach (Rank rnk in RanksList) {
-                Player.SendMessage(p, rnk.group.color + rnk.group.name + " costs &f" + rnk.price + " &3" + Server.moneys);
+                Player.Message(p, rnk.group.color + rnk.group.name + " costs &f" + rnk.price + " &3" + Server.moneys);
                 if (rnk.group.name.CaselessEq(maxrank.name)) break;
             }
         }

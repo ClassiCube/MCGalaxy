@@ -36,39 +36,39 @@ namespace MCGalaxy.Commands {
                 bool foundBind = false;
                 for (int i = 0; i < 10; i++)  {
                     if (p.cmdBind[i] != null) {
-                        Player.SendMessage(p, "&c/" + i + " %Sbound to &b" + p.cmdBind[i] + " " + p.messageBind[i]);
+                        Player.Message(p, "&c/" + i + " %Sbound to &b" + p.cmdBind[i] + " " + p.messageBind[i]);
                         foundBind = true;
                     }
                 }
-                if (!foundBind) Player.SendMessage(p, "You currently have no commands bound.");
+                if (!foundBind) Player.Message(p, "You currently have no commands bound.");
                 return;
             }
             
             string[] parts = message.Split(trimChars, 3);
             byte index;
             if (!byte.TryParse(parts[0], out index) || index >= 10) {
-                Player.SendMessage(p, "Bind number must be between 0 and 9."); return;
+                Player.Message(p, "Bind number must be between 0 and 9."); return;
             }
             
             if (parts.Length == 1) {
                 if (p.cmdBind[index] == null)
-                    Player.SendMessage(p, "No command bound for &c/" + index);
+                    Player.Message(p, "No command bound for &c/" + index);
                 else
-                    Player.SendMessage(p, "&c/" + index + " %Sbound to &b" + p.cmdBind[index] + " " + p.messageBind[index]);
+                    Player.Message(p, "&c/" + index + " %Sbound to &b" + p.cmdBind[index] + " " + p.messageBind[index]);
             } else {
                 p.cmdBind[index] = parts[1];
                 p.messageBind[index] = parts.Length > 2 ? parts[2] : "";
 
-                Player.SendMessage(p, "Bound &b/" + p.cmdBind[index] + " " + p.messageBind[index] + " to &c/" + index);
+                Player.Message(p, "Bound &b/" + p.cmdBind[index] + " " + p.messageBind[index] + " to &c/" + index);
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/cmdbind [num] [command] - Binds [num] to [command]");
-            Player.SendMessage(p, "[num] must be between 0 and 9");
-            Player.SendMessage(p, "Use with \"/[num]\" &b(example: /2)");
-            Player.SendMessage(p, "Use /cmdbind [num] to see the currently bound command.");
-            Player.SendMessage(p, "Use /cmdbind to see all bound commands.");
+            Player.Message(p, "/cmdbind [num] [command] - Binds [num] to [command]");
+            Player.Message(p, "[num] must be between 0 and 9");
+            Player.Message(p, "Use with \"/[num]\" &b(example: /2)");
+            Player.Message(p, "Use /cmdbind [num] to see the currently bound command.");
+            Player.Message(p, "Use /cmdbind to see all bound commands.");
         }
     }
 }

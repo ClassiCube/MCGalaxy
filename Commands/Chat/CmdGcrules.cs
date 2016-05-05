@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/gcrules - Shows global chat rules");
-            Player.SendMessage(p, "To chat in global chat, use /global");
+            Player.Message(p, "/gcrules - Shows global chat rules");
+            Player.Message(p, "To chat in global chat, use /global");
         }
     }
 }

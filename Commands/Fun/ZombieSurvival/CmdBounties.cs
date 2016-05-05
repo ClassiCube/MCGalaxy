@@ -33,20 +33,20 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             Dictionary<string, BountyData> bounties = Server.zombie.Bounties;
             if (bounties.Count == 0) {
-                Player.SendMessage(p, "There are no active bounties.");
+                Player.Message(p, "There are no active bounties.");
             } else {
                 foreach (var pair in bounties) {
                     Player pl = PlayerInfo.FindExact(pair.Key);
                     if (pl == null) continue;
-                    Player.SendMessage(p, "Bounty for " + pl.ColoredName + " %Sis &a" 
+                    Player.Message(p, "Bounty for " + pl.ColoredName + " %Sis &a" 
                                        + pair.Value.Amount + "%S" + Server.moneys + ".");
                 }
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/bounties");
-            Player.SendMessage(p, "%HOutputs a list of all active bounties on players.");
+            Player.Message(p, "%T/bounties");
+            Player.Message(p, "%HOutputs a list of all active bounties on players.");
         }
     }
 }

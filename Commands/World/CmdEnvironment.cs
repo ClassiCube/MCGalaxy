@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             } else {
                 // Adjust for the older version of the command which had /env p and used /env l.
                 if (args[0] == "player" || args[0] == "p") {
-                    Player.SendMessage(p, "Change your own env settings by pressing " +
+                    Player.Message(p, "Change your own env settings by pressing " +
                                        "escape and going to the appropriate options menu."); return;
                 } else if ((args[0] == "level" || args[0] == "l") && args.Length >= 3) {
                     args[0] = args[1];
@@ -303,10 +303,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/env [variable] [value]");
-            Player.SendMessage(p, "%H  Valid variables: fog, cloud, sky, sun, shadow, weather");
-            Player.SendMessage(p, "%H    level, cloudheight, maxfog, horizon, border, preset");
-            Player.SendMessage(p, "%HUsing 'normal' as a value will reset the variable");
+            Player.Message(p, "%T/env [variable] [value]");
+            Player.Message(p, "%H  Valid variables: fog, cloud, sky, sun, shadow, weather");
+            Player.Message(p, "%H    level, cloudheight, maxfog, horizon, border, preset");
+            Player.Message(p, "%HUsing 'normal' as a value will reset the variable");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands
 
             Group grp = Group.Find(message);
             if (grp == null) {
-                Player.SendMessage(p, "Could not find group"); return;
+                Player.Message(p, "Could not find group"); return;
             }
 
             StringBuilder builder = new StringBuilder();
@@ -46,16 +46,16 @@ namespace MCGalaxy.Commands
                 builder.Append(s).Append(", ");
             
             if (builder.Length == 0) {
-                Player.SendMessage(p, "No one has the rank of " + grp.ColoredName);
+                Player.Message(p, "No one has the rank of " + grp.ColoredName);
             } else {
-                Player.SendMessage(p, "People with the rank of " + grp.ColoredName + ":");
-                Player.SendMessage(p, builder.ToString(0, builder.Length - 2));
+                Player.Message(p, "People with the rank of " + grp.ColoredName + ":");
+                Player.Message(p, builder.ToString(0, builder.Length - 2));
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/viewranks [rank] - Shows all users who have [rank]");
-            Player.SendMessage(p, "Available ranks: " + Group.concatList());
+            Player.Message(p, "/viewranks [rank] - Shows all users who have [rank]");
+            Player.Message(p, "Available ranks: " + Group.concatList());
         }
     }
 }

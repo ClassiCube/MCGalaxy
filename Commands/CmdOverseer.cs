@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
             bool mapOnly = cmd == "SPAWN" || cmd == "PRESET" || cmd == "WEATHER" || cmd == "ENV" ||
                 cmd == "KICK" || cmd == "KICKALL" || cmd == "ZONE" || cmd == "LB" || cmd == "LEVELBLOCK";
             if (mapOnly && !p.level.name.CaselessStarts(p.name)) {
-                Player.SendMessage(p, "You may only perform that action on your own map.");
+                Player.Message(p, "You may only perform that action on your own map.");
                 return;
             }
 
@@ -110,18 +110,18 @@ namespace MCGalaxy.Commands
                 } else if (value.CaselessEq("SNOW")) {
                     Command.all.Find("env").Use(p, "weather 2");
                 } else {
-                    Player.SendMessage(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
+                    Player.Message(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
                 }
             } else {
-                Player.SendMessage(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
-                Player.SendMessage(p, "/os env level -- Sets the water height of your map");
-                Player.SendMessage(p, "/os env cloudheight -- Sets the cloud height of your map");
-                Player.SendMessage(p, "/os env maxfog -- Sets the max fog distance in your map");
-                Player.SendMessage(p, "/os env horizon -- Sets what block the \"ocean\" shows outside your map");
-                Player.SendMessage(p, "/os env border -- Sets what block replaces the \"bedrock\" below sea level in your map");
-                Player.SendMessage(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
-                Player.SendMessage(p, "  Warning: Shrub,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock.");
-                Player.SendMessage(p, "  Note: If no hex or block is given, the default will be used.");
+                Player.Message(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
+                Player.Message(p, "/os env level -- Sets the water height of your map");
+                Player.Message(p, "/os env cloudheight -- Sets the cloud height of your map");
+                Player.Message(p, "/os env maxfog -- Sets the max fog distance in your map");
+                Player.Message(p, "/os env horizon -- Sets what block the \"ocean\" shows outside your map");
+                Player.Message(p, "/os env border -- Sets what block replaces the \"bedrock\" below sea level in your map");
+                Player.Message(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
+                Player.Message(p, "  Warning: Shrub,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock.");
+                Player.Message(p, "  Note: If no hex or block is given, the default will be used.");
             }
         }
         
@@ -129,7 +129,7 @@ namespace MCGalaxy.Commands
             bool mapOnly = cmd == "PHYSICS" || cmd == "MOTD" || cmd == "GUNS" || cmd == "CHAT" || cmd == "RESTORE" ||
                 cmd == "PERVISIT" || cmd == "TEXTURE" || cmd == "BUILDABLE" || cmd == "DELETEABLE";
             if (mapOnly && !p.level.name.CaselessStarts(p.name)) {
-                Player.SendMessage(p, "You may only perform that action on your own map.");
+                Player.Message(p, "You may only perform that action on your own map.");
                 return;
             }
             byte mapNum = 0;
@@ -156,7 +156,7 @@ namespace MCGalaxy.Commands
                 string[] args = value.TrimEnd().Split(' ');
                 if (args.Length == 3) value += " flat";
                     
-                Player.SendMessage(p, "Creating a new map for you: " + level);
+                Player.Message(p, "Creating a new map for you: " + level);
                 Command.all.Find("newlvl").Use(p, level + " " + value);
                 
                 // Set default perbuild permissions
@@ -170,7 +170,7 @@ namespace MCGalaxy.Commands
                     Group grp = Group.findPerm(osPerm);
                     if (grp != null) {
                         Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
-                        Player.SendMessage(p, "Use %T/os zone add [name] %Sto allow " +
+                        Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
                                            "players ranked below " + grp.ColoredName + " %Sto build in the map.");
                     }
                 }
@@ -178,29 +178,29 @@ namespace MCGalaxy.Commands
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5")
                     Command.all.Find("physics").Use(p, p.level.name + " " + value);
                 else
-                    Player.SendMessage(p, "You didn't enter a number! " +
+                    Player.Message(p, "You didn't enter a number! " +
                                        "Please enter one of these numbers: 0, 1, 2, 3, 4, 5");
             } else if (cmd == "DELETE") {
                 if (value == "") {
-                    Player.SendMessage(p, "To delete one of your maps type /os map delete <map number>");
+                    Player.Message(p, "To delete one of your maps type /os map delete <map number>");
                 } else if (value == "1") {
                     Command.all.Find("deletelvl").Use(p, FirstMapName(p));
-                    Player.SendMessage(p, "Map 1 has been removed.");
+                    Player.Message(p, "Map 1 has been removed.");
                 } else if (byte.TryParse(value, out mapNum)) {
                     Command.all.Find("deletelvl").Use(p, p.name.ToLower() + value);
-                    Player.SendMessage(p, "Map " + value + " has been removed.");
+                    Player.Message(p, "Map " + value + " has been removed.");
                 } else {
                     Help(p);
                 }
             } else if (cmd == "SAVE") {
                 if (value == "") {
-                    Player.SendMessage(p, "To save one of your maps type /os map save <map number>");
+                    Player.Message(p, "To save one of your maps type /os map save <map number>");
                 } else if (value == "1") {
                     Command.all.Find("save").Use(p, FirstMapName(p));
-                    Player.SendMessage(p, "Map 1 has been saved.");
+                    Player.Message(p, "Map 1 has been saved.");
                 } else if (byte.TryParse(value, out mapNum)) {
                     Command.all.Find("save").Use(p, p.name.ToLower() + value);
-                    Player.SendMessage(p, "Map " + value + " has been saved.");
+                    Player.Message(p, "Map " + value + " has been saved.");
                 } else {
                     Help(p);
                 }
@@ -211,7 +211,7 @@ namespace MCGalaxy.Commands
                 if (motd == "") motd = "ignore";
                 
                 if (motd.Length > 64) {
-                    Player.SendMessage(p, "Your motd can be no longer than %b64 %Scharacters.");
+                    Player.Message(p, "Your motd can be no longer than %b64 %Scharacters.");
                 } else {
                     p.level.motd = motd;
                     p.level.ChatLevel("Map's MOTD was changed to: &b" + p.level.motd);
@@ -244,23 +244,23 @@ namespace MCGalaxy.Commands
             } else if (cmd == "DELETABLE") {
                 Command.all.Find("map").Use(p, "deletable");
             }  else {
-                Player.SendMessage(p, "/os map add [type - default is flat] -- Creates your map (128x64x128)");
-                Player.SendMessage(p, "/os map add [width] [height] [length] [type] -- Creates your map");
-                Player.SendMessage(p, "/os map physics -- Sets the physics on your map.");
-                Player.SendMessage(p, "/os map delete -- Deletes your map");
-                Player.SendMessage(p, "/os map restore [num] -- Restores backup [num] of your map");
-                Player.SendMessage(p, "/os map save -- Saves your map");
-                Player.SendMessage(p, "/os map chat -- Sets whether roleplay (level only) chat is used.");
-                Player.SendMessage(p, "/os map motd -- Changes the motd of your map");
-                Player.SendMessage(p, "/os map guns -- Toggles if guns can be used on your map");
-                Player.SendMessage(p, "/os map pervisit %b[default is " + Server.defaultRank + "]%S -- Changes the pervisit of you map");
-                Player.SendMessage(p, "/os map texture -- Sets terrain.png url for your map");
-                Player.SendMessage(p, "/os map texturezip -- Sets texture pack .zip url for your map");
-                Player.SendMessage(p, "/os map buildable -- Sets whether any blocks can be placed");
-                Player.SendMessage(p, "/os map deletable -- Sets whether any blocks can be deleted");
-                Player.SendMessage(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
-                Player.SendMessage(p, "  Map Types: Desert, flat, forest, island, mountains, ocean, pixel, empty and space");
-                Player.SendMessage(p, "  Motd: If no message is provided, the default message will be used.");
+                Player.Message(p, "/os map add [type - default is flat] -- Creates your map (128x64x128)");
+                Player.Message(p, "/os map add [width] [height] [length] [type] -- Creates your map");
+                Player.Message(p, "/os map physics -- Sets the physics on your map.");
+                Player.Message(p, "/os map delete -- Deletes your map");
+                Player.Message(p, "/os map restore [num] -- Restores backup [num] of your map");
+                Player.Message(p, "/os map save -- Saves your map");
+                Player.Message(p, "/os map chat -- Sets whether roleplay (level only) chat is used.");
+                Player.Message(p, "/os map motd -- Changes the motd of your map");
+                Player.Message(p, "/os map guns -- Toggles if guns can be used on your map");
+                Player.Message(p, "/os map pervisit %b[default is " + Server.defaultRank + "]%S -- Changes the pervisit of you map");
+                Player.Message(p, "/os map texture -- Sets terrain.png url for your map");
+                Player.Message(p, "/os map texturezip -- Sets texture pack .zip url for your map");
+                Player.Message(p, "/os map buildable -- Sets whether any blocks can be placed");
+                Player.Message(p, "/os map deletable -- Sets whether any blocks can be deleted");
+                Player.Message(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
+                Player.Message(p, "  Map Types: Desert, flat, forest, island, mountains, ocean, pixel, empty and space");
+                Player.Message(p, "  Motd: If no message is provided, the default message will be used.");
             }
         }
         
@@ -272,9 +272,9 @@ namespace MCGalaxy.Commands
                 // Add Zone to your personal map(took a while to get it to work(it was a big derp))
                 if (value != "") {
                     Command.all.Find("ozone").Use(p, value);
-                    Player.SendMessage(p, value + " has been allowed building on your map.");
+                    Player.Message(p, value + " has been allowed building on your map.");
                 } else {
-                    Player.SendMessage(p, "You did not specify a name to allow building on your map.");
+                    Player.Message(p, "You did not specify a name to allow building on your map.");
                 }
             } else if (cmd == "DEL") {
                 // I need to add the ability to delete a single zone, I need help!
@@ -286,15 +286,15 @@ namespace MCGalaxy.Commands
                 }
             } else if (cmd == "BLOCK") {
                 if (value == "") {
-                    Player.SendMessage(p, "You did not specify a name to blacklist from your map."); return;
+                    Player.Message(p, "You did not specify a name to blacklist from your map."); return;
                 }
                 Player blocked = PlayerInfo.Find(value);
-                if (blocked == null) { Player.SendMessage(p, "Cannot find player."); return; }
-                if (blocked.name.CaselessEq(p.name)) { Player.SendMessage(p, "You can't blacklist yourself"); return; }                
+                if (blocked == null) { Player.Message(p, "Cannot find player."); return; }
+                if (blocked.name.CaselessEq(p.name)) { Player.Message(p, "You can't blacklist yourself"); return; }                
                 
                 string path = "levels/blacklists/" + p.level.name + ".txt";
                 if (File.Exists(path) && File.ReadAllText(path).Contains(blocked.name)) {
-                    Player.SendMessage(p, blocked.name + " is already blacklisted."); return;
+                    Player.Message(p, blocked.name + " is already blacklisted."); return;
                 }
                 EnsureFileExists(path);
                 try {
@@ -305,20 +305,20 @@ namespace MCGalaxy.Commands
                 } catch {
                     Server.s.Log("Error saving level blacklist");
                 }
-                Player.SendMessage(p, blocked.name + " has been blacklisted from your map.");
+                Player.Message(p, blocked.name + " has been blacklisted from your map.");
                 if (blocked.level.name == p.level.name) { 
                     Command.all.Find("goto").Use(blocked, Server.mainLevel.name); return; 
                 }
             } else if (cmd == "UNBLOCK") {
                 if (value == "") {
-                    Player.SendMessage(p, "You did not specify a name to blacklist from your map."); return;
+                    Player.Message(p, "You did not specify a name to blacklist from your map."); return;
                 }
                 
                 string path = "levels/blacklists/" + p.level.name + ".txt";
                 EnsureFileExists(path);
                 if (!value.EndsWith("+")) value += "+";
                 if (!File.ReadAllText(path).Contains(value)) {
-                    Player.SendMessage(p, value + " is not blacklisted."); return;
+                    Player.Message(p, value + " is not blacklisted."); return;
                 }
                 
                 try {
@@ -328,29 +328,29 @@ namespace MCGalaxy.Commands
                 } catch {
                     Server.s.Log("Error saving level unblock");
                 }
-                Player.SendMessage(p, value + " has been removed from your map's blacklist.");
+                Player.Message(p, value + " has been removed from your map's blacklist.");
             } else if (cmd == "BLACKLIST") {
                 string path = "levels/blacklists/" + p.level.name + ".txt";
                 if (!File.Exists(path)) {
-                    Player.SendMessage(p, "There are no blacklisted players on this map.");
+                    Player.Message(p, "There are no blacklisted players on this map.");
                 } else {
-                    Player.SendMessage(p, "Current blocked players on level &b" + p.level.name + "%S:");
+                    Player.Message(p, "Current blocked players on level &b" + p.level.name + "%S:");
                     string blocked = "";
                     string[] lines = File.ReadAllLines(path);
                     foreach (string line in lines) {
                         string player = line.Split(' ')[1];
                         blocked += player + ", ";
                     }
-                    Player.SendMessage(p, blocked);
+                    Player.Message(p, blocked);
                 }
             } else {
-                Player.SendMessage(p, "/os zone add [playername or rank] -- Add a zone for a player or a rank."); ;
-                Player.SendMessage(p, "/os zone del [all] -- Deletes all zones.");
-                Player.SendMessage(p, "/os zone list -- show active zones on brick.");
-                Player.SendMessage(p, "/os zone block - Blacklist a player from joining your map.");
-                Player.SendMessage(p, "/os zone unblock - Unblocks a player from your map.");
-                Player.SendMessage(p, "/os zone blacklist - Show current blacklisted players.");
-                Player.SendMessage(p, "You can only delete all zones for now.");
+                Player.Message(p, "/os zone add [playername or rank] -- Add a zone for a player or a rank."); ;
+                Player.Message(p, "/os zone del [all] -- Deletes all zones.");
+                Player.Message(p, "/os zone list -- show active zones on brick.");
+                Player.Message(p, "/os zone block - Blacklist a player from joining your map.");
+                Player.Message(p, "/os zone unblock - Unblocks a player from your map.");
+                Player.Message(p, "/os zone blacklist - Show current blacklisted players.");
+                Player.Message(p, "You can only delete all zones for now.");
             }
         }
         
@@ -374,11 +374,11 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/os [command string] - sends command to The Overseer");
-            Player.SendMessage(p, "Accepted commands:");
-            Player.SendMessage(p, "go, map, spawn, zone, kick, kickall, env, " +
+            Player.Message(p, "/os [command string] - sends command to The Overseer");
+            Player.Message(p, "Accepted commands:");
+            Player.Message(p, "go, map, spawn, zone, kick, kickall, env, " +
                                "preset, levelblock/lb");
-            Player.SendMessage(p, "/os zone add [name] - allows [name] to build in the world.");
+            Player.Message(p, "/os zone add [name] - allows [name] to build in the world.");
         }
     }
 }

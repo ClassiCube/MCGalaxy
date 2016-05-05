@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/flipheads - Does as it says on the tin");
+            Player.Message(p, "/flipheads - Does as it says on the tin");
         }
     }
 }

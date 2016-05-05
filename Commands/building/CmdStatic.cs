@@ -34,25 +34,25 @@ namespace MCGalaxy.Commands {
             p.ClearBlockchange();
             p.modeType = 0;
 
-            Player.SendMessage(p, "Static mode: &a" + p.staticCommands);
+            Player.Message(p, "Static mode: &a" + p.staticCommands);
             if (message == "" || !p.staticCommands) return;
 
             string[] parts = message.Split(new char[] { ' ' }, 2);
             Command cmd = Command.all.Find(parts[0]);
             if (cmd == null) {
-                Player.SendMessage(p, "There is no command \"" + parts[0] + "\""); return;
+                Player.Message(p, "There is no command \"" + parts[0] + "\""); return;
             }
             
             if (!p.group.CanExecute(cmd)) {
-                Player.SendMessage(p, "Cannot use the \"" + parts[0] + "\" command."); return;
+                Player.Message(p, "Cannot use the \"" + parts[0] + "\" command."); return;
             }
             string args = parts.Length > 1 ? parts[1] : "";
             cmd.Use(p, args);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/static [command] - Makes every command a toggle.");
-            Player.SendMessage(p, "If [command] is given, then that command is used");
+            Player.Message(p, "/static [command] - Makes every command a toggle.");
+            Player.Message(p, "If [command] is given, then that command is used");
         }
     }
 }

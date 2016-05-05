@@ -49,22 +49,22 @@ namespace MCGalaxy.Commands {
             if (end == 0) {
                 StringBuilder list = ListMaps(p, all, files, 0, files.Length);
                 if (list.Length > 0) {
-                    Player.SendMessage(p, "Unloaded levels [Accessible]: ");
-                    Player.SendMessage(p, list.Remove(0, 2).ToString());
-                    if (files.Length > 50) { Player.SendMessage(p, "For a more structured list, use /unloaded <1/2/3/..>"); }
+                    Player.Message(p, "Unloaded levels [Accessible]: ");
+                    Player.Message(p, list.Remove(0, 2).ToString());
+                    if (files.Length > 50) { Player.Message(p, "For a more structured list, use /unloaded <1/2/3/..>"); }
                 } else {
-                    Player.SendMessage(p, "No maps are unloaded");
+                    Player.Message(p, "No maps are unloaded");
                 }
             } else {
                 if (end > files.Length) end = files.Length;
-                if (start > files.Length) { Player.SendMessage(p, "No maps beyond number " + files.Length); return; }
+                if (start > files.Length) { Player.Message(p, "No maps beyond number " + files.Length); return; }
                 
                 StringBuilder list = ListMaps(p, all, files, start, end);
                 if (list.Length > 0) {
-                    Player.SendMessage(p, "Unloaded levels [Accessible] (" + start + " to " + end + "):");
-                    Player.SendMessage(p, list.Remove(0, 2).ToString());
+                    Player.Message(p, "Unloaded levels [Accessible] (" + start + " to " + end + "):");
+                    Player.Message(p, list.Remove(0, 2).ToString());
                 } else {
-                    Player.SendMessage(p, "No maps are unloaded");
+                    Player.Message(p, "No maps are unloaded");
                 }
             }
         }
@@ -104,10 +104,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%f/unloaded %S- Lists all unloaded levels, and their accessible state.");
-            Player.SendMessage(p, "%f/unloaded all %S- Lists all loaded and unloaded levels, and their accessible state.");
-            Player.SendMessage(p, "%f/unloaded <1/2/3/..> %S- Shows a compact list.");
-            Player.SendMessage(p, "%f/unloaded all <1/2/3/..> %S- Shows a compact list.");
+            Player.Message(p, "%f/unloaded %S- Lists all unloaded levels, and their accessible state.");
+            Player.Message(p, "%f/unloaded all %S- Lists all loaded and unloaded levels, and their accessible state.");
+            Player.Message(p, "%f/unloaded <1/2/3/..> %S- Shows a compact list.");
+            Player.Message(p, "%f/unloaded all <1/2/3/..> %S- Shows a compact list.");
         }
     }
 }

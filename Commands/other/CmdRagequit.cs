@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/ragequit - Makes you ragequit");
+            Player.Message(p, "/ragequit - Makes you ragequit");
         }
     }
 }

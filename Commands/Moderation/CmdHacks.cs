@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
         	string[] words = message.Split(' ');
             if (words.Length >= 1 && message != "")
             {
-	            Player.SendMessage(p, "&cIncorrect syntax. Abuse detected.");
+	            Player.Message(p, "&cIncorrect syntax. Abuse detected.");
 	            Thread.Sleep(3000);
    			}
             const string msg = "Your IP has been backtraced + reported to FBI Cyber Crimes Unit.";
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/hacks - Performs various server hacks. OPERATORS ONLY!!!");
+            Player.Message(p, "/hacks - Performs various server hacks. OPERATORS ONLY!!!");
         }
     }
 }

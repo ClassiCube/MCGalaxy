@@ -31,18 +31,18 @@ namespace MCGalaxy.Commands {
          public override void Use(Player p, string message) {
             Player[] alive = Server.zombie.Alive.Items;
             if (alive.Length == 0) {
-                Player.SendMessage(p, "No one is alive."); return;
+                Player.Message(p, "No one is alive."); return;
             }
             
-            Player.SendMessage(p, "Players who are " + Colors.green + "alive %Sare:");
+            Player.Message(p, "Players who are " + Colors.green + "alive %Sare:");
             string list = "";
             foreach (Player pl in alive)
                 list = list + pl.group.color + pl.DisplayName + "%S, ";
-            Player.SendMessage(p, list);
+            Player.Message(p, list);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/alive - shows who is alive");
+            Player.Message(p, "/alive - shows who is alive");
         }
     }
 }

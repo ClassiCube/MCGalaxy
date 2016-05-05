@@ -35,13 +35,13 @@ namespace MCGalaxy.Commands
         	if (p == null) { MessageInGameOnly(p); return; }
             if (Server.agreetorulesonentry == false)
             {
-                Player.SendMessage(p, "This command can only be used if agree-to-rules-on-entry is enabled!");
+                Player.Message(p, "This command can only be used if agree-to-rules-on-entry is enabled!");
                 return;
             }
             //If someone is ranked before agreeing to the rules they are locked and cannot use any commands unless demoted back to guest
             /*if (p.group.Permission > LevelPermission.Guest)
             {
-                Player.SendMessage(p, "Your rank is higher than guest and you have already agreed to the rules!");
+                Player.Message(p, "Your rank is higher than guest and you have already agreed to the rules!");
                 return;
             }*/
             var agreed = File.ReadAllText("ranks/agreed.txt");
@@ -51,22 +51,22 @@ namespace MCGalaxy.Commands
                 var checklogs = File.ReadAllText("logs/" + DateTime.Now.ToString("yyyy") + "-" + DateTime.Now.ToString("MM") + "-" + DateTime.Now.ToString("dd") + ".txt");
                 if (!checklogs.Contains(p.name.ToLower() + " used /rules"))
                 {
-                    Player.SendMessage(p, "&9You must read /rules before agreeing!");
+                    Player.Message(p, "&9You must read /rules before agreeing!");
                     return;
                 }
             }*/
             if (p.hasreadrules == false)
             {
-                Player.SendMessage(p, "&9You must read /rules before agreeing!");
+                Player.Message(p, "&9You must read /rules before agreeing!");
                 return;
             }
             if ((agreed+" ").Contains(" " + p.name.ToLower() + " ")) //Edited to prevent inner names from working.
             {
-                Player.SendMessage(p, "You have already agreed to the rules!");
+                Player.Message(p, "You have already agreed to the rules!");
                 return;
             }
             p.agreed = true;
-            Player.SendMessage(p, "Thank you for agreeing to follow the rules. You may now build and use commands!");
+            Player.Message(p, "Thank you for agreeing to follow the rules. You may now build and use commands!");
             string playerspath = "ranks/agreed.txt";
             if (File.Exists(playerspath))
             { 
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/agree - Agree to the rules when entering the server");
+            Player.Message(p, "/agree - Agree to the rules when entering the server");
         }
     }
 }

@@ -38,9 +38,9 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, message, out matches);
             if (matches > 1) return;
             if (who == null) {
-                Player.SendMessage(p, "Could not find player. Searching Player DB.");
+                Player.Message(p, "Could not find player. Searching Player DB.");
                 OfflinePlayer target = PlayerInfo.FindOffline(message);
-                if (target == null) { Player.SendMessage(p, "Could not find any player by the name entered."); return; }
+                if (target == null) { Player.Message(p, "Could not find any player by the name entered."); return; }
                 message = target.ip;
             } else {
                 message = who.ip;
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             query.AddParam("@IP", message);
             DataTable Clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
 
-            if (Clones.Rows.Count == 0) { Player.SendMessage(p, "Could not find any record of the player entered."); return; }
+            if (Clones.Rows.Count == 0) { Player.Message(p, "Could not find any record of the player entered."); return; }
 
             List<string> alts = new List<string>();
             for (int i = 0; i < Clones.Rows.Count; ++i) {
@@ -58,10 +58,10 @@ namespace MCGalaxy.Commands {
             }
 
             Clones.Dispose();
-            if (alts.Count <= 1) { Player.SendMessage(p, name + " has no clones."); return; }
+            if (alts.Count <= 1) { Player.Message(p, name + " has no clones."); return; }
 
-            Player.SendMessage(p, "These players have the same IP address:");
-            Player.SendMessage(p, string.Join(", ", alts));
+            Player.Message(p, "These players have the same IP address:");
+            Player.Message(p, string.Join(", ", alts));
         }
         
         void AddAlt(string value, List<string> alts) {
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/clones <name> - Finds everyone with the same IP as <name>");
+            Player.Message(p, "/clones <name> - Finds everyone with the same IP as <name>");
         }
     }
 }

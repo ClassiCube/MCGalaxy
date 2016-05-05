@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
                     if (ip.Rows.Count > 0) {
                         message = ip.Rows[0]["IP"].ToString();
                     } else {
-                        Player.SendMessage(p, "Unable to find an IP address for that user."); return;
+                        Player.Message(p, "Unable to find an IP address for that user."); return;
                     }
                     ip.Dispose();
                 } else {
@@ -51,9 +51,9 @@ namespace MCGalaxy.Commands
                 }
             }
 
-            if (message.IndexOf('.') == -1) { Player.SendMessage(p, "Not a valid ip!"); return; }
-            if (p != null) if (p.ip == message) { Player.SendMessage(p, "You shouldn't be able to use this command..."); return; }
-            if (!Server.bannedIP.Contains(message)) { Player.SendMessage(p, message + " doesn't seem to be banned..."); return; }
+            if (message.IndexOf('.') == -1) { Player.Message(p, "Not a valid ip!"); return; }
+            if (p != null) if (p.ip == message) { Player.Message(p, "You shouldn't be able to use this command..."); return; }
+            if (!Server.bannedIP.Contains(message)) { Player.Message(p, message + " doesn't seem to be banned..."); return; }
             Server.bannedIP.Remove(message); Server.bannedIP.Save("banned-ip.txt", false);
 
             if (p != null)
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/unbanip <ip/player> - Un-bans an ip.  Also accepts a player name when you use @ before the name.");
+            Player.Message(p, "/unbanip <ip/player> - Un-bans an ip.  Also accepts a player name when you use @ before the name.");
         }
     }
 }

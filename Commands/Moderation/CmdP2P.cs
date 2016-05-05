@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
-            if (args.Length == 1) { Player.SendMessage(p, "You did not specify the target player."); return; }
+            if (args.Length == 1) { Player.Message(p, "You did not specify the target player."); return; }
             Player source = PlayerInfo.FindOrShowMatches(p, args[0]);
             Player target = PlayerInfo.FindOrShowMatches(p, args[1]);
             
@@ -39,12 +39,12 @@ namespace MCGalaxy.Commands {
             if (p.group.Permission < source.group.Permission) {
                 MessageTooHighRank(p, "teleport", true); return;            	
             }
-            Player.SendMessage(p, "Attempting to teleport " + source.name + " to " + target.name + ".");
+            Player.Message(p, "Attempting to teleport " + source.name + " to " + target.name + ".");
             Command.all.Find("tp").Use(source, target.name);            
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/p2p [source] [target] - Teleports the source player to the target player.");
+            Player.Message(p, "/p2p [source] [target] - Teleports the source player to the target player.");
         }
     }
 }

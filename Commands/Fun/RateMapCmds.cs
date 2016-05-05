@@ -31,15 +31,15 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            if (p.Game.RatedMap) { Player.SendMessage(p, "You have already liked this map."); return; }
+            if (p.Game.RatedMap) { Player.Message(p, "You have already liked this map."); return; }
             p.level.Likes++;
             p.Game.RatedMap = true;
-            Player.SendMessage(p, "You have liked this map.");
+            Player.Message(p, "You have liked this map.");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/maplike");
-            Player.SendMessage(p, "%HIncrements the number of times this map has been liked.");
+            Player.Message(p, "%T/maplike");
+            Player.Message(p, "%HIncrements the number of times this map has been liked.");
         }
     }
     
@@ -53,15 +53,15 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            if (p.Game.RatedMap) { Player.SendMessage(p, "You have already disliked this map."); return; }
+            if (p.Game.RatedMap) { Player.Message(p, "You have already disliked this map."); return; }
             p.level.Dislikes++;
             p.Game.RatedMap = true;
-            Player.SendMessage(p, "You have disliked this map.");
+            Player.Message(p, "You have disliked this map.");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/mapdislike");
-            Player.SendMessage(p, "%HIncrements the number of times this map has been disliked.");
+            Player.Message(p, "%T/mapdislike");
+            Player.Message(p, "%HIncrements the number of times this map has been disliked.");
         }
     }
 }

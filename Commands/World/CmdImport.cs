@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             if (File.Exists(file + ".dat")) { Import(p, file + ".dat", message, FileType.Dat); return; }
             if (File.Exists(file + ".mcf")) { Import(p, file + ".mcf", message, FileType.Mcf); return; }
             if (File.Exists(file + ".fcm")) { Import(p, file + ".fcm", message, FileType.Fcm); return; }
-            Player.SendMessage(p, "No .dat, .mcf or .fcm file with the given name was found in the imports directory.");
+            Player.Message(p, "No .dat, .mcf or .fcm file with the given name was found in the imports directory.");
         }
         
         void Import(Player p, string fileName, string message, FileType type) {
@@ -49,9 +49,9 @@ namespace MCGalaxy.Commands {
                     else DatFile.Load(fs, message);
                 } catch (Exception ex) {
                     Server.ErrorLog(ex);
-                    Player.SendMessage(p, "The map conversion failed."); return;
+                    Player.Message(p, "The map conversion failed."); return;
                 }
-                Player.SendMessage(p, "Converted map!");
+                Player.Message(p, "Converted map!");
                 Command.all.Find("load").Use(p, message);
             }
         }
@@ -59,9 +59,9 @@ namespace MCGalaxy.Commands {
         enum FileType { Mcf, Fcm, Dat };
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/import [name]");
-            Player.SendMessage(p, "%HImports the .dat, .mcf or .fcm file with the given name.");
-            Player.SendMessage(p, "%HNote this command only loads .dat/.mcf/.fcm files from the /extra/import/ folder");
+            Player.Message(p, "%T/import [name]");
+            Player.Message(p, "%HImports the .dat, .mcf or .fcm file with the given name.");
+            Player.Message(p, "%HNote this command only loads .dat/.mcf/.fcm files from the /extra/import/ folder");
         }
     }
 }

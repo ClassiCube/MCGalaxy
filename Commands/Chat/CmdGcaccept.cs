@@ -29,14 +29,14 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (Server.gcaccepted.Contains(p.name.ToLower())) { Player.SendMessage(p, "You already accepted the global chat rules!"); return; }
+            if (Server.gcaccepted.Contains(p.name.ToLower())) { Player.Message(p, "You already accepted the global chat rules!"); return; }
             Server.gcaccepted.Add(p.name.ToLower());
             File.WriteAllLines("text/gcaccepted.txt", Server.gcaccepted.ToArray());
-            Player.SendMessage(p, "Congratulations! You can now use the Global Chat");
+            Player.Message(p, "Congratulations! You can now use the Global Chat");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/gcaccept - Accept the global chat rules.");
+            Player.Message(p, "/gcaccept - Accept the global chat rules.");
         }
     }
 }

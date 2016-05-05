@@ -33,19 +33,19 @@ namespace MCGalaxy.Commands
             string[] args = message.Split(' ');
             if (args.Length != 2) { Help(p); return; }
             int amount;
-            if (!int.TryParse(args[1], out amount)) { Player.SendMessage(p, "Amount must be an integer."); return; }
-            if (amount < 0) { Player.SendMessage(p, "Cannot pay negative %3" + Server.moneys); return; }
+            if (!int.TryParse(args[1], out amount)) { Player.Message(p, "Amount must be an integer."); return; }
+            if (amount < 0) { Player.Message(p, "Cannot pay negative %3" + Server.moneys); return; }
             
             int matches = 1;
             Player who = PlayerInfo.FindOrShowMatches(p, args[0], out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.SendMessage(p, "You cannot pay yourself %3" + Server.moneys); return; }
+            if (p != null && p == who) { Player.Message(p, "You cannot pay yourself %3" + Server.moneys); return; }
             string target = null;
             Economy.EcoStats payer, receiver;
             
             if (who == null) {
                 OfflinePlayer off = PlayerInfo.FindOffline(args[0]);
-                if (off == null) { Player.SendMessage(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }
+                if (off == null) { Player.Message(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }
                 payer = Economy.RetrieveEcoStats(p.name);
                 receiver = Economy.RetrieveEcoStats(args[0]);
                 if (!IsLegalPayment(p, payer.money, receiver.money, amount)) return;
@@ -75,14 +75,14 @@ namespace MCGalaxy.Commands
         }
 
         bool IsLegalPayment(Player p, int payer, int receiver, int amount) {
-            if (receiver + amount > 16777215) { Player.SendMessage(p, "%cPlayers cannot have over %f16777215 %3" + Server.moneys); return false; }
-            if (payer - amount < 0) { Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys); return false; }
+            if (receiver + amount > 16777215) { Player.Message(p, "%cPlayers cannot have over %f16777215 %3" + Server.moneys); return false; }
+            if (payer - amount < 0) { Player.Message(p, "%cYou don't have enough %3" + Server.moneys); return false; }
             return true;
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/pay [player] [amount] ");
-            Player.SendMessage(p, "%HPays <amount> %3" + Server.moneys + " %Hto [player]");
+            Player.Message(p, "%T/pay [player] [amount] ");
+            Player.Message(p, "%HPays <amount> %3" + Server.moneys + " %Hto [player]");
         }
     }
 }

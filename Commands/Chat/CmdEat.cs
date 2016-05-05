@@ -33,15 +33,15 @@ namespace MCGalaxy.Commands {
             if (p == null) { MessageInGameOnly(p); return; }
             
             if (DateTime.UtcNow < p.NextEat) {
-                Player.SendMessage(p, "You're still full - you need to wait at least " +
+                Player.Message(p, "You're still full - you need to wait at least " +
                                    "10 seconds between snacks."); return;
             }
             if (Economy.Enabled && p.money < 1) {
-                Player.SendMessage(p, "You need to have at least 1 &3" + Server.moneys + 
+                Player.Message(p, "You need to have at least 1 &3" + Server.moneys + 
                                    " %Sto purchase a snack."); return;
             }
             if (p.muted) {
-                Player.SendMessage(p, "You cannot use this command while muted."); return;
+                Player.Message(p, "You cannot use this command while muted."); return;
             }
             
             p.NextEat = DateTime.UtcNow.AddSeconds(10);
@@ -67,8 +67,8 @@ namespace MCGalaxy.Commands {
         static string[] defMessages = { "guzzled a grape", "chewed a cherry", "ate an avocado" };
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/eat %H- Eats a random snack.");
-            Player.SendMessage(p, "%HIf economy is enabled, costs 1 &3" + Server.moneys);
+            Player.Message(p, "%T/eat %H- Eats a random snack.");
+            Player.Message(p, "%HIf economy is enabled, costs 1 &3" + Server.moneys);
         }
     }
 }

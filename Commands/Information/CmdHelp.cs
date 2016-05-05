@@ -36,24 +36,24 @@ namespace MCGalaxy.Commands
             switch (message.ToLower())
             {
                 case "":
-                    Player.SendMessage(p, "Command Categories:");
-                    Player.SendMessage(p, "  %aBuilding Chat Economy Games Info Moderation Other World");
-                    Player.SendMessage(p, "Other Categories:");
-                    Player.SendMessage(p, "  %aRanks Colors Shortcuts Commands");
-                    Player.SendMessage(p, "To view help for a category, type %T/help CategoryName");
-                    Player.SendMessage(p, "To see detailed help for a command, type %T/help CommandName");
-                    Player.SendMessage(p, "To see your stats, type %T/whois");
-                    Player.SendMessage(p, "To see loaded maps, type %T/maps");
-                    Player.SendMessage(p, "To view your personal world options, use %T/OS");
-                    Player.SendMessage(p, "To join a map, type %T/goto WorldName");
-                    Player.SendMessage(p, "To send private messages, type %T@PlayerName Message");
+                    Player.Message(p, "Command Categories:");
+                    Player.Message(p, "  %aBuilding Chat Economy Games Info Moderation Other World");
+                    Player.Message(p, "Other Categories:");
+                    Player.Message(p, "  %aRanks Colors Shortcuts Commands");
+                    Player.Message(p, "To view help for a category, type %T/help CategoryName");
+                    Player.Message(p, "To see detailed help for a command, type %T/help CommandName");
+                    Player.Message(p, "To see your stats, type %T/whois");
+                    Player.Message(p, "To see loaded maps, type %T/maps");
+                    Player.Message(p, "To view your personal world options, use %T/OS");
+                    Player.Message(p, "To join a map, type %T/goto WorldName");
+                    Player.Message(p, "To send private messages, type %T@PlayerName Message");
                     break;
                 case "ranks":
                     message = "";
                     foreach (Group grp in Group.GroupList)
                     {
                         if (grp.Permission < LevelPermission.Nobody) // Note that -1 means max undo.  Undo anything and everything.
-                            Player.SendMessage(p, grp.ColoredName + " - &bCmd: " + grp.maxBlocks + " - &2Undo: " + ((grp.maxUndo != -1) ? grp.maxUndo.ToString() : "max") + " - &cPerm: " + (int)grp.Permission);
+                            Player.Message(p, grp.ColoredName + " - &bCmd: " + grp.maxBlocks + " - &2Undo: " + ((grp.maxUndo != -1) ? grp.maxUndo.ToString() : "max") + " - &cPerm: " + (int)grp.Permission);
                     }
                     break;
                 case "build":
@@ -91,12 +91,12 @@ namespace MCGalaxy.Commands
                     PrintShortcuts(p, message); break;
                 case "colours":
                 case "colors":
-                    Player.SendMessage(p, "&fTo use a color, put a '%' and then put the color code.");
-                    Player.SendMessage(p, "Colors Available:");
-                    Player.SendMessage(p, "0 - &0Black %S| 1 - &1Navy %S| 2 - &2Green %S| 3 - &3Teal");
-                    Player.SendMessage(p, "4 - &4Maroon %S| 5 - &5Purple %S| 6 - &6Gold %S| 7 - &7Silver");
-                    Player.SendMessage(p, "8 - &8Gray %S| 9 - &9Blue %S| a - &aLime %S| b - &bAqua");
-                    Player.SendMessage(p, "c - &cRed %S| d - &dPink %S| e - &eYellow %S| f - &fWhite");
+                    Player.Message(p, "&fTo use a color, put a '%' and then put the color code.");
+                    Player.Message(p, "Colors Available:");
+                    Player.Message(p, "0 - &0Black %S| 1 - &1Navy %S| 2 - &2Green %S| 3 - &3Teal");
+                    Player.Message(p, "4 - &4Maroon %S| 5 - &5Purple %S| 6 - &6Gold %S| 7 - &7Silver");
+                    Player.Message(p, "8 - &8Gray %S| 9 - &9Blue %S| a - &aLime %S| b - &bAqua");
+                    Player.Message(p, "c - &cRed %S| d - &dPink %S| e - &eYellow %S| f - &fWhite");
                     CmdCustomColors.ListHandler(p, null, true);
                     break;
                 case "old":
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
                     PrintAllCommands(p); break;
                 default:
                     if (ParseCommand(p, message) || ParseBlock(p, message) || ParsePlugin(p, message)) return;
-                    Player.SendMessage(p, "Could not find command, plugin or block specified.");
+                    Player.Message(p, "Could not find command, plugin or block specified.");
                     break;
             }
         }
@@ -129,13 +129,13 @@ namespace MCGalaxy.Commands
                 cmds.Append(", &b").Append(shortcuts[i]);
             
             if (list1) {
-                Player.SendMessage(p, "Available shortcuts (1):");
-                Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2));
-                Player.SendMessage(p, "%bType %f/help shortcuts 2%b to view the rest of the list ");
+                Player.Message(p, "Available shortcuts (1):");
+                Player.Message(p, cmds.ToString(2, cmds.Length - 2));
+                Player.Message(p, "%bType %f/help shortcuts 2%b to view the rest of the list ");
             } else {
-                Player.SendMessage(p, "Available shortcuts (2):");
-                Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2));
-                Player.SendMessage(p, "%bType %f/help shortcuts 1%b to view the rest of the list ");
+                Player.Message(p, "Available shortcuts (2):");
+                Player.Message(p, cmds.ToString(2, cmds.Length - 2));
+                Player.Message(p, "%bType %f/help shortcuts 1%b to view the rest of the list ");
             }
         }
         
@@ -150,11 +150,11 @@ namespace MCGalaxy.Commands
                 else cmds.Append(", ").Append(GetColor(c)).Append(c.name);
             }
             
-            Player.SendMessage(p, "Available commands:");
-            Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2));
-            Player.SendMessage(p, "Type \"/help <command>\" for more help.");
-            Player.SendMessage(p, "Type \"/help shortcuts\" for shortcuts.");
-            Player.SendMessage(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
+            Player.Message(p, "Available commands:");
+            Player.Message(p, cmds.ToString(2, cmds.Length - 2));
+            Player.Message(p, "Type \"/help <command>\" for more help.");
+            Player.Message(p, "Type \"/help shortcuts\" for shortcuts.");
+            Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
         }
         
         static void PrintAllCommands(Player p) {
@@ -164,11 +164,11 @@ namespace MCGalaxy.Commands
                 cmds.Append(", ").Append(GetColor(c)).Append(c.name);
             }
 
-            Player.SendMessage(p, "All commands:");
-            Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2));
-            Player.SendMessage(p, "Type \"/help <command>\" for more help.");
-            Player.SendMessage(p, "Type \"/help shortcuts\" for shortcuts.");
-            Player.SendMessage(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
+            Player.Message(p, "All commands:");
+            Player.Message(p, cmds.ToString(2, cmds.Length - 2));
+            Player.Message(p, "Type \"/help <command>\" for more help.");
+            Player.Message(p, "Type \"/help shortcuts\" for shortcuts.");
+            Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
         }
         
         static void PrintHelpForGroup(Player p, string typeName, string typeTitle) {
@@ -182,10 +182,10 @@ namespace MCGalaxy.Commands
             }
             
             if (cmds.Length == 0) {
-                Player.SendMessage(p, "No commands of this type are available to you.");
+                Player.Message(p, "No commands of this type are available to you.");
             } else {
-                Player.SendMessage(p, typeTitle + " commands you may use:");
-                Player.SendMessage(p, cmds.ToString(2, cmds.Length - 2) + ".");
+                Player.Message(p, typeTitle + " commands you may use:");
+                Player.Message(p, cmds.ToString(2, cmds.Length - 2) + ".");
             }
         }
         
@@ -194,17 +194,17 @@ namespace MCGalaxy.Commands
             if (cmd == null) return false;
             cmd.Help(p);
             LevelPermission minPerm = GrpCommands.MinPerm(cmd);
-            Player.SendMessage(p, "Rank needed: " + GetColoredRank(minPerm));
+            Player.Message(p, "Rank needed: " + GetColoredRank(minPerm));
             PrintAliases(p, cmd);
             
             CommandPerm[] perms = cmd.AdditionalPerms;
             if (perms == null) return true;
             
-            Player.SendMessage(p, "%TAdditional permissions:");
+            Player.Message(p, "%TAdditional permissions:");
             for (int i = 0; i < perms.Length; i++) {
                 var addition = CommandOtherPerms.Find(cmd, i + 1);
                 LevelPermission perm = (LevelPermission)addition.Permission;
-                Player.SendMessage(p, GetColoredRank(perm) + " %S- " + addition.Description);
+                Player.Message(p, GetColoredRank(perm) + " %S- " + addition.Description);
             }
             return true;
         }
@@ -218,7 +218,7 @@ namespace MCGalaxy.Commands
             FindAliases(Alias.aliases, cmd, dst);
             
             if (dst.Length == "Shortcuts: ".Length) return;
-            Player.SendMessage(p, dst.ToString(0, dst.Length - 2));
+            Player.Message(p, dst.ToString(0, dst.Length - 2));
         }
         
         void FindAliases(List<Alias> aliases, Command cmd, StringBuilder dst) {
@@ -243,62 +243,62 @@ namespace MCGalaxy.Commands
             switch (message.ToLower())
             {
                 case "door":
-                    Player.SendMessage(p, "Door can be used as an 'openable' block if physics are enabled, will automatically toggle back to closed after a few seconds. door_green toggles to red instead of air - also see, odoor and tdoor."); break;
+                    Player.Message(p, "Door can be used as an 'openable' block if physics are enabled, will automatically toggle back to closed after a few seconds. door_green toggles to red instead of air - also see, odoor and tdoor."); break;
                 case "odoor":
-                    Player.SendMessage(p, "Odoor behaves like a user togglable door, does not auto close.  Needs to be opened with a normal /door of any type and touched by other physics blocks, such as air_door to work."); break;
+                    Player.Message(p, "Odoor behaves like a user togglable door, does not auto close.  Needs to be opened with a normal /door of any type and touched by other physics blocks, such as air_door to work."); break;
                 case "tdoor":
-                    Player.SendMessage(p, "Tdoor behaves like a regular /door, but allows physics blocks, e.g. active_water to flow through when opened."); break;
+                    Player.Message(p, "Tdoor behaves like a regular /door, but allows physics blocks, e.g. active_water to flow through when opened."); break;
                 case "air_switch":
-                    Player.SendMessage(p, "Air_switch can be placed in front of doors to act as an automatic door opener when the player walks into the air_switch block."); break;
+                    Player.Message(p, "Air_switch can be placed in front of doors to act as an automatic door opener when the player walks into the air_switch block."); break;
                 case "fire":
-                    Player.SendMessage(p, "Fire blocks burn through wood and temporarily leaves coal and obsidian behind."); break;
+                    Player.Message(p, "Fire blocks burn through wood and temporarily leaves coal and obsidian behind."); break;
                 case "nerve_gas":
-                    Player.SendMessage(p, "Nerve gas is an invisible, killer, static block."); break;
+                    Player.Message(p, "Nerve gas is an invisible, killer, static block."); break;
                 case "train":
-                    Player.SendMessage(p, "Place a train on red wool and it will move with physics on. Can ride with /ride."); break;
+                    Player.Message(p, "Place a train on red wool and it will move with physics on. Can ride with /ride."); break;
                 case "snake":
-                    Player.SendMessage(p, "Snake crawls along the ground and kills players it touches if physics are on."); break;
+                    Player.Message(p, "Snake crawls along the ground and kills players it touches if physics are on."); break;
                 case "zombie":
-                    Player.SendMessage(p, "Place a zombie on the map. Moves with physics and kills players on touch"); break;
+                    Player.Message(p, "Place a zombie on the map. Moves with physics and kills players on touch"); break;
                 case "creeper":
-                    Player.SendMessage(p, "Place a creeper on the map. Moves with physics and kills players on touch, also explodes like tnt."); break;
+                    Player.Message(p, "Place a creeper on the map. Moves with physics and kills players on touch, also explodes like tnt."); break;
                 case "firework":
-                    Player.SendMessage(p, "Place a firework. Left click to send a firework into the sky, which explodes into different colored wool."); break;
+                    Player.Message(p, "Place a firework. Left click to send a firework into the sky, which explodes into different colored wool."); break;
                 case "rocketstart":
-                    Player.SendMessage(p, "Place a rocket starter. Left click to fire, explodes like tnt."); break;
+                    Player.Message(p, "Place a rocket starter. Left click to fire, explodes like tnt."); break;
                 case "finite_faucet":
-                    Player.SendMessage(p, "Place a faucet block which spews out and places water on the map a few blocks at a time."); break;
+                    Player.Message(p, "Place a faucet block which spews out and places water on the map a few blocks at a time."); break;
                 case "water_faucet":
                 case "lava_faucet":
-                    Player.SendMessage(p, "Place a faucet block, which water, or lava will come out of.  Works like water/lavafall but water/lava disappears and is redropped periodically."); break;
+                    Player.Message(p, "Place a faucet block, which water, or lava will come out of.  Works like water/lavafall but water/lava disappears and is redropped periodically."); break;
                 case "waterfall":
                 case "lavafall":
-                    Player.SendMessage(p, "Waterfall and lavafall flow straight down, catch them at the bottom, or they will flood the map like regular active_water/lava."); break;
+                    Player.Message(p, "Waterfall and lavafall flow straight down, catch them at the bottom, or they will flood the map like regular active_water/lava."); break;
                 case "finite_water":
                 case "finite_lava":
-                    Player.SendMessage(p, "Finite water and lava flow like active_water/lava, but never create more blocks than you place."); break;
+                    Player.Message(p, "Finite water and lava flow like active_water/lava, but never create more blocks than you place."); break;
                 case "hot_lava":
                 case "cold_water":
-                    Player.SendMessage(p, "Hot lava and cold water are nonmoving killer blocks which kill players on touch."); break;
+                    Player.Message(p, "Hot lava and cold water are nonmoving killer blocks which kill players on touch."); break;
                 case "active_water":
                 case "acw":
                 case "geyser":
                 case "active_cold_water":
-                    Player.SendMessage(p, "Active_water flows horizontally through the map, active_cold_water and geyser kill players, geyser flows upwards."); break;
+                    Player.Message(p, "Active_water flows horizontally through the map, active_cold_water and geyser kill players, geyser flows upwards."); break;
                 case "active_lava":
                 case "ahl":
                 case "magma":
                 case "active_hot_lava":
                 case "fast_hot_lava":
                 case "lava_fast":
-                    Player.SendMessage(p, "Active_lava and its fast counterparts flow horizontally through the map, active_hot_lava and magma kill players, magma flows upwards slowly if it is placed in a spot where it cannot flow then broken out."); break;
+                    Player.Message(p, "Active_lava and its fast counterparts flow horizontally through the map, active_hot_lava and magma kill players, magma flows upwards slowly if it is placed in a spot where it cannot flow then broken out."); break;
                 case "shark":
                 case "lava_shark":
                 case "goldfish":
                 case "sea_sponge":
                 case "salmon":
                 case "betta_fish":
-                    Player.SendMessage(p, "The fish blocks are different colored blocks that swim around in active_water (lava_shark in active_lava), sharks and lava sharks players they touch."); break;
+                    Player.Message(p, "The fish blocks are different colored blocks that swim around in active_water (lava_shark in active_lava), sharks and lava sharks players they touch."); break;
                 case "phoenix":
                 case "killer_phoenix":
                 case "dove":
@@ -306,12 +306,12 @@ namespace MCGalaxy.Commands
                 case "red_robin":
                 case "pidgeon":
                 case "duck":
-                    Player.SendMessage(p, "The bird blocks are different colored blocks that fly through the air if physics is on. Killer_phoenix kills players it touches"); break;
+                    Player.Message(p, "The bird blocks are different colored blocks that fly through the air if physics is on. Killer_phoenix kills players it touches"); break;
                 default:
-                    Player.SendMessage(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b))); break;
+                    Player.Message(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b))); break;
             }
             Group foundRank = Group.findPerm(Block.BlockList[b].lowestRank);
-            Player.SendMessage(p, "Rank needed: " + foundRank.ColoredName);
+            Player.Message(p, "Rank needed: " + foundRank.ColoredName);
             return true;
         }
         
@@ -337,7 +337,7 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "...really? Wow. Just...wow.");
+            Player.Message(p, "...really? Wow. Just...wow.");
         }
     }
 }

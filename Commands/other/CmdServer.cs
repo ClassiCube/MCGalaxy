@@ -46,17 +46,17 @@ namespace MCGalaxy.Commands
                     break;
                 case "public":
                     Server.pub = true;
-                    Player.SendMessage(p, "Server is now public!");
+                    Player.Message(p, "Server is now public!");
                     Server.s.Log("Server is now public!");
                     break;
                 case "private":
                     Server.pub = false;
-                    Player.SendMessage(p, "Server is now private!");
+                    Player.Message(p, "Server is now private!");
                     Server.s.Log("Server is now private!");
                     break;
                 case "reset":  //made so ONLY the owner or console can use this command.
                     if (!CheckPerms(p)) {
-                        Player.SendMessage(p, "Only Console or the Server Owner can reset the server."); return;
+                        Player.Message(p, "Only Console or the Server Owner can reset the server."); return;
                     }
                     //restting to default properties is dangerous... but recoverable.
                     //We save the old files to <name>.bkp, then delete them.
@@ -66,23 +66,23 @@ namespace MCGalaxy.Commands
                     //    Server
                     //    Rank
                     //    Command
-                    Player.SendMessage(p, "Backing up and deleting current property files.");
+                    Player.Message(p, "Backing up and deleting current property files.");
                     foreach (string name in Directory.GetFiles("properties"))
                     {
                         File.Copy(name, name + ".bkp"); // create backup first.
                         File.Delete(name);
                     }
-                    Player.SendMessage(p, "Done!  Restoring defaults...");
+                    Player.Message(p, "Done!  Restoring defaults...");
                     //We set he defaults here, then go to reload the settings.
                     SetToDefault();
                     goto case "reload";
                 case "reload":  // For security, only the owner and Console can use this.
                     if (!CheckPerms(p)) {
-                        Player.SendMessage(p, "Only Console or the Server Owner can reload the server settings."); return;
+                        Player.Message(p, "Only Console or the Server Owner can reload the server settings."); return;
                     }
-                    Player.SendMessage(p, "Reloading settings...");
+                    Player.Message(p, "Reloading settings...");
                     Server.LoadAllSettings();
-                    Player.SendMessage(p, "Settings reloaded!  You may need to restart the server, however.");
+                    Player.Message(p, "Settings reloaded!  You may need to restart the server, however.");
                     break;
                 case "backup":
                 case "backup all":
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands
                     // Also important to save everything to a .zip file (Though we can rename the extention.)
                     // When backing up, one option is to save all non-main program files.
                     //    This means all folders, and files in these folders.
-                    Player.SendMessage(p, "Server backup (Everything): Started.\n\tPlease wait while backup finishes.");
+                    Player.Message(p, "Server backup (Everything): Started.\n\tPlease wait while backup finishes.");
                     Save(true, p);
                     break;
                 case "backup db":
@@ -102,19 +102,19 @@ namespace MCGalaxy.Commands
                     // Also important to save everything to a .zip file (Though we can rename the extention.)
                     // When backing up, one option is to save all non-main program files.
                     //    This means all folders, and files in these folders.
-                    Player.SendMessage(p, "Server backup (Database): Started.\n\tPlease wait while backup finishes.");
+                    Player.Message(p, "Server backup (Database): Started.\n\tPlease wait while backup finishes.");
                     Save(false, true, p);
                     break;
                 case "backup allbutdb":
                     // Important to save everything to a .zip file (Though we can rename the extention.)
                     // When backing up, one option is to save all non-main program files.
                     //    This means all folders, and files in these folders.
-                    Player.SendMessage(p, "Server backup (Everything but Database): Started.\n\tPlease wait while backup finishes.");
+                    Player.Message(p, "Server backup (Everything but Database): Started.\n\tPlease wait while backup finishes.");
                     Save(false, p);
                     break;
                 case "restore":
                     if (!CheckPerms(p)) {
-                        Player.SendMessage(p, "Only Console or the Server Owner can restore the server.");
+                        Player.Message(p, "Only Console or the Server Owner can restore the server.");
                         return;
                     }
                     Thread extract = new Thread(new ParameterizedThreadStart(ExtractPackage));
@@ -122,7 +122,7 @@ namespace MCGalaxy.Commands
                     extract.Start(p);
                     break;
                 default:
-                    Player.SendMessage(p, "/server " + message + " is not currently implemented.");
+                    Player.Message(p, "/server " + message + " is not currently implemented.");
                     goto case "";
                 //case "help":
                 //    Help(p);
@@ -181,20 +181,20 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/server <reset|restart|reload|update|shutdown|public|private|backup|restore> - All server commands.");
-            Player.SendMessage(p, "/server <reset>    - Reset everything to defaults. (Owner only)  WARNING: This will erase ALL properties.  Use with caution. (Likely requires restart)");
-            Player.SendMessage(p, "/server <restart>  - Restart the server.");
-            Player.SendMessage(p, "/server <reload>   - Reload the server files. (May require restart) (Owner only)");
-            Player.SendMessage(p, "/server <update>   - Update the server");
-            Player.SendMessage(p, "/server <shutdown> - Shutdown the server");
-            Player.SendMessage(p, "/server <public>   - Make the server public. (Start listening for new connections.)");
-            Player.SendMessage(p, "/server <private>  - Make the server private. (Stop listening for new connections.)");
-            Player.SendMessage(p, "/server <restore>  - Restore the server from a backup.");
-            Player.SendMessage(p, "/server <backup> [all/db/allbutdb] - Make a backup. (Default is all)");
-            Player.SendMessage(p, "Backup options:");
-            Player.SendMessage(p, "all      - Make a backup of the server and all SQL data. (Default)");
-            Player.SendMessage(p, "db       - Just backup the database.");
-            Player.SendMessage(p, "allbutdb - Backup everything BUT the database.");
+            Player.Message(p, "/server <reset|restart|reload|update|shutdown|public|private|backup|restore> - All server commands.");
+            Player.Message(p, "/server <reset>    - Reset everything to defaults. (Owner only)  WARNING: This will erase ALL properties.  Use with caution. (Likely requires restart)");
+            Player.Message(p, "/server <restart>  - Restart the server.");
+            Player.Message(p, "/server <reload>   - Reload the server files. (May require restart) (Owner only)");
+            Player.Message(p, "/server <update>   - Update the server");
+            Player.Message(p, "/server <shutdown> - Shutdown the server");
+            Player.Message(p, "/server <public>   - Make the server public. (Start listening for new connections.)");
+            Player.Message(p, "/server <private>  - Make the server private. (Stop listening for new connections.)");
+            Player.Message(p, "/server <restore>  - Restore the server from a backup.");
+            Player.Message(p, "/server <backup> [all/db/allbutdb] - Make a backup. (Default is all)");
+            Player.Message(p, "Backup options:");
+            Player.Message(p, "all      - Make a backup of the server and all SQL data. (Default)");
+            Player.Message(p, "db       - Just backup the database.");
+            Player.Message(p, "allbutdb - Backup everything BUT the database.");
         }
 
         private static void CreatePackage(object par)
@@ -259,7 +259,7 @@ namespace MCGalaxy.Commands
                 }// end:if(withFiles)
                 Server.s.Log("Data saved!");
             }// end:using (Package package) - Close and dispose package.
-            Player.SendMessage(p, "Server backup (" + (withFiles ? "Everything" + (withDB ? "" : " but Database") : "Database") + "): Complete!");
+            Player.Message(p, "Server backup (" + (withFiles ? "Everything" + (withDB ? "" : " but Database") : "Database") + "): Complete!");
             Server.s.Log("Server backed up!");
         }// end:CreatePackage()
 
@@ -345,7 +345,7 @@ namespace MCGalaxy.Commands
                     }
                 }
             }
-            Player.SendMessage((Player)p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is reccommended, though not required.");
+            Player.Message((Player)p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is reccommended, though not required.");
         }
     }
 }

@@ -29,12 +29,12 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             if (message == "" || args.Length == 1) { Help(p); return; }
             Command cmd = Command.all.Find(args[0]);
-            if (cmd == null) { Player.SendMessage(p, "Could not find command entered"); return; }
-            if (p != null && !p.group.CanExecute(cmd)) { Player.SendMessage(p, "Your rank cannot use this command."); return; }
+            if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }
+            if (p != null && !p.group.CanExecute(cmd)) { Player.Message(p, "Your rank cannot use this command."); return; }
 
             LevelPermission perm = Level.PermissionFromName(args[1]);
-            if (perm == LevelPermission.Null) { Player.SendMessage(p, "Could not find rank specified"); return; }
-            if (p != null && perm > p.group.Permission) { Player.SendMessage(p, "Cannot set permissions to a rank higher than yours."); return; }
+            if (perm == LevelPermission.Null) { Player.Message(p, "Could not find rank specified"); return; }
+            if (p != null && perm > p.group.Permission) { Player.Message(p, "Cannot set permissions to a rank higher than yours."); return; }
 
             int otherPermIndex = 0;
             string permName = "permission";
@@ -43,26 +43,26 @@ namespace MCGalaxy.Commands {
                 GrpCommands.Save(GrpCommands.allowedCommands);
                 GrpCommands.fillRanks();
             } else if (!int.TryParse(args[2], out otherPermIndex)) {
-                Player.SendMessage(p, "\"" + args[2] + "\" is not an integer.");
+                Player.Message(p, "\"" + args[2] + "\" is not an integer.");
             } else {
                 CommandOtherPerms.OtherPerms perms = CommandOtherPerms.Find(cmd, otherPermIndex);
                 if (perms == null) {
-                    Player.SendMessage(p, "This command has no additional permission with that number."); return;
+                    Player.Message(p, "This command has no additional permission with that number."); return;
                 }
                 perms.Permission = (int)perm;
                 CommandOtherPerms.Save();
                 permName = "additional permission " + otherPermIndex;
             }
             Player.GlobalMessage("&d" + cmd.name + "%S's " + permName + " was set to " + Level.PermissionToName(perm));
-            Player.SendMessage(p, cmd.name + "'s " + permName + " was set to " + Level.PermissionToName(perm));
+            Player.Message(p, cmd.name + "'s " + permName + " was set to " + Level.PermissionToName(perm));
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/cmdset [cmd] [rank] <otherperm> - Changes [cmd] rank to [rank]");
-            Player.SendMessage(p, "Only commands you can use can be modified.");
-            Player.SendMessage(p, "<otherperm> is optional and is used to set the additional " +
+            Player.Message(p, "/cmdset [cmd] [rank] <otherperm> - Changes [cmd] rank to [rank]");
+            Player.Message(p, "Only commands you can use can be modified.");
+            Player.Message(p, "<otherperm> is optional and is used to set the additional " +
                                "permissions for several commands. Most commands do not use this.");
-            Player.SendMessage(p, "Available ranks: " + Group.concatList());
+            Player.Message(p, "Available ranks: " + Group.concatList());
         }
     }
 }

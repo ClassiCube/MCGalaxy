@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             if (args[0].CaselessEq("map")) {
                 args[1] = args[1].ToLower();
                 if (!Player.ValidName(args[1])) {
-                    Player.SendMessage(p, "\"" + args[1] + "\" is not a valid level name."); return;
+                    Player.Message(p, "\"" + args[1] + "\" is not a valid level name."); return;
                 }
                 
                 string path = "text/lockdown/map/" + args[1];
@@ -59,10 +59,10 @@ namespace MCGalaxy.Commands {
 
                 if (!who.jailed) {
                     if (p != null && who.group.Permission >= p.group.Permission) {
-                        Player.SendMessage(p, "Cannot lock down someone of equal or greater rank."); return;
+                        Player.Message(p, "Cannot lock down someone of equal or greater rank."); return;
                     }
                     if (p != null && who.level != p.level) {
-                        Player.SendMessage(p, "Moving player to your map...");
+                        Player.Message(p, "Moving player to your map...");
                         Command.all.Find("goto").Use(who, p.level.name);
                         who.BlockUntilLoad(500);
                     }
@@ -77,10 +77,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/lockdown [map/player] [name]");
-            Player.SendMessage(p, "%H'map' - prevents new players from joining that map.");
-            Player.SendMessage(p, "%H'player' - prevents that player from using commands.");
-            Player.SendMessage(p, "%HUsing /lockdown again will unlock that map/player.");
+            Player.Message(p, "%T/lockdown [map/player] [name]");
+            Player.Message(p, "%H'map' - prevents new players from joining that map.");
+            Player.Message(p, "%H'player' - prevents that player from using commands.");
+            Player.Message(p, "%HUsing /lockdown again will unlock that map/player.");
         }
     }
 }

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") {
                 if (p == null) {
-                    Player.SendMessage(p, "Console must provide a player or bot name."); return;
+                    Player.Message(p, "Console must provide a player or bot name."); return;
                 }
                 message = p.name;
             }
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands {
             } else {
                 isBot = false;
                 who = p;
-                if (who == null) { Player.SendMessage(p, "Console must provide a player name."); return; }
+                if (who == null) { Player.Message(p, "Console must provide a player name."); return; }
                 model = message;
             }
             model = model.ToLower();
@@ -78,10 +78,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/model [name] [model] - Sets the model of that player.");
-            Player.SendMessage(p, "/model bot [name] [model] - Sets the model of that bot.");
-            Player.SendMessage(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
-            Player.SendMessage(p, "You can also place a block ID instead of a model name, to change your model into a block!");
+            Player.Message(p, "/model [name] [model] - Sets the model of that player.");
+            Player.Message(p, "/model bot [name] [model] - Sets the model of that bot.");
+            Player.Message(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
+            Player.Message(p, "You can also place a block ID instead of a model name, to change your model into a block!");
         }
     }
     
@@ -100,9 +100,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/xm [model] - Sets your own model.");
-            Player.SendMessage(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
-            Player.SendMessage(p, "You can also place a block ID instead of a model name, to change your model into a block!");
+            Player.Message(p, "/xm [model] - Sets your own model.");
+            Player.Message(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
+            Player.Message(p, "You can also place a block ID instead of a model name, to change your model into a block!");
         }
     }
 }

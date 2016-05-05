@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
 			if (message == "") message = "y";
 			
 			if (p.CopyBuffer == null) {
-				Player.SendMessage(p, "You haven't copied anything yet"); return;
+				Player.Message(p, "You haven't copied anything yet"); return;
 			}
 
 			switch (message)
@@ -61,10 +61,10 @@ namespace MCGalaxy.Commands
 					p.CopyBuffer = RotateX(p.CopyBuffer); break;
 
 				default:
-					Player.SendMessage(p, "Incorrect syntax");
+					Player.Message(p, "Incorrect syntax");
 					Help(p); return;
 			}
-			Player.SendMessage(p, "Spun: &b" + message);
+			Player.Message(p, "Spun: &b" + message);
 		}
 		
 		CopyState RotateX(CopyState state) {
@@ -174,9 +174,9 @@ namespace MCGalaxy.Commands
 		}
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "/spin <x/y/z/180/mirrorx/mirrory/mirrorz> - Spins the copied object.");
-			Player.SendMessage(p, "Shortcuts: u for upside down (mirror on y), m for mirror on z");
-			Player.SendMessage(p, "x for spin 90 on x, y for spin 90 on y, z for spin 90 on z.");
+			Player.Message(p, "/spin <x/y/z/180/mirrorx/mirrory/mirrorz> - Spins the copied object.");
+			Player.Message(p, "Shortcuts: u for upside down (mirror on y), m for mirror on z");
+			Player.Message(p, "x for spin 90 on x, y for spin 90 on y, z for spin 90 on z.");
 		}
 	}
 }

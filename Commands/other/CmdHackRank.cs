@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands {
             if (p == null) { MessageInGameOnly(p); return; }
             
             if (p.hackrank) {
-                Player.SendMessage(p, Colors.red + "You have already hacked a rank!"); return;
+                Player.Message(p, Colors.red + "You have already hacked a rank!"); return;
             }
             Group grp = Group.Find(message);
             if (grp != null) {
                 DoFakeRank(p, grp);
             } else {
-                Player.SendMessage(p, "Invalid Rank!");
+                Player.Message(p, "Invalid Rank!");
             }
         }
 
@@ -70,8 +70,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/hackrank [rank] - Hacks a rank");
-            Player.SendMessage(p, "Available ranks: " + Group.concatList());
+            Player.Message(p, "/hackrank [rank] - Hacks a rank");
+            Player.Message(p, "Available ranks: " + Group.concatList());
         }
     }
 }

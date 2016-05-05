@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/back - Takes you back to the position you were in before teleportation");
+            Player.Message(p, "/back - Takes you back to the position you were in before teleportation");
         }
     }
 }

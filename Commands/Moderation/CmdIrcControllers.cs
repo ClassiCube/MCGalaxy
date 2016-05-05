@@ -36,39 +36,39 @@ namespace MCGalaxy.Commands {
             switch (parts[0].ToLower()) {
                 case "reload":
                     Server.ircControllers = PlayerList.Load("IRC_Controllers.txt", null);
-                    Player.SendMessage(p, "IRC Controllers reloaded!");
+                    Player.Message(p, "IRC Controllers reloaded!");
                     break;
                 case "add":
-                    if (parts.Length < 2) { Player.SendMessage(p, "You need to provide a name to add."); return; }
+                    if (parts.Length < 2) { Player.Message(p, "You need to provide a name to add."); return; }
                     if (Server.ircControllers.Contains(parts[1])) {
-                        Player.SendMessage(p, parts[1] + " is already an IRC controller."); return;
+                        Player.Message(p, parts[1] + " is already an IRC controller."); return;
                     }
                     
                     Server.ircControllers.Add(parts[1]);
                     Server.ircControllers.Save("IRC_Controllers.txt", true);
-                    Player.SendMessage(p, parts[1] + " added to the IRC controller list.");
+                    Player.Message(p, parts[1] + " added to the IRC controller list.");
                     break;
                 case "remove":
-                    if (parts.Length < 2) { Player.SendMessage(p, "You need to provide a name to remove."); return; }
+                    if (parts.Length < 2) { Player.Message(p, "You need to provide a name to remove."); return; }
                     if (!Server.ircControllers.Contains(parts[1])) {
-                        Player.SendMessage(p, parts[1] + " is not an IRC controller."); return;
+                        Player.Message(p, parts[1] + " is not an IRC controller."); return;
                     }
                     
                     Server.ircControllers.Remove(parts[1]);
                     Server.ircControllers.Save("IRC_Controllers.txt", true);
-                    Player.SendMessage(p, parts[1] + " removed from the IRC controller list.");
+                    Player.Message(p, parts[1] + " removed from the IRC controller list.");
                     break;
                 case "list":
                     List<string> players = Server.ircControllers.All();
                     string names = String.Join(", ", players);
-                    Player.SendMessage(p, "IRC controllers list:");
-                    Player.SendMessage(p, names);
+                    Player.Message(p, "IRC controllers list:");
+                    Player.Message(p, names);
                     break;
             }            
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/ircctrl <reload/add/remove/list> [name]");
+            Player.Message(p, "/ircctrl <reload/add/remove/list> [name]");
         }
     }
 }

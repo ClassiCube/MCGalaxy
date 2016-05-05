@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
                     {
                         if (p.level.GetTile(xpos, blockunder, zpos) != Block.air && p.level.GetTile(xpos, blockunder, zpos) != Block.air_switch && p.level.GetTile(xpos, blockunder, zpos) != Block.air_door && p.level.GetTile(xpos, blockunder, zpos) != Block.air_flood && p.level.GetTile(xpos, blockunder, zpos) != Block.air_flood_down && p.level.GetTile(xpos, blockunder, zpos) != Block.air_flood_layer && p.level.GetTile(xpos, blockunder, zpos) != Block.air_flood_up && p.level.GetTile(xpos, blockunder, zpos) != Block.air_portal && p.level.GetTile(xpos, blockunder, zpos) != Block.redflower && p.level.GetTile(xpos, blockunder, zpos) != Block.yellowflower && p.level.GetTile(xpos, blockunder, zpos) != Block.finiteWater && p.level.GetTile(xpos, blockunder, zpos) != Block.finiteLava && p.level.GetTile(xpos, blockunder, zpos) != Block.fire && p.level.GetTile(xpos, blockunder, zpos) != Block.water && p.level.GetTile(xpos, blockunder, zpos) != Block.water_door && p.level.GetTile(xpos, blockunder, zpos) != Block.water_portal && p.level.GetTile(xpos, blockunder, zpos) != Block.WaterDown && p.level.GetTile(xpos, blockunder, zpos) != Block.WaterFaucet && p.level.GetTile(xpos, blockunder, zpos) != Block.lava && p.level.GetTile(xpos, blockunder, zpos) != Block.lava_door && p.level.GetTile(xpos, blockunder, zpos) != Block.lava_fast && p.level.GetTile(xpos, blockunder, zpos) != Block.lava_portal && p.level.GetTile(xpos, blockunder, zpos) != Block.LavaDown && p.level.GetTile(xpos, blockunder, zpos) != Block.lavastill && p.level.GetTile(xpos, blockunder, zpos) != Block.Zero)
                         {
-                            Player.SendMessage(p, "Teleported you down!");
+                            Player.Message(p, "Teleported you down!");
                             p.SendPos(0xFF, p.pos[0], (ushort)((posy + 1) * 32), p.pos[2], p.rot[0], p.rot[1]);
                             found = true;
                         }
@@ -53,12 +53,12 @@ namespace MCGalaxy.Commands
             }
             if (!found)
             {
-                Player.SendMessage(p, "No free spaces found below you");
+                Player.Message(p, "No free spaces found below you");
             }
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/descend - Teleports you to the first free space below you.");
+            Player.Message(p, "/descend - Teleports you to the first free space below you.");
         }
     }
 }

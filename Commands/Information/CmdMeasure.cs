@@ -33,12 +33,12 @@ namespace MCGalaxy.Commands {
             if (message != "") {
                 cpos.toIgnore = Block.Byte(message);
                 if (cpos.toIgnore == Block.Zero) {
-                    Player.SendMessage(p, "Could not find block specified"); return;
+                    Player.Message(p, "Could not find block specified"); return;
                 }
             }
             
             p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -66,21 +66,21 @@ namespace MCGalaxy.Commands {
             }
 
             int width = maxX - minX + 1, height = maxY - minY + 1, length = maxZ - minZ + 1;
-            Player.SendMessage(p, "Measuring between (" + minX + ", " + minY + ", " + minZ +
+            Player.Message(p, "Measuring between (" + minX + ", " + minY + ", " + minZ +
                                ") and (" + maxX + ", " + maxY + ", " + maxZ + ")");
-            Player.SendMessage(p, "Area is " + width + " wide, " + height + " high, " + length + " long." +
+            Player.Message(p, "Area is " + width + " wide, " + height + " high, " + length + " long." +
                                " Volume is " + (width * height * length) + " blocks." );
             string name = " non-" + Block.Name(cpos.toIgnore);
-            Player.SendMessage(p, "There are " + foundBlocks + name + " blocks in the area.");
+            Player.Message(p, "There are " + foundBlocks + name + " blocks in the area.");
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
         struct CatchPos { public ushort x, y, z; public byte toIgnore; }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/measure [ignore]");
-            Player.SendMessage(p, "%HMeasures all the blocks between two points");
-            Player.SendMessage(p, "%H [ignore] is optional, and specifies the block which is not counted.");
+            Player.Message(p, "%T/measure [ignore]");
+            Player.Message(p, "%HMeasures all the blocks between two points");
+            Player.Message(p, "%H [ignore] is optional, and specifies the block which is not counted.");
         }
     }
 }

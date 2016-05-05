@@ -16,7 +16,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/quit <reason> - Leave the server.");
+            Player.Message(p, "/quit <reason> - Leave the server.");
         }
     }
 }

@@ -30,22 +30,22 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string time = DateTime.Now.ToString("HH:mm:ss"); //DateTime.Now.ToString();
-            Player.SendMessage(p, "Server time is " + time);
+            Player.Message(p, "Server time is " + time);
             if (!Server.zombie.Running) return;
             
             int delta = (int)(Server.zombie.RoundEnd - DateTime.UtcNow).TotalSeconds;
             if (delta > 0) {
-                Player.SendMessage(p, "&a" + delta + " %Sseconds until the round ends.");
+                Player.Message(p, "&a" + delta + " %Sseconds until the round ends.");
             } else {
                 delta = (int)(Server.zombie.RoundStart - DateTime.UtcNow).TotalSeconds;
                 if (delta > 0)
-                    Player.SendMessage(p, "&a" + delta + " %Sseconds until the round starts.");
+                    Player.Message(p, "&a" + delta + " %Sseconds until the round starts.");
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/time - Shows the server time.");
-            Player.SendMessage(p, "If zombie survival is running, shows time left until round end or start.");
+            Player.Message(p, "/time - Shows the server time.");
+            Player.Message(p, "If zombie survival is running, shows time left until round end or start.");
         }
     }
 }

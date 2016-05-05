@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (p == null) {
-                Player.SendMessage(p, "This command can only be used in-game. Use /mute [Player] instead."); return;
+                Player.Message(p, "This command can only be used in-game. Use /mute [Player] instead."); return;
             }
 
             string[] args = message.Split(' ');
@@ -42,26 +42,26 @@ namespace MCGalaxy.Commands {
                 MessageTooHighRank(p, "xmute", true); return;
             }
             if (p == muter) {
-                Player.SendMessage(p, "You cannot use xmute on yourself!"); return;
+                Player.Message(p, "You cannot use xmute on yourself!"); return;
             }
             Command.all.Find("mute").Use(p, muter.name);
 
             int time = 120;
             if (args.Length > 1 && !int.TryParse(args[1], out time)) { 
-            	Player.SendMessage(p, "Invalid time given."); Help(p); return; 
+            	Player.Message(p, "Invalid time given."); Help(p); return; 
             }
             if (time <= 0) {
-            	Player.SendMessage(p, "Time must be positive and greater than zero."); return;
+            	Player.Message(p, "Time must be positive and greater than zero."); return;
             }
             
             Player.GlobalMessage(muter.color + muter.DisplayName + " %Shas been muted for " + time + " seconds");
-            Player.SendMessage(muter, "You have been muted for " + time + " seconds");
+            Player.Message(muter, "You have been muted for " + time + " seconds");
             Thread.Sleep(time * 1000);
             Command.all.Find("mute").Use(p, muter.name);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/xmute <player> <seconds> - Mutes <player> for <seconds> seconds");
+            Player.Message(p, "/xmute <player> <seconds> - Mutes <player> for <seconds> seconds");
         }
     }
 }

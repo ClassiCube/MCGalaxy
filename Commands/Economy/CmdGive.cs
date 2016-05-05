@@ -38,19 +38,19 @@ namespace MCGalaxy.Commands
 
             int amount;
             if (!int.TryParse(args[1], out amount)) {
-                Player.SendMessage(p, "Amount must be an integer."); return;
+                Player.Message(p, "Amount must be an integer."); return;
             }
-            if (amount < 0) { Player.SendMessage(p, "Cannot give negative %3" + Server.moneys); return; }
+            if (amount < 0) { Player.Message(p, "Cannot give negative %3" + Server.moneys); return; }
             
             int matches = 1;
             Player who = PlayerInfo.FindOrShowMatches(p, args[0], out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.SendMessage(p, "You cannot give yourself %3" + Server.moneys); return; }
+            if (p != null && p == who) { Player.Message(p, "You cannot give yourself %3" + Server.moneys); return; }
             Economy.EcoStats ecos;
 
             if (who == null) {
                 OfflinePlayer off = PlayerInfo.FindOffline(args[0]);
-                if (off == null) { Player.SendMessage(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }
+                if (off == null) { Player.Message(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }
 
                 ecos = Economy.RetrieveEcoStats(args[0]);
                 if (ReachedMax(p, ecos.money, amount)) return;
@@ -72,14 +72,14 @@ namespace MCGalaxy.Commands
         
         static bool ReachedMax(Player p, int current, int amount) {
             if (current + amount > 16777215) {
-                Player.SendMessage(p, "%cPlayers cannot have over %316,777,215 %3" + Server.moneys); return true;
+                Player.Message(p, "%cPlayers cannot have over %316,777,215 %3" + Server.moneys); return true;
             }
             return false;
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/give [player] <amount>");
-            Player.SendMessage(p, "%HGives [player] <amount> %3" + Server.moneys);
+            Player.Message(p, "%T/give [player] <amount>");
+            Player.Message(p, "%HGives [player] <amount> %3" + Server.moneys);
         }
     }
 }

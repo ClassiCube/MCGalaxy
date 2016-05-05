@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(args[0]);
             
             string target = who == null ? args[0] : who.name;
-            if (!Player.ValidName(target)) { Player.SendMessage(p, "Invalid name \"" + target + "\"."); return; }
+            if (!Player.ValidName(target)) { Player.Message(p, "Invalid name \"" + target + "\"."); return; }
             Group grp = who == null ? PlayerInfo.GetGroup(target) : who.group;
             if (p != null && grp.Permission >= p.group.Permission) {
                 MessageTooHighRank(p, "temp ban", false); return;
@@ -42,10 +42,10 @@ namespace MCGalaxy.Commands {
             
             int minutes = 60;
             if (args.Length > 1 && !int.TryParse(args[1], out minutes)) {
-                Player.SendMessage(p, "Invalid minutes given."); return;
+                Player.Message(p, "Invalid minutes given."); return;
             }
-            if (minutes > 1440) { Player.SendMessage(p, "Cannot temp ban for more than a day"); return; }
-            if (minutes < 1) { Player.SendMessage(p, "Cannot temp ban someone for less than a minute"); return; }
+            if (minutes > 1440) { Player.Message(p, "Cannot temp ban for more than a day"); return; }
+            if (minutes < 1) { Player.Message(p, "Cannot temp ban someone for less than a minute"); return; }
             
             Server.TempBan tBan;
             tBan.name = target;
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands {
                 who.Kick("Banned for " + minutes + " minutes!" + reason);
             }
             
-            Player.SendMessage(p, "Temp banned " + target + " for " + minutes + " minutes.");
+            Player.Message(p, "Temp banned " + target + " for " + minutes + " minutes.");
             if (args.Length <= 2) Player.AddNote(target, p, "T");
             else Player.AddNote(target, p, "T", args[2]);
         }
@@ -74,9 +74,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/tempban <name> <minutes> [reason] - Bans <name> for <minutes>");
-            Player.SendMessage(p, "Max time is 1440 (1 day). Default is 60");
-            Player.SendMessage(p, "Temp bans will reset on server restart");
+            Player.Message(p, "/tempban <name> <minutes> [reason] - Bans <name> for <minutes>");
+            Player.Message(p, "Max time is 1440 (1 day). Default is 60");
+            Player.Message(p, "Temp bans will reset on server restart");
         }
     }
 }

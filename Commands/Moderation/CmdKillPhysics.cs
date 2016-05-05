@@ -41,13 +41,13 @@ namespace MCGalaxy.Commands
                         Thread.Sleep(500);
                     }
                 }
-                Player.SendMessage(p, "All physics killed");
+                Player.Message(p, "All physics killed");
             }
         }
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/killphysics - kills all physics on every level.");
+            Player.Message(p, "/killphysics - kills all physics on every level.");
 
         }
     }

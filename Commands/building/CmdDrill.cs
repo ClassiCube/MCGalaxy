@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
             }
 
             p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Destroy the block you wish to drill.");
+            Player.Message(p, "Destroy the block you wish to drill.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -81,8 +81,8 @@ namespace MCGalaxy.Commands
             }
 
             if (buffer.Count > p.group.maxBlocks) {
-                Player.SendMessage(p, "You tried to drill " + buffer.Count + " blocks.");
-                Player.SendMessage(p, "You cannot drill more than " + p.group.maxBlocks + ".");
+                Player.Message(p, "You tried to drill " + buffer.Count + " blocks.");
+                Player.Message(p, "You cannot drill more than " + p.group.maxBlocks + ".");
                 return;
             }
 
@@ -95,13 +95,13 @@ namespace MCGalaxy.Commands
                 bool sameBlock = type == Block.custom_block ? extType == extTile : type == tile;
                 if (sameBlock) p.level.UpdateBlock(p, x, y, z, Block.air, 0);
             }
-            Player.SendMessage(p, "Drilled " + buffer.Count + " blocks.");
+            Player.Message(p, "Drilled " + buffer.Count + " blocks.");
         }
 
         struct CatchPos { public int dist; }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/drill [distance] - Drills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
+            Player.Message(p, "/drill [distance] - Drills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
         }
     }
 }

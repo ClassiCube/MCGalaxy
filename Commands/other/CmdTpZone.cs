@@ -43,15 +43,15 @@ namespace MCGalaxy.Commands
                     }
                     catch { Help(p); return; }
 
-                    if (currentNum < 0) { Player.SendMessage(p, "Must be greater than 0"); return; }
+                    if (currentNum < 0) { Player.Message(p, "Must be greater than 0"); return; }
                     if (pageNum > p.level.ZoneList.Count) pageNum = p.level.ZoneList.Count;
-                    if (currentNum > p.level.ZoneList.Count) { Player.SendMessage(p, "No Zones beyond number " + (p.level.ZoneList.Count - 1)); return; }
+                    if (currentNum > p.level.ZoneList.Count) { Player.Message(p, "No Zones beyond number " + (p.level.ZoneList.Count - 1)); return; }
 
-                    Player.SendMessage(p, "Zones (" + currentNum + " to " + (pageNum - 1) + "):");
+                    Player.Message(p, "Zones (" + currentNum + " to " + (pageNum - 1) + "):");
                     for (int i = currentNum; i < pageNum; i++)
                     {
                         Level.Zone zone = p.level.ZoneList[i];
-                        Player.SendMessage(p, "&c" + i + " &b(" +
+                        Player.Message(p, "&c" + i + " &b(" +
                             zone.smallX + "-" + zone.bigX + ", " +
                             zone.smallY + "-" + zone.bigY + ", " +
                             zone.smallZ + "-" + zone.bigZ + ") &f" +
@@ -63,13 +63,13 @@ namespace MCGalaxy.Commands
                     for (int i = 0; i < p.level.ZoneList.Count; i++)
                     {
                         Level.Zone zone = p.level.ZoneList[i];
-                        Player.SendMessage(p, "&c" + i + " &b(" +
+                        Player.Message(p, "&c" + i + " &b(" +
                             zone.smallX + "-" + zone.bigX + ", " +
                             zone.smallY + "-" + zone.bigY + ", " +
                             zone.smallZ + "-" + zone.bigZ + ") &f" +
                             zone.Owner);
                     }
-                    Player.SendMessage(p, "For a more structured list, use /tpzone list <1/2/3/..>");
+                    Player.Message(p, "For a more structured list, use /tpzone list <1/2/3/..>");
                 }
             }
             else
@@ -81,22 +81,22 @@ namespace MCGalaxy.Commands
 
                 if (zoneID < 0 || zoneID > p.level.ZoneList.Count)
                 {
-                    Player.SendMessage(p, "This zone doesn't exist");
+                    Player.Message(p, "This zone doesn't exist");
                     return;
                 }
 
                 Level.Zone zone = p.level.ZoneList[zoneID];
                 p.SendPos(0xFF, (ushort)(zone.bigX * 32 + 16), (ushort)(zone.bigY * 32 + 32), (ushort)(zone.bigZ * 32 + 16), p.rot[0], p.rot[1]);
 
-                Player.SendMessage(p, "Teleported to zone &c" + zoneID + " &b(" +
+                Player.Message(p, "Teleported to zone &c" + zoneID + " &b(" +
                     zone.bigX + ", " + zone.bigY + ", " + zone.bigZ + ") &f" +
                     zone.Owner);
             }
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/tpzone <id> - Teleports to the zone with ID equal to <id>");
-            Player.SendMessage(p, "/tpzone list - Lists all zones");
+            Player.Message(p, "/tpzone <id> - Teleports to the zone with ID equal to <id>");
+            Player.Message(p, "/tpzone list - Lists all zones");
         }
     }
 }

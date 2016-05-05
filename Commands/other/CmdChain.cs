@@ -31,14 +31,14 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (p.level.permissionbuild > p.group.Permission) {
-                Player.SendMessage(p, "You cannot build on this map!"); return;
+                Player.Message(p, "You cannot build on this map!"); return;
             }
             
             int yaw = p.rot[0];
             Level lvl = p.level;
             ushort x = (ushort)(p.pos[0] / 32), y = (ushort)(p.pos[1] / 32), z = (ushort)(p.pos[2] / 32);
             if (x >= lvl.Width || z >= lvl.Length) {
-                Player.SendMessage(p, "You must be inside the map to use this command."); return;
+                Player.Message(p, "You must be inside the map to use this command."); return;
             }
             
             int dirX = (yaw > 16 && yaw <= 112) ? 1 : (yaw > 144 && yaw <= 240) ? -1 : 0;
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/chain - Shoots a chain of brown mushrooms and grabs a block and brings it back to the start.");
+            Player.Message(p, "/chain - Shoots a chain of brown mushrooms and grabs a block and brings it back to the start.");
         }
     }
 }

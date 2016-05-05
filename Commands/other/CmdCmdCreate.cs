@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
             if (name.Length == 1)
             {
                 if (File.Exists("extra/commands/source/Cmd" + message + ".cs")) { 
-                    Player.SendMessage(p, "File Cmd" + message + ".cs already exists.  Choose another name."); return; 
+                    Player.Message(p, "File Cmd" + message + ".cs already exists.  Choose another name."); return; 
                 }
                 try
                 {
@@ -51,17 +51,17 @@ namespace MCGalaxy.Commands
                 catch (Exception e)
                 {
                     Server.ErrorLog(e);
-                    Player.SendMessage(p, "An error occurred creating the class file.");
+                    Player.Message(p, "An error occurred creating the class file.");
                     return;
                 }
-                Player.SendMessage(p, "Successfully created a new command class.");
+                Player.Message(p, "Successfully created a new command class.");
                 return;
             }
 
             if (name[1] == "vb")
             {
                 if (File.Exists("extra/commands/source/Cmd" + name[0] + ".vb")) { 
-                    Player.SendMessage(p, "File Cmd" + name[0] + ".vb already exists.  Choose another name."); return; 
+                    Player.Message(p, "File Cmd" + name[0] + ".vb already exists.  Choose another name."); return; 
                 }
                 try
                 {
@@ -70,10 +70,10 @@ namespace MCGalaxy.Commands
                 catch (Exception e)
                 {
                     Server.ErrorLog(e);
-                    Player.SendMessage(p, "An error occurred creating the class file.");
+                    Player.Message(p, "An error occurred creating the class file.");
                     return;
                 }
-                Player.SendMessage(p, "Successfully created a new vb command class.");
+                Player.Message(p, "Successfully created a new vb command class.");
                 return;
             }
             // else if (name.Length > 2) { Help(p); return; }
@@ -82,8 +82,8 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/cmdcreate <message> - Creates a dummy command class named Cmd<Message> from which you can make a new command.");
-            Player.SendMessage(p, "Or use \"/cmdcreate <name of command> vb\" to create a dummy class in visual basic");
+            Player.Message(p, "/cmdcreate <message> - Creates a dummy command class named Cmd<Message> from which you can make a new command.");
+            Player.Message(p, "Or use \"/cmdcreate <name of command> vb\" to create a dummy class in visual basic");
         }
     }
 }

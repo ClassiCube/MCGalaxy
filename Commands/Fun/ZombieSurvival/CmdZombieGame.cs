@@ -49,26 +49,26 @@ namespace MCGalaxy.Commands
         static void HandleStatus(Player p, string message, string[] args) {
             switch (Server.zombie.Status) {
                 case ZombieGameStatus.NotStarted:
-                    Player.SendMessage(p, "Zombie Survival is not ccurrently running."); return;
+                    Player.Message(p, "Zombie Survival is not ccurrently running."); return;
                 case ZombieGameStatus.InfiniteRounds:
-                    Player.SendMessage(p, "Zombie Survival is currently in progress with infinite rounds."); return;
+                    Player.Message(p, "Zombie Survival is currently in progress with infinite rounds."); return;
                 case ZombieGameStatus.SingleRound:
-                    Player.SendMessage(p, "Zombie Survival game currently in progress."); return;
+                    Player.Message(p, "Zombie Survival game currently in progress."); return;
                 case ZombieGameStatus.VariableRounds:
-                    Player.SendMessage(p, "Zombie Survival game currently in progress with " + Server.zombie.MaxRounds + " rounds."); return;
+                    Player.Message(p, "Zombie Survival game currently in progress with " + Server.zombie.MaxRounds + " rounds."); return;
                 case ZombieGameStatus.LastRound:
-                    Player.SendMessage(p, "Zombie Survival game currently in progress, with this round being the final round."); return;
+                    Player.Message(p, "Zombie Survival game currently in progress, with this round being the final round."); return;
             }
         }
         
         static void HandleStart(Player p, string message, string[] args) {
             if (Server.zombie.Running) {
-                Player.SendMessage(p, "There is already a Zombie Survival game currently in progress."); return;
+                Player.Message(p, "There is already a Zombie Survival game currently in progress."); return;
             }
             if (args.Length == 2) {
                 int rounds = 1;
                 if (!int.TryParse(args[1], out rounds)) {
-                    Player.SendMessage(p, "You need to specify a valid option!"); return;
+                    Player.Message(p, "You need to specify a valid option!"); return;
                 }
                 ZombieGameStatus status = rounds == 0 ?
                     ZombieGameStatus.InfiniteRounds : ZombieGameStatus.VariableRounds;
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands
         
         static void HandleStop(Player p, string message, string[] args) {
             if (!Server.zombie.Running) {
-                Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return;
+                Player.Message(p, "There is no Zombie Survival game currently in progress."); return;
             }
             Player.GlobalMessage("The current game of Zombie Survival will end this round!");
             Server.zombie.Status = ZombieGameStatus.LastRound;
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
         
         static void HandleForceStop(Player p, string message, string[] args) {
             if (!Server.zombie.Running) {
-                Player.SendMessage(p, "There is no Zombie Survival game currently in progress."); return;
+                Player.Message(p, "There is no Zombie Survival game currently in progress."); return;
             }
         	
             string src = p == null ? "(console)" : p.name;
@@ -100,12 +100,12 @@ namespace MCGalaxy.Commands
         static void HandleHitbox(Player p, string message, string[] args) {
             byte precision;
             if (args.Length == 1) {
-                Player.SendMessage(p, "Hitbox detection is currently &a" + ZombieGame.HitboxPrecision + " %Sunits apart.");
+                Player.Message(p, "Hitbox detection is currently &a" + ZombieGame.HitboxPrecision + " %Sunits apart.");
             } else if (!byte.TryParse(args[1], out precision)) {
-                Player.SendMessage(p, "Hitbox detection must be an integer between 0 and 256.");
+                Player.Message(p, "Hitbox detection must be an integer between 0 and 256.");
             } else {
                 ZombieGame.HitboxPrecision = precision;
-                Player.SendMessage(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
+                Player.Message(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
                 SrvProperties.Save();
             }
         }
@@ -113,25 +113,25 @@ namespace MCGalaxy.Commands
         static void HandleMaxMove(Player p, string message, string[] args) {
             byte distance;
             if (args.Length == 1) {
-                Player.SendMessage(p, "Maxmium move distance is currently &a" + ZombieGame.MaxMoveDistance + " %Sunits apart.");
+                Player.Message(p, "Maxmium move distance is currently &a" + ZombieGame.MaxMoveDistance + " %Sunits apart.");
             } else if (!byte.TryParse(args[1], out distance)) {
-                Player.SendMessage(p, "Maximum move distance must be an integer between 0 and 256.");
+                Player.Message(p, "Maximum move distance must be an integer between 0 and 256.");
             } else {
                 ZombieGame.MaxMoveDistance = distance;
-                Player.SendMessage(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
+                Player.Message(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
                 SrvProperties.Save();
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/zg status - shows the current status of the Zombie Survival game.");
-            Player.SendMessage(p, "/zg start 0 - Starts a Zombie Survival game for an unlimited amount of rounds.");
-            Player.SendMessage(p, "/zg start [x] - Starts a Zombie Survival game for [x] amount of rounds.");
-            Player.SendMessage(p, "/zg stop - Stops the Zombie Survival game after the round has finished.");
-            Player.SendMessage(p, "/zg force - Force stops the Zombie Survival game immediately.");
-            Player.SendMessage(p, "/zg hitbox [distance] - Sets how far apart players need to be before " +
+            Player.Message(p, "/zg status - shows the current status of the Zombie Survival game.");
+            Player.Message(p, "/zg start 0 - Starts a Zombie Survival game for an unlimited amount of rounds.");
+            Player.Message(p, "/zg start [x] - Starts a Zombie Survival game for [x] amount of rounds.");
+            Player.Message(p, "/zg stop - Stops the Zombie Survival game after the round has finished.");
+            Player.Message(p, "/zg force - Force stops the Zombie Survival game immediately.");
+            Player.Message(p, "/zg hitbox [distance] - Sets how far apart players need to be before " +
                                "they are considered a 'collision'. (32 units = 1 block).");
-            Player.SendMessage(p, "/zg maxmove [distance] - Sets how far apart players are allowed to move in a" +
+            Player.Message(p, "/zg maxmove [distance] - Sets how far apart players are allowed to move in a" +
                                "movement packet before they are considered speedhacking. (32 units = 1 block).");
         }
     }

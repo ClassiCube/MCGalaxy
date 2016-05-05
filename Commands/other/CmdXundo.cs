@@ -41,13 +41,13 @@ namespace MCGalaxy.Commands
                 Command.all.Find("undo").Use(p, ((who == null) ? message : who.name) + " all"); //Who null check
                 return;
             }
-            Player.SendMessage(p, "You are not allowed to undo this player");
+            Player.Message(p, "You are not allowed to undo this player");
         }
 
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/xundo [name]  -  works as 'undo [name] all' but now anyone can use it (up to their undo limit)");
+            Player.Message(p, "/xundo [name]  -  works as 'undo [name] all' but now anyone can use it (up to their undo limit)");
         }
     }
 }

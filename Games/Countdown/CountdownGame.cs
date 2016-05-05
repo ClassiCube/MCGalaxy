@@ -40,13 +40,13 @@ namespace MCGalaxy.Games {
         public void GameStart(Player p) {
             switch (gamestatus) {
                 case CountdownGameStatus.Disabled:
-                    Player.SendMessage(p, "Please enable Countdown first!!"); return;
+                    Player.Message(p, "Please enable Countdown first!!"); return;
                 case CountdownGameStatus.AboutToStart:
-                    Player.SendMessage(p, "Game is about to start"); return;
+                    Player.Message(p, "Game is about to start"); return;
                 case CountdownGameStatus.InProgress:
-                    Player.SendMessage(p, "Game is already in progress"); return;
+                    Player.Message(p, "Game is already in progress"); return;
                 case CountdownGameStatus.Finished:
-                    Player.SendMessage(p, "Game has finished"); return;
+                    Player.Message(p, "Game has finished"); return;
                 case CountdownGameStatus.Enabled:
                     gamestatus = CountdownGameStatus.AboutToStart;
                     Thread.Sleep(2000); break;
@@ -60,10 +60,10 @@ namespace MCGalaxy.Games {
             ushort y1 = (ushort)((mapon.Height - 2) * 32);
             ushort z1 = (ushort)(midZ * 32 + 16);
             
-            foreach (Player player in players) {
-                if (player.level != mapon) {
-                    player.SendMessage("Sending you to the correct map.");
-                    Command.all.Find("goto").Use(player, mapon.name);
+            foreach (Player pl in players) {
+                if (pl.level != mapon) {
+                    pl.SendMessage("Sending you to the correct map.");
+                    Command.all.Find("goto").Use(pl, mapon.name);
                 }
                 p.SpawnEntity(p, 0xFF, x1, y1, z1, 0, 0);
             }
@@ -285,7 +285,7 @@ namespace MCGalaxy.Games {
                 winner.incountdown = false;
             } else {
                 foreach (Player pl in players) {
-                    Player.SendMessage(pl, "The countdown game was canceled!");
+                    Player.Message(pl, "The countdown game was canceled!");
                     Command.all.Find("spawn").Use(pl, "");
                 }
                 Player.GlobalMessage("The countdown game was canceled!!");
@@ -302,9 +302,9 @@ namespace MCGalaxy.Games {
             if (!(gamestatus == CountdownGameStatus.Enabled || gamestatus == CountdownGameStatus.Finished || gamestatus == CountdownGameStatus.Disabled)) {
                 switch (gamestatus) {
                     case CountdownGameStatus.Disabled:
-                        Player.SendMessage(p, "Please enable the game first"); return;
+                        Player.Message(p, "Please enable the game first"); return;
                     default:
-                        Player.SendMessage(p, "Please wait till the end of the game"); return;
+                        Player.Message(p, "Please wait till the end of the game"); return;
                 }
             }
             SetGlassTube(Block.air, Block.air);
@@ -316,9 +316,9 @@ namespace MCGalaxy.Games {
                     Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.green, mapon);
             
             if (!all) {
-                Player.SendMessage(p, "The Countdown map has been reset");
+                Player.Message(p, "The Countdown map has been reset");
                 if (gamestatus == CountdownGameStatus.Finished)
-                    Player.SendMessage(p, "You do not need to re-enable it");
+                    Player.Message(p, "You do not need to re-enable it");
                 gamestatus = CountdownGameStatus.Enabled;
                 
                 Player[] online = PlayerInfo.Online.Items; 
@@ -326,17 +326,17 @@ namespace MCGalaxy.Games {
                     if (!pl.playerofcountdown) continue;
                     if (pl.level == mapon) {
                         Command.all.Find("countdown").Use(pl, "join");
-                        Player.SendMessage(pl, "You've rejoined countdown!!");
+                        Player.Message(pl, "You've rejoined countdown!!");
                     } else {
-                        Player.SendMessage(pl, "You've been removed from countdown because you aren't on the map");
+                        Player.Message(pl, "You've been removed from countdown because you aren't on the map");
                         pl.playerofcountdown = false;
                         players.Remove(pl);
                     }
                 }
             } else {
-                Player.SendMessage(p, "Countdown has been reset");
+                Player.Message(p, "Countdown has been reset");
                 if (gamestatus == CountdownGameStatus.Finished)
-                    Player.SendMessage(p, "You do not need to re-enable it");
+                    Player.Message(p, "You do not need to re-enable it");
                 gamestatus = CountdownGameStatus.Enabled;
                 playersleftlist.Clear();
                 players.Clear();
@@ -364,7 +364,7 @@ namespace MCGalaxy.Games {
         	Player[] online = PlayerInfo.Online.Items; 
             foreach (Player pl in online) {
                 if (pl.playerofcountdown)
-                    Player.SendMessage(pl, message);
+                    Player.Message(pl, message);
             }
         }
         

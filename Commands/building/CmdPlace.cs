@@ -48,23 +48,23 @@ namespace MCGalaxy.Commands {
                         y = (ushort)(Convert.ToUInt16(parts[2]) * 32);
                         z = (ushort)(Convert.ToUInt16(parts[3]) * 32);
                         break;
-                    default: Player.SendMessage(p, "Invalid number of parameters"); return;
+                    default: Player.Message(p, "Invalid number of parameters"); return;
                 }
             } catch { 
-            	Player.SendMessage(p, "Invalid parameters"); return; 
+            	Player.Message(p, "Invalid parameters"); return; 
             }
 
             if (type == Block.Zero) return;
-            if (!Block.canPlace(p, type)) { Player.SendMessage(p, "Cannot place that block type."); return; }
+            if (!Block.canPlace(p, type)) { Player.Message(p, "Cannot place that block type."); return; }
             Vec3U16 P = Vec3U16.ClampPosToBounds(x, y, z, p.level);
             
             P.X /= 32; P.Y /= 32; P.Z /= 32;
             p.level.UpdateBlock(p, P.X, P.Y, P.Z, type, extType);
-            Player.SendMessage(p, "A block was placed at (" + P.X + ", " + P.Y + ", " + P.Z + ").");
+            Player.Message(p, "A block was placed at (" + P.X + ", " + P.Y + ", " + P.Z + ").");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/place [block] <x y z> - Places block at your feet or <x y z>");
+            Player.Message(p, "/place [block] <x y z> - Places block at your feet or <x y z>");
         }
     }
 }

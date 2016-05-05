@@ -395,7 +395,7 @@ namespace MCGalaxy
                 foreach (TntWarsGame.player pl in TntWarsGame.Find(this).Players)
                 {
                     pl.p.CurrentTntGameNumber = -1;
-                    Player.SendMessage(pl.p, "TNT Wars: The TNT Wars game you are currently playing has been deleted!");
+                    Player.Message(pl.p, "TNT Wars: The TNT Wars game you are currently playing has been deleted!");
                     pl.p.PlayingTntWars = false;
                     pl.p.canBuild = true;
                     TntWarsGame.SetTitlesAndColor(pl, true);
@@ -430,7 +430,7 @@ namespace MCGalaxy
         	Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.level.name.ToLower() == name.ToLower()) {
-                    Player.SendMessage(p, "You were moved to the main level as " + name + " was unloaded.");
+                    Player.Message(p, "You were moved to the main level as " + name + " was unloaded.");
                     Command.all.Find("goto").Use(p, Server.mainLevel.name);
                 }
             }

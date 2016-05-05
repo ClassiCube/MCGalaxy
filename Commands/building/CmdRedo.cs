@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
         static void PerformRedo(Player p) {
         	UndoDrawOpEntry[] entries = p.DrawOps.Items;
 			if (entries.Length == 0) {
-				Player.SendMessage(p, "You have no %T/undo%S or %T/undo <seconds>%S to redo."); return;
+				Player.Message(p, "You have no %T/undo%S or %T/undo <seconds>%S to redo."); return;
 			}
 			
 			for (int i = entries.Length - 1; i >= 0; i--) {
@@ -50,15 +50,15 @@ namespace MCGalaxy.Commands {
 				RedoSelfDrawOp op = new RedoSelfDrawOp();
 				op.Start = entry.Start; op.End = entry.End;
 				DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal });
-				Player.SendMessage(p, "Redo performed.");
+				Player.Message(p, "Redo performed.");
 				return;
 			}      	
-        	Player.SendMessage(p, "No %T/undo%S or %T/undo <seconds>%S calls were " +
+        	Player.Message(p, "No %T/undo%S or %T/undo <seconds>%S calls were " +
         	                   "found in the last 200 draw operations.");
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/redo - Redoes the last /undo or /undo <seconds> you performed.");
+            Player.Message(p, "/redo - Redoes the last /undo or /undo <seconds> you performed.");
         }
     }
 }

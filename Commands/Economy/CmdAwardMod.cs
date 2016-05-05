@@ -35,18 +35,18 @@ namespace MCGalaxy.Commands {
             if (args[0].CaselessEq("add")) {
                 args = args[1].Split(awardArgs, 2);
                 if (args.Length == 1) { 
-                    Player.SendMessage(p, "&cUse a : to separate the award name from its description."); 
+                    Player.Message(p, "&cUse a : to separate the award name from its description."); 
                     Help(p); return; 
                 }
 
                 if (!Awards.Add(args[0], args[1])) {
-                    Player.SendMessage(p, "This award already exists."); return;
+                    Player.Message(p, "This award already exists."); return;
                 } else {
                     Player.GlobalMessage("Award added: &6" + args[0] + " : " + args[1]);
                 }
             } else {
                 if (!Awards.Remove(args[1])) {
-                    Player.SendMessage(p, "This award does not exist."); return;
+                    Player.Message(p, "This award does not exist."); return;
                 } else {
                     Player.GlobalMessage("Award removed: &6" + args[1]);
                 }
@@ -55,9 +55,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/awardmod <add/del> [award name] : [description]");
-            Player.SendMessage(p, "%HAdds or deletes a reward with the name [award name]");
-            Player.SendMessage(p, "%T/awardmod add Bomb joy : Bomb lots of people %His an example");
+            Player.Message(p, "%T/awardmod <add/del> [award name] : [description]");
+            Player.Message(p, "%HAdds or deletes a reward with the name [award name]");
+            Player.Message(p, "%T/awardmod add Bomb joy : Bomb lots of people %His an example");
         }
     }
 }

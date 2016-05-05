@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
         	if (p == null) { MessageInGameOnly(p); return; }
         	if (p.Game.PledgeSurvive) {
-        		Player.SendMessage(p, "You cannot un-pledge that you will be infected."); return;
+        		Player.Message(p, "You cannot un-pledge that you will be infected."); return;
         	}
         	
         	p.Game.PledgeSurvive = true;
@@ -40,9 +40,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/human %H- pledges that you will not be infected.");
-            Player.SendMessage(p, "%HIf you survive, you receive an &aextra 5 %3" + Server.moneys);
-            Player.SendMessage(p, "%HHowever, if you are infected, you will &close 2 %3" + Server.moneys);
+            Player.Message(p, "%T/human %H- pledges that you will not be infected.");
+            Player.Message(p, "%HIf you survive, you receive an &aextra 5 %3" + Server.moneys);
+            Player.Message(p, "%HHowever, if you are infected, you will &close 2 %3" + Server.moneys);
         }
     }
 }

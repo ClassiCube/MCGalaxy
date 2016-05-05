@@ -40,13 +40,13 @@ namespace MCGalaxy.Commands {
             if (matches == 1) {
                 info = FromOnline(pl);
             } else {            
-                if (!Player.ValidName(message)) { Player.SendMessage(p, "\"" + message + "\" is not a valid player name."); return; }
+                if (!Player.ValidName(message)) { Player.Message(p, "\"" + message + "\" is not a valid player name."); return; }
                 
-                Player.SendMessage(p, "Searching the database for the player..");
+                Player.Message(p, "Searching the database for the player..");
                 OfflinePlayer target = PlayerInfo.FindOffline(message, true);
                 if (target == null) {
-                    Player.SendMessage(p, "\"" + message + "\" was not found in the database.");
-                    Player.SendMessage(p, "Note you must use a player's full account name."); return;
+                    Player.Message(p, "\"" + message + "\" was not found in the database.");
+                    Player.Message(p, "Note you must use a player's full account name."); return;
                 }
                 info = FromOffline(target, message);
             }
@@ -99,8 +99,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/whois [name] %H- Displays information about that player.");
-            Player.SendMessage(p, "%HNote this works for both online and offline players.");
+            Player.Message(p, "%T/whois [name] %H- Displays information about that player.");
+            Player.Message(p, "%HNote this works for both online and offline players.");
         }
     }
 }

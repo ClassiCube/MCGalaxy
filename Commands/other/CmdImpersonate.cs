@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(trimChars, 2);
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (who == null || message == "") {Help(p); return; }
-            if (who.muted) { Player.SendMessage(p, "Cannot impersonate a muted player"); return; }
+            if (who.muted) { Player.Message(p, "Cannot impersonate a muted player"); return; }
             
             if (p == null || p == who || p.group.Permission > who.group.Permission) {
                 Player.SendChatFrom(who, args[1]);
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/impersonate <player> <message> - Sends a message as if it came from <player>");
+            Player.Message(p, "/impersonate <player> <message> - Sends a message as if it came from <player>");
         }
     }
 }

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/roll [min] [max] - Rolls a random number between [min] and [max].");
+            Player.Message(p, "/roll [min] [max] - Rolls a random number between [min] and [max].");
         }
     }
 }

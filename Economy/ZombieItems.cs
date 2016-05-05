@@ -33,10 +33,10 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             byte count = 1;
             if (args.Length >= 3 && !byte.TryParse(args[2], out count) || count == 0 || count > 10) {
-                Player.SendMessage(p, "Number of groups of 10 blocks to buy must be an integer between 1 and 10."); return;
+                Player.Message(p, "Number of groups of 10 blocks to buy must be an integer between 1 and 10."); return;
             }
             if (p.money < Price * count) {
-                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + 
+                Player.Message(p, "%cYou don't have enough %3" + Server.moneys + 
                                    "%c to buy " +  (count * 10) +  " " + Name + "."); return;
             }
             
@@ -45,9 +45,9 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.SendMessage(p, "Syntax: %T/buy 10blocks [num]");
-            Player.SendMessage(p, "Increases the blocks you are able to place by 10 * [num].");
-            Player.SendMessage(p, "Costs %f" + Price + " * [num] %3" + Server.moneys);
+            Player.Message(p, "Syntax: %T/buy 10blocks [num]");
+            Player.Message(p, "Increases the blocks you are able to place by 10 * [num].");
+            Player.Message(p, "Costs %f" + Price + " * [num] %3" + Server.moneys);
         }        
     }
     
@@ -62,10 +62,10 @@ namespace MCGalaxy.Eco {
         
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (Server.zombie.QueuedLevel != null) {
-                Player.SendMessage(p, "Someone else has already queued a level."); return;
+                Player.Message(p, "Someone else has already queued a level."); return;
             }
             if (!LevelInfo.ExistsOffline(message)) {
-                Player.SendMessage(p, "Given level does not exist."); return;
+                Player.Message(p, "Given level does not exist."); return;
             }
             
             Command.all.Find("queue").Use(p, "level " + message);
@@ -89,18 +89,18 @@ namespace MCGalaxy.Eco {
             bool hasAToken = false;
             for (int i = 0; i < text.Length; i++) {
                 if (!CheckEscape(text, i, ref hasAToken)) { 
-                    Player.SendMessage(p, "You can only use {0} and {1} for tokens in infect messages."); return; 
+                    Player.Message(p, "You can only use {0} and {1} for tokens in infect messages."); return; 
                 }
             }
             if (!hasAToken) {
-                Player.SendMessage(p, "You need to include a \"{0}\" (placeholder for zombie player) " +
+                Player.Message(p, "You need to include a \"{0}\" (placeholder for zombie player) " +
                                    "and/or a \"{1}\" (placeholder for human player) in the infect message."); return;
             }
             
             PlayerDB.AppendInfectMessage(p.name, text);
             if (p.Game.InfectMessages == null) p.Game.InfectMessages = new List<string>();
             p.Game.InfectMessages.Add(text);
-            Player.SendMessage(p, "%aAdded infect message: %f" + text);
+            Player.Message(p, "%aAdded infect message: %f" + text);
             Economy.MakePurchase(p, Price, "%3InfectMessage: " + message);
         }
         
@@ -125,22 +125,22 @@ namespace MCGalaxy.Eco {
         protected internal override void OnBuyCommand(Command cmd, Player p, 
                                              string message, string[] args) {
             if (p.money < Price) {
-                Player.SendMessage(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
+                Player.Message(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
             }
             if (p.Game.Invisible) {
-                Player.SendMessage(p, "You are already invisible."); return;
+                Player.Message(p, "You are already invisible."); return;
             }
         	if (p.Game.InvisibilityPotions >= ZombieGame.InvisibilityPotions) {
-        		Player.SendMessage(p, "You cannot buy any more invisibility potions this round."); return;
+        		Player.Message(p, "You cannot buy any more invisibility potions this round."); return;
         	}
             if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
-                Player.SendMessage(p, "You can only buy an invisiblity potion " +
+                Player.Message(p, "You can only buy an invisiblity potion " +
                                    "when a round of zombie survival is in progress."); return;
             }
             
             DateTime end = Server.zombie.RoundEnd;
             if (DateTime.UtcNow.AddSeconds(60) > end) {
-                Player.SendMessage(p, "You cannot buy an invisibility potion " +
+                Player.Message(p, "You cannot buy an invisibility potion " +
                                    "during the last minute of a round."); return;
             }          
             int duration = ZombieGame.InvisibilityDuration;
@@ -149,7 +149,7 @@ namespace MCGalaxy.Eco {
             p.Game.InvisibilityPotions++;
             int left = ZombieGame.InvisibilityPotions - p.Game.InvisibilityPotions;
             
-            Player.SendMessage(p, "Lasts for &a" + duration + " %Sseconds. You can buy &a" + left + " %Smore this round.");
+            Player.Message(p, "Lasts for &a" + duration + " %Sseconds. You can buy &a" + left + " %Smore this round.");
             Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false);
             Economy.MakePurchase(p, Price, "%3Invisibility: " + duration);
@@ -160,7 +160,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreCommand(Player p) {
             base.OnStoreCommand(p);
             int duration = ZombieGame.InvisibilityDuration;
-            Player.SendMessage(p, "%HLasts for " + duration + " seconds before you reappear.");
+            Player.Message(p, "%HLasts for " + duration + " seconds before you reappear.");
         }
     }
 }

@@ -35,16 +35,16 @@ namespace MCGalaxy.Commands {
             
             int amount = 0;
             if (args.Length == 1 || !int.TryParse(args[1], out amount)) {
-                Player.SendMessage(p, "You must specify an integer amount to fakepay."); return;
+                Player.Message(p, "You must specify an integer amount to fakepay."); return;
             }            
-            if (amount < 0) { Player.SendMessage(p, "You can't fakepay a negative amount."); return; }        
-            if (amount >= 16777215) { Player.SendMessage(p, "You can only fakepay up to 16777215."); return; }
+            if (amount < 0) { Player.Message(p, "You can't fakepay a negative amount."); return; }        
+            if (amount >= 16777215) { Player.Message(p, "You can only fakepay up to 16777215."); return; }
 
             Player.GlobalMessage(who.ColoredName + " %Swas given " + amount + " " + Server.moneys);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/fakepay <name> <amount> - Sends a fake give change message.");
+            Player.Message(p, "/fakepay <name> <amount> - Sends a fake give change message.");
         }
     }
 }

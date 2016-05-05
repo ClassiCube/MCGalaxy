@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
                 p.Blockchange += Blockchange1;
                 p.SendMessage("Select two corners for restore.");
             } else {
-                Player.SendMessage(p, "Backup " + message + " does not exist.");
+                Player.Message(p, "Backup " + message + " does not exist.");
             }
         }
 
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands {
         struct CatchPos { public string backup; public ushort x, y, z; }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/restoreselection <number> - restores a previous backup of the current selection");
+            Player.Message(p, "/restoreselection <number> - restores a previous backup of the current selection");
         }
     }
 }

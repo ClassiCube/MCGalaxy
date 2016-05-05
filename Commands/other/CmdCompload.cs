@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override bool museumUsable { get { return true; } }
-        public override void Help(Player p) { Player.SendMessage(p, "/compload <command> - Compiles AND loads <command> for use (shortcut = /cml)"); }
+        public override void Help(Player p) { Player.Message(p, "/compload <command> - Compiles AND loads <command> for use (shortcut = /cml)"); }
         public override void Use(Player p, string message)
         {
             string[] param = message.Split(' ');

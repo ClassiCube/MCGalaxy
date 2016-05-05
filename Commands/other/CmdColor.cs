@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands {
                 Database.executeQuery(query, "UPDATE Players SET color = '' WHERE name = @Name");
             } else {
             	string color = Colors.Parse(args[1]);
-            	if (color == "") { Player.SendMessage(p, "There is no color \"" + args[1] + "\"."); return; }
-                else if (color == who.color) { Player.SendMessage(p, p.DisplayName + " already has that color."); return; }
+            	if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+                else if (color == who.color) { Player.Message(p, p.DisplayName + " already has that color."); return; }
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
                 
@@ -64,10 +64,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/color <player> [color] - Gives <player> the nick color of [color].");
-            Player.SendMessage(p, "If no [color] is specified, player's nick color reverts to group default.");
-            Player.SendMessage(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
-            Player.SendMessage(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
+            Player.Message(p, "/color <player> [color] - Gives <player> the nick color of [color].");
+            Player.Message(p, "If no [color] is specified, player's nick color reverts to group default.");
+            Player.Message(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
+            Player.Message(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
         }
     }
 	
@@ -86,10 +86,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/xcolor [color] - Gives you the nick color of [color].");
-            Player.SendMessage(p, "If no [color] is specified, your nick color reverts to group default.");
-            Player.SendMessage(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
-            Player.SendMessage(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
+            Player.Message(p, "/xcolor [color] - Gives you the nick color of [color].");
+            Player.Message(p, "If no [color] is specified, your nick color reverts to group default.");
+            Player.Message(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
+            Player.Message(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
         }
     }	
 }

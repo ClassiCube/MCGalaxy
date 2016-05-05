@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands {
             int bancount = Group.findPerm(LevelPermission.Banned).playerList.All().Count;
 
             DataTable table = Database.fillData("SELECT COUNT(id) FROM Players");
-            Player.SendMessage(p, "A total of " + table.Rows[0]["COUNT(id)"] + " unique players have visited this server.");
-            Player.SendMessage(p, "Of these players, " + bancount + " have been banned.");
+            Player.Message(p, "A total of " + table.Rows[0]["COUNT(id)"] + " unique players have visited this server.");
+            Player.Message(p, "Of these players, " + bancount + " have been banned.");
             table.Dispose();
             int count = 0, hiddenCount = 0;
             
@@ -47,13 +47,13 @@ namespace MCGalaxy.Commands {
             string verb = count == 1 ? "is " : "are ";
             string qualifier = count == 1 ? " player" : " players";
             if (hiddenCount == 0)
-                Player.SendMessage(p, "There " + verb + count + qualifier + " online.");
+                Player.Message(p, "There " + verb + count + qualifier + " online.");
             else
-                Player.SendMessage(p, "There " + verb + count + qualifier + " online (" + hiddenCount + " hidden).");
+                Player.Message(p, "There " + verb + count + qualifier + " online (" + hiddenCount + " hidden).");
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/pcount - Displays the number of players online and total.");
+            Player.Message(p, "/pcount - Displays the number of players online and total.");
         }
     }
 }

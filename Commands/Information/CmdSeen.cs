@@ -34,18 +34,18 @@ namespace MCGalaxy.Commands
             Player pl = PlayerInfo.FindOrShowMatches(p, message, out matches);
             if (matches > 1) return;
             if (matches == 1) {
-                Player.SendMessage(p, pl.name + " was first seen: " + pl.firstLogin);
-                Player.SendMessage(p, pl.color + pl.name + " %Sis currently online."); return;
+                Player.Message(p, pl.name + " was first seen: " + pl.firstLogin);
+                Player.Message(p, pl.color + pl.name + " %Sis currently online."); return;
             }
 
             OfflinePlayer target = PlayerInfo.FindOffline(message);
-            if (target == null) { Player.SendMessage(p, "Unable to find player"); return; }
-            Player.SendMessage(p, message + " was first seen: " + target.firstLogin);
-            Player.SendMessage(p, message + " was last seen: " + target.lastLogin);
+            if (target == null) { Player.Message(p, "Unable to find player"); return; }
+            Player.Message(p, message + " was first seen: " + target.firstLogin);
+            Player.Message(p, message + " was last seen: " + target.lastLogin);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/seen [player] - says when a player was first and last seen on the server");
+            Player.Message(p, "/seen [player] - says when a player was first and last seen on the server");
         }
     }
 }

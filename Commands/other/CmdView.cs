@@ -37,10 +37,10 @@ namespace MCGalaxy.Commands {
 					allFiles += ", " + fi.Name;
 
 				if (allFiles == "") {
-					Player.SendMessage(p, "No files are viewable by you");
+					Player.Message(p, "No files are viewable by you");
 				} else {
-					Player.SendMessage(p, "Available files:");
-					Player.SendMessage(p, allFiles.Remove(0, 2));
+					Player.Message(p, "Available files:");
+					Player.Message(p, allFiles.Remove(0, 2));
 				}
 			} else {
 				Player who = p;
@@ -54,17 +54,17 @@ namespace MCGalaxy.Commands {
 				if (File.Exists("extra/text/" + args[0] + ".txt")) {
 					string[] lines = File.ReadAllLines("extra/text/" + args[0] + ".txt");
 					for (int i = 0; i < lines.Length; i++)
-						Player.SendMessage(who, lines[i]);
+						Player.Message(who, lines[i]);
 				} else {
-					Player.SendMessage(p, "File specified doesn't exist");
+					Player.Message(p, "File specified doesn't exist");
 				}
 			}
 		}
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "/view [file] [player] - Views [file]'s contents");
-			Player.SendMessage(p, "/view by itself will list all files you can view");
-			Player.SendMessage(p, "If [player] is given, that player is shown the file");
+			Player.Message(p, "/view [file] [player] - Views [file]'s contents");
+			Player.Message(p, "/view by itself will list all files you can view");
+			Player.Message(p, "If [player] is given, that player is shown the file");
 		}
 	}
 }

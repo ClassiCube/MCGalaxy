@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             Level lvl = null;
             if (message == "") {
                 if (p == null) {
-                    Player.SendMessage(p, "You must provide a level name when using this command from console."); return;
+                    Player.Message(p, "You must provide a level name when using this command from console."); return;
                 }
                 lvl = p.level;
             } else {
@@ -55,8 +55,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/allowguns - Allow/disallow guns and missiles on the specified level. If no message is given, the current level is taken.");
-            Player.SendMessage(p, "Note: If guns are allowed on a map, and /allowguns is used, all guns and missiles will be disabled.");
+            Player.Message(p, "/allowguns - Allow/disallow guns and missiles on the specified level. If no message is given, the current level is taken.");
+            Player.Message(p, "Note: If guns are allowed on a map, and /allowguns is used, all guns and missiles will be disabled.");
         }
     }
 }

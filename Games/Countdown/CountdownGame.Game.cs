@@ -26,13 +26,13 @@ namespace MCGalaxy.Games {
         public override void PlayerJoinedGame(Player p) {
             if (!Server.Countdown.players.Contains(p)) {
                 Server.Countdown.players.Add(p);
-                Player.SendMessage(p, "You've joined the Countdown game!!");
+                Player.Message(p, "You've joined the Countdown game!!");
                 Player.GlobalMessage(p.name + " has joined Countdown!!");
                 if (p.level != Server.Countdown.mapon)
                 	Command.all.Find("goto").Use(p, "countdown");
                 p.playerofcountdown = true;
             } else {
-                Player.SendMessage(p, "Sorry, you have already joined!!, to leave please type /countdown leave");
+                Player.Message(p, "Sorry, you have already joined!!, to leave please type /countdown leave");
             }
         }
         

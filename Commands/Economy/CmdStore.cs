@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                     if (!item.Enabled) continue;
                     item.OnStoreOverview(p); 
                 }
-        		Player.SendMessage(p, "%HUse %T/store [item] %Hto see more information about that item.");
+        		Player.Message(p, "%HUse %T/store [item] %Hto see more information about that item.");
                 return;
             }
             
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             {
                 if (message.CaselessEq(alias)) {
                     if (!item.Enabled) { 
-                        Player.SendMessage(p, "%cThe " + item.Name + " item is not currently buyable."); return; 
+                        Player.Message(p, "%cThe " + item.Name + " item is not currently buyable."); return; 
                     }
                     item.OnStoreCommand(p); 
                     return;
@@ -59,11 +59,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/store [item]");
-            Player.SendMessage(p, "%HViews information about the specific item, such as its cost.");
-            Player.SendMessage(p, "%T/store");
-            Player.SendMessage(p, "%HViews information about all enabled items.");
-            Player.SendMessage(p, "%H   Available items: %f" + Economy.GetItemNames(", "));
+            Player.Message(p, "%T/store [item]");
+            Player.Message(p, "%HViews information about the specific item, such as its cost.");
+            Player.Message(p, "%T/store");
+            Player.Message(p, "%HViews information about all enabled items.");
+            Player.Message(p, "%H   Available items: %f" + Economy.GetItemNames(", "));
         }
     }
 }

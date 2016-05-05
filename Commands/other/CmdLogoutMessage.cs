@@ -40,18 +40,18 @@ namespace MCGalaxy.Commands {
             string name = target != null ? target.name : args[0];
 
             if (target == null && PlayerInfo.FindOfflineName(name) == null) {
-                Player.SendMessage(p, "There is no player with the given name."); return;
+                Player.Message(p, "There is no player with the given name."); return;
             }
             PlayerDB.SetLogoutMessage(name, args[1]);
             
             string fullName = target != null ? target.ColoredName : name;
-            Player.SendMessage(p, "The logout message of " + fullName + " %Shas been changed to: " + args[1]);
+            Player.Message(p, "The logout message of " + fullName + " %Shas been changed to: " + args[1]);
             string changer = p == null ? "(console)" : p.name;
             Server.s.Log(changer + " changed " + name + "'s logout message to:");
         }
         
          public override void Help(Player p) {
-            Player.SendMessage(p, "/logoutmessage [Player] [Message] - Customize your logout message.");
+            Player.Message(p, "/logoutmessage [Player] [Message] - Customize your logout message.");
         }
     }
 }

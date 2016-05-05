@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/referee - Turns referee mode on/off.");
+            Player.Message(p, "/referee - Turns referee mode on/off.");
         }
     }
 }

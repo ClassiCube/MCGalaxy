@@ -123,7 +123,7 @@ namespace MCGalaxy.Gui
                     }
                     else
                     {
-                        Player.SendMessage(p, "No update found!");
+                        Player.Message(p, "No update found!");
                     }
                 }
                 catch(Exception e) { /*try { Server.s.Log("No web server found to update on.");*/Logger.WriteError(e); } /*catch { }*/ //}

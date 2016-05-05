@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level l in loaded) {
                     if (l.physics > 0)
-                        Player.SendMessage(p, "&5" + l.name + " %Shas physics at &b" + l.physics +
+                        Player.Message(p, "&5" + l.name + " %Shas physics at &b" + l.physics +
                                            "%S. &cChecks: " + l.lastCheck + "; Updates: " + l.lastUpdate);
                 }
                 return;
@@ -41,10 +41,10 @@ namespace MCGalaxy.Commands
             Level level = p != null ? p.level : Server.mainLevel;
             int state = 0, stateIndex = args.Length == 1 ? 0 : 1;
             if (!int.TryParse(args[stateIndex], out state)) {
-                Player.SendMessage(p, "Given physics state was not a proper number."); return;
+                Player.Message(p, "Given physics state was not a proper number."); return;
             }
             if (state < 0 || state > 5 ) {
-                Player.SendMessage(p, "Given physics state was less than 0, or greater than 5."); return;
+                Player.Message(p, "Given physics state was less than 0, or greater than 5."); return;
             }
             
             if (args.Length == 2) {
@@ -69,10 +69,10 @@ namespace MCGalaxy.Commands
         internal static string[] states = { "&cOFF", "&aNormal", "&aAdvanced", "&aHardcore", "&aInstant", "&4Doors-only" };
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/physics [map] [0/1/2/3/4/5]");
-            Player.SendMessage(p, "%HSets the physics state for the given map.");
-            Player.SendMessage(p, "%H  If no map name is given, uses the current map.");
-            Player.SendMessage(p, "%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only"); 
+            Player.Message(p, "%T/physics [map] [0/1/2/3/4/5]");
+            Player.Message(p, "%HSets the physics state for the given map.");
+            Player.Message(p, "%H  If no map name is given, uses the current map.");
+            Player.Message(p, "%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only"); 
         }
     }
 }

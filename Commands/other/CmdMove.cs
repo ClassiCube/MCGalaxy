@@ -56,9 +56,9 @@ namespace MCGalaxy.Commands
 
                 Command.all.Find("goto").Use(who, where.name);
                 if (who.level == where)
-                    Player.SendMessage(p, "Sent " + who.ColoredName + " %Sto " + where.name);
+                    Player.Message(p, "Sent " + who.ColoredName + " %Sto " + where.name);
                 else
-                    Player.SendMessage(p, where.name + " is not loaded");
+                    Player.Message(p, where.name + " is not loaded");
             }
             else
             {
@@ -90,16 +90,16 @@ namespace MCGalaxy.Commands
                     y *= 32; y += 32;
                     z *= 32; z += 16;
                     who.SendPos(0xFF, x, y, z, p.rot[0], p.rot[1]);
-                    if (p != who) Player.SendMessage(p, "Moved " + who.color + who.name);
+                    if (p != who) Player.Message(p, "Moved " + who.color + who.name);
                 }
-                catch { Player.SendMessage(p, "Invalid co-ordinates"); }
+                catch { Player.Message(p, "Invalid co-ordinates"); }
             }
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/move <player> <map> <x> <y> <z> - Move <player> to <map> or given coordinates");
-            Player.SendMessage(p, "<map> must be blank if x, y or z is used and vice versa");
-            Player.SendMessage(p, "If <map> is empty, the main level be assumed");
+            Player.Message(p, "/move <player> <map> <x> <y> <z> - Move <player> to <map> or given coordinates");
+            Player.Message(p, "<map> must be blank if x, y or z is used and vice versa");
+            Player.Message(p, "If <map> is empty, the main level be assumed");
         }
     }
 }

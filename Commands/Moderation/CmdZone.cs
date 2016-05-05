@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
             if (message == "")
             {
                 p.ZoneCheck = true;
-                Player.SendMessage(p, "Place a block where you would like to check for zones.");
+                Player.Message(p, "Place a block where you would like to check for zones.");
                 return;
             }
             else if (!CheckAdditionalPerm(p, 1))
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands
                     {
                         case "del":
                             p.zoneDel = true;
-                            Player.SendMessage(p, "Place a block where you would like to delete a zone.");
+                            Player.Message(p, "Place a block where you would like to delete a zone.");
                             return;
                         default:
                             Help(p);
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
                 }
                 else //if they cant, it warns them, the ops and logs it on the server!
                 {
-                    Player.SendMessage(p, "You can't delete a zone which is above your rank!");
+                    Player.Message(p, "You can't delete a zone which is above your rank!");
                     Chat.GlobalMessageOps(p.name + " tried to delete a zone that is above their rank!");
                     Server.s.Log(p.name + " tried to delete a zone that is above their rank!");
                     return;
@@ -91,9 +91,9 @@ namespace MCGalaxy.Commands
                         Database.executeQuery(query, "DELETE FROM `Zone" + p.level.name + "` WHERE Owner=@Owner AND SmallX='" + Zn.smallX + "' AND SMALLY='" + Zn.smallY + 
                                               "' AND SMALLZ='" + Zn.smallZ + "' AND BIGX='" + Zn.bigX + "' AND BIGY='" + Zn.bigY + "' AND BIGZ='" + Zn.bigZ + "'");
 
-                        Player.SendMessage(p, "Zone deleted for &b" + Zn.Owner);
+                        Player.Message(p, "Zone deleted for &b" + Zn.Owner);
                         p.level.ZoneList.Remove(p.level.ZoneList[i]);
-                        if (i == p.level.ZoneList.Count) { Player.SendMessage(p, "Finished removing all zones"); return; }
+                        if (i == p.level.ZoneList.Count) { Player.Message(p, "Finished removing all zones"); return; }
                         i--;
                     }
                 }
@@ -120,20 +120,20 @@ namespace MCGalaxy.Commands
             }
             else { Help(p); return; }
 
-            if (!Player.ValidName(cpos.Owner)) { Player.SendMessage(p, "INVALID NAME."); return; }
+            if (!Player.ValidName(cpos.Owner)) { Player.Message(p, "INVALID NAME."); return; }
 
             cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
 
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
-            Player.SendMessage(p, "Zone for: &b" + cpos.Owner + ".");
+            Player.Message(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Zone for: &b" + cpos.Owner + ".");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/zone [add] [name] - Creates a zone only [name] can build in");
-            Player.SendMessage(p, "/zone [add] [rank] - Creates a zone only [rank]+ can build in");
-            Player.SendMessage(p, "/zone del - Deletes the zone clicked");
+            Player.Message(p, "/zone [add] [name] - Creates a zone only [name] can build in");
+            Player.Message(p, "/zone [add] [rank] - Creates a zone only [rank]+ can build in");
+            Player.Message(p, "/zone del - Deletes the zone clicked");
         }
 
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -162,7 +162,7 @@ namespace MCGalaxy.Commands
             query.AddParam("@Owner", Zn.Owner);
             Database.executeQuery(query, "INSERT INTO `Zone" + p.level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES ("
                                   + Zn.smallX + ", " + Zn.smallY + ", " + Zn.smallZ + ", " + Zn.bigX + ", " + Zn.bigY + ", " + Zn.bigZ + ", @Owner)");
-            Player.SendMessage(p, "Added zone for &b" + cpos.Owner);
+            Player.Message(p, "Added zone for &b" + cpos.Owner);
         }
 
         struct CatchPos { public ushort x, y, z; public string Owner; }

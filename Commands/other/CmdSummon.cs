@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands
             
             if (p.level != who.level)
             {
-                Player.SendMessage(p, who.ColoredName + " %Sis in a different Level. Forcefetching has started!");
+                Player.Message(p, who.ColoredName + " %Sis in a different Level. Forcefetching has started!");
                 Command.all.Find("goto").Use(who, p.level.name);
                 Thread.Sleep(1000);
                 // Sleep for a bit while they load
@@ -67,8 +67,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/summon <player> - Summons a player to your position.");
-            Player.SendMessage(p, "/summon all - Summons all players in the map");
+            Player.Message(p, "/summon <player> - Summons a player to your position.");
+            Player.Message(p, "/summon all - Summons all players in the map");
         }
     }
 }

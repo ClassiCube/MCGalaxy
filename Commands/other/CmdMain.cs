@@ -28,12 +28,12 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (p.level.name == Server.mainLevel.name) { Player.SendMessage(p, "You are already on the servers main level!"); return; }
+            if (p.level.name == Server.mainLevel.name) { Player.Message(p, "You are already on the servers main level!"); return; }
             Command.all.Find("goto").Use(p, Server.mainLevel.name);
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/main - Sends you to the main level.");
+            Player.Message(p, "/main - Sends you to the main level.");
         }
     }
 }

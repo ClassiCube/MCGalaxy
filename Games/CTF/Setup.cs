@@ -84,8 +84,8 @@ namespace MCGalaxy.CTF
                         cache[p].by = y;
                         cache[p].bz = z;
                         cache[p].blue = p.level.GetTile(x, y, z);
-                        Player.SendMessage(p, "Ok! I got the blue flag, now can you show me the red flag?");
-                        Player.SendMessage(p, "Just hit it");
+                        Player.Message(p, "Ok! I got the blue flag, now can you show me the red flag?");
+                        Player.Message(p, "Just hit it");
                         cache[p].s = Step.GetRedFlag;
                         break;
                     case Step.GetRedFlag:
@@ -93,9 +93,9 @@ namespace MCGalaxy.CTF
                         cache[p].ry = y;
                         cache[p].rz = z;
                         cache[p].red = p.level.GetTile(x, y, z);
-                        Player.SendMessage(p, "Got it!");
-                        Player.SendMessage(p, "Now I can do random spawns, or do you have a spawn in mind?");
-                        Player.SendMessage(p, "Say - (Random/Set)");
+                        Player.Message(p, "Got it!");
+                        Player.Message(p, "Now I can do random spawns, or do you have a spawn in mind?");
+                        Player.Message(p, "Say - (Random/Set)");
                         cache[p].s = Step.RandomorSet;
                         break;
                 }
@@ -103,8 +103,8 @@ namespace MCGalaxy.CTF
         }
         void Finish(Player p, int bx, int by, int bz, int rx, int ry, int rz)
         {
-            Player.SendMessage(p, "I'll set the tag points and capture points to there default");
-            Player.SendMessage(p, "You can change them by going into CTF/<mapname>.config :)");
+            Player.Message(p, "I'll set the tag points and capture points to there default");
+            Player.Message(p, "You can change them by going into CTF/<mapname>.config :)");
             List<string> config = new List<string>();
             config.Add("base.red.x=" + cache[p].rx);
             config.Add("base.red.y=" + cache[p].ry);
@@ -153,10 +153,10 @@ namespace MCGalaxy.CTF
                 {
                     if (cache[p].s == Step.RandomorSet)
                     {
-                        Player.SendMessage(p, "Ok random spawns it is!");
+                        Player.Message(p, "Ok random spawns it is!");
                         Finish(p, 0, 0, 0, 0, 0, 0);
                         cache.Remove(p);
-                        Player.SendMessage(p, "Setup Complete!");
+                        Player.Message(p, "Setup Complete!");
                     }
                 }
             }
@@ -166,7 +166,7 @@ namespace MCGalaxy.CTF
                 {
                     if (cache[p].s == Step.RandomorSet)
                     {
-                        Player.SendMessage(p, "Ok, can you stand in the blue spawn and say \"continue\" (without the \" \")");
+                        Player.Message(p, "Ok, can you stand in the blue spawn and say \"continue\" (without the \" \")");
 
                     }
                 }
@@ -179,23 +179,23 @@ namespace MCGalaxy.CTF
                     {
                         case Step.GetCenter:
                             cache[p].middle = p.pos[2] / 32;
-                            Player.SendMessage(p, "I got " + cache[p].middle);
-                            Player.SendMessage(p, "Ok, now I need to know where the blue flag is. Can you point me to it?");
-                            Player.SendMessage(p, "Simply hit the block..");
+                            Player.Message(p, "I got " + cache[p].middle);
+                            Player.Message(p, "Ok, now I need to know where the blue flag is. Can you point me to it?");
+                            Player.Message(p, "Simply hit the block..");
                             cache[p].s = Step.GetBlueFlag;
                             break;
                         case Step.BlueSetSpawn:
                             cache[p].bluex = p.pos[0];
                             cache[p].bluey = p.pos[1];
                             cache[p].bluez = p.pos[2];
-                            Player.SendMessage(p, "Ok, now can you stand in the red spawn and say \"conintue\"");
+                            Player.Message(p, "Ok, now can you stand in the red spawn and say \"conintue\"");
                             cache[p].s = Step.RedSetaSPawn;
                             break;
                         case Step.RedSetaSPawn:
-                            Player.SendMessage(p, "ALMOST DONE!");
+                            Player.Message(p, "ALMOST DONE!");
                             Finish(p, cache[p].bluex, cache[p].bluey, cache[p].bluez, p.pos[0], p.pos[1], p.pos[2]);
                             cache.Remove(p);
-                            Player.SendMessage(p, "Setup Complete!");
+                            Player.Message(p, "Setup Complete!");
                             break;
                     }
                 }
@@ -207,10 +207,10 @@ namespace MCGalaxy.CTF
             {
                 Level current = p.level;
                 int middle = p.level.Length / 2;
-                Player.SendMessage(p, "%2Hello and welcome to the noob friendly CTF setup :D");
+                Player.Message(p, "%2Hello and welcome to the noob friendly CTF setup :D");
                 if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
-                Player.SendMessage(p, "I'll setup this map, but first can you stand in the middle of the map?");
-                Player.SendMessage(p, "Once you get to the middle type \"continue\" in chat (without \" \")");
+                Player.Message(p, "I'll setup this map, but first can you stand in the middle of the map?");
+                Player.Message(p, "Once you get to the middle type \"continue\" in chat (without \" \")");
                 Data d = new Data();
                 d.s = Step.GetCenter;
                 d.current = current;

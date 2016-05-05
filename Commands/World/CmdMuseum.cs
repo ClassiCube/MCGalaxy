@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             Server.s.Log(path);
             
             if (!File.Exists(path)) {
-                Player.SendMessage(p, "Level or backup could not be found."); return;
+                Player.Message(p, "Level or backup could not be found."); return;
             }
             
             Level lvl = LvlFile.Load(name, path);
@@ -79,8 +79,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/museum <map> <restore> - Allows you to access a restore of the map entered.");
-            Player.SendMessage(p, "Works on offline maps");
+            Player.Message(p, "/museum <map> <restore> - Allows you to access a restore of the map entered.");
+            Player.Message(p, "Works on offline maps");
         }
     }
 }

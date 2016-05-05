@@ -33,10 +33,10 @@ namespace MCGalaxy.Commands {
             }
             
             if (who.voice) {
-                Player.SendMessage(p, "Removing voice status from " + who.ColoredName);
+                Player.Message(p, "Removing voice status from " + who.ColoredName);
                 who.SendMessage("Your voice status has been revoked.");
             } else {
-                Player.SendMessage(p, "Giving voice status to " + who.ColoredName);
+                Player.Message(p, "Giving voice status to " + who.ColoredName);
                 who.SendMessage("You have received voice status.");
             }
             who.voice = !who.voice;
@@ -44,9 +44,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/voice [name]");
-            Player.SendMessage(p, "%HToggles voice status on or off for the given player.");
-            Player.SendMessage(p, "%HIf no name is given, toggles your own voice status.");
+            Player.Message(p, "%T/voice [name]");
+            Player.Message(p, "%HToggles voice status on or off for the given player.");
+            Player.Message(p, "%HIf no name is given, toggles your own voice status.");
         }
     }
 }

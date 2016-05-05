@@ -73,12 +73,12 @@ namespace MCGalaxy.Commands {
                 message = target.name;
             } else {
                 message = PlayerInfo.FindOfflineName(message);
-                if (message == null) { Player.SendMessage(p, "Unable to find player"); return; }
+                if (message == null) { Player.Message(p, "Unable to find player"); return; }
             }
 
-            Player.SendMessage(p, (p == null ? "" : "&d") + "OpStats for " + (p == null ? "" : "&c") + message); // Use colorcodes if in game, don't use color if in console
-            Player.SendMessage(p, (p == null ? "" : "&d") + "Showing " + spanName + " Starting from " + spanStart);
-            Player.SendMessage(p, (p == null ? "" : "&0") + "----------------");
+            Player.Message(p, (p == null ? "" : "&d") + "OpStats for " + (p == null ? "" : "&c") + message); // Use colorcodes if in game, don't use color if in console
+            Player.Message(p, (p == null ? "" : "&d") + "Showing " + spanName + " Starting from " + spanStart);
+            Player.Message(p, (p == null ? "" : "&0") + "----------------");
             
             DoQuery(p, "Reviews - ", spanStart, spanEnd, message, "review", "LIKE 'next'");
             DoQuery(p, "Promotes - ", spanStart, spanEnd, message, "promote", "!=''");
@@ -101,12 +101,12 @@ namespace MCGalaxy.Commands {
             DataTable table = Database.fillData("SELECT COUNT(ID) FROM Opstats WHERE Time >= '" + start + "' AND Time < '" + end +
                                                 "' AND Name LIKE '" + name + "' AND Cmd LIKE '" + cmd +"' AND Cmdmsg " + msg);
             // don't use colour codes in cli or gui
-            Player.SendMessage(p, (p == null ? "" : "&a") + group + (p == null ? "" : "&5") + table.Rows[0]["COUNT(id)"]);
+            Player.Message(p, (p == null ? "" : "&a") + group + (p == null ? "" : "&5") + table.Rows[0]["COUNT(id)"]);
             table.Dispose();
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/opstats [player] [today]|[yesterday]|[thismonth]|[lastmonth]|[all] - Displays information about operator command usage.");
+            Player.Message(p, "/opstats [player] [today]|[yesterday]|[thismonth]|[lastmonth]|[all] - Displays information about operator command usage.");
         }
     }
 }

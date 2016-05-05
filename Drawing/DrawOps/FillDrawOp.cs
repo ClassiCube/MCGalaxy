@@ -34,8 +34,8 @@ namespace MCGalaxy.Drawing.Ops {
         public override bool CanDraw(Vec3U16[] marks, Player p, out long affected) {
             affected = GetBlocksAffected(p.level, marks);
             if (affected > p.group.maxBlocks) {
-                Player.SendMessage(p, "You tried to fill over " + p.group.maxBlocks + " blocks.");
-                Player.SendMessage(p, "You cannot fill more than " + p.group.maxBlocks + ".");
+                Player.Message(p, "You tried to fill over " + p.group.maxBlocks + " blocks.");
+                Player.Message(p, "You cannot fill more than " + p.group.maxBlocks + ".");
                 return false;
             }
             return true;

@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             else if (p == null) message = "You were kicked by the console.";
             else message = "You were kicked by " + p.DisplayName + ".";
 
-            if (p != null && p == who) { Player.SendMessage(p, "You cannot kick yourself."); return; }
+            if (p != null && p == who) { Player.Message(p, "You cannot kick yourself."); return; }
             if (p != null && who.group.Permission >= p.group.Permission) {
                 Player.SendChatFrom(p, p.ColoredName + "%S tried to kick " 
                                     + who.ColoredName + "%S but failed.", false);
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/kick <player> [message] - Kicks a player.");
+            Player.Message(p, "/kick <player> [message] - Kicks a player.");
         }
     }
 }

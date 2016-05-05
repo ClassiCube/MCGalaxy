@@ -29,12 +29,12 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             string name = message.ToLower();
             if (name == "" && p == null) {
-                Player.SendMessage(p, "You must specify a map name when unloading from console."); return;
+                Player.Message(p, "You must specify a map name when unloading from console."); return;
             }
             
             if (name == "") {
                 if (!p.level.Unload())
-                    Player.SendMessage(p, "You cannot unload this level.");
+                    Player.Message(p, "You cannot unload this level.");
             } else if (name == "empty") {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 for (int i = 0; i < loaded.Length; i++) {
@@ -45,18 +45,18 @@ namespace MCGalaxy.Commands
             } else {
                 Level level = LevelInfo.Find(name);
                 if (level == null) {
-                    Player.SendMessage(p, "There is no level \"" + name + "\" loaded.");
+                    Player.Message(p, "There is no level \"" + name + "\" loaded.");
                 } else if (!level.Unload()) {
-                    Player.SendMessage(p, "You cannot unload this level.");
+                    Player.Message(p, "You cannot unload this level.");
                 }
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/unload [map name]");
-            Player.SendMessage(p, "%HUnloads the given map.");
-            Player.SendMessage(p, "%H  If map name is \"empty\", unloads all maps with no players in them.");
-            Player.SendMessage(p, "%H  If no map name is given, unloads the current map."); 
+            Player.Message(p, "%T/unload [map name]");
+            Player.Message(p, "%HUnloads the given map.");
+            Player.Message(p, "%H  If map name is \"empty\", unloads all maps with no players in them.");
+            Player.Message(p, "%H  If no map name is given, unloads the current map."); 
         }
     }
 }

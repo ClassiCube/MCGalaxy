@@ -41,8 +41,8 @@ namespace MCGalaxy.Games {
                     Server.lava.AnnounceRoundInfo(p);
                     Server.lava.AnnounceTimeLeft(!Server.lava.flooded, true, p);
                 } else {
-                    Player.SendMessage(p, "Vote for the next map!");
-                    Player.SendMessage(p, "Choices: " + Server.lava.VoteString);
+                    Player.Message(p, "Vote for the next map!");
+                    Player.Message(p, "Choices: " + Server.lava.VoteString);
                 }
             }
         }

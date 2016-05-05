@@ -66,17 +66,17 @@ namespace MCGalaxy
 
             if (p != null && p.muted)
             {
-                Player.SendMessage(p, "*Tears* You aren't allowed to talk to the nice people of global chat");
+                Player.Message(p, "*Tears* You aren't allowed to talk to the nice people of global chat");
             }
             if ((p == null && !Server.canusegc) || (p != null && !p.canusegc))
             {
-                Player.SendMessage(p, "You can no longer use the GC!");
+                Player.Message(p, "You can no longer use the GC!");
                 return;
             }
             #region General rules
             if (message.Contains("minecraft.net/classic/play/"))
             {
-                Player.SendMessage(p, "No server links Mr whale!");
+                Player.Message(p, "No server links Mr whale!");
                 if (p == null)
                 {
                     Server.gcmultiwarns++;
@@ -90,7 +90,7 @@ namespace MCGalaxy
             }
             if (message.Contains("http://") || message.Contains("https://") || message.Contains("www."))
             {
-                Player.SendMessage(p, "No links!");
+                Player.Message(p, "No links!");
                 if (p == null)
                 {
                     Server.gcmultiwarns++;
@@ -104,7 +104,7 @@ namespace MCGalaxy
             }
             if (message.ToLower().Contains(Server.name.ToLower()))
             {
-                Player.SendMessage(p, "Let's not advertise Mr whale!");
+                Player.Message(p, "Let's not advertise Mr whale!");
                 if (p != null) { p.multi++; }
                 else { Server.gcmultiwarns++; }
                 return;
@@ -115,12 +115,12 @@ namespace MCGalaxy
             {
                 if (p == null) { Server.gcspamcount++; Server.gcmultiwarns++; }
                 else { p.spamcount++; p.multi++; }
-                Player.SendMessage(p, "Don't send repetitive messages!");
+                Player.Message(p, "Don't send repetitive messages!");
                 if ((p == null ? Server.gcspamcount : p.spamcount) >= 4)
                 {
                     if (p == null) { Server.canusegc = false; }
                     else { p.canusegc = false; }
-                    Player.SendMessage(p, "You can no longer use the gc! Reason: repetitive message spam");
+                    Player.Message(p, "You can no longer use the gc! Reason: repetitive message spam");
                     return;
                 }
                 if ((p == null ? Server.gcspamcount : p.spamcount) >= 2) { return; }
@@ -138,7 +138,7 @@ namespace MCGalaxy
 
             if (t < new TimeSpan(0, 0, 1))
             {
-                Player.SendMessage(p, "Stop the flooding buddy!");
+                Player.Message(p, "Stop the flooding buddy!");
 
                 if (p == null)
                 {
@@ -158,7 +158,7 @@ namespace MCGalaxy
                     else 
                         p.canusegc = false;
 
-                    Player.SendMessage(p, "You can no longer use the gc! Reason: flooding");
+                    Player.Message(p, "You can no longer use the gc! Reason: flooding");
                 }
                 if ((p == null ? Server.gcfloodcount : p.floodcount) >= 3) { return; }
             }
@@ -179,14 +179,14 @@ namespace MCGalaxy
                     Server.canusegc = false;
                 else 
                     p.canusegc = false;
-                Player.SendMessage(p, "You can no longer use the gc! Reason: multiple offenses!");
+                Player.Message(p, "You can no longer use the gc! Reason: multiple offenses!");
 
                 return;
             }
 
             if (String.IsNullOrEmpty(message.Replace("Console:", "").Trim()))
             {
-                Player.SendMessage(p, "You should send some text!");
+                Player.Message(p, "You should send some text!");
                 return;
             }
 

@@ -30,11 +30,11 @@ namespace MCGalaxy.Commands
             if (File.Exists("plugins/" + message + ".dll"))
                 Plugin.Load(message + ".dll", false);
             else
-                Player.SendMessage(p, "Plugin not found!");
+                Player.Message(p, "Plugin not found!");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/pload <filename> - Load a plugin in your plugins folder!");
+            Player.Message(p, "/pload <filename> - Load a plugin in your plugins folder!");
         }
         public CmdPLoad() { }
     }

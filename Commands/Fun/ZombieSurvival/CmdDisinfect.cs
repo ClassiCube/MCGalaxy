@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             if (who == null) return;
             
             if (!who.Game.Infected || !Server.zombie.RoundInProgress) {
-                Player.SendMessage(p, "Cannot disinfect player");
+                Player.Message(p, "Cannot disinfect player");
             } else if (!who.Game.Referee) {
                 Server.zombie.DisinfectPlayer(who);
                 Player.GlobalMessage(who.ColoredName + " %Swas disinfected!");
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/disinfect [name] - disinfects [name]");
+            Player.Message(p, "/disinfect [name] - disinfects [name]");
         }
     }
 }

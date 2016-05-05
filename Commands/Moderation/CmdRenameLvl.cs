@@ -35,11 +35,11 @@ namespace MCGalaxy.Commands {
             if (lvl == null) return;
             string newName = args[1];
             if (!Player.ValidName(newName)) {
-                Player.SendMessage(p, "\"" + newName + "\" is not a valid level name."); return;
+                Player.Message(p, "\"" + newName + "\" is not a valid level name."); return;
             }
             
-            if (LevelInfo.ExistsOffline(newName)) { Player.SendMessage(p, "Level already exists."); return; }
-            if (lvl == Server.mainLevel) { Player.SendMessage(p, "Cannot rename the main level."); return; }
+            if (LevelInfo.ExistsOffline(newName)) { Player.Message(p, "Level already exists."); return; }
+            if (lvl == Server.mainLevel) { Player.Message(p, "Cannot rename the main level."); return; }
             lvl.Unload();
 
             File.Move(LevelInfo.LevelPath(lvl.name), LevelInfo.LevelPath(newName));
@@ -116,8 +116,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/renamelvl <level> <new name> - Renames <level> to <new name>");
-            Player.SendMessage(p, "Portals going to <level> will be lost");
+            Player.Message(p, "/renamelvl <level> <new name> - Renames <level> to <new name>");
+            Player.Message(p, "Portals going to <level> will be lost");
         }
     }
 }

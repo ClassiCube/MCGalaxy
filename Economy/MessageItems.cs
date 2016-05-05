@@ -32,19 +32,19 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.all.Find("loginmessage").Use(null, p.name + " joined the server.");
-                Player.SendMessage(p, "%aYour login message was removed for free.");
+                Player.Message(p, "%aYour login message was removed for free.");
                 return;
             }
             
             string text = message.Split(trimChars, 2)[1]; // keep spaces this way         
             if (text == PlayerDB.GetLoginMessage(p)) {
-                Player.SendMessage(p, "%cYou already have that login message."); return;
+                Player.Message(p, "%cYou already have that login message."); return;
             }
             if (text.Length > 64) {
-                Player.SendMessage(p, "%cLogin message must be 64 characters or less."); return;
+                Player.Message(p, "%cLogin message must be 64 characters or less."); return;
             }
             Command.all.Find("loginmessage").Use(null, p.name + " " + text);
-            Player.SendMessage(p, "%aYour login message was changed to: %f" + text);
+            Player.Message(p, "%aYour login message was changed to: %f" + text);
             Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + text);
         }
     }
@@ -62,19 +62,19 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.all.Find("logoutmessage").Use(null, p.name + " Disconnected.");
-                Player.SendMessage(p, "%aYour logout message was removed for free.");
+                Player.Message(p, "%aYour logout message was removed for free.");
                 return;
             }
             
             string text = message.Split(trimChars, 2)[1]; // keep spaces this way         
             if (text == PlayerDB.GetLogoutMessage(p)) {
-                Player.SendMessage(p, "%cYou already have that logout message."); return;
+                Player.Message(p, "%cYou already have that logout message."); return;
             }       
             if (text.Length > 64) {
-                Player.SendMessage(p, "%cLogin message must be 64 characters or less."); return;
+                Player.Message(p, "%cLogin message must be 64 characters or less."); return;
             }            
             Command.all.Find("logoutmessage").Use(null, p.name + " " + text);
-            Player.SendMessage(p, "%aYour logout message was changed to: %f" + text);
+            Player.Message(p, "%aYour logout message was changed to: %f" + text);
             Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + text);
         }
     }

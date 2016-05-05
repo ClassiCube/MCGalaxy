@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands
                 Help(p); return;
             }
         	
-            Player.SendMessage(p, "Place two blocks to determine the edges.");           
+            Player.Message(p, "Place two blocks to determine the edges.");           
             p.ClearBlockchange();
             p.blockchangeObject = cpos;
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
@@ -65,8 +65,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-        	Player.SendMessage(p, "%T/maze");
-        	Player.SendMessage(p, "%HGenerates a random maze between two points.");
+        	Player.Message(p, "%T/maze");
+        	Player.Message(p, "%HGenerates a random maze between two points.");
         }
         
         struct CatchPos { public ushort x, y, z; public int randomizer; }

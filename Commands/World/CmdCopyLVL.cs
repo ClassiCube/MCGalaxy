@@ -34,17 +34,17 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.ToLower().Split(' ');
             if (args.Length < 2) {
-                Player.SendMessage(p, "You did not specify the destination level name."); return;
+                Player.Message(p, "You did not specify the destination level name."); return;
             }
             
             string src = args[0], dst = args[1];
             if (!p.group.CanExecute("newlvl")) {
-                Player.SendMessage(p, "You cannot use /copylvl as you cannot use /newlvl."); return;
+                Player.Message(p, "You cannot use /copylvl as you cannot use /newlvl."); return;
             }
-            if (!Player.ValidName(src)) { Player.SendMessage(p, "\"" + src + "\" is not a valid level name."); return; }
-            if (!Player.ValidName(dst)) { Player.SendMessage(p, "\"" + dst + "\" is not a valid level name."); return; }         
-            if (!LevelInfo.ExistsOffline(src)) { Player.SendMessage(p, "The level \"" + src + "\" does not exist."); return; }
-            if (LevelInfo.ExistsOffline(dst)) { Player.SendMessage(p, "The level \"" + dst + "\" already exists."); return; }
+            if (!Player.ValidName(src)) { Player.Message(p, "\"" + src + "\" is not a valid level name."); return; }
+            if (!Player.ValidName(dst)) { Player.Message(p, "\"" + dst + "\" is not a valid level name."); return; }         
+            if (!LevelInfo.ExistsOffline(src)) { Player.Message(p, "The level \"" + src + "\" does not exist."); return; }
+            if (LevelInfo.ExistsOffline(dst)) { Player.Message(p, "The level \"" + dst + "\" already exists."); return; }
             
             try {
             	File.Copy(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
@@ -53,17 +53,17 @@ namespace MCGalaxy.Commands {
                 if (File.Exists("blockdefs/lvl_" + src + ".json"))
                     File.Copy("blockdefs/lvl_" + src + ".json", "blockdefs/lvl_" + dst + ".json");
             } catch (System.IO.FileNotFoundException) {
-                Player.SendMessage(p, dst + " does not exist!"); return;
+                Player.Message(p, dst + " does not exist!"); return;
             } catch (System.IO.IOException) {
-                Player.SendMessage(p, "The level &c" + dst + " %S already exists!"); return;
+                Player.Message(p, "The level &c" + dst + " %S already exists!"); return;
             }
-            Player.SendMessage(p, "The level &a" + src + " %Shas been copied to &a" + dst + ".");
+            Player.Message(p, "The level &a" + src + " %Shas been copied to &a" + dst + ".");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/copylvl [level] [copied level]");
-            Player.SendMessage(p, "%HMakes a copy of [level] called [copied Level].");
-            Player.SendMessage(p, "%HNote: Only the level file and level properties are copied.");
+            Player.Message(p, "%T/copylvl [level] [copied level]");
+            Player.Message(p, "%HMakes a copy of [level] called [copied Level].");
+            Player.Message(p, "%HNote: Only the level file and level properties are copied.");
         }
     }
 }

@@ -47,16 +47,16 @@ namespace MCGalaxy.Commands {
         	switch (args[0].ToLower()) {
                 case "apply":
                     Economy.Load();
-                    Player.SendMessage(p, "%aApplied changes");
+                    Player.Message(p, "%aApplied changes");
                     return;                  
 
                 case "enable":
-                    Player.SendMessage(p, "%aThe economy system is now enabled"); 
+                    Player.Message(p, "%aThe economy system is now enabled"); 
                     Economy.Enabled = true; 
                     Economy.Save(); return;
 
                 case "disable":
-                    Player.SendMessage(p, "%aThe economy system is now disabled"); 
+                    Player.Message(p, "%aThe economy system is now disabled"); 
                     Economy.Enabled = false; 
                     Economy.Save();return;
                     
@@ -74,30 +74,30 @@ namespace MCGalaxy.Commands {
                     }
                                         
                     if (args[1] == "") { SetupHelp(p); return; }
-                    Player.SendMessage(p, "%cThat wasn't a valid command addition!");
+                    Player.Message(p, "%cThat wasn't a valid command addition!");
                     return;
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%cMost commands have been removed from /economy, " +
+            Player.Message(p, "%cMost commands have been removed from /economy, " +
                                "use the appropriate command from %T/help economy %cinstead.");
         	if (CheckAdditionalPerm(p)) {
-                Player.SendMessage(p, "%f/eco <type> %e- to setup economy");
-                Player.SendMessage(p, "%f/eco help %e- get more specific help for setting up the economy");
+                Player.Message(p, "%f/eco <type> %e- to setup economy");
+                Player.Message(p, "%f/eco help %e- get more specific help for setting up the economy");
             }
         }
 
         void SetupHelp(Player p) {
-            Player.SendMessage(p, "%4/eco apply %e- reloads changes made to 'economy.properties'");
-            Player.SendMessage(p, "%4/eco [%aenable%4/%cdisable%4] %e- to enable/disable the economy system");
-            Player.SendMessage(p, "%4/eco [title/color/tcolor/rank/map] [%aenable%4/%cdisable%4] %e- to enable/disable that feature");
-            Player.SendMessage(p, "%4/eco [title/color/tcolor] [%3price%4] %e- to setup the prices for these features");
-            Player.SendMessage(p, "%4/eco rank price [%frank%4] [%3price%4] %e- to set the price for that rank");
-            Player.SendMessage(p, "%4/eco rank maxrank [%frank%4] %e- to set the max buyable rank");
-            Player.SendMessage(p, "%4/eco map new [%fname%4] [%fx%4] [%fy%4] [%fz%4] [%ftype%4] [%3price%4] %e- to setup a map preset");
-            Player.SendMessage(p, "%4/eco map delete [%fname%4] %e- to delete a map");
-            Player.SendMessage(p, "%4/eco map edit [%fname%4] [name/x/y/z/type/price] [%fvalue%4] %e- to edit a map preset");
+            Player.Message(p, "%4/eco apply %e- reloads changes made to 'economy.properties'");
+            Player.Message(p, "%4/eco [%aenable%4/%cdisable%4] %e- to enable/disable the economy system");
+            Player.Message(p, "%4/eco [title/color/tcolor/rank/map] [%aenable%4/%cdisable%4] %e- to enable/disable that feature");
+            Player.Message(p, "%4/eco [title/color/tcolor] [%3price%4] %e- to setup the prices for these features");
+            Player.Message(p, "%4/eco rank price [%frank%4] [%3price%4] %e- to set the price for that rank");
+            Player.Message(p, "%4/eco rank maxrank [%frank%4] %e- to set the max buyable rank");
+            Player.Message(p, "%4/eco map new [%fname%4] [%fx%4] [%fy%4] [%fz%4] [%ftype%4] [%3price%4] %e- to setup a map preset");
+            Player.Message(p, "%4/eco map delete [%fname%4] %e- to delete a map");
+            Player.Message(p, "%4/eco map edit [%fname%4] [name/x/y/z/type/price] [%fvalue%4] %e- to edit a map preset");
         }
     }
 }

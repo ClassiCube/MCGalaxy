@@ -31,12 +31,12 @@ namespace MCGalaxy.Commands
             p.parseSmiley = !p.parseSmiley;
             p.smileySaved = false;
 
-            if (p.parseSmiley) Player.SendMessage(p, "Emote parsing is enabled.");
-            else Player.SendMessage(p, "Emote parsing is disabled.");
+            if (p.parseSmiley) Player.Message(p, "Emote parsing is enabled.");
+            else Player.Message(p, "Emote parsing is disabled.");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/emote - Enables or disables emoticon parsing");
+            Player.Message(p, "/emote - Enables or disables emoticon parsing");
         }
     }
 }

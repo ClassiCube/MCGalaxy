@@ -31,13 +31,13 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            if (message.IndexOf("'") != -1) { Player.SendMessage(p, "Cannot parse request."); return; }
+            if (message.IndexOf("'") != -1) { Player.Message(p, "Cannot parse request."); return; }
 
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@IP", message);
             DataTable playerDb = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
 
-            if (playerDb.Rows.Count == 0) { Player.SendMessage(p, "Could not find anyone with this IP"); return; }
+            if (playerDb.Rows.Count == 0) { Player.Message(p, "Could not find anyone with this IP"); return; }
 
             string playerNames = "Players with this IP: ";
 
@@ -47,13 +47,13 @@ namespace MCGalaxy.Commands
             }
             playerNames = playerNames.Remove(playerNames.Length - 2);
 
-            Player.SendMessage(p, playerNames);
+            Player.Message(p, playerNames);
             playerDb.Dispose();
         }
         
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/whoip <ip address> - Displays players associated with a given IP address.");
+            Player.Message(p, "/whoip <ip address> - Displays players associated with a given IP address.");
         }
     }
 }

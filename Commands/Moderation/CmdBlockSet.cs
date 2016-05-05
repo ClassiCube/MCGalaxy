@@ -31,12 +31,12 @@ namespace MCGalaxy.Commands
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
 
             byte foundBlock = Block.Byte(message.Split(' ')[0]);
-            if (foundBlock == Block.Zero) { Player.SendMessage(p, "Could not find block entered"); return; }
+            if (foundBlock == Block.Zero) { Player.Message(p, "Could not find block entered"); return; }
             LevelPermission newPerm = Level.PermissionFromName(message.Split(' ')[1]);
-            if (newPerm == LevelPermission.Null) { Player.SendMessage(p, "Could not find rank specified"); return; }
-            if (p != null && newPerm > p.group.Permission) { Player.SendMessage(p, "Cannot set to a rank higher than yourself."); return; }
+            if (newPerm == LevelPermission.Null) { Player.Message(p, "Could not find rank specified"); return; }
+            if (p != null && newPerm > p.group.Permission) { Player.Message(p, "Cannot set to a rank higher than yourself."); return; }
 
-            if (p != null && !Block.canPlace(p, foundBlock)) { Player.SendMessage(p, "Cannot modify a block set for a higher rank"); return; }
+            if (p != null && !Block.canPlace(p, foundBlock)) { Player.Message(p, "Cannot modify a block set for a higher rank"); return; }
 
             Block.BlockList[foundBlock].lowestRank = newPerm;
             Block.SaveBlocks(Block.BlockList);
@@ -53,14 +53,14 @@ namespace MCGalaxy.Commands
 
             Player.GlobalMessage("&d" + Block.Name(foundBlock) + "S's permission was changed to " + Level.PermissionToName(newPerm));
             if (p == null)
-                Player.SendMessage(p, Block.Name(foundBlock) + "'s permission was changed to " + Level.PermissionToName(newPerm));
+                Player.Message(p, Block.Name(foundBlock) + "'s permission was changed to " + Level.PermissionToName(newPerm));
         }
         
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/blockset [block] [rank] - Changes [block] rank to [rank]");
-            Player.SendMessage(p, "Only blocks you can use can be modified");
-            Player.SendMessage(p, "Available ranks: " + Group.concatList());
+            Player.Message(p, "/blockset [block] [rank] - Changes [block] rank to [rank]");
+            Player.Message(p, "Only blocks you can use can be modified");
+            Player.Message(p, "Available ranks: " + Group.concatList());
         }
     }
 }

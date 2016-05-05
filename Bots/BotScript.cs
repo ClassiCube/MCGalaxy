@@ -23,10 +23,10 @@ namespace MCGalaxy.Bots {
     public static class BotScript {
         
         public static bool Parse(Player p, PlayerBot bot, string file) {
-            if (!File.Exists(file)) { Player.SendMessage(p, "Could not find specified AI."); return false; }
+            if (!File.Exists(file)) { Player.Message(p, "Could not find specified AI."); return false; }
 
             string[] codes = File.ReadAllLines(file);
-            if (codes[0] != "#Version 2") { Player.SendMessage(p, "Invalid file version. Remake"); return false; }
+            if (codes[0] != "#Version 2") { Player.Message(p, "Invalid file version. Remake"); return false; }
 
             PlayerBot.Pos newPos = new PlayerBot.Pos();
             try { bot.Waypoints.Clear(); } catch { }
@@ -66,7 +66,7 @@ namespace MCGalaxy.Bots {
                     }
                     bot.Waypoints.Add(newPos);
                 } catch { 
-                    Player.SendMessage(p, "AI file corrupt."); return false;
+                    Player.Message(p, "AI file corrupt."); return false;
                 }
             }
             return true;

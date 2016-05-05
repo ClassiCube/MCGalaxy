@@ -151,6 +151,26 @@ namespace MCGalaxy {
             buffer[0] = Opcode.Message;
             NetUtils.WriteAscii("", buffer, 2);
             SendRaw(buffer);
+        }        
+        
+        public static void Message(Player p, string message) {
+            SendMessage(p, message, true);
+        }
+        
+        public static void Message(Player p, string message, object a0) {
+            SendMessage(p, String.Format(message, a0), true);
+        }
+        
+        public static void Message(Player p, string message, object a0, object a1) {
+            SendMessage(p, String.Format(message, a0, a1), true);
+        }
+        
+        public static void Message(Player p, string message, object a0, object a1, object a2) {
+            SendMessage(p, String.Format(message, a0, a1, a2), true);
+        }
+        
+        public static void Message(Player p, string message, params object[] args) {
+            SendMessage(p, String.Format(message, args), true);
         }
 
         public static void SendMessage(Player p, string message) {

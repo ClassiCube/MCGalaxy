@@ -35,13 +35,13 @@ namespace MCGalaxy.Commands {
             
             if (args.Length == 1) {
                 if (scope == "level")
-                    Player.SendMessage(p, "Level terrain: " + GetPath(p.level.terrainUrl));
+                    Player.Message(p, "Level terrain: " + GetPath(p.level.terrainUrl));
                 else if (scope == "levelzip")
-                    Player.SendMessage(p, "Level tex pack: " + GetPath(p.level.texturePackUrl));
+                    Player.Message(p, "Level tex pack: " + GetPath(p.level.texturePackUrl));
                 else if (scope == "global")
-                    Player.SendMessage(p, "Global terrain: " + GetPath(Server.defaultTerrainUrl));
+                    Player.Message(p, "Global terrain: " + GetPath(Server.defaultTerrainUrl));
                 else if (scope == "globalzip")
-                    Player.SendMessage(p, "Global tex pack: " + GetPath(Server.defaultTextureUrl));
+                    Player.Message(p, "Global tex pack: " + GetPath(Server.defaultTextureUrl));
                 else
                     Help(p);
                 return; 
@@ -108,11 +108,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/texture [scope] [url]");
-            Player.SendMessage(p, "%H  global/globalzip scope: Changes server's default texture.");
-            Player.SendMessage(p, "%H  level/levelzip scope: Changes current level's texture.");
-            Player.SendMessage(p, "%HUsing 'reset' as a url will reset the texture to default.");
-            Player.SendMessage(p, "%HNote: zip texture packs are not supported by all clients.");
+            Player.Message(p, "%T/texture [scope] [url]");
+            Player.Message(p, "%H  global/globalzip scope: Changes server's default texture.");
+            Player.Message(p, "%H  level/levelzip scope: Changes current level's texture.");
+            Player.Message(p, "%HUsing 'reset' as a url will reset the texture to default.");
+            Player.Message(p, "%HNote: zip texture packs are not supported by all clients.");
         }
     }
 }

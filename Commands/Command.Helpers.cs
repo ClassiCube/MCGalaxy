@@ -43,7 +43,7 @@ namespace MCGalaxy {
         }
         
         protected void MessageInGameOnly(Player p) {
-            Player.SendMessage(p, "/" + name + " can only be used in-game.");
+            Player.Message(p, "/" + name + " can only be used in-game.");
         }
         
         protected bool CheckAdditionalPerm(Player p, int num = 1) {
@@ -58,9 +58,9 @@ namespace MCGalaxy {
         protected void MessageNeedMinPerm(Player p, string action, int perm) {
             Group grp = Group.findPermInt(perm);
             if (grp == null)
-                Player.SendMessage(p, "Only ranks with permissions greater than &a" + perm + "%Scan " + action);
+                Player.Message(p, "Only ranks with permissions greater than &a" + perm + "%Scan " + action);
             else
-                Player.SendMessage(p, "Only " + grp.ColoredName + "%S+ can " + action);
+                Player.Message(p, "Only " + grp.ColoredName + "%S+ can " + action);
         }
         
         protected void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
@@ -69,15 +69,15 @@ namespace MCGalaxy {
         
         protected void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
             if (canAffectGroup)
-                Player.SendMessage(p, "Can only " + action + " players ranked " + grp.ColoredName + " %Sor below");
+                Player.Message(p, "Can only " + action + " players ranked " + grp.ColoredName + " %Sor below");
             else
-                Player.SendMessage(p, "Can only " + action + " players ranked below " + grp.ColoredName);
+                Player.Message(p, "Can only " + action + " players ranked below " + grp.ColoredName);
         }
         
         internal void MessageCannotUse(Player p) {
             var perms = GrpCommands.allowedCommands.Find(C => C.commandName == name);
             if (perms.disallow.Contains(p.group.Permission)) {
-                Player.SendMessage(p, "Your rank cannot use /%T" + name); return;
+                Player.Message(p, "Your rank cannot use /%T" + name); return;
             }
             
             StringBuilder builder = new StringBuilder("Only ");            
@@ -99,7 +99,7 @@ namespace MCGalaxy {
             else
                 builder.Append(minGrp.ColoredName + "%S+");
             builder.Append(" can use %T/" + name);
-            Player.SendMessage(p, builder.ToString());
+            Player.Message(p, builder.ToString());
         }
     }
     

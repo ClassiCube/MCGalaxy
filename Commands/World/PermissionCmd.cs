@@ -25,23 +25,23 @@ namespace MCGalaxy.Commands {
         public static void Use(Player p, string[] args, bool skipNobodyPerm, string target,
                                Func<Level, LevelPermission> getter, Action<Level, LevelPermission> setter) {
             if (args.Length == 1 && p == null) {
-                Player.SendMessage(p, "You must provide a level name when using this command from console.");
+                Player.Message(p, "You must provide a level name when using this command from console.");
                 return;
             }
             Level level = args.Length == 1 ? p.level : LevelInfo.Find(args[0]);
             if (level == null) {
-                Player.SendMessage(p, "There is no level \"" + args[0] + "\" loaded."); return;
+                Player.Message(p, "There is no level \"" + args[0] + "\" loaded."); return;
             }
             
             string rank = args.Length == 1 ? args[0] : args[1];
             LevelPermission newRank = Level.PermissionFromName(rank);
             if (newRank == LevelPermission.Null) {
-                Player.SendMessage(p, "Not a valid rank"); return;
+                Player.Message(p, "Not a valid rank"); return;
             }
 
             if (p != null && getter(level) > p.group.Permission) {
                 if (skipNobodyPerm || (getter(level) != LevelPermission.Nobody)) {
-                    Player.SendMessage(p, "You cannot change the " + target + " of a level " +
+                    Player.Message(p, "You cannot change the " + target + " of a level " +
                                        "with a " + target + " higher than your rank.");
                     return;
                 }
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             
             if (p != null && newRank > p.group.Permission) {
                 if (skipNobodyPerm || (newRank != LevelPermission.Nobody)) {
-                    Player.SendMessage(p, "You cannot change the " + target + " of a level " +
+                    Player.Message(p, "You cannot change the " + target + " of a level " +
                                        "to a " + target + " higher than your rank.");
                     return;
                 }
@@ -60,19 +60,19 @@ namespace MCGalaxy.Commands {
             Server.s.Log(level.name + " " + target + " permission changed to " + newRank + ".");
             Chat.GlobalMessageLevel(level, target + " permission changed to " + newRank + ".");
             if (p == null || p.level != level)
-                Player.SendMessage(p, target + " permission changed to " + newRank + " on " + level.name + ".");
+                Player.Message(p, target + " permission changed to " + newRank + " on " + level.name + ".");
         }
         
         public static void UseList(Player p, string[] args, string target,
                                    Func<Level, LevelPermission> getter,
                                    Func<Level, List<string>> wlGetter, Func<Level, List<string>> blGetter) {
             if (args.Length == 1 && p == null) {
-                Player.SendMessage(p, "You must provide a level name when using this command from console.");
+                Player.Message(p, "You must provide a level name when using this command from console.");
                 return;
             }
             Level level = args.Length == 1 ? p.level : LevelInfo.Find(args[0]);
             if (level == null) {
-                Player.SendMessage(p, "There is no level \"" + args[0] + "\" loaded."); return;
+                Player.Message(p, "There is no level \"" + args[0] + "\" loaded."); return;
             }
             
             string name = args.Length == 1 ? args[0] : args[1];
@@ -82,26 +82,26 @@ namespace MCGalaxy.Commands {
             name = name.Substring(1);            
             
             if (name == "") {
-                Player.SendMessage(p, "You must provide a player name to " + mode + "."); return;
+                Player.Message(p, "You must provide a player name to " + mode + "."); return;
             }
             if (p != null && name.CaselessEq(p.name)) {
-                Player.SendMessage(p, "You cannot " + mode + " yourself."); return;
+                Player.Message(p, "You cannot " + mode + " yourself."); return;
             }
             
             if (p != null && getter(level) > p.group.Permission) {
-                Player.SendMessage(p, "You cannot change the " + target + " " + mode +
+                Player.Message(p, "You cannot change the " + target + " " + mode +
                                    " permissions for a player higher than your rank."); return;
             }
             if (p != null && blGetter(level).CaselessContains(p.name)) {
-                Player.SendMessage(p, "You cannot change " + target + " " +
+                Player.Message(p, "You cannot change " + target + " " +
                                    "permissions as you are blacklisted."); return;
             }
             if (p != null && PlayerInfo.GetGroup(name).Permission > p.group.Permission) {
-                Player.SendMessage(p, "You cannot whitelist/blacklist players of a higher rank."); return;
+                Player.Message(p, "You cannot whitelist/blacklist players of a higher rank."); return;
             }
             
             if (list.CaselessContains(name)) {
-                Player.SendMessage(p, "\"" + name + "\" is already " + mode + "ed."); return;
+                Player.Message(p, "\"" + name + "\" is already " + mode + "ed."); return;
             }
             list.Add(name);
             other.CaselessRemove(name);
@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands {
             Server.s.Log(msg + " on " + level.name);
             Chat.GlobalMessageLevel(level, msg);
             if (p == null || p.level != level)
-                Player.SendMessage(p, msg + " on " + level.name + ".");
+                Player.Message(p, msg + " on " + level.name + ".");
         }
     }
 }

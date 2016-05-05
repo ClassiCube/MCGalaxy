@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
                     if (lvl != null)
                         Save(p, lvl, restore);
                     else
-                        Player.SendMessage(p, "Could not find level specified");
+                        Player.Message(p, "Could not find level specified");
                 } else {
                     Help(p);
                 }
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
         
         static void Save(Player p, Level lvl, string restoreName) {
             lvl.Save(true);
-            Player.SendMessage(p, "Level \"" + lvl.name + "\" saved.");
+            Player.Message(p, "Level \"" + lvl.name + "\" saved.");
             int num = lvl.Backup(true, restoreName);
             if (num == -1) return;
             
@@ -79,10 +79,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/save - Saves the level you are currently in");
-            Player.SendMessage(p, "/save all - Saves all loaded levels.");
-            Player.SendMessage(p, "/save <map> - Saves the specified map.");
-            Player.SendMessage(p, "/save <map> <name> - Backups the map with a given restore name");
+            Player.Message(p, "/save - Saves the level you are currently in");
+            Player.Message(p, "/save all - Saves all loaded levels.");
+            Player.Message(p, "/save <map> - Saves the specified map.");
+            Player.Message(p, "/save <map> <name> - Backups the map with a given restore name");
         }
     }
 }

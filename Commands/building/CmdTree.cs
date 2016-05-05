@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
             p.ClearBlockchange();
             p.blockchangeObject = cpos;
             p.Blockchange += new Player.BlockchangeEventHandler(PlaceBlock1);
-            Player.SendMessage(p, "Select where you wish your tree to grow");
+            Player.Message(p, "Select where you wish your tree to grow");
         }
 
         void PlaceBlock1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands {
             
             if (cpos.brushMsg != "") {
                 if (!p.group.CanExecute("brush")) {
-                    Player.SendMessage(p, "You cannot use /brush, so therefore cannot use /tree with a brush."); return;
+                    Player.Message(p, "You cannot use /brush, so therefore cannot use /tree with a brush."); return;
                 }
                 brush = ParseBrush(cpos.brushMsg, p, type, extType);
                 if (brush == null) return;
@@ -85,8 +85,8 @@ namespace MCGalaxy.Commands {
             string[] parts = brushMsg.Split(trimChars, 2);
             string brushName = CmdBrush.FindBrush(parts[0]);
             if (brushName == null) {
-                Player.SendMessage(p, "No brush found with name \"" + parts[0] + "\".");
-                Player.SendMessage(p, "Available brushes: " + CmdBrush.AvailableBrushes);
+                Player.Message(p, "No brush found with name \"" + parts[0] + "\".");
+                Player.Message(p, "Available brushes: " + CmdBrush.AvailableBrushes);
                 return null;
             }
 
@@ -98,10 +98,10 @@ namespace MCGalaxy.Commands {
         struct CatchPos { public int mode; public string brushMsg; }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/tree [type] %H- Draws a tree.");
-            Player.SendMessage(p, "%HTypes - &fFern/1, Cactus/2, Notch/3, Swamp/4");
-            Player.SendMessage(p, "%T/tree [type] [brush name] <brush args>");
-			Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "%T/tree [type] %H- Draws a tree.");
+            Player.Message(p, "%HTypes - &fFern/1, Cactus/2, Notch/3, Swamp/4");
+            Player.Message(p, "%T/tree [type] [brush name] <brush args>");
+			Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
     }
 }

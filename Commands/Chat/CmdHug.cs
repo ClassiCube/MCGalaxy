@@ -32,9 +32,9 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (who == null) return;
             if (p != null && who.name == p.name) {
-                Player.SendMessage(p, "You cannot hug yourself, silly!"); return;
+                Player.Message(p, "You cannot hug yourself, silly!"); return;
             }
-            if (p != null && p.muted) { Player.SendMessage(p, "Cannot use /hug while muted."); return; }
+            if (p != null && p.muted) { Player.Message(p, "Cannot use /hug while muted."); return; }
             
             string giver = (p == null) ? "(console)" : p.ColoredName, type = null;
             if (args.Length > 1) {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             
             if (type == "deadly") {
                 if (p != null && p.group.Permission < LevelPermission.Operator) {
-                    Player.SendMessage(p, "You cannot %cdeath-hug %Sat your current rank."); return;
+                    Player.Message(p, "You cannot %cdeath-hug %Sat your current rank."); return;
                 }
                 if (p != null && who.group.Permission > p.group.Permission) {
                     MessageTooHighRank(p, "&cdeath-hug%S", true); return;
@@ -59,9 +59,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/hug [player] <type>");
-            Player.SendMessage(p, "%HValid types are: &floving, friendly, creepy and deadly.");
-            Player.SendMessage(p, "%HSpecifying no type or a non-existent type results in a normal hug.");
+            Player.Message(p, "%T/hug [player] <type>");
+            Player.Message(p, "%HValid types are: &floving, friendly, creepy and deadly.");
+            Player.Message(p, "%HSpecifying no type or a non-existent type results in a normal hug.");
         }
     }
 }

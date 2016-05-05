@@ -43,20 +43,20 @@ namespace MCGalaxy.Commands {
                         else if (i == 1) click.Y = value;
                         else click.Z = value;
                     } else {
-                        Player.SendMessage(p, "\"" + args[i] + "\" was not valid"); return;
+                        Player.Message(p, "\"" + args[i] + "\" was not valid"); return;
                     }
                 }
             }
             
             click = Vec3U16.ClampToBounds(click.X, click.Y, click.Z, p.level);
             p.ManualChange(click.X, click.Y, click.Z, 0, Block.rock);
-            Player.SendMessage(p, "Clicked &b(" + click.X + ", " + click.Y + ", " + click.Z + ")");
+            Player.Message(p, "Clicked &b(" + click.X + ", " + click.Y + ", " + click.Z + ")");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/click [x y z] - Fakes a click");
-            Player.SendMessage(p, "If no xyz is given, it uses the last place clicked");
-            Player.SendMessage(p, "/click 200 y 200 will cause it to click at 200x, last y and 200z");
+            Player.Message(p, "/click [x y z] - Fakes a click");
+            Player.Message(p, "If no xyz is given, it uses the last place clicked");
+            Player.Message(p, "/click 200 y 200 will cause it to click at 200x, last y and 200z");
         }
     }
 }

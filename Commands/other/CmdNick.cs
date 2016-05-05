@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
 				who.DisplayName = who.truename;
 				Player.SendChatFrom(who, who.FullName + "%S has reverted their nick to their original name.", false);
 			} else {
-				if (newName.Length >= 30) { Player.SendMessage(p, "Nick must be under 30 letters."); return; }				
+				if (newName.Length >= 30) { Player.Message(p, "Nick must be under 30 letters."); return; }				
 				Player.SendChatFrom(who, who.FullName + "%S has changed their nick to " + who.color + newName + "%S.", false);
 				who.DisplayName = newName;
 			}
@@ -56,8 +56,8 @@ namespace MCGalaxy.Commands {
 		}
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "/nick <player> [newName] - Gives <player> the nick of [newName].");
-			Player.SendMessage(p, "If no [newName] is given, the player's nick is reverted to their original name.");
+			Player.Message(p, "/nick <player> [newName] - Gives <player> the nick of [newName].");
+			Player.Message(p, "If no [newName] is given, the player's nick is reverted to their original name.");
 		}
 	}
 	
@@ -76,8 +76,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/xnick [newName] - Gives you the nick of [newName].");
-            Player.SendMessage(p, "If no [newName] is given, your nick is reverted to your original name.");
+            Player.Message(p, "/xnick [newName] - Gives you the nick of [newName].");
+            Player.Message(p, "If no [newName] is given, your nick is reverted to your original name.");
         }
     }
 }

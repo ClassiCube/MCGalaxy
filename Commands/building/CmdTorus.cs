@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/torus [brush args]");
-            Player.SendMessage(p, "%HDraws a torus(circular tube) between two points.");
-            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.SendMessage(p, "   %HNote: radius of tube itself is calculated based on " +
+            Player.Message(p, "%T/torus [brush args]");
+            Player.Message(p, "%HDraws a torus(circular tube) between two points.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "   %HNote: radius of tube itself is calculated based on " +
                                "vertical difference between the two corners.");
         }
     }

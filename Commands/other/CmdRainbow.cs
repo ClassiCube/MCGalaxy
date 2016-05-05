@@ -32,13 +32,13 @@ namespace MCGalaxy.Commands
         {
             CatchPos cpos;
             cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/rainbow - Taste the rainbow");
+            Player.Message(p, "/rainbow - Taste the rainbow");
         }
         public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
@@ -110,12 +110,12 @@ namespace MCGalaxy.Commands
 
             if (buffer.Count > p.group.maxBlocks)
             {
-                Player.SendMessage(p, "You tried to replace " + buffer.Count + " blocks.");
-                Player.SendMessage(p, "You cannot replace more than " + p.group.maxBlocks + ".");
+                Player.Message(p, "You tried to replace " + buffer.Count + " blocks.");
+                Player.Message(p, "You cannot replace more than " + p.group.maxBlocks + ".");
                 return;
             }
 
-            Player.SendMessage(p, buffer.Count.ToString() + " blocks.");
+            Player.Message(p, buffer.Count.ToString() + " blocks.");
             buffer.ForEach(P => p.level.UpdateBlock(p, P.x, P.y, P.z, P.newType, 0));
 
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

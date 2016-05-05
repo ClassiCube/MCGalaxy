@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands {
 
             string err = Ban.EditReason(args[0], args[1]);
             if (err != "")
-                Player.SendMessage(p, err);
+                Player.Message(p, err);
             else
-            	Player.SendMessage(p, "Succesfully edited baninfo about &0" + args[0] + " %Sto: &2" + args[1]);
+            	Player.Message(p, "Succesfully edited baninfo about &0" + args[0] + " %Sto: &2" + args[1]);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/banedit <username> <reason> - Edits reason of ban for the user.");
+            Player.Message(p, "/banedit <username> <reason> - Edits reason of ban for the user.");
         }
     }
 }

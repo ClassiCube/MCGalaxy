@@ -37,11 +37,11 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(args[0]);
             if (who == null) {
                 string target = PlayerInfo.FindOfflineName(args[0]);
-                if (target == null) { Player.SendMessage(p, "Player &b" + args[0] + " %Swas not found in the database."); return; }
+                if (target == null) { Player.Message(p, "Player &b" + args[0] + " %Swas not found in the database."); return; }
                 args[0] = target;
             }
             if (args.Length == 1) {
-                Player.SendMessage(p, Colors.red + "You must specify a type to modify.");
+                Player.Message(p, Colors.red + "You must specify a type to modify.");
                 MessageValidTypes(p); return;
             }
             
@@ -56,9 +56,9 @@ namespace MCGalaxy.Commands {
                     SetInteger(p, args, "totalLogin", 1000000000, who, v => who.totalLogins = v); break;
                 case "title":
                     if (args.Length < 3) {
-                        Player.SendMessage(p, "Title name can be up to 17 characters in length, but may NOT include spaces."); return;
+                        Player.Message(p, "Title name can be up to 17 characters in length, but may NOT include spaces."); return;
                     }
-                    if (args[2].Length > 17) { Player.SendMessage(p, "Title must be under 17 letters."); return; }
+                    if (args[2].Length > 17) { Player.Message(p, "Title must be under 17 letters."); return; }
                     if (args[2] == "null") args[2] = "";
                     
                     if (who != null) {
@@ -85,20 +85,20 @@ namespace MCGalaxy.Commands {
                 case "titlecolor":
                     SetColor(p, args, "title_color", who, v => who.titlecolor = (v == "" ? "" : Colors.Parse(v))); break;
                 default:
-                    Player.SendMessage(p, Colors.red + "Invalid type.");
+                    Player.Message(p, Colors.red + "Invalid type.");
                     MessageValidTypes(p); break;
             }
         }
         
         static void SetColor(Player p, string[] args, string column, Player who, Action<string> setter) {
             if (args.Length < 3) {
-                Player.SendMessage(p, "Color format: color name, or \"null\" to reset to default color."); return;
+                Player.Message(p, "Color format: color name, or \"null\" to reset to default color."); return;
             }
             
             if (args[2] == "null") {
                 args[2] = "";
             } else if (Colors.Parse(args[2]) == "") {
-                Player.SendMessage(p, "There is no color \"" + args[2] + "\"."); return;
+                Player.Message(p, "There is no color \"" + args[2] + "\"."); return;
             }
             
             if (who != null) {
@@ -112,20 +112,20 @@ namespace MCGalaxy.Commands {
         
         static void SetDate(Player p, string[] args, string column, Player who, Action<DateTime> setter) {
             if (args.Length < 3) {
-                Player.SendMessage(p, "Dates must be in the format: yyyy-mm-dd_hh:mm:ss");
-                Player.SendMessage(p, "Do not include spaces or other special characters other than what you see above.");
+                Player.Message(p, "Dates must be in the format: yyyy-mm-dd_hh:mm:ss");
+                Player.Message(p, "Do not include spaces or other special characters other than what you see above.");
                 return;
             }
             args[2] = args[2].Replace('_', ' ');
             if (!Regex.IsMatch(args[2], @"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}")) {
-                Player.SendMessage(p, "Dates must be in the format: yyyy-mm-dd_hh:mm:ss"); return;
+                Player.Message(p, "Dates must be in the format: yyyy-mm-dd_hh:mm:ss"); return;
             }
             
             DateTime date;
             if (!DateTime.TryParse(args[2], out date)) {
-                Player.SendMessage(p, "Invalid format.");
-                Player.SendMessage(p, "Your date must be possible via the Western Calender");
-                Player.SendMessage(p, "Time cannot exceede increments of 23h, 59m, 59s");
+                Player.Message(p, "Invalid format.");
+                Player.Message(p, "Your date must be possible via the Western Calender");
+                Player.Message(p, "Time cannot exceede increments of 23h, 59m, 59s");
                 return;
             }
             
@@ -137,21 +137,21 @@ namespace MCGalaxy.Commands {
         
         static void SetTimespan(Player p, string[] args, string column, Player who, Action<string> setter) {
             if (args.Length < 3) {
-                Player.SendMessage(p, "Timespan must be in the format: ddd:hh:mm:ss");
-                Player.SendMessage(p, "Do not include spaces or other special characters other than what you see above.");
+                Player.Message(p, "Timespan must be in the format: ddd:hh:mm:ss");
+                Player.Message(p, "Do not include spaces or other special characters other than what you see above.");
                 return;
             }
             
             if (!Regex.IsMatch(args[2], @"\d{3}:\d{2}:\d{2}:\d{2}")) {
-                Player.SendMessage(p, "Timespan must be in the format: ddd:hh:mm:ss");
-                Player.SendMessage(p, "If your number needs to be a single digit place a 0 in front.");
+                Player.Message(p, "Timespan must be in the format: ddd:hh:mm:ss");
+                Player.Message(p, "If your number needs to be a single digit place a 0 in front.");
                 return;
             }
             
             TimeSpan timeFrame;
             if (!TimeSpan.TryParse(args[2], out timeFrame)) {
-                Player.SendMessage(p, "Timespan must be in the format: ddd:hh:mm:ss");
-                Player.SendMessage(p, "Hour range(0-23), Minute and Second range(0-59)");
+                Player.Message(p, "Timespan must be in the format: ddd:hh:mm:ss");
+                Player.Message(p, "Hour range(0-23), Minute and Second range(0-59)");
                 return;
             }
             
@@ -171,15 +171,15 @@ namespace MCGalaxy.Commands {
                 while (max > 0) {
                     digits++; max /= 10;
                 }
-                Player.SendMessage(p, "You must specify a number, which can be " + digits + " digits at most."); return;
+                Player.Message(p, "You must specify a number, which can be " + digits + " digits at most."); return;
             }
             
             int value = 0;
             if (!Int32.TryParse(args[2], out value)) {
-                Player.SendMessage(p, "&c" + args[2] + " is either not a number, or is larger than " + int.MaxValue); return;
+                Player.Message(p, "&c" + args[2] + " is either not a number, or is larger than " + int.MaxValue); return;
             }
             if (value < 0 || value >= max) {
-                Player.SendMessage(p, "&cNumber must be less than " + max + " and cannot be negative."); return;
+                Player.Message(p, "&cNumber must be less than " + max + " and cannot be negative."); return;
             }
             
             if (who != null)
@@ -203,19 +203,19 @@ namespace MCGalaxy.Commands {
         static void MessageDataChanged(Player p, string name, string type, string value) {
             string msg = value == "" ? String.Format("The {1} data for &b{0} %Shas been reset.", name, type)
                 : String.Format("The {1} data for &b{0} %Shas been updated to &a{2} %S.", name, type, value);
-            Player.SendMessage(p, msg);
+            Player.Message(p, msg);
         }
 
         static void MessageValidTypes(Player p) {
-            Player.SendMessage(p, "Valid types: FirstLogin, LastLogin, TotalLogins, Title, TotalDeaths, Money, " +
+            Player.Message(p, "Valid types: FirstLogin, LastLogin, TotalLogins, Title, TotalDeaths, Money, " +
                                "TotalBlocks, TotalCuboid, TotalKicked, TimeSpent, Color, TitleColor ");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/pe <username> <type> <value>");
-            Player.SendMessage(p, "Edits an online or offline player's information. Use with caution!");
+            Player.Message(p, "/pe <username> <type> <value>");
+            Player.Message(p, "Edits an online or offline player's information. Use with caution!");
             MessageValidTypes(p);
-            Player.SendMessage(p, "To see value format for a specific type, leave <value> blank.");
+            Player.Message(p, "To see value format for a specific type, leave <value> blank.");
         }
     }
 }

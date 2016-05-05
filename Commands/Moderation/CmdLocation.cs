@@ -36,10 +36,10 @@ namespace MCGalaxy.Commands {
             string ip = "";
             Player who = PlayerInfo.Find(message);
             if (who == null) {
-                Player.SendMessage(p, "&eNo online player \"" + message + "\", searching database..");
+                Player.Message(p, "&eNo online player \"" + message + "\", searching database..");
                 OfflinePlayer target = PlayerInfo.FindOffline(message);
                 if (target == null) {
-                    Player.SendMessage(p, "&cCould not find player at all"); return;
+                    Player.Message(p, "&cCould not find player at all"); return;
                 }
                 ip = target.ip;
             } else {
@@ -47,10 +47,10 @@ namespace MCGalaxy.Commands {
             }
             
             if (Player.IPInPrivateRange(ip)) {
-                Player.SendMessage(p, Colors.red + "Player has an internal IP, cannot trace"); return;
+                Player.Message(p, Colors.red + "Player has an internal IP, cannot trace"); return;
             }        
             string name = who != null ? who.name : message;
-            Player.SendMessage(p, "&aThe IP of &b" + name + " &ahas been traced to: &b" + GetIPLocation(ip));
+            Player.Message(p, "&aThe IP of &b" + name + " &ahas been traced to: &b" + GetIPLocation(ip));
         }
         
         static string GetIPLocation(string IP) {
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/location <name> - Tracks down the location of the IP associated with <name>.");
+            Player.Message(p, "/location <name> - Tracks down the location of the IP associated with <name>.");
         }
     }
 }

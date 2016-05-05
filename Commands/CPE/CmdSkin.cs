@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") {
                 if (p == null) {
-                    Player.SendMessage(p, "Console must provide a player or bot name."); return;
+                    Player.Message(p, "Console must provide a player or bot name."); return;
                 }
                 message = p.truename;
             }
@@ -55,12 +55,12 @@ namespace MCGalaxy.Commands {
             } else {
                 isBot = false;
                 who = p;
-                if (who == null) { Player.SendMessage(p, "Console must provide a player name."); return; }
+                if (who == null) { Player.Message(p, "Console must provide a player name."); return; }
                 skin = message;
             }
 
             if (!Player.ValidName(skin)) {
-                Player.SendMessage(p, "\"" + skin + "\" is not a valid skin name."); return;
+                Player.Message(p, "\"" + skin + "\" is not a valid skin name."); return;
             }
             if (isBot) {
                 pBot.skinName = skin;
@@ -82,9 +82,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/skin [name] [skin] - Sets the skin of that player.");
-            Player.SendMessage(p, "/skin bot [name] [model] - Sets the model of that bot.");
-            Player.SendMessage(p, "For example, the player \"Test\" by default has the skin \"Test\".");
+            Player.Message(p, "/skin [name] [skin] - Sets the skin of that player.");
+            Player.Message(p, "/skin bot [name] [model] - Sets the model of that bot.");
+            Player.Message(p, "For example, the player \"Test\" by default has the skin \"Test\".");
         }
     }
 }

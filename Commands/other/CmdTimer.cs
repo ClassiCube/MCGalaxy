@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (p.cmdTimer) { Player.SendMessage(p, "Can only have one timer at a time. Use /abort to cancel your previous timer."); return; }
+            if (p.cmdTimer) { Player.Message(p, "Can only have one timer at a time. Use /abort to cancel your previous timer."); return; }
 
             System.Timers.Timer messageTimer = new System.Timers.Timer(5000);
             if (message == "") { Help(p); return; }
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
                 TotalTime = 60;
             }
 
-            if (TotalTime > 300) { Player.SendMessage(p, "Cannot have more than 5 minutes in a timer"); return; }
+            if (TotalTime > 300) { Player.Message(p, "Cannot have more than 5 minutes in a timer"); return; }
 
             Chat.GlobalChatLevel(p, "Timer lasting for " + TotalTime + " seconds has started.", false);
             TotalTime = (int)(TotalTime / 5);
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands
                 TotalTime--;
                 if (TotalTime < 1 || !p.cmdTimer)
                 {
-                    Player.SendMessage(p, "Timer ended.");
+                    Player.Message(p, "Timer ended.");
                     messageTimer.Stop();
                     messageTimer.Dispose();
                 }
@@ -72,8 +72,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/timer [time] [message] - Starts a timer which repeats [message] every 5 seconds.");
-            Player.SendMessage(p, "Repeats constantly until [time] has passed");
+            Player.Message(p, "/timer [time] [message] - Starts a timer which repeats [message] every 5 seconds.");
+            Player.Message(p, "Repeats constantly until [time] has passed");
         }
     }
 }

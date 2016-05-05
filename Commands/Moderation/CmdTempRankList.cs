@@ -28,16 +28,16 @@ namespace MCGalaxy.Commands {
             int count = 0;
             foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
                 if (count == 0)
-                    Player.SendMessage(p, "&ePlayers with a temporary rank assigned:");
+                    Player.Message(p, "&ePlayers with a temporary rank assigned:");
                 CmdTempRankInfo.PrintTempRankInfo(p, line);
                 count++;
             }
             if (count == 0)
-                Player.SendMessage(p, "&cThere are no players with a temporary rank assigned.");
+                Player.Message(p, "&cThere are no players with a temporary rank assigned.");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/trl - Lists every user with a temporary rank");
+            Player.Message(p, "/trl - Lists every user with a temporary rank");
         }
     }
 }

@@ -36,15 +36,15 @@ namespace MCGalaxy.Commands {
             if (who == null) return;
             byte amount = 0;
             if (!byte.TryParse(args[1], out amount)) {
-                Player.SendMessage(p, "The bounty amount must be an positive integer less than 256."); return;
+                Player.Message(p, "The bounty amount must be an positive integer less than 256."); return;
             }
             if (p.money < amount) {
-                Player.SendMessage(p, "You do not have enough " + Server.moneys + " to place such a large bountry."); return;
+                Player.Message(p, "You do not have enough " + Server.moneys + " to place such a large bountry."); return;
             }
             
             BountyData old;
             if (Server.zombie.Bounties.TryGetValue(who.name, out old) && old.Amount >= amount) {
-                Player.SendMessage(p, "There is already a larger active bounty for " + who.name + "."); return;
+                Player.Message(p, "There is already a larger active bounty for " + who.name + "."); return;
             }
             
             if (old == null) {
@@ -58,8 +58,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/bounty [name] [amount]");
-            Player.SendMessage(p, "%HSets a bounty on the given player.");
+            Player.Message(p, "%T/bounty [name] [amount]");
+            Player.Message(p, "%HSets a bounty on the given player.");
         }
     }
 }

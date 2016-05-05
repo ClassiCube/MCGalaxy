@@ -40,14 +40,14 @@ namespace MCGalaxy.Commands {
             string strLimit = args[1];
             int limit = 0;
             if (!Int32.TryParse(strLimit, out limit)) {
-                Player.SendMessage(p, string.Format("/Top: Invalid limit \"{0}\".", strLimit));
+                Player.Message(p, string.Format("/Top: Invalid limit \"{0}\".", strLimit));
                 return;
             }
             if (limit < 1) {
-                Player.SendMessage(p, string.Format("/Top: \"{0}\" is too small a limit, the min is 1.", strLimit));
+                Player.Message(p, string.Format("/Top: \"{0}\" is too small a limit, the min is 1.", strLimit));
                 return;
             } else if (limit > 15) {
-                Player.SendMessage(p, string.Format("/Top: \"{0}\" is too big a limit, the max is 15.", strLimit));
+                Player.Message(p, string.Format("/Top: \"{0}\" is too big a limit, the max is 15.", strLimit));
                 return;
             }
             
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands {
                     title = "&aTop consecutive rounds survived:";
                     table = "ZombieStats"; break;
                 default:
-                    Player.SendMessage(p, string.Format("/Top: Unrecognised type \"{0}\".", args[0]));
+                    Player.Message(p, string.Format("/Top: Unrecognised type \"{0}\".", args[0]));
                     return;
             }
             
@@ -111,26 +111,26 @@ namespace MCGalaxy.Commands {
                 string.Format(query, select, columnName.ToLower(), table,
                               columnName.ToLower(), order, limit));
             
-            Player.SendMessage(p, title);
+            Player.Message(p, title);
             for (int i = 0; i < db.Rows.Count; i++) {
-                Player.SendMessage(p, (i + 1) + ") " + db.Rows[i][select] + " - [" + db.Rows[i][columnName] + "]");
+                Player.Message(p, (i + 1) + ") " + db.Rows[i][select] + " - [" + db.Rows[i][columnName] + "]");
             }
             db.Dispose();
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%2/top [#] [number] - Prints a particular top list with number of entries");
+            Player.Message(p, "%2/top [#] [number] - Prints a particular top list with number of entries");
             SendRecognisedTypes(p);
         }
         
         internal static void SendRecognisedTypes(Player p) {
-            Player.SendMessage(p, "1) Most logins   2) Most deaths");
-            Player.SendMessage(p, "3) Money   4) First Players");
-            Player.SendMessage(p, "5) Recent Players   6) Blocks Modified");
-            Player.SendMessage(p, "7) Most kicks");
+            Player.Message(p, "1) Most logins   2) Most deaths");
+            Player.Message(p, "3) Money   4) First Players");
+            Player.Message(p, "5) Recent Players   6) Blocks Modified");
+            Player.Message(p, "7) Most kicks");
             if (!Server.zombie.Running) return;
-            Player.SendMessage(p, "8) Most infected   9) Most rounds survived");
-            Player.SendMessage(p, "10) Max infected   11) Max rounds survived");
+            Player.Message(p, "8) Most infected   9) Most rounds survived");
+            Player.Message(p, "10) Max infected   11) Max rounds survived");
         }
     }
     
@@ -149,7 +149,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%2/topfive [#] - Prints a particular top five list");
+            Player.Message(p, "%2/topfive [#] - Prints a particular top five list");
             CmdTop.SendRecognisedTypes(p);
         }
     }
@@ -169,7 +169,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%2/topten [#] - Prints a particular top ten list");
+            Player.Message(p, "%2/topten [#] - Prints a particular top ten list");
             CmdTop.SendRecognisedTypes(p);
         }
     }

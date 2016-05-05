@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             cpos.message = message.ToLower();
             p.blockchangeObject = cpos;
             
-            Player.SendMessage(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
@@ -66,9 +66,9 @@ namespace MCGalaxy.Commands {
         struct CatchPos { public ushort x, y, z; public string message; }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/replace [block] [block2].. [new]");
-            Player.SendMessage(p, "%HReplaces [block] with [new] between two points.");
-            Player.SendMessage(p, "%H   If more than one [block] is specified, they will all be replaced.");
+            Player.Message(p, "%T/replace [block] [block2].. [new]");
+            Player.Message(p, "%HReplaces [block] with [new] between two points.");
+            Player.Message(p, "%H   If more than one [block] is specified, they will all be replaced.");
         }
     }
     
@@ -80,9 +80,9 @@ namespace MCGalaxy.Commands {
         protected override bool ReplaceNot { get { return true; } }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/replacenot [block] [block2].. [new]");
-            Player.SendMessage(p, "%HReplaces everything but [block] with [new] between two points.");
-            Player.SendMessage(p, "%H   If more than one [block] is specified, they will all be ignored.");
+            Player.Message(p, "%T/replacenot [block] [block2].. [new]");
+            Player.Message(p, "%HReplaces everything but [block] with [new] between two points.");
+            Player.Message(p, "%H   If more than one [block] is specified, they will all be ignored.");
         }
     }
     
@@ -106,13 +106,13 @@ namespace MCGalaxy.Commands {
             DrawOp drawOp = new CuboidDrawOp();
             if (!DrawOp.DoDrawOp(drawOp, brush, p, 0, 0, 0, x2, y2, z2))
                 return;
-            Player.SendMessage(p, "&4/replaceall finished!");
+            Player.Message(p, "&4/replaceall finished!");
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/replaceall [block] [block2].. [new]");
-            Player.SendMessage(p, "%HReplaces [block] with [new] for the entire map.");
-            Player.SendMessage(p, "%H   If more than one [block] is specified, they will all be replaced.");
+            Player.Message(p, "%T/replaceall [block] [block2].. [new]");
+            Player.Message(p, "%HReplaces [block] with [new] for the entire map.");
+            Player.Message(p, "%H   If more than one [block] is specified, they will all be replaced.");
         }
     }
 }

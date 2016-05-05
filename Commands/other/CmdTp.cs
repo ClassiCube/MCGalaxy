@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             Player target = PlayerInfo.FindOrShowMatches(p, message);
             if (target == null) return;
             if (target.level.IsMuseum) {
-                Player.SendMessage(p, "Player \"" + message + "\" is in a museum!"); return;
+                Player.Message(p, "Player \"" + message + "\" is in a museum!"); return;
             }
         
             if (!Server.higherranktp && p.group.Permission < target.group.Permission) {
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
             
             IGame game = target.level.CurrentGame();
             if (!p.Game.Referee && game != null && !game.TeleportAllowed) {
-                Player.SendMessage(p, "You can only teleport to players who are " +
+                Player.Message(p, "You can only teleport to players who are " +
                                    "playing a game when you are in referee mode."); return;
             }
             
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
             if (p.level != target.level)
                 Command.all.Find("goto").Use(p, target.level.name);            
             if (target.Loading) {
-                Player.SendMessage(p, "Waiting for " + target.ColoredName + " %Sto spawn...");
+                Player.Message(p, "Waiting for " + target.ColoredName + " %Sto spawn...");
                 target.BlockUntilLoad(10);
             }
             p.BlockUntilLoad(10);  //Wait for player to spawn in new map
@@ -61,8 +61,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/tp [target] - Teleports yourself to that player.");
-            Player.SendMessage(p, "Use /p2p to teleport a given player to a different player.");
+            Player.Message(p, "/tp [target] - Teleports yourself to that player.");
+            Player.Message(p, "Use /p2p to teleport a given player to a different player.");
         }
     }
 }

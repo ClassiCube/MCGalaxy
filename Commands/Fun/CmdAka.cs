@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             p.Game.Aka = !p.Game.Aka;
             Player[] players = PlayerInfo.Online.Items;
-            Player.SendMessage(p, "AKA mode is now: " + (p.Game.Aka ? "&aon" : "&coff"));
+            Player.Message(p, "AKA mode is now: " + (p.Game.Aka ? "&aon" : "&coff"));
             
             foreach (Player pl in players) {
                 if (pl.level != p.level || p == pl || !Entities.CanSeeEntity(p, pl)) continue;
@@ -40,8 +40,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/aka");
-            Player.SendMessage(p, "%HToggles whether infected players show their actual names.");
+            Player.Message(p, "%T/aka");
+            Player.Message(p, "%HToggles whether infected players show their actual names.");
         }
     }
 }

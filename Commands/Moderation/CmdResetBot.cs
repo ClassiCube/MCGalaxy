@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/resetbot - reloads the IRCBot. FOR EMERGENCIES ONLY!");
+            Player.Message(p, "/resetbot - reloads the IRCBot. FOR EMERGENCIES ONLY!");
         }
     }
 }

@@ -37,20 +37,20 @@ namespace MCGalaxy.Commands {
                 string[] parts = line.Split(' ');
                 Group newgroup = Group.Find(parts[2]);
                 Command.all.Find("setrank").Use(null, message + " " + newgroup.name + " temp rank unassigned");
-                Player.SendMessage(p, "&eTemp rank of &a" + message + "&e has been unassigned");
+                Player.Message(p, "&eTemp rank of &a" + message + "&e has been unassigned");
                 if (who != null)
-                    Player.SendMessage(who, "&eYour temp rank has been unassigned");
+                    Player.Message(who, "&eYour temp rank has been unassigned");
                 assigned = true;
             }
             
             if (!assigned) {
-                Player.SendMessage(p, "&a" + message + "&c has not been assigned a temp rank."); return;
+                Player.Message(p, "&a" + message + "&c has not been assigned a temp rank."); return;
             }
             File.WriteAllText("text/tempranks.txt", all.ToString());
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/dtr <player> - Deletes that player's temp rank");
+            Player.Message(p, "/dtr <player> - Deletes that player's temp rank");
         }
     }
 }

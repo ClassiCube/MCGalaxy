@@ -32,13 +32,13 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             Player nick = PlayerInfo.FindNick(p, message);
             if (nick == null) {
-                Player.SendMessage(p, "The player is not online."); return;
+                Player.Message(p, "The player is not online."); return;
             }
-            Player.SendMessage(p, "This player's real username is " + nick.name);
+            Player.Message(p, "This player's real username is " + nick.name);
         }
         
         public override void Help(Player p) {
-           Player.SendMessage(p, "/whonick <nickname> - Displays player's real username");
+           Player.Message(p, "/whonick <nickname> - Displays player's real username");
         }
     }
 }

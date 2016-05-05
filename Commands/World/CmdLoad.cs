@@ -53,11 +53,11 @@ namespace MCGalaxy.Commands
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level l in loaded)
                 {
-                    if (l.name == message) { Player.SendMessage(p, message + " is already loaded!"); return; }
+                    if (l.name == message) { Player.Message(p, message + " is already loaded!"); return; }
                 }
 
                 if (!LevelInfo.ExistsOffline(message)) {
-                    Player.SendMessage(p, "Level \"" + message + "\" doesn't exist!"); return;
+                    Player.Message(p, "Level \"" + message + "\" doesn't exist!"); return;
                 }
 
                 Level level = Level.Load(message);
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands
                         level = Level.Load(message);
                         if (level == null)
                         {
-                            Player.SendMessage(p, "Loading backup failed.");
+                            Player.Message(p, "Loading backup failed.");
                             string backupPath = Server.backupLocation;
                             if (Directory.Exists(backupPath + "/" + message))
                             {
@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
                                 level = Level.Load(message);
                                 if (level == null)
                                 {
-                                    Player.SendMessage(p, "Loading latest backup failed as well.");
+                                    Player.Message(p, "Loading latest backup failed as well.");
                                 }
                             } 
                             return;
@@ -94,14 +94,14 @@ namespace MCGalaxy.Commands
                     }
                     else
                     {
-                        Player.SendMessage(p, "Backup of " + message + " does not exist.");
+                        Player.Message(p, "Backup of " + message + " does not exist.");
                         return;
                     }
                 }
 
                 if (p != null) if (level.permissionvisit > p.group.Permission)
                     {
-                        Player.SendMessage(p, "This map is for " + Level.PermissionToName(level.permissionvisit) + " only!");
+                        Player.Message(p, "This map is for " + Level.PermissionToName(level.permissionvisit) + " only!");
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
                         return;
@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands
                 {
                     if (l.name == message)
                     {
-                        Player.SendMessage(p, message + " is already loaded!");
+                        Player.Message(p, message + " is already loaded!");
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
                         return;
@@ -142,7 +142,7 @@ namespace MCGalaxy.Commands
                 }
                 catch
                 {
-                    Player.SendMessage(p, "Physics variable invalid");
+                    Player.Message(p, "Physics variable invalid");
                 }
             }
             catch (Exception e)
@@ -158,7 +158,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/load <level> <physics> - Loads a level.");
+            Player.Message(p, "/load <level> <physics> - Loads a level.");
         }
     }
 }

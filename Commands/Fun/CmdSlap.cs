@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             if (who == null) {
                 Level lvl = LevelInfo.Find(message);
                 if (lvl == null) {
-                    Player.SendMessage(p, "Could not find player or map specified"); return;
+                    Player.Message(p, "Could not find player or map specified"); return;
                 }
                 
                 Player[] players = PlayerInfo.Online.Items;
@@ -68,8 +68,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/slap <name> - Slaps <name>, knocking them into the air");
-            Player.SendMessage(p, "/slap <level> - Slaps all players on <level> that are a lower rank than you, knocking them into the air");
+            Player.Message(p, "/slap <name> - Slaps <name>, knocking them into the air");
+            Player.Message(p, "/slap <level> - Slaps all players on <level> that are a lower rank than you, knocking them into the air");
         }
     }
 }

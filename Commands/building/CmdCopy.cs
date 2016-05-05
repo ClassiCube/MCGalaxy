@@ -53,21 +53,21 @@ namespace MCGalaxy.Commands
 				if (parts.Length != 2) { Help(p); return; }
 				string path = "extra/savecopy/" + parts[1] + "/" + message + ".cpy";
 				if (!File.Exists(path)) {
-					Player.SendMessage(p, "No such copy exists"); return;
+					Player.Message(p, "No such copy exists"); return;
 				}
 				
 				File.Delete(path);
-				Player.SendMessage(p, "Deleted copy " + parts[1]);
+				Player.Message(p, "Deleted copy " + parts[1]);
 			} else if (opt == "list") {
 				string dir = "extra/savecopy/" + p.name;
 				if (!Directory.Exists(dir)) {
-					Player.SendMessage(p, "No such directory exists"); return;
+					Player.Message(p, "No such directory exists"); return;
 				}
 				
 				FileInfo[] fin = new DirectoryInfo(dir).GetFiles();
 				for (int i = 0; i < fin.Length; i++) {
 					string name = fin[i].Name.Replace(".cpy", "").Replace(".cpb", "");
-					Player.SendMessage(p, name);
+					Player.Message(p, name);
 				}
 			} else {
 				HandleOther(p, opt, parts, allowoffset);
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
 			}
 
 			p.blockchangeObject = cpos;
-			Player.SendMessage(p, "Place two blocks to determine the edges.");
+			Player.Message(p, "Place two blocks to determine the edges.");
 			p.ClearBlockchange();
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
 		}
@@ -132,8 +132,8 @@ namespace MCGalaxy.Commands
 			p.CopyBuffer = state;
 
 			if ((state.Volume - totalAir) > p.group.maxBlocks) {
-				Player.SendMessage(p, "You tried to copy " + state.Volume + " blocks.");
-				Player.SendMessage(p, "You cannot copy more than " + p.group.maxBlocks + ".");
+				Player.Message(p, "You tried to copy " + state.Volume + " blocks.");
+				Player.Message(p, "You cannot copy more than " + p.group.maxBlocks + ".");
 				p.CopyBuffer = null;
 				return;
 			}
@@ -148,9 +148,9 @@ namespace MCGalaxy.Commands
 					p.level.UpdateBlock(p, xx, yy, zz, Block.air, 0);
 			}
 
-			Player.SendMessage(p, (state.Volume - totalAir) + " blocks copied.");
+			Player.Message(p, (state.Volume - totalAir) + " blocks copied.");
 			if (cpos.allowoffset != -1) {
-				Player.SendMessage(p, "Place a block to determine where to paste from");
+				Player.Message(p, "Place a block to determine where to paste from");
 				p.Blockchange += new Player.BlockchangeEventHandler(Blockchange3);
 			}
 		}
@@ -166,7 +166,7 @@ namespace MCGalaxy.Commands
 
 		void SaveCopy(Player p, string file) {
 			if (!Player.ValidName(file)) {
-				Player.SendMessage(p, "Bad file name"); return;
+				Player.Message(p, "Bad file name"); return;
 			}
 			
 			if (!Directory.Exists("extra/savecopy"))
@@ -174,7 +174,7 @@ namespace MCGalaxy.Commands
 			if (!Directory.Exists("extra/savecopy/" + p.name))
 				Directory.CreateDirectory("extra/savecopy/" + p.name);
 			if (Directory.GetFiles("extra/savecopy/" + p.name).Length > 15) {
-				Player.SendMessage(p, "You can only save a maxmium of 15 copies. /copy delete some.");
+				Player.Message(p, "You can only save a maxmium of 15 copies. /copy delete some.");
 				return;
 			}
 			
@@ -184,7 +184,7 @@ namespace MCGalaxy.Commands
 			{
 				p.CopyBuffer.SaveTo(gs);
 			}
-			Player.SendMessage(p, "Saved copy as " + file);
+			Player.Message(p, "Saved copy as " + file);
 		}
 
 		void LoadCopy(Player p, string file) {
@@ -192,7 +192,7 @@ namespace MCGalaxy.Commands
 			bool existsNew = File.Exists(path + ".cpb");
 			bool existsOld = File.Exists(path + ".cpy");
 			if (!existsNew && !existsOld) {
-				Player.SendMessage(p, "No such copy exists"); return;
+				Player.Message(p, "No such copy exists"); return;
 			}
 			path = existsNew ? path + ".cpb" : path + ".cpy";
 
@@ -206,20 +206,20 @@ namespace MCGalaxy.Commands
 					state.LoadFromOld(gs, fs);
 				p.CopyBuffer = state;
 			}
-			Player.SendMessage(p, "Loaded copy as " + file);
+			Player.Message(p, "Loaded copy as " + file);
 		}
 		
 		struct CatchPos { public ushort x, y, z; public int type; public int allowoffset; }
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "/copy - Copies the blocks in an area.");
-			Player.SendMessage(p, "/copy save <save_name> - Saves what you have copied.");
-			Player.SendMessage(p, "/copy load <load_name> - Loads what you have saved.");
-			Player.SendMessage(p, "/copy delete <delete_name> - Deletes the specified copy.");
-			Player.SendMessage(p, "/copy list - Lists all saved copies you have");
-			Player.SendMessage(p, "/copy cut - Copies the blocks in an area, then removes them.");
-			Player.SendMessage(p, "/copy air - Copies the blocks in an area, including air.");
-			Player.SendMessage(p, "/copy @ - @ toggle for all the above, gives you a third click after copying that determines where to paste from");
+			Player.Message(p, "/copy - Copies the blocks in an area.");
+			Player.Message(p, "/copy save <save_name> - Saves what you have copied.");
+			Player.Message(p, "/copy load <load_name> - Loads what you have saved.");
+			Player.Message(p, "/copy delete <delete_name> - Deletes the specified copy.");
+			Player.Message(p, "/copy list - Lists all saved copies you have");
+			Player.Message(p, "/copy cut - Copies the blocks in an area, then removes them.");
+			Player.Message(p, "/copy air - Copies the blocks in an area, including air.");
+			Player.Message(p, "/copy @ - @ toggle for all the above, gives you a third click after copying that determines where to paste from");
 		}
 	}
 }

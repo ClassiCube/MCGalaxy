@@ -27,11 +27,11 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             for (int i = 0; i < 20; i++)
                 p.SendBlankMessage();
-            Player.SendMessage(p, "%4Chat cleared.");
+            Player.Message(p, "%4Chat cleared.");
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/playercls - Clears your chat.");
+            Player.Message(p, "/playercls - Clears your chat.");
         }
     }
 }

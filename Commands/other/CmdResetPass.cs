@@ -38,24 +38,24 @@ namespace MCGalaxy.Commands {
             if (who == null) return;
             
             if (p != null && (Server.server_owner == "Notch" || Server.server_owner == "")) {
-                Player.SendMessage(p, "Please tell the server owner to change the 'Server Owner' property.");
+                Player.Message(p, "Please tell the server owner to change the 'Server Owner' property.");
                 return;
             }
             if (p != null && Server.server_owner != p.name)  {
-                Player.SendMessage(p, "You're not the server owner!"); return;
+                Player.Message(p, "You're not the server owner!"); return;
             }
             
             if (!File.Exists("extra/passwords/" + who.name + ".dat")) {
-                Player.SendMessage(p, "The player you specified does not have a password!"); return;
+                Player.Message(p, "The player you specified does not have a password!"); return;
             }
             File.Delete("extra/passwords/" + who.name + ".dat");
-            Player.SendMessage(p, "The admin password has sucessfully been removed for " + who.ColoredName + "!");
+            Player.Message(p, "The admin password has sucessfully been removed for " + who.ColoredName + "!");
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/resetpass [Player]");
-            Player.SendMessage(p, "%HResets the password for the specified player.");
-            Player.SendMessage(p, "%HNote: Can only be used by console and the server owner.");
+            Player.Message(p, "%T/resetpass [Player]");
+            Player.Message(p, "%HResets the password for the specified player.");
+            Player.Message(p, "%HNote: Can only be used by console and the server owner.");
         }
     }
 }

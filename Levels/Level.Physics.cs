@@ -95,7 +95,7 @@ namespace MCGalaxy {
                             Player[] online = PlayerInfo.Online.Items;
                             foreach (Player p in online) {
                                 if (p.level != this) continue;
-                                Player.SendMessage(p, "Physics warning!");
+                                Player.Message(p, "Physics warning!");
                             }
                             Server.s.Log("Physics warning on " + name);
 

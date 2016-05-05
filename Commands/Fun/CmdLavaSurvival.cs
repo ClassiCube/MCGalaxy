@@ -34,18 +34,18 @@ namespace MCGalaxy.Commands
 		{
 			if (String.IsNullOrEmpty(message)) { Help(p); return; }
 			string[] s = message.ToLower().Split(' ');
-			if (p == null && (s[0] == "go" || s[0] == "setup")) { Player.SendMessage(p, "The \"" + s[0] + "\" command can only be used in-game!"); return; }
+			if (p == null && (s[0] == "go" || s[0] == "setup")) { Player.Message(p, "The \"" + s[0] + "\" command can only be used in-game!"); return; }
 
 			if (s[0] == "go")
 			{
-				if (!Server.lava.active) { Player.SendMessage(p, "There is no Lava Survival game right now."); return; }
+				if (!Server.lava.active) { Player.Message(p, "There is no Lava Survival game right now."); return; }
 				Command.all.Find("goto").Use(p, Server.lava.map.name);
 				return;
 			}
 			if (s[0] == "info")
 			{
-				if (!Server.lava.active) { Player.SendMessage(p, "There is no Lava Survival game right now."); return; }
-				if (!Server.lava.roundActive) { Player.SendMessage(p, "The round of Lava Survival hasn't started yet."); return; }
+				if (!Server.lava.active) { Player.Message(p, "There is no Lava Survival game right now."); return; }
+				if (!Server.lava.roundActive) { Player.Message(p, "The round of Lava Survival hasn't started yet."); return; }
 				Server.lava.AnnounceRoundInfo(p, p == null);
 				Server.lava.AnnounceTimeLeft(!Server.lava.flooded, true, p, p == null);
 				return;
@@ -60,16 +60,16 @@ namespace MCGalaxy.Commands
 							Player.GlobalMessage("Lava Survival has started! Join the fun with /ls go");
 							return;
 						case 1:
-							Player.SendMessage(p, "There is already an active Lava Survival game.");
+							Player.Message(p, "There is already an active Lava Survival game.");
 							return;
 						case 2:
-							Player.SendMessage(p, "You must have at least 3 configured maps to play Lava Survival.");
+							Player.Message(p, "You must have at least 3 configured maps to play Lava Survival.");
 							return;
 						case 3:
-							Player.SendMessage(p, "The specified map doesn't exist.");
+							Player.Message(p, "The specified map doesn't exist.");
 							return;
 						default:
-							Player.SendMessage(p, "An unknown error occurred.");
+							Player.Message(p, "An unknown error occurred.");
 							return;
 					}
 				}
@@ -81,19 +81,19 @@ namespace MCGalaxy.Commands
 							Player.GlobalMessage("Lava Survival has ended! We hope you had fun!");
 							return;
 						case 1:
-							Player.SendMessage(p, "There isn't an active Lava Survival game.");
+							Player.Message(p, "There isn't an active Lava Survival game.");
 							return;
 						default:
-							Player.SendMessage(p, "An unknown error occurred.");
+							Player.Message(p, "An unknown error occurred.");
 							return;
 					}
 				}
 				if (s[0] == "end")
 				{
-					if (!Server.lava.active) { Player.SendMessage(p, "There isn't an active Lava Survival game."); return; }
+					if (!Server.lava.active) { Player.Message(p, "There isn't an active Lava Survival game."); return; }
 					if (Server.lava.roundActive) Server.lava.EndRound();
 					else if (Server.lava.voteActive) Server.lava.EndVote();
-					else Player.SendMessage(p, "There isn't an active round or vote to end.");
+					else Player.Message(p, "There isn't an active round or vote to end.");
 					return;
 				}
 			}
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands
 				if (s[0] == "setup")
 				{
 					if (s.Length < 2) { SetupHelp(p); return; }
-					if (Server.lava.active) { Player.SendMessage(p, "You cannot configure Lava Survival while a game is active."); return; }
+					if (Server.lava.active) { Player.Message(p, "You cannot configure Lava Survival while a game is active."); return; }
 					if (s[1] == "map")
 					{
 						if (s.Length < 3) { SetupHelp(p, "map"); return; }
@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands
 						}
 						else
 						{
-							if (foundLevel == Server.mainLevel) { Player.SendMessage(p, "You cannot use the main map for Lava Survival."); return; }
+							if (foundLevel == Server.mainLevel) { Player.Message(p, "You cannot use the main map for Lava Survival."); return; }
 							if (Server.lava.HasMap(foundLevel.name))
 							{
 								Server.lava.RemoveMap(foundLevel.name);
@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands
 								foundLevel.unload = true;
 								foundLevel.loadOnGoto = true;
 								Level.SaveSettings(foundLevel);
-								Player.SendMessage(p, "Map \"" + foundLevel.name + "\" has been removed.");
+								Player.Message(p, "Map \"" + foundLevel.name + "\" has been removed.");
 								return;
 							}
 							else
@@ -140,19 +140,19 @@ namespace MCGalaxy.Commands
 								foundLevel.unload = false;
 								foundLevel.loadOnGoto = false;
 								Level.SaveSettings(foundLevel);
-								Player.SendMessage(p, "Map \"" + foundLevel.name + "\" has been added.");
+								Player.Message(p, "Map \"" + foundLevel.name + "\" has been added.");
 								return;
 							}
 						}
 					}
 					if (s[1] == "block")
 					{
-						if (!Server.lava.HasMap(p.level.name)) { Player.SendMessage(p, "Add the map before configuring it."); return; }
+						if (!Server.lava.HasMap(p.level.name)) { Player.Message(p, "Add the map before configuring it."); return; }
 						if (s.Length < 3) { SetupHelp(p, "block"); return; }
 
 						if (s[2] == "flood")
 						{
-							Player.SendMessage(p, "Place or destroy the block you want to be the total flood block spawn point.");
+							Player.Message(p, "Place or destroy the block you want to be the total flood block spawn point.");
 							CatchPos cpos; cpos.mode = 0;
 							cpos.x = 0; cpos.y = 0; cpos.z = 0;
 							p.blockchangeObject = cpos;
@@ -162,7 +162,7 @@ namespace MCGalaxy.Commands
 						}
 						if (s[2] == "layer")
 						{
-							Player.SendMessage(p, "Place or destroy the block you want to be the layer flood base spawn point.");
+							Player.Message(p, "Place or destroy the block you want to be the layer flood base spawn point.");
 							CatchPos cpos; cpos.mode = 1;
 							cpos.x = 0; cpos.y = 0; cpos.z = 0;
 							p.blockchangeObject = cpos;
@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands
 					}
 					if (s[1] == "safezone" || s[1] == "safe")
 					{
-						Player.SendMessage(p, "Place two blocks to determine the edges.");
+						Player.Message(p, "Place two blocks to determine the edges.");
 						CatchPos cpos; cpos.mode = 2;
 						cpos.x = 0; cpos.y = 0; cpos.z = 0;
 						p.blockchangeObject = cpos;
@@ -188,13 +188,13 @@ namespace MCGalaxy.Commands
 					{
 						if (s.Length < 3)
 						{
-							Player.SendMessage(p, "Maps: &b" + Server.lava.Maps.Concatenate(", "));
-							Player.SendMessage(p, "Setup rank: " + Group.findPerm(Server.lava.setupRank).ColoredName);
-							Player.SendMessage(p, "Control rank: " + Group.findPerm(Server.lava.controlRank).ColoredName);
-							Player.SendMessage(p, "Start on server startup: " + (Server.lava.startOnStartup ? "&aON" : "&cOFF"));
-							Player.SendMessage(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
-							Player.SendMessage(p, "Vote count: &b" + Server.lava.voteCount);
-							Player.SendMessage(p, "Vote time: &b" + Server.lava.voteTime + " minute" + (Server.lava.voteTime == 1 ? "" : "s"));
+							Player.Message(p, "Maps: &b" + Server.lava.Maps.Concatenate(", "));
+							Player.Message(p, "Setup rank: " + Group.findPerm(Server.lava.setupRank).ColoredName);
+							Player.Message(p, "Control rank: " + Group.findPerm(Server.lava.controlRank).ColoredName);
+							Player.Message(p, "Start on server startup: " + (Server.lava.startOnStartup ? "&aON" : "&cOFF"));
+							Player.Message(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
+							Player.Message(p, "Vote count: &b" + Server.lava.voteCount);
+							Player.Message(p, "Vote time: &b" + Server.lava.voteTime + " minute" + (Server.lava.voteTime == 1 ? "" : "s"));
 							return;
 						}
 
@@ -204,15 +204,15 @@ namespace MCGalaxy.Commands
 							{
 								case "sendafkmain":
 									Server.lava.sendAfkMain = !Server.lava.sendAfkMain;
-									Player.SendMessage(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
+									Player.Message(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
 									break;
 								case "votecount":
 									Server.lava.voteCount = (byte)MathHelper.Clamp(decimal.Parse(s[3]), 2, 10);
-									Player.SendMessage(p, "Vote count: &b" + Server.lava.voteCount);
+									Player.Message(p, "Vote count: &b" + Server.lava.voteCount);
 									break;
 								case "votetime":
 									Server.lava.voteTime = double.Parse(s[3]);
-									Player.SendMessage(p, "Vote time: &b" + Server.lava.voteTime + "minute" + (Server.lava.voteTime == 1 ? "" : "s"));
+									Player.Message(p, "Vote time: &b" + Server.lava.voteTime + "minute" + (Server.lava.voteTime == 1 ? "" : "s"));
 									break;
 								default:
 									SetupHelp(p, "settings");
@@ -221,27 +221,27 @@ namespace MCGalaxy.Commands
 							Server.lava.SaveSettings();
 							return;
 						}
-						catch { Player.SendMessage(p, "INVALID INPUT"); return; }
+						catch { Player.Message(p, "INVALID INPUT"); return; }
 					}
 					if (s[1] == "mapsettings")
 					{
-						if (!Server.lava.HasMap(p.level.name)) { Player.SendMessage(p, "Add the map before configuring it."); return; }
+						if (!Server.lava.HasMap(p.level.name)) { Player.Message(p, "Add the map before configuring it."); return; }
 						LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
 						if (s.Length < 4)
 						{
-							Player.SendMessage(p, "Fast lava chance: &b" + settings.fast + "%");
-							Player.SendMessage(p, "Killer lava/water chance: &b" + settings.killer + "%");
-							Player.SendMessage(p, "Destroy blocks chance: &b" + settings.destroy + "%");
-							Player.SendMessage(p, "Water flood chance: &b" + settings.water + "%");
-							Player.SendMessage(p, "Layer flood chance: &b" + settings.layer + "%");
-							Player.SendMessage(p, "Layer height: &b" + settings.layerHeight + " block" + (settings.layerHeight == 1 ? "" : "s"));
-							Player.SendMessage(p, "Layer count: &b" + settings.layerCount);
-							Player.SendMessage(p, "Layer time: &b" + settings.layerInterval + " minute" + (settings.layerInterval == 1 ? "" : "s"));
-							Player.SendMessage(p, "Round time: &b" + settings.roundTime + " minute" + (settings.roundTime == 1 ? "" : "s"));
-							Player.SendMessage(p, "Flood time: &b" + settings.floodTime + " minute" + (settings.floodTime == 1 ? "" : "s"));
-							Player.SendMessage(p, "Flood position: &b" + settings.blockFlood.ToString(", "));
-							Player.SendMessage(p, "Layer position: &b" + settings.blockLayer.ToString(", "));
-							Player.SendMessage(p, String.Format("Safe zone: &b({0}) ({1})", settings.safeZone[0].ToString(", "), settings.safeZone[1].ToString(", ")));
+							Player.Message(p, "Fast lava chance: &b" + settings.fast + "%");
+							Player.Message(p, "Killer lava/water chance: &b" + settings.killer + "%");
+							Player.Message(p, "Destroy blocks chance: &b" + settings.destroy + "%");
+							Player.Message(p, "Water flood chance: &b" + settings.water + "%");
+							Player.Message(p, "Layer flood chance: &b" + settings.layer + "%");
+							Player.Message(p, "Layer height: &b" + settings.layerHeight + " block" + (settings.layerHeight == 1 ? "" : "s"));
+							Player.Message(p, "Layer count: &b" + settings.layerCount);
+							Player.Message(p, "Layer time: &b" + settings.layerInterval + " minute" + (settings.layerInterval == 1 ? "" : "s"));
+							Player.Message(p, "Round time: &b" + settings.roundTime + " minute" + (settings.roundTime == 1 ? "" : "s"));
+							Player.Message(p, "Flood time: &b" + settings.floodTime + " minute" + (settings.floodTime == 1 ? "" : "s"));
+							Player.Message(p, "Flood position: &b" + settings.blockFlood.ToString(", "));
+							Player.Message(p, "Layer position: &b" + settings.blockLayer.ToString(", "));
+							Player.Message(p, String.Format("Safe zone: &b({0}) ({1})", settings.safeZone[0].ToString(", "), settings.safeZone[1].ToString(", ")));
 							return;
 						}
 
@@ -251,50 +251,50 @@ namespace MCGalaxy.Commands
 							{
 								case "fast":
 									settings.fast = (byte)MathHelper.Clamp(decimal.Parse(s[3]), 0, 100);
-									Player.SendMessage(p, "Fast lava chance: &b" + settings.fast + "%");
+									Player.Message(p, "Fast lava chance: &b" + settings.fast + "%");
 									break;
 								case "killer":
 									settings.killer = (byte)MathHelper.Clamp(decimal.Parse(s[3]), 0, 100);
-									Player.SendMessage(p, "Killer lava/water chance: &b" + settings.killer + "%");
+									Player.Message(p, "Killer lava/water chance: &b" + settings.killer + "%");
 									break;
 								case "destroy":
 									settings.destroy = (byte)MathHelper.Clamp(decimal.Parse(s[3]), 0, 100);
-									Player.SendMessage(p, "Destroy blocks chance: &b" + settings.destroy + "%");
+									Player.Message(p, "Destroy blocks chance: &b" + settings.destroy + "%");
 									break;
 								case "water":
 									settings.water = (byte)MathHelper.Clamp(decimal.Parse(s[3]), 0, 100);
-									Player.SendMessage(p, "Water flood chance: &b" + settings.water + "%");
+									Player.Message(p, "Water flood chance: &b" + settings.water + "%");
 									break;
 								case "layer":
 									settings.layer = (byte)MathHelper.Clamp(decimal.Parse(s[3]), 0, 100);
-									Player.SendMessage(p, "Layer flood chance: &b" + settings.layer + "%");
+									Player.Message(p, "Layer flood chance: &b" + settings.layer + "%");
 									break;
 								case "layerheight":
 									settings.layerHeight = int.Parse(s[3]);
-									Player.SendMessage(p, "Layer height: &b" + settings.layerHeight + " block" + (settings.layerHeight == 1 ? "" : "s"));
+									Player.Message(p, "Layer height: &b" + settings.layerHeight + " block" + (settings.layerHeight == 1 ? "" : "s"));
 									break;
 								case "layercount":
 									settings.layerCount = int.Parse(s[3]);
-									Player.SendMessage(p, "Layer count: &b" + settings.layerCount);
+									Player.Message(p, "Layer count: &b" + settings.layerCount);
 									break;
 								case "layertime":
 									settings.layerInterval = double.Parse(s[3]);
-									Player.SendMessage(p, "Layer time: &b" + settings.layerInterval + " minute" + (settings.layerInterval == 1 ? "" : "s"));
+									Player.Message(p, "Layer time: &b" + settings.layerInterval + " minute" + (settings.layerInterval == 1 ? "" : "s"));
 									break;
 								case "roundtime":
 									settings.roundTime = double.Parse(s[3]);
-									Player.SendMessage(p, "Round time: &b" + settings.roundTime + " minute" + (settings.roundTime == 1 ? "" : "s"));
+									Player.Message(p, "Round time: &b" + settings.roundTime + " minute" + (settings.roundTime == 1 ? "" : "s"));
 									break;
 								case "floodtime":
 									settings.floodTime = double.Parse(s[3]);
-									Player.SendMessage(p, "Flood time: &b" + settings.floodTime + " minute" + (settings.floodTime == 1 ? "" : "s"));
+									Player.Message(p, "Flood time: &b" + settings.floodTime + " minute" + (settings.floodTime == 1 ? "" : "s"));
 									break;
 								default:
 									SetupHelp(p, "mapsettings");
 									return;
 							}
 						}
-						catch { Player.SendMessage(p, "INVALID INPUT"); return; }
+						catch { Player.Message(p, "INVALID INPUT"); return; }
 						Server.lava.SaveMapSettings(settings);
 						return;
 					}
@@ -305,19 +305,19 @@ namespace MCGalaxy.Commands
 		}
 		public override void Help(Player p)
 		{
-			Player.SendMessage(p, "/lavasurvival <params> - Main command for Lava Survival.");
-			Player.SendMessage(p, "The following params are available:");
-			Player.SendMessage(p, "go - Join the fun!");
-			Player.SendMessage(p, "info - View the current round info and time.");
+			Player.Message(p, "/lavasurvival <params> - Main command for Lava Survival.");
+			Player.Message(p, "The following params are available:");
+			Player.Message(p, "go - Join the fun!");
+			Player.Message(p, "info - View the current round info and time.");
 			if (p == null || p.group.Permission >= Server.lava.controlRank)
 			{
-				Player.SendMessage(p, "start [map] - Start the Lava Survival game, optionally on the specified map.");
-				Player.SendMessage(p, "stop - Stop the current Lava Survival game.");
-				Player.SendMessage(p, "end - End the current round or vote.");
+				Player.Message(p, "start [map] - Start the Lava Survival game, optionally on the specified map.");
+				Player.Message(p, "stop - Stop the current Lava Survival game.");
+				Player.Message(p, "end - End the current round or vote.");
 			}
 			if (p == null || p.group.Permission >= Server.lava.setupRank)
 			{
-				Player.SendMessage(p, "setup - Setup lava survival, use it for more info.");
+				Player.Message(p, "setup - Setup lava survival, use it for more info.");
 			}
 		}
 
@@ -326,40 +326,40 @@ namespace MCGalaxy.Commands
 			switch (mode)
 			{
 				case "map":
-					Player.SendMessage(p, "Add or remove maps in Lava Survival.");
-					Player.SendMessage(p, "<mapname> - Adds or removes <mapname>.");
+					Player.Message(p, "Add or remove maps in Lava Survival.");
+					Player.Message(p, "<mapname> - Adds or removes <mapname>.");
 					break;
 				case "block":
-					Player.SendMessage(p, "View or set the block spawn positions.");
-					Player.SendMessage(p, "flood - Set the position for the total flood block.");
-					Player.SendMessage(p, "layer - Set the position for the layer flood base.");
+					Player.Message(p, "View or set the block spawn positions.");
+					Player.Message(p, "flood - Set the position for the total flood block.");
+					Player.Message(p, "layer - Set the position for the layer flood base.");
 					break;
 				case "settings":
-					Player.SendMessage(p, "View or change the settings for Lava Survival.");
-					Player.SendMessage(p, "sendafkmain - Toggle sending AFK users to the main map when the map changes.");
-					Player.SendMessage(p, "votecount <2-10> - Set how many maps will be in the next map vote.");
-					Player.SendMessage(p, "votetime <time> - Set how long until the next map vote ends.");
+					Player.Message(p, "View or change the settings for Lava Survival.");
+					Player.Message(p, "sendafkmain - Toggle sending AFK users to the main map when the map changes.");
+					Player.Message(p, "votecount <2-10> - Set how many maps will be in the next map vote.");
+					Player.Message(p, "votetime <time> - Set how long until the next map vote ends.");
 					break;
 				case "mapsettings":
-					Player.SendMessage(p, "View or change the settings for a Lava Survival map.");
-					Player.SendMessage(p, "fast <0-100> - Set the percent chance of fast lava.");
-					Player.SendMessage(p, "killer <0-100> - Set the percent chance of killer lava/water.");
-					Player.SendMessage(p, "destroy <0-100> - Set the percent chance of the lava/water destroying blocks.");
-					Player.SendMessage(p, "water <0-100> - Set the percent chance of a water instead of lava flood.");
-					Player.SendMessage(p, "layer <0-100> - Set the percent chance of the lava/water flooding in layers.");
-					Player.SendMessage(p, "layerheight <height> - Set the height of each layer.");
-					Player.SendMessage(p, "layercount <count> - Set the number of layers to flood.");
-					Player.SendMessage(p, "layertime <time> - Set the time interval for another layer to flood.");
-					Player.SendMessage(p, "roundtime <time> - Set how long until the round ends.");
-					Player.SendMessage(p, "floodtime <time> - Set how long until the map is flooded.");
+					Player.Message(p, "View or change the settings for a Lava Survival map.");
+					Player.Message(p, "fast <0-100> - Set the percent chance of fast lava.");
+					Player.Message(p, "killer <0-100> - Set the percent chance of killer lava/water.");
+					Player.Message(p, "destroy <0-100> - Set the percent chance of the lava/water destroying blocks.");
+					Player.Message(p, "water <0-100> - Set the percent chance of a water instead of lava flood.");
+					Player.Message(p, "layer <0-100> - Set the percent chance of the lava/water flooding in layers.");
+					Player.Message(p, "layerheight <height> - Set the height of each layer.");
+					Player.Message(p, "layercount <count> - Set the number of layers to flood.");
+					Player.Message(p, "layertime <time> - Set the time interval for another layer to flood.");
+					Player.Message(p, "roundtime <time> - Set how long until the round ends.");
+					Player.Message(p, "floodtime <time> - Set how long until the map is flooded.");
 					break;
 				default:
-					Player.SendMessage(p, "Commands to setup Lava Survival.");
-					Player.SendMessage(p, "map <name> - Add or remove maps in Lava Survival.");
-					Player.SendMessage(p, "block <mode> - Set the block spawn positions.");
-					Player.SendMessage(p, "safezone - Set the safe zone, which is an area that can't be flooded.");
-					Player.SendMessage(p, "settings <setting> [value] - View or change the settings for Lava Survival.");
-					Player.SendMessage(p, "mapsettings <setting> [value] - View or change the settings for a Lava Survival map.");
+					Player.Message(p, "Commands to setup Lava Survival.");
+					Player.Message(p, "map <name> - Add or remove maps in Lava Survival.");
+					Player.Message(p, "block <mode> - Set the block spawn positions.");
+					Player.Message(p, "safezone - Set the safe zone, which is an area that can't be flooded.");
+					Player.Message(p, "settings <setting> [value] - View or change the settings for Lava Survival.");
+					Player.Message(p, "mapsettings <setting> [value] - View or change the settings for a Lava Survival map.");
 					break;
 			}
 		}
@@ -382,7 +382,7 @@ namespace MCGalaxy.Commands
 			if (cpos.mode == 1) settings.blockLayer = new Vec3U16(x, y, z);
 			Server.lava.SaveMapSettings(settings);
 
-			Player.SendMessage(p, String.Format("Position set! &b({0}, {1}, {2})", x, y, z));
+			Player.Message(p, String.Format("Position set! &b({0}, {1}, {2})", x, y, z));
 		}
 
 		public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
@@ -403,7 +403,7 @@ namespace MCGalaxy.Commands
 				settings.safeZone = new Vec3U16[] { new Vec3U16(sx, sy, sz), new Vec3U16(ex, ey, ez) };
 				Server.lava.SaveMapSettings(settings);
 
-				Player.SendMessage(p, String.Format("Safe zone set! &b({0}, {1}, {2}) ({3}, {4}, {5})", sx, sy, sz, ex, ey, ez));
+				Player.Message(p, String.Format("Safe zone set! &b({0}, {1}, {2}) ({3}, {4}, {5})", sx, sy, sz, ex, ey, ez));
 			}
 		}
 

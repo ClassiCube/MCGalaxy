@@ -32,12 +32,12 @@ namespace MCGalaxy.Commands
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
             who.ignoreGrief = !who.ignoreGrief;
-            Player.SendMessage(p, who.ColoredName + "%S's trust status: " + who.ignoreGrief);
+            Player.Message(p, who.ColoredName + "%S's trust status: " + who.ignoreGrief);
             who.SendMessage("Your trust status was changed to: " + who.ignoreGrief);
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/trust <name> - Turns off the anti-grief for <name>");
+            Player.Message(p, "/trust <name> - Turns off the anti-grief for <name>");
         }
     }
 }

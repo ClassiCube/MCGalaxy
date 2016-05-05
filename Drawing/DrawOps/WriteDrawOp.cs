@@ -57,7 +57,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         void DrawLetter(Player p, Level lvl, char c, ref ushort x, ushort y, ref ushort z, Brush brush) {
             if ((int)c >= 256 || letters[(int)c] == null) {
-                Player.SendMessage(p, "\"" + c + "\" is not currently supported, replacing with space.");
+                Player.Message(p, "\"" + c + "\" is not currently supported, replacing with space.");
                 x = (ushort)(x + dirX * 4 * Scale);
                 z = (ushort)(z + dirZ * 4 * Scale);
             } else {

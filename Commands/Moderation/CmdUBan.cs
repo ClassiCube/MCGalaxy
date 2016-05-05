@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/uban [name] [message]- Bans, undoes, and kicks [name] with [message], if specified.");
+            Player.Message(p, "/uban [name] [message]- Bans, undoes, and kicks [name] with [message], if specified.");
         }
     }
 }

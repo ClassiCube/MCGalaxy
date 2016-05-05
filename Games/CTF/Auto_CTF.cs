@@ -273,7 +273,7 @@ namespace MCGalaxy.Games
                             if (Math.Abs((p1.pos[0] / 32) - (x / 32)) < 5 && Math.Abs((p1.pos[1] / 32) - (y / 32)) < 5 && Math.Abs((p1.pos[2] / 32) - (z / 32)) < 5 && !GetPlayer(p).tagging)
                             {
                                 GetPlayer(p1).tagging = true;
-                                Player.SendMessage(p1, p.ColoredName + " %Stagged you!");
+                                Player.Message(p1, p.ColoredName + " %Stagged you!");
                                 b.SendToSpawn(mainlevel, this, p1);
                                 Thread.Sleep(300);
                                 if (GetPlayer(p1).hasflag)
@@ -456,7 +456,7 @@ namespace MCGalaxy.Games
                 if (p.level == mainlevel && !blueteam.members.Contains(p) && !redteam.members.Contains(p))
                 {
                     p.RevertBlock(x, y, z);
-                    Player.SendMessage(p, "You are not on a team!");
+                    Player.Message(p, "You are not on a team!");
                     Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                 }
                 if (p.level == mainlevel && blueteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z && mainlevel.GetTile(redbase.x, redbase.y, redbase.z) != Block.air)
@@ -489,7 +489,7 @@ namespace MCGalaxy.Games
                     }
                     else
                     {
-                        Player.SendMessage(p, "You cant take your own flag!");
+                        Player.Message(p, "You cant take your own flag!");
                         p.RevertBlock(x, y, z);
                         Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                     }
@@ -514,7 +514,7 @@ namespace MCGalaxy.Games
                     }
                     else
                     {
-                        Player.SendMessage(p, "You cant take your own flag!");
+                        Player.Message(p, "You cant take your own flag!");
                         p.RevertBlock(x, y, z);
                         Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                     }
@@ -541,12 +541,12 @@ namespace MCGalaxy.Games
                         Data d = GetPlayer(p);
                         if (d.chatting)
                         {
-                            Player.SendMessage(d.p, "You are no longer chatting with your team!");
+                            Player.Message(d.p, "You are no longer chatting with your team!");
                             d.chatting = !d.chatting;
                         }
                         else
                         {
-                            Player.SendMessage(d.p, "You are now chatting with your team!");
+                            Player.Message(d.p, "You are now chatting with your team!");
                             d.chatting = !d.chatting;
                         }
                         Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
@@ -567,7 +567,7 @@ namespace MCGalaxy.Games
                             }
                             redteam.Add(p);
                             Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
-                            Player.SendMessage(p, Colors.red + "You are now on the red team!");
+                            Player.Message(p, Colors.red + "You are now on the red team!");
                         }
                         else if (redteam.members.Count > blueteam.members.Count)
                         {
@@ -580,7 +580,7 @@ namespace MCGalaxy.Games
                             }
                             blueteam.Add(p);
                             Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
-                            Player.SendMessage(p, Colors.blue + "You are now on the blue team!");
+                            Player.Message(p, Colors.blue + "You are now on the blue team!");
                         }
                         else if (new Random().Next(2) == 0)
                         {
@@ -593,7 +593,7 @@ namespace MCGalaxy.Games
                             }
                             redteam.Add(p);
                             Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
-                            Player.SendMessage(p, Colors.red + "You are now on the red team!");
+                            Player.Message(p, Colors.red + "You are now on the red team!");
                         }
                         else
                         {
@@ -606,7 +606,7 @@ namespace MCGalaxy.Games
                             }
                             blueteam.Add(p);
                             Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
-                            Player.SendMessage(p, Colors.blue + "You are now on the blue team!");
+                            Player.Message(p, Colors.blue + "You are now on the blue team!");
                         }
                     }
                     else if (message != "ctf" && p.level == mainlevel)
@@ -633,26 +633,26 @@ namespace MCGalaxy.Games
             {
                 if (message == "1" || message.ToLower() == map1)
                 {
-                    Player.SendMessage(p, "Thanks for voting :D");
+                    Player.Message(p, "Thanks for voting :D");
                     vote1++;
                     Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                 }
                 else if (message == "2" || message.ToLower() == map2)
                 {
-                    Player.SendMessage(p, "Thanks for voting :D");
+                    Player.Message(p, "Thanks for voting :D");
                     vote2++;
                     Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                 }
                 else if (message == "3" || message.ToLower() == map3)
                 {
-                    Player.SendMessage(p, "Thanks for voting :D");
+                    Player.Message(p, "Thanks for voting :D");
                     vote3++;
                     Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                 }
                 else
                 {
-                    Player.SendMessage(p, "%2VOTE:");
-                    Player.SendMessage(p, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
+                    Player.Message(p, "%2VOTE:");
+                    Player.Message(p, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
                     Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                 }
             }
@@ -667,7 +667,7 @@ namespace MCGalaxy.Games
                         	Player[] online = PlayerInfo.Online.Items; 
                         	foreach (Player p1 in online) {
                                 if (blueteam.members.Contains(p1))
-                                    Player.SendMessage(p1, "(Blue) " + p.color + p.name + ":&f " + message);
+                                    Player.Message(p1, "(Blue) " + p.color + p.name + ":&f " + message);
                             }
                             Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                         }
@@ -676,7 +676,7 @@ namespace MCGalaxy.Games
                         	Player[] online = PlayerInfo.Online.Items; 
                         	foreach (Player p1 in online) {
                                 if (redteam.members.Contains(p1))
-                                    Player.SendMessage(p1, "(Red) " + p.color + p.name + ":&f " + message);
+                                    Player.Message(p1, "(Red) " + p.color + p.name + ":&f " + message);
                             }
                             Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                         }

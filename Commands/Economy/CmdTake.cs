@@ -40,19 +40,19 @@ namespace MCGalaxy.Commands
             int amount = 0;
             bool all = args[1].CaselessEq("all");
             if (!all && !int.TryParse(args[1], out amount)) {
-                Player.SendMessage(p, "Amount must be an integer."); return;
+                Player.Message(p, "Amount must be an integer."); return;
             }
-            if (amount < 0) { Player.SendMessage(p, "%cYou can't take negative %3" + Server.moneys); return; }
+            if (amount < 0) { Player.Message(p, "%cYou can't take negative %3" + Server.moneys); return; }
             
             int matches = 1;
             Player who = PlayerInfo.FindOrShowMatches(p, args[0], out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.SendMessage(p, "%cYou can't take %3" + Server.moneys + "%c from yourself"); return; }
+            if (p != null && p == who) { Player.Message(p, "%cYou can't take %3" + Server.moneys + "%c from yourself"); return; }
             
             Economy.EcoStats ecos;
             if (who == null) {
                 OfflinePlayer off = PlayerInfo.FindOffline(args[0]);
-                if (off == null) { Player.SendMessage(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }
+                if (off == null) { Player.Message(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }
                 ecos = Economy.RetrieveEcoStats(args[0]);
                 Take(all, ref ecos, ref amount);
                 Player.GlobalMessage(taker + " %Stook %f" + amount + " %3" + Server.moneys + " %Sfrom " + off.color + off.name + "%f(offline)");
@@ -78,8 +78,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p){
-            Player.SendMessage(p, "&f/take [player] <amount> %S- Takes <amount> of " + Server.moneys + " from [player]");
-            Player.SendMessage(p, "&f/take [player] all %S- Takes all the " + Server.moneys + " from [player]");
+            Player.Message(p, "&f/take [player] <amount> %S- Takes <amount> of " + Server.moneys + " from [player]");
+            Player.Message(p, "&f/take [player] all %S- Takes all the " + Server.moneys + " from [player]");
         }
     }
 }

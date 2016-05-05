@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             if (message.ToLower() == "set" && p != null) {
                 p.level.jailx = p.pos[0]; p.level.jaily = p.pos[1]; p.level.jailz = p.pos[2];
                 p.level.jailrotx = p.rot[0]; p.level.jailroty = p.rot[1];
-                Player.SendMessage(p, "Set Jail point.");
+                Player.Message(p, "Set Jail point.");
                 return;
             }
             Player who = PlayerInfo.FindOrShowMatches(p, message);
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
                 if (p != null &&who.group.Permission >= p.group.Permission) { 
                     MessageTooHighRank(p, "jail", false); return;
                 }
-                Player.SendMessage(p, "You jailed " + who.DisplayName);
+                Player.Message(p, "You jailed " + who.DisplayName);
                 Entities.GlobalDespawn(who, false);
                 who.jailed = true;
                 Entities.GlobalSpawn(who, (ushort)who.level.jailx, (ushort)who.level.jaily, (ushort)who.level.jailz,
@@ -56,15 +56,15 @@ namespace MCGalaxy.Commands
                 Server.Jailed.DeleteContains(who.name.ToLower());
                 who.jailed = false;
                 Command.all.Find("spawn").Use(who, "");
-                Player.SendMessage(p, "You freed " + who.name + " from jail");
+                Player.Message(p, "You freed " + who.name + " from jail");
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &afreed %Sfrom jail", false);
             }
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/jail [user] - Places [user] in jail unable to use commands.");
-            Player.SendMessage(p, "/jail [set] - Creates the jail point for the map.");
-            Player.SendMessage(p, "This command has been deprecated in favor of /xjail.");
+            Player.Message(p, "/jail [user] - Places [user] in jail unable to use commands.");
+            Player.Message(p, "/jail [set] - Creates the jail point for the map.");
+            Player.Message(p, "This command has been deprecated in favor of /xjail.");
         }
     }
 }

@@ -29,17 +29,17 @@ namespace MCGalaxy.Commands
         {
             if (Server.YesVotes >= 1 || Server.NoVotes >= 1)
             {
-                Player.SendMessage(p, Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
+                Player.Message(p, Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
                 return;
             }
             else
             {
-                Player.SendMessage(p, "There hasn't been a vote yet!");
+                Player.Message(p, "There hasn't been a vote yet!");
             }
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/voteresults - see the results of the last vote!");
+            Player.Message(p, "/voteresults - see the results of the last vote!");
         }
     }
 }

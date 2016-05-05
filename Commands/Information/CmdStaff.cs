@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/staff - Displays the MCGalaxy team.");
+            Player.Message(p, "/staff - Displays the MCGalaxy team.");
         }
     }
     
@@ -47,11 +47,11 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             string modlist = string.Join(", ", Server.Mods);
-            Player.SendMessage(p, "&9MCGalaxy mods: %S" + modlist + "&e.");
+            Player.Message(p, "&9MCGalaxy mods: %S" + modlist + "&e.");
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/mods - Displays the list of MCGalaxy moderators.");
+            Player.Message(p, "/mods - Displays the list of MCGalaxy moderators.");
         }
     }
     
@@ -66,11 +66,11 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             string devlist = string.Join(", ", Server.Devs);
-            Player.SendMessage(p, "&9MCGalaxy devs: %S" + devlist + "&e.");
+            Player.Message(p, "&9MCGalaxy devs: %S" + devlist + "&e.");
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/devs - Displays the list of MCGalaxy developers.");
+            Player.Message(p, "/devs - Displays the list of MCGalaxy developers.");
         }
     }
 }

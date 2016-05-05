@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
             Group newRank = Group.Find(args[1]);
 
             string reason = args.Length > 2 ? args[2] : "Congratulations!";
-            if (newRank == null) { Player.SendMessage(p, "Could not find specified rank."); return; }
+            if (newRank == null) { Player.Message(p, "Could not find specified rank."); return; }
 
             Group bannedGroup = Group.findPerm(LevelPermission.Banned);
             string rankMsg;
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
                 rankMsg = args[0] + " &f(offline)" + "%S's rank was set to " + newRank.ColoredName + rankReason;
                 Player.GlobalMessage(rankMsg);
             } else if (who == p) {
-                Player.SendMessage(p, "Cannot change your own rank."); return;
+                Player.Message(p, "Cannot change your own rank."); return;
             } else {
                 if (!ChangeRank(who.name, who.group, newRank, who, p, reason)) return;
 
@@ -72,13 +72,13 @@ namespace MCGalaxy.Commands
         bool ChangeRank(string name, Group group, Group newRank, Player who, Player p, string reason) {
             Group banned = Group.findPerm(LevelPermission.Banned);
             if (group == banned || newRank == banned) {
-                Player.SendMessage(p, "Cannot change the rank to or from \"" + banned.name + "\"."); return false;
+                Player.Message(p, "Cannot change the rank to or from \"" + banned.name + "\"."); return false;
             }
             if (p != null && (group.Permission >= p.group.Permission || newRank.Permission >= p.group.Permission)) {
                 MessageTooHighRank(p, "change the rank of", false); return false;
             }
             if (p != null && (newRank.Permission >= p.group.Permission)) {               
-                Player.SendMessage(p, "Cannot change the rank of a player to a rank equal or higher to yours."); return false;
+                Player.Message(p, "Cannot change the rank of a player to a rank equal or higher to yours."); return false;
             }            
             
             if (who != null) {
@@ -107,9 +107,9 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/rank <player> <rank> <yay> - Sets or returns a players rank.");
-            Player.SendMessage(p, "Valid Ranks are: " + Group.concatList(true, true));
-            Player.SendMessage(p, "<yay> is a celebratory message");
+            Player.Message(p, "/rank <player> <rank> <yay> - Sets or returns a players rank.");
+            Player.Message(p, "Valid Ranks are: " + Group.concatList(true, true));
+            Player.Message(p, "<yay> is a celebratory message");
         }
     }
 }

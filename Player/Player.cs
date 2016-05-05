@@ -446,7 +446,7 @@ namespace MCGalaxy {
                     if (from != null && p.listignored.Contains(from.name)) continue;
                    
                     if (!p.ignoreAll || (from != null && from == p))
-                        Player.SendMessage(p, message);
+                        Player.Message(p, message);
                 }
             }
         }
@@ -583,7 +583,7 @@ namespace MCGalaxy {
                 		string leavem = "&c- " + FullName + " %S" + discMsg;
                 		if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
                 			Player[] players = PlayerInfo.Online.Items; 
-                			foreach (Player pl in players) { Player.SendMessage(pl, leavem); }
+                			foreach (Player pl in players) { Player.Message(pl, leavem); }
                 		}
                 	}
                 	Server.s.Log(name + " disconnected (" + discMsg + ").");

@@ -32,15 +32,15 @@ namespace MCGalaxy.Commands {
 			
 			float dist;
 			if( !float.TryParse(message, out dist)) {
-				Player.SendMessage(p, "\"" + message + "\", is not a valid distance."); return;
+				Player.Message(p, "\"" + message + "\", is not a valid distance."); return;
 			}
 			int packedDist = (int)(dist * 32);
 			if (packedDist < 0) packedDist = 160;
 			
 			if (packedDist > short.MaxValue) {
-				Player.SendMessage(p, "\"" + message + "\", is too long a reach distance. Max is 1023 blocks.");
+				Player.Message(p, "\"" + message + "\", is too long a reach distance. Max is 1023 blocks.");
 			} else if (!p.HasCpeExt(CpeExt.ClickDistance)) {
-				Player.SendMessage(p, "Your client doesn't support changing your reach distance.");
+				Player.Message(p, "Your client doesn't support changing your reach distance.");
 			} else {		
 				p.SendClickDistance((short)packedDist);
 				p.ReachDistance = packedDist / 32f;
@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands {
 		}
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "%T/reach [distance]");
-			Player.SendMessage(p, "%HSets the reach distance for how far away you can modify blocks.");
-			Player.SendMessage(p, "%H   The default reach distance is 5.");
+			Player.Message(p, "%T/reach [distance]");
+			Player.Message(p, "%HSets the reach distance for how far away you can modify blocks.");
+			Player.Message(p, "%H   The default reach distance is 5.");
 		}
 	}
 }

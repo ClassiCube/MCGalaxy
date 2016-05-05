@@ -30,11 +30,11 @@ namespace MCGalaxy.Commands
             if (plugin != null)
                 Plugin.Unload(plugin, false);
             else
-                Player.SendMessage(p, "That plugin is not loaded!");
+                Player.Message(p, "That plugin is not loaded!");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/punload <Plugin name> - Unload a plugin that is loaded");
+            Player.Message(p, "/punload <Plugin name> - Unload a plugin that is loaded");
         }
         public CmdPUnload() { }
     }

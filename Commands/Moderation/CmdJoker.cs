@@ -60,8 +60,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/joker <name> - Causes a player to become a joker!");
-            Player.SendMessage(p, "/joker # <name> - Makes the player a joker silently");
+            Player.Message(p, "/joker <name> - Causes a player to become a joker!");
+            Player.Message(p, "/joker # <name> - Makes the player a joker silently");
         }
     }
 }

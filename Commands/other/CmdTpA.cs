@@ -20,45 +20,45 @@ namespace MCGalaxy.Commands {
             if (number > 1) { Help(p); return; }
 
             Player who = PlayerInfo.FindOrShowMatches(p, message);
-            if (who == p) { Player.SendMessage(p, "&cError:%S You cannot send yourself a request!"); return; }
+            if (who == p) { Player.Message(p, "&cError:%S You cannot send yourself a request!"); return; }
             if (who == null) return;
             if (who.listignored.Contains(p.name))
             {
                 //Lies
-                Player.SendMessage(p, "---------------------------------------------------------");
-                Player.SendMessage(p, "Your teleport request has been sent to " + who.ColoredName);
-                Player.SendMessage(p, "This request will timeout after " + Colors.aqua + "90%S seconds.");
-                Player.SendMessage(p, "---------------------------------------------------------");
+                Player.Message(p, "---------------------------------------------------------");
+                Player.Message(p, "Your teleport request has been sent to " + who.ColoredName);
+                Player.Message(p, "This request will timeout after " + Colors.aqua + "90%S seconds.");
+                Player.Message(p, "---------------------------------------------------------");
                 return;
             }
-            if (who.name == p.currentTpa) { Player.SendMessage(p, "&cError:%S You already have a pending request with this player."); return; }
+            if (who.name == p.currentTpa) { Player.Message(p, "&cError:%S You already have a pending request with this player."); return; }
             if (p.level != who.level && who.level.IsMuseum) {
-                Player.SendMessage(p, "Player \"" + who.ColoredName + "\" is in a museum!"); return;
+                Player.Message(p, "Player \"" + who.ColoredName + "\" is in a museum!"); return;
             }
 
             if (who.Loading)
             {
-                Player.SendMessage(p, "Waiting for " + who.ColoredName + " %Sto spawn...");
+                Player.Message(p, "Waiting for " + who.ColoredName + " %Sto spawn...");
                 who.BlockUntilLoad(10);
             }
 
-            Player.SendMessage(p, "---------------------------------------------------------");
-            Player.SendMessage(p, "Your teleport request has been sent to " + who.ColoredName);
-            Player.SendMessage(p, "This request will timeout after " + Colors.aqua + "90 %Sseconds.");
-            Player.SendMessage(p, "---------------------------------------------------------");
-            Player.SendMessage(who, "---------------------------------------------------------");
-            Player.SendMessage(who, p.ColoredName + " %Swould like to teleport to you!");
-            Player.SendMessage(who, "Type " + Colors.green + "/tpaccept %Sor " + Colors.maroon + "/tpdeny%S!");
-            Player.SendMessage(who, "This request will timeout after " + Colors.aqua + "90 %Sseconds.");
-            Player.SendMessage(who, "---------------------------------------------------------");
+            Player.Message(p, "---------------------------------------------------------");
+            Player.Message(p, "Your teleport request has been sent to " + who.ColoredName);
+            Player.Message(p, "This request will timeout after " + Colors.aqua + "90 %Sseconds.");
+            Player.Message(p, "---------------------------------------------------------");
+            Player.Message(who, "---------------------------------------------------------");
+            Player.Message(who, p.ColoredName + " %Swould like to teleport to you!");
+            Player.Message(who, "Type " + Colors.green + "/tpaccept %Sor " + Colors.maroon + "/tpdeny%S!");
+            Player.Message(who, "This request will timeout after " + Colors.aqua + "90 %Sseconds.");
+            Player.Message(who, "---------------------------------------------------------");
             who.senderName = p.DisplayName;
             who.Request = true;
             p.currentTpa = who.name;
             
             Thread.Sleep(90000);
             if (who.Request) {
-                Player.SendMessage(p, "Your teleport request has timed out.");
-                Player.SendMessage(who, "Pending teleport request has timed out.");
+                Player.Message(p, "Your teleport request has timed out.");
+                Player.Message(who, "Pending teleport request has timed out.");
                 who.Request = false;
                 who.senderName = "";
                 p.currentTpa = "";
@@ -66,9 +66,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/tpa <player> - Sends a teleport request to the given player");
-            Player.SendMessage(p, "/tpaccept - Accepts a teleport request");
-            Player.SendMessage(p, "/tpdeny - Denies a teleport request");
+            Player.Message(p, "/tpa <player> - Sends a teleport request to the given player");
+            Player.Message(p, "/tpaccept - Accepts a teleport request");
+            Player.Message(p, "/tpdeny - Denies a teleport request");
         }
     }
 
@@ -83,18 +83,18 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (!p.Request) {
-                Player.SendMessage(p, "&cError: %SYou do not have any pending teleport requests!"); return;
+                Player.Message(p, "&cError: %SYou do not have any pending teleport requests!"); return;
             }
             
             Player who = PlayerInfo.FindExact(p.senderName);
             p.Request = false;
             p.senderName = "";
             if (who == null) {
-                Player.SendMessage(p, "The player who requested to teleport to you isn't online anymore."); return;
+                Player.Message(p, "The player who requested to teleport to you isn't online anymore."); return;
             }
             
-            Player.SendMessage(p, "You have accepted " + who.ColoredName + "%S's teleportation request.");
-            Player.SendMessage(who, p.ColoredName +  " %Shas accepted your request. Teleporting now...");            
+            Player.Message(p, "You have accepted " + who.ColoredName + "%S's teleportation request.");
+            Player.Message(who, p.ColoredName +  " %Shas accepted your request. Teleporting now...");            
             who.currentTpa = "";
             Thread.Sleep(1000);
             if (p.level != who.level)
@@ -108,8 +108,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/tpaccept - Accepts a teleport request");
-            Player.SendMessage(p, "For use with /tpa");
+            Player.Message(p, "/tpaccept - Accepts a teleport request");
+            Player.Message(p, "For use with /tpa");
         }
     }
 
@@ -124,24 +124,24 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (!p.Request ) {
-                Player.SendMessage(p, "&cError: %SYou do not have any pending teleport requests!"); return;
+                Player.Message(p, "&cError: %SYou do not have any pending teleport requests!"); return;
             }
             
             Player who = PlayerInfo.FindExact(p.senderName);
             p.Request = false;
             p.senderName = "";
             if (who == null) {
-                Player.SendMessage(p, "The player who requested to teleport to you isn't online anymore."); return;
+                Player.Message(p, "The player who requested to teleport to you isn't online anymore."); return;
             }
             
-            Player.SendMessage(p, "You have denied " + who.ColoredName + "%S's teleportation request.");
-            Player.SendMessage(who, p.ColoredName + " %Shas denied your request.");
+            Player.Message(p, "You have denied " + who.ColoredName + "%S's teleportation request.");
+            Player.Message(who, p.ColoredName + " %Shas denied your request.");
             who.currentTpa = "";
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/tpdeny - Denies a teleport request");
-            Player.SendMessage(p, "For use with /tpa");
+            Player.Message(p, "/tpdeny - Denies a teleport request");
+            Player.Message(p, "For use with /tpa");
         }
     }
 }

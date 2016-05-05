@@ -48,9 +48,9 @@ namespace MCGalaxy.Drawing.Ops {
             length -= 2;
             
             if (width <= 0 || length <= 0) {
-                Player.SendMessage(p, "The corners of the maze need to be further apart."); return;
+                Player.Message(p, "The corners of the maze need to be further apart."); return;
             }
-            Player.SendMessage(p, "Generating maze... this could take a while");
+            Player.Message(p, "Generating maze... this could take a while");
             //substract 2 cause we will just make the inner. the outer wall is made seperately
             wall = new bool[width + 1, length + 1];//+1 cause we begin at 0 so we need one object more
             for (int w = 0; w <= width; w++)
@@ -82,7 +82,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (stack.Count < 1) break;//if no nodes are free anymore we will end the generation here
             }
             
-            Player.SendMessage(p, "Generated maze, now drawing.");
+            Player.Message(p, "Generated maze, now drawing.");
             ushort minX = Min.X, minZ = Min.Z, maxX = Max.X, maxZ = Max.Z, y = Min.Y;
             for (ushort xx = 0; xx <= width; xx++)
                 for (ushort zz = 0; zz <= length; zz++)
@@ -105,7 +105,7 @@ namespace MCGalaxy.Drawing.Ops {
             QuadZ(minZ, (ushort)(y + 1), minX, (ushort)(y + 2), maxX, p, lvl, brush);
             QuadZ(maxZ, (ushort)(y + 1), minX, (ushort)(y + 2), maxX, p, lvl, brush);
             
-            Player.SendMessage(p, "Maze painted. Build your entrance and exit yourself");
+            Player.Message(p, "Maze painted. Build your entrance and exit yourself");
             randomizer = 0;
         }
         

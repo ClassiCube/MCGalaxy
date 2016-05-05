@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands
         }
         
         void HandleEnter(Player p) {
-            if (p == null) { Player.SendMessage(p, "Console cannot enter the review queue."); return; }
+            if (p == null) { Player.Message(p, "Console cannot enter the review queue."); return; }
             if (DateTime.UtcNow < p.NextReviewTime) {
-                Player.SendMessage(p, "You have to wait " + Server.reviewcooldown + " seconds everytime you use this command");
+                Player.Message(p, "You have to wait " + Server.reviewcooldown + " seconds everytime you use this command");
                 return;
             }
             
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands
             
             foreach (string name in Server.reviewlist) {
                 if (name != p.name) continue;
-                Player.SendMessage(p, "You already entered the review queue!"); return;
+                Player.Message(p, "You already entered the review queue!"); return;
             }
 
             bool opsOn = false;
@@ -80,17 +80,17 @@ namespace MCGalaxy.Commands
             if (opsOn) {
                 Server.reviewlist.Add(p.name);
                 int pos = Server.reviewlist.IndexOf(p.name);
-                if (pos > 1) { Player.SendMessage(p, "You entered the &creview %Squeue. You have &c" + pos + " %Speople in front of you in the queue"); }
-                if (pos == 1) { Player.SendMessage(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
-                if (pos == 0) { Player.SendMessage(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
-                Player.SendMessage(p, "The Online Operators have been notified. Someone should be with you shortly.");
+                if (pos > 1) { Player.Message(p, "You entered the &creview %Squeue. You have &c" + pos + " %Speople in front of you in the queue"); }
+                if (pos == 1) { Player.Message(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
+                if (pos == 0) { Player.Message(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
+                Player.Message(p, "The Online Operators have been notified. Someone should be with you shortly.");
                 
                 string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
                 Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", Server.reviewnext);
                 Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", Server.reviewnext);
                 p.NextReviewTime = DateTime.UtcNow.AddSeconds(Server.reviewcooldown);
             } else {
-                Player.SendMessage(p, "&cThere are no operators on to review your build. Please wait for one to come on and try again.");
+                Player.Message(p, "&cThere are no operators on to review your build. Please wait for one to come on and try again.");
             }
         }
         
@@ -102,20 +102,20 @@ namespace MCGalaxy.Commands
                 MessageNeedMinPerm(p, "view the review queue", (int)grp.Permission); return;
             }
             if (Server.reviewlist.Count == 0) {
-                Player.SendMessage(p, "There are no players in the review queue!"); return;
+                Player.Message(p, "There are no players in the review queue!"); return;
             }
             
-            Player.SendMessage(p, "&9Players in the review queue:");
+            Player.Message(p, "&9Players in the review queue:");
             int pos = 1;
             foreach (string who in Server.reviewlist) {
                 string rank = Group.findPlayer(who.ToLower());
-                Player.SendMessage(p, "&a" + pos + ". &f" + who + "&a - Current Rank: " + Group.Find(rank).color + rank);
+                Player.Message(p, "&a" + pos + ". &f" + who + "&a - Current Rank: " + Group.Find(rank).color + rank);
                 pos++;
             }
         }
         
         void HandleLeave(Player p) {
-            if (p == null) { Player.SendMessage(p, "Console cannot leave the review queue."); return; }
+            if (p == null) { Player.Message(p, "Console cannot leave the review queue."); return; }
             Group grp = Group.findPerm(Server.reviewleave);
             if (grp == null) { MessageNoPerm(p, Server.reviewleave); return; }
             
@@ -127,15 +127,15 @@ namespace MCGalaxy.Commands
             foreach (string who in Server.reviewlist)
                 inQueue |= who == p.name;
             if (!inQueue) {
-                Player.SendMessage(p, "You aren't in the review queue so you cannot leave it."); return;
+                Player.Message(p, "You aren't in the review queue so you cannot leave it."); return;
             }
             Server.reviewlist.Remove(p.name);
             MessageReviewPosChanged();
-            Player.SendMessage(p, "You have left the review queue!");
+            Player.Message(p, "You have left the review queue!");
         }
         
         void HandleNext(Player p) {
-            if (p == null) { Player.SendMessage(p, "Console cannot answer the review queue."); return; }
+            if (p == null) { Player.Message(p, "Console cannot answer the review queue."); return; }
             Group grp = Group.findPerm(Server.reviewnext);
             if (grp == null) { MessageNoPerm(p, Server.reviewnext); }
             
@@ -143,24 +143,24 @@ namespace MCGalaxy.Commands
                 MessageNeedMinPerm(p, "answer the review queue", (int)grp.Permission); return;
             }
             if (Server.reviewlist.Count == 0) {
-                Player.SendMessage(p, "There are no players in the review queue."); return;
+                Player.Message(p, "There are no players in the review queue."); return;
             }
             
             string user = Server.reviewlist[0];
             Player who = PlayerInfo.FindExact(user);
             if (who == null) {
-                Player.SendMessage(p, "Player " + user + " doesn't exist or is offline. " + user + " has been removed from the review queue");
+                Player.Message(p, "Player " + user + " doesn't exist or is offline. " + user + " has been removed from the review queue");
                 Server.reviewlist.Remove(user);
                 return;
             } else if (who == p) {
-                Player.SendMessage(p, "Cannot teleport to yourself. You have been removed from the review queue.");
+                Player.Message(p, "Cannot teleport to yourself. You have been removed from the review queue.");
                 Server.reviewlist.Remove(user);
                 return;
             }
             Server.reviewlist.Remove(user);
             Command.all.Find("tp").Use(p, who.name);
-            Player.SendMessage(p, "You have been teleported to " + user);
-            Player.SendMessage(who, "Your review request has been answered by " + p.name + ".");
+            Player.Message(p, "You have been teleported to " + user);
+            Player.Message(who, "Your review request has been answered by " + p.name + ".");
             MessageReviewPosChanged();
         }
         
@@ -172,11 +172,11 @@ namespace MCGalaxy.Commands
                 MessageNeedMinPerm(p, "clear the review queue", (int)grp.Permission); return;
             }
             Server.reviewlist.Clear();
-            Player.SendMessage(p, "The review queue has been cleared");
+            Player.Message(p, "The review queue has been cleared");
         }
         
         static void MessageNoPerm(Player p, LevelPermission perm) {
-            Player.SendMessage(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
+            Player.Message(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
             Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
             Chat.GlobalMessageAdmins("The group permission that is messed up is: " + perm + " (" + (int)perm+ ")");
         }
@@ -186,14 +186,14 @@ namespace MCGalaxy.Commands
             foreach (string name in Server.reviewlist) {
                 Player who = PlayerInfo.FindExact(name);
                 if (who == null) continue;
-                Player.SendMessage(who, "The review queue has changed. You now have " + count + " players in front of you.");
+                Player.Message(who, "The review queue has changed. You now have " + count + " players in front of you.");
                 count++;
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/review <enter/view/leave/next/clear>");
-            Player.SendMessage(p, "%HLets you enter, view, leave, or clear the reviewlist or" +
+            Player.Message(p, "%T/review <enter/view/leave/next/clear>");
+            Player.Message(p, "%HLets you enter, view, leave, or clear the reviewlist or" +
                                "teleport you to the next player in the review queue.");
         }
     }

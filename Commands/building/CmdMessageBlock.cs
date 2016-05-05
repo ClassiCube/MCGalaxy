@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
                     default: cpos.type = Block.MsgWhite; cpos.message = message; break;
             }
             if (args.Length == 1) {
-                Player.SendMessage(p, "You need to provide text to put in the messageblock."); return;
+                Player.Message(p, "You need to provide text to put in the messageblock."); return;
             }
             if (cpos.message == null)
                 cpos.message = args[1];
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands {
             }
 
             p.blockchangeObject = cpos;
-            Player.SendMessage(p, "Place where you wish the message block to go."); p.ClearBlockchange();
+            Player.Message(p, "Place where you wish the message block to go."); p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
@@ -81,10 +81,10 @@ namespace MCGalaxy.Commands {
                 p.level.Blockchange(p, x, y, z, cpos.type, 0);
                 p.SendBlockchange(x, y, z, cpos.type, 0); // for when same block type but different message
                 UpdateDatabase(p, cpos, x, y, z);
-                Player.SendMessage(p, "Message block created.");
+                Player.Message(p, "Message block created.");
             } else {
             	p.RevertBlock(x, y, z); 
-                Player.SendMessage(p, "Failed to create a message block.");
+                Player.Message(p, "Failed to create a message block.");
             }
 
             if (p.staticCommands)
@@ -118,21 +118,21 @@ namespace MCGalaxy.Commands {
                         DataRow row = Messages.Rows[i];
                         p.SendBlockchange(ushort.Parse(row["X"].ToString()), ushort.Parse(row["Y"].ToString()), ushort.Parse(row["Z"].ToString()), Block.MsgWhite);
                     }
-                    Player.SendMessage(p, "Now showing &a" + Messages.Rows.Count + " %SMBs.");
+                    Player.Message(p, "Now showing &a" + Messages.Rows.Count + " %SMBs.");
                 } else {
                     for (int i = 0; i < Messages.Rows.Count; i++) {
                         DataRow row = Messages.Rows[i];
                         p.RevertBlock(ushort.Parse(row["X"].ToString()), ushort.Parse(row["Y"].ToString()), ushort.Parse(row["Z"].ToString()));
                     }
-                    Player.SendMessage(p, "Now hiding MBs.");
+                    Player.Message(p, "Now hiding MBs.");
                 }
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/mb [block] [message] - Places a message in your next block.");
-            Player.SendMessage(p, "Valid blocks: white, black, air, water, lava");
-            Player.SendMessage(p, "/mb show shows or hides MBs");
+            Player.Message(p, "/mb [block] [message] - Places a message in your next block.");
+            Player.Message(p, "Valid blocks: white, black, air, water, lava");
+            Player.Message(p, "/mb show shows or hides MBs");
         }
     }
 }

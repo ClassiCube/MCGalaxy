@@ -28,11 +28,11 @@ namespace MCGalaxy.Commands
         public CmdMe() { }
         public override void Use(Player p, string message)
         {
-            if (message == "") { Player.SendMessage(p, "You"); return; }
+            if (message == "") { Player.Message(p, "You"); return; }
             if (p == null) { MessageInGameOnly(p); return; }
 
-            if (p.joker || p.muted) { Player.SendMessage(p, "Cannot use /me while muted or jokered."); return; }
-            if (Server.chatmod && !p.voice) { Player.SendMessage(p, "Chat moderation is on, you cannot emote."); return; }
+            if (p.joker || p.muted) { Player.Message(p, "Cannot use /me while muted or jokered."); return; }
+            if (Server.chatmod && !p.voice) { Player.Message(p, "Chat moderation is on, you cannot emote."); return; }
 
             if (!p.level.worldChat) {
                 Chat.GlobalChatLevel(p, "<Level>" + p.color + "*" + Colors.StripColours(p.DisplayName) + " " + message, false);
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "What do you need help with, m'boy?! Are you stuck down a well?!");
+            Player.Message(p, "What do you need help with, m'boy?! Are you stuck down a well?!");
         }
     }
 }

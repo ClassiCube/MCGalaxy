@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
 
             if (!Player.ValidName(whoTo))
             {
-                Player.SendMessage(p, "%cIllegal name!");
+                Player.Message(p, "%cIllegal name!");
                 return;
             }
 
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands
             }
 
             //DB
-            if (message.Length > 255 && Server.useMySQL) { Player.SendMessage(p, "Message was too long. The text below has been trimmed."); Player.SendMessage(p, message.Substring(256)); message = message.Remove(256); }
+            if (message.Length > 255 && Server.useMySQL) { Player.Message(p, "Message was too long. The text below has been trimmed."); Player.Message(p, message.Substring(256)); message = message.Remove(256); }
             //safe against SQL injections because whoTo is checked for illegal characters
             Database.executeQuery("CREATE TABLE if not exists `Inbox" + whoTo + "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
             if (!Server.useMySQL)
@@ -78,12 +78,12 @@ namespace MCGalaxy.Commands
             Database.executeQuery(query, "INSERT INTO `Inbox" + whoTo + "` (PlayerFrom, TimeSent, Contents) VALUES (@From, @Time, @Content)");
             //DB
 
-            Player.SendMessage(p, "Message sent to &5" + whoTo + ".");
+            Player.Message(p, "Message sent to &5" + whoTo + ".");
             if (who != null) who.SendMessage("Message recieved from &5" + fromname + "%S.");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/send [name] <message> - Sends <message> to [name].");
+            Player.Message(p, "/send [name] <message> - Sends <message> to [name].");
         }
     }
 }

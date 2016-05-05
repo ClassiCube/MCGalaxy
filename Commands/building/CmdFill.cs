@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             p.RevertBlock(x, y, z);
             GetRealBlock(type, extType, p, ref cpos);
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { 
-            	Player.SendMessage(p, "Cannot fill with that."); return; 
+            	Player.Message(p, "Cannot fill with that."); return; 
             }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
@@ -123,10 +123,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/fill [brush args] <mode>");
-            Player.SendMessage(p, "%HFills the area specified with the output of the current brush.");
-            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.SendMessage(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");            
+            Player.Message(p, "%T/fill [brush args] <mode>");
+            Player.Message(p, "%HFills the area specified with the output of the current brush.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");            
         }
     }
 }

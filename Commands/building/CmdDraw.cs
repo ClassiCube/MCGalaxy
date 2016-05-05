@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands {
             if (parts.Length < 3) { Help(p); return false; }
             if (!ushort.TryParse(parts[parts.Length - 3], out op.Height) || op.Height > 2000 ||
                 !ushort.TryParse(parts[parts.Length - 2], out op.Radius) || op.Radius > 2000) {
-                Player.SendMessage(p, "Radius and height must be positive integers less than 2000."); return false;
+                Player.Message(p, "Radius and height must be positive integers less than 2000."); return false;
             }
             return true;
         }
@@ -100,20 +100,20 @@ namespace MCGalaxy.Commands {
         bool CheckOneArg(Player p, AdvDrawOp op, string[] parts) {
             if (parts.Length < 2) { Help(p); return false; }
             if (!ushort.TryParse(parts[parts.Length - 2], out op.Radius) || op.Radius > 2000) { 
-                Player.SendMessage(p, "Radius must be a positive integer less than 2000."); return false;
+                Player.Message(p, "Radius must be a positive integer less than 2000."); return false;
             }
             return true;
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/draw [brush args] <height> <baseradius> <mode>");
-            Player.SendMessage(p, "%T/draw [brush args] <radius> <mode>");
-            Player.SendMessage(p, "%HDraws an object at the specified point.");
-            Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.SendMessage(p, "   %HObjects: &fcone/hcone/icone/hicone");
-            Player.SendMessage(p, "     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
-            Player.SendMessage(p, "   %HObjects with only radius: &fsphere/hsphere");
-            Player.SendMessage(p, "   %HNote 'h' means hollow, 'i' means inverse");
+            Player.Message(p, "%T/draw [brush args] <height> <baseradius> <mode>");
+            Player.Message(p, "%T/draw [brush args] <radius> <mode>");
+            Player.Message(p, "%HDraws an object at the specified point.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "   %HObjects: &fcone/hcone/icone/hicone");
+            Player.Message(p, "     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
+            Player.Message(p, "   %HObjects with only radius: &fsphere/hsphere");
+            Player.Message(p, "   %HNote 'h' means hollow, 'i' means inverse");
         }
     }
 }

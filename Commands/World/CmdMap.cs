@@ -46,24 +46,24 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player.SendMessage(p, "MOTD: &b" + lvl.motd);
-                    Player.SendMessage(p, "Finite mode: " + GetBool(lvl.finite));
-                    Player.SendMessage(p, "Random flow: " + GetBool(lvl.randomFlow));
-                    Player.SendMessage(p, "Animal AI: " + GetBool(lvl.ai));
-                    Player.SendMessage(p, "Edge water: " + GetBool(lvl.edgeWater));
-                    Player.SendMessage(p, "Grass growing: " + GetBool(lvl.GrassGrow));
-                    Player.SendMessage(p, "Tree growing: " + GetBool(lvl.growTrees));
-                    Player.SendMessage(p, "Leaf decay: " + GetBool(lvl.leafDecay));
-                    Player.SendMessage(p, "Physics speed: &b" + lvl.speedPhysics);
-                    Player.SendMessage(p, "Physics overload: &b" + lvl.overload);
-                    Player.SendMessage(p, "Survival death: " + GetBool(lvl.Death) + "(Fall: " + lvl.fall + ", Drown: " + lvl.drown + ")");
-                    Player.SendMessage(p, "Killer blocks: " + GetBool(lvl.Killer));
-                    Player.SendMessage(p, "Unload: " + GetBool(lvl.unload));
-                    Player.SendMessage(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
-                    Player.SendMessage(p, "Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
-                    Player.SendMessage(p, "Guns: " + GetBool(lvl.guns));
-                    Player.SendMessage(p, "Buildable: " + GetBool(lvl.Buildable));
-                    Player.SendMessage(p, "Deletable: " + GetBool(lvl.Deletable));
+                    Player.Message(p, "MOTD: &b" + lvl.motd);
+                    Player.Message(p, "Finite mode: " + GetBool(lvl.finite));
+                    Player.Message(p, "Random flow: " + GetBool(lvl.randomFlow));
+                    Player.Message(p, "Animal AI: " + GetBool(lvl.ai));
+                    Player.Message(p, "Edge water: " + GetBool(lvl.edgeWater));
+                    Player.Message(p, "Grass growing: " + GetBool(lvl.GrassGrow));
+                    Player.Message(p, "Tree growing: " + GetBool(lvl.growTrees));
+                    Player.Message(p, "Leaf decay: " + GetBool(lvl.leafDecay));
+                    Player.Message(p, "Physics speed: &b" + lvl.speedPhysics);
+                    Player.Message(p, "Physics overload: &b" + lvl.overload);
+                    Player.Message(p, "Survival death: " + GetBool(lvl.Death) + "(Fall: " + lvl.fall + ", Drown: " + lvl.drown + ")");
+                    Player.Message(p, "Killer blocks: " + GetBool(lvl.Killer));
+                    Player.Message(p, "Unload: " + GetBool(lvl.unload));
+                    Player.Message(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
+                    Player.Message(p, "Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
+                    Player.Message(p, "Guns: " + GetBool(lvl.guns));
+                    Player.Message(p, "Buildable: " + GetBool(lvl.Buildable));
+                    Player.Message(p, "Deletable: " + GetBool(lvl.Deletable));
                     return;
                 }
             }
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands
 
             try
             {
-                if (lvl == null) Player.SendMessage(p, "derp");
+                if (lvl == null) Player.Message(p, "derp");
                 switch (foundStart)
                 {
                     case "theme": lvl.theme = message.Substring(message.IndexOf(' ') + 1); lvl.ChatLevel("Map theme: &b" + lvl.theme); break;
@@ -96,13 +96,13 @@ namespace MCGalaxy.Commands
                         SetBool(p, lvl, ref lvl.GrassGrow, "Growing grass: "); break;
                     case "ps":
                     case "physicspeed":
-                        if (int.Parse(message.Split(' ')[1]) < 10) { Player.SendMessage(p, "Cannot go below 10"); return; }
+                        if (int.Parse(message.Split(' ')[1]) < 10) { Player.Message(p, "Cannot go below 10"); return; }
                         lvl.speedPhysics = int.Parse(message.Split(' ')[1]);
                         lvl.ChatLevel("Physics speed: &b" + lvl.speedPhysics);
                         break;
                     case "overload":
-                        if (int.Parse(message.Split(' ')[1]) < 500) { Player.SendMessage(p, "Cannot go below 500 (default is 1500)"); return; }
-                        if (p != null && p.group.Permission < LevelPermission.Admin && int.Parse(message.Split(' ')[1]) > 2500) { Player.SendMessage(p, "Only SuperOPs may set higher than 2500"); return; }
+                        if (int.Parse(message.Split(' ')[1]) < 500) { Player.Message(p, "Cannot go below 500 (default is 1500)"); return; }
+                        if (p != null && p.group.Permission < LevelPermission.Admin && int.Parse(message.Split(' ')[1]) > 2500) { Player.Message(p, "Only SuperOPs may set higher than 2500"); return; }
                         lvl.overload = int.Parse(message.Split(' ')[1]);
                         lvl.ChatLevel("Physics overload: &b" + lvl.overload);
                         break;
@@ -142,12 +142,12 @@ namespace MCGalaxy.Commands
                         lvl.UpdateBlockPermissions(); break;
                     
                     default:
-                        Player.SendMessage(p, "Could not find option entered."); return;
+                        Player.Message(p, "Could not find option entered."); return;
                 }
                 lvl.changed = true;
-                if (p != null && p.level != lvl) Player.SendMessage(p, "/map finished!");
+                if (p != null && p.level != lvl) Player.Message(p, "/map finished!");
             }
-            catch { Player.SendMessage(p, "INVALID INPUT"); }
+            catch { Player.Message(p, "INVALID INPUT"); }
         }
         
         void SetBool(Player p, Level lvl, ref bool target, string message, bool negate = false) {
@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands
             lvl.ChatLevel(message + GetBool(display));
             
             if (p == null) 
-                Player.SendMessage(p, message + GetBool(display, true));
+                Player.Message(p, message + GetBool(display, true));
         }
         
         string GetBool(bool value, bool console = false) {
@@ -165,27 +165,27 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/map [level] [toggle] - Sets [toggle] on [level]");
-            Player.SendMessage(p, "Possible toggles: theme, finite, randomflow, ai, edge, grass, growtrees, leafdecay, ps, overload, motd, " +
+            Player.Message(p, "/map [level] [toggle] - Sets [toggle] on [level]");
+            Player.Message(p, "Possible toggles: theme, finite, randomflow, ai, edge, grass, growtrees, leafdecay, ps, overload, motd, " +
                                "death, fall, drown, unload, loadongoto, rp, killer, chat, buildable, deletable, levelonlydeath");
-            Player.SendMessage(p, "Edge will cause edge water to flow.");
-            Player.SendMessage(p, "Grass will make grass not grow without physics.");
-            Player.SendMessage(p, "Tree growing will make saplings grow into trees after a while.");
-            Player.SendMessage(p, "Leaf decay will make leaves not connected to a log within 4 blocks disappear randomly.");
-            Player.SendMessage(p, "Finite will cause all liquids to be finite.");
-            Player.SendMessage(p, "Random flow makes mass flooding liquids flow less uniformly.");
-            Player.SendMessage(p, "AI will make animals hunt or flee.");
-            Player.SendMessage(p, "PS will set the map's physics speed.");
-            Player.SendMessage(p, "Overload will change how easy/hard it is to kill physics.");
-            Player.SendMessage(p, "MOTD will set a custom motd for the map. (leave blank to reset)");
-            Player.SendMessage(p, "Death will allow survival-style dying (falling, drowning)");
-            Player.SendMessage(p, "Fall/drown set the distance/time before dying from each.");
-            Player.SendMessage(p, "Drowning value is 10 for one second of air.");
-            Player.SendMessage(p, "Killer turns killer blocks on and off.");
-            Player.SendMessage(p, "Unload sets whether the map unloads when no one's there.");
-            Player.SendMessage(p, "Load on /goto sets whether the map can be loaded when some uses /goto. Only works if the load on /goto server option is enabled.");
-            Player.SendMessage(p, "Buildable sets whether any blocks can be placed by any player");
-            Player.SendMessage(p, "Deletable sets whether any blocks can be deleted by any player");
+            Player.Message(p, "Edge will cause edge water to flow.");
+            Player.Message(p, "Grass will make grass not grow without physics.");
+            Player.Message(p, "Tree growing will make saplings grow into trees after a while.");
+            Player.Message(p, "Leaf decay will make leaves not connected to a log within 4 blocks disappear randomly.");
+            Player.Message(p, "Finite will cause all liquids to be finite.");
+            Player.Message(p, "Random flow makes mass flooding liquids flow less uniformly.");
+            Player.Message(p, "AI will make animals hunt or flee.");
+            Player.Message(p, "PS will set the map's physics speed.");
+            Player.Message(p, "Overload will change how easy/hard it is to kill physics.");
+            Player.Message(p, "MOTD will set a custom motd for the map. (leave blank to reset)");
+            Player.Message(p, "Death will allow survival-style dying (falling, drowning)");
+            Player.Message(p, "Fall/drown set the distance/time before dying from each.");
+            Player.Message(p, "Drowning value is 10 for one second of air.");
+            Player.Message(p, "Killer turns killer blocks on and off.");
+            Player.Message(p, "Unload sets whether the map unloads when no one's there.");
+            Player.Message(p, "Load on /goto sets whether the map can be loaded when some uses /goto. Only works if the load on /goto server option is enabled.");
+            Player.Message(p, "Buildable sets whether any blocks can be placed by any player");
+            Player.Message(p, "Deletable sets whether any blocks can be deleted by any player");
         }
     }
 }

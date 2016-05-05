@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/fliphead - Does as it says on the tin (only works while infected)");
+            Player.Message(p, "/fliphead - Does as it says on the tin (only works while infected)");
         }
     }
 }

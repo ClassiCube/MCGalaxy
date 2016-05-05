@@ -37,18 +37,18 @@ namespace MCGalaxy.Commands
                 Player who = PlayerInfo.FindOrShowMatches(p, value);
                 if (who == null) return;
                 
-                Player.SendMessage(p, value + " was queued.");
+                Player.Message(p, value + " was queued.");
                 Server.zombie.QueuedZombie = value;
                 if (Server.zombie.CurLevel != null)
                     Server.zombie.CurLevel.ChatLevel(who.ColoredName + " %Swas queued as the next zombie.");
             } else if (args[0].CaselessEq("level")) {
                 if (LevelInfo.ExistsOffline(value)) {
-                    Player.SendMessage(p, value + " was queued.");
+                    Player.Message(p, value + " was queued.");
                     Server.zombie.QueuedLevel = value.ToLower();
                     if (Server.zombie.CurLevel != null)
                         Server.zombie.CurLevel.ChatLevel(value + " was queued as the next map.");
                 } else {
-                    Player.SendMessage(p, "Level \"" + value + "\" was not found.");
+                    Player.Message(p, "Level \"" + value + "\" was not found.");
                 }
             } else {
             	Help(p);
@@ -56,8 +56,8 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/queue zombie [name] - Next round [name] will be infected");
-            Player.SendMessage(p, "/queue level [name] - Next round [name] will be the round loaded");
+            Player.Message(p, "/queue zombie [name] - Next round [name] will be infected");
+            Player.Message(p, "/queue level [name] - Next round [name] will be the round loaded");
         }
     }
 }

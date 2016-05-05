@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
         
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/patrol - Teleports you to a random " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " or lower");
+            Player.Message(p, "/patrol - Teleports you to a random " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " or lower");
         }
 
         public override void Use(Player p, string message)
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
             List<string> getpatrol = (from pl in PlayerInfo.players where (int) pl.@group.Permission <= CommandOtherPerms.GetPerm(this) select pl.name).ToList();
             if (getpatrol.Count <= 0)
             {
-                Player.SendMessage(p, "There must be at least one guest online to use this command!");
+                Player.Message(p, "There must be at least one guest online to use this command!");
                 return;
             }
             Random random = new Random();
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
             string value = getpatrol[index];
             Player who = PlayerInfo.FindExact(value);
             Command.all.Find("tp").Use(p, who.name);
-            Player.SendMessage(p, "You are now visiting " + who.color + who.name + "!");
+            Player.Message(p, "You are now visiting " + who.color + who.name + "!");
         }
     }
 }

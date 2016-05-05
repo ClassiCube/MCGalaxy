@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             if (args.Length < 2) { Help(p); return; }
             int limit;
             if (!int.TryParse(args[1], out limit) || limit <= 0) {
-                Player.SendMessage(p, "Limit amount must be a whole number and greater than 0."); return;
+                Player.Message(p, "Limit amount must be a whole number and greater than 0."); return;
             }
             
             switch (args[0].ToLower()) {
@@ -68,9 +68,9 @@ namespace MCGalaxy.Commands {
                     SrvProperties.Save(); return;
             }
 
-            if (args.Length == 2) { Player.SendMessage(p, "You need to provide a rank name for this type."); return; }
+            if (args.Length == 2) { Player.Message(p, "You need to provide a rank name for this type."); return; }
             Group grp = Group.Find(args[2]);
-            if (grp == null) { Player.SendMessage(p, "No rank found matching: " + args[2]); return; }
+            if (grp == null) { Player.Message(p, "No rank found matching: " + args[2]); return; }
 
             switch (args[0].ToLower()) {
                 case "dl":
@@ -88,11 +88,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/limit <type> <amount> [rank] - Sets the limit for <type>");
-            Player.SendMessage(p, "Valid types: reloadthreshold(rt), restartphysics(rp), " +
+            Player.Message(p, "/limit <type> <amount> [rank] - Sets the limit for <type>");
+            Player.Message(p, "Valid types: reloadthreshold(rt), restartphysics(rp), " +
                                "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen), " +
                                "admingenlimit(admingen)");
-            Player.SendMessage(p, "Rank is required for drawlimit and maxundo types.");
+            Player.Message(p, "Rank is required for drawlimit and maxundo types.");
         }
     }
 }

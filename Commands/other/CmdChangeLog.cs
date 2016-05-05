@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
         {
             if (!File.Exists("changelog.txt"))
             {
-                Player.SendMessage(p, "Unable to find changelog");
+                Player.Message(p, "Unable to find changelog");
                 return;
             }
 
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
             {
                 for (int j = 0; j < strArray.Length; j++)
                 {
-                    Player.SendMessage(p, strArray[j]);
+                    Player.Message(p, strArray[j]);
                 }
             }
             else
@@ -73,23 +73,23 @@ namespace MCGalaxy.Commands
                     Player player = PlayerInfo.FindOrShowMatches(p, split[0]);
                     if (player == null) return;
 
-                    Player.SendMessage(player, "Changelog:");
+                    Player.Message(player, "Changelog:");
 
                     for (int l = 0; l < strArray.Length; l++)
                     {
-                        Player.SendMessage(player, strArray[l]);
+                        Player.Message(player, strArray[l]);
                     }
                     
-                    Player.SendMessage(p, "The Changelog was successfully sent to " + player.name + ".");                 
+                    Player.Message(p, "The Changelog was successfully sent to " + player.name + ".");                 
                     return;
                 }
             }
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/changelog - View the most recent changelog!!");
-            Player.SendMessage(p, "/changelog <player> - Sends the most recent changelog to <player>!!");
-            Player.SendMessage(p, "/changelog all - Sends the most recent changelog to everyone!!");
+            Player.Message(p, "/changelog - View the most recent changelog!!");
+            Player.Message(p, "/changelog <player> - Sends the most recent changelog to <player>!!");
+            Player.Message(p, "/changelog all - Sends the most recent changelog to everyone!!");
         }
     }
 }

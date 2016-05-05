@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             Economy.EcoStats ecos;
             if (p == null && message == "") {
-                Player.SendMessage(p, "You must provide a name when using the command from console."); return;
+                Player.Message(p, "You must provide a name when using the command from console."); return;
             }
 
             int matches = 1;
@@ -39,29 +39,29 @@ namespace MCGalaxy.Commands {
             if (matches > 1) return;
             if (matches == 0) {
                 ecos = Economy.RetrieveEcoStats(message);
-                Player.SendMessage(p, "%3===Economy stats for: %f" + ecos.playerName + "%7(offline)%3===");
+                Player.Message(p, "%3===Economy stats for: %f" + ecos.playerName + "%7(offline)%3===");
             } else {
                 ecos = Economy.RetrieveEcoStats(who.name);
-                Player.SendMessage(p, "%3===Economy stats for: " + who.color + who.name + "%3===");
+                Player.Message(p, "%3===Economy stats for: " + who.color + who.name + "%3===");
             }
             
-            Player.SendMessage(p, "Current balance: %f" + ecos.money + " %3" + Server.moneys);
-            Player.SendMessage(p, "Total spent: %f" + ecos.totalSpent + " %3" + Server.moneys);
+            Player.Message(p, "Current balance: %f" + ecos.money + " %3" + Server.moneys);
+            Player.Message(p, "Total spent: %f" + ecos.totalSpent + " %3" + Server.moneys);
             if (!(String.IsNullOrEmpty(ecos.purchase) || ecos.purchase == "%cNone"))
-                Player.SendMessage(p, "Last purchase: " + ecos.purchase);
+                Player.Message(p, "Last purchase: " + ecos.purchase);
             if (!(String.IsNullOrEmpty(ecos.payment) || ecos.payment == "%cNone"))
-                Player.SendMessage(p, "Last payment: " + ecos.payment);
+                Player.Message(p, "Last payment: " + ecos.payment);
             if (!(String.IsNullOrEmpty(ecos.salary) || ecos.salary == "%cNone"))
-                Player.SendMessage(p, "Last receipt: " + ecos.salary);
+                Player.Message(p, "Last receipt: " + ecos.salary);
             if (!(String.IsNullOrEmpty(ecos.fine) || ecos.fine == "%cNone"))
-                Player.SendMessage(p, "Last fine: " + ecos.fine);
+                Player.Message(p, "Last fine: " + ecos.fine);
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/balance <player>");
-            Player.SendMessage(p, "%HShows how much %3" + Server.moneys + " %H<player> has, " +
+            Player.Message(p, "%T/balance <player>");
+            Player.Message(p, "%HShows how much %3" + Server.moneys + " %H<player> has, " +
                                "plus their most recent transactions.");
-            Player.SendMessage(p, "%HIf <player> is not given, shows your own balance.");
+            Player.Message(p, "%HIf <player> is not given, shows your own balance.");
         }
     }
 }

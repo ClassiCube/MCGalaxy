@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         
         protected override void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.RevertBlock(x, y, z);
-            if (!Block.canPlace(p, type)) { Player.SendMessage(p, "You cannot place this block."); return; }
+            if (!Block.canPlace(p, type)) { Player.Message(p, "You cannot place this block."); return; }
 
             Thread gunThread = new Thread(() => DoShoot(p, type, extType));
             gunThread.Name = "MCG_Gun";
@@ -106,8 +106,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/gun [at end] - Allows you to fire bullets at people");
-            Player.SendMessage(p, "Available [at end] values: &cexplode, destroy, laser, tp");
+            Player.Message(p, "/gun [at end] - Allows you to fire bullets at people");
+            Player.Message(p, "Available [at end] values: &cexplode, destroy, laser, tp");
         }
     }
 }

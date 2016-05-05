@@ -177,7 +177,7 @@ namespace MCGalaxy {
         
         void Player_PlayerChat(Player p, string message) {    
             if (String.IsNullOrEmpty(message.Trim())) {
-                Player.SendMessage(p, "You cannot send that message");
+                Player.Message(p, "You cannot send that message");
                 return;
             }
 

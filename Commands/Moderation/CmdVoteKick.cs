@@ -30,9 +30,9 @@ namespace MCGalaxy.Commands
         {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
-            if (p.muted) { Player.SendMessage(p, "You cannot start votes while muted."); }
+            if (p.muted) { Player.Message(p, "You cannot start votes while muted."); }
 
-            if (Server.voteKickInProgress) { Player.SendMessage(p, "Please wait for the current vote to finish!"); return; }
+            if (Server.voteKickInProgress) { Player.Message(p, "Please wait for the current vote to finish!"); return; }
 
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/votekick <player> - Calls a 30sec vote to kick <player>");
+            Player.Message(p, "/votekick <player> - Calls a 30sec vote to kick <player>");
         }
     }
 }

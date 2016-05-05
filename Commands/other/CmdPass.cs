@@ -37,19 +37,19 @@ namespace MCGalaxy.Commands
 
             if (p.group.Permission < Server.verifyadminsrank)
             {
-                Player.SendMessage(p, "You do not have the &crequired rank to use this command!");
+                Player.Message(p, "You do not have the &crequired rank to use this command!");
                 return;
             }
 
             if (!Server.verifyadmins)
             {
-                Player.SendMessage(p, "Verification of admins is &cdisabled!");
+                Player.Message(p, "Verification of admins is &cdisabled!");
                 return;
             }
 
             if (!p.adminpen)
             {
-                Player.SendMessage(p, "You have &calready verified.");
+                Player.Message(p, "You have &calready verified.");
                 return;
             }
 
@@ -69,13 +69,13 @@ namespace MCGalaxy.Commands
 
             if (number > 1)
             {
-                Player.SendMessage(p, "Your password must be &cone %Sword!");
+                Player.Message(p, "Your password must be &cone %Sword!");
                 return;
             }
 
             if (!Directory.Exists("extra/passwords"))
             {
-                Player.SendMessage(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!");
+                Player.Message(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!");
                 return;
             }
 
@@ -83,27 +83,27 @@ namespace MCGalaxy.Commands
             FileInfo[] fi = di.GetFiles("*.dat");
             if (!File.Exists("extra/passwords/" + p.name + ".dat"))
             {
-                Player.SendMessage(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!");
+                Player.Message(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!");
                 return;
             }
 
             if (PasswordHasher.MatchesPass(p.name, message))
             {
-                Player.SendMessage(p, "Thank you, " + p.color + p.name + "%S! You have now &averified %Sand have &aaccess to admin commands and features!");
+                Player.Message(p, "Thank you, " + p.color + p.name + "%S! You have now &averified %Sand have &aaccess to admin commands and features!");
                 p.adminpen = false;
                 return;
             }
 
             p.passtries++;
-            Player.SendMessage(p, "&cWrong Password. %SRemember your password is &ccase sensitive!");
-            Player.SendMessage(p, "Forgot your password? %SContact the owner so they can reset it!");
+            Player.Message(p, "&cWrong Password. %SRemember your password is &ccase sensitive!");
+            Player.Message(p, "Forgot your password? %SContact the owner so they can reset it!");
         }
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/pass [Password] - If you are an admin, use this command to verify");
-            Player.SendMessage(p, "your login. You will need to use this to be given access to commands");
-            Player.SendMessage(p, "Note: If you do not have a password, use /setpass [Password]");
+            Player.Message(p, "/pass [Password] - If you are an admin, use this command to verify");
+            Player.Message(p, "your login. You will need to use this to be given access to commands");
+            Player.Message(p, "Note: If you do not have a password, use /setpass [Password]");
         }
     }
 }

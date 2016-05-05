@@ -525,7 +525,7 @@ namespace MCGalaxy {
             if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
                 if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
                     Player[] players = PlayerInfo.Online.Items; 
-                    foreach (Player pl in players) { Player.SendMessage(pl, joinm); }
+                    foreach (Player pl in players) { Player.Message(pl, joinm); }
                 }
             }
             if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
@@ -637,12 +637,12 @@ namespace MCGalaxy {
             if (Server.muted.Contains(name)) {
                 muted = true;
                 GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
-                Player.SendMessage(this, "!%cYou are still %8muted%c since your last login.");
+                Player.Message(this, "!%cYou are still %8muted%c since your last login.");
             }           
             if (Server.frozen.Contains(name)) {
                 frozen = true;
                 GlobalMessage(DisplayName + " is still frozen from the last time they went offline.");
-                Player.SendMessage(this, "!%cYou are still %8frozen%c since your last login.");
+                Player.Message(this, "!%cYou are still %8frozen%c since your last login.");
             }        	
         }
         
@@ -1067,7 +1067,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                                 muteTimer.Stop();
                                 if (muted) Command.all.Find("mute").Use(null, name);
                                 this.consecutivemessages = 0;
-                                Player.SendMessage(this, "Remember, no &cspamming %Snext time!");
+                                Player.Message(this, "Remember, no &cspamming %Snext time!");
                             }
                         };
                         muteTimer.Start();
@@ -1105,12 +1105,12 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 {
 if (team == null)
 {
-Player.SendMessage(this, "You are not on a team.");
+Player.Message(this, "You are not on a team.");
 return;
 }
 foreach (Player p in team.players)
 {
-Player.SendMessage(p, "(" + team.teamstring + ") " + this.color + this.name + ":&f " + text);
+Player.Message(p, "(" + team.teamstring + ") " + this.color + this.name + ":&f " + text);
 }
 return;
 }*/
@@ -1324,8 +1324,8 @@ return;
                                         command.Use(this, message);
                                     } catch (Exception e) {
                                         Server.ErrorLog(e);
-                                        Player.SendMessage(this, "An error occured when using the command!");
-                                        Player.SendMessage(this, e.GetType() + ": " + e.Message);
+                                        Player.Message(this, "An error occured when using the command!");
+                                        Player.Message(this, e.GetType() + ": " + e.Message);
                                     }
                                 }));
             thread.Name = "MCG_Command";

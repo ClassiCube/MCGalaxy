@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands
        public override string type { get { return CommandTypes.Moderation; } }
         public override void Use(Player p, string message)
         {
-            if (p != null) { Player.SendMessage(p, "Creating a plugin example source"); }
+            if (p != null) { Player.Message(p, "Creating a plugin example source"); }
             else { Server.s.Log("Creating a plugin example source"); }
 
             string name;
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            if (p != null) Player.SendMessage(p, "/pcreate <Plugin name> - Create a example .cs file!");
+            if (p != null) Player.Message(p, "/pcreate <Plugin name> - Create a example .cs file!");
             else Server.s.Log("/pcreate <Plugin name> - Create a example .cs file!");
         }
         public CmdPCreate() { }

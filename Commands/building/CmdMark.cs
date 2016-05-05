@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/mark - Clicks where you are standing.");
-            Player.SendMessage(p, "Use this to place a marker at your position when making a selection or cuboid.");
+            Player.Message(p, "/mark - Clicks where you are standing.");
+            Player.Message(p, "Use this to place a marker at your position when making a selection or cuboid.");
         }
     }
 }

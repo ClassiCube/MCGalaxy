@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
             {
                 if (p.modeType != 0)
                 {
-                    Player.SendMessage(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + " %Smode: &cOFF");
+                    Player.Message(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + " %Smode: &cOFF");
                     p.modeType = 0;
                 }
                 else
@@ -43,36 +43,36 @@ namespace MCGalaxy.Commands
             else
             {
                 byte b = Block.Byte(message);
-                if (b == Block.Zero) { Player.SendMessage(p, "Could not find block given."); return; }
-                if (b == Block.air) { Player.SendMessage(p, "Cannot use Air Mode."); return; }
+                if (b == Block.Zero) { Player.Message(p, "Could not find block given."); return; }
+                if (b == Block.air) { Player.Message(p, "Cannot use Air Mode."); return; }
 
                 if (!p.allowTnt && (b == Block.tnt || b == Block.bigtnt || b == Block.smalltnt 
                                     || b == Block.nuketnt || b == Block.tntexplosion)) {
-                	Player.SendMessage(p, "Tnt usage is not allowed at the moment"); return;
+                	Player.Message(p, "Tnt usage is not allowed at the moment"); return;
                 }
 
                 if (!p.allowTnt && b == Block.fire) {
-                    Player.SendMessage(p, "Tnt usage is not allowed at the moment, fire is a lighter for tnt and is also disabled"); return;
+                    Player.Message(p, "Tnt usage is not allowed at the moment, fire is a lighter for tnt and is also disabled"); return;
                 }
                         
-                if (!Block.canPlace(p, b)) { Player.SendMessage(p, "Cannot place this block at your rank."); return; }
+                if (!Block.canPlace(p, b)) { Player.Message(p, "Cannot place this block at your rank."); return; }
 
                 if (p.modeType == b)
                 {
-                    Player.SendMessage(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + " %Smode: &cOFF");
+                    Player.Message(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + " %Smode: &cOFF");
                     p.modeType = 0;
                 }
                 else
                 {
                     p.modeType = b;
-                    Player.SendMessage(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + " %Smode: &aON");
+                    Player.Message(p, "&b" + Block.Name(p.modeType)[0].ToString().ToUpper() + Block.Name(p.modeType).Remove(0, 1).ToLower() + " %Smode: &aON");
                 }
             }
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/mode [block] - Makes every block placed into [block].");
-            Player.SendMessage(p, "/[block] also works");
+            Player.Message(p, "/mode [block] - Makes every block placed into [block].");
+            Player.Message(p, "/[block] also works");
         }
     }
 }

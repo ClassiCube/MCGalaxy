@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             int ignored = 0;
             if (message == "") {
-                if (p == null) { Player.SendMessage(null, "Console doesn't have an undo buffer."); return; }
+                if (p == null) { Player.Message(null, "Console doesn't have an undo buffer."); return; }
                 UndoSelf(p); return;
             } else if (p != null && int.TryParse(message, out ignored)) {
                 message = p.name.ToLower() + " " + message;
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
             
             if (parts.Length > 1 && parts[1].CaselessEq("update")) {
                 UndoFile.UpgradePlayerUndoFiles(parts[0]);
-                Player.SendMessage(p, "Updated undo files for " + parts[0] + " to the new binary format.");
+                Player.Message(p, "Updated undo files for " + parts[0] + " to the new binary format.");
                 return;
             }
 
@@ -71,13 +71,13 @@ namespace MCGalaxy.Commands
             if (param.CaselessEq("all")) {
                 secs = (p.group.maxUndo == undoMax || p == who) ? int.MaxValue : p.group.maxUndo;
             } else if (!long.TryParse(param, out secs)) {
-                Player.SendMessage(p, "Invalid seconds, using 30 seconds.");
+                Player.Message(p, "Invalid seconds, using 30 seconds.");
                 return 30;
             }
 
             if (secs == 0) secs = 5400;
             if (p != null && p != who && p.group.maxUndo != undoMax && secs > p.group.maxUndo) {
-                Player.SendMessage(p, p.group.name + "s may only undo up to " + p.group.maxUndo + " seconds.");
+                Player.Message(p, p.group.name + "s may only undo up to " + p.group.maxUndo + " seconds.");
                 return p.group.maxUndo;
             }
             return secs;
@@ -86,8 +86,8 @@ namespace MCGalaxy.Commands
         void UndoSelf(Player p) {
             UndoDrawOpEntry[] entries = p.DrawOps.Items;
             if (entries.Length == 0) {
-                Player.SendMessage(p, "You have no draw operations to undo.");
-                Player.SendMessage(p, "Try using %T/undo <seconds> %Sinstead.");
+                Player.Message(p, "You have no draw operations to undo.");
+                Player.Message(p, "Try using %T/undo <seconds> %Sinstead.");
                 return;
             }
             
@@ -100,13 +100,13 @@ namespace MCGalaxy.Commands
                 op.who = p;
                 op.Start = entry.Start; op.End = entry.End;
                 DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
-                Player.SendMessage(p, "Undo performed.");
+                Player.Message(p, "Undo performed.");
                 return;
             }
             
-            Player.SendMessage(p, "Unable to undo any draw operations, as all of the " +
+            Player.Message(p, "Unable to undo any draw operations, as all of the " +
                                "past 50 draw operations are %T/undo%S or %T/undo <seconds>.");
-            Player.SendMessage(p, "Try using %T/undo <seconds> %Sinstead.");
+            Player.Message(p, "Try using %T/undo <seconds> %Sinstead.");
         }
         
         void UndoOnlinePlayer(Player p, long seconds, Player who) {
@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands
             
             Level saveLevel = op.saveLevel;
             if (p == who) {
-                Player.SendMessage(p, "Undid your actions for the past &b" + seconds + " %Sseconds.");
+                Player.Message(p, "Undid your actions for the past &b" + seconds + " %Sseconds.");
             } else {
                 Player.SendChatFrom(who, who.ColoredName + "%S's actions for the past &b" + seconds + " seconds were undone.", false);
             }
@@ -146,14 +146,14 @@ namespace MCGalaxy.Commands
                 Server.s.Log(whoName + "'s actions for the past " + seconds + " seconds were undone.");
                 if (p != null) p.level.Save(true);
             } else {
-                Player.SendMessage(p, "Could not find player specified.");
+                Player.Message(p, "Could not find player specified.");
             }
         }
         
         void UndoLevelPhysics(Player p, long seconds) {
             if (!CheckAdditionalPerm(p, 2)) { MessageNeedPerms(p, "can undo physics.", 2); return; }
             if (p != null && !p.group.CanExecute("physics")) {
-                Player.SendMessage(p, "You can only undo physics if you can use /physics."); return;
+                Player.Message(p, "You can only undo physics if you can use /physics."); return;
             }
             Command.all.Find("physics").Use(p, "0");
             UndoPhysicsDrawOp op = new UndoPhysicsDrawOp();
@@ -166,13 +166,13 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/undo - Undoes your last draw operation.");
-            Player.SendMessage(p, "/undo [player] [seconds] - Undoes the blockchanges made by [player] in the previous [seconds].");
+            Player.Message(p, "/undo - Undoes your last draw operation.");
+            Player.Message(p, "/undo [player] [seconds] - Undoes the blockchanges made by [player] in the previous [seconds].");
             if (p == null || (p.group.maxUndo <= 500000 || p.group.maxUndo == 0))
-                Player.SendMessage(p, "/undo [player] all - &cWill undo 68 years, 18 days, 15 hours, 28 minutes, 31 seconds for [player]");
+                Player.Message(p, "/undo [player] all - &cWill undo 68 years, 18 days, 15 hours, 28 minutes, 31 seconds for [player]");
             if (p == null || (p.group.maxUndo <= 1800 || p.group.maxUndo == 0))
-                Player.SendMessage(p, "/undo [player] - &cWill undo 30 minutes");
-            Player.SendMessage(p, "/undo physics [seconds] - Undoes the physics for the current map");
+                Player.Message(p, "/undo [player] - &cWill undo 30 minutes");
+            Player.Message(p, "/undo physics [seconds] - Undoes the physics for the current map");
         }
     }
 }

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
 			if (p == null) { MessageInGameOnly(p); return; }
 			string replaceCmd = ReplaceNot ? "replacenot" : "replace";
 			if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("brush")) {
-				Player.SendMessage(p, "You cannot use /brush and/or /" + replaceCmd + 
+				Player.Message(p, "You cannot use /brush and/or /" + replaceCmd + 
 				                   ", so therefore cannot use this command."); return;
 			}
 			
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
 			cpos.message = message.ToLower();
 			p.blockchangeObject = cpos;
 			
-			Player.SendMessage(p, "Place two blocks to determine the edges.");
+			Player.Message(p, "Place two blocks to determine the edges.");
 			p.ClearBlockchange();
 			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
 		}
@@ -70,8 +70,8 @@ namespace MCGalaxy.Commands {
 			if (tile == Block.Zero) return;
 			string brushName = CmdBrush.FindBrush(parts[1]);
 			if (brushName == null) {
-				Player.SendMessage(p, "No brush found with name \"" + parts[1] + "\".");
-				Player.SendMessage(p, "Available brushes: " + CmdBrush.AvailableBrushes);
+				Player.Message(p, "No brush found with name \"" + parts[1] + "\".");
+				Player.Message(p, "Available brushes: " + CmdBrush.AvailableBrushes);
 				return;
 			}
 
@@ -95,10 +95,10 @@ namespace MCGalaxy.Commands {
 		struct CatchPos { public ushort x, y, z; public string message; }
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "%T/rb [block] [brush name] <brush args>");
-			Player.SendMessage(p, "%HReplaces all blocks of the given type, " +
+			Player.Message(p, "%T/rb [block] [brush name] <brush args>");
+			Player.Message(p, "%HReplaces all blocks of the given type, " +
 			                   "in the specified area with the output of the given brush.");
-			Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
+			Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
 		}
 	}
 	
@@ -109,10 +109,10 @@ namespace MCGalaxy.Commands {
 		protected override bool ReplaceNot { get { return true; } }
 		
 		public override void Help(Player p) {
-			Player.SendMessage(p, "%T/rnb [block] [brush name] <brush args>");
-			Player.SendMessage(p, "%HReplaces all blocks (except for the given block), " +
+			Player.Message(p, "%T/rnb [block] [brush name] <brush args>");
+			Player.Message(p, "%HReplaces all blocks (except for the given block), " +
 			                   "in the specified area with the output of the given brush.");
-			Player.SendMessage(p, "   %HFor help about brushes, type %T/help brush%H.");
+			Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
 		}
 	}
 }

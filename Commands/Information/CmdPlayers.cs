@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
         public CmdPlayers() { }
 
         public override void Use(Player p, string message) {
-            DisplayPlayers(p, message, text => Player.SendMessage(p, text), 
+            DisplayPlayers(p, message, text => Player.Message(p, text), 
         	               true, Server.showEmptyRanks);
         }
         
@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/players [rank] - Shows name and general rank of all players");
+            Player.Message(p, "/players [rank] - Shows name and general rank of all players");
         }
     }
 }

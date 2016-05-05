@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (!p.EnoughMoney(10)) {
-                Player.SendMessage(p, "You need &f10 " + Server.moneys + " %Sto enter the lottery."); return;
+                Player.Message(p, "You need &f10 " + Server.moneys + " %Sto enter the lottery."); return;
             }
             
             string[] players = Server.zombie.Lottery.Items;
             for (int i = 0; i < players.Length; i++) {
                 if (players[i].CaselessEq(p.name)) {
-                    Player.SendMessage(p, "You are already in the lottery, which has &a"
+                    Player.Message(p, "You are already in the lottery, which has &a"
             		                   + players.Length + " %Splayers in it."); return;
                 }
             }
@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/lottery %H-Enters lottery for &f10 " + Server.moneys);
-            Player.SendMessage(p, "%HThe winner is calculated at the end of each round.");
-            Player.SendMessage(p, "%HYou are &cnot refunded %Hif you disconnect.");
+            Player.Message(p, "%T/lottery %H-Enters lottery for &f10 " + Server.moneys);
+            Player.Message(p, "%HThe winner is calculated at the end of each round.");
+            Player.Message(p, "%HYou are &cnot refunded %Hif you disconnect.");
         }
     }
 }

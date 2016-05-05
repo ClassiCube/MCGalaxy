@@ -95,12 +95,12 @@ namespace MCGalaxy
 						 "' This is where the magic happens, naturally." +   Environment.NewLine +
 						 "' p is the player object for the player executing the command.  message is everything after the command invocation itself." +   Environment.NewLine +
 						 "\t\tPublic Overrides Sub Use(p As Player, message As String)" + Environment.NewLine +
-						 "\t\t\tPlayer.SendMessage(p, \"Hello World!\")" + Environment.NewLine +
+						 "\t\t\tPlayer.Message(p, \"Hello World!\")" + Environment.NewLine +
 						 "\t\tEnd Sub" + Environment.NewLine +
 						 Environment.NewLine +
 						 "' This one controls what happens when you use /help [commandname]." +   Environment.NewLine +
 						 "\t\tPublic Overrides Sub Help(p As Player)" + Environment.NewLine +
-						 "\t\t\tPlayer.SendMessage(p, \"/" + CmdName.ToLower() + " - Does stuff.  Example command.\")" + Environment.NewLine +
+						 "\t\t\tPlayer.Message(p, \"/" + CmdName.ToLower() + " - Does stuff.  Example command.\")" + Environment.NewLine +
 
 						 "\t\tEnd Sub" + Environment.NewLine +
 						 "\tEnd Class" + Environment.NewLine +

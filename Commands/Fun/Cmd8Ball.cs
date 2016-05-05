@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
 		public Cmd8Ball() { }
         public override void Use(Player p, string message) {
             if (String.IsNullOrEmpty(message)) { Help(p); return; }
-            if (p.joker || p.muted) { Player.SendMessage(p, "Cannot use 8ball while muted or jokered."); return; }
+            if (p.joker || p.muted) { Player.Message(p, "Cannot use 8ball while muted or jokered."); return; }
             Random random = new Random();
             string[] messages = { "Not likely." , "Very likely." , "Impossible!" , "Probably." , "Ask again later." , "No." , "Maybe." };
             Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + " asked the question " + message + " ", false);
@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/8ball (message)");
-            Player.SendMessage(p, "%HGives you a meaningless response to a question.");
+            Player.Message(p, "%T/8ball (message)");
+            Player.Message(p, "%HGives you a meaningless response to a question.");
         }
     }
 }

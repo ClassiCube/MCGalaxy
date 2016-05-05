@@ -41,11 +41,11 @@ namespace MCGalaxy.Commands
                     //safe against SQL injections because no user input is given here
                     DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent");
 
-                    if (Inbox.Rows.Count == 0) { Player.SendMessage(p, "No messages found."); Inbox.Dispose(); return; }
+                    if (Inbox.Rows.Count == 0) { Player.Message(p, "No messages found."); Inbox.Dispose(); return; }
 
                     for (int i = 0; i < Inbox.Rows.Count; ++i)
                     {
-                        Player.SendMessage(p, i + ": From &5" + Inbox.Rows[i]["PlayerFrom"]+ " %Sat &a" + Inbox.Rows[i]["TimeSent"]);
+                        Player.Message(p, i + ": From &5" + Inbox.Rows[i]["PlayerFrom"]+ " %Sat &a" + Inbox.Rows[i]["TimeSent"]);
                     }
                     Inbox.Dispose();
                 }
@@ -59,16 +59,16 @@ namespace MCGalaxy.Commands
                         {
                             FoundRecord = int.Parse(message.Split(' ')[1]);
                         }
-                        catch { Player.SendMessage(p, "Incorrect number given."); return; }
+                        catch { Player.Message(p, "Incorrect number given."); return; }
 
-                        if (FoundRecord < 0) { Player.SendMessage(p, "Cannot delete records below 0"); return; }
+                        if (FoundRecord < 0) { Player.Message(p, "Cannot delete records below 0"); return; }
                     }
                     //safe against SQL injections because no user input is given here
                     DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent");
 
                     if (Inbox.Rows.Count - 1 < FoundRecord || Inbox.Rows.Count == 0)
                     {
-                        Player.SendMessage(p, "\"" + FoundRecord + "\" does not exist."); Inbox.Dispose(); return;
+                        Player.Message(p, "\"" + FoundRecord + "\" does not exist."); Inbox.Dispose(); return;
                     }
 
                     ParameterisedQuery query = ParameterisedQuery.Create();
@@ -84,9 +84,9 @@ namespace MCGalaxy.Commands
                     Database.executeQuery(query, queryString);
 
                     if (FoundRecord == -1)
-                        Player.SendMessage(p, "Deleted all messages.");
+                        Player.Message(p, "Deleted all messages.");
                     else
-                        Player.SendMessage(p, "Deleted message.");
+                        Player.Message(p, "Deleted message.");
 
                     Inbox.Dispose();
                 }
@@ -98,33 +98,33 @@ namespace MCGalaxy.Commands
                     {
                         FoundRecord = int.Parse(message);
                     }
-                    catch { Player.SendMessage(p, "Incorrect number given."); return; }
+                    catch { Player.Message(p, "Incorrect number given."); return; }
 
-                    if (FoundRecord < 0) { Player.SendMessage(p, "Cannot read records below 0"); return; }
+                    if (FoundRecord < 0) { Player.Message(p, "Cannot read records below 0"); return; }
 
                     //safe against SQL injections because no user input is given here
                     DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent");
 
                     if (Inbox.Rows.Count - 1 < FoundRecord || Inbox.Rows.Count == 0)
                     {
-                        Player.SendMessage(p, "\"" + FoundRecord + "\" does not exist."); Inbox.Dispose(); return;
+                        Player.Message(p, "\"" + FoundRecord + "\" does not exist."); Inbox.Dispose(); return;
                     }
 
-                    Player.SendMessage(p, "Message from &5" + Inbox.Rows[FoundRecord]["PlayerFrom"] + " %Ssent at &a" + Inbox.Rows[FoundRecord]["TimeSent"] + ":");
-                    Player.SendMessage(p, Inbox.Rows[FoundRecord]["Contents"].ToString());
+                    Player.Message(p, "Message from &5" + Inbox.Rows[FoundRecord]["PlayerFrom"] + " %Ssent at &a" + Inbox.Rows[FoundRecord]["TimeSent"] + ":");
+                    Player.Message(p, Inbox.Rows[FoundRecord]["Contents"].ToString());
                     Inbox.Dispose();
                 }
             }
             catch
             {
-                Player.SendMessage(p, "Error accessing inbox. You may have no mail, try again.");
+                Player.Message(p, "Error accessing inbox. You may have no mail, try again.");
             }
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/inbox - Displays all your messages.");
-            Player.SendMessage(p, "/inbox [num] - Displays the message at [num]");
-            Player.SendMessage(p, "/inbox <del> [\"all\"/num] - Deletes the message at Num or All if \"all\" is given.");
+            Player.Message(p, "/inbox - Displays all your messages.");
+            Player.Message(p, "/inbox [num] - Displays the message at [num]");
+            Player.Message(p, "/inbox <del> [\"all\"/num] - Deletes the message at Num or All if \"all\" is given.");
         }
     }
 }

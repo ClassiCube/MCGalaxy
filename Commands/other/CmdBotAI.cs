@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands
             if (args.Length < 2) { Help(p); return; }
             string ai = args[1].ToLower();
 
-            if (!Player.ValidName(ai)) { Player.SendMessage(p, "Invalid AI name!"); return; }
-            if (ai == "hunt" || ai == "kill") { Player.SendMessage(p, "Reserved for special AI."); return; }
+            if (!Player.ValidName(ai)) { Player.Message(p, "Invalid AI name!"); return; }
+            if (ai == "hunt" || ai == "kill") { Player.Message(p, "Reserved for special AI."); return; }
 
             switch (args[0].ToLower()) {
                 case "add":
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands
 
             int currentTry = 0;
             if (!File.Exists("bots/" + ai)) {
-                Player.SendMessage(p, "Could not find specified AI."); return;
+                Player.Message(p, "Could not find specified AI."); return;
             }
             
             retry:
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands
                         }
 
                         File.WriteAllLines("bots/" + ai, outLines);
-                        Player.SendMessage(p, "Deleted the last instruction from " + ai);
+                        Player.Message(p, "Deleted the last instruction from " + ai);
                         return;
                     } else {
                         Help(p); return;
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
                 }
             }
             catch (IOException) { currentTry++; goto retry; }
-            Player.SendMessage(p, "Deleted &b" + ai);
+            Player.Message(p, "Deleted &b" + ai);
         }
 
         void HandleAdd(Player p, string ai, string action = "", string extra = "10", string more = "2") {
@@ -99,23 +99,23 @@ namespace MCGalaxy.Commands
             StreamWriter SW;
             try {
                 if (!File.Exists("bots/" + ai)) {
-                    Player.SendMessage(p, "Created new bot AI: &b" + ai);
+                    Player.Message(p, "Created new bot AI: &b" + ai);
                     using (SW = File.CreateText("bots/" + ai))
                     {
                         SW.WriteLine("#Version 2");
                     }
                 } else if (allLines[0] != "#Version 2") {
-                    Player.SendMessage(p, "File found is out-of-date. Overwriting");
+                    Player.Message(p, "File found is out-of-date. Overwriting");
                     File.Delete("bots/" + ai);
                     using (SW = File.CreateText("bots/" + ai))
                     {
                         SW.WriteLine("#Version 2");
                     }
                 } else {
-                    Player.SendMessage(p, "Appended to bot AI: &b" + ai);
+                    Player.Message(p, "Appended to bot AI: &b" + ai);
                 }
             } catch { 
-                Player.SendMessage(p, "An error occurred when accessing the files. You may need to delete it."); return; 
+                Player.Message(p, "An error occurred when accessing the files. You may need to delete it."); return; 
             }
 
             try {
@@ -147,40 +147,40 @@ namespace MCGalaxy.Commands
                             for (int i = allLines.Length - 1; i > 0; i--) if (allLines[i][0] != '#' && allLines[i] != "") SW.WriteLine(allLines[i]);
                             break;
                         case "linkscript":
-                            if (extra != "10") SW.WriteLine("linkscript " + extra); else Player.SendMessage(p, "Linkscript requires a script as a parameter");
+                            if (extra != "10") SW.WriteLine("linkscript " + extra); else Player.Message(p, "Linkscript requires a script as a parameter");
                             break;
                         case "jump":
                             SW.WriteLine("jump"); break;
                         default:
-                            Player.SendMessage(p, "Could not find \"" + action + "\""); break;
+                            Player.Message(p, "Could not find \"" + action + "\""); break;
                     }
                 }
             }
-            catch { Player.SendMessage(p, "Invalid parameter"); }
+            catch { Player.Message(p, "Invalid parameter"); }
         }
         
         void HandleInfo(Player p, string ai) {
             if (!File.Exists("bots/" + ai)) {
-                Player.SendMessage(p, "There is no bot AI with that name."); return;
+                Player.Message(p, "There is no bot AI with that name."); return;
             }
             string[] lines = File.ReadAllLines("bots/" + ai);
             foreach (string l in lines) {
                 if (l.Length == 0 || l[0] == '#') continue;
-                Player.SendMessage(p, l);
+                Player.Message(p, l);
             }
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/botai del [name] %H- deletes that AI");
-            Player.SendMessage(p, "%T/botai del [name] last%H- deletes last instruction of that AI");
-            Player.SendMessage(p, "%T/botai info [name] %H- prints list of instructions that AI has");
-            Player.SendMessage(p, "%T/botai add [name] [instruction] <args>");
-            Player.SendMessage(p, "%HInstructions: %Swalk, teleport, wait, nod, speed, " +
+            Player.Message(p, "%T/botai del [name] %H- deletes that AI");
+            Player.Message(p, "%T/botai del [name] last%H- deletes last instruction of that AI");
+            Player.Message(p, "%T/botai info [name] %H- prints list of instructions that AI has");
+            Player.Message(p, "%T/botai add [name] [instruction] <args>");
+            Player.Message(p, "%HInstructions: %Swalk, teleport, wait, nod, speed, " +
                                "spin, reset, remove, reverse, linkscript, jump");
-            Player.SendMessage(p, "%Hwait, nod, spin %S- optional arg specifies '0.1 seconds'");
-            Player.SendMessage(p, "%Hnod, spin %S- optional second arg specifies 'speed'");
-            Player.SendMessage(p, "%Hspeed %S- arg specifies percentage of normal speed");
-            Player.SendMessage(p, "%Hlinkscript %S- arg specifies another AI name");
+            Player.Message(p, "%Hwait, nod, spin %S- optional arg specifies '0.1 seconds'");
+            Player.Message(p, "%Hnod, spin %S- optional second arg specifies 'speed'");
+            Player.Message(p, "%Hspeed %S- arg specifies percentage of normal speed");
+            Player.Message(p, "%Hlinkscript %S- arg specifies another AI name");
         }
     }
 }

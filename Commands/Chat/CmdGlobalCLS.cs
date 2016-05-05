@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/globalcls - Clears the chat for all users.");
+            Player.Message(p, "/globalcls - Clears the chat for all users.");
         }
     }
 }

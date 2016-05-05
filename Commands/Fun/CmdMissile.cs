@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
                 p.aiming = false;
             }
             p.RevertBlock(x, y, z);
-            if (!Block.canPlace(p, type)) { Player.SendMessage(p, "You cannot place this block."); return; }
+            if (!Block.canPlace(p, type)) { Player.Message(p, "You cannot place this block."); return; }
 
             Thread gunThread = new Thread(() => DoShoot(p, type, extType));
             gunThread.Name = "MCG_Missile";
@@ -139,9 +139,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/missile [at end] - Allows you to fire missiles at people");
-            Player.SendMessage(p, "Available [at end] values: &cexplode, destroy, tp");
-            Player.SendMessage(p, "Differs from /gun in that the missile is guided");
+            Player.Message(p, "/missile [at end] - Allows you to fire missiles at people");
+            Player.Message(p, "Available [at end] values: &cexplode, destroy, tp");
+            Player.Message(p, "Differs from /gun in that the missile is guided");
         }
     }
 }

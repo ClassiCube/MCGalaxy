@@ -32,14 +32,14 @@ namespace MCGalaxy.Commands
         {
             if (Server.PCCounter == null)
             {
-                Player.SendMessage(p, "Starting PCCounter...one second");
+                Player.Message(p, "Starting PCCounter...one second");
                 Server.PCCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
                 Server.PCCounter.BeginInit();
                 Server.PCCounter.NextValue();
             }
             if (Server.ProcessCounter == null)
             {
-                Player.SendMessage(p, "Starting ProcessCounter...one second");
+                Player.Message(p, "Starting ProcessCounter...one second");
                 Server.ProcessCounter = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
                 Server.ProcessCounter.BeginInit();
                 Server.ProcessCounter.NextValue();
@@ -56,15 +56,15 @@ namespace MCGalaxy.Commands
             string MemoryUsage = "Memory Usage: " + Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1048576).ToString() + " Megabytes";
             string Uptime = "Uptime: " + up.Days + " Days " + up.Hours + " Hours " + up.Minutes + " Minutes " + up.Seconds + " Seconds";
             string Threads = "Threads: " + Process.GetCurrentProcess().Threads.Count;
-            Player.SendMessage(p, Uptime);
-            Player.SendMessage(p, MemoryUsage);
-            Player.SendMessage(p, ProcessorUsage);
-            Player.SendMessage(p, Threads);
+            Player.Message(p, Uptime);
+            Player.Message(p, MemoryUsage);
+            Player.Message(p, ProcessorUsage);
+            Player.Message(p, Threads);
 
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/serverreport - Get server CPU%, RAM usage, and uptime.");
+            Player.Message(p, "/serverreport - Get server CPU%, RAM usage, and uptime.");
         }
     }
 }

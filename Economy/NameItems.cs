@@ -32,19 +32,19 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.all.Find("title").Use(null, p.name);
-                Player.SendMessage(p, "%aYour title was removed for free."); return;
+                Player.Message(p, "%aYour title was removed for free."); return;
             }
             
             string title = message.Split(trimChars, 2)[1]; // keep spaces this way
             if (title == p.title) {
-                Player.SendMessage(p, "%cYou already have that title."); return;
+                Player.Message(p, "%cYou already have that title."); return;
             }
             if (title.Length >= 20) {
-                Player.SendMessage(p, "%cTitles must be under 20 characters."); return;
+                Player.Message(p, "%cTitles must be under 20 characters."); return;
             }
             
             Command.all.Find("title").Use(null, p.name + " " + title);
-            Player.SendMessage(p, "%aYour title was changed to [" + p.titlecolor + title + "%a]");
+            Player.Message(p, "%aYour title was changed to [" + p.titlecolor + title + "%a]");
             Economy.MakePurchase(p, Price, "%3Title: %f" + title);
         }
     }
@@ -62,19 +62,19 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.all.Find("nick").Use(null, p.name);
-                Player.SendMessage(p, "%aYour nickname was removed for free."); return;
+                Player.Message(p, "%aYour nickname was removed for free."); return;
             }
             
             string nick = message.Split(trimChars, 2)[1]; // keep spaces this way
             if (nick == p.DisplayName) {
-                Player.SendMessage(p, "%cYou already have that nickname."); return;
+                Player.Message(p, "%cYou already have that nickname."); return;
             }
             if (nick.Length >= 30) {
-                Player.SendMessage(p, "%cNicknames must be under 30 characters."); return;
+                Player.Message(p, "%cNicknames must be under 30 characters."); return;
             }
             
             Command.all.Find("nick").Use(null, p.name + " " + nick);
-            Player.SendMessage(p, "%aYour nickname was changed to [" + p.color + nick + "%a]");
+            Player.Message(p, "%aYour nickname was changed to [" + p.color + nick + "%a]");
             Economy.MakePurchase(p, Price, "%3Nickname: %f" + nick);
         }
     }
@@ -90,14 +90,14 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) {            
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
-                if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }
+                if (args[1] == "") { Player.Message(p, "%cThat wasn't a color"); return; }
             }
             if (args[1] == p.titlecolor) {
-                Player.SendMessage(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c titlecolor"); return;
+                Player.Message(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c titlecolor"); return;
             }
             
             Command.all.Find("tcolor").Use(null, p.name + " " + Colors.Name(args[1]));
-            Player.SendMessage(p, "%aYour titlecolor was changed to " + args[1] + Colors.Name(args[1]));
+            Player.Message(p, "%aYour titlecolor was changed to " + args[1] + Colors.Name(args[1]));
             Economy.MakePurchase(p, Price, "%3Titlecolor: " + args[1] + Colors.Name(args[1]));
         }
     }
@@ -113,10 +113,10 @@ namespace MCGalaxy.Eco {
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
-                if (args[1] == "") { Player.SendMessage(p, "%cThat wasn't a color"); return; }
+                if (args[1] == "") { Player.Message(p, "%cThat wasn't a color"); return; }
             }
             if (args[1] == p.color) {
-                Player.SendMessage(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c color"); return;
+                Player.Message(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c color"); return;
             }
             
             Command.all.Find("color").Use(null, p.name + " " + Colors.Name(args[1]));

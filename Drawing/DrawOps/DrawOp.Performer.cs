@@ -54,7 +54,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             op.Level = p == null ? null : p.level;
             if (op.Level != null && !op.Level.DrawingAllowed) {
-                Player.SendMessage(p, "Drawing commands are turned off on this map.");
+                Player.Message(p, "Drawing commands are turned off on this map.");
                 return false;
             }
             
@@ -63,10 +63,10 @@ namespace MCGalaxy.Drawing.Ops {
                 return false;
             if (brush != null && affected != -1) {
                 const string format = "{0}({1}): affecting up to {2} blocks";
-                Player.SendMessage(p, String.Format(format, op.Name, brush.Name, affected));
+                Player.Message(p, String.Format(format, op.Name, brush.Name, affected));
             } else if (affected != -1) {
                 const string format = "{0}: affecting up to {1} blocks";
-                Player.SendMessage(p, String.Format(format, op.Name, affected));
+                Player.Message(p, String.Format(format, op.Name, affected));
             }
             
             AppendDrawOp(p, op, brush, marks, affected);

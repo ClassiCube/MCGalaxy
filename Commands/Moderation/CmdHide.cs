@@ -38,10 +38,10 @@ namespace MCGalaxy.Commands
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "check") {
                 string state = p.hidden ? "" : "not ";
-                Player.SendMessage(p, "You are " + state + "currently hidden!"); return;
+                Player.Message(p, "You are " + state + "currently hidden!"); return;
             }
             if (message != "" && p.possess != "") {
-                Player.SendMessage(p, "Stop your current possession first."); return;
+                Player.Message(p, "Stop your current possession first."); return;
             }
             bool messageOps = true;
             if (message.CaselessEq("silent")) {
@@ -82,10 +82,10 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.SendMessage(p, "/hide - Toggles your visibility to other players, also toggles opchat.");
-            Player.SendMessage(p, "/hide check - Checks your hidden status.");
-            Player.SendMessage(p, "/hide silent - hides without sending a message to other ops/admins.");
-            Player.SendMessage(p, "Use /ohide to hide other players.");
+            Player.Message(p, "/hide - Toggles your visibility to other players, also toggles opchat.");
+            Player.Message(p, "/hide check - Checks your hidden status.");
+            Player.Message(p, "/hide silent - hides without sending a message to other ops/admins.");
+            Player.Message(p, "Use /ohide to hide other players.");
         }
     }
 }

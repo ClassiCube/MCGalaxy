@@ -44,8 +44,8 @@ namespace MCGalaxy.Commands {
             string award = args.Length > 1 ? args[1] : "";
             award = Awards.Find(award);
             if (award == null) {
-                Player.SendMessage(p, "The award you entered doesn't exist");
-                Player.SendMessage(p, "Use /awards for a list of awards");
+                Player.Message(p, "The award you entered doesn't exist");
+                Player.Message(p, "Use /awards for a list of awards");
                 return;
             }
 
@@ -53,22 +53,22 @@ namespace MCGalaxy.Commands {
                 if (Awards.GiveAward(plName, award)) {
                     Player.GlobalMessage(Server.FindColor(plName) + plName + " %Swas awarded: &b" + award);
                 } else {
-                    Player.SendMessage(p, "The player already has that award."); return;
+                    Player.Message(p, "The player already has that award."); return;
                 }
             } else {
                 if (Awards.TakeAward(plName, award)) {
                     Player.GlobalMessage(Server.FindColor(plName) + plName + " %Shad their &b" + award + " %Saward removed");
                 } else {
-                    Player.SendMessage(p, "The player didn't have the award you tried to take"); return;
+                    Player.Message(p, "The player didn't have the award you tried to take"); return;
                 }
             }
             Awards.Save();
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/award <give/take> [player] [award] %H- Gives/Takes [player] the [award]");
-            Player.SendMessage(p, "%HIf only [player] and [aware] are given, Give is used.");
-            Player.SendMessage(p, "%H[award] needs to be the full award's name. Not partial");
+            Player.Message(p, "%T/award <give/take> [player] [award] %H- Gives/Takes [player] the [award]");
+            Player.Message(p, "%HIf only [player] and [aware] are given, Give is used.");
+            Player.Message(p, "%H[award] needs to be the full award's name. Not partial");
         }
     }
 }

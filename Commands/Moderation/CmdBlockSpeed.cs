@@ -42,25 +42,25 @@ namespace MCGalaxy.Commands {
             
             if (cmd == "bs") {
             	if (!int.TryParse(args[1], out value)) { 
-            		Player.SendMessage(p, "Invalid number specified."); return; 
+            		Player.Message(p, "Invalid number specified."); return; 
             	}
             	BlockQueue.blockupdates = value;
-                Player.SendMessage(p, String.Format("Blocks per interval is now {0}.", BlockQueue.blockupdates));
+                Player.Message(p, String.Format("Blocks per interval is now {0}.", BlockQueue.blockupdates));
             } else if (cmd == "ts") {
                 if (!int.TryParse(args[1], out value)) { 
-            		Player.SendMessage(p, "Invalid number specified."); return; 
+            		Player.Message(p, "Invalid number specified."); return; 
             	}
             	BlockQueue.time = value;
-                Player.SendMessage(p, String.Format("Block interval is now {0}.", BlockQueue.time));
+                Player.Message(p, String.Format("Block interval is now {0}.", BlockQueue.time));
             } else if (cmd == "buf")  {
                 if (p.level.bufferblocks)
-                    Player.SendMessage(p, String.Format("Block buffering on {0} disabled.", p.level.name));
+                    Player.Message(p, String.Format("Block buffering on {0} disabled.", p.level.name));
                 else
-                    Player.SendMessage(p, String.Format("Block buffering on {0} enabled.", p.level.name));
+                    Player.Message(p, String.Format("Block buffering on {0} enabled.", p.level.name));
                 p.level.bufferblocks = !p.level.bufferblocks;
             } else if (cmd == "net") {
             	if (!int.TryParse(args[1], out value)) { 
-            		Player.SendMessage(p, "Invalid number specified."); return; 
+            		Player.Message(p, "Invalid number specified."); return; 
             	}
             	
                 switch (value) {
@@ -84,14 +84,14 @@ namespace MCGalaxy.Commands {
         }
         
         static void SendEstimation(Player p) {
-            Player.SendMessage(p, String.Format("{0} blocks every {1} milliseconds = {2} blocks per second.", BlockQueue.blockupdates, BlockQueue.time, BlockQueue.blockupdates * (1000 / BlockQueue.time)));
-            Player.SendMessage(p, String.Format("Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000, PlayerInfo.Online.Count, PlayerInfo.Online.Count * ((BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000)));
+            Player.Message(p, String.Format("{0} blocks every {1} milliseconds = {2} blocks per second.", BlockQueue.blockupdates, BlockQueue.time, BlockQueue.blockupdates * (1000 / BlockQueue.time)));
+            Player.Message(p, String.Format("Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000, PlayerInfo.Online.Count, PlayerInfo.Online.Count * ((BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000)));
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/bs [option] [option value] - Options for block speeds.");
-            Player.SendMessage(p, "Options are: bs (blocks per interval), ts (interval in milliseconds), buf (toggles buffering), clear, net.");
-            Player.SendMessage(p, "/bs net [2,4,8,12,16,20,24] - Presets, divide by 8 and times by 1000 to get blocks per second.");
+            Player.Message(p, "/bs [option] [option value] - Options for block speeds.");
+            Player.Message(p, "Options are: bs (blocks per interval), ts (interval in milliseconds), buf (toggles buffering), clear, net.");
+            Player.Message(p, "/bs net [2,4,8,12,16,20,24] - Presets, divide by 8 and times by 1000 to get blocks per second.");
         }
     }
 }

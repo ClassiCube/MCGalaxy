@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
-            if (p == who) { Player.SendMessage(p, "Cannot freeze yourself."); return; }
+            if (p == who) { Player.Message(p, "Cannot freeze yourself."); return; }
             if (p != null && who.group.Permission >= p.group.Permission) { 
                 MessageTooHighRank(p, "freeze", false); return; 
             }
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "/freeze <name> - Stops <name> from moving until unfrozen.");
+            Player.Message(p, "/freeze <name> - Stops <name> from moving until unfrozen.");
         }
     }
 }

@@ -29,12 +29,12 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             p.opchat = !p.opchat;
-            if (p.opchat) Player.SendMessage(p, "All messages will now be sent to OPs only");
-            else Player.SendMessage(p, "OP chat turned off");
+            if (p.opchat) Player.Message(p, "All messages will now be sent to OPs only");
+            else Player.Message(p, "OP chat turned off");
         }
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/opchat - Makes all messages sent go to OPs by default");
+            Player.Message(p, "/opchat - Makes all messages sent go to OPs by default");
         }
     }
 }

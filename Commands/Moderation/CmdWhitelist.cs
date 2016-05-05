@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (!Server.useWhitelist) { Player.SendMessage(p, "Whitelist is not enabled."); return; }
+            if (!Server.useWhitelist) { Player.Message(p, "Whitelist is not enabled."); return; }
             if (message == "") { Help(p); return; }
             int pos = message.IndexOf(' ');
             if (pos != -1)
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands
                     case "add":
                         if (Server.whiteList.Contains(player))
                         {
-                            Player.SendMessage(p, "&f" + player + " %Sis already on the whitelist!");
+                            Player.Message(p, "&f" + player + " %Sis already on the whitelist!");
                             break;
                         }
                         Server.whiteList.Add(player);
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
                     case "del":
                         if (!Server.whiteList.Contains(player))
                         {
-                            Player.SendMessage(p, "&f" + player + " %Sis not on the whitelist!");
+                            Player.Message(p, "&f" + player + " %Sis not on the whitelist!");
                             break;
                         }
                         Server.whiteList.Remove(player);
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
                             output += " " + wlName + ",";
                         }
                         output = output.Substring(0, output.Length - 1);
-                        Player.SendMessage(p, output);
+                        Player.Message(p, output);
                         break;
                     default:
                         Help(p);
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands
                         output += " " + wlName + ",";
                     }
                     output = output.Substring(0, output.Length - 1);
-                    Player.SendMessage(p, output);
+                    Player.Message(p, output);
                 }
                 else
                 {
@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p)
         {
-            Player.SendMessage(p, "/whitelist <add/del/list> [player] - Handles whitelist entry for [player], or lists all entries.");
+            Player.Message(p, "/whitelist <add/del/list> [player] - Handles whitelist entry for [player], or lists all entries.");
         }
     }
 }
