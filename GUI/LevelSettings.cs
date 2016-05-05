@@ -56,8 +56,8 @@ namespace MCGalaxy.Gui {
         [Category("Physics")]
         public bool LeafDecay { get { return lvl.leafDecay; } set { lvl.leafDecay = value; } }
         
-        [Description("If physics is active, whether liquids when spreading randomly choose a direction to flow in." +
-                     "Otherwise, they spread uniformly in all directions.")]
+        [Description("If physics is active, whether spreading liquids randomly pick a direction to flow in." +
+                     "Otherwise, spreads in all directions.")]
         [Category("Physics")]
         public bool RandomFlow { get { return lvl.randomFlow; } set { lvl.randomFlow = value; } }
     }

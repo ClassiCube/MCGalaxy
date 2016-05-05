@@ -112,20 +112,35 @@ namespace MCGalaxy.Util {
             return aNum.CompareTo(bNum);
         }
         
-        protected internal static void UndoBlock(Player p, Level lvl, Player.UndoPos Pos, 
+        protected internal static void UndoBlock(Player pl, Level lvl, Player.UndoPos P, 
                                         int timeDelta, BufferedBlockSender buffer) {
-            byte lvlTile = lvl.GetTile(Pos.x, Pos.y, Pos.z);
-            if (lvlTile == Pos.newtype || Block.Convert(lvlTile) == Block.water
+            byte lvlTile = lvl.GetTile(P.x, P.y, P.z);
+            if (lvlTile == P.newtype || Block.Convert(lvlTile) == Block.water
                 || Block.Convert(lvlTile) == Block.lava || lvlTile == Block.grass) {
                 
-                byte newExtType = Pos.newExtType;
-                Pos.newtype = Pos.type; Pos.newExtType = Pos.extType;
-                Pos.extType = newExtType; Pos.type = lvlTile;
-                Pos.timeDelta = timeDelta;
-                if (lvl.DoBlockchange(p, Pos.x, Pos.y, Pos.z, Pos.newtype, Pos.newExtType)) {
-                    buffer.Add(lvl.PosToInt(Pos.x, Pos.y, Pos.z), Pos.newtype, Pos.newExtType);
-                    buffer.CheckIfSend(false);
-                }
+                byte newExtType = P.newExtType;
+                P.newtype = P.type; P.newExtType = P.extType;
+                P.extType = newExtType; P.type = lvlTile;
+                P.timeDelta = timeDelta;
+                
+                if (pl != null) {
+                    if (lvl.DoBlockchange(pl, P.x, P.y, P.z, P.newtype, P.newExtType)) {
+                        buffer.Add(lvl.PosToInt(P.x, P.y, P.z), P.newtype, P.newExtType);
+                        buffer.CheckIfSend(false);
+                    }
+                } else {
+                	bool diffBlock = Block.Convert(lvlTile) != Block.Convert(P.newtype);
+                    if (!diffBlock && lvlTile == Block.custom_block)
+                    	diffBlock = lvl.GetExtTile(P.x, P.y, P.z) != P.newExtType;
+                    
+                	if (diffBlock) {
+                        buffer.Add(lvl.PosToInt(P.x, P.y, P.z), P.newtype, P.newExtType);
+                        buffer.CheckIfSend(false);
+                    }                    
+                    lvl.SetTile(P.x, P.y, P.z, P.newtype);
+                    if (P.newtype == Block.custom_block)
+                    	lvl.SetExtTile(P.x, P.y, P.z, P.newExtType);
+                }              
             }
         }
         

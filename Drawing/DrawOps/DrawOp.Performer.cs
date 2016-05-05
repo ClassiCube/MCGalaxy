@@ -52,8 +52,8 @@ namespace MCGalaxy.Drawing.Ops {
                 op.Min = Vec3U16.Min(op.Min, marks[i]);
                 op.Max = Vec3U16.Max(op.Max, marks[i]);
             }
-            op.Level = p.level;
-            if (!op.Level.DrawingAllowed) {
+            op.Level = p == null ? null : p.level;
+            if (op.Level != null && !op.Level.DrawingAllowed) {
                 Player.SendMessage(p, "Drawing commands are turned off on this map.");
                 return false;
             }
@@ -74,15 +74,17 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         static void AppendDrawOp(Player p, DrawOp op, Brush brush, Vec3U16[] marks, long affected) {
-            PendingDrawOp pending = new PendingDrawOp();
-            pending.Op = op;
-            pending.Brush = brush;
-            pending.Marks = marks;
-            pending.Affected = affected;
-            pending.Level = p.level;
+			if (p == null) { op.Perform(marks, p, op.Level, brush); return; }
+			
+            PendingDrawOp item = new PendingDrawOp();
+            item.Op = op;
+            item.Brush = brush;
+            item.Marks = marks;
+            item.Affected = affected;
+            item.Level = op.Level;
             
             lock (p.pendingDrawOpsLock) {
-                p.PendingDrawOps.Add(pending);
+                p.PendingDrawOps.Add(item);
                 // Another thread is already processing draw ops.
                 if (p.PendingDrawOps.Count > 1) return;
             }

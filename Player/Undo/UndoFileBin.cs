@@ -75,10 +75,11 @@ namespace MCGalaxy.Util {
                 for (int i = list.Count - 1; i >= 0; i--) {
                     ChunkHeader chunk = list[i];
                     Level lvl;
-                    if (!CheckChunk(chunk, start, p, out lvl))
-                        return false;
-                    if (lvl == null || (p.level != null && !p.level.name.CaselessEq(lvl.name)))
-                        continue;
+                    if (!CheckChunk(chunk, start, p, out lvl)) return false;
+                    if (lvl == null) continue;
+                    if (p != null && (p.level != null && !p.level.name.CaselessEq(lvl.name))) 
+                    	continue;
+                    
                     BufferedBlockSender buffer = new BufferedBlockSender(lvl);
                     if (!undoArea) {
                         min = new Vec3U16(0, 0, 0);

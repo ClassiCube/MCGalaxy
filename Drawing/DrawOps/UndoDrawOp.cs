@@ -60,7 +60,8 @@ namespace MCGalaxy.Drawing.Ops {
             
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl == null || (p.level != null && !p.level.name.CaselessEq(lvl.name))) {
+                if (lvl == null) { node = node.Prev; continue; }
+                if (p != null && (p.level != null && !p.level.name.CaselessEq(lvl.name))) {
                     node = node.Prev; continue;
                 }
                 Pos.mapName = lvl.name;
