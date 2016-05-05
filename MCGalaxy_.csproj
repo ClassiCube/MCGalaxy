@@ -380,6 +380,7 @@
     <Compile Include="Commands\Other\CmdTp.cs" />
     <Compile Include="Commands\Other\CmdTpA.cs" />
     <Compile Include="Commands\Other\CmdTpZone.cs" />
+    <Compile Include="Commands\other\CmdView.cs" />
     <Compile Include="Commands\Other\CmdVote.cs" />
     <Compile Include="Commands\Other\CmdWarp.cs" />
     <Compile Include="Commands\Other\CmdWaypoint.cs" />
