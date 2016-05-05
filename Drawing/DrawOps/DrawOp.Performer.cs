@@ -63,10 +63,10 @@ namespace MCGalaxy.Drawing.Ops {
                 return false;
             if (brush != null && affected != -1) {
                 const string format = "{0}({1}): affecting up to {2} blocks";
-                Player.Message(p, String.Format(format, op.Name, brush.Name, affected));
+                Player.Message(p, format, op.Name, brush.Name, affected);
             } else if (affected != -1) {
                 const string format = "{0}: affecting up to {1} blocks";
-                Player.Message(p, String.Format(format, op.Name, affected));
+                Player.Message(p, format, op.Name, affected);
             }
             
             AppendDrawOp(p, op, brush, marks, affected);

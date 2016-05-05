@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             bool env = args[0].CaselessEq("env");
             level = env ? (args.Length > 1 ? args[1] : "") : args[0];
             bool perms = args[0].CaselessEq("perms");
-            level = perms ? (args.Length > 1 ? args[1] : "") : args[0];
+            level = perms ? (args.Length > 1 ? args[1] : "") : level;
             
             Level lvl = level == "" ? p.level : LevelInfo.Find(level);
             MapInfoData data = new MapInfoData();
@@ -120,8 +120,8 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "No custom texture pack set for this map.");
             
             const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
-            Player.Message(p, String.Format(format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
-                                                Color(data.Light), Color(data.Shadow)));
+            Player.Message(p, format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
+                           Color(data.Light), Color(data.Shadow));
             
             Player.Message(p, "Water Level: %b" + data.EdgeLevel + "%S, Clouds height: %b" + data.CloudsHeight
                                + "%S, Max fog distance: %b" + data.MaxFogDistance);

@@ -45,18 +45,18 @@ namespace MCGalaxy.Commands {
             		Player.Message(p, "Invalid number specified."); return; 
             	}
             	BlockQueue.blockupdates = value;
-                Player.Message(p, String.Format("Blocks per interval is now {0}.", BlockQueue.blockupdates));
+                Player.Message(p, "Blocks per interval is now {0}.", BlockQueue.blockupdates);
             } else if (cmd == "ts") {
                 if (!int.TryParse(args[1], out value)) { 
             		Player.Message(p, "Invalid number specified."); return; 
             	}
             	BlockQueue.time = value;
-                Player.Message(p, String.Format("Block interval is now {0}.", BlockQueue.time));
+                Player.Message(p, "Block interval is now {0}.", BlockQueue.time);
             } else if (cmd == "buf")  {
                 if (p.level.bufferblocks)
-                    Player.Message(p, String.Format("Block buffering on {0} disabled.", p.level.name));
+                    Player.Message(p, "Block buffering on {0} disabled.", p.level.name);
                 else
-                    Player.Message(p, String.Format("Block buffering on {0} enabled.", p.level.name));
+                    Player.Message(p, "Block buffering on {0} enabled.", p.level.name);
                 p.level.bufferblocks = !p.level.bufferblocks;
             } else if (cmd == "net") {
             	if (!int.TryParse(args[1], out value)) { 
@@ -84,8 +84,9 @@ namespace MCGalaxy.Commands {
         }
         
         static void SendEstimation(Player p) {
-            Player.Message(p, String.Format("{0} blocks every {1} milliseconds = {2} blocks per second.", BlockQueue.blockupdates, BlockQueue.time, BlockQueue.blockupdates * (1000 / BlockQueue.time)));
-            Player.Message(p, String.Format("Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000, PlayerInfo.Online.Count, PlayerInfo.Online.Count * ((BlockQueue.blockupdates * (1000 / BlockQueue.time) * 8) / 1000)));
+        	int updates = BlockQueue.blockupdates, time = BlockQueue.time, count = PlayerInfo.Online.Count;
+            Player.Message(p, "{0} blocks every {1} milliseconds = {2} blocks per second.", updates, time, updates * (1000 / time));
+            Player.Message(p, "Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (updates * (1000 / time) * 8) / 1000, count, count * ((updates * (1000 / time) * 8) / 1000));
         }
         
         public override void Help(Player p) {

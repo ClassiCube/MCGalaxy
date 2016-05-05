@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands {
                     
                     if (count >= 8 && !all) {
                         const string helpFormat = "To see the next set of custom colors, type %T/ccols list {0}";
-                        Player.Message(p, String.Format(helpFormat, offset + 8));
+                        Player.Message(p, helpFormat, offset + 8);
                         return;
                     }
                 }

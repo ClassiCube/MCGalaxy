@@ -57,9 +57,7 @@ namespace MCGalaxy.Commands {
                     if (i < players.Count - 1)
                         builder.Append(", ");
                 }
-                
-                string msg = String.Format("  {0}: &f{1}", kvp.Key, builder.ToString());
-                Player.Message(p, msg);
+                Player.Message(p, "  {0}: &f{1}", kvp.Key, builder.ToString());
             }
         }
 

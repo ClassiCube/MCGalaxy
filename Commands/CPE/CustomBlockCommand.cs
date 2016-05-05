@@ -169,11 +169,11 @@ namespace MCGalaxy.Commands {
                 if (index >= offset) {
                     count++;
                     const string format = "Custom block %T{0} %Shas name %T{1}";
-                    Player.Message(p, String.Format(format, def.BlockID, def.Name));
+                    Player.Message(p, format, def.BlockID, def.Name);
                     
                     if (count >= 8) {
                         const string helpFormat = "To see the next set of custom blocks, type %T{1} list {0}";
-                        Player.Message(p, String.Format(helpFormat, offset + 8, cmd));
+                        Player.Message(p, helpFormat, offset + 8, cmd);
                         return;
                     }
                 }

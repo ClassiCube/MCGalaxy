@@ -241,7 +241,7 @@ namespace MCGalaxy.Commands
 							Player.Message(p, "Flood time: &b" + settings.floodTime + " minute" + (settings.floodTime == 1 ? "" : "s"));
 							Player.Message(p, "Flood position: &b" + settings.blockFlood.ToString(", "));
 							Player.Message(p, "Layer position: &b" + settings.blockLayer.ToString(", "));
-							Player.Message(p, String.Format("Safe zone: &b({0}) ({1})", settings.safeZone[0].ToString(", "), settings.safeZone[1].ToString(", ")));
+							Player.Message(p, "Safe zone: &b({0}) ({1})", settings.safeZone[0].ToString(", "), settings.safeZone[1].ToString(", "));
 							return;
 						}
 
@@ -382,7 +382,7 @@ namespace MCGalaxy.Commands
 			if (cpos.mode == 1) settings.blockLayer = new Vec3U16(x, y, z);
 			Server.lava.SaveMapSettings(settings);
 
-			Player.Message(p, String.Format("Position set! &b({0}, {1}, {2})", x, y, z));
+			Player.Message(p, "Position set! &b({0}, {1}, {2})", x, y, z);
 		}
 
 		public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
@@ -403,7 +403,7 @@ namespace MCGalaxy.Commands
 				settings.safeZone = new Vec3U16[] { new Vec3U16(sx, sy, sz), new Vec3U16(ex, ey, ez) };
 				Server.lava.SaveMapSettings(settings);
 
-				Player.Message(p, String.Format("Safe zone set! &b({0}, {1}, {2}) ({3}, {4}, {5})", sx, sy, sz, ex, ey, ez));
+				Player.Message(p, "Safe zone set! &b({0}, {1}, {2}) ({3}, {4}, {5})", sx, sy, sz, ex, ey, ez);
 			}
 		}
 

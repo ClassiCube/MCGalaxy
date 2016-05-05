@@ -236,7 +236,7 @@ namespace MCGalaxy.Commands {
             	Server.Countdown.mapon = lvl;
             
             const string format = "Generated map ({0}x{1}x{2}), sending you to it..";
-            Player.Message(p, String.Format(format, width, height, length));
+            Player.Message(p, format, width, height, length);
             Command.all.Find("load").Use(p, "countdown");
             Command.all.Find("goto").Use(p, "countdown");
 
