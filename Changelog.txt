@@ -1,3 +1,28 @@
+v 1.8.6.0
+- Fixed: /award not working when neither 'give' nor 'take' is used.
+- Added: Allow customising infect messages for zombie survival.
+- Improved: Hidden players still show to players of same rank (and above) as in-game entities.
+- Added: Revive and invisibility potions for zombie survival.
+- Added: pervisit whitelist and blacklist
+- Improved: /help now shows more useful info for physics blocks. (Thanks Peteys93)
+- Improved: whois/whowas more concise, and is now one shared command.
+- Improved: Better method of scrolling chat in gui, faster and incurs less memory allocations.
+- Improved: /mi split up into /mi, /mi perms, and /mi env.
+- Fixed: Can now /unban partially matched online banned players.
+- Fixed: /tempban twice on same name creating new tempban instead of updating old.
+- Improved: Skins, bots, and models now persist between sessions
+- Fixed: /server reload wiping command permissions.
+- Removed: /xspawn as it was pretty much pointlesss
+- Improved: /freeze now persists across sessions
+- Fixed: 'slap', 'banip' in players tab in server gui crashing the server.
+- Improved: /help botai, also added /botai info [name].
+- Improved: /whois now shows when a player is afk.
+- Fixed: /fill not working when held block same as existing block.
+- Added: /os map achat and /os map restore
+- Fixed: /me and /eat not working properly when 'roleplay' / 'level only' chat is used.
+- Added: /os map add now sets perbuild to the min rank that can use /os, or the rank specified in the 'misc --> extra' tab.
+- Improved: Logs now grouped under one tab.
+
 v 1.8.5.0
 - More work on zombie survival.
 - /mark works properly when you are outside the map.
