@@ -133,7 +133,7 @@ namespace MCGalaxy.Gui {
         
         [Description("Message shown when a player uses /buy revive, but does not disinfect them.")]
         [Category("Revive settings")]
-        public string FailureMessage { get; set; }        
+        public string FailureMessage { get; set; }
         
         public void LoadFromServer() {
             ChangeLevels = ZombieGame.ChangeLevels;

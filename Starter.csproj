@@ -48,6 +48,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\LevelSettings.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="GUI\Window.cs">
       <SubType>Form</SubType>

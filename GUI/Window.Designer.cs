@@ -2320,6 +2320,7 @@ namespace MCGalaxy.Gui
             this.lbMap_Lded.Name = "lbMap_Lded";
             this.lbMap_Lded.Size = new System.Drawing.Size(379, 199);
             this.lbMap_Lded.TabIndex = 0;
+            this.lbMap_Lded.SelectedIndexChanged += new System.EventHandler(this.MapSelectedChanged);
             // 
             // gbMap_Unld
             // 
@@ -2340,7 +2341,7 @@ namespace MCGalaxy.Gui
             this.btnMap_Load.TabIndex = 1;
             this.btnMap_Load.Text = "Load map";
             this.btnMap_Load.UseVisualStyleBackColor = true;
-            this.btnMap_Load.Click += new System.EventHandler(this.MapLoadClick);            
+            this.btnMap_Load.Click += new System.EventHandler(this.MapLoadClick);
             // 
             // lb_MapUnld
             // 

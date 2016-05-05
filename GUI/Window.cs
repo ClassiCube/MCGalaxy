@@ -394,7 +394,9 @@ namespace MCGalaxy.Gui
                 
                 if (selectedLvl != null) {
                     int index = lbMap_Lded.Items.IndexOf(selectedLvl);
-                    if (index >= 0) lbMap_Lded.SelectedIndex = index;
+                    lbMap_Lded.SelectedIndex = index;
+                } else {
+                    lbMap_Lded.SelectedIndex = -1;
                 }
 
                 //dgvPlayers.Invalidate();
@@ -937,7 +939,9 @@ namespace MCGalaxy.Gui
                 
                 if (selectedLvl != null) {
                     int index = lbMap_Unld.Items.IndexOf(selectedLvl);
-                    if (index >= 0) lbMap_Unld.SelectedIndex = index;
+                    lbMap_Unld.SelectedIndex = index;
+                } else {
+                    lbMap_Unld.SelectedIndex = -1;
                 }
             });
         }
@@ -1652,6 +1656,26 @@ namespace MCGalaxy.Gui
         	UpdateMapList();
         }
         
+        string last = null;
+        void MapSelectedChanged(object sender, EventArgs e) {
+            if (lbMap_Lded.SelectedItem == null) {
+                pgMaps.SelectedObject = null; 
+                gbMap_Props.Text = "Properties for (none selected)"; return;
+            }
+            
+            string name = lbMap_Lded.SelectedItem.ToString();
+            Level lvl = LevelInfo.FindExact(name);
+            if (lvl == null) {
+                pgMaps.SelectedObject = null;
+                gbMap_Props.Text = "Properties for (none selected)"; return;
+            }
+            
+            if (name == last) return;
+            last = name;
+            LevelSettings settings = new LevelSettings(lvl);
+            pgMaps.SelectedObject = settings;
+            gbMap_Props.Text = "Properties for " + name;
+        }
         #endregion
     }
 }
