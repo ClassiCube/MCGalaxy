@@ -43,7 +43,6 @@ namespace MCGalaxy.Gui
 
         PlayerCollection pc = new PlayerCollection(new PlayerListView());
         LevelCollection lc = new LevelCollection(new LevelListView());
-        LevelCollection lcTAB = new LevelCollection(new LevelListViewForTab());
 
         //public static event EventHandler Minimize;
         public NotifyIcon notifyIcon1 = new NotifyIcon();
@@ -125,19 +124,6 @@ namespace MCGalaxy.Gui
 
             dgvMaps.DataSource = new LevelCollection(new LevelListView());
             dgvMaps.Font = new Font("Calibri", 8.25f);
-
-            dgvMapsTab.DataSource = new LevelCollection(new LevelListViewForTab());
-            dgvMapsTab.Font = new Font("Calibri", 8.25f);
-
-            /*using (System.Timers.Timer UpdateListTimer = new System.Timers.Timer(10000))
-            {
-                UpdateListTimer.Elapsed += delegate
-                {
-                    UpdateClientList(PlayerInfo.players);
-                    UpdateMapList("'");
-                    Server.s.Log("Lists updated!");
-                }; UpdateListTimer.Start();
-            }*/
 
             UpdateListTimer.Elapsed += delegate
             {
@@ -398,6 +384,7 @@ namespace MCGalaxy.Gui
                 } else {
                     lbMap_Lded.SelectedIndex = -1;
                 }
+                UpdateSelectedMap(null, null);
 
                 //dgvPlayers.Invalidate();
                 dgvMaps.DataSource = null;
@@ -412,33 +399,8 @@ namespace MCGalaxy.Gui
                 dgvMaps.Refresh();
                 //dgvPlayers.ResumeLayout();
 
-                if (dgvMapsTab.DataSource == null)
-                    dgvMapsTab.DataSource = lcTAB;
-
-                // Try to keep the same selection on update
-                string selected2 = null;
-                if (lcTAB.Count > 0 && dgvMapsTab.SelectedRows.Count > 0)
-                {
-                    selected2 = (from DataGridViewRow row in dgvMapsTab.Rows where row.Selected select lcTAB[row.Index]).First().name;
-                }
-
                 // Update the data source and control
                 //dgvPlayers.SuspendLayout();
-                lcTAB.Clear();
-                //lcTAB = new LevelCollection(new LevelListViewForTab());
-                Server.levels.ForEach(l => lcTAB.Add(l));
-
-                //dgvPlayers.Invalidate();
-                dgvMapsTab.DataSource = null;
-                dgvMapsTab.DataSource = lcTAB;
-                // Reselect map
-                if (selected2 != null)
-                {
-                    foreach (DataGridViewRow row in from l in Server.levels from DataGridViewRow row in dgvMapsTab.Rows where Equals(row.Cells[0].Value, selected2) select row)
-                        row.Selected = true;
-                }
-
-                dgvMapsTab.Refresh();
             }
         }
 
@@ -625,15 +587,6 @@ namespace MCGalaxy.Gui
             return (Level)(this.dgvMaps.SelectedRows[0].DataBoundItem);
         }
 
-        private Level GetSelectedLevelTab()
-        {
-
-            if (dgvMapsTab.SelectedRows.Count == 0)
-                return null;
-
-            return (Level)(dgvMapsTab.SelectedRows[0].DataBoundItem);
-        }
-
         private void clonesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             playerselect("clones");
@@ -704,11 +657,6 @@ namespace MCGalaxy.Gui
         private void rPChatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             levelcommand("map", " chat");
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            levelcommand("save");
         }
 
         private void levelcommand(string com)
@@ -799,153 +747,6 @@ namespace MCGalaxy.Gui
         }
 
         #region Tabs
-        #region mapsTab
-        private void editPropertiesToolStripMenuItem_Click(object sender, EventArgs e) //Ok actually i deleted this.......................... but it's still needed for the other stuff (like cliking on the cell etc.)
-        {
-            Level l = GetSelectedLevelTab();
-            if (l != null)
-            {
-                prpertiesoflvl = l;
-                MOTDtxt.Text = l.motd;
-                physlvlnumeric.Value = l.physics;
-                grasschk.Checked = l.GrassGrow;
-                chatlvlchk.Checked = l.worldChat;
-                Killerbloxchk.Checked = l.Killer;
-                SurvivalStyleDeathchk.Checked = l.Death;
-                finitechk.Checked = l.finite;
-                edgewaterchk.Checked = l.edgeWater;
-                Aicombo.SelectedItem = l.ai ? "Hunt" : "Flee";
-                Gunschk.Checked = l.guns;
-                Fallnumeric.Value = l.fall;
-                drownNumeric.Value = l.drown;
-                LoadOnGotoChk.Checked = l.loadOnGoto;
-                UnloadChk.Checked = l.unload;
-                chkRndFlow.Checked = l.randomFlow;
-                leafDecayChk.Checked = l.leafDecay;
-                TreeGrowChk.Checked = l.growTrees;
-                AutoLoadChk.Checked = false;
-                if (File.Exists("text/autoload.txt"))
-                {
-                    using (StreamReader r = new StreamReader("text/autoload.txt"))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            if (line.Contains(l.name) || line.Contains(l.name.ToLower()))
-                            {
-                                AutoLoadChk.Checked = true;
-                            }
-                        }
-                    }
-                }
-            }
-            UpdateMapList();
-        }
-
-        private void SaveMap_Click(object sender, EventArgs e)
-        {
-            if (prpertiesoflvl == null) return;
-            Level l = prpertiesoflvl;
-            l.motd = MOTDtxt.Text;
-            if (MOTDtxt.Text == "")
-            {
-                l.motd = "ignore";
-            }
-            l.physics = (int)physlvlnumeric.Value;
-            l.GrassGrow = grasschk.Checked;
-            l.worldChat = chatlvlchk.Checked;
-            l.Killer = Killerbloxchk.Checked;
-            l.Death = SurvivalStyleDeathchk.Checked;
-            l.finite = finitechk.Checked;
-            l.edgeWater = edgewaterchk.Checked;
-            switch (Aicombo.SelectedItem.ToString())
-            {
-                case "Hunt":
-                    l.ai = true;
-                    break;
-                case "Flee":
-                    l.ai = false;
-                    break;
-            }
-            l.guns = Gunschk.Checked;
-            l.fall = (int)Fallnumeric.Value;
-            l.drown = (int)drownNumeric.Value;
-            l.loadOnGoto = LoadOnGotoChk.Checked;
-            l.unload = UnloadChk.Checked;
-            l.randomFlow = chkRndFlow.Checked;
-            l.leafDecay = leafDecayChk.Checked;
-            l.growTrees = TreeGrowChk.Checked;
-            {
-                List<string> oldlines = new List<string>();
-                if (!File.Exists("text/autoload.txt"))
-                    using (var nulled = File.CreateText("text/autoload.txt")) { }
-
-                using (StreamReader r = new StreamReader("text/autoload.txt"))
-                {
-                    bool done = false;
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        if (line.ToLower().Contains(l.name.ToLower()))
-                        {
-                            if (AutoLoadChk.Checked == false)
-                            {
-                                line = "";
-                            }
-                            done = true;
-                        }
-                        oldlines.Add(line);
-                    }
-                    if (AutoLoadChk.Checked && !done)
-                    {
-                        oldlines.Add(l.name + "=" + l.physics);
-                    }
-                }
-                File.Delete("text/autoload.txt");
-                using (StreamWriter SW = File.CreateText("text/autoload.txt"))
-                {
-                    foreach (string line in oldlines.Where(line => line.Trim() != ""))
-                    {
-                        SW.WriteLine(line);
-                    }
-                }
-            }
-            UpdateMapList();
-        }
-
-        private void CreateNewMap_Click(object sender, EventArgs e) { }
-
-        private void dgvMapsTab_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            saveToolStripMenuItem_Click(sender, e);
-            editPropertiesToolStripMenuItem_Click(sender, e);
-        }
-
-        public void UpdateUnloadedList()
-        {
-            RunOnUiThread(() =>
-            {
-        	    string selectedLvl = null;
-                if (lbMap_Unld.SelectedItem != null)
-                    selectedLvl = lbMap_Unld.SelectedItem.ToString();
-                
-                lbMap_Unld.Items.Clear();
-                FileInfo[] fi = new DirectoryInfo("levels/").GetFiles("*.lvl");
-                foreach (FileInfo file in fi) {
-                    string name = file.Name.Replace(".lvl", "");
-                    if (LevelInfo.FindExact(name) == null)
-                        lbMap_Unld.Items.Add(name);
-                }
-                
-                if (selectedLvl != null) {
-                    int index = lbMap_Unld.Items.IndexOf(selectedLvl);
-                    lbMap_Unld.SelectedIndex = index;
-                } else {
-                    lbMap_Unld.SelectedIndex = -1;
-                }
-            });
-        }
-        #endregion
         #region playersTab
         private void LoadPLayerTabDetails(object sender, EventArgs e)
         {
@@ -1647,7 +1448,7 @@ namespace MCGalaxy.Gui
             genThread.Start();
         }
         
-       void MapLoadClick(object sender, EventArgs e) {
+        void MapLoadClick(object sender, EventArgs e) {
             try {
                 Command.all.Find("load").Use(null, lbMap_Unld.SelectedItem.ToString());
             } catch { 
@@ -1657,16 +1458,18 @@ namespace MCGalaxy.Gui
         }
         
         string last = null;
-        void MapSelectedChanged(object sender, EventArgs e) {
+        void UpdateSelectedMap(object sender, EventArgs e) {
             if (lbMap_Lded.SelectedItem == null) {
-                pgMaps.SelectedObject = null; 
+        		if (pgMaps.SelectedObject == null) return;
+                pgMaps.SelectedObject = null; last = null;
                 gbMap_Props.Text = "Properties for (none selected)"; return;
             }
             
             string name = lbMap_Lded.SelectedItem.ToString();
             Level lvl = LevelInfo.FindExact(name);
             if (lvl == null) {
-                pgMaps.SelectedObject = null;
+            	if (pgMaps.SelectedObject == null) return;
+                pgMaps.SelectedObject = null; last = null;
                 gbMap_Props.Text = "Properties for (none selected)"; return;
             }
             
@@ -1675,6 +1478,31 @@ namespace MCGalaxy.Gui
             LevelSettings settings = new LevelSettings(lvl);
             pgMaps.SelectedObject = settings;
             gbMap_Props.Text = "Properties for " + name;
+        }
+        
+        public void UpdateUnloadedList()
+        {
+            RunOnUiThread(() =>
+            {
+        	    string selectedLvl = null;
+                if (lbMap_Unld.SelectedItem != null)
+                    selectedLvl = lbMap_Unld.SelectedItem.ToString();
+                
+                lbMap_Unld.Items.Clear();
+                FileInfo[] fi = new DirectoryInfo("levels/").GetFiles("*.lvl");
+                foreach (FileInfo file in fi) {
+                    string name = file.Name.Replace(".lvl", "");
+                    if (LevelInfo.FindExact(name) == null)
+                        lbMap_Unld.Items.Add(name);
+                }
+                
+                if (selectedLvl != null) {
+                    int index = lbMap_Unld.Items.IndexOf(selectedLvl);
+                    lbMap_Unld.SelectedIndex = index;
+                } else {
+                    lbMap_Unld.SelectedIndex = -1;
+                }
+            });
         }
         #endregion
     }

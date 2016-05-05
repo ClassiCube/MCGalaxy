@@ -144,7 +144,7 @@ namespace MCGalaxy.Commands
             if (op.foundUser) {
                 Player.GlobalMessage(Server.FindColor(whoName) + whoName + "%S's actions for the past &b" + seconds + " %Sseconds were undone.");
                 Server.s.Log(whoName + "'s actions for the past " + seconds + " seconds were undone.");
-                p.level.Save(true);
+                if (p != null) p.level.Save(true);
             } else {
                 Player.SendMessage(p, "Could not find player specified.");
             }

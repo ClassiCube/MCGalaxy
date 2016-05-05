@@ -25,7 +25,7 @@ namespace MCGalaxy
 {
     public sealed class LevelCollection : List<Level>, ITypedList
     {
-        protected ILevelViewBuilder _viewBuilder;
+        ILevelViewBuilder _viewBuilder;
 
         public LevelCollection(ILevelViewBuilder viewBuilder)
         {
@@ -91,93 +91,6 @@ namespace MCGalaxy
             PropertyDescriptor[] propArray = new PropertyDescriptor[props.Count];
             props.CopyTo(propArray);
             return new PropertyDescriptorCollection(propArray);
-        }
-    }
-
-    public class LevelListViewForTab : ILevelViewBuilder
-    {
-        public PropertyDescriptorCollection GetView()
-        {
-            List<PropertyDescriptor> props = new List<PropertyDescriptor>();
-            LevelMethodDelegate del = l => l.name;
-            props.Add(new LevelMethodDescriptor("Name", del, typeof(string)));
-
-            del = l => l.players.Count;
-            props.Add(new LevelMethodDescriptor("Players", del, typeof(int)));
-
-            del = l => l.physics;
-            props.Add(new LevelMethodDescriptor("Physics", del, typeof(int)));
-
-            del = l => l.motd;
-            props.Add(new LevelMethodDescriptor("MOTD", del, typeof(string)));
-
-            del = l => l.GrassGrow;
-            props.Add(new LevelMethodDescriptor("Grass", del, typeof(bool)));
-
-            del = l => l.Killer;
-            props.Add(new LevelMethodDescriptor("Killer-Blocks", del, typeof(bool)));
-
-            del = l => l.worldChat;
-            props.Add(new LevelMethodDescriptor("World-Chat", del, typeof(bool)));
-
-            del = l => l.Death;
-            props.Add(new LevelMethodDescriptor("Death", del, typeof(bool)));
-
-            del = l => l.finite;
-            props.Add(new LevelMethodDescriptor("Finite", del, typeof(bool)));
-
-            del = l => l.randomFlow;
-            props.Add(new LevelMethodDescriptor("Random Flow", del, typeof(bool)));
-
-            del = l => l.edgeWater;
-            props.Add(new LevelMethodDescriptor("Edge-Water", del, typeof(bool)));
-
-            del = l => l.ai ? "Hunt" : "Flee";
-            props.Add(new LevelMethodDescriptor("AI", del, typeof(string)));
-
-            del = l => l.guns;
-            props.Add(new LevelMethodDescriptor("Guns", del, typeof(bool)));
-
-            del = l => l.drown;
-            props.Add(new LevelMethodDescriptor("Drown", del, typeof(int)));
-
-            del = l => l.fall;
-            props.Add(new LevelMethodDescriptor("Fall", del, typeof(int)));
-
-            del = l => l.loadOnGoto;
-            props.Add(new LevelMethodDescriptor("Load on /goto", del, typeof(bool)));
-
-            del = l => l.unload;
-            props.Add(new LevelMethodDescriptor("Unload Empty", del, typeof(bool)));
-
-            del =
-                l =>
-                (File.Exists("text/autoload.txt") &&
-                 (File.ReadAllLines("text/autoload.txt").Contains(l.name) ||
-                  File.ReadAllLines("text/autoload.txt").Contains(l.name.ToLower())));
-            props.Add(new LevelMethodDescriptor("Autoload", del, typeof(bool)));
-
-            del = delegate(Level l)
-                      {
-                          //return l.permissionvisit.ToString();
-                Group grp = Group.GroupList.Find(g => g.Permission == l.permissionvisit);
-                          return grp == null ? l.permissionvisit.ToString() : grp.name;
-                      };
-            props.Add(new LevelMethodDescriptor("PerVisit", del, typeof(string)));
-
-            del = delegate(Level l)
-                      {
-                          //return l.permissionbuild.ToString();
-                Group grp = Group.GroupList.Find(g => g.Permission == l.permissionbuild);
-                          return grp == null ? l.permissionbuild.ToString() : grp.name;
-                      };
-            props.Add(new LevelMethodDescriptor("PerBuild", del, typeof(string)));
-
-            PropertyDescriptor[] propArray = new PropertyDescriptor[props.Count];
-            props.CopyTo(propArray);
-            return new PropertyDescriptorCollection(propArray);
-
-
         }
     }
 

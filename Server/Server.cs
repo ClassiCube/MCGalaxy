@@ -76,6 +76,7 @@ namespace MCGalaxy
         [ConfigInt("position-interval", "Server", null, 100, 20, 2000)]
         public static int PositionInterval = 100;
 
+        public static PlayersFile AutoloadMaps = new PlayersFile("text/autoload.txt");
         public static PlayersFile Frozen = new PlayersFile("ranks/frozen.txt");
         public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
         public static PlayersFile Muted = new PlayersFile("ranks/muted.txt");

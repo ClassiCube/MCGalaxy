@@ -149,46 +149,6 @@ namespace MCGalaxy.Gui
             this.dgvPlayers = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.TreeGrowChk = new System.Windows.Forms.CheckBox();
-            this.label39 = new System.Windows.Forms.Label();
-            this.leafDecayChk = new System.Windows.Forms.CheckBox();
-            this.label38 = new System.Windows.Forms.Label();
-            this.chkRndFlow = new System.Windows.Forms.CheckBox();
-            this.label37 = new System.Windows.Forms.Label();
-            this.UnloadChk = new System.Windows.Forms.CheckBox();
-            this.label36 = new System.Windows.Forms.Label();
-            this.LoadOnGotoChk = new System.Windows.Forms.CheckBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.AutoLoadChk = new System.Windows.Forms.CheckBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.drownNumeric = new System.Windows.Forms.NumericUpDown();
-            this.Fallnumeric = new System.Windows.Forms.NumericUpDown();
-            this.label22 = new System.Windows.Forms.Label();
-            this.Gunschk = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.Aicombo = new System.Windows.Forms.ComboBox();
-            this.edgewaterchk = new System.Windows.Forms.CheckBox();
-            this.grasschk = new System.Windows.Forms.CheckBox();
-            this.finitechk = new System.Windows.Forms.CheckBox();
-            this.Killerbloxchk = new System.Windows.Forms.CheckBox();
-            this.SurvivalStyleDeathchk = new System.Windows.Forms.CheckBox();
-            this.chatlvlchk = new System.Windows.Forms.CheckBox();
-            this.physlvlnumeric = new System.Windows.Forms.NumericUpDown();
-            this.MOTDtxt = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.SaveMap = new System.Windows.Forms.Button();
-            this.dgvMapsTab = new System.Windows.Forms.DataGridView();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.PlayersTextBox = new MCGalaxy.Gui.AutoScrollTextBox();
             this.PlyersListBox = new System.Windows.Forms.ListBox();
@@ -296,12 +256,6 @@ namespace MCGalaxy.Gui
             this.txtLogMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.drownNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Fallnumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.physlvlnumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMapsTab)).BeginInit();
             this.tabPage7.SuspendLayout();
             this.panel4.SuspendLayout();
             this.Chat.SuspendLayout();
@@ -1118,10 +1072,9 @@ namespace MCGalaxy.Gui
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.Chat);
-            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabControl1.Font = new System.Drawing.Font("Calibri", 8.25F);
             this.tabControl1.Location = new System.Drawing.Point(1, 11);
@@ -1130,414 +1083,7 @@ namespace MCGalaxy.Gui
             this.tabControl1.Size = new System.Drawing.Size(775, 514);
             this.tabControl1.TabIndex = 2;
             this.tabControl1.Click += new System.EventHandler(this.tabControl1_Click);
-            // 
-            // tabPage6
-            // 
-            this.tabPage6.Controls.Add(this.panel2);
-            this.tabPage6.Controls.Add(this.dgvMapsTab);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(767, 488);
-            this.tabPage6.TabIndex = 6;
-            this.tabPage6.Text = "Maps";
-            // 
-            // panel2
-            // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.TreeGrowChk);
-            this.panel2.Controls.Add(this.label39);
-            this.panel2.Controls.Add(this.leafDecayChk);
-            this.panel2.Controls.Add(this.label38);
-            this.panel2.Controls.Add(this.chkRndFlow);
-            this.panel2.Controls.Add(this.label37);
-            this.panel2.Controls.Add(this.UnloadChk);
-            this.panel2.Controls.Add(this.label36);
-            this.panel2.Controls.Add(this.LoadOnGotoChk);
-            this.panel2.Controls.Add(this.label35);
-            this.panel2.Controls.Add(this.AutoLoadChk);
-            this.panel2.Controls.Add(this.label23);
-            this.panel2.Controls.Add(this.drownNumeric);
-            this.panel2.Controls.Add(this.Fallnumeric);
-            this.panel2.Controls.Add(this.label22);
-            this.panel2.Controls.Add(this.Gunschk);
-            this.panel2.Controls.Add(this.label6);
-            this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.Aicombo);
-            this.panel2.Controls.Add(this.edgewaterchk);
-            this.panel2.Controls.Add(this.grasschk);
-            this.panel2.Controls.Add(this.finitechk);
-            this.panel2.Controls.Add(this.Killerbloxchk);
-            this.panel2.Controls.Add(this.SurvivalStyleDeathchk);
-            this.panel2.Controls.Add(this.chatlvlchk);
-            this.panel2.Controls.Add(this.physlvlnumeric);
-            this.panel2.Controls.Add(this.MOTDtxt);
-            this.panel2.Controls.Add(this.label21);
-            this.panel2.Controls.Add(this.label20);
-            this.panel2.Controls.Add(this.label19);
-            this.panel2.Controls.Add(this.label18);
-            this.panel2.Controls.Add(this.label17);
-            this.panel2.Controls.Add(this.label16);
-            this.panel2.Controls.Add(this.label15);
-            this.panel2.Controls.Add(this.label13);
-            this.panel2.Controls.Add(this.label11);
-            this.panel2.Controls.Add(this.SaveMap);
-            this.panel2.Location = new System.Drawing.Point(390, 7);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(372, 207);
-            this.panel2.TabIndex = 48;
-            // 
-            // TreeGrowChk
-            // 
-            this.TreeGrowChk.AutoSize = true;
-            this.TreeGrowChk.Location = new System.Drawing.Point(168, 61);
-            this.TreeGrowChk.Name = "TreeGrowChk";
-            this.TreeGrowChk.Size = new System.Drawing.Size(15, 14);
-            this.TreeGrowChk.TabIndex = 48;
-            this.TreeGrowChk.UseVisualStyleBackColor = true;
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(97, 62);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(69, 13);
-            this.label39.TabIndex = 47;
-            this.label39.Text = "Tree growing:";
-            // 
-            // leafDecayChk
-            // 
-            this.leafDecayChk.AutoSize = true;
-            this.leafDecayChk.Location = new System.Drawing.Point(76, 125);
-            this.leafDecayChk.Name = "leafDecayChk";
-            this.leafDecayChk.Size = new System.Drawing.Size(15, 14);
-            this.leafDecayChk.TabIndex = 46;
-            this.leafDecayChk.UseVisualStyleBackColor = true;
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(4, 125);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(60, 13);
-            this.label38.TabIndex = 45;
-            this.label38.Text = "Leaf decay:";
-            // 
-            // chkRndFlow
-            // 
-            this.chkRndFlow.AutoSize = true;
-            this.chkRndFlow.Location = new System.Drawing.Point(343, 98);
-            this.chkRndFlow.Name = "chkRndFlow";
-            this.chkRndFlow.Size = new System.Drawing.Size(15, 14);
-            this.chkRndFlow.TabIndex = 44;
-            this.chkRndFlow.UseVisualStyleBackColor = true;
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(234, 97);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(71, 13);
-            this.label37.TabIndex = 43;
-            this.label37.Text = "Random flow:";
-            // 
-            // UnloadChk
-            // 
-            this.UnloadChk.AutoSize = true;
-            this.UnloadChk.Location = new System.Drawing.Point(343, 82);
-            this.UnloadChk.Name = "UnloadChk";
-            this.UnloadChk.Size = new System.Drawing.Size(15, 14);
-            this.UnloadChk.TabIndex = 42;
-            this.UnloadChk.UseVisualStyleBackColor = true;
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(234, 82);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(104, 13);
-            this.label36.TabIndex = 41;
-            this.label36.Text = "Unload when empty:";
-            // 
-            // LoadOnGotoChk
-            // 
-            this.LoadOnGotoChk.AutoSize = true;
-            this.LoadOnGotoChk.Location = new System.Drawing.Point(343, 66);
-            this.LoadOnGotoChk.Name = "LoadOnGotoChk";
-            this.LoadOnGotoChk.Size = new System.Drawing.Size(15, 14);
-            this.LoadOnGotoChk.TabIndex = 40;
-            this.LoadOnGotoChk.UseVisualStyleBackColor = true;
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(234, 67);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(74, 13);
-            this.label35.TabIndex = 39;
-            this.label35.Text = "Load on /goto:";
-            // 
-            // AutoLoadChk
-            // 
-            this.AutoLoadChk.AutoSize = true;
-            this.AutoLoadChk.Location = new System.Drawing.Point(76, 109);
-            this.AutoLoadChk.Name = "AutoLoadChk";
-            this.AutoLoadChk.Size = new System.Drawing.Size(15, 14);
-            this.AutoLoadChk.TabIndex = 38;
-            this.AutoLoadChk.UseVisualStyleBackColor = true;
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(4, 109);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(58, 13);
-            this.label23.TabIndex = 37;
-            this.label23.Text = "Auto-Load:";
-            // 
-            // drownNumeric
-            // 
-            this.drownNumeric.Location = new System.Drawing.Point(281, 144);
-            this.drownNumeric.Name = "drownNumeric";
-            this.drownNumeric.Size = new System.Drawing.Size(77, 21);
-            this.drownNumeric.TabIndex = 36;
-            // 
-            // Fallnumeric
-            // 
-            this.Fallnumeric.Location = new System.Drawing.Point(281, 116);
-            this.Fallnumeric.Name = "Fallnumeric";
-            this.Fallnumeric.Size = new System.Drawing.Size(77, 21);
-            this.Fallnumeric.TabIndex = 35;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(234, 142);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(41, 13);
-            this.label22.TabIndex = 34;
-            this.label22.Text = "Drown:";
-            // 
-            // Gunschk
-            // 
-            this.Gunschk.AutoSize = true;
-            this.Gunschk.Location = new System.Drawing.Point(76, 93);
-            this.Gunschk.Name = "Gunschk";
-            this.Gunschk.Size = new System.Drawing.Size(15, 14);
-            this.Gunschk.TabIndex = 33;
-            this.Gunschk.UseVisualStyleBackColor = true;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(234, 118);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(27, 13);
-            this.label6.TabIndex = 32;
-            this.label6.Text = "Fall:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(4, 94);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(34, 13);
-            this.label5.TabIndex = 31;
-            this.label5.Text = "Guns:";
-            // 
-            // Aicombo
-            // 
-            this.Aicombo.FormattingEnabled = true;
-            this.Aicombo.Items.AddRange(new object[] {
-            "Hunt",
-            "Flee"});
-            this.Aicombo.Location = new System.Drawing.Point(29, 142);
-            this.Aicombo.Name = "Aicombo";
-            this.Aicombo.Size = new System.Drawing.Size(62, 21);
-            this.Aicombo.TabIndex = 30;
-            // 
-            // edgewaterchk
-            // 
-            this.edgewaterchk.AutoSize = true;
-            this.edgewaterchk.Location = new System.Drawing.Point(343, 50);
-            this.edgewaterchk.Name = "edgewaterchk";
-            this.edgewaterchk.Size = new System.Drawing.Size(15, 14);
-            this.edgewaterchk.TabIndex = 29;
-            this.edgewaterchk.UseVisualStyleBackColor = true;
-            // 
-            // grasschk
-            // 
-            this.grasschk.AutoSize = true;
-            this.grasschk.Location = new System.Drawing.Point(76, 61);
-            this.grasschk.Name = "grasschk";
-            this.grasschk.Size = new System.Drawing.Size(15, 14);
-            this.grasschk.TabIndex = 28;
-            this.grasschk.UseVisualStyleBackColor = true;
-            // 
-            // finitechk
-            // 
-            this.finitechk.AutoSize = true;
-            this.finitechk.Location = new System.Drawing.Point(343, 34);
-            this.finitechk.Name = "finitechk";
-            this.finitechk.Size = new System.Drawing.Size(15, 14);
-            this.finitechk.TabIndex = 27;
-            this.finitechk.UseVisualStyleBackColor = true;
-            // 
-            // Killerbloxchk
-            // 
-            this.Killerbloxchk.AutoSize = true;
-            this.Killerbloxchk.Location = new System.Drawing.Point(343, 2);
-            this.Killerbloxchk.Name = "Killerbloxchk";
-            this.Killerbloxchk.Size = new System.Drawing.Size(15, 14);
-            this.Killerbloxchk.TabIndex = 26;
-            this.Killerbloxchk.UseVisualStyleBackColor = true;
-            // 
-            // SurvivalStyleDeathchk
-            // 
-            this.SurvivalStyleDeathchk.AutoSize = true;
-            this.SurvivalStyleDeathchk.Location = new System.Drawing.Point(343, 18);
-            this.SurvivalStyleDeathchk.Name = "SurvivalStyleDeathchk";
-            this.SurvivalStyleDeathchk.Size = new System.Drawing.Size(15, 14);
-            this.SurvivalStyleDeathchk.TabIndex = 25;
-            this.SurvivalStyleDeathchk.UseVisualStyleBackColor = true;
-            // 
-            // chatlvlchk
-            // 
-            this.chatlvlchk.AutoSize = true;
-            this.chatlvlchk.Location = new System.Drawing.Point(76, 77);
-            this.chatlvlchk.Name = "chatlvlchk";
-            this.chatlvlchk.Size = new System.Drawing.Size(15, 14);
-            this.chatlvlchk.TabIndex = 24;
-            this.chatlvlchk.UseVisualStyleBackColor = true;
-            // 
-            // physlvlnumeric
-            // 
-            this.physlvlnumeric.Location = new System.Drawing.Point(76, 36);
-            this.physlvlnumeric.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.physlvlnumeric.Name = "physlvlnumeric";
-            this.physlvlnumeric.Size = new System.Drawing.Size(106, 21);
-            this.physlvlnumeric.TabIndex = 22;
-            // 
-            // MOTDtxt
-            // 
-            this.MOTDtxt.Location = new System.Drawing.Point(76, 8);
-            this.MOTDtxt.Name = "MOTDtxt";
-            this.MOTDtxt.Size = new System.Drawing.Size(152, 21);
-            this.MOTDtxt.TabIndex = 21;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(4, 146);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(19, 13);
-            this.label21.TabIndex = 20;
-            this.label21.Text = "AI:";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(234, 51);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(89, 13);
-            this.label20.TabIndex = 19;
-            this.label20.Text = "Edge water flows:";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(234, 35);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(68, 13);
-            this.label19.TabIndex = 18;
-            this.label19.Text = "Finite Liquid:";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(234, 18);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(103, 13);
-            this.label18.TabIndex = 17;
-            this.label18.Text = "Survival-style death:";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(234, 2);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(67, 13);
-            this.label17.TabIndex = 16;
-            this.label17.Text = "Killer blocks:";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(4, 62);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(37, 13);
-            this.label16.TabIndex = 15;
-            this.label16.Text = "Grass:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(4, 11);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(38, 13);
-            this.label15.TabIndex = 14;
-            this.label15.Text = "MOTD:";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(4, 78);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(64, 13);
-            this.label13.TabIndex = 12;
-            this.label13.Text = "World-Chat:";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(4, 41);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(72, 13);
-            this.label11.TabIndex = 10;
-            this.label11.Text = "Physics Level:";
-            // 
-            // SaveMap
-            // 
-            this.SaveMap.Location = new System.Drawing.Point(3, 168);
-            this.SaveMap.Name = "SaveMap";
-            this.SaveMap.Size = new System.Drawing.Size(364, 35);
-            this.SaveMap.TabIndex = 9;
-            this.SaveMap.Text = "Save Map Properties";
-            this.SaveMap.UseVisualStyleBackColor = true;
-            this.SaveMap.Click += new System.EventHandler(this.SaveMap_Click);        
-            // 
-            // dgvMapsTab
-            // 
-            this.dgvMapsTab.AllowUserToAddRows = false;
-            this.dgvMapsTab.AllowUserToDeleteRows = false;
-            this.dgvMapsTab.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dgvMapsTab.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvMapsTab.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMapsTab.Location = new System.Drawing.Point(7, 220);
-            this.dgvMapsTab.MultiSelect = false;
-            this.dgvMapsTab.Name = "dgvMapsTab";
-            this.dgvMapsTab.ReadOnly = true;
-            this.dgvMapsTab.RowHeadersVisible = false;
-            this.dgvMapsTab.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvMapsTab.Size = new System.Drawing.Size(754, 262);
-            this.dgvMapsTab.TabIndex = 39;
-            this.dgvMapsTab.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMapsTab_CellClick);
-            this.dgvMapsTab.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMapsTab_CellClick);
-            // 
+            //
             // tabPage7
             // 
             this.tabPage7.Controls.Add(this.PlayersTextBox);
@@ -2320,7 +1866,7 @@ namespace MCGalaxy.Gui
             this.lbMap_Lded.Name = "lbMap_Lded";
             this.lbMap_Lded.Size = new System.Drawing.Size(379, 199);
             this.lbMap_Lded.TabIndex = 0;
-            this.lbMap_Lded.SelectedIndexChanged += new System.EventHandler(this.MapSelectedChanged);
+            this.lbMap_Lded.SelectedIndexChanged += new System.EventHandler(this.UpdateSelectedMap);
             // 
             // gbMap_Unld
             // 
@@ -2557,13 +2103,6 @@ namespace MCGalaxy.Gui
             this.txtLogMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage6.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.drownNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Fallnumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.physlvlnumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMapsTab)).EndInit();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -2651,37 +2190,8 @@ namespace MCGalaxy.Gui
         private DataGridView dgvPlayers;
         private Label label1;
         private TabControl tabControl1;
-        private TabPage tabPage6;
-        private Label label11;
-        private Button SaveMap;
-        private DataGridView dgvMapsTab;
-        private Panel panel2;
-        private Label label13;
-        private Label label17;
-        private Label label15;
-        private Label label19;
-        private Label label18;
-        private Label label20;
-        private Label label21;
         private ToolStripMenuItem promoteToolStripMenuItem;
         private ToolStripMenuItem demoteToolStripMenuItem;
-        private ComboBox Aicombo;
-        private CheckBox edgewaterchk;
-        private CheckBox grasschk;
-        private CheckBox finitechk;
-        private CheckBox Killerbloxchk;
-        private CheckBox SurvivalStyleDeathchk;
-        private CheckBox chatlvlchk;
-        private NumericUpDown physlvlnumeric;
-        private TextBox MOTDtxt;
-        private Label label5;
-        private NumericUpDown drownNumeric;
-        private NumericUpDown Fallnumeric;
-        private Label label22;
-        private CheckBox Gunschk;
-        private Label label6;
-        private CheckBox AutoLoadChk;
-        private Label label23;
         private TabPage tabPage7;
         internal RichTextBox LogsTxtBox;
         private DateTimePicker dateTimePicker1;
@@ -2763,20 +2273,9 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem unloadToolStripMenuItem;
         private ToolStripMenuItem moveAllToolStripMenuItem;
         private ToolStripMenuItem reloadToolStripMenuItem;
-        private Label label16;
-        private Label label35;
-        private CheckBox LoadOnGotoChk;
-        private CheckBox UnloadChk;
-        private Label label36;
         private ToolStripMenuItem randomFlowToolStripMenuItem;
         private ToolStripMenuItem leafDecayToolStripMenuItem;
-        private CheckBox chkRndFlow;
-        private Label label37;
-        private CheckBox leafDecayChk;
-        private Label label38;
         private ToolStripMenuItem treeGrowingToolStripMenuItem;
-        private CheckBox TreeGrowChk;
-        private Label label39;
         private ToolStripMenuItem physicsToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripMenuItem toolStripMenuItem3;
