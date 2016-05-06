@@ -68,7 +68,12 @@ namespace MCGalaxy.SQL.Native {
             if (count == 0) return "";
             
             byte* ptr = (byte*)Interop.sqlite3_column_text(stmt, i);        
-            return Encoding.UTF8.GetString(ptr, count);
+            int charCount = Encoding.UTF8.GetCharCount(ptr, count);
+            if (charCount == 0) return "";
+            
+            char* chars = stackalloc char[charCount];
+            Encoding.UTF8.GetChars(ptr, count, chars, charCount);
+            return new string(chars, 0, charCount);
         }
         
         byte[] MakeBlob(IntPtr stmt, int i) {
