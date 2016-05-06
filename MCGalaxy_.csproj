@@ -380,7 +380,7 @@
     <Compile Include="Commands\Other\CmdTp.cs" />
     <Compile Include="Commands\Other\CmdTpA.cs" />
     <Compile Include="Commands\Other\CmdTpZone.cs" />
-    <Compile Include="Commands\other\CmdView.cs" />
+    <Compile Include="Commands\Other\CmdView.cs" />
     <Compile Include="Commands\Other\CmdVote.cs" />
     <Compile Include="Commands\Other\CmdWarp.cs" />
     <Compile Include="Commands\Other\CmdWaypoint.cs" />
@@ -586,11 +586,11 @@
     <Compile Include="Player\VIP.cs" />
     <Compile Include="Server\Extra\Warp.cs" />
     <Compile Include="API\WebServer.cs" />
-    <Compile Include="util\FastList.cs" />
-    <Compile Include="util\App.cs" />
-    <Compile Include="util\SparseBitSet.cs" />
-    <Compile Include="util\Vectors.cs" />
-    <Compile Include="util\VolatileArray.cs" />
+    <Compile Include="Util\FastList.cs" />
+    <Compile Include="Util\App.cs" />
+    <Compile Include="Util\SparseBitSet.cs" />
+    <Compile Include="Util\Vectors.cs" />
+    <Compile Include="Util\VolatileArray.cs" />
     <Compile Include="SharkBite.Thresher\ChannelModeInfo.cs" />
     <Compile Include="SharkBite.Thresher\CommandBuilder.cs" />
     <Compile Include="SharkBite.Thresher\Connection.cs" />
@@ -608,8 +608,8 @@
     <Compile Include="SharkBite.Thresher\TextColor.cs" />
     <Compile Include="SharkBite.Thresher\UserInfo.cs" />
     <Compile Include="SharkBite.Thresher\WhoisInfo.cs" />
-    <Compile Include="util\CP437Reader.cs" />
-    <Compile Include="util\CP437Writer.cs" />
+    <Compile Include="Util\CP437Reader.cs" />
+    <Compile Include="Util\CP437Writer.cs" />
     <Compile Include="Util\ExtrasCollection.cs" />
     <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
