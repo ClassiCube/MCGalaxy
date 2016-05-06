@@ -26,8 +26,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks"),
-                    new CommandAlias("cmdlist", "commands"), new CommandAlias("commands", "commands") }; }
+            get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks") }; }
         }
         public CmdHelp() { }
 
