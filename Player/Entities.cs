@@ -31,16 +31,17 @@ namespace MCGalaxy {
         public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z,
                                        byte rotx, byte roty, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
-            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;
+            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;          
+            
             foreach (Player other in players) {
                 if ((other.Loading && p != other) || p.level != other.level) continue;
                 
                 if (p != other && Entities.CanSeeEntity(other, p)) {
-                    other.SpawnEntity(p, p.id, x, y, z, rotx, roty, possession);
+                    Spawn(other, p, p.id, x, y, z, rotx, roty, possession);
                 } else if (p == other && self) {
                     other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
                     other.oldpos = other.pos; other.oldrot = other.rot;
-                    other.SpawnEntity(other, 0xFF, x, y, z, rotx, roty, possession);
+                    Spawn(other, p, 0xFF, x, y, z, rotx, roty, possession);
                 }
             }
         }
@@ -48,6 +49,7 @@ namespace MCGalaxy {
         /// <summary> Despawns this player to all other players that can see the player in the current world. </summary>
         public static void GlobalDespawn(Player p, bool self, bool diffWorld = false) {
             Player[] players = PlayerInfo.Online.Items;
+            
             foreach (Player other in players) {
                 if (p.level != other.level) continue;
                 
@@ -55,9 +57,9 @@ namespace MCGalaxy {
                 bool despawn = Entities.CanSeeEntity(other, p);
                 if (!diffWorld) despawn = !despawn;
                 if (p != other && despawn) {
-                    other.DespawnEntity(p.id);
+                    Despawn(other, p.id);
                 } else if (p == other && self) {
-                    other.DespawnEntity(255);
+                    Despawn(other, 0xFF);
                 }
             }
         }
@@ -65,15 +67,11 @@ namespace MCGalaxy {
 
         internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z,
                                    byte rotx, byte roty, string possession = "") {
+            TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
-                string col = p.color;
-                if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
-                    col = "&" + Colors.GetFallback(col[1]);
-                string group = p.Game.Referee ? "&2Referees" : "&fPlayers";
-                
+                string col = GetSupportedCol(dst, p.color);             
                 if (dst.hasExtList) {
                     dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, x, y, z, rotx, roty);
-                    dst.SendExtAddPlayerName(id, p.skinName, col + p.truename, group, 0);
                 } else {
                     dst.SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty);
                 }
@@ -87,7 +85,6 @@ namespace MCGalaxy {
             
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(id, skinName, Colors.red + name + possession, x, y, z, rotx, roty);
-                dst.SendExtAddPlayerName(id, skinName, Colors.red + name, "&cZombies", 0);
             } else {
                 dst.SendSpawn(id, Colors.red + name + possession, x, y, z, rotx, roty);
             }
@@ -97,9 +94,9 @@ namespace MCGalaxy {
         }
         
         internal static void Spawn(Player dst, PlayerBot b) {
+            TabList.Add(dst, b);
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(b.id, b.skinName, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
-                dst.SendExtAddPlayerName(b.id, b.skinName, b.color + b.name, "Bots", 0);
             } else {
                 dst.SendSpawn(b.id, b.color + b.skinName, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             }
@@ -107,8 +104,13 @@ namespace MCGalaxy {
         
         internal static void Despawn(Player dst, byte id) {
             dst.SendRaw(Opcode.RemoveEntity, id);
-            if (dst.hasExtList)
-                dst.SendExtRemovePlayerName(id);
+            TabList.Remove(dst, id);
+        }
+        
+        internal static string GetSupportedCol(Player dst, string col) {
+            if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
+                col = "&" + Colors.GetFallback(col[1]);
+            return col;
         }
         
         #endregion      

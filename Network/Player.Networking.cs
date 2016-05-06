@@ -644,11 +644,6 @@ namespace MCGalaxy {
             if (hasChangeModel) UpdateModels();
         }
         
-        public void SendExtAddPlayerName(byte id, string listName, string displayName, Group grp) {
-            byte grpRank = (byte)grp.Permission.GetHashCode();
-            SendExtAddPlayerName(id, listName, displayName, grp.color + grp.name + "s:", grpRank);
-        }
-        
         public void SendExtAddPlayerName(byte id, string listName, string displayName, string grp, byte grpRank) {
             byte[] buffer = new byte[196];
             buffer[0] = Opcode.CpeExtAddPlayerName;
