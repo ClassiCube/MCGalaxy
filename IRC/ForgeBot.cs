@@ -37,13 +37,11 @@ namespace MCGalaxy {
         static char[] trimChars = { ' ' };
         
         public ForgeBot(string channel, string opchannel, string nick, string server) {
-            this.channel = channel.Trim(); this.opchannel = opchannel.Trim(); this.nick = nick.Replace(" ", ""); this.server = server;
-            banCmd = new List<string>();
-            banCmd.Add("resetbot");
-            banCmd.Add("resetirc");
-            banCmd.Add("oprules");
-            banCmd.Add("irccontrollers");
-            banCmd.Add("ircctrl");
+            this.channel = channel.Trim(); 
+            this.opchannel = opchannel.Trim(); 
+            this.nick = nick.Replace(" ", ""); 
+            this.server = server;            
+            banCmd = new List<string>() { "resetbot", "resetirc", "oprules", "irccontrollers", "ircctrl" };
             
             if (Server.irc) {
 
@@ -215,6 +213,9 @@ namespace MCGalaxy {
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
+        	// Old bot was disconnected, try to reclaim it.
+            if (user.Nick == nick) connection.Sender.Nick(nick);
+        	
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
             if (user.Nick == nick) return;
@@ -338,17 +339,20 @@ namespace MCGalaxy {
             Server.s.Log("Connected to IRC!");
             reset = false;
             retries = 0;
-            if (Server.ircIdentify && Server.ircPassword != "") {
-                Server.s.Log("Identifying with NickServ");
-                connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + Server.ircPassword);
-            }
-
+            Authenticate();
             Server.s.Log("Joining channels...");
 
             if (!String.IsNullOrEmpty(channel))
                 connection.Sender.Join(channel);
             if (!String.IsNullOrEmpty(opchannel))
                 connection.Sender.Join(opchannel);
+        }
+        
+        void Authenticate() {
+        	if (Server.ircIdentify && Server.ircPassword != "") {
+                Server.s.Log("Identifying with NickServ");
+                connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + Server.ircPassword);
+            }
         }
 
         void Listener_OnDisconnected() {
@@ -357,11 +361,10 @@ namespace MCGalaxy {
 
         void Listener_OnNick(UserInfo user, string newNick) {
             //Player.GlobalMessage(Server.IRCColour + "[IRC] " + user.Nick + " changed nick to " + newNick);
+            // We have successfully reclaimed our nick, so try to sign in again.
+            if (newNick == nick) Authenticate();
 
-            if (newNick.Trim() == "") {
-                this.Pm(user.Nick, "You cannot have that username");
-                return;
-            }
+            if (newNick.Trim() == "") return;
             
             foreach (var kvp in users) {
                 int index = GetNickIndex(user.Nick, kvp.Value);
