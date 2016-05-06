@@ -131,7 +131,8 @@ namespace MCGalaxy {
             })).Start();*/
 
             Server.s.Log("Connecting to IRC...");
-
+            connection.connectionArgs.Nick = nick;
+            
             try { connection.Connect(); }
             catch (Exception e) {
                 Server.s.Log("Failed to connect to IRC!");
