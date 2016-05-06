@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
                 case "command":
                 case "":
                     Group pGroup = p != null ? p.group : Group.findPerm(LevelPermission.Nobody);
-                    PrintRankCommands(p, pGroup, true); break;
+                    PrintRankCommands(p, pGroup); break;
                 case "commandsall":
                 case "commandall":
                 case "all":
@@ -109,60 +109,66 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static void PrintRankCommands(Player p, Group group, bool colors) {
-            StringBuilder cmds = new StringBuilder();
+        static void PrintRankCommands(Player p, Group group) {
+            List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (!group.CanExecute(c) || disabled != null) continue;
-                if (c.name == null) continue;
-                
-                if (!colors) cmds.Append(", ").Append(c.name);
-                else cmds.Append(", ").Append(CmdHelp.GetColor(c)).Append(c.name);
+                if (!group.CanExecute(c) || disabled != null || c.name == null) continue;
+                cmds.Add(c);
             }
             
+            StringBuilder list = FormatCommands(cmds);            
             Player.Message(p, "Available commands:");
-            Player.Message(p, cmds.ToString(2, cmds.Length - 2));
+            Player.Message(p, list.ToString(2, list.Length - 2));
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
             Player.Message(p, "Type %T/cmds shortcuts %Sfor a list of command shortcuts.");
             Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
         }
         
         static void PrintAllCommands(Player p) {
-            StringBuilder cmds = new StringBuilder();
+            List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 if (c.name == null) continue;
-                cmds.Append(", ").Append(CmdHelp.GetColor(c)).Append(c.name);
+                cmds.Add(c);
             }
 
+            StringBuilder list = FormatCommands(cmds);
             Player.Message(p, "All commands:");
-            Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-            Player.Message(p, "Type \"/help <command>\" for more help.");
-            Player.Message(p, "Type \"/help shortcuts\" for shortcuts.");
+            Player.Message(p, list.ToString(2, list.Length - 2));
+            Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
+            Player.Message(p, "Type %T/cmds shortcuts %Sfor a list of command shortcuts.");
             Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
         }
         
         static void PrintHelpForGroup(Player p, string typeName, string typeTitle) {
-            StringBuilder cmds = new StringBuilder();
+            List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
                 if (p == null || p.group.CanExecute(c) && disabled == null) {
                     if (!c.type.Contains(typeName) || c.name == null) continue;
-                    cmds.Append(", ").Append(CmdHelp.GetColor(c)).Append(c.name);
+                    cmds.Add(c);
                 }
             }
             
-            if (cmds.Length == 0) {
+            if (list.Length == 0) {
                 Player.Message(p, "No commands of this type are available to you.");
             } else {
                 Player.Message(p, typeTitle + " commands you may use:");
-                Player.Message(p, cmds.ToString(2, cmds.Length - 2) + ".");
+                Player.Message(p, list.ToString(2, list.Length - 2) + ".");
             }
+        }
+        
+        static StringBuilder FormatCommands(List<Command> cmds) {
+            StringBuilder list = new StringBuilder();
+            foreach (Command c in cmds)
+                list.Append(", ").Append(CmdHelp.GetColor(c)).Append(c.name);
+            return list;
         }
 
         public override void Help(Player p) {
-        	Player.Message(p, "%T/commands [category]");
-        	Player.Message(p, "%H\"all\" category will output all commands.");
-        	Player.Message(p, "%HNo category outputs commands you can use.");
+            Player.Message(p, "%T/commands [category]");
+            Player.Message(p, "%H\"all\" category will output all commands.");
+            Player.Message(p, "%HNo category outputs commands you can use.");
             Player.Message(p, "%HOther Categories:");
             Player.Message(p, "  &aBuilding Chat Economy Games Info Moderation Other World");
         }
