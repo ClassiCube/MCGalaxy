@@ -115,7 +115,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdHigh5()), "high 5 fun");
             new CommandKeywords((new CmdHighlight()), "mod high light block change history");
             new CommandKeywords((new CmdHollow()), "block create");
-            new CommandKeywords((new CmdHost()), "owner server " + Server.server_owner + " " + Server.ZallState);
             new CommandKeywords((new CmdIgnore()), "abort chat player");
             new CommandKeywords((new CmdImport()), "dat imp extra");
             new CommandKeywords((new CmdImageprint()), "jpg bmp gif png image print");

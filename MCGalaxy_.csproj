@@ -227,7 +227,6 @@
     <Compile Include="Commands\Information\CmdFaq.cs" />
     <Compile Include="Commands\Information\CmdHasirc.cs" />
     <Compile Include="Commands\Information\CmdHelp.cs" />
-    <Compile Include="Commands\Information\CmdHost.cs" />
     <Compile Include="Commands\Information\CmdInbox.cs" />
     <Compile Include="Commands\Information\CmdInfo.cs" />
     <Compile Include="Commands\Information\CmdLastCmd.cs" />
