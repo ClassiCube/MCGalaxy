@@ -995,12 +995,11 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     return;
                 afkCount = 0;
 
-                if ( text != "/afk" ) {
-                    if ( Server.afkset.Contains(this.name) ) {
-                        Server.afkset.Remove(this.name);
-                        Player.GlobalMessage("-" + ColoredName + "%S- is no longer AFK");
-                        Server.IRC.Say(DisplayName + " is no longer AFK");
-                    }
+                if ( text != "/afk" && IsAfk ) {
+                    IsAfk = false;
+                    Player.GlobalMessage("-" + ColoredName + "%S- is no longer AFK");
+                    Server.IRC.Say(DisplayName + " is no longer AFK");
+                    TabList.UpdateToAll(this, true);
                 }
                 // Typing //Command appears in chat as /command
                 // Suggested by McMrCat

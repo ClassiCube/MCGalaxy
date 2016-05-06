@@ -142,7 +142,6 @@ namespace MCGalaxy
         //Global Chat Rules Accepted list
         public static List<string> gcaccepted = new List<string>();
 
-        public static List<string> afkset = new List<string>();
         public static List<string> ircafkset = new List<string>();
         public static List<string> messages = new List<string>();
 

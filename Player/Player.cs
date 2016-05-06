@@ -68,7 +68,7 @@ namespace MCGalaxy {
         public System.Timers.Timer afkTimer = new System.Timers.Timer(2000);
         public int afkCount = 0;
         public DateTime afkStart;
-        public bool IsAfk { get { return Server.afkset.Contains(name); } }
+        public bool IsAfk = false;
         public bool cmdTimer = false;
         public bool UsingWom = false;
         public string BrushName = "normal", DefaultBrushArgs = "";
@@ -296,7 +296,7 @@ namespace MCGalaxy {
 
         public static string CheckPlayerStatus(Player p) {
             if ( p.hidden ) return "hidden";
-            if ( Server.afkset.Contains(p.name) ) return "afk";
+            if ( p.IsAfk ) return "afk";
             return "active";
         }
         
@@ -556,7 +556,7 @@ namespace MCGalaxy {
                 timespent.Dispose();
                 afkCount = 0;
                 afkStart = DateTime.Now;
-                Server.afkset.Remove(name);
+                IsAfk = false;
                 isFlying = false;
                 aiming = false;
                 
