@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("cmdlist", "commands") }; }
+            get { return new[] { new CommandAlias("cmdlist") }; }
         }
         public CmdCommands() { }
 
@@ -34,59 +34,55 @@ namespace MCGalaxy.Commands {
         }
         
         internal static bool DoCommand(Player p, string message) {
-            switch (message.ToLower()) {
+            string[] args = message.Split(' ');
+            string sort = args.Length > 1 ? args[1].ToLower() : null;
+            
+            switch (args[0].ToLower()) {
                 case "build":
                 case "building":
-                    PrintHelpForGroup(p, "build", "Building"); break;
+                    PrintHelpForGroup(p, sort, "build", "Building"); break;
                 case "chat":
-                    PrintHelpForGroup(p, "chat", "Chat"); break;
+                    PrintHelpForGroup(p, sort, "chat", "Chat"); break;
                 case "eco":
                 case "economy":
-                    PrintHelpForGroup(p, "eco", "Economy"); break;
+                    PrintHelpForGroup(p, sort, "eco", "Economy"); break;
                 case "mod":
                 case "moderation":
-                    PrintHelpForGroup(p, "mod", "Moderation"); break;
+                    PrintHelpForGroup(p, sort, "mod", "Moderation"); break;
                 case "info":
                 case "information":
-                    PrintHelpForGroup(p, "info", "Information"); break;
+                    PrintHelpForGroup(p, sort, "info", "Information"); break;
                 case "game":
                 case "games":
-                    PrintHelpForGroup(p, "game", "Game"); break;
+                    PrintHelpForGroup(p, sort, "game", "Game"); break;
                 case "other":
                 case "others":
-                    PrintHelpForGroup(p, "other", "Other");  break;
+                    PrintHelpForGroup(p, sort, "other", "Other");  break;
                 case "maps":
                 case "world":
-                    PrintHelpForGroup(p, "world", "World"); break;
+                    PrintHelpForGroup(p, sort, "world", "World"); break;
                 case "short":
                 case "shortcut":
                 case "shortcuts":
-                case "short 1":
-                case "shortcut 1":
-                case "shortcuts 1":
-                case "short 2":
-                case "shortcut 2":
-                case "shortcuts 2":
-                    PrintShortcuts(p, message); break;
+                    PrintShortcuts(p, sort); break;
                 case "old":
                 case "oldmenu":
-                case "commands":
                 case "command":
                 case "":
                     Group pGroup = p != null ? p.group : Group.findPerm(LevelPermission.Nobody);
-                    PrintRankCommands(p, pGroup); break;
+                    PrintRankCommands(p, sort, pGroup); break;
                 case "commandsall":
                 case "commandall":
                 case "all":
-                    PrintAllCommands(p); break;
+                    PrintAllCommands(p, sort); break;
                 default:
                     return false;
             }
             return true;
         }
         
-        static void PrintShortcuts(Player p, string message) {
-            bool list1 = message[message.Length - 1] != '2';
+        static void PrintShortcuts(Player p, string sort) {
+            bool list1 = sort == null || sort != "2";
             List<string> shortcuts = new List<string>();
             foreach (Command c in Command.all.commands) {
                 if (p != null && !p.group.CanExecute(c) || c.shortcut == "") continue;
@@ -109,7 +105,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static void PrintRankCommands(Player p, Group group) {
+        static void PrintRankCommands(Player p, string sort, Group group) {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
@@ -117,7 +113,7 @@ namespace MCGalaxy.Commands {
                 cmds.Add(c);
             }
             
-            StringBuilder list = FormatCommands(cmds);            
+            StringBuilder list = FormatCommands(cmds, sort);
             Player.Message(p, "Available commands:");
             Player.Message(p, list.ToString(2, list.Length - 2));
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
@@ -125,14 +121,14 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
         }
         
-        static void PrintAllCommands(Player p) {
+        static void PrintAllCommands(Player p, string sort) {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 if (c.name == null) continue;
                 cmds.Add(c);
             }
 
-            StringBuilder list = FormatCommands(cmds);
+            StringBuilder list = FormatCommands(cmds, sort);
             Player.Message(p, "All commands:");
             Player.Message(p, list.ToString(2, list.Length - 2));
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
@@ -140,7 +136,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
         }
         
-        static void PrintHelpForGroup(Player p, string typeName, string typeTitle) {
+        static void PrintHelpForGroup(Player p, string sort, 
+                                      string typeName, string typeTitle) {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
@@ -150,15 +147,25 @@ namespace MCGalaxy.Commands {
                 }
             }
             
+            StringBuilder list = FormatCommands(cmds, sort);
             if (list.Length == 0) {
-                Player.Message(p, "No commands of this type are available to you.");
+                Player.Message(p, "You cannot use any of the " + typeTitle + " commands.");
             } else {
                 Player.Message(p, typeTitle + " commands you may use:");
                 Player.Message(p, list.ToString(2, list.Length - 2) + ".");
             }
         }
         
-        static StringBuilder FormatCommands(List<Command> cmds) {
+        static StringBuilder FormatCommands(List<Command> cmds, string sort) {
+            if (sort != null && (sort == "name" || sort == "names")) {
+                cmds.Sort((a, b) => a.name
+                          .CompareTo(b.name));
+            }
+            if (sort != null && (sort == "rank" || sort == "ranks")) {
+                cmds.Sort((a, b) => GrpCommands.MinPerm(a)
+                          .CompareTo(GrpCommands.MinPerm(b)));
+            }
+            
             StringBuilder list = new StringBuilder();
             foreach (Command c in cmds)
                 list.Append(", ").Append(CmdHelp.GetColor(c)).Append(c.name);
@@ -166,11 +173,13 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/commands [category]");
-            Player.Message(p, "%H\"all\" category will output all commands.");
-            Player.Message(p, "%HNo category outputs commands you can use.");
-            Player.Message(p, "%HOther Categories:");
-            Player.Message(p, "  &aBuilding Chat Economy Games Info Moderation Other World");
+            Player.Message(p, "%T/commands [category] [sort]");
+            Player.Message(p, "%HIf no category is given, outputs all commands you can use.");
+            Player.Message(p, "  %H\"shortcuts\" category outputs all command shortcuts.");            
+            Player.Message(p, "  %H\"all\" category outputs all commands.");
+            Player.Message(p, "%HOther command categories:");
+            Player.Message(p, "  %HBuilding Chat Economy Games Info Moderation Other World");
+            Player.Message(p, "%HSort is optional, and can be either \"name\" or \"rank\"");
         }
     }
 }
