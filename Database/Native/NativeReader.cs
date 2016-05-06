@@ -24,29 +24,62 @@ namespace MCGalaxy.SQL.Native {
 
     unsafe sealed class NativeReader {
         
-		int cols;
-		int[] codes;
+        int cols;
         public void ReadColumns(NativeCommand cmd, DataTable results) {
+            results.Columns.Clear();
             cols = Interop.sqlite3_column_count(cmd.Statement);
-            codes = new int[cols];
             
             for (int i = 0; i < cols; i++) {
                 IntPtr namePtr = Interop.sqlite3_column_name(cmd.Statement, i);
                 string name = new String((sbyte*)namePtr);
-                int code = Interop.sqlite3_column_type(cmd.Statement, i);
-                codes[i] = code;
-                
-                Type type = typeof(object);
-                if (code == 1) type = typeof(long);
-                else if (code == 2) type = typeof(double);
-                else if (code == 3) type = typeof(string);
-                else if (code == 4) type = typeof(byte[]);
-                results.Columns.Add(new DataColumn(name, type));
+                results.Columns.Add(new DataColumn(name));
             }
         }
         
         public void ReadRows(NativeCommand cmd, DataTable results) {
-			
+            while (true) {
+                int code = Interop.sqlite3_step(cmd.Statement);
+                if (code == Interop.RowReady) {
+                    object[] values = new object[cols];
+                    for (int i = 0; i < values.Length; i++)
+                        values[i] = ParseValue(cmd.Statement, i);
+                    
+                    results.Rows.Add(values); continue;
+                }
+                if (code == Interop.Done) return;
+                if (code > 0) throw new NativeException(code);
+            }
+        }
+        
+        unsafe object ParseValue(IntPtr stmt, int i) {
+            int code = Interop.sqlite3_column_type(stmt, i);
+            switch (code) {
+                case 1: return Interop.sqlite3_column_int64(stmt, i);
+                case 2: return Interop.sqlite3_column_double(stmt, i);
+                case 3: return MakeString(stmt, i);
+                case 4: return MakeBlob(stmt, i);
+                case 5: return null;
+            }
+            throw new InvalidOperationException("Invalid type code: " + code);
+        }
+        
+        string MakeString(IntPtr stmt, int i) {
+            int count = Interop.sqlite3_column_bytes(stmt, i);
+            if (count == 0) return "";
+            
+            byte* ptr = (byte*)Interop.sqlite3_column_text(stmt, i);        
+            return Encoding.UTF8.GetString(ptr, count);
+        }
+        
+        byte[] MakeBlob(IntPtr stmt, int i) {
+            int count = Interop.sqlite3_column_bytes(stmt, i);
+            if (count == 0) return new byte[0];
+            
+            byte* ptr = (byte*)Interop.sqlite3_column_blob(stmt, i);
+            byte[] dst = new byte[count];
+            for (int j = 0; j < count; j++)
+                dst[j] = ptr[j];
+            return dst;
         }
     }
 }

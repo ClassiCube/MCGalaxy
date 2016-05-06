@@ -53,7 +53,7 @@ namespace MCGalaxy.SQL.Native {
                 BindParam(args[i]);
             
             int code = Interop.sqlite3_step(Statement);
-            if (code > 0 && code != 101) throw new NativeException(code);
+            if (code > 0 && code != Interop.Done) throw new NativeException(code);
             code = Interop.sqlite3_reset(Statement);
             if (code > 0) throw new NativeException(code);
             return 0;

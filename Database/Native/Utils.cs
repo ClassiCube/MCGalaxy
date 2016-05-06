@@ -88,6 +88,9 @@ namespace MCGalaxy.SQL.Native {
         static Encoding encoding = Encoding.UTF8;
         const CallingConvention conv = CallingConvention.Cdecl;
         
+        public const int Busy = 5, Locked = 6;
+        public const int RowReady = 100, Done = 101;
+        
         public static byte[] MakeUTF8(string input) {
             int count = encoding.GetByteCount(input) + 1; // null terminator
             byte[] chars = new byte[count];
@@ -145,8 +148,11 @@ namespace MCGalaxy.SQL.Native {
 
         [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern IntPtr sqlite3_column_text(IntPtr stmt, int iCol);
-
+        
         [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern IntPtr sqlite3_column_text16(IntPtr stmt, int iCol);
+        public static extern IntPtr sqlite3_column_blob(IntPtr stmt, int iCol);
+        
+        [DllImport("sqlite3.dll", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
+        public static extern int sqlite3_column_bytes(IntPtr stmt, int iCol);        
     }
 }
