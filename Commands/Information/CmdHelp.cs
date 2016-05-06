@@ -56,39 +56,6 @@ namespace MCGalaxy.Commands
                             Player.Message(p, grp.ColoredName + " - &bCmd: " + grp.maxBlocks + " - &2Undo: " + ((grp.maxUndo != -1) ? grp.maxUndo.ToString() : "max") + " - &cPerm: " + (int)grp.Permission);
                     }
                     break;
-                case "build":
-                case "building":
-                    PrintHelpForGroup(p, "build", "Building"); break;
-                case "chat":
-                    PrintHelpForGroup(p, "chat", "Chat"); break;
-                case "eco":
-                case "economy":
-                    PrintHelpForGroup(p, "eco", "Economy"); break;
-                case "mod":
-                case "moderation":
-                    PrintHelpForGroup(p, "mod", "Moderation"); break;
-                case "info":
-                case "information":
-                    PrintHelpForGroup(p, "info", "Information"); break;
-                case "game":
-                case "games":
-                    PrintHelpForGroup(p, "game", "Game"); break;
-                case "other":
-                case "others":
-                    PrintHelpForGroup(p, "other", "Other");  break;
-                case "maps":
-                case "world":
-                    PrintHelpForGroup(p, "world", "World"); break;
-                case "short":
-                case "shortcut":
-                case "shortcuts":
-                case "short 1":
-                case "shortcut 1":
-                case "shortcuts 1":
-                case "short 2":
-                case "shortcut 2":
-                case "shortcuts 2":
-                    PrintShortcuts(p, message); break;
                 case "colours":
                 case "colors":
                     Player.Message(p, "&fTo use a color, put a '%' and then put the color code.");
@@ -99,93 +66,11 @@ namespace MCGalaxy.Commands
                     Player.Message(p, "c - &cRed %S| d - &dPink %S| e - &eYellow %S| f - &fWhite");
                     CmdCustomColors.ListHandler(p, null, true);
                     break;
-                case "old":
-                case "oldmenu":
-                case "commands":
-                case "command":
-                    Group pGroup = p != null ? p.group : Group.findPerm(LevelPermission.Nobody);
-                    PrintRankCommands(p, pGroup, true); break;
-                case "commandsall":
-                case "commandall":
-                    PrintAllCommands(p); break;
                 default:
+                    if (CmdCommands.DoCommand(p, message)) break;
                     if (ParseCommand(p, message) || ParseBlock(p, message) || ParsePlugin(p, message)) return;
                     Player.Message(p, "Could not find command, plugin or block specified.");
                     break;
-            }
-        }
-        
-        static void PrintShortcuts(Player p, string message) {
-            bool list1 = message[message.Length - 1] != '2';
-            List<string> shortcuts = new List<string>();
-            foreach (Command c in Command.all.commands) {
-                if (p != null && !p.group.CanExecute(c) || c.shortcut == "") continue;
-                shortcuts.Add(c.shortcut + " %S[" + c.name + "]");
-            }
-            
-            int top = list1 ? shortcuts.Count / 2 : shortcuts.Count;
-            StringBuilder cmds = new StringBuilder();
-            for (int i = list1 ? 0 : shortcuts.Count / 2; i < top; i++)
-                cmds.Append(", &b").Append(shortcuts[i]);
-            
-            if (list1) {
-                Player.Message(p, "Available shortcuts (1):");
-                Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-                Player.Message(p, "%bType %f/help shortcuts 2%b to view the rest of the list ");
-            } else {
-                Player.Message(p, "Available shortcuts (2):");
-                Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-                Player.Message(p, "%bType %f/help shortcuts 1%b to view the rest of the list ");
-            }
-        }
-        
-        static void PrintRankCommands(Player p, Group group, bool colors) {
-            StringBuilder cmds = new StringBuilder();
-            foreach (Command c in Command.all.commands) {
-                string disabled = Command.GetDisabledReason(c.Enabled);
-                if (!group.CanExecute(c) || disabled != null) continue;
-                if (c.name == null) continue;
-                
-                if (!colors) cmds.Append(", ").Append(c.name);
-                else cmds.Append(", ").Append(GetColor(c)).Append(c.name);
-            }
-            
-            Player.Message(p, "Available commands:");
-            Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-            Player.Message(p, "Type \"/help <command>\" for more help.");
-            Player.Message(p, "Type \"/help shortcuts\" for shortcuts.");
-            Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
-        }
-        
-        static void PrintAllCommands(Player p) {
-            StringBuilder cmds = new StringBuilder();
-            foreach (Command c in Command.all.commands) {
-                if (c.name == null) continue;
-                cmds.Append(", ").Append(GetColor(c)).Append(c.name);
-            }
-
-            Player.Message(p, "All commands:");
-            Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-            Player.Message(p, "Type \"/help <command>\" for more help.");
-            Player.Message(p, "Type \"/help shortcuts\" for shortcuts.");
-            Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
-        }
-        
-        static void PrintHelpForGroup(Player p, string typeName, string typeTitle) {
-            StringBuilder cmds = new StringBuilder();
-            foreach (Command c in Command.all.commands) {
-                string disabled = Command.GetDisabledReason(c.Enabled);
-                if (p == null || p.group.CanExecute(c) && disabled == null) {
-                    if (!c.type.Contains(typeName) || c.name == null) continue;
-                    cmds.Append(", ").Append(GetColor(c)).Append(c.name);
-                }
-            }
-            
-            if (cmds.Length == 0) {
-                Player.Message(p, "No commands of this type are available to you.");
-            } else {
-                Player.Message(p, typeTitle + " commands you may use:");
-                Player.Message(p, cmds.ToString(2, cmds.Length - 2) + ".");
             }
         }
         
@@ -324,7 +209,7 @@ namespace MCGalaxy.Commands
             return false;
         }
 
-        static string GetColor(Command cmd) {
+        internal static string GetColor(Command cmd) {
         	LevelPermission perm = GrpCommands.MinPerm(cmd);
             Group grp = Group.findPerm(perm);
             return grp == null ? "&f" : grp.color;

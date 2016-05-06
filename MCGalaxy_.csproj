@@ -224,6 +224,7 @@
     <Compile Include="Commands\Information\CmdAfk.cs" />
     <Compile Include="Commands\Information\CmdBlocks.cs" />
     <Compile Include="Commands\Information\CmdClones.cs" />
+    <Compile Include="Commands\Information\CmdCommands.cs" />
     <Compile Include="Commands\Information\CmdFaq.cs" />
     <Compile Include="Commands\Information\CmdHasirc.cs" />
     <Compile Include="Commands\Information\CmdHelp.cs" />
