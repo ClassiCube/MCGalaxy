@@ -96,33 +96,38 @@ namespace MCGalaxy {
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
-        internal static void SpawnEntities(Player p) { SpawnEntities(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); }
+        internal static void SpawnEntities(Player p, bool bots = true) { 
+        	SpawnEntities(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], bots); 
+        }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
-        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY) {
+        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY,bool bots = true) {
         	Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
         		if (pl.level != p.level || !CanSeeEntity(p, pl) || p == pl) continue;
                 Spawn(p, pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }           
             GlobalSpawn(p, x, y, z, rotX, rotY, true);
-            
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots)
+
+            if (!bots) return;            
+            PlayerBot[] botsList = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in botsList)
             	if (b.level == p.level) Spawn(p, b);
         }
         
         /// <summary> Despawns this player to all other players, and despawns all others players to this player. </summary>
-        internal static void DespawnEntities(Player p) {
+        internal static void DespawnEntities(Player p, bool bots = true) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (p.level == pl.level && p != pl) Despawn(p, pl.id);
             }
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots) {
+            GlobalDespawn(p, true, true);
+            
+            if (!bots) return;
+            PlayerBot[] botsList = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in botsList) {
                 if (p.level == b.level) Despawn(p, b.id);
-            }
-            Entities.GlobalDespawn(p, true, true);
+            }           
         }
         
         internal static void Spawn(Player dst, PlayerBot b) {

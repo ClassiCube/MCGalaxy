@@ -192,8 +192,6 @@ namespace MCGalaxy.Games {
         }
         
         public override void AdjustPrefix(Player p, ref string prefix) {
-            Team team = p.Game.Team;
-            prefix += team != null ? "<" + team.Color + team.Name + p.color + "> " : "";
             int winStreak = p.Game.CurrentRoundsSurvived;
             
             if (winStreak == 1) prefix += "&4*" + p.color;

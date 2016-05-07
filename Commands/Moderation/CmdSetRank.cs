@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
 
                 rankMsg = who.ColoredName + "%S's rank was set to " + newRank.ColoredName + rankReason;
                 Player.GlobalMessage(rankMsg);                
-                Entities.DespawnEntities(who);
+                Entities.DespawnEntities(who, false);
                 
                 string oldCol = who.group.color;
                 who.group = newRank;
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands
 
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
                 who.SendUserType(Block.canPlace(who.group.Permission, Block.blackrock));              
-                Entities.SpawnEntities(who);
+                Entities.SpawnEntities(who, false);
             }
             Server.IRC.Say(rankMsg);
         }

@@ -301,7 +301,6 @@ namespace MCGalaxy {
         public bool InGlobalChat;
 
         public bool isDev, isMod;
-        public bool isStaff;
         public bool verifiedName;
 
         public static string CheckPlayerStatus(Player p) {
@@ -312,11 +311,14 @@ namespace MCGalaxy {
         
         public void SetPrefix() {
             prefix = Game.Referee ? "&2[Ref] " : "";
-            if (group.prefix != "") prefix += "&f" + group.prefix + color; 
+            if (group.prefix != "") prefix += "&f" + group.prefix + color;
+            Team team = Game.Team;
+            prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
+            
             IGame game = level == null ? null : level.CurrentGame();
             if (game != null) game.AdjustPrefix(this, ref prefix);
             
-            bool isOwner = Server.server_owner != "" && Server.server_owner.CaselessEq(name);
+            bool isOwner = Server.server_owner.CaselessEq(name);
             string viptitle = isDev ? string.Format("{0}[&9Dev{0}] ", color) : 
         		isMod ? string.Format("{0}[&aMod{0}] ", color) :
             	isOwner ? string.Format("{0}[&cOwner{0}] ", color) : "";

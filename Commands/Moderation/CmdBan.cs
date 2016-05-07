@@ -71,10 +71,10 @@ namespace MCGalaxy.Commands {
             		Player.GlobalMessage(banMsg);
             	}
                 
-                who.group = Group.findPerm(LevelPermission.Banned);
-                Entities.DespawnEntities(who);
+            	Entities.DespawnEntities(who, false);
+                who.group = Group.findPerm(LevelPermission.Banned);             
                 who.color = who.group.color;
-                Entities.SpawnEntities(who);
+                Entities.SpawnEntities(who, false);
             }
             
             string oldgroup = group.name.ToString();

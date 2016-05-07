@@ -117,7 +117,7 @@ namespace MCGalaxy.Drawing {
             double Z = R * 0.0193 + G * 0.1192 + B * 0.9505;
             
             
-            // Then CIE-XYZ to CIE_Lab
+            // Then CIE-XYZ to CIE-Lab
             X /= 95.047; Y /= 100.0; Z /= 108.883;
             
             if (X > 0.008856) X = Math.Pow(X, 1.0/3);
