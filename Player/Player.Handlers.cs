@@ -286,7 +286,7 @@ namespace MCGalaxy {
                 truename = name;
                 skinName = name;
                 
-                lock (pendingLock) {                   
+                lock (pendingLock) {
                     int altsCount = 0;
                     DateTime now = DateTime.UtcNow;
                     foreach (PendingItem item in pendingNames) {
