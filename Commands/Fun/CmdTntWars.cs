@@ -314,7 +314,7 @@ namespace MCGalaxy.Commands
                                 Player who = PlayerInfo.FindOrShowMatches(p, text[1]);
                                 if (who != null)
                                 {
-                                    Player.Message(who, "TNT Wars Rules: (sent to you by " + p.color + p.name + Server.DefaultColor + " )");
+                                    Player.Message(who, "TNT Wars Rules: (sent to you by " + p.ColoredName + " %S)");
                                     Player.Message(who, "The aim of the game is to blow up people using TNT!");
                                     Player.Message(who, "To place tnt simply place a TNT block and after a short delay it shall explode!");
                                     Player.Message(who, "During the game the amount of TNT placable at one time may be limited!");

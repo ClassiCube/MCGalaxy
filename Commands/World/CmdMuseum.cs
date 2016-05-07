@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
             lvl.jailrotx = lvl.rotx; lvl.jailroty = lvl.roty;
 
             p.Loading = true;
-            CmdReveal.DespawnEntities(p);
+            Entities.DespawnEntities(p);
             Level oldLevel = p.level;
             p.level = lvl;
             p.SendMotd();

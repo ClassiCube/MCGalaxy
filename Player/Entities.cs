@@ -47,7 +47,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Despawns this player to all other players that can see the player in the current world. </summary>
-        public static void GlobalDespawn(Player p, bool self, bool diffWorld = false) {
+        public static void GlobalDespawn(Player p, bool self, bool fromCanSeeUs = false) {
             Player[] players = PlayerInfo.Online.Items;
             
             foreach (Player other in players) {
@@ -55,7 +55,7 @@ namespace MCGalaxy {
                 
                 // If same world, despawn if we can't see them.
                 bool despawn = Entities.CanSeeEntity(other, p);
-                if (!diffWorld) despawn = !despawn;
+                if (!fromCanSeeUs) despawn = !despawn;
                 if (p != other && despawn) {
                     Despawn(other, p.id);
                 } else if (p == other && self) {
@@ -63,6 +63,8 @@ namespace MCGalaxy {
                 }
             }
         }
+        
+        
         
 
         internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z,
@@ -93,6 +95,36 @@ namespace MCGalaxy {
                 dst.SendChangeModel(id, ZombieGame.ZombieModel);
         }
         
+        /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
+        internal static void SpawnEntities(Player p) { SpawnEntities(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); }
+        
+        /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
+        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY) {
+        	Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+        		if (pl.level != p.level || !CanSeeEntity(p, pl) || p == pl) continue;
+                Spawn(p, pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
+            }           
+            GlobalSpawn(p, x, y, z, rotX, rotY, true);
+            
+            PlayerBot[] bots = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in bots)
+            	if (b.level == p.level) Spawn(p, b);
+        }
+        
+        /// <summary> Despawns this player to all other players, and despawns all others players to this player. </summary>
+        internal static void DespawnEntities(Player p) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (p.level == pl.level && p != pl) Despawn(p, pl.id);
+            }
+            PlayerBot[] bots = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in bots) {
+                if (p.level == b.level) Despawn(p, b.id);
+            }
+            Entities.GlobalDespawn(p, true, true);
+        }
+        
         internal static void Spawn(Player dst, PlayerBot b) {
             TabList.Add(dst, b);
             if (dst.hasExtList) {
@@ -106,9 +138,7 @@ namespace MCGalaxy {
             dst.SendRaw(Opcode.RemoveEntity, id);
             TabList.Remove(dst, id);
         }
-        
-        
-        
+
         #endregion 
         
         internal static string GetSupportedCol(Player dst, string col) {

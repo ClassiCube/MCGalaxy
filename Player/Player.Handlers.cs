@@ -584,7 +584,7 @@ namespace MCGalaxy {
                 ushort y = (ushort)((1 + level.spawny) * 32);
                 ushort z = (ushort)((0.5 + level.spawnz) * 32);
                 pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
-                CmdGoto.SpawnEntities(this, x, y, z, rot[0], rot[1]);
+                Entities.SpawnEntities(this, x, y, z, rot[0], rot[1]);
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Server.s.Log("Error spawning player \"" + name + "\"");

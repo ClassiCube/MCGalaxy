@@ -56,8 +56,7 @@ namespace MCGalaxy.Commands
             if (state == 0)
                 level.ClearPhysics();
             string stateDesc = states[state];
-            Player.GlobalMessage("Physics are now " + stateDesc + Server.DefaultColor +
-                                 " on &b" + level.name + Server.DefaultColor + ".");
+            Player.GlobalMessage("Physics are now " + stateDesc + "%S on &b" + level.name + "%S.");
             stateDesc = stateDesc.Substring( 2 );
             
             string logInfo = "Physics are now " + stateDesc + " on " + level.name + ".";

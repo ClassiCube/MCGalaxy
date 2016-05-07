@@ -64,24 +64,11 @@ namespace MCGalaxy.Commands {
             GC.WaitForPendingFinalizers();
         }
         
-        /// <summary> Despawns this player to all other players, and despawns all others players to this player. </summary>
-        internal static void DespawnEntities(Player who) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (who.level == pl.level && who != pl) who.DespawnEntity(pl.id);
-            }
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots) {
-                if (who.level == b.level) who.DespawnEntity(b.id);
-            }
-            Entities.GlobalDespawn(who, true, true);
-        }
-        
         internal static void ReloadMap(Player p, Player who, bool showMessage) {
             who.Loading = true;
-            DespawnEntities(who);
+            Entities.DespawnEntities(who);
             who.SendUserMOTD(); who.SendMap(who.level);            
-            CmdGoto.SpawnEntities(who, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
+            Entities.SpawnEntities(who);
             who.Loading = false;
 
             if (!showMessage) return;
