@@ -72,11 +72,11 @@ namespace MCGalaxy {
         public bool Compile(string cmdName) {
             string path = SourceDir + "Cmd" + cmdName + Ext;
             StringBuilder sb = null;
-            bool exists = File.Exists(errPath);
+            bool exists = File.Exists(ErrorPath);
             
             if (!File.Exists(path)) {
                 sb = new StringBuilder();
-                using (StreamWriter w = new StreamWriter(errPath, exists)) {
+                using (StreamWriter w = new StreamWriter(ErrorPath, exists)) {
                     AppendDivider(sb, exists);
                     sb.AppendLine("File not found: Cmd" + cmdName + ".cs");
                     w.Write(sb.ToString());
@@ -104,7 +104,7 @@ namespace MCGalaxy {
                     sb.AppendLine("Error " + error.ErrorNumber);
                     sb.AppendLine("Message: " + error.ErrorText);
                     sb.AppendLine("Line: " + error.Line);
-                    using (StreamWriter w = new StreamWriter(errPath, exists))
+                    using (StreamWriter w = new StreamWriter(ErrorPath, exists))
                         w.Write(sb.ToString());
                     return false;
                 default:
@@ -119,7 +119,7 @@ namespace MCGalaxy {
                         sb.AppendLine("Line: " + err.Line);
                         first = false;
                     }
-                    using (StreamWriter w = new StreamWriter(errPath, exists))
+                    using (StreamWriter w = new StreamWriter(ErrorPath, exists))
                         w.Write(sb.ToString());
                     return false;
             }
