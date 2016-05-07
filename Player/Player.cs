@@ -28,6 +28,7 @@ using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {
+	
     public sealed partial class Player : IDisposable {
         
         /// <summary>
@@ -39,7 +40,16 @@ namespace MCGalaxy {
         public void ClearChat() { OnChat = null; }
         public static Dictionary<string, string> left = new Dictionary<string, string>();
         
-        static List<string> pendingNames = new List<string>();
+        class PendingItem {
+            public string Name;
+            public DateTime Connected;
+            
+            public PendingItem(string name) {
+                Name = name;
+                Connected = DateTime.UtcNow;
+            }
+        }
+        static List<PendingItem> pendingNames = new List<PendingItem>();
         static object pendingLock = new object();
         
         public static List<Player> connections = new List<Player>(Server.players);

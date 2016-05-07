@@ -107,13 +107,15 @@ namespace MCGalaxy {
             TabList.Remove(dst, id);
         }
         
+        
+        
+        #endregion 
+        
         internal static string GetSupportedCol(Player dst, string col) {
             if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
                 col = "&" + Colors.GetFallback(col[1]);
             return col;
         }
-        
-        #endregion      
 
         
         /// <summary> Returns whether the given player is able to see the other player (e.g. in /who). </summary>

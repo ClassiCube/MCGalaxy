@@ -29,12 +29,18 @@ namespace MCGalaxy {
     
     public sealed partial class Player : IDisposable {
         
-        bool removedFromPending = false;        
+        bool removedFromPending = false;
         void RemoveFromPending() {
             if (removedFromPending) return;
             removedFromPending = true;
-            lock (pendingLock)
-                pendingNames.Remove(truename);
+            
+            lock (pendingLock) {
+                for (int i = 0; i < pendingNames.Count; i++) {
+                    PendingItem item = pendingNames[i];
+                    if (item.Name != truename) continue;
+                    pendingNames.RemoveAt(i); return;
+                }
+            }
         }
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
@@ -280,14 +286,16 @@ namespace MCGalaxy {
                 truename = name;
                 skinName = name;
                 
-                lock (pendingLock) {
-                    pendingNames.Add(name);
+                lock (pendingLock) {                   
                     int altsCount = 0;
-                    foreach (string other in pendingNames) {
-                        if (other == truename) altsCount++;
+                    DateTime now = DateTime.UtcNow;
+                    foreach (PendingItem item in pendingNames) {
+                        if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)
+                            altsCount++;
                     }
+                    pendingNames.Add(new PendingItem(name));
                     
-                    if (altsCount > 1) {
+                    if (altsCount > 0) {
                         Kick("Already logged in!", true); return;
                     }
                 }
