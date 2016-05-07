@@ -551,6 +551,7 @@
     <Compile Include="API\API.cs" />
     <Compile Include="Player\EmotesHandler.cs" />
     <Compile Include="Player\FullCP437Handler.cs" />
+    <Compile Include="ScriptingUtil\Scripting.cs" />
     <Compile Include="Server\AutoSaver.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Levels\BlockDefinitions.cs" />
@@ -563,7 +564,6 @@
     <Compile Include="IRC\ForgeBot.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Player\Player.Events.cs" />
-    <Compile Include="ScriptingUtil\ScriptingVB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Drawing\ImagePalette.cs" />
@@ -579,7 +579,7 @@
     <Compile Include="Server\Extra\ProfanityFilter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ScriptingUtil\Scripting.cs" />
+    <Compile Include="ScriptingUtil\Backends.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.Tasks.cs" />
     <Compile Include="Server\Server.Threads.cs" />

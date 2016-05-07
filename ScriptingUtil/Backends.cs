@@ -1,0 +1,152 @@
+/*
+    Copyright 2010 MCLawl Team - Written by Valek (Modified by MCGalaxy)
+
+    Edited for use with MCGalaxy
+ 
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
+using System;
+
+namespace MCGalaxy {    
+    public sealed class ScriptingCS : Scripting {    
+        
+        public override string Ext { get { return ".cs"; } }        
+        public override string ProviderName { get { return "CSharp"; } }
+        
+        public override string CommandSkeleton {
+            get {
+                return @"/*
+\tAuto-generated command skeleton class.
+
+\tUse this as a basis for custom commands implemented via the MCGalaxy scripting framework.
+\tFile and class should be named a specific way.  For example, /update is named 'CmdUpdate.cs' for the file, and 'CmdUpdate' for the class.
+*/
+
+// Add any other using statements you need up here, of course.
+// As a note, MCGalaxy is designed for .NET 3.5.
+using System;
+
+namespace MCGalaxy 
+{{
+\tpublic class Cmd{0} : Command
+\t{{
+\t\t// The command's name, in all lowercase.  What you'll be putting behind the slash when using it.
+\t\tpublic override string name {{ get {{ return ""{1}""; }} }}
+
+\t\t// Command's shortcut (please take care not to use an existing one, or you may have issues.
+\t\tpublic override string shortcut {{ get {{ return """"; }} }}
+
+\t\t// Determines which submenu the command displays in under /help.
+\t\tpublic override string type {{ get {{ return ""other""; }} }}
+
+\t\t// Determines whether or not this command can be used in a museum. Block/map altering commands should be made false to avoid errors.
+\t\tpublic override bool museumUsable {{ get {{ return false; }} }}
+
+\t\t// Determines the command's default rank. Valid values are:
+\t\t// LevelPermission.Nobody, LevelPermission.Banned, LevelPermission.Guest
+\t\t// LevelPermission.Builder, LevelPermission.AdvBuilder, LevelPermission.Operator, LevelPermission.Admin
+\t\tpublic override LevelPermission defaultRank {{ get {{ return LevelPermission.Banned; }} }}
+
+\t\t// This is where the magic happens, naturally.
+\t\t// p is the player object for the player executing the command. message is everything after the command invocation itself.
+\t\tpublic override void Use(Player p, string message)
+\t\t{{
+\t\t\tPlayer.Message(p, ""Hello World!"");
+\t\t}}
+
+\t\t// This one controls what happens when you use /help [commandname].
+\t\tpublic override void Help(Player p)
+\t\t{{
+\t\t\tPlayer.Message(p, ""/{1} - Does stuff. Example command."");
+\t\t}}
+\t}}
+}}";
+            }
+        }
+    }
+    
+    public sealed class ScriptingVB : Scripting {
+        
+        public override string Ext { get { return ".vb"; } }
+        public override string ProviderName { get { return "VisualBasic"; } }
+        
+        public override string CommandSkeleton {
+            get {
+                return @"Imports MCGalaxy
+'Auto-generated command skeleton class.
+'Use this as a basis for custom commands implemented via the MCGalaxy scripting framework.
+'File and class should be named a specific way.  For example, /update is named 'CmdUpdate.vb' for the file, and 'CmdUpdate' for the class.
+'
+' Add any other using statements you need up here, of course.
+' As a note, MCGalaxy is designed for .NET 3.5.
+
+Namespace MCGalaxy
+\tPublic Class Cmd{0}
+\t\tInherits Command
+' The command's name, IN ALL LOWERCASE. What you'll be putting behind the slash when using it.
+
+\t\tPublic Overrides ReadOnly Property name() As String
+\t\t\tGet
+\t\t\t\tReturn ""{1}""
+\t\t\tEnd Get
+\t\tEnd Property
+
+' Command's shortcut (please take care not to use an existing one, or you may have issues.
+\t\tPublic Overrides ReadOnly Property shortcut() As String
+\t\t\tGet
+\t\t\t\tReturn """"
+\t\t\tEnd Get
+\t\tEnd Property
+
+' Determines which submenu the command displays in under /help.   
+\t\tPublic Overrides ReadOnly Property type() As String
+\t\t\tGet
+\t\t\t\tReturn ""other""
+\t\t\tEnd Get
+\t\t End Property
+
+' Determines whether or not this command can be used in a museum.  Block/map altering commands should be made false to avoid errors.
+\t\tPublic Overrides ReadOnly Property museumUsable() As Boolean
+\t\t\tGet
+\t\t\t\tReturn False
+\t\t\tEnd Get
+\t\tEnd Property
+
+' Determines the command's default rank. Valid values are:
+' LevelPermission.Nobody, LevelPermission.Banned, LevelPermission.Guest
+' LevelPermission.Builder, LevelPermission.AdvBuilder, LevelPermission.Operator, LevelPermission.Admin
+\t\tPublic Overrides ReadOnly Property defaultRank() As LevelPermission
+\t\t\tGet
+\t\t\t\tReturn LevelPermission.Banned
+\t\t\tEnd Get
+\t\tEnd Property
+
+' This is where the magic happens, naturally.
+' p is the player object for the player executing the command.  message is everything after the command invocation itself. 
+\t\tPublic Overrides Sub Use(p As Player, message As String)
+\t\t\tPlayer.Message(p, ""Hello World!"")
+\t\tEnd Sub
+
+' This one controls what happens when you use /help [commandname].
+\t\tPublic Overrides Sub Help(p As Player)
+\t\t\tPlayer.Message(p, ""/{1} - Does stuff. Example command."")
+
+\t\tEnd Sub
+\tEnd Class
+End Namespace";
+            }
+        }
+    }    
+}

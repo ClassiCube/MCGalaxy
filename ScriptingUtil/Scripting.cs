@@ -1,9 +1,9 @@
-/*
+﻿/*
     Copyright 2010 MCLawl Team - Written by Valek (Modified by MCGalaxy)
 
     Edited for use with MCGalaxy
  
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -23,189 +23,129 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace MCGalaxy
-{
-    static class Scripting
-    {
-        private static CodeDomProvider compiler = CodeDomProvider.CreateProvider("CSharp");
-        private static CompilerParameters parameters = new CompilerParameters();
-        private static CompilerResults results;
-        private static string sourcepath = "extra/commands/source/";
-        private static string dllpath = "extra/commands/dll/";
-
-        /// <summary>
-        /// Creates a new, empty command class.
-        /// </summary>
-        public static void CreateNew(string CmdName)
-        {
-            if (!Directory.Exists(sourcepath))
-            {
-                Directory.CreateDirectory(sourcepath);
-            }
-
-            using (var sw = new StreamWriter(File.Create(sourcepath + "Cmd" + CmdName + ".cs")))
-            {
-                sw.Write(
-                    "/*" + Environment.NewLine +
-                    "\tAuto-generated command skeleton class." + Environment.NewLine +
-                    Environment.NewLine +
-                    "\tUse this as a basis for custom commands implemented via the MCGalaxy scripting framework." + Environment.NewLine +
-                    "\tFile and class should be named a specific way.  For example, /update is named 'CmdUpdate.cs' for the file, and 'CmdUpdate' for the class." + Environment.NewLine +
-                    "*/" + Environment.NewLine +
-                    Environment.NewLine +
-                    "// Add any other using statements you need up here, of course." + Environment.NewLine +
-                    "// As a note, MCGalaxy is designed for .NET 3.5." + Environment.NewLine +
-                    "using System;" + Environment.NewLine +
-                    Environment.NewLine +
-                    "namespace MCGalaxy" + Environment.NewLine +
-                    "{" + Environment.NewLine +
-                    "\tpublic class " + CmdName.Capitalize() + " : Command" + Environment.NewLine +
-                    "\t{" + Environment.NewLine +
-                    "\t\t// The command's name, in all lowercase.  What you'll be putting behind the slash when using it." + Environment.NewLine +
-                    "\t\tpublic override string name { get { return \"" + CmdName.ToLower() + "\"; } }" + Environment.NewLine +
-                    Environment.NewLine +
-                    "\t\t// Command's shortcut (please take care not to use an existing one, or you may have issues." + Environment.NewLine +
-                    "\t\tpublic override string shortcut { get { return \"\"; } }" + Environment.NewLine +
-                    Environment.NewLine +
-                    "\t\t// Determines which submenu the command displays in under /help." + Environment.NewLine +
-                    "\t\tpublic override string type { get { return \"other\"; } }" + Environment.NewLine +
-                    Environment.NewLine +
-                    "\t\t// Determines whether or not this command can be used in a museum.  Block/map altering commands should be made false to avoid errors." + Environment.NewLine +
-                    "\t\tpublic override bool museumUsable { get { return false; } }" + Environment.NewLine +
-                    Environment.NewLine +
-                    "\t\t// Determines the command's default rank.  Valid values are:" + Environment.NewLine +
-                    "\t\t// LevelPermission.Nobody, LevelPermission.Banned, LevelPermission.Guest" + Environment.NewLine +
-                    "\t\t// LevelPermission.Builder, LevelPermission.AdvBuilder, LevelPermission.Operator, LevelPermission.Admin" + Environment.NewLine +
-                    "\t\tpublic override LevelPermission defaultRank { get { return LevelPermission.Banned; } }" + Environment.NewLine +
-                    Environment.NewLine +
-                    "\t\t// This is where the magic happens, naturally." + Environment.NewLine +
-                    "\t\t// p is the player object for the player executing the command.  message is everything after the command invocation itself." + Environment.NewLine +
-                    "\t\tpublic override void Use(Player p, string message)" + Environment.NewLine +
-                    "\t\t{" + Environment.NewLine +
-                    "\t\t\tPlayer.Message(p, \"Hello World!\");" + Environment.NewLine +
-                    "\t\t}" + Environment.NewLine +
-                    Environment.NewLine +
-                    "\t\t// This one controls what happens when you use /help [commandname]." + Environment.NewLine +
-                    "\t\tpublic override void Help(Player p)" + Environment.NewLine +
-                    "\t\t{" + Environment.NewLine +
-                    "\t\t\tPlayer.Message(p, \"/" + CmdName.ToLower() + " - Does stuff.  Example command.\");" + Environment.NewLine +
-                    "\t\t}" + Environment.NewLine +
-                    "\t}" + Environment.NewLine +
-                    "}");
-            }
+namespace MCGalaxy {
+    
+    /// <summary> Compiles source code files from a particular language into a .dll file. </summary>
+    public abstract class Scripting {
+        
+        public const string AutoloadFile = "text/cmdautoload.txt";
+        public const string SourceDir = "extra/commands/source/";
+        public const string DllDir = "extra/commands/dll/";
+        public const string ErrorPath = "logs/errors/compiler.log";
+        
+        static readonly string divider = new string('-', 25);        
+        protected CodeDomProvider compiler;
+        protected CompilerParameters args = new CompilerParameters();
+        protected CompilerResults results;
+        
+        public abstract string Ext { get; }
+        public abstract string ProviderName { get; }
+        public abstract string CommandSkeleton { get; }
+        
+        public static Scripting CS = new ScriptingCS();
+        public static Scripting VB = new ScriptingVB();
+        
+        public Scripting() {
+            compiler = CodeDomProvider.CreateProvider(ProviderName);
         }
-
-        /// <summary>
-        /// Compiles a written function from source into a DLL.
-        /// </summary>
+        
+        public void CreateNew(string cmdName) {
+            if (!Directory.Exists(SourceDir))
+                Directory.CreateDirectory(SourceDir);
+            cmdName = cmdName.ToLower();
+            
+            string syntax = CommandSkeleton;
+            // Make sure we are using the OS's line endings
+            syntax = syntax.Replace(@"\t", "\t");
+            syntax = syntax.Replace("\r\n", "\n");
+            syntax = syntax.Replace("\n", Environment.NewLine);
+            syntax = String.Format(syntax, cmdName.Capitalize(), cmdName);
+            
+            string path = SourceDir + "Cmd" + cmdName + Ext;
+            using (var sw = new StreamWriter(path))
+                sw.WriteLine(syntax);
+        }
+        
+        /// <summary> Compiles a written function from source into a DLL. </summary>
         /// <param name="commandName">Name of the command file to be compiled (without the extension)</param>
-        /// <returns>True on successful compile, false on failure.</returns>
-        public static bool Compile(string commandName)
-        {
-            string divider = new string('-', 25);
-            if (!File.Exists(sourcepath + "Cmd" + commandName + ".cs"))
-            {
-                bool check = File.Exists("logs/errors/compiler.log");
-                StreamWriter errlog = new StreamWriter("logs/errors/compiler.log", check);
-                if (check)
-                {
-                    errlog.WriteLine();
-                    errlog.WriteLine(divider);
-                    errlog.WriteLine();
+        /// <returns> True on successful compile, false on failure. </returns>
+        public bool Compile(string cmdName) {
+            string path = SourceDir + "Cmd" + cmdName + Ext;
+            StringBuilder sb = null;
+            bool exists = File.Exists(errPath);
+            
+            if (!File.Exists(path)) {
+                sb = new StringBuilder();
+                using (StreamWriter w = new StreamWriter(errPath, exists)) {
+                    AppendDivider(sb, exists);
+                    sb.AppendLine("File not found: Cmd" + cmdName + ".cs");
+                    w.Write(sb.ToString());
                 }
-                errlog.WriteLine("File not found: Cmd" + commandName + ".cs");
-                errlog.Dispose();
                 return false;
             }
-            if (!Directory.Exists(dllpath))
-            {
-                Directory.CreateDirectory(dllpath);
-            }
-            parameters.GenerateExecutable = false;
-            parameters.MainClass = commandName;
-            parameters.OutputAssembly = dllpath + "Cmd" + commandName + ".dll";
-            parameters.ReferencedAssemblies.Add("MCGalaxy_.dll");
-            StreamReader sr = new StreamReader(sourcepath + "cmd" + commandName + ".cs");
-            results = compiler.CompileAssemblyFromSource(parameters, sr.ReadToEnd().Replace("namespace MCLawl", "namespace MCGalaxy"));
-            sr.Dispose();
-            switch (results.Errors.Count)
-            {
+            if (!Directory.Exists(DllDir))
+                Directory.CreateDirectory(DllDir);
+            
+            args.GenerateExecutable = false;
+            args.MainClass = cmdName;
+            args.OutputAssembly = DllDir + "Cmd" + cmdName + ".dll";
+            args.ReferencedAssemblies.Add("MCGalaxy_.dll");
+            string code = File.ReadAllText(path);
+            results = compiler.CompileAssemblyFromSource(args, code.Replace("MCLawl", "MCGalaxy"));
+            
+            switch (results.Errors.Count) {
                 case 0:
                     return true;
                 case 1:
+                    sb = new StringBuilder();
                     CompilerError error = results.Errors[0];
-                    bool exists = (File.Exists("logs/errors/compiler.log"));
-                    StringBuilder sb = new StringBuilder();
-                    if (exists)
-                    {
-                        sb.AppendLine();
-                        sb.AppendLine(divider);
-                        sb.AppendLine();
-                    }
+                    AppendDivider(sb, exists);
+                    
                     sb.AppendLine("Error " + error.ErrorNumber);
                     sb.AppendLine("Message: " + error.ErrorText);
                     sb.AppendLine("Line: " + error.Line);
-                    StreamWriter sw = new StreamWriter("logs/errors/compiler.log", exists);
-                    sw.Write(sb.ToString());
-                    sw.Dispose();
+                    using (StreamWriter w = new StreamWriter(errPath, exists))
+                        w.Write(sb.ToString());
                     return false;
                 default:
-                    exists = (File.Exists("logs/errors/compiler.log"));
                     sb = new StringBuilder();
-                    bool start = true;
-                    if(exists)
-                    {
-                        sb.AppendLine();
-                        sb.AppendLine(divider);
-                        sb.AppendLine();
-                    }
-                    foreach (CompilerError err in results.Errors)
-                    {
-                        if (!start)
-                        {
-                            sb.AppendLine();
-                            sb.AppendLine(divider);
-                            sb.AppendLine();
-                        }
+                    AppendDivider(sb, exists);
+                    bool first = true;
+                    
+                    foreach (CompilerError err in results.Errors) {
+                        if (!first) AppendDivider(sb, true);
                         sb.AppendLine("Error #" + err.ErrorNumber);
                         sb.AppendLine("Message: " + err.ErrorText);
                         sb.AppendLine("Line: " + err.Line);
-                        if (start)
-                        {
-                            start = false;
-                        }
+                        first = false;
                     }
-                    sw = new StreamWriter("logs/errors/compiler.log", exists);
-                    sw.Write(sb.ToString());
-                    sw.Dispose();
+                    using (StreamWriter w = new StreamWriter(errPath, exists))
+                        w.Write(sb.ToString());
                     return false;
             }
         }
-
-        public static void Autoload()
-        {
-            if (!File.Exists("text/cmdautoload.txt"))
-            {
-                File.Create("text/cmdautoload.txt");
-                return;
-            }
-            string[] autocmds = File.ReadAllLines("text/cmdautoload.txt");
-            foreach (string cmd in autocmds)
-            {
+        
+        void AppendDivider(StringBuilder sb, bool exists) {
+            if (!exists) return;
+            sb.AppendLine();
+            sb.AppendLine(divider);
+            sb.AppendLine();
+        }
+        
+        /// <summary> Automatically loads all .dll commands specified in the autoload file. </summary>
+        public static void Autoload() {
+            if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }        
+            string[] list = File.ReadAllLines(AutoloadFile);
+            
+            foreach (string cmd in list) {
                 if (cmd == "") continue;
                 string error = Scripting.Load("Cmd" + cmd.ToLower());
-                if (error != null)
-                {
-                    Server.s.Log(error);
-                    error = null;
-                    continue;
-                }
+                if (error != null) { Server.s.Log(error); continue; }
                 Server.s.Log("AUTOLOAD: Loaded " + cmd.ToLower() + ".dll");
 
             }
-            //ScriptingVB.Autoload();
         }
-
+        
         /// <summary> Loads a command for use on the server. </summary>
         /// <param name="command">Name of the command to be loaded (make sure it's prefixed by Cmd before bringing it in here or you'll have problems).</param>
         /// <returns>Error string on failure, null on success.</returns>
@@ -214,7 +154,7 @@ namespace MCGalaxy
                 return "Invalid command name specified.";
             try {
                 //Allows unloading and deleting dlls without server restart
-                byte[] data = File.ReadAllBytes(dllpath + command + ".dll");
+                byte[] data = File.ReadAllBytes(DllDir + command + ".dll");
                 Assembly lib = Assembly.Load(data);
                 
                 foreach (Type t in lib.GetTypes()) {
