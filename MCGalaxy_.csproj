@@ -457,6 +457,8 @@
     <Compile Include="Drawing\DrawOps\TriangleDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\UndoDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
+    <Compile Include="Drawing\Image\ImagePalette.cs" />
+    <Compile Include="Drawing\Image\IPalette.cs" />
     <Compile Include="Economy\Awards.cs" />
     <Compile Include="Economy\ReviveItem.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
@@ -565,7 +567,6 @@
     <Compile Include="Player\Player.Events.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
-    <Compile Include="Drawing\ImagePalette.cs" />
     <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Player\PlayerCollection.cs" />
@@ -690,6 +691,7 @@
     <Folder Include="Database\SQLite" />
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Drawing\Brushes" />
+    <Folder Include="Drawing\Image" />
     <Folder Include="Games\Countdown" />
     <Folder Include="Games\LavaSurvival" />
     <Folder Include="Games\TntWars" />
