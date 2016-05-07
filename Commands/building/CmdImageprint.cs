@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands
             
             IPalette selector = null;
             if (popType == 6) selector = new GrayscalePalette();
-            else selector = new RGBPalette();
+            else selector = new RgbPalette();
             selector.SetAvailableBlocks(palette);
 
             for (int yy = 0; yy < bmp.Height; yy++)
