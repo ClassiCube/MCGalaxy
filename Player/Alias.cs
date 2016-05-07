@@ -29,7 +29,7 @@ namespace MCGalaxy {
         public static List<Alias> coreAliases = new List<Alias>();
         public static List<Alias> aliases = new List<Alias>();
         public const string file = "text/aliases.txt";
-        public string Trigger, Target, Args;
+        public string Trigger, Target, Prefix, Suffix;
 
         public Alias(string trigger, string target) {
             Trigger = trigger;
@@ -40,8 +40,13 @@ namespace MCGalaxy {
                 Target = target;
             } else {
                 Target = target.Substring(0, space);
-                Args = target.Substring(space + 1);
+                Prefix = target.Substring(space + 1);
             }
+        }
+        
+        public Alias(string trigger, string target, string prefix, string suffix) {
+            Trigger = trigger; Target = target;
+            Prefix = prefix; Suffix = suffix;
         }
 
         public static void Load(){
@@ -61,10 +66,10 @@ namespace MCGalaxy {
                 sw.WriteLine("# it is treated as /help me <args given by user>.");
                 
                 foreach (Alias a in aliases) {
-                    if (a.Args == null)
+                    if (a.Prefix == null)
                         sw.WriteLine(a.Trigger + " : " + a.Target);
                     else
-                        sw.WriteLine(a.Trigger + " : " + a.Target + " " + a.Args);
+                        sw.WriteLine(a.Trigger + " : " + a.Target + " " + a.Prefix);
                 }                   
             }
         }

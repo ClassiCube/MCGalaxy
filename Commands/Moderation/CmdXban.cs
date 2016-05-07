@@ -20,7 +20,7 @@ namespace MCGalaxy.Commands {
     public sealed class CmdXban : Command {
         
         public override string name { get { return "xban"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "banx"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             Command.all.Find("banip").Use(p, "@" + name);
             if (who != null)
                 Command.all.Find("kick").Use(p, message);
-            Command.all.Find("xundo").Use(p, name);
+            Command.all.Find("undo").Use(p, name + " all");
         }
 
         public override void Help(Player p) {

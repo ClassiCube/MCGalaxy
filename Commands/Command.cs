@@ -51,9 +51,9 @@ namespace MCGalaxy {
                 
                 CommandAlias[] aliases = cmd.Aliases;
                 if (aliases == null) continue;                
-                foreach (CommandAlias alias in aliases) {
-                    string target = cmd.name + " " + alias.Args;
-                    Alias.coreAliases.Add(new Alias(alias.Trigger, target));
+                foreach (CommandAlias a in aliases) {
+                    Alias alias = new Alias(a.Trigger, cmd.name, a.Prefix, a.Suffix);
+                    Alias.coreAliases.Add(alias);
                 }
             }            
             core.commands = new List<Command>(all.commands);
@@ -71,14 +71,10 @@ namespace MCGalaxy {
     }
     
     public struct CommandAlias {
-        public string Trigger, Args;
+        public string Trigger, Prefix, Suffix;
         
-        public CommandAlias(string cmd) {
-            Trigger = cmd; Args = "";
-        }
-        
-        public CommandAlias(string cmd, string args) {
-            Trigger = cmd; Args = args;
+        public CommandAlias(string cmd, string prefix = null, string suffix = null) {
+            Trigger = cmd; Prefix = prefix; Suffix = suffix;
         }
     }
     

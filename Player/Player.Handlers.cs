@@ -1270,8 +1270,10 @@ return;
                 Alias alias = Alias.Find(cmd);
                 if (alias != null) {
                     cmd = alias.Target;
-                    if (alias.Args != null)
-                        message = message == "" ? alias.Args : alias.Args + " " + message;                  
+                    if (alias.Prefix != null)
+                        message = message == "" ? alias.Prefix : alias.Prefix + " " + message;
+                    if (alias.Suffix != null)
+                        message = message == "" ? alias.Suffix : message + " " + alias.Suffix;
                 }
                 
                 if (OnCommand != null) OnCommand(cmd, this, message);
