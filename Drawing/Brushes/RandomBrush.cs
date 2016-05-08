@@ -50,8 +50,8 @@ namespace MCGalaxy.Drawing.Brushes {
             string[] parts = args.Message.Split(' ');
             int[] count = new int[parts.Length];
             ExtBlock[] toAffect = GetBlocks(args.Player, parts, count, P => true, null);
-            if (toAffect == null) return null;
             
+            if (toAffect == null) return null;           
             ExtBlock[] blocks = Combine(toAffect, count);
             return new RandomBrush(blocks);
         }

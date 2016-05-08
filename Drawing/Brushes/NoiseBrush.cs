@@ -27,10 +27,16 @@ namespace MCGalaxy.Drawing.Brushes {
         readonly ExtBlock[] blocks;
         readonly ImprovedNoise noise;
         
-        public NoiseBrush(ExtBlock[] blocks) {
+        public NoiseBrush(ExtBlock[] blocks, NoiseArgs n) {
             this.blocks = blocks;
-            noise = new ImprovedNoise(new Random());
-            noise.Octaves = 4;
+            Random r = n.Seed == int.MinValue ? new Random() : new Random(n.Seed);
+            noise = new ImprovedNoise(r);
+            
+            noise.Frequency = n.Frequency;
+            noise.Amplitude = n.Amplitude;
+            noise.Octaves = n.Octaves;
+            noise.Lacunarity = n.Lacunarity;
+            noise.Persistence = n.Persistence;
         }
         
         public override string Name { get { return "Noise"; } }
@@ -38,24 +44,65 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         public static string[] HelpString = new [] {
-            "%TArguments: [block1/frequency] [block2]..",
+            "%TArguments: [block1/frequency] [block2] <args>..",
             "%HDraws by selecting blocks from the given [blocks] using perlin noise.",
             "%Hfrequency is optional (defaults to 1), and specifies the number of times " +
-            "the block should appear (as a fraction of the total of all the frequencies).",
+                "the block should appear (as a fraction of the total of all the frequencies).",
+            "%HOptional arguments format: %T<first letter of arg>_<value>",
+            "%H  Arguments: amplitude, frequency, lacunarity, octaves, persistence, seed",
         };
         
         public static Brush Process(BrushArgs args) {
+            NoiseArgs n = default(NoiseArgs);
+            n.Amplitude = 1; n.Frequency = 1; n.Octaves = 1;
+            n.Seed = int.MinValue; n.Persistence = 2; n.Lacunarity = 2;
             if (args.Message == "")
-                return new NoiseBrush(new[] { new ExtBlock(args.Type, args.ExtType), 
-                                               new ExtBlock(Block.Zero, 0) });
+                return new NoiseBrush(new[] { new ExtBlock(args.Type, args.ExtType),
+                                          new ExtBlock(Block.Zero, 0) }, n);
             
             string[] parts = args.Message.Split(' ');
             int[] count = new int[parts.Length];
-            ExtBlock[] toAffect = GetBlocks(args.Player, parts, count, P => true, null);
-            if (toAffect == null) return null;
+            ExtBlock[] toAffect = GetBlocks(args.Player, parts, count, 
+                                            Filter, arg => Handler(arg, args.Player, ref n));
             
+            if (toAffect == null) return null;
             ExtBlock[] blocks = Combine(toAffect, count);
-            return new NoiseBrush(blocks);
+            return new NoiseBrush(blocks, n);
+        }
+        
+        // We want to handle non block options.
+        static bool Filter(string arg) {
+            if (arg.Length < 2) return true;
+            return arg[1] != '_';
+        }
+        
+        static bool Handler(string arg, Player p, ref NoiseArgs args) {
+            char opt = arg[0];
+            arg = arg.Substring(arg.IndexOf('_') + 1);
+            
+            if (opt == 'l') {
+                if (float.TryParse(arg, out args.Lacunarity)) return true;
+                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); 
+            } else if (opt == 'a') {
+                if (float.TryParse(arg, out args.Amplitude)) return true;
+                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); 
+            } else if (opt == 'f') {
+                if (float.TryParse(arg, out args.Frequency)) return true;
+                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); 
+            } else if (opt == 'p') {
+                if (float.TryParse(arg, out args.Persistence)) return true;
+                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); 
+            } else if (opt == 'o') {
+                if (byte.TryParse(arg, out args.Octaves) 
+                    && args.Octaves > 0 && args.Octaves <= 16) return true;
+                Player.Message(p, "\"{0}\" was not an integer between 1 and 16.", arg); 
+            } else if (opt == 's') {
+                if (int.TryParse(arg, out args.Seed)) return true;
+                Player.Message(p, "\"{0}\" was not a valid integer.", arg); 
+            } else {
+                Player.Message(p, "\"{0}\" was not a valid argument name.", opt); 
+            }
+            return false;
         }
         
         int next;
@@ -72,5 +119,11 @@ namespace MCGalaxy.Drawing.Brushes {
         public override byte NextExtBlock(DrawOp op) {
             return blocks[next].ExtType;
         }
+    }
+    
+    public struct NoiseArgs {
+        public byte Octaves;
+        public int Seed;
+        public float Frequency, Amplitude, Persistence, Lacunarity;
     }
 }
