@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
             Player.Message(who, "Type " + Colors.green + "/tpaccept %Sor " + Colors.maroon + "/tpdeny%S!");
             Player.Message(who, "This request will timeout after " + Colors.aqua + "90 %Sseconds.");
             Player.Message(who, "---------------------------------------------------------");
-            who.senderName = p.DisplayName;
+            who.senderName = p.name;
             who.Request = true;
             p.currentTpa = who.name;
             
