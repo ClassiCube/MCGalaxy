@@ -25,7 +25,7 @@ namespace MCGalaxy {
         
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) in the player's world. </summary>
-        internal static void UpdateToAll(Player p, bool self) {
+        internal static void UpdateToLevel(Player p, bool self) {
             Player[] players = PlayerInfo.Online.Items;
             p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;          
             
@@ -47,6 +47,7 @@ namespace MCGalaxy {
         public static void Add(Player dst, Player p, byte id) {
             if (!dst.hasExtList) return;
             byte grpPerm = (byte)(offset - p.group.Permission);
+            if (!Server.TablistRankSorted) grpPerm = 0;
             
             if (p.IsAfk) {
                 string col = Entities.GetSupportedCol(dst, p.color);

@@ -160,12 +160,16 @@ namespace MCGalaxy
         public static DateTime restarttime;
 
         public static bool chatmod = false;
-        [ConfigBool("log-notes", "Other", null, true)]    
+        [ConfigBool("log-notes", "Other", null, true)]
         public static bool LogNotes = true;
         
         [ConfigPerm("os-perbuild-default", "other", null, LevelPermission.Nobody)]
         public static LevelPermission osPerbuildDefault = LevelPermission.Nobody;
-
+        [ConfigBool("tablist-rank-sorted", "Other", null, true)]
+        public static bool TablistRankSorted = true;
+        [ConfigBool("tablist-global", "Other", null, false)]
+        public static bool TablistGlobal = false;
+        
         //Global VoteKick In Progress Flag
         public static bool voteKickInProgress = false;
         public static int voteKickVotesNeeded = 0;
