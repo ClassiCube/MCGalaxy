@@ -36,6 +36,9 @@ namespace MCGalaxy.Commands
                     new CommandPerm(LevelPermission.AdvBuilder, "Lowest rank able to undo physics"),
                 }; }
         }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("xundo", null, "all") }; }
+        }
 
         public override void Use(Player p, string message) {
             int ignored = 0;
@@ -110,12 +113,7 @@ namespace MCGalaxy.Commands
         }
         
         void UndoOnlinePlayer(Player p, long seconds, Player who) {
-            if (p != null && p != who) {
-                if (who.group.Permission > p.group.Permission) {
-                    MessageTooHighRank(p, "undo", true); return;
-                }
-                if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can undo other players."); return; }
-            }
+            if (p != null && p != who && !CheckUndoPerms(p, who.group)) return;
             
             UndoOnlineDrawOp op;
             if (p == who) op = new UndoSelfDrawOp();
@@ -135,7 +133,8 @@ namespace MCGalaxy.Commands
         }
         
         void UndoOfflinePlayer(Player p, long seconds, string whoName) {
-            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can undo other players."); return; }
+            if (p != null && !CheckUndoPerms(p, Group.findPlayerGroup(whoName))) return;
+            
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();
             op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.whoName = whoName;
@@ -148,6 +147,12 @@ namespace MCGalaxy.Commands
             } else {
                 Player.Message(p, "Could not find player specified.");
             }
+        }
+        
+        bool CheckUndoPerms(Player p, Group grp) {
+             if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can undo other players."); return false; }
+             if (grp.Permission > p.group.Permission) { MessageTooHighRank(p, "undo", true); return false; }
+             return true;
         }
         
         void UndoLevelPhysics(Player p, long seconds) {

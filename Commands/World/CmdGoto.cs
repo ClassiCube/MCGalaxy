@@ -122,14 +122,14 @@ namespace MCGalaxy.Commands {
             if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 
             p.Loading = true;
-            CmdReveal.DespawnEntities(p);
+            Entities.DespawnEntities(p);
             Level oldLevel = p.level;
             p.level = lvl; p.SendUserMOTD(); p.SendMap(oldLevel);
 
             ushort x = (ushort)((0.5 + lvl.spawnx) * 32);
             ushort y = (ushort)((1 + lvl.spawny) * 32);
             ushort z = (ushort)((0.5 + lvl.spawnz) * 32);
-            SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
+            Entities.SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
             p.Loading = false;
             CheckGamesJoin(p, oldLevel);
             
@@ -139,19 +139,6 @@ namespace MCGalaxy.Commands {
                 Server.IRC.Say(p.ColoredName + " %rwent to &8" + lvl.name, false, true);
             }
             return true;
-        }
-        
-        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY) {
-        	Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-        		if (pl.level != p.level || !Entities.CanSeeEntity(p, pl) || p == pl) continue;
-                p.SpawnEntity(pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
-            }           
-            Entities.GlobalSpawn(p, x, y, z, rotX, rotY, true);
-            
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots)
-            	if (b.level == p.level) Entities.Spawn(p, b);
         }
         
         internal static void CheckGamesJoin(Player p, Level oldLvl) {

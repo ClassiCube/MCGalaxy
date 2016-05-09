@@ -76,7 +76,7 @@ namespace MCGalaxy.Games {
             
             if (p.Game.Invisible) {
                 p.SendCpeMessage(CpeMessageType.BottomRight2, "", false);
-                Player.GlobalSpawn(p, false);
+                Entities.GlobalSpawn(p, false);
                 p.Game.ResetInvisibility();
             }
             

@@ -53,18 +53,17 @@ namespace MCGalaxy.Commands
                 if (!ChangeRank(who.name, who.group, newRank, who, p, reason)) return;
 
                 rankMsg = who.ColoredName + "%S's rank was set to " + newRank.ColoredName + rankReason;
-                Player.GlobalMessage(rankMsg);
+                Player.GlobalMessage(rankMsg);                
+                Entities.DespawnEntities(who, false);
                 
-                string oldcolor = who.group.color;
+                string oldCol = who.group.color;
                 who.group = newRank;
-                if (who.color == "" || who.color == oldcolor)
-                    who.color = who.group.color;
+                if (who.color == "" || who.color == oldCol) who.color = who.group.color;
                 who.SetPrefix();
-                Entities.GlobalDespawn(who, false);
 
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
                 who.SendUserType(Block.canPlace(who.group.Permission, Block.blackrock));              
-                Entities.GlobalSpawn(who, false);
+                Entities.SpawnEntities(who, false);
             }
             Server.IRC.Say(rankMsg);
         }

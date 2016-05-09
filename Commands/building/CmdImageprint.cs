@@ -142,77 +142,60 @@ namespace MCGalaxy.Commands
                 if (popType == 1) popType = 2;
                 if (popType == 3) popType = 4;
             }
-            ImagePalette.ColorBlock[] palette = ImagePalette.GetPalette(popType);
-            ImagePalette.ColorBlock cur;
+            ColorBlock[] palette = ImagePalette.GetPalette(popType);
+            ColorBlock cur = default(ColorBlock);
+            Vec3U16 P;
+            
+            IPalette selector = null;
+            if (popType == 6) selector = new GrayscalePalette();
+            else selector = new RgbPalette();
+            selector.SetAvailableBlocks(palette);
 
             for (int yy = 0; yy < bmp.Height; yy++)
                 for (int xx = 0; xx < bmp.Width; xx++)
             {
                 if (layer) {
-                    cur.y = cpos.y;
+                    P.Y = cpos.y;
                     if (direction <= 1) {
-                        if (direction == 0) { cur.x = (ushort)(cpos.x + xx); cur.z = (ushort)(cpos.z - yy); }
-                        else { cur.x = (ushort)(cpos.x - xx); cur.z = (ushort)(cpos.z + yy); }
+                        if (direction == 0) { P.X = (ushort)(cpos.x + xx); P.Z = (ushort)(cpos.z - yy); }
+                        else { P.X = (ushort)(cpos.x - xx); P.Z = (ushort)(cpos.z + yy); }
                     } else {
-                        if (direction == 2) { cur.z = (ushort)(cpos.z + xx); cur.x = (ushort)(cpos.x + yy); }
-                        else { cur.z = (ushort)(cpos.z - xx); cur.x = (ushort)(cpos.x - yy); }
+                        if (direction == 2) { P.Z = (ushort)(cpos.z + xx); P.X = (ushort)(cpos.x + yy); }
+                        else { P.Z = (ushort)(cpos.z - xx); P.X = (ushort)(cpos.x - yy); }
                     }
                 } else {
-                    cur.y = (ushort)(cpos.y + yy);
+                    P.Y = (ushort)(cpos.y + yy);
                     if (direction <= 1) {
-                        if (direction == 0) cur.x = (ushort)(cpos.x + xx);
-                        else cur.x = (ushort)(cpos.x - xx);
-                        cur.z = cpos.z;
+                        if (direction == 0) P.X = (ushort)(cpos.x + xx);
+                        else P.X = (ushort)(cpos.x - xx);
+                        P.Z = cpos.z;
                     } else {
-                        if (direction == 2) cur.z = (ushort)(cpos.z + xx);
-                        else cur.z = (ushort)(cpos.z - xx);
-                        cur.x = cpos.x;
+                        if (direction == 2) P.Z = (ushort)(cpos.z + xx);
+                        else P.Z = (ushort)(cpos.z - xx);
+                        P.X = cpos.x;
                     }
                 }
 
                 Color col = bmp.GetPixel(xx, yy);
                 cur.r = col.R; cur.g = col.G; cur.b = col.B; cur.a = col.A;
-                if (popType == 6) {
-                    int brightness = (cur.r + cur.g + cur.b) / 3;
-                    if (brightness < (256 / 4))
-                        cur.type = Block.obsidian;
-                    else if (brightness >= (256 / 4) && brightness < (256 / 4) * 2)
-                        cur.type = Block.darkgrey;
-                    else if (brightness >= (256 / 4) * 2 && brightness < (256 / 4) * 3)
-                        cur.type = Block.lightgrey;
-                    else
-                        cur.type = Block.white;
-                } else {
-                    int minimum = int.MaxValue, position = 0;
-                    for (int i = 0; i < palette.Length; i++) {
-                        ImagePalette.ColorBlock pixel = palette[i];
-                        int dist = (cur.r - pixel.r) * (cur.r - pixel.r) 
-                            + (cur.g - pixel.g) * (cur.g - pixel.g)
-                            + (cur.b - pixel.b) * (cur.b - pixel.b);
-                        
-                        if (dist < minimum) {
-                            minimum = dist; position = i;
-                        }
-                    }
-
-                    cur.type = palette[position].type;
-                    if (popType == 1 || popType == 3) {
-                        int threshold = popType == 1 ? 20 : 3;
-                        if (position <= threshold) {
-                            if (direction == 0)
-                                cur.z = (ushort)(cur.z + 1);
-                            else if (direction == 2)
-                                cur.x = (ushort)(cur.x - 1);
-                            else if (direction == 1)
-                                cur.z = (ushort)(cur.z - 1);
-                            else if (direction == 3)
-                                cur.x = (ushort)(cur.x + 1);
-                        }
+                int position;
+                cur.type = selector.BestMatch(cur, out position);
+                if (popType == 1 || popType == 3) {
+                    int threshold = popType == 1 ? 20 : 3;
+                    if (position <= threshold) {
+                        if (direction == 0)
+                            P.Z = (ushort)(P.Z + 1);
+                        else if (direction == 2)
+                            P.X = (ushort)(P.X - 1);
+                        else if (direction == 1)
+                            P.Z = (ushort)(P.Z - 1);
+                        else if (direction == 3)
+                            P.X = (ushort)(P.X + 1);
                     }
                 }
 
                 if (cur.a < 20) cur.type = Block.air;
-                p.level.UpdateBlock(p, cur.x, cur.y, cur.z, cur.type, 0);
+                p.level.UpdateBlock(p, P.X, P.Y, P.Z, cur.type, 0);
             }
             
             if (cpos.bitmapLoc == "tempImage_" + p.name)

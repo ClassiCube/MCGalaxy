@@ -22,7 +22,7 @@ namespace MCGalaxy.Drawing {
     internal static class ImagePalette {
         
         internal static string[] Names = {
-            null, "2-layer color", "1-layer color", "2-layer grayscale", 
+            null, "2-layer color", "1-layer color", "2-layer grayscale",
             "1-layer grayscale", "Black and White", "Mathematical grayscale"
         };
         public static ColorBlock[] GetPalette(byte type) {
@@ -134,14 +134,13 @@ namespace MCGalaxy.Drawing {
             new ColorBlock(255, 255, 255, 36),
             new ColorBlock(0, 0, 0, 49),
         };
-
-        public struct ColorBlock  {
-            public ushort x, y, z; public byte type, r, g, b, a;
-            
-            public ColorBlock(byte r, byte g, byte b, byte type) {
-                this.r = r; this.g = g; this.b = b; this.type = type;
-                x = 0; y = 0; z = 0; a = 0;
-            }
+    }
+    
+    public struct ColorBlock  {
+        public byte type, r, g, b, a;
+        
+        public ColorBlock(byte r, byte g, byte b, byte type) {
+            this.r = r; this.g = g; this.b = b; this.type = type; a = 0;
         }
     }
 }

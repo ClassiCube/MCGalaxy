@@ -70,13 +70,15 @@ namespace MCGalaxy.Commands {
                 case "command":
                 case "":
                     Group pGroup = p != null ? p.group : Group.findPerm(LevelPermission.Nobody);
-                    PrintRankCommands(p, sort, pGroup); break;
+                    PrintRankCommands(p, sort, pGroup, true); break;
                 case "commandsall":
                 case "commandall":
                 case "all":
                     PrintAllCommands(p, sort); break;
                 default:
-                    return false;
+                    Group grp = Group.Find(args[0]);
+                    if (grp == null) return false;
+                    PrintRankCommands(p, sort, grp, false); break;
             }
             return true;
         }
@@ -105,7 +107,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static void PrintRankCommands(Player p, string sort, Group group) {
+        static void PrintRankCommands(Player p, string sort, Group group, bool own) {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
@@ -114,7 +116,11 @@ namespace MCGalaxy.Commands {
             }
             
             StringBuilder list = FormatCommands(cmds, sort);
-            Player.Message(p, "Available commands:");
+            if (own)
+                Player.Message(p, "Available commands:");
+            else
+                Player.Message(p, "Commands available to " + group.ColoredName + " %Srank:");
+            
             Player.Message(p, list.ToString(2, list.Length - 2));
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
             Player.Message(p, "Type %T/cmds shortcuts %Sfor a list of command shortcuts.");
@@ -177,6 +183,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HIf no category is given, outputs all commands you can use.");
             Player.Message(p, "  %H\"shortcuts\" category outputs all command shortcuts.");            
             Player.Message(p, "  %H\"all\" category outputs all commands.");
+            Player.Message(p, "  %HIf category is a rank name, outputs all commands that rank can use.");
             Player.Message(p, "%HOther command categories:");
             Player.Message(p, "  %HBuilding Chat Economy Games Info Moderation Other World");
             Player.Message(p, "%HSort is optional, and can be either \"name\" or \"rank\"");

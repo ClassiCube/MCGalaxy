@@ -26,8 +26,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks"),
-                    new CommandAlias("cmdlist", "commands"), new CommandAlias("commands", "commands") }; }
+            get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks") }; }
         }
         public CmdHelp() { }
 
@@ -111,10 +110,11 @@ namespace MCGalaxy.Commands
                 if (!a.Target.CaselessEq(cmd.name)) continue;
                 
                 dst.Append('/').Append(a.Trigger);
-                if (a.Args != null) {
+                string args = a.Prefix == null ? a.Suffix : a.Prefix;
+                if (args != null) {
                     string name = String.IsNullOrEmpty(cmd.shortcut) 
                         ? cmd.name : cmd.shortcut;
-                    dst.Append(" for /").Append(name + " " + a.Args);
+                    dst.Append(" for /").Append(name + " " + args);
                 }                
                 dst.Append(", ");
             }

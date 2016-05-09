@@ -28,6 +28,7 @@ using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {
+	
     public sealed partial class Player : IDisposable {
         
         /// <summary>
@@ -39,7 +40,16 @@ namespace MCGalaxy {
         public void ClearChat() { OnChat = null; }
         public static Dictionary<string, string> left = new Dictionary<string, string>();
         
-        static List<string> pendingNames = new List<string>();
+        class PendingItem {
+            public string Name;
+            public DateTime Connected;
+            
+            public PendingItem(string name) {
+                Name = name;
+                Connected = DateTime.UtcNow;
+            }
+        }
+        static List<PendingItem> pendingNames = new List<PendingItem>();
         static object pendingLock = new object();
         
         public static List<Player> connections = new List<Player>(Server.players);
@@ -68,7 +78,7 @@ namespace MCGalaxy {
         public System.Timers.Timer afkTimer = new System.Timers.Timer(2000);
         public int afkCount = 0;
         public DateTime afkStart;
-        public bool IsAfk { get { return Server.afkset.Contains(name); } }
+        public bool IsAfk = false;
         public bool cmdTimer = false;
         public bool UsingWom = false;
         public string BrushName = "normal", DefaultBrushArgs = "";
@@ -291,22 +301,24 @@ namespace MCGalaxy {
         public bool InGlobalChat;
 
         public bool isDev, isMod;
-        public bool isStaff;
         public bool verifiedName;
 
         public static string CheckPlayerStatus(Player p) {
             if ( p.hidden ) return "hidden";
-            if ( Server.afkset.Contains(p.name) ) return "afk";
+            if ( p.IsAfk ) return "afk";
             return "active";
         }
         
         public void SetPrefix() {
             prefix = Game.Referee ? "&2[Ref] " : "";
-            if (group.prefix != "") prefix += "&f" + group.prefix + color; 
+            if (group.prefix != "") prefix += "&f" + group.prefix + color;
+            Team team = Game.Team;
+            prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
+            
             IGame game = level == null ? null : level.CurrentGame();
             if (game != null) game.AdjustPrefix(this, ref prefix);
             
-            bool isOwner = Server.server_owner != "" && Server.server_owner.CaselessEq(name);
+            bool isOwner = Server.server_owner.CaselessEq(name);
             string viptitle = isDev ? string.Format("{0}[&9Dev{0}] ", color) : 
         		isMod ? string.Format("{0}[&aMod{0}] ", color) :
             	isOwner ? string.Format("{0}[&cOwner{0}] ", color) : "";
@@ -556,7 +568,7 @@ namespace MCGalaxy {
                 timespent.Dispose();
                 afkCount = 0;
                 afkStart = DateTime.Now;
-                Server.afkset.Remove(name);
+                IsAfk = false;
                 isFlying = false;
                 aiming = false;
                 

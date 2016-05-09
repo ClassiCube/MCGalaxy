@@ -40,7 +40,7 @@ namespace MCGalaxy.Drawing.Brushes {
             { "checkered", CheckeredBrush.Process }, { "rainbow", RainbowBrush.Process },
             { "bwrainbow", BWRainbowBrush.Process }, { "striped", StripedBrush.Process },
             { "replace", ReplaceBrush.Process }, { "replacenot", ReplaceNotBrush.Process },
-            { "random", RandomBrush.Process },
+            { "random", RandomBrush.Process }, { "noise", NoiseBrush.Process },
         };
         
         public static Dictionary<string, string[]> BrushesHelp = new Dictionary<string, string[]> {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Brushes {
             { "checkered", CheckeredBrush.HelpString }, { "rainbow", RainbowBrush.HelpString },
             { "bwrainbow", BWRainbowBrush.HelpString }, { "striped", StripedBrush.HelpString },
             { "replace", ReplaceBrush.HelpString }, { "replacenot", ReplaceNotBrush.HelpString },
-            { "random", RandomBrush.HelpString },
+            { "random", RandomBrush.HelpString }, { "noise", NoiseBrush.HelpString },
         };
     }
     

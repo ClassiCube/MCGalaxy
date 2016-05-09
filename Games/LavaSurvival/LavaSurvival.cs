@@ -306,7 +306,7 @@ namespace MCGalaxy.Games
                 	    pl.Game.PledgeSurvive = false;
                         if (pl.level == oldMap)
                         {
-                            if (sendAfkMain && Server.afkset.Contains(pl.name)) Command.all.Find("main").Use(pl, "");
+                            if (sendAfkMain && pl.IsAfk) Command.all.Find("main").Use(pl, "");
                             else Command.all.Find("goto").Use(pl, map.name);
                         }
                     }

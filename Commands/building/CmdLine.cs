@@ -50,7 +50,8 @@ namespace MCGalaxy.Commands {
             
             // May be in the format <brush args> <mode> <max_length>
             ushort len;
-            if (!ushort.TryParse(parts[parts.Length - 1], out len)) return DrawMode.normal;
+            if (parts.Length == 1 || !ushort.TryParse(parts[parts.Length - 1], out len)) 
+                return DrawMode.normal;
             return ParseMode(parts[parts.Length - 2]);
         }
 

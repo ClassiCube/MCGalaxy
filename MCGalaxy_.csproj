@@ -386,7 +386,6 @@
     <Compile Include="Commands\other\CmdWarp.cs" />
     <Compile Include="Commands\other\CmdWaypoint.cs" />
     <Compile Include="Commands\other\CmdXJail.cs" />
-    <Compile Include="Commands\other\CmdXundo.cs" />
     <Compile Include="Commands\World\CmdClearBlockChanges.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
     <Compile Include="Commands\World\CmdDeleteLvl.cs" />
@@ -432,6 +431,8 @@
     <Compile Include="Database\SQLite\SQLiteParameterisedQuery.cs" />
     <Compile Include="Drawing\Brushes\Brush.cs" />
     <Compile Include="Drawing\Brushes\CheckeredBrush.cs" />
+    <Compile Include="Drawing\Brushes\FrequencyBrush.cs" />
+    <Compile Include="Drawing\Brushes\NoiseBrush.cs" />
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
     <Compile Include="Drawing\Brushes\RainbowBrush.cs" />
     <Compile Include="Drawing\Brushes\RandomBrush.cs" />
@@ -458,6 +459,8 @@
     <Compile Include="Drawing\DrawOps\TriangleDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\UndoDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
+    <Compile Include="Drawing\Image\ImagePalette.cs" />
+    <Compile Include="Drawing\Image\IPalette.cs" />
     <Compile Include="Economy\Awards.cs" />
     <Compile Include="Economy\ReviveItem.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
@@ -484,12 +487,13 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
+    <Compile Include="Generator\ImprovedNoise.cs" />
     <Compile Include="Levels\BufferedBlockSender.cs" />
-    <Compile Include="Levels\Generator\MapGen.cs" />
-    <Compile Include="Levels\Generator\NoiseGen.cs" />
-    <Compile Include="Levels\Generator\MapGenParams.cs" />
-    <Compile Include="Levels\Generator\RealisticMapGen.cs" />
-    <Compile Include="Levels\Generator\TreeGen.cs" />
+    <Compile Include="Generator\MapGen.cs" />
+    <Compile Include="Generator\NoiseGen.cs" />
+    <Compile Include="Generator\MapGenParams.cs" />
+    <Compile Include="Generator\RealisticMapGen.cs" />
+    <Compile Include="Generator\TreeGen.cs" />
     <Compile Include="Levels\IO\DatFile.cs" />
     <Compile Include="Levels\IO\FcmFile.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
@@ -527,6 +531,7 @@
     <Compile Include="Player\Player.Handlers.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\PlayersFile.cs" />
+    <Compile Include="Player\TabList.cs" />
     <Compile Include="Player\Undo\UndoCache.cs" />
     <Compile Include="Player\Undo\UndoFileCBin.cs" />
     <Compile Include="Player\Waypoint.cs" />
@@ -550,6 +555,7 @@
     <Compile Include="API\API.cs" />
     <Compile Include="Player\EmotesHandler.cs" />
     <Compile Include="Player\FullCP437Handler.cs" />
+    <Compile Include="ScriptingUtil\Scripting.cs" />
     <Compile Include="Server\AutoSaver.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Levels\BlockDefinitions.cs" />
@@ -562,10 +568,8 @@
     <Compile Include="IRC\ForgeBot.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Player\Player.Events.cs" />
-    <Compile Include="ScriptingUtil\ScriptingVB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
-    <Compile Include="Drawing\ImagePalette.cs" />
     <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Player\PlayerCollection.cs" />
@@ -578,7 +582,7 @@
     <Compile Include="Server\Extra\ProfanityFilter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ScriptingUtil\Scripting.cs" />
+    <Compile Include="ScriptingUtil\Backends.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.Tasks.cs" />
     <Compile Include="Server\Server.Threads.cs" />
@@ -691,12 +695,13 @@
     <Folder Include="Database\SQLite" />
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Drawing\Brushes" />
+    <Folder Include="Drawing\Image" />
     <Folder Include="Games\Countdown" />
     <Folder Include="Games\LavaSurvival" />
     <Folder Include="Games\TntWars" />
     <Folder Include="Games\ZombieSurvival" />
     <Folder Include="Levels\IO" />
-    <Folder Include="Levels\Generator" />
+    <Folder Include="Generator" />
     <Folder Include="Levels\Physics" />
     <Folder Include="Economy" />
     <Folder Include="Blocks" />

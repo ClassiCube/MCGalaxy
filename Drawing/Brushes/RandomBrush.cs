@@ -22,7 +22,7 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
     
-    public sealed class RandomBrush : Brush {
+    public sealed class RandomBrush : FrequencyBrush {
         readonly ExtBlock[] blocks;
         readonly int seed;
         
@@ -49,52 +49,11 @@ namespace MCGalaxy.Drawing.Brushes {
             
             string[] parts = args.Message.Split(' ');
             int[] count = new int[parts.Length];
-            ExtBlock[] toAffect = GetBlocks(args.Player, parts.Length, parts, count);
-            if (toAffect == null) return null;
+            ExtBlock[] toAffect = GetBlocks(args.Player, parts, count, P => true, null);
             
+            if (toAffect == null) return null;           
             ExtBlock[] blocks = Combine(toAffect, count);
             return new RandomBrush(blocks);
-        }
-        
-        static ExtBlock[] GetBlocks(Player p, int max, string[] parts, int[] count) {
-            ExtBlock[] blocks = new ExtBlock[max];
-            for (int i = 0; i < blocks.Length; i++) {
-                blocks[i].Type = Block.Zero;
-                count[i] = 1;
-            }
-            
-            for (int i = 0; i < max; i++ ) {
-                byte extType = 0;
-                int sepIndex = parts[i].IndexOf('/');
-                string block = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
-                byte type = DrawCmd.GetBlock(p, block, out extType);
-                if (type == Block.Zero) return null;
-                
-                blocks[i].Type = type; blocks[i].ExtType = extType;
-                if (sepIndex < 0) continue;
-                int chance;
-                if (!int.TryParse(parts[i].Substring(sepIndex + 1), out chance) || chance <= 0 || chance > 10000) {
-                    Player.Message(p, "frequency must be an integer between 1 and 10,000."); return null;
-                }
-                count[i] = chance;
-            }
-            return blocks;
-        }
-        
-        static ExtBlock[] Combine(ExtBlock[] toAffect, int[] count) {
-            int sum = 0;
-            for (int i = 0; i < count.Length; i++) sum += count[i];
-            if (toAffect.Length == 1) sum += 1;
-            
-            ExtBlock[] blocks = new ExtBlock[sum];
-            for (int i = 0, index = 0; i < toAffect.Length; i++) {
-                for (int j = 0; j < count[i]; j++)
-                    blocks[index++] = toAffect[i];
-            }
-            // For one block argument, leave everything else untouched.
-            if (toAffect.Length == 1) 
-                blocks[blocks.Length - 1] = new ExtBlock(Block.Zero, 0);
-            return blocks;
         }
         
         int next;

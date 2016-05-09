@@ -72,10 +72,8 @@ namespace MCGalaxy
 
             props.Add(new PlayerMethodDescriptor("Status", p =>
                       {
-                          if (p.hidden)
-                              return "hidden";
-                          if (Server.afkset.Contains(p.name))
-                              return "afk";
+                          if (p.hidden) return "hidden";
+                          if (p.IsAfk) return "afk";
                           return "active";
                       }, typeof(string)));
 

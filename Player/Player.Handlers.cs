@@ -29,12 +29,18 @@ namespace MCGalaxy {
     
     public sealed partial class Player : IDisposable {
         
-        bool removedFromPending = false;        
+        bool removedFromPending = false;
         void RemoveFromPending() {
             if (removedFromPending) return;
             removedFromPending = true;
-            lock (pendingLock)
-                pendingNames.Remove(truename);
+            
+            lock (pendingLock) {
+                for (int i = 0; i < pendingNames.Count; i++) {
+                    PendingItem item = pendingNames[i];
+                    if (item.Name != truename) continue;
+                    pendingNames.RemoveAt(i); return;
+                }
+            }
         }
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
@@ -281,13 +287,15 @@ namespace MCGalaxy {
                 skinName = name;
                 
                 lock (pendingLock) {
-                    pendingNames.Add(name);
                     int altsCount = 0;
-                    foreach (string other in pendingNames) {
-                        if (other == truename) altsCount++;
+                    DateTime now = DateTime.UtcNow;
+                    foreach (PendingItem item in pendingNames) {
+                        if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)
+                            altsCount++;
                     }
+                    pendingNames.Add(new PendingItem(name));
                     
-                    if (altsCount > 1) {
+                    if (altsCount > 0) {
                         Kick("Already logged in!", true); return;
                     }
                 }
@@ -576,7 +584,7 @@ namespace MCGalaxy {
                 ushort y = (ushort)((1 + level.spawny) * 32);
                 ushort z = (ushort)((0.5 + level.spawnz) * 32);
                 pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
-                CmdGoto.SpawnEntities(this, x, y, z, rot[0], rot[1]);
+                Entities.SpawnEntities(this, x, y, z, rot[0], rot[1]);
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Server.s.Log("Error spawning player \"" + name + "\"");
@@ -995,12 +1003,11 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     return;
                 afkCount = 0;
 
-                if ( text != "/afk" ) {
-                    if ( Server.afkset.Contains(this.name) ) {
-                        Server.afkset.Remove(this.name);
-                        Player.GlobalMessage("-" + ColoredName + "%S- is no longer AFK");
-                        Server.IRC.Say(DisplayName + " is no longer AFK");
-                    }
+                if ( text != "/afk" && IsAfk ) {
+                    IsAfk = false;
+                    Player.GlobalMessage("-" + ColoredName + "%S- is no longer AFK");
+                    Server.IRC.Say(DisplayName + " is no longer AFK");
+                    TabList.UpdateToAll(this, true);
                 }
                 // Typing //Command appears in chat as /command
                 // Suggested by McMrCat
@@ -1263,8 +1270,10 @@ return;
                 Alias alias = Alias.Find(cmd);
                 if (alias != null) {
                     cmd = alias.Target;
-                    if (alias.Args != null)
-                        message = message == "" ? alias.Args : alias.Args + " " + message;                  
+                    if (alias.Prefix != null)
+                        message = message == "" ? alias.Prefix : alias.Prefix + " " + message;
+                    if (alias.Suffix != null)
+                        message = message == "" ? alias.Suffix : message + " " + alias.Suffix;
                 }
                 
                 if (OnCommand != null) OnCommand(cmd, this, message);

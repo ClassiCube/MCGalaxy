@@ -31,49 +31,49 @@ namespace MCGalaxy {
         public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z,
                                        byte rotx, byte roty, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
-            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;
+            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;          
+            
             foreach (Player other in players) {
                 if ((other.Loading && p != other) || p.level != other.level) continue;
                 
                 if (p != other && Entities.CanSeeEntity(other, p)) {
-                    other.SpawnEntity(p, p.id, x, y, z, rotx, roty, possession);
+                    Spawn(other, p, p.id, x, y, z, rotx, roty, possession);
                 } else if (p == other && self) {
                     other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
                     other.oldpos = other.pos; other.oldrot = other.rot;
-                    other.SpawnEntity(other, 0xFF, x, y, z, rotx, roty, possession);
+                    Spawn(other, p, 0xFF, x, y, z, rotx, roty, possession);
                 }
             }
         }
         
         /// <summary> Despawns this player to all other players that can see the player in the current world. </summary>
-        public static void GlobalDespawn(Player p, bool self, bool diffWorld = false) {
+        public static void GlobalDespawn(Player p, bool self, bool fromCanSeeUs = false) {
             Player[] players = PlayerInfo.Online.Items;
+            
             foreach (Player other in players) {
                 if (p.level != other.level) continue;
                 
                 // If same world, despawn if we can't see them.
                 bool despawn = Entities.CanSeeEntity(other, p);
-                if (!diffWorld) despawn = !despawn;
+                if (!fromCanSeeUs) despawn = !despawn;
                 if (p != other && despawn) {
-                    other.DespawnEntity(p.id);
+                    Despawn(other, p.id);
                 } else if (p == other && self) {
-                    other.DespawnEntity(255);
+                    Despawn(other, 0xFF);
                 }
             }
         }
         
+        
+        
 
         internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z,
                                    byte rotx, byte roty, string possession = "") {
+            TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
-                string col = p.color;
-                if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
-                    col = "&" + Colors.GetFallback(col[1]);
-                string group = p.Game.Referee ? "&2Referees" : "&fPlayers";
-                
+                string col = GetSupportedCol(dst, p.color);             
                 if (dst.hasExtList) {
                     dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, x, y, z, rotx, roty);
-                    dst.SendExtAddPlayerName(id, p.skinName, col + p.truename, group, 0);
                 } else {
                     dst.SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty);
                 }
@@ -87,7 +87,6 @@ namespace MCGalaxy {
             
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(id, skinName, Colors.red + name + possession, x, y, z, rotx, roty);
-                dst.SendExtAddPlayerName(id, skinName, Colors.red + name, "&cZombies", 0);
             } else {
                 dst.SendSpawn(id, Colors.red + name + possession, x, y, z, rotx, roty);
             }
@@ -96,10 +95,45 @@ namespace MCGalaxy {
                 dst.SendChangeModel(id, ZombieGame.ZombieModel);
         }
         
+        /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
+        internal static void SpawnEntities(Player p, bool bots = true) { 
+        	SpawnEntities(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], bots); 
+        }
+        
+        /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
+        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY,bool bots = true) {
+        	Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+        		if (pl.level != p.level || !CanSeeEntity(p, pl) || p == pl) continue;
+                Spawn(p, pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
+            }           
+            GlobalSpawn(p, x, y, z, rotX, rotY, true);
+
+            if (!bots) return;            
+            PlayerBot[] botsList = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in botsList)
+            	if (b.level == p.level) Spawn(p, b);
+        }
+        
+        /// <summary> Despawns this player to all other players, and despawns all others players to this player. </summary>
+        internal static void DespawnEntities(Player p, bool bots = true) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (p.level == pl.level && p != pl) Despawn(p, pl.id);
+            }
+            GlobalDespawn(p, true, true);
+            
+            if (!bots) return;
+            PlayerBot[] botsList = PlayerBot.Bots.Items;
+            foreach (PlayerBot b in botsList) {
+                if (p.level == b.level) Despawn(p, b.id);
+            }           
+        }
+        
         internal static void Spawn(Player dst, PlayerBot b) {
+            TabList.Add(dst, b);
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(b.id, b.skinName, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
-                dst.SendExtAddPlayerName(b.id, b.skinName, b.color + b.name, "Bots", 0);
             } else {
                 dst.SendSpawn(b.id, b.color + b.skinName, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             }
@@ -107,11 +141,16 @@ namespace MCGalaxy {
         
         internal static void Despawn(Player dst, byte id) {
             dst.SendRaw(Opcode.RemoveEntity, id);
-            if (dst.hasExtList)
-                dst.SendExtRemovePlayerName(id);
+            TabList.Remove(dst, id);
         }
+
+        #endregion 
         
-        #endregion      
+        internal static string GetSupportedCol(Player dst, string col) {
+            if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
+                col = "&" + Colors.GetFallback(col[1]);
+            return col;
+        }
 
         
         /// <summary> Returns whether the given player is able to see the other player (e.g. in /who). </summary>

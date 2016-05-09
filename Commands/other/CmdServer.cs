@@ -156,7 +156,6 @@ namespace MCGalaxy.Commands
         		elem.Field.SetValue(null, elem.Attrib.DefaultValue);
 
             Server.tempBans = new List<Server.TempBan>();
-            Server.afkset = new List<string>();
             Server.ircafkset = new List<string>();
             Server.messages = new List<string>();
             Server.chatmod = false;

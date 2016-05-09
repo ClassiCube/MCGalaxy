@@ -101,7 +101,7 @@ namespace MCGalaxy {
         void AfkTimerElapsed(object sender, ElapsedEventArgs e) {
             if ( name == "" ) return;
 
-            if ( Server.afkset.Contains(name) ) {
+            if ( IsAfk ) {
                 afkCount = 0;
                 if ( Server.afkkick > 0 && group.Permission < Server.afkkickperm )
                     if ( afkStart.AddMinutes(Server.afkkick) < DateTime.Now )

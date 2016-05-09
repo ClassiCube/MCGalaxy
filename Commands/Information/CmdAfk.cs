@@ -37,27 +37,28 @@ namespace MCGalaxy.Commands
             if (p != null && p.muted) { Player.Message(p, "Cannot use /afk while muted."); return; }
 
             if (message == "list") {
-                foreach (string s in Server.afkset) {
-                    Player pl = PlayerInfo.FindExact(s);
-                    if (pl == null || !Entities.CanSee(p, pl)) continue;
-                    Player.Message(p, s);
+            	Player[] players = PlayerInfo.Online.Items;
+                foreach (Player pl in players) {
+                    if (!Entities.CanSee(p, pl) || !pl.IsAfk) continue;
+                    Player.Message(p, p.name);
                 }
                 return;
             }
             
             if (p.joker) message = "";
-            if (!Server.afkset.Contains(p.name)) {
+            if (!p.IsAfk) {
                 p.afkStart = DateTime.Now;
                 p.afkMessage = message;
-                Server.afkset.Add(p.name);
+                p.IsAfk = true;
                 Player.GlobalMessage("-" + p.ColoredName + "%S- is AFK " + message);
                 Server.IRC.Say(p.DisplayName + " is AFK " + message);
             } else {
-                Server.afkset.Remove(p.name);
+                p.IsAfk = false;
                 p.afkMessage = null;
                 Player.GlobalMessage("-" + p.ColoredName + "%S- is no longer AFK");
                 Server.IRC.Say(p.DisplayName + " is no longer AFK");
             }
+            TabList.UpdateToAll(p, true);
         }
         
         public override void Help(Player p) {
