@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace MCGalaxy {
 
@@ -107,7 +108,7 @@ namespace MCGalaxy {
                 if (value[i] != '&') { 
                     output[used++] = value[i]; continue;
                 }
-                if (i == value.Length - 1 || !Colors.IsValid(value[i + 1])) {
+                if (i == value.Length - 1 || !Colors.ValidColor(value[i + 1])) {
                     output[used++] = value[i]; continue;
                 }
                 char col = value[i + 1];
@@ -121,17 +122,17 @@ namespace MCGalaxy {
                 // Check for same colour codes but not in a row
                 if (lastCol != col) {
                     output[used++] = '&';
-                    ourpur[used++] = col;
+                    output[used++] = col;
                 }
                 last = i; i++; // skip over colour code
-                lastCol = col
+                lastCol = col;
             }
             
             // Trim trailing colour codes
             int j = value.Length;
             while ((j - 2) >= 0) {
                 if (value[j - 2] != '&') break;
-                if (!drawer.ValidColor(value[j - 1])) break;
+                if (!Colors.ValidColor(value[j - 1])) break;
                 j -= 2; used -= 2;
             }
             return new string(output, 0, used);
