@@ -76,7 +76,7 @@ namespace MCGalaxy.Games {
                     break;
                 case "color":
                     team.Color = value; break;
-                case "founder":
+                case "owner":
                     team.Owner = value; break;
                 case "members":
                     team.Members = new List<string>(value.Split(',')); break;
