@@ -199,6 +199,10 @@ namespace MCGalaxy {
             return (int)c >= 256 ? '\0' : ExtColors[c].Fallback;
         }
         
+        public static bool ValidColor(char c) {
+            return IsStandardColor(c) || GetFallback(c) != '\0';
+        }
+        
         static string GetExtColor(string name) {
             for (int i = 0; i < ExtColors.Length; i++) {
                 CustomColor col = ExtColors[i];

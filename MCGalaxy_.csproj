@@ -589,6 +589,7 @@
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
+    <Compile Include="util\LineWrapper.cs" />
     <Compile Include="util\SparseBitSet.cs" />
     <Compile Include="util\Vectors.cs" />
     <Compile Include="util\VolatileArray.cs" />

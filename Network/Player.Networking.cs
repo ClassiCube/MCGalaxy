@@ -215,7 +215,7 @@ namespace MCGalaxy {
             }
             
             retryTag: try {
-                foreach ( string line in Wordwrap(message) ) {
+                foreach ( string line in LineWrapper.Wordwrap(message) ) {
                     string newLine = line;
                     if ( newLine.TrimEnd(' ')[newLine.TrimEnd(' ').Length - 1] < '!' ) {
                         if (!HasCpeExt(CpeExt.EmoteFix))
