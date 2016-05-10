@@ -33,8 +33,10 @@ namespace MCGalaxy.Commands {
             string cmd = args[0].ToLower();
             if (cmd == "clear") {
                 Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level lvl in loaded) 
-                    lvl.blockqueue.Clear();
+                foreach (Level lvl in loaded) {
+                	lock (lvl.queueLock)
+                	    lvl.blockqueue.Clear();
+                }
                 return;
             }
             if (args.Length == 1) { Help(p); return; }

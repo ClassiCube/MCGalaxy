@@ -236,7 +236,9 @@ namespace MCGalaxy
         public bool unload = true;
         [ConfigBool("WorldChat", "General", null, true)]        
         public bool worldChat = true;
+        
         public bool bufferblocks = Server.bufferblocks;
+        internal readonly object queueLock = new object();
         public List<BlockQueue.block> blockqueue = new List<BlockQueue.block>();
         private readonly object physThreadLock = new object();
         BufferedBlockSender bulkSender;
@@ -331,7 +333,8 @@ namespace MCGalaxy
             UndoBuffer.Clear();
             blockCache.Clear();
             ZoneList.Clear();
-            blockqueue.Clear();
+            lock (queueLock)
+                blockqueue.Clear();
             blocks = null;
             CustomBlocks = null;
         }

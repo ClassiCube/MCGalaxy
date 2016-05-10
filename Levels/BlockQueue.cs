@@ -32,8 +32,10 @@ namespace MCGalaxy {
                 started = true;
                 try {
                     Level[] loaded = LevelInfo.Loaded.Items;
-                    foreach (Level l in loaded)
-                        ProcessLevelBlocks(l);
+                    foreach (Level lvl in loaded) {
+                    	lock (lvl.queueLock)
+                            ProcessLevelBlocks(lvl);
+                    }
                     bulkSender.level = null;
                 } catch (Exception ex) {
                     Server.ErrorLog(ex);
@@ -53,7 +55,8 @@ namespace MCGalaxy {
             block item;
             item.p = p; item.index = index;
             item.type = type; item.extType = extType;
-            p.level.blockqueue.Add(item);
+            lock (p.level.queueLock)
+                p.level.blockqueue.Add(item);
         }
         
         static void ProcessLevelBlocks(Level lvl) {
@@ -67,7 +70,7 @@ namespace MCGalaxy {
                 for (int c = 0; c < count; c++) {
                     block item = lvl.blockqueue[c];
                     bulkSender.Add(item.index, item.type, item.extType);
-                    bulkSender.CheckIfSend(false);             
+                    bulkSender.CheckIfSend(false);
                 }
                 bulkSender.CheckIfSend(true);
                 lvl.blockqueue.RemoveRange(0, count);

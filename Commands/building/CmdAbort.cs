@@ -41,11 +41,9 @@ namespace MCGalaxy.Commands
             p.isFlying = false;
             p.BrushName = "normal";
             p.DefaultBrushArgs = "";
-            try
-            {
+            
+            lock (p.level.queueLock)
                 p.level.blockqueue.RemoveAll(b => b.p == p);
-            }
-            finally { BlockQueue.Resume(); }
             Player.Message(p, "Every toggle or action was aborted.");
         }
         public override void Help(Player p)
