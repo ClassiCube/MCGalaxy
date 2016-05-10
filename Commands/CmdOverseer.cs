@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands
             } else if (cmd == "LB" || cmd == "LEVELBLOCK") {
                 string[] lbArgs = message.Split(trimChars, 2);
                 string lbArg = lbArgs.Length > 1 ? lbArgs[1] : "";
-                Command.all.Find("levelblock").Use(p, lbArg);
+                CustomBlockCommand.Execute(p, lbArg, false, "/os lb");
             } else if (cmd == "SPAWN") {
                 Command.all.Find("setspawn").Use(p, "");
             } else if (cmd == "PRESET") {

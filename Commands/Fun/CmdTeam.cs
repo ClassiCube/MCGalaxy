@@ -121,6 +121,10 @@ namespace MCGalaxy.Commands {
             }
             team = Team.FindTeam(args[1]);
             if (team != null) { Player.Message(p, "There is already an existing team with that name."); return; }
+            if (args[1].Length > 16) {
+                Player.SendMessage(p, "Team names must be 16 characters or less."); return;
+            }
+            
             team = new Team(args[1], p.name);
             p.Game.Team = team;
             p.SetPrefix();
