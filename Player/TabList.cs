@@ -76,27 +76,36 @@ namespace MCGalaxy {
         	if (!Server.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
-                if (p != other && Entities.CanSeeEntity(other, p)) {
+            	if (p == other) {
+            		if (self) Add(other, p, 0xFF);
+            		continue;
+            	}
+            	
+                if (Entities.CanSeeEntity(other, p))
                     Add(other, p, p.id);
+                if (Entities.CanSeeEntity(p, other))
                     Add(p, other, other.id);
-                } else if (p == other && self) {
-                    Add(other, p, 0xFF);
-                }
             }
         }
         
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) in the server. </summary>
-        internal static void RemoveAll(Player p, bool self) {
+        internal static void RemoveAll(Player p, bool self, bool toVisible) {
         	if (!Server.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player other in players) {
-                if (p != other && Entities.CanSeeEntity(other, p)) {
-                    Remove(other, p.id);
-                    Remove(p, other.id);
-                } else if (p == other && self) {
-                    Remove(other, 0xFF);
-                }
+            foreach (Player other in players) {               
+            	if (p == other) {
+            		if (self) Remove(other, 0xFF); 
+            		continue;
+            	}
+            	
+                bool despawn = !Entities.CanSeeEntity(other, p);
+                if (toVisible) despawn = !despawn;
+                if (despawn) Remove(other, p.id);
+                
+                despawn = !Entities.CanSeeEntity(p, other);
+                if (toVisible) despawn = !despawn;
+                if (despawn) Remove(p, other.id);
             }
         }
         

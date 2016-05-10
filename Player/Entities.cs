@@ -31,7 +31,8 @@ namespace MCGalaxy {
         public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z,
                                        byte rotx, byte roty, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
-            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;          
+            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;  
+            TabList.UpdateAll(p, self);
             
             foreach (Player other in players) {
                 if ((other.Loading && p != other) || p.level != other.level) continue;
@@ -46,16 +47,17 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Despawns this player to all other players that can see the player in the current world. </summary>
-        public static void GlobalDespawn(Player p, bool self, bool fromCanSeeUs = false) {
+        /// <summary> Despawns this player to all other players that cannot 
+        /// (or can if 'toVisible' is true) see the player in the current world. </summary>
+        public static void GlobalDespawn(Player p, bool self, bool toVisible = false) {
             Player[] players = PlayerInfo.Online.Items;
+            TabList.RemoveAll(p, self, toVisible);
             
             foreach (Player other in players) {
                 if (p.level != other.level) continue;
                 
-                // If same world, despawn if we can't see them.
-                bool despawn = Entities.CanSeeEntity(other, p);
-                if (!fromCanSeeUs) despawn = !despawn;
+                bool despawn = !Entities.CanSeeEntity(other, p);
+                if (toVisible) despawn = !despawn;
                 if (p != other && despawn) {
                     Despawn(other, p.id);
                 } else if (p == other && self) {
@@ -107,7 +109,6 @@ namespace MCGalaxy {
                 Spawn(p, pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }           
             GlobalSpawn(p, x, y, z, rotX, rotY, true);
-            TabList.UpdateAll(p, true);
 
             if (!bots) return;            
             PlayerBot[] botsList = PlayerBot.Bots.Items;
@@ -122,7 +123,6 @@ namespace MCGalaxy {
                 if (p.level == pl.level && p != pl) Despawn(p, pl.id);
             }
             GlobalDespawn(p, true, true);
-            TabList.RemoveAll(p, true);
             
             if (!bots) return;
             PlayerBot[] botsList = PlayerBot.Bots.Items;
