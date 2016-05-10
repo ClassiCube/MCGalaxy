@@ -61,18 +61,15 @@ namespace MCGalaxy.Commands {
 		}
 	}
 	
-	public class CmdXNick : Command {
+	public class CmdXNick : CmdNick {
 		
         public override string name { get { return "xnick"; } }
         public override string shortcut { get { return "xnickname"; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdXNick() { }
 
         public override void Use(Player p, string message) {
             if (message != "") message = " " + message;
-        	Command.all.Find("nick").Use(p, p.name + message);
+        	base.Use(p, p.name + message);
         }
         
         public override void Help(Player p) {

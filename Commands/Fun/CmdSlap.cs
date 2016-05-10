@@ -40,15 +40,18 @@ namespace MCGalaxy.Commands {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level == lvl && pl.group.Permission < p.group.Permission)
-                        Command.all.Find("slap").Use(p, pl.name);
+                        DoSlap(p, pl);
                 }
                 return;
             }
             if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "slap", true); return;
             }
-
-            ushort curX = (ushort)(who.pos[0] / 32), curY = (ushort)(who.pos[1] / 32), curZ = (ushort)(who.pos[2] / 32);
+            DoSlap(p, who);
+        }
+        
+        void DoSlap(Player p, Player who) {
+        	ushort curX = (ushort)(who.pos[0] / 32), curY = (ushort)(who.pos[1] / 32), curZ = (ushort)(who.pos[2] / 32);
             ushort foundHeight = ushort.MaxValue;
 
             string src = p == null ? "(console)" : p.ColoredName;
