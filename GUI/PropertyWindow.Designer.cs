@@ -394,6 +394,9 @@ namespace MCGalaxy.Gui
             this.gbReviewQueue = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.chat_gbTab = new System.Windows.Forms.GroupBox();
+            this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
+            this.chat_cbTabRank = new System.Windows.Forms.CheckBox();
             this.tabChat.SuspendLayout();
             this.chat_gbMessages.SuspendLayout();
             this.chat_gbOther.SuspendLayout();
@@ -478,11 +481,13 @@ namespace MCGalaxy.Gui
             this.gbReviewActions.SuspendLayout();
             this.gbReviewPerms.SuspendLayout();
             this.gbReviewQueue.SuspendLayout();
+            this.chat_gbTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChat
             // 
             this.tabChat.BackColor = System.Drawing.Color.White;
+            this.tabChat.Controls.Add(this.chat_gbTab);
             this.tabChat.Controls.Add(this.chat_gbMessages);
             this.tabChat.Controls.Add(this.chat_gbOther);
             this.tabChat.Controls.Add(this.chat_gbColors);
@@ -605,7 +610,7 @@ namespace MCGalaxy.Gui
             this.chat_gbOther.Controls.Add(this.chat_txtConsole);
             this.chat_gbOther.Location = new System.Drawing.Point(235, 6);
             this.chat_gbOther.Name = "chat_gbOther";
-            this.chat_gbOther.Size = new System.Drawing.Size(256, 175);
+            this.chat_gbOther.Size = new System.Drawing.Size(256, 87);
             this.chat_gbOther.TabIndex = 1;
             this.chat_gbOther.TabStop = false;
             this.chat_gbOther.Text = "Other";
@@ -1803,8 +1808,8 @@ namespace MCGalaxy.Gui
             this.cmbOsMap.Name = "cmbOsMap";
             this.cmbOsMap.Size = new System.Drawing.Size(172, 21);
             this.cmbOsMap.TabIndex = 47;
-            this.toolTip.SetToolTip(this.cmbOsMap, "Default min rank that can build on maps made with /os map add.\n" +
-            "If 'nobody' is selected, the default min rank used is the min rank that can use /os.");
+            this.toolTip.SetToolTip(this.cmbOsMap, "Default min rank that can build on maps made with /os map add.\nIf \'nobody\' is sel" +
+                        "ected, the default min rank used is the min rank that can use /os.");
             // 
             // pageBlocks
             // 
@@ -4341,6 +4346,39 @@ namespace MCGalaxy.Gui
             this.listBox1.Size = new System.Drawing.Size(129, 459);
             this.listBox1.TabIndex = 0;
             // 
+            // chat_gbTab
+            // 
+            this.chat_gbTab.Controls.Add(this.chat_cbTabRank);
+            this.chat_gbTab.Controls.Add(this.chat_cbTabLevel);
+            this.chat_gbTab.Location = new System.Drawing.Point(235, 104);
+            this.chat_gbTab.Name = "chat_gbTab";
+            this.chat_gbTab.Size = new System.Drawing.Size(256, 77);
+            this.chat_gbTab.TabIndex = 3;
+            this.chat_gbTab.TabStop = false;
+            this.chat_gbTab.Text = "Tab list";
+            // 
+            // chat_cbTabLevel
+            // 
+            this.chat_cbTabLevel.AutoSize = true;
+            this.chat_cbTabLevel.Location = new System.Drawing.Point(6, 52);
+            this.chat_cbTabLevel.Name = "chat_cbTabLevel";
+            this.chat_cbTabLevel.Size = new System.Drawing.Size(108, 17);
+            this.chat_cbTabLevel.TabIndex = 30;
+            this.chat_cbTabLevel.Text = "Level only tab list";
+            this.toolTip.SetToolTip(this.chat_cbTabLevel, "Is immortality cheap and unfair?");
+            this.chat_cbTabLevel.UseVisualStyleBackColor = true;
+            // 
+            // chat_gbTabRank
+            // 
+            this.chat_cbTabRank.AutoSize = true;
+            this.chat_cbTabRank.Location = new System.Drawing.Point(6, 20);
+            this.chat_cbTabRank.Name = "chat_cbTabRank";
+            this.chat_cbTabRank.Size = new System.Drawing.Size(116, 17);
+            this.chat_cbTabRank.TabIndex = 31;
+            this.chat_cbTabRank.Text = "Sort tab list by rank";
+            this.toolTip.SetToolTip(this.chat_cbTabRank, "Is immortality cheap and unfair?");
+            this.chat_cbTabRank.UseVisualStyleBackColor = true;
+            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4481,8 +4519,13 @@ namespace MCGalaxy.Gui
             this.gbReviewPerms.ResumeLayout(false);
             this.gbReviewPerms.PerformLayout();
             this.gbReviewQueue.ResumeLayout(false);
+            this.chat_gbTab.ResumeLayout(false);
+            this.chat_gbTab.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox chat_cbTabLevel;
+        private System.Windows.Forms.CheckBox chat_cbTabRank;
+        private System.Windows.Forms.GroupBox chat_gbTab;
         private System.Windows.Forms.ComboBox cmbOsMap;
         private System.Windows.Forms.Label lblOsMap;
         private System.Windows.Forms.CheckBox cbLogNotes;

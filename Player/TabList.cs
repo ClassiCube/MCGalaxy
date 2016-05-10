@@ -42,6 +42,9 @@ namespace MCGalaxy {
         	string col = Entities.GetSupportedCol(dst, p.color);          
             group = Server.TablistGlobal ? "Level " + p.level.name : "&fPlayers";    	
             name = col + p.truename;
+            
+            if (p.hidden && p.IsAfk) { name += " &f(Hid, &7AFK)"; return; }
+            if (p.hidden) name += " &f(Hid)";
             if (p.IsAfk) { name += " &7(AFK)"; return; }
             
             IGame game = p.level.CurrentGame();

@@ -426,8 +426,12 @@ namespace MCGalaxy.Gui {
                     try { updateTimeNumeric.Value = Convert.ToDecimal(value); }
                     catch { updateTimeNumeric.Value = 10; }
                     break;
+                case "tablist-rank-sorted":
+                    chat_cbTabRank.Checked = value.ToLower() == "true"; break;
+                 case "tablist-global":
+                    chat_cbTabLevel.Checked = value.ToLower() != "true"; break;
                 case "autoload":
-                    chkAutoload.Checked = ( value.ToLower() == "true" ); break;
+                    chkAutoload.Checked = value.ToLower() == "true"; break;
                 case "parse-emotes":
                     chkSmile.Checked = value.ToLower() == "true"; break;
                 case "allow-tp-to-higher-ranks":
@@ -441,17 +445,11 @@ namespace MCGalaxy.Gui {
                 case "dollar-before-dollar":
                     chk17Dollar.Checked = value.ToLower() == "true"; break;
                 case "money-name":
-                    txtMoneys.Text = value;
-                    break;
-                    /*case "mono":
-                            chkMono.Checked = value.ToLower() == "true";
-                            break;*/
+                    txtMoneys.Text = value; break;
                 case "restart-on-error":
-                    chkRestart.Checked = value.ToLower() == "true";
-                    break;
+                    chkRestart.Checked = value.ToLower() == "true"; break;
                 case "repeat-messages":
-                    chkRepeatMessages.Checked = value.ToLower() == "true";
-                    break;
+                    chkRepeatMessages.Checked = value.ToLower() == "true"; break;
                 case "host-state":
                     if ( value != "" ) chat_txtConsole.Text = value;
                     break;
@@ -682,6 +680,8 @@ namespace MCGalaxy.Gui {
             Server.GlobalChatColor = Colors.Parse(chat_cmbGlobal.SelectedItem.ToString());
             Server.HelpSyntaxColor = Colors.Parse(chat_cmbSyntax.SelectedItem.ToString());
             Server.HelpDescriptionColor = Colors.Parse(chat_cmbDesc.SelectedItem.ToString());
+            Server.TablistRankSorted = chat_cbTabRank.Checked;
+            Server.TablistGlobal = !chat_cbTabLevel.Checked;
            
             Server.higherranktp = chkTpToHigherRanks.Checked;
             Server.checkUpdates = chkUpdates.Checked;
