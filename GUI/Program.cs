@@ -92,7 +92,7 @@ namespace MCGalaxy.Gui
                     Server s = new Server();
                     s.OnLog += WriteToConsole;
                     s.OnCommand += WriteToConsole;
-                    s.OnSystem += WriteToConsole;
+                    s.OnSystem += delegate { };
                     s.Start();
 
                     Console.Title = Server.name + " - MCGalaxy " + Server.Version;
@@ -206,6 +206,7 @@ namespace MCGalaxy.Gui
                         {
                             cmd.Use(null, sentMsg);
                             Console.WriteLine("CONSOLE: USED /" + sentCmd + " " + sentMsg);
+                            Server.s.Log("(Console) used /" + sentCmd + " " + sentMsg, true);
                             if (sentCmd.ToLower() != "restart")
                                 continue;
                             break;
@@ -229,6 +230,7 @@ namespace MCGalaxy.Gui
                         Player.GlobalMessage(msg);
                         Server.IRC.Say(msg);
                         WriteToConsole(msg);
+                        Server.s.Log("(Console): " + msg, true);
                     }
                 }
                 catch (Exception ex)

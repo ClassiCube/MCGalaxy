@@ -453,6 +453,7 @@ namespace MCGalaxy.Gui
                 Player.GlobalMessage("Console [&a" + Server.ZallState + Server.DefaultColor + "]:&f " + text);
                 Server.IRC.Say("Console [" + Server.ZallState + "]: " + text);
                 WriteLine("<CONSOLE> " + text);
+                Server.s.Log("(Console): " + text, true);
                 txtInput.Clear();
             }
         }
@@ -501,6 +502,7 @@ namespace MCGalaxy.Gui
                     }
                     commandcmd.Use(null, sentMsg);
                     newCommand("CONSOLE: USED /" + sentCmd + " " + sentMsg);
+                    Server.s.Log("(Console) used /" + sentCmd + " " + sentMsg, true);
                 }
                 catch (Exception ex)
                 {

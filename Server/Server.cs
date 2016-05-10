@@ -793,20 +793,13 @@ namespace MCGalaxy
                     return;
                 }
             }
+            
             if (!systemMsg)
                 OnServerLogEvent.Call(message);
-            if (OnLog != null)
-            {
-                if (!systemMsg)
-                {
-                    OnLog(DateTime.Now.ToString("(HH:mm:ss) ") + message);
-                }
-                else
-                {
-                    OnSystem(DateTime.Now.ToString("(HH:mm:ss) ") + message);
-                }
-            }
-
+            if (!systemMsg && OnLog != null)
+                OnLog(DateTime.Now.ToString("(HH:mm:ss) ") + message);
+            if (systemMsg && OnSystem != null)
+                OnSystem(DateTime.Now.ToString("(HH:mm:ss) ") + message);
             Logger.Write(DateTime.Now.ToString("(HH:mm:ss) ") + message + Environment.NewLine);
         }
         public void OpLog(string message, bool systemMsg = false)
