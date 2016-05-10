@@ -65,19 +65,20 @@ namespace MCGalaxy {
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) who can see the player in the tab list. </summary>
         internal static void Update(Player p, bool self) {
-        	if (Server.TablistGlobal) UpdateToAll(p, self);
+        	if (Server.TablistGlobal) UpdateAll(p, self);
         	else UpdateToLevel(p, self);
         }
         
         
     	/// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) in the server. </summary>
-        internal static void UpdateToAll(Player p, bool self) {
+        internal static void UpdateAll(Player p, bool self) {
         	if (!Server.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
                 if (p != other && Entities.CanSeeEntity(other, p)) {
                     Add(other, p, p.id);
+                    Add(p, other, other.id);
                 } else if (p == other && self) {
                     Add(other, p, 0xFF);
                 }
@@ -86,12 +87,13 @@ namespace MCGalaxy {
         
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) in the server. </summary>
-        internal static void RemoveFromAll(Player p, bool self) {
+        internal static void RemoveAll(Player p, bool self) {
         	if (!Server.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
                 if (p != other && Entities.CanSeeEntity(other, p)) {
                     Remove(other, p.id);
+                    Remove(p, other.id);
                 } else if (p == other && self) {
                     Remove(other, 0xFF);
                 }

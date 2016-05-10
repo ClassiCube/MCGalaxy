@@ -85,9 +85,8 @@ namespace MCGalaxy.Commands {
         
         protected void HelpModels(Player p) {
             Player.Message(p, "Available models: Chibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie.");
-            Player.Message(p, "You can also use a block ID for the model name, to set a block model.");
-            Player.Message(p, "You can also put a |[scale] after the model name to have the client draw the model at that scale. " +
-                           "Note this is not supported by all clients.");
+            Player.Message(p, "To set a block model, use a block ID for the model name.");
+            Player.Message(p, "For setting scaling models, put \"|[scale]\" after the model name (not supported by all clients).");
         }
     }
     

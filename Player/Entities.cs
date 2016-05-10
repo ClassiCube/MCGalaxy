@@ -107,7 +107,7 @@ namespace MCGalaxy {
                 Spawn(p, pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }           
             GlobalSpawn(p, x, y, z, rotX, rotY, true);
-            TabList.UpdateToAll(p, true);
+            TabList.UpdateAll(p, true);
 
             if (!bots) return;            
             PlayerBot[] botsList = PlayerBot.Bots.Items;
@@ -122,7 +122,7 @@ namespace MCGalaxy {
                 if (p.level == pl.level && p != pl) Despawn(p, pl.id);
             }
             GlobalDespawn(p, true, true);
-            TabList.RemoveFromAll(p, true);
+            TabList.RemoveAll(p, true);
             
             if (!bots) return;
             PlayerBot[] botsList = PlayerBot.Bots.Items;
