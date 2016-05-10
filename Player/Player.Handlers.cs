@@ -1007,7 +1007,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     IsAfk = false;
                     Player.GlobalMessage("-" + ColoredName + "%S- is no longer AFK");
                     Server.IRC.Say(DisplayName + " is no longer AFK");
-                    TabList.UpdateToLevel(this, true);
+                    TabList.Update(this, true);
                 }
                 // Typing //Command appears in chat as /command
                 // Suggested by McMrCat

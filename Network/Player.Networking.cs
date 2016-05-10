@@ -126,7 +126,7 @@ namespace MCGalaxy {
         
         public void SendRaw(byte[] buffer, bool sync = false) {
             // Abort if socket has been closed
-            if (socket == null || !socket.Connected) return;
+            if (disconnected || socket == null || !socket.Connected) return;
             
             try {
                 if (sync)

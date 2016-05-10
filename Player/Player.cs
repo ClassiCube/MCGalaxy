@@ -556,7 +556,6 @@ namespace MCGalaxy {
                     return;
                 }
                 // FlyBuffer.Clear();
-                disconnected = true;
                 SaveIgnores();
                 pingTimer.Stop();
                 pingTimer.Dispose();
@@ -573,6 +572,7 @@ namespace MCGalaxy {
                 aiming = false;
                 
                 SendKick(kickMsg, sync);
+                disconnected = true;
                 if (!loggedIn) {
                 	connections.Remove(this);
                 	RemoveFromPending();
@@ -589,7 +589,7 @@ namespace MCGalaxy {
                 	tntwarsgame.SendAllPlayersMessage("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
                 }
 
-                Entities.GlobalDespawn(this, false, true);
+                Entities.DespawnEntities(this, false);
                 if (discMsg != null) {
                 	if (!hidden) {
                 		string leavem = "&c- " + FullName + " %S" + discMsg;

@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands
                 Player.GlobalMessage("-" + p.ColoredName + "%S- is no longer AFK");
                 Server.IRC.Say(p.DisplayName + " is no longer AFK");
             }
-            TabList.UpdateToLevel(p, true);
+            TabList.Update(p, true);
         }
         
         public override void Help(Player p) {

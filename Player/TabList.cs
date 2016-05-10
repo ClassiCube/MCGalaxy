@@ -23,24 +23,7 @@ namespace MCGalaxy {
     /// <summary> Contains methods related to the management of tab list of player names. </summary>
     public static class TabList {
         
-        /// <summary> Updates the tab list entry for this player to all other players 
-        /// (whose clients support it) in the player's world. </summary>
-        internal static void UpdateToLevel(Player p, bool self) {
-            Player[] players = PlayerInfo.Online.Items;
-            p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;          
-            
-            foreach (Player other in players) {
-                if ((other.Loading && p != other) || p.level != other.level) continue;
-                
-                if (p != other && Entities.CanSeeEntity(other, p)) {
-                    Add(other, p, p.id);
-                } else if (p == other && self) {
-                    Add(other, p, 0xFF);
-                }
-            }
-        }
-        
-        // Want nobody to be at top of list, banned to be bottom of list.
+    	 // Want nobody to be at top of list, banned to be bottom of list.
         const LevelPermission offset = LevelPermission.Nobody;
         
         /// <summary> Adds the given player to that player's tab list (if their client supports it). </summary>
@@ -48,19 +31,23 @@ namespace MCGalaxy {
             if (!dst.hasExtList) return;
             byte grpPerm = (byte)(offset - p.group.Permission);
             if (!Server.TablistRankSorted) grpPerm = 0;
-            string col = Entities.GetSupportedCol(dst, p.color);
             
-            if (p.IsAfk) {
-                dst.SendExtAddPlayerName(id, p.truename, col + p.truename, "&7AFK", grpPerm);
-                return;
-            }
-            string name = col + p.truename;
-            string group = "&fPlayers";
-            
-            IGame game = p.level.CurrentGame();
-            if (game != null) 
-            	game.GetTabName(p, dst, ref name, ref group);
+            string name, group;
+            GetEntry(p, dst, out name, out group);
             dst.SendExtAddPlayerName(id, p.truename, name, group, grpPerm);
+        }
+        
+        /// <summary> Gets the name and the group name for the given player. </summary>
+        public static void GetEntry(Player p, Player dst, out string name, out string group) {
+        	string col = Entities.GetSupportedCol(dst, p.color);          
+            if (p.IsAfk) {
+        		name = col + p.truename; group = "&7AFK"; return;
+            }
+        	
+            name = col + p.truename;
+            group = Server.TablistGlobal ? "Level " + p.level.name : "&fPlayers";
+            IGame game = p.level.CurrentGame();
+            if (game != null) game.GetTabName(p, dst, ref name, ref group);
         }
         
         /// <summary> Adds the given bot to that player's tab list (if their client support it). </summary>
@@ -73,6 +60,58 @@ namespace MCGalaxy {
         public static void Remove(Player dst, byte id) {
             if (!dst.hasExtList) return;
             dst.SendExtRemovePlayerName(id);
+        }
+        
+        /// <summary> Updates the tab list entry for this player to all other players 
+        /// (whose clients support it) who can see the player in the tab list. </summary>
+        internal static void Update(Player p, bool self) {
+        	if (Server.TablistGlobal) UpdateToAll(p, self);
+        	else UpdateToLevel(p, self);
+        }
+        
+        
+    	/// <summary> Updates the tab list entry for this player to all other players 
+        /// (whose clients support it) in the server. </summary>
+        internal static void UpdateToAll(Player p, bool self) {
+        	if (!Server.TablistGlobal) return;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player other in players) {
+                if (p != other && Entities.CanSeeEntity(other, p)) {
+                    Add(other, p, p.id);
+                } else if (p == other && self) {
+                    Add(other, p, 0xFF);
+                }
+            }
+        }
+        
+        /// <summary> Updates the tab list entry for this player to all other players 
+        /// (whose clients support it) in the server. </summary>
+        internal static void RemoveFromAll(Player p, bool self) {
+        	if (!Server.TablistGlobal) return;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player other in players) {
+                if (p != other && Entities.CanSeeEntity(other, p)) {
+                    Remove(other, p.id);
+                } else if (p == other && self) {
+                    Remove(other, 0xFF);
+                }
+            }
+        }
+        
+        /// <summary> Updates the tab list entry for this player to all other players 
+        /// (whose clients support it) in the player's world. </summary>
+        internal static void UpdateToLevel(Player p, bool self) {
+        	if (Server.TablistGlobal) return;
+            Player[] players = PlayerInfo.Online.Items;          
+            foreach (Player other in players) {
+                if ((other.Loading && p != other) || p.level != other.level) continue;
+                
+                if (p != other && Entities.CanSeeEntity(other, p)) {
+                    Add(other, p, p.id);
+                } else if (p == other && self) {
+                    Add(other, p, 0xFF);
+                }
+            }
         }
     }
 }

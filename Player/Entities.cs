@@ -64,12 +64,11 @@ namespace MCGalaxy {
             }
         }
         
-        
-        
 
         internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z,
                                    byte rotx, byte roty, string possession = "") {
-            TabList.Add(dst, p, id);
+        	if (!Server.TablistGlobal)
+                TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
                 string col = GetSupportedCol(dst, p.color);             
                 if (dst.hasExtList) {
@@ -101,13 +100,14 @@ namespace MCGalaxy {
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
-        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY,bool bots = true) {
+        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY, bool bots = true) {
         	Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
         		if (pl.level != p.level || !CanSeeEntity(p, pl) || p == pl) continue;
                 Spawn(p, pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }           
             GlobalSpawn(p, x, y, z, rotX, rotY, true);
+            TabList.UpdateToAll(p, true);
 
             if (!bots) return;            
             PlayerBot[] botsList = PlayerBot.Bots.Items;
@@ -122,11 +122,12 @@ namespace MCGalaxy {
                 if (p.level == pl.level && p != pl) Despawn(p, pl.id);
             }
             GlobalDespawn(p, true, true);
+            TabList.RemoveFromAll(p, true);
             
             if (!bots) return;
             PlayerBot[] botsList = PlayerBot.Bots.Items;
             foreach (PlayerBot b in botsList) {
-                if (p.level == b.level) Despawn(p, b.id);
+                if (p.level == b.level) Despawn(p, b);
             }           
         }
         
@@ -141,7 +142,13 @@ namespace MCGalaxy {
         
         internal static void Despawn(Player dst, byte id) {
             dst.SendRaw(Opcode.RemoveEntity, id);
-            TabList.Remove(dst, id);
+            if (!Server.TablistGlobal)
+                TabList.Remove(dst, id);
+        }
+        
+        internal static void Despawn(Player dst, PlayerBot b) {
+            dst.SendRaw(Opcode.RemoveEntity, b.id);
+            TabList.Remove(dst, b.id);
         }
 
         #endregion 
