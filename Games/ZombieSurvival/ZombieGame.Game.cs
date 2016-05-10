@@ -199,5 +199,20 @@ namespace MCGalaxy.Games {
             else if (winStreak == 3) prefix += "&6*"+ p.color;
             else if (winStreak > 0) prefix += "&6" + winStreak + p.color;
         }
+        
+        public override void GetTabName(Player p, Player dst,
+                                        ref string name, ref string group) {
+            if (p.Game.Referee) {
+                group = "&2Referees";
+            } else if (p.Game.Infected) {
+                group = "&cZombies";
+                if (ZombieGame.ZombieName != "" && !dst.Game.Aka)
+                    name = "&c" + ZombieGame.ZombieName;
+                else
+                    name = "&c" + p.truename;
+            } else {
+                group = "&fHumans";
+            }
+        }
     }
 }

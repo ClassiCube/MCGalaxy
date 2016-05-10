@@ -87,7 +87,7 @@ namespace MCGalaxy {
                     SendMessage("You have " + Awards.AwardAmount(name) + " awards.");
             } catch {
             }
-            
+
             Player[] players = PlayerInfo.Online.Items;
             SendMessage("You have modified &a" + overallBlocks + " %Sblocks!");
             string prefix = players.Length == 1 ? "There is" : "There are";

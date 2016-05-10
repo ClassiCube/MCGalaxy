@@ -68,5 +68,10 @@ namespace MCGalaxy.Games {
         
         /// <summary> Adjusts the prefix (e.g. title) shown before the player's name in chat. </summary>
         public virtual void AdjustPrefix(Player p, ref string prefix) { }
+        
+        /// <summary> Gets the player's name shown in the tab list 
+        /// (for clients that support a separate tab list) that are in this game. </summary>
+        public virtual void GetTabName(Player p, Player dst,
+                                       ref string name, ref string group) { }
     }
 }

@@ -48,24 +48,19 @@ namespace MCGalaxy {
             if (!dst.hasExtList) return;
             byte grpPerm = (byte)(offset - p.group.Permission);
             if (!Server.TablistRankSorted) grpPerm = 0;
+            string col = Entities.GetSupportedCol(dst, p.color);
             
             if (p.IsAfk) {
-                string col = Entities.GetSupportedCol(dst, p.color);
                 dst.SendExtAddPlayerName(id, p.truename, col + p.truename, "&7AFK", grpPerm);
                 return;
-            }            
-            
-            if (!Server.zombie.Running || !p.Game.Infected) {
-                string col = Entities.GetSupportedCol(dst, p.color);
-                string group = p.Game.Referee ? "&2Referees" : "&fPlayers";
-                dst.SendExtAddPlayerName(id, p.truename, col + p.truename, group, grpPerm);
-                return;
             }
+            string name = col + p.truename;
+            string group = "&fPlayers";
             
-            string name = p.truename;
-            if (ZombieGame.ZombieName != "" && !dst.Game.Aka)
-                name = ZombieGame.ZombieName;           
-            dst.SendExtAddPlayerName(id, p.truename, Colors.red + name, "&cZombies", grpPerm);
+            IGame game = p.level.CurrentGame();
+            if (game != null) 
+            	game.GetTabName(p, dst, ref name, ref group);
+            dst.SendExtAddPlayerName(id, p.truename, name, group, grpPerm);
         }
         
         /// <summary> Adds the given bot to that player's tab list (if their client support it). </summary>
