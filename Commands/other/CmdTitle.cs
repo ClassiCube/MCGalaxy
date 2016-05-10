@@ -18,7 +18,7 @@
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdTitle : Command {
+    public class CmdTitle : Command {
         
         public override string name { get { return "title"; } }
         public override string shortcut { get { return ""; } }
@@ -64,18 +64,15 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public class CmdXTitle : Command {
+    public class CmdXTitle : CmdTitle {
         
         public override string name { get { return "xtitle"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdXTitle() { }
 
         public override void Use(Player p, string message) {
             if (message != "") message = " " + message;
-            Command.all.Find("title").Use(p, p.name + message);
+            base.Use(p, p.name + message);
         }
         
         public override void Help(Player p) {

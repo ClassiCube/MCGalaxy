@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             string model = null;
 
             if (isBot && args.Length > 2) {
-            	pBot = PlayerBot.FindOrShowMatches(p, args[1]);
+                pBot = PlayerBot.FindOrShowMatches(p, args[1]);
                 if (pBot == null) return;
                 model = args[2];
             } else if (args.Length > 1) {
@@ -80,12 +80,18 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "/model [name] [model] - Sets the model of that player.");
             Player.Message(p, "/model bot [name] [model] - Sets the model of that bot.");
-            Player.Message(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
-            Player.Message(p, "You can also place a block ID instead of a model name, to change your model into a block!");
+            HelpModels(p);
+        }
+        
+        protected void HelpModels(Player p) {
+            Player.Message(p, "Available models: Chibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie.");
+            Player.Message(p, "You can also use a block ID for the model name, to set a block model.");
+            Player.Message(p, "You can also put a |[scale] after the model name to have the client draw the model at that scale. " +
+                           "Note this is not supported by all clients.");
         }
     }
     
-    public class CmdXModel : Command {
+    public class CmdXModel : CmdModel {
         
         public override string name { get { return "xmodel"; } }
         public override string shortcut { get { return "xm"; } }
@@ -96,13 +102,12 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); }
             string model = message == "" ? "humanoid" : message;
-            Command.all.Find("model").Use(p, p.name + " " + model);
+            base.Use(p, p.name + " " + model);
         }
 
         public override void Help(Player p) {
             Player.Message(p, "/xm [model] - Sets your own model.");
-            Player.Message(p, "Available models: Chibi, Chicken, Creeper, Croc, Humanoid, Pig, Printer, Sheep, Spider, Skeleton, Zombie.");
-            Player.Message(p, "You can also place a block ID instead of a model name, to change your model into a block!");
+            HelpModels(p);
         }
     }
 }

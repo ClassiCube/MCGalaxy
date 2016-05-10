@@ -62,12 +62,13 @@ namespace MCGalaxy.Commands
             {
                 List<string> list = VIP.GetAll();
                 if (list.Count < 1) Player.Message(p, "There are no VIPs.");
-                else
-                {
+                else {
                     StringBuilder sb = new StringBuilder();
                     foreach (string name in list)
                         sb.Append(name).Append(", ");
-                    Player.Message(p, "There are " + list.Count + " VIPs:");
+                    
+                    string count = list.Count > 1 ? "is 1" : "are " + list.Count;
+                    Player.Message(p, "There " + count + " VIPs:");
                     Player.Message(p, sb.Remove(sb.Length - 2, 2).ToString());
                 }
             }

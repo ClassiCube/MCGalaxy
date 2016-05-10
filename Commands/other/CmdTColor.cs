@@ -18,7 +18,7 @@
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdTColor : Command {
+    public class CmdTColor : Command {
         
         public override string name { get { return "tcolor"; } }
         public override string shortcut { get { return ""; } }
@@ -61,30 +61,31 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "/tcolor <player> [color] - Gives <player> the title color of [color].");
             Player.Message(p, "If no [color] is specified, title color is removed.");
+            HelpColors(p);
+        }
+        
+        protected void HelpColors(Player p) {
             Player.Message(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
             Player.Message(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
+            Player.Message(p, "To see a list of all colors, use /help colors.");
         }
     }
     
-    public sealed class CmdXTColor : Command {
+    public sealed class CmdXTColor : CmdTColor {
         
         public override string name { get { return "xtcolor"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdXTColor() { }
 
         public override void Use(Player p, string message) {
             if (message != "") message = " " + message;
-            Command.all.Find("tcolor").Use(p, p.name + message);
+            base.Use(p, p.name + message);
         }
 
         public override void Help(Player p) {
             Player.Message(p, "/xtcolor [color] - Gives you the title color of [color].");
             Player.Message(p, "If no [color] is specified, title color is removed.");
-            Player.Message(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
-            Player.Message(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
+            HelpColors(p);
         }
     }
 }

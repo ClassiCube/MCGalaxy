@@ -88,7 +88,11 @@ namespace MCGalaxy.Commands
                 }
             }
 
-            output("There are &a" + totalPlayers + " %Splayers online.");
+            if (totalPlayers == 1)
+                output("There is &a1 %Splayer online.");
+            else
+                output("There are &a" + totalPlayers + " %Splayers online.");
+            
             devSec.Print(output, false);
             modsSec.Print(output, false);
             
