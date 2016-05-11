@@ -32,7 +32,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public CloudyBrush(ExtBlock[] blocks, int[] counts, NoiseArgs n) {
             this.blocks = blocks;
             this.counts = counts;
-            this.thresholds = thresholds;
+            this.thresholds = new float[counts.Length];
             Random r = n.Seed == int.MinValue ? new Random() : new Random(n.Seed);
             noise = new ImprovedNoise(r);
             
@@ -58,15 +58,21 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public static Brush Process(BrushArgs args) {
             NoiseArgs n = default(NoiseArgs);
-            n.Amplitude = 1; n.Frequency = 1; n.Octaves = 1;
-            n.Seed = int.MinValue; n.Persistence = 2; n.Lacunarity = 2;
+            // Constants borrowed from fCraft to match it
+            n.Amplitude = 1;
+            n.Frequency = 0.08f;
+            n.Octaves = 3;
+            n.Seed = int.MinValue;
+            n.Persistence = 0.75f;
+            n.Lacunarity = 2;
+            
             if (args.Message == "")
                 return new CloudyBrush(new[] { new ExtBlock(args.Type, args.ExtType),
-                                          new ExtBlock(Block.Zero, 0) }, n);
+                                           new ExtBlock(Block.Zero, 0) }, new[] { 1, 1 }, n);
             
             string[] parts = args.Message.Split(' ');
             int[] count = new int[parts.Length];
-            ExtBlock[] toAffect = GetBlocks(args.Player, parts, count, 
+            ExtBlock[] toAffect = GetBlocks(args.Player, parts, count,
                                             Filter, arg => Handler(arg, args.Player, ref n));
             
             if (toAffect == null) return null;
@@ -85,77 +91,93 @@ namespace MCGalaxy.Drawing.Brushes {
             
             if (opt == 'l') {
                 if (float.TryParse(arg, out args.Lacunarity)) return true;
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); 
+                Player.Message(p, "\"{0}\" was not a valid decimal.", arg);
             } else if (opt == 'a') {
                 if (float.TryParse(arg, out args.Amplitude)) return true;
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); 
+                Player.Message(p, "\"{0}\" was not a valid decimal.", arg);
             } else if (opt == 'f') {
                 if (float.TryParse(arg, out args.Frequency)) return true;
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); 
+                Player.Message(p, "\"{0}\" was not a valid decimal.", arg);
             } else if (opt == 'p') {
                 if (float.TryParse(arg, out args.Persistence)) return true;
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); 
+                Player.Message(p, "\"{0}\" was not a valid decimal.", arg);
             } else if (opt == 'o') {
-                if (byte.TryParse(arg, out args.Octaves) 
+                if (byte.TryParse(arg, out args.Octaves)
                     && args.Octaves > 0 && args.Octaves <= 16) return true;
-                Player.Message(p, "\"{0}\" was not an integer between 1 and 16.", arg); 
+                Player.Message(p, "\"{0}\" was not an integer between 1 and 16.", arg);
             } else if (opt == 's') {
                 if (int.TryParse(arg, out args.Seed)) return true;
-                Player.Message(p, "\"{0}\" was not a valid integer.", arg); 
+                Player.Message(p, "\"{0}\" was not a valid integer.", arg);
             } else {
-                Player.Message(p, "\"{0}\" was not a valid argument name.", opt); 
+                Player.Message(p, "\"{0}\" was not a valid argument name.", opt);
             }
             return false;
         }
         
-		public unsafe override void Configure(DrawOp op, Player p) {
+        public unsafe override void Configure(DrawOp op, Player p) {
             Player.Message(p, "Calculating noise distribution...");
-            // Initalise our 10000 element histogram
-            const int count = 10000;
-            int* values = stackalloc int[count];
-            for (int i = 0; i < count; i++)
-            	values[i] = 0;
+            // Initalise our noise histogram
+            const int accuracy = 10000;
+            int* values = stackalloc int[accuracy];
+            for (int i = 0; i < accuracy; i++)
+                values[i] = 0;
             
-            // Fill the histogram
+            // Fill the histogram with the distribution of the noise
             for (int x = op.Min.X; x <= op.Max.X; x++)
-            	for (int y = op.Min.Y; y <= op.Max.Y; y++)
-            		for (int z = op.Min.Z; z <= op.Max.Z; z++)
+                for (int y = op.Min.Y; y <= op.Max.Y; y++)
+                    for (int z = op.Min.Z; z <= op.Max.Z; z++)
             {
-            	float N = noise.NormalisedNoise(x, y, z);
-            	N = (N + 1) * 0.5f; // rescale to [0, 1]
-            	
-            	int index = (int)(N * count);
-            	index = index < 0 ? 0 : index;
-            	index = index >= count ? count - 1 : index;
-            	values[index]++;
+                float N = noise.NormalisedNoise(x, y, z);
+                N = (N + 1) * 0.5f; // rescale to [0, 1]
+                
+                int index = (int)(N * accuracy);
+                index = index < 0 ? 0 : index;
+                index = index >= accuracy ? accuracy - 1 : index;
+                values[index]++;
             }
             
-            // Calculate the ratio of blocks
-            float* ratio = stackalloc float[counts.Length];
-            int total = 0;
+            // Calculate the coverage of blocks
+            float* coverage = stackalloc float[counts.Length];
+            int totalBlocks = 0;
             for (int i = 0; i < counts.Length; i++)
-            	total += counts[i];
-            float prev = 0;
-            for (int i = 0; i < ratio.Length; i++) {
-            	ratio[i] = prev + (counts[i] / (float)total);
-            	prev = ratio[i];
+                totalBlocks += counts[i];
+            float last = 0;
+            for (int i = 0; i < counts.Length; i++) {
+                coverage[i] = last + (counts[i] / (float)totalBlocks);
+                last = coverage[i];
             }
             
-            // Map noise distribution to block ratios TODO how?
-            int volume = (op.Max.X - op.Min.X + 1) 
-            	* (op.Max.Y - op.Min.Y + 1) * (op.Max.Z - op.Min.Z + 1);          
-                       
+            // Map noise distribution to block coverage
+            int volume = (op.Max.X - op.Min.X + 1)
+                * (op.Max.Y - op.Min.Y + 1) * (op.Max.Z - op.Min.Z + 1);
+            float sum = 0;
+            for (int i = 0; i < accuracy; i++) {
+                // Update the thresholds
+                // So for example if sum is 0.2 and coverage is [0.25, 0.5, 0.75, 1]
+                //   then the threshold for all blocks is set to this.
+                // If sum was say 0.8 instead, then only the threshold for the
+                //   very last block would be increased.
+                for (int j = 0; j < counts.Length; j++) {
+                    if (sum <= coverage[j])
+                        thresholds[j] = i / (float)accuracy;
+                }
+                sum += values[i] / (float)volume;
+            }
+            thresholds[blocks.Length - 1] = 1;            
             Player.Message(p, "Finished calculating, now drawing.");
-		}
+        }
         
         int next;
         public override byte NextBlock(DrawOp op) {
             float N = noise.NormalisedNoise(op.Coords.X, op.Coords.Y, op.Coords.Z);
             N = (N + 1) * 0.5f; // rescale to [0, 1];
-            next = (int)(N * blocks.Length);
+            N = N < 0 ? 0 : N;
+            N = N > 1 ? 1 : N;
             
-            if (next < 0) next = 0;
-            if (next >= blocks.Length) next = blocks.Length - 1;
+            next = blocks.Length - 1;
+            for (int i = 0; i < thresholds.Length; i++) {
+                if (N <= thresholds[i]) { next = i; break; }
+            }
             return blocks[next].Type;
         }
         
