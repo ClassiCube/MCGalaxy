@@ -442,7 +442,7 @@ namespace MCGalaxy.Commands {
                 if (pl.level == null || !pl.level.HasCustomBlocks) continue;
                 if (!pl.outdatedClient) continue;
                 
-                Command.all.Find("reveal").Use(p, pl.name);
+                CmdReveal.ReloadMap(p, pl, true);
             }
         }
         
