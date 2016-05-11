@@ -205,11 +205,7 @@ namespace MCGalaxy {
                                 if (p.group.Permission < group.Permission)
                                     continue;
                             }
-                                
-                            Database.executeQuery("DELETE FROM `Zone" + p.level.name + "` WHERE Owner='" +
-                                                  zn.Owner + "' AND SmallX='" + zn.smallX + "' AND SMALLY='" +
-                                                  zn.smallY + "' AND SMALLZ='" + zn.smallZ + "' AND BIGX='" +
-                                                  zn.bigX + "' AND BIGY='" + zn.bigY + "' AND BIGZ='" + zn.bigZ +  "'");
+                            Zones.Delete(p.level.name, zn);
                             if (toDel == null) toDel = new List<Zone>();
                             toDel.Add(zn);
 

@@ -104,13 +104,17 @@ namespace MCGalaxy.Eco {
 
                 Player.Message(p, "%aSuccessfully created your map: '%f" + name + "%a'");
                 try {
-                    //safe against SQL injections, but will be replaced soon by a new feature
-                    Database.executeQuery("INSERT INTO `Zone" + level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) parts[1]S " +
-                                          "(0,0,0," + (level.Width - 1) + "," + (level.Height - 1) + "," + (level.Length - 1) + ",'" + p.name + "')");
+                    Level.Zone zn = default(Level.Zone);
+                    zn.bigX = (ushort)(level.Width - 1);
+                    zn.bigY = (ushort)(level.Height - 1);
+                    zn.bigZ = (ushort)(level.Length - 1);
+                    zn.Owner = p.name;
+                    level.ZoneList.Add(zn);
+                    Zones.Create(level.name, zn);
                     Player.Message(p, "%aZoning Succesful");
                 } catch { Player.Message(p, "%cZoning Failed"); }
             } catch {
-                Player.Message(p, "%cSomething went wrong, Money untouchred"); return;
+                Player.Message(p, "%cSomething went wrong, Money untouched"); return;
             }
             Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
         }

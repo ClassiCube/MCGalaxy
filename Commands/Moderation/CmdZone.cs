@@ -86,11 +86,7 @@ namespace MCGalaxy.Commands
                     for (int i = 0; i < p.level.ZoneList.Count; i++)
                     {
                         Level.Zone Zn = p.level.ZoneList[i];
-                        ParameterisedQuery query = ParameterisedQuery.Create();
-                        query.AddParam("@Owner", Zn.Owner);
-                        Database.executeQuery(query, "DELETE FROM `Zone" + p.level.name + "` WHERE Owner=@Owner AND SmallX='" + Zn.smallX + "' AND SMALLY='" + Zn.smallY + 
-                                              "' AND SMALLZ='" + Zn.smallZ + "' AND BIGX='" + Zn.bigX + "' AND BIGY='" + Zn.bigY + "' AND BIGZ='" + Zn.bigZ + "'");
-
+                        Zones.Delete(p.level.name, Zn);
                         Player.Message(p, "Zone deleted for &b" + Zn.Owner);
                         p.level.ZoneList.Remove(p.level.ZoneList[i]);
                         if (i == p.level.ZoneList.Count) { Player.Message(p, "Finished removing all zones"); return; }
@@ -157,11 +153,7 @@ namespace MCGalaxy.Commands
             Zn.Owner = cpos.Owner;
 
             p.level.ZoneList.Add(Zn);
-
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Owner", Zn.Owner);
-            Database.executeQuery(query, "INSERT INTO `Zone" + p.level.name + "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES ("
-                                  + Zn.smallX + ", " + Zn.smallY + ", " + Zn.smallZ + ", " + Zn.bigX + ", " + Zn.bigY + ", " + Zn.bigZ + ", @Owner)");
+            Zones.Create(p.level.name, Zn);
             Player.Message(p, "Added zone for &b" + cpos.Owner);
         }
 

@@ -303,7 +303,6 @@
     <Compile Include="Commands\Moderation\CmdPromote.cs" />
     <Compile Include="Commands\Moderation\CmdPUnload.cs" />
     <Compile Include="Commands\Moderation\CmdRankInfo.cs" />
-    <Compile Include="Commands\Moderation\CmdRenameLvl.cs" />
     <Compile Include="Commands\Moderation\CmdResetBot.cs" />
     <Compile Include="Commands\Moderation\CmdRestart.cs" />
     <Compile Include="Commands\Moderation\CmdRestoreSelection.cs" />
@@ -400,6 +399,7 @@
     <Compile Include="Commands\World\CmdPause.cs" />
     <Compile Include="Commands\World\CmdPermissions.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
+    <Compile Include="Commands\World\CmdRenameLvl.cs" />
     <Compile Include="Commands\World\CmdRestore.cs" />
     <Compile Include="Commands\World\CmdReveal.cs" />
     <Compile Include="Commands\World\CmdSave.cs" />
@@ -523,6 +523,7 @@
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
+    <Compile Include="Levels\Zones.cs" />
     <Compile Include="Player\Chat.cs" />
     <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />
