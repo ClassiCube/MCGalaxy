@@ -307,7 +307,6 @@
     <Compile Include="Commands\Moderation\CmdResetBot.cs" />
     <Compile Include="Commands\Moderation\CmdRestart.cs" />
     <Compile Include="Commands\Moderation\CmdRestoreSelection.cs" />
-    <Compile Include="Commands\Moderation\CmdReveal.cs" />
     <Compile Include="Commands\Moderation\CmdSetRank.cs" />
     <Compile Include="Commands\Moderation\CmdShutdown.cs" />
     <Compile Include="Commands\Moderation\CmdTempBan.cs" />
@@ -402,6 +401,7 @@
     <Compile Include="Commands\World\CmdPermissions.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
     <Compile Include="Commands\World\CmdRestore.cs" />
+    <Compile Include="Commands\World\CmdReveal.cs" />
     <Compile Include="Commands\World\CmdSave.cs" />
     <Compile Include="Commands\World\CmdSetspawn.cs" />
     <Compile Include="Commands\World\CmdTexture.cs" />
