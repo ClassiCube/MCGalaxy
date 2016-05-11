@@ -81,19 +81,19 @@ namespace MCGalaxy.Generator {
             
             return Lerp(
                 Lerp(
-                    Lerp(Grad(p[AA], X, Y, Z),
-                         Grad(p[BA], X - 1, Y, Z),
+                    Lerp(Grad(p[AA], x, y, z),
+                         Grad(p[BA], x - 1, y, z),
                          u),
-                    Lerp(Grad(p[AB], X, Y - 1, Z),
-                         Grad(p[BB], X - 1, Y - 1, Z),
+                    Lerp(Grad(p[AB], x, y - 1, z),
+                         Grad(p[BB], x - 1, y - 1, z),
                          u),
                     v),
                 Lerp(
-                    Lerp(Grad(p[AA + 1], X, Y, Z - 1),
-                         Grad(p[BA + 1], X - 1, Y, Z - 1),
+                    Lerp(Grad(p[AA + 1], x, y, z - 1),
+                         Grad(p[BA + 1], x - 1, y, z - 1),
                          u),
-                    Lerp(Grad(p[AB + 1], X, Y - 1, Z - 1),
-                         Grad(p[BB + 1], X - 1, Y - 1, Z - 1),
+                    Lerp(Grad(p[AB + 1], x, y - 1, z - 1),
+                         Grad(p[BB + 1], x - 1, y - 1, z - 1),
                          u),
                     v),
                 w);

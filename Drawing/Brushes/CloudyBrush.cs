@@ -25,10 +25,14 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class CloudyBrush : FrequencyBrush {
         readonly ExtBlock[] blocks;
+        readonly int[] counts;
+        readonly float[] thresholds;
         readonly ImprovedNoise noise;
         
-        public CloudyBrush(ExtBlock[] blocks, NoiseArgs n) {
+        public CloudyBrush(ExtBlock[] blocks, int[] counts, NoiseArgs n) {
             this.blocks = blocks;
+            this.counts = counts;
+            this.thresholds = thresholds;
             Random r = n.Seed == int.MinValue ? new Random() : new Random(n.Seed);
             noise = new ImprovedNoise(r);
             
@@ -66,8 +70,7 @@ namespace MCGalaxy.Drawing.Brushes {
                                             Filter, arg => Handler(arg, args.Player, ref n));
             
             if (toAffect == null) return null;
-            ExtBlock[] blocks = Combine(toAffect, count);
-            return new CloudyBrush(blocks, n);
+            return new CloudyBrush(toAffect, count, n);
         }
         
         // We want to handle non block options.
@@ -105,8 +108,43 @@ namespace MCGalaxy.Drawing.Brushes {
             return false;
         }
         
-		public override void Configure(DrawOp op, Player p) {
+		public unsafe override void Configure(DrawOp op, Player p) {
             Player.Message(p, "Calculating noise distribution...");
+            // Initalise our 10000 element histogram
+            const int count = 10000;
+            int* values = stackalloc int[count];
+            for (int i = 0; i < count; i++)
+            	values[i] = 0;
+            
+            // Fill the histogram
+            for (int x = op.Min.X; x <= op.Max.X; x++)
+            	for (int y = op.Min.Y; y <= op.Max.Y; y++)
+            		for (int z = op.Min.Z; z <= op.Max.Z; z++)
+            {
+            	float N = noise.NormalisedNoise(x, y, z);
+            	N = (N + 1) * 0.5f; // rescale to [0, 1]
+            	
+            	int index = (int)(N * count);
+            	index = index < 0 ? 0 : index;
+            	index = index >= count ? count - 1 : index;
+            	values[index]++;
+            }
+            
+            // Calculate the ratio of blocks
+            float* ratio = stackalloc float[counts.Length];
+            int total = 0;
+            for (int i = 0; i < counts.Length; i++)
+            	total += counts[i];
+            float prev = 0;
+            for (int i = 0; i < ratio.Length; i++) {
+            	ratio[i] = prev + (counts[i] / (float)total);
+            	prev = ratio[i];
+            }
+            
+            // Map noise distribution to block ratios TODO how?
+            int volume = (op.Max.X - op.Min.X + 1) 
+            	* (op.Max.Y - op.Min.Y + 1) * (op.Max.Z - op.Min.Z + 1);          
+                       
             Player.Message(p, "Finished calculating, now drawing.");
 		}
         
