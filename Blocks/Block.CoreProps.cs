@@ -60,10 +60,10 @@ namespace MCGalaxy {
                 }
                 
                 if ((i >= red && i <= white) || (i >= lightpink && i <= turquoise))
-                    Properties[i].KilledByLava = true;
+                    Properties[i].LavaKills = true;
                 if (i == air || i == shrub || (i >= yellowflower && i <= redmushroom)) {
-                    Properties[i].KilledByLava = true;
-                    Properties[i].KilledByWater = true;
+                    Properties[i].LavaKills = true;
+                    Properties[i].WaterKills = true;
                 }
                 
                 // Door blocks
@@ -89,10 +89,10 @@ namespace MCGalaxy {
             Properties[air_flood_down].SaveConvertId = air;
             Properties[air_flood_layer].SaveConvertId = air;
             Properties[air_flood_up].SaveConvertId = air;
-            Properties[wood].KilledByLava = true; Properties[trunk].KilledByLava = true;
-            Properties[sponge].KilledByLava = true; Properties[bookcase].KilledByLava = true;
-            Properties[leaf].KilledByLava = true;
-            Properties[red].IsTrack = true; Properties[op_air].IsTrack = true;
+            Properties[wood].LavaKills = true; Properties[trunk].LavaKills = true;
+            Properties[sponge].LavaKills = true; Properties[bookcase].LavaKills = true;
+            Properties[leaf].LavaKills = true;
+            Properties[red].IsRails = true; Properties[op_air].IsRails = true;
             SetupDefaultNames();
         }
         

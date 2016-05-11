@@ -138,11 +138,11 @@ namespace MCGalaxy
 
         public static bool Mover(byte type) { return walkthroughHandlers[type] != null; }
 
-        public static bool FireKill(byte type) { return type != air && Properties[type].KilledByLava; }
+        public static bool FireKill(byte type) { return type != air && Properties[type].LavaKills; }
         
-        public static bool LavaKill(byte type) { return Properties[type].KilledByLava; }
+        public static bool LavaKill(byte type) { return Properties[type].LavaKills; }
 		
-        public static bool WaterKill(byte type) { return Properties[type].KilledByWater; }
+        public static bool WaterKill(byte type) { return Properties[type].WaterKills; }
 
         public static bool LightPass(byte type, byte extType, BlockDefinition[] defs) {
             switch (Convert(type)) {

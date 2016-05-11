@@ -45,9 +45,9 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether this block is considered a portal. </summary>
         public bool IsPortal;
         /// <summary> Whether this block is overwritten/killed by water blocks. </summary>
-        public bool KilledByWater;
+        public bool WaterKills;
         /// <summary> Whether this block is overwritten/killed by lava blocks. </summary>
-        public bool KilledByLava;
+        public bool LavaKills;
         
         /// <summary> Whether walkinhg through this block causes the death of that player. </summary>
         public bool CausesDeath;
@@ -56,7 +56,7 @@ namespace MCGalaxy.Blocks {
         public bool OPBlock;
         
         /// <summary> Whether this block should allow trains to go over them. </summary>
-        public bool IsTrack;
+        public bool IsRails;
         
         public BlockProps(byte type) {
             this = default(BlockProps);
