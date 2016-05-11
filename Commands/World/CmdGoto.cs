@@ -132,6 +132,7 @@ namespace MCGalaxy.Commands {
             Entities.SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
             p.Loading = false;
             CheckGamesJoin(p, oldLevel);
+            p.prevMsg = "";
             
             bool showJoin = p.level.ShouldSaveChanges() || (oldLevel != null && oldLevel.ShouldSaveChanges());
             if (!p.hidden && showJoin) {

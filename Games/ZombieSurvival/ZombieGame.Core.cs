@@ -125,7 +125,9 @@ namespace MCGalaxy.Games {
                 RoundStart = DateTime.UtcNow.AddSeconds(30);
                 if (!Running) return null;
                 SendLevelRaw("&4Starting in &f30 &4seconds", true);
-                Thread.Sleep(20000); if (!Running) return null;
+                Thread.Sleep(10000); if (!Running) return null;
+                SendLevelRaw("&4Starting in &f20 &4seconds", true);
+                Thread.Sleep(10000); if (!Running) return null;
                 SendLevelRaw("&4Starting in &f10 &4seconds", true);
                 Thread.Sleep(5000); if (!Running) return null;
                 SendLevelRaw("&4Starting in &f5 &4seconds", true);
@@ -138,6 +140,7 @@ namespace MCGalaxy.Games {
                 Thread.Sleep(1000); if (!Running) return null;
                 SendLevelRaw("&4Starting in &f1 &4second", true);
                 Thread.Sleep(1000); if (!Running) return null;
+                SendLevelRaw("", true);
                 int nonRefPlayers = 0;
                 List<Player> players = new List<Player>();
                 
