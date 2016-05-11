@@ -30,6 +30,9 @@ namespace MCGalaxy.Drawing.Brushes {
         /// <summary> Description of the brush, in addition to its syntax. </summary>
         public abstract string[] Help { get; }
         
+        /// <summary> Performs calcuations (if necessary) for the given drawop. </summary>
+        public virtual void Configure(DrawOp op, Player p) { }
+        
         public abstract byte NextBlock(DrawOp op);
         
         public abstract byte NextExtBlock(DrawOp op);
@@ -40,7 +43,7 @@ namespace MCGalaxy.Drawing.Brushes {
             { "checkered", CheckeredBrush.Process }, { "rainbow", RainbowBrush.Process },
             { "bwrainbow", BWRainbowBrush.Process }, { "striped", StripedBrush.Process },
             { "replace", ReplaceBrush.Process }, { "replacenot", ReplaceNotBrush.Process },
-            { "random", RandomBrush.Process }, { "noise", NoiseBrush.Process },
+            { "random", RandomBrush.Process }, { "cloudy", CloudyBrush.Process },
         };
         
         public static Dictionary<string, string[]> BrushesHelp = new Dictionary<string, string[]> {
@@ -48,7 +51,7 @@ namespace MCGalaxy.Drawing.Brushes {
             { "checkered", CheckeredBrush.HelpString }, { "rainbow", RainbowBrush.HelpString },
             { "bwrainbow", BWRainbowBrush.HelpString }, { "striped", StripedBrush.HelpString },
             { "replace", ReplaceBrush.HelpString }, { "replacenot", ReplaceNotBrush.HelpString },
-            { "random", RandomBrush.HelpString }, { "noise", NoiseBrush.HelpString },
+            { "random", RandomBrush.HelpString }, { "cloudy", CloudyBrush.HelpString },
         };
     }
     

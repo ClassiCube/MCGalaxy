@@ -116,6 +116,8 @@ namespace MCGalaxy.Drawing.Ops {
                 entry.Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
                 
                 bool needReveal = item.Op.DetermineDrawOpMethod(item.Level, item.Affected);
+                if (item.Brush != null)
+                    item.Brush.Configure(item.Op, p);
                 item.Op.Perform(item.Marks, p, item.Level, item.Brush);
                 timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                 entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
