@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Guest, "The highest rank to be patrolled") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Guest, " and below are patrolled") }; }
         }
         
         public override void Help(Player p)
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
             string value = getpatrol[index];
             Player who = PlayerInfo.FindExact(value);
             Command.all.Find("tp").Use(p, who.name);
-            Player.Message(p, "You are now visiting " + who.color + who.name + "!");
+            Player.Message(p, "Now visiting " + who.ColoredName + "%S.");
         }
     }
 }

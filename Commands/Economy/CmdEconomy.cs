@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "Lowest rank that can setup the economy") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can setup the economy") }; }
         }
         
         public override void Use(Player p, string message) {

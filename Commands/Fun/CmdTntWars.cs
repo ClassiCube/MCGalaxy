@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
 		public override bool museumUsable { get { return false; } }
 		public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "Lowest rank that can use admin commands for tntwars") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can use admin commands for tntwars") }; }
         }
 
         public bool DeleteZone = false;

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "Lowest rank able to set rank requirements."),
+                    new CommandPerm(LevelPermission.Operator, "+ can set rank requirements."),
                 }; }
         }
         static char[] trimChars = new[] { ' ' };

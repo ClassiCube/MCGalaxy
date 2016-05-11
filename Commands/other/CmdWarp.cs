@@ -28,9 +28,9 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "Lowest rank to create warps"),
-                    new CommandPerm(LevelPermission.Operator, "Lowest rank to delete warps"),
-                    new CommandPerm(LevelPermission.Operator, "Lowest rank to move/edit warps"),
+                    new CommandPerm(LevelPermission.Operator, "+ can create warps"),
+                    new CommandPerm(LevelPermission.Operator, "+ can delete warps"),
+                    new CommandPerm(LevelPermission.Operator, "+ can move/edit warps"),
                 }; }
         }
         

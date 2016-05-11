@@ -26,9 +26,9 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "Lowest rank at which big tnt can be used"),
-                    new CommandPerm(LevelPermission.Operator, "Lowest rank at which the user can allow/disallow tnt"),
-                    new CommandPerm(LevelPermission.Operator, "Lowest rank at which nuke tnt can be used"),
+                    new CommandPerm(LevelPermission.Operator, "+ can use big TNT"),
+                    new CommandPerm(LevelPermission.Operator, "+ can allow/disallow tnt"),
+                    new CommandPerm(LevelPermission.Operator, "+ can use nuke TNT"),
                 }; }
         }
 

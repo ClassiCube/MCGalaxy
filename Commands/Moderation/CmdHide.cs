@@ -26,8 +26,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, 
-                                                     "Lowest rank that can hide/unhide without showing a message to ops") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can hide/unhide without showing a message to ops") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xhide", "silent") }; }

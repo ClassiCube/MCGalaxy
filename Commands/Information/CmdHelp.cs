@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands
             for (int i = 0; i < perms.Length; i++) {
                 var addition = CommandOtherPerms.Find(cmd, i + 1);
                 LevelPermission perm = (LevelPermission)addition.Permission;
-                Player.Message(p, GetColoredRank(perm) + " %S- " + addition.Description);
+                Player.Message(p, GetColoredRank(perm) + "%S" + addition.Description);
             }
             return true;
         }
