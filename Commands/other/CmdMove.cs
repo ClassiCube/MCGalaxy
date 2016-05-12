@@ -33,22 +33,19 @@ namespace MCGalaxy.Commands
             // /move x y z
             // /move name x y z
 
-            string[] param = message.Split(' ');
-
-            if (param.Length < 1 || param.Length > 4) { Help(p); return; }
+            string[] args = message.Split(' ');
+            if (args.Length < 1 || args.Length > 4) { Help(p); return; }
 
             // /move name
-            if (param.Length == 1)
-            {
+            if (args.Length == 1) {
                 // Use main world by default
                 // Add the world name to the 2nd param so that the IF block below is used
-                param = new string[] { param[0], Server.mainLevel.name };
+                args = new string[] { args[0], Server.mainLevel.name };
             }
 
-            if (param.Length == 2)     // /move name map
-            {
-                Player who = PlayerInfo.FindOrShowMatches(p, param[0]);
-                Level where = LevelInfo.FindOrShowMatches(p, param[1]);
+            if (args.Length == 2) {    // /move name map
+                Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+                Level where = LevelInfo.FindOrShowMatches(p, args[1]);
                 if (who == null || where == null) return;
                 if (p != null && who.group.Permission > p.group.Permission) { 
                     MessageTooHighRank(p, "move", true); return;
@@ -59,37 +56,31 @@ namespace MCGalaxy.Commands
                     Player.Message(p, "Sent " + who.ColoredName + " %Sto " + where.name);
                 else
                     Player.Message(p, where.name + " is not loaded");
-            }
-            else
-            {
+            } else {
                 // /move name x y z
                 // /move x y z
 
                 Player who;
-
-                if (param.Length == 4)
-                {
-                    who = PlayerInfo.FindOrShowMatches(p, param[0]);
+                int offset = 0;
+                if (args.Length == 4) {
+                    who = PlayerInfo.FindOrShowMatches(p, args[0]);
                     if (who == null) return;
                     if (p != null && who.group.Permission > p.group.Permission) { 
                         MessageTooHighRank(p, "move", true); return; 
                     }
-                    message = message.Substring(message.IndexOf(' ') + 1);
-                }
-                else
-                {
+                    offset = 1;
+                } else {
                     who = p;
                 }
 
-                try
-                {
-                    ushort x = System.Convert.ToUInt16(message.Split(' ')[0]);
-                    ushort y = System.Convert.ToUInt16(message.Split(' ')[1]);
-                    ushort z = System.Convert.ToUInt16(message.Split(' ')[2]);
+                try {
+                    ushort x = ushort.Parse(args[offset + 0]);
+                    ushort y = ushort.Parse(args[offset + 1]);
+                    ushort z = ushort.Parse(args[offset + 2]);
                     x *= 32; x += 16;
-                    y *= 32; y += 32;
+                    y *= 32;
                     z *= 32; z += 16;
-                    who.SendPos(0xFF, x, y, z, p.rot[0], p.rot[1]);
+                    who.SendOwnFeetPos(x, y, z, p.rot[0], p.rot[1]);
                     if (p != who) Player.Message(p, "Moved " + who.color + who.name);
                 }
                 catch { Player.Message(p, "Invalid co-ordinates"); }

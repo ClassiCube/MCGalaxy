@@ -514,9 +514,15 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
+         /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
+        /// <remarks>This method treats Y as head Y, and adjusts for client increasing Y by 22/32 blocks. </remarks>
+        public void SendOwnFeetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
+            SendPos(0xFF, x, (ushort)(y + 51 - 22), z, rotx, roty);
+        }
+        
         /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
-        /// <remarks>This method adjusts for the peculiarity of the client increasing Y by 22/32 blocks. </remarks>
-        public void SendOwnPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
+        /// <remarks>This method treats Y as feet Y, and adjusts for client increasing Y by 22/32 blocks. </remarks>
+        public void SendOwnHeadPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
             SendPos(0xFF, x, (ushort)(y - 22), z, rotx, roty);
         }
 

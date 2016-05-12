@@ -68,7 +68,7 @@ namespace MCGalaxy.Games {
             
             if (x != p.countdowntempx || z != p.countdowntempz) {
                 x = p.countdowntempx; z = p.countdowntempz;
-                p.SendOwnPos(x, y, z, rotX, rotY);
+                p.SendOwnHeadPos(x, y, z, rotX, rotY);
             }
             p.pos[0] = x; p.pos[1] = y; p.pos[2] = z;
             p.rot[0] = rotX; p.rot[1] = rotY;
