@@ -672,7 +672,8 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
-        public void SendMakeSelection( byte id, string label, short smallx, short smally, short smallz, short bigx, short bigy, short bigz, short r, short g, short b, short opacity ) {
+        public void SendMakeSelection( byte id, string label, short smallx, short smally, short smallz, 
+                                      short bigx, short bigy, short bigz, short r, short g, short b, short opacity ) {
             byte[] buffer = new byte[86];
             buffer[0] = Opcode.CpeMakeSelection;
             buffer[1] = id;
@@ -738,8 +739,8 @@ namespace MCGalaxy {
         	SendRaw(Opcode.CpeEnvWeatherType, (byte)weather);
         }
         
-        void SendHackControl( byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning,
-                             byte allowthirdperson, short maxjumpheight ) {
+        void SendHackControl(byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning,
+                             byte allowthirdperson, short maxjumpheight) {
             byte[] buffer = new byte[8];
             buffer[0] = Opcode.CpeHackControl;
             buffer[1] = allowflying;
@@ -748,6 +749,21 @@ namespace MCGalaxy {
             buffer[4] = allowrespawning;
             buffer[5] = allowthirdperson;
             NetUtils.WriteI16(maxjumpheight, buffer, 6);
+            SendRaw(buffer);
+        }
+        
+        public void SendSetEnvMapUrl(string url) {
+            byte[] buffer = new byte[65];
+            buffer[0] = Opcode.CpeSetMapEnvUrl;
+            NetUtils.WriteAscii(url, buffer, 1);
+            SendRaw(buffer);
+        }
+        
+        public void SendSetEnvMapProperty(EnvProp prop, int value) {
+            byte[] buffer = new byte[6];
+            buffer[0] = Opcode.CpeSetMapEnvProperty;
+            buffer[1] = (byte)prop;
+            NetUtils.WriteI32(value, buffer, 2);
             SendRaw(buffer);
         }
 

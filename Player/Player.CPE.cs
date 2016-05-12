@@ -42,6 +42,7 @@ namespace MCGalaxy
         public int BlockDefinitionsExt = 0;
         public int TextColors = 0;
         public int BulkBlockUpdate = 0;
+        public int EnvMapAspect = 0;
         
         public bool hasCustomBlocks, hasBlockDefs, 
         hasTextColors, hasChangeModel, hasExtList;
@@ -102,34 +103,36 @@ namespace MCGalaxy
                     } break;
                 case CpeExt.BulkBlockUpdate:
                     BulkBlockUpdate = version; break;
+                case CpeExt.EnvMapAspect:
+                    EnvMapAspect = version; break;
             }
         }
 
         public bool HasCpeExt(string Extension, int version = 1) {
             if (!hasCpe) return false;
-            switch (Extension)
-            {
-                    case CpeExt.ClickDistance: return ClickDistance == version;
-                    case CpeExt.CustomBlocks: return CustomBlocks == version;
-                    case CpeExt.HeldBlock: return HeldBlock == version;
-                    case CpeExt.TextHotkey: return TextHotKey == version;
-                    case CpeExt.ExtPlayerList: return ExtPlayerList == version;
-                    case CpeExt.EnvColors: return EnvColors == version;
-                    case CpeExt.SelectionCuboid: return SelectionCuboid == version;
-                    case CpeExt.BlockPermissions: return BlockPermissions == version;
-                    case CpeExt.ChangeModel: return ChangeModel == version;
-                    case CpeExt.EnvMapAppearance: return EnvMapAppearance == version;
-                    case CpeExt.EnvWeatherType: return EnvWeatherType == version;
-                    case CpeExt.HackControl: return HackControl == version;
-                    case CpeExt.EmoteFix: return EmoteFix == version;
-                    case CpeExt.MessageTypes: return MessageTypes == version;                    
-                    case CpeExt.LongerMessages: return LongerMessages == version;
-                    case CpeExt.FullCP437: return FullCP437 == version;
-                    case CpeExt.BlockDefinitions: return BlockDefinitions == version;
-                    case CpeExt.BlockDefinitionsExt: return BlockDefinitionsExt == version;
-                    case CpeExt.TextColors: return TextColors == version;
-                    case CpeExt.BulkBlockUpdate: return BulkBlockUpdate == version;
-                    default: return false;
+            switch (Extension) {
+                case CpeExt.ClickDistance: return ClickDistance == version;
+                case CpeExt.CustomBlocks: return CustomBlocks == version;
+                case CpeExt.HeldBlock: return HeldBlock == version;
+                case CpeExt.TextHotkey: return TextHotKey == version;
+                case CpeExt.ExtPlayerList: return ExtPlayerList == version;
+                case CpeExt.EnvColors: return EnvColors == version;
+                case CpeExt.SelectionCuboid: return SelectionCuboid == version;
+                case CpeExt.BlockPermissions: return BlockPermissions == version;
+                case CpeExt.ChangeModel: return ChangeModel == version;
+                case CpeExt.EnvMapAppearance: return EnvMapAppearance == version;
+                case CpeExt.EnvWeatherType: return EnvWeatherType == version;
+                case CpeExt.HackControl: return HackControl == version;
+                case CpeExt.EmoteFix: return EmoteFix == version;
+                case CpeExt.MessageTypes: return MessageTypes == version;                    
+                case CpeExt.LongerMessages: return LongerMessages == version;
+                case CpeExt.FullCP437: return FullCP437 == version;
+                case CpeExt.BlockDefinitions: return BlockDefinitions == version;
+                case CpeExt.BlockDefinitionsExt: return BlockDefinitionsExt == version;
+                case CpeExt.TextColors: return TextColors == version;
+                case CpeExt.BulkBlockUpdate: return BulkBlockUpdate == version;
+                case CpeExt.EnvMapAspect: return EnvMapAspect == version;
+                default: return false;
             }
         }
         
@@ -232,11 +235,18 @@ namespace MCGalaxy
         public const string BlockDefinitionsExt = "BlockDefinitionsExt";
         public const string TextColors = "TextColors";
         public const string BulkBlockUpdate = "BulkBlockUpdate";
+        public const string EnvMapAspect = "EnvMapAspect";
     }
     
     public enum CpeMessageType : byte {
         Normal = 0, Status1 = 1, Status2 = 2, Status3 = 3,
         BottomRight1 = 11, BottomRight2 = 12, BottomRight3 = 13,
         Announcement = 100,
+    }
+    
+    public enum EnvProp : byte {
+        SidesBlock = 0, EdgeBlock = 1, EdgeLevel = 2,
+        CloudsLevel = 3, MaxFog = 4, CloudsSpeed = 5,
+        WeatherSpeed = 6, WeatherFade = 7,
     }
 }

@@ -62,5 +62,7 @@ namespace MCGalaxy {
 		public const byte CpeDefineBlockExt = 37;
 		public const byte CpeBulkBlockUpdate = 38;
 		public const byte CpeSetTextColor = 39;
+		public const byte CpeSetMapEnvUrl = 40;
+		public const byte CpeSetMapEnvProperty = 41;
 	}
 }
