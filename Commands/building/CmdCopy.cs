@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands
 {
@@ -105,12 +107,18 @@ namespace MCGalaxy.Commands
 		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
-			ushort minX = (ushort)Math.Min(x, cpos.x), minY = (ushort)Math.Min(y, cpos.y);
-			ushort minZ = (ushort)Math.Min(z, cpos.z), maxX = (ushort)Math.Max(x, cpos.x);
-			ushort maxY = (ushort)Math.Max(y, cpos.y), maxZ = (ushort)Math.Max(z, cpos.z);
+			ushort minX = (ushort)Math.Min(x, cpos.x), maxX = (ushort)Math.Max(x, cpos.x);
+			ushort minY = (ushort)Math.Min(y, cpos.y), maxY = (ushort)Math.Max(y, cpos.y);
+			ushort minZ = (ushort)Math.Min(z, cpos.z), maxZ = (ushort)Math.Max(z, cpos.z);
 			
 			CopyState state = new CopyState(minX, minY, minZ, maxX - minX + 1,
 			                                maxY - minY + 1, maxZ - minZ + 1);
+			if (state.Volume > p.group.maxBlocks) {
+				Player.Message(p, "You tried to copy up to " + state.Volume + " blocks.");
+				Player.Message(p, "You cannot copy more than " + p.group.maxBlocks + ".");
+				return;
+			}
+			
 			state.SetOrigin(cpos.x, cpos.y, cpos.z);
 			int totalAir = 0, index = 0;
 			state.PasteAir = cpos.type == 2;
@@ -130,22 +138,11 @@ namespace MCGalaxy.Commands
 				index++;
 			}
 			p.CopyBuffer = state;
-
-			if ((state.Volume - totalAir) > p.group.maxBlocks) {
-				Player.Message(p, "You tried to copy " + state.Volume + " blocks.");
-				Player.Message(p, "You cannot copy more than " + p.group.maxBlocks + ".");
-				p.CopyBuffer = null;
-				return;
-			}
-
-			if (cpos.type == 1)
-				for (ushort yy = minY; yy <= maxY; ++yy)
-					for (ushort zz = minZ; zz <= maxZ; ++zz)
-						for (ushort xx = minX; xx <= maxX; ++xx)
-			{
-				byte b = p.level.GetTile(xx, yy, zz);
-				if (b != Block.air && Block.canPlace(p, b))
-					p.level.UpdateBlock(p, xx, yy, zz, Block.air, 0);
+			
+			if (cpos.type == 1) {
+				DrawOp op = new CuboidDrawOp();
+			    Brush brush = new SolidBrush(Block.air, 0);
+			    DrawOp.DoDrawOp(op, brush, p, minX, minY, minZ, maxX, maxY, maxZ);
 			}
 
 			Player.Message(p, (state.Volume - totalAir) + " blocks copied.");

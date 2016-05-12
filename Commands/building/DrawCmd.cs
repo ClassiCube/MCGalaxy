@@ -35,8 +35,8 @@ namespace MCGalaxy.Commands {
             cpos.mode = GetMode(message, parts);
             OnUse(p, message, parts, ref cpos);
             
-            p.blockchangeObject = cpos;           
-            Player.Message(p, PlaceMessage);            
+            p.blockchangeObject = cpos;
+            Player.Message(p, PlaceMessage);
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
