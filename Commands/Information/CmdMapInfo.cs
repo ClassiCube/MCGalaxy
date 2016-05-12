@@ -123,9 +123,12 @@ namespace MCGalaxy.Commands {
             Player.Message(p, format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
                            Color(data.Light), Color(data.Shadow));
             
-            Player.Message(p, "Water Level: %b" + data.EdgeLevel + "%S, Clouds height: %b" + data.CloudsHeight
-                               + "%S, Max fog distance: %b" + data.MaxFogDistance);
-            Player.Message(p, "Edge Block: %b" + data.EdgeBlock + "%S, Horizon Block: %b" + data.HorizonBlock);
+            Player.Message(p, "Water level: &b{0}%S, Clouds height: &b{1}%S, Max fog distance: &b{2}",
+                           data.EdgeLevel, data.CloudsHeight, data.MaxFog);
+            Player.Message(p, "Edge Block: &b{0}%S, Horizon Block: &b{1}", data.EdgeBlock, data.HorizonBlock);
+            Player.Message(p, "Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
+                           (data.CloudsSpeed / 256f).ToString("F2"),
+                           (data.WeatherSpeed / 256f).ToString("F2"));
         }
         
         class MapInfoData {
@@ -135,7 +138,8 @@ namespace MCGalaxy.Commands {
             public bool Guns;
             public string Name, TerrainUrl, TextureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
-            public short EdgeLevel, CloudsHeight, MaxFogDistance;
+            public int EdgeLevel, CloudsHeight, MaxFog;
+            public int CloudsSpeed, WeatherSpeed;
             public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
             public LevelPermission visit, build, visitmax, buildmax;
             public List<string> VisitWhitelist = new List<string>();
@@ -157,7 +161,8 @@ namespace MCGalaxy.Commands {
                 Fog = lvl.FogColor; Sky = lvl.SkyColor; Clouds = lvl.CloudColor;
                 Light = lvl.LightColor; Shadow = lvl.ShadowColor;
                 EdgeLevel = lvl.EdgeLevel; CloudsHeight = lvl.CloudsHeight;
-                MaxFogDistance = lvl.MaxFogDistance;
+                MaxFog = lvl.MaxFogDistance;
+                CloudsSpeed = lvl.CloudsSpeed; WeatherSpeed = lvl.WeatherSpeed;
                 EdgeBlock = lvl.EdgeBlock; HorizonBlock = lvl.HorizonBlock;
                 
                 TerrainUrl = lvl.terrainUrl != "" ?
@@ -190,6 +195,8 @@ namespace MCGalaxy.Commands {
                     case "guns": Guns = bool.Parse(value); break;
                     case "texture": TerrainUrl = value; break;
                     case "texturepack": TextureUrl = value; break;
+                    case "clouds-speed": CloudsSpeed = int.Parse(value); break;
+                    case "weather-speed": WeatherSpeed = int.Parse(value); break;
                     
                     case "perbuild": build = GetPerm(value); break;
                     case "pervisit": visit = GetPerm(value); break;
@@ -218,7 +225,7 @@ namespace MCGalaxy.Commands {
                     case "edgeblock": EdgeBlock = byte.Parse(value); break;
                     case "edgelevel": EdgeLevel = short.Parse(value); break;
                     case "cloudsheight": CloudsHeight = short.Parse(value); break;
-                    case "maxfog": MaxFogDistance = short.Parse(value); break;
+                    case "maxfog": MaxFog = short.Parse(value); break;
                     case "horizonblock": HorizonBlock = byte.Parse(value); break;
                 }
             }

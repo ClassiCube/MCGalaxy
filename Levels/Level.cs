@@ -96,7 +96,7 @@ namespace MCGalaxy
         public bool Deletable = true;
 
         [ConfigInt("Weather", "Env", null, 0, 0, 2)]        
-        public int weather;
+        public int Weather;
         [ConfigString("Texture", "Env", null, "", true)]
         public string terrainUrl = "";
         [ConfigString("TexturePack", "Env", null, "", true)]
@@ -154,14 +154,22 @@ namespace MCGalaxy
         public string LightColor = null;
 
         /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
-        public short EdgeLevel;
+        public int EdgeLevel;
         
         /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
-        public short CloudsHeight;
+        public int CloudsHeight;
         
         /// <summary> Max fog distance the client can see. 
         /// Default is 0, meaning use the client-side defined maximum fog distance. </summary>
-        public short MaxFogDistance;
+        public int MaxFogDistance;
+        
+        /// <summary> Clouds speed, in units of 256ths. Default is 256 (1 speed). </summary>
+        [ConfigInt("clouds-speed", "Env", null, 256, short.MinValue, short.MaxValue)]
+        public int CloudsSpeed = 256;
+        
+        /// <summary> Weather speed, in units of 256ths. Default is 256 (1 speed). </summary>
+        [ConfigInt("weather-speed", "Env", null, 256, short.MinValue, short.MaxValue)]
+        public int WeatherSpeed = 256;
 
         /// <summary> The block which will be displayed on the horizon. </summary>
         public byte HorizonBlock = Block.water;

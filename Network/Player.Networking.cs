@@ -382,7 +382,7 @@ namespace MCGalaxy {
                 Loading = false;
                 
                 if (HasCpeExt(CpeExt.EnvWeatherType))
-                    SendSetMapWeather(level.weather);
+                    SendSetMapWeather(level.Weather);
                 if (HasCpeExt(CpeExt.EnvColors))
                     SendCurrentEnvColors();
                 SendCurrentMapAppearance();
@@ -711,26 +711,26 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
-        public void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, short sidelevel ) {
+        public void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, int sidelevel ) {
             byte[] buffer = new byte[69];
             buffer[0] = Opcode.CpeEnvSetMapApperance;
             NetUtils.WriteAscii(url, buffer, 1);
             buffer[65] = sideblock;
             buffer[66] = edgeblock;
-            NetUtils.WriteI16(sidelevel, buffer, 67);
+            NetUtils.WriteI16((short)sidelevel, buffer, 67);
             SendRaw(buffer);
         }
         
-        public void SendSetMapAppearanceV2( string url, byte sideblock, byte edgeblock, short sidelevel,
-                                           short cloudHeight, short maxFog ) {
+        public void SendSetMapAppearanceV2( string url, byte sideblock, byte edgeblock, int sidelevel,
+                                           int cloudHeight, int maxFog ) {
             byte[] buffer = new byte[73];
             buffer[0] = Opcode.CpeEnvSetMapApperance;
             NetUtils.WriteAscii(url, buffer, 1);
             buffer[65] = sideblock;
             buffer[66] = edgeblock;
-            NetUtils.WriteI16(sidelevel, buffer, 67);
-            NetUtils.WriteI16(cloudHeight, buffer, 69);
-            NetUtils.WriteI16(maxFog, buffer, 71);
+            NetUtils.WriteI16((short)sidelevel, buffer, 67);
+            NetUtils.WriteI16((short)cloudHeight, buffer, 69);
+            NetUtils.WriteI16((short)maxFog, buffer, 71);
             SendRaw(buffer);
         }
         

@@ -166,7 +166,7 @@ namespace MCGalaxy
                 edge = level.GetFallback(edge);  
                 
             if (HasCpeExt(CpeExt.EnvMapAspect)) {
-                string url = GetUrl();
+                string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl) SendSetEnvMapUrl("");
                 SendSetEnvMapUrl(url);
@@ -176,8 +176,10 @@ namespace MCGalaxy
                 SendSetEnvMapProperty(EnvProp.EdgeLevel, level.EdgeLevel);
                 SendSetEnvMapProperty(EnvProp.CloudsLevel, level.CloudsHeight);
                 SendSetEnvMapProperty(EnvProp.MaxFog, level.MaxFogDistance);
+                SendSetEnvMapProperty(EnvProp.CloudsSpeed, level.CloudsSpeed);
+                SendSetEnvMapProperty(EnvProp.WeatherSpeed, level.WeatherSpeed);
             } else if (HasCpeExt(CpeExt.EnvMapAppearance, 2)) {
-                string url = GetUrl();
+                string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl)
                     SendSetMapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
@@ -189,7 +191,7 @@ namespace MCGalaxy
             }
         }
         
-        string GetUrl() {
+        public string GetTextureUrl() {
             string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
             if (url == "")
                 url = Server.defaultTextureUrl == "" ? Server.defaultTerrainUrl : Server.defaultTextureUrl;

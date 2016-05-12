@@ -67,27 +67,39 @@ namespace MCGalaxy.Commands {
                 case "sunlight":
                     SetEnvColour(p, value, 4, "sunlight", ref lvl.LightColor); break;
                 case "weather":
-                    SetEnvWeather(p, value, ref lvl.weather); break;
+                    SetEnvWeather(p, value, ref lvl.Weather); break;
                 case "cloudsheight":
                 case "cloudheight":
-                    SetEnvMapAppearanceS(p, value, "clouds height", (short)(lvl.Height + 2), ref lvl.CloudsHeight); break;
+                    SetEnvMapAppearanceS(p, value, EnvProp.CloudsLevel,
+                                         "clouds height", (short)(lvl.Height + 2), ref lvl.CloudsHeight); break;
                 case "waterlevel":
                 case "edgelevel":
                 case "level":
-                    SetEnvMapAppearanceS(p, value, "water level", (short)(lvl.Height / 2), ref lvl.EdgeLevel); break;
+                    SetEnvMapAppearanceS(p, value, EnvProp.EdgeLevel,
+                                         "water level", (short)(lvl.Height / 2), ref lvl.EdgeLevel); break;
                 case "maxfogdistance":
                 case "maxfog":
                 case "fogdistance":
                 case "fogdist":
-                    SetEnvMapAppearanceS(p, value, "max fog distance", 0, ref lvl.MaxFogDistance); break;
+                    SetEnvMapAppearanceS(p, value, EnvProp.MaxFog,
+                                         "max fog distance", 0, ref lvl.MaxFogDistance); break;
+                case "cloudspeed":
+                case "cloudsspeed":
+                    SetEnvMapAppearanceS(p, value, EnvProp.CloudsSpeed,
+                                         "clouds speed", 0, ref lvl.CloudsSpeed); break;
+                case "weatherspeed":
+                    SetEnvMapAppearanceS(p, value, EnvProp.WeatherSpeed,
+                                         "weather speed", 0, ref lvl.WeatherSpeed); break;
                 case "horizon":
                 case "edge":
                 case "water":
-                    SetEnvMapAppearance(p, value, "edge block", Block.waterstill, ref lvl.HorizonBlock); break;
+                    SetEnvMapAppearance(p, value, EnvProp.EdgeBlock,
+                                        "edge block", Block.waterstill, ref lvl.HorizonBlock); break;
                 case "side":
                 case "border":
                 case "bedrock":
-                    SetEnvMapAppearance(p, value, "sides block", Block.blackrock, ref lvl.EdgeBlock); break;
+                    SetEnvMapAppearance(p, value, EnvProp.SidesBlock,
+                                        "sides block", Block.blackrock, ref lvl.EdgeBlock); break;
                 case "preset":
                     if (!SetPreset(p, value)) return;
                     break;
@@ -138,7 +150,7 @@ namespace MCGalaxy.Commands {
             byte weather = 255;
             if (IsResetString(value)) {
                 p.SendMessage(string.Format("Reset weather for {0}&S to 0 (sun)", p.level.name));
-                p.level.weather = 0;
+                p.level.Weather = 0;
             } else {
                 if (byte.TryParse(value, out weather)) {
                 } else if (value.CaselessEq("sun")) {
@@ -154,7 +166,7 @@ namespace MCGalaxy.Commands {
                 }
             }
             
-            p.level.weather = weather;
+            p.level.Weather = weather;
             string weatherType = weather == 0 ? "&sSun" : (weather == 1 ? "&1Rain" : "&fSnow");
             p.SendMessage(string.Format("&aSet weather for {0}&a to {1} ({2}&a)", p.level.name, weather, weatherType));
             
@@ -166,31 +178,37 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        void SetEnvMapAppearance(Player p, string value, string variable, byte defValue, ref byte target) {
+        void SetEnvMapAppearance(Player p, string value, EnvProp prop,
+                                 string variable, byte defValue, ref byte target) {
             if (IsResetString(value)) {
                 p.SendMessage(string.Format("Reset {0} for {0}&S to normal", variable, p.level.name));
                 target = defValue;
             } else {
                 if (!CheckBlock(p, value, variable, ref target)) return;
             }
-            SendCurrentMapAppearance(p.level);
+            SendCurrentMapAppearance(p.level, prop, target);
         }
         
-        void SetEnvMapAppearanceS(Player p, string value, string variable, short defValue, ref short target) {
+        void SetEnvMapAppearanceS(Player p, string value, EnvProp prop,
+                                  string variable, short defValue, ref int target) {
             if (IsResetString(value)) {
                 p.SendMessage(string.Format("Reset {0} for {0}&S to normal", variable, p.level.name));
                 target = defValue;
             } else {
                 if (!CheckShort(p, value, variable, ref target)) return;
             }
-            SendCurrentMapAppearance(p.level);
+            SendCurrentMapAppearance(p.level, prop, target);
         }
         
-        void SendCurrentMapAppearance(Level lvl) {
-        	Player[] players = PlayerInfo.Online.Items; 
+        void SendCurrentMapAppearance(Level lvl, EnvProp prop, int value) {
+            Player[] players = PlayerInfo.Online.Items; 
             foreach (Player pl in players) {
-        		if (pl.level != lvl) continue;
-                pl.SendCurrentMapAppearance();
+                if (pl.level != lvl) continue;
+                
+                if (pl.HasCpeExt(CpeExt.EnvMapAspect))
+                    pl.SendSetEnvMapProperty(prop, value);
+                else
+                    pl.SendCurrentMapAppearance();
             }
         }
         
@@ -213,14 +231,14 @@ namespace MCGalaxy.Commands {
             return false;
         }
         
-        bool CheckShort(Player p, string value, string variable, ref short modify) {
-            short level;
-            if (!short.TryParse(value, out level)) {
-                p.SendMessage(string.Format("Env: \"{0}\" is not a valid integer.", value));
+        bool CheckShort(Player p, string raw, string variable, ref int modify) {
+            short value;
+            if (!short.TryParse(raw, out value)) {
+                Player.Message(p, "Env: \"{0}\" is not a valid integer.", value);
                 return false;
             } else {
-                modify = level;
-                p.SendMessage(string.Format("Set {0} for {1}&S to {2}", variable, p.level.name, level));
+                modify = value;
+                Player.Message(p, "Set {0} for {1}&S to {2}", variable, p.level.name, value);
                 return true;
             }
         }
