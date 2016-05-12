@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission) {
-                        pl.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+                        pl.SendOwnPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
                         pl.SendMessage("You were summoned by " + p.ColoredName + "%S.");
                     }
                 }
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
                 // Sleep for a bit while they load
             }
 
-            who.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+            who.SendOwnPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
             who.SendMessage("You were summoned by " + p.ColoredName + "%S.");
         }
         public override void Help(Player p)

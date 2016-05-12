@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands {
                 target.BlockUntilLoad(10);
             }
             p.BlockUntilLoad(10);  //Wait for player to spawn in new map
-            p.SendPos(0xFF, target.pos[0], target.pos[1], target.pos[2], target.rot[0], 0);
+            p.SendOwnPos(target.pos[0], target.pos[1], target.pos[2], target.rot[0], 0);
         }
         
         public override void Help(Player p) {
