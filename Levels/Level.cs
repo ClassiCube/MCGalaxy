@@ -159,7 +159,8 @@ namespace MCGalaxy
         /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
         public short CloudsHeight;
         
-        /// <summary> Max fog distance the client can see. Default is 0, meaning use the client-side defined maximum fog distance. </summary>
+        /// <summary> Max fog distance the client can see. 
+        /// Default is 0, meaning use the client-side defined maximum fog distance. </summary>
         public short MaxFogDistance;
 
         /// <summary> The block which will be displayed on the horizon. </summary>

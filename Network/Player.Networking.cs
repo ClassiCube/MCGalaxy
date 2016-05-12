@@ -385,8 +385,7 @@ namespace MCGalaxy {
                     SendSetMapWeather(level.weather);
                 if (HasCpeExt(CpeExt.EnvColors))
                     SendCurrentEnvColors();
-                if (HasCpeExt(CpeExt.EnvMapAppearance) || HasCpeExt(CpeExt.EnvMapAppearance, 2))
-                    SendCurrentMapAppearance();
+                SendCurrentMapAppearance();
                 
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);

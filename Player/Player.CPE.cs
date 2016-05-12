@@ -159,26 +159,41 @@ namespace MCGalaxy
         
         string lastUrl = "";
         public void SendCurrentMapAppearance() {
-            byte edgeBlock = level.EdgeBlock, horBlock = level.HorizonBlock;
-            if (edgeBlock >= Block.CpeCount && !hasBlockDefs)
-                edgeBlock = level.GetFallback(edgeBlock);
-            if (horBlock >= Block.CpeCount && !hasBlockDefs)
-                horBlock = level.GetFallback(horBlock);  
+            byte side = level.EdgeBlock, edge = level.HorizonBlock;
+            if (side >= Block.CpeCount && !hasBlockDefs)
+                side = level.GetFallback(side);
+            if (edge >= Block.CpeCount && !hasBlockDefs)
+                edge = level.GetFallback(edge);  
                 
-            if (EnvMapAppearance == 2) {
-                string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
-                if (url == "") 
-                    url = Server.defaultTextureUrl == "" ? Server.defaultTerrainUrl : Server.defaultTextureUrl;
+            if (HasCpeExt(CpeExt.EnvMapAspect)) {
+                string url = GetUrl();
+                // reset all other textures back to client default.
+                if (url != lastUrl) SendSetEnvMapUrl("");
+                SendSetEnvMapUrl(url);
                 
+                SendSetEnvMapProperty(EnvProp.SidesBlock, side);
+                SendSetEnvMapProperty(EnvProp.EdgeBlock, edge);
+                SendSetEnvMapProperty(EnvProp.EdgeLevel, level.EdgeLevel);
+                SendSetEnvMapProperty(EnvProp.CloudsLevel, level.CloudsHeight);
+                SendSetEnvMapProperty(EnvProp.MaxFog, level.MaxFogDistance);
+            } else if (HasCpeExt(CpeExt.EnvMapAppearance, 2)) {
+                string url = GetUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl)
-                    SendSetMapAppearanceV2("", edgeBlock, horBlock, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
-                SendSetMapAppearanceV2(url, edgeBlock, horBlock, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
+                    SendSetMapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
+                SendSetMapAppearanceV2(url, side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
                 lastUrl = url;
-            } else {
+            } else if (HasCpeExt(CpeExt.EnvMapAppearance)) {
                 string url = level.terrainUrl == "" ? Server.defaultTerrainUrl : level.terrainUrl;
-                SendSetMapAppearance(url, edgeBlock, horBlock, level.EdgeLevel);
+                SendSetMapAppearance(url, side, edge, level.EdgeLevel);
             }
+        }
+        
+        string GetUrl() {
+            string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
+            if (url == "")
+                url = Server.defaultTextureUrl == "" ? Server.defaultTerrainUrl : Server.defaultTextureUrl;
+            return url;
         }
         
         public void SendCurrentEnvColors() {

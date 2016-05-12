@@ -189,9 +189,8 @@ namespace MCGalaxy.Commands {
         void SendCurrentMapAppearance(Level lvl) {
         	Player[] players = PlayerInfo.Online.Items; 
             foreach (Player pl in players) {
-                bool hasExt = pl.HasCpeExt(CpeExt.EnvMapAppearance) || pl.HasCpeExt(CpeExt.EnvMapAppearance, 2);
-                if (hasExt && pl.level == lvl)
-                    pl.SendCurrentMapAppearance();
+        		if (pl.level != lvl) continue;
+                pl.SendCurrentMapAppearance();
             }
         }
         
