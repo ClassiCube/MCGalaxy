@@ -582,21 +582,6 @@ namespace MCGalaxy
                 {
                     Server.s.Log("Skipping level save for " + name + ".");
                 }
-            }
-            catch (OutOfMemoryException e)
-            {
-                Server.ErrorLog(e);
-                if (Server.mono)
-                {
-                    Process[] prs = Process.GetProcesses();
-                    foreach (Process pr in prs)
-                    {
-                        if (pr.ProcessName == "MCGalaxy")
-                            pr.Kill();
-                    }
-                }
-                else
-                    Command.all.Find("restart").Use(null, "");
             } catch (Exception e) {
                 Server.s.Log("FAILED TO SAVE :" + name);
                 Player.GlobalMessage("FAILED TO SAVE :" + name);

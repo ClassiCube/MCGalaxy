@@ -557,7 +557,6 @@ namespace MCGalaxy
             } catch (Exception e) {
                 ErrorLog(e);
                 s.Log("MySQL settings have not been set! Please Setup using the properties window.");
-                //process.Kill();
                 return;
             }
             
