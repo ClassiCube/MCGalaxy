@@ -103,7 +103,10 @@ namespace MCGalaxy {
         static string ConvertMessage(string message, bool color) {
             if (String.IsNullOrEmpty(message.Trim()))
                 message = ".";
+            message = EmotesHandler.Replace(message);
+            message = FullCP437Handler.Replace(message);
             message = CP437Writer.ConvertToUnicode(message);
+            
             if (color)
                 message = Colors.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
             return message;

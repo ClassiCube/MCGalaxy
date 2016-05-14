@@ -109,7 +109,7 @@ namespace MCGalaxy {
             { "house", '\u007F' } // ⌂
         };
 
-        public static string ReplaceEmoteKeywords(string message) {
+        public static string Replace(string message) {
             return Unescape(message, '(', ')', EmoteKeywords);
         }
         
@@ -119,8 +119,7 @@ namespace MCGalaxy {
             if (message == null)
                 throw new ArgumentNullException("message");
             int startIndex = message.IndexOf(start);
-            if (startIndex == -1)
-                return message;
+            if (startIndex == -1) return message;
 
             StringBuilder output = new StringBuilder(message.Length);
             int lastAppendedIndex = 0;

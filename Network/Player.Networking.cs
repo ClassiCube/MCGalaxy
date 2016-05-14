@@ -275,7 +275,7 @@ namespace MCGalaxy {
                 sb.Replace("<3", "(heart)");
             }
 
-            message = EmotesHandler.ReplaceEmoteKeywords(sb.ToString());
+            message = EmotesHandler.Replace(sb.ToString());
             message = FullCP437Handler.Replace(message);
             return message;
         }
