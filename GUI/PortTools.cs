@@ -46,7 +46,7 @@ namespace MCGalaxy.Gui.Popups {
         }
 
         private void linkHelpForward_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            try { Process.Start("https://portforward.com"); }
+            try { Process.Start("http://portforward.com"); }
             catch { }
         }
 
