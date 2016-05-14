@@ -472,6 +472,8 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Sends a packet indicating an entity was spawned in the current map
+        /// at the given absolute position + coordinates </summary>
         public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             byte[] buffer = new byte[74];
             buffer[0] = Opcode.AddEntity;
@@ -487,6 +489,7 @@ namespace MCGalaxy {
             if (hasChangeModel) UpdateModels();
         }
         
+        /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             if ( x < 0 ) x = 32;
             if ( y < 0 ) y = 32;
@@ -511,12 +514,26 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
-        public void SendUserType(bool op) {
-            SendRaw(Opcode.SetPermission, op ? (byte)100 : (byte)0);
+         /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
+        /// <remarks>This method treats Y as head Y, and adjusts for client increasing Y by 22/32 blocks. </remarks>
+        public void SendOwnFeetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
+            SendPos(0xFF, x, (ushort)(y + 51 - 22), z, rotx, roty);
         }
         
+        /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
+        /// <remarks>This method treats Y as feet Y, and adjusts for client increasing Y by 22/32 blocks. </remarks>
+        public void SendOwnHeadPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
+            SendPos(0xFF, x, (ushort)(y - 22), z, rotx, roty);
+        }
+
+        /// <summary> Sends a packet indicating an entity was removed from the current map. </summary>
         public void SendDespawn(byte id) {
             SendRaw(Opcode.RemoveEntity, id);
+        }
+        
+        /// <summary> Sends a packet indicating the user's permissions changed. </summary>
+        public void SendUserType(bool op) {
+            SendRaw(Opcode.SetPermission, op ? (byte)100 : (byte)0);
         }
         
         public void SendBlockchange(ushort x, ushort y, ushort z, byte type) {
