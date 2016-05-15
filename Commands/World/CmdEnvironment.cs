@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                 // Adjust for the older version of the command which had /env p and used /env l.
                 if (args[0] == "player" || args[0] == "p") {
                     Player.Message(p, "Change your own env settings by pressing " +
-                                       "escape and going to the appropriate options menu."); return;
+                                   "escape and going to the appropriate options menu."); return;
                 } else if ((args[0] == "level" || args[0] == "l") && args.Length >= 3) {
                     args[0] = args[1];
                     args[1] = args[2];
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
         }
         
         void Handle(Player p, string variable, string value) {
-            Level lvl = p.level;            
+            Level lvl = p.level;
             switch (variable) {
                 case "fog":
                     SetEnvColour(p, value, 2, "fog", ref lvl.FogColor); break;
@@ -85,11 +85,14 @@ namespace MCGalaxy.Commands {
                                          "max fog distance", 0, ref lvl.MaxFogDistance); break;
                 case "cloudspeed":
                 case "cloudsspeed":
-                    SetEnvMapAppearanceS(p, value, EnvProp.CloudsSpeed,
-                                         "clouds speed", 0, ref lvl.CloudsSpeed); break;
+                    SetEnvMapAppearanceF(p, value, EnvProp.CloudsSpeed, 256, "clouds speed", 
+                                         256, ref lvl.CloudsSpeed, -32767, 32767); break;
                 case "weatherspeed":
-                    SetEnvMapAppearanceS(p, value, EnvProp.WeatherSpeed,
-                                         "weather speed", 0, ref lvl.WeatherSpeed); break;
+                    SetEnvMapAppearanceF(p, value, EnvProp.WeatherSpeed, 256, "weather speed", 
+                                         256, ref lvl.WeatherSpeed, -32767, 32767); break;
+                case "weatherfade":
+                    SetEnvMapAppearanceF(p, value, EnvProp.WeatherFade, 128, "weather fade rate", 
+                                         128, ref lvl.WeatherFade, 0, 255); break;
                 case "horizon":
                 case "edge":
                 case "water":
@@ -107,43 +110,6 @@ namespace MCGalaxy.Commands {
                     Help(p); return;
             }
             p.level.Save(true);
-        }
-        
-        void SetEnvColour(Player p, string value, byte envType, string envTypeName, ref string target) {
-            if (IsResetString(value)) {
-                p.SendMessage(string.Format("Reset {0} color for {1}&S to normal", envTypeName, p.level.name));
-                target = null;
-            } else {
-                if (value.Length > 0 && value[0] == '#')
-                    value = value.Substring(1);
-                if (value.Length != 6 || !IsValidHex(value)) {
-                    p.SendMessage(string.Format("Env: \"#{0}\" is not a valid HEX color code.", value));
-                    return;
-                }
-                
-                p.SendMessage(string.Format("Set {0} color for {1}&S to #{2}", envTypeName, p.level.name, value));
-                target = value;
-            }
-            SendEnvColorPackets(p, envType, value);
-        }
-        
-        void SendEnvColorPackets(Player p, byte envType, string value) {
-        	Player[] players = PlayerInfo.Online.Items; 
-            foreach (Player pl in players) {
-                if (pl.level == p.level)
-                    SendEnvColorPacket(pl, envType, value);
-            }
-        }
-        
-        void SendEnvColorPacket(Player p, byte envType, string value) {
-            if (p.HasCpeExt(CpeExt.EnvColors)) {
-                try {
-                    System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml("#" + value.ToUpper());
-                    p.SendEnvColor(envType, col.R, col.G, col.B);
-                } catch {
-                    p.SendEnvColor(envType, -1, -1, -1);
-                }
-            }
         }
         
         void SetEnvWeather(Player p, string value, ref int target) {
@@ -171,7 +137,7 @@ namespace MCGalaxy.Commands {
             p.SendMessage(string.Format("&aSet weather for {0}&a to {1} ({2}&a)", p.level.name, weather, weatherType));
             
             // Send the changed colour to all players affected by the command.
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level == p.level && pl.HasCpeExt(CpeExt.EnvWeatherType))
                     pl.SendSetMapWeather(weather);
@@ -200,16 +166,15 @@ namespace MCGalaxy.Commands {
             SendCurrentMapAppearance(p.level, prop, target);
         }
         
-        void SendCurrentMapAppearance(Level lvl, EnvProp prop, int value) {
-            Player[] players = PlayerInfo.Online.Items; 
-            foreach (Player pl in players) {
-                if (pl.level != lvl) continue;
-                
-                if (pl.HasCpeExt(CpeExt.EnvMapAspect))
-                    pl.SendSetEnvMapProperty(prop, value);
-                else
-                    pl.SendCurrentMapAppearance();
+        void SetEnvMapAppearanceF(Player p, string value, EnvProp prop, int scale, string variable, 
+                                  short defValue, ref int target, int min, int max) {
+            if (IsResetString(value)) {
+                p.SendMessage(string.Format("Reset {0} for {0}&S to normal", variable, p.level.name));
+                target = defValue;
+            } else {
+                if (!CheckFloat(p, value, variable, ref target, scale, min, max)) return;
             }
+            SendCurrentMapAppearance(p.level, prop, target);
         }
         
         bool CheckBlock(Player p, string value, string variable, ref byte modify) {
@@ -217,7 +182,7 @@ namespace MCGalaxy.Commands {
             byte block = DrawCmd.GetBlock(p, value, out extBlock, false);
             if (block == Block.Zero) return false;
             if (block >= Block.CpeCount && block != Block.custom_block) {
-                p.SendMessage("Cannot use physics block ids for /env."); return false; 
+                p.SendMessage("Cannot use physics block ids for /env."); return false;
             }
             
             if (block == Block.shrub || block == Block.yellowflower || block == Block.redflower ||
@@ -239,6 +204,25 @@ namespace MCGalaxy.Commands {
             } else {
                 modify = value;
                 Player.Message(p, "Set {0} for {1}&S to {2}", variable, p.level.name, value);
+                return true;
+            }
+        }
+        
+        bool CheckFloat(Player p, string raw, string variable, 
+                        ref int modify, int scale, float min, float max) {
+            float value;
+            min /= scale; max /= scale;
+            
+            if (!float.TryParse(raw, out value)) {
+                Player.Message(p, "Env: \"{0}\" is not a valid decimal.", value);
+                return false;
+            } else if (value < min || value > max) {
+                Player.Message(p, "Env: \"{0}\" must be between {1} and {2}.",
+                               value, min.ToString("F2"), max.ToString("F2"));
+                return false;
+            } else {
+                modify = (int)(value * scale);
+                Player.Message(p, "Set {0} for {1}&S to {2}", variable, p.level.name, value.ToString("F2"));
                 return true;
             }
         }
@@ -304,7 +288,7 @@ namespace MCGalaxy.Commands {
         
         static bool IsValidHex(string hex) {
             for (int i = 0; i < hex.Length; i++) {
-        		if (!Colors.IsStandardColor(hex[i])) return false;
+                if (!Colors.IsStandardColor(hex[i])) return false;
             }
             return true;
         }
@@ -314,6 +298,56 @@ namespace MCGalaxy.Commands {
                 value.CaselessEq("reset") || value.CaselessEq("default");
         }
         
+        
+        void SendCurrentMapAppearance(Level lvl, EnvProp prop, int value) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != lvl) continue;
+                
+                if (pl.HasCpeExt(CpeExt.EnvMapAspect))
+                    pl.SendSetEnvMapProperty(prop, value);
+                else
+                    pl.SendCurrentMapAppearance();
+            }
+        }
+        
+        void SetEnvColour(Player p, string value, byte envType, string envTypeName, ref string target) {
+            if (IsResetString(value)) {
+                p.SendMessage(string.Format("Reset {0} color for {1}&S to normal", envTypeName, p.level.name));
+                target = null;
+            } else {
+                if (value.Length > 0 && value[0] == '#')
+                    value = value.Substring(1);
+                if (value.Length != 6 || !IsValidHex(value)) {
+                    p.SendMessage(string.Format("Env: \"#{0}\" is not a valid HEX color code.", value));
+                    return;
+                }
+                
+                p.SendMessage(string.Format("Set {0} color for {1}&S to #{2}", envTypeName, p.level.name, value));
+                target = value;
+            }
+            SendEnvColorPackets(p, envType, value);
+        }
+        
+        void SendEnvColorPackets(Player p, byte envType, string value) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level == p.level)
+                    SendEnvColorPacket(pl, envType, value);
+            }
+        }
+        
+        void SendEnvColorPacket(Player p, byte envType, string value) {
+            if (p.HasCpeExt(CpeExt.EnvColors)) {
+                try {
+                    System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml("#" + value.ToUpper());
+                    p.SendEnvColor(envType, col.R, col.G, col.B);
+                } catch {
+                    p.SendEnvColor(envType, -1, -1, -1);
+                }
+            }
+        }
+        
         static void SendPresetsMessage(Player p) {
             p.SendMessage("/env preset [type] -- Uses an env preset on your current map");
             p.SendMessage("Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
@@ -321,8 +355,9 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/env [variable] [value]");
-            Player.Message(p, "%H  Valid variables: fog, cloud, sky, sun, shadow, weather");
-            Player.Message(p, "%H    level, cloudheight, maxfog, horizon, border, preset");
+            Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level");
+            Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight");
+            Player.Message(p, "%H   cloudspeed, weatherspeed, weatherfade");
             Player.Message(p, "%HUsing 'normal' as a value will reset the variable");
         }
     }

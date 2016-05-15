@@ -129,6 +129,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
                            (data.CloudsSpeed / 256f).ToString("F2"),
                            (data.WeatherSpeed / 256f).ToString("F2"));
+            Player.Message(p, "Weather fade rate: &b{0}%",
+                           (data.WeatherFade / 128).ToString("F2"));
         }
         
         class MapInfoData {
@@ -139,7 +141,7 @@ namespace MCGalaxy.Commands {
             public string Name, TerrainUrl, TextureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
             public int EdgeLevel, CloudsHeight, MaxFog;
-            public int CloudsSpeed, WeatherSpeed;
+            public int CloudsSpeed = 256, WeatherSpeed = 256, WeatherFade = 128;
             public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
             public LevelPermission visit, build, visitmax, buildmax;
             public List<string> VisitWhitelist = new List<string>();
@@ -164,6 +166,7 @@ namespace MCGalaxy.Commands {
                 MaxFog = lvl.MaxFogDistance;
                 CloudsSpeed = lvl.CloudsSpeed; WeatherSpeed = lvl.WeatherSpeed;
                 EdgeBlock = lvl.EdgeBlock; HorizonBlock = lvl.HorizonBlock;
+                WeatherFade = lvl.WeatherFade;
                 
                 TerrainUrl = lvl.terrainUrl != "" ?
                     lvl.terrainUrl : Server.defaultTerrainUrl;
@@ -197,6 +200,7 @@ namespace MCGalaxy.Commands {
                     case "texturepack": TextureUrl = value; break;
                     case "clouds-speed": CloudsSpeed = int.Parse(value); break;
                     case "weather-speed": WeatherSpeed = int.Parse(value); break;
+                    case "weather-fade": WeatherFade = int.Parse(value); break;
                     
                     case "perbuild": build = GetPerm(value); break;
                     case "pervisit": visit = GetPerm(value); break;

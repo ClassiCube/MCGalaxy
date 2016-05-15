@@ -170,6 +170,10 @@ namespace MCGalaxy
         /// <summary> Weather speed, in units of 256ths. Default is 256 (1 speed). </summary>
         [ConfigInt("weather-speed", "Env", null, 256, short.MinValue, short.MaxValue)]
         public int WeatherSpeed = 256;
+        
+        /// <summary> Weather fade, in units of 256ths. Default is 256 (1 speed). </summary>
+        [ConfigInt("weather-fade", "Env", null, 128, short.MinValue, short.MaxValue)]
+        public int WeatherFade = 128;
 
         /// <summary> The block which will be displayed on the horizon. </summary>
         public byte HorizonBlock = Block.water;
