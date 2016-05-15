@@ -73,7 +73,6 @@ namespace MCGalaxy {
         #region Script handling
         
         void BotTimerFunc(object sender, ElapsedEventArgs e) {
-            Random rand = new Random();
             ushort x = (ushort)Math.Round((decimal)pos[0] / 32);
             ushort y = (ushort)((pos[1] - 33) / 32);
             ushort z = (ushort)Math.Round((decimal)pos[2] / 32);
@@ -269,7 +268,7 @@ namespace MCGalaxy {
         void MoveTimerFunc(object sender, ElapsedEventArgs e) {
             moveTimer.Interval = Server.updateTimer.Interval / movementSpeed;
             if (!movement) return;
-            int newNum; Random rand = new Random();
+            int newNum;
 
             if ((pos[1] - 19) % 32 != 0 && !jumping)
             {
