@@ -85,7 +85,7 @@ namespace MCGalaxy
                 {
                     if (t.BaseType == typeof(Plugin_Simple))
                     {
-                        instance = Activator.CreateInstance(lib.GetTypes()[0]);
+                        instance = Activator.CreateInstance(t);
                         break;
                     }
                 }

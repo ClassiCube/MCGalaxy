@@ -118,7 +118,7 @@ namespace MCGalaxy.Core {
 
         public static void ForwardPort(int port, ProtocolType protocol, string description) {
             if ( string.IsNullOrEmpty(_serviceUrl) )
-                throw new Exception("No UPnP service available or Discover() has not been called");
+                throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             XmlDocument xdoc = SOAPRequest(_serviceUrl, "<u:AddPortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
                 "<NewRemoteHost></NewRemoteHost><NewExternalPort>" + port.ToString() + "</NewExternalPort><NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
                 "<NewInternalPort>" + port.ToString() + "</NewInternalPort><NewInternalClient>" + GetLocalIP() +
@@ -128,7 +128,7 @@ namespace MCGalaxy.Core {
 
         public static void DeleteForwardingRule(int port, ProtocolType protocol) {
             if ( string.IsNullOrEmpty(_serviceUrl) )
-                throw new Exception("No UPnP service available or Discover() has not been called");
+                throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             XmlDocument xdoc = SOAPRequest(_serviceUrl,
             "<u:DeletePortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
             "<NewRemoteHost>" +
@@ -142,7 +142,7 @@ namespace MCGalaxy.Core {
         [DebuggerStepThrough]
         public static IPAddress GetExternalIP() {
             if ( string.IsNullOrEmpty(_serviceUrl) )
-                throw new Exception("No UPnP service available or Discover() has not been called");
+                throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             XmlDocument xdoc = SOAPRequest(_serviceUrl, "<u:GetExternalIPAddress xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
             "</u:GetExternalIPAddress>", "GetExternalIPAddress");
             XmlNamespaceManager nsMgr = new XmlNamespaceManager(xdoc.NameTable);

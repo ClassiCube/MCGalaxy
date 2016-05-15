@@ -144,13 +144,6 @@ namespace MCGalaxy.Commands
             return sec;
         }
         
-        static void AppendName(Player pl, string foundName, ref string target) {
-            if (pl.voice)
-                target += " " + "&f+%S" + foundName + " (" + pl.level.name + "),";
-            else
-                target += " " + foundName + " (" + pl.level.name + "),";
-        }
-        
         static string GetPlural(string groupName) {
             if (groupName.Length < 2)
                 return groupName;

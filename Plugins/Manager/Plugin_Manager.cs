@@ -118,7 +118,7 @@ namespace MCGalaxy
             String creator = "";
             try
             {
-                object instance = null;
+                Plugin instance = null;
                 Assembly lib = null;
                 using (FileStream fs = File.Open(pluginname, FileMode.Open))
                 {
@@ -129,11 +129,7 @@ namespace MCGalaxy
                         while ((read = fs.Read(buffer, 0, 1024)) > 0)
                             ms.Write(buffer, 0, read);
                         lib = Assembly.Load(ms.ToArray());
-                        ms.Close();
-                        ms.Dispose();
                     }
-                    fs.Close();
-                    fs.Dispose();
                 }
                 try
                 {
@@ -141,7 +137,7 @@ namespace MCGalaxy
                     {
                         if (t.BaseType == typeof(Plugin))
                         {
-                            instance = Activator.CreateInstance(t);
+                        	instance = (Plugin)Activator.CreateInstance(t);
                             break;
                         }
                     }
@@ -152,10 +148,10 @@ namespace MCGalaxy
                     Server.s.Log("The plugin " + pluginname + " couldn't be loaded!");
                     return;
                 }
-                String plugin_version = ((Plugin)instance).MCGalaxy_Version;
+                String plugin_version = instance.MCGalaxy_Version;
                 if (!String.IsNullOrEmpty(plugin_version) && new Version(plugin_version) > Server.Version)
                 {
-                    Server.s.Log("This plugin (" + ((Plugin)instance).name + ") isn't compatible with this version of MCGalaxy!");
+                    Server.s.Log("This plugin (" + instance.name + ") isn't compatible with this version of MCGalaxy!");
                     Thread.Sleep(1000);
                     if (Server.unsafe_plugin)
                     {
@@ -166,16 +162,16 @@ namespace MCGalaxy
                         return;
                 }
                 here:
-                Plugin.all.Add((Plugin)instance);
-                creator = ((Plugin)instance).creator;
-                if (((Plugin)instance).LoadAtStartup)
+                Plugin.all.Add(instance);
+                creator = instance.creator;
+                if (instance.LoadAtStartup)
                 {
-                    ((Plugin)instance).Load(startup);
-                    Server.s.Log("Plugin: " + ((Plugin)instance).name + " loaded...build: " + ((Plugin)instance).build);
+                    instance.Load(startup);
+                    Server.s.Log("Plugin: " + instance.name + " loaded...build: " + instance.build);
                 }
                 else
-                    Server.s.Log("Plugin: " + ((Plugin)instance).name + " was not loaded, you can load it with /pload");
-                Server.s.Log(((Plugin)instance).welcome);
+                    Server.s.Log("Plugin: " + instance.name + " was not loaded, you can load it with /pload");
+                Server.s.Log(instance.welcome);
                 return;
             }
             catch (FileNotFoundException)

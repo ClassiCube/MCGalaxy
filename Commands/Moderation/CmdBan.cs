@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands {
                 Entities.SpawnEntities(who, false);
             }
             
-            string oldgroup = group.name.ToString();
+            string oldgroup = group.name;
             Group.findPerm(LevelPermission.Banned).playerList.Add(target);
             Ban.BanPlayer(p, target.ToLower(), reason, stealth, oldgroup);
             Group.findPerm(LevelPermission.Banned).playerList.Save();

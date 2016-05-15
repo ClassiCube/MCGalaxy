@@ -323,7 +323,7 @@ namespace MCGalaxy
                     if (lowestRank != LevelPermission.Null)
                         BlockList[type].lowestRank = lowestRank;
                     else
-                        throw new Exception();
+                        throw new InvalidDataException("Line " + s + " is invalid.");
                 }
                 catch { Server.s.Log("Could not find the rank given on " + s + ". Using default"); }
             }

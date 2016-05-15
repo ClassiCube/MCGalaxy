@@ -257,7 +257,7 @@ namespace MCGalaxy {
             return true;
         }
         
-        bool CheckRank(Player p, ushort x, ushort y, ushort z, bool AllowBuild, bool inZone) {
+        bool CheckRank(Player p, bool AllowBuild, bool inZone) {
             if (p.group.Permission < permissionbuild && (!inZone || !AllowBuild)) {
                 if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
                     Player.Message(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
@@ -287,7 +287,7 @@ namespace MCGalaxy {
             bool AllowBuild = true, inZone = false;
             if (!CheckZones(p, x, y, z, b, ref AllowBuild, ref inZone, ref Owners))
                 return false;
-            if (Owners.Length == 0 && !CheckRank(p, x, y, z, AllowBuild, inZone))
+            if (Owners.Length == 0 && !CheckRank(p, AllowBuild, inZone))
                 return false;
             return true;
         }

@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands
                 DataRow row = Blocks.Rows[i];
                 Username = row["Username"].ToString().Trim();
                 TimePerformed = DateTime.Parse(row["TimePerformed"].ToString()).ToString("yyyy-MM-dd HH:mm:ss");
-                BlockUsed = Block.Name(Convert.ToByte(row["Type"])).ToString();
+                BlockUsed = Block.Name(Convert.ToByte(row["Type"]));
                 Deleted = Convert.ToBoolean(row["Deleted"]);
 
                 if (!Deleted)

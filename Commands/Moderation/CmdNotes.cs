@@ -71,15 +71,6 @@ namespace MCGalaxy.Commands {
             if (arg.CaselessEq("T")) return "Temp-Banned";
             return arg;
         }
-        
-        void UpdateModel(byte id, string model, Level level, Player who) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level != level || !pl.HasCpeExt(CpeExt.ChangeModel)) continue;
-                byte sendId = (pl == who) ? (byte)0xFF : id;
-                pl.SendChangeModel(sendId, model);
-            }
-        }
 
         public override void Help(Player p) {
            Player.Message(p, "%T/notes [name] %H- views that player's notes.");
