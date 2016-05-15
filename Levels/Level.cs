@@ -595,48 +595,52 @@ namespace MCGalaxy
             GC.WaitForPendingFinalizers();
         }
 
-        public int Backup(bool Forced = false, string backupName = "")
-        {
-            if (!backedup || Forced)
-            {
+        public int Backup(bool Forced = false, string backupName = "") {
+            if (!backedup || Forced) {
                 int backupNumber = 1;
-                string backupPath = @Server.backupLocation;
-                if (Directory.Exists(string.Format("{0}/{1}", backupPath, name)))
-                {
-                    backupNumber = Directory.GetDirectories(string.Format("{0}/" + name, backupPath)).Length + 1;
-                }
-                else
-                {
-                    Directory.CreateDirectory(backupPath + "/" + name);
-                }
-                string path = string.Format("{0}/" + name + "/" + backupNumber, backupPath);
+                string dir = Path.Combine(Server.backupLocation, name);
+                backupNumber = IncrementBackup(dir);
+
+                string path = Path.Combine(dir, backupNumber.ToString());
                 if (backupName != "")
-                {
-                    path = string.Format("{0}/" + name + "/" + backupName, backupPath);
-                }
+                    path = Path.Combine(dir, backupName);
                 Directory.CreateDirectory(path);
 
-                string BackPath = string.Format("{0}/{1}.lvl", path, name);
+                string backup = Path.Combine(path, name + ".lvl");
                 string current = LevelInfo.LevelPath(name);
-                try
-                {
-                    File.Copy(current, BackPath, true);
+                try {
+                    File.Copy(current, backup, true);
                     backedup = true;
                     return backupNumber;
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     Server.ErrorLog(e);
-                    Server.s.Log(string.Format("FAILED TO INCREMENTAL BACKUP :{0}", name));
+                    Server.s.Log("FAILED TO INCREMENTAL BACKUP :" + name);
                     return -1;
                 }
             }
             Server.s.Log("Level unchanged, skipping backup");
             return -1;
         }
+        
+        int IncrementBackup(string dir) {
+            if (Directory.Exists(dir)) {
+                int max = 0;
+                string[] backups = Directory.GetDirectories(dir);
+                foreach (string s in backups) {
+                    string name = s.Substring(s.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                    int num;
+                    
+                    if (!int.TryParse(name, out num)) continue;
+                    max = Math.Max(num, max);
+                }
+                return max + 1;
+            } else {
+                Directory.CreateDirectory(dir);
+                return 1;
+            }
+        }
 
-        public static void CreateLeveldb(string givenName)
-        {
+        public static void CreateLeveldb(string givenName) {
             Database.executeQuery("CREATE TABLE if not exists `Block" + givenName +
                                   "` (Username CHAR(20), TimePerformed DATETIME, X SMALLINT UNSIGNED, Y SMALLINT UNSIGNED, Z SMALLINT UNSIGNED, Type TINYINT UNSIGNED, Deleted " +
                                   (Server.useMySQL ? "BOOL" : "INT") + ")");
@@ -648,14 +652,12 @@ namespace MCGalaxy
                                   "` (SmallX SMALLINT UNSIGNED, SmallY SMALLINT UNSIGNED, SmallZ SMALLINT UNSIGNED, BigX SMALLINT UNSIGNED, BigY SMALLINT UNSIGNED, BigZ SMALLINT UNSIGNED, Owner VARCHAR(20));");
         }
 
-        public static Level Load(string givenName)
-        {
+        public static Level Load(string givenName) {
             return Load(givenName, 0);
         }
 
         //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
-        public static Level Load(string givenName, byte phys)
-        {
+        public static Level Load(string givenName, byte phys) {
             if (LevelLoad != null)
                 LevelLoad(givenName);
             OnLevelLoadEvent.Call(givenName);
