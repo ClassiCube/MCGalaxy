@@ -69,39 +69,54 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        StringBuilder ListMaps(Player p, bool all, FileInfo[] files, int start, int end) {
+        static StringBuilder ListMaps(Player p, bool all, FileInfo[] files, int start, int end) {
             StringBuilder builder = new StringBuilder();
             Level[] loaded = LevelInfo.Loaded.Items;
             for (int i = start; i < end; i++) {
                 string level = files[i].Name.Replace(".lvl", "");
                 if (!all && loaded.Any(l => l.name.CaselessEq(level))) continue;
                 
-                string visit = GetLoadOnGoto(level) && (p == null || p.group.Permission >= GetPerVisitPermission(level)) ? "%aYes" : "%cNo";
-                builder.Append(", ").Append(Group.findPerm(GetPerBuildPermission(level)).color + level + " &b[" + visit + "&b]");
+                LevelPermission visitP, buildP;
+                bool loadOnGoto;
+                RetrieveProps(level, out visitP, out buildP, out loadOnGoto);
+                
+                string visit = loadOnGoto && (p == null || p.group.Permission >= visitP) ? "%aYes" : "%cNo";
+                builder.Append(", ").Append(Group.findPerm(buildP).color + level + " &b[" + visit + "&b]");
             }
             return builder;
         }
-
-        LevelPermission GetPerVisitPermission(string level) {
-            string value = LevelInfo.FindOfflineProperty(level, "pervisit");
-            if (value == null) return LevelPermission.Guest;
-            Group grp = Group.Find(value);
-            return grp == null ? LevelPermission.Guest : grp.Permission;
+        
+        static void RetrieveProps(string level, out LevelPermission visit,
+                                  out LevelPermission build, out bool loadOnGoto) {
+            visit = LevelPermission.Guest;
+            build = LevelPermission.Guest;
+            loadOnGoto = true;
+            Group grp;
+            
+            string file = LevelInfo.GetPropertiesPath(level);
+            if (file == null) return;
+            SearchArgs args = new SearchArgs();
+            PropertiesFile.Read(file, ref args, ProcessLine);
+            
+            grp = args.Visit == null ? null : Group.Find(args.Visit);
+            if (grp != null) visit = grp.Permission;
+            grp = args.Build == null ? null : Group.Find(args.Build);
+            if (grp != null) build = grp.Permission;            
+            if (!bool.TryParse(args.LoadOnGoto, out loadOnGoto))
+                loadOnGoto = true;
         }
-
-        LevelPermission GetPerBuildPermission(string level) {
-            string value = LevelInfo.FindOfflineProperty(level, "perbuild");
-            if (value == null) return LevelPermission.Guest;
-            Group grp = Group.Find(value);
-            return grp == null ? LevelPermission.Guest : grp.Permission;
+        
+        static void ProcessLine(string key, string value, ref SearchArgs args) {
+            if (key.CaselessEq("pervisit")) {
+                args.Visit = value;
+            } else if (key.CaselessEq("perbuild")) {
+                args.Build = value;
+            } else if (key.CaselessEq("loadongoto")) {
+                args.LoadOnGoto = value;
+            }
         }
-
-        bool GetLoadOnGoto(string level) {
-            string value = LevelInfo.FindOfflineProperty(level, "loadongoto");
-            bool load;
-            if (!bool.TryParse(value, out load)) return true;
-            return load;
-        }
+        
+        struct SearchArgs { public string Visit, Build, LoadOnGoto; }
 
         public override void Help(Player p) {
             Player.Message(p, "%f/unloaded %S- Lists all unloaded levels, and their accessible state.");
