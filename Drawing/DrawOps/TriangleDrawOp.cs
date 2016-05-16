@@ -26,31 +26,43 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
             // Applying Heron's Formula
-            double a = (marks[0] - marks[2]).Length;
-            double b = (marks[1] - marks[2]).Length;
-            double c = (marks[0] - marks[1]).Length;
-            double s = (a + b + c) / 2;
+            float a = (marks[0] - marks[2]).Length;
+            float b = (marks[1] - marks[2]).Length;
+            float c = (marks[0] - marks[1]).Length;
+            float s = (a + b + c) / 2;
             return (int)Math.Sqrt(s * (s - a) * (s - b) * (s - c));
         }
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Min, p2 = Max, a = marks[0];
-            Vec3S16 v0 = marks[1] - a, v1 = marks[2] - a;
-            float d00 = v0.Dot(v0), d01 = v0.Dot(v1), d11 = v1.Dot(v1);
-            float invDenom = 1f / (d00 * d11 - d01 * d01);
+            Vec3F32 V1 = marks[0], V2 = marks[1], V3 = marks[2];
+            Vec3F32 N = Vec3F32.Cross(V2 - V1, V3 - V1);
+            N = Vec3F32.Normalise(N);
             
-            for (ushort yy = p1.Y; yy <= p2.Y; yy++)
-                for (ushort zz = p1.Z; zz <= p2.Z; zz++)
-                    for (ushort xx = p1.X; xx <= p2.X; xx++)
+            for (ushort yy = Min.Y; yy <= Max.Y; yy++)
+                for (ushort zz = Min.Z; zz <= Max.Z; zz++)
+                    for (ushort xx = Min.X; xx <= Max.X; xx++)
             {
-                // Compute the barycentric coordinates of the point
-                Vec3S16 v2 = new Vec3U16(xx, yy, zz) - a;
-                float d20 = v2.Dot(v0), d21 = v2.Dot(v1);                
-                float v = (d11 * d20 - d01 * d21) * invDenom;
-                float w = (d00 * d21 - d01 * d20) * invDenom;
-                float u = 1.0f - v - w;
+                // Project point onto the plane
+                Vec3F32 P = new Vec3F32(xx, yy, zz);
+                float t = Vec3F32.Dot(N, V1) - Vec3F32.Dot(N, P);
+                Vec3F32 P0 = P + t * N;
+                float dist = (P - P0).Length;
+                if (dist > 0.5) continue;
                 
-                if (u >= 0 && u <= 1 && v >= 0 && v <= 1 && w >= 0 && w <= 1)
+                // Check if inside the triangle
+                Vec3F32 v0 = V3 - V1, v1 = V2 - V1, v2 = P0 - V1;
+                float dot00 = Vec3F32.Dot(v0, v0);
+                float dot01 = Vec3F32.Dot(v0, v1);
+                float dot02 = Vec3F32.Dot(v0, v2);
+                float dot11 = Vec3F32.Dot(v1, v1);
+                float dot12 = Vec3F32.Dot(v1, v2);
+
+                // Compute barycentric coordinates
+                float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+                float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+                float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+                if (u >= 0 && v >= 0 && u + v <= 1)
                     PlaceBlock(p, lvl, xx, yy, zz, brush);
             }
         }

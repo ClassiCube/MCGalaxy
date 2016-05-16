@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands {
                 
                 if (index >= offset) {
                     count++;
-                    const string format = "{0} - %{1} displays as &{1}{2}{4}, and falls back to {3}.";
+                    const string format = "{4}{0} &{1}({2}){4} - %{1}, falls back to %{3}.";
                     Player.SendMessage(p, String.Format(format, col.Name, col.Code, Hex(col), col.Fallback, Server.DefaultColor), false);
                     
                     if (count >= 8 && !all) {

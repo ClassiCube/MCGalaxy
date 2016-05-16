@@ -22,7 +22,7 @@ using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Commands {
 	
-	/*public sealed class CmdTriangle : DrawCmd { TODO: why is this having issues?
+	public sealed class CmdTriangle : DrawCmd {
         public override string name { get { return "triangle"; } }
         public override string shortcut { get { return "tri"; } }
 		protected override string PlaceMessage {
@@ -61,5 +61,5 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HDraws a triangle between three points.");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
-    }*/
+    }
 }

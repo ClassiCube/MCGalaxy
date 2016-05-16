@@ -52,7 +52,7 @@ namespace MCGalaxy {
         
         public int LengthSquared { get { return X * X + Y * Y + Z * Z; } }
         
-        public double Length { get { return Math.Sqrt( X * X + Y * Y + Z * Z ); } }
+        public float Length { get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); } }
         
         public float Dot(Vec3U16 b) { return X * b.X + Y * b.Y + Z * b.Z; }
         
@@ -153,7 +153,7 @@ namespace MCGalaxy {
         
         public int LengthSquared { get { return X * X + Y * Y + Z * Z; } }
         
-        public double Length { get { return Math.Sqrt( X * X + Y * Y + Z * Z ); } }
+        public float Length { get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); } }
         
         public float Dot(Vec3S16 b) { return X * b.X + Y * b.Y + Z * b.Z; }
         
@@ -162,6 +162,88 @@ namespace MCGalaxy {
         }
         
         public static bool operator != (Vec3S16 a, Vec3S16 b) {
+            return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
+        }
+        
+        public override string ToString() {
+            return X + "," + Y + "," + Z;
+        }
+        
+        public string ToString(string separator) {
+            return String.Format("{1}{0}{2}{0}{3}", separator, X, Y, Z);
+        }
+    }
+    
+    public struct Vec3F32 {
+        
+        public float X, Y, Z;
+        
+        public Vec3F32(float x, float y, float z) {
+            X = x; Y = y; Z = z;
+        }
+        
+        public float LengthSquared {
+            get { return X * X + Y * Y + Z * Z; }
+        }
+        
+        public float Length {
+            get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); }
+        }
+        
+        public static float Dot(Vec3F32 a, Vec3F32 b) {
+            return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+        }
+        
+        public static Vec3F32 Cross(Vec3F32 a, Vec3F32 b) {
+            return new Vec3F32(a.Y * b.Z - a.Z * b.Y,
+                               a.Z * b.X - a.X * b.Z,
+                               a.X * b.Y - a.Y * b.X);
+        }
+        
+        public static Vec3F32 Normalise(Vec3F32 a) {
+            float invLen = 1 / a.Length;
+            a.X *= invLen; a.Y *= invLen; a.Z *= invLen;
+            return a;
+        }        
+        
+        public static Vec3F32 operator * (float a, Vec3F32 b) {
+            return new Vec3F32(a * b.X, a * b.Y, a * b.Z);
+        }
+        
+        public static Vec3F32 operator - (Vec3F32 a, Vec3F32 b) {
+            return new Vec3F32(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+        
+        public static Vec3F32 operator + (Vec3F32 a, Vec3F32 b) {
+            return new Vec3F32(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        }
+        
+        public static implicit operator Vec3F32(Vec3U16 a) {
+            return new Vec3F32(a.X, a.Y, a.Z);
+        }
+        
+        
+        public override bool Equals(object obj) {
+            return (obj is Vec3F32) && Equals((Vec3F32)obj);
+        }
+        
+        public bool Equals(Vec3F32 other) {
+            return X == other.X & Y == other.Y && Z == other.Z;
+        }
+        
+        public override int GetHashCode() {
+            int hashCode = 0;
+            hashCode += 1000000007 * X.GetHashCode();
+            hashCode += 1000000009 * Y.GetHashCode();
+            hashCode += 1000000021 * Z.GetHashCode();
+            return hashCode;
+        }
+        
+        public static bool operator == (Vec3F32 a, Vec3F32 b) {
+            return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        }
+        
+        public static bool operator != (Vec3F32 a, Vec3F32 b) {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
         }
         
