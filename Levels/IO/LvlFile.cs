@@ -26,26 +26,25 @@ namespace MCGalaxy.Levels.IO {
     public static class LvlFile {
         
         public static void Save(Level level, string file) {
-            using (Stream fs = File.Create(file), gs = new GZipStream(fs, CompressionMode.Compress, true))
+    		using (Stream fs = File.Create(file))
+                using (Stream gs = new GZipStream(fs, CompressionMode.Compress, true))
             {
-                byte[] header = new byte[16];
+                byte[] header = new byte[18];
                 BitConverter.GetBytes(1874).CopyTo(header, 0);
-                gs.Write(header, 0, 2);
-
-                BitConverter.GetBytes(level.Width).CopyTo(header, 0);
-                BitConverter.GetBytes(level.Length).CopyTo(header, 2);
-                BitConverter.GetBytes(level.Height).CopyTo(header, 4);
-                BitConverter.GetBytes(level.spawnx).CopyTo(header, 6);
-                BitConverter.GetBytes(level.spawnz).CopyTo(header, 8);
-                BitConverter.GetBytes(level.spawny).CopyTo(header, 10);
-                header[12] = level.rotx;
-                header[13] = level.roty;
-                header[14] = (byte)level.permissionvisit;
-                header[15] = (byte)level.permissionbuild;
+                BitConverter.GetBytes(level.Width).CopyTo(header, 2);
+                BitConverter.GetBytes(level.Length).CopyTo(header, 4);
+                BitConverter.GetBytes(level.Height).CopyTo(header, 6);
+                BitConverter.GetBytes(level.spawnx).CopyTo(header, 8);
+                BitConverter.GetBytes(level.spawnz).CopyTo(header, 10);
+                BitConverter.GetBytes(level.spawny).CopyTo(header, 12);
+                header[14] = level.rotx;
+                header[15] = level.roty;
+                header[16] = (byte)level.permissionvisit;
+                header[17] = (byte)level.permissionbuild;
                 gs.Write(header, 0, header.Length);
+                
                 byte[] blocks = level.blocks;
                 int start = 0, len = 0;
-
                 for (int i = 0; i < blocks.Length; ++i) {
                     byte block = blocks[i], convBlock = 0;
                     if (block < Block.CpeCount || (convBlock = Block.SaveConvert(block)) == block) {
