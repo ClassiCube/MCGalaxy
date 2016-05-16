@@ -20,10 +20,10 @@ using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
 
-    public class HollowDrawOp : CuboidDrawOp {
+    public class OutlineDrawOp : CuboidDrawOp {
         
-        public override string Name { get { return "Hollow"; } }
-        public byte Skip;
+        public override string Name { get { return "Outline"; } }
+        public byte Type, NewType;    
         
         public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = marks[0], p2 = marks[1];
@@ -31,27 +31,17 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                bool hollow = true;
-                byte tile = lvl.GetTile(x, y, z);
-                if (!Block.RightClick(Block.Convert(tile), true) && tile != Skip) {
-                    CheckTile(lvl, x - 1, y, z, ref hollow);
-                    CheckTile(lvl, x + 1, y, z, ref hollow);
-                    CheckTile(lvl, x, y - 1, z, ref hollow);
-                    CheckTile(lvl, x, y + 1, z, ref hollow);
-                    CheckTile(lvl, x, y, z - 1, ref hollow);
-                    CheckTile(lvl, x, y, z + 1, ref hollow);
-                } else {
-                    hollow = false;
-                }
-                if (hollow) 
-                    PlaceBlock(p, lvl, x, y, z, Block.air, 0);
+                bool outline = false;
+                if (lvl.GetTile((ushort)(x - 1), y, z) == Type) outline = true;
+                else if (lvl.GetTile((ushort)(x + 1), y, z) == Type) outline = true;
+                else if (lvl.GetTile(x, (ushort)(y - 1), z) == Type) outline = true;
+                else if (lvl.GetTile(x, (ushort)(y + 1), z) == Type) outline = true;
+                else if (lvl.GetTile(x, y, (ushort)(z - 1)) == Type) outline = true;
+                else if (lvl.GetTile(x, y, (ushort)(z + 1)) == Type) outline = true;
+
+                if (outline && p.level.GetTile(x, y, z) != Type)
+                    PlaceBlock(p, lvl, x, y, z, NewType, 0);
             }
-        }
-        
-        void CheckTile(Level lvl, int x, int y, int z, ref bool hollow) {
-            byte tile = lvl.GetTile((ushort)x, (ushort)y, (ushort)z);
-            if (Block.RightClick(Block.Convert(tile)) || tile == Skip)
-                hollow = false;
         }
     }
 }
