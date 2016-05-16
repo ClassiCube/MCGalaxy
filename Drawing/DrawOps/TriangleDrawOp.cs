@@ -62,9 +62,23 @@ namespace MCGalaxy.Drawing.Ops {
                 float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
                 float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-                if (u >= 0 && v >= 0 && u + v <= 1)
+                if (u >= 0 && v >= 0 && u + v <= 1) {
                     PlaceBlock(p, lvl, xx, yy, zz, brush);
+                } else if (Axis(P, V1, V2) || Axis(P, V1, V3) || Axis(P, V2, V3)) {
+                    PlaceBlock(p, lvl, xx, yy, zz, brush);
+                }
             }
+        }
+        
+        private bool Axis(Vec3F32 P, Vec3F32 P1, Vec3F32 P2) {
+            // Point to line segment test
+            float bottom = (P2 - P1).LengthSquared;
+            if (bottom == 0) return (P1 - P).Length <= 0.5f;
+
+            float t = Vec3F32.Dot(P2 - P1, P - P1) / bottom;
+            if (t < 0 || t > 1) return false;
+            Vec3F32 proj = P1 + t * (P2 - P1);
+            return (P - proj).Length <= 0.5f;
         }
     }
 }
