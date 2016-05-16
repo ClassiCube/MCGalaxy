@@ -1885,9 +1885,7 @@ namespace MCGalaxy.Commands
 
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
         {
-            p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            p.SendBlockchange(x, y, z, b);
+        	RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
             TntWarsGame.Zone Zn = new TntWarsGame.Zone();

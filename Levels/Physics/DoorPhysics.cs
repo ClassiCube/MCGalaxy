@@ -66,9 +66,9 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void ActivateNeighbours(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
-            for (int xx = -1; xx <= 1; xx++)
-                for (int yy = -1; yy <= 1; yy++)
-                    for (int zz = -1; zz <= 1; zz++)
+            for (int yy = -1; yy <= 1; yy++)
+                for (int zz = -1; zz <= 1; zz++)
+                    for (int xx = -1; xx <= 1; xx++)
             {
                 byte b = lvl.GetTile(lvl.IntOffset(C.b, xx, yy, zz));
                 if (b == Block.rocketstart) {

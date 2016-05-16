@@ -448,6 +448,7 @@
     <Compile Include="Drawing\DrawOps\DrawOp.Performer.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
     <Compile Include="Drawing\DrawOps\FillDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\HollowDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\LineDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\MazeDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PasteDrawOp.cs" />

@@ -37,6 +37,8 @@ namespace MCGalaxy {
             return null;
         }
         
+        /// <summary> Clears the block change handler, and reverts the block back 
+        /// to the existing one in the world. </summary>
         protected static void RevertAndClearState(Player p, ushort x, ushort y, ushort z) {
             p.ClearBlockchange();
             p.RevertBlock(x, y, z);

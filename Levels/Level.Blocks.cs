@@ -466,6 +466,12 @@ namespace MCGalaxy {
             return pos.X < Width && pos.Y < Height && pos.Z < Length;
         }
         
+        public void UpdateBlock(Player p, int index, byte type, byte extType) {
+            ushort x, y, z;
+            IntToPos(index, out x, out y, out z);
+            UpdateBlock(p, x, y, z, type, extType);
+        }
+        
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (!DoBlockchange(p, x, y, z, type, extType)) return;          
             BlockPos bP = default(BlockPos);
