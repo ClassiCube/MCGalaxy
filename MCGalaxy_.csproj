@@ -139,6 +139,7 @@
     <Compile Include="Commands\building\CmdPlace.cs" />
     <Compile Include="Commands\building\CmdPortal.cs" />
     <Compile Include="Commands\building\CmdPyramid.cs" />
+    <Compile Include="Commands\building\CmdRainbow.cs" />
     <Compile Include="Commands\building\CmdRedo.cs" />
     <Compile Include="Commands\building\CmdReplaceBrush.cs" />
     <Compile Include="Commands\building\CmdTriangle.cs" />
@@ -359,7 +360,6 @@
     <Compile Include="Commands\other\CmdPass.cs" />
     <Compile Include="Commands\other\CmdQuit.cs" />
     <Compile Include="Commands\other\CmdRagequit.cs" />
-    <Compile Include="Commands\other\CmdRainbow.cs" />
     <Compile Include="Commands\other\CmdRepeat.cs" />
     <Compile Include="Commands\other\CmdReport.cs" />
     <Compile Include="Commands\other\CmdResetPass.cs" />
