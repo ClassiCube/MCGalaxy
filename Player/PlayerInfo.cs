@@ -160,8 +160,10 @@ namespace MCGalaxy {
             
             using (DataTable results = Database.fillData(query, syntax)) {
             	if (results.Rows.Count == 0) {
-            		Player.Message(p, "No players found matching \"{0}\".", name); return null;
+            	    Player.Message(p, "No players found matching \"{0}\".", name); return null;
             	}
+            	if (results.Rows.Count == 1)
+            	    return FillInfo(results.Rows[0], true);
                 List<string> matches = new List<string>();
                 
                 foreach (DataRow row in results.Rows) {
