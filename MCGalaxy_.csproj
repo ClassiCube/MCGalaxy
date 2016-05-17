@@ -112,8 +112,9 @@
     <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Blocks\BlockProps.cs" />
     <Compile Include="Bots\BotsFile.cs" />
+    <Compile Include="Bots\Instructions.cs" />
     <Compile Include="Bots\PlayerBot.cs" />
-    <Compile Include="Bots\BotScript.cs" />
+    <Compile Include="Bots\ScriptFile.cs" />
     <Compile Include="Commands\building\CmdAbort.cs" />
     <Compile Include="Commands\building\CmdBind.cs" />
     <Compile Include="Commands\building\CmdBrush.cs" />

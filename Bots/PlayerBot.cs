@@ -46,7 +46,7 @@ namespace MCGalaxy {
 
         public ushort[] pos = new ushort[3], oldpos = new ushort[3], foundPos = new ushort[3];
         public byte[] rot = new byte[2], oldrot = new byte[2], foundRot = new byte[2];
-        bool movement = false;
+        public bool movement = false;
         public int movementSpeed = 24;
         bool jumping = false;
         int currentjump = 0;
@@ -83,7 +83,7 @@ namespace MCGalaxy {
             if (Waypoints.Count == 0) {
                 if (hunt) DoHunt();
             } else {
-                bool skip = false;                
+                bool skip = false;
 
                 retry: 
                 switch (Waypoints[currentPoint].type)
@@ -129,8 +129,11 @@ namespace MCGalaxy {
 
                 if (currentPoint == Waypoints.Count) currentPoint = 0;
             }
-
-            if (!movement && Waypoints.Count > 0) {
+            AdvanceRotation();
+        }
+        
+        public void AdvanceRotation() {
+        	if (!movement && Waypoints.Count > 0) {
                 if (rot[0] < 245) rot[0] += 8;
                 else rot[0] = 0;
 
@@ -138,6 +141,12 @@ namespace MCGalaxy {
                 else if (rot[1] > 250) rot[1] = 0;
                 else rot[1] += 4;
             }
+        }
+        
+        public void NextInstruction() {
+            currentPoint++;
+            if (currentPoint == Waypoints.Count) 
+                currentPoint = 0;
         }
         
         bool DoWalk(ref bool skip) {
@@ -150,10 +159,8 @@ namespace MCGalaxy {
                 if ((ushort)(pos[2] / 32) == (ushort)(Waypoints[currentPoint].z / 32)) {
                     rot[0] = Waypoints[currentPoint].rotx;
                     rot[1] = Waypoints[currentPoint].roty;
-                    currentPoint++;
                     movement = false;
-
-                    if (currentPoint == Waypoints.Count) currentPoint = 0;
+                    NextInstruction();
                     if (!skip) { skip = true; return false; }
                 }
             }
@@ -166,16 +173,14 @@ namespace MCGalaxy {
             pos[2] = Waypoints[currentPoint].z;
             rot[0] = Waypoints[currentPoint].rotx;
             rot[1] = Waypoints[currentPoint].roty;
-            currentPoint++;
-            if (currentPoint == Waypoints.Count) currentPoint = 0;
+            NextInstruction();
         }
         
         bool DoWait(ref bool skip) {
             if (countdown != 0) {
                 countdown--;
                 if (countdown == 0) {
-                    currentPoint++;
-                    if (currentPoint == Waypoints.Count) currentPoint = 0;
+                	NextInstruction();
                     if (!skip) { skip = true; return false; }
                 }
             } else {
@@ -205,8 +210,7 @@ namespace MCGalaxy {
                 }
 
                 if (countdown == 0) {
-                    currentPoint++;
-                    if (currentPoint == Waypoints.Count) currentPoint = 0;
+                	NextInstruction();
                     if (!skip) { skip = true; return false; }
                 }
             } else {
@@ -223,10 +227,8 @@ namespace MCGalaxy {
                 else if (rot[0] + (byte)Waypoints[currentPoint].rotspeed < 0) rot[0] = 255;
                 else rot[0] += (byte)Waypoints[currentPoint].rotspeed;
 
-                if (countdown == 0)
-                {
-                    currentPoint++;
-                    if (currentPoint == Waypoints.Count) currentPoint = 0;
+                if (countdown == 0) {
+                	NextInstruction();
                     if (!skip) { skip = true; return false; }
                 }
             } else {
@@ -239,8 +241,7 @@ namespace MCGalaxy {
             movementSpeed = (int)Math.Round(24m / 100m * Waypoints[currentPoint].seconds);
             if (movementSpeed == 0) movementSpeed = 1;
 
-            currentPoint++;
-            if (currentPoint == Waypoints.Count) currentPoint = 0;
+            NextInstruction();
             if (!skip) { skip = true; return false; }
             return true;
         }
@@ -257,10 +258,9 @@ namespace MCGalaxy {
                         case 5: pos[1] -= 24; jumping = false; currentjump = 0; jumpTimer.Stop(); break;
                 }
             };
+        	
             jumpTimer.Start();
-
-            currentPoint++;
-            if (currentPoint == Waypoints.Count) currentPoint = 0;
+            NextInstruction();
             if (!skip) { skip = true; return false; }
             return true;
         }

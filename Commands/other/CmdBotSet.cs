@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            if (!BotScript.Parse(p, bot, "bots/" + ai)) return;
+            if (!ScriptFile.Parse(p, bot, "bots/" + ai)) return;
             bot.AIName = ai;
             if (p != null) Chat.GlobalChatLevel(p, bot.color + bot.name + "%S's AI is now set to " + ai, false);
             Server.s.Log(bot.name + "'s AI was set to " + ai);

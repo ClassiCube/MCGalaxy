@@ -54,7 +54,7 @@ namespace MCGalaxy.Bots {
                     
                     PlayerBot.Add(bot, false);
                     if (!String.IsNullOrEmpty(props.AI))
-                        BotScript.Parse(null, bot, "bots/" + props.AI);
+                        ScriptFile.Parse(null, bot, "bots/" + props.AI);
                 }
             }
         }
