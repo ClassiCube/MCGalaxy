@@ -145,30 +145,52 @@ namespace MCGalaxy {
             query.AddParam("@Name", name);
             string syntax = Server.useMySQL ? "SELECT * FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
                 "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
-            using (DataTable playerDB = Database.fillData(query, syntax)) {
-                if (playerDB.Rows.Count == 0) return null;
-                
-                OfflinePlayer pl = new OfflinePlayer();
-                DataRow row = playerDB.Rows[0];
-                pl.name = row["Name"].ToString().Trim();
-                pl.ip = row["IP"].ToString().Trim();
-                
-                pl.totalTime = row["TimeSpent"].ToString();
-                pl.firstLogin = row["FirstLogin"].ToString();
-                pl.lastLogin = row["LastLogin"].ToString();
-                if (!fullStats) return pl;
-                
-                pl.title = row["Title"].ToString().Trim();
-                pl.titleColor = Colors.Parse(row["title_color"].ToString().Trim());
-                pl.color = Colors.Parse(row["color"].ToString().Trim());
-                
-                pl.money = row["Money"].ToString();
-                pl.deaths = row["TotalDeaths"].ToString();
-                pl.blocks = row["totalBlocks"].ToString();
-                pl.logins = row["totalLogin"].ToString();
-                pl.kicks = row["totalKicked"].ToString();
-                return pl;
+            using (DataTable results = Database.fillData(query, syntax)) {
+                if (results.Rows.Count == 0) return null;
+                return FillInfo(results.Rows[0], fullStats);
             }
+        }
+        
+        public static OfflinePlayer FindOfflineMatches(string name, ref List<string> matches) {         
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@Name", "%" + name + "%");
+            string syntax = Server.useMySQL ? 
+                "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20 COLLATE utf8_general_ci" :
+                "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20 COLLATE NOCASE";
+            using (DataTable results = Database.fillData(query, syntax)) {
+                if (results.Rows.Count == 0) return null;
+                matches = new List<string>();
+                
+                foreach (DataRow row in results.Rows) {
+                    string entry = row["Name"].ToString().Trim();
+                    if (entry.CaselessEq(name))
+                        return FillInfo(row, true);
+                    matches.Add(entry);
+                }
+                return null;
+            }
+        }
+        
+        static OfflinePlayer FillInfo(DataRow row, bool fullStats) {
+            OfflinePlayer pl = new OfflinePlayer();
+            pl.name = row["Name"].ToString().Trim();
+            pl.ip = row["IP"].ToString().Trim();
+            
+            pl.totalTime = row["TimeSpent"].ToString();
+            pl.firstLogin = row["FirstLogin"].ToString();
+            pl.lastLogin = row["LastLogin"].ToString();
+            if (!fullStats) return pl;
+            
+            pl.title = row["Title"].ToString().Trim();
+            pl.titleColor = Colors.Parse(row["title_color"].ToString().Trim());
+            pl.color = Colors.Parse(row["color"].ToString().Trim());
+            
+            pl.money = row["Money"].ToString();
+            pl.deaths = row["TotalDeaths"].ToString();
+            pl.blocks = row["totalBlocks"].ToString();
+            pl.logins = row["totalLogin"].ToString();
+            pl.kicks = row["totalKicked"].ToString();
+            return pl;
         }
         
         public static string FindOfflineName(string name) {

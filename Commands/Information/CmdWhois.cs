@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {
@@ -39,14 +40,21 @@ namespace MCGalaxy.Commands {
             WhoInfo info;
             if (matches == 1) {
                 info = FromOnline(pl);
-            } else {            
-                if (!Player.ValidName(message)) { Player.Message(p, "\"" + message + "\" is not a valid player name."); return; }
+            } else {
+                if (!Player.ValidName(message)) { Player.Message(p, "\"" + message + "\" is not a valid player name."); return; }                
+                Player.Message(p, "Searching database for the player..");           
+                List<string> dbMatches = null;
+                OfflinePlayer target = PlayerInfo.FindOfflineMatches(message, ref dbMatches);  
                 
-                Player.Message(p, "Searching the database for the player..");
-                OfflinePlayer target = PlayerInfo.FindOffline(message, true);
                 if (target == null) {
-                    Player.Message(p, "\"" + message + "\" was not found in the database.");
-                    Player.Message(p, "Note you must use a player's full account name."); return;
+                    if (dbMatches == null) {
+                        Player.Message(p, "No players found matching \"{0}\".", message);
+                    } else {
+                        string count = dbMatches.Count == 20 ? "20+" : dbMatches.Count.ToString();
+                        Player.Message(p, "{0} players found matching \"{1}\": {2}", 
+                                       count, message, String.Join(", ", dbMatches));
+                    }
+                    return;
                 }
                 info = FromOffline(target, message);
             }
