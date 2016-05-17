@@ -109,7 +109,8 @@ namespace MCGalaxy.Drawing.Ops {
                     bP.index = lvl.PosToInt(x, y, z);
                     bP.SetData(type, extType, type == 0);
                     
-                    lvl.blockCache.Add(bP);                   
+                    if (lvl.UseBlockDB)
+                        lvl.blockCache.Add(bP);
                     BlockQueue.Addblock(p, bP.index, type, extType);
                     TotalModified++;
                     break; 
@@ -119,7 +120,8 @@ namespace MCGalaxy.Drawing.Ops {
                     bP.index = lvl.PosToInt(x, y, z);
                     
                     bP.SetData(type, extType, type == 0);
-                    lvl.blockCache.Add(bP);                
+                    if (lvl.UseBlockDB)
+                        lvl.blockCache.Add(bP);
                     Player.GlobalBlockchange(lvl, x, y, z, type, extType);
                     TotalModified++;
                     break;                    
@@ -131,7 +133,7 @@ namespace MCGalaxy.Drawing.Ops {
                     p.loginBlocks++;
                     p.overallBlocks++;
                     TotalModified++;
-                    break;                    
+                    break;
                 case M_BlockChange:
                     lvl.Blockchange(x, y, z, type, extType);
                     TotalModified++;

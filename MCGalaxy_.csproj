@@ -385,7 +385,7 @@
     <Compile Include="Commands\other\CmdWarp.cs" />
     <Compile Include="Commands\other\CmdWaypoint.cs" />
     <Compile Include="Commands\other\CmdXJail.cs" />
-    <Compile Include="Commands\World\CmdClearBlockChanges.cs" />
+    <Compile Include="Commands\World\CmdBlockDB.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
     <Compile Include="Commands\World\CmdDeleteLvl.cs" />
     <Compile Include="Commands\World\CmdEnvironment.cs" />

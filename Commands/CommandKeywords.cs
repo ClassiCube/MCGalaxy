@@ -55,6 +55,7 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdBanip()), "ip ban kick mod punish");
             new CommandKeywords((new CmdBanlist()), "list ban info mod");
             new CommandKeywords((new CmdBind()), "block replace");
+            new CommandKeywords((new CmdBlockDB()), "about block change remove del");
             new CommandKeywords((new CmdBlocks()), "block info list");
             new CommandKeywords((new CmdBlockSet()), "rank mod block");
             new CommandKeywords((new CmdBlockSpeed()), "block speed mod setting");
@@ -67,7 +68,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdC4()), "tnt c4 explosion");
             new CommandKeywords((new CmdChain()), "grab block mushroom brown");
             new CommandKeywords((new CmdChangeLog()), "MCGalaxy change log");
-            new CommandKeywords((new CmdClearBlockChanges()), "about block change remove del");
             new CommandKeywords((new CmdClick()), "block use");
             new CommandKeywords((new CmdClones()), "clone ip player info");
             new CommandKeywords((new CmdCmdBind()), "bind cmd command shortcut");

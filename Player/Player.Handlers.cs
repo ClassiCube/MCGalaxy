@@ -78,7 +78,8 @@ namespace MCGalaxy {
             if ( Blockchange != null ) {
                 if ( Blockchange.Method.ToString().IndexOf("AboutBlockchange") == -1 && !level.IsMuseum ) {
                     bP.flags |= 1;
-                    level.blockCache.Add(bP);
+                    if (level.UseBlockDB)
+                        level.blockCache.Add(bP);
                 }
 
                 Blockchange(this, x, y, z, type, extType);
@@ -128,12 +129,12 @@ namespace MCGalaxy {
                 }
             }
             //else
-            if ( !painting && action == 0 ) {
+            if (!painting && action == 0) {
                 bP.flags |= 1;
-                if (DeleteBlock(b, x, y, z, type, extType))
+                if (DeleteBlock(b, x, y, z, type, extType) && level.UseBlockDB)
                     level.blockCache.Add(bP);
             } else {
-                if (PlaceBlock(b, x, y, z, type, extType))
+                if (PlaceBlock(b, x, y, z, type, extType) && level.UseBlockDB)
                     level.blockCache.Add(bP);
             }
         }

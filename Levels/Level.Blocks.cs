@@ -149,8 +149,9 @@ namespace MCGalaxy {
             Level.BlockPos bP = default(Level.BlockPos);
             bP.name = p.name;
             bP.index = b;
-            bP.SetData(type, extType, type == 0);          
-            blockCache.Add(bP);
+            bP.SetData(type, extType, type == 0); 
+            if (UseBlockDB)
+                blockCache.Add(bP);
             
             Player.UndoPos Pos;
             Pos.x = x; Pos.y = y; Pos.z = z;
@@ -472,7 +473,8 @@ namespace MCGalaxy {
             bP.name = p.name;
             bP.index = PosToInt(x, y, z);
             bP.SetData(type, extType, type == 0);
-            blockCache.Add(bP);
+            if (UseBlockDB)
+                blockCache.Add(bP);
             
             if (bufferblocks) 
                 BlockQueue.Addblock(p, bP.index, type, extType);

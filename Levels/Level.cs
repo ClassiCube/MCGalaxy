@@ -94,6 +94,9 @@ namespace MCGalaxy
         public bool Buildable = true;
         [ConfigBool("Deletable", "Permissions", null, true)]
         public bool Deletable = true;
+        
+        [ConfigBool("UseBlockDB", "Other", null, true)]
+        public bool UseBlockDB = true;
 
         [ConfigInt("Weather", "Env", null, 0, 0, 2)]        
         public int Weather;
@@ -454,6 +457,7 @@ namespace MCGalaxy
         
         public unsafe void saveChanges() {
             if (blockCache.Count == 0) return;
+            if (!UseBlockDB) { blockCache.Clear(); return; }
             List<BlockPos> tempCache = blockCache;
             string date = new String('-', 19); //yyyy-mm-dd hh:mm:ss
             

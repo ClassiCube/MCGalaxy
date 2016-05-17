@@ -57,23 +57,25 @@ namespace MCGalaxy.Commands {
         }
         
         void ShowNormal(Player p, MapInfoData data) {
-            Player.Message(p, "&b" + data.Name + "%S: Width=" + data.Width + " Height=" + data.Height + " Depth=" + data.Length);
+            Player.Message(p, "&bAbout {0}%S: Width={1} Height={2} Length={3}", data.Name, data.Width, data.Height, data.Length);
             string physicsState = CmdPhysics.states[data.Physics];
-            Player.Message(p, "Physics are " + physicsState + " %Son &b" + data.Name);
-
-            string gunStatus = data.Guns ? "&aonline" : "&coffline";
-            if (p == null || p.group.CanExecute("gun"))
-                Player.Message(p, "&cGuns &eare " + gunStatus + " &eon " + data.Name + ".");
+            if (p == null || p.group.CanExecute("gun")) {
+                Player.Message(p, "   Physics are {0}%S, gun usage %Sis {1}", 
+                               physicsState, data.Guns ? "&aenabled" : "&cdisabled");
+            } else {
+                Player.Message(p, "   Physics are {0}", physicsState);
+            }
 
             if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
                 int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
                 DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.Name, latestBackup.ToString()));
-                Player.Message(p, "Latest backup: &a" + latestBackup + " %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"));
+                Player.Message(p, "   Latest backup: &a{0} %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"), latestBackup);
             } else {
-                Player.Message(p, "No backups for this map exist yet.");
+                Player.Message(p, "   No backups for this map exist yet.");
             }
-            Player.Message(p, "Use %T/mi env " + data.Name + " %Sto see environment settings.");
-            Player.Message(p, "Use %T/mi perms " + data.Name + " %Sto see permission settings.");
+            Player.Message(p, "   BlockDB (Used for /b) is {0}", data.BlockDB ? "&aEnabled" : "&cDisabled");
+            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);
+            Player.Message(p, "Use %T/mi perms {0} %Sto see permission settings.", data.Name);
             
             if (!Server.zombie.IsZombieMap(data.Name)) return;
             Player.Message(p, "Map authors: " + data.Authors);
@@ -137,7 +139,7 @@ namespace MCGalaxy.Commands {
             
             public ushort Width, Height, Length;
             public int Physics;
-            public bool Guns;
+            public bool Guns, BlockDB;
             public string Name, TerrainUrl, TextureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
             public int EdgeLevel, CloudsHeight, MaxFog;
@@ -154,7 +156,7 @@ namespace MCGalaxy.Commands {
             public void FromOnlineLevel(Level lvl) {
                 Name = lvl.name;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
-                Physics = lvl.physics; Guns = lvl.guns;
+                Physics = lvl.physics; Guns = lvl.guns; BlockDB = lvl.UseBlockDB;
                 visit = lvl.permissionvisit; build = lvl.permissionbuild;
                 visitmax = lvl.pervisitmax; buildmax = lvl.perbuildmax;
                 VisitWhitelist = new List<string>(lvl.VisitWhitelist);
@@ -201,6 +203,7 @@ namespace MCGalaxy.Commands {
                     case "clouds-speed": CloudsSpeed = int.Parse(value); break;
                     case "weather-speed": WeatherSpeed = int.Parse(value); break;
                     case "weather-fade": WeatherFade = int.Parse(value); break;
+                    case "useblockdb": BlockDB = bool.Parse(value); break;
                     
                     case "perbuild": build = GetPerm(value); break;
                     case "pervisit": visit = GetPerm(value); break;
