@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands
             if (who == null) {
                 OfflinePlayer off = PlayerInfo.FindOfflineOrShowMatches(p, args[0]);
                 if (off == null) return;
-                ecos = Economy.RetrieveEcoStats(args[0]);
+                ecos = Economy.RetrieveEcoStats(off.name);
                 Take(all, ref ecos, ref amount);
                 Player.GlobalMessage(taker + " %Stook %f" + amount + " %3" + Server.moneys + " %Sfrom " + off.color + off.name + "%f(offline)");
             } else {

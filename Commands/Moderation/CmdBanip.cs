@@ -33,7 +33,6 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (String.IsNullOrEmpty(message.Trim())) { Help(p); return; }
             message = Colors.EscapeColors(message);
-            string name = "";
             if (message[0] == '@') {
                 message = message.Remove(0, 1).Trim();
                 Player who = PlayerInfo.Find(message);
@@ -41,18 +40,13 @@ namespace MCGalaxy.Commands {
                 if (who == null) {
                     OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);
                     if (target == null) return;
-                    name = message.ToLower();
                     message = target.ip;
                 } else {
-                    name = who.name.ToLower();
                     message = who.ip;
                 }
             } else {
                 Player who = PlayerInfo.Find(message);
-                if (who != null) {
-                    name = who.name.ToLower();
-                    message = who.ip;
-                }
+                if (who != null) message = who.ip;
             }
 
             if (message.Equals("127.0.0.1")) { Player.Message(p, "You can't ip-ban the server!"); return; }

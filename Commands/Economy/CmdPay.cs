@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
                 OfflinePlayer off = PlayerInfo.FindOfflineOrShowMatches(p, args[0]);
                 if (off == null) return;
                 payer = Economy.RetrieveEcoStats(p.name);
-                receiver = Economy.RetrieveEcoStats(args[0]);
+                receiver = Economy.RetrieveEcoStats(off.name);
                 if (!IsLegalPayment(p, payer.money, receiver.money, amount)) return;
                 
                 target = off.color + off.name;
