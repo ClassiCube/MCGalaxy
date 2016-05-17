@@ -28,18 +28,17 @@ namespace MCGalaxy.Bots {
         };
             
         static bool DoWalk(PlayerBot bot) {
-            bot.foundPos[0] = bot.Waypoints[bot.currentPoint].x;
-            bot.foundPos[1] = bot.Waypoints[bot.currentPoint].y;
-            bot.foundPos[2] = bot.Waypoints[bot.currentPoint].z;
+            bot.foundPos[0] = bot.Waypoints[bot.cur].x;
+            bot.foundPos[1] = bot.Waypoints[bot.cur].y;
+            bot.foundPos[2] = bot.Waypoints[bot.cur].z;
             bot.movement = true;
 
-            if ((ushort)(bot.pos[0] / 32) == (ushort)(bot.Waypoints[bot.currentPoint].x / 32)) {
-                if ((ushort)(bot.pos[2] / 32) == (ushort)(bot.Waypoints[bot.currentPoint].z / 32)) {
-                    bot.rot[0] = bot.Waypoints[bot.currentPoint].rotx;
-                    bot.rot[1] = bot.Waypoints[bot.currentPoint].roty;
+            if ((ushort)(bot.pos[0] / 32) == (ushort)(bot.Waypoints[bot.cur].x / 32)) {
+                if ((ushort)(bot.pos[2] / 32) == (ushort)(bot.Waypoints[bot.cur].z / 32)) {
+                    bot.rot[0] = bot.Waypoints[bot.cur].rotx;
+                    bot.rot[1] = bot.Waypoints[bot.cur].roty;
                     bot.movement = false;
-                    bot.NextInstruction();
-                    return false;
+                    bot.NextInstruction(); return false;
                 }
             }
             bot.AdvanceRotation();
@@ -47,26 +46,89 @@ namespace MCGalaxy.Bots {
         }
         
         static bool DoTeleport(PlayerBot bot) {
-            bot.pos[0] = bot.Waypoints[bot.currentPoint].x;
-            bot.pos[1] = bot.Waypoints[bot.currentPoint].y;
-            bot.pos[2] = bot.Waypoints[bot.currentPoint].z;
-            bot.rot[0] = bot.Waypoints[bot.currentPoint].rotx;
-            bot.rot[1] = bot.Waypoints[bot.currentPoint].roty;
+            bot.pos[0] = bot.Waypoints[bot.cur].x;
+            bot.pos[1] = bot.Waypoints[bot.cur].y;
+            bot.pos[2] = bot.Waypoints[bot.cur].z;
+            bot.rot[0] = bot.Waypoints[bot.cur].rotx;
+            bot.rot[1] = bot.Waypoints[bot.cur].roty;
             bot.NextInstruction();
             return true;
         }
         
        static bool DoWait(PlayerBot bot) {
-            if (bot.countdown != 0) {
-                bot.countdown--;
-                if (bot.countdown == 0) {
-                    bot.NextInstruction();
-                    return false;
+            if (bot.countdown == 0) {
+        		bot.countdown = bot.Waypoints[bot.cur].seconds;
+        		return true;
+        	}
+        	
+        	bot.countdown--;
+        	if (bot.countdown == 0) { bot.NextInstruction(); return false; }
+            return true;
+        }
+        
+        static bool DoNod(PlayerBot bot) {
+            if (bot.countdown == 0) {
+        		bot.countdown = bot.Waypoints[bot.cur].seconds;
+        		return true;
+        	}
+        	bot.countdown--;
+
+            byte speed = (byte)bot.Waypoints[bot.cur].rotspeed;
+            if (bot.nodUp) {
+                if (bot.rot[1] > 32 && bot.rot[1] < 128) {
+                    bot.nodUp = !bot.nodUp;
+                } else {
+                    if (bot.rot[1] + speed > 255) bot.rot[1] = 0;
+                    else bot.rot[1] += speed;
                 }
             } else {
-                bot.countdown = bot.Waypoints[bot.currentPoint].seconds;
+                if (bot.rot[1] > 128 && bot.rot[1] < 224) {
+                    bot.nodUp = !bot.nodUp;
+                } else {
+                    if (bot.rot[1] - speed < 0) bot.rot[1] = 255;
+                    else bot.rot[1] -= speed;
+                }
             }
+
+        	if (bot.countdown == 0) { bot.NextInstruction(); return false; }
             return true;
+        }
+        
+        static bool DoSpin(PlayerBot bot) {
+            if (bot.countdown == 0) {
+        		bot.countdown = bot.Waypoints[bot.cur].seconds;
+        		return true;
+        	}
+        	bot.countdown--;
+
+        	byte speed = (byte)bot.Waypoints[bot.cur].rotspeed;
+        	if (bot.rot[0] + speed > 255) bot.rot[0] = 0;
+        	else if (bot.rot[0] + speed < 0) bot.rot[0] = 255;
+        	else bot.rot[0] += speed;
+
+        	if (bot.countdown == 0) { bot.NextInstruction(); return false; }
+        	return true;
+        }
+        
+        static bool DoSpeed(PlayerBot bot) {
+            bot.movementSpeed = (int)Math.Round(24m / 100m * bot.Waypoints[bot.cur].seconds);
+            if (bot.movementSpeed == 0) bot.movementSpeed = 1;
+            bot.NextInstruction(); return true;
+        }
+        
+        static bool DoJump(PlayerBot bot) {
+            bot.jumpTimer.Elapsed += delegate {
+                bot.currentjump++;
+                switch (bot.currentjump) {
+                    case 1:
+                    case 2: bot.pos[1] += 24; break;
+                    case 3: break;
+                    case 4: bot.pos[1] -= 24; break;
+                    case 5: bot.pos[1] -= 24; bot.jumping = false; bot.currentjump = 0; bot.jumpTimer.Stop(); break;
+                }
+            };       	
+            bot.jumpTimer.Start();
+            bot.NextInstruction(); return true;
         }
     }
 }

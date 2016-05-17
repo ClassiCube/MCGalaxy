@@ -38,7 +38,7 @@ namespace MCGalaxy {
         public byte id;
         public string color;
         public Level level;
-        public int currentPoint = 0;
+        public int cur = 0;
         public int countdown = 0;
         public bool nodUp = false;
         public List<Pos> Waypoints = new List<Pos>();
@@ -48,12 +48,12 @@ namespace MCGalaxy {
         public byte[] rot = new byte[2], oldrot = new byte[2], foundRot = new byte[2];
         public bool movement = false;
         public int movementSpeed = 24;
-        bool jumping = false;
-        int currentjump = 0;
+        internal bool jumping = false;
+        internal int currentjump = 0;
 
         System.Timers.Timer botTimer = new System.Timers.Timer(100);
         System.Timers.Timer moveTimer = new System.Timers.Timer(100 / 24);
-        System.Timers.Timer jumpTimer = new System.Timers.Timer(95);
+        internal System.Timers.Timer jumpTimer = new System.Timers.Timer(95);
 
         public PlayerBot(string n, Level lvl, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             name = n;
@@ -86,8 +86,7 @@ namespace MCGalaxy {
                 bool skip = false;
 
                 retry: 
-                switch (Waypoints[currentPoint].type)
-                {
+                switch (Waypoints[cur].type) {
                     case "walk":
                         if (!DoWalk(ref skip)) goto retry;
                         break;
@@ -107,33 +106,32 @@ namespace MCGalaxy {
                         if (!DoSpeed(ref skip)) goto retry;
                         return;
                     case "reset":
-                        currentPoint = 0;
+                        cur = 0;
                         return;
                     case "remove":
                         PlayerBot.Remove(this);
                         return;
                     case "linkscript":
-                        if (File.Exists("bots/" + Waypoints[currentPoint].newscript)) {
-                            Command.all.Find("botset").Use(null, this.name + " " + Waypoints[currentPoint].newscript);
+                        if (File.Exists("bots/" + Waypoints[cur].newscript)) {
+                            Command.all.Find("botset").Use(null, name + " " + Waypoints[cur].newscript);
                             return;
                         }
 
-                        currentPoint++;
-                        if (currentPoint == Waypoints.Count) currentPoint = 0;
+                        cur++;
+                        if (cur == Waypoints.Count) cur = 0;
                         if (!skip) { skip = true; goto retry; }
                         return;
                     case "jump":
                         if (!DoJump(ref skip)) goto retry;
                         break;
                 }
-
-                if (currentPoint == Waypoints.Count) currentPoint = 0;
+                if (cur == Waypoints.Count) cur = 0;
             }
             AdvanceRotation();
         }
         
         public void AdvanceRotation() {
-        	if (!movement && Waypoints.Count > 0) {
+            if (!movement && Waypoints.Count > 0) {
                 if (rot[0] < 245) rot[0] += 8;
                 else rot[0] = 0;
 
@@ -144,21 +142,21 @@ namespace MCGalaxy {
         }
         
         public void NextInstruction() {
-            currentPoint++;
-            if (currentPoint == Waypoints.Count) 
-                currentPoint = 0;
+            cur++;
+            if (cur == Waypoints.Count) 
+                cur = 0;
         }
         
         bool DoWalk(ref bool skip) {
-            foundPos[0] = Waypoints[currentPoint].x;
-            foundPos[1] = Waypoints[currentPoint].y;
-            foundPos[2] = Waypoints[currentPoint].z;
+            foundPos[0] = Waypoints[cur].x;
+            foundPos[1] = Waypoints[cur].y;
+            foundPos[2] = Waypoints[cur].z;
             movement = true;
 
-            if ((ushort)(pos[0] / 32) == (ushort)(Waypoints[currentPoint].x / 32)) {
-                if ((ushort)(pos[2] / 32) == (ushort)(Waypoints[currentPoint].z / 32)) {
-                    rot[0] = Waypoints[currentPoint].rotx;
-                    rot[1] = Waypoints[currentPoint].roty;
+            if ((ushort)(pos[0] / 32) == (ushort)(Waypoints[cur].x / 32)) {
+                if ((ushort)(pos[2] / 32) == (ushort)(Waypoints[cur].z / 32)) {
+                    rot[0] = Waypoints[cur].rotx;
+                    rot[1] = Waypoints[cur].roty;
                     movement = false;
                     NextInstruction();
                     if (!skip) { skip = true; return false; }
@@ -168,11 +166,11 @@ namespace MCGalaxy {
         }
         
         void DoTeleport() {
-            pos[0] = Waypoints[currentPoint].x;
-            pos[1] = Waypoints[currentPoint].y;
-            pos[2] = Waypoints[currentPoint].z;
-            rot[0] = Waypoints[currentPoint].rotx;
-            rot[1] = Waypoints[currentPoint].roty;
+            pos[0] = Waypoints[cur].x;
+            pos[1] = Waypoints[cur].y;
+            pos[2] = Waypoints[cur].z;
+            rot[0] = Waypoints[cur].rotx;
+            rot[1] = Waypoints[cur].roty;
             NextInstruction();
         }
         
@@ -180,11 +178,11 @@ namespace MCGalaxy {
             if (countdown != 0) {
                 countdown--;
                 if (countdown == 0) {
-                	NextInstruction();
+                    NextInstruction();
                     if (!skip) { skip = true; return false; }
                 }
             } else {
-                countdown = Waypoints[currentPoint].seconds;
+                countdown = Waypoints[cur].seconds;
             }
             return true;
         }
@@ -197,24 +195,24 @@ namespace MCGalaxy {
                     if (rot[1] > 32 && rot[1] < 128) nodUp = !nodUp;
                     else
                     {
-                        if (rot[1] + (byte)Waypoints[currentPoint].rotspeed > 255) rot[1] = 0;
-                        else rot[1] += (byte)Waypoints[currentPoint].rotspeed;
+                        if (rot[1] + (byte)Waypoints[cur].rotspeed > 255) rot[1] = 0;
+                        else rot[1] += (byte)Waypoints[cur].rotspeed;
                     }
                 } else {
                     if (rot[1] > 128 && rot[1] < 224) nodUp = !nodUp;
                     else
                     {
-                        if (rot[1] - (byte)Waypoints[currentPoint].rotspeed < 0) rot[1] = 255;
-                        else rot[1] -= (byte)Waypoints[currentPoint].rotspeed;
+                        if (rot[1] - (byte)Waypoints[cur].rotspeed < 0) rot[1] = 255;
+                        else rot[1] -= (byte)Waypoints[cur].rotspeed;
                     }
                 }
 
                 if (countdown == 0) {
-                	NextInstruction();
+                    NextInstruction();
                     if (!skip) { skip = true; return false; }
                 }
             } else {
-                countdown = Waypoints[currentPoint].seconds;
+                countdown = Waypoints[cur].seconds;
             }
             return true;
         }
@@ -223,22 +221,22 @@ namespace MCGalaxy {
             if (countdown != 0) {
                 countdown--;
 
-                if (rot[0] + (byte)Waypoints[currentPoint].rotspeed > 255) rot[0] = 0;
-                else if (rot[0] + (byte)Waypoints[currentPoint].rotspeed < 0) rot[0] = 255;
-                else rot[0] += (byte)Waypoints[currentPoint].rotspeed;
+                if (rot[0] + (byte)Waypoints[cur].rotspeed > 255) rot[0] = 0;
+                else if (rot[0] + (byte)Waypoints[cur].rotspeed < 0) rot[0] = 255;
+                else rot[0] += (byte)Waypoints[cur].rotspeed;
 
                 if (countdown == 0) {
-                	NextInstruction();
+                    NextInstruction();
                     if (!skip) { skip = true; return false; }
                 }
             } else {
-                countdown = Waypoints[currentPoint].seconds;
+                countdown = Waypoints[cur].seconds;
             }
             return true;
         }
         
         bool DoSpeed(ref bool skip) {
-            movementSpeed = (int)Math.Round(24m / 100m * Waypoints[currentPoint].seconds);
+            movementSpeed = (int)Math.Round(24m / 100m * Waypoints[cur].seconds);
             if (movementSpeed == 0) movementSpeed = 1;
 
             NextInstruction();
@@ -258,7 +256,7 @@ namespace MCGalaxy {
                         case 5: pos[1] -= 24; jumping = false; currentjump = 0; jumpTimer.Stop(); break;
                 }
             };
-        	
+            
             jumpTimer.Start();
             NextInstruction();
             if (!skip) { skip = true; return false; }
@@ -399,7 +397,7 @@ namespace MCGalaxy {
         }
         
         public static void UnloadFromLevel(Level lvl) {
-        	BotsFile.UnloadBots(lvl);
+            BotsFile.UnloadBots(lvl);
             RemoveAll(lvl, false);           
         }
         
@@ -464,14 +462,14 @@ namespace MCGalaxy {
             foreach (PlayerBot bot in bots) {
                 if (bot.name.ToLower() == name) return bot;
                 if (bot.name.ToLower().Contains(name)) {
-                	match = bot; matches++;
+                    match = bot; matches++;
                 }
             }
             return matches == 1 ? match : null;
         }
         
         public static PlayerBot FindOrShowMatches(Player pl, string name) {
-        	int matches = 0;
+            int matches = 0;
             return Extensions.FindOrShowMatches(pl, name, out matches, Bots.Items, b => true,
                                                 b => b.name, "bots");
         }
