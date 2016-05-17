@@ -41,21 +41,12 @@ namespace MCGalaxy.Commands {
             if (matches == 1) {
                 info = FromOnline(pl);
             } else {
-                if (!Player.ValidName(message)) { Player.Message(p, "\"" + message + "\" is not a valid player name."); return; }                
+                if (!Player.ValidName(message)) { 
+            	    Player.Message(p, "\"" + message + "\" is not a valid player name."); return; 
+            	}
                 Player.Message(p, "Searching database for the player..");           
-                List<string> dbMatches = null;
-                OfflinePlayer target = PlayerInfo.FindOfflineMatches(message, ref dbMatches);  
-                
-                if (target == null) {
-                    if (dbMatches == null) {
-                        Player.Message(p, "No players found matching \"{0}\".", message);
-                    } else {
-                        string count = dbMatches.Count == 20 ? "20+" : dbMatches.Count.ToString();
-                        Player.Message(p, "{0} players found matching \"{1}\": {2}", 
-                                       count, message, String.Join(", ", dbMatches));
-                    }
-                    return;
-                }
+                OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);              
+                if (target == null) return;
                 info = FromOffline(target, message);
             }
             WhoInfo.Output(p, info, CheckAdditionalPerm(p));

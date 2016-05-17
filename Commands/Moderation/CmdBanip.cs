@@ -39,13 +39,10 @@ namespace MCGalaxy.Commands {
                 Player who = PlayerInfo.Find(message);
 
                 if (who == null) {
-                    OfflinePlayer target = PlayerInfo.FindOffline(message);                  
-                    if (target != null) {
-                        name = message.ToLower();
-                        message = target.ip;
-                    } else {
-                        Player.Message(p, "Unable to find an IP address for that user."); return;
-                    }
+                    OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);
+                    if (target == null) return;
+                    name = message.ToLower();
+                    message = target.ip;
                 } else {
                     name = who.name.ToLower();
                     message = who.ip;

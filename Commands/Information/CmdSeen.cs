@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands
                 Player.Message(p, pl.color + pl.name + " %Sis currently online."); return;
             }
 
-            OfflinePlayer target = PlayerInfo.FindOffline(message);
-            if (target == null) { Player.Message(p, "Unable to find player"); return; }
+            OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);
+            if (target == null) return;
             Player.Message(p, message + " was first seen: " + target.firstLogin);
             Player.Message(p, message + " was last seen: " + target.lastLogin);
         }

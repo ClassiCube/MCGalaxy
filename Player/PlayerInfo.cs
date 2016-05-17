@@ -151,22 +151,27 @@ namespace MCGalaxy {
             }
         }
         
-        public static OfflinePlayer FindOfflineMatches(string name, ref List<string> matches) {         
+        public static OfflinePlayer FindOfflineOrShowMatches(Player p, string name) {         
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", "%" + name + "%");
             string syntax = Server.useMySQL ? 
                 "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20 COLLATE utf8_general_ci" :
                 "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20 COLLATE NOCASE";
+            
             using (DataTable results = Database.fillData(query, syntax)) {
-                if (results.Rows.Count == 0) return null;
-                matches = new List<string>();
+            	if (results.Rows.Count == 0) {
+            		Player.Message(p, "No players found matching \"{0}\".", name); return null;
+            	}
+                List<string> matches = new List<string>();
                 
                 foreach (DataRow row in results.Rows) {
                     string entry = row["Name"].ToString().Trim();
-                    if (entry.CaselessEq(name))
-                        return FillInfo(row, true);
+                    if (entry.CaselessEq(name)) return FillInfo(row, true);
                     matches.Add(entry);
                 }
+                string count = matches.Count == 20 ? "20+" : matches.Count.ToString();
+                Player.Message(p, "{0} players found matching \"{1}\": {2}",
+                               count, name, String.Join(", ", matches));
                 return null;
             }
         }

@@ -44,8 +44,8 @@ namespace MCGalaxy.Commands
             Economy.EcoStats payer, receiver;
             
             if (who == null) {
-                OfflinePlayer off = PlayerInfo.FindOffline(args[0]);
-                if (off == null) { Player.Message(p, "The player \"&a" + args[0] + "%S\" was not found at all."); return; }
+                OfflinePlayer off = PlayerInfo.FindOfflineOrShowMatches(p, args[0]);
+                if (off == null) return;
                 payer = Economy.RetrieveEcoStats(p.name);
                 receiver = Economy.RetrieveEcoStats(args[0]);
                 if (!IsLegalPayment(p, payer.money, receiver.money, amount)) return;
