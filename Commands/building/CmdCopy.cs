@@ -32,9 +32,9 @@ namespace MCGalaxy.Commands
 		public override string type { get { return CommandTypes.Building; } }
 		public override bool museumUsable { get { return true; } }
 		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public override CommandAlias[] Aliases {
-        	get { return new[] { new CommandAlias("cut", "cut") }; }
-        }
+		public override CommandAlias[] Aliases {
+			get { return new[] { new CommandAlias("cut", "cut") }; }
+		}
 		public CmdCopy() { }
 
 		public override void Use(Player p, string message) {
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
 				message = message.Replace("@ ", "").Replace("@", "");
 			
 			string[] parts = message.Split(' ');
-			string opt = parts.Length == 0 ? null : parts[0].ToLower();
+			string opt = parts[0].ToLower();
 			
 			if (opt == "save") {
 				if (parts.Length != 2) { Help(p); return; }
@@ -113,14 +113,8 @@ namespace MCGalaxy.Commands
 			
 			CopyState state = new CopyState(minX, minY, minZ, maxX - minX + 1,
 			                                maxY - minY + 1, maxZ - minZ + 1);
-			if (state.Volume > p.group.maxBlocks) {
-				Player.Message(p, "You tried to copy up to " + state.Volume + " blocks.");
-				Player.Message(p, "You cannot copy more than " + p.group.maxBlocks + ".");
-				return;
-			}
-			
 			state.SetOrigin(cpos.x, cpos.y, cpos.z);
-			int totalAir = 0, index = 0;
+			int index = 0; state.UsedBlocks = 0;
 			state.PasteAir = cpos.type == 2;
 			
 			for (ushort yy = minY; yy <= maxY; ++yy)
@@ -132,20 +126,30 @@ namespace MCGalaxy.Commands
 				if (b == Block.custom_block)
 					extB = p.level.GetExtTile(xx, yy, zz);
 				
-				if (b == Block.air && cpos.type != 2) totalAir++;
-			    state.Blocks[index] = b;
+				if (b != Block.air || state.PasteAir) {
+					state.UsedBlocks++;
+					if (state.UsedBlocks > p.group.maxBlocks) {
+						Player.Message(p, "You tried to copy " + state.UsedBlocks + " or more blocks.");
+						Player.Message(p, "You cannot copy more than " + p.group.maxBlocks + ".");
+						state = null;
+						return;
+					}
+				}
+				state.Blocks[index] = b;
 				state.ExtBlocks[index] = extB;
 				index++;
 			}
-			p.CopyBuffer = state;
 			
+			p.CopyBuffer = state;
 			if (cpos.type == 1) {
 				DrawOp op = new CuboidDrawOp();
-			    Brush brush = new SolidBrush(Block.air, 0);
-			    DrawOp.DoDrawOp(op, brush, p, minX, minY, minZ, maxX, maxY, maxZ);
+				Brush brush = new SolidBrush(Block.air, 0);
+				DrawOp.DoDrawOp(op, brush, p, minX, minY, minZ, maxX, maxY, maxZ);
 			}
 
-			Player.Message(p, (state.Volume - totalAir) + " blocks copied.");
+			string format = "Copied &a{0} %Sblocks." +
+				(state.PasteAir ? "" : " To also copy air blocks, use %T/copy air");
+			Player.Message(p, format, state.UsedBlocks);
 			if (cpos.allowoffset != -1) {
 				Player.Message(p, "Place a block to determine where to paste from");
 				p.Blockchange += new Player.BlockchangeEventHandler(Blockchange3);

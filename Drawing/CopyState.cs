@@ -27,6 +27,7 @@ namespace MCGalaxy.Drawing {
 		public int OriginX, OriginY, OriginZ;
 		public int Width, Height, Length;
 		public bool PasteAir;
+		public int UsedBlocks;
 		
 		const int identifier = 0x434F5059; // 'COPY'
 		const int identifierC = 0x434F5043; // 'COPC' (Copy compressed)
@@ -35,17 +36,20 @@ namespace MCGalaxy.Drawing {
 			get { return Width * Height * Length; }
 		}
 		
-		public CopyState(int x, int y, int z, int width, int height, int length, byte[] blocks, byte[] extBlocks) {
+		public CopyState(int x, int y, int z, int width, int height, int length, 
+		                 byte[] blocks, byte[] extBlocks) {
 			X = x; Y = y; Z = z;
 			Width = width; Height = height; Length = length;
 			Blocks = blocks;
 			ExtBlocks = extBlocks;
+			UsedBlocks = Volume;
 		}
 		
 		public CopyState(int x, int y, int z, int width, int height, int length)
 			: this(x, y, z, width, height, length, null, null) {
 			Blocks = new byte[width * height * length];
 			ExtBlocks = new byte[width * height * length];
+			UsedBlocks = Volume;
 		}
 		
 		public void Clear() {
@@ -108,6 +112,7 @@ namespace MCGalaxy.Drawing {
 				blocksLen = r.ReadInt32();
 				ExtBlocks = r.ReadBytes(blocksLen).Decompress(uncompressedLen);
 			}
+			UsedBlocks = Volume;
 			OriginX = r.ReadInt32(); OriginY = r.ReadInt32(); OriginZ = r.ReadInt32();
 		}
 		
@@ -124,6 +129,7 @@ namespace MCGalaxy.Drawing {
 				ushort z = BitConverter.ToUInt16(raw, i + 4);
 				Set(x - X, y - Y, z - Z, raw[i + 6], 0);
 			}
+			UsedBlocks = Volume;
 			OriginX = X; OriginY = Y; OriginZ = Z;
 		}
 		
