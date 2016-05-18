@@ -126,6 +126,8 @@ namespace MCGalaxy {
             try {
                 ushort x, y, z;
                 lastCheck = ListCheck.Count;
+                const uint mask = PhysicsArgs.TypeMask;
+                
                 if (physics == 5) {
                     for (int i = 0; i < ListCheck.Count; i++) {
                         Check C = ListCheck.Items[i];
@@ -134,11 +136,11 @@ namespace MCGalaxy {
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z, C.data, this);
                             
-                            if ((C.data.Raw & 0x3F) == 0 || ExtraInfoPhysics.DoDoorsOnly(this, ref C, null)) {
+                            if ((C.data.Raw & mask) == 0 || ExtraInfoPhysics.DoDoorsOnly(this, ref C, null)) {
                                 Block.HandlePhysics handler = Block.physicsDoorsHandlers[blocks[C.b]];
                                 if (handler != null)
                                     handler(this, ref C);
-                                else if ((C.data.Raw & 0x3F) == 0 || !C.data.HasWait)
+                                else if ((C.data.Raw & mask) == 0 || !C.data.HasWait)
                                     C.data.Data = 255;
                             }
                             ListCheck.Items[i] = C;
@@ -157,11 +159,11 @@ namespace MCGalaxy {
                             if (OnPhysicsUpdateEvent.events.Count > 0)
                                 OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
                             
-                            if ((C.data.Raw & 0x3F) == 0 || ExtraInfoPhysics.DoComplex(this, ref C)) {
+                            if ((C.data.Raw & mask) == 0 || ExtraInfoPhysics.DoComplex(this, ref C)) {
                                 Block.HandlePhysics handler = Block.physicsHandlers[blocks[C.b]];
                                 if (handler != null)
                                     handler(this, ref C);
-                                else if ((C.data.Raw & 0x3F) == 0 || !C.data.HasWait)
+                                else if ((C.data.Raw & mask) == 0 || !C.data.HasWait)
                                     C.data.Data = 255;
                             }
                             ListCheck.Items[i] = C;

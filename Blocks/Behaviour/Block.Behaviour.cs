@@ -172,13 +172,13 @@ namespace MCGalaxy {
                     physicsDoorsHandlers[i] = DoorPhysics.odoorPhysics;
                 } else if (door == Block.door_tnt_air) {
                     physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4);
-                    physicsDoorsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4);
+                    physicsDoorsHandlers[door] = physicsHandlers[door];
                 } else if (door == Block.air_switch_air || door == Block.air_door_air) {
                     physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4, true);
-                    physicsDoorsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4, true);
+                    physicsDoorsHandlers[door] = physicsHandlers[door];
                 } else if (door != Block.air) {
                     physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 16);
-                    physicsDoorsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 16);
+                    physicsDoorsHandlers[door] = physicsHandlers[door];
                 }
             }
         }

@@ -24,6 +24,8 @@ namespace MCGalaxy.BlockPhysics {
     public struct PhysicsArgs {
         public uint Raw;
         
+        public const uint TypeMask = 0x3F;
+        
         public byte Type1 {
             get { return (byte)(Raw & 0x7); }
             set { Raw &= ~(0x7u << 0);
@@ -66,7 +68,7 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public void ResetTypes() { Raw &= ~0x3Fu; }
+        public void ResetTypes() { Raw &= ~TypeMask; }
         // TODO: what to do with last bit
         
         /// <summary> No special action is performed. </summary>
