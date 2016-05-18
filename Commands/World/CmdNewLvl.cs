@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands
             bool useSeed = args.Length == 6;
             if (useSeed && !Int32.TryParse(args[5], out seed))
                 seed = args[5].GetHashCode();
-            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be a power of two >= to 16."); return; }
-            if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be a power of two >= to 16."); return; }
-            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be a power of two >= to 16."); return; }
+            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must divisible by 16, and >= 16"); return; }
+            if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be divisible by 16, and >= 16"); return; }
+            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= to 16."); return; }
 
             if (!Player.ValidName(name)) { 
                 Player.Message(p, "Invalid name!"); return; 
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands
         public override void Help(Player p) {
             Player.Message(p, "/newlvl - creates a new level.");
             Player.Message(p, "/newlvl mapname 128 64 128 type seed");
-            Player.Message(p, "Valid sizes: 16, 32, 64, 128, 256, 512, 1024"); //Update this to add more?
+            Player.Message(p, "Valid sizes: Must be >= 16 and <= 1024, and divisible by 16."); 
             MapGen.PrintValidFormats(p);
             Player.Message(p, "The seed is optional, and controls how the level is generated.");
             Player.Message(p, "If the seed is the same, the generated level will be the same.");
