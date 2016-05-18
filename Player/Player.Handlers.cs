@@ -531,16 +531,20 @@ namespace MCGalaxy {
                 adminpen = true;
             if (emoteList.Contains(name)) parseSmiley = false;
 
-            string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
-            if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
-                if ((Server.guestJoinNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
-                    Player[] players = PlayerInfo.Online.Items; 
-                    foreach (Player pl in players) { Player.Message(pl, joinm); }
-                }
-            }
+            hidden = group.CanExecute("hide") && Server.Hidden.Find(name).FirstOrDefault() != null;
+            if (hidden) SendMessage("&8Reminder: You are still hidden.");
             if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
-                hidden = true;
-                adminchat = true;
+                hidden = true; adminchat = true;
+            }
+            
+            string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
+            if (hidden) joinm = "&8(hidden)" + joinm;
+            const LevelPermission perm = LevelPermission.Guest;
+            if (group.Permission > perm || (Server.guestJoinNotify && group.Permission <= perm)) {
+                Player[] players = PlayerInfo.Online.Items;
+                foreach (Player pl in players) {
+                    if (Entities.CanSee(pl, this)) Player.Message(pl, joinm);
+                }
             }
             
             if (PlayerConnect != null)

@@ -101,9 +101,9 @@ namespace MCGalaxy.Commands
         }
         
         static void AddStates(Player pl, ref string name) {
-        	if (pl.hidden) name += "(hidden)";
-            if (pl.muted) name += "(muted)";
-            if (pl.frozen) name += "(frozen)";
+        	if (pl.hidden) name += "-hidden";
+            if (pl.muted) name += "-muted";
+            if (pl.frozen) name += "-freeze";
             if (pl.Game.Referee) name += "-ref";
             if (pl.IsAfk) name += "-afk";
         }

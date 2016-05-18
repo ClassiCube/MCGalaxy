@@ -83,6 +83,7 @@ namespace MCGalaxy
         public static PlayersFile Jailed = new PlayersFile("ranks/jailed.txt");
         public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");
         public static PlayersFile Notes = new PlayersFile("text/notes.txt"); 
+        public static PlayersFile Hidden = new PlayersFile("ranks/hidden.txt");
         public static PlayersFile Skins = new PlayersFile("extra/skins.txt");
         public static PlayersFile Models = new PlayersFile("extra/models.txt");
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }

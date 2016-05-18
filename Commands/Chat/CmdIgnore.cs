@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
             
             if (unignore != null) {
                 p.listignored.Remove(unignore);
-                Player.Message(p, "No longer ignoring &a{0}", unignore);
+                Player.Message(p, "&aNo longer ignoring {0}", unignore);
             } else {
                 int matches = 0;
                 Player who = PlayerInfo.FindOrShowMatches(p, action);
@@ -80,10 +80,10 @@ namespace MCGalaxy.Commands {
                 
                 if (p.listignored.Contains(who.name)) {
                     p.listignored.Remove(who.name);
-                    Player.Message(p, "No longer ignoring &a{0}", who.DisplayName);
+                    Player.Message(p, "&aNo longer ignoring {0}", who.ColoredName);
                 } else {
                     p.listignored.Add(who.name);
-                    Player.Message(p, "Now ignoring &c{0}", who.DisplayName);
+                    Player.Message(p, "&cNow ignoring {0}", who.ColoredName);
                 }
             }
         }
