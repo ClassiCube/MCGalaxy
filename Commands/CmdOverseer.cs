@@ -178,15 +178,21 @@ namespace MCGalaxy.Commands
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5")
                     Command.all.Find("physics").Use(p, p.level.name + " " + value);
                 else
-                    Player.Message(p, "You didn't enter a number! " +
-                                       "Please enter one of these numbers: 0, 1, 2, 3, 4, 5");
+                    Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
             } else if (cmd == "DELETE") {
                 if (value == "") {
                     Player.Message(p, "To delete one of your maps type /os map delete <map number>");
                 } else if (value == "1") {
+                    string firstMap = FirstMapName(p);
+                    if (!LevelInfo.ExistsOffline(firstMap)) {
+                        Player.Message(p, "You don't have a map with that map number."); return;
+                    }
                     Command.all.Find("deletelvl").Use(p, FirstMapName(p));
                     Player.Message(p, "Map 1 has been removed.");
                 } else if (byte.TryParse(value, out mapNum)) {
+                    if (!LevelInfo.ExistsOffline(p.name.ToLower() + value)) {
+                        Player.Message(p, "You don't have a map with that map number."); return;
+                    }
                     Command.all.Find("deletelvl").Use(p, p.name.ToLower() + value);
                     Player.Message(p, "Map " + value + " has been removed.");
                 } else {
