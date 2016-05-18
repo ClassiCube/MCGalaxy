@@ -53,8 +53,8 @@ namespace MCGalaxy.Drawing.Brushes {
             "%Hfrequency is optional (defaults to 1), and specifies the number of times " +
                 "the block should appear (as a fraction of the total of all the frequencies).",
             "%HOptional args format: %T<first letter of argument>_<value>",
-            "%H  Arguments: %Ta%Hmplitude, %Tf%Hrequency (scale), %Tl%Hacunarity, " +
-            "%To%Hctaves, %Tp%Hersistence (turbulence), %Ts%Heed",
+            "%HArguments: %Ta%Hmplitude, %Tf%Hrequency (scale), %Ts%Heed, " +
+            "%To%Hctaves, %Tp%Hersistence (turbulence), %Tl%Hacunarity",
         };
         
         public static Brush Process(BrushArgs args) {

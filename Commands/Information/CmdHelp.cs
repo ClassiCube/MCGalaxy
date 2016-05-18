@@ -76,16 +76,22 @@ namespace MCGalaxy.Commands
             string[] args = message.Split(trimChars, 2);
             Command cmd = Command.all.Find(args[0]);
             if (cmd == null) return false;
-            if (args.Length == 1)
-                cmd.Help(p);
-            else
-                cmd.Help(p, args[1]);
             
-            LevelPermission minPerm = GrpCommands.MinPerm(cmd);
+            if (args.Length == 1) {
+                cmd.Help(p);
+                PrintCommandInfo(p, cmd);
+            } else {
+                cmd.Help(p, args[1]);
+            }
+            return true;
+        }
+        
+        internal static void PrintCommandInfo(Player p, Command cmd) {
+        	LevelPermission minPerm = GrpCommands.MinPerm(cmd);
             Player.Message(p, "Rank needed: " + GetColoredRank(minPerm));
             PrintAliases(p, cmd);           
             CommandPerm[] perms = cmd.AdditionalPerms;
-            if (perms == null) return true;
+            if (perms == null) return;
             
             Player.Message(p, "%TAdditional permissions:");
             for (int i = 0; i < perms.Length; i++) {
@@ -93,10 +99,9 @@ namespace MCGalaxy.Commands
                 LevelPermission perm = (LevelPermission)addition.Permission;
                 Player.Message(p, GetColoredRank(perm) + "%S" + addition.Description);
             }
-            return true;
         }
         
-        void PrintAliases(Player p, Command cmd) {
+        static void PrintAliases(Player p, Command cmd) {
             StringBuilder dst = new StringBuilder("Shortcuts: ");
             if (!String.IsNullOrEmpty(cmd.shortcut)) {
                 dst.Append('/').Append(cmd.shortcut).Append(", ");
@@ -108,7 +113,7 @@ namespace MCGalaxy.Commands
             Player.Message(p, dst.ToString(0, dst.Length - 2));
         }
         
-        void FindAliases(List<Alias> aliases, Command cmd, StringBuilder dst) {
+        static void FindAliases(List<Alias> aliases, Command cmd, StringBuilder dst) {
             foreach (Alias a in aliases) {
                 if (!a.Target.CaselessEq(cmd.name)) continue;
                 

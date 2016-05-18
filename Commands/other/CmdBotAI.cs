@@ -17,6 +17,8 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Bots;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdBotAI : Command
@@ -64,7 +66,7 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "Could not find specified AI."); return;
             }
             
-            retry:
+        retry:
             try {
                 if (args.Length == 2) {
                     if (currentTry == 0)
@@ -96,67 +98,38 @@ namespace MCGalaxy.Commands
             try { allLines = File.ReadAllLines("bots/" + ai); }
             catch { allLines = new string[1]; }
 
-            StreamWriter SW;
             try {
                 if (!File.Exists("bots/" + ai)) {
                     Player.Message(p, "Created new bot AI: &b" + ai);
-                    using (SW = File.CreateText("bots/" + ai))
-                    {
-                        SW.WriteLine("#Version 2");
-                    }
+                    using (StreamWriter w = new StreamWriter("bots/" + ai))
+                        w.WriteLine("#Version 2");
                 } else if (allLines[0] != "#Version 2") {
                     Player.Message(p, "File found is out-of-date. Overwriting");
                     File.Delete("bots/" + ai);
-                    using (SW = File.CreateText("bots/" + ai))
-                    {
-                        SW.WriteLine("#Version 2");
-                    }
+                    using (StreamWriter w = new StreamWriter("bots/" + ai))
+                        w.WriteLine("#Version 2");
                 } else {
                     Player.Message(p, "Appended to bot AI: &b" + ai);
                 }
-            } catch { 
-                Player.Message(p, "An error occurred when accessing the files. You may need to delete it."); return; 
+            } catch {
+                Player.Message(p, "An error occurred when accessing the files. You may need to delete it."); return;
             }
 
             try {
-                using (SW = File.AppendText("bots/" + ai))
-                {
-                    switch (action.ToLower())
-                    {
-                        case "":
-                        case "walk":
-                            SW.WriteLine("walk " + p.pos[0] + " " + p.pos[1] + " " + p.pos[2] + " " + p.rot[0] + " " + p.rot[1]);
-                            break;
-                        case "teleport":
-                        case "tp":
-                            SW.WriteLine("teleport " + p.pos[0] + " " + p.pos[1] + " " + p.pos[2] + " " + p.rot[0] + " " + p.rot[1]);
-                            break;
-                        case "wait":
-                            SW.WriteLine("wait " + int.Parse(extra)); break;
-                        case "nod":
-                            SW.WriteLine("nod " + int.Parse(extra) + " " + int.Parse(more)); break;
-                        case "speed":
-                            SW.WriteLine("speed " + int.Parse(extra)); break;
-                        case "remove":
-                            SW.WriteLine("remove"); break;
-                        case "reset":
-                            SW.WriteLine("reset"); break;
-                        case "spin":
-                            SW.WriteLine("spin " + int.Parse(extra) + " " + int.Parse(more)); break;
-                        case "reverse":
-                            for (int i = allLines.Length - 1; i > 0; i--) if (allLines[i][0] != '#' && allLines[i] != "") SW.WriteLine(allLines[i]);
-                            break;
-                        case "linkscript":
-                            if (extra != "10") SW.WriteLine("linkscript " + extra); else Player.Message(p, "Linkscript requires a script as a parameter");
-                            break;
-                        case "jump":
-                            SW.WriteLine("jump"); break;
-                        default:
-                            Player.Message(p, "Could not find \"" + action + "\""); break;
-                    }
-                }
+            	if (action != "reverse") {
+            		ScriptFile.Append(p, ai, action, extra, more); return;
+            	}
+            	
+            	using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
+            		for (int i = allLines.Length - 1; i > 0; i--) {
+            			if (allLines[i][0] != '#' && allLines[i] != "")
+            				w.WriteLine(allLines[i]);
+            		}
+            		return;
+            	}
+            } catch { 
+                Player.Message(p, "Invalid parameter"); 
             }
-            catch { Player.Message(p, "Invalid parameter"); }
         }
         
         void HandleInfo(Player p, string ai) {
@@ -176,11 +149,38 @@ namespace MCGalaxy.Commands
             Player.Message(p, "%T/botai info [name] %H- prints list of instructions that AI has");
             Player.Message(p, "%T/botai add [name] [instruction] <args>");
             Player.Message(p, "%HInstructions: %Swalk, teleport, wait, nod, speed, " +
-                               "spin, reset, remove, reverse, linkscript, jump");
+                           "spin, reset, remove, reverse, linkscript, jump");
+            Player.Message(p, "%HTo see extended help, type %T/help botai [instruction]");
             Player.Message(p, "%Hwait, nod, spin %S- optional arg specifies '0.1 seconds'");
             Player.Message(p, "%Hnod, spin %S- optional second arg specifies 'speed'");
-            Player.Message(p, "%Hspeed %S- arg specifies percentage of normal speed");
             Player.Message(p, "%Hlinkscript %S- arg specifies another AI name");
+        }
+        
+        public override void Help(Player p, string message) {
+            switch (message.ToLower()) {
+                case "wait":
+                    Player.Message(p, "%T/botai add [name] wait [interval]");
+                    Player.Message(p, "%HCauses the bot to stay still for a period of time.");
+                    Player.Message(p, "%HNote interval is in 10ths of a second, so an " +
+                                   "interval of 20 means stay still for two seconds.");
+                    Player.Message(p, "%HIf interval is not given, stays still for one second.");
+                    break;
+                case "speed":
+                    Player.Message(p, "%T/botai add [name] speed [percentage]");
+                    Player.Message(p, "%HSets how fast the bot moves, relative to its normal speed.");
+                    Player.Message(p, "%H100 means it moves at normal speed, " +
+                                   "50 means it moves half as fast as normal");
+                    break;
+                case "linkscript":
+                    Player.Message(p, "%T/botai add [name] linkscript [AI name]");
+                    Player.Message(p, "%HCauses the bot to execute all of " +
+                                   "the instructions defined in the given AI.");
+                    break;
+                default:
+                    Player.Message(p, "%HInstructions: %Swalk, teleport, wait, nod, speed, " +
+                                   "spin, reset, remove, reverse, linkscript, jump");
+                    break;
+            }
         }
     }
 }

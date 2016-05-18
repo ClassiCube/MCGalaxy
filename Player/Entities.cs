@@ -132,7 +132,6 @@ namespace MCGalaxy {
         }
         
         internal static void Spawn(Player dst, PlayerBot b) {
-            TabList.Add(dst, b);
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(b.id, b.skinName, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             } else {
@@ -148,7 +147,6 @@ namespace MCGalaxy {
         
         internal static void Despawn(Player dst, PlayerBot b) {
             dst.SendRaw(Opcode.RemoveEntity, b.id);
-            TabList.Remove(dst, b.id);
         }
 
         #endregion 

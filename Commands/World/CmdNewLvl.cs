@@ -92,7 +92,8 @@ namespace MCGalaxy.Commands
         public override void Help(Player p) {
             Player.Message(p, "/newlvl - creates a new level.");
             Player.Message(p, "/newlvl mapname 128 64 128 type seed");
-            Player.Message(p, "Valid sizes: Must be >= 16 and <= 1024, and divisible by 16."); 
+            Player.Message(p, "Valid sizes: Must be >= 16 and <= 8192, and divisible by 16.");
+            Player.Message(p, "Note due to limitations, other players don't show past 1024.");
             MapGen.PrintValidFormats(p);
             Player.Message(p, "The seed is optional, and controls how the level is generated.");
             Player.Message(p, "If the seed is the same, the generated level will be the same.");

@@ -53,8 +53,12 @@ namespace MCGalaxy.Bots {
                     bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
                     
                     PlayerBot.Add(bot, false);
-                    if (!String.IsNullOrEmpty(props.AI))
+                    if (String.IsNullOrEmpty(props.AI)) continue;
+                    try {
                         ScriptFile.Parse(null, bot, "bots/" + props.AI);
+                    } catch (Exception ex)  {
+                    	Server.ErrorLog(ex);
+                    }
                 }
             }
         }

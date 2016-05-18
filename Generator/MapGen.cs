@@ -38,7 +38,7 @@ namespace MCGalaxy {
         }
         
         public static bool OkayAxis(int len) {
-			return len >= 16 && len <= 1024 && (len % 16) == 0;
+			return len >= 16 && len <= 8192 && (len % 16) == 0;
         }
         
         unsafe static void MapSet(int width, int length, byte* ptr, int yStart, int yEnd, byte block) {

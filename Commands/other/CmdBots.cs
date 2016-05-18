@@ -20,7 +20,7 @@ namespace MCGalaxy.Commands
     public sealed class CmdBots : Command
     {
         public override string name { get { return "bots"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "botlist"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
