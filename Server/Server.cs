@@ -122,9 +122,6 @@ namespace MCGalaxy
 
         public static readonly List<string> Devs = new List<string>();
         public static readonly List<string> Mods = new List<string>();
-        
-        internal static readonly List<string> protectover = new List<string>(new string[] { "moderate", "mute", "freeze", "lockdown", "ban", "banip", "kickban", "kick", "global", "xban", "xundo", "undo", "uban", "unban", "unbanip", "demote", "promote", "restart", "shutdown", "setrank", "warn", "tempban", "impersonate", "sendcmd", "possess", "joker", "jail", "ignore", "voice" });
-        public static List<string> ProtectOver { get { return new List<string>(protectover); } }
 
         internal static readonly List<string> opstats = new List<string>(new string[] { "ban", "tempban", "kick", "warn", "mute", "freeze", "undo", "kickban", "demote", "promote" });
         public static List<string> Opstats { get { return new List<string>(opstats); } }

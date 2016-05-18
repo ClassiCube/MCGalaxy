@@ -315,7 +315,6 @@
     <Compile Include="Commands\Moderation\CmdTempRankInfo.cs" />
     <Compile Include="Commands\Moderation\CmdTempRankList.cs" />
     <Compile Include="Commands\Moderation\CmdTrust.cs" />
-    <Compile Include="Commands\Moderation\CmdUBan.cs" />
     <Compile Include="Commands\Moderation\CmdUnban.cs" />
     <Compile Include="Commands\Moderation\CmdUnbanip.cs" />
     <Compile Include="Commands\Moderation\CmdUndoArea.cs" />

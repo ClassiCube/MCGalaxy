@@ -15,25 +15,22 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdKickban : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdKickban : Command {
         public override string name { get { return "kickban"; } }
         public override string shortcut { get { return "kb"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdKickban() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             Command.all.Find("ban").Use(p, message);
             Command.all.Find("kick").Use(p, message);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.Message(p, "/kickban <player> [message] - Kicks and bans a player with an optional message.");
         }
     }

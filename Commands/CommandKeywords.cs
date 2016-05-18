@@ -237,7 +237,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdTpZone()), "tp zone teleport");
             new CommandKeywords((new CmdTree()), "log");
             new CommandKeywords((new CmdTrust()), "allow agree");
-            new CommandKeywords((new CmdUBan()), "ban undo kick mod");
             new CommandKeywords((new CmdUnban()), "undo ban kick mod");
             new CommandKeywords((new CmdUnbanip()), "undo ban ip kick mod");
             new CommandKeywords((new CmdUndo()), "redo action block change");
@@ -259,7 +258,7 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdWhois()), "who player info");
             new CommandKeywords((new CmdWrite()), "block text");
             new CommandKeywords((new CmdWriteText()), "block text");
-            new CommandKeywords((new CmdXban()), "ban undo admin");
+            new CommandKeywords((new CmdXban()), "ban undo admin mod");
             new CommandKeywords((new CmdXJail()), "extra jail undo");
             new CommandKeywords((new CmdXmute()), "mute extra");
             new CommandKeywords((new CmdZombieGame()), "zombie game");
