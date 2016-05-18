@@ -98,7 +98,7 @@ namespace MCGalaxy.Gui {
         [Category("Survival")]
         public bool KillerBlocks { get { return lvl.Killer; } set { lvl.Killer = value; } }
         
-        [Description("Whether players can die from drowning and falling too high.")]
+        [Description("Whether players can die from drowning and falling from too high.")]
         [Category("Survival")]
         public bool SurvivalDeath { get { return lvl.Death; } set { lvl.Death = value; } }
         

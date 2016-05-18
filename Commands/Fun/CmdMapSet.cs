@@ -61,6 +61,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Value must be 'normal', 'modifyonly', or 'momodify'"); return;
                 }
                 p.level.BuildType = value;
+                p.level.UpdateBlockPermissions();
                 Player.Message(p, "Set build type to: " + value);
             } else if (args[0].CaselessEq("minroundtime") || args[0].CaselessEq("minround")) {
                 byte time;
