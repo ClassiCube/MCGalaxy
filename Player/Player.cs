@@ -840,8 +840,7 @@ Next: continue;
                 Server.s.Log("Failed to load ignore list for: " + name);
             }
             if (ignoreAll || ignoreGlobal || ignoreIRC || listignored.Count > 0) {
-                SendMessage("&cYou are still ignoring some people from your last login.");
-                SendMessage("&cType &a/ignore list &cto see the list.");
+                SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
             }
         }
         

@@ -27,6 +27,9 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override CommandAlias[] Aliases {
+            get { return new [] { new CommandAlias("deafen", "ignore all") }; }
+        }
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
@@ -35,37 +38,53 @@ namespace MCGalaxy.Commands {
             
             if (action == "all") {
                 p.ignoreAll = !p.ignoreAll;
-                Player.Message(p, p.ignoreAll ? "&cAll chat is now ignored!" : "&aAll chat is no longer ignored!");
+                Player.Message(p, p.ignoreAll ? "&cNow ignoring all chat" : "&aNo longer ignoring all chat");
                 CreateIgnoreFile(p); return;
             } else if (action == "irc") {
                 p.ignoreIRC = !p.ignoreIRC;
-                Player.Message(p, p.ignoreIRC ? "&cIRC chat is now ignored!" : "&aIRC chat is no longer ignored!");
+                Player.Message(p, p.ignoreIRC ? "&cNow ignoring IRC chat" : "&aNo longer ignoring IRC chat");
                 CreateIgnoreFile(p); return;
             } else if (action == "global") {
                 p.ignoreGlobal = !p.ignoreGlobal;
-                Player.Message(p, p.ignoreGlobal ? "&cGlobal Chat is now ignored!" : "&aGlobal Chat is no longer ignored!");
+                Player.Message(p, p.ignoreGlobal ? "&cNow ignoring Global Chat" : "&aNo longer ignoring Global Chat");
                 CreateIgnoreFile(p); return;
             } else if (action == "list") {
                 Player.Message(p, "&cCurrently ignoring the following players:");
                 string names = string.Join(", ", p.listignored);
                 if (names != "") Player.Message(p, names);
-                if (p.ignoreAll) Player.Message(p, "&cIgnoring all chat.");
-                if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat.");
-                if (p.ignoreGlobal) Player.Message(p, "&cIgnoring global chat.");                
+                if (p.ignoreAll) Player.Message(p, "&cIgnoring all chat");
+                if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat");
+                if (p.ignoreGlobal) Player.Message(p, "&cIgnoring global chat");
                 return;
             }
             
-            Player who = PlayerInfo.Find(action);
-            if (who == null) { Player.Message(p, "Could not find player specified."); return; }
-            if (who.name == p.name) { Player.Message(p, "You cannot ignore yourself."); return; }
             CreateIgnoreFile(p);
+            string unignore = null;
+            for (int i = 0; i < p.listignored.Count; i++) {
+                if (!action.CaselessEq(p.listignored[i])) continue;
+                unignore = p.listignored[i]; break;
+            }
             
-            if (!p.listignored.Contains(who.name)) {
-                p.listignored.Add(who.name);
-                Player.Message(p, "Player now ignored: &c" + who.DisplayName + "!");
+            if (unignore != null) {
+                p.listignored.Remove(unignore);
+                Player.Message(p, "No longer ignoring &a{0}", unignore);
             } else {
-                p.listignored.Remove(who.name);
-                Player.Message(p, "Player is no longer ignored: &a" + who.DisplayName + "!");
+                int matches = 0;
+                Player who = PlayerInfo.FindOrShowMatches(p, action);
+                if (who == null) {
+                    if (matches == 0)
+                        Player.SendMessage(p, "You must use the full name when unignoring offline players.");
+                    return;
+                }
+                if (p.name == who.name) { Player.Message(p, "You cannot ignore yourself."); return; }
+                
+                if (p.listignored.Contains(who.name)) {
+                    p.listignored.Remove(who.name);
+                    Player.Message(p, "No longer ignoring &a{0}", who.DisplayName);
+                } else {
+                    p.listignored.Add(who.name);
+                    Player.Message(p, "Now ignoring &c{0}", who.DisplayName);
+                }
             }
         }
         
@@ -81,7 +100,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%H  If name is \"all\", all chat is ignored.");
             Player.Message(p, "%H  If name is \"global\", MCGalaxy global chat is ignored.");
             Player.Message(p, "%H  If name is \"irc\", IRC chat is ignored.");
-            Player.Message(p, "%H  Otherwise, the online player matching the name is ignored.");            
+            Player.Message(p, "%H  Otherwise, the online player matching the name is ignored.");
         }
     }
 }
