@@ -1007,6 +1007,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 
                 if ( text != "/afk" && IsAfk ) {
                     IsAfk = false;
+                    afkMessage = null;
                     Player.GlobalMessage("-" + ColoredName + "%S- is no longer AFK");
                     Server.IRC.Say(DisplayName + " is no longer AFK");
                     TabList.Update(this, true);

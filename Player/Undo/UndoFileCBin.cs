@@ -149,7 +149,8 @@ namespace MCGalaxy.Util {
                     Level lvl;
                     if (!CheckChunk(chunk, start, p, out lvl)) return false;
                     if (lvl == null) continue;
-                    if (p != null && (p.level != null && !p.level.name.CaselessEq(lvl.name))) 
+                    bool isSuper = p == null || p.group.Permission == LevelPermission.Nobody;
+                    if (!isSuper && (p.level == null || !p.level.name.CaselessEq(lvl.name)))
                     	continue;
                     
                     BufferedBlockSender buffer = new BufferedBlockSender(lvl);
