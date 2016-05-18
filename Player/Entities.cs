@@ -161,23 +161,23 @@ namespace MCGalaxy {
 
         
         /// <summary> Returns whether the given player is able to see the other player (e.g. in /who). </summary>
-        public static bool CanSee(Player p, Player who) {
-            if (p == null || !who.hidden || p == who) return true;
-            if (who.otherRankHidden) return p.group.Permission >= who.oHideRank;
-            return p.group.Permission > who.group.Permission;
+        public static bool CanSee(Player p, Player target) {
+            if (p == null || !target.hidden || p == target) return true;
+            if (target.otherRankHidden) return p.group.Permission >= target.oHideRank;
+            return p.group.Permission > target.group.Permission;
         }
         
         /// <summary> Returns whether the given player is able to see the other player as an in-game entity. </summary>
-        public static bool CanSeeEntity(Player p, Player who) {
-            bool mayBeHidden = who.hidden;
-            mayBeHidden |= (who.Game.Referee || who.Game.Invisible) && Server.zombie.Running;
-            if (p == null || !mayBeHidden || p == who) return true;
-            if (who.Game.Referee && !p.Game.Referee 
+        public static bool CanSeeEntity(Player p, Player target) {
+            bool mayBeHidden = target.hidden;
+            mayBeHidden |= (target.Game.Referee || target.Game.Invisible) && Server.zombie.Running;
+            if (p == null || !mayBeHidden || p == target) return true;
+            if (target.Game.Referee && !p.Game.Referee 
                 && Server.zombie.Running) return false;
-            if (who.Game.Invisible && !p.Game.Referee 
+            if (target.Game.Invisible && !p.Game.Referee 
                 && Server.zombie.Running) return false;
-            if (who.otherRankHidden) return p.group.Permission >= who.oHideRank;            
-            return p.group.Permission >= who.group.Permission;
+            if (target.otherRankHidden) return p.group.Permission >= target.oHideRank;
+            return p.group.Permission >= target.group.Permission;
         }
         
         /// <summary> Updates the model of the entity with the specified id to all other players. </summary>

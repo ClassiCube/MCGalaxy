@@ -57,11 +57,11 @@ namespace MCGalaxy {
                 }
             }
             WriteLines(lines);
-        }        
+        }
         
         /// <summary> Deletes all lines which contain the given value. </summary>
         public void DeleteContains(string value) {
-            if (!File.Exists(file)) return;        	
+            if (!File.Exists(file)) return;
             List<string> lines = new List<string>();
             using (StreamReader r = new StreamReader(file)) {
                 string line;

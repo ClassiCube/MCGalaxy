@@ -277,7 +277,6 @@
     <Compile Include="Commands\Moderation\CmdExplode.cs" />
     <Compile Include="Commands\Moderation\CmdFollow.cs" />
     <Compile Include="Commands\Moderation\CmdFreeze.cs" />
-    <Compile Include="Commands\Moderation\CmdGcbanlistupdate.cs" />
     <Compile Include="Commands\Moderation\CmdHacks.cs" />
     <Compile Include="Commands\Moderation\CmdHide.cs" />
     <Compile Include="Commands\Moderation\CmdHighlight.cs" />
@@ -316,7 +315,6 @@
     <Compile Include="Commands\Moderation\CmdTempRankInfo.cs" />
     <Compile Include="Commands\Moderation\CmdTempRankList.cs" />
     <Compile Include="Commands\Moderation\CmdTrust.cs" />
-    <Compile Include="Commands\Moderation\CmdUBan.cs" />
     <Compile Include="Commands\Moderation\CmdUnban.cs" />
     <Compile Include="Commands\Moderation\CmdUnbanip.cs" />
     <Compile Include="Commands\Moderation\CmdUndoArea.cs" />

@@ -97,7 +97,7 @@ namespace MCGalaxy {
         public string ip;
         public string color;
         public Group group;
-        public LevelPermission oHideRank;
+        public LevelPermission oHideRank = LevelPermission.Null;
         public bool otherRankHidden = false;
         public bool hidden = false;
         public bool painting = false;
@@ -591,14 +591,15 @@ namespace MCGalaxy {
 
                 Entities.DespawnEntities(this, false);
                 if (discMsg != null) {
-                	if (!hidden) {
-                		string leavem = "&c- " + FullName + " %S" + discMsg;
-                		if ((Server.guestLeaveNotify && group.Permission <= LevelPermission.Guest) || group.Permission > LevelPermission.Guest) {
-                			Player[] players = PlayerInfo.Online.Items; 
-                			foreach (Player pl in players) { Player.Message(pl, leavem); }
-                		}
-                	}
-                	Server.s.Log(name + " disconnected (" + discMsg + ").");
+                    string leavem = "&c- " + FullName + " %S" + discMsg;
+                    const LevelPermission perm = LevelPermission.Guest;
+                    if (group.Permission > perm || (Server.guestLeaveNotify && group.Permission <= perm)) {
+                        Player[] players = PlayerInfo.Online.Items;
+                        foreach (Player pl in players) {
+                            if (Entities.CanSee(pl, this)) Player.Message(pl, leavem); 
+                        }
+                    }
+                    Server.s.Log(name + " disconnected (" + discMsg + ").");
                 } else {
                 	totalKicked++;
                 	SendChatFrom(this, "&c- " + color + prefix + DisplayName + " %Skicked (" + kickMsg + "%S).", false);
@@ -840,8 +841,7 @@ Next: continue;
                 Server.s.Log("Failed to load ignore list for: " + name);
             }
             if (ignoreAll || ignoreGlobal || ignoreIRC || listignored.Count > 0) {
-                SendMessage("&cYou are still ignoring some people from your last login.");
-                SendMessage("&cType &a/ignore list &cto see the list.");
+                SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
             }
         }
         

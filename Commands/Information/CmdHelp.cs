@@ -29,11 +29,10 @@ namespace MCGalaxy.Commands
             get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks") }; }
         }
         public CmdHelp() { }
+        static char[] trimChars = { ' ' };
 
-        public override void Use(Player p, string message)
-        {
-            switch (message.ToLower())
-            {
+        public override void Use(Player p, string message) {
+            switch (message.ToLower()) {
                 case "":
                     Player.Message(p, "Command Categories:");
                     Player.Message(p, "  %aBuilding Chat Economy Games Info Moderation Other World");
@@ -74,13 +73,17 @@ namespace MCGalaxy.Commands
         }
         
         bool ParseCommand(Player p, string message) {
-            Command cmd = Command.all.Find(message);
+            string[] args = message.Split(trimChars, 2);
+            Command cmd = Command.all.Find(args[0]);
             if (cmd == null) return false;
-            cmd.Help(p);
+            if (args.Length == 1)
+                cmd.Help(p);
+            else
+                cmd.Help(p, args[1]);
+            
             LevelPermission minPerm = GrpCommands.MinPerm(cmd);
             Player.Message(p, "Rank needed: " + GetColoredRank(minPerm));
-            PrintAliases(p, cmd);
-            
+            PrintAliases(p, cmd);           
             CommandPerm[] perms = cmd.AdditionalPerms;
             if (perms == null) return true;
             

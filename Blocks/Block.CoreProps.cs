@@ -104,13 +104,13 @@ namespace MCGalaxy {
         }
         
         static void SetupDefaultNames() {
-            string[] names = { "air", "stone", "grass", "dirt", "cobblestone", "wood", "plant", 
-                "adminium", "active_water", "water", "active_lava", "lava", "sand", "gravel", 
-                "gold_ore", "iron_ore", "coal", "tree", "leaves", "sponge", "glass", "red", 
-                "orange", "yellow", "lime", "green", "springgreen", "cyan", "blue", 
-                "blueviolet", "indigo", "purple", "magenta", "pink", "black", "gray", "white", 
-                "yellow_flower", "red_flower", "brown_shroom", "red_shroom", "gold", "iron", 
-                "double_stair", "stair", "brick", "tnt", "bookcase", "mossy_cobblestone", 
+            string[] names = { "air", "stone", "grass", "dirt", "cobblestone", "wood", "sapling", 
+                "bedrock", "active_water", "water", "active_lava", "lava", "sand", "gravel", 
+                "gold_ore", "iron_ore", "coal", "log", "leaves", "sponge", "glass", "red", 
+                "orange", "yellow", "lime", "green", "teal", "aqua", "cyan", 
+                "blue", "indigo", "violet", "magenta", "pink", "black", "gray", "white", 
+                "dandelion", "rose", "brown_shroom", "red_shroom", "gold", "iron", 
+                "doubleslab", "slab", "brick", "tnt", "bookshelf", "mossyrocks", 
                 "obsidian", "cobblestoneslab", "rope", "sandstone", "snow", "fire", "lightpink", 
                 "forestgreen", "brown", "deepblue", "turquoise", "ice", "ceramictile", "magmablock", 
                 "pillar", "crate", "stonebrick", "door_darkpink_air", "door_darkgrey_air", 
@@ -146,7 +146,7 @@ namespace MCGalaxy {
                 "train", "creeper", "zombie", "zombie_head", "unknown", "dove", "pidgeon", "duck", 
                 "phoenix", "red_robin", "blue_bird", "unknown", "killer_phoenix", "unknown", "unknown", 
                 "goldfish", "sea_sponge", "shark", "salmon", "betta_fish", "lava_shark", "snake", 
-                "snake_tail", "door_gold", "door_gold_air", "unknown" };            
+                "snake_tail", "door_gold", "door_gold_air", "unknown" };
             for (int i = 0; i < names.Length; i++) {
                 Properties[i].Name = names[i];
                 if (names[i] != "unknown") 
@@ -155,10 +155,15 @@ namespace MCGalaxy {
                     Aliases[names[i].Replace("_", "")] = (byte)i;
             }
             
-            // Add old MCGalaxy aliases
-            Aliases["greenyellow"] = lightgreen;
+            // Add old MCGalaxy names
+            Aliases["purple"] = purple; Aliases["blueviolet"] = blue;
+            Aliases["adminium"] = blackrock; Aliases["bookcase"] = bookcase;
+            Aliases["plant"] = shrub; Aliases["mossy_cobblestone"] = stonevine;
+            Aliases["springgreen"] = aquagreen; Aliases["greenyellow"] = lightgreen;
+            Aliases["red_flower"] = redflower; Aliases["yellow_flower"] = yellowflower;
+            Aliases["stair"] = staircasestep; Aliases["double_stair"] = staircasefull;
             // Add other aliases
-            Aliases["planks"] = wood; Aliases["log"] = trunk;
+            Aliases["planks"] = wood; Aliases["tree"] = trunk;
             Aliases["stairs"] = staircasestep; Aliases["slab"] = staircasestep;
             Aliases["doubleslab"] = staircasefull; Aliases["slabfull"] = staircasefull;
             Aliases["solid"] = blackrock; Aliases["admintite"] = blackrock;

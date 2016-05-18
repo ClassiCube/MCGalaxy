@@ -32,15 +32,11 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             
-            bool stealth = false, totalBan = false;
+            bool stealth = false;
             if (message[0] == '#') {
                 message = message.Remove(0, 1).Trim();
                 stealth = true;
                 Server.s.Log("Stealth ban Attempted by " + (p == null ? "Console" : p.ColoredName));
-            } else if (message[0] == '@') {
-                message = message.Remove(0, 1).Trim();
-                totalBan = true;
-                Server.s.Log("Total ban Attempted by " + (p == null ? "Console" : p.ColoredName));
             }
             
             string[] args = message.Split(trimChars, 2);
@@ -87,10 +83,6 @@ namespace MCGalaxy.Commands {
             Server.IRC.Say(banMsg);
             
             Server.s.Log("BANNED: " + target.ToLower() + " by " + banner);
-            if (totalBan) {
-                Command.all.Find("undo").Use(p, target + " 0");
-                Command.all.Find("banip").Use(p, "@ " + target);
-            }
         }
         
         bool CheckPerms(string name, Group group, Player p) {
@@ -109,7 +101,6 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "/ban <player> [reason] - Bans a player without kicking them.");
             Player.Message(p, "Add # before name to stealth ban.");
-            Player.Message(p, "Add @ before name to total ban.");
         }
     }
 }

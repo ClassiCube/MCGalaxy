@@ -32,14 +32,13 @@ namespace MCGalaxy.Commands {
             string name = message.Split(' ')[0];
             Player who = PlayerInfo.Find(name);
             Command.all.Find("ban").Use(p, message);
-            Command.all.Find("banip").Use(p, "@" + name);
             if (who != null)
                 Command.all.Find("kick").Use(p, message);
             Command.all.Find("undo").Use(p, name + " all");
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/xban [name] [message]- Bans, banips, undoes, and kicks [name] with [message], if specified.");
+            Player.Message(p, "/xban [name] [message]- Bans, undoes, and kicks [name] with [message], if specified.");
         }
     }
 }

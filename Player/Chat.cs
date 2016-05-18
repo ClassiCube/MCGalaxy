@@ -229,17 +229,11 @@ namespace MCGalaxy {
             if (who == null) return;
             if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return; }
             
-            LevelPermission perm = p == null ? LevelPermission.Nobody : p.group.Permission;
-            LevelPermission whoPerm = who.group.Permission;
-            
             if (who.ignoreAll) {
                 DoFakePM(p, who, message); return;
-            }
-            
-            foreach (string ignored in who.listignored) {
-                if (p != null && ignored == p.name) {
-                    DoFakePM(p, who, message); return;
-                }
+            }          
+            if (p != null && who.listignored.Contains(p.name)) {
+                DoFakePM(p, who, message); return;
             }
             DoPM(p, who, message);
         }
