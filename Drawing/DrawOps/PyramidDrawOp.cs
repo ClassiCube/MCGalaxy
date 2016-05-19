@@ -54,6 +54,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3S32 p1 = Min, p2 = Max;
+            baseOp.Level = Level;
+            
             while (true) {
                 baseOp.Perform(marks, p, lvl, brush);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
@@ -94,10 +96,11 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Pyramid reverse"; } }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-        	wallOp.Min = Min; wallOp.Max = Max;
-        	baseOp.Min = Min; baseOp.Max = Max;
-        	
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            wallOp.Min = Min; wallOp.Max = Max;
+            baseOp.Min = Min; baseOp.Max = Max;
+            wallOp.Level = Level; baseOp.Level = Level;
+            
             while (true) {
                 wallOp.Perform(marks, p, lvl, brush);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
