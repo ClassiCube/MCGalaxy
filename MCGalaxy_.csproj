@@ -471,6 +471,8 @@
     <Compile Include="Economy\MessageItems.cs" />
     <Compile Include="Economy\NameItems.cs" />
     <Compile Include="Economy\RankItem.cs" />
+    <Compile Include="Events\Level.Events.cs" />
+    <Compile Include="Events\Player.Events.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
@@ -569,7 +571,6 @@
     <Compile Include="IRC\GlobalChatBot.cs" />
     <Compile Include="IRC\ForgeBot.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
-    <Compile Include="Player\Player.Events.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Server\Colors.cs" />
@@ -705,6 +706,7 @@
     <Folder Include="Blocks" />
     <Folder Include="Config" />
     <Folder Include="Bots" />
+    <Folder Include="Events" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\Undo" />
     <Folder Include="Plugins" />

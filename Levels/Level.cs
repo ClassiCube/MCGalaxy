@@ -47,23 +47,6 @@ namespace MCGalaxy
 
     public sealed partial class Level : IDisposable
     {
-        #region Delegates
-
-        public delegate void OnLevelLoad(string level);
-
-        public delegate void OnLevelLoaded(Level l);
-
-        public delegate void OnLevelSave(Level l);
-
-        public delegate void OnLevelUnload(Level l);
-
-        public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, PhysicsArgs args, Level l);
-
-        public delegate void OnPhysicsStateChanged(object sender, PhysicsState state);
-
-        #endregion
-
-        public static event OnPhysicsStateChanged PhysicsStateChanged;
         public static bool cancelload;
         public static bool cancelsave;
         public static bool cancelphysics;
@@ -356,19 +339,6 @@ namespace MCGalaxy
         }
 
         #endregion
-        [Obsolete("Please use OnPhysicsUpdate.Register()")]
-        public event OnPhysicsUpdate PhysicsUpdate = null;
-        [Obsolete("Please use OnLevelUnloadEvent.Register()")]
-        public static event OnLevelUnload LevelUnload = null;
-        [Obsolete("Please use OnLevelSaveEvent.Register()")]
-        public static event OnLevelSave LevelSave = null;
-        //public static event OnLevelSave onLevelSave = null;
-        [Obsolete("Please use OnLevelUnloadEvent.Register()")]
-        public event OnLevelUnload onLevelUnload = null;
-        [Obsolete("Please use OnLevelUnloadEvent.Register()")]
-        public static event OnLevelLoad LevelLoad = null;
-        [Obsolete("Please use OnLevelUnloadEvent.Register()")]
-        public static event OnLevelLoaded LevelLoaded;
 
         /// <summary> Whether block changes made on this level should be 
         /// saved to the BlockDB and .lvl files. </summary>

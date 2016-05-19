@@ -284,7 +284,7 @@ namespace MCGalaxy {
                 string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
                 string error;
                 if (!CheckUserAndCommand(user, cmdName, message, out error)) {
-                    if (error != null) Server.IRC.Say(error);
+                    if (error != null) Say(error);
                     return;
                 }
 
@@ -296,11 +296,11 @@ namespace MCGalaxy {
                     try {
                         cmd.Use(new Player("IRC"), args);
                     } catch (Exception e) {
-                        Server.IRC.Say("CMD Error: " + e.ToString());
+                        Say("CMD Error: " + e.ToString());
                     }
                     usedCmd = "";
                 } else {
-                    Server.IRC.Say("Unknown command!");
+                    Say("Unknown command!");
                 }
             }
 
