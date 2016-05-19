@@ -38,8 +38,6 @@ namespace MCGalaxy.Commands {
             string level;
             bool env = args[0].CaselessEq("env");
             level = env ? (args.Length > 1 ? args[1] : "") : args[0];
-            bool perms = args[0].CaselessEq("perms");
-            level = perms ? (args.Length > 1 ? args[1] : "") : level;
             
             Level lvl = level == "" ? p.level : LevelInfo.Find(level);
             MapInfoData data = new MapInfoData();
@@ -52,7 +50,6 @@ namespace MCGalaxy.Commands {
             }
             
             if (env) ShowEnv(p, data);
-            else if (perms) ShowPermissions(p, data);
             else ShowNormal(p, data);
         }
         
@@ -60,22 +57,22 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "&bAbout {0}%S: Width={1} Height={2} Length={3}", data.Name, data.Width, data.Height, data.Length);
             string physicsState = CmdPhysics.states[data.Physics];
             if (p == null || p.group.CanExecute("gun")) {
-                Player.Message(p, "   Physics are {0}%S, gun usage %Sis {1}", 
+                Player.Message(p, "  Physics are {0}%S, gun usage %Sis {1}", 
                                physicsState, data.Guns ? "&aenabled" : "&cdisabled");
             } else {
-                Player.Message(p, "   Physics are {0}", physicsState);
+                Player.Message(p, "  Physics are {0}", physicsState);
             }
 
             if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
                 int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
                 DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.Name, latestBackup.ToString()));
-                Player.Message(p, "   Latest backup: &a{0} %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"), latestBackup);
+                Player.Message(p, "  Latest backup: &a{0} %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"), latestBackup);
             } else {
-                Player.Message(p, "   No backups for this map exist yet.");
+                Player.Message(p, "  No backups for this map exist yet.");
             }
-            Player.Message(p, "   BlockDB (Used for /b) is {0}", data.BlockDB ? "&aEnabled" : "&cDisabled");
-            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);
-            Player.Message(p, "Use %T/mi perms {0} %Sto see permission settings.", data.Name);
+            Player.Message(p, "  BlockDB (Used for /b) is {0}", data.BlockDB ? "&aEnabled" : "&cDisabled");
+            ShowPermissions(p, data);
+            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);            
             
             if (!Server.zombie.IsZombieMap(data.Name)) return;
             Player.Message(p, "Map authors: " + data.Authors);
@@ -86,17 +83,17 @@ namespace MCGalaxy.Commands {
         }
         
         void ShowPermissions(Player p, MapInfoData data) {
-            Player.Message(p, "Build rank = " + Group.findPerm(data.build).ColoredName +
+            Player.Message(p, "  Build rank = " + Group.findPerm(data.build).ColoredName +
                                " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
-            Player.Message(p, "BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
+            Player.Message(p, "  BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
                                " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
             List<string> whitelist = data.VisitWhitelist;
             List<string> blacklist = data.VisitBlacklist;
             GetBlacklistedPlayers(data.Name, blacklist);
             if (whitelist.Count > 0)
-                Player.Message(p, "Visit whitelist: &a" + String.Join("%S, &a", whitelist));
+                Player.Message(p, "  Visit whitelist: &a" + String.Join("%S, &a", whitelist));
             if (blacklist.Count > 0)
-                Player.Message(p, "Visit blacklist: &c" + String.Join("%S, &c", blacklist));
+                Player.Message(p, "  Visit blacklist: &c" + String.Join("%S, &c", blacklist));
         }
         
         void GetBlacklistedPlayers(string l, List<string> blacklist) {
@@ -250,7 +247,6 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p)  {
             Player.Message(p, "/mapinfo <map> - Display details of <map>");
             Player.Message(p, "/mapinfo env <map> - Display environment details of <map>");
-            Player.Message(p, "/mapinfo perms <map> - Display permission details of <map>");
         }
     }
 }
