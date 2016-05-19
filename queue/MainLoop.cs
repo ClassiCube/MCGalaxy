@@ -31,25 +31,9 @@ using System.Threading;
 
 namespace MonoTorrent.Client {
     
-    public delegate void MainLoopResult(object result);
-    public delegate object MainLoopJob();
-    public delegate void MainLoopTask();
+    public delegate void SchedulerTask();
 
     public sealed class MainLoop {
-        
-        private class SchedulerTask {
-            public Exception StoredException;
-            public MainLoopTask Task;
-
-            public void Execute() {
-                try {
-                    Task();
-                } catch (Exception ex) {
-                    StoredException = ex;
-                    throw;
-                }
-            }
-        }
 
         AutoResetEvent handle = new AutoResetEvent(false);
         Queue<SchedulerTask> tasks = new Queue<SchedulerTask>();
@@ -73,17 +57,18 @@ namespace MonoTorrent.Client {
                 if (task == null) {
                     handle.WaitOne();
                 } else {
-                    task.Execute();
+                    try {
+                        task();
+                    } catch (Exception ex) {
+                        MCGalaxy.Server.ErrorLog(ex);
+                    }
                 }
                 Thread.Sleep(10);
             }
         }
 
         /// <summary> Queues an action that is asynchronously executed. </summary>
-        public void Queue(MainLoopTask action) {
-            SchedulerTask task = new SchedulerTask();
-            task.Task = action;
-            
+        public void Queue(SchedulerTask task) {
             lock (tasks) {
                 tasks.Enqueue(task);
                 handle.Set();
