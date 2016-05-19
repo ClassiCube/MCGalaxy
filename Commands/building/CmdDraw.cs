@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands {
                     op = new AdvVolcanoDrawOp(); break;
                 default:
                     Help(p); return;
-            }           
+            }
             string[] args = cpos.message.Split(' ');
             if ((op.UsesHeight && !CheckTwoArgs(p, op, args)) || 
                 (!op.UsesHeight && !CheckOneArg(p, op, args))) return;
@@ -80,7 +80,18 @@ namespace MCGalaxy.Commands {
             int brushOffset = op.UsesHeight ? 3 : 2;
             Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
-            if (!DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3S32(x, y, z) }))
+            
+            Vec3S32[] marks = {
+            	new Vec3S32(x - op.Radius, y, z - op.Radius),
+                new Vec3S32(x + op.Radius, y, z + op.Radius) };
+            if (op.UsesHeight) {
+                marks[1].Y += op.Height;
+            } else {
+                marks[0].Y -= op.Radius; 
+                marks[1].Y += op.Radius;
+            }
+            
+            if (!DrawOp.DoDrawOp(op, brush, p, marks))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

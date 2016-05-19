@@ -17,8 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy {  
     public struct Vec3U16 {
         
         public ushort X, Y, Z;
@@ -54,28 +53,6 @@ namespace MCGalaxy {
         
         public float Length { get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); } }
         
-        public float Dot(Vec3U16 b) { return X * b.X + Y * b.Y + Z * b.Z; }
-        
-        public Vec3U16 Max(Vec3U16 b) { return Max(this, b); }
-        
-        public Vec3U16 Min(Vec3U16 b) { return Min(this, b); }
-        
-        public static Vec3U16 Max(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            return new Vec3U16(Math.Max(x1, x2), Math.Max(y1, y2), Math.Max(z1, z2));
-        }
-        
-        public static Vec3U16 Min(ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            return new Vec3U16(Math.Min(x1, x2), Math.Min(y1, y2), Math.Min(z1, z2));
-        }
-        
-        public static Vec3U16 Max(Vec3U16 a, Vec3U16 b) {
-            return new Vec3U16(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y), Math.Max(a.Z, b.Z));
-        }
-        
-        public static Vec3U16 Min(Vec3U16 a, Vec3U16 b) {
-            return new Vec3U16(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Min(a.Z, b.Z));
-        }
-        
         /// <summary> Clamps the given block coordinates to inside the map. </summary>
         public static Vec3U16 ClampToBounds(ushort x, ushort y, ushort z, Level lvl) {
             Vec3U16 P = new Vec3U16(x, y, z);
@@ -108,14 +85,6 @@ namespace MCGalaxy {
         
         public static bool operator != (Vec3U16 a, Vec3U16 b) {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
-        }
-        
-        public static Vec3U16 operator + (Vec3U16 a, Vec3U16 b) {
-            return new Vec3U16((ushort)(a.X + b.X), (ushort)(a.Y + b.Y), (ushort)(a.Z + b.Z));
-        }
-        
-        public static Vec3S32 operator - (Vec3U16 a, Vec3U16 b) {
-            return new Vec3S32(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
         
         public static explicit operator Vec3U16(Vec3S32 a) {
@@ -179,6 +148,14 @@ namespace MCGalaxy {
         
         public static Vec3S32 operator - (Vec3S32 a, Vec3S32 b) {
             return new Vec3S32(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+        
+        public static Vec3S32 operator * (Vec3S32 a, int b) {
+            return new Vec3S32(a.X * b, a.Y * b, a.Z * b);
+        }
+        
+        public static Vec3S32 operator / (Vec3S32 a, int b) {
+            return new Vec3S32(a.X / b, a.Y / b, a.Z / b);
         }
         
         public static bool operator == (Vec3S32 a, Vec3S32 b) {

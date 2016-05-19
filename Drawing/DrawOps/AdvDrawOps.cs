@@ -42,18 +42,17 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 P = (Vec3U16)marks[0];
             int upper = (Radius + 1) * (Radius + 1);
-            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
-            int minY = Math.Max(P.Y - Radius, 0) - P.Y, maxY = Math.Min(P.Y + Radius, lvl.Height - 1) - P.Y;
-            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
-            for (int yy = minY; yy <= maxY; yy++)
-                for (int zz = minZ; zz <= maxZ; zz++)
-                    for (int xx = minX; xx <= maxX; xx++)
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3S32 C = (Min + Max) / 2;
+
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
-                int curDist = xx * xx + yy * yy + zz * zz;
-                if (curDist < upper)
-                    PlaceBlock(p, lvl, (ushort)(P.X + xx), (ushort)(P.Y + yy), (ushort)(P.Z + zz), brush);
+                int dist = (C.X - x) * (C.X - x) + (C.Y - y) * (C.Y - y) + (C.Z - z) * (C.Z - z);
+                if (dist < upper)
+                    PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }
@@ -71,19 +70,17 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 P = (Vec3U16)marks[0];
             int upper = (Radius + 1) * (Radius + 1), inner = (Radius - 1) * (Radius - 1);
-            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
-            int minY = Math.Max(P.Y - Radius, 0) - P.Y, maxY = Math.Min(P.Y + Radius, lvl.Height - 1) - P.Y;
-            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
-            for (int yy = minY; yy <= maxY; yy++)
-                for (int zz = minZ; zz <= maxZ; zz++)
-                    for (int xx = minX; xx <= maxX; xx++)
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3S32 C = (Min + Max) / 2;
+
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
-                int curDist = xx * xx + yy * yy + zz * zz;
-                if (curDist < upper && curDist >= inner) {
-                    PlaceBlock(p, lvl, (ushort)(P.X + xx), (ushort)(P.Y + yy), (ushort)(P.Z + zz), brush);
-                }
+                int dist = (C.X - x) * (C.X - x) + (C.Y - y) * (C.Y - y) + (C.Z - z) * (C.Z - z);
+                if (dist < upper && dist >= inner)
+                    PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }
