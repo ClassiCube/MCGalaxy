@@ -32,36 +32,66 @@ namespace MCGalaxy.Commands {
             if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }
             if (p != null && !p.group.CanExecute(cmd)) { Player.Message(p, "Your rank cannot use this command."); return; }
 
-            LevelPermission perm = Level.PermissionFromName(args[1]);
-            if (perm == LevelPermission.Null) { Player.Message(p, "Could not find rank specified"); return; }
-            if (p != null && perm > p.group.Permission) { Player.Message(p, "Cannot set permissions to a rank higher than yours."); return; }
+            Group grp = Group.Find(args[1]);
+            if (grp == null) { Player.Message(p, "Could not find rank specified"); return; }
+            if (p != null && grp.Permission > p.group.Permission) { 
+                Player.Message(p, "Cannot set permissions to a rank higher than yours."); return; 
+            }
 
             int otherPermIndex = 0;
-            string permName = "permission";
             if (args.Length == 2) {
-                GrpCommands.allowedCommands.Find(rA => rA.commandName == cmd.name).lowestRank = perm;
-                GrpCommands.Save(GrpCommands.allowedCommands);
-                GrpCommands.fillRanks();
+                var allowed = GrpCommands.allowedCommands.Find(rA => rA.commandName == cmd.name);
+                allowed.lowestRank = grp.Permission;
+                UpdatePermissions(cmd, p, "'s permission was set to " + grp.ColoredName);
+            } else if (args[2].CaselessEq("allow")) {
+                var allowed = GrpCommands.allowedCommands.Find(rA => rA.commandName == cmd.name);
+                allowed.disallow.Remove(grp.Permission);
+                if (!allowed.allow.Contains(grp.Permission))
+                    allowed.allow.Add(grp.Permission);
+                UpdatePermissions(cmd, p, " can now be used by " + grp.ColoredName);
+            } else if (args[2].CaselessEq("disallow")) {
+                if (p != null && p.group.Permission == grp.Permission) {
+                    Player.Message(p, "You cannot disallow your own rank from using a command."); return;
+                }
+                
+                var allowed = GrpCommands.allowedCommands.Find(rA => rA.commandName == cmd.name);
+                allowed.allow.Remove(grp.Permission);
+                if (!allowed.disallow.Contains(grp.Permission))
+                    allowed.disallow.Add(grp.Permission);
+                UpdatePermissions(cmd, p, " is no longer usable by " + grp.ColoredName);
             } else if (!int.TryParse(args[2], out otherPermIndex)) {
-                Player.Message(p, "\"" + args[2] + "\" is not an integer.");
+                Player.Message(p, "\"{0}\" must be \"allow\", \"disallow\", or an integer.", args[2]);
             } else {
                 CommandOtherPerms.OtherPerms perms = CommandOtherPerms.Find(cmd, otherPermIndex);
                 if (perms == null) {
                     Player.Message(p, "This command has no additional permission with that number."); return;
                 }
-                perms.Permission = (int)perm;
+                
+                perms.Permission = (int)grp.Permission;
                 CommandOtherPerms.Save();
-                permName = "additional permission " + otherPermIndex;
+                string permName = "additional permission " + otherPermIndex;
+                Player.GlobalMessage("&d" + cmd.name + "%S's " + permName + " was set to " + grp.ColoredName);
+                Player.Message(p, cmd.name + "'s " + permName + " was set to " + grp.ColoredName);
             }
-            Player.GlobalMessage("&d" + cmd.name + "%S's " + permName + " was set to " + Level.PermissionToName(perm));
-            Player.Message(p, cmd.name + "'s " + permName + " was set to " + Level.PermissionToName(perm));
+        }
+        
+        static void UpdatePermissions(Command cmd, Player p, string message) {
+             GrpCommands.Save(GrpCommands.allowedCommands);
+             GrpCommands.fillRanks();
+             Player.GlobalMessage("&d" + cmd.name + "%S" + message);
+             Player.Message(p, cmd.name + message);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/cmdset [cmd] [rank] <otherperm> - Changes [cmd] rank to [rank]");
-            Player.Message(p, "Only commands you can use can be modified.");
-            Player.Message(p, "<otherperm> is optional and is used to set the additional " +
-                               "permissions for several commands. Most commands do not use this.");
+            Player.Message(p, "%T/cmdset [cmd] [rank]");
+            Player.Message(p, "%HSets lowest rank that can use [cmd] to [rank]");
+            Player.Message(p, "%T/cmdset [cmd] [rank] allow");
+            Player.Message(p, "%HAllows a specific rank to use [cmd]");
+            Player.Message(p, "%T/cmdset [cmd] [rank] disallow");
+            Player.Message(p, "%HPrevents a specific rank from using [cmd]");
+            Player.Message(p, "%T/cmdset [cmd] [rank] <additional permission number>");
+            Player.Message(p, "%HSet the lowest rank that has that additional permission for [cmd] " +
+                           "(Most commands do not use these)");
             Player.Message(p, "Available ranks: " + Group.concatList());
         }
     }
