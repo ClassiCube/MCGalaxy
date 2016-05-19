@@ -30,7 +30,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Pyramid"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Height;
+            long R = Radius, H = Max.Y - Min.Y;
             return (R * R * H) / 3;
         }
         
@@ -42,11 +42,12 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
+            	int height = Max.Y - Min.Y;
                 int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Invert ? yy : Height - yy;
+                int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;              
                 
-                double curRadius = Radius * ((double)curHeight / (double)Height);
+                double curRadius = Radius * ((double)curHeight / (double)height);
                 if (Math.Abs(xx) > curRadius || Math.Abs(zz) > curRadius)
                     continue;
                 byte ctile = lvl.GetTile(x, y, z);
@@ -61,7 +62,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Hollow Pyramid"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Height;
+            long R = Radius, H = Max.Y - Min.Y;
             long outer = (R * R * H) / 3;
             long inner = ((R - 1) * (R - 1) * (H - 1)) / 3;
             return outer - inner;
@@ -70,16 +71,17 @@ namespace MCGalaxy.Drawing.Ops {
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
+            int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Invert ? yy : Height - yy;
+                int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;           
                 
-                double curRadius = Radius * ((double)curHeight / (double)Height);
+                double curRadius = Radius * ((double)curHeight / (double)height);
                 int absx = Math.Abs(xx), absz = Math.Abs(zz);
                 if (absx > curRadius || absz > curRadius) continue;
                 if (absx < (curRadius - 1) && absz < (curRadius - 1)) continue;

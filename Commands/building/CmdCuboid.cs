@@ -27,9 +27,9 @@ namespace MCGalaxy.Commands
         public override string name { get { return "cuboid"; } }
         public override string shortcut { get { return "z"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("cw", "wire"),
-                    new CommandAlias("ch", "hollow"), new CommandAlias("walls", "walls"),
-                    new CommandAlias("box"), new CommandAlias("hbox", "hollow") }; }
+            get { return new[] { new CommandAlias("cw", null, "wire"),
+                    new CommandAlias("ch", null, "hollow"), new CommandAlias("walls", null, "walls"),
+                    new CommandAlias("box"), new CommandAlias("hbox", null, "hollow") }; }
         }
 
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
