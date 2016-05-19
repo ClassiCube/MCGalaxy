@@ -600,8 +600,8 @@ namespace MCGalaxy.Commands {
         
         internal static void Help(Player p, bool global, string cmd) {
         	// TODO: find a nicer way of doing this
-        	string fullCmd = cmd.Replace("gb", "globalblock")
-        	    .Replace("lb", "levelblock");
+        	string fullCmd = cmd.Replace("lb", "levelblock")
+        		.Replace("gb", "globalblock");
             
             Player.Message(p, "%T" + fullCmd + " <add/copy/edit/list/remove>");
             Player.Message(p, "%H  " + cmd + " add [id] - begins creating a new custom block.");

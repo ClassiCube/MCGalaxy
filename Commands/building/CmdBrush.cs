@@ -28,6 +28,9 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         static char[] trimChars = { ' ' };
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("brushes", "list") }; }
+        }
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
@@ -37,7 +40,9 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(trimChars, 2);
             string brush = FindBrush(args[0]);
             
-            if (brush == null) {
+            if (args[0].CaselessEq("list")) {
+                Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
+            } else if (brush == null) {
                 Player.Message(p, "No brush found with name \"" + args[0] + "\".");
                 Player.Message(p, "Available brushes: " + AvailableBrushes);
             } else {
@@ -64,7 +69,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HSets your current brush to the brush with the given name.");
             Player.Message(p, "%T/help brush [name]");
             Player.Message(p, "%HOutputs the help for the brush with the given name.");
-            Player.Message(p, "Available brushes: " + AvailableBrushes);
+            Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
             Player.Message(p, "%HThe default brush simply takes one argument specifying the block to draw with. " +
                            "If no arguments are given, your currently held block is used instead.");
         }
@@ -73,7 +78,7 @@ namespace MCGalaxy.Commands {
             string brush = FindBrush(message);
             if (brush == null) {
                 Player.Message(p, "No brush found with name \"{0}\".", message);
-                Player.Message(p, "Available brushes: " + AvailableBrushes);
+                Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
             } else {
                 string[] help = Brush.BrushesHelp[brush];
                 foreach (string line in help)

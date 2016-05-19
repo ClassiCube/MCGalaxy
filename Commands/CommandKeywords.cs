@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdImageprint()), "jpg bmp gif png image print");
             new CommandKeywords((new CmdInfect()), "virus inf");
             new CommandKeywords((new CmdInfected()), "infect player list");
-            new CommandKeywords((new CmdInfo()), "server detail");
+            new CommandKeywords((new CmdServerInfo()), "server detail");
             new CommandKeywords((new CmdInvincible()), "god life inf");
             new CommandKeywords((new CmdJail()), "prison punish");
             new CommandKeywords((new CmdJoker()), "joke troll fun");

@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/replace [block] [block2].. [new]");
             Player.Message(p, "%HReplaces [block] with [new] between two points.");
-            Player.Message(p, "%H   If more than one [block] is specified, they will all be replaced.");
+            Player.Message(p, "%H   If more than one [block] is specified, they will all be replaced with [new].");
         }
     }
     
@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/replaceall [block] [block2].. [new]");
             Player.Message(p, "%HReplaces [block] with [new] for the entire map.");
-            Player.Message(p, "%H   If more than one [block] is specified, they will all be replaced.");
+            Player.Message(p, "%H   If more than one [block] is specified, they will all be replaced with [new].");
         }
     }
 }

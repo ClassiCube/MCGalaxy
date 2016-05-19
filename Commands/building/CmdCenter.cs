@@ -5,7 +5,7 @@ namespace MCGalaxy.Commands {
     public sealed class CmdCenter : Command {
 		
         public override string name { get { return "center"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "centre"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

@@ -30,6 +30,9 @@ namespace MCGalaxy.Commands {
         public override CommandPerm[] AdditionalPerms {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see IPs and if a player is whitelisted") }; }
         }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("info"), new CommandAlias("i") }; }
+        }
         
         public override void Use(Player p, string message) {
             if (message == "") message = p.name;

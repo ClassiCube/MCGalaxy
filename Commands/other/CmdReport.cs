@@ -31,6 +31,9 @@ namespace MCGalaxy.Commands {
         public override CommandPerm[] AdditionalPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can check, view and delete reports") }; }
         }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("reports", "list") }; }
+        }
         static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
@@ -154,8 +157,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%T/report [Player] [Reason] %H- Reports that player for the given reason.");
             if (!CheckAdditionalPerm(p)) return;
             Player.Message(p, "%T/report list %H- Outputs the list of reported players.");
-            Player.Message(p, "%T/report check [Player] %H- View the report for the given player.");
-            Player.Message(p, "%T/report delete [Player] %H- Deletes the report for the given player.");
+            Player.Message(p, "%T/report check [Player] %H- Views report for that player.");
+            Player.Message(p, "%T/report delete [Player] %H- Deletes report for that player.");
             Player.Message(p, "%T/report clear %H- Clears &call%H reports.");
         }
     }

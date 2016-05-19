@@ -231,7 +231,7 @@
     <Compile Include="Commands\Information\CmdHasirc.cs" />
     <Compile Include="Commands\Information\CmdHelp.cs" />
     <Compile Include="Commands\Information\CmdInbox.cs" />
-    <Compile Include="Commands\Information\CmdInfo.cs" />
+    <Compile Include="Commands\Information\CmdServerInfo.cs" />
     <Compile Include="Commands\Information\CmdLastCmd.cs" />
     <Compile Include="Commands\Information\CmdLevels.cs" />
     <Compile Include="Commands\Information\CmdMapInfo.cs" />
