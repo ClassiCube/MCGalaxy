@@ -16,10 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdHelp : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdHelp : Command {
         public override string name { get { return "help"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -88,14 +86,34 @@ namespace MCGalaxy.Commands
         }
         
         internal static void PrintCommandInfo(Player p, Command cmd) {
-        	LevelPermission minPerm = GrpCommands.MinPerm(cmd);
-            Player.Message(p, "Rank needed: " + GetColoredRank(minPerm));
+            var perms = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("Usable by: ");
+            if (perms == null) {
+                builder.Append(GetColoredRank(cmd.defaultRank) + "%S+");
+            } else {
+                builder.Append(GetColoredRank(perms.lowestRank) + "%S+");
+                if (perms.allow.Count > 0) {
+                    foreach (LevelPermission perm in perms.allow)
+                        builder.Append(", " + GetColoredRank(perm) + "%S");
+                }
+                
+                if (perms.disallow.Count > 0) {
+                    builder.Append( " (but not ");
+                    foreach (LevelPermission perm in perms.disallow)
+                        builder.Append(GetColoredRank(perm) + "%S, ");
+                    builder.Remove(builder.Length - 2, 2);
+                    builder.Append(")");
+                }
+            }
+            Player.Message(p, builder.ToString());
+            
             PrintAliases(p, cmd);           
-            CommandPerm[] perms = cmd.AdditionalPerms;
-            if (perms == null) return;
+            CommandPerm[] addPerms = cmd.AdditionalPerms;
+            if (addPerms == null) return;
             
             Player.Message(p, "%TAdditional permissions:");
-            for (int i = 0; i < perms.Length; i++) {
+            for (int i = 0; i < addPerms.Length; i++) {
                 var addition = CommandOtherPerms.Find(cmd, i + 1);
                 LevelPermission perm = (LevelPermission)addition.Permission;
                 Player.Message(p, GetColoredRank(perm) + "%S" + addition.Description);
@@ -219,7 +237,7 @@ namespace MCGalaxy.Commands
         }
 
         internal static string GetColor(Command cmd) {
-        	LevelPermission perm = GrpCommands.MinPerm(cmd);
+            LevelPermission perm = GrpCommands.MinPerm(cmd);
             Group grp = Group.findPerm(perm);
             return grp == null ? "&f" : grp.color;
         }
