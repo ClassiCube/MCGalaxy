@@ -16,51 +16,65 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Commands {
-    
-    public sealed class CmdTorus : DrawCmd {
+    public sealed class CmdSphere : DrawCmd {
         
-        public override string name { get { return "torus"; } }
-        public override string shortcut { get { return "tor"; } }
+        public override string name { get { return "sphere"; } }
+        public override string shortcut { get { return "sp"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("donut"), new CommandAlias("bagel") }; }
+        	get { return new[] { new CommandAlias("sphereh", null, "hollow"), new CommandAlias("sph", null, "hollow") }; }
         }
         protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
         
+        protected override DrawMode ParseMode(string msg) {
+            if (msg == "solid") return DrawMode.solid;
+            else if (msg == "hollow") return DrawMode.hollow;
+            return DrawMode.normal;
+        }
+
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
             
-            DrawOp drawOp = new TorusDrawOp();
-            Brush brush = GetBrush(p, cpos, 0);
+            DrawOp op = null;
+            Func<BrushArgs, Brush> constructor = null;
+            switch (cpos.mode) {
+                case DrawMode.solid:
+                    op = new AdvSphereDrawOp();
+                    constructor = SolidBrush.Process; break;
+                case DrawMode.hollow:
+                    op = new AdvHollowSphereDrawOp(); break;
+                default:
+                    op = new AdvSphereDrawOp(); break;
+            }         
+            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
+            Brush brush = GetBrush(p, cpos, brushOffset, constructor);
             if (brush == null) return;
-            
+
             int dx = cpos.x - x, dy = cpos.y - y, dz = cpos.z - z;
-            int horR = (int)Math.Sqrt(dx * dx + dz * dz), verR = Math.Abs(dy);
-            Vec3S32[] marks = { new Vec3S32(cpos.x - horR, cpos.y - verR, cpos.z - horR),
-                new Vec3S32(cpos.x + horR, cpos.y + verR, cpos.z + horR) };
-                      
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, marks))
+            int R = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
+            Vec3S32[] marks = { new Vec3S32(cpos.x - R, cpos.y - R, cpos.z - R),
+                new Vec3S32(cpos.x + R, cpos.y + R, cpos.z + R) };
+            
+            if (!DrawOp.DoDrawOp(op, brush, p, marks))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        protected override DrawMode ParseMode(string msg) { return DrawMode.normal; }
-        
         public override void Help(Player p) {
-            Player.Message(p, "%T/torus [brush args]");
-            Player.Message(p, "%HDraws a torus(circular tube), with the first point as the centre, " +
+            Player.Message(p, "%T/sphere [brush args] <mode>");
+            Player.Message(p, "%HCreates a sphere, with the first point as the centre, " +
                            "and second being the radius.");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.Message(p, "   %HNote: radius of the tube itself is the vertical difference between the two points.");
+            Player.Message(p, "   %HModes: &fsolid/hollow");
         }
     }
 }
-

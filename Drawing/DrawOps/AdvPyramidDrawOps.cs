@@ -30,29 +30,29 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Pyramid"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Height;
+            long R = Radius, H = Max.Y - Min.Y;
             return (R * R * H) / 3;
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 P = (Vec3U16)marks[0];
-            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
-            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
-            int maxY = Math.Min(P.Y + Height, lvl.Height - 1) - P.Y;
-            for (int yy = 0; yy <= maxY; yy++)
-                for (int zz = minZ; zz <= maxZ; zz++)
-                    for (int xx = minX; xx <= maxX; xx++)
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3S32 C = (Min + Max) / 2;
+
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
-                int curHeight = Invert ? yy : Height - yy;
-                if (curHeight == 0) continue;
-                int cx = P.X + xx, cy = P.Y + (Height - curHeight), cz = P.Z + zz;                
+            	int height = Max.Y - Min.Y;
+                int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
+                int curHeight = Invert ? yy : height - yy;
+                if (curHeight == 0) continue;              
                 
-                double curRadius = Radius * ((double)curHeight / (double)Height);
+                double curRadius = Radius * ((double)curHeight / (double)height);
                 if (Math.Abs(xx) > curRadius || Math.Abs(zz) > curRadius)
                     continue;
-                byte ctile = lvl.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
+                byte ctile = lvl.GetTile(x, y, z);
                 if (ctile != 0) continue;
-                PlaceBlock(p, lvl, (ushort)cx, (ushort)cy, (ushort)cz, brush);
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }
@@ -62,33 +62,33 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Hollow Pyramid"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Height;
+            long R = Radius, H = Max.Y - Min.Y;
             long outer = (R * R * H) / 3;
             long inner = ((R - 1) * (R - 1) * (H - 1)) / 3;
             return outer - inner;
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 P = Clamp(marks[0]);
-            int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
-            int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
-            int maxY = Math.Min(P.Y + Height, lvl.Height - 1) - P.Y;
-            for (int yy = 0; yy <= maxY; yy++)
-                for (int zz = minZ; zz <= maxZ; zz++)
-                    for (int xx = minX; xx <= maxX; xx++)
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3S32 C = (Min + Max) / 2;
+            int height = Max.Y - Min.Y;
+
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
-                int curHeight = Invert ? yy : Height - yy;
-                if (curHeight == 0) continue;
-                int cx = P.X + xx, cy = P.Y + (Height - curHeight), cz = P.Z + zz;                
+                int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
+                int curHeight = Invert ? yy : height - yy;
+                if (curHeight == 0) continue;           
                 
-                double curRadius = Radius * ((double)curHeight / (double)Height);
+                double curRadius = Radius * ((double)curHeight / (double)height);
                 int absx = Math.Abs(xx), absz = Math.Abs(zz);
                 if (absx > curRadius || absz > curRadius) continue;
                 if (absx < (curRadius - 1) && absz < (curRadius - 1)) continue;
 
-                byte ctile = lvl.GetTile((ushort)cx, (ushort)cy, (ushort)cz);
+                byte ctile = lvl.GetTile(x, y, z);
                 if (ctile != 0) continue;
-                PlaceBlock(p, lvl, (ushort)cx, (ushort)cy, (ushort)cz, brush);
+                PlaceBlock(p, lvl, x, y, z, brush);
             }
         }
     }

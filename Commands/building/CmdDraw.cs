@@ -73,22 +73,22 @@ namespace MCGalaxy.Commands {
                 default:
                     Help(p); return;
             }
+            ushort radius = 0, height = 0;
             string[] args = cpos.message.Split(' ');
-            if ((op.UsesHeight && !CheckTwoArgs(p, op, args)) || 
-                (!op.UsesHeight && !CheckOneArg(p, op, args))) return;
+            if ((op.UsesHeight && !CheckTwoArgs(p, ref radius, ref height, args)) || 
+                (!op.UsesHeight && !CheckOneArg(p, ref radius, args))) return;
             
             int brushOffset = op.UsesHeight ? 3 : 2;
             Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
             
             Vec3S32[] marks = {
-            	new Vec3S32(x - op.Radius, y, z - op.Radius),
-                new Vec3S32(x + op.Radius, y, z + op.Radius) };
+            	new Vec3S32(x - radius, y, z - radius),
+                new Vec3S32(x + radius, y, z + radius) };
             if (op.UsesHeight) {
-                marks[1].Y += op.Height;
+                marks[1].Y += height;
             } else {
-                marks[0].Y -= op.Radius; 
-                marks[1].Y += op.Radius;
+                marks[0].Y -= radius; marks[1].Y += radius;
             }
             
             if (!DrawOp.DoDrawOp(op, brush, p, marks))
@@ -99,18 +99,18 @@ namespace MCGalaxy.Commands {
         
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
         
-        bool CheckTwoArgs(Player p, AdvDrawOp op, string[] parts) {
+        bool CheckTwoArgs(Player p, ref ushort radius, ref ushort height, string[] parts) {
             if (parts.Length < 3) { Help(p); return false; }
-            if (!ushort.TryParse(parts[parts.Length - 3], out op.Height) || op.Height > 2000 ||
-                !ushort.TryParse(parts[parts.Length - 2], out op.Radius) || op.Radius > 2000) {
+            if (!ushort.TryParse(parts[parts.Length - 3], out height) || height > 2000 ||
+                !ushort.TryParse(parts[parts.Length - 2], out radius) || radius > 2000) {
                 Player.Message(p, "Radius and height must be positive integers less than 2000."); return false;
             }
             return true;
         }
         
-        bool CheckOneArg(Player p, AdvDrawOp op, string[] parts) {
+        bool CheckOneArg(Player p, ref ushort radius, string[] parts) {
             if (parts.Length < 2) { Help(p); return false; }
-            if (!ushort.TryParse(parts[parts.Length - 2], out op.Radius) || op.Radius > 2000) { 
+            if (!ushort.TryParse(parts[parts.Length - 2], out radius) || radius > 2000) { 
                 Player.Message(p, "Radius must be a positive integer less than 2000."); return false;
             }
             return true;

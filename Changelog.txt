@@ -1,3 +1,34 @@
+v 1.8.7.0
+- Added: /infoswap.
+- Added: Tab list separately handled from in-game entities, allowing for a server-wise tab list.
+- Added: Cloudy (perlin noise) brush like fcraft.
+- Added: /main <level> to set the main level from ingame.
+- Added: Allow generating any size divisible by 16, not just powers of two divisible by 16.
+- Added: Actual /sphere command.
+- Added: /hide persists across sessions.
+- Added: /Triangle draw operation.
+- Added: Configuring weather speed, cloud speed, and weather fade/falloff rate.
+- Added: /where to show a player's position and orientation.
+- Fixed: /explode me not working.
+- Fixed: 'is afk' always showing in /whois.
+- Fixed: If older backups directories were missing, existing backup directories are overwritten.
+- Fixed: /compload for visual basic commands.
+- Fixed: tpaccept/tpdeny not working.
+- Fixed: /botremove not working.
+- Fixed: /mi env not working on loaded levels.
+- Improved: /about now shows the 'real' custom block id, not just ID of custom_block.
+- Improved: Reduced logging information to main console window, shown in logs-->sytstem instead.
+- Improved: /torus now draws like fcraft /torus.
+- Improved: outline/copy cut/rainbow/hollow are now draw ops, allowing them to be undone/redone.
+- Improved: When using only /copy, air blocks (Since not pasted) do not count towards draw limit.
+- Improved: More commands now have the fCraft command names/aliases as aliases too.
+- Improved: Now uses the same block names as classicube/classicalsharp clients.
+- Improved: /help commands split into separate /commands, which can use name and rank sorting.
+- Improved: /host combined into /sinfo, /sinfo simplified.
+- Improved: IRC bot now tries to reclaim its normal nick upon reconnection.
+- Improved: Map tab redesigned to be more visually appealing.
+- Removed: /ban #name and /uban name, just use /xban name.
+
 v 1.8.6.0
 - Fixed: /award not working when neither 'give' nor 'take' is used.
 - Added: Allow customising infect messages for zombie survival.

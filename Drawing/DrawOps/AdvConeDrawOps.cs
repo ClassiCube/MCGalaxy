@@ -30,23 +30,24 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Cone"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Height;
+            long R = Radius, H = Max.Y - Min.Y;
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
+            int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Invert ? yy : Height - yy;
+                int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * ((double)curHeight / (double)Height);
+                double curRadius = Radius * ((double)curHeight / (double)height);
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
                 
@@ -62,7 +63,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Hollow Cone"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Height;
+            long R = Radius, H = Max.Y - Min.Y;
             double outer = (int)(Math.PI / 3 * (R * R * H));
             double inner = (int)(Math.PI / 3 * ((R - 1) * (R - 1) * (H - 1)));
             return (long)(outer - inner);
@@ -71,16 +72,17 @@ namespace MCGalaxy.Drawing.Ops {
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
+            int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Invert ? yy : Height - yy;
+                int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * ((double)curHeight / (double)Height);
+                double curRadius = Radius * ((double)curHeight / (double)height);
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius || dist < (curRadius - 1) * (curRadius - 1))
                     continue;
@@ -97,23 +99,24 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Volcano"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Height;
+            long R = Radius, H = Max.Y - Min.Y;
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
+            int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Height - yy;
+                int curHeight = height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * ((double)curHeight / (double)Height);
+                double curRadius = Radius * ((double)curHeight / (double)height);
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
                 
