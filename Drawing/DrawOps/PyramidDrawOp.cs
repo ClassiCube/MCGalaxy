@@ -33,25 +33,27 @@ namespace MCGalaxy.Drawing.Ops {
             return baseOp.DetermineDrawOpMethod(lvl, affected);
         }
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            Vec3U16 origP1 = marks[0], origP2 = marks[1];
-            Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+            Vec3S32 oMin = Min, oMax = Max;
+            baseOp.Min = oMin; baseOp.Max = oMax;
+            Vec3S32 p1 = Min, p2 = Max;
             long total = 0;
+            
             while (true) {
                 total += baseOp.GetBlocksAffected(lvl, marks);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
-                    break;            
+                    break;
                 p1.X++; p2.X--;
                 p1.Z++; p2.Z--;
                 p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
-                marks[0] = p1; marks[1] = p2;
+                baseOp.Min = p1; baseOp.Max = p2;
             }
-            marks[0] = origP1; marks[1] = origP2;
+            baseOp.Min = oMin; baseOp.Max = oMax;
             return total;
         }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+            Vec3S32 p1 = Min, p2 = Max;
             while (true) {
                 baseOp.Perform(marks, p, lvl, brush);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
@@ -59,12 +61,12 @@ namespace MCGalaxy.Drawing.Ops {
                 p1.X++; p2.X--;
                 p1.Z++; p2.Z--;
                 p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
-                marks[0] = p1; marks[1] = p2;
+                baseOp.Min = p1; baseOp.Max = p2;
             }
         }
     }
     
-    public class PyramidSolidDrawOp : PyramidDrawOp {      
+    public class PyramidSolidDrawOp : PyramidDrawOp {
 
         public PyramidSolidDrawOp() : base(new CuboidDrawOp(), 1) {
         }
@@ -91,19 +93,24 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Pyramid reverse"; } }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+        	wallOp.Min = Min; wallOp.Max = Max;
+        	baseOp.Min = Min; baseOp.Max = Max;
+        	
             while (true) {
                 wallOp.Perform(marks, p, lvl, brush);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
                     break;
                 p1.X++; p2.X--;
                 p1.Z++; p2.Z--;
-                marks[0] = p1; marks[1] = p2;
+                wallOp.Min = p1; wallOp.Max = p2;
+                baseOp.Min = p1; baseOp.Max = p2;
                 
                 baseOp.Perform(marks, p, lvl, airBrush);
                 p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
-                marks[0] = p1; marks[1] = p2;
+                wallOp.Min = p1; wallOp.Max = p2;
+                baseOp.Min = p1; baseOp.Max = p2;
             }
         }
     }

@@ -59,12 +59,12 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, Vec3U16[] marks,
+        protected override bool UndoEntry(Player p, string path, Vec3S32[] marks,
                                           ref byte[] temp, DateTime start) {
             Player.UndoPos Pos = default(Player.UndoPos);
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             string[] lines = File.ReadAllText(path).Split(' ');
-            Vec3U16 min = marks[0], max = marks[1];
+            Vec3U16 min = (Vec3U16)marks[0], max = (Vec3U16)marks[1];
             bool undoArea = min.X != ushort.MaxValue;
             BufferedBlockSender buffer = new BufferedBlockSender(null);
             string last = null;

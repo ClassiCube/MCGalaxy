@@ -24,18 +24,17 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Torus"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
-            double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+            double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;
             return (int)(2 * Math.PI * Math.PI * rTube * rTube * rCentre);
         }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
-            double cx = (p1.X + p2.X) / 2.0, cy = (p1.Y + p2.Y) / 2.0, cz = (p1.Z + p2.Z) / 2.0;
-            double rx = (p2.X - p1.X) / 2.0 + 0.25, ry = (p2.Y - p1.Y) / 2.0 + 0.25, rz = (p2.Z - p1.Z) / 2.0 + 0.25;
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {          
+            double cx = (Min.X + Max.X) / 2.0, cy = (Min.Y + Max.Y) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
+            double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             
             for (ushort yy = p1.Y; yy <= p2.Y; yy++)
                 for (ushort zz = p1.Z; zz <= p2.Z; zz++)

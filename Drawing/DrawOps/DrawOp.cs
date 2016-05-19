@@ -41,13 +41,13 @@ namespace MCGalaxy.Drawing.Ops {
         protected internal int method;
         
         /// <summary> Minimum coordinates of the bounds of this drawing command. </summary>
-        public Vec3U16 Min;
+        public Vec3S32 Min;
         
         /// <summary> Maximum coordinates of the bounds of this drawing command. </summary>
-        public Vec3U16 Max;
+        public Vec3S32 Max;
         
         /// <summary> Coordinates of the first point selected by the user. </summary>
-        public Vec3U16 Origin;
+        public Vec3S32 Origin;
         
         /// <summary> Coordinates of the current block being processed by the drawing command. </summary>
         public Vec3U16 Coords;
@@ -55,20 +55,16 @@ namespace MCGalaxy.Drawing.Ops {
         /// <summary> Level the draw operation is being performed upon. </summary>
         public Level Level;
         
-        /// <summary> Whether the two given coordinates from the user should be adjusted,
-        /// so that the first coordinate contains the minimum values on all three axes. </summary>
-        public virtual bool MinMaxCoords { get { return true; } }
-        
         /// <summary> Human friendly name of the draw operation. </summary>
         public abstract string Name { get; }
         
         /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
-        public abstract long GetBlocksAffected(Level lvl, Vec3U16[] marks);
+        public abstract long GetBlocksAffected(Level lvl, Vec3S32[] marks);
         
-        public abstract void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush);
+        public abstract void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush);
         
-        public virtual bool CanDraw(Vec3U16[] marks, Player p, out long affected) {
+        public virtual bool CanDraw(Vec3S32[] marks, Player p, out long affected) {
             affected = GetBlocksAffected(Level, marks);
             if (p != null && affected > p.group.maxBlocks) {
                 Player.Message(p, "You tried to draw " + affected + " blocks.");
@@ -149,5 +145,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal const int M_PBlockQueue = 0, M_PBlockChange = 1, M_PSetTile = 2;
         internal const int M_BlockChange = 3, M_SetTile = 4;
+        
+        protected Vec3U16 Clamp(Vec3S32 pos) {
+            pos.X = Math.Max(0, Math.Min(pos.X, Level.Width - 1));
+            pos.Y = Math.Max(0, Math.Min(pos.Y, Level.Height - 1));
+            pos.Z = Math.Max(0, Math.Min(pos.Z, Level.Length - 1));
+            return new Vec3U16((ushort)pos.X, (ushort)pos.Y, (ushort)pos.Z);
+        }
     }
 }

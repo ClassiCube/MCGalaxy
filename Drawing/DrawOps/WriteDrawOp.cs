@@ -28,9 +28,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Write"; } }
         
-        public override bool MinMaxCoords { get { return false; } }
-        
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             int blocks = 0;
             foreach (char c in Text) {
                 if ((int)c >= 256 || letters[(int)c] == null) {
@@ -45,8 +43,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         int dirX, dirZ;
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
             if (Math.Abs(p2.X - p1.X) > Math.Abs(p2.Z - p1.Z))
                 dirX = p2.X > p1.X? 1 : -1;
             else

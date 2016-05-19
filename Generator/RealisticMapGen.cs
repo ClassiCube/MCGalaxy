@@ -40,7 +40,7 @@ namespace MCGalaxy {
         ushort LiquidLevel;
         MapGenParams genParams;
         TreeDrawOp treeDrawer;
-        Vec3U16[] treeCoords;
+        Vec3S32[] treeCoords;
         
         public bool GenerateMap(Level Lvl, string type, int seed = 0, bool useSeed = false) {
             DateTime startTime = DateTime.UtcNow;
@@ -52,7 +52,7 @@ namespace MCGalaxy {
                 treeDrawer = new TreeDrawOp();
                 treeDrawer.random = rand;
                 treeDrawer.method = DrawOp.M_SetTile;
-                treeCoords = new Vec3U16[1];
+                treeCoords = new Vec3S32[1];
             }
             
             try

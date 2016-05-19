@@ -33,13 +33,13 @@ namespace MCGalaxy.Drawing.Ops {
         byte[] r = new byte[1];
         int width, length;
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            int lenX = (Math.Abs(marks[1].X - marks[0].X) + 1) / 2;
-            int lenZ = (Math.Abs(marks[1].Z - marks[0].Z) + 1) / 2;
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+            int lenX = (Math.Abs(Max.X - Min.X) + 1) / 2;
+            int lenZ = (Math.Abs(Max.Z - Min.Z) + 1) / 2;
             return lenX * lenZ * 3;
         }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             width = Max.X - Min.X;
             if (width % 2 != 0) { width++; Min.X--; }
             width -= 2;
@@ -83,27 +83,28 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             Player.Message(p, "Generated maze, now drawing.");
-            ushort minX = Min.X, minZ = Min.Z, maxX = Max.X, maxZ = Max.Z, y = Min.Y;
+            Vec3U16 min = Clamp(Min), max = Clamp(Max);
+            ushort y = min.Y;
             for (ushort xx = 0; xx <= width; xx++)
                 for (ushort zz = 0; zz <= length; zz++)
                     if (wall[xx, zz])
             {
-                PlaceBlock(p, lvl, (ushort)(xx + minX + 1), y, (ushort)(zz + minZ + 1), Block.staircasefull, 0);
-                PlaceBlock(p, lvl, (ushort)(xx + minX + 1), (ushort)(y + 1), (ushort)(zz + minZ + 1), Block.leaf, 0);
-                PlaceBlock(p, lvl, (ushort)(xx + minX + 1), (ushort)(y + 2), (ushort)(zz + minZ + 1), Block.leaf, 0);
+                PlaceBlock(p, lvl, (ushort)(xx + min.X + 1), y, (ushort)(zz + min.Z + 1), Block.staircasefull, 0);
+                PlaceBlock(p, lvl, (ushort)(xx + min.X + 1), (ushort)(y + 1), (ushort)(zz + min.Z + 1), Block.leaf, 0);
+                PlaceBlock(p, lvl, (ushort)(xx + min.X + 1), (ushort)(y + 2), (ushort)(zz + min.Z + 1), Block.leaf, 0);
             }
             
             brush = new SolidBrush(Block.staircasefull, 0);
-            QuadX(minX, y, minZ, y, maxZ, p, lvl, brush);
-            QuadX(maxX, y, minZ, y, maxZ, p, lvl, brush);
-            QuadZ(minZ, y, minX, y, maxX, p, lvl, brush);
-            QuadZ(maxZ, y, minX, y, maxX, p, lvl, brush);
+            QuadX(min.X, y, min.Z, y, max.Z, p, lvl, brush);
+            QuadX(max.X, y, min.Z, y, max.Z, p, lvl, brush);
+            QuadZ(min.Z, y, min.X, y, max.X, p, lvl, brush);
+            QuadZ(max.Z, y, min.X, y, max.X, p, lvl, brush);
             
             brush = new SolidBrush(Block.leaf, 0);
-            QuadX(minX, (ushort)(y + 1), minZ, (ushort)(y + 2), maxZ, p, lvl, brush);
-            QuadX(maxX, (ushort)(y + 1), minZ, (ushort)(y + 2), maxZ, p, lvl, brush);
-            QuadZ(minZ, (ushort)(y + 1), minX, (ushort)(y + 2), maxX, p, lvl, brush);
-            QuadZ(maxZ, (ushort)(y + 1), minX, (ushort)(y + 2), maxX, p, lvl, brush);
+            QuadX(min.X, (ushort)(y + 1), min.Z, (ushort)(y + 2), max.Z, p, lvl, brush);
+            QuadX(max.X, (ushort)(y + 1), min.Z, (ushort)(y + 2), max.Z, p, lvl, brush);
+            QuadZ(min.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, p, lvl, brush);
+            QuadZ(max.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, p, lvl, brush);
             
             Player.Message(p, "Maze painted. Build your entrance and exit yourself");
             randomizer = 0;

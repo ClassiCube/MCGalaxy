@@ -131,12 +131,12 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override bool UndoEntry(Player p, string path, Vec3U16[] marks,
+        protected override bool UndoEntry(Player p, string path, Vec3S32[] marks,
                                           ref byte[] temp, DateTime start) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             Player.UndoPos Pos = default(Player.UndoPos);
-            Vec3U16 min = marks[0], max = marks[1];
+            Vec3U16 min = (Vec3U16)marks[0], max = (Vec3U16)marks[1];
             bool undoArea = min.X != ushort.MaxValue;
             UndoCacheItem item = default(UndoCacheItem);
             

@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands {
         	RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
-            Vec3U16[] marks = { new Vec3U16(cpos.x, cpos.y, cpos.z),
-            	new Vec3U16(cpos.x2, cpos.y2, cpos.z2), new Vec3U16(x, y, z) };
+            Vec3S32[] marks = { new Vec3S32(cpos.x, cpos.y, cpos.z),
+            	new Vec3S32(cpos.x2, cpos.y2, cpos.z2), new Vec3S32(x, y, z) };
             
             Brush brush = GetBrush(p, cpos, 0, null);
             if (brush == null) return;

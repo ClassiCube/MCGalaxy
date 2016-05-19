@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
                 if (brush == null) return;
             }
             
-            Vec3U16[] marks = { new Vec3U16(x, y, z) };
+            Vec3S32[] marks = { new Vec3S32(x, y, z) };
             if (!DrawOp.DoDrawOp(op, brush, p, marks))
                 return;
             if (p.staticCommands)

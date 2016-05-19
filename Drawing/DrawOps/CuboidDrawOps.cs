@@ -25,8 +25,8 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Hollow"; } }
         public byte Skip;
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
@@ -60,8 +60,8 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Outline"; } }
         public byte Type, NewType;
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
@@ -84,8 +84,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Rainbow"; } }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int dx = Math.Abs(p1.X - p2.X), dy = Math.Abs(p1.Y - p2.Y), dz = Math.Abs(p1.Z - p2.Z);
             byte stepX = 0, stepY = 0, stepZ = 0;
             
@@ -98,13 +98,13 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             int i = 12;
-            for (ushort y = Min.Y; y <= Max.Y; y++) {
+            for (ushort y = p1.Y; y <= p2.Y; y++) {
                 i = (i + stepY) % 13;
                 int startZ = i;
-                for (ushort z = Min.Z; z <= Max.Z; z++) {
+                for (ushort z = p1.Z; z <= p2.Z; z++) {
                     i = (i + stepZ) % 13;
                     int startX = i;
-                    for (ushort x = Min.X; x <= Max.X; x++) {
+                    for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % 13;
                         if (lvl.GetTile(x, y, z) != Block.air)
                             PlaceBlock(p, lvl, x, y, z, (byte)(Block.red + i), 0);
@@ -113,7 +113,6 @@ namespace MCGalaxy.Drawing.Ops {
                 }
                 i = startZ;
             }
-
         }
     }
 }

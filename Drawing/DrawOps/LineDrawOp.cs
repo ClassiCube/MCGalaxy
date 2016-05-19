@@ -28,10 +28,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Line"; } }
         
-        public override bool MinMaxCoords { get { return false; } }
-        
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        	Vec3S32 p1 = marks[0], p2 = marks[1];
             double dx = Math.Abs(p2.X - p1.X) + 0.25, dy = Math.Abs(p2.Y - p1.Y) + 0.25, dz = Math.Abs(p2.Z - p1.Z) + 0.25;
             if (WallsMode) {
                 int baseLen = (int)Math.Ceiling(Math.Sqrt(dx * dx + dz * dz));
@@ -42,8 +40,8 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 p1 = marks[0], p2 = marks[1];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
             List<FillPos> buffer = new List<FillPos>();
             DrawLine(p1.X, p1.Y, p1.Z, MaxLength, p2.X, p2.Y, p2.Z, buffer);
             if (WallsMode) {

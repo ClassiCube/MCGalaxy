@@ -24,7 +24,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Triangle"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             // Applying Heron's Formula
             float a = (marks[0] - marks[2]).Length;
             float b = (marks[1] - marks[2]).Length;
@@ -33,14 +33,15 @@ namespace MCGalaxy.Drawing.Ops {
             return (int)Math.Sqrt(s * (s - a) * (s - b) * (s - c));
         }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3F32 V1 = marks[0], V2 = marks[1], V3 = marks[2];
             Vec3F32 N = Vec3F32.Cross(V2 - V1, V3 - V1);
             N = Vec3F32.Normalise(N);
+            Vec3U16 min = Clamp(Min), max = Clamp(Max);
             
-            for (ushort yy = Min.Y; yy <= Max.Y; yy++)
-                for (ushort zz = Min.Z; zz <= Max.Z; zz++)
-                    for (ushort xx = Min.X; xx <= Max.X; xx++)
+            for (ushort yy = min.Y; yy <= max.Y; yy++)
+                for (ushort zz = min.Z; zz <= max.Z; zz++)
+                    for (ushort xx = min.X; xx <= max.X; xx++)
             {
                 // Project point onto the plane
                 Vec3F32 P = new Vec3F32(xx, yy, zz);

@@ -39,11 +39,11 @@ namespace MCGalaxy.Drawing.Ops {
         public const int T_Tree = 0, T_NotchTree = 1, T_NotchSwamp = 2, T_Cactus = 3;
         static Brush defBrush = new SolidBrush(Block.leaf, 0);
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
         	if (brush == null) brush = defBrush;
-            Vec3U16 P = marks[0];
+        	Vec3U16 P = Clamp(marks[0]);
             if (Type == T_Tree) AddTree(p, lvl, P.X, P.Y, P.Z, brush);
             if (Type == T_NotchTree) AddNotchTree(p, lvl, P.X, P.Y, P.Z, brush);
             if (Type == T_NotchSwamp) AddNotchSwampTree(p, lvl, P.X, P.Y, P.Z, brush);

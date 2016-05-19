@@ -25,7 +25,7 @@ namespace MCGalaxy.Drawing {
     internal struct PendingDrawOp {
         public DrawOp Op;
         public Brush Brush;
-        public Vec3U16[] Marks;
+        public Vec3S32[] Marks;
         public long Affected;
         public Level Level;
     }
@@ -37,20 +37,15 @@ namespace MCGalaxy.Drawing.Ops {
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                     ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            Vec3U16[] marks = new [] { new Vec3U16(x1, y1, z1), new Vec3U16(x2, y2, z2) };
-            if (op.MinMaxCoords) {
-                marks[0].X = Math.Min(x1, x2); marks[1].X = Math.Max(x1, x2);
-                marks[0].Y = Math.Min(y1, y2); marks[1].Y = Math.Max(y1, y2);
-                marks[0].Z = Math.Min(z1, z2); marks[1].Z = Math.Max(z1, z2);
-            }
+            Vec3S32[] marks = new [] { new Vec3S32(x1, y1, z1), new Vec3S32(x2, y2, z2) };
             return DoDrawOp(op, brush, p, marks);
         }
         
-        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, Vec3U16[] marks) {
+        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, Vec3S32[] marks) {
             op.Origin = marks[0]; op.Min = marks[0]; op.Max = marks[0];
             for (int i = 1; i < marks.Length; i++) {
-                op.Min = Vec3U16.Min(op.Min, marks[i]);
-                op.Max = Vec3U16.Max(op.Max, marks[i]);
+                op.Min = Vec3S32.Min(op.Min, marks[i]);
+                op.Max = Vec3S32.Max(op.Max, marks[i]);
             }
             op.Level = p == null ? null : p.level;
             if (op.Level != null && !op.Level.DrawingAllowed) {
@@ -73,7 +68,7 @@ namespace MCGalaxy.Drawing.Ops {
             return true;
         }
         
-        static void AppendDrawOp(Player p, DrawOp op, Brush brush, Vec3U16[] marks, long affected) {
+        static void AppendDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks, long affected) {
 			if (p == null) { op.Perform(marks, p, op.Level, brush); return; }
 			
             PendingDrawOp item = new PendingDrawOp();

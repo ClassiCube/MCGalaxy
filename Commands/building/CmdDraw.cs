@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands {
             int brushOffset = op.UsesHeight ? 3 : 2;
             Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return;
-            if (!DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3U16(x, y, z) }))
+            if (!DrawOp.DoDrawOp(op, brush, p, new [] { new Vec3S32(x, y, z) }))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);

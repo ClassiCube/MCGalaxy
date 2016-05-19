@@ -114,8 +114,12 @@ namespace MCGalaxy {
             return new Vec3U16((ushort)(a.X + b.X), (ushort)(a.Y + b.Y), (ushort)(a.Z + b.Z));
         }
         
-        public static Vec3S16 operator - (Vec3U16 a, Vec3U16 b) {
-            return new Vec3S16((short)(a.X - b.X), (short)(a.Y - b.Y), (short)(a.Z - b.Z));
+        public static Vec3S32 operator - (Vec3U16 a, Vec3U16 b) {
+            return new Vec3S32(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+        
+        public static explicit operator Vec3U16(Vec3S32 a) {
+        	return new Vec3U16((ushort)a.X, (ushort)a.Y, (ushort)a.Z);
         }
         
         public override string ToString() {
@@ -127,19 +131,19 @@ namespace MCGalaxy {
         }
     }
     
-    public struct Vec3S16 {
+    public struct Vec3S32 {
         
-        public short X, Y, Z;
+        public int X, Y, Z;
         
-        public Vec3S16(short x, short y, short z) {
+        public Vec3S32(int x, int y, int z) {
             X = x; Y = y; Z = z;
         }
         
         public override bool Equals(object obj) {
-            return (obj is Vec3S16) && Equals((Vec3S16)obj);
+            return (obj is Vec3S32) && Equals((Vec3S32)obj);
         }
         
-        public bool Equals(Vec3S16 other) {
+        public bool Equals(Vec3S32 other) {
             return X == other.X & Y == other.Y && Z == other.Z;
         }
         
@@ -155,13 +159,33 @@ namespace MCGalaxy {
         
         public float Length { get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); } }
         
-        public float Dot(Vec3S16 b) { return X * b.X + Y * b.Y + Z * b.Z; }
+        public float Dot(Vec3S32 b) { return X * b.X + Y * b.Y + Z * b.Z; }
         
-        public static bool operator == (Vec3S16 a, Vec3S16 b) {
+        public static Vec3S32 Max(Vec3S32 a, Vec3S32 b) {
+            return new Vec3S32(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y), Math.Max(a.Z, b.Z));
+        }
+        
+        public static Vec3S32 Min(Vec3S32 a, Vec3S32 b) {
+            return new Vec3S32(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Min(a.Z, b.Z));
+        }
+        
+        public static implicit operator Vec3S32(Vec3U16 a) {
+            return new Vec3S32(a.X, a.Y, a.Z);
+        }
+        
+        public static Vec3S32 operator + (Vec3S32 a, Vec3S32 b) {
+            return new Vec3S32(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        }
+        
+        public static Vec3S32 operator - (Vec3S32 a, Vec3S32 b) {
+            return new Vec3S32(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        }
+        
+        public static bool operator == (Vec3S32 a, Vec3S32 b) {
             return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
         }
         
-        public static bool operator != (Vec3S16 a, Vec3S16 b) {
+        public static bool operator != (Vec3S32 a, Vec3S32 b) {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
         }
         
@@ -218,10 +242,9 @@ namespace MCGalaxy {
             return new Vec3F32(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
         }
         
-        public static implicit operator Vec3F32(Vec3U16 a) {
+        public static implicit operator Vec3F32(Vec3S32 a) {
             return new Vec3F32(a.X, a.Y, a.Z);
-        }
-        
+        }       
         
         public override bool Equals(object obj) {
             return (obj is Vec3F32) && Equals((Vec3F32)obj);

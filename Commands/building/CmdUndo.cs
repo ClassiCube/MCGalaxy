@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands
                 UndoSelfDrawOp op = new UndoSelfDrawOp();
                 op.who = p;
                 op.Start = entry.Start; op.End = entry.End;
-                DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
+                DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
                 Player.Message(p, "Undo performed.");
                 return;
             }
@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands
             else op = new UndoOnlineDrawOp();
             op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.who = who;
-            DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
+            DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
             Level saveLevel = op.saveLevel;
             if (p == who) {
@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();
             op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
             op.whoName = whoName;
-            DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
+            DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
 
             if (op.foundUser) {
                 Player.GlobalMessage(Server.FindColor(whoName) + whoName + "%S's actions for the past &b" + seconds + " %Sseconds were undone.");
@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands
             Command.all.Find("physics").Use(p, "0");
             UndoPhysicsDrawOp op = new UndoPhysicsDrawOp();
             op.seconds = seconds;
-            DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
+            DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
             Player.GlobalMessage("Physics were undone &b" + seconds + " %Sseconds");
             Server.s.Log( "Physics were undone &b" + seconds + " %Sseconds");

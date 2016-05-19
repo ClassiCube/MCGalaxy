@@ -487,7 +487,7 @@ namespace MCGalaxy.Gui
             // 
             // tabChat
             // 
-            this.tabChat.BackColor = System.Drawing.Color.White;
+            this.tabChat.BackColor = System.Drawing.SystemColors.Control;
             this.tabChat.Controls.Add(this.chat_gbTab);
             this.tabChat.Controls.Add(this.chat_gbMessages);
             this.tabChat.Controls.Add(this.chat_gbOther);
@@ -2221,7 +2221,7 @@ namespace MCGalaxy.Gui
             // 
             // pageMisc
             // 
-            this.pageMisc.BackColor = System.Drawing.Color.White;
+            this.pageMisc.BackColor = System.Drawing.SystemColors.Control;
             this.pageMisc.Controls.Add(this.economyGroupBox);
             this.pageMisc.Controls.Add(this.grpExtra);
             this.pageMisc.Controls.Add(this.grpMessages);
@@ -2527,7 +2527,7 @@ namespace MCGalaxy.Gui
             // 
             // pageIRC
             // 
-            this.pageIRC.BackColor = System.Drawing.Color.White;
+            this.pageIRC.BackColor = System.Drawing.SystemColors.Control;
             this.pageIRC.Controls.Add(this.grpSQL);
             this.pageIRC.Controls.Add(this.grpIRC);
             this.pageIRC.Location = new System.Drawing.Point(4, 22);
@@ -2759,7 +2759,7 @@ namespace MCGalaxy.Gui
             // 
             // pageServer
             // 
-            this.pageServer.BackColor = System.Drawing.Color.White;
+            this.pageServer.BackColor = System.Drawing.SystemColors.Control;
             this.pageServer.Controls.Add(this.grpLevels);
             this.pageServer.Controls.Add(this.grpAdvanced);
             this.pageServer.Controls.Add(this.grpGeneral);

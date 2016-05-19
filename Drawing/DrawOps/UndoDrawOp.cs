@@ -40,9 +40,9 @@ namespace MCGalaxy.Drawing.Ops {
         internal Player who;
         internal Level saveLevel = null;
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             PerformUndo(p, ref saveLevel);
             bool foundUser = false;
             UndoFile.UndoPlayer(p, who.name.ToLower(), marks, Start, ref foundUser);
@@ -53,8 +53,8 @@ namespace MCGalaxy.Drawing.Ops {
             UndoCacheNode node = cache.Tail;
             if (node == null) return;
             
-            Vec3U16 min = Min, max = Max;
-            bool undoArea = min.X != ushort.MaxValue;
+            Vec3U16 min = (Vec3U16)Min, max = (Vec3U16)Max;
+            bool undoArea = Min.X != ushort.MaxValue;
             Player.UndoPos Pos = default(Player.UndoPos);
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             
@@ -104,9 +104,9 @@ namespace MCGalaxy.Drawing.Ops {
         internal string whoName;
         internal bool foundUser = false;
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {            
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {            
             UndoFile.UndoPlayer(p, whoName.ToLower(), marks, Start, ref foundUser);
         }
     }
@@ -117,9 +117,9 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal long seconds;
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) { return -1; }
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             if (lvl.UndoBuffer.Count != Server.physUndo) {
                 int count = lvl.currentUndo;
                 for (int i = count; i >= 0; i--) {

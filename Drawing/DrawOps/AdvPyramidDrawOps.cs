@@ -29,13 +29,13 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Adv Pyramid"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Height;
             return (R * R * H) / 3;
         }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 P = marks[0];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 P = (Vec3U16)marks[0];
             int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
             int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
             int maxY = Math.Min(P.Y + Height, lvl.Height - 1) - P.Y;
@@ -61,15 +61,15 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Adv Hollow Pyramid"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3U16[] marks) {
+        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Height;
             long outer = (R * R * H) / 3;
             long inner = ((R - 1) * (R - 1) * (H - 1)) / 3;
             return outer - inner;
         }
         
-        public override void Perform(Vec3U16[] marks, Player p, Level lvl, Brush brush) {
-            Vec3U16 P = marks[0];
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        	Vec3U16 P = Clamp(marks[0]);
             int minX = Math.Max(P.X - Radius, 0) - P.X, maxX = Math.Min(P.X + Radius, lvl.Width - 1) - P.X;
             int minZ = Math.Max(P.Z - Radius, 0) - P.Z, maxZ = Math.Min(P.Z + Radius, lvl.Length - 1) - P.Z;
             int maxY = Math.Min(P.Y + Height, lvl.Height - 1) - P.Y;

@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
 				
 				RedoSelfDrawOp op = new RedoSelfDrawOp();
 				op.Start = entry.Start; op.End = entry.End;
-				DrawOp.DoDrawOp(op, null, p, new [] { Vec3U16.MaxVal, Vec3U16.MaxVal });
+				DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal });
 				Player.Message(p, "Redo performed.");
 				return;
 			}      	

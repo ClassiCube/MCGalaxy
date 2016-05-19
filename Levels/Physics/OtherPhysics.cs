@@ -123,7 +123,7 @@ namespace MCGalaxy.BlockPhysics {
             TreeDrawOp op = new TreeDrawOp();
             op.random = rand;
             op.method = DrawOp.M_BlockChange;
-            op.Perform(new [] { new Vec3U16(x, y, z) }, null, lvl, null);
+            op.Perform(new [] { new Vec3S32(x, y, z) }, null, lvl, null);
             C.data.Data = 255;
         }
         

@@ -35,7 +35,7 @@ namespace MCGalaxy.Util {
          
         protected abstract void ReadUndoData(List<Player.UndoPos> buffer, string path);
         
-        protected abstract bool UndoEntry(Player p, string path, Vec3U16[] marks,
+        protected abstract bool UndoEntry(Player p, string path, Vec3S32[] marks,
                                           ref byte[] temp, DateTime start);
         
         protected abstract bool HighlightEntry(Player p, string path, 
@@ -62,7 +62,7 @@ namespace MCGalaxy.Util {
             NewFormat.SaveUndoData(p.UndoBuffer, path);
         }
         
-        public static void UndoPlayer(Player p, string target, Vec3U16[] marks, DateTime start, ref bool FoundUser) {
+        public static void UndoPlayer(Player p, string target, Vec3S32[] marks, DateTime start, ref bool FoundUser) {
             FilterEntries(p, undoDir, target, marks, start, false, ref FoundUser);
             FilterEntries(p, prevUndoDir, target, marks, start, false, ref FoundUser);
         }
@@ -72,7 +72,7 @@ namespace MCGalaxy.Util {
             FilterEntries(p, prevUndoDir, target, null, start, true, ref FoundUser);
         }
         
-        static void FilterEntries(Player p, string dir, string name, Vec3U16[] marks,
+        static void FilterEntries(Player p, string dir, string name, Vec3S32[] marks,
                                   DateTime start, bool highlight, ref bool FoundUser) {
             string path = Path.Combine(dir, name);
             if (!Directory.Exists(path))
