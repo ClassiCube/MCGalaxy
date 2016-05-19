@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, ">> &a" + who.Deaths + " &cdeaths%S, &a" + who.Money +
                                    " %S" + Server.moneys +", " + Awards.AwardAmount(who.Name) + " awards");
             else
-                Player.Message(p, ">> &a" + who.Deaths + " &cdeaths%s, " + Awards.AwardAmount(who.Name) + " awards");
+                Player.Message(p, ">> &a" + who.Deaths + " &cdeaths%S, " + Awards.AwardAmount(who.Name) + " awards");
             
             if (who.LoginBlocks >= 0)
                 Player.Message(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &esince login");

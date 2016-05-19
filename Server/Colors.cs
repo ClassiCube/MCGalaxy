@@ -171,8 +171,7 @@ namespace MCGalaxy {
             if (color == 'h' || color == 'H') { color = Server.HelpDescriptionColor[1]; return true; }
             if (color == 't' || color == 'T') { color = Server.HelpSyntaxColor[1]; return true; }
             if (color == 'i' || color == 'I') { color = Server.IRCColour[1]; return true; }
-            if (color == 'g' || color == 'G') { color = Server.GlobalChatColor[1]; return true; }
-            if (color == 'r' || color == 'R') { color = 'f'; return true; }            
+            if (color == 'g' || color == 'G') { color = Server.GlobalChatColor[1]; return true; }        
             return Colors.GetFallback(color) != '\0';
         }        
         

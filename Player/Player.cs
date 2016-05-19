@@ -450,7 +450,7 @@ namespace MCGalaxy {
 
             Last50Chat.Add(chatmessage);
             if (showname)
-                message = from.voicestring + from.color + from.prefix + from.DisplayName + ": %r&f" + message;
+                message = from.voicestring + from.color + from.prefix + from.DisplayName + ": &f" + message;
             
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {

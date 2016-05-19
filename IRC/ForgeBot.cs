@@ -114,7 +114,7 @@ namespace MCGalaxy {
             message = CP437Writer.ConvertToUnicode(message);
             
             if (color)
-                message = Colors.MinecraftToIrcColors(message.Replace("%r", ResetSignal));
+                message = Colors.MinecraftToIrcColors(message.Replace("%S", ResetSignal));
             return message;
         }
         
@@ -170,15 +170,15 @@ namespace MCGalaxy {
             if (!Server.irc || !IsConnected()) return;
             string msg = null;
             if (action == PlayerAction.AFK)
-                msg = p.ColoredName + " %ris AFK " + message;
+                msg = p.ColoredName + " %Sis AFK " + message;
             else if (action == PlayerAction.UnAFK)
-                msg = p.ColoredName + " %ris no longer AFK";
+                msg = p.ColoredName + " %Sis no longer AFK";
             else if (action == PlayerAction.Joker)
-                msg = p.ColoredName + " %ris now a &aJ&bo&ck&5e&9r%S";
+                msg = p.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S";
             else if (action == PlayerAction.Unjoker)
-                msg = p.ColoredName + " %ris no longer a &aJ&bo&ck&5e&9r%S";
+                msg = p.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S";
             else if (action == PlayerAction.JoinWorld)
-                msg = p.ColoredName + " %rwent to &8" + message;
+                msg = p.ColoredName + " %Swent to &8" + message;
             else if (action == PlayerAction.Me)
                 msg = "*" + p.DisplayName + " " + message;
             
@@ -190,7 +190,7 @@ namespace MCGalaxy {
             if (!Server.irc || !IsConnected()) return;
             if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
             
-            string msg = p.DisplayName + " %rleft the game (" + reason + ")";
+            string msg = p.DisplayName + " %Sleft the game (" + reason + ")";
             msg = ConvertMessage(msg, true);
             if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
         }
@@ -199,7 +199,7 @@ namespace MCGalaxy {
             if (!Server.irc || !IsConnected()) return;
             if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest) return;
             
-            string msg = p.DisplayName + " %rjoined the game";
+            string msg = p.DisplayName + " %Sjoined the game";
             msg = ConvertMessage(msg, true);
             if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
         }
@@ -211,11 +211,9 @@ namespace MCGalaxy {
             }
 
             if (Server.ircColorsEnable && Server.irc && IsConnected())
-                Say(p.FullName + "%r: " + message, p.opchat);
+                Say(p.FullName + "%S: " + message, p.opchat);
             if (!Server.ircColorsEnable && Server.irc && IsConnected())
-            {
                 Say(p.DisplayName + ": " + message, p.opchat);
-            }
         }        
         #endregion
         
