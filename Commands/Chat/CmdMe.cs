@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands
                 Chat.GlobalChatLevel(p, "<Level>" + p.color + "*" + Colors.StripColours(p.DisplayName) + " " + message, false);
             } else {
                 Player.SendChatFrom(p, p.color + "*" + Colors.StripColours(p.DisplayName) + " " + message, false);
-                Server.IRC.Say("*" + p.DisplayName + " " + message);
+                Player.RaisePlayerAction(p, PlayerAction.Me, message);
             }
         }
         

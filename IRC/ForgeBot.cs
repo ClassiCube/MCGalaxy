@@ -53,6 +53,7 @@ namespace MCGalaxy {
                 Player.PlayerChat += Player_PlayerChat;
                 Player.PlayerConnect += Player_PlayerConnect;
                 Player.PlayerDisconnect += Player_PlayerDisconnect;
+                Player.DoPlayerAction += Player_PlayerAction;
 
                 // Regster events for incoming
                 connection.Listener.OnNick += Listener_OnNick;
@@ -81,7 +82,9 @@ namespace MCGalaxy {
                     File.Delete("text/ircbancmd.txt");
                 } else {
                     if (!File.Exists("text/irccmdblacklist.txt")) 
-                        File.WriteAllLines("text/irccmdblacklist.txt", new String[] { "#Here you can put commands that cannot be used from the IRC bot.", "#Lines starting with \"#\" are ignored." });
+                        File.WriteAllLines("text/irccmdblacklist.txt", new [] { 
+                    	                   	"#Here you can put commands that cannot be used from the IRC bot.", 
+                    	                   	"#Lines starting with \"#\" are ignored." });
                     foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt"))
                         if (line[0] != '#') banCmd.Add(line);
                 }
@@ -91,7 +94,10 @@ namespace MCGalaxy {
         public void Say(string message, bool opchat = false, bool color = true) {
             if (!Server.irc || !IsConnected()) return;
             message = ConvertMessage(message, color);
-            connection.Sender.PublicMessage(opchat ? opchannel : channel, message);
+            
+            string chan = opchat ? opchannel : channel;
+            if (!String.IsNullOrEmpty(chan))
+                connection.Sender.PublicMessage(chan, message);
         }
         
         public void Pm(string user, string message, bool color = true) {
@@ -158,6 +164,27 @@ namespace MCGalaxy {
         }
         
         #region In-game event handlers
+        
+        void Player_PlayerAction(Player p, PlayerAction action, 
+                                      string message, bool stealth) {
+            if (!Server.irc || !IsConnected()) return;
+            string msg = null;
+            if (action == PlayerAction.AFK)
+                msg = p.ColoredName + " %ris AFK " + message;
+            else if (action == PlayerAction.UnAFK)
+                msg = p.ColoredName + " %ris no longer AFK";
+            else if (action == PlayerAction.Joker)
+                msg = p.ColoredName + " %ris now a &aJ&bo&ck&5e&9r%S";
+            else if (action == PlayerAction.Unjoker)
+                msg = p.ColoredName + " %ris no longer a &aJ&bo&ck&5e&9r%S";
+            else if (action == PlayerAction.JoinWorld)
+                msg = p.ColoredName + " %rwent to &8" + message;
+            else if (action == PlayerAction.Me)
+                msg = "*" + p.DisplayName + " " + message;
+            
+            if (msg != null)
+                Say(msg, stealth);
+        }
         
         void Player_PlayerDisconnect(Player p, string reason) {
             if (!Server.irc || !IsConnected()) return;

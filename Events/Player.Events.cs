@@ -17,9 +17,11 @@
 */
 using System;
 namespace MCGalaxy {
+    public enum PlayerAction { Joker, Unjoker, AFK, UnAFK, JoinWorld, Me };
+    
     /// <summary> This is the player object </summary>
     public sealed partial class Player {
-    	
+        
         internal bool cancelcommand = false;
         internal bool cancelchat = false;
         internal bool cancelmove = false;
@@ -133,5 +135,16 @@ namespace MCGalaxy {
         public static event OnPlayerRotate PlayerRotate = null;
         /// <summary> Called when the player rotates. </summary>
         public event OnPlayerRotate OnRotate = null;
+        
+        /// <summary> Called when the player performs an action. </summary>
+        public delegate void OnPlayerAction(Player p, PlayerAction action, 
+                                            string message, bool stealth);
+        /// <summary> Called when a player performs an action. </summary>
+        public static event OnPlayerAction DoPlayerAction = null;      
+        public static void RaisePlayerAction(Player p, PlayerAction action,
+                                             string message = null, bool stealth = false) {
+            OnPlayerAction change = DoPlayerAction;
+            if (change != null) change(p, action, message, stealth);
+        }
     }
 }

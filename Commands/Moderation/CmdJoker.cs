@@ -47,14 +47,14 @@ namespace MCGalaxy.Commands {
                 } else {
                      Player.SendChatFrom(who, who.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S.", false);              
                 }
-                Server.IRC.Say(who.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S.", stealth);
+                Player.RaisePlayerAction(p, PlayerAction.Joker, null, stealth);
             } else {
                 if (stealth) { 
                     Chat.GlobalMessageOps(who.ColoredName + " %Sis now STEALTH unjokered.");
                 } else {
                     Player.SendChatFrom(who, who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", false);
                 }
-                Server.IRC.Say(who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", stealth);
+            	Player.RaisePlayerAction(p, PlayerAction.Unjoker, null, stealth);
             }
             who.joker = !who.joker;
         }

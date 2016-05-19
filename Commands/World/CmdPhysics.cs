@@ -53,15 +53,13 @@ namespace MCGalaxy.Commands
             }
             
             level.setPhysics(state);
-            if (state == 0)
-                level.ClearPhysics();
+            if (state == 0) level.ClearPhysics();
             string stateDesc = states[state];
-            Player.GlobalMessage("Physics are now " + stateDesc + "%S on &b" + level.name + "%S.");
-            stateDesc = stateDesc.Substring( 2 );
+            level.ChatLevel("Physics are now " + stateDesc + "%S on &b" + level.name + "%S.");
             
+            stateDesc = stateDesc.Substring( 2 );       
             string logInfo = "Physics are now " + stateDesc + " on " + level.name + ".";
             Server.s.Log(logInfo);
-            Server.IRC.Say(logInfo);
             level.changed = true;
         }
         

@@ -51,12 +51,12 @@ namespace MCGalaxy.Commands
                 p.afkMessage = message;
                 p.IsAfk = true;
                 Player.GlobalMessage("-" + p.ColoredName + "%S- is AFK " + message);
-                Server.IRC.Say(p.DisplayName + " is AFK " + message);
+                Player.RaisePlayerAction(p, PlayerAction.AFK, message);
             } else {
                 p.IsAfk = false;
                 p.afkMessage = null;
                 Player.GlobalMessage("-" + p.ColoredName + "%S- is no longer AFK");
-                Server.IRC.Say(p.DisplayName + " is no longer AFK");
+                Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
             }
             TabList.Update(p, true);
         }
