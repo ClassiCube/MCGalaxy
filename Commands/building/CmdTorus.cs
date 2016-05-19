@@ -26,33 +26,40 @@ namespace MCGalaxy.Commands {
         
         public override string name { get { return "torus"; } }
         public override string shortcut { get { return "tor"; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("donut"), new CommandAlias("bagel") }; }
         }
+        protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
+        
         protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
+            
             DrawOp drawOp = new TorusDrawOp();
             Brush brush = GetBrush(p, cpos, 0);
             if (brush == null) return;
+            
+            int dx = cpos.x - x, dy = cpos.y - y, dz = cpos.z - z;
+            int horR = (int)Math.Sqrt(dx * dx + dz * dz), verR = Math.Abs(dy);
+            Vec3S32[] marks = { new Vec3S32(cpos.x - horR, cpos.y - verR, cpos.z - horR),
+                new Vec3S32(cpos.x + horR, cpos.y + verR, cpos.z + horR) };
                       
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
+            if (!DrawOp.DoDrawOp(drawOp, brush, p, marks))
                 return;
             if (p.staticCommands)
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
         
-        protected override DrawMode ParseMode(string msg) {
-            return DrawMode.normal;
-        }
+        protected override DrawMode ParseMode(string msg) { return DrawMode.normal; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/torus [brush args]");
-            Player.Message(p, "%HDraws a torus(circular tube) between two points.");
+            Player.Message(p, "%HDraws a torus(circular tube), with the first point as the centre, " +
+                           "and second being the radius.");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.Message(p, "   %HNote: radius of tube itself is calculated based on " +
-                               "vertical difference between the two corners.");
+            Player.Message(p, "   %HNote: radius of the tube itself is the vertical difference between the two points.");
         }
     }
 }

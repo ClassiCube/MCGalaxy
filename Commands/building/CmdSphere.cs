@@ -42,11 +42,6 @@ namespace MCGalaxy.Commands {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
-
-            int dx = cpos.x - x, dy = cpos.y - y, dz = cpos.z - z;
-            int radius = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
-            Vec3S32[] marks = { new Vec3S32(cpos.x - radius, cpos.y - radius, cpos.z - radius),
-                new Vec3S32(cpos.x + radius, cpos.y + radius, cpos.z + radius) };
             
             DrawOp op = null;
             Func<BrushArgs, Brush> constructor = null;
@@ -62,6 +57,11 @@ namespace MCGalaxy.Commands {
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset, constructor);
             if (brush == null) return;
+
+            int dx = cpos.x - x, dy = cpos.y - y, dz = cpos.z - z;
+            int R = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
+            Vec3S32[] marks = { new Vec3S32(cpos.x - R, cpos.y - R, cpos.z - R),
+                new Vec3S32(cpos.x + R, cpos.y + R, cpos.z + R) };
             
             if (!DrawOp.DoDrawOp(op, brush, p, marks))
                 return;
@@ -71,7 +71,8 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/sphere [brush args] <mode>");
-            Player.Message(p, "%HCreates a sphere, using the first point as the centre, and the second point as the radius.");
+            Player.Message(p, "%HCreates a sphere, with the first point as the centre, " +
+                           "and second being the radius.");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
             Player.Message(p, "   %HModes: &fsolid/hollow");
         }
