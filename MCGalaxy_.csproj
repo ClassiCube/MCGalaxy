@@ -621,10 +621,7 @@
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
-    <Compile Include="queue\Cache.cs" />
-    <Compile Include="queue\ICacheable.cs" />
     <Compile Include="queue\MainLoop.cs" />
-    <Compile Include="queue\TorrentException.cs" />
     <Compile Include="util\Extensions.cs" />
     <Compile Include="util\Hasher.cs" />
     <Compile Include="util\ICryptoService.cs" />

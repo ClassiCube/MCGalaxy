@@ -422,9 +422,8 @@ namespace MCGalaxy
 
         public static MainLoop ml;
         public static Server s;
-        public Server()
-        {
-            ml = new MainLoop("server");
+        public Server() {
+            ml = new MainLoop("MCG_Scheduler");
             Server.s = this;
         }
         //True = cancel event
