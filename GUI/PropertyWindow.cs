@@ -428,8 +428,10 @@ namespace MCGalaxy.Gui {
                     break;
                 case "tablist-rank-sorted":
                     chat_cbTabRank.Checked = value.ToLower() == "true"; break;
-                 case "tablist-global":
+                case "tablist-global":
                     chat_cbTabLevel.Checked = value.ToLower() != "true"; break;
+                case "tablist-bots":
+                    chat_cbTabBots.Checked = value.ToLower() == "true"; break;
                 case "autoload":
                     chkAutoload.Checked = value.ToLower() == "true"; break;
                 case "parse-emotes":
@@ -682,6 +684,7 @@ namespace MCGalaxy.Gui {
             Server.HelpDescriptionColor = Colors.Parse(chat_cmbDesc.SelectedItem.ToString());
             Server.TablistRankSorted = chat_cbTabRank.Checked;
             Server.TablistGlobal = !chat_cbTabLevel.Checked;
+            Server.TablistBots = chat_cbTabBots.Checked;
            
             Server.higherranktp = chkTpToHigherRanks.Checked;
             Server.checkUpdates = chkUpdates.Checked;

@@ -395,6 +395,7 @@ namespace MCGalaxy.Gui
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.chat_gbTab = new System.Windows.Forms.GroupBox();
+            this.chat_cbTabBots = new System.Windows.Forms.CheckBox();
             this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
             this.chat_cbTabRank = new System.Windows.Forms.CheckBox();
             this.tabChat.SuspendLayout();
@@ -610,7 +611,7 @@ namespace MCGalaxy.Gui
             this.chat_gbOther.Controls.Add(this.chat_txtConsole);
             this.chat_gbOther.Location = new System.Drawing.Point(235, 6);
             this.chat_gbOther.Name = "chat_gbOther";
-            this.chat_gbOther.Size = new System.Drawing.Size(256, 87);
+            this.chat_gbOther.Size = new System.Drawing.Size(256, 77);
             this.chat_gbOther.TabIndex = 1;
             this.chat_gbOther.TabStop = false;
             this.chat_gbOther.Text = "Other";
@@ -4350,9 +4351,10 @@ namespace MCGalaxy.Gui
             // 
             this.chat_gbTab.Controls.Add(this.chat_cbTabRank);
             this.chat_gbTab.Controls.Add(this.chat_cbTabLevel);
-            this.chat_gbTab.Location = new System.Drawing.Point(235, 104);
+            this.chat_gbTab.Controls.Add(this.chat_cbTabBots);
+            this.chat_gbTab.Location = new System.Drawing.Point(235, 89);
             this.chat_gbTab.Name = "chat_gbTab";
-            this.chat_gbTab.Size = new System.Drawing.Size(256, 77);
+            this.chat_gbTab.Size = new System.Drawing.Size(256, 92);
             this.chat_gbTab.TabIndex = 3;
             this.chat_gbTab.TabStop = false;
             this.chat_gbTab.Text = "Tab list";
@@ -4360,24 +4362,32 @@ namespace MCGalaxy.Gui
             // chat_cbTabLevel
             // 
             this.chat_cbTabLevel.AutoSize = true;
-            this.chat_cbTabLevel.Location = new System.Drawing.Point(6, 52);
+            this.chat_cbTabLevel.Location = new System.Drawing.Point(6, 44);
             this.chat_cbTabLevel.Name = "chat_cbTabLevel";
             this.chat_cbTabLevel.Size = new System.Drawing.Size(108, 17);
             this.chat_cbTabLevel.TabIndex = 30;
             this.chat_cbTabLevel.Text = "Level only tab list";
-            this.toolTip.SetToolTip(this.chat_cbTabLevel, "Is immortality cheap and unfair?");
             this.chat_cbTabLevel.UseVisualStyleBackColor = true;
             // 
             // chat_gbTabRank
             // 
             this.chat_cbTabRank.AutoSize = true;
-            this.chat_cbTabRank.Location = new System.Drawing.Point(6, 20);
+            this.chat_cbTabRank.Location = new System.Drawing.Point(6, 19);
             this.chat_cbTabRank.Name = "chat_cbTabRank";
             this.chat_cbTabRank.Size = new System.Drawing.Size(116, 17);
             this.chat_cbTabRank.TabIndex = 31;
             this.chat_cbTabRank.Text = "Sort tab list by rank";
-            this.toolTip.SetToolTip(this.chat_cbTabRank, "Is immortality cheap and unfair?");
             this.chat_cbTabRank.UseVisualStyleBackColor = true;
+            // 
+            // chat_cbTabBots
+            // 
+            this.chat_cbTabBots.AutoSize = true;
+            this.chat_cbTabBots.Location = new System.Drawing.Point(6, 69);
+            this.chat_cbTabBots.Name = "chat_cbTabBots";
+            this.chat_cbTabBots.Size = new System.Drawing.Size(108, 17);
+            this.chat_cbTabBots.TabIndex = 32;
+            this.chat_cbTabBots.Text = "Show bots in tab list";
+            this.chat_cbTabBots.UseVisualStyleBackColor = true;
             // 
             // PropertyWindow
             // 
@@ -4523,6 +4533,7 @@ namespace MCGalaxy.Gui
             this.chat_gbTab.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox chat_cbTabBots;
         private System.Windows.Forms.CheckBox chat_cbTabLevel;
         private System.Windows.Forms.CheckBox chat_cbTabRank;
         private System.Windows.Forms.GroupBox chat_gbTab;

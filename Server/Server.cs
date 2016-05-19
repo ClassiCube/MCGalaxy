@@ -163,10 +163,12 @@ namespace MCGalaxy
         
         [ConfigPerm("os-perbuild-default", "other", null, LevelPermission.Nobody)]
         public static LevelPermission osPerbuildDefault = LevelPermission.Nobody;
-        [ConfigBool("tablist-rank-sorted", "Other", null, true)]
+        [ConfigBool("tablist-rank-sorted", "Tablist", null, true)]
         public static bool TablistRankSorted = true;
-        [ConfigBool("tablist-global", "Other", null, false)]
+        [ConfigBool("tablist-global", "Tablist", null, false)]
         public static bool TablistGlobal = false;
+        [ConfigBool("tablist-bots", "Tablist", null, false)]
+        public static bool TablistBots = false;
         
         //Global VoteKick In Progress Flag
         public static bool voteKickInProgress = false;
