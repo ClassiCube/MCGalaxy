@@ -73,10 +73,7 @@ namespace MCGalaxy.Util {
             if ( hashes.Equals(Encoding.UTF8.GetString(Compute(salt, plainText))) ) {
                 return true;
             }
-
-
             return false;
-
         }
     }
 }

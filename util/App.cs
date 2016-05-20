@@ -1,19 +1,19 @@
 ﻿/*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 using System.Diagnostics;
@@ -51,7 +51,7 @@ namespace MCGalaxy.Gui
                 if (wait) { if (!Server.checkUpdates) return; Thread.Sleep(10000); }
                 try
                 {
-                	string raw = Client.DownloadString(CurrentVersionFile);
+                    string raw = Client.DownloadString(CurrentVersionFile);
                     Version availableUpdateVersion = new Version(raw);
                     if (availableUpdateVersion > Server.Version)
                     {
@@ -134,88 +134,14 @@ namespace MCGalaxy.Gui
             updateThread.Start();
         }
 
-        public static void PerformUpdate()
-        {
-            try
-            {
-                //StreamWriter SW;
-                //if (!Server.mono)
-                //{
-                //    if (!File.Exists("Update.bat"))
-                //        SW = new StreamWriter(File.Create("Update.bat"));
-                //    else
-                //    {
-                //        if (File.ReadAllLines("Update.bat")[0] != "::Version 3")
-                //        {
-                //            SW = new StreamWriter(File.Create("Update.bat"));
-                //        }
-                //        else
-                //        {
-                //            SW = new StreamWriter(File.Create("Update_generated.bat"));
-                //        }
-                //    }
-                //    SW.WriteLine("::Version 3");
-                //    SW.WriteLine("TASKKILL /pid %2 /F");
-                //    SW.WriteLine("if exist MCGalaxy_.dll.backup (erase MCGalaxy_.dll.backup)");
-                //    SW.WriteLine("if exist MCGalaxy_.dll (rename MCGalaxy_.dll MCGalaxy_.dll.backup)");
-                //    SW.WriteLine("if exist MCGalaxy.new (rename MCGalaxy.new MCGalaxy_.dll)");
-                //    SW.WriteLine("start MCGalaxy.exe");
-                //}
-                //else
-                //{
-                //    if (!File.Exists("Update.sh"))
-                //        SW = new StreamWriter(File.Create("Update.sh"));
-                //    else
-                //    {
-                //        if (File.ReadAllLines("Update.sh")[0] != "#Version 2")
-                //        {
-                //            SW = new StreamWriter(File.Create("Update.sh"));
-                //        }
-                //        else
-                //        {
-                //            SW = new StreamWriter(File.Create("Update_generated.sh"));
-                //        }
-                //    }
-                //    SW.WriteLine("#Version 2");
-                //    SW.WriteLine("#!/bin/bash");
-                //    SW.WriteLine("kill $2");
-                //    SW.WriteLine("rm MCGalaxy_.dll.backup");
-                //    SW.WriteLine("mv MCGalaxy_.dll MCGalaxy.dll_.backup");
-                //    SW.WriteLine("wget " + DLLLocation);
-                //    SW.WriteLine("mono MCGalaxy.exe");
-                //}
-
-                //SW.Flush(); SW.Close(); SW.Dispose();
-
-                //Process proc = Process.GetCurrentProcess();
-                //string assemblyname = proc.ProcessName + ".exe";
-
-                //WebClient client = new WebClient();
-                //Server.selectedrevision = client.DownloadString(Program.CurrentVersionFile);
-                //client.Dispose();
-
-                //string verscheck = Server.selectedrevision.TrimStart('r');
-                //int vers = int.Parse(verscheck.Split('.')[0]);
-                try
-                {
-                    if (File.Exists("MCLawl.new"))
-                        File.Delete("MCLawl.new");
-                    if (File.Exists("Changelog.txt"))
-                        File.Delete("Changelog.txt");
-                    if (File.Exists("MCGalaxy_.update"))
-                        File.Delete("MCGalaxy_.update");
-                    if (File.Exists("MCGalaxy.update"))
-                        File.Delete("MCGalaxy.update");
-                    if (File.Exists("Update.bat"))
-                        File.Delete("Update.bat");
-                    if (File.Exists("Update_generated.bat"))
-                        File.Delete("Update_generated.bat");
-                    if (File.Exists("Update.sh"))
-                        File.Delete("Update.sh");
-                    if (File.Exists("Update_generated.sh"))
-                        File.Delete("Update_generated.sh");
+        public static void PerformUpdate() {
+            try {
+                try {
+                    DeleteFiles("MCLawl.new", "Changelog.txt", "MCGalaxy_.update", "MCGalaxy.update",
+                                "Update.bat", "Update.sh", "Update_generated.bat", "Update_generated.sh");
+                } catch {
                 }
-                catch { }
+                
                 WebClient Client = new WebClient();
                 Client.DownloadFile(DLLLocation, "MCGalaxy_.update");
                 Client.DownloadFile(EXELocation, "MCGalaxy.update");
@@ -231,26 +157,29 @@ namespace MCGalaxy.Gui
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.save();
                 
-                if (!usingConsole)
+                if (!usingConsole) {
                     Process.Start("Updater.exe", "securitycheck10934579068013978427893755755270374" + parent);
-                else
-                {
+                } else {
                     Process.Start("mono", parentfullpathdir + "/Updater.exe securitycheck10934579068013978427893755755270374" + parent);
                 }
                 ExitProgram(false);
+            } catch (Exception e) { 
+                Server.ErrorLog(e); 
             }
-            catch (Exception e) { Server.ErrorLog(e); }
+        }
+        
+        static void DeleteFiles(params string[] files) {
+            foreach (string f in files) {
+                if (File.Exists(f)) File.Delete(f);
+            }
         }
 
-        public static void ExitProgram(bool AutoRestart)
-        {
+        public static void ExitProgram(bool AutoRestart) {
             Server.restarting = AutoRestart;
             Server.shuttingDown = true;
-
             Server.Exit(AutoRestart);
 
-            new Thread(new ThreadStart(delegate
-            {
+            new Thread(new ThreadStart(delegate {
                 /*try
                 {
                     if (MCGalaxy.Gui.Window.thisWindow.notifyIcon1 != null)
@@ -262,28 +191,21 @@ namespace MCGalaxy.Gui
                 }
                 catch { }
                 */
-                if (AutoRestart)
-                {
+                if (AutoRestart) {
                     saveAll(true);
 
                     if (Server.listen != null) Server.listen.Close();
-                    if (!usingConsole)
-                    {
+                    if (!usingConsole) {
                         Process.Start(parent);
                         Environment.Exit(0);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Process.Start(Application.ExecutablePath);
+                    } else {
+                        Process.Start(Application.ExecutablePath);
                         Application.Exit();
                     }
-                }
-                else
-                {
+                } else {
                     saveAll(false);
                     Application.Exit();
-                    if (usingConsole)
-                    {
+                    if (usingConsole) {
                         Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
                     }
                     Environment.Exit(0);
@@ -291,25 +213,22 @@ namespace MCGalaxy.Gui
             })).Start();
         }
 
-        public static void saveAll(bool restarting)
-        {
-            try
-            {
-            	Player[] players = PlayerInfo.Online.Items; 
-                foreach (Player p in players)
-                {
+        public static void saveAll(bool restarting) {
+            try {
+                Player[] players = PlayerInfo.Online.Items; 
+                foreach (Player p in players) {
                     string msg = restarting ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
                     p.LeaveServer(msg, msg);
                 }
+            } catch (Exception ex) { 
+                Server.ErrorLog(ex); 
             }
-            catch (Exception ex) { Server.ErrorLog(ex); }
 
-            try
-            {
+            try {
                 string level = null;
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                	if (!lvl.ShouldSaveChanges()) continue;
+                    if (!lvl.ShouldSaveChanges()) continue;
                     level = level + lvl.name + "=" + lvl.physics + Environment.NewLine;
                     lvl.Save(false, true);
                     lvl.saveChanges();
@@ -318,8 +237,9 @@ namespace MCGalaxy.Gui
                 if (Server.ServerSetupFinished && !Server.AutoLoad) {
                     File.WriteAllText("text/autoload.txt", level);
                 }
+            } catch (Exception ex) {
+                Server.ErrorLog(ex); 
             }
-            catch (Exception exc) { Server.ErrorLog(exc); }
         }
     }
 }

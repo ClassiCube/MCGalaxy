@@ -625,7 +625,6 @@
     <Compile Include="queue\MainLoop.cs" />
     <Compile Include="util\Extensions.cs" />
     <Compile Include="util\Hasher.cs" />
-    <Compile Include="util\ICryptoService.cs" />
     <Compile Include="util\MathHelper.cs" />
     <Compile Include="util\MCForgeScripter.cs" />
     <Compile Include="Player\Player.CPE.cs" />
