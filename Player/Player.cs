@@ -72,9 +72,8 @@ namespace MCGalaxy {
         internal bool dontmindme = false;
         public Socket socket;
         System.Timers.Timer loginTimer = new System.Timers.Timer(1000);
-        System.Timers.Timer pingTimer = new System.Timers.Timer(2000);
         System.Timers.Timer extraTimer = new System.Timers.Timer(22000);
-        public System.Timers.Timer afkTimer = new System.Timers.Timer(2000);
+        public System.Timers.Timer checkTimer = new System.Timers.Timer(2000);
         public int afkCount = 0;
         public DateTime afkStart;
         public bool IsAfk = false;
@@ -562,10 +561,8 @@ namespace MCGalaxy {
                 }
                 // FlyBuffer.Clear();
                 SaveIgnores();
-                pingTimer.Stop();
-                pingTimer.Dispose();
-                afkTimer.Stop();
-                afkTimer.Dispose();
+                checkTimer.Stop();
+                checkTimer.Dispose();
                 muteTimer.Stop();
                 muteTimer.Dispose();
                 afkCount = 0;

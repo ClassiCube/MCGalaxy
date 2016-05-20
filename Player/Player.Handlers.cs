@@ -1074,7 +1074,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     if ( this.consecutivemessages >= Server.spamcounter ) {
                         int total = Server.mutespamtime;
                         Command.all.Find("mute").Use(null, name);
-                        Player.GlobalMessage(color + this.DisplayName + " %Shas been &0muted &efor spamming!");
+                        Player.GlobalMessage(color + DisplayName + " %Shas been &0muted &efor spamming!");
                         muteTimer.Elapsed += delegate {
                             total--;
                             if ( total <= 0 ) {
