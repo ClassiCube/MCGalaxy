@@ -52,9 +52,9 @@ namespace MCGalaxy {
 
         public static void Addblock(Player p, int index, byte type, byte extType = 0) {
         	if (index == -1) return;
-            block item;
-            item.p = p; item.index = index;
-            item.type = type; item.extType = extType;
+            QueuedBlock item;
+            item.SessionID = p.SessionID; item.Index = index;
+            item.Type = type; item.ExtType = extType;
             lock (p.level.queueLock)
                 p.level.blockqueue.Add(item);
         }
@@ -68,8 +68,8 @@ namespace MCGalaxy {
                     count = lvl.blockqueue.Count;
 
                 for (int c = 0; c < count; c++) {
-                    block item = lvl.blockqueue[c];
-                    bulkSender.Add(item.index, item.type, item.extType);
+                    QueuedBlock item = lvl.blockqueue[c];
+                    bulkSender.Add(item.Index, item.Type, item.ExtType);
                     bulkSender.CheckIfSend(false);
                 }
                 bulkSender.CheckIfSend(true);
@@ -81,6 +81,6 @@ namespace MCGalaxy {
             }
         }
 
-        public struct block { public Player p; public int index; public byte type, extType; }
+        public struct QueuedBlock { public int SessionID, Index; public byte Type, ExtType; }
     }
 }

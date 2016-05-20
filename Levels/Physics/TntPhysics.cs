@@ -113,7 +113,7 @@ namespace MCGalaxy.BlockPhysics {
             int id = args.Value1 | args.Value2 << 8 | args.Data << 16;
             Player[] players = PlayerInfo.Online.Items;
             for (int i = 0; i < players.Length; i++) {
-                if (players[i].tntWarsUuid == id) return players[i];
+                if (players[i].SessionID == id) return players[i];
             }
             return null;
         }

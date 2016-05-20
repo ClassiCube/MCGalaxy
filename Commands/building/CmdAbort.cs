@@ -26,8 +26,7 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdAbort() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
         	if (p == null) { MessageInGameOnly(p); return; }
             p.ClearBlockchange();
             p.painting = false;
@@ -43,11 +42,11 @@ namespace MCGalaxy.Commands
             p.DefaultBrushArgs = "";
             
             lock (p.level.queueLock)
-                p.level.blockqueue.RemoveAll(b => b.p == p);
+                p.level.blockqueue.RemoveAll(b => b.SessionID == p.SessionID);
             Player.Message(p, "Every toggle or action was aborted.");
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.Message(p, "/abort - Cancels an action.");
         }
     }

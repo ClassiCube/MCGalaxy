@@ -189,7 +189,7 @@ namespace MCGalaxy {
         public bool voted = false;
         public bool flipHead = false;
         public GameProps Game = new GameProps();
-        public int tntWarsUuid;
+        public int SessionID;
 
         //Countdown
         public bool playerofcountdown = false;
@@ -334,13 +334,13 @@ namespace MCGalaxy {
             return !(Block.Walkthrough(Block.Convert(head)) || head == Block.Zero)
                 && !(Block.Walkthrough(Block.Convert(feet)) || feet == Block.Zero);
         }
-        static int tntwarsCounter;
+        static int sessionCounter;
 
         //This is so that plugin devs can declare a player without needing a socket..
         //They would still have to do p.Dispose()..
         public Player(string playername) { 
             name = playername;
-            tntWarsUuid = Interlocked.Increment(ref tntwarsCounter);
+            SessionID = Interlocked.Increment(ref sessionCounter);
             if (playername == "IRC") { group = Group.Find("nobody"); color = Colors.lime; } 
         }
 
@@ -348,7 +348,7 @@ namespace MCGalaxy {
             try {
                 socket = s;
                 ip = socket.RemoteEndPoint.ToString().Split(':')[0];
-                tntWarsUuid = Interlocked.Increment(ref tntwarsCounter);
+                SessionID = Interlocked.Increment(ref sessionCounter);
 
                 /*if (IPInPrivateRange(ip))
                     exIP = ResolveExternalIP(ip);
