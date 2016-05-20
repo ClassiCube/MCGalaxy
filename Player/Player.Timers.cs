@@ -23,9 +23,6 @@ namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
 
         void InitTimers() {
-            timespent.Elapsed += TimeSpentElapsed;
-            timespent.Start();
-            
             loginTimer.Elapsed += LoginTimerElapsed;
             loginTimer.Start();
             extraTimer.Elapsed += ExtraTimerElapsed;
@@ -36,11 +33,6 @@ namespace MCGalaxy {
             afkTimer.Elapsed += AfkTimerElapsed;
             if (Server.afkminutes > 0)
                 afkTimer.Start();
-        }
-
-        static readonly TimeSpan delta = TimeSpan.FromSeconds(1);
-        void TimeSpentElapsed(object sender, ElapsedEventArgs e) {
-            time = time.Add(delta);
         }
         
         void LoginTimerElapsed(object sender, ElapsedEventArgs e) {

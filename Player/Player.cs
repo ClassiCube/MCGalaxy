@@ -71,7 +71,6 @@ namespace MCGalaxy {
         internal string truename, skinName;
         internal bool dontmindme = false;
         public Socket socket;
-        System.Timers.Timer timespent = new System.Timers.Timer(1000);
         System.Timers.Timer loginTimer = new System.Timers.Timer(1000);
         System.Timers.Timer pingTimer = new System.Timers.Timer(2000);
         System.Timers.Timer extraTimer = new System.Timers.Timer(22000);
@@ -87,7 +86,13 @@ namespace MCGalaxy {
         byte[] buffer = new byte[0];
         byte[] tempbuffer = new byte[0xFF];
         public bool disconnected = false;
-        public TimeSpan time;
+        
+        DateTime startTime;
+        public TimeSpan time {
+        	get { return DateTime.UtcNow - startTime; }
+            set { startTime = DateTime.UtcNow.Add(-value); }
+        }
+
         public string name;
         public string DisplayName;
         public string realName;
@@ -563,8 +568,6 @@ namespace MCGalaxy {
                 afkTimer.Dispose();
                 muteTimer.Stop();
                 muteTimer.Dispose();
-                timespent.Stop();
-                timespent.Dispose();
                 afkCount = 0;
                 afkStart = DateTime.Now;
                 IsAfk = false;
