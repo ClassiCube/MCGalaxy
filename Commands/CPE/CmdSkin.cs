@@ -74,6 +74,8 @@ namespace MCGalaxy.Commands {
                 Entities.GlobalSpawn(who, true);
                 if (p != who)
                     Player.GlobalMessage(who.ColoredName + "'s %Sskin was changed to &c" + skin);
+                else
+                    Player.Message(who, "Changed your own skin to &c" + skin);	
                 
                 Server.Skins.DeleteStartsWith(who.name + " ");
                 if (skin != who.truename)

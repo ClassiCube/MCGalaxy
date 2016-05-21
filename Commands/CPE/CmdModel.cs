@@ -70,6 +70,8 @@ namespace MCGalaxy.Commands {
                 Entities.UpdateModel(who.id, model, who.level, who);
                 if (p != who)
                     Player.GlobalMessage(who.ColoredName + "'s %Smodel was changed to a &c" + model);
+                else
+                    Player.Message(who, "Changed your own model to a &c" + model);
                 
                 Server.Models.DeleteStartsWith(who.name + " ");
                 if (model != "humanoid")
