@@ -50,6 +50,7 @@ namespace MCGalaxy {
                 genParams = new MapGenParams();
             if (genParams.GenTrees) {
                 treeDrawer = new TreeDrawOp();
+                treeDrawer.Level = Lvl;
                 treeDrawer.random = rand;
                 treeDrawer.method = DrawOp.M_SetTile;
                 treeCoords = new Vec3S32[1];
