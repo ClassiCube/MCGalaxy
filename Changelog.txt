@@ -1,3 +1,10 @@
+v 1.8.7.1
+- Added: /cmdset now allows you to allow/disallow specific ranks.
+- Added: /help <cmd> now uses more concise format, also lists specifically allowed/disallowed ranks.
+- Fixed: /newlvl mountains not working, /whois not showing days component.
+- Improved: Now IRC replaces %S with reset signal (instead of separate %r), so looks better on most clients.
+- Improved: Less timer usage, timers properly cleaned up.
+
 v 1.8.7.0
 - Added: /infoswap.
 - Added: Tab list separately handled from in-game entities, allowing for a server-wise tab list.
