@@ -576,7 +576,6 @@
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Player\PlayerCollection.cs" />
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Server\Extra\Heart.cs" />

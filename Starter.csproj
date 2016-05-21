@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GUI\LevelSettings.cs" />
+    <Compile Include="GUI\PlayerCollection.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="GUI\Window.cs">
       <SubType>Form</SubType>

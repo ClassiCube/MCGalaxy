@@ -45,6 +45,7 @@ namespace MCGalaxy {
                     CP437Writer.WriteAllText("text/welcome.txt", "Welcome to my server!");
                     SendMessage("Welcome to my server!");
                 }
+                loginTimer.Elapsed -= LoginTimerElapsed;
                 loginTimer.Dispose();
                 extraTimer.Start();
             }
@@ -83,11 +84,12 @@ namespace MCGalaxy {
             
             if (Server.lava.active)
                 SendMessage("There is a &aLava Survival %Sgame active! Join it by typing /ls go");
+            extraTimer.Elapsed -= ExtraTimerElapsed;
             extraTimer.Dispose();
         }
         
         void CheckTimerElapsed(object sender, ElapsedEventArgs e) {
-            if ( name == "" ) return;
+            if (name == "") return;
             SendRaw(Opcode.Ping);
             if (Server.afkminutes <= 0) return;
             
@@ -116,6 +118,18 @@ namespace MCGalaxy {
                     }
                 }
             }
+        }
+        
+        int muteCooldown = 0;
+        void MuteTimerElapsed(object sender, ElapsedEventArgs e) {
+            muteCooldown--;
+            if ( muteCooldown > 0) return;
+            
+            muteTimer.Stop();
+            muteTimer.Elapsed -= MuteTimerElapsed;
+            if (muted) Command.all.Find("mute").Use(null, name);
+            consecutivemessages = 0;
+            Player.Message(this, "Remember, no &cspamming %Snext time!");
         }
     }
 }
