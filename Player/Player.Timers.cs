@@ -131,5 +131,23 @@ namespace MCGalaxy {
             consecutivemessages = 0;
             Player.Message(this, "Remember, no &cspamming %Snext time!");
         }
+        
+        void DisposeTimers() {
+            loginTimer.Stop();
+            loginTimer.Elapsed -= LoginTimerElapsed;
+            loginTimer.Dispose();
+
+            extraTimer.Stop();
+            extraTimer.Elapsed -= ExtraTimerElapsed;
+            extraTimer.Dispose();
+            
+            checkTimer.Stop();
+            checkTimer.Elapsed -= CheckTimerElapsed;
+            checkTimer.Dispose();
+            
+            muteTimer.Stop();
+            muteTimer.Elapsed -= MuteTimerElapsed;
+            muteTimer.Dispose();
+        }
     }
 }

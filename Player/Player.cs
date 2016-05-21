@@ -561,12 +561,7 @@ namespace MCGalaxy {
                 }
                 // FlyBuffer.Clear();
                 SaveIgnores();
-                checkTimer.Stop();
-                checkTimer.Elapsed -= CheckTimerElapsed;
-                checkTimer.Dispose();
-                muteTimer.Stop();
-                muteTimer.Elapsed -= MuteTimerElapsed;
-                muteTimer.Dispose();
+                DisposeTimers();
                 afkCount = 0;
                 afkStart = DateTime.Now;
                 IsAfk = false;
