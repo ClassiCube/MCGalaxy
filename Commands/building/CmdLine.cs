@@ -16,15 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdLine : DrawCmd {
-        
+namespace MCGalaxy.Commands.Building {    
+    public sealed class CmdLine : DrawCmd {      
         public override string name { get { return "line"; } }
         public override string shortcut { get { return "l"; } }      
         protected override string PlaceMessage { get { return "Place two blocks to determine the endpoints."; } }

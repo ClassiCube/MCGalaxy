@@ -19,7 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.World {
     public sealed class CmdRenameLvl : Command {
         public override string name { get { return "renamelvl"; } }
         public override string shortcut { get { return ""; } }

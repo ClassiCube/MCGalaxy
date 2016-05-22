@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Building {
     public sealed class CmdRainbow : Command {
         public override string name { get { return "rainbow"; } }
         public override string shortcut { get { return ""; } }

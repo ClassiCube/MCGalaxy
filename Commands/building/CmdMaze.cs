@@ -16,16 +16,10 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.Collections;
-using System.Security.Cryptography;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdMaze : Command
-    {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdMaze : Command {
         public override string name { get { return "maze"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }

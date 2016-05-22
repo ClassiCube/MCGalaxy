@@ -16,14 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdWriteText : Command {
-        
+namespace MCGalaxy.Commands.Building {    
+    public sealed class CmdWriteText : Command {        
         public override string name { get { return "writetext"; } }
         public override string shortcut { get { return "wrt"; } }
         public override string type { get { return CommandTypes.Building; } }

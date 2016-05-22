@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Building {
     public sealed class CmdHollow : Command {
         public override string name { get { return "hollow"; } }
         public override string shortcut { get { return ""; } }

@@ -19,10 +19,8 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
-    public class CmdReplace : Command {
-        
+namespace MCGalaxy.Commands.Building {  
+    public class CmdReplace : Command {        
         public override string name { get { return "replace"; } }
         public override string shortcut { get { return "r"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -72,11 +70,9 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public sealed class CmdReplaceNot : CmdReplace {
-        
+    public sealed class CmdReplaceNot : CmdReplace {        
         public override string name { get { return "replacenot"; } }
         public override string shortcut { get { return "rn"; } }
-
         protected override bool ReplaceNot { get { return true; } }
         
         public override void Help(Player p) {
@@ -86,8 +82,7 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public sealed class CmdReplaceAll : Command {
-        
+    public sealed class CmdReplaceAll : Command {      
         public override string name { get { return "replaceall"; } }
         public override string shortcut { get { return "ra"; } }
         public override string type { get { return CommandTypes.Building; } }

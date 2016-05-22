@@ -20,10 +20,8 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdFill : DrawCmd {
-        
+namespace MCGalaxy.Commands.Building {   
+    public sealed class CmdFill : DrawCmd {        
         public override string name { get { return "fill"; } }
         public override string shortcut { get { return "f"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }

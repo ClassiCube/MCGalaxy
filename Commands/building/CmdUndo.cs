@@ -16,15 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdUndo : Command
-    {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdUndo : Command {
         public override string name { get { return "undo"; } }
         public override string shortcut { get { return "u"; } }
         public override string type { get { return CommandTypes.Building; } }

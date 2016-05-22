@@ -18,10 +18,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdPerbuildMax : Command {
-        
+namespace MCGalaxy.Commands.World {  
+    public sealed class CmdPerbuildMax : Command {        
         public override string name { get { return "perbuildmax"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
@@ -44,8 +42,7 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public sealed class CmdPermissionBuild : Command {
-        
+    public sealed class CmdPermissionBuild : Command {        
         public override string name { get { return "perbuild"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
@@ -68,8 +65,7 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public sealed class CmdPervisitMax : Command {
-        
+    public sealed class CmdPervisitMax : Command {        
         public override string name { get { return "pervisitmax"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
@@ -92,8 +88,7 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public sealed class CmdPermissionVisit : Command {
-        
+    public sealed class CmdPermissionVisit : Command {       
         public override string name { get { return "pervisit"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }

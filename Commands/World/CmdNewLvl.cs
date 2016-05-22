@@ -18,10 +18,8 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdNewLvl : Command
-    {
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdNewLvl : Command {
         public override string name { get { return "newlvl"; } }
         public override string shortcut { get { return "gen"; } }
         public override string type { get { return CommandTypes.World; } }

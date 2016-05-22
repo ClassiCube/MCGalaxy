@@ -16,10 +16,9 @@
     permissions and limitations under the Licenses.
 */
 using System.Collections.Generic;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdDrill : Command
-    {
+
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdDrill : Command {		
         public override string name { get { return "drill"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }

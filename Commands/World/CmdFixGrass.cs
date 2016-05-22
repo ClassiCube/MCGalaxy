@@ -16,10 +16,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdFixGrass : Command
-    {
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdFixGrass : Command {
         public override string name { get { return "fixgrass"; } }
         public override string shortcut { get { return "fg"; } }
         public override string type { get { return CommandTypes.World; } }

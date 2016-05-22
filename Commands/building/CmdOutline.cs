@@ -16,10 +16,9 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Building {
     public sealed class CmdOutline : Command {
         public override string name { get { return "outline"; } }
         public override string shortcut { get { return ""; } }

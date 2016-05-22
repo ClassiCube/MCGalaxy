@@ -32,6 +32,7 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) return;
+            if (p != null && p.muted) { Player.Message(p, "Cannot use /high5 while muted."); return; }
 
 			string giver = (p == null) ? "(console)" : p.ColoredName;
             Player.Message(who, giver + " just highfived you");

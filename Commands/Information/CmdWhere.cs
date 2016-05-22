@@ -31,8 +31,11 @@ namespace MCGalaxy.Commands {
             int matches;
             Player pl = PlayerInfo.FindOrShowMatches(p, message, out matches);
             if (pl == null) return;
-            short x = (short)pl.pos[0], y = (short)pl.pos[1], z = (short)pl.pos[2];
+            if (pl.level.CurrentGame() != null && !(p == null || p.Game.Referee)) {
+                Player.Message(p, "You can only use /where on people in games when you are in referee mode."); return;
+            }
             
+            short x = (short)pl.pos[0], y = (short)pl.pos[1], z = (short)pl.pos[2];
             Player.Message(p, "{0}%S is on {1} (X:&b{2}%S Y:&b{3}%S Z:&b{4}%S)",
                            pl.ColoredName, pl.level.name, x >> 5, (y - 51) >> 5, z >> 5);
             Player.Message(p, "Yaw: &b{0}%S degrees, Pitch: &b{1}%S degrees",

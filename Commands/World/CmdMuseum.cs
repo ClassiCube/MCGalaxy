@@ -22,10 +22,8 @@ using System.Net;
 using System.Threading;
 using MCGalaxy.Levels.IO;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdMuseum : Command
-    {
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdMuseum : Command {
         public override string name { get { return "museum"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }

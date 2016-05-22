@@ -15,10 +15,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdDelete : Command
-    {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdDelete : Command {		
         public override string name { get { return "delete"; } }
         public override string shortcut { get { return "d"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -26,15 +24,14 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdDelete() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message)  {
             if (message != "") { Help(p); return; }
 
             p.deleteMode = !p.deleteMode;
             Player.Message(p, "Delete mode: &a" + p.deleteMode);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.Message(p, "/delete - Deletes any block you click");
             Player.Message(p, "\"any block\" meaning door_air, portals, mb's, etc");
         }

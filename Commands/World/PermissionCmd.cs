@@ -18,8 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.World {   
     static class PermissionCmd {
         
         public static void Use(Player p, string[] args, bool skipNobodyPerm, string target,

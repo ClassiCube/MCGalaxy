@@ -15,10 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPaint : Command
-    {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdPaint : Command {
         public override string name { get { return "paint"; } }
         public override string shortcut { get { return "p"; } }
         public override string type { get { return CommandTypes.Building; } }

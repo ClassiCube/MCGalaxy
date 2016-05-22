@@ -18,10 +18,8 @@
 using System.Collections.Generic;
 using MCGalaxy.Drawing;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdSpin : Command
-    {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdSpin : Command {
 		public override string name { get { return "spin"; } }
 		public override string shortcut { get { return ""; } }
 		public override string type { get { return CommandTypes.Building; } }

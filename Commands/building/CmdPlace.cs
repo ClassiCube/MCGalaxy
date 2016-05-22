@@ -16,10 +16,9 @@
 	permissions and limitations under the Licenses.
 */
 using System;
-namespace MCGalaxy.Commands {
-	
-    public sealed class CmdPlace : Command {
-		
+
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdPlace : Command {		
         public override string name { get { return "place"; } }
         public override string shortcut { get { return "pl"; } }
         public override string type { get { return CommandTypes.Building; } }

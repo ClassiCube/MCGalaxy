@@ -20,10 +20,8 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdCuboid : DrawCmd
-    {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdCuboid : DrawCmd {
         public override string name { get { return "cuboid"; } }
         public override string shortcut { get { return "z"; } }
         public override CommandAlias[] Aliases {

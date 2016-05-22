@@ -17,6 +17,8 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Commands.Building;
+using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {

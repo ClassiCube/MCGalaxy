@@ -16,14 +16,11 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdSpheroid : DrawCmd {
-        
+namespace MCGalaxy.Commands.Building {    
+    public sealed class CmdSpheroid : DrawCmd {        
         public override string name { get { return "spheroid"; } }
         public override string shortcut { get { return "e"; } }
         public override CommandAlias[] Aliases {

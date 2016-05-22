@@ -15,12 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Building {
     public sealed class CmdTree : Command {
         public override string name { get { return "tree"; } }
         public override string shortcut { get { return ""; } }

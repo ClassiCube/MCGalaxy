@@ -16,14 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdTorus : DrawCmd {
-        
+namespace MCGalaxy.Commands.Building {   
+    public sealed class CmdTorus : DrawCmd {       
         public override string name { get { return "torus"; } }
         public override string shortcut { get { return "tor"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }

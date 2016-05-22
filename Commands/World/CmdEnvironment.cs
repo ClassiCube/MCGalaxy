@@ -16,11 +16,10 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands.Building;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdEnvironment : Command {
-        
+namespace MCGalaxy.Commands {   
+    public sealed class CmdEnvironment : Command {        
         public override string name { get { return "environment"; } }
         public override string shortcut { get { return "env"; } }
         public override string type { get { return CommandTypes.World; } }

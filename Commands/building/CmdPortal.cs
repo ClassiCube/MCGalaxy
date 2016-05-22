@@ -20,10 +20,8 @@ using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdPortal : Command {
-        
+namespace MCGalaxy.Commands.Building {  
+    public sealed class CmdPortal : Command {        
         public override string name { get { return "portal"; } }
         public override string shortcut { get { return "o"; } }
         public override string type { get { return CommandTypes.Building; } }

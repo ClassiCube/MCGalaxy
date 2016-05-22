@@ -16,10 +16,8 @@
     permissions and limitations under the Licenses.
  */
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdTexture : Command {
-        
+namespace MCGalaxy.Commands.World {  
+    public sealed class CmdTexture : Command {        
         public override string name { get { return "texture"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }

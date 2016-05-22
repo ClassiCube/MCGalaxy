@@ -19,10 +19,8 @@ using System;
 using System.IO;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdDeleteLvl : Command {
-        
+namespace MCGalaxy.Commands.World {    
+    public sealed class CmdDeleteLvl : Command {        
         public override string name { get { return "deletelvl"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }

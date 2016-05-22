@@ -16,13 +16,10 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy;
-using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-	
+namespace MCGalaxy.Commands.Building {	
 	public class CmdReplaceBrush : Command {
 		public override string name { get { return "replacebrush"; } }
 		public override string shortcut { get { return "rb"; } }

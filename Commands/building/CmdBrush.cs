@@ -19,8 +19,7 @@ using System;
 using MCGalaxy;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Building {  
     public sealed class CmdBrush : Command {
         public override string name { get { return "brush"; } }
         public override string shortcut { get { return ""; } }

@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using MCGalaxy.BlockPhysics;
 using MCGalaxy.Commands;
+using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 

@@ -19,10 +19,8 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.BlockPhysics;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdRestartPhysics : Command
-    {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdRestartPhysics : Command {
         public override string name { get { return "restartphysics"; } }
         public override string shortcut { get { return "rp"; } }
         public override string type { get { return CommandTypes.Building; } }

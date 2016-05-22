@@ -20,10 +20,8 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdPaste : Command {
-        
+namespace MCGalaxy.Commands.Building {    
+    public sealed class CmdPaste : Command {        
         public override string name { get { return "paste"; } }
         public override string shortcut { get { return "v"; } }
         public override string type { get { return CommandTypes.Building; } }

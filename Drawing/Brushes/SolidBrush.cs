@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Commands;
+using MCGalaxy.Commands.Building;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {

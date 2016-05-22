@@ -16,14 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    public sealed class CmdSphere : DrawCmd {
-        
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdSphere : DrawCmd {       
         public override string name { get { return "sphere"; } }
         public override string shortcut { get { return "sp"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }

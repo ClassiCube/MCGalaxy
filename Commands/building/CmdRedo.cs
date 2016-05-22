@@ -16,14 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdRedo : Command {
-        
+namespace MCGalaxy.Commands.Building {   
+    public sealed class CmdRedo : Command {   
         public override string name { get { return "redo"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }

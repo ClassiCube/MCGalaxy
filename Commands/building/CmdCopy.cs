@@ -23,10 +23,8 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands
-{
-	public sealed class CmdCopy : Command
-	{
+namespace MCGalaxy.Commands.Building {
+	public sealed class CmdCopy : Command {
 		public override string name { get { return "copy"; } }
 		public override string shortcut { get { return "c"; } }
 		public override string type { get { return CommandTypes.Building; } }

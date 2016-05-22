@@ -16,17 +16,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Threading;
 using MCGalaxy.Drawing;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdImageprint : Command
-    {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdImageprint : Command {
         public override string name { get { return "imageprint"; } }
         public override string shortcut { get { return "img"; } }
         public override string type { get { return CommandTypes.Building; } }

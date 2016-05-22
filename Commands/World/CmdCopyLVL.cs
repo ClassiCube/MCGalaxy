@@ -20,10 +20,8 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands {
-    
-    public class CmdCopyLVL : Command {
-        
+namespace MCGalaxy.Commands.World {   
+    public class CmdCopyLVL : Command {        
         public override string name { get { return "copylvl"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }

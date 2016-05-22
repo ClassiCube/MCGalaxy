@@ -17,12 +17,10 @@
  */
 using System;
 using System.Data;
-using System.Text.RegularExpressions;
 using MCGalaxy.SQL;
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdMessageBlock : Command {
-        
+
+namespace MCGalaxy.Commands.Building {    
+    public sealed class CmdMessageBlock : Command {      
         public override string name { get { return "mb"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }

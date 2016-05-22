@@ -1,9 +1,7 @@
 using System;
 
-namespace MCGalaxy.Commands {
-	
-    public sealed class CmdCenter : Command {
-		
+namespace MCGalaxy.Commands.Building {	
+	public sealed class CmdCenter : Command {
         public override string name { get { return "center"; } }
         public override string shortcut { get { return "centre"; } }
         public override string type { get { return CommandTypes.Building; } }

@@ -19,10 +19,8 @@ using System;
 using System.IO;
 using MCGalaxy.Levels.IO;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdImport : Command {
-        
+namespace MCGalaxy.Commands.World {    
+    public sealed class CmdImport : Command {       
         public override string name { get { return "import"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }

@@ -16,12 +16,10 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-	
+namespace MCGalaxy.Commands.Building {	
 	public sealed class CmdTriangle : DrawCmd {
         public override string name { get { return "triangle"; } }
         public override string shortcut { get { return "tri"; } }
