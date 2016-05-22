@@ -18,7 +18,7 @@
 using System;
 using System.Drawing;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.CPE {
     
     public sealed class CmdCustomColors : Command {
         

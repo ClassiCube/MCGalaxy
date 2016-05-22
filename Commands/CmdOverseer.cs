@@ -18,6 +18,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using MCGalaxy.Commands.CPE;
+
 namespace MCGalaxy.Commands
 {
     public sealed class CmdOverseer : Command

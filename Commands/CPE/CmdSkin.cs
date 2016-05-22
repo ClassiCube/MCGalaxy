@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.CPE {
     
     public class CmdSkin : Command {
         

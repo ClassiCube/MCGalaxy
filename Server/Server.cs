@@ -243,8 +243,8 @@ namespace MCGalaxy
         public static int ircPort = 6667;        
         [ConfigString("irc-nick", "IRC bot", null, "ForgeBot")]
         public static string ircNick = "ForgeBot";
-        [ConfigString("irc-server", "IRC bot", null, "irc.geekshed.net")]        
-        public static string ircServer = "irc.geekshed.net";
+        [ConfigString("irc-server", "IRC bot", null, "irc.esper.net")]
+        public static string ircServer = "irc.esper.net";
         [ConfigString("irc-channel", "IRC bot", null, "#changethis")]        
         public static string ircChannel = "#changethis";
         [ConfigString("irc-opchannel", "IRC bot", null, "#changethistoo", true)]        
