@@ -196,8 +196,21 @@ namespace MCGalaxy {
         
         #region Position updates
         
-        public static byte[] GetPositionPacket(byte id, ushort[] pos, ushort[] oldpos,
-                                               byte[] rot, byte[] oldrot, byte realPitch, bool bot) {
+        public static byte[] GetPositionPacket(PlayerBot bot) {
+            // TODO: not sure why this bots only work with absolute packets
+            byte[] buffer = new byte[10];
+            buffer[0] = Opcode.EntityTeleport;
+            buffer[1] = bot.id;
+            NetUtils.WriteU16(bot.pos[0], buffer, 2);
+            NetUtils.WriteU16(bot.pos[1], buffer, 4);
+            NetUtils.WriteU16(bot.pos[2], buffer, 6);
+            buffer[8] = bot.rot[0];
+            buffer[9] = bot.rot[1];
+            return buffer;
+        }
+        
+        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, ushort[] pos, ushort[] oldpos,
+                                                    byte[] rot, byte[] oldrot, byte realPitch) {
             bool posChanged = false, oriChanged = false, absPosUpdate = false;
             if (oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2])
                 posChanged = true;
@@ -205,72 +218,55 @@ namespace MCGalaxy {
                 oriChanged = true;
             if (Math.Abs(pos[0] - oldpos[0]) > 32 || Math.Abs(pos[1] - oldpos[1]) > 32 || Math.Abs(pos[2] - oldpos[2]) > 32)
                 absPosUpdate = true;
-            // TODO: not sure why this is necessary for bots
-            if (bot)
-                absPosUpdate = true;
 
-            byte[] buffer = null;
             if (absPosUpdate) {
-                buffer = new byte[10];
-                buffer[0] = Opcode.EntityTeleport;
-                buffer[1] = id;
-                NetUtils.WriteU16(pos[0], buffer, 2);
-                NetUtils.WriteU16(pos[1], buffer, 4);
-                NetUtils.WriteU16(pos[2], buffer, 6);
-                buffer[8] = rot[0];
-                buffer[9] = realPitch;
+                *ptr++ = Opcode.EntityTeleport; *ptr++ = id;
+                *ptr++ = (byte)(pos[0] >> 8); *ptr++ = (byte)pos[0];
+                *ptr++ = (byte)(pos[1] >> 8); *ptr++ = (byte)pos[1];       
+                *ptr++ = (byte)(pos[2] >> 8); *ptr++ = (byte)pos[2];
+                *ptr++ = rot[0]; *ptr++ = realPitch;
             } else if (posChanged && oriChanged) {
-                buffer = new byte[7];
-                buffer[0] = Opcode.RelPosAndOrientationUpdate;
-                buffer[1] = id;
-                buffer[2] = (byte)(pos[0] - oldpos[0]);
-                buffer[3] = (byte)(pos[1] - oldpos[1]);
-                buffer[4] = (byte)(pos[2] - oldpos[2]);
-                buffer[5] = rot[0];
-                buffer[6] = realPitch;
+                *ptr++ = Opcode.RelPosAndOrientationUpdate; *ptr++ = id;
+                *ptr++ = (byte)(pos[0] - oldpos[0]);
+                *ptr++ = (byte)(pos[1] - oldpos[1]);
+                *ptr++ = (byte)(pos[2] - oldpos[2]);
+                *ptr++ = rot[0]; *ptr++ = realPitch;
             } else if (posChanged) {
-                buffer = new byte[5];
-                buffer[0] = Opcode.RelPosUpdate;
-                buffer[1] = id;
-                buffer[2] = (byte)(pos[0] - oldpos[0]);
-                buffer[3] = (byte)(pos[1] - oldpos[1]);
-                buffer[4] = (byte)(pos[2] - oldpos[2]);
+                *ptr++ = Opcode.RelPosUpdate; *ptr++ = id;
+                *ptr++ = (byte)(pos[0] - oldpos[0]);
+                *ptr++ = (byte)(pos[1] - oldpos[1]);
+                *ptr++ = (byte)(pos[2] - oldpos[2]);
             } else if (oriChanged) {
-                buffer = new byte[4];
-                buffer[0] = Opcode.OrientationUpdate;
-                buffer[1] = id;
-                buffer[2] = rot[0];
-                buffer[3] = realPitch;
+                *ptr++ = Opcode.OrientationUpdate; *ptr++ = id;
+                *ptr++ = rot[0]; *ptr++ = realPitch;
             }
-            return buffer;
         }
         
         public static void GlobalUpdate() {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players)
                 UpdatePosition(p);
+            foreach (Player p in players) {
+                 p.oldpos = p.pos; p.oldrot = p.rot;
+            }
         }
         
-        static void UpdatePosition(Player p) {
-            //pingDelayTimer.Stop();
-            byte[] packet = Entities.GetPositionPacket(p.id, p.pos, p.oldpos, p.rot, 
-                                                       p.oldrot, MakePitch(p), false);            
-            if (packet == null) return;
-            byte[] oldPacket = null;
-            
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl == p || pl.level != p.level || !CanSeeEntity(pl, p)) continue;
-                
-                // For clients that don't support ChangeModel, we still need to provide
-                // some visual indication that they are infected.
-                if (!pl.hasChangeModel && oldPacket == null) {
-                    oldPacket = Entities.GetPositionPacket(p.id, p.pos, p.oldpos, p.rot, 
-                                                           p.oldrot, MakeClassicPitch(p), false);
-                }
-                pl.SendRaw(pl.hasChangeModel ? packet : oldPacket);
-            }
-            p.oldpos = p.pos; p.oldrot = p.rot;
+        unsafe static void UpdatePosition(Player p) {
+             Player[] players = PlayerInfo.Online.Items;
+             byte* src = stackalloc byte[10 * 256]; // 10 = size of absolute update
+             byte* ptr = src;
+             foreach (Player pl in players) {
+                 if (p == pl || p.level != pl.level || !CanSeeEntity(p, pl)) continue;
+                 byte pitch = p.hasChangeModel ? MakePitch(pl) : MakeClassicPitch(pl);                
+                 Entities.GetPositionPacket(ref ptr, pl.id, pl.pos, pl.oldpos, pl.rot, pl.oldrot, pitch);
+             }
+             
+             int count = (int)(ptr - src);
+             if (count == 0) return;
+             byte[] packet = new byte[count];
+             for (int i = 0; i < packet.Length; i++)
+                 packet[i] = src[i];
+             p.SendRaw(packet);
         }
         
         static byte MakePitch(Player p) {

@@ -431,7 +431,7 @@ namespace MCGalaxy {
         public void Update() { }
 
         void UpdatePosition() {
-            byte[] packet = Entities.GetPositionPacket(id, pos, oldpos, rot, oldrot, rot[1], true);
+            byte[] packet = Entities.GetPositionPacket(this);
             oldpos = pos; oldrot = rot;
             if (packet == null) return;
 
