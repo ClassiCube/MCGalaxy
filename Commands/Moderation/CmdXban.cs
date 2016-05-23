@@ -15,10 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdXban : Command {
-        
+namespace MCGalaxy.Commands.Moderation {   
+    public sealed class CmdXban : Command {       
         public override string name { get { return "xban"; } }
         public override string shortcut { get { return "banx"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -32,13 +30,14 @@ namespace MCGalaxy.Commands {
             string name = message.Split(' ')[0];
             Player who = PlayerInfo.Find(name);
             Command.all.Find("ban").Use(p, message);
+            Command.all.Find("banip").Use(p, "@" + name);
             if (who != null)
                 Command.all.Find("kick").Use(p, message);
             Command.all.Find("undo").Use(p, name + " all");
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/xban [name] [message]- Bans, undoes, and kicks [name] with [message], if specified.");
+            Player.Message(p, "/xban [name] [message]- Bans, IP bans, undoes, and kicks [name] with [message], if specified.");
         }
     }
 }

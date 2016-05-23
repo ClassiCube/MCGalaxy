@@ -13,8 +13,8 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
 */
 using System.IO;
-namespace MCGalaxy.Commands {
-    
+
+namespace MCGalaxy.Commands.Moderation {   
     public sealed class CmdTempRankList : Command {        
         public override string name { get { return "tempranklist"; } }
         public override string shortcut { get { return "trl"; } }

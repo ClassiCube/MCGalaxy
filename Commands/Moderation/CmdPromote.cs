@@ -1,9 +1,7 @@
 using System;
 
-namespace MCGalaxy.Commands {
-
+namespace MCGalaxy.Commands.Moderation {
     public class CmdPromote : Command {
-
         public override string name { get { return "promote"; } }
         public override string shortcut { get { return "pr"; } }
         public override string type { get { return CommandTypes.Moderation; } }

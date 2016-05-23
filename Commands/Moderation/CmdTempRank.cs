@@ -15,10 +15,8 @@ permissions and limitations under the Licenses.
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdTempRank : Command {
-        
+namespace MCGalaxy.Commands.Moderation {   
+    public sealed class CmdTempRank : Command {       
         public override string name { get { return "temprank"; } }
         public override string shortcut { get { return "tr"; } }
         public override string type { get { return CommandTypes.Moderation; } }

@@ -56,14 +56,11 @@ namespace MCGalaxy.Commands
             if (!Server.bannedIP.Contains(message)) { Player.Message(p, message + " doesn't seem to be banned..."); return; }
             Server.bannedIP.Remove(message); Server.bannedIP.Save("banned-ip.txt", false);
 
-            if (p != null)
-            {
+            if (p != null) {
                 Server.IRC.Say(message.ToLower() + " was un-ip-banned by " + p.name + ".");
                 Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by " + p.name + ".");
                 Player.GlobalMessage(message + " was &8un-ip-banned %Sby " + p.ColoredName + "%S.");
-            }
-            else
-            {
+            } else {
                 Server.IRC.Say(message.ToLower() + " was un-ip-banned by (console).");
                 Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by (console).");
                 Player.GlobalMessage(message + " was &8un-ip-banned %Sby (console).");

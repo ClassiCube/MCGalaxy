@@ -21,7 +21,7 @@ using System.Data;
 using System.Linq;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBanip : Command {
         public override string name { get { return "banip"; } }
         public override string shortcut { get { return "bi"; } }

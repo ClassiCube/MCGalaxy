@@ -17,10 +17,8 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdTempBan : Command {
-        
+namespace MCGalaxy.Commands.Moderation {
+    public sealed class CmdTempBan : Command {       
         public override string name { get { return "tempban"; } }
         public override string shortcut { get { return "tb"; } }
         public override string type { get { return CommandTypes.Moderation; } }

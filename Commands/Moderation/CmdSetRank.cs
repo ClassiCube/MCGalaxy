@@ -17,10 +17,8 @@
  */
 using System;
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdSetRank : Command
-    {
+namespace MCGalaxy.Commands.Moderation {
+    public sealed class CmdSetRank : Command {
         public override string name { get { return "setrank"; } }
         public override string shortcut { get { return "rank"; } }
         public override string type { get { return CommandTypes.Moderation; } }

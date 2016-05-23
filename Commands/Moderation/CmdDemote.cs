@@ -1,9 +1,7 @@
 using System;
 
-namespace MCGalaxy.Commands {
-
+namespace MCGalaxy.Commands.Moderation {
     public class CmdDemote : Command {
-
         public override string name { get { return "demote"; } }
         public override string shortcut { get { return "de"; } }
         public override string type { get { return CommandTypes.Moderation; } }

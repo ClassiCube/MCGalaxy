@@ -18,13 +18,11 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdMute : Command
-    {
+namespace MCGalaxy.Commands.Moderation {
+    public sealed class CmdMute : Command {
         public override string name { get { return "mute"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdMute() { }

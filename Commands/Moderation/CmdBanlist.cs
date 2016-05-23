@@ -18,10 +18,8 @@
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdBanlist : Command
-    {
+namespace MCGalaxy.Commands.Moderation {
+    public sealed class CmdBanlist : Command {
         public override string name { get { return "banlist"; } }
         public override string shortcut { get { return "bl"; } }
         public override string type { get { return CommandTypes.Moderation; } }

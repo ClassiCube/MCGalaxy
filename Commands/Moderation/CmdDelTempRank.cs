@@ -16,8 +16,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdDelTempRank : Command {
         public override string name { get { return "deltemprank"; } }
         public override string shortcut { get { return "dtr"; } }
