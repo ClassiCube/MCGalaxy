@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands.Building;
+using MCGalaxy.Commands.Moderation;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 

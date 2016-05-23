@@ -228,13 +228,11 @@ namespace MCGalaxy.Gui
                     if (!Chat.HandleModes(null, s)) {
                         msg = String.Format("{0}Console [&a{1}{0}]: &f{2}", Server.DefaultColor, Server.ZallState, s);
                         Player.GlobalMessage(msg);
-                        Server.IRC.Say(msg);
+                        Server.IRC.Say("Console [" + Server.ZallState + "]: " + s);
                         WriteToConsole(msg);
                         Server.s.Log("(Console): " + msg, true);
                     }
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Server.ErrorLog(ex);
                 }
             }
