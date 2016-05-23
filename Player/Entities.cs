@@ -156,6 +156,7 @@ namespace MCGalaxy {
         #endregion 
         
         internal static string GetSupportedCol(Player dst, string col) {
+            if (col == null) return null;
             if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
                 col = "&" + Colors.GetFallback(col[1]);
             return col;
