@@ -304,7 +304,6 @@
     <Compile Include="Commands\Moderation\CmdOZone.cs" />
     <Compile Include="Commands\Moderation\CmdP2P.cs" />
     <Compile Include="Commands\Moderation\CmdPatrol.cs" />
-    <Compile Include="Commands\Moderation\CmdPCreate.cs" />
     <Compile Include="Commands\Moderation\CmdPlayerEditDB.cs" />
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
     <Compile Include="Commands\Moderation\CmdPromote.cs" />
@@ -383,6 +382,7 @@
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
     <Compile Include="Commands\Scripting\CmdCompile.cs" />
     <Compile Include="Commands\Scripting\CmdCompload.cs" />
+    <Compile Include="Commands\Scripting\CmdPCreate.cs" />
     <Compile Include="Commands\Scripting\CmdPLoad.cs" />
     <Compile Include="Commands\Scripting\CmdPUnload.cs" />
     <Compile Include="Commands\World\CmdBlockDB.cs" />

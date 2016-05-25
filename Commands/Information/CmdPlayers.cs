@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands
                     return;
                 
                 if (builder.Length > 0)
-                    builder.Remove(builder.Length - 2, 2);
+                    builder.Remove(builder.Length - 1, 1);
                 string message = title + builder.ToString();
                 output(message);
             }
@@ -130,7 +130,7 @@ namespace MCGalaxy.Commands
                 if (pl.voice) builder.Append("&f+%S");
                 
                 builder.Append(name);
-                builder.Append(" (" + pl.level.name + "), ");
+                builder.Append(" (" + pl.level.name + "),");
             }
         }
         
