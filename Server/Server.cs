@@ -245,7 +245,7 @@ namespace MCGalaxy
         public static string ircNick = "ForgeBot";
         [ConfigString("irc-server", "IRC bot", null, "irc.esper.net")]
         public static string ircServer = "irc.esper.net";
-        [ConfigString("irc-channel", "IRC bot", null, "#changethis")]        
+        [ConfigString("irc-channel", "IRC bot", null, "#changethis", true)]        
         public static string ircChannel = "#changethis";
         [ConfigString("irc-opchannel", "IRC bot", null, "#changethistoo", true)]        
         public static string ircOpChannel = "#changethistoo";      
