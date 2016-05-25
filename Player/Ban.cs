@@ -46,6 +46,10 @@ namespace MCGalaxy {
 			file.Append(data);
 		}
 		
+		public static string FormatBan(string banner, string reason) {
+			return "Banned for \"" + reason + "\" by " + banner;
+		}
+		
 		/// <summary> Returns whether the given user is banned. </summary>
 		public static bool IsBanned(string who) {
 			who = who.ToLower();
@@ -82,7 +86,7 @@ namespace MCGalaxy {
 			foreach (string line in File.ReadAllLines("text/bans.txt")) {
 				string[] parts = line.Split(' ');
 				if (parts.Length <= 1 || parts[1] != name)
-					sb.Append(line + "\r\n");
+					sb.AppendLine(line);
 				else
 					success = true;
 			}
@@ -91,28 +95,26 @@ namespace MCGalaxy {
 		}
 		
 		/// <summary> Change the ban reason for the given user. </summary>
-		public static string EditReason(string who, string reason) {
+		public static bool EditReason(string who, string reason) {
 			who = who.ToLower();
 			reason = reason.Replace(" ", "%20");
-			bool found = false;
+			bool success = false;
 			StringBuilder sb = new StringBuilder();
 			
 			foreach (string line in File.ReadAllLines("text/bans.txt")) {
 				string[] parts = line.Split(' ');
 				if (parts.Length > 2 && parts[1] == who) {
 					parts[2] = CP437Writer.ConvertToUnicode(reason);				
-					found = true;
-					sb.Append(String.Join(" ", parts) + "\r\n");
+					success = true;
+					sb.AppendLine(String.Join(" ", parts));
 				} else {
-					sb.Append(line + "\r\n");
+					sb.AppendLine(line);
 				}
 			}
 			
-			if (found) {
+			if (success)
 				File.WriteAllText("text/bans.txt", sb.ToString());
-				return "";
-			}
-			return "This player isn't banned!";
+			return success;
 		}
 	}
 }

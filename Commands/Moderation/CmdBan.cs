@@ -79,7 +79,6 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length == 1) Player.AddNote(target, p, "B");
             else Player.AddNote(target, p, "B", args[1]);
             Server.IRC.Say(banMsg);
-            
             Server.s.Log("BANNED: " + target.ToLower() + " by " + banner);
         }
         
