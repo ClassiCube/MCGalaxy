@@ -45,11 +45,11 @@ namespace MCGalaxy.Commands.Building {
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             RevertAndClearState(p, x, y, z);
-            int offX = p.copyoffset[0] + x, offY = p.copyoffset[1] + y, offZ = p.copyoffset[2] + z;
+            int x1 = p.copyoffset[0] + x, y1 = p.copyoffset[1] + y, z1 = p.copyoffset[2] + z;
             CopyState state = p.CopyBuffer;
-            if (state.X != state.OriginX) offX -= (state.Width - 1);
-            if (state.Y != state.OriginY) offY -= (state.Height - 1);
-            if (state.Z != state.OriginZ) offZ -= (state.Length - 1);
+            if (state.X != state.OriginX) x1 -= (state.Width - 1);
+            if (state.Y != state.OriginY) y1 -= (state.Height - 1);
+            if (state.Z != state.OriginZ) z1 -= (state.Length - 1);
 
             DrawOp op;
             if (cpos.message == "") {
@@ -64,8 +64,8 @@ namespace MCGalaxy.Commands.Building {
                 else
                     ((PasteDrawOp)op).Include = ReplaceBrush.GetBlocks(p, 0, args.Length, args);
             }
-            
-            if (!DrawOp.DoDrawOp(op, null, p, (ushort)offX, (ushort)offY, (ushort)offZ, 0, 0, 0))
+            Vec3S32[] marks = { new Vec3S32(x1, y1, z1) };
+            if (!DrawOp.DoDrawOp(op, null, p, marks))
                 return;
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         } 

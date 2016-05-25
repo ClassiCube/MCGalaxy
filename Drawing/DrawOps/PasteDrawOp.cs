@@ -32,18 +32,17 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(marks[0]);
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             // Adjust for the fact that paste origin may be outside the map.
-            short offX = (short)p1.X, offY = (short)p1.Y, offZ = (short)p1.Z;
+            int x1 = marks[0].X, y1 = marks[0].Y, z1 = marks[0].Z;
             
             for (int i = 0; i < state.Blocks.Length; i++ ) {
                 ushort locX, locY, locZ;
                 byte b = state.Blocks[i], extB = state.ExtBlocks[i];
                 state.GetCoords(i, out locX, out locY, out locZ);
                 
-                ushort x = (ushort)(locX + offX), y = (ushort)(locY + offY), z = (ushort)(locZ + offZ);
+                ushort x = (ushort)(locX + x1), y = (ushort)(locY + y1), z = (ushort)(locZ + z1);
                 byte type = lvl.GetTile(x, y, z), extType = 0;
                 if (type == Block.custom_block) extType = lvl.GetExtTile(x, y, z);
                 
