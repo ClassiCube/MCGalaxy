@@ -92,9 +92,6 @@ namespace MCGalaxy.Gui
                 Level.LevelLoaded += Level_LevelLoaded;
                 Level.LevelUnload += Level_LevelUnload;
 
-                GlobalChatBot.OnNewRecieveGlobalMessage += GlobalChatRecieve;
-                GlobalChatBot.OnNewSayGlobalMessage += GlobalChatSay;
-
                 RunOnUiThread(() => btnProperties.Enabled = true);
 
             });
@@ -150,14 +147,6 @@ namespace MCGalaxy.Gui
         void Player_PlayerDisconnect(Player p, string reason)
         {
             UpdatePlyersListBox();
-        }
-        void GlobalChatRecieve(string nick, string message)
-        {
-            this.LogGlobalChat("> " + nick + ": " + message);
-        }
-        void GlobalChatSay(string player, string message)
-        {
-            this.LogGlobalChat("< " + player + ": " + message);
         }
         void Level_LevelUnload(Level l)
         {
@@ -1322,27 +1311,6 @@ namespace MCGalaxy.Gui
         private void treeGrowingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             levelcommand("map", " growtrees");
-        }
-
-        private void txtGlobalInput_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (txtGlobalInput.Text == null || txtGlobalInput.Text.Trim() == "") { return; }
-                try { Command.all.Find("global").Use(null, txtGlobalInput.Text.Trim()); }
-                catch (Exception ex) { Server.ErrorLog(ex); }
-                txtGlobalInput.Clear();
-            }
-        }
-
-        public void LogGlobalChat(string message)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new MethodInvoker(() => txtGlobalLog.AppendTextAndScroll(message)));
-                return;
-            }
-            txtGlobalLog.AppendTextAndScroll(message);
         }
 
         #region Colored Reader Context Menu

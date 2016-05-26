@@ -59,7 +59,6 @@ namespace MCGalaxy.Gui
             this.chat_chkCheap = new System.Windows.Forms.CheckBox();
             this.chat_txtShutdown = new System.Windows.Forms.TextBox();
             this.chat_gbOther = new System.Windows.Forms.GroupBox();
-            this.chat_chkGlobal = new System.Windows.Forms.CheckBox();
             this.chat_lblConsole = new System.Windows.Forms.Label();
             this.chat_txtConsole = new System.Windows.Forms.TextBox();
             this.chat_gbColors = new System.Windows.Forms.GroupBox();
@@ -69,9 +68,6 @@ namespace MCGalaxy.Gui
             this.chat_colSyntax = new System.Windows.Forms.Label();
             this.chat_cmbSyntax = new System.Windows.Forms.ComboBox();
             this.chat_lblSyntax = new System.Windows.Forms.Label();
-            this.chat_colGlobal = new System.Windows.Forms.Label();
-            this.chat_cmbGlobal = new System.Windows.Forms.ComboBox();
-            this.chat_lblGlobal = new System.Windows.Forms.Label();
             this.chat_colIRC = new System.Windows.Forms.Label();
             this.chat_cmbIRC = new System.Windows.Forms.ComboBox();
             this.chat_lblIRC = new System.Windows.Forms.Label();
@@ -511,7 +507,7 @@ namespace MCGalaxy.Gui
             this.chat_gbMessages.Controls.Add(this.chat_txtCheap);
             this.chat_gbMessages.Controls.Add(this.chat_chkCheap);
             this.chat_gbMessages.Controls.Add(this.chat_txtShutdown);
-            this.chat_gbMessages.Location = new System.Drawing.Point(8, 187);
+            this.chat_gbMessages.Location = new System.Drawing.Point(8, 157);
             this.chat_gbMessages.Name = "chat_gbMessages";
             this.chat_gbMessages.Size = new System.Drawing.Size(483, 180);
             this.chat_gbMessages.TabIndex = 2;
@@ -606,25 +602,14 @@ namespace MCGalaxy.Gui
             // 
             // chat_gbOther
             // 
-            this.chat_gbOther.Controls.Add(this.chat_chkGlobal);
             this.chat_gbOther.Controls.Add(this.chat_lblConsole);
             this.chat_gbOther.Controls.Add(this.chat_txtConsole);
             this.chat_gbOther.Location = new System.Drawing.Point(235, 6);
             this.chat_gbOther.Name = "chat_gbOther";
-            this.chat_gbOther.Size = new System.Drawing.Size(256, 77);
+            this.chat_gbOther.Size = new System.Drawing.Size(256, 47);
             this.chat_gbOther.TabIndex = 1;
             this.chat_gbOther.TabStop = false;
             this.chat_gbOther.Text = "Other";
-            // 
-            // chat_chkGlobal
-            // 
-            this.chat_chkGlobal.AutoSize = true;
-            this.chat_chkGlobal.Location = new System.Drawing.Point(9, 46);
-            this.chat_chkGlobal.Name = "chat_chkGlobal";
-            this.chat_chkGlobal.Size = new System.Drawing.Size(101, 17);
-            this.chat_chkGlobal.TabIndex = 5;
-            this.chat_chkGlobal.Text = "Use Global Chat";
-            this.chat_chkGlobal.UseVisualStyleBackColor = true;
             // 
             // chat_lblConsole
             // 
@@ -651,9 +636,6 @@ namespace MCGalaxy.Gui
             this.chat_gbColors.Controls.Add(this.chat_colSyntax);
             this.chat_gbColors.Controls.Add(this.chat_cmbSyntax);
             this.chat_gbColors.Controls.Add(this.chat_lblSyntax);
-            this.chat_gbColors.Controls.Add(this.chat_colGlobal);
-            this.chat_gbColors.Controls.Add(this.chat_cmbGlobal);
-            this.chat_gbColors.Controls.Add(this.chat_lblGlobal);
             this.chat_gbColors.Controls.Add(this.chat_colIRC);
             this.chat_gbColors.Controls.Add(this.chat_cmbIRC);
             this.chat_gbColors.Controls.Add(this.chat_lblIRC);
@@ -662,14 +644,14 @@ namespace MCGalaxy.Gui
             this.chat_gbColors.Controls.Add(this.chat_lblDefault);
             this.chat_gbColors.Location = new System.Drawing.Point(8, 6);
             this.chat_gbColors.Name = "chat_gbColors";
-            this.chat_gbColors.Size = new System.Drawing.Size(221, 175);
+            this.chat_gbColors.Size = new System.Drawing.Size(221, 145);
             this.chat_gbColors.TabIndex = 0;
             this.chat_gbColors.TabStop = false;
             this.chat_gbColors.Text = "Colors";
             // 
             // chat_colDesc
             // 
-            this.chat_colDesc.Location = new System.Drawing.Point(99, 125);
+            this.chat_colDesc.Location = new System.Drawing.Point(99, 98);
             this.chat_colDesc.Name = "chat_colDesc";
             this.chat_colDesc.Size = new System.Drawing.Size(18, 18);
             this.chat_colDesc.TabIndex = 34;
@@ -677,7 +659,7 @@ namespace MCGalaxy.Gui
             // chat_cmbDesc
             // 
             this.chat_cmbDesc.FormattingEnabled = true;
-            this.chat_cmbDesc.Location = new System.Drawing.Point(120, 125);
+            this.chat_cmbDesc.Location = new System.Drawing.Point(120, 98);
             this.chat_cmbDesc.Name = "chat_cmbDesc";
             this.chat_cmbDesc.Size = new System.Drawing.Size(95, 21);
             this.chat_cmbDesc.TabIndex = 33;
@@ -687,7 +669,7 @@ namespace MCGalaxy.Gui
             // chat_lblDesc
             // 
             this.chat_lblDesc.AutoSize = true;
-            this.chat_lblDesc.Location = new System.Drawing.Point(6, 128);
+            this.chat_lblDesc.Location = new System.Drawing.Point(6, 101);
             this.chat_lblDesc.Name = "chat_lblDesc";
             this.chat_lblDesc.Size = new System.Drawing.Size(90, 13);
             this.chat_lblDesc.TabIndex = 32;
@@ -695,7 +677,7 @@ namespace MCGalaxy.Gui
             // 
             // chat_colSyntax
             // 
-            this.chat_colSyntax.Location = new System.Drawing.Point(99, 98);
+            this.chat_colSyntax.Location = new System.Drawing.Point(99, 71);
             this.chat_colSyntax.Name = "chat_colSyntax";
             this.chat_colSyntax.Size = new System.Drawing.Size(18, 18);
             this.chat_colSyntax.TabIndex = 35;
@@ -703,7 +685,7 @@ namespace MCGalaxy.Gui
             // chat_cmbSyntax
             // 
             this.chat_cmbSyntax.FormattingEnabled = true;
-            this.chat_cmbSyntax.Location = new System.Drawing.Point(120, 98);
+            this.chat_cmbSyntax.Location = new System.Drawing.Point(120, 71);
             this.chat_cmbSyntax.Name = "chat_cmbSyntax";
             this.chat_cmbSyntax.Size = new System.Drawing.Size(95, 21);
             this.chat_cmbSyntax.TabIndex = 30;
@@ -713,38 +695,11 @@ namespace MCGalaxy.Gui
             // chat_lblSyntax
             // 
             this.chat_lblSyntax.AutoSize = true;
-            this.chat_lblSyntax.Location = new System.Drawing.Point(6, 101);
+            this.chat_lblSyntax.Location = new System.Drawing.Point(6, 74);
             this.chat_lblSyntax.Name = "chat_lblSyntax";
             this.chat_lblSyntax.Size = new System.Drawing.Size(68, 13);
             this.chat_lblSyntax.TabIndex = 31;
             this.chat_lblSyntax.Text = "/help syntax:";
-            // 
-            // chat_colGlobal
-            // 
-            this.chat_colGlobal.BackColor = System.Drawing.Color.Black;
-            this.chat_colGlobal.Location = new System.Drawing.Point(99, 71);
-            this.chat_colGlobal.Name = "chat_colGlobal";
-            this.chat_colGlobal.Size = new System.Drawing.Size(18, 18);
-            this.chat_colGlobal.TabIndex = 28;
-            // 
-            // chat_cmbGlobal
-            // 
-            this.chat_cmbGlobal.FormattingEnabled = true;
-            this.chat_cmbGlobal.Location = new System.Drawing.Point(120, 71);
-            this.chat_cmbGlobal.Name = "chat_cmbGlobal";
-            this.chat_cmbGlobal.Size = new System.Drawing.Size(95, 21);
-            this.chat_cmbGlobal.TabIndex = 27;
-            this.toolTip.SetToolTip(this.chat_cmbGlobal, "The color of Global Chat text in-game.");
-            this.chat_cmbGlobal.SelectedIndexChanged += new System.EventHandler(this.chat_cmbGlobal_SelectedIndexChanged);
-            // 
-            // chat_lblGlobal
-            // 
-            this.chat_lblGlobal.AutoSize = true;
-            this.chat_lblGlobal.Location = new System.Drawing.Point(6, 74);
-            this.chat_lblGlobal.Name = "chat_lblGlobal";
-            this.chat_lblGlobal.Size = new System.Drawing.Size(64, 13);
-            this.chat_lblGlobal.TabIndex = 29;
-            this.chat_lblGlobal.Text = "Global chat:";
             // 
             // chat_colIRC
             // 
@@ -4352,7 +4307,7 @@ namespace MCGalaxy.Gui
             this.chat_gbTab.Controls.Add(this.chat_cbTabRank);
             this.chat_gbTab.Controls.Add(this.chat_cbTabLevel);
             this.chat_gbTab.Controls.Add(this.chat_cbTabBots);
-            this.chat_gbTab.Location = new System.Drawing.Point(235, 89);
+            this.chat_gbTab.Location = new System.Drawing.Point(235, 59);
             this.chat_gbTab.Name = "chat_gbTab";
             this.chat_gbTab.Size = new System.Drawing.Size(256, 92);
             this.chat_gbTab.TabIndex = 3;
@@ -4729,9 +4684,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.TextBox txtIRCPort;
         private System.Windows.Forms.CheckBox chkShowEmptyRanks;
-        private System.Windows.Forms.CheckBox chat_chkGlobal;
-        private System.Windows.Forms.ComboBox chat_cmbGlobal;
-        private System.Windows.Forms.Label chat_colGlobal;
         private System.Windows.Forms.TextBox txtMaxUndo;
         private System.Windows.Forms.Label label52;
         private System.Windows.Forms.GroupBox groupBox20;
@@ -4873,7 +4825,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox chat_gbOther;
         private System.Windows.Forms.GroupBox chat_gbColors;
         private System.Windows.Forms.TabPage tabChat;
-        private System.Windows.Forms.Label chat_lblGlobal;
         private System.Windows.Forms.ComboBox chat_cmbDesc;
         private System.Windows.Forms.Label chat_lblDesc;
         private System.Windows.Forms.Label chat_lblSyntax;

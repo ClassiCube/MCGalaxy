@@ -1086,11 +1086,6 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if( Chat.HandleModes(this, text) )
                     return;
 
-                if ( InGlobalChat ) {
-                    Command.all.Find("global").Use(this, text); //Didn't want to rewrite the whole command... you lazy bastard :3
-                    return;
-                }
-
                 if ( text[0] == ':' ) {
                     if ( PlayingTntWars ) {
                         string newtext = text;

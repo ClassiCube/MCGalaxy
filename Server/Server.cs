@@ -64,7 +64,6 @@ namespace MCGalaxy
         public event PlayerListHandler OnPlayerListChange;
         public event VoidHandler OnSettingsUpdate;
         public static ForgeBot IRC;
-        public static GlobalChatBot GlobalChat;
         public static Thread locationChecker;
         public static Thread blockThread;
         //public static List<MySql.Data.MySqlClient.MySqlCommand> mySQLCommands = new List<MySql.Data.MySqlClient.MySqlCommand>();
@@ -326,15 +325,6 @@ namespace MCGalaxy
         
         [ConfigBool("global-chat-enabled", "Other", null, true)]
         public static bool UseGlobalChat = true;
-        public static string GlobalChatNick()
-        {
-            string serverName = Server.name.Replace(" ", "").Replace("'", "").Replace("!", "");;
-            if(serverName.Length > 28)
-            {
-                serverName.Substring(0, 28);
-            }
-            return serverName;
-        }
         [ConfigInt("afk-minutes", "Other", null, 10)] 
         public static int afkminutes = 10;
         [ConfigInt("afk-kick", "Other", null, 45)]
@@ -746,11 +736,6 @@ namespace MCGalaxy
             {
                 listen.Close();
             }
-            try
-            {
-                GlobalChat.Disconnect(!AutoRestart ? "Server is shutting down." : "Server is restarting.");
-            }
-            catch { }
             try
             {
                 IRC.Disconnect(!AutoRestart ? "Server is shutting down." : "Server is restarting.");

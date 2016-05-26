@@ -162,10 +162,7 @@ namespace MCGalaxy {
             }
 
             IRC = new ForgeBot(Server.ircChannel, Server.ircOpChannel, Server.ircNick, Server.ircServer);
-            GlobalChat = new GlobalChatBot(GlobalChatNick());
-
             if (Server.irc) IRC.Connect();
-            if (Server.UseGlobalChat) GlobalChat.Connect();
 
             new AutoSaver(Server.backupInterval);
 

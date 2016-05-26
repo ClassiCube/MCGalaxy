@@ -166,9 +166,6 @@
     <Compile Include="Commands\Chat\CmdChatRoom.cs" />
     <Compile Include="Commands\Chat\CmdEat.cs" />
     <Compile Include="Commands\Chat\CmdEmote.cs" />
-    <Compile Include="Commands\Chat\CmdGcaccept.cs" />
-    <Compile Include="Commands\Chat\CmdGcrules.cs" />
-    <Compile Include="Commands\Chat\CmdGlobal.cs" />
     <Compile Include="Commands\Chat\CmdGlobalCLS.cs" />
     <Compile Include="Commands\Chat\CmdHigh5.cs" />
     <Compile Include="Commands\Chat\CmdHug.cs" />
@@ -568,7 +565,6 @@
     <Compile Include="Database\BulkTransaction.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\Auto_CTF.cs" />
-    <Compile Include="IRC\GlobalChatBot.cs" />
     <Compile Include="IRC\ForgeBot.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />

@@ -29,7 +29,6 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             Server.IRC.Reset();
-            Server.GlobalChat.Reset();
         }
         public override void Help(Player p)
         {

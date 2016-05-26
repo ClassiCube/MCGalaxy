@@ -302,8 +302,6 @@ namespace MCGalaxy {
 
         //Global Chat
         public bool loggedIn;
-        public bool InGlobalChat;
-
         public bool isDev, isMod;
         public bool verifiedName;
 
@@ -472,12 +470,7 @@ namespace MCGalaxy {
             GlobalMessage(message, false);
         }
         public static void GlobalMessage(string message, bool global) {
-            if ( !global )
-                //message = message.Replace("%", "&");
-                message = Colors.EscapeColors(message);
-            else
-                message = message.Replace("%G", Server.GlobalChatColor);
-            
+            message = Colors.EscapeColors(message);           
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.ignoreAll || (global && p.ignoreGlobal)) continue;

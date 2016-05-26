@@ -60,7 +60,6 @@ namespace MCGalaxy.Gui {
         	string[] colorsArray = colors.ToArray();
             chat_cmbDefault.Items.AddRange(colorsArray);
             chat_cmbIRC.Items.AddRange(colorsArray);
-            chat_cmbGlobal.Items.AddRange(colorsArray);
             chat_cmbSyntax.Items.AddRange(colorsArray);
             chat_cmbDesc.Items.AddRange(colorsArray);
             cmbColor.Items.AddRange(colorsArray);
@@ -377,8 +376,6 @@ namespace MCGalaxy.Gui {
                     ParseColor(value, chat_cmbDefault); break;
                 case "irc-color":
                     ParseColor(value, chat_cmbIRC); break;
-                case "global-chat-color":
-                    ParseColor(value, chat_cmbGlobal); break; 
                 case "help-syntax-color":
                     ParseColor(value, chat_cmbSyntax); break;
                 case "help-desc-color":
@@ -549,10 +546,6 @@ namespace MCGalaxy.Gui {
                     chkShowEmptyRanks.Checked = value.ToLower() == "true";
                     break;
 
-                case "global-chat-enabled":
-                    chat_chkGlobal.Checked = value.ToLower() == "true";
-                    break;
-
                 case "view":
                     Server.reviewview = Level.PermissionFromName(value.ToLower());
                     break;
@@ -679,7 +672,6 @@ namespace MCGalaxy.Gui {
 
             Server.DefaultColor = Colors.Parse(chat_cmbDefault.SelectedItem.ToString());
             Server.IRCColour = Colors.Parse(chat_cmbIRC.SelectedItem.ToString());
-            Server.GlobalChatColor = Colors.Parse(chat_cmbGlobal.SelectedItem.ToString());
             Server.HelpSyntaxColor = Colors.Parse(chat_cmbSyntax.SelectedItem.ToString());
             Server.HelpDescriptionColor = Colors.Parse(chat_cmbDesc.SelectedItem.ToString());
             Server.TablistRankSorted = chat_cbTabRank.Checked;
@@ -708,9 +700,7 @@ namespace MCGalaxy.Gui {
             Server.mutespamtime = (int)numSpamMute.Value;
             Server.spamcountreset = (int)numCountReset.Value;
             Server.LogNotes = cbLogNotes.Checked;
-
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
-            Server.UseGlobalChat = chat_chkGlobal.Checked;
 
             Server.reviewview = Group.GroupList.Find(grp => grp.name == cmbViewQueue.SelectedItem.ToString()).Permission;
             Server.reviewenter = Group.GroupList.Find(grp => grp.name == cmbEnterQueue.SelectedItem.ToString()).Permission;
@@ -726,10 +716,6 @@ namespace MCGalaxy.Gui {
 
         private void chat_cmbIRC_SelectedIndexChanged(object sender, EventArgs e) {
             chat_colIRC.BackColor = GetColor(chat_cmbIRC.Items[chat_cmbIRC.SelectedIndex].ToString());
-        }
-        
-        private void chat_cmbGlobal_SelectedIndexChanged(object sender, EventArgs e) {
-            chat_colGlobal.BackColor = GetColor(chat_cmbGlobal.Items[chat_cmbGlobal.SelectedIndex].ToString());
         }
         
         private void chat_cmbSyntax_SelectedIndexChanged(object sender, EventArgs e) {

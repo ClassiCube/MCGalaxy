@@ -206,10 +206,6 @@ namespace MCGalaxy.Gui
             this.NameTxtPlayersTab = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.Chat = new System.Windows.Forms.TabPage();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.txtGlobalLog = new MCGalaxy.Gui.AutoScrollTextBox();
-            this.txtGlobalInput = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label32 = new System.Windows.Forms.Label();
             this.txtAdminLog = new MCGalaxy.Gui.AutoScrollTextBox();
@@ -258,8 +254,7 @@ namespace MCGalaxy.Gui
             this.tabControl1.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.Chat.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.Chat.SuspendLayout();  
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -1674,7 +1669,6 @@ namespace MCGalaxy.Gui
             // 
             // Chat
             // 
-            this.Chat.Controls.Add(this.groupBox3);
             this.Chat.Controls.Add(this.groupBox2);
             this.Chat.Controls.Add(this.groupBox1);
             this.Chat.Location = new System.Drawing.Point(4, 22);
@@ -1684,50 +1678,6 @@ namespace MCGalaxy.Gui
             this.Chat.TabIndex = 8;
             this.Chat.Text = "Chat";
             this.Chat.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.label40);
-            this.groupBox3.Controls.Add(this.txtGlobalLog);
-            this.groupBox3.Controls.Add(this.txtGlobalInput);
-            this.groupBox3.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(8, 327);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(753, 155);
-            this.groupBox3.TabIndex = 37;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Global Chat";
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(7, 131);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(61, 13);
-            this.label40.TabIndex = 32;
-            this.label40.Text = "GlobalChat:";
-            // 
-            // txtGlobalLog
-            // 
-            this.txtGlobalLog.BackColor = System.Drawing.SystemColors.Window;
-            this.txtGlobalLog.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtGlobalLog.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtGlobalLog.Location = new System.Drawing.Point(6, 20);
-            this.txtGlobalLog.Multiline = true;
-            this.txtGlobalLog.Name = "txtGlobalLog";
-            this.txtGlobalLog.ReadOnly = true;
-            this.txtGlobalLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtGlobalLog.Size = new System.Drawing.Size(741, 102);
-            this.txtGlobalLog.TabIndex = 2;
-            // 
-            // txtGlobalInput
-            // 
-            this.txtGlobalInput.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtGlobalInput.Location = new System.Drawing.Point(74, 128);
-            this.txtGlobalInput.Name = "txtGlobalInput";
-            this.txtGlobalInput.Size = new System.Drawing.Size(673, 21);
-            this.txtGlobalInput.TabIndex = 28;
-            this.txtGlobalInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtGlobalInput_KeyDown);
             // 
             // groupBox2
             // 
@@ -2108,8 +2058,6 @@ namespace MCGalaxy.Gui
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.Chat.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -2287,10 +2235,6 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem loadingToolStripMenuItem;
         private ToolStripMenuItem miscToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
-        private GroupBox groupBox3;
-        private Label label40;
-        private AutoScrollTextBox txtGlobalLog;
-        private TextBox txtGlobalInput;
         private Components.ColoredTextBox txtLog;
         private ContextMenuStrip txtLogMenuStrip;
         private ToolStripMenuItem nightModeToolStripMenuItem;
