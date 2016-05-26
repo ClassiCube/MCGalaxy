@@ -17,7 +17,7 @@
 */
 using System;
 namespace MCGalaxy {
-    public enum PlayerAction { Joker, Unjoker, AFK, UnAFK, JoinWorld, Me };
+    public enum PlayerAction { Joker, Unjoker, AFK, UnAFK, JoinWorld, Me, Review };
     
     /// <summary> This is the player object </summary>
     public sealed partial class Player {

@@ -205,7 +205,7 @@ namespace MCGalaxy {
                     p.SendMessage("To Ops &f-" + displayName + "&f- " + text);
                 
                 Server.s.Log("(OPs): " + name + ": " + text);
-                Server.IRC.Say(name + ": " + text, true);
+                Server.IRC.Say(displayName + "%S: " + text, true);
                 return true;
             }
             if (text[0] == '+' || (p != null && p.adminchat)) {
@@ -218,7 +218,7 @@ namespace MCGalaxy {
                     p.SendMessage("To Admins &f-" + displayName + "&f- " + text);
                 
                 Server.s.Log("(Admins): " + name + ": " + text);
-                Server.IRC.Say(name + ": " + text, true);
+                Server.IRC.Say(displayName + "%S: " + text, true);
                 return true;
             }
             return false;

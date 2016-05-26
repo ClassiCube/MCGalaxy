@@ -92,6 +92,7 @@ namespace MCGalaxy.Commands
             } else {
                 Player.Message(p, "&cThere are no operators on to review your build. Please wait for one to come on and try again.");
             }
+            Player.RaisePlayerAction(p, PlayerAction.Review, null, true);
         }
         
         void HandleView(Player p) {

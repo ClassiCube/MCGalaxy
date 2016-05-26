@@ -181,6 +181,8 @@ namespace MCGalaxy {
                 msg = p.ColoredName + " %Swent to &8" + message;
             else if (action == PlayerAction.Me)
                 msg = "*" + p.DisplayName + " " + message;
+            else if (action == PlayerAction.Review)
+                msg = p.ColoredName + " %Sis requesting a review.";
             
             if (msg != null)
                 Say(msg, stealth);
