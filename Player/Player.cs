@@ -531,10 +531,13 @@ namespace MCGalaxy {
         [Obsolete("Use LeaveServer() instead")]
         public void leftGame(string kickMsg = "") { LeaveServer(kickMsg, null); }
 
+        bool leftServer = false;
         public void LeaveServer(string kickMsg, string discMsg, bool sync = false) {
-        	if (discMsg != null) discMsg = Colors.EscapeColors(discMsg);
-        	if (kickMsg != null) kickMsg = Colors.EscapeColors(kickMsg);
-        	
+            if (discMsg != null) discMsg = Colors.EscapeColors(discMsg);
+            if (kickMsg != null) kickMsg = Colors.EscapeColors(kickMsg);
+            if (leftServer) return;
+            leftServer = true;
+            
             OnPlayerDisconnectEvent.Call(this, discMsg ?? kickMsg);
             //Umm...fixed?
             if (name == "") {
