@@ -321,6 +321,7 @@ namespace MCGalaxy {
 
                 isDev = Server.Devs.CaselessContains(name);
                 isMod = Server.Mods.CaselessContains(name);
+                Group foundGrp = Group.findPlayerGroup(name);
 
                 try {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
@@ -340,7 +341,7 @@ namespace MCGalaxy {
                     Kick(Server.defaultBanMessage, true);  return;
                 }
                 
-                if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Banned)) {
+                if (foundGrp == Group.findPerm(LevelPermission.Banned)) {
                     if (!Server.useWhitelist || !onWhitelist) {
                         string[] data = Ban.GetBanData(name);
                         if (data != null) {
@@ -359,7 +360,7 @@ namespace MCGalaxy {
                     Player[] online = PlayerInfo.Online.Items;
                     if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Kick("Server full!"); return; }
                     // Code for limiting no. of guests
-                    if (Group.findPlayerGroup(name) == Group.findPerm(LevelPermission.Guest))
+                    if (foundGrp == Group.findPerm(LevelPermission.Guest))
                     {
                         // Check to see how many guests we have
                         online = PlayerInfo.Online.Items;
@@ -397,7 +398,7 @@ namespace MCGalaxy {
                 try { left.Remove(name.ToLower()); }
                 catch { }
 
-                group = Group.findPlayerGroup(name);
+                group = foundGrp;
                 Loading = true;
                 if (disconnected) return;
                 id = FreeId();
