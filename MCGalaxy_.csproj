@@ -174,6 +174,8 @@
     <Compile Include="Commands\Chat\CmdOpChat.cs" />
     <Compile Include="Commands\Chat\CmdPlayerCLS.cs" />
     <Compile Include="Commands\Chat\CmdRankMsg.cs" />
+    <Compile Include="Commands\Chat\CmdRoll.cs" />
+    <Compile Include="Commands\Chat\CmdSay.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
     <Compile Include="Commands\Command.cs" />
@@ -354,8 +356,6 @@
     <Compile Include="Commands\other\CmdResetPass.cs" />
     <Compile Include="Commands\other\CmdReview.cs" />
     <Compile Include="Commands\other\CmdRide.cs" />
-    <Compile Include="Commands\other\CmdRoll.cs" />
-    <Compile Include="Commands\other\CmdSay.cs" />
     <Compile Include="Commands\other\CmdSend.cs" />
     <Compile Include="Commands\other\CmdSendCmd.cs" />
     <Compile Include="Commands\other\CmdServer.cs" />

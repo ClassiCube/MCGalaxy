@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Games;
 
@@ -49,7 +50,7 @@ namespace MCGalaxy.Commands.World {
             
             if (!didJoin) return;
             bool unloadOld = true;
-            if (oldLevel.unload && !oldLevel.name.Contains("&cMuseum ")) {
+            if (oldLevel.unload && !oldLevel.IsMuseum) {
                 Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player pl in players) 
                     if (pl.level == oldLevel) { unloadOld = false; break; }
@@ -64,43 +65,46 @@ namespace MCGalaxy.Commands.World {
             } else if (Server.AutoLoad) {
                 if (!LevelInfo.ExistsOffline(message)) {
                     lvl = LevelInfo.Find(message);
-                    if (lvl == null) {
-                        Player.Message(p, "Level \"" + message + "\" doesn't exist! Did you mean...");
-                        Command.all.Find("search").Use(p, "levels " + message);
-                        return false;
+                    if (lvl != null) return GoToLevel(p, lvl, message);
+                    List<string> matches = CmdSearch.MatchUnloaded(message);
+                    if (matches.Count == 1) return GotoOfflineLevel(p, matches[0]);
+                    
+                    if (matches.Count == 0) {
+                        Player.Message(p, "No levels found matching \"" + message + "\".");
                     } else {
-                        return GoToLevel(p, lvl, message);
+                        Player.Message(p, "Level \"" + message + "\" does not exist. Did you mean...");
+                        Player.Message(p, matches.Concatenate());
                     }
-                } else if (Level.CheckLoadOnGoto(message)) {
-                    Command.all.Find("load").Use(p, message);
-                    lvl = LevelInfo.Find(message);
-                    if (lvl != null) {
-                        return GoToLevel(p, lvl, message);
-                    } else {
-                        Player.Message(p, "Level \"" + message + "\" failed to be auto-loaded.");
-                        return false;
-                    }
-                } else {
-                    if (lvl == null) {
-                        Player.Message(p, "Level \"" + message + "\" cannot be loaded using /goto.");
-                        return false;
-                    } else {
-                        return GoToLevel(p, lvl, message);
-                    }
+                    return false;
                 }
+                return GotoOfflineLevel(p, message);
             } else {
                 lvl = LevelInfo.Find(message);
                 if (lvl == null) {
-                    Player.Message(p, "There is no level \"" + message + "\" loaded. Did you mean..");
+                    Player.Message(p, "There is no level \"{0}\" loaded. Did you mean..", message);
                     Command.all.Find("search").Use(p, "levels " + message);
                     return false;
-                } else {
-                    return GoToLevel(p, lvl, message);
                 }
+                return GoToLevel(p, lvl, message);
             }
         }
         
-        bool GoToLevel(Player p, Level lvl, string message) {
+        static bool GotoOfflineLevel(Player p, string message) {
+            if (Level.CheckLoadOnGoto(message)) {
+                Command.all.Find("load").Use(p, message);
+                Level lvl = LevelInfo.Find(message);
+                if (lvl != null) {
+                    return GoToLevel(p, lvl, message);
+                } else {
+                    Player.Message(p, "Level \"{0}\" failed to be auto-loaded.", message);
+                    return false;
+                }
+            }
+            Player.Message(p, "Level \"{0}\" cannot be loaded using /goto.", message);
+            return false;
+        }
+        
+        static bool GoToLevel(Player p, Level lvl, string message) {
             if (p.level == lvl) { Player.Message(p, "You are already in \"" + lvl.name + "\"."); return false; }
             if (Player.BlacklistCheck(p.name, message) || lvl.VisitBlacklist.CaselessContains(p.name)) {
                 Player.Message(p, "You are blacklisted from " + lvl.name + "."); return false;

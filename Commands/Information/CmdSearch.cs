@@ -120,18 +120,24 @@ namespace MCGalaxy.Commands {
         }
         
         static void SearchUnloaded(Player p, string keyword) {
-            StringBuilder searched = new StringBuilder();
-            DirectoryInfo di = new DirectoryInfo("levels/");
+        List<string> matches = MatchUnloaded(keyword);
+            if (matches.Count == 0) 
+            Player.Message(p, "No levels found containing &b" + keyword);
+            else
+            Player.Message(p, matches.Concatenate(", "));
+        }
+        
+        internal static List<string> MatchUnloaded(string keyword) {
+        List<string> matches = new List<string>();
+        DirectoryInfo di = new DirectoryInfo("levels/");
             FileInfo[] fi = di.GetFiles("*.lvl");
 
             foreach (FileInfo file in fi) {
                 string level = file.Name.Replace(".lvl", "");
                 if (level.IndexOf(keyword, comp) >= 0)
-                    searched.Append(", ").Append(level);
+                matches.Add(level);
             }
-
-            if (searched.Length == 0) { Player.Message(p, "No levels found containing &b" + keyword); return; }
-            Player.Message(p, searched.ToString(2, searched.Length - 2));
+            return matches;
         }
         
         public override void Help(Player p) {
