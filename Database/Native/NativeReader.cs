@@ -15,7 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System;
+// TODO: Finish native database backend
+/*using System;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -87,4 +88,4 @@ namespace MCGalaxy.SQL.Native {
             return dst;
         }
     }
-}
+}*/

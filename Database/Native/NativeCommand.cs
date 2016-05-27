@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace MCGalaxy.SQL.Native {
 
@@ -53,10 +54,24 @@ namespace MCGalaxy.SQL.Native {
                 BindParam(args[i]);
             
             int code = Interop.sqlite3_step(Statement);
+            WaitUntilFree(ref code, false);
             if (code > 0 && code != Interop.Done) throw new NativeException(code);
+            
             code = Interop.sqlite3_reset(Statement);
+            WaitUntilFree(ref code, true);
             if (code > 0) throw new NativeException(code);
-            return 0;
+            return 1;
+        }
+        
+        void WaitUntilFree(ref int code, bool reset) {
+            DateTime start = DateTime.UtcNow;
+            while (code == Interop.Busy || code == Interop.Done) {
+                Thread.Sleep(100);
+                TimeSpan delta = DateTime.UtcNow - start;
+                if (delta.TotalSeconds > 30) break;
+                code = reset ? Interop.sqlite3_reset(Statement) 
+                    : Interop.sqlite3_step(Statement);
+            }
         }
         
         public void Dispose() {
