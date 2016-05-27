@@ -26,13 +26,13 @@ namespace MCGalaxy.Gui {
             int index = 0;
             char col = 'S';
             while (index < message.Length)
-                AppendNextPart(ref col, ref index, message, output);
+                OutputPart(ref col, ref index, message, output);
         }
         
-        static void AppendNextPart(ref char col, ref int start, 
+        static void OutputPart(ref char col, ref int start, 
                                    string message, Action<char, string> output) {
             int next = Next(start, message);
-            if (next == -1 || next == (message.Length - 1) ) {
+            if (next == -1) {
                 string part = message.Substring(start);
                 if (part.Length > 0) output(col, part);
                 start = message.Length;
@@ -46,8 +46,13 @@ namespace MCGalaxy.Gui {
         
         static int Next(int start, string message) {
             for (int i = start; i < message.Length; i++) {
-                if (message[i] == '&' || message[i] == '%')
-                    return i;
+				if (!(message[i] == '&' || message[i] == '%')) continue;
+				// No colour code follows this
+				if (i == message.Length - 1) return -1;
+				
+                // Check following character is an actual colour code
+                char col = message[i + 1];
+                if (Colors.MapColor(ref col)) return i;
             }
             return -1;
         }        
@@ -73,12 +78,12 @@ namespace MCGalaxy.Gui {
                 case '6': return ConsoleColor.DarkYellow;
                 case '8': return ConsoleColor.DarkGray;
                 case '9': return ConsoleColor.Blue;
-                case 'a': case 'A': return ConsoleColor.Green;
-                case 'b': case 'B': return ConsoleColor.Cyan;
-                case 'c': case 'C': return ConsoleColor.Red;
-                case 'd': case 'D': return ConsoleColor.Magenta;
-                case 'e': case 'E': return ConsoleColor.Yellow;
-                case 'f': case 'F': return ConsoleColor.White;
+                case 'a': return ConsoleColor.Green;
+                case 'b': return ConsoleColor.Cyan;
+                case 'c': return ConsoleColor.Red;
+                case 'd': return ConsoleColor.Magenta;
+                case 'e': return ConsoleColor.Yellow;
+                case 'f': return ConsoleColor.White;
                 default:
                     char fallback = Colors.GetFallback(c);
                     return fallback == '\0' ? 
@@ -106,12 +111,12 @@ namespace MCGalaxy.Gui {
                 case '7': return Color.FromArgb( 255, 161, 161, 161 );
                 case '8': return Color.FromArgb( 255, 34, 34, 34 );
                 case '9': return Color.FromArgb( 255, 34, 34, 225 );
-                case 'a': case 'A': return Color.FromArgb( 255, 34, 225, 34 );
-                case 'b': case 'B': return Color.FromArgb( 255, 34, 225, 225 );
-                case 'c': case 'C': return Color.FromArgb( 255, 225, 34, 34 );
-                case 'd': case 'D': return Color.FromArgb( 255, 225, 34, 225 );
-                case 'e': case 'E': return Color.FromArgb( 255, 225, 225, 34 );
-                case 'f': case 'F': return Color.Black;
+                case 'a': return Color.FromArgb( 255, 34, 225, 34 );
+                case 'b': return Color.FromArgb( 255, 34, 225, 225 );
+                case 'c': return Color.FromArgb( 255, 225, 34, 34 );
+                case 'd': return Color.FromArgb( 255, 225, 34, 225 );
+                case 'e': return Color.FromArgb( 255, 225, 225, 34 );
+                case 'f': return Color.Black;
                 
                 default:
                     char fallback = Colors.GetFallback(c);
