@@ -23,7 +23,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace MCGalaxy {
 	
@@ -75,53 +74,19 @@ namespace MCGalaxy {
             }
         }
 
-        public static string Capitalize(this string str)
-        {
+        public static string Capitalize(this string str) {
             if (String.IsNullOrEmpty(str))
                 return String.Empty;
             char[] a = str.ToCharArray();
             a[0] = char.ToUpper(a[0]);
             return new string(a);
         }
-        public static string Concatenate<T>(this List<T> list)
-        {
-            return list.Concatenate(String.Empty);
-        }
-        public static string Concatenate<T>(this List<T> list, string separator)
-        {
-            if (list.Count > 0)
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (T obj in list)
-                    sb.Append(separator + obj.ToString());
-                sb.Remove(0, separator.Length);
-                return sb.ToString();
-            }
-            return String.Empty;
-        }
-        public static string MCCharFilter(this string str)
-        {
-            // Allowed chars are any ASCII char between 20h/32 and 7Dh/125 inclusive, except for 26h/38 (&) and 60h/96 (`)
-            str = Regex.Replace(str, @"[^\u0000-\u007F]", "");
-
-            if (String.IsNullOrEmpty(str.Trim()))
-                return str;
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (char b in Encoding.ASCII.GetBytes(str))
-            {
-                if (b != 38 && b != 96 && b >= 32 && b <= 125)
-                    sb.Append(b);
-                /*else
-                    sb.Append("*");*/
-            }
-
-            return sb.ToString();
+        
+        public static string Concatenate<T>(this List<T> list, string separator) {
+        	return String.Join(separator, list);
         }
 
-        public static void UncapitalizeAll(string file)
-        {
+        public static void UncapitalizeAll(string file) {
             string[] complete = File.ReadAllLines(file);
             for (int i = 0; i < complete.Length; i++)
                 complete[i] = complete[i].ToLower();

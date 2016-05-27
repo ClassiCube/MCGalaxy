@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
@@ -43,10 +42,8 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "&cThe period needs to be a number."); return;
             }
 
-            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
-                if (line.StartsWith(player, comp)) {
-                    Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;
-                }
+            foreach (string line in Server.TempRanks.Find(player)) {
+                Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;
             }
             
             if (p != null && who != null && p == who) {
