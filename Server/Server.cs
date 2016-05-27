@@ -318,9 +318,9 @@ namespace MCGalaxy
         public static string IRCColour = "&5";
         [ConfigColor("global-chat-color", "Colors", null, "&6")]        
         public static string GlobalChatColor = "&6";
-        [ConfigColor("help-syntax-color", "IRC bot", null, "&a")]        
+        [ConfigColor("help-syntax-color", "Colors", null, "&a")]        
         public static string HelpSyntaxColor = "&a";
-        [ConfigColor("help-desc-color", "IRC bot", null, "&e")]        
+        [ConfigColor("help-desc-color", "Colors", null, "&e")]        
         public static string HelpDescriptionColor = "&e";
         
         [ConfigBool("global-chat-enabled", "Other", null, true)]

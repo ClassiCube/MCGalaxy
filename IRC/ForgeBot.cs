@@ -249,9 +249,9 @@ namespace MCGalaxy {
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
-        	// Old bot was disconnected, try to reclaim it.
+            // Old bot was disconnected, try to reclaim it.
             if (user.Nick == nick) connection.Sender.Nick(nick);
-        	
+            
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
             if (user.Nick == nick) return;
@@ -360,10 +360,7 @@ namespace MCGalaxy {
             if (index < 0) {
                 error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
             }
-            string prefix = GetPrefix(chanNicks[index]);
-            if (prefix == "" || prefix == "+") {
-                error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
-            }
+            if (!VerifyNick(user.Nick, ref error)) return false;
             
             if (banCmd != null && banCmd.Contains(cmdName)) {
                 error = "You are not allowed to use this command from IRC."; return false;
@@ -385,7 +382,7 @@ namespace MCGalaxy {
         }
         
         void Authenticate() {
-        	if (Server.ircIdentify && Server.ircPassword != "") {
+            if (Server.ircIdentify && Server.ircPassword != "") {
                 Server.s.Log("Identifying with NickServ");
                 connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + Server.ircPassword);
             }
@@ -479,7 +476,9 @@ namespace MCGalaxy {
         }
         
         int GetNickIndex(string n, List<string> chanNicks) {
+            if (chanNicks == null) return -1;
             string unprefixNick = Unprefix(n);
+            
             for (int i = 0; i < chanNicks.Count; i++ ) {
                 if (unprefixNick == Unprefix(chanNicks[i]))
                     return i;
@@ -509,6 +508,27 @@ namespace MCGalaxy {
         bool IsNickChar(char c) {
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
                 c == '[' || c == ']' || c == '{' || c == '}' || c == '^' || c == '`' || c == '_' || c == '|';
+        }
+        
+        bool VerifyNick(string nick, ref string error) {
+            IRCControllerVerify verify = Server.IRCVerify;
+            if (verify == IRCControllerVerify.None) return true;
+            
+            if (verify == IRCControllerVerify.HalfOp) {
+                string prefix = GetPrefix(nick);
+                if (prefix == "" || prefix == "+") {
+                    error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
+                }
+                return true;
+            } else {
+                List<string> chanNicks = null;
+                users.TryGetValue(opchannel, out chanNicks);
+                int index = GetNickIndex(nick, chanNicks);
+                if (index == -1) {
+                    error = "You must have joined the opchannel to use commands from IRC."; return false;
+                }
+                return true;
+            }
         }
         
         #endregion
