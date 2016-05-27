@@ -431,11 +431,15 @@ namespace MCGalaxy
             List<BlockPos> tempCache = blockCache;
             string date = new String('-', 19); //yyyy-mm-dd hh:mm:ss
             
-            using (BulkTransaction transaction = BulkTransaction.Create()) {
-                fixed (char* ptr = date) {
-                    ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
-                    DoSaveChanges(tempCache, ptr, date, transaction);
-                }
+            fixed (char* ptr = date) {
+                 ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
+                 if (Server.useMySQL) {
+                     using (BulkTransaction bulk = BulkTransaction.Create())
+                         DoSaveChanges(tempCache, ptr, date, bulk);
+                 } else {
+                     using (BulkTransaction bulk = new NativeBulkTransaction())
+                         DoSaveChanges(tempCache, ptr, date, bulk);     
+                 }
             }
             tempCache.Clear();
             blockCache = new List<BlockPos>();

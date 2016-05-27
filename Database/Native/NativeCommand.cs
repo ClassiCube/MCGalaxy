@@ -65,7 +65,7 @@ namespace MCGalaxy.SQL.Native {
         
         void WaitUntilFree(ref int code, bool reset) {
             DateTime start = DateTime.UtcNow;
-            while (code == Interop.Busy || code == Interop.Done) {
+            while (code == Interop.Busy || code == Interop.Locked) {
                 Thread.Sleep(100);
                 TimeSpan delta = DateTime.UtcNow - start;
                 if (delta.TotalSeconds > 30) break;

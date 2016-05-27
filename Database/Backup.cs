@@ -246,7 +246,6 @@ namespace MCGalaxy.SQL {
 
             using (BulkTransaction helper = BulkTransaction.Create())
             {
-
                 foreach (string cmd in cmds)
                 {
                     String newCmd = cmd.Trim(" \r\n\t".ToCharArray());
