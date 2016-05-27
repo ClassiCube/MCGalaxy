@@ -253,6 +253,7 @@ namespace MCGalaxy
         [ConfigBool("Pillaring", "Game", null, false)]
         public bool Pillaring = !ZombieGame.noPillaring;
         
+        [ConfigEnum("BuildType", "Game", null, BuildType.Normal, typeof(BuildType))]
         public BuildType BuildType = BuildType.Normal;
         public bool CanPlace { get { return Buildable && BuildType != BuildType.NoModify; } }
         public bool CanDelete { get { return Deletable && BuildType != BuildType.NoModify; } }

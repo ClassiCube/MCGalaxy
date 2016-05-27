@@ -44,8 +44,7 @@ namespace MCGalaxy.Levels.IO {
         static void WriteLevelProperties(Level level, StreamWriter w) {
             w.WriteLine("#Level properties for " + level.name);
             w.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
-            w.WriteLine("Physics = " + level.physics);
-            w.WriteLine("BuildType = " + level.BuildType);            
+            w.WriteLine("Physics = " + level.physics);        
             ConfigElement.Serialise(Server.levelConfig, " settings", w, level);
         }
         
@@ -97,8 +96,6 @@ namespace MCGalaxy.Levels.IO {
             switch (key.ToLower()) {
                 case "physics":
                     level.setPhysics(int.Parse(value)); break;
-                case "buildtype":
-                    level.BuildType = (BuildType)Enum.Parse(typeof(BuildType), value); break;
                 default:
                     if (!ConfigElement.Parse(Server.levelConfig, key, value, level))
 				        Server.s.Log("\"" + key + "\" was not a recognised level property key.");

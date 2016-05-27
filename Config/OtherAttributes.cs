@@ -138,4 +138,28 @@ namespace MCGalaxy.Config {
             return time.ToShortDateString();
         }
     }
+    
+    public sealed class ConfigEnumAttribute : ConfigAttribute {
+        
+        /// <summary> The type of members of this enumeration. </summary>
+        public Type EnumType;
+        
+        public ConfigEnumAttribute(string name, string section, string desc, 
+                                   object defValue, Type enumType)
+            : base(name, section, desc, defValue) {
+            EnumType = enumType;
+        }
+        
+        public override object Parse(string value) {
+            object result;
+            try {
+                result = Enum.Parse(EnumType, value, true);
+            } catch {
+                Server.s.Log("Config key \"" + Name + "\" is not a valid enum member, " +
+                                 "using default of " + DefaultValue);
+                return DefaultValue;
+            }
+            return result;
+        }
+    }
 }

@@ -250,6 +250,8 @@ namespace MCGalaxy
         public static bool ircIdentify = false;
         [ConfigString("irc-password", "IRC bot", null, "", true)]        
         public static string ircPassword = "";
+        [ConfigEnum("irc-controller-verify", "IRC bot", null, IRCControllerVerify.HalfOp, typeof(IRCControllerVerify))]
+        public static IRCControllerVerify IRCVerify = IRCControllerVerify.HalfOp;
         
         [ConfigBool("admin-verification", "Admin", null, true)]        
         public static bool verifyadmins = true;

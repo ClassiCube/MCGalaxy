@@ -23,6 +23,9 @@ using MCGalaxy.Commands;
 using Sharkbite.Irc;
 
 namespace MCGalaxy {
+    
+    public enum IRCControllerVerify { None, HalfOp, OpChannel };
+    
     public sealed class ForgeBot {
         public static readonly string ResetSignal = "\x0F\x03";
         private Connection connection;

@@ -320,8 +320,7 @@ namespace MCGalaxy {
                 byte type = message[129];
 
                 isDev = Server.Devs.CaselessContains(name);
-                isMod = Server.Mods.CaselessContains(name);
-                Group foundGrp = Group.findPlayerGroup(name);
+                isMod = Server.Mods.CaselessContains(name);               
 
                 try {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
@@ -335,6 +334,7 @@ namespace MCGalaxy {
                 } catch { }
 
                 if (!CheckWhitelist()) return;
+                Group foundGrp = Group.findPlayerGroup(name);
                 
                 // ban check
                 if (Server.bannedIP.Contains(ip) && (!Server.useWhitelist || !onWhitelist)) {
