@@ -112,9 +112,7 @@ namespace MCGalaxy {
             }
         }
         
-        void LoadGCAccepted() {
-            foreach (string line in File.ReadAllLines("text/gcaccepted.txt"))
-                gcaccepted.Add(line);
+        void SetupSocket() {
             Log("Creating listening socket on port " + port + "... ");
             Setup();
         }

@@ -136,8 +136,6 @@ namespace MCGalaxy
         public static List<Level> levels;
         //reviewlist intitialize
         public static List<string> reviewlist = new List<string>();
-        //Global Chat Rules Accepted list
-        public static List<string> gcaccepted = new List<string>();
 
         public static List<string> ircafkset = new List<string>();
         public static List<string> messages = new List<string>();
@@ -495,7 +493,7 @@ namespace MCGalaxy
             Plugin.Load();
             ml.Queue(LoadPlayerLists);
             ml.Queue(LoadAutoloadCommands);
-            ml.Queue(LoadGCAccepted);
+            ml.Queue(SetupSocket);
 
             ml.Queue(InitTimers);
             ml.Queue(InitRest);
@@ -508,10 +506,8 @@ namespace MCGalaxy
             if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
             if (!Directory.Exists("bots")) Directory.CreateDirectory("bots");
             if (!Directory.Exists("text")) Directory.CreateDirectory("text");
-            if (!File.Exists("text/tempranks.txt")) File.CreateText("text/tempranks.txt").Dispose();
-            if (!File.Exists("text/rankinfo.txt")) File.CreateText("text/rankinfo.txt").Dispose();
-            if (!File.Exists("text/transexceptions.txt")) File.CreateText("text/transexceptions.txt").Dispose();
-            if (!File.Exists("text/gcaccepted.txt")) File.CreateText("text/gcaccepted.txt").Dispose();
+            TempRanks.EnsureExists();
+            RankInfo.EnsureExists();
             if (!File.Exists("text/bans.txt")) File.CreateText("text/bans.txt").Dispose();
 
             if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");

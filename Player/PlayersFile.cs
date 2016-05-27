@@ -32,6 +32,11 @@ namespace MCGalaxy {
             locker = new object();
         }
         
+        public void EnsureExists() {
+            if (!File.Exists(file)) 
+                File.Create(file).Dispose();
+        }
+        
         /// <summary> Finds all lines which caselessly start with the given name. </summary>
         public IEnumerable<string> Find(string name) {
             if (!File.Exists(file)) yield break;
