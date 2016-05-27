@@ -74,6 +74,9 @@ namespace MCGalaxy.Commands {
         
         bool ParseCommand(Player p, string message) {
             string[] args = message.Split(trimChars, 2);
+            Alias alias = Alias.Find(args[0].ToLower());
+            if (alias != null) args[0] = alias.Target;
+                    
             Command cmd = Command.all.Find(args[0]);
             if (cmd == null) return false;
             
@@ -109,7 +112,7 @@ namespace MCGalaxy.Commands {
             }
             Player.Message(p, builder.ToString());
             
-            PrintAliases(p, cmd);           
+            PrintAliases(p, cmd);
             CommandPerm[] addPerms = cmd.AdditionalPerms;
             if (addPerms == null) return;
             

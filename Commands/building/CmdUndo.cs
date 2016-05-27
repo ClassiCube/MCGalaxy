@@ -170,10 +170,10 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "/undo - Undoes your last draw operation.");
             Player.Message(p, "/undo [player] [seconds] - Undoes the blockchanges made by [player] in the previous [seconds].");
             if (p == null || (p.group.maxUndo <= 500000 || p.group.maxUndo == 0))
-                Player.Message(p, "/undo [player] all - &cWill undo 68 years, 18 days, 15 hours, 28 minutes, 31 seconds for [player]");
+                Player.Message(p, "/undo [player] all - &cUndoes 68 years for [player]");
             if (p == null || (p.group.maxUndo <= 1800 || p.group.maxUndo == 0))
-                Player.Message(p, "/undo [player] - &cWill undo 30 minutes");
-            Player.Message(p, "/undo physics [seconds] - Undoes the physics for the current map");
+                Player.Message(p, "/undo [player] - &cUndoes 30 minutes for [player]");
+            Player.Message(p, "/undo physics [seconds] - Undoes physics on your current map");
         }
     }
 }

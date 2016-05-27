@@ -34,12 +34,11 @@ namespace MCGalaxy.Commands
         public CmdViewRanks() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-
+            if (message == "") { 
+        	    Player.Message(p, "Available ranks: " + Group.concatList()); return;
+        	}
             Group grp = Group.Find(message);
-            if (grp == null) {
-                Player.Message(p, "Could not find group"); return;
-            }
+            if (grp == null) { Player.Message(p, "Could not find group"); return; }
 
             StringBuilder builder = new StringBuilder();
             foreach (string s in grp.playerList.All())

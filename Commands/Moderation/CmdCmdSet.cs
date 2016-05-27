@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%T/cmdset [cmd] [rank] <additional permission number>");
             Player.Message(p, "%HSet the lowest rank that has that additional permission for [cmd] " +
                            "(Most commands do not use these)");
-            Player.Message(p, "Available ranks: " + Group.concatList());
+            Player.Message(p, "To see available ranks, type %T/viewranks");
         }
     }
 }
