@@ -221,9 +221,7 @@ namespace MCGalaxy.Gui
 
         delegate void LogDelegate(string message);
 
-        /// <summary>
-        /// Does the same as Console.WriteLine() only in the form
-        /// </summary>
+        /// <summary> Does the same as Console.WriteLine() only in the form </summary>
         /// <param name="s">The line to write</param>
         public void WriteLine(string s)
         {
@@ -284,9 +282,7 @@ namespace MCGalaxy.Gui
             }
         }
 
-        /// <summary>
-        /// Updates the list of client names in the window
-        /// </summary>
+        /// <summary> Updates the list of client names in the window </summary>
         /// <param name="players">The list of players to add</param>
         public void UpdateClientList(List<Player> players)
         {
@@ -393,9 +389,7 @@ namespace MCGalaxy.Gui
             }
         }
 
-        /// <summary>
-        /// Places the server's URL at the top of the window
-        /// </summary>
+        /// <summary> Places the server's URL at the top of the window </summary>
         /// <param name="s">The URL to display</param>
         public void UpdateUrl(string s)
         {

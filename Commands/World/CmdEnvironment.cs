@@ -114,26 +114,23 @@ namespace MCGalaxy.Commands {
         void SetEnvWeather(Player p, string value, ref int target) {
             byte weather = 255;
             if (IsResetString(value)) {
-                p.SendMessage(string.Format("Reset weather for {0}&S to 0 (sun)", p.level.name));
+                Player.Message(p, "Reset weather for {0}%S to 0 (sun)", p.level.name);
                 p.level.Weather = 0;
             } else {
                 if (byte.TryParse(value, out weather)) {
-                } else if (value.CaselessEq("sun")) {
-                    weather = 0;
-                } else if (value.CaselessEq("rain")) {
-                    weather = 1;
-                }  else if (value.CaselessEq("snow")) {
-                    weather = 2;
+                } else if (value.CaselessEq("sun")) { weather = 0;
+                } else if (value.CaselessEq("rain")) { weather = 1;
+                } else if (value.CaselessEq("snow")) { weather = 2;
                 }
                 
                 if (weather > 2) {
-                    p.SendMessage("Please use a valid integer (0,1,2) or string (sun,rain,snow)"); return;
+                    Player.Message(p, "Please use a valid integer (0,1,2) or string (sun,rain,snow)"); return;
                 }
             }
             
             p.level.Weather = weather;
-            string weatherType = weather == 0 ? "&sSun" : (weather == 1 ? "&1Rain" : "&fSnow");
-            p.SendMessage(string.Format("&aSet weather for {0}&a to {1} ({2}&a)", p.level.name, weather, weatherType));
+            string weatherType = weather == 0 ? "%SSun" : (weather == 1 ? "&1Rain" : "&fSnow");
+            Player.Message(p, "&aSet weather for {0}&a to {1} ({2}&a)", p.level.name, weather, weatherType);
             
             // Send the changed colour to all players affected by the command.
             Player[] players = PlayerInfo.Online.Items;
@@ -146,7 +143,7 @@ namespace MCGalaxy.Commands {
         void SetEnvMapAppearance(Player p, string value, EnvProp prop,
                                  string variable, byte defValue, ref byte target) {
             if (IsResetString(value)) {
-                p.SendMessage(string.Format("Reset {0} for {0}&S to normal", variable, p.level.name));
+                Player.Message(p, "Reset {0} for {0}%S to normal", variable, p.level.name);
                 target = defValue;
             } else {
                 if (!CheckBlock(p, value, variable, ref target)) return;
@@ -157,7 +154,7 @@ namespace MCGalaxy.Commands {
         void SetEnvMapAppearanceS(Player p, string value, EnvProp prop,
                                   string variable, short defValue, ref int target) {
             if (IsResetString(value)) {
-                p.SendMessage(string.Format("Reset {0} for {0}&S to normal", variable, p.level.name));
+                Player.Message(p, "Reset {0} for {0}%S to normal", variable, p.level.name);
                 target = defValue;
             } else {
                 if (!CheckShort(p, value, variable, ref target)) return;
@@ -168,7 +165,7 @@ namespace MCGalaxy.Commands {
         void SetEnvMapAppearanceF(Player p, string value, EnvProp prop, int scale, string variable, 
                                   short defValue, ref int target, int min, int max) {
             if (IsResetString(value)) {
-                p.SendMessage(string.Format("Reset {0} for {0}&S to normal", variable, p.level.name));
+                Player.Message(p, "Reset {0} for {0}%S to normal", variable, p.level.name);
                 target = defValue;
             } else {
                 if (!CheckFloat(p, value, variable, ref target, scale, min, max)) return;
@@ -181,15 +178,15 @@ namespace MCGalaxy.Commands {
             byte block = DrawCmd.GetBlock(p, value, out extBlock, false);
             if (block == Block.Zero) return false;
             if (block >= Block.CpeCount && block != Block.custom_block) {
-                p.SendMessage("Cannot use physics block ids for /env."); return false;
+                Player.Message(p, "Cannot use physics block ids for /env."); return false;
             }
             
             if (block == Block.shrub || block == Block.yellowflower || block == Block.redflower ||
                 block == Block.mushroom || block == Block.redmushroom || block == Block.rope || block == Block.fire) {
-                p.SendMessage(string.Format("Env: Cannot use {0} for {1}.", block, variable));
+                Player.Message(p, "Env: Cannot use {0} for {1}.", block, variable);
             } else {
                 modify = block == Block.custom_block ? extBlock : block;
-                p.SendMessage(string.Format("Set {0} for {1}&S to {2}", variable, p.level.name, modify));
+                Player.Message(p, "Set {0} for {1}%S to {2}", variable, p.level.name, modify);
                 return true;
             }
             return false;
@@ -202,7 +199,7 @@ namespace MCGalaxy.Commands {
                 return false;
             } else {
                 modify = value;
-                Player.Message(p, "Set {0} for {1}&S to {2}", variable, p.level.name, value);
+                Player.Message(p, "Set {0} for {1}%S to {2}", variable, p.level.name, value);
                 return true;
             }
         }
@@ -221,7 +218,7 @@ namespace MCGalaxy.Commands {
                 return false;
             } else {
                 modify = (int)(value * scale);
-                Player.Message(p, "Set {0} for {1}&S to {2}", variable, p.level.name, value.ToString("F2"));
+                Player.Message(p, "Set {0} for {1}%S to {2}", variable, p.level.name, value.ToString("F2"));
                 return true;
             }
         }
@@ -312,7 +309,7 @@ namespace MCGalaxy.Commands {
         
         void SetEnvColour(Player p, string value, byte envType, string envTypeName, ref string target) {
             if (IsResetString(value)) {
-                p.SendMessage(string.Format("Reset {0} color for {1}&S to normal", envTypeName, p.level.name));
+                Player.Message(p, "Reset {0} color for {1}%S to normal", envTypeName, p.level.name);
                 target = null;
             } else {
                 if (value.Length > 0 && value[0] == '#')
@@ -322,7 +319,7 @@ namespace MCGalaxy.Commands {
                     return;
                 }
                 
-                p.SendMessage(string.Format("Set {0} color for {1}&S to #{2}", envTypeName, p.level.name, value));
+                Player.Message(p, "Set {0} color for {1}%S to #{2}", envTypeName, p.level.name, value);
                 target = value;
             }
             SendEnvColorPackets(p, envType, value);

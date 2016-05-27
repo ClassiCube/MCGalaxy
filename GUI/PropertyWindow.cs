@@ -1381,9 +1381,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
 
 
-        /// <summary>
-        /// Toggles enabled state for IRC options.
-        /// </summary>
+        /// <summary> Toggles enabled state for IRC options. </summary>
         /// <param name="enabled"></param>
         protected void toggleIrcSettings(bool enabled)
         {
@@ -1397,9 +1395,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
 
 
-        /// <summary>
-        /// Toggles enabeld state for MySQL options.
-        /// </summary>
+        /// <summary> Toggles enabeld state for MySQL options. </summary>
         /// <param name="enabled"></param>
         protected void toggleMySQLSettings(bool enabled)
         {

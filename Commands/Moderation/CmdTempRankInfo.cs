@@ -47,10 +47,10 @@ namespace MCGalaxy.Commands.Moderation {
             
             DateTime assignmentDate = new DateTime(years, months, days, hours, minutes, 0);
             DateTime expireDate = assignmentDate.AddHours(Convert.ToDouble(period));
-            Player.Message(p, "%STemp rank information for " + args[0] + ":");
-            Player.Message(p, "%SFrom " + oldCol + oldrank + " %Sto "
+            Player.Message(p, "Temp rank information for " + args[0] + ":");
+            Player.Message(p, "From " + oldCol + oldrank + " %Sto "
                                + tempCol + temprank + "%S, by " + tempranker);
-            Player.Message(p, "&SRanked on &a" + assignmentDate.ToString() +
+            Player.Message(p, "Ranked on &a" + assignmentDate.ToString() +
                                "%S, expires &a" + expireDate.ToString());
         }
 

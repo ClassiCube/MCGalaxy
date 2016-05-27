@@ -136,74 +136,47 @@ namespace MCGalaxy.Gui.Components {
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Appends the log.
-        /// </summary>
+        /// <summary> Appends the log. </summary>
         /// <param name="text">The text to log.</param>
         public void AppendLog(string text, Color foreColor) {
-            if ( InvokeRequired ) {
-                Invoke((MethodInvoker)( () => AppendLog ( text, foreColor ) ));
+            if (InvokeRequired) {
+                Invoke((MethodInvoker)(() => AppendLog(text, foreColor)));
                 return;
             }
-
-            if ( DateStamp )
-                Append(dateStamp, Color.Gray, BackColor);
+            if (DateStamp) Append(dateStamp, Color.Gray);
             int line = GetLineFromCharIndex(Math.Max(0, TextLength - 1));
             
-            if ( !Colorize ) {                
+            if (!Colorize) {                
                 AppendText(text);                
-                if ( AutoScroll ) ScrollToEnd(line);
+                if (AutoScroll) ScrollToEnd(line);
                 return;
             }
-            if ( !text.Contains('&') && !text.Contains('%') ) {
-                Append(text, foreColor, BackColor);              
-                if ( AutoScroll ) ScrollToEnd(line);
-                return;
-            }
-
-            string[] messagesSplit = text.Split(new[] { '%', '&' }, StringSplitOptions.RemoveEmptyEntries);
-
-            for ( int i = 0; i < messagesSplit.Length; i++ ) {
-                string split = messagesSplit[i];
-                if ( String.IsNullOrEmpty(split.Trim()) )
-                    continue;
-                Color? color = GetColor(split[0]);
-                Append(color != null ? split.Substring(1) : split, color ?? foreColor, BackColor);
-            }
-            if ( AutoScroll ) ScrollToEnd(line);
+            Formatter.Format(text, (c, s) => Formatter.FormatGui(c, s, this, foreColor));
+            if (AutoScroll) ScrollToEnd(line);
         }
 
-        /// <summary>
-        /// Appends the log.
-        /// </summary>
+        /// <summary> Appends the log. </summary>
         /// <param name="text">The text to log.</param>
         public void AppendLog(string text) {
             AppendLog(text, ForeColor);
         }
 
-        /// <summary>
-        /// Appends the log.
-        /// </summary>
+        /// <summary> Appends the log. </summary>
         /// <param name="text">The text to log.</param>
         /// <param name="foreColor">Color of the foreground.</param>
-        /// <param name="bgColor">Color of the background.</param>
-        private void Append(string text, Color foreColor, Color bgColor) {
-            if ( InvokeRequired ) {
-                Invoke((MethodInvoker)( () => Append ( text, foreColor, bgColor ) ));
-                return;
+        internal void Append(string text, Color foreColor) {
+            if (InvokeRequired) {
+        		Invoke((MethodInvoker)(() => Append(text, foreColor))); return;
             }
 
             SelectionStart = TextLength;
             SelectionLength = 0;
             SelectionColor = foreColor;
-            SelectionBackColor = bgColor;
             AppendText(text);
-            SelectionBackColor = BackColor;
             SelectionColor = ForeColor;
-
         }
 
-        private void ColoredReader_LinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e) {
+        void ColoredReader_LinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e) {
             if ( !e.LinkText.StartsWith("http://www.minecraft.net/classic/play/") ) {
                 if ( MessageBox.Show("Never open links from people that you don't trust!", "Warning!!", MessageBoxButtons.OKCancel) == DialogResult.Cancel )
                     return;
@@ -357,34 +330,5 @@ namespace MCGalaxy.Gui.Components {
         }
 
         #endregion
-        
-        /// <summary> Gets a color from a char. </summary>
-        public static Color? GetColor( char c ) {
-            Colors.MapColor( ref c );
-            switch ( c ) {
-                case '0': return Color.Black;
-                case '1': return Color.FromArgb( 255, 0, 0, 161 );
-                case '2': return Color.FromArgb( 255, 0, 161, 0 );
-                case '3': return Color.FromArgb( 255, 0, 161, 161 );
-                case '4': return Color.FromArgb( 255, 161, 0, 0 );
-                case '5': return Color.FromArgb( 255, 161, 0, 161 );
-                case '6': return Color.FromArgb( 255, 161, 161, 0 );
-                case '7': return Color.FromArgb( 255, 161, 161, 161 );
-                case '8': return Color.FromArgb( 255, 34, 34, 34 );
-                case '9': return Color.FromArgb( 255, 34, 34, 225 );
-                case 'a': return Color.FromArgb( 255, 34, 225, 34 );
-                case 'b': return Color.FromArgb( 255, 34, 225, 225 );
-                case 'c': return Color.FromArgb( 255, 225, 34, 34 );
-                case 'd': return Color.FromArgb( 255, 225, 34, 225 );
-                case 'e': return Color.FromArgb( 255, 225, 225, 34 );
-                case 'f': return Color.Black;
-                default:
-                    char fallback = Colors.GetFallback(c);
-                    if (fallback == '\0') return null;
-                    
-                    CustomColor col = Colors.ExtColors[c];
-                    return Color.FromArgb(col.R, col.G, col.B);
-            }
-        }
     }
 }

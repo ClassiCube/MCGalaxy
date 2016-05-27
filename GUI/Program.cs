@@ -126,55 +126,11 @@ namespace MCGalaxy.Gui
                     useHighQualityGui = value.ToLower() == "true"; break;
             }
         }
-        
-        //U WANT TO SEE HOW WE DO IT MCSTORM?
-        //I WOULD EXPLAIN, BUT ITS BETTER TO JUST COPY AND PASTE, AMIRITE?
-        private static void WriteToConsole(string message)
-        {
-            if (!message.Contains("&") && !message.Contains("%"))
-            {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(message);
-                return;
-            }
-            string[] splitted = message.Split('&', '%');
-            for (int i = 0; i < splitted.Length; i++)
-            {
-                string elString = splitted[i];
-                if (String.IsNullOrEmpty(elString))
-                    continue;
-                Console.ForegroundColor = GetColor(elString[0]);
-                Console.Write(elString.Substring(1));
-                if (i != splitted.Length - 1)
-                    continue;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write('\n');
-            }
-        }
 
-        private static ConsoleColor GetColor(char c) {
-        	Colors.MapColor(ref c);
-            switch (c) {             
-                case '0': return ConsoleColor.Black;
-                case '1': return ConsoleColor.DarkBlue;
-                case '2': return ConsoleColor.DarkGreen;
-                case '3': return ConsoleColor.DarkCyan;
-                case '4': return ConsoleColor.DarkRed;
-                case '5': return ConsoleColor.DarkMagenta;
-                case '7': return ConsoleColor.Gray;
-                case '6': return ConsoleColor.DarkYellow;
-                case '8': return ConsoleColor.DarkGray;
-                case '9': return ConsoleColor.Blue;
-                case 'a': case 'A': return ConsoleColor.Green;
-                case 'b': case 'B': return ConsoleColor.Cyan;
-                case 'c': case 'C': return ConsoleColor.Red;
-                case 'd': case 'D': return ConsoleColor.Magenta;
-                case 'e': case 'E': return ConsoleColor.Yellow;
-                case 'f': case 'F': return ConsoleColor.White;
-                default:
-                    char fallback = Colors.GetFallback(c);
-                    return fallback == '\0' ? ConsoleColor.White : GetColor(fallback);
-            }
+        static void WriteToConsole(string message) {
+            Formatter.Format(message, Formatter.FormatConsole);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
         }
 
         public static void handleComm()
