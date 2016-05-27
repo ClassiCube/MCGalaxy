@@ -189,13 +189,13 @@ namespace MCGalaxy.Commands
                     if (!LevelInfo.ExistsOffline(firstMap)) {
                         Player.Message(p, "You don't have a map with that map number."); return;
                     }
-                    Command.all.Find("deletelvl").Use(p, FirstMapName(p));
+                    Command.all.Find("deletelvl").Use(null, FirstMapName(p));
                     Player.Message(p, "Map 1 has been removed.");
                 } else if (byte.TryParse(value, out mapNum)) {
                     if (!LevelInfo.ExistsOffline(p.name.ToLower() + value)) {
                         Player.Message(p, "You don't have a map with that map number."); return;
                     }
-                    Command.all.Find("deletelvl").Use(p, p.name.ToLower() + value);
+                    Command.all.Find("deletelvl").Use(null, p.name.ToLower() + value);
                     Player.Message(p, "Map " + value + " has been removed.");
                 } else {
                     Help(p);
@@ -382,11 +382,11 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/os [command string] - sends command to The Overseer");
-            Player.Message(p, "Accepted commands:");
-            Player.Message(p, "go, map, spawn, zone, kick, kickall, env, " +
-                               "preset, levelblock/lb");
-            Player.Message(p, "/os zone add [name] - allows [name] to build in the world.");
+            Player.Message(p, "%T/os [command] [args]");
+            Player.Message(p, "%HAllows you to modify and manage your personal realms.");
+            Player.Message(p, "%HCommands: %Sgo, map, spawn, zone, kick, " +
+                           "kickall, env, preset, levelblock(lb)");            
+            Player.Message(p, "%T/os zone add [name] %H- allows [name] to build in the world.");
         }
     }
 }
