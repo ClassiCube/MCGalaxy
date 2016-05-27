@@ -26,15 +26,15 @@ namespace MCGalaxy.Commands {
     
     public sealed class CommandKeywords {
         public static List<CommandKeywords> all = new List<CommandKeywords>();
-        public Command Cmd;
+        public string CmdName;
         public string[] Keywords;
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         
         public CommandKeywords(Command cmd, string key) {
-            this.Cmd = cmd;
+            CmdName = cmd.name;
             string keyword = key + " " + cmd.name + " " + cmd.type;
             if (cmd.shortcut.Length > 3) { keyword += " " + cmd.shortcut; }
-            this.Keywords = keyword.Split(' ');
+            Keywords = keyword.Split(' ');
             all.Add(this);
         }
         
@@ -280,7 +280,7 @@ namespace MCGalaxy.Commands {
                 foreach (string key in ckw.Keywords)
             {
                 if (key == "" || key.IndexOf(word, comp) < 0) continue;
-                list.Add(ckw.Cmd.name); break;
+                list.Add(ckw.CmdName); break;
             }
             return list.Count == 0 ? null : list.ToArray();
         }
@@ -293,7 +293,7 @@ namespace MCGalaxy.Commands {
             {
                 for (int i = 0; i < words.Length; i++) {
                     if (key == "" || key.IndexOf(words[i], comp) < 0) continue;
-                    if (!list.Contains(ckw.Cmd.name)) list.Add(ckw.Cmd.name);
+                    if (!list.Contains(ckw.CmdName)) list.Add(ckw.CmdName);
                     break;
                 }
             }
