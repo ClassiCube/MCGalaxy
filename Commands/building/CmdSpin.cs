@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdSpin() { }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("mirror", "mirror") }; }
+        	get { return new [] { new CommandAlias("mirror", "mirror"), new CommandAlias("rotate") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -81,9 +81,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/spin <x/y/z/180/mirrorx/mirrory/mirrorz> - Spins the copied object.");
-            Player.Message(p, "Shortcuts: u for mirror on y, m for mirror on z");
-            Player.Message(p, "x for spin 90 on x, y for spin 90 on y, z for spin 90 on z.");
+            Player.Message(p, "%T/spin mirrorx/mirrory/mirrorz");
+            Player.Message(p, "%HFlips/Mirrors the copied object around that axis.");
+            Player.Message(p, "%T/spin X/Y/Z 90/180/270");
+            Player.Message(p, "%HRotates the copied object around that axis by the given angle. " +
+                           "If no angle is given, 90 degrees is used.");
         }
     }
 }
