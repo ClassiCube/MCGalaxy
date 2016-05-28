@@ -19,30 +19,41 @@ using System;
 using System.IO;
 
 namespace MCGalaxy.Drawing {
-
     public static class Flip {
         
         public static CopyState RotateX(CopyState state, int angle) {
-            CopyState newState = new CopyState(state.X, state.Y, state.Z,
-                                               state.Width, state.Length, state.Height);
-            int[] m = { 0x100, 0x002, 0x010 }; 
+			CopyState newState = Clone(state);
+			newState.Height = angle == 180 ? state.Height : state.Length;
+			newState.Length = angle == 180 ? state.Length : state.Height;
+			
+            int[] m = { posX, negZ, posY };
+            if (angle == 180) { m[1] = negY; m[2] = negZ; }
+            if (angle == 270) { m[1] = posZ; m[2] = negY; }
             return Rotate(state, newState, m);
         }
         
         public static CopyState RotateY(CopyState state, int angle) {
-            CopyState newState = new CopyState(state.X, state.Y, state.Z,
-                                               state.Length, state.Height, state.Width);
-            int[] m = { 0x002, 0x010, 0x100 };
+			CopyState newState = Clone(state);
+			newState.Width = angle == 180 ? state.Width : state.Length;
+			newState.Length = angle == 180 ? state.Length : state.Width;
+
+            int[] m = { negZ, posY, posX };
+            if (angle == 180) { m[0] = negX; m[2] = negZ; }
+            if (angle == 270) { m[0] = posZ; m[2] = negX; }
             return Rotate(state, newState, m);
         }
         
         public static CopyState RotateZ(CopyState state, int angle) {
-            CopyState newState = new CopyState(state.X, state.Y, state.Z,
-                                               state.Height, state.Width, state.Length);
-            int[] m = { 0x010, 0x200, 0x001 };
+			CopyState newState = Clone(state);
+			newState.Width = angle == 180 ? state.Width : state.Height;
+			newState.Height = angle == 180 ? state.Height : state.Width;
+			
+            int[] m = { posY, negX, posZ };
+            if (angle == 180) { m[0] = negX; m[1] = negY; }
+            if (angle == 270) { m[0] = negY; m[1] = posX; }
             return Rotate(state, newState, m);
         }
-        
+
         static CopyState Rotate(CopyState state, CopyState newState, int[] m) {
             byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
             for (int i = 0; i < blocks.Length; i++) {
@@ -59,21 +70,29 @@ namespace MCGalaxy.Drawing {
                 state.X + Rotate(m[0], oX, oY, oZ, state),
                 state.Y + Rotate(m[1], oX, oY, oZ, state),
                 state.Z + Rotate(m[2], oX, oY, oZ, state));
-            newState.UsedBlocks = state.UsedBlocks;
             return newState;
         }
 		
+		const int posX = 0x100, negX = 0x200, posY = 0x010, negY = 0x020, posZ = 0x001, negZ = 0x002;
         static int Rotate(int row, int x, int y, int z, CopyState state) {
             switch (row) {
-                case 0x100: return x;
-                case 0x200: return (state.Width - 1 - x);
-                case 0x010: return y;
-                case 0x020: return (state.Height - 1 - y);
-                case 0x001: return z;
-                case 0x002: return (state.Length - 1 - z);
+                case posX: return x;
+                case negX: return (state.Width - 1 - x);
+                case posY: return y;
+                case negY: return (state.Height - 1 - y);
+                case posZ: return z;
+                case negZ: return (state.Length - 1 - z);
             }
             return 0;
         }
+		
+		static CopyState Clone(CopyState state) {
+			CopyState newState = new CopyState(state.X, state.Y, state.Z,
+			                                   state.Width, state.Height, state.Length);
+			newState.UsedBlocks = state.UsedBlocks;
+			return newState;
+		}
+		
         
         public static void MirrorX(CopyState state) {
             int midZ = state.Length / 2, maxZ = state.Length - 1;

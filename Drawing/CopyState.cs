@@ -51,7 +51,7 @@ namespace MCGalaxy.Drawing {
 			ExtBlocks = new byte[width * height * length];
 			UsedBlocks = Volume;
 		}
-		
+
 		public void Clear() {
 			Blocks = null;
 			ExtBlocks = null;

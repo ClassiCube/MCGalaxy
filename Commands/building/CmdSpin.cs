@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             if (p.CopyBuffer == null) {
                 Player.Message(p, "You haven't copied anything yet"); return;
             }
-            string opt = opt.ToLower();
+            string opt = message.ToLower();
             
             // Mirroring
             if (opt == "mirrorx" || opt == "mirror x") {
@@ -48,24 +48,36 @@ namespace MCGalaxy.Commands.Building {
                 Flip.MirrorZ(p.CopyBuffer);
                 Player.Message(p, "Flipped copy across the Z (north/south) axis.");
             } else {
-                // Rotating
-                switch (opt) {
-                    case "90":
-                    case "y":
-                        p.CopyBuffer = Flip.RotateY(p.CopyBuffer, 90); break;
-                    case "180":
-                        Flip.MirrorX(p.CopyBuffer); Flip.MirrorZ(p.CopyBuffer); break;
-                    case "z":
-                        p.CopyBuffer = Flip.RotateZ(p.CopyBuffer, 90); break;
-                    case "x":
-                        p.CopyBuffer = Flip.RotateX(p.CopyBuffer, 90); break;
-
-                    default:
-                        Player.Message(p, "Incorrect syntax");
-                        Help(p); return;
-                        Player.Message(p, "Spun: &b" + opt);
+                string[] args = opt.Split(' ');
+                char axis = 'Y';
+                int angle = 90;
+                if (!Handle(ref axis, ref angle, args[0])) { Help(p); return; }
+                if (args.Length > 1 && !Handle(ref axis, ref angle, args[1])) { Help(p); return; }
+                
+                if (angle == 0) {
+                } else if (axis == 'X') {
+                    p.CopyBuffer = Flip.RotateX(p.CopyBuffer, angle);
+                } else if (axis == 'Y') {
+                    p.CopyBuffer = Flip.RotateY(p.CopyBuffer, angle);
+                } else if (axis == 'Z') {
+                    p.CopyBuffer = Flip.RotateZ(p.CopyBuffer, angle);
                 }
+                Player.Message(p, "Rotated copy {0} degrees around the {1} axis", angle, axis);
             }            
+        }
+        
+        bool Handle(ref char axis, ref int angle, string arg) {
+            int value;
+            if (arg == "x" || arg == "y" || arg == "z") {
+                axis = char.ToUpper(arg[0]); return true;
+            } else if (int.TryParse(arg, out value)) {
+                // Clamp to [0, 360)
+                value %= 360;
+                if (value < 0) value += 360;
+                angle = value;
+                return angle == 0 || angle == 90 || angle == 180 || angle == 270;
+            }
+            return false;
         }
         
         public override void Help(Player p) {
