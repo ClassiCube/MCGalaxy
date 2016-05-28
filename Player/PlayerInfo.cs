@@ -155,7 +155,7 @@ namespace MCGalaxy {
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", "%" + name + "%");
             string syntax = Server.useMySQL ? 
-                "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20 COLLATE utf8_general_ci" :
+                "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20" :
                 "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20 COLLATE NOCASE";
             
             using (DataTable results = Database.fillData(query, syntax)) {

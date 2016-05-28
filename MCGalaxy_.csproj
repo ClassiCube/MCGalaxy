@@ -399,9 +399,7 @@
     <Compile Include="Commands\World\CmdSave.cs" />
     <Compile Include="Commands\World\CmdSetspawn.cs" />
     <Compile Include="Commands\World\CmdTexture.cs" />
-    <Compile Include="Commands\World\CmdUnflood.cs">
-      <DependentUpon>CmdUnload.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\PermissionCmd.cs" />
     <Compile Include="Config\ConfigAttribute.cs" />
