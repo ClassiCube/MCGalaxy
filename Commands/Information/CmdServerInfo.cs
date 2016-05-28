@@ -71,6 +71,7 @@ namespace MCGalaxy.Commands {
                 Server.ProcessCounter = new PerformanceCounter("Process", "% Processor Time", proc.ProcessName);
                 Server.ProcessCounter.BeginInit();
                 Server.ProcessCounter.NextValue();
+                System.Threading.Thread.Sleep(500);
             }
             
             // Private Bytes because it is what the process has reserved for itself

@@ -276,7 +276,6 @@
     <Compile Include="Commands\Moderation\CmdBlockSpeed.cs" />
     <Compile Include="Commands\Moderation\CmdCmdSet.cs" />
     <Compile Include="Commands\Moderation\CmdCrashServer.cs" />
-    <Compile Include="Commands\Moderation\CmdDelTempRank.cs" />
     <Compile Include="Commands\Moderation\CmdDemote.cs" />
     <Compile Include="Commands\Moderation\CmdExplode.cs" />
     <Compile Include="Commands\Moderation\CmdFollow.cs" />
@@ -312,8 +311,6 @@
     <Compile Include="Commands\Moderation\CmdShutdown.cs" />
     <Compile Include="Commands\Moderation\CmdTempBan.cs" />
     <Compile Include="Commands\Moderation\CmdTempRank.cs" />
-    <Compile Include="Commands\Moderation\CmdTempRankInfo.cs" />
-    <Compile Include="Commands\Moderation\CmdTempRankList.cs" />
     <Compile Include="Commands\Moderation\CmdTrust.cs" />
     <Compile Include="Commands\Moderation\CmdUnban.cs" />
     <Compile Include="Commands\Moderation\CmdUnbanip.cs" />

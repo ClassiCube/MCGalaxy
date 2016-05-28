@@ -84,7 +84,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdCuboid()), "box set area block");
             new CommandKeywords((new CmdDelete()), "del mode");
             new CommandKeywords((new CmdDeleteLvl()), "delete remove level lvl");
-            new CommandKeywords((new CmdDelTempRank()), "del remove temp rank");
             new CommandKeywords((new CmdDemote()), "rank lower");
             new CommandKeywords((new CmdDevs()), "dev MCGalaxy forgeware forgecraft");
             new CommandKeywords((new CmdDisagree()), "no rules");
@@ -212,7 +211,7 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdSay()), "speak broad cast");
             new CommandKeywords((new CmdSearch()), "find block command player rank");
             new CommandKeywords((new CmdSeen()), "saw last user");
-            new CommandKeywords((new CmdServerReport()), "report server");
+            new CommandKeywords((new CmdServerInfo()), "report server");
             new CommandKeywords((new CmdServer()), "setting option");
             new CommandKeywords((new CmdSetRank()), "rank set user player");
             new CommandKeywords((new CmdSetspawn()), "spawn set map level lvl");
@@ -228,8 +227,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdTColor()), "title color set");
             new CommandKeywords((new CmdTempBan()), "temp ban");
             new CommandKeywords((new CmdTempRank()), "temp rank");
-            new CommandKeywords((new CmdTempRankInfo()), "temp rank info");
-            new CommandKeywords((new CmdTempRankList()), "temp rank list");
             new CommandKeywords((new CmdTime()), "server");
             new CommandKeywords((new CmdTimer()), "count down");
             new CommandKeywords((new CmdTitle()), "set user");
