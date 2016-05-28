@@ -549,6 +549,7 @@ namespace MCGalaxy {
             if (type == Block.custom_block) {
                 buffer[7] = hasBlockDefs ? level.GetExtTile(x, y, z) 
                     : level.GetFallbackExtTile(x, y, z);
+                if (!hasCustomBlocks) buffer[7] = Block.ConvertCPE(buffer[7]);
             } else if (hasCustomBlocks) {
                 buffer[7] = Block.Convert(type);
             } else {
@@ -570,6 +571,7 @@ namespace MCGalaxy {
             
             if (type == Block.custom_block) {
                 buffer[7] = hasBlockDefs ? extType : level.GetFallback(extType);
+                if (!hasCustomBlocks) buffer[7] = Block.ConvertCPE(buffer[7]);
             } else if (hasCustomBlocks) {
                 buffer[7] = Block.Convert(type);
             } else {
