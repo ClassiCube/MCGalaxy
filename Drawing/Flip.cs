@@ -22,21 +22,21 @@ namespace MCGalaxy.Drawing {
 
     public static class Flip {
         
-        public static CopyState RotateX(CopyState state) {
+        public static CopyState RotateX(CopyState state, int angle) {
             CopyState newState = new CopyState(state.X, state.Y, state.Z,
                                                state.Width, state.Length, state.Height);
-            int[] m = { 0x100, 0x002, 0x010 };
+            int[] m = { 0x100, 0x002, 0x010 }; 
             return Rotate(state, newState, m);
         }
         
-        public static CopyState RotateY(CopyState state) {
+        public static CopyState RotateY(CopyState state, int angle) {
             CopyState newState = new CopyState(state.X, state.Y, state.Z,
                                                state.Length, state.Height, state.Width);
             int[] m = { 0x002, 0x010, 0x100 };
             return Rotate(state, newState, m);
         }
         
-        public static CopyState RotateZ(CopyState state) {
+        public static CopyState RotateZ(CopyState state, int angle) {
             CopyState newState = new CopyState(state.X, state.Y, state.Z,
                                                state.Height, state.Width, state.Length);
             int[] m = { 0x010, 0x200, 0x001 };
@@ -59,9 +59,10 @@ namespace MCGalaxy.Drawing {
                 state.X + Rotate(m[0], oX, oY, oZ, state),
                 state.Y + Rotate(m[1], oX, oY, oZ, state),
                 state.Z + Rotate(m[2], oX, oY, oZ, state));
+            newState.UsedBlocks = state.UsedBlocks;
             return newState;
         }
-        
+		
         static int Rotate(int row, int x, int y, int z, CopyState state) {
             switch (row) {
                 case 0x100: return x;
