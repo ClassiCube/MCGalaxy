@@ -1,0 +1,130 @@
+﻿/*
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Dual-licensed under the Educational Community License, Version 2.0 and
+the GNU General Public License, Version 3 (the "Licenses"); you may
+not use this file except in compliance with the Licenses. You may
+obtain a copy of the Licenses at
+http://www.opensource.org/licenses/ecl2.php
+http://www.gnu.org/licenses/gpl-3.0.html
+Unless required by applicable law or agreed to in writing,
+software distributed under the Licenses are distributed on an "AS IS"
+BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied. See the Licenses for the specific language governing
+permissions and limitations under the Licenses.
+ */
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace MCGalaxy {
+    
+    public class Warp {
+        public ushort x, y, z;
+        public byte rotx, roty;
+        public string name;
+        public string lvlname;
+    }
+    
+    public sealed class WarpList {        
+        public static WarpList Global = new WarpList(false);
+        
+        public List<Warp> Items = new List<Warp>();
+        bool playerWarp;
+        
+        public WarpList(bool playerWarp) {
+            this.playerWarp = playerWarp;
+        }
+        
+        public Warp Find(string name) {
+            foreach (Warp wp in Items) {
+                if (wp.name.CaselessEq(name)) return wp;
+            }
+            return null;
+        }
+        
+        public void Goto(string waypoint, Player p) {
+            Warp wp = Find(waypoint);
+            if (wp == null) return;
+            
+            Level lvl = LevelInfo.FindExact(wp.lvlname);
+            if (p.level != lvl)
+                Command.all.Find("goto").Use(p, wp.lvlname);
+            
+            if (p.level.name.CaselessEq(wp.lvlname)) {
+                p.SendPos(0xFF, wp.x, wp.y, wp.z, wp.rotx, wp.roty);
+                Player.Message(p, "Sent you to waypoint");
+            } else {
+                Player.Message(p, "Unable to send you to the warp as the map it is on is not loaded.");
+            }
+        }
+
+        public void Create(string waypoint, Player p) {
+            Warp wp = new Warp();
+            wp.x = p.pos[0]; wp.y = p.pos[1]; wp.z = p.pos[2];
+            wp.rotx = p.rot[0]; wp.roty = p.rot[1];
+            wp.name = waypoint;
+            wp.lvlname = p.level.name;
+            Items.Add(wp);
+            Save(p);
+        }
+
+        public void Update(string waypoint, Player p) {
+            Warp wp = Find(waypoint);
+            Items.Remove(wp);
+            Create(waypoint, p);
+        }
+
+        public void Remove(string waypoint, Player p) {
+            Warp wp = Find(waypoint);
+            Items.Remove(wp);
+            Save(p);
+        }
+
+        public bool Exists(string waypoint) {
+            foreach (Warp wp in Items) {
+                if (wp.name.CaselessEq(waypoint)) return true;
+            }
+            return false;
+        }
+        
+
+        public void Load(Player p) {
+            string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";
+            if (!File.Exists(file)) return;
+            
+            using (StreamReader SR = new StreamReader(file)) {
+                string line;
+                while ((line = SR.ReadLine()) != null) {
+                    line = line.ToLower().Trim();
+                    if (line.StartsWith("#") || !line.Contains(":")) continue;
+                    
+                    string[] parts = line.ToLower().Split(':');
+                    Warp wp = new Warp();
+                    try {
+                        wp.name = parts[0];
+                        wp.lvlname = parts[1];
+                        wp.x = ushort.Parse(parts[2]);
+                        wp.y = ushort.Parse(parts[3]);
+                        wp.z = ushort.Parse(parts[4]);
+                        wp.rotx = byte.Parse(parts[5]);
+                        wp.roty = byte.Parse(parts[6]);                        
+                        Items.Add(wp);
+                    } catch {
+                        Server.s.Log("Couldn't load a warp.");
+                    }
+                }
+            }
+        }
+
+        public void Save(Player p) {
+            string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";
+            if (Items.Count == 0) return;
+            
+            using (StreamWriter SW = new StreamWriter(file)) {
+                foreach (Warp wp in Items) {
+                    SW.WriteLine(wp.name + ":" + wp.lvlname + ":" + wp.x + ":" + wp.y + ":" + wp.z + ":" + wp.rotx + ":" + wp.roty);
+                }
+            }
+        }
+    }
+}

@@ -534,7 +534,7 @@
     <Compile Include="Player\TabList.cs" />
     <Compile Include="Player\Undo\UndoCache.cs" />
     <Compile Include="Player\Undo\UndoFileCBin.cs" />
-    <Compile Include="Player\Waypoint.cs" />
+    <Compile Include="Player\Warp.cs" />
     <Compile Include="Player\Player.Timers.cs" />
     <Compile Include="Player\Undo\UndoFile.cs" />
     <Compile Include="Player\Undo\UndoFileBin.cs" />
@@ -585,7 +585,6 @@
     <Compile Include="Server\Server.Threads.cs" />
     <Compile Include="Server\Updater.cs" />
     <Compile Include="Player\VIP.cs" />
-    <Compile Include="Server\Extra\Warp.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />

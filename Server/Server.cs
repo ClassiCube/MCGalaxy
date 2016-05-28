@@ -658,7 +658,7 @@ namespace MCGalaxy
             Block.SetBlocks();
             Awards.Load();
             Economy.Load();
-            Warp.LOAD();
+            WarpList.Global.Load(null);
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Team.LoadList();

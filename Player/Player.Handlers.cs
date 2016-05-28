@@ -577,8 +577,7 @@ namespace MCGalaxy {
             }                
             
             try {
-                WaypointList.Load(this);
-                //if (Waypoints.Count > 0) { this.SendMessage("Loaded " + Waypoints.Count + " waypoints!"); }
+                Waypoints.Load(this);
             } catch (Exception ex) {
                 SendMessage("Error loading waypoints!");
                 Server.ErrorLog(ex);

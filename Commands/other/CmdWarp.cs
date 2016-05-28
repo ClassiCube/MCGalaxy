@@ -37,6 +37,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (p == null) { MessageInGameOnly(p); return; }
+            WarpList warps = WarpList.Global;
             string[] command = message.ToLower().Split(' ');
             string par0 = String.Empty;
             string par1 = String.Empty;
@@ -51,7 +52,7 @@ namespace MCGalaxy.Commands
             if (par0 == "list" || par0 == "view" || par0 == "l" || par0 == "v")
             {
                 Player.Message(p, "Warps:");
-                foreach (Warp.Wrp wr in Warp.Warps)
+                foreach (Warp wr in warps.Items)
                 {
                     if (LevelInfo.Find(wr.lvlname) != null)
                     {
@@ -67,13 +68,13 @@ namespace MCGalaxy.Commands
             	if (CheckAdditionalPerm(p, 1))
                 {
                     if (par1 == null) { Player.Message(p, "You didn't specify a name for the warp!"); return; }
-                    if (Warp.WarpExists(par1)) { Player.Message(p, "Warp has already been created!!"); return; }
+                    if (warps.Exists(par1)) { Player.Message(p, "Warp has already been created!!"); return; }
                     {
-                        if (par2 == null) { Warp.AddWarp(par1, p); }
-                        else { Warp.AddWarp(par1, PlayerInfo.Find(par2)); }
+                        if (par2 == null) { warps.Create(par1, p); }
+                        else { warps.Create(par1, PlayerInfo.Find(par2)); }
                     }
                     {
-                        if (Warp.WarpExists(par1))
+                        if (warps.Exists(par1))
                         {
                             Player.Message(p, "Warp created!");
                             return;
@@ -93,12 +94,12 @@ namespace MCGalaxy.Commands
                 if (CheckAdditionalPerm(p, 2))
                 {
                     if (par1 == null) { Player.Message(p, "You didn't specify a warp to delete!"); return; }
-                    if (!Warp.WarpExists(par1)) { Player.Message(p, "Warp doesn't exist!!"); return; }
+                    if (!warps.Exists(par1)) { Player.Message(p, "Warp doesn't exist!!"); return; }
                     {
-                        Warp.DeleteWarp(par1);
+                        warps.Remove(par1, p);
                     }
                     {
-                        if (!Warp.WarpExists(par1))
+                        if (!warps.Exists(par1))
                         {
                             Player.Message(p, "Warp deleted!");
                             return;
@@ -118,13 +119,13 @@ namespace MCGalaxy.Commands
                 if (CheckAdditionalPerm(p, 3))
                 {
                     if (par1 == null) { Player.Message(p, "You didn't specify a warp to be moved!"); return; }
-                    if (!Warp.WarpExists(par1)) { Player.Message(p, "Warp doesn't exist!!"); return; }
+                    if (!warps.Exists(par1)) { Player.Message(p, "Warp doesn't exist!!"); return; }
                     {
-                        if (par2 == null) { Warp.MoveWarp(par1, p); }
-                        else { Warp.MoveWarp(par1, PlayerInfo.Find(par2)); }
+                        if (par2 == null) { warps.Update(par1, p); }
+                        else { warps.Update(par1, PlayerInfo.Find(par2)); }
                     }
                     {
-                        if (Warp.WarpExists(par1))
+                        if (warps.Exists(par1))
                         {
                             Player.Message(p, "Warp moved!");
                             return;
@@ -141,26 +142,9 @@ namespace MCGalaxy.Commands
 
             else
             {
-                if (Warp.WarpExists(par0))
+                if (warps.Exists(par0))
                 {
-                    Warp.Wrp w = new Warp.Wrp();
-                    w = Warp.GetWarp(par0);
-                    Level lvl = LevelInfo.Find(w.lvlname);
-                    if (lvl != null)
-                    {
-                        if (p.level != lvl)
-                        {
-                            if (lvl.permissionvisit > p.group.Permission) { Player.Message(p, "Sorry, you aren't a high enough rank to visit the map that that warp is on."); return; }
-                            Command.all.Find("goto").Use(p, lvl.name);
-                        }
-                        p.SendPos(0xFF, w.x, w.y, w.z, w.rotx, w.roty);
-                        return;
-                    }
-                    else
-                    {
-                        Player.Message(p, "The level that that warp is on (" + w.lvlname + ") either no longer exists or is currently unloaded");
-                        return;
-                    }
+                    warps.Goto(par0, p);
                 }
                 else
                 {

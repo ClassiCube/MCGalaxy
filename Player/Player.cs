@@ -296,7 +296,7 @@ namespace MCGalaxy {
         public List<string> spyChatRooms = new List<string>();
         public DateTime lastchatroomglobal;
 
-        public List<Waypoint> Waypoints = new List<Waypoint>();
+        public WarpList Waypoints = new WarpList(true);
 
         public Random random = new Random();
 
