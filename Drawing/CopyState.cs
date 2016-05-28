@@ -73,7 +73,7 @@ namespace MCGalaxy.Drawing {
 			return (y * Length + z) * Width + x;
 		}
 		
-		public void Set(int x, int y, int z, byte type, byte extType) {
+		public void Set(byte type, byte extType, int x, int y, int z) {
 			Blocks[(y * Length + z) * Width + x] = type;
 			ExtBlocks[(y * Length + z) * Width + x] = extType;
 		}
@@ -127,7 +127,7 @@ namespace MCGalaxy.Drawing {
 				ushort x = BitConverter.ToUInt16(raw, i + 0);
 				ushort y = BitConverter.ToUInt16(raw, i + 2);
 				ushort z = BitConverter.ToUInt16(raw, i + 4);
-				Set(x - X, y - Y, z - Z, raw[i + 6], 0);
+				Set(raw[i + 6], 0, x - X, y - Y, z - Z);
 			}
 			UsedBlocks = Volume;
 			OriginX = X; OriginY = Y; OriginZ = Z;

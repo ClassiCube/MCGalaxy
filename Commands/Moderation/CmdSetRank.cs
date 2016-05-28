@@ -36,7 +36,6 @@ namespace MCGalaxy.Commands.Moderation {
             string reason = args.Length > 2 ? args[2] : "Congratulations!";
             if (newRank == null) { Player.Message(p, "Could not find specified rank."); return; }
 
-            Group bannedGroup = Group.findPerm(LevelPermission.Banned);
             string rankMsg;
             string rankReason = "%S. (" + reason + ")";
             if (who == null) {

@@ -62,13 +62,13 @@ namespace MCGalaxy {
         public static string lastMSG = "";
         
         //TpA
-        public bool Request = false;
-        public string senderName = "";
-        public string currentTpa = "";
+        internal bool Request = false;
+        internal string senderName = "";
+        internal string currentTpa = "";
 
         public static bool storeHelp = false;
         public static string storedHelp = "";
-        internal string truename, skinName;
+        public string truename, skinName;
         internal bool dontmindme = false;
         public Socket socket;
         System.Timers.Timer loginTimer = new System.Timers.Timer(1000);

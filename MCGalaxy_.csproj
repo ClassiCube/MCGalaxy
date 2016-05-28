@@ -403,7 +403,9 @@
     <Compile Include="Commands\World\CmdSave.cs" />
     <Compile Include="Commands\World\CmdSetspawn.cs" />
     <Compile Include="Commands\World\CmdTexture.cs" />
-    <Compile Include="Commands\World\CmdUnflood.cs" />
+    <Compile Include="Commands\World\CmdUnflood.cs">
+      <DependentUpon>CmdUnload.cs</DependentUpon>
+    </Compile>
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\PermissionCmd.cs" />
     <Compile Include="Config\ConfigAttribute.cs" />
@@ -458,6 +460,7 @@
     <Compile Include="Drawing\DrawOps\TriangleDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\UndoDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
+    <Compile Include="Drawing\Flip.cs" />
     <Compile Include="Drawing\Image\ImagePalette.cs" />
     <Compile Include="Drawing\Image\IPalette.cs" />
     <Compile Include="Economy\Awards.cs" />
