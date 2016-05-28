@@ -25,7 +25,7 @@ namespace MCGalaxy {
 		public static void Delete(string level, Level.Zone zn) {
 			ParameterisedQuery query = ParameterisedQuery.Create();
 			query.AddParam("@Owner", zn.Owner);
-			Database.executeQuery("DELETE FROM `Zone" + level + "` WHERE Owner=@Owner" +
+			Database.executeQuery(query, "DELETE FROM `Zone" + level + "` WHERE Owner=@Owner" +
 			                      " AND SmallX='" + zn.smallX + "' AND SMALLY='" +
 			                      zn.smallY + "' AND SMALLZ='" + zn.smallZ + "' AND BIGX='" +
 			                      zn.bigX + "' AND BIGY='" + zn.bigY + "' AND BIGZ='" + zn.bigZ + "'");
