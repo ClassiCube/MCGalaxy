@@ -92,9 +92,9 @@ namespace MCGalaxy {
             string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";
             if (!File.Exists(file)) return;
             
-            using (StreamReader SR = new StreamReader(file)) {
+            using (StreamReader r = new StreamReader(file)) {
                 string line;
-                while ((line = SR.ReadLine()) != null) {
+                while ((line = r.ReadLine()) != null) {
                     line = line.ToLower().Trim();
                     if (line.StartsWith("#") || !line.Contains(":")) continue;
                     
@@ -117,12 +117,10 @@ namespace MCGalaxy {
         }
 
         public void Save(Player p) {
-            string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";
-            if (Items.Count == 0) return;
-            
-            using (StreamWriter SW = new StreamWriter(file)) {
+            string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";            
+            using (StreamWriter w = new StreamWriter(file)) {
                 foreach (Warp wp in Items) {
-                    SW.WriteLine(wp.name + ":" + wp.lvlname + ":" + wp.x + ":" + wp.y + ":" + wp.z + ":" + wp.rotx + ":" + wp.roty);
+                    w.WriteLine(wp.name + ":" + wp.lvlname + ":" + wp.x + ":" + wp.y + ":" + wp.z + ":" + wp.rotx + ":" + wp.roty);
                 }
             }
         }

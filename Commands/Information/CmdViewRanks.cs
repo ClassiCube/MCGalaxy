@@ -40,15 +40,12 @@ namespace MCGalaxy.Commands
             Group grp = Group.Find(message);
             if (grp == null) { Player.Message(p, "Could not find group"); return; }
 
-            StringBuilder builder = new StringBuilder();
-            foreach (string s in grp.playerList.All())
-                builder.Append(s).Append(", ");
-            
-            if (builder.Length == 0) {
+            string list = grp.playerList.All().Concatenate(", ");            
+            if (list.Length == 0) {
                 Player.Message(p, "No one has the rank of " + grp.ColoredName);
             } else {
                 Player.Message(p, "People with the rank of " + grp.ColoredName + ":");
-                Player.Message(p, builder.ToString(0, builder.Length - 2));
+                Player.Message(p, list);
             }
         }
         
