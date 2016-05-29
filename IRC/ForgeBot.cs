@@ -360,7 +360,7 @@ namespace MCGalaxy {
             if (index < 0) {
                 error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
             }
-            if (!VerifyNick(user.Nick, ref error)) return false;
+            if (!VerifyNick(chanNicks[index], ref error)) return false;
             
             if (banCmd != null && banCmd.Contains(cmdName)) {
                 error = "You are not allowed to use this command from IRC."; return false;

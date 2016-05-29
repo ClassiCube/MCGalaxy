@@ -169,6 +169,14 @@ namespace MCGalaxy.Commands
                     if (osPerm == LevelPermission.Nobody)
                         osPerm = GrpCommands.MinPerm(this);
                     
+                    Level.Zone zn = default(Level.Zone);
+                    zn.bigX = (ushort)(lvl.Width - 1);
+                    zn.bigY = (ushort)(lvl.Height - 1);
+                    zn.bigZ = (ushort)(lvl.Length - 1);
+                    zn.Owner = p.name;
+                    lvl.ZoneList.Add(zn);
+                    Zones.Create(lvl.name, zn);
+                    
                     Group grp = Group.findPerm(osPerm);
                     if (grp != null) {
                         Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
