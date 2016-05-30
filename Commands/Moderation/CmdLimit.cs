@@ -69,8 +69,8 @@ namespace MCGalaxy.Commands {
             }
 
             if (args.Length == 2) { Player.Message(p, "You need to provide a rank name for this type."); return; }
-            Group grp = Group.Find(args[2]);
-            if (grp == null) { Player.Message(p, "No rank found matching: " + args[2]); return; }
+            Group grp = Group.FindOrShowMatches(p, args[2]);
+            if (grp == null) return;
 
             switch (args[0].ToLower()) {
                 case "dl":

@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands {
             if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }
             if (p != null && !p.group.CanExecute(cmd)) { Player.Message(p, "Your rank cannot use this command."); return; }
 
-            Group grp = Group.Find(args[1]);
-            if (grp == null) { Player.Message(p, "Could not find rank specified"); return; }
+            Group grp = Group.FindOrShowMatches(p, args[1]);
+            if (grp == null) return;
             if (p != null && grp.Permission > p.group.Permission) { 
                 Player.Message(p, "Cannot set permissions to a rank higher than yours."); return; 
             }

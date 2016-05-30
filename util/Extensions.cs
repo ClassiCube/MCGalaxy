@@ -152,7 +152,7 @@ namespace MCGalaxy {
             }
         }
         
-        public static T FindOrShowMatches<T>(Player pl, string name, out int matches, T[] items,
+        public static T FindOrShowMatches<T>(Player pl, string name, out int matches, IEnumerable<T> items,
                                          Predicate<T> filter, Func<T, string> nameGetter, string type)  {
         	T match = default(T); matches = 0;
             name = name.ToLower();

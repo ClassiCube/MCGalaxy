@@ -59,8 +59,8 @@ namespace MCGalaxy.Commands.Moderation {
                 player = who.name;
             }
             
-            Group group = Group.Find(rank);
-            if (group == null) { Player.Message(p, "&cRank &a" + rank + "&c does not exist."); return; }
+            Group group = Group.FindOrShowMatches(p, rank);
+            if (group == null) return;
             int periodTime;
             if (!Int32.TryParse(period, out periodTime)) {
                 Player.Message(p, "&cThe period needs to be a number."); return;

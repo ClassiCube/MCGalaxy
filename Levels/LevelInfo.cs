@@ -42,8 +42,7 @@ namespace MCGalaxy {
         }
         
         public static Level FindOrShowMatches(Player pl, string name) {
-            int matches = 0;
-            return FindOrShowMatches(pl, name, out matches);
+            int matches = 0; return FindOrShowMatches(pl, name, out matches);
         }
         
         public static Level FindOrShowMatches(Player pl, string name, out int matches) {

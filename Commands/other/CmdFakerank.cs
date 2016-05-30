@@ -29,12 +29,8 @@ namespace MCGalaxy.Commands
             string[] args = message.Split(' ');
             if (message == "" || args.Length < 2) { Help(p); return; }
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
-            Group grp = Group.Find(args[1]);
-            
-            if (who == null) return;
-            if (grp == null) {
-                Player.Message(p, "No rank found with the name \"" + args[1] + "\"." ); return;
-            }
+            Group grp = Group.FindOrShowMatches(p, args[1]);            
+            if (who == null || grp == null) return;
             
             if (grp.Permission == LevelPermission.Banned) {
                 string banner = p == null ? "console" : p.ColoredName;

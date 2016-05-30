@@ -31,10 +31,10 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.Split(trimChars, 3);
             if (args.Length < 2) { Help(p); return; }
             Player who = PlayerInfo.Find(args[0]);
-            Group newRank = Group.Find(args[1]);
+            Group newRank = Group.FindOrShowMatches(p, args[1]);
 
             string reason = args.Length > 2 ? args[2] : "Congratulations!";
-            if (newRank == null) { Player.Message(p, "Could not find specified rank."); return; }
+            if (newRank == null) return;
 
             string rankMsg;
             string rankReason = "%S. (" + reason + ")";

@@ -152,38 +152,44 @@ namespace MCGalaxy
             OnGroupSaveEvent.Call();
         }
         
-        /// <summary> Check to see if group /name/ exists </summary>
-        /// <param name="name">The name of the group to search for</param>
-        /// <returns>Return true if it does exists, returns false if it doesnt</returns>
+        /// <summary> Check whether a group with that name exists. </summary>
         public static bool Exists(string name) {
             name = name.ToLower();
             return GroupList.Any(gr => gr.name == name);
         }
         
-        /// <summary> Find the group with the name /name/ </summary>
-        /// <param name="name">The name of the group</param>
-        /// <returns>The group object with that name</returns>
+        /// <summary> Find the group which has the given name. </summary>
         public static Group Find(string name) {
             name = name.ToLower();
-
-            if (name == "adv") name = "advbuilder";
+            MapName(ref name);
+            return GroupList.Find(gr => gr.name == name);
+        }
+        
+        /// <summary> Find the group(s) which contain the given name. </summary>
+        public static Group FindOrShowMatches(Player p, string name, out int matches) {
+            name = name.ToLower();
+            MapName(ref name);
+            return Extensions.FindOrShowMatches(p, name, out matches, GroupList, g => true, g => g.name, "ranks");
+        }
+        
+        /// <summary> Find the group(s) which contain the given name. </summary>
+        public static Group FindOrShowMatches(Player p, string name) {
+        	int matches = 0; return FindOrShowMatches(p, name, out matches);
+        }
+        
+        static void MapName(ref string name) {
+        	if (name == "adv") name = "advbuilder";
             if (name == "op") name = "operator";
             if (name == "super" || (name == "admin" && !Group.Exists("admin"))) name = "superop";
             if (name == "noone") name = "nobody";
-
-            return GroupList.Find(gr => gr.name == name.ToLower());
         }
         
-        /// <summary> Find the group with the permission /Perm/ </summary>
-        /// <param name="Perm">The level permission to search for</param>
-        /// <returns>The group object with that level permission</returns>
+        /// <summary> Finds the group with has the given permission level. </summary>
         public static Group findPerm(LevelPermission Perm) {
             return GroupList.Find(grp => grp.Permission == Perm);
         }
 
-        /// <summary> Find the group with the permission /Perm/ </summary>
-        /// <param name="Perm">The level permission to search for</param>
-        /// <returns>The group object with that level permission</returns>
+        /// <summary> Find the group which has the given permission level. </summary>
         public static Group findPermInt(int Perm) {
             return GroupList.Find(grp => (int)grp.Permission == Perm);
         }

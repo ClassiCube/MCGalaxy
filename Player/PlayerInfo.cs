@@ -49,8 +49,7 @@ namespace MCGalaxy {
         }
         
         public static Player FindOrShowMatches(Player pl, string name, bool onlyCanSee = true) {
-            int matches = 0;
-            return FindOrShowMatches(pl, name, out matches, onlyCanSee);
+            int matches = 0; return FindOrShowMatches(pl, name, out matches, onlyCanSee);
         }
         
         public static Player FindOrShowMatches(Player pl, string name, out int matches, bool onlyCanSee = true) {
