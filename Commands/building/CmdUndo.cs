@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Building {
         internal static long GetSeconds(Player p, Player who, string param) {
             long secs;
             if (param.CaselessEq("all")) {
-                secs = (p.group.maxUndo == undoMax || p == who) ? int.MaxValue : p.group.maxUndo;
+                secs = (p == null || p.group.maxUndo == undoMax || p == who) ? int.MaxValue : p.group.maxUndo;
             } else if (!long.TryParse(param, out secs)) {
                 Player.Message(p, "Invalid seconds, using 30 seconds.");
                 return 30;

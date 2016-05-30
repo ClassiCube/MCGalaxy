@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
             foreach (Player pl in players) { 
                 if (p == null || pl.group.Permission < p.group.Permission) 
                     Command.all.Find("move").Use(p, pl.name + " " + level.name); 
-                else 
+                else
                     Player.Message(p, "You cannot move " + pl.ColoredName + " %Sbecause they are of equal or higher rank"); 
             }
         }

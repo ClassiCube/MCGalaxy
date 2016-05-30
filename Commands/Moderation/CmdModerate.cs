@@ -15,10 +15,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdModerate : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdModerate : Command {
         public override string name { get { return "moderate"; } }
         public override string shortcut { get { return ""; } }
        public override string type { get { return CommandTypes.Moderation; } }
@@ -26,25 +24,20 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdModerate() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
 
-            if (Server.chatmod)
-            {
-                Server.chatmod = false;
-                Player.GlobalMessage("Chat moderation has been disabled.  Everyone can now speak.");
-            }
-            else
-            {
-                Server.chatmod = true;
+            if (Server.chatmod) {
+                Player.GlobalMessage("Chat moderation has been disabled. Everyone can now speak.");
+            } else {
                 Player.GlobalMessage("Chat moderation engaged! Silence the plebians!");
             }
+            Server.chatmod = !Server.chatmod;
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/moderate - Toggles chat moderation status.  When enabled, only voiced");
-            Player.Message(p, "players may speak.");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "/moderate - Toggles chat moderation status. " +
+        	               "When enabled, only voiced players may speak.");
         }
     }
 }
