@@ -18,18 +18,16 @@
 using System;
 using System.Text;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdViewRanks : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdViewRanks : Command {
         public override string name { get { return "viewranks"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("ops", "operator"),
-                    new CommandAlias("admins", "superop"), new CommandAlias("banned", "banned") }; }
+            get { return new[] { new CommandAlias("ops", "operator"), new CommandAlias("admins", "superop"),
+                    new CommandAlias("banned", "banned"), new CommandAlias("balist", "banned") }; }
         }
         public CmdViewRanks() { }
 
@@ -37,7 +35,8 @@ namespace MCGalaxy.Commands
             if (message == "") { 
         	    Player.Message(p, "Available ranks: " + Group.concatList()); return;
         	}
-            Group grp = Group.Find(message);
+        	Group grp = message.CaselessEq("banned") ? 
+        	    Group.findPerm(LevelPermission.Banned) : Group.Find(message);
             if (grp == null) { Player.Message(p, "Could not find group"); return; }
 
             string list = grp.playerList.All().Concatenate(", ");            
@@ -50,7 +49,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/viewranks [rank] - Shows all users who have [rank]");
+            Player.Message(p, "/viewranks [rank] - Shows all players who have [rank]");
+            Player.Message(p, "/viewranks banned - Shows all players who are banned.");
             Player.Message(p, "Available ranks: " + Group.concatList());
         }
     }

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (p == null) { Player.Message(p, "Console must provide a player name."); return; }
                 message = p.name;
             }           
-            bool banned = Group.findPerm(LevelPermission.Banned).playerList.Contains(message);
+            bool banned = Group.IsBanned(message);
             string msg = message + (banned ? " is &CBANNED" : " is not banned");
             
             string[] data = Ban.GetBanData(message);

@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands {
             if (alts.CaselessContains(value)) return;
         	
             Group grp = Group.findPerm(LevelPermission.Banned);
-            if (Ban.IsBanned(value))
+            if (Group.IsBanned(value))
                 alts.Add(grp.color + value + "%S");
             else
                 alts.Add(value);

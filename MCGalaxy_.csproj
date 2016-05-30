@@ -271,7 +271,6 @@
     <Compile Include="Commands\Moderation\CmdBan.cs" />
     <Compile Include="Commands\Moderation\CmdBanEdit.cs" />
     <Compile Include="Commands\Moderation\CmdBanip.cs" />
-    <Compile Include="Commands\Moderation\CmdBanlist.cs" />
     <Compile Include="Commands\Moderation\CmdBlockSet.cs" />
     <Compile Include="Commands\Moderation\CmdBlockSpeed.cs" />
     <Compile Include="Commands\Moderation\CmdCmdSet.cs" />

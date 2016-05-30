@@ -27,17 +27,9 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            bool totalUnban = false;
-            if (message[0] == '@') {
-                totalUnban = true;
-                message = message.Remove(0, 1).Trim();
-            }
-
             Player who = PlayerInfo.Find(message);
             string name = who == null ? message : who.name;
             Unban(p, name, who);
-            if (totalUnban)
-                Command.all.Find("unbanip").Use(p, "@" + message);
         }
         
         void Unban(Player p, string name, Player who) {

@@ -56,7 +56,6 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdBanEdit()), "reason edit ban");
             new CommandKeywords((new CmdBanInfo()), "info ban details");
             new CommandKeywords((new CmdBanip()), "ip ban kick mod punish");
-            new CommandKeywords((new CmdBanlist()), "list ban info mod");
             new CommandKeywords((new CmdBind()), "block replace");
             new CommandKeywords((new CmdBlockDB()), "about block change remove del");
             new CommandKeywords((new CmdBlocks()), "block info list");
@@ -243,7 +242,7 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdUnflood()), "flood un restore");
             new CommandKeywords((new CmdUnload()), "load un map level lvl");
             new CommandKeywords((new CmdUnloaded()), "map level lvl list");
-            new CommandKeywords((new CmdViewRanks()), "show rank view user player");
+            new CommandKeywords((new CmdViewRanks()), "list info ban show rank view user player");
             new CommandKeywords((new CmdVIP()), "list add remove del");
             new CommandKeywords((new CmdVoice()), "speak moderate");
             new CommandKeywords((new CmdVote()), "yes no ");

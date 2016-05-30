@@ -624,10 +624,7 @@ namespace MCGalaxy
                     return "Error";
                 var whois = new WhoWas(p);
                 Group grp = Group.Find(whois.rank);
-                if (grp != null && grp.Permission == LevelPermission.Banned)
-                    whois.banned = true;
-                else
-                    whois.banned = Ban.IsBanned(p);
+                whois.banned = grp != null && grp.Permission == LevelPermission.Banned;
                 
                 if (whois.banned) {
                     string[] bandata = Ban.GetBanData(p);

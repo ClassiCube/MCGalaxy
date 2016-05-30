@@ -50,17 +50,6 @@ namespace MCGalaxy {
 			return "Banned for \"" + reason + "\" by " + banner;
 		}
 		
-		/// <summary> Returns whether the given user is banned. </summary>
-		public static bool IsBanned(string who) {
-			who = who.ToLower();
-			foreach (string line in File.ReadAllLines("text/bans.txt")) {
-				string[] parts = line.Split(' ');
-				if (parts.Length <= 1) continue;
-				if (parts[1] == who) return true;
-			}
-			return false;
-		}
-		
 		/// <summary> Gives info about the ban of user, as a string array of
 		/// {banned by, ban reason, date and time, previous rank, stealth},
 		/// or null if no ban data was found. </summary>

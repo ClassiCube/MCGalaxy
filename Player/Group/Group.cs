@@ -224,5 +224,11 @@ namespace MCGalaxy
 
             return returnString.Remove(0, 2);
         }
+        
+        /// <summary> Returns whether the given player is in the banned rank. </summary>
+        public static bool IsBanned(string name) {
+            Group grp = findPerm(LevelPermission.Banned);
+            return grp != null && grp.playerList.Contains(name);
+        }
     }
 }
