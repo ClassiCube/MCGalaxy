@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ops", "operator"), new CommandAlias("admins", "superop"),
-                    new CommandAlias("banned", "banned"), new CommandAlias("balist", "banned") }; }
+                    new CommandAlias("banned", "banned"), new CommandAlias("banlist", "banned") }; }
         }
         public CmdViewRanks() { }
 
