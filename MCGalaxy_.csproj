@@ -180,7 +180,6 @@
     <Compile Include="Commands\CmdOverseer.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\Command.Helpers.cs" />
-    <Compile Include="Commands\CommandKeywords.cs" />
     <Compile Include="Commands\CommandList.cs" />
     <Compile Include="Commands\CommandOtherPerms.cs" />
     <Compile Include="Commands\CPE\CmdCustomColors.cs" />

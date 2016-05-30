@@ -35,9 +35,7 @@ namespace MCGalaxy.Commands {
             args[0] = args[0].ToLower();
             string keyword = args[1];
             
-            if (args[0] == "cmd" || args[0] == "cmds" || args[0] == "command" || args[0] == "commands") {
-                SearchCommands(p, keyword);
-            } else if (args[0] == "block" || args[0] == "blocks") {
+            if (args[0] == "block" || args[0] == "blocks") {
                 SearchBlocks(p, keyword);
             } else if (args[0] == "rank" || args[0] == "ranks") {
                 SearchRanks(p, keyword);
@@ -50,27 +48,6 @@ namespace MCGalaxy.Commands {
             } else {
                 Help(p);
             }
-        }
-        
-        static void SearchCommands(Player p, string keyword) {
-            if (keyword.Length <= 2) {
-                Player.Message(p, "You need to enter at least three characters to search for."); return;
-            }
-            string[] keywords = keyword.Split(' ');
-            string[] found = keywords.Length == 1 ?
-                CommandKeywords.Find(keyword) : CommandKeywords.Find(keywords);
-            if (found == null) {
-                Player.Message(p, "No commands found matching keyword(s): '" + keyword + "'"); return;
-            }
-            
-            StringBuilder cmds = new StringBuilder();
-            bool mode = true;
-            Player.Message(p, "&bCommands found: ");
-            foreach (string cmd in found) {
-                cmds.Append(mode ? "%S, &9" : "%S, &2").Append(cmd);
-                mode = !mode;
-            }
-            Player.Message(p, cmds.ToString(4, cmds.Length - 4));
         }
         
         static void SearchBlocks(Player p, string keyword) {
@@ -141,7 +118,6 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "&b/search &2commands &a<keywords[more]> &e- finds commands with those keywords");
             Player.Message(p, "&b/search &2blocks &a<keyword> &e- finds blocks with that keyword");
             Player.Message(p, "&b/search &2ranks &a<keyword> &e- finds blocks with that keyword");
             Player.Message(p, "&b/search &2players &a<keyword> &e- find players with that keyword");

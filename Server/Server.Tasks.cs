@@ -177,7 +177,6 @@ namespace MCGalaxy {
             Log("Finished setting up server, finding classicube.net url..");
             ServerSetupFinished = true;
             Checktimer.StartTimer();
-            Commands.CommandKeywords.SetKeyWords();
             try
             {
                 if (Server.lava.startOnStartup)
