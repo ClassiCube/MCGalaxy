@@ -274,7 +274,6 @@
     <Compile Include="Commands\Moderation\CmdBlockSpeed.cs" />
     <Compile Include="Commands\Moderation\CmdCmdSet.cs" />
     <Compile Include="Commands\Moderation\CmdCrashServer.cs" />
-    <Compile Include="Commands\Moderation\CmdDemote.cs" />
     <Compile Include="Commands\Moderation\CmdExplode.cs" />
     <Compile Include="Commands\Moderation\CmdFollow.cs" />
     <Compile Include="Commands\Moderation\CmdFreeze.cs" />
@@ -301,7 +300,6 @@
     <Compile Include="Commands\Moderation\CmdPatrol.cs" />
     <Compile Include="Commands\Moderation\CmdPlayerEditDB.cs" />
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
-    <Compile Include="Commands\Moderation\CmdPromote.cs" />
     <Compile Include="Commands\Moderation\CmdResetBot.cs" />
     <Compile Include="Commands\Moderation\CmdRestart.cs" />
     <Compile Include="Commands\Moderation\CmdRestoreSelection.cs" />
