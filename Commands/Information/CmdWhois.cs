@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands {
         }
         
         WhoInfo FromOffline(OfflinePlayer target, string message) {
-            Group group = Group.Find(Group.findPlayer(message));
+            Group group = Group.Find(Group.findPlayer(target.name));
             string color = target.color == "" ? group.color : target.color;
             string prefix = target.title == "" ? "" : color + "[" + target.titleColor + target.title + color + "] ";
             

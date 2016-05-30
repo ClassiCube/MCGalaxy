@@ -34,59 +34,59 @@ namespace MCGalaxy.Commands {
         
         public static void Output(Player p, WhoInfo who, bool canSeeIP) {
             Player.Message(p, who.FullName + " %S(" + who.Name + ") has:");
-            Player.Message(p, ">> Rank of " + who.Group.ColoredName);
+            Player.Message(p, "  Rank of " + who.Group.ColoredName);
             
             if (Economy.Enabled)
-                Player.Message(p, ">> &a" + who.Deaths + " &cdeaths%S, &a" + who.Money +
+                Player.Message(p, "  &a" + who.Deaths + " &cdeaths%S, &a" + who.Money +
                                    " %S" + Server.moneys +", " + Awards.AwardAmount(who.Name) + " awards");
             else
-                Player.Message(p, ">> &a" + who.Deaths + " &cdeaths%S, " + Awards.AwardAmount(who.Name) + " awards");
+                Player.Message(p, "  &a" + who.Deaths + " &cdeaths%S, " + Awards.AwardAmount(who.Name) + " awards");
             
             if (who.LoginBlocks >= 0)
-                Player.Message(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &esince login");
+                Player.Message(p, "  &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &esince login");
             else
-                Player.Message(p, ">> &bModified &a" + who.TotalBlocks + " &eblocks");
+                Player.Message(p, "  &bModified &a" + who.TotalBlocks + " &eblocks");
 
             if (who.TimeOnline.Ticks > 0)
-                Player.Message(p, ">> Spent " + Shorten(who.TimeSpent) + " on the server, " + Shorten(who.TimeOnline) + " this session");
+                Player.Message(p, "  Spent " + Shorten(who.TimeSpent) + " on the server, " + Shorten(who.TimeOnline) + " this session");
             else
-                Player.Message(p, ">> Spent " + Shorten(who.TimeSpent) + " on the server");
+                Player.Message(p, "  Spent " + Shorten(who.TimeSpent) + " on the server");
             
             if (who.Last.Ticks > 0)
-                Player.Message(p, ">> First login &a" + who.First.ToString("yyyy-MM-dd")
+                Player.Message(p, "  First login &a" + who.First.ToString("yyyy-MM-dd")
                                    + "%S, last login &a" + who.Last.ToString("yyyy-MM-dd"));
             else
-                Player.Message(p, ">> First login on &a" + who.First.ToString("yyyy-MM-dd")
+                Player.Message(p, "  First login on &a" + who.First.ToString("yyyy-MM-dd")
                                    + "%S, and is currently &aonline");
             
-            Player.Message(p, ">> Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick");        
+            Player.Message(p, "  Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick");        
             if (who.Group.Permission == LevelPermission.Banned) {
                 string[] data = Ban.GetBanData(who.Name);
                 if (data != null)
-                    Player.Message(p, ">> is banned for " + data[1] + " by " + data[0]);
+                    Player.Message(p, "  is banned for " + data[1] + " by " + data[0]);
                 else
-                    Player.Message(p, ">> is banned");
+                    Player.Message(p, "  is banned");
             }                
 
             if (Server.Devs.CaselessContains(who.Name))
-                Player.Message(p, ">> Player is a &9Developer");
+                Player.Message(p, "  Player is a &9Developer");
             if (Server.Mods.CaselessContains(who.Name))
-                Player.Message(p, ">> Player is a &9MCGalaxy Moderator");
+                Player.Message(p, "  Player is a &9MCGalaxy Moderator");
 
             if (canSeeIP) {
                 string ipMsg = who.IP;
                 if (Server.bannedIP.Contains(who.IP)) ipMsg = "&8" + who.IP + ", which is banned";
-                Player.Message(p, ">> The IP of " + ipMsg);
+                Player.Message(p, "  The IP of " + ipMsg);
                 if (Server.useWhitelist&& Server.whiteList.Contains(who.Name))
-                    Player.Message(p, ">> Player is &fWhitelisted");
+                    Player.Message(p, "  Player is &fWhitelisted");
             }
             if (who.AfkMessage != null)
-                Player.Message(p, ">> Is &aAFK %S(" + who.AfkMessage + "%S)");
+                Player.Message(p, "  Is &aAFK %S(" + who.AfkMessage + "%S)");
             
             if (!Server.zombie.Running) return;
-            Player.Message(p, ">> Survived &a" + who.RoundsTotal +
+            Player.Message(p, "  Survived &a" + who.RoundsTotal +
                                " %Srounds total, most in a row was &e" + who.RoundsMax);
-            Player.Message(p, ">> Infected &a" + who.InfectedTotal +
+            Player.Message(p, "  Infected &a" + who.InfectedTotal +
                                " %Splayers total, most in a round was &e" + who.InfectedMax);
         }
         
