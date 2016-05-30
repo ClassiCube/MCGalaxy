@@ -73,6 +73,10 @@ namespace MCGalaxy.SQL.Native {
                 StringCount = value.Length + 1;
                 StringPtr = (byte*)Marshal.AllocHGlobal(StringCount);
             }
+            
+            // Reset all bytes to 0, then replace them.
+            for (int i = 0; i < StringCount; i++)
+                StringPtr[i] = 0;
             for (int i = 0; i < value.Length; i++)
                 StringPtr[i] = (byte)value[i];
         }
