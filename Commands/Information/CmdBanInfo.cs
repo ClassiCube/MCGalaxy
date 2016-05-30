@@ -16,30 +16,39 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdBaninfo : Command {
+    public sealed class CmdBanInfo : Command {
         public override string name { get { return "baninfo"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdBaninfo() { }
+        public CmdBanInfo() { }
 
         public override void Use(Player p, string message) {
-            if (message == "" || message.Length <= 3) { Help(p); return; }
+            if (message == "") {
+                if (p == null) { Player.Message(p, "Console must provide a player name."); return; }
+                message = p.name;
+            }           
+            bool banned = Group.findPerm(LevelPermission.Banned).playerList.Contains(message);
+            string msg = message + (banned ? " is &CBANNED" : " is not banned");
             
             string[] data = Ban.GetBanData(message);
+            if (data != null && banned) {
+                Group grp = Group.Find(data[3]);
+                string grpName = grp == null ? data[3] : grp.ColoredName;
+                msg += " %S(Former rank: " + grpName + "%S)";
+            }
+            Player.Message(p, msg);
+                
             if (data != null) {
-                Player.Message(p, "&9User: &e" + message);
-                Player.Message(p, "&9Banned by: &e" + data[0]);
-                Player.Message(p, "&9Reason: &e" + data[1]);
-                Player.Message(p, "&9Date and time: &e" + data[2]);
-                Player.Message(p, "&9Old rank: &e" + data[3]);
-                string stealth = data[4] == "true" ?  "&aYes" : "&cNo";
-                Player.Message(p, "&9Stealth banned: " + stealth);
-            } else if (!Group.findPerm(LevelPermission.Banned).playerList.Contains(message)) {
-                Player.Message(p, "That player isn't banned");
-            } else if (data == null) {
-                Player.Message(p, "Couldn't find ban info about " + message + ".");
+                string[] date = data[2].Split(' ');
+                data[2] = date[1] + "-" + date[2] + "-" + date[3] + " at " + date[5];
+                data[2] = data[2].Replace(",", "");
+                
+                Player.Message(p, "Banned on {0} by {1}", data[2], data[0]);
+                Player.Message(p, "Reason: {0}", data[1]);
+            } else {
+                Player.Message(p, "No ban data found for " + message + ".");
             }
         }
         

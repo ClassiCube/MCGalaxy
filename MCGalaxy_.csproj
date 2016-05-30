@@ -230,6 +230,7 @@
     <Compile Include="Commands\Fun\ZombieSurvival\CmdZombieGame.cs" />
     <Compile Include="Commands\Information\CmdAbout.cs" />
     <Compile Include="Commands\Information\CmdAfk.cs" />
+    <Compile Include="Commands\Information\CmdBanInfo.cs" />
     <Compile Include="Commands\Information\CmdBlocks.cs" />
     <Compile Include="Commands\Information\CmdChangeLog.cs" />
     <Compile Include="Commands\Information\CmdClones.cs" />
@@ -269,7 +270,6 @@
     <Compile Include="Commands\Moderation\CmdAllowGuns.cs" />
     <Compile Include="Commands\Moderation\CmdBan.cs" />
     <Compile Include="Commands\Moderation\CmdBanEdit.cs" />
-    <Compile Include="Commands\Moderation\CmdBaninfo.cs" />
     <Compile Include="Commands\Moderation\CmdBanip.cs" />
     <Compile Include="Commands\Moderation\CmdBanlist.cs" />
     <Compile Include="Commands\Moderation\CmdBlockSet.cs" />

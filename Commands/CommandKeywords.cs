@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
             new CommandKeywords((new CmdBalance()), "cash " + Server.moneys);
             new CommandKeywords((new CmdBan()), "kick mod punish");
             new CommandKeywords((new CmdBanEdit()), "reason edit ban");
-            new CommandKeywords((new CmdBaninfo()), "info ban details");
+            new CommandKeywords((new CmdBanInfo()), "info ban details");
             new CommandKeywords((new CmdBanip()), "ip ban kick mod punish");
             new CommandKeywords((new CmdBanlist()), "list ban info mod");
             new CommandKeywords((new CmdBind()), "block replace");
