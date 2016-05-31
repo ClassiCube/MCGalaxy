@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands
                 Level[] loaded = LevelInfo.Loaded.Items;
                 if (!loaded.Any(l => l.name == mapname))
                     Command.all.Find("load").Use(p, mapname);
-                Command.all.Find("goto").Use(p, mapname);
+                PlayerActions.ChangeMap(p, mapname);
             } else if (cmd == "LB" || cmd == "LEVELBLOCK") {
                 string[] lbArgs = message.Split(trimChars, 2);
                 string lbArg = lbArgs.Length > 1 ? lbArgs[1] : "";
@@ -82,15 +82,15 @@ namespace MCGalaxy.Commands
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level == p.level && pl.name != p.name)
-                        Command.all.Find("goto").Use(pl, Server.mainLevel.name);
+                        PlayerActions.ChangeMap(pl, Server.mainLevel.name);
                 }
             } else if (cmd == "KICK") {
                 if (arg == "") { p.SendMessage("You must specify a player to kick."); return; }
                 
-                Player kicked = PlayerInfo.FindOrShowMatches(p, arg);
-                if (kicked != null) {
-                    if (kicked.level.name == p.level.name)
-                        Command.all.Find("goto").Use(kicked, Server.mainLevel.name);
+                Player pl = PlayerInfo.FindOrShowMatches(p, arg);
+                if (pl != null) {
+                    if (pl.level.name == p.level.name)
+                        PlayerActions.ChangeMap(pl, Server.mainLevel.name);
                     else
                         p.SendMessage("Player is not on your level!");
                 }
@@ -324,7 +324,7 @@ namespace MCGalaxy.Commands
                 }
                 Player.Message(p, blocked.name + " has been blacklisted from your map.");
                 if (blocked.level.name == p.level.name) { 
-                    Command.all.Find("goto").Use(blocked, Server.mainLevel.name); return; 
+                    PlayerActions.ChangeMap(blocked, Server.mainLevel.name); return; 
                 }
             } else if (cmd == "UNBLOCK") {
                 if (value == "") {

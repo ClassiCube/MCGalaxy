@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
             p.beforeTeleportPos = p.pos;
             
             if (p.level != target.level)
-                Command.all.Find("goto").Use(p, target.level.name);            
+                PlayerActions.ChangeMap(p, target.level.name);
             if (target.Loading) {
                 Player.Message(p, "Waiting for " + target.ColoredName + " %Sto spawn...");
                 target.BlockUntilLoad(10);

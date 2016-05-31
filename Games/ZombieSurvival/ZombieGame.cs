@@ -123,7 +123,7 @@ namespace MCGalaxy.Games {
                 pl.Game.PledgeSurvive = false;
                 if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(LastLevelName)) {
                     pl.SendMessage("Going to the next map - &a" + next);
-                    Command.all.Find("goto").Use(pl, next);
+                    PlayerActions.ChangeMap(pl, next);
                 }
             }
             if (LastLevelName != "")

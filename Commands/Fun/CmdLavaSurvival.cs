@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
 			if (s[0] == "go")
 			{
 				if (!Server.lava.active) { Player.Message(p, "There is no Lava Survival game right now."); return; }
-				Command.all.Find("goto").Use(p, Server.lava.map.name);
+				PlayerActions.ChangeMap(p, Server.lava.map.name);
 				return;
 			}
 			if (s[0] == "info")

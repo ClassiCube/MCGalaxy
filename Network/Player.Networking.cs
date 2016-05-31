@@ -393,7 +393,7 @@ namespace MCGalaxy {
                     aiming = false;
             } catch( Exception ex ) {
                 success = false;
-                Command.all.Find("goto").Use(this, Server.mainLevel.name);
+                PlayerActions.ChangeMap(this, Server.mainLevel.name);
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
                 Server.ErrorLog(ex);
             } finally {

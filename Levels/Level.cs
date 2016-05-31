@@ -421,7 +421,7 @@ namespace MCGalaxy
             foreach (Player p in players) {
                 if (p.level.name.ToLower() == name.ToLower()) {
                     Player.Message(p, "You were moved to the main level as " + name + " was unloaded.");
-                    Command.all.Find("goto").Use(p, Server.mainLevel.name);
+                    PlayerActions.ChangeMap(p, Server.mainLevel.name);
                 }
             }
         }

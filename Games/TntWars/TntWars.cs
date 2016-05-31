@@ -157,7 +157,7 @@ namespace MCGalaxy.Games
             {
                 foreach (player p in Players.Where(p => p.p.level != lvl))
                 {
-                    Command.all.Find("goto").Use(p.p, lvl.name);
+                    PlayerActions.ChangeMap(p.p, lvl.name);
                     p.p.inTNTwarsMap = true;
                 }
                 if (GameMode == TntWarsGameMode.TDM) { Command.all.Find("reveal").Use(null, "all " + lvl.name); }//So peoples names apear above their heads in the right color!

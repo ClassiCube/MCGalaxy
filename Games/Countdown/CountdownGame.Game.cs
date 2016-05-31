@@ -29,7 +29,7 @@ namespace MCGalaxy.Games {
                 Player.Message(p, "You've joined the Countdown game!!");
                 Player.GlobalMessage(p.name + " has joined Countdown!!");
                 if (p.level != Server.Countdown.mapon)
-                	Command.all.Find("goto").Use(p, "countdown");
+                	PlayerActions.ChangeMap(p, "countdown");
                 p.playerofcountdown = true;
             } else {
                 Player.Message(p, "Sorry, you have already joined!!, to leave please type /countdown leave");

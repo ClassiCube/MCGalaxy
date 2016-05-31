@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
                     MessageTooHighRank(p, "move", true); return;
                 }
 
-                Command.all.Find("goto").Use(who, where.name);
+                PlayerActions.ChangeMap(who, where.name);
                 if (who.level == where)
                     Player.Message(p, "Sent " + who.ColoredName + " %Sto " + where.name);
                 else
@@ -77,10 +77,7 @@ namespace MCGalaxy.Commands
                     ushort x = ushort.Parse(args[offset + 0]);
                     ushort y = ushort.Parse(args[offset + 1]);
                     ushort z = ushort.Parse(args[offset + 2]);
-                    x *= 32; x += 16;
-                    y *= 32;
-                    z *= 32; z += 16;
-                    who.SendOwnFeetPos(x, y, z, p.rot[0], p.rot[1]);
+                    PlayerActions.MoveCoords(who, x, y, z);
                     if (p != who) Player.Message(p, "Moved " + who.color + who.name);
                 }
                 catch { Player.Message(p, "Invalid co-ordinates"); }

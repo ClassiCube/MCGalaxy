@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands {
             if (p.level != who.level)
             {
                 Level where = p.level;
-                Command.all.Find("goto").Use(who, where.name);
+                PlayerActions.ChangeMap(who, where.name);
                 Thread.Sleep(1000);
             }
 

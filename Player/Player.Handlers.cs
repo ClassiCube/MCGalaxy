@@ -676,7 +676,7 @@ namespace MCGalaxy {
                         reader.Dispose();
                     
                         try {
-                            Command.all.Find("goto").Use(this, parts[1]);
+                            PlayerActions.ChangeMap(this, parts[1]);
                             Command.all.Find("jail").Use(null, parts[0]);
                         } catch (Exception ex) {
                             Kick("Error occured");

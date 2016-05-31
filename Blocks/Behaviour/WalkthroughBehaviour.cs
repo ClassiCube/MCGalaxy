@@ -33,18 +33,19 @@ namespace MCGalaxy.BlockBehaviour {
                 if (last == -1) { Portals.Dispose(); return true; }
                 
                 DataRow row = Portals.Rows[last];
-                if (p.level.name != row["ExitMap"].ToString()) {
+                string map = row["ExitMap"].ToString();
+                if (p.level.name != map) {
                     if (p.level.permissionvisit > p.group.Permission) {
                         Player.Message(p, "You do not have the adequate rank to visit this map!"); return true;
                     }
                     
                     p.ignorePermission = true;
                     Level curLevel = p.level;
-                    Command.all.Find("goto").Use(p, row["ExitMap"].ToString());
+                    PlayerActions.ChangeMap(p, map);
                     if (curLevel == p.level) { Player.Message(p, "The map the portal goes to isn't loaded."); return true; }
                     p.ignorePermission = false;
-                }
-                p.BlockUntilLoad(10);
+                    p.BlockUntilLoad(10);
+                }              
                 Command.all.Find("move").Use(p, p.name + " " + row["ExitX"].ToString() + " " + row["ExitY"].ToString() + " " + row["ExitZ"].ToString());
                 Portals.Dispose();
             } catch {

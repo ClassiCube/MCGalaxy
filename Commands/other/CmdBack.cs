@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
                 return;
             }
             if (p.level.name.ToLower() != p.beforeTeleportMap.ToLower())
-                Command.all.Find("goto").Use(p, p.beforeTeleportMap);
+                PlayerActions.ChangeMap(p, p.beforeTeleportMap);
             p.SendPos(0xFF, p.beforeTeleportPos[0], p.beforeTeleportPos[1], p.beforeTeleportPos[2], 0, 0);
         }
         public override void Help(Player p)

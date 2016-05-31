@@ -524,6 +524,7 @@
     <Compile Include="Player\Group\GroupCommands.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
     <Compile Include="Player\Player.Handlers.cs" />
+    <Compile Include="Player\PlayerActions.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\PlayersFile.cs" />
     <Compile Include="Player\TabList.cs" />

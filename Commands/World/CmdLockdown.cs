@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands {
                     }
                     if (p != null && who.level != p.level) {
                         Player.Message(p, "Moving player to your map...");
-                        Command.all.Find("goto").Use(who, p.level.name);
+                        PlayerActions.ChangeMap(who, p.level.name);
                         who.BlockUntilLoad(500);
                     }
                     Player.GlobalMessage(who.ColoredName + " %Shas been locked down!");

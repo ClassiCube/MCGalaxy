@@ -63,7 +63,7 @@ namespace MCGalaxy.Games {
             foreach (Player pl in players) {
                 if (pl.level != mapon) {
                     pl.SendMessage("Sending you to the correct map.");
-                    Command.all.Find("goto").Use(pl, mapon.name);
+                    PlayerActions.ChangeMap(pl, mapon.name);
                 }
                 p.SpawnEntity(p, 0xFF, x1, y1, z1, 0, 0);
             }

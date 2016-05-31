@@ -100,7 +100,7 @@ namespace MCGalaxy.Eco {
                 Level level = LevelInfo.Find(name);
                 if (level.permissionbuild > p.group.Permission) { level.permissionbuild = p.group.Permission; }
                 if (level.permissionvisit > p.group.Permission) { level.permissionvisit = p.group.Permission; }
-                Command.all.Find("goto").Use(p, name);
+                PlayerActions.ChangeMap(p, name);
 
                 Player.Message(p, "%aSuccessfully created your map: '%f" + name + "%a'");
                 try {

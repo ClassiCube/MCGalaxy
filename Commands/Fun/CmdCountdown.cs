@@ -50,9 +50,9 @@ namespace MCGalaxy.Commands {
             
             switch (cmd) {
                 case "help":
-                    Command.all.Find("help").Use(p, "countdown"); return;
+            		Help(p); return;
                 case "goto":
-                    Command.all.Find("goto").Use(p, "countdown"); return;
+                    PlayerActions.ChangeMap(p, "countdown"); return;
                 case "join":
                     HandleJoin(p); return;
                 case "leave":
@@ -238,7 +238,7 @@ namespace MCGalaxy.Commands {
             const string format = "Generated map ({0}x{1}x{2}), sending you to it..";
             Player.Message(p, format, width, height, length);
             Command.all.Find("load").Use(p, "countdown");
-            Command.all.Find("goto").Use(p, "countdown");
+            PlayerActions.ChangeMap(p, "countdown");
 
             p.level.permissionbuild = LevelPermission.Nobody;
             p.level.motd = "Welcome to the Countdown map!!!! -hax";
