@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (message == "") {
                 if (p == null) { Player.Message(p, "Console must provide a player name."); return; }
                 message = p.name;
-            }           
+            }
             bool banned = Group.IsBanned(message);
             string msg = message + (banned ? " is &CBANNED" : " is not banned");
             
@@ -39,17 +39,28 @@ namespace MCGalaxy.Commands.Moderation {
                 msg += " %S(Former rank: " + grpName + "%S)";
             }
             Player.Message(p, msg);
-                
+            
             if (data != null) {
-                string[] date = data[2].Split(' ');
-                data[2] = date[1] + "-" + date[2] + "-" + date[3] + " at " + date[5];
-                data[2] = data[2].Replace(",", "");
-                
-                Player.Message(p, "Banned on {0} by {1}", data[2], data[0]);
+                data[2] = Reformat(data[2]);
+                Player.Message(p, "{0} on {1} by {2}", banned ? "Banned" : "Last banned", data[2], data[0]);
                 Player.Message(p, "Reason: {0}", data[1]);
             } else {
                 Player.Message(p, "No ban data found for " + message + ".");
             }
+            
+            data = Ban.GetUnbanData(message);
+            if (data != null) {
+                data[2] = Reformat(data[2]);
+                Player.Message(p, "{0} on {1} by {2}", banned ? "Last unbanned" : "Ubanned", data[2], data[0]);
+                Player.Message(p, "Reason: {0}", data[1]);
+            }
+        }
+        
+        static string Reformat(string data) {
+            string[] date = data.Split(' ');
+            data = date[1] + "-" + date[2] + "-" + date[3] + " at " + date[5];
+            data = data.Replace(",", "");
+            return data;
         }
         
         public override void Help(Player p) {

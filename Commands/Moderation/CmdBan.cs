@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        
+        public CmdBan() { }
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
@@ -71,9 +71,10 @@ namespace MCGalaxy.Commands.Moderation {
                 Entities.SpawnEntities(who, false);
             }
             
+            Ban.DeleteBan(target.ToLower());
             string oldgroup = group.name;
             Group.findPerm(LevelPermission.Banned).playerList.Add(target);
-            Ban.BanPlayer(p, target.ToLower(), reason, stealth, oldgroup);
+            Ban.BanPlayer(p, target, reason, stealth, oldgroup);
             Group.findPerm(LevelPermission.Banned).playerList.Save();
             
             if (args.Length == 1) Player.AddNote(target, p, "B");

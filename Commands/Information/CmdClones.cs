@@ -17,6 +17,7 @@
  */
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {
@@ -32,8 +33,8 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             message = Colors.EscapeColors(message);
             if (message == "" && p != null) message = p.name;
-            string name = message;
 
+            string name = null;
             int matches = 0;
             Player who = PlayerInfo.FindOrShowMatches(p, message, out matches);
             if (matches > 1) return;
@@ -41,37 +42,27 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Could not find player. Searching Player DB.");
                 OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);              
                 if (target == null) return;
-                message = target.ip;
+                message = target.ip; name = target.name;
             } else {
-                message = who.ip;
-            }
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@IP", message);
-            DataTable Clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
-
-            if (Clones.Rows.Count == 0) { Player.Message(p, "Could not find any record of the player entered."); return; }
-
-            List<string> alts = new List<string>();
-            for (int i = 0; i < Clones.Rows.Count; ++i) {
-                string altName = Clones.Rows[i]["Name"].ToString();
-                AddAlt(altName, alts);
+                message = who.ip; name = who.name;
             }
 
-            Clones.Dispose();
-            if (alts.Count <= 1) { Player.Message(p, name + " has no clones."); return; }
+            List<string> alts = PlayerInfo.FindAccounts(message);
+            if (alts.Count == 0) { Player.Message(p, "Could not find any record of the player entered."); return; }
+            if (alts.Count == 1) { Player.Message(p, message + " has no clones."); return; }
+            Group grp = Group.findPerm(LevelPermission.Banned);
+           
+            StringBuilder builder = new StringBuilder();
+            foreach (string alt in alts) {
+                if (Group.IsBanned(alt))
+                     builder.Append(grp.color + alt + "%S");
+                else
+                    builder.Append(alt);
+                builder.Append(", ");
+            }
 
             Player.Message(p, "These players have the same IP address:");
-            Player.Message(p, string.Join(", ", alts));
-        }
-        
-        void AddAlt(string value, List<string> alts) {
-            if (alts.CaselessContains(value)) return;
-        	
-            Group grp = Group.findPerm(LevelPermission.Banned);
-            if (Group.IsBanned(value))
-                alts.Add(grp.color + value + "%S");
-            else
-                alts.Add(value);
+            Player.Message(p, builder.ToString(0, builder.Length - 2));
         }
 
         public override void Help(Player p) {

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
         	string[] args = message.Split(trimChars, 2);
             if (args.Length < 2) { Help(p); return; }
 
-            if (!Ban.EditReason(args[0], args[1])) {
+            if (!Ban.ChangeBanReason(args[0], args[1])) {
                 Player.Message(p, "That player isn't banned.");
             } else {
                 Player.Message(p, "Succesfully edited baninfo about &0{0} %Sto: &2{1}", args[0], args[1]);

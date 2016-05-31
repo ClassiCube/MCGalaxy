@@ -24,40 +24,41 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdUnban() { }
-
+        static char[] trimChars = { ' ' };
+        
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.Find(message);
-            string name = who == null ? message : who.name;
-            Unban(p, name, who);
+            string[] args = message.Split(trimChars, 2);
+            
+            Player who = PlayerInfo.Find(args[0]);
+            string name = who == null ? args[0] : who.name;
+            string reason = args.Length > 1 ? args[1] : "(none given)";
+            Unban(p, name, who, reason);
         }
         
-        void Unban(Player p, string name, Player who) {
+        void Unban(Player p, string name, Player who, string reason) {
             string srcFull = p == null ? "(console)" : p.ColoredName + "%S";
             string src = p == null ? "(console)" : p.name;
             
-            if (Group.findPlayerGroup(name) != Group.findPerm(LevelPermission.Banned)) {
+            if (!Group.IsBanned(name)) {
                 foreach (Server.TempBan tban in Server.tempBans) {
                     if (!tban.name.CaselessEq(name)) continue;
                     
                     Server.tempBans.Remove(tban);
                     Player.GlobalMessage(name + " had their temporary ban lifted by " + srcFull + ".");
-                    Server.s.Log("UNBANNED: by " + src);
+                    Server.s.Log("UNBANNED: " + name + " by " + src);
                     Server.IRC.Say(name + " was unbanned by " + src + ".");
                     return;
                 }
                 Player.Message(p, "Player \"" + name + "\" is not banned.");
             } else {
                 Player.GlobalMessage(name + " was &8(unbanned) %Sby " + srcFull + ".");
-                Server.s.Log("UNBANNED: by " + src);
+                Server.s.Log("UNBANNED: " + name + " by " + src);
                 Server.IRC.Say(name + " was unbanned by " + src + ".");
                 
+                Ban.UnbanPlayer(p, name, reason);
                 Group.findPerm(LevelPermission.Banned).playerList.Remove(name);
                 Group.findPerm(LevelPermission.Banned).playerList.Save();
-                if (Ban.DeleteBan(name))
-                    Player.Message(p, "Deleted ban information about " + name + ".");
-                else
-                    Player.Message(p, "No info found about " + name + ".");
                 
                 if (who != null) {
                     who.group = Group.standard; who.color = who.group.color;
@@ -68,7 +69,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/unban <player> - Unbans a player. This includes temporary bans.");
+        	Player.Message(p, "/unban <player> [reason]");
+        	Player.Message(p, "Unbans a player. This includes temporary bans.");
         }
     }
 }

@@ -510,7 +510,7 @@ namespace MCGalaxy
             if (!Directory.Exists("text")) Directory.CreateDirectory("text");
             TempRanks.EnsureExists();
             RankInfo.EnsureExists();
-            if (!File.Exists("text/bans.txt")) File.CreateText("text/bans.txt").Dispose();
+            Ban.EnsureExists();
 
             if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");
             if (!Directory.Exists("extra/undo")) Directory.CreateDirectory("extra/undo");

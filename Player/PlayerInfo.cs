@@ -212,6 +212,21 @@ namespace MCGalaxy {
                 }
             }
         }
+        
+        public static List<string> FindAccounts(string ip) {
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@IP", ip);
+            DataTable clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
+
+            List<string> alts = new List<string>();
+            foreach (DataRow row in clones.Rows) {
+            	string name = row["Name"].ToString();
+            	if (!alts.CaselessContains(name))
+            		alts.Add(name);
+            }
+            clones.Dispose();
+            return alts;
+        }
     }
     
     public class OfflinePlayer {

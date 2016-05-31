@@ -33,13 +33,13 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoTntExplosion(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;
             if (rand.Next(1, 11) <= 7)
                 lvl.AddUpdate(C.b, Block.air);
         }
 		
         public static void DoLargeTnt(Level lvl, ref Check C, int power) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -56,7 +56,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoSmallTnt(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;            
+            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             Player p = GetPlayer(ref C.data);

@@ -22,7 +22,7 @@ namespace MCGalaxy.BlockPhysics {
     public static class ZombiePhysics {
         
         public static void Do(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;            
+            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             

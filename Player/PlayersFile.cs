@@ -24,7 +24,7 @@ namespace MCGalaxy {
     /// <summary> Represents a list of metadata about players. (such as rank info, ban info, notes). </summary>
     public sealed class PlayersFile {
         
-        readonly string file;
+        public readonly string file;
         readonly object locker;
         
         public PlayersFile(string file) {
