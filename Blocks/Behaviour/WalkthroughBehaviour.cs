@@ -31,6 +31,7 @@ namespace MCGalaxy.BlockBehaviour {
                 DataTable Portals = Database.fillData("SELECT * FROM `Portals" + p.level.name + "` WHERE EntryX=" + (int)x + " AND EntryY=" + (int)y + " AND EntryZ=" + (int)z);
                 int last = Portals.Rows.Count - 1;
                 if (last == -1) { Portals.Dispose(); return true; }
+                byte rotX = p.rot[0], rotY = p.rot[1];
                 
                 DataRow row = Portals.Rows[last];
                 string map = row["ExitMap"].ToString();
@@ -45,8 +46,12 @@ namespace MCGalaxy.BlockBehaviour {
                     if (curLevel == p.level) { Player.Message(p, "The map the portal goes to isn't loaded."); return true; }
                     p.ignorePermission = false;
                     p.BlockUntilLoad(10);
-                }              
-                Command.all.Find("move").Use(p, p.name + " " + row["ExitX"].ToString() + " " + row["ExitY"].ToString() + " " + row["ExitZ"].ToString());
+                }
+                
+                x = ushort.Parse(row["ExitX"].ToString());
+                y = ushort.Parse(row["ExitY"].ToString());
+                z = ushort.Parse(row["ExitZ"].ToString());
+                PlayerActions.MoveCoords(p, x, y, z, rotX, rotY);
                 Portals.Dispose();
             } catch {
                 Player.Message(p, "Portal had no exit.");
@@ -88,8 +93,8 @@ namespace MCGalaxy.BlockBehaviour {
             
             int index = p.level.PosToInt(x, y, z);
             if (index != p.lastCheckpointIndex) {
-            	int sendY = (p.pos[1] / 32) * 32 + 10;
-            	p.SpawnEntity(p, 0xFF, p.pos[0], (ushort)sendY, p.pos[2], p.rot[0], p.rot[1]);
+                int sendY = (p.pos[1] / 32) * 32 + 10;
+                p.SpawnEntity(p, 0xFF, p.pos[0], (ushort)sendY, p.pos[2], p.rot[0], p.rot[1]);
                 p.lastCheckpointIndex = index;
             }
             return true;
