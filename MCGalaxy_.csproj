@@ -494,6 +494,7 @@
     <Compile Include="Levels\IO\McfFile.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
     <Compile Include="Levels\Level.Physics.cs" />
+    <Compile Include="Levels\LevelActions.cs" />
     <Compile Include="Levels\LevelInfo.cs" />
     <Compile Include="Levels\PhysicsArgs.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />

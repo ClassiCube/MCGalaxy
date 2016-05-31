@@ -79,7 +79,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy the next rank"); return;
             }
             
-            Command.all.Find("promote").Use(null, p.name);
+            Command.all.Find("setrank").Use(null, "+up " + p.name);
             Player.Message(p, "%aYou've successfully bought the rank " + p.group.ColoredName);
             Economy.MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.ColoredName);
         }

@@ -193,17 +193,18 @@ namespace MCGalaxy.Commands
                 if (value == "") {
                     Player.Message(p, "To delete one of your maps type /os map delete <map number>");
                 } else if (value == "1") {
-                    string firstMap = FirstMapName(p);
-                    if (!LevelInfo.ExistsOffline(firstMap)) {
+                    string map = FirstMapName(p);
+                    if (!LevelInfo.ExistsOffline(map)) {
                         Player.Message(p, "You don't have a map with that map number."); return;
                     }
-                    Command.all.Find("deletelvl").Use(null, FirstMapName(p));
+                    LevelActions.Delete(map);
                     Player.Message(p, "Map 1 has been removed.");
                 } else if (byte.TryParse(value, out mapNum)) {
-                    if (!LevelInfo.ExistsOffline(p.name.ToLower() + value)) {
+            	    string map = p.name.ToLower() + value;
+                    if (!LevelInfo.ExistsOffline(map)) {
                         Player.Message(p, "You don't have a map with that map number."); return;
                     }
-                    Command.all.Find("deletelvl").Use(null, p.name.ToLower() + value);
+            		LevelActions.Delete(map);
                     Player.Message(p, "Map " + value + " has been removed.");
                 } else {
                     Help(p);

@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
             } else {
                 Player.Message(p, "  No backups for this map exist yet.");
             }
-            Player.Message(p, "  BlockDB (Used for /b) is {0}", data.BlockDB ? "&aEnabled" : "&cDisabled");
+            Player.Message(p, "  BlockDB (Used for /b) is {0}", data.blockDB ? "&aEnabled" : "&cDisabled");
             ShowPermissions(p, data);
             Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);            
             
@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands {
             
             public ushort Width, Height, Length;
             public int Physics;
-            public bool Guns, BlockDB;
+            public bool Guns, blockDB = true;
             public string Name, TerrainUrl, TextureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
             public int EdgeLevel, CloudsHeight, MaxFog;
@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands {
             public void FromOnlineLevel(Level lvl) {
                 Name = lvl.name;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
-                Physics = lvl.physics; Guns = lvl.guns; BlockDB = lvl.UseBlockDB;
+                Physics = lvl.physics; Guns = lvl.guns; blockDB = lvl.UseBlockDB;
                 visit = lvl.permissionvisit; build = lvl.permissionbuild;
                 visitmax = lvl.pervisitmax; buildmax = lvl.perbuildmax;
                 VisitWhitelist = new List<string>(lvl.VisitWhitelist);
@@ -200,7 +200,7 @@ namespace MCGalaxy.Commands {
                     case "clouds-speed": CloudsSpeed = int.Parse(value); break;
                     case "weather-speed": WeatherSpeed = int.Parse(value); break;
                     case "weather-fade": WeatherFade = int.Parse(value); break;
-                    case "useblockdb": BlockDB = bool.Parse(value); break;
+                    case "useblockdb": blockDB = bool.Parse(value); break;
                     
                     case "perbuild": build = GetPerm(value); break;
                     case "pervisit": visit = GetPerm(value); break;

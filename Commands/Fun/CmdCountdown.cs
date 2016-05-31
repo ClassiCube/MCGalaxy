@@ -228,7 +228,7 @@ namespace MCGalaxy.Commands {
             Level oldLevel = LevelInfo.FindExact("countdown");
             if (oldLevel != null) {
                 oldLevel.permissionbuild = LevelPermission.Guest;
-                Command.all.Find("deletelvl").Use(p, "countdown");
+                LevelActions.Delete("countdown");
             }
             Level lvl = CountdownMapGen.Generate(width, height, length);
             lvl.Save();

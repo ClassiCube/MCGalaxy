@@ -40,7 +40,6 @@ namespace MCGalaxy.Commands.World {
             
             if (!Player.ValidName(message)) { Player.Message(p, "\"" + message + "\" is not a valid level name."); return; }
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }
-            if (!Directory.Exists("levels/deleted")) Directory.CreateDirectory("levels/deleted");
 
             if (!LevelInfo.ExistsOffline(message)) {
                 Player.Message(p, "Could not find specified level."); return;
@@ -51,29 +50,8 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
             }
 
-            if (File.Exists("levels/deleted/" + message + ".lvl")) {
-                int currentNum = 0;
-                while (File.Exists("levels/deleted/" + message + currentNum + ".lvl")) currentNum++;
-
-                File.Move(LevelInfo.LevelPath(message), "levels/deleted/" + message + currentNum + ".lvl");
-            } else {
-            	File.Move(LevelInfo.LevelPath(message), "levels/deleted/" + message + ".lvl");
-            }
             Player.Message(p, "Created backup.");
-
-            try { File.Delete("levels/level properties/" + message + ".properties"); } catch { }
-            try { File.Delete("levels/level properties/" + message); } catch { }
-            try {
-                if (File.Exists("blockdefs/lvl_" + message + ".json"))
-                    File.Delete("blockdefs/lvl_" + message + ".json");
-            } catch {}
-
-            //safe against SQL injections because the levelname (message) is first being checked if it exists
-            Database.executeQuery("DROP TABLE `Block" + message + "`");
-            Database.executeQuery("DROP TABLE `Portals" + message + "`");
-            Database.executeQuery("DROP TABLE `Messages" + message + "`");
-            Database.executeQuery("DROP TABLE `Zone" + message + "`");
-            Player.GlobalMessage("Level " + message + " was deleted.");
+            LevelActions.Delete(message.ToLower());
         }
         
         LevelPermission GetPerBuildPermission(string level) {

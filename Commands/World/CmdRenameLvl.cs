@@ -41,78 +41,11 @@ namespace MCGalaxy.Commands.World {
             if (LevelInfo.ExistsOffline(newName)) { Player.Message(p, "Level already exists."); return; }
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot rename the main level."); return; }
             lvl.Unload();
-
-            File.Move(LevelInfo.LevelPath(lvl.name), LevelInfo.LevelPath(newName));
-            try {
-                File.Move(LevelInfo.LevelPath(lvl.name) + ".backup", LevelInfo.LevelPath(newName) + ".backup");
-            } catch {
-            }
             
-            try {
-                File.Move("levels/level properties/" + lvl.name + ".properties", "levels/level properties/" + newName + ".properties");
-            } catch {
-            }
-            
-            try {
-                File.Move("levels/level properties/" + lvl.name, "levels/level properties/" + newName + ".properties");
-            } catch {
-            }
-            
-            try {
-                if (File.Exists("blockdefs/lvl_" + lvl.name + ".json"))
-                    File.Move("blockdefs/lvl_" + lvl.name + ".json", "blockdefs/lvl_" + newName + ".json");
-            } catch {
-            }
-
-            //Move and rename backups
-            try {
-                MoveBackups(lvl.name, newName);
-            } catch {
-            }
-
-            //safe against SQL injections because foundLevel is being checked and,
-            //newName is being split and partly checked on illegal characters reserved for Windows.
-            if (Server.useMySQL)
-                Database.executeQuery(String.Format("RENAME TABLE `Block{0}` TO `Block{1}`, " +
-                                                    "`Portals{0}` TO `Portals{1}`, " +
-                                                    "`Messages{0}` TO `Messages{1}`, " +
-                                                    "`Zone{0}` TO `Zone{1}`", lvl.name.ToLower(), newName.ToLower()));
-            else {
-                using (BulkTransaction helper = SQLiteBulkTransaction.Create()) { // ensures that it's either all work, or none work.
-                    helper.Execute(String.Format("ALTER TABLE `Block{0}` RENAME TO `Block{1}`", lvl.name.ToLower(), newName.ToLower()));
-                    helper.Execute(String.Format("ALTER TABLE `Portals{0}` RENAME TO `Portals{1}`", lvl.name.ToLower(), newName.ToLower()));
-                    helper.Execute(String.Format("ALTER TABLE `Messages{0}` RENAME TO `Messages{1}`", lvl.name.ToLower(), newName.ToLower()));
-                    helper.Execute(String.Format("ALTER TABLE `Zone{0}` RENAME TO `Zone{1}`", lvl.name.ToLower(), newName.ToLower()));
-                    helper.Commit();
-                }
-            }
+            LevelActions.Rename(lvl.name.ToLower(), newName.ToLower());
             try { Command.all.Find("load").Use(p, newName); }
             catch { }
             Player.GlobalMessage("Renamed " + lvl.name + " to " + newName);
-        }
-
-        static bool DirectoryEmpty(string dir) {
-            if (!Directory.Exists(dir))  return true;
-            if (Directory.GetDirectories(dir).Length > 0) return false;
-            if (Directory.GetFiles(dir).Length > 0) return false;
-            return true;
-        }
-        
-        static void MoveBackups(string oldName, string newName) {
-            for (int i = 1; ; i++) {
-                string oldDir = LevelInfo.BackupPath(oldName, i.ToString());
-                string newDir = LevelInfo.BackupPath(newName, i.ToString());
-
-                if (File.Exists(oldDir + oldName + ".lvl")) {
-                    Directory.CreateDirectory(newDir);
-                    File.Move(oldDir + oldName + ".lvl", newDir + newName + ".lvl");
-                    if (DirectoryEmpty(oldDir)) Directory.Delete(oldDir);
-                } else {
-                    if (DirectoryEmpty(Server.backupLocation + "/" + oldName + "/"))
-                        Directory.Delete(Server.backupLocation + "/" + oldName + "/");
-                    break;
-                }
-            }
         }
         
         public override void Help(Player p) {
