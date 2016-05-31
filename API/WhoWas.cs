@@ -16,7 +16,7 @@ namespace MCGalaxy {
 
         public WhoWas(string p) {
             rank = Group.findPlayer(p);
-            OfflinePlayer pl = PlayerInfo.FindOffline(p, true);
+            OfflinePlayer pl = PlayerInfo.Find(p, true);
             if (pl == null) return;
             
             modified_blocks = int.Parse(pl.blocks);

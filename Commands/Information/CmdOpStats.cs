@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands {
             if (target != null) {
                 message = target.name;
             } else {
-                message = PlayerInfo.FindOfflineName(message);
+                message = PlayerInfo.FindName(message);
                 if (message == null) { Player.Message(p, "Unable to find player"); return; }
             }
 

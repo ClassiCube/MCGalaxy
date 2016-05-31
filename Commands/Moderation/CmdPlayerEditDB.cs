@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             Player who = PlayerInfo.Find(args[0]);
             if (who == null) {
-                string target = PlayerInfo.FindOfflineName(args[0]);
+                string target = PlayerInfo.FindName(args[0]);
                 if (target == null) { Player.Message(p, "Player &b" + args[0] + " %Swas not found in the database."); return; }
                 args[0] = target;
             }

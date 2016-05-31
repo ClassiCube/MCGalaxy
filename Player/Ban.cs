@@ -40,12 +40,14 @@ namespace MCGalaxy {
         
         /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
         public static void BanPlayer(Player p, string who, string reason, bool stealth, string oldrank) {
+            reason = reason.Replace(" ", "%20");
             string player = p == null ? "(console)" : p.name.ToLower();
             AddBanEntry(player, who.ToLower(), reason, stealth.ToString(), FormatDate(), oldrank);
         }
         
         /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
         public static void UnbanPlayer(Player p, string who, string reason) {
+            reason = reason.Replace(" ", "%20");
             string player = p == null ? "(console)" : p.name.ToLower();
             AddUnbanEntry(player, who.ToLower(), reason, FormatDate());
         }

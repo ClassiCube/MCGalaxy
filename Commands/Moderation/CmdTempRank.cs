@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
             string player = args[0], rank = args[1], period = args[2];
             Player who = PlayerInfo.Find(player);
             if (who == null) {
-                player = PlayerInfo.FindOfflineName(player);
+                player = PlayerInfo.FindName(player);
                 if (player == null) { Player.Message(p, "&cPlayer &a" + args[0] + "&c not found."); return; }
             } else {
                 player = who.name;

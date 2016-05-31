@@ -15,12 +15,10 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-using System.Data;
-using MCGalaxy.SQL;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdWhoip : Command
-    {
+using System.Collections.Generic;
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdWhoip : Command {
         public override string name { get { return "whoip"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -28,31 +26,16 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdWhoip() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (message.IndexOf("'") != -1) { Player.Message(p, "Cannot parse request."); return; }
 
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@IP", message);
-            DataTable playerDb = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
-
-            if (playerDb.Rows.Count == 0) { Player.Message(p, "Could not find anyone with this IP"); return; }
-
-            string playerNames = "Players with this IP: ";
-
-            for (int i = 0; i < playerDb.Rows.Count; i++)
-            {
-                playerNames += playerDb.Rows[i]["Name"] + ", ";
-            }
-            playerNames = playerNames.Remove(playerNames.Length - 2);
-
-            Player.Message(p, playerNames);
-            playerDb.Dispose();
+            List<string> accounts = PlayerInfo.FindAccounts(message);
+            if (accounts.Count == 0) { Player.Message(p, "Could not find anyone with this IP"); return; }
+            Player.Message(p, accounts.Concatenate(", "));
         }
         
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.Message(p, "/whoip <ip address> - Displays players associated with a given IP address.");
         }
     }

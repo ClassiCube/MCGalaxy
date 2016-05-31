@@ -41,7 +41,6 @@ namespace MCGalaxy.Commands.Moderation {
             string reason = args.Length > 1 ? args[1] : Server.defaultBanMessage;
             string banReason = reason == "-" ? "" : " (" + reason + ")";
             if (reason == "-") reason = "&c-";    
-            reason = reason.Replace(" ", "%20");
             Player who = PlayerInfo.Find(args[0]);
             
             string target = who == null ? args[0] : who.name;

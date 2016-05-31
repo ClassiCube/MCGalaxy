@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             Player target = PlayerInfo.Find(args[0]);
             string name = target != null ? target.name : args[0];
 
-            if (target == null && PlayerInfo.FindOfflineName(name) == null) {
+            if (target == null && PlayerInfo.FindName(name) == null) {
                 Player.Message(p, "There is no player with the given name."); return;
             }
             PlayerDB.SetLoginMessage(name, args[1]);

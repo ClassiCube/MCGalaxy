@@ -139,15 +139,50 @@ namespace MCGalaxy {
             p.totalKicked = int.Parse(row["totalKicked"].ToString());
         }
         
-        public static OfflinePlayer FindOffline(string name, bool fullStats = false) {         
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", name);
-            string syntax = Server.useMySQL ? "SELECT * FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
-                "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
-            using (DataTable results = Database.fillData(query, syntax)) {
+        public static OfflinePlayer Find(string name, bool fullStats = false) {
+            using (DataTable results = Query(name, "*")) {
                 if (results.Rows.Count == 0) return null;
                 return FillInfo(results.Rows[0], fullStats);
             }
+        }
+        
+        public static string FindName(string name) {
+            using (DataTable playerDB = Query(name, "Name")) {
+                if (playerDB.Rows.Count == 0) return null;
+                return playerDB.Rows[0]["Name"].ToString().Trim();
+            }
+        }
+        
+        public static string FindIP(string name) {
+            using (DataTable results = Query(name, "IP")) {
+                if (results.Rows.Count == 0) return null;
+                return results.Rows[0]["IP"].ToString().Trim();
+            }
+        }
+        
+         public static List<string> FindAccounts(string ip) {
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@IP", ip);
+            DataTable clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
+
+            List<string> alts = new List<string>();
+            foreach (DataRow row in clones.Rows) {
+                string name = row["Name"].ToString();
+                if (!alts.CaselessContains(name))
+                    alts.Add(name);
+            }
+            clones.Dispose();
+            return alts;
+        }
+        
+        
+        static DataTable Query(string name, string selector) {
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@Name", name);
+            string syntax = Server.useMySQL ? 
+                "SELECT " + selector + " FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
+                "SELECT " + selector + " FROM Players WHERE Name=@Name COLLATE NOCASE";
+            return Database.fillData(query, syntax);
         }
         
         public static OfflinePlayer FindOfflineOrShowMatches(Player p, string name) {         
@@ -158,11 +193,11 @@ namespace MCGalaxy {
                 "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20 COLLATE NOCASE";
             
             using (DataTable results = Database.fillData(query, syntax)) {
-            	if (results.Rows.Count == 0) {
-            	    Player.Message(p, "No players found matching \"{0}\".", name); return null;
-            	}
-            	if (results.Rows.Count == 1)
-            	    return FillInfo(results.Rows[0], true);
+                if (results.Rows.Count == 0) {
+                    Player.Message(p, "No players found matching \"{0}\".", name); return null;
+                }
+                if (results.Rows.Count == 1)
+                    return FillInfo(results.Rows[0], true);
                 List<string> matches = new List<string>();
                 
                 foreach (DataRow row in results.Rows) {
@@ -197,35 +232,6 @@ namespace MCGalaxy {
             pl.logins = row["totalLogin"].ToString();
             pl.kicks = row["totalKicked"].ToString();
             return pl;
-        }
-        
-        public static string FindOfflineName(string name) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", name);
-            string syntax = Server.useMySQL ? "SELECT Name FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
-                "SELECT * FROM Players WHERE Name=@Name COLLATE NOCASE";
-            using (DataTable playerDB = Database.fillData(query, syntax)) {
-                if (playerDB.Rows.Count == 0) {
-                    return null;
-                } else {
-                    return playerDB.Rows[0]["Name"].ToString().Trim();
-                }
-            }
-        }
-        
-        public static List<string> FindAccounts(string ip) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@IP", ip);
-            DataTable clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
-
-            List<string> alts = new List<string>();
-            foreach (DataRow row in clones.Rows) {
-            	string name = row["Name"].ToString();
-            	if (!alts.CaselessContains(name))
-            		alts.Add(name);
-            }
-            clones.Dispose();
-            return alts;
         }
     }
     

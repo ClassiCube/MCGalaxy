@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             if (matches > 1) return;
             if (who == null) {
                 Player.Message(p, "Could not find player. Searching Player DB.");
-                OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);              
+                OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);
                 if (target == null) return;
                 message = target.ip; name = target.name;
             } else {
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands {
             StringBuilder builder = new StringBuilder();
             foreach (string alt in alts) {
                 if (Group.IsBanned(alt))
-                     builder.Append(grp.color + alt + "%S");
+                    builder.Append(grp.color + alt + "%S");
                 else
                     builder.Append(alt);
                 builder.Append(", ");

@@ -45,11 +45,11 @@ namespace MCGalaxy.Commands {
                 Player.SendMessage(p, "\"" + args[1] + "\" must be offline to use /infoswap."); return;
             }
             
-            OfflinePlayer src = PlayerInfo.FindOffline(args[0], true);
+            OfflinePlayer src = PlayerInfo.Find(args[0], true);
             if (src == null) {
                 Player.SendMessage(p, "\"" + args[0] + "\" was not found in the database."); return;
             }
-            OfflinePlayer dst = PlayerInfo.FindOffline(args[1], true);
+            OfflinePlayer dst = PlayerInfo.Find(args[1], true);
             if (dst == null) {
                 Player.SendMessage(p, "\"" + args[1] + "\" was not found in the database."); return;
             }

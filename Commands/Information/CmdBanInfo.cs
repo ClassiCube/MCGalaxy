@@ -30,7 +30,14 @@ namespace MCGalaxy.Commands.Moderation {
                 message = p.name;
             }
             bool banned = Group.IsBanned(message);
-            string msg = message + (banned ? " is &CBANNED" : " is not banned");
+            string msg = message;
+            string ip = PlayerInfo.FindIP(message);
+            bool ipBanned = ip != null && Server.bannedIP.Contains(ip);
+            
+            if (!ipBanned && banned) msg += " is &CBANNED";
+            else if (!ipBanned && !banned) msg += " is not banned";
+            else if (ipBanned && banned) msg += " and their IP are &CBANNED";
+            else msg += " is not banned, but their IP is &CBANNED";
             
             string[] data = Ban.GetBanData(message);
             if (data != null && banned) {
@@ -51,7 +58,7 @@ namespace MCGalaxy.Commands.Moderation {
             data = Ban.GetUnbanData(message);
             if (data != null) {
                 data[2] = Reformat(data[2]);
-                Player.Message(p, "{0} on {1} by {2}", banned ? "Last unbanned" : "Ubanned", data[2], data[0]);
+                Player.Message(p, "{0} on {1} by {2}", banned ? "Last unbanned" : "Unbanned", data[2], data[0]);
                 Player.Message(p, "Reason: {0}", data[1]);
             }
         }

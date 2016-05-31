@@ -66,11 +66,15 @@ namespace MCGalaxy.Commands {
                     Entities.GlobalSpawn(who, false);
                 }
             }
+            
+            string ip = PlayerInfo.FindIP(name);
+            if (ip != null && Server.bannedIP.Contains(ip))
+                Player.Message(p, "NOTE: Their IP is still banned.");
         }
         
         public override void Help(Player p) {
-        	Player.Message(p, "/unban <player> [reason]");
-        	Player.Message(p, "Unbans a player. This includes temporary bans.");
+            Player.Message(p, "/unban <player> [reason]");
+            Player.Message(p, "Unbans a player. This includes temporary bans.");
         }
     }
 }
