@@ -689,13 +689,8 @@ Next: continue;
         }
 
         public static int GetBannedCount() {
-            try {
-                return File.ReadAllLines("ranks/banned.txt").Length;
-            }
-            catch/* (Exception ex)*/
-            {
-                return 0;
-            }
+            Group group = Group.findPerm(LevelPermission.Banned);
+            return group == null ? 0 : group.playerList.Count;
         }
         #endregion
 

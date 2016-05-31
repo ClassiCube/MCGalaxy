@@ -248,7 +248,6 @@
     <Compile Include="Commands\Information\CmdOpRules.cs" />
     <Compile Include="Commands\Information\CmdOpStats.cs" />
     <Compile Include="Commands\Information\CmdPClients.cs" />
-    <Compile Include="Commands\Information\CmdPCount.cs" />
     <Compile Include="Commands\Information\CmdPlayers.cs" />
     <Compile Include="Commands\Information\CmdRankReqs.cs" />
     <Compile Include="Commands\Information\CmdRules.cs" />

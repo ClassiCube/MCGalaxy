@@ -16,7 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Data;
 using System.Diagnostics;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {
     public sealed class CmdServerInfo : Command {
@@ -36,25 +38,29 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             
-            Player.Message(p, "Server's name: &b" + Server.name + "%S");
-            Player.Message(p, "&a" + Player.number + " %Splayers online, &8"
-                           + Player.GetBannedCount() + " banned%S players total.");
-            Player.Message(p, "&a" + LevelInfo.Loaded.Count + " %Slevels currently loaded. " +
-                           "Currency is &3" + Server.moneys + "%S.");
+            // TODO: use max rowid to be faster
+            DataTable table = Database.fillData("SELECT COUNT(id) FROM Players");
+            int count = int.Parse(table.Rows[0]["COUNT(id)"].ToString());
+            table.Dispose();
+            
+            Player.Message(p, "Server's name: &b{0}%S", Server.name);
+            Player.Message(p, "&a{0}%S players total. (&a{1}%S online, &8{2} banned%S)",
+                           count, Player.number, Player.GetBannedCount());
+            Player.Message(p, "&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
+                           LevelInfo.Loaded.Count, Server.moneys);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
             Player.Message(p, "Been up for &b" + WhoInfo.Shorten(up, true) +
-                           "%S, and is running &bMCGalaxy &a" + Server.VersionString +
+                           "%S, running &bMCGalaxy &a" + Server.VersionString +
                            "%S (based on &bMCForge %Sand &bMCLawl%S).");
-            Command.all.Find("devs").Use(p, "");
 
             Player.Message(p, "Player positions are updated every &b"
                            + Server.updateTimer.Interval + " %Smilliseconds.");
             string owner = Server.server_owner;
             if (!owner.CaselessEq("Notch"))
-                Player.Message(p, "Owner is &3" + owner + ". %SConsole state: &3" + Server.ZallState);
+                Player.Message(p, "Owner is &3{0}. %SConsole state: &3{1}", owner, Server.ZallState);
             else
-                Player.Message(p, "Console state: &3" + Server.ZallState);
+                Player.Message(p, "Console state: &3{0}", Server.ZallState);
             
             if (CheckAdditionalPerm(p))
                 ShowServerStats(p);

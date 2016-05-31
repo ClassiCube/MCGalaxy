@@ -47,6 +47,11 @@ namespace MCGalaxy {
                 return new List<string>(players);
         }
         
+        public int Count { get {
+                lock (locker)
+                    return players.Count;
+            } }
+        
         public void Save() { Save(group.fileName, true); }
         
         public void Save(string path, bool console) {
