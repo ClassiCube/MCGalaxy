@@ -221,25 +221,32 @@ namespace MCGalaxy {
                 absPosUpdate = true;
 
             if (absPosUpdate) {
-                *ptr++ = Opcode.EntityTeleport; *ptr++ = id;
-                *ptr++ = (byte)(pos[0] >> 8); *ptr++ = (byte)pos[0];
-                *ptr++ = (byte)(pos[1] >> 8); *ptr++ = (byte)pos[1];       
-                *ptr++ = (byte)(pos[2] >> 8); *ptr++ = (byte)pos[2];
-                *ptr++ = rot[0]; *ptr++ = realPitch;
+                *ptr = Opcode.EntityTeleport; ptr++;
+                *ptr = id; ptr++;
+                *ptr = (byte)(pos[0] >> 8); ptr++; *ptr = (byte)pos[0]; ptr++;
+                *ptr = (byte)(pos[1] >> 8); ptr++; *ptr = (byte)pos[1]; ptr++;      
+                *ptr = (byte)(pos[2] >> 8); ptr++; *ptr = (byte)pos[2]; ptr++;
+                *ptr = rot[0]; ptr++;
+                *ptr = realPitch; ptr++;
             } else if (posChanged && oriChanged) {
-                *ptr++ = Opcode.RelPosAndOrientationUpdate; *ptr++ = id;
-                *ptr++ = (byte)(pos[0] - oldpos[0]);
-                *ptr++ = (byte)(pos[1] - oldpos[1]);
-                *ptr++ = (byte)(pos[2] - oldpos[2]);
-                *ptr++ = rot[0]; *ptr++ = realPitch;
+                *ptr = Opcode.RelPosAndOrientationUpdate; ptr++;
+                *ptr = id; ptr++;
+                *ptr = (byte)(pos[0] - oldpos[0]); ptr++;
+                *ptr = (byte)(pos[1] - oldpos[1]); ptr++;
+                *ptr = (byte)(pos[2] - oldpos[2]); ptr++;
+                *ptr = rot[0]; ptr++; 
+                *ptr = realPitch; ptr++;
             } else if (posChanged) {
-                *ptr++ = Opcode.RelPosUpdate; *ptr++ = id;
-                *ptr++ = (byte)(pos[0] - oldpos[0]);
-                *ptr++ = (byte)(pos[1] - oldpos[1]);
-                *ptr++ = (byte)(pos[2] - oldpos[2]);
+                *ptr = Opcode.RelPosUpdate; ptr++; 
+                *ptr = id; ptr++;
+                *ptr = (byte)(pos[0] - oldpos[0]); ptr++;
+                *ptr = (byte)(pos[1] - oldpos[1]); ptr++;
+                *ptr = (byte)(pos[2] - oldpos[2]); ptr++;
             } else if (oriChanged) {
-                *ptr++ = Opcode.OrientationUpdate; *ptr++ = id;
-                *ptr++ = rot[0]; *ptr++ = realPitch;
+                *ptr = Opcode.OrientationUpdate; ptr++; 
+                *ptr = id; ptr++;
+                *ptr = rot[0]; ptr++;
+                *ptr = realPitch; ptr++;
             }
         }
         
