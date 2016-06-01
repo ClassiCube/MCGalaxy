@@ -41,7 +41,8 @@ namespace MCGalaxy.Drawing.Ops {
             return DoDrawOp(op, brush, p, marks);
         }
         
-        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, Vec3S32[] marks) {
+        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, 
+		                            Vec3S32[] marks, bool checkLimit = true) {
             op.Origin = marks[0]; op.Min = marks[0]; op.Max = marks[0];
             for (int i = 1; i < marks.Length; i++) {
                 op.Min = Vec3S32.Min(op.Min, marks[i]);
@@ -54,7 +55,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             long affected = 0;
-            if (!op.CanDraw(marks, p, out affected))
+            if (checkLimit && !op.CanDraw(marks, p, out affected))
                 return false;
             if (brush != null && affected != -1) {
                 const string format = "{0}({1}): affecting up to {2} blocks";

@@ -142,7 +142,8 @@ namespace MCGalaxy.Commands.Building {
 			if (cpos.type == 1) {
 				DrawOp op = new CuboidDrawOp();
 				Brush brush = new SolidBrush(Block.air, 0);
-				DrawOp.DoDrawOp(op, brush, p, minX, minY, minZ, maxX, maxY, maxZ);
+				Vec3S32[] marks = { new Vec3S32(minX, minY, minZ), new Vec3S32(maxX, maxY, maxZ) };
+				DrawOp.DoDrawOp(op, brush, p, marks, false);
 			}
 
 			string format = "Copied &a{0} %Sblocks." +
