@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands
                         }
                         Server.whiteList.Add(player);
                         Chat.GlobalMessageOps(p.ColoredName + " %Sadded &f" + player + " %Sto the whitelist.");
-                        Server.whiteList.Save("whitelist.txt", true);
+                        Server.whiteList.Save();
                         Server.s.Log("WHITELIST: Added " + player);
                         break;
                     case "del":
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands
                         }
                         Server.whiteList.Remove(player);
                         Chat.GlobalMessageOps(p.ColoredName + " %Sremoved &f" + player + " %Sfrom the whitelist.");
-                        Server.whiteList.Save("whitelist.txt", true);
+                        Server.whiteList.Save();
                         Server.s.Log("WHITELIST: Removed " + player);
                         break;
                     case "list":

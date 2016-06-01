@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             if (p != null) if (p.ip == message) { Player.Message(p, "You shouldn't be able to use this command..."); return; }
             if (!Server.bannedIP.Contains(message)) { Player.Message(p, message + " is not a banned IP."); return; }
             Server.bannedIP.Remove(message);
-            Server.bannedIP.Save("banned-ip.txt", false);
+            Server.bannedIP.Save();
 
             string name = p == null ? "(console)" : p.name;
             string fullName = p == null ? "(console)" : p.ColoredName;

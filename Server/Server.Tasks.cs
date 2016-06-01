@@ -66,18 +66,17 @@ namespace MCGalaxy {
         }
         
         void LoadPlayerLists() {
-            bannedIP = PlayerList.Load("banned-ip.txt", null);
-            ircControllers = PlayerList.Load("IRC_Controllers.txt", null);
-            muted = PlayerList.Load("muted.txt", null);
-            frozen = PlayerList.Load("frozen.txt", null);
+            bannedIP = PlayerList.Load("banned-ip.txt");
+            ircControllers = PlayerList.Load("IRC_Controllers.txt");
+            muted = PlayerList.Load("muted.txt");
+            frozen = PlayerList.Load("frozen.txt");
+            //jailed = PlayerList.Load("jailed.txt");
+            if (!File.Exists("ranks/jailed.txt")) { File.Create("ranks/jailed.txt").Close(); Server.s.Log("CREATED NEW: ranks/jailed.txt"); }
 
             foreach (Group grp in Group.GroupList)
-                grp.playerList = PlayerList.Load(grp.fileName, grp);
+                grp.playerList = PlayerList.Load(grp.fileName);
             if (useWhitelist)
-                whiteList = PlayerList.Load("whitelist.txt", null);
-            if (!File.Exists("ranks/jailed.txt")) { File.Create("ranks/jailed.txt").Close(); Server.s.Log("CREATED NEW: ranks/jailed.txt"); }
-            Extensions.UncapitalizeAll("ranks/banned.txt");
-            Extensions.UncapitalizeAll("ranks/muted.txt");
+                whiteList = PlayerList.Load("whitelist.txt");
         }
         
         void LoadAutoloadCommands() {

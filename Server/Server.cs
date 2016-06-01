@@ -119,6 +119,7 @@ namespace MCGalaxy
         public static PlayerList muted;
         public static PlayerList ignored;
         public static PlayerList frozen;
+        //public static PlayerList jailed;
 
         public static readonly List<string> Devs = new List<string>();
         public static readonly List<string> Mods = new List<string>();

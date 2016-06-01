@@ -85,13 +85,6 @@ namespace MCGalaxy {
         public static string Concatenate<T>(this List<T> list, string separator) {
         	return String.Join(separator, list);
         }
-
-        public static void UncapitalizeAll(string file) {
-            string[] complete = File.ReadAllLines(file);
-            for (int i = 0; i < complete.Length; i++)
-                complete[i] = complete[i].ToLower();
-            File.WriteAllLines(file, complete);
-        }    
         
         public static string ToDBTime(this TimeSpan value) {
         	return value.Days + " " + value.Hours + " " + value.Minutes + " " + value.Seconds;

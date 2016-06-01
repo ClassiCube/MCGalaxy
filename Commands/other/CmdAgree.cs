@@ -38,23 +38,7 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "This command can only be used if agree-to-rules-on-entry is enabled!");
                 return;
             }
-            //If someone is ranked before agreeing to the rules they are locked and cannot use any commands unless demoted back to guest
-            /*if (p.group.Permission > LevelPermission.Guest)
-            {
-                Player.Message(p, "Your rank is higher than guest and you have already agreed to the rules!");
-                return;
-            }*/
             var agreed = File.ReadAllText("ranks/agreed.txt");
-            /*
-            if (File.Exists("logs/" + DateTime.Now.ToString("yyyy") + "-" + DateTime.Now.ToString("MM") + "-" + DateTime.Now.ToString("dd") + ".txt"))
-            {
-                var checklogs = File.ReadAllText("logs/" + DateTime.Now.ToString("yyyy") + "-" + DateTime.Now.ToString("MM") + "-" + DateTime.Now.ToString("dd") + ".txt");
-                if (!checklogs.Contains(p.name.ToLower() + " used /rules"))
-                {
-                    Player.Message(p, "&9You must read /rules before agreeing!");
-                    return;
-                }
-            }*/
             if (p.hasreadrules == false)
             {
                 Player.Message(p, "&9You must read /rules before agreeing!");

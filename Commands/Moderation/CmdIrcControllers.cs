@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
                     }
                     
                     Server.ircControllers.Add(parts[1]);
-                    Server.ircControllers.Save("IRC_Controllers.txt", true);
+                    Server.ircControllers.Save();
                     Player.Message(p, parts[1] + " added to the IRC controller list.");
                     break;
                 case "remove":
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands {
                     }
                     
                     Server.ircControllers.Remove(parts[1]);
-                    Server.ircControllers.Save("IRC_Controllers.txt", true);
+                    Server.ircControllers.Save();
                     Player.Message(p, parts[1] + " removed from the IRC controller list.");
                     break;
                 case "list":

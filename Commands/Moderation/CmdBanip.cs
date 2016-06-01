@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.GlobalMessage(message + " was &8ip-banned %S by (console).");
             }
             Server.bannedIP.Add(message);
-            Server.bannedIP.Save("banned-ip.txt", false);
+            Server.bannedIP.Save();
 
             /*
             foreach (Player pl in PlayerInfo.players) {
