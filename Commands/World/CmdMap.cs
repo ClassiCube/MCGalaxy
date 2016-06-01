@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.World {
                 if (lvl == null || message.Split(' ')[0].ToLower() == "ps" || message.Split(' ')[0].ToLower() == "rp") lvl = p.level;
                 else message = message.Substring(message.IndexOf(' ') + 1);
             }
-            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can set map options."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can set map options."); return; }
 
             string foundStart;
             if (message.IndexOf(' ') == -1) foundStart = message.ToLower();

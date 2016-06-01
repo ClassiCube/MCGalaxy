@@ -45,14 +45,14 @@ namespace MCGalaxy.Commands.World {
         
         
         static void FixDirtAndGrass(Player p, Level lvl, ref int totalFixed) {
-            int index = 0;
-            for (int y = 0; y < lvl.Height - 1; y++)
+            int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
+            for (int y = 0; y < lvl.Height; y++)
                 for (int z = 0; z < lvl.Length; z++)
                     for (int x = 0; x < lvl.Width; x++)
             {
                 byte block = lvl.blocks[index];
                 if (block == Block.dirt) {
-                    byte above = lvl.blocks[index + lvl.Width * lvl.Length], extAbove = 0;
+                    byte above = y == maxY ? Block.air : lvl.blocks[index + oneY], extAbove = 0;
                     if (above == Block.custom_block)
                         extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                     
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.World {
                         totalFixed++;
                     }
                 } else if (block == Block.grass) {
-                    byte above = lvl.blocks[index + lvl.Width * lvl.Length], extAbove = 0;
+                    byte above = y == maxY ? Block.air : lvl.blocks[index + oneY], extAbove = 0;
                     if (above == Block.custom_block)
                         extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                     
@@ -118,14 +118,15 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void FixDirt(Player p, Level lvl, ref int totalFixed) {
-            int index = 0;
-            for (int y = 0; y < lvl.Height - 1; y++)
+            int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
+            for (int y = 0; y < lvl.Height; y++)
                 for (int z = 0; z < lvl.Length; z++)
                     for (int x = 0; x < lvl.Width; x++)
             {
                 byte block = lvl.blocks[index];
                 if (block != Block.dirt) { index++; continue; }
-                byte above = lvl.blocks[index + lvl.Width * lvl.Length], extAbove = 0;
+                
+                byte above = y == maxY ? Block.air : lvl.blocks[index + oneY], extAbove = 0;
                 if (above == Block.custom_block)
                     extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                 
@@ -138,14 +139,15 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void FixGrass(Player p, Level lvl, ref int totalFixed) {
-            int index = 0;
-            for (int y = 0; y < lvl.Height - 1; y++)
+            int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
+            for (int y = 0; y < lvl.Height; y++)
                 for (int z = 0; z < lvl.Length; z++)
                     for (int x = 0; x < lvl.Width; x++)
             {
                 byte block = lvl.blocks[index];
                 if (block != Block.grass) { index++; continue; }
-                byte above = lvl.blocks[index + lvl.Width * lvl.Length], extAbove = 0;
+                
+                byte above = y == maxY ? Block.air : lvl.blocks[index + oneY], extAbove = 0;
                 if (above == Block.custom_block)
                     extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                 

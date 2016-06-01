@@ -26,6 +26,9 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override CommandPerm[] AdditionalPerms {
+            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can create teams") }; }
+        }
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
@@ -114,6 +117,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleCreate(Player p, string[] args) {
+            if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can create a team.", 1); return; }
             Team team = p.Game.Team;
             if (team != null) { Player.Message(p, "You need to leave your current team before you can create one."); return; }
             if (args.Length == 1) {

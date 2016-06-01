@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
                 }
                 PlayerActions.ChangeMap(p, Server.mainLevel.name);
             } else {
-                if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "change the main level"); return; }
+                if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "change the main level"); return; }
                 if (!Player.ValidName(message)) {
                     Player.Message(p, "\"{0}\" is not a valid level name.", message); return;
                 }

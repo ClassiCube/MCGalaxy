@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands
 
                 if (split[0] == "all")
                 {
-                	if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can send the changelog to all players."); return; }
+                	if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can send the changelog to all players."); return; }
                     for (int k = 0; k < strArray.Length; k++)
                     {
                         Player.GlobalMessage(strArray[k]);

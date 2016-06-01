@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands {
             else
                 Player.Message(p, "Console state: &3{0}", Server.ZallState);
             
-            if (CheckAdditionalPerm(p))
+            if (CheckExtraPerm(p))
                 ShowServerStats(p);
         }
         

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
 
             if (parts[0] == "all") {
                 if (lvl == null) { Player.Message(p, "Level not found."); return; }            
-                if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can reload all players in a map."); return; }
+                if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can reload all players in a map."); return; }
 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player who in players) {

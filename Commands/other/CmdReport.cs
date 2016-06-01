@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
         }
 
         void HandleList(Player p, string[] args) {
-        	if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can see the list of reports."); return; }
+        	if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can see the list of reports."); return; }
 
             bool foundone = false;
             FileInfo[] fi = new DirectoryInfo("extra/reported").GetFiles("*.txt");
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands {
             if (args.Length != 2) {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
-            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can view the details of a report."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can view the details of a report."); return; }
             if (!Player.ValidName(args[1])) {
                 Player.Message(p, "\"" + args[1] + "\" is not a valid player name."); return;
             }
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands {
             if (args.Length != 2) {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
-            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can delete reports."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can delete reports."); return; }
             if (!Player.ValidName(args[1])) {
                 Player.Message(p, "\"" + args[1] + "\" is not a valid player name."); return;
             }
@@ -119,7 +119,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleClear(Player p, string[] args) {
-            if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can clear the list of reports."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can clear the list of reports."); return; }
             
             FileInfo[] fi = new DirectoryInfo("extra/reported").GetFiles("*.txt");
             foreach (FileInfo file in fi) {
@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/report [Player] [Reason] %H- Reports that player for the given reason.");
-            if (!CheckAdditionalPerm(p)) return;
+            if (!CheckExtraPerm(p)) return;
             Player.Message(p, "%T/report list %H- Outputs the list of reported players.");
             Player.Message(p, "%T/report check [Player] %H- Views report for that player.");
             Player.Message(p, "%T/report delete [Player] %H- Deletes report for that player.");

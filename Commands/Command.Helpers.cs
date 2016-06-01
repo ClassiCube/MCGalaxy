@@ -48,7 +48,7 @@ namespace MCGalaxy {
             Player.Message(p, "/" + name + " can only be used in-game.");
         }
         
-        protected bool CheckAdditionalPerm(Player p, int num = 1) {
+        protected bool CheckExtraPerm(Player p, int num = 1) {
             return p == null || (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, num);
         }
         

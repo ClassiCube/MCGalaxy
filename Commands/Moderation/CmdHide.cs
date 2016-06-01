@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
             }
             bool messageOps = true;
             if (message.CaselessEq("silent")) {
-                if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can hide silently"); return; }
+                if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can hide silently"); return; }
                 messageOps = false;
             }
             

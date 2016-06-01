@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
 
             Player who = p;
             if (message != "") {
-            	if (!CheckAdditionalPerm(p)) { MessageNeedPerms(p, "can send the rules to a player."); return; }
+            	if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can send the rules to a player."); return; }
                 who = PlayerInfo.FindOrShowMatches(p, message);
                 if (who == null) return;
             }
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-        	if (CheckAdditionalPerm(p)) {
+        	if (CheckExtraPerm(p)) {
                 Player.Message(p, "/rules [player]- Displays server rules to a player.");
                 Player.Message(p, "If no [player] is given, the rules will be sent to you.");
             } else {

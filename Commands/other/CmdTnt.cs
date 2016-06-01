@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
                     Player.Message(p, "Tnt usage is not allowed at the moment!"); return;
                 }
                 
-            	if (CheckAdditionalPerm(p, 1)) {
+            	if (CheckExtraPerm(p, 1)) {
                     p.modeType = Block.bigtnt;
                     Player.Message(p, "TNT (Big) mode is now &aON%S.");
                 } else {
@@ -63,21 +63,21 @@ namespace MCGalaxy.Commands
                     Player.Message(p, "Tnt usage is not allowed at the moment!"); return;
                 }
                 
-            	if (CheckAdditionalPerm(p, 3)) {
+            	if (CheckExtraPerm(p, 3)) {
                     p.modeType = Block.nuketnt;
                     Player.Message(p, "TNT (Nuke) mode is now &aON%S.");
                 } else {
                     MessageNeedPerms(p, "can use nuke TNT mode.", 3); return;
                 }
             } else if (message.ToLower() == "allow") {
-            	if (CheckAdditionalPerm(p, 2)) {
+            	if (CheckExtraPerm(p, 2)) {
                     p.allowTnt = true; Player.Message(p, "&cTnt usage has now been enabled!");
                 } else {
                     MessageNeedPerms(p, "can allow TNT usage.", 2); return;
                 }                
                 return;
             } else if (message.ToLower() == "disallow") {
-            	if (CheckAdditionalPerm(p, 2)) {
+            	if (CheckExtraPerm(p, 2)) {
                     p.allowTnt = false; Player.Message(p, "&cTnt usage has now been disabled!");
                 } else {
                     MessageNeedPerms(p, "can disallow TNT usage.", 2); return;
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands
         public override void Help(Player p) {
             Player.Message(p, "/tnt [small/big/nuke] - Creates exploding TNT (with Physics 3).");
             Player.Message(p, "Big and Nuke TNT is reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 3)).name + "+");
-            if (CheckAdditionalPerm(p, 2)) {
+            if (CheckExtraPerm(p, 2)) {
                 Player.Message(p, "/tnt allow - Allows the use of tnt server-wide.");
                 Player.Message(p, "/tnt disallow - Disallows the use of tnt server-wide.");
             }

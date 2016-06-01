@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
                     break;
             }
 
-            if (CheckAdditionalPerm(p, 2)) {
+            if (CheckExtraPerm(p, 2)) {
                 switch (cmd) {
                     case "download":
                     case "generate":
@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleRules(Player p, string target) {
-        	bool hasPerm = CheckAdditionalPerm(p, 1);
+        	bool hasPerm = CheckExtraPerm(p, 1);
             if (target == "" || !hasPerm) {
                 Player.Message(p, "The aim of the game is to stay alive the longest.");
                 Player.Message(p, "Don't fall in the lava!!");
@@ -359,12 +359,12 @@ namespace MCGalaxy.Commands {
             p.SendMessage("/cd goto - goto the countdown map");
             p.SendMessage("/cd players - view players currently playing");
             
-            if (CheckAdditionalPerm(p, 1))
+            if (CheckExtraPerm(p, 1))
                 p.SendMessage("/cd rules <all/map/player> - the rules of countdown. with send: all to send to all, map to send to map and have a player's name to send to a player");
             else
                 p.SendMessage("/cd rules - view the rules of countdown");
             
-            if (CheckAdditionalPerm(p, 2)) {
+            if (CheckExtraPerm(p, 2)) {
                 p.SendMessage("/cd generate [width] [height] [length] - generates the countdown map (default size is 32x32x32)");
                 p.SendMessage("/cd enable - enable the game");
                 p.SendMessage("/cd disable - disable the game");

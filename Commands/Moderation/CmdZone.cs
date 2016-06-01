@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "Place a block where you would like to check for zones.");
                 return;
             }
-            else if (!CheckAdditionalPerm(p, 1))
+            else if (!CheckExtraPerm(p, 1))
             {
                 MessageNeedPerms(p, "can delete zones.", 1); return;
             }
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands
 
             if (message.ToLower() == "del all")
             {
-            	if (!CheckAdditionalPerm(p, 2))
+            	if (!CheckExtraPerm(p, 2))
                 {
                     MessageNeedPerms(p, "can delete all zones.", 2); return;
                 }
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands
             }
 
 
-            if (!CheckAdditionalPerm(p, 3))
+            if (!CheckExtraPerm(p, 3))
             {
             	MessageNeedPerms(p, "can create zones.", 3); return;
             }

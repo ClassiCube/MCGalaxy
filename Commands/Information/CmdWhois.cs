@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
                 if (target == null) return;
                 info = FromOffline(target, message);
             }
-            WhoInfo.Output(p, info, CheckAdditionalPerm(p));
+            WhoInfo.Output(p, info, CheckExtraPerm(p));
         }
         
         WhoInfo FromOnline(Player who) {

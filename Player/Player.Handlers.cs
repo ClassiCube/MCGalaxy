@@ -236,18 +236,15 @@ namespace MCGalaxy {
                             HandleLogin(message);
                             break;
                         case Opcode.SetBlockClient:
-                            if (!loggedIn)
-                                break;
+                            if (!loggedIn) break;
                             HandleBlockchange(message);
                             break;
                         case Opcode.EntityTeleport:
-                            if (!loggedIn)
-                                break;
+                            if (!loggedIn) break;
                             HandleMovement(message);
                             break;
                         case Opcode.Message:
-                            if (!loggedIn)
-                                break;
+                            if (!loggedIn) break;
                             HandleChat(message);
                             break;
                         case Opcode.CpeExtInfo:

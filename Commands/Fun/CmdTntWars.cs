@@ -243,7 +243,7 @@ namespace MCGalaxy.Commands
 				case "all":
 				case "a":
 				case "everyone":
-					if (CheckAdditionalPerm(p)) {
+					if (CheckExtraPerm(p)) {
 						Player[] players = PlayerInfo.Online.Items;
 						foreach (Player who in players)
 						{
@@ -263,7 +263,7 @@ namespace MCGalaxy.Commands
 				case "lvl":
 				case "map":
 				case "m":
-					if (CheckAdditionalPerm(p)) {
+					if (CheckExtraPerm(p)) {
 						foreach (Player who in p.level.players) {
 							Player.Message(who, "TNT Wars Rules: (sent to all players in map by " + p.ColoredName + " %S)");
 							Player.Message(who, "The aim of the game is to blow up people using TNT!");
@@ -281,7 +281,7 @@ namespace MCGalaxy.Commands
 				case "pls":
 				case "pl":
 				case "p":
-					if (CheckAdditionalPerm(p)) {
+					if (CheckExtraPerm(p)) {
 						TntWarsGame gm = TntWarsGame.GetTntWarsGame(p);
 						if (gm == null) {
 							Player.Message(p, "TNT Wars Error: You aren't in a TNT Wars game!");
@@ -302,7 +302,7 @@ namespace MCGalaxy.Commands
 					break;
 
 				default:
-					if (text[1] != null && CheckAdditionalPerm(p)) {
+					if (text[1] != null && CheckExtraPerm(p)) {
 						Player who = PlayerInfo.FindOrShowMatches(p, text[1]);
 						if (who != null) {
 							Player.Message(who, "TNT Wars Rules: (sent to you by " + p.ColoredName + " %S)");
@@ -412,7 +412,7 @@ namespace MCGalaxy.Commands
 		}
 		
 		void DoSetup(Player p, string[] text) {
-			if (!CheckAdditionalPerm(p)) {
+			if (!CheckExtraPerm(p)) {
 				Player.Message(p, "Sorry, you aren't a high enough rank for that!"); return;
 			}
 			
@@ -1747,7 +1747,7 @@ namespace MCGalaxy.Commands
 			Player.Message(p, "/tw scores <top/team/me> - view the top score/team scores/your scores");
 			Player.Message(p, "/tw players {p} - view the current players in your game");
 			Player.Message(p, "/tw health {hp} - view your currrent amount of health left");
-			if (CheckAdditionalPerm(p))
+			if (CheckExtraPerm(p))
 			{
 				Player.Message(p, "/tw rules <all/level/players/<playername>> - send the rules to yourself, all, your map, all players in your game or to one person!");
 				Player.Message(p, "/tw setup {s} - setup the game (do '/tntwars setup help' for more info!");
