@@ -44,7 +44,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
-                    if (line.IndexOf(p.name, comp) < 0) continue;
+                    if (!line.StartsWith(p.name, comp)) continue;
                     string[] args = line.Split(' ');
 
                     int period = Convert.ToInt32(args[3]);
@@ -54,11 +54,10 @@ namespace MCGalaxy {
                     int months = Convert.ToInt32(args[7]);
                     int years = Convert.ToInt32(args[8]);
                     
-                    Player who = PlayerInfo.Find(args[0]);
                     DateTime expire = new DateTime(years, months, days, hours, minutes, 0)
                         .AddHours(Convert.ToDouble(period));
                     if (DateTime.Now >= expire)
-                        Command.all.Find("deltemprank").Use(null, who.name);
+                        Command.all.Find("temprank").Use(null, p.name + " delete");
                 }
             }
         }
