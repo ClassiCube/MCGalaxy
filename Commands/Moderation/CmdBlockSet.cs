@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands
                 }
             }
 
-            Player.GlobalMessage("&d" + Block.Name(foundBlock) + "S's permission was changed to " + Level.PermissionToName(newPerm));
+            Player.GlobalMessage("&d" + Block.Name(foundBlock) + "%S's permission was changed to " + Level.PermissionToName(newPerm));
             if (p == null)
                 Player.Message(p, Block.Name(foundBlock) + "'s permission was changed to " + Level.PermissionToName(newPerm));
         }
