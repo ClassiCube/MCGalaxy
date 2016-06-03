@@ -116,10 +116,7 @@ namespace MCGalaxy {
             }
         }
         
-        bool Moved() {
-            return (oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2]) 
-                && (oldrot[0] != rot[0] || oldrot[1] != rot[1]);
-        }
+        bool Moved() { return oldrot[0] != rot[0] || oldrot[1] != rot[1]; }
         
         int muteCooldown = 0;
         void MuteTimerElapsed(object sender, ElapsedEventArgs e) {

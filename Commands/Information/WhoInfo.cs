@@ -30,6 +30,7 @@ namespace MCGalaxy.Commands {
         public string IP;
         public int RoundsTotal, RoundsMax;
         public int InfectedTotal, InfectedMax;
+        public TimeSpan IdleTime;
         public string AfkMessage;
         
         public static void Output(Player p, WhoInfo who, bool canSeeIP) {
@@ -43,14 +44,14 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "  &a" + who.Deaths + " &cdeaths%S, " + Awards.AwardAmount(who.Name) + " awards");
             
             if (who.LoginBlocks >= 0)
-                Player.Message(p, "  &bModified &a" + who.TotalBlocks + " &eblocks, &a" + who.LoginBlocks + " &esince login");
+                Player.Message(p, "  &bModified &a{0} &eblocks, &a{1} &esince login", who.TotalBlocks, who.LoginBlocks);
             else
-                Player.Message(p, "  &bModified &a" + who.TotalBlocks + " &eblocks");
+                Player.Message(p, "  &bModified &a{0} &eblocks", who.TotalBlocks);
 
             if (who.TimeOnline.Ticks > 0)
-                Player.Message(p, "  Spent " + Shorten(who.TimeSpent) + " on the server, " + Shorten(who.TimeOnline) + " this session");
+                Player.Message(p, "  Spent {0} on the server, {1} this session", Shorten(who.TimeSpent), Shorten(who.TimeOnline));
             else
-                Player.Message(p, "  Spent " + Shorten(who.TimeSpent) + " on the server");
+                Player.Message(p, "  Spent {0} on the server",  Shorten(who.TimeSpent));
             
             if (who.Last.Ticks > 0)
                 Player.Message(p, "  First login &a" + who.First.ToString("yyyy-MM-dd")
@@ -59,7 +60,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "  First login on &a" + who.First.ToString("yyyy-MM-dd")
                                    + "%S, and is currently &aonline");
             
-            Player.Message(p, "  Logged in &a" + who.Logins + " %Stimes, &c" + who.Kicks + " %Sof which ended in a kick");        
+            Player.Message(p, "  Logged in &a{0} %Stimes, &c{1} %Sof which ended in a kick", who.Logins, who.Kicks);        
             if (who.Group.Permission == LevelPermission.Banned) {
                 string[] data = Ban.GetBanData(who.Name);
                 if (data != null)
@@ -69,9 +70,9 @@ namespace MCGalaxy.Commands {
             }                
 
             if (Server.Devs.CaselessContains(who.Name))
-                Player.Message(p, "  Player is a &9Developer");
+                Player.Message(p, "  Player is an &9MCGalaxy Developer");
             if (Server.Mods.CaselessContains(who.Name))
-                Player.Message(p, "  Player is a &9MCGalaxy Moderator");
+                Player.Message(p, "  Player is an &9MCGalaxy Moderator");
 
             if (canSeeIP) {
                 string ipMsg = who.IP;
@@ -81,7 +82,9 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "  Player is &fWhitelisted");
             }
             if (who.AfkMessage != null)
-                Player.Message(p, "  Is &aAFK %S(" + who.AfkMessage + "%S)");
+                Player.Message(p, "  Idle for {0} (AFK {1}%S)", Shorten(who.IdleTime), who.AfkMessage);
+            else if (who.IdleTime.TotalMinutes >= 1)
+            	Player.Message(p, "  Idle for {0}", Shorten(who.IdleTime));
             
             if (!Server.zombie.Running) return;
             Player.Message(p, "  Survived &a" + who.RoundsTotal +
