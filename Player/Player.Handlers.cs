@@ -845,33 +845,33 @@ return;
                 if ( level.Killer && !invincible && !hidden ) {
 
                     switch ( b ) {
-                        case Block.tntexplosion: Chat.GlobalChatLevel(this, FullName + " %S&cblew into pieces.", false); break;
-                        case Block.deathair: Chat.GlobalChatLevel(this, FullName + " %Swalked into &cnerve gas and suffocated.", false); break;
+                        case Block.tntexplosion: Chat.GlobalChatLevel(this, ColoredName + " %S&cblew into pieces.", false); break;
+                        case Block.deathair: Chat.GlobalChatLevel(this, ColoredName + " %Swalked into &cnerve gas and suffocated.", false); break;
                         case Block.deathwater:
-                        case Block.activedeathwater: Chat.GlobalChatLevel(this, FullName + " %Sstepped in &dcold water and froze.", false); break;
+                        case Block.activedeathwater: Chat.GlobalChatLevel(this, ColoredName + " %Sstepped in &dcold water and froze.", false); break;
                         case Block.deathlava:
                         case Block.activedeathlava:
-                        case Block.fastdeathlava: Chat.GlobalChatLevel(this, FullName + " %Sstood in &cmagma and melted.", false); break;
-                        case Block.magma: Chat.GlobalChatLevel(this, FullName + " %Swas hit by &cflowing magma and melted.", false); break;
-                        case Block.geyser: Chat.GlobalChatLevel(this, FullName + " %Swas hit by &cboiling water and melted.", false); break;
-                        case Block.birdkill: Chat.GlobalChatLevel(this, FullName + " %Swas hit by a &cphoenix and burnt.", false); break;
-                        case Block.train: Chat.GlobalChatLevel(this, FullName + " %Swas hit by a &ctrain.", false); break;
-                        case Block.fishshark: Chat.GlobalChatLevel(this, FullName + " %Swas eaten by a &cshark.", false); break;
-                        case Block.fire: Chat.GlobalChatLevel(this, FullName + " %Sburnt to a &ccrisp.", false); break;
-                        case Block.rockethead: Chat.GlobalChatLevel(this, FullName + " %Swas &cin a fiery explosion.", false); level.MakeExplosion(x, y, z, 0); break;
-                        case Block.zombiebody: Chat.GlobalChatLevel(this, FullName + " %Sdied due to lack of &5brain.", false); break;
-                        case Block.creeper: Chat.GlobalChatLevel(this, FullName + " %Swas killed &cb-SSSSSSSSSSSSSS", false); level.MakeExplosion(x, y, z, 1); break;
-                        case Block.air: Chat.GlobalChatLevel(this, FullName + " %Shit the floor &chard.", false); break;
-                        case Block.water: Chat.GlobalChatLevel(this, FullName + " %S&cdrowned.", false); break;
-                        case Block.Zero: Chat.GlobalChatLevel(this, FullName + " %Swas &cterminated", false); break;
-                        case Block.fishlavashark: Chat.GlobalChatLevel(this, FullName + " %Swas eaten by a ... LAVA SHARK?!", false); break;
+                        case Block.fastdeathlava: Chat.GlobalChatLevel(this, ColoredName + " %Sstood in &cmagma and melted.", false); break;
+                        case Block.magma: Chat.GlobalChatLevel(this, ColoredName + " %Swas hit by &cflowing magma and melted.", false); break;
+                        case Block.geyser: Chat.GlobalChatLevel(this, ColoredName + " %Swas hit by &cboiling water and melted.", false); break;
+                        case Block.birdkill: Chat.GlobalChatLevel(this, ColoredName + " %Swas hit by a &cphoenix and burnt.", false); break;
+                        case Block.train: Chat.GlobalChatLevel(this, ColoredName + " %Swas hit by a &ctrain.", false); break;
+                        case Block.fishshark: Chat.GlobalChatLevel(this, ColoredName + " %Swas eaten by a &cshark.", false); break;
+                        case Block.fire: Chat.GlobalChatLevel(this, ColoredName + " %Sburnt to a &ccrisp.", false); break;
+                        case Block.rockethead: Chat.GlobalChatLevel(this, ColoredName + " %Swas &cin a fiery explosion.", false); level.MakeExplosion(x, y, z, 0); break;
+                        case Block.zombiebody: Chat.GlobalChatLevel(this, ColoredName + " %Sdied due to lack of &5brain.", false); break;
+                        case Block.creeper: Chat.GlobalChatLevel(this, ColoredName + " %Swas killed &cb-SSSSSSSSSSSSSS", false); level.MakeExplosion(x, y, z, 1); break;
+                        case Block.air: Chat.GlobalChatLevel(this, ColoredName + " %Shit the floor &chard.", false); break;
+                        case Block.water: Chat.GlobalChatLevel(this, ColoredName + " %S&cdrowned.", false); break;
+                        case Block.Zero: Chat.GlobalChatLevel(this, ColoredName + " %Swas &cterminated", false); break;
+                        case Block.fishlavashark: Chat.GlobalChatLevel(this, ColoredName + " %Swas eaten by a ... LAVA SHARK?!", false); break;
                         case Block.rock:
                             if ( explode ) level.MakeExplosion(x, y, z, 1);
-                            SendChatFrom(this, FullName + "%S" + customMessage, false);
+                            SendChatFrom(this, ColoredName + "%S" + customMessage, false);
                             break;
                         case Block.stone:
                             if ( explode ) level.MakeExplosion(x, y, z, 1);
-                            Chat.GlobalChatLevel(this, FullName + "%S" + customMessage, false);
+                            Chat.GlobalChatLevel(this, ColoredName + "%S" + customMessage, false);
                             break;
                     }
                     if ( Game.team != null && this.level.ctfmode ) {
@@ -902,7 +902,7 @@ return;
                     }
 
                     if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
-                        Chat.GlobalChatLevel(this, FullName + " %Shas died &3" + overallDeath + " times", false);
+                        Chat.GlobalChatLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false);
                 }
                 lastDeath = DateTime.Now;
 
