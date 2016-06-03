@@ -985,15 +985,13 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     }
                 }
                 //if (text.StartsWith(">") || text.StartsWith("<")) return;
-                if (text.EndsWith(">"))
-                {
-                    storedMessage += text.Replace(">", "|>|");
+                if (text.EndsWith(">")) {
+                    storedMessage += text.Substring(0, text.Length - 1) + "|>|";
                     SendMessage(Colors.teal + "Partial message: " + Colors.white + storedMessage.Replace("|>|", " ").Replace("|<|", ""));
                     return;
                 }
-                if (text.EndsWith("<"))
-                {
-                    storedMessage += text.Replace("<", "|<|");
+                if (text.EndsWith("<")) {
+                    storedMessage += text.Substring(0, text.Length - 1) + "|<|";
                     SendMessage(Colors.teal + "Partial message: " + Colors.white + storedMessage.Replace("|<|", "").Replace("|>|", " "));
                     return;
                 }
