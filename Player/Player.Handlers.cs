@@ -755,9 +755,14 @@ return;
             
             if (cancelmove) {
                 SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
-            }            
+            } 
+            
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
+            if (!Moved()) return;
+            
+            LastAction = DateTime.UtcNow;
+            if (IsAfk) CmdAfk.ToggleAfk(this, "");
             /*if (!CheckIfInsideBlock()) { clippos = pos; cliprot = rot; }*/
         }
 

@@ -45,6 +45,7 @@ namespace MCGalaxy.Commands {
             p.IsAfk = !p.IsAfk;
             p.afkMessage = p.IsAfk ? message : null;
             TabList.Update(p, true);
+            p.LastAction = DateTime.UtcNow;
             
             bool send = !Server.chatmod && !p.muted;
             if (p.IsAfk) {                
