@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Timers;
+using MCGalaxy.Commands;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
@@ -49,6 +50,7 @@ namespace MCGalaxy {
                 loginTimer.Dispose();
                 extraTimer.Start();
             }
+            LastAction = DateTime.UtcNow;
         }
         
         void ExtraTimerElapsed(object sender, ElapsedEventArgs e) {
@@ -93,31 +95,30 @@ namespace MCGalaxy {
             SendRaw(Opcode.Ping);
             if (Server.afkminutes <= 0) return;
             
-            if ( IsAfk ) {
-                afkCount = 0;
-                if ( Server.afkkick > 0 && group.Permission < Server.afkkickperm )
-                    if ( afkStart.AddMinutes(Server.afkkick) < DateTime.Now )
+            if (IsAfk) {
+                int time = Server.afkkick;
+                if (AutoAfk) time += Server.afkminutes;
+                
+                if (Server.afkkick > 0 && group.Permission < Server.afkkickperm) {
+                    if (LastAction.AddMinutes(time) < DateTime.UtcNow)
                         Kick("Auto-kick, AFK for " + Server.afkkick + " minutes");
-                if ( ( oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2] ) && ( oldrot[0] != rot[0] || oldrot[1] != rot[1] ) )
-                    Command.all.Find("afk").Use(this, "");
+                }
+                if (Moved()) CmdAfk.ToggleAfk(this, "");
             } else {
-                if ( oldpos[0] == pos[0] && oldpos[1] == pos[1] && oldpos[2] == pos[2] && oldrot[0] == rot[0] && oldrot[1] == rot[1] )
-                    afkCount++;
-                else
-                    afkCount = 0;
+                if (Moved()) LastAction = DateTime.UtcNow;
 
-                if ( afkCount > Server.afkminutes * 30 ) {
-                    if ( name != null && !String.IsNullOrEmpty(name.Trim()) && !hidden ) {
-                        Command.all.Find("afk").Use(this, "auto: Not moved for " + Server.afkminutes + " minutes");
-                        if ( AFK != null )
-                            AFK(this);
-                        if ( ONAFK != null )
-                            ONAFK(this);
-                        OnPlayerAFKEvent.Call(this);
-                        afkCount = 0;
+                if (LastAction.AddMinutes(Server.afkminutes) < DateTime.UtcNow) {
+                    if (name != null && !String.IsNullOrEmpty(name.Trim()) && !hidden) {
+                        CmdAfk.ToggleAfk(this, "auto: Not moved for " + Server.afkminutes + " minutes");
+                        AutoAfk = true;
                     }
                 }
             }
+        }
+        
+        bool Moved() {
+            return (oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2]) 
+                && (oldrot[0] != rot[0] || oldrot[1] != rot[1]);
         }
         
         int muteCooldown = 0;

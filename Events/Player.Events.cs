@@ -47,9 +47,11 @@ namespace MCGalaxy {
         /// <summary> This event is triggered when a player goes AFK </summary>
         [Obsolete("Please use the OnPlayerAFKEvent.Register()")]
         public static event OnAFK AFK;
+        public static void RaiseAFK(Player p) { if (AFK != null) AFK(p); }
         /// <summary> This event is triggered when a player goes AFK </summary>
         [Obsolete("Please use the OnPlayerAFKEvent.Register()")]
         public event OnAFK ONAFK;
+        public void RaiseONAFK() { if (ONAFK != null) ONAFK(this); }
         
         /// <summary> Called when a player's data is saved to the database. (even if disabled) </summary>
         public delegate void OnMySQLSave(Player p, string sqlCommand);

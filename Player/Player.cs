@@ -74,9 +74,8 @@ namespace MCGalaxy {
         System.Timers.Timer loginTimer = new System.Timers.Timer(1000);
         System.Timers.Timer extraTimer = new System.Timers.Timer(22000);
         public System.Timers.Timer checkTimer = new System.Timers.Timer(2000);
-        public int afkCount = 0;
-        public DateTime afkStart;
-        public bool IsAfk = false;
+        public DateTime LastAction;
+        public bool IsAfk = false, AutoAfk;
         public bool cmdTimer = false;
         public bool UsingWom = false;
         public string BrushName = "normal", DefaultBrushArgs = "";
@@ -558,8 +557,7 @@ namespace MCGalaxy {
                 // FlyBuffer.Clear();
                 SaveIgnores();
                 DisposeTimers();
-                afkCount = 0;
-                afkStart = DateTime.Now;
+                LastAction = DateTime.UtcNow;
                 IsAfk = false;
                 isFlying = false;
                 aiming = false;

@@ -16,10 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdAfk : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdAfk : Command {
         public override string name { get { return "afk"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -30,35 +28,44 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            if (Server.chatmod) {
-                Player.Message(p, "You cannot use /afk while chat moderation is enabled");
-                return;
-            }
-            if (p != null && p.muted) { Player.Message(p, "Cannot use /afk while muted."); return; }
-
             if (message == "list") {
-            	Player[] players = PlayerInfo.Online.Items;
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (!Entities.CanSee(p, pl) || !pl.IsAfk) continue;
                     Player.Message(p, p.name);
                 }
                 return;
             }
-            
+            ToggleAfk(p, message);
+        }
+        
+        internal static void ToggleAfk(Player p, string message) {
             if (p.joker) message = "";
-            if (!p.IsAfk) {
-                p.afkStart = DateTime.Now;
-                p.afkMessage = message;
-                p.IsAfk = true;
-                Player.GlobalMessage("-" + p.ColoredName + "%S- is AFK " + message);
-                Player.RaisePlayerAction(p, PlayerAction.AFK, message);
+            p.AutoAfk = false;
+            p.IsAfk = !p.IsAfk;
+            p.afkMessage = p.IsAfk ? message : null;
+            TabList.Update(p, true);
+            
+            bool send = !Server.chatmod && !p.muted;
+            if (p.IsAfk) {                
+                if (send) {
+                    Player.GlobalMessage("-" + p.ColoredName + "%S- is AFK " + message);
+                    Player.RaisePlayerAction(p, PlayerAction.AFK, message);
+                } else {
+                    Player.Message(p, "You are now marked as being AFK.");
+                }
+                
+            	p.RaiseONAFK();
+            	Player.RaiseAFK(p);
+                OnPlayerAFKEvent.Call(p);
             } else {
-                p.IsAfk = false;
-                p.afkMessage = null;
+                if (send) {
                 Player.GlobalMessage("-" + p.ColoredName + "%S- is no longer AFK");
                 Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
+                } else {
+                    Player.Message(p, "You are no longer marked as being AFK.");
+                }
             }
-            TabList.Update(p, true);
         }
         
         public override void Help(Player p) {

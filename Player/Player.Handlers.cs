@@ -273,6 +273,7 @@ namespace MCGalaxy {
         
         void HandleLogin(byte[] message)
         {
+            LastAction = DateTime.UtcNow;
             try
             {
                 if (loggedIn) return;
@@ -1003,15 +1004,10 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 }
                 if ( text.Length == 0 )
                     return;
-                afkCount = 0;
+                LastAction = DateTime.UtcNow;
 
-                if ( text != "/afk" && IsAfk ) {
-                    IsAfk = false;
-                    afkMessage = null;
-                    Player.GlobalMessage("-" + ColoredName + "%S- is no longer AFK");
-                    RaisePlayerAction(this, PlayerAction.UnAFK, null, false);
-                    TabList.Update(this, true);
-                }
+                if ( text != "/afk" && IsAfk )
+                	CmdAfk.ToggleAfk(this, "");
                 // Typing //Command appears in chat as /command
                 // Suggested by McMrCat
                 if ( text.StartsWith("//") ) {
