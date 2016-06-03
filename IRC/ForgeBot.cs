@@ -216,11 +216,10 @@ namespace MCGalaxy {
                 Player.Message(p, "You cannot send that message");
                 return;
             }
-
-            if (Server.ircColorsEnable && IsConnected())
-                Say(p.FullName + "%S: " + message, p.opchat);
-            if (!Server.ircColorsEnable && IsConnected())
-                Say(p.DisplayName + ": " + message, p.opchat);
+            if (!IsConnected()) return;
+            
+            string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
+            Say(name + "%S: " + message, p.opchat);
         }        
         #endregion
         
