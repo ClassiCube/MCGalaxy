@@ -331,12 +331,15 @@ namespace MCGalaxy.Gui {
                     txtOpChannel.Text = value;
                     break;
                 case "irc-identify":
-                    chkIrcId.Checked = ( value.ToLower() == "true" );
+                    chkIrcId.Checked = value.ToLower() == "true";
                     break;
                 case "irc-password":
                     txtIrcId.Text = value;
                     break;
-
+                case "irc-player-titles":
+                    irc_cbTitles.Checked = value.ToLower() == "true";
+                    break;
+                    
                 case "rplimit":
                     try { txtRP.Text = value; }
                     catch { txtRP.Text = "500"; }
@@ -632,6 +635,7 @@ namespace MCGalaxy.Gui {
             Server.ircPort = int.Parse(txtIRCPort.Text);
             Server.ircIdentify = chkIrcId.Checked;
             Server.ircPassword = txtIrcId.Text;
+            Server.ircPlayerTitles = irc_cbTitles.Checked;
 
             Server.rpLimit = int.Parse(txtRP.Text);
             Server.rpNormLimit = int.Parse(txtRP.Text);
@@ -1383,8 +1387,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         /// <summary> Toggles enabled state for IRC options. </summary>
         /// <param name="enabled"></param>
-        protected void toggleIrcSettings(bool enabled)
-        {
+        protected void toggleIrcSettings(bool enabled) {
             txtIRCServer.Enabled = enabled;
             txtIRCPort.Enabled = enabled;
             txtNick.Enabled = enabled;
@@ -1392,6 +1395,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             txtOpChannel.Enabled = enabled;
             txtIrcId.Enabled = enabled;
             chkIrcId.Enabled = enabled;
+            irc_cbTitles.Enabled = enabled;
         }
 
 

@@ -249,6 +249,7 @@ namespace MCGalaxy.Gui
             this.label49 = new System.Windows.Forms.Label();
             this.txtIrcId = new System.Windows.Forms.TextBox();
             this.chkIrcId = new System.Windows.Forms.CheckBox();
+            this.irc_cbTitles = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -2507,7 +2508,7 @@ namespace MCGalaxy.Gui
             this.grpSQL.Controls.Add(this.txtSQLUsername);
             this.grpSQL.Location = new System.Drawing.Point(264, 3);
             this.grpSQL.Name = "grpSQL";
-            this.grpSQL.Size = new System.Drawing.Size(227, 252);
+            this.grpSQL.Size = new System.Drawing.Size(227, 272);
             this.grpSQL.TabIndex = 29;
             this.grpSQL.TabStop = false;
             this.grpSQL.Text = "MySQL";
@@ -2609,6 +2610,16 @@ namespace MCGalaxy.Gui
             this.txtSQLUsername.TabIndex = 1;
             this.txtSQLUsername.Tag = "The username set while installing MySQL";
             // 
+            // irc_cbTitles
+            // 
+            this.irc_cbTitles.AutoSize = true;
+            this.irc_cbTitles.Location = new System.Drawing.Point(9, 251);
+            this.irc_cbTitles.Name = "irc_cbTitles";
+            this.irc_cbTitles.Size = new System.Drawing.Size(140, 17);
+            this.irc_cbTitles.TabIndex = 32;
+            this.irc_cbTitles.Text = "Show player titles on IRC";
+            this.irc_cbTitles.UseVisualStyleBackColor = true;
+            // 
             // grpIRC
             // 
             this.grpIRC.Controls.Add(this.txtIRCPort);
@@ -2625,9 +2636,10 @@ namespace MCGalaxy.Gui
             this.grpIRC.Controls.Add(this.label4);
             this.grpIRC.Controls.Add(this.txtNick);
             this.grpIRC.Controls.Add(this.label5);
+            this.grpIRC.Controls.Add(this.irc_cbTitles);
             this.grpIRC.Location = new System.Drawing.Point(8, 3);
             this.grpIRC.Name = "grpIRC";
-            this.grpIRC.Size = new System.Drawing.Size(250, 252);
+            this.grpIRC.Size = new System.Drawing.Size(250, 272);
             this.grpIRC.TabIndex = 27;
             this.grpIRC.TabStop = false;
             this.grpIRC.Text = "IRC";
@@ -4681,6 +4693,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.TextBox txtIrcId;
         private System.Windows.Forms.CheckBox chkIrcId;
+        private System.Windows.Forms.CheckBox irc_cbTitles;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.TextBox txtIRCPort;
         private System.Windows.Forms.CheckBox chkShowEmptyRanks;
