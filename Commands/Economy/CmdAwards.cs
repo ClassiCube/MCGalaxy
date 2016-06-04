@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/awards [player] %H- Gives a list of awards that player has.");
-            Player.Message(p, "$HIf [player] is not given, lists all awards the server has.");
+            Player.Message(p, "%HIf [player] is not given, lists all awards the server has.");
             Player.Message(p, "%HSpecify 1/2/3/... after to get an ordered list.");
         }
     }
