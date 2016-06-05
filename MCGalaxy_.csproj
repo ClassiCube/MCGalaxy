@@ -272,11 +272,9 @@
     <Compile Include="Commands\Moderation\CmdBlockSet.cs" />
     <Compile Include="Commands\Moderation\CmdBlockSpeed.cs" />
     <Compile Include="Commands\Moderation\CmdCmdSet.cs" />
-    <Compile Include="Commands\Moderation\CmdCrashServer.cs" />
     <Compile Include="Commands\Moderation\CmdExplode.cs" />
     <Compile Include="Commands\Moderation\CmdFollow.cs" />
     <Compile Include="Commands\Moderation\CmdFreeze.cs" />
-    <Compile Include="Commands\Moderation\CmdHacks.cs" />
     <Compile Include="Commands\Moderation\CmdHide.cs" />
     <Compile Include="Commands\Moderation\CmdHighlight.cs" />
     <Compile Include="Commands\Moderation\CmdInfoSwap.cs" />
@@ -340,8 +338,6 @@
     <Compile Include="Commands\other\CmdMove.cs" />
     <Compile Include="Commands\other\CmdNick.cs" />
     <Compile Include="Commands\other\CmdPass.cs" />
-    <Compile Include="Commands\other\CmdQuit.cs" />
-    <Compile Include="Commands\other\CmdRagequit.cs" />
     <Compile Include="Commands\other\CmdRepeat.cs" />
     <Compile Include="Commands\other\CmdReport.cs" />
     <Compile Include="Commands\other\CmdResetPass.cs" />
@@ -365,6 +361,7 @@
     <Compile Include="Commands\other\CmdWarp.cs" />
     <Compile Include="Commands\other\CmdWaypoint.cs" />
     <Compile Include="Commands\other\CmdXJail.cs" />
+    <Compile Include="Commands\other\QuitCmds.cs" />
     <Compile Include="Commands\Scripting\CmdCmdCreate.cs" />
     <Compile Include="Commands\Scripting\CmdCmdLoad.cs" />
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
