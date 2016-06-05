@@ -42,14 +42,13 @@ namespace MCGalaxy.Commands
                 if (Server.zombie.CurLevel != null)
                     Server.zombie.CurLevel.ChatLevel(who.ColoredName + " %Swas queued as the next zombie.");
             } else if (args[0].CaselessEq("level")) {
-                if (LevelInfo.ExistsOffline(value)) {
-                    Player.Message(p, value + " was queued.");
-                    Server.zombie.QueuedLevel = value.ToLower();
-                    if (Server.zombie.CurLevel != null)
-                        Server.zombie.CurLevel.ChatLevel(value + " was queued as the next map.");
-                } else {
-                    Player.Message(p, "Level \"" + value + "\" was not found.");
-                }
+                string map = LevelInfo.FindMapOrShowMatches(p, value);
+                if (map == null) return;
+                
+                Player.Message(p, map + " was queued.");
+                Server.zombie.QueuedLevel = map.ToLower();
+                if (Server.zombie.CurLevel != null)
+                    Server.zombie.CurLevel.ChatLevel(map + " was queued as the next map.");
             } else {
             	Help(p);
             }

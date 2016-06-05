@@ -49,6 +49,24 @@ namespace MCGalaxy {
             return Extensions.FindOrShowMatches(pl, name, out matches, LevelInfo.Loaded.Items,
                                                 l => true, l => l.name, "loaded levels");
         }
+        
+        public static string FindMapOrShowMatches(Player pl, string name) {
+            int matches = 0; return FindMapOrShowMatches(pl, name, out matches);
+        }
+        
+        public static string FindMapOrShowMatches(Player pl, string name, out int matches) {
+            matches = 0;
+            if (!Player.ValidName(name)) {
+                Player.Message(pl, "\"{0}\" is not a valid level name.", name); return null;
+            }
+            
+            var files = Directory.EnumerateFiles("levels", "*.lvl");
+            string map = Extensions.FindOrShowMatches(pl, name, out matches, files,
+                                                      l => true, l => Path.GetFileNameWithoutExtension(l), "levels");
+            if (map != null) 
+                map = Path.GetFileNameWithoutExtension(map);
+            return map;
+        }
 
         public static Level FindExact(string name) {
             Level[] loaded = Loaded.Items;

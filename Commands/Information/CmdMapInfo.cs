@@ -43,10 +43,11 @@ namespace MCGalaxy.Commands {
             MapInfoData data = new MapInfoData();
             if (lvl != null) {
                 data.FromOnlineLevel(lvl);
-            } else if (LevelInfo.ExistsOffline(level)) {
-                data.FromOfflineLevel(level);
             } else {
-                Player.Message(p, "Could not find specified level."); return;
+                string map = LevelInfo.FindMapOrShowMatches(p, level);
+                if (map == null) return;
+                Server.s.Log(map);
+                data.FromOfflineLevel(map);
             }
             
             if (env) ShowEnv(p, data);

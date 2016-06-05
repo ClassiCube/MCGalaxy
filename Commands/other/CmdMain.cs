@@ -39,15 +39,15 @@ namespace MCGalaxy.Commands {
                 if (!Player.ValidName(message)) {
                     Player.Message(p, "\"{0}\" is not a valid level name.", message); return;
                 }
-                if (!LevelInfo.ExistsOffline(message)) {
-                    Player.Message(p, "The level \"{0}\" does not exist.", message); return;
-                }
                 
-                Server.level = message;
-                Server.mainLevel = Level.Load(message);
+                string map = LevelInfo.FindMapOrShowMatches(p, message);
+                if (map == null) return;
+                
+                Server.level = map;
+                Server.mainLevel = Level.Load(map);
                 Server.mainLevel.unload = false;
                 SrvProperties.Save();
-                Player.Message(p, "Set main level to \"{0}\"", message);
+                Player.Message(p, "Set main level to \"{0}\"", map);
             }
         }
         

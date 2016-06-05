@@ -41,17 +41,15 @@ namespace MCGalaxy.Commands.World {
             if (!Player.ValidName(message)) { Player.Message(p, "\"" + message + "\" is not a valid level name."); return; }
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }
 
-            if (!LevelInfo.ExistsOffline(message)) {
-                Player.Message(p, "Could not find specified level."); return;
-            }
-
-            LevelPermission perbuild = GetPerBuildPermission(message);
+            string map = LevelInfo.FindMapOrShowMatches(p, message);
+            if (map == null) return;
+            LevelPermission perbuild = GetPerBuildPermission(map);
             if (p != null && perbuild > p.group.Permission) {
                 Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
             }
 
             Player.Message(p, "Created backup.");
-            LevelActions.Delete(message.ToLower());
+            LevelActions.Delete(map.ToLower());
         }
         
         LevelPermission GetPerBuildPermission(string level) {

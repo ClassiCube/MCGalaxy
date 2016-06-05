@@ -68,16 +68,10 @@ namespace MCGalaxy.Commands.World {
             		return GotoOfflineLevel(p, message);
                 lvl = LevelInfo.Find(message);
                 if (lvl != null) return GoToLevel(p, lvl, message);
-                List<string> matches = CmdSearch.MatchUnloaded(message);
-                if (matches.Count == 1) return GotoOfflineLevel(p, matches[0]);
                 
-                if (matches.Count == 0) {
-                    Player.Message(p, "No levels found matching \"" + message + "\".");
-                } else {
-                    Player.Message(p, "Level \"" + message + "\" does not exist. Did you mean...");
-                    Player.Message(p, matches.Concatenate(", "));
-                }
-                return false;
+                string map = LevelInfo.FindMapOrShowMatches(p, message);
+                if (map == null) return false;
+                return GotoOfflineLevel(p, map);
             } else {
                 lvl = LevelInfo.Find(message);
                 if (lvl == null) {

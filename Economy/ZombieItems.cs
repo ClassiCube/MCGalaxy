@@ -64,13 +64,12 @@ namespace MCGalaxy.Eco {
             if (Server.zombie.QueuedLevel != null) {
                 Player.Message(p, "Someone else has already queued a level."); return;
             }
-            if (!LevelInfo.ExistsOffline(message)) {
-                Player.Message(p, "Given level does not exist."); return;
-            }
+            string map = LevelInfo.FindMapOrShowMatches(p, message);
+            if (map == null) return;
             
-            Command.all.Find("queue").Use(p, "level " + message);
+            Command.all.Find("queue").Use(p, "level " + map);
             ZombieAwards.Give(p, ZombieAwards.buyQueue, Server.zombie);
-            Economy.MakePurchase(p, Price, "%3QueueLevel: " + message);
+            Economy.MakePurchase(p, Price, "%3QueueLevel: " + map);
         }
     }
     

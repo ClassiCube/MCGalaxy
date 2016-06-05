@@ -97,16 +97,8 @@ namespace MCGalaxy.Commands {
         }
         
         static void SearchUnloaded(Player p, string keyword) {
-        List<string> matches = MatchUnloaded(keyword);
-            if (matches.Count == 0) 
-            Player.Message(p, "No levels found containing &b" + keyword);
-            else
-            Player.Message(p, matches.Concatenate(", "));
-        }
-        
-        internal static List<string> MatchUnloaded(string keyword) {
-        List<string> matches = new List<string>();
-        DirectoryInfo di = new DirectoryInfo("levels/");
+            List<string> matches = new List<string>();
+            DirectoryInfo di = new DirectoryInfo("levels/");
             FileInfo[] fi = di.GetFiles("*.lvl");
 
             foreach (FileInfo file in fi) {
@@ -114,7 +106,11 @@ namespace MCGalaxy.Commands {
                 if (level.IndexOf(keyword, comp) >= 0)
                 matches.Add(level);
             }
-            return matches;
+            
+            if (matches.Count == 0) 
+            Player.Message(p, "No levels found containing &b" + keyword);
+            else
+            Player.Message(p, matches.Concatenate(", "));
         }
         
         public override void Help(Player p) {

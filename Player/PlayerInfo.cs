@@ -53,6 +53,11 @@ namespace MCGalaxy {
         }
         
         public static Player FindOrShowMatches(Player pl, string name, out int matches, bool onlyCanSee = true) {
+            matches = 0;
+            if (!Player.ValidName(name)) {
+                Player.Message(pl, "\"{0}\" is not a valid player name.", name); return null;
+            }
+            
             return Extensions.FindOrShowMatches(pl, name, out matches, Online.Items,
                                                 p => Entities.CanSee(pl, p) || !onlyCanSee,
                                                 p => p.name, "online players");
