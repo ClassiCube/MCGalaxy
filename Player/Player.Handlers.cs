@@ -141,13 +141,13 @@ namespace MCGalaxy {
         }
         
         bool DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if (deleteMode) { ChangeBlock(x, y, z, Block.air, 0); return true; }
+            if (deleteMode) { return ChangeBlock(x, y, z, Block.air, 0); }
 
             Block.HandleDelete handler = Block.deleteHandlers[b];
             if (handler != null) {
                 if (handler(this, b, x, y, z)) return false;
             } else {
-                ChangeBlock(x, y, z, Block.air, 0);
+                return ChangeBlock(x, y, z, Block.air, 0);
             }
 
             if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt) 
@@ -166,18 +166,21 @@ namespace MCGalaxy {
             if (handler != null) {
                 if (handler(this, b, x, y, z)) return false;
             } else {
-                ChangeBlock(x, y, z, type, extType);
+                return ChangeBlock(x, y, z, type, extType);
             }
             return true;
         }
         
         /// <summary> Updates the block at the given position, also turning the block below to dirt if the block above blocks light. </summary>
-        internal void ChangeBlock(ushort x, ushort y, ushort z, byte type, byte extType) {
-            level.Blockchange(this, x, y, z, type, extType);
+        internal bool ChangeBlock(ushort x, ushort y, ushort z, byte type, byte extType) {
+            if (!level.DoBlockchange(this, x, y, z, type, extType)) return false;
+            Player.GlobalBlockchange(level, x, y, z, type, extType);
+            
             if (level.GetTile(x, (ushort)(y - 1), z) == Block.grass && level.GrassDestroy 
                 && !Block.LightPass(type, extType, level.CustomBlockDefs)) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
             }
+            return true;
         }
         
         byte[] HandleMessage(byte[] buffer) {
@@ -656,7 +659,7 @@ namespace MCGalaxy {
                 frozen = true;
                 GlobalMessage(DisplayName + " is still frozen from the last time they went offline.");
                 Player.Message(this, "!%cYou are still %8frozen%c since your last login.");
-            }        	
+            }            
         }
         
         void CheckLoginJailed() {
@@ -1012,7 +1015,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 LastAction = DateTime.UtcNow;
 
                 if ( text != "/afk" && IsAfk )
-                	CmdAfk.ToggleAfk(this, "");
+                    CmdAfk.ToggleAfk(this, "");
                 // Typing //Command appears in chat as /command
                 // Suggested by McMrCat
                 if ( text.StartsWith("//") ) {
@@ -1287,8 +1290,8 @@ return;
         }
         
         void UseCommand(Command command, string cmd, string message) {
-        	if (!group.CanExecute(command)) { command.MessageCannotUse(this); return; }
-        	string reason = Command.GetDisabledReason(command.Enabled);
+            if (!group.CanExecute(command)) { command.MessageCannotUse(this); return; }
+            string reason = Command.GetDisabledReason(command.Enabled);
             if (reason != null) {
                 SendMessage("Command is disabled as " + reason); return;
             }
