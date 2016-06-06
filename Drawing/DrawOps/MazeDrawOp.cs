@@ -106,7 +106,7 @@ namespace MCGalaxy.Drawing.Ops {
             QuadZ(min.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, p, lvl, brush);
             QuadZ(max.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, p, lvl, brush);
             
-            Player.Message(p, "Maze painted. Build your entrance and exit yourself");
+            Player.Message(p, "Maze painted. Build the entrance and exit yourself");
             randomizer = 0;
         }
         

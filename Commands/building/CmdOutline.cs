@@ -30,13 +30,12 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length != 2) { Help(p); return; }
-            CatchPos cpos = default(CatchPos);
+            CatchPos cpos = default(CatchPos);           
             
-            cpos.type = Block.Byte(args[0]);
-            if (cpos.type == Block.Zero) { Player.Message(p, "There is no block \"{0}\".", args[0]); return; }
-            cpos.newType = Block.Byte(args[1]);
-            if (cpos.newType == Block.Zero) { Player.Message(p, "There is no block \"{0}\".",  args[1]); return; }
-            if (!Block.canPlace(p, cpos.newType)) { Player.Message(p, "Cannot place that block type."); return; }
+            cpos.type = DrawCmd.GetBlock(p, args[0], out cpos.newType);
+            if (cpos.type == Block.Zero) return;
+            cpos.newType = DrawCmd.GetBlock(p, args[1], out cpos.newExtType);
+            if (cpos.newType == Block.Zero) return;
 
             p.blockchangeObject = cpos;
             Player.Message(p, "Place two blocks to determine the edges.");
@@ -56,13 +55,14 @@ namespace MCGalaxy.Commands.Building {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             
             OutlineDrawOp op = new OutlineDrawOp();
-            op.Type = cpos.type; op.NewType = cpos.newType;
+            op.Type = cpos.type; op.ExtType = cpos.extType;
+            op.NewType = cpos.newType; op.NewExtType = cpos.newExtType;
             if (!DrawOp.DoDrawOp(op, null, p, x, y, z, cpos.x, cpos.y, cpos.z )) 
                 return;
             if (p.staticCommands) 
                 p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-        struct CatchPos { public byte type, newType; public ushort x, y, z; }
+        struct CatchPos { public byte type, extType, newType, newExtType; public ushort x, y, z; }
 
         public override void Help(Player p) {
             Player.Message(p, "/outline [type] [type2] - Outlines [type] with [type2]");

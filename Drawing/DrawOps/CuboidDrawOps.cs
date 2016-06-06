@@ -26,7 +26,7 @@ namespace MCGalaxy.Drawing.Ops {
         public byte Skip;
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
@@ -58,25 +58,31 @@ namespace MCGalaxy.Drawing.Ops {
     public class OutlineDrawOp : CuboidDrawOp {
         
         public override string Name { get { return "Outline"; } }
-        public byte Type, NewType;
+        public byte Type, ExtType, NewType, NewExtType;
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 bool outline = false;
-                if (lvl.GetTile((ushort)(x - 1), y, z) == Type) outline = true;
-                else if (lvl.GetTile((ushort)(x + 1), y, z) == Type) outline = true;
-                else if (lvl.GetTile(x, (ushort)(y - 1), z) == Type) outline = true;
-                else if (lvl.GetTile(x, (ushort)(y + 1), z) == Type) outline = true;
-                else if (lvl.GetTile(x, y, (ushort)(z - 1)) == Type) outline = true;
-                else if (lvl.GetTile(x, y, (ushort)(z + 1)) == Type) outline = true;
+                outline |= Check(lvl, (ushort)(x - 1), y, z);
+                outline |= Check(lvl, (ushort)(x + 1), y, z);
+                outline |= Check(lvl, x, y, (ushort)(z - 1));
+                outline |= Check(lvl, x, y, (ushort)(z + 1));
+                outline |= Check(lvl, x, (ushort)(y - 1), z);
+                outline |= Check(lvl, x, (ushort)(y + 1), z);
 
-                if (outline && p.level.GetTile(x, y, z) != Type)
-                    PlaceBlock(p, lvl, x, y, z, NewType, 0);
+                if (outline && !Check(lvl, x, y, z))
+                    PlaceBlock(p, lvl, x, y, z, NewType, NewExtType);
             }
+        }
+        
+        bool Check(Level lvl, ushort x, ushort y, ushort z) {
+            byte tile = lvl.GetTile(x, y, z);
+            if (tile != Type) return false;
+            return tile != Block.custom_block || lvl.GetExtTile(x, y, z) == ExtType;
         }
     }
     
@@ -85,7 +91,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Rainbow"; } }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int dx = Math.Abs(p1.X - p2.X), dy = Math.Abs(p1.Y - p2.Y), dz = Math.Abs(p1.Z - p2.Z);
             byte stepX = 0, stepY = 0, stepZ = 0;
             
