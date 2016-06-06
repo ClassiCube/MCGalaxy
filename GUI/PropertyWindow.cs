@@ -259,7 +259,7 @@ namespace MCGalaxy.Gui {
         void LineProcessor(string key, string value) {
             switch (key.ToLower()) {
                 case "server-name":
-                    if ( ValidString(value, "![]:.,{}~-+()?_/\\' ") ) txtName.Text = value;
+                    if ( ValidString(value, "![]&:.,{}~-+()?_/\\' ") ) txtName.Text = value;
                     else txtName.Text = "[MCGalaxy] Minecraft server";
                     break;
                 case "motd":

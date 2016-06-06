@@ -195,7 +195,7 @@ namespace MCGalaxy
         public static string salt = "";
 
         [ConfigString("server-name", "General", null, 
-                      "[MCGalaxy] Default", false, "![]:.,{}~-+()?_/\\' ")]
+                      "[MCGalaxy] Default", false, "![]&:.,{}~-+()?_/\\' ")]
         public static string name = "[MCGalaxy] Default";
         [ConfigString("motd", "General", null, "Welcome",
                      false,  "=![]&:.,{}~-+()?_/\\' ")]
