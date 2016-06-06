@@ -1332,6 +1332,7 @@ return;
                                     }
                                 }));
             thread.Name = "MCG_Command";
+            thread.IsBackground = true;
             thread.Start();
         }
     }

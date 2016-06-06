@@ -422,87 +422,23 @@ namespace MCGalaxy.Gui
             }
         }
 
-        private void txtInput_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                string text = txtInput.Text.Trim();
-                if (String.IsNullOrEmpty(text)) return;
-                if (MCGalaxy.Chat.HandleModes(null, text))
-                	return;
-                
-                Player.GlobalMessage("Console [&a" + Server.ZallState + Server.DefaultColor + "]:&f " + text);
-                Server.IRC.Say("Console [&a" + Server.ZallState + "%S]: " + text);
-                WriteLine("<CONSOLE> " + text);
-                Server.s.Log("(Console): " + text, true);
-                txtInput.Clear();
-            }
-        }
-
-        private void txtCommands_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode != Keys.Enter)
-                return;
-            string sentCmd, sentMsg = "";
+        void txtInput_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode != Keys.Enter) return;
             e.Handled = true;
             e.SuppressKeyPress = true;
+            Handlers.HandleChat(txtInput.Text, WriteLine);
+            txtInput.Clear();
+        }
 
-            if (txtCommands.Text == null || txtCommands.Text.Trim() == "")
-            {
-                newCommand("CONSOLE: Whitespace commands are not allowed.");
-                txtCommands.Clear();
-                return;
-            }
-
-            if (txtCommands.Text[0] == '/' && txtCommands.Text.Length > 1)
-                txtCommands.Text = txtCommands.Text.Substring(1);
-
-            if (txtCommands.Text.IndexOf(' ') != -1)
-            {
-                sentCmd = txtCommands.Text.Split(' ')[0];
-                sentMsg = txtCommands.Text.Substring(txtCommands.Text.IndexOf(' ') + 1);
-            }
-            else if (txtCommands.Text != "")
-            {
-                sentCmd = txtCommands.Text;
-            }
-            else
-            {
-                return;
-            }
-
-            Thread cmdThread = new Thread(() =>
-            {
-                try
-                {
-                    Command commandcmd = Command.all.Find(sentCmd);
-                    if (commandcmd == null)
-                    {
-                        Server.s.Log("No such command!");
-                        return;
-                    }
-                    commandcmd.Use(null, sentMsg);
-                    newCommand("CONSOLE: USED /" + sentCmd + " " + sentMsg);
-                    Server.s.Log("(Console) used /" + sentCmd + " " + sentMsg, true);
-                }
-                catch (Exception ex)
-                {
-                    Server.ErrorLog(ex);
-                    newCommand("CONSOLE: Failed command.");
-                }
-            });
-            cmdThread.Name = "MCG_ConsoleCommand";
-            cmdThread.Start();
-
+        void txtCommands_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode != Keys.Enter) return;
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            Handlers.HandleCommand(txtCommands.Text, newCommand);
             txtCommands.Clear();
         }
 
-        private void btnClose_Click_1(object sender, EventArgs e)
-        {
-            Close();
-        }
+        void btnClose_Click_1(object sender, EventArgs e) { Close(); }
 
         public void newCommand(string p)
         {

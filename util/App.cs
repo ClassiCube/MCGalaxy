@@ -205,9 +205,8 @@ namespace MCGalaxy.Gui
                 } else {
                     saveAll(false);
                     Application.Exit();
-                    if (usingConsole) {
-                        Process.GetProcessById(Process.GetCurrentProcess().Id).Kill();
-                    }
+                    if (usingConsole)
+                    	Process.GetCurrentProcess().Kill();
                     Environment.Exit(0);
                 }
             })).Start();

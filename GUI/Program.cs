@@ -35,8 +35,7 @@ namespace MCGalaxy.Gui
         public static extern IntPtr GetConsoleWindow();
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        public static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e)
-        {
+        public static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {
             Exception ex = (Exception)e.ExceptionObject;
             Server.ErrorLog(ex);
             Thread.Sleep(500);
@@ -45,8 +44,7 @@ namespace MCGalaxy.Gui
                 App.ExitProgram(true);
         }
 
-        public static void ThreadExHandler(object sender, ThreadExceptionEventArgs e)
-        {
+        public static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
             Exception ex = e.Exception;
             Server.ErrorLog(ex);
             Thread.Sleep(500);
@@ -57,18 +55,17 @@ namespace MCGalaxy.Gui
 
         static bool useConsole, useHighQualityGui;
         [STAThread]
-        public static void Main(string[] args)
-        {
+        public static void Main(string[] args) {
             startTime = DateTime.Now;
-            if (Process.GetProcessesByName("MCGalaxy").Length != 1)
-            {
-                foreach (Process pr in Process.GetProcessesByName("MCGalaxy"))
-                {
-                    if (pr.MainModule.BaseAddress == Process.GetCurrentProcess().MainModule.BaseAddress)
-                        if (pr.Id != Process.GetCurrentProcess().Id)
-                            pr.Kill();
+            Process[] duplicates = Process.GetProcessesByName("MCGalaxy");
+            if (duplicates.Length != 1) {
+                Process proc = Process.GetCurrentProcess();
+                foreach (Process pr in duplicates) {
+                    if (pr.MainModule.BaseAddress == proc.MainModule.BaseAddress)
+                        if (pr.Id != proc.Id) pr.Kill();
                 }
             }
+            
             Logger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             Application.ThreadException += ThreadExHandler;
@@ -133,60 +130,16 @@ namespace MCGalaxy.Gui
             Console.WriteLine();
         }
 
-        public static void handleComm()
-        {
-            string s, msg;
-            while (true)
-            {
-                try
-                {
-                    string sentCmd = String.Empty, sentMsg = String.Empty;
-                    s = Console.ReadLine().Trim(); // Make sure we have no whitespace!
-
-                    if (s.Length < 1) continue;
-                    if (s[0] == '/') s = s.Remove(0, 1);
-                    else goto talk;
-                    if (s.IndexOf(' ') != -1)
-                    {
-                        sentCmd = s.Substring(0, s.IndexOf(' '));
-                        sentMsg = s.Substring(s.IndexOf(' ') + 1);
-                    }
-                    else if (s != String.Empty) sentCmd = s;
-                    else goto talk;
-
-                    try
-                    {
-                        if (Server.Check(sentCmd, sentMsg)) { Server.cancelcommand = false; continue; }
-                        Command cmd = Command.all.Find(sentCmd);
-                        if (cmd != null)
-                        {
-                            cmd.Use(null, sentMsg);
-                            Console.WriteLine("CONSOLE: USED /" + sentCmd + " " + sentMsg);
-                            Server.s.Log("(Console) used /" + sentCmd + " " + sentMsg, true);
-                            if (sentCmd.ToLower() != "restart")
-                                continue;
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("CONSOLE: Unknown command.");
-                            continue;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Server.ErrorLog(e);
-                        Console.WriteLine("CONSOLE: Failed command.");
-                        continue;
-                    }
-
-                talk:
-                    if (!Chat.HandleModes(null, s)) {
-                        msg = String.Format("{0}Console [&a{1}{0}]: &f{2}", Server.DefaultColor, Server.ZallState, s);
-                        Player.GlobalMessage(msg);
-                        Server.IRC.Say("Console [&a" + Server.ZallState + "%S]: " + s);
-                        WriteToConsole(msg);
-                        Server.s.Log("(Console): " + msg, true);
+        public static void handleComm() {
+            while (true) {
+                try {
+                    string s = Console.ReadLine().Trim(); // Make sure we have no whitespace!
+                    if (s.Length > 0 && s[0] == '/') {
+                        s = s.Remove(0, 1);
+                        Thread t = Handlers.HandleCommand(s, Console.WriteLine);
+                        if (s.CaselessEq("restart")) { t.Join(); break; }
+                    } else {
+                        Handlers.HandleChat(s, WriteToConsole);
                     }
                 } catch (Exception ex) {
                     Server.ErrorLog(ex);
