@@ -434,7 +434,7 @@ namespace MCGalaxy.Gui
                 	return;
                 
                 Player.GlobalMessage("Console [&a" + Server.ZallState + Server.DefaultColor + "]:&f " + text);
-                Server.IRC.Say("Console [" + Server.ZallState + "]: " + text);
+                Server.IRC.Say("Console [&a" + Server.ZallState + "%S]: " + text);
                 WriteLine("<CONSOLE> " + text);
                 Server.s.Log("(Console): " + text, true);
                 txtInput.Clear();

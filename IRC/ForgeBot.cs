@@ -299,6 +299,9 @@ namespace MCGalaxy {
         }
 
         void Listener_OnPublic(UserInfo user, string channel, string message) {
+            message = message.TrimEnd();
+            if (message.Length == 0) return;
+            
             message = Colors.IrcToMinecraftColors(message);
             message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.Split(trimChars, 3);
@@ -334,9 +337,6 @@ namespace MCGalaxy {
                     Say("Unknown command!");
                 }
             }
-
-            if (String.IsNullOrEmpty(message.Trim()))
-                message = ".";
 
             if (channel.CaselessEq(opchannel)) {
                 Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
