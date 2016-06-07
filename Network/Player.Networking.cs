@@ -183,11 +183,11 @@ namespace MCGalaxy {
                     storedHelp += message + "\r\n";
                 else
                     Server.s.Log(message);
-            } else if (p.name == "IRC") {
-                if (String.IsNullOrEmpty(Server.IRC.usedCmd))
+            } else if (p.ircNick != null) {
+                if (p.ircNick == "#@public@#")
                     Server.IRC.Say(message, false, true);
                 else
-                    Server.IRC.Pm(Server.IRC.usedCmd, message);
+                    Server.IRC.Pm(p.ircNick, message);
             } else {
                 p.SendMessage(0, Server.DefaultColor + message, colorParse);
             }

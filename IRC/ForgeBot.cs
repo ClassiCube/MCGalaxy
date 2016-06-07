@@ -35,7 +35,6 @@ namespace MCGalaxy {
         private string server;
         private bool reset = false;
         private byte retries = 0;
-        public string usedCmd = "";
         Dictionary<string, List<string>> users = new Dictionary<string, List<string>>();
         static char[] trimChars = { ' ' };
         
@@ -285,14 +284,15 @@ namespace MCGalaxy {
             Command cmd = Command.all.Find(ircCmd);
             if (cmd != null) {
                 Server.s.Log("IRC Command: /" + message + " (by " + user.Nick + ")");
-                usedCmd = user.Nick;
                 string args = parts.Length > 1 ? parts[1] : "";
+                Player p = MakeIRCPlayer(user.Nick);
+                
                 try {
-                    cmd.Use(new Player("IRC"), args);
+                    if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
+                    cmd.Use(p, args);
                 } catch (Exception e) {
                     Pm(user.Nick, "CMD Error: " + e.ToString());
                 }
-                usedCmd = "";
             }
             else
                 Pm(user.Nick, "Unknown command!");
@@ -325,14 +325,15 @@ namespace MCGalaxy {
                 Command cmd = Command.all.Find(cmdName);
                 if (cmdName != "" && cmd != null) {
                     Server.s.Log("IRC Command: /" + message.Replace(".x ", "") + " (by " + user.Nick + ")");
-                    usedCmd = "";
                     string args = parts.Length > 2 ? parts[2] : "";
+                    Player p = MakeIRCPlayer("#@public@#");
+                    
                     try {
-                        cmd.Use(new Player("IRC"), args);
+                        if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
+                        cmd.Use(p, args);
                     } catch (Exception e) {
                         Say("CMD Error: " + e.ToString());
                     }
-                    usedCmd = "";
                 } else {
                     Say("Unknown command!");
                 }
@@ -365,6 +366,15 @@ namespace MCGalaxy {
                 error = "You are not allowed to use this command from IRC."; return false;
             }
             return true;
+        }
+        
+        static Player MakeIRCPlayer(string ircNick) {
+            Player p = new Player("IRC");
+            p.group = Group.findPerm(Server.ircControllerRank);
+            if (p.group == null)
+                p.group = Group.findPerm(LevelPermission.Nobody);
+            p.ircNick = ircNick;
+            p.color = "&a"; return p;
         }
         
         void Listener_OnRegistered() {

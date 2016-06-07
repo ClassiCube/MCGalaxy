@@ -119,6 +119,7 @@ namespace MCGalaxy {
         public DateTime NextReviewTime, NextEat;
         public float ReachDistance = 5;
         public bool hackrank;
+        internal string ircNick;
         
         public string FullName { get { return color + prefix + DisplayName; } }
         
@@ -166,8 +167,6 @@ namespace MCGalaxy {
         public int totalLogins = 0;
         public int totalKicked = 0;
         public int overallDeath = 0;
-
-        public string savedcolor = "";
 
         public bool staticCommands = false;
         internal bool outdatedClient = false; // for ClassicalSharp 0.98.5, which didn't reload map for BlockDefinitions
@@ -341,8 +340,9 @@ namespace MCGalaxy {
         //They would still have to do p.Dispose()..
         public Player(string playername) { 
             name = playername;
+            truename = playername;
+            DisplayName = playername;
             SessionID = Interlocked.Increment(ref sessionCounter);
-            if (playername == "IRC") { group = Group.Find("nobody"); color = Colors.lime; } 
         }
 
         public Player(Socket s) {
@@ -350,15 +350,9 @@ namespace MCGalaxy {
                 socket = s;
                 ip = socket.RemoteEndPoint.ToString().Split(':')[0];
                 SessionID = Interlocked.Increment(ref sessionCounter);
-
-                /*if (IPInPrivateRange(ip))
-                    exIP = ResolveExternalIP(ip);
-                else
-                    exIP = ip;*/
-
                 Server.s.Log(ip + " connected to the server.");
 
-                for ( byte i = 0; i < 128; ++i ) bindings[i] = i;
+                for (byte i = 0; i < 128; i++) bindings[i] = i;
 
                 socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, new AsyncCallback(Receive), this);
                 InitTimers();

@@ -255,13 +255,15 @@ namespace MCGalaxy
         public static string ircPassword = "";
         [ConfigEnum("irc-controller-verify", "IRC bot", null, IRCControllerVerify.HalfOp, typeof(IRCControllerVerify))]
         public static IRCControllerVerify IRCVerify = IRCControllerVerify.HalfOp;
+        [ConfigPerm("irc-controller-rank", "IRC bot", null, LevelPermission.Nobody)]
+        public static LevelPermission ircControllerRank = LevelPermission.Nobody;   
         
         [ConfigBool("admin-verification", "Admin", null, true)]        
         public static bool verifyadmins = true;
         [ConfigPerm("verify-admin-perm", "Admin", null, LevelPermission.Operator)]
         public static LevelPermission verifyadminsrank = LevelPermission.Operator;
 
-        [ConfigBool("restart-on-error", "Error handling", null, true)]           
+        [ConfigBool("restart-on-error", "Error handling", null, true)]
         public static bool restartOnError = true;
         [ConfigInt("rplimit", "Other", null, 500, 0, 50000)]
         public static int rpLimit = 500;
