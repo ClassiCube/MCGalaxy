@@ -181,63 +181,12 @@ namespace MCGalaxy {
             return true;
         }
         
-        bool CheckZones(Player p, ushort x, ushort y, ushort z, byte b, ref bool AllowBuild, ref bool inZone, ref string Owners) {
-            bool foundDel = false;
-            if ((p.group.Permission < LevelPermission.Admin || p.ZoneCheck || p.zoneDel) && !Block.AllowBreak(b))
-            {
-                List<Zone> toDel = null;
-                if (ZoneList.Count == 0)
-                    AllowBuild = true;
-                else
-                {
-                    for (int index = 0; index < ZoneList.Count; index++)
-                    {
-                        Zone zn = ZoneList[index];
-                        if (x < zn.smallX || x > zn.bigX || y < zn.smallY || y > zn.bigY || z < zn.smallZ || z > zn.bigZ)
-                            continue;
-                        inZone = true;
-                        if (p.zoneDel) {
-                            if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                                string grpName = zn.Owner.Substring(3);
-                                if (p.group.Permission < Group.Find(grpName).Permission)
-                                    continue;
-                            } else if (zn.Owner != "" && (zn.Owner.ToLower() != p.name.ToLower())) {
-                                Group group = Group.findPlayerGroup(zn.Owner.ToLower());
-                                if (p.group.Permission < group.Permission)
-                                    continue;
-                            }
-                            Zones.Delete(p.level.name, zn);
-                            if (toDel == null) toDel = new List<Zone>();
-                            toDel.Add(zn);
-
-                            Player.Message(p, "Zone deleted for &b" + zn.Owner);
-                            foundDel = true;
-                        } else {
-                            if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                                string grpName = zn.Owner.Substring(3);
-                                if (Group.Find(grpName).Permission <= p.group.Permission && !p.ZoneCheck) {
-                                    AllowBuild = true; break;
-                                }
-                                AllowBuild = false;
-                                Owners += ", " + grpName;
-                            } else {
-                                if (zn.Owner.ToLower() == p.name.ToLower() && !p.ZoneCheck) {
-                                    AllowBuild = true; break;
-                                }
-                                AllowBuild = false;
-                                Owners += ", " + zn.Owner;
-                            }
-                        }
-                    }
-                }
-
+        bool CheckZonePerms(Player p, ushort x, ushort y, ushort z,
+                        ref bool AllowBuild, ref bool inZone, ref string Owners) {
+            if (p.group.Permission < LevelPermission.Admin || p.ZoneCheck || p.zoneDel) {
+            	bool foundDel = FindZones(p, x, y, z, ref inZone, ref AllowBuild, ref Owners);
                 if (p.zoneDel) {
-                    if (!foundDel) {
-                        Player.Message(p, "No zones found to delete.");
-                    } else {
-                        foreach (Zone Zn in toDel)
-                            ZoneList.Remove(Zn);
-                    }
+                    if (!foundDel) Player.Message(p, "No zones found to delete.");
                     p.zoneDel = false;
                     return false;
                 }
@@ -256,6 +205,52 @@ namespace MCGalaxy {
                 }
             }
             return true;
+        }
+        
+        bool FindZones(Player p, ushort x, ushort y, ushort z, 
+                             ref bool inZone, ref bool AllowBuild, ref string Owners) {
+            if (ZoneList.Count == 0) { AllowBuild = true; return false; }
+            bool foundDel = false;
+            
+            for (int i = 0; i < ZoneList.Count; i++) {
+                Zone zn = ZoneList[i];
+                if (x < zn.smallX || x > zn.bigX || y < zn.smallY || y > zn.bigY || z < zn.smallZ || z > zn.bigZ)
+                    continue;
+                
+                inZone = true;
+                if (p.zoneDel) {
+                    if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
+                        string grpName = zn.Owner.Substring(3);
+                        if (p.group.Permission < Group.Find(grpName).Permission)
+                            continue;
+                    } else if (zn.Owner != "" && (zn.Owner.ToLower() != p.name.ToLower())) {
+                        Group group = Group.findPlayerGroup(zn.Owner.ToLower());
+                        if (p.group.Permission < group.Permission)
+                            continue;
+                    }
+                    
+                    Zones.Delete(p.level.name, zn);
+                    ZoneList.RemoveAt(i); i--;
+                    Player.Message(p, "Zone deleted for &b" + zn.Owner);
+                    foundDel = true;
+                } else {
+                    if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
+                        string grpName = zn.Owner.Substring(3);
+                        if (Group.Find(grpName).Permission <= p.group.Permission && !p.ZoneCheck) {
+                            AllowBuild = true; break;
+                        }
+                        AllowBuild = false;
+                        Owners += ", " + grpName;
+                    } else {
+                        if (zn.Owner.ToLower() == p.name.ToLower() && !p.ZoneCheck) {
+                            AllowBuild = true; break;
+                        }
+                        AllowBuild = false;
+                        Owners += ", " + zn.Owner;
+                    }
+                }
+            }
+            return foundDel;
         }
         
         bool CheckRank(Player p, bool AllowBuild, bool inZone) {
@@ -286,7 +281,7 @@ namespace MCGalaxy {
             
             string Owners = "";
             bool AllowBuild = true, inZone = false;
-            if (!CheckZones(p, x, y, z, b, ref AllowBuild, ref inZone, ref Owners))
+            if (!CheckZonePerms(p, x, y, z, ref AllowBuild, ref inZone, ref Owners))
                 return false;
             if (Owners.Length == 0 && !CheckRank(p, AllowBuild, inZone))
                 return false;
