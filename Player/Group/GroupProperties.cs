@@ -129,7 +129,7 @@ namespace MCGalaxy {
                     grp.OverseerMaps = osmaps;
                     break;
                 case "prefix":
-                    grp.prefix = value;
+                    grp.prefix = CP437Reader.ConvertToRaw(value);
                     break;
                     
             }

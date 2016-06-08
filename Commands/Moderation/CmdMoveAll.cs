@@ -15,10 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdMoveAll : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdMoveAll : Command {
         public override string name { get { return "moveall"; } }
         public override string shortcut { get { return "ma"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -31,8 +29,8 @@ namespace MCGalaxy.Commands
             
             Player[] players = PlayerInfo.Online.Items;           
             foreach (Player pl in players) { 
-                if (p == null || pl.group.Permission < p.group.Permission) 
-                    Command.all.Find("move").Use(p, pl.name + " " + level.name); 
+                if (p == null || pl.group.Permission < p.group.Permission)
+                    PlayerActions.ChangeMap(pl, level.name);
                 else
                     Player.Message(p, "You cannot move " + pl.ColoredName + " %Sbecause they are of equal or higher rank"); 
             }
