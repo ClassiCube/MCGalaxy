@@ -70,6 +70,7 @@ namespace MCGalaxy {
             ircControllers = PlayerList.Load("IRC_Controllers.txt");
             muted = PlayerList.Load("muted.txt");
             frozen = PlayerList.Load("frozen.txt");
+            hidden = PlayerList.Load("hidden.txt");
             //jailed = PlayerList.Load("jailed.txt");
             if (!File.Exists("ranks/jailed.txt")) { File.Create("ranks/jailed.txt").Close(); Server.s.Log("CREATED NEW: ranks/jailed.txt"); }
 

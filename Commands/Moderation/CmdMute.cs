@@ -27,34 +27,33 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdMute() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "" || message.Split(' ').Length > 2) { Help(p); return; }
             Player who = PlayerInfo.FindOrShowMatches(p, message);
             if (who == null) {
                 if (Server.muted.Contains(message)) {
                     Server.muted.Remove(message);
+                    Server.muted.Save();
                     Player.GlobalMessage(message + " %Sis not online but is now &bun-muted");
-                    Server.Muted.DeleteContains(who.name.ToLower());
                 }
                 return;
             }
-
             if (who == p) { Player.Message(p, "You cannot mute or unmute yourself."); return; }
 
             if (who.muted) {
                 who.muted = false;
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &bun-muted", false);
                 Server.muted.Remove(who.name);
-                Server.Muted.DeleteContains(who.name.ToLower());
+                Server.muted.Save();
             } else  {
                 if (p != null && who.group.Permission >= p.group.Permission) { 
                     MessageTooHighRank(p, "mute", false); return;
                 }
                 who.muted = true;
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &8muted", false);
+                Server.muted.Remove(who.name);
                 Server.muted.Add(who.name);
-                Server.Muted.Append(who.name.ToLower());
+                Server.muted.Save();
                 Player.AddNote(who.name, p, "M");
             }
         }

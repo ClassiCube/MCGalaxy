@@ -45,30 +45,21 @@ namespace MCGalaxy
         public delegate void OnServerError(Exception error);
         public static event OnServerError ServerError = null;
         public delegate void OnServerLog(string message);
-        public static event OnServerLog ServerLog;
-        public static event OnServerLog ServerAdminLog;
-        public static event OnServerLog ServerOpLog;
+        public static event OnServerLog ServerLog, ServerAdminLog, ServerOpLog;
         public delegate void HeartBeatHandler();
         public delegate void MessageEventHandler(string message);
         public delegate void PlayerListHandler(List<Player> playerList);
         public delegate void VoidHandler();
         public delegate void LogHandler(string message);
-        public event LogHandler OnLog;
-        public event LogHandler OnSystem;
-        public event LogHandler OnCommand;
-        public event LogHandler OnError;
-        public event LogHandler OnOp;
-        public event LogHandler OnAdmin;
+        public event LogHandler OnLog, OnSystem, OnCommand, OnError, OnOp, OnAdmin;
         public event HeartBeatHandler HeartBeatFail;
         public event MessageEventHandler OnURLChange;
         public event PlayerListHandler OnPlayerListChange;
         public event VoidHandler OnSettingsUpdate;
+        
         public static ForgeBot IRC;
-        public static Thread locationChecker;
-        public static Thread blockThread;
-        //public static List<MySql.Data.MySqlClient.MySqlCommand> mySQLCommands = new List<MySql.Data.MySqlClient.MySqlCommand>();
-        public static WebServer APIServer;
-        public static WebServer InfoServer;
+        public static Thread locationChecker, blockThread;
+        public static WebServer APIServer, InfoServer;
         public static DateTime StartTime, StartTimeLocal;
         [ConfigBool("enable-http-api", "Server", null, false)]
         public static bool EnableHttpApi = false;
@@ -76,13 +67,10 @@ namespace MCGalaxy
         public static int PositionInterval = 100;
 
         public static PlayersFile AutoloadMaps = new PlayersFile("text/autoload.txt");
-        public static PlayersFile Frozen = new PlayersFile("ranks/frozen.txt");
         public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
-        public static PlayersFile Muted = new PlayersFile("ranks/muted.txt");
         public static PlayersFile Jailed = new PlayersFile("ranks/jailed.txt");
         public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");
         public static PlayersFile Notes = new PlayersFile("text/notes.txt"); 
-        public static PlayersFile Hidden = new PlayersFile("ranks/hidden.txt");
         public static PlayersFile Skins = new PlayersFile("extra/skins.txt");
         public static PlayersFile Models = new PlayersFile("extra/models.txt");
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
@@ -95,8 +83,7 @@ namespace MCGalaxy
         }
 
         // URL hash for connecting to the server
-        public static string Hash = String.Empty;
-        public static string URL = String.Empty;
+        public static string Hash = String.Empty, URL = String.Empty;
 
         public static Socket listen;
         public static System.Timers.Timer updateTimer = new System.Timers.Timer(100);
@@ -113,18 +100,12 @@ namespace MCGalaxy
         public static bool UseCTF = false;
         public static bool ServerSetupFinished = false;
         public static Auto_CTF ctf = null;
-        public static PlayerList bannedIP;
-        public static PlayerList whiteList;
-        public static PlayerList ircControllers;
-        public static PlayerList muted;
-        public static PlayerList ignored;
-        public static PlayerList frozen;
-        //public static PlayerList jailed;
+        public static PlayerList bannedIP, whiteList, ircControllers, muted, ignored, frozen, hidden;
 
         public static readonly List<string> Devs = new List<string>();
         public static readonly List<string> Mods = new List<string>();
 
-        internal static readonly List<string> opstats = new List<string>(new string[] { "ban", "tempban", "kick", "warn", "mute", "freeze", "undo", "kickban", "demote", "promote" });
+        internal static readonly List<string> opstats = new List<string>(new [] { "ban", "tempban", "kick", "warn", "mute", "freeze", "undo", "kickban", "demote", "promote" });
         public static List<string> Opstats { get { return new List<string>(opstats); } }
 
         public static List<TempBan> tempBans = new List<TempBan>();

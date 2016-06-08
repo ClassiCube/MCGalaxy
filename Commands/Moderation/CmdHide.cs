@@ -67,7 +67,8 @@ namespace MCGalaxy.Commands
                 Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + discMsg, false);
                 Server.IRC.Say(p.DisplayName + " left the game (" + discMsg + ")");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
-                Server.Hidden.Append(p.name);
+                Server.hidden.Remove(p.name);
+                Server.hidden.Add(p.name);
             } else {
                 Entities.GlobalSpawn(p, false);
                 p.hidden = false;
@@ -80,8 +81,9 @@ namespace MCGalaxy.Commands
                 Server.IRC.Say(p.DisplayName + " joined the game");
                 if (messageOps && p.opchat) opchat.Use(p, message);
                 if (p.adminchat) adminchat.Use(p, message);
-                Server.Hidden.DeleteStartsWith(p.name);
+                Server.hidden.Remove(p.name);
             }
+            Server.hidden.Save();
         }
 
         public override void Help(Player p) {

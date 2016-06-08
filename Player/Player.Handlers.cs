@@ -534,7 +534,7 @@ namespace MCGalaxy {
                 adminpen = true;
             if (emoteList.Contains(name)) parseSmiley = false;
 
-            hidden = group.CanExecute("hide") && Server.Hidden.Find(name).FirstOrDefault() != null;
+            hidden = group.CanExecute("hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");
             if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
                 hidden = true; adminchat = true;

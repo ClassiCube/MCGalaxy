@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 
 namespace MCGalaxy {
     
@@ -78,7 +79,7 @@ namespace MCGalaxy {
                 return list;
             }
             
-            using (StreamReader r = new StreamReader(path)) {
+            using (StreamReader r = new StreamReader(path, Encoding.UTF8)) {
                 string line = null;
                 while ((line = r.ReadLine()) != null) {
                     // Need to convert uppercase to lowercase, in case user added in entries.
