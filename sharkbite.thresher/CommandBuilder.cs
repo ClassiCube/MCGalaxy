@@ -43,34 +43,20 @@ namespace Sharkbite.Irc
 		internal const int MAX_COMMAND_SIZE = 512;
 		internal const char CtcpQuote = '\u0001';
 
-		internal CommandBuilder(Connection connection )
-		{
+		internal CommandBuilder(Connection connection) {
 			this.connection = connection;
 			commandBuffer = new StringBuilder(MAX_COMMAND_SIZE);
 		}
 
-		internal Connection Connection 
-		{
-			get
-			{
-				return connection;
-			}
-		}
-		internal StringBuilder Buffer
-		{
-			get
-			{
-				return commandBuffer;
-			}
-		}
+		internal Connection Connection { get { return connection; } }
+		internal StringBuilder Buffer { get { return commandBuffer; } }
 
 		/// <summary>
 		/// This methods actually sends the notice and privmsg commands.
 		/// It assumes that the message has already been broken up
 		/// and has a valid target.
 		/// </summary>
-		internal void SendMessage(string type, string target, string message) 
-		{
+		internal void SendMessage(string type, string target, string message) {
 			commandBuffer.Append(type);
 			commandBuffer.Append(SPACE);
 			commandBuffer.Append(target);
@@ -78,13 +64,14 @@ namespace Sharkbite.Irc
 			commandBuffer.Append(message);
 			connection.SendCommand( commandBuffer );
 		}
+		
 		/// <summary>
 		/// Clear the contents of the string buffer.
 		/// </summary>
-		internal void ClearBuffer() 
-		{
+		internal void ClearBuffer() {
 			commandBuffer.Remove(0, commandBuffer.Length );
 		}
+		
 		/// <summary>
 		/// Break up a large message into smaller peices that will fit within the IRC
 		/// max message size.
