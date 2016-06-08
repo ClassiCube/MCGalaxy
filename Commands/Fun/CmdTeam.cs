@@ -134,7 +134,7 @@ namespace MCGalaxy.Commands {
             p.SetPrefix();
             Team.TeamsList[team.Name] = team;
             Team.SaveList();
-            Player.GlobalMessage(p.ColoredName + " %Sjust created the &a" + args[1] + " %Steam.");
+            Player.SendChatFrom(p, p.ColoredName + " %Sjust created the &a" + args[1] + " %Steam.", false);
         }
         
         void HandleJoin(Player p, string[] args) {

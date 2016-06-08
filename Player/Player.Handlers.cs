@@ -1115,32 +1115,7 @@ Player.Message(p, "(" + team.teamstring + ") " + this.color + this.name + ":&f "
 }
 return;
 }*/
-                if ( this.joker ) {
-                    if ( File.Exists("text/joker.txt") ) {
-                        Server.s.Log("<JOKER>: " + this.name + ": " + text);
-                        Chat.GlobalMessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
-                        FileInfo jokertxt = new FileInfo("text/joker.txt");
-                        StreamReader stRead = jokertxt.OpenText();
-                        List<string> lines = new List<string>();
-                        Random rnd = new Random();
-                        int i = 0;
-
-                        while ( !( stRead.Peek() == -1 ) )
-                            lines.Add(stRead.ReadLine());
-
-                        stRead.Close();
-                        stRead.Dispose();
-
-                        if ( lines.Count > 0 ) {
-                            i = rnd.Next(lines.Count);
-                            text = lines[i];
-                        }
-
-                    }
-                    else { File.Create("text/joker.txt").Dispose(); }
-
-                }
-
+                text = HandleJoker(text);
                 //chatroom stuff
                 if ( this.Chatroom != null ) {
                     Chat.ChatRoom(this, text, true, this.Chatroom);
@@ -1185,6 +1160,24 @@ return;
                 //IRCBot.Say(name + ": " + text);
             }
             catch ( Exception e ) { Server.ErrorLog(e); Player.GlobalMessage("An error occurred: " + e.Message); }
+        }
+        
+        string HandleJoker(string text) {
+            if (!joker) return text;
+            if (!File.Exists("text/joker.txt")) {
+                File.Create("text/joker.txt").Dispose(); return text;
+            }
+            Server.s.Log("<JOKER>: " + name + ": " + text);
+            Chat.GlobalMessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
+
+            List<string> lines = new List<string>();
+            using (StreamReader r = new StreamReader("text/joker.txt")) {
+                string line = null;
+                while ((line = r.ReadLine()) != null)
+                    lines.Add(line);
+            }
+            Random rnd = new Random();
+            return lines.Count > 0 ? lines[rnd.Next(lines.Count)] : text;
         }
         
         bool IsHandledMessage(string text) {

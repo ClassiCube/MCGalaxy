@@ -442,7 +442,6 @@ namespace MCGalaxy {
             chatmessage.username = from.color + from.name;
             chatmessage.time = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
 
-
             Last50Chat.Add(chatmessage);
             if (showname)
                 message = from.voicestring + from.color + from.prefix + from.DisplayName + ": &f" + message;
