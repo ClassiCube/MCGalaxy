@@ -32,9 +32,7 @@ namespace MCGalaxy.Commands {
         public CmdViewRanks() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { 
-        	    Player.Message(p, "Available ranks: " + Group.concatList()); return;
-        	}
+            if (message == "") { Player.Message(p, "Available ranks: " + Group.concatList()); return; }
         	Group grp = message.CaselessEq("banned") ? 
         	    Group.findPerm(LevelPermission.Banned) : Group.Find(message);
             if (grp == null) { Player.Message(p, "Could not find group"); return; }

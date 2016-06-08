@@ -19,9 +19,7 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands {
-    
-    public sealed class CmdIrcControllers : Command {
-        
+    public sealed class CmdIrcControllers : Command {        
         public override string name { get { return "irccontrollers"; } }
         public override string shortcut { get { return "ircctrl"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -35,7 +33,7 @@ namespace MCGalaxy.Commands {
             
             switch (parts[0].ToLower()) {
                 case "reload":
-                    Server.ircControllers = PlayerList.Load("IRC_Controllers.txt", null);
+                    Server.ircControllers = PlayerList.Load("IRC_Controllers.txt");
                     Player.Message(p, "IRC Controllers reloaded!");
                     break;
                 case "add":
@@ -59,8 +57,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, parts[1] + " removed from the IRC controller list.");
                     break;
                 case "list":
-                    List<string> players = Server.ircControllers.All();
-                    string names = String.Join(", ", players);
+                    string names = Server.ircControllers.All().Concatenate(", ");
                     Player.Message(p, "IRC controllers list:");
                     Player.Message(p, names);
                     break;

@@ -67,27 +67,30 @@ namespace MCGalaxy {
         
         public static PlayerList Load(string path) {
             if (!Directory.Exists("ranks"))
-                Directory.CreateDirectory("ranks");            
+                Directory.CreateDirectory("ranks");
             PlayerList list = new PlayerList();
             list.file = path;
             path = "ranks/" + path;
             
-            if (File.Exists(path)) {
-                foreach (string line in File.ReadAllLines(path)) {
-                    string entry = line;
+            if (!File.Exists(path)) {
+                File.Create(path).Close();
+                Server.s.Log("CREATED NEW: " + list.file);
+                return list;
+            }
+            
+            using (StreamReader r = new StreamReader(path)) {
+                string line = null;
+                while ((line = r.ReadLine()) != null) {
                     // Need to convert uppercase to lowercase, in case user added in entries.
                     bool anyUpper = false;
-                    for (int i = 0; i < entry.Length; i++) {
-                        char c = entry[i];
+                    for (int i = 0; i < line.Length; i++) {
+                        char c = line[i];
                         anyUpper |= (c >= 'A' && c <= 'Z');
                     }
                     
-                    if (anyUpper) entry = entry.ToLower();
-                    list.Add(entry); 
-            	}
-            } else {
-                File.Create(path).Close();
-                Server.s.Log("CREATED NEW: " + list.file);
+                    if (anyUpper) line = line.ToLower();
+                    list.players.Add(line);
+                }
             }
             return list;
         }

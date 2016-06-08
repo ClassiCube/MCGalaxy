@@ -32,12 +32,8 @@ namespace MCGalaxy.Commands {
             string player = sep >= 0 ? message.Substring(sep + 1) : "";
             
             if (action.CaselessEq("list")) {
-                string output = "Whitelist: &f";
-                foreach (string name in Server.whiteList.All())
-                    output += name + ", ";
-                output = output.Substring(0, output.Length - 2);
-                Player.Message(p, output);
-                return;
+                string names = Server.whiteList.All().Concatenate(", ");
+                Player.Message(p, "Whitelist: &f" + names); return;
             }
             if (player == "") { Help(p); return; }
             
@@ -45,7 +41,7 @@ namespace MCGalaxy.Commands {
                 if (Server.whiteList.Contains(player)) {
                     Player.Message(p, "&f" + player + " %Sis already on the whitelist!"); return;
                 }
-            	
+                
                 Server.whiteList.Add(player);
                 Chat.GlobalMessageOps(p.ColoredName + " %Sadded &f" + player + " %Sto the whitelist.");
                 Server.whiteList.Save();
@@ -54,7 +50,7 @@ namespace MCGalaxy.Commands {
                 if (!Server.whiteList.Contains(player)) {
                     Player.Message(p, "&f" + player + " %Sis not on the whitelist!"); return;
                 }
-            	
+                
                 Server.whiteList.Remove(player);
                 Chat.GlobalMessageOps(p.ColoredName + " %Sremoved &f" + player + " %Sfrom the whitelist.");
                 Server.whiteList.Save();
