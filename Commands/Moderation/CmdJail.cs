@@ -48,17 +48,18 @@ namespace MCGalaxy.Commands
                 Entities.GlobalSpawn(who, (ushort)who.level.jailx, (ushort)who.level.jaily, (ushort)who.level.jailz,
                                      who.level.jailrotx, who.level.jailroty, true);
                 
-                Server.Jailed.DeleteContains(who.name.ToLower());
-                Server.Jailed.Append(who.name.ToLower() + " " + who.level.name);
+                Server.jailed.Remove(who.name);
+                Server.jailed.Add(who.name, who.level.name);
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &8jailed", false);
                 Player.AddNote(who.name, p, "J");                
             } else {
-                Server.Jailed.DeleteContains(who.name.ToLower());
+            	Server.jailed.Remove(who.name);
                 who.jailed = false;
                 Command.all.Find("spawn").Use(who, "");
                 Player.Message(p, "You freed " + who.name + " from jail");
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &afreed %Sfrom jail", false);
             }
+            Server.jailed.Save();
         }
 
         public override void Help(Player p) {

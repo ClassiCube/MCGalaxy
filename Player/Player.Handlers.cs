@@ -663,30 +663,18 @@ namespace MCGalaxy {
         }
         
         void CheckLoginJailed() {
-            //very very sloppy, yes I know.. but works for the time
-            try  {
-                if (!File.Exists("ranks/jailed.txt")) {
-                    File.Create("ranks/jailed.txt").Close(); return;
-                }
-                
-                using (StreamReader reader = new StreamReader("ranks/jailed.txt")) {
-                    string line;
-                    while ((line = reader.ReadLine()) != null) {
-                        string[] parts = line.Split();
-                        if (!parts[0].CaselessEq(name)) continue;
-                        reader.Dispose();
-                    
-                        try {
-                            PlayerActions.ChangeMap(this, parts[1]);
-                            Command.all.Find("jail").Use(null, parts[0]);
-                        } catch (Exception ex) {
-                            Kick("Error occured");
-                            Server.ErrorLog(ex);
-                        }
-                        return;
-                    }
-                }
-            } catch {
+            string line = Server.jailed.Find(name);
+            if (line == null) return;
+            int space = line.IndexOf(' ');
+            if (space == -1) return;
+            string level = line.Substring(space + 1);
+            
+            try {
+                PlayerActions.ChangeMap(this, level);
+                Command.all.Find("jail").Use(null, name);
+            } catch (Exception ex) {
+                Kick("Error occured");
+                Server.ErrorLog(ex);
             }
         }
 

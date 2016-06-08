@@ -16,14 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace MCGalaxy {
-    
-    public sealed class PlayerList {
-        
+    public sealed class PlayerList {  
+		
         string file;
         List<string> players = new List<string>();
         readonly object locker = new object();

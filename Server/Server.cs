@@ -68,7 +68,6 @@ namespace MCGalaxy
 
         public static PlayersFile AutoloadMaps = new PlayersFile("text/autoload.txt");
         public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
-        public static PlayersFile Jailed = new PlayersFile("ranks/jailed.txt");
         public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");
         public static PlayersFile Notes = new PlayersFile("text/notes.txt"); 
         public static PlayersFile Skins = new PlayersFile("extra/skins.txt");
@@ -101,9 +100,9 @@ namespace MCGalaxy
         public static bool ServerSetupFinished = false;
         public static Auto_CTF ctf = null;
         public static PlayerList bannedIP, whiteList, ircControllers, muted, ignored, frozen, hidden;
+        public static PlayerExtList jailed;
 
-        public static readonly List<string> Devs = new List<string>();
-        public static readonly List<string> Mods = new List<string>();
+        public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
 
         internal static readonly List<string> opstats = new List<string>(new [] { "ban", "tempban", "kick", "warn", "mute", "freeze", "undo", "kickban", "demote", "promote" });
         public static List<string> Opstats { get { return new List<string>(opstats); } }
@@ -118,7 +117,6 @@ namespace MCGalaxy
         public static List<Level> levels;
         //reviewlist intitialize
         public static List<string> reviewlist = new List<string>();
-
         public static List<string> ircafkset = new List<string>();
         public static List<string> messages = new List<string>();
 
@@ -209,6 +207,8 @@ namespace MCGalaxy
 
         [ConfigString("main-name", "General", null, "main", false, "._+")]
         public static string level = "main";
+        [ConfigString("xjail-map-name", "Other", null, "(main)", false, "()._+")]
+        public static string xjailLevel = "(main)";
         public static string errlog = "error.log";
 
         [ConfigBool("report-back", "Error handling", null, true)]
