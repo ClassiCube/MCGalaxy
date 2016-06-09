@@ -602,24 +602,16 @@ namespace MCGalaxy {
         }
         
         void LoadCpeData() {
-            try {
-                foreach (string line in Server.Skins.Find(name)) {
-                    string[] parts = line.Split(trimChars, 2);
-                    if (parts.Length == 1) continue;
-                    skinName = parts[1];
-                }
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
+            string line = Server.skins.Find(name);
+            if (line != null) {
+                int sep = line.IndexOf(' ');
+                if (sep >= 0) skinName = line.Substring(sep + 1);
             }
             
-            try {
-                foreach (string line in Server.Models.Find(name)) {
-                    string[] parts = line.Split(trimChars, 2);
-                    if (parts.Length == 1) continue;
-                    model = parts[1];
-                }
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
+            line = Server.models.Find(name);
+            if (line != null) {
+                int sep = line.IndexOf(' ');
+                if (sep >= 0) model = line.Substring(sep + 1);
             }
         }
         

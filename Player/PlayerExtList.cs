@@ -97,7 +97,7 @@ namespace MCGalaxy {
                     
                     int space = line.IndexOf(' ');
                     string name = space >= 0 ? line.Substring(0, space) : line;
-                    list.players.Add(line);
+                    list.players.Add(name);
                 }
             }
             return list;

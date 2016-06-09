@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
  
-namespace MCGalaxy.Commands.CPE {
-	
+namespace MCGalaxy.Commands.CPE {	
 	public sealed class CmdReachDistance : Command {
 		
 		public override string name { get { return "reachdistance"; } }

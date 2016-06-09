@@ -81,9 +81,10 @@ namespace MCGalaxy.Commands.CPE {
                 else
                     Player.Message(who, "Changed your own model to a &c" + model);
                 
-                Server.Models.DeleteStartsWith(who.name + " ");
+                Server.models.Remove(who.name);
                 if (model != "humanoid")
-                    Server.Models.Append(who.name + " " + model);
+                    Server.models.Add(who.name, model);
+                Server.models.Save();
             }
         }
 

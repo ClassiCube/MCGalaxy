@@ -70,8 +70,6 @@ namespace MCGalaxy
         public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
         public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");
         public static PlayersFile Notes = new PlayersFile("text/notes.txt"); 
-        public static PlayersFile Skins = new PlayersFile("extra/skins.txt");
-        public static PlayersFile Models = new PlayersFile("extra/models.txt");
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
 
         public static string VersionString {
@@ -100,7 +98,7 @@ namespace MCGalaxy
         public static bool ServerSetupFinished = false;
         public static Auto_CTF ctf = null;
         public static PlayerList bannedIP, whiteList, ircControllers, muted, ignored, frozen, hidden;
-        public static PlayerExtList jailed;
+        public static PlayerExtList jailed, models, skins;
 
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
 

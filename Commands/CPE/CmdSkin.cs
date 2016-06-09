@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.CPE {
 
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player or bot name")) return;
-            message = p.truename;
+            if (message == "") message = p.truename;
             
             Player who = p;
             PlayerBot pBot = null;
@@ -73,9 +73,10 @@ namespace MCGalaxy.Commands.CPE {
                 else
                     Player.Message(who, "Changed your own skin to &c" + skin);	
                 
-                Server.Skins.DeleteStartsWith(who.name + " ");
+                Server.skins.Remove(who.name);
                 if (skin != who.truename)
-                    Server.Skins.Append(who.name + " " + skin);
+                    Server.skins.Add(who.name, skin);
+                Server.skins.Save();
             }
         }
 
