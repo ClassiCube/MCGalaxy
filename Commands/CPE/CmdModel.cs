@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.CPE {
                 who.model = model;
                 Entities.UpdateModel(who.id, model, who.level, who);
                 if (p != who)
-                    Player.GlobalMessage(who.ColoredName + "'s %Smodel was changed to a &c" + model);
+                    Player.GlobalMessage(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);
                 else
                     Player.Message(who, "Changed your own model to a &c" + model);
                 

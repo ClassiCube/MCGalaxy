@@ -28,7 +28,7 @@ using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {
-	
+    
     public sealed partial class Player : IDisposable {
         
         /// <summary>
@@ -87,7 +87,7 @@ namespace MCGalaxy {
         
         DateTime startTime;
         public TimeSpan time {
-        	get { return DateTime.UtcNow - startTime; }
+            get { return DateTime.UtcNow - startTime; }
             set { startTime = DateTime.UtcNow.Add(-value); }
         }
 
@@ -320,8 +320,8 @@ namespace MCGalaxy {
             
             bool isOwner = Server.server_owner.CaselessEq(name);
             string viptitle = isDev ? string.Format("{0}[&9Dev{0}] ", color) : 
-        		isMod ? string.Format("{0}[&aMod{0}] ", color) :
-            	isOwner ? string.Format("{0}[&cOwner{0}] ", color) : "";
+                isMod ? string.Format("{0}[&aMod{0}] ", color) :
+                isOwner ? string.Format("{0}[&cOwner{0}] ", color) : "";
             prefix = prefix + viptitle;
             prefix = (title == "") ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
         }
@@ -420,7 +420,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type, byte extType) {
-        	Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) { 
                 if (p.level == level) p.SendBlockchange(x, y, z, type, extType); 
             }
@@ -458,9 +458,7 @@ namespace MCGalaxy {
         }
 
         public static List<ChatMessage> Last50Chat = new List<ChatMessage>();
-        public static void GlobalMessage(string message) {
-            GlobalMessage(message, false);
-        }
+        public static void GlobalMessage(string message) { GlobalMessage(message, false); }
         public static void GlobalMessage(string message, bool global) {
             message = Colors.EscapeColors(message);           
             Player[] players = PlayerInfo.Online.Items; 
@@ -482,6 +480,12 @@ namespace MCGalaxy {
                     p.SendMessage(message, true);
             }
         }
+        
+        public static void GlobalMessage(Player from, string message) {
+            if (from == null) GlobalMessage(message, false);
+            else SendChatFrom(from, message, false);
+        }
+        
         
         public static void GlobalSpawn(Player p, bool self, string possession = "") {
            Entities.GlobalSpawn(p, self, possession);
@@ -507,7 +511,7 @@ namespace MCGalaxy {
                 if (controller == null) return false;
                 marker = " (" + controller.color + controller.name + color + ")";
             }
-        	
+            
             Entities.GlobalDespawn(this, true);
             Entities.GlobalSpawn(this, true, marker);
             return true;
@@ -558,8 +562,8 @@ namespace MCGalaxy {
                 SendKick(kickMsg, sync);
                 disconnected = true;
                 if (!loggedIn) {
-                	connections.Remove(this);
-                	RemoveFromPending();
+                    connections.Remove(this);
+                    RemoveFromPending();
                     Server.s.Log(ip + " disconnected.");
                     return;
                 }
@@ -569,8 +573,8 @@ namespace MCGalaxy {
                 Server.Countdown.PlayerLeftServer(this);
                 TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
                 if ( tntwarsgame != null ) {
-                	tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
-                	tntwarsgame.SendAllPlayersMessage("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
+                    tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
+                    tntwarsgame.SendAllPlayersMessage("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
                 }
 
                 Entities.DespawnEntities(this, false);
@@ -585,9 +589,9 @@ namespace MCGalaxy {
                     }
                     Server.s.Log(name + " disconnected (" + discMsg + ").");
                 } else {
-                	totalKicked++;
-                	SendChatFrom(this, "&c- " + color + prefix + DisplayName + " %Skicked (" + kickMsg + "%S).", false);
-                	Server.s.Log(name + " kicked (" + kickMsg + ").");
+                    totalKicked++;
+                    SendChatFrom(this, "&c- " + color + prefix + DisplayName + " %Skicked (" + kickMsg + "%S).", false);
+                    Server.s.Log(name + " kicked (" + kickMsg + ").");
                 }
 
                 try { save(); }
@@ -596,11 +600,11 @@ namespace MCGalaxy {
                 PlayerInfo.Online.Remove(this);
                 Server.s.PlayerListUpdate();
                 if (name != null)
-                	left[name.ToLower()] = ip;
+                    left[name.ToLower()] = ip;
                 if (PlayerDisconnect != null)
-                	PlayerDisconnect(this, discMsg ?? kickMsg);
+                    PlayerDisconnect(this, discMsg ?? kickMsg);
                 if (Server.AutoLoad && level.unload && !level.IsMuseum && IsAloneOnCurrentLevel())
-                	level.Unload(true);
+                    level.Unload(true);
                 Dispose();
             } catch ( Exception e ) { 
                 Server.ErrorLog(e); 
@@ -738,7 +742,7 @@ Next: continue;
         }
 
         public bool EnoughMoney(int amount) {
-        	return money >= amount;
+            return money >= amount;
         }
         
         public void OnMoneyChanged() {
@@ -790,15 +794,15 @@ Next: continue;
             
             try {
                 using (StreamWriter w = new StreamWriter(path)) {
-            		if (ignoreAll) w.WriteLine("&all");
-            	    if (ignoreGlobal) w.WriteLine("&global");
-            	    if (ignoreIRC) w.WriteLine("&irc");
-            	    
+                    if (ignoreAll) w.WriteLine("&all");
+                    if (ignoreGlobal) w.WriteLine("&global");
+                    if (ignoreIRC) w.WriteLine("&irc");
+                    
                     foreach (string line in listignored)
                         w.WriteLine(line);
                 }
             } catch (Exception ex) {
-            	Server.ErrorLog(ex);
+                Server.ErrorLog(ex);
                 Server.s.Log("Failed to save ignored list for player: " + this.name);
             }
         }

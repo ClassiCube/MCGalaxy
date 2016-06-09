@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
                 	if (pl.level.name.CaselessEq(lvl.name))
                         pl.aiming = false;
             } else {
-                Player.GlobalMessage("&9Gun usage has been enabled on &c" + lvl.name + "&9!");            
+                Player.GlobalMessage("&9Gun usage has been enabled on &c" + lvl.name + "&9!");
             }
             lvl.guns = !lvl.guns;
             Level.SaveSettings(lvl);

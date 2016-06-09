@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands {
         
         public override string name { get { return "roll"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdRoll() { }
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             if (args.Length == 1 || !int.TryParse(args[1], out max)) max = 7;
             if (min > max) { int a = min; min = max; max = a; }
 
-            Player.GlobalMessage(p.ColoredName + " %Srolled a &a" + rand.Next(min, max + 1) + " %S(" + min + "|" + max + ")");
+            Player.GlobalMessage(p, p.ColoredName + " %Srolled a &a" + rand.Next(min, max + 1) + " %S(" + min + "|" + max + ")");
         }
         
         public override void Help(Player p) {

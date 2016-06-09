@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.CPE {
                 Entities.GlobalDespawn(who, true);
                 Entities.GlobalSpawn(who, true);
                 if (p != who)
-                    Player.GlobalMessage(who.ColoredName + "'s %Sskin was changed to &c" + skin);
+                    Player.GlobalMessage(who, who.ColoredName + "'s %Sskin was changed to &c" + skin);
                 else
                     Player.Message(who, "Changed your own skin to &c" + skin);	
                 
