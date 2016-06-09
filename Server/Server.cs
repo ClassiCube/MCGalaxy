@@ -479,6 +479,7 @@ namespace MCGalaxy
             Plugin.Load();
             ml.Queue(LoadPlayerLists);
             ml.Queue(LoadAutoloadCommands);
+            ml.Queue(MovePreviousLevelFiles);
             ml.Queue(SetupSocket);
 
             ml.Queue(InitTimers);

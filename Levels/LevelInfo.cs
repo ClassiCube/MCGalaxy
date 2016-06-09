@@ -88,6 +88,10 @@ namespace MCGalaxy {
             return "levels/" + name.ToLower() + ".lvl";
         }
         
+        public static string PrevPath(string name) {
+            return "levels/prev/" + name.ToLower() + ".lvl.prev";
+        }
+        
         public static string BackupPath(string name, string backup) {
             return Server.backupLocation + "/" + name + "/" + backup + "/" + name + ".lvl";
         }

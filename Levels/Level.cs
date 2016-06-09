@@ -541,16 +541,17 @@ namespace MCGalaxy
             {
                 if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
                 if (!Directory.Exists("levels/level properties")) Directory.CreateDirectory("levels/level properties");
-
-                if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics))
-                {
+                if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
+                
+                if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {
                     if (clearPhysics)
                         ClearPhysics();
                     
                     if (File.Exists(path)) {
-                        if (File.Exists(path + ".prev"))
-                            File.Delete(path + ".prev");
-                        File.Copy(path, path + ".prev");
+                    	string prevPath = LevelInfo.PrevPath(name);
+                    	if (File.Exists(prevPath))
+                            File.Delete(prevPath);
+                        File.Copy(path, prevPath, true);
                         File.Delete(path);
                     }
                     LvlFile.Save(this, path + ".backup");
@@ -560,9 +561,7 @@ namespace MCGalaxy
                     Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
                                                PlayerInfo.Online.Count, Server.players));
                     changed = false;
-                }
-                else
-                {
+                } else {
                     Server.s.Log("Skipping level save for " + name + ".");
                 }
             } catch (Exception e) {

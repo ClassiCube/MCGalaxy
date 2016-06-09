@@ -112,6 +112,30 @@ namespace MCGalaxy {
                 }
             }
         }
+		
+        void MovePreviousLevelFiles() {
+            if (!Directory.Exists("levels")) return;
+            try {
+                string[] files = Directory.GetFiles("levels", "*.prev");
+                if (files.Length == 0) return;
+                if (!Directory.Exists("levels/prev"))
+                    Directory.CreateDirectory("levels/prev");
+                
+                foreach (string file in files) {
+                    string name = Path.GetFileName(file);
+                    string newFile = "levels/prev/" + name;
+                    
+                    try {
+                        File.Move(file, newFile);
+                    } catch (Exception ex) {
+                        Server.s.Log("Error while trying to move .lvl.prev file");
+                        Server.ErrorLog(ex);
+                    }
+                }
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
+        }
         
         void SetupSocket() {
             Log("Creating listening socket on port " + port + "... ");
