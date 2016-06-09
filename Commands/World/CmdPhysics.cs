@@ -15,27 +15,20 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPhysics : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdPhysics : Command {
         public override string name { get { return "physics"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdPhysics() { }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("killphysics", "kill") }; }
+        }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
-                Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level l in loaded) {
-                    if (l.physics > 0)
-                        Player.Message(p, "&5" + l.name + " %Shas physics at &b" + l.physics +
-                                           "%S. &cChecks: " + l.lastCheck + "; Updates: " + l.lastUpdate);
-                }
-                return;
-            }
+            if (message == "") { ShowPhysics(p); return; }
+            if (message.CaselessEq("kill")) { KillPhysics(p); return; }
             
             string[] args = message.Split(' ');
             Level level = p != null ? p.level : Server.mainLevel;
@@ -51,25 +44,47 @@ namespace MCGalaxy.Commands
                 level = LevelInfo.FindOrShowMatches(p, args[0]);
                 if (level == null) return;
             }
-            
-            level.setPhysics(state);
-            if (state == 0) level.ClearPhysics();
-            string stateDesc = states[state];
-            level.ChatLevel("Physics are now " + stateDesc + "%S on &b" + level.name + "%S.");
-            
-            stateDesc = stateDesc.Substring( 2 );       
-            string logInfo = "Physics are now " + stateDesc + " on " + level.name + ".";
-            Server.s.Log(logInfo);
-            level.changed = true;
+            SetPhysics(level, state);
         }
         
         internal static string[] states = { "&cOFF", "&aNormal", "&aAdvanced", "&aHardcore", "&aInstant", "&4Doors-only" };
+        
+        void ShowPhysics(Player p) {
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level lvl in loaded) {
+                if (lvl.physics == 0) continue;
+                Player.Message(p, "&5" + lvl.name + " %Shas physics at &b" + lvl.physics +
+                               "%S. &cChecks: " + lvl.lastCheck + "; Updates: " + lvl.lastUpdate);
+            }
+        }
+        
+        void KillPhysics(Player p) {
+            Level[] levels = LevelInfo.Loaded.Items;
+            foreach (Level lvl in levels) {
+                if (lvl.physics == 0) continue;
+                SetPhysics(lvl, 0);
+            }
+            Player.Message(p, "Physics killed on all levels.");
+        }
+        
+        static void SetPhysics(Level lvl, int state) {
+            lvl.setPhysics(state);
+            if (state == 0) lvl.ClearPhysics();
+            string stateDesc = states[state];
+            lvl.ChatLevel("Physics are now " + stateDesc + "%S on &b" + lvl.name + "%S.");
+            
+            stateDesc = stateDesc.Substring( 2 );
+            string logInfo = "Physics are now " + stateDesc + " on " + lvl.name + ".";
+            Server.s.Log(logInfo);
+            lvl.changed = true;
+        }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/physics [map] [0/1/2/3/4/5]");
             Player.Message(p, "%HSets the physics state for the given map.");
             Player.Message(p, "%H  If no map name is given, uses the current map.");
-            Player.Message(p, "%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only"); 
+            Player.Message(p, "%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only");
+            Player.Message(p, "%T/physics kill %H- Sets physics to 0 on all loaded levels.");
         }
     }
 }

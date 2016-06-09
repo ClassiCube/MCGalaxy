@@ -283,7 +283,6 @@
     <Compile Include="Commands\Moderation\CmdJoker.cs" />
     <Compile Include="Commands\Moderation\CmdKick.cs" />
     <Compile Include="Commands\Moderation\CmdKickban.cs" />
-    <Compile Include="Commands\Moderation\CmdKillPhysics.cs" />
     <Compile Include="Commands\Moderation\CmdLimit.cs" />
     <Compile Include="Commands\Moderation\CmdLocation.cs" />
     <Compile Include="Commands\Moderation\CmdLowlag.cs" />
