@@ -1,3 +1,30 @@
+v 1.8.7.2
+Added: Review requests appear on IRC op channel.
+Added: Can toggle whether player titles are shown on IRC.
+Fixed: /undo not working from console.
+Fixed: /cut not working if number of non-air blocks was in draw limit, but volume of copy area was greater than draw limit.
+Fixed: /outline now works with custom blocks.
+Fixed: /jail and /xjail actually work.
+Fixed: IRC bot not joining registered channels due to joining them before server indicates the bot is authenticated.
+Fixed: Double disconnection messages.
+Fixed: /paste not working properly when paste origin was outside map.
+Improved: Player position updates are now bulk grouped and sent as one packet, reducing bandwidth usage.
+Improved: /banx now IP bans again.
+Improved: /spin now accepts 180/270/-90/-180/-270 angles.
+Improved: /whois is now nicer, also shows idle time.
+Improved: Rotation is preserved when going to a portal in another map.
+Improved: /baninfo shows if IP ban, also last ban/unban reason.
+Improved: Can now partially match unloaded map names in commands.
+Improved: /resetbot now also uses new irc server/port if it has changed.
+Improved: /help for some methods, now also prints aliases.
+Improved: Use faster pinvoke method, reduces memory allocation and time to save BlockDB.
+Removed: /serverreport and /pcount, now part of /serverinfo.
+Removed: /deltemprank, /temprankinfo, /tempranklist, now part of /temprank.
+Removed: xcolor/xnick/xtitle/xtcolor/xmodel and make them alias to their actual commands, with the original commands now using an extra permission to affect bots and other players.
+Removed: /promote and /demote, now alias to /setrank +up and /setrank -down.
+Removed: /staff and /mods, just use /devs
+Removed: Global chat.
+
 v 1.8.7.1
 - Added: /cmdset now allows you to allow/disallow specific ranks.
 - Added: /help <cmd> now uses more concise format, also lists specifically allowed/disallowed ranks.
