@@ -17,9 +17,6 @@
  */
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Net;
-using System.Threading;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {

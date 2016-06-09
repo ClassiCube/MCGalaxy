@@ -38,14 +38,9 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             
-            // TODO: use max rowid to be faster
-            DataTable table = Database.fillData("SELECT COUNT(id) FROM Players");
-            int count = int.Parse(table.Rows[0]["COUNT(id)"].ToString());
-            table.Dispose();
-            
             Player.Message(p, "Server's name: &b{0}%S", Server.name);
             Player.Message(p, "&a{0}%S players total. (&a{1}%S online, &8{2} banned%S)",
-                           count, Player.number, Player.GetBannedCount());
+                           GetPlayerCount(), Player.number, Player.GetBannedCount());
             Player.Message(p, "&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
                            LevelInfo.Loaded.Count, Server.moneys);
             
@@ -64,6 +59,24 @@ namespace MCGalaxy.Commands {
             
             if (CheckExtraPerm(p))
                 ShowServerStats(p);
+        }
+        
+        static int GetPlayerCount() {
+            // Use fast path if possible  TODO: fast path for mysql
+            int count = 0;
+            if (!Server.useMySQL) {                
+                DataTable maxTable = Database.fillData("SELECT MAX(_ROWID_) FROM Players LIMIT 1;");
+                if (maxTable.Rows.Count > 0) {
+                	 string row = maxTable.Rows[0]["MAX(_ROWID_)"].ToString();
+                     maxTable.Dispose();
+                     if (int.TryParse(row, out count) && count > 0) return count;
+                }             
+            }
+            
+            DataTable table = Database.fillData("SELECT COUNT(id) FROM Players");
+            count = int.Parse(table.Rows[0]["COUNT(id)"].ToString());
+            table.Dispose();
+            return count;
         }
         
         void ShowServerStats(Player p) {

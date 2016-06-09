@@ -64,12 +64,12 @@ namespace MCGalaxy.Commands {
             } else {
                 CommandOtherPerms.OtherPerms perms = CommandOtherPerms.Find(cmd, otherPermIndex);
                 if (perms == null) {
-                    Player.Message(p, "This command has no additional permission with that number."); return;
+                    Player.Message(p, "This command has no extra permission with that number."); return;
                 }
                 
                 perms.Permission = (int)grp.Permission;
                 CommandOtherPerms.Save();
-                string permName = "additional permission " + otherPermIndex;
+                string permName = "extra permission " + otherPermIndex;
                 Player.GlobalMessage("&d" + cmd.name + "%S's " + permName + " was set to " + grp.ColoredName);
                 Player.Message(p, cmd.name + "'s " + permName + " was set to " + grp.ColoredName);
             }
@@ -89,9 +89,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HAllows a specific rank to use [cmd]");
             Player.Message(p, "%T/cmdset [cmd] [rank] disallow");
             Player.Message(p, "%HPrevents a specific rank from using [cmd]");
-            Player.Message(p, "%T/cmdset [cmd] [rank] <additional permission number>");
-            Player.Message(p, "%HSet the lowest rank that has that additional permission for [cmd] " +
-                           "(Most commands do not use these)");
+            Player.Message(p, "%T/cmdset [cmd] [rank] <extra permission number>");
+            Player.Message(p, "%HSet the lowest rank that has that extra permission for [cmd]");
             Player.Message(p, "To see available ranks, type %T/viewranks");
         }
     }

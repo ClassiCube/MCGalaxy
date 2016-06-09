@@ -116,11 +116,11 @@ namespace MCGalaxy.Commands {
             CommandPerm[] addPerms = cmd.AdditionalPerms;
             if (addPerms == null) return;
             
-            Player.Message(p, "%TAdditional permissions:");
+            Player.Message(p, "%TExtra permissions:");
             for (int i = 0; i < addPerms.Length; i++) {
-                var addition = CommandOtherPerms.Find(cmd, i + 1);
-                LevelPermission perm = (LevelPermission)addition.Permission;
-                Player.Message(p, GetColoredRank(perm) + "%S" + addition.Description);
+                var extra = CommandOtherPerms.Find(cmd, i + 1);
+                LevelPermission perm = (LevelPermission)extra.Permission;
+                Player.Message(p, "{0}) {1}%S{2}", i + 1, GetColoredRank(perm), extra.Description);
             }
         }
         
