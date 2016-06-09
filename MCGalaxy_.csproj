@@ -164,6 +164,7 @@
     <Compile Include="Commands\building\DrawCmd.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
     <Compile Include="Commands\Chat\CmdChatRoom.cs" />
+    <Compile Include="Commands\Chat\CmdColor.cs" />
     <Compile Include="Commands\Chat\CmdEat.cs" />
     <Compile Include="Commands\Chat\CmdEmote.cs" />
     <Compile Include="Commands\Chat\CmdGlobalCLS.cs" />
@@ -171,11 +172,14 @@
     <Compile Include="Commands\Chat\CmdHug.cs" />
     <Compile Include="Commands\Chat\CmdIgnore.cs" />
     <Compile Include="Commands\Chat\CmdMe.cs" />
+    <Compile Include="Commands\Chat\CmdNick.cs" />
     <Compile Include="Commands\Chat\CmdOpChat.cs" />
     <Compile Include="Commands\Chat\CmdPlayerCLS.cs" />
     <Compile Include="Commands\Chat\CmdRankMsg.cs" />
     <Compile Include="Commands\Chat\CmdRoll.cs" />
     <Compile Include="Commands\Chat\CmdSay.cs" />
+    <Compile Include="Commands\Chat\CmdTColor.cs" />
+    <Compile Include="Commands\Chat\CmdTitle.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
     <Compile Include="Commands\Command.cs" />
@@ -320,7 +324,6 @@
     <Compile Include="Commands\other\CmdBack.cs" />
     <Compile Include="Commands\other\CmdC4.cs" />
     <Compile Include="Commands\other\CmdChain.cs" />
-    <Compile Include="Commands\other\CmdColor.cs" />
     <Compile Include="Commands\other\cmdCTFADSFD.cs" />
     <Compile Include="Commands\other\CmdDescend.cs" />
     <Compile Include="Commands\other\CmdDisagree.cs" />
@@ -335,7 +338,6 @@
     <Compile Include="Commands\other\CmdLogoutMessage.cs" />
     <Compile Include="Commands\other\CmdMain.cs" />
     <Compile Include="Commands\other\CmdMove.cs" />
-    <Compile Include="Commands\other\CmdNick.cs" />
     <Compile Include="Commands\other\CmdPass.cs" />
     <Compile Include="Commands\other\CmdRepeat.cs" />
     <Compile Include="Commands\other\CmdReport.cs" />
@@ -348,9 +350,7 @@
     <Compile Include="Commands\other\CmdSetPass.cs" />
     <Compile Include="Commands\other\CmdSpawn.cs" />
     <Compile Include="Commands\other\CmdSummon.cs" />
-    <Compile Include="Commands\other\CmdTColor.cs" />
     <Compile Include="Commands\other\CmdTimer.cs" />
-    <Compile Include="Commands\other\CmdTitle.cs" />
     <Compile Include="Commands\other\CmdTnt.cs" />
     <Compile Include="Commands\other\CmdTp.cs" />
     <Compile Include="Commands\other\CmdTpA.cs" />

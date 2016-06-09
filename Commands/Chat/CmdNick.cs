@@ -18,8 +18,7 @@
 using System;
 using MCGalaxy;
 
-namespace MCGalaxy.Commands {
-	
+namespace MCGalaxy.Commands {	
 	public class CmdNick : Command {
 		
 		public override string name { get { return "nick"; } }
@@ -27,26 +26,36 @@ namespace MCGalaxy.Commands {
 		public override string type { get { return CommandTypes.Other; } }
 		public override bool museumUsable { get { return true; } }
 		public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-		public CmdNick() { }
+        public override CommandPerm[] AdditionalPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the nick of other players") }; }
+        }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("xnick", "-own") }; }
+        }
 		static char[] trimChars = { ' ' };
 
 		public override void Use(Player p, string message) {
 			if (message == "") { Help(p); return; }
-			string[] parts = message.Split(trimChars, 2);
+			string[] args = message.Split(trimChars, 2);
+            if (args[0].CaselessEq("-own")) {
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
+                args[0] = p.name;
+            }
 			
-			Player who = PlayerInfo.FindOrShowMatches(p, parts[0]);
+			Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
 			if (who == null) return;
 			if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the nick of", true); return;
 			}
+			if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the nick of other players."); return; }
 
-			string newName = parts.Length > 1 ? parts[1] : "";
+			string newName = args.Length > 1 ? args[1] : "";
 			if (newName == "") {
 				who.DisplayName = who.truename;
-				Player.SendChatFrom(who, who.FullName + "%S has reverted their nick to their original name.", false);
+				Player.SendChatFrom(who, who.FullName + "%S reverted their nick to their original name.", false);
 			} else {
 				if (newName.Length >= 30) { Player.Message(p, "Nick must be under 30 letters."); return; }				
-				Player.SendChatFrom(who, who.FullName + "%S has changed their nick to " + who.color + newName + "%S.", false);
+				Player.SendChatFrom(who, who.FullName + "%S changed their nick to " + who.color + newName + "%S.", false);
 				who.DisplayName = newName;
 			}
 			
@@ -56,26 +65,9 @@ namespace MCGalaxy.Commands {
 		}
 		
 		public override void Help(Player p) {
-			Player.Message(p, "/nick <player> [newName] - Gives <player> the nick of [newName].");
-			Player.Message(p, "If no [newName] is given, the player's nick is reverted to their original name.");
+			Player.Message(p, "/nick <player> [nick] - Sets the nick of <player>");
+			Player.Message(p, "If no [nick] is given, reverts player's nick to their original name.");
 		}
 	}
-	
-	public class CmdXNick : CmdNick {
-		
-        public override string name { get { return "xnick"; } }
-        public override string shortcut { get { return "xnickname"; } }
-        public CmdXNick() { }
-
-        public override void Use(Player p, string message) {
-            if (message != "") message = " " + message;
-        	base.Use(p, p.name + message);
-        }
-        
-        public override void Help(Player p) {
-            Player.Message(p, "/xnick [newName] - Gives you the nick of [newName].");
-            Player.Message(p, "If no [newName] is given, your nick is reverted to your original name.");
-        }
-    }
 }
 

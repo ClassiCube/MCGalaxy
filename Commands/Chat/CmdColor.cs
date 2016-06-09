@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands {
 		
         public override string name { get { return "color"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] AdditionalPerms {
@@ -32,6 +32,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Use(Player p, string message) {
+            if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
             if (args[0].CaselessEq("-own")) {
                 if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }

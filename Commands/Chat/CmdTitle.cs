@@ -25,20 +25,30 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdTitle() { }
+        public override CommandPerm[] AdditionalPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the title of other players") }; }
+        }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("xtitle", "-own") }; }
+        }
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] parts = message.Split(trimChars, 2);
-
-            Player who = PlayerInfo.FindOrShowMatches(p, parts[0]);
+            string[] args = message.Split(trimChars, 2);
+            if (args[0].CaselessEq("-own")) {
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
+                args[0] = p.name;
+            }
+            
+            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (who == null) return;
             if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the title of", true); return;
             }
+            if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the title of other players."); return; }
             
-            string newTitle = parts.Length > 1 ? parts[1] : "";
+            string newTitle = args.Length > 1 ? args[1] : "";
             ParameterisedQuery query = ParameterisedQuery.Create();
             if (newTitle != "")
                 newTitle = newTitle.Replace("[", "").Replace("]", "");
@@ -59,25 +69,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/title <player> [title] - Gives <player> the [title].");
-            Player.Message(p, "If no [title] is given, the player's title is removed.");
-        }
-    }
-    
-    public class CmdXTitle : CmdTitle {
-        
-        public override string name { get { return "xtitle"; } }
-        public override string shortcut { get { return ""; } }
-        public CmdXTitle() { }
-
-        public override void Use(Player p, string message) {
-            if (message != "") message = " " + message;
-            base.Use(p, p.name + message);
-        }
-        
-        public override void Help(Player p) {
-            Player.Message(p, "/xtitle [title] - Gives you the [title].");
-            Player.Message(p, "If no [title] is given, your title is removed.");
+            Player.Message(p, "/title <player> [title] - Sets the title of <player>");
+            Player.Message(p, "If no [title] is given, removes player's title.");
         }
     }
 }

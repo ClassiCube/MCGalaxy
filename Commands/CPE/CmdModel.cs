@@ -27,17 +27,29 @@ namespace MCGalaxy.Commands.CPE {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override CommandPerm[] AdditionalPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the model of other players") }; }
+        }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("xmodel", "-own") }; }
+        }
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player or bot name")) return;
-            message = p.name;
+            if (message == "") message = p.name;
             
             Player who = p;
             PlayerBot pBot = null;
             bool isBot = message.CaselessStarts("bot ");
             string[] args = message.Split(trimChars, isBot ? 3 : 2);
             string model = null;
+            
+            if (args[0].CaselessEq("-own")) {
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
+                args[0] = p.name;
+                if (args.Length == 1) message = "humanoid";
+            }
 
             if (isBot && args.Length > 2) {
                 pBot = PlayerBot.FindOrShowMatches(p, args[1]);
@@ -78,33 +90,9 @@ namespace MCGalaxy.Commands.CPE {
         public override void Help(Player p) {
             Player.Message(p, "/model [name] [model] - Sets the model of that player.");
             Player.Message(p, "/model bot [name] [model] - Sets the model of that bot.");
-            HelpModels(p);
-        }
-        
-        protected void HelpModels(Player p) {
             Player.Message(p, "Available models: Chibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie.");
             Player.Message(p, "To set a block model, use a block ID for the model name.");
             Player.Message(p, "For setting scaling models, put \"|[scale]\" after the model name (not supported by all clients).");
-        }
-    }
-    
-    public class CmdXModel : CmdModel {
-        
-        public override string name { get { return "xmodel"; } }
-        public override string shortcut { get { return "xm"; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-
-        public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); }
-            string model = message == "" ? "humanoid" : message;
-            base.Use(p, p.name + " " + model);
-        }
-
-        public override void Help(Player p) {
-            Player.Message(p, "/xm [model] - Sets your own model.");
-            HelpModels(p);
         }
     }
 }
