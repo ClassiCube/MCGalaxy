@@ -115,7 +115,7 @@ namespace MCGalaxy.SQL {
                     }
                 }
                 sql.WriteLine();
-                using (DataTable tableRowData = Database.fillData("SELECT * FROM  " + tableName))
+                using (DataTable tableRowData = Database.fillData("SELECT * FROM `" + tableName + "`"))
                 {
                     if (tableRowData.Rows.Count > 0)
                     {

@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "You freed " + who.name + " from jail");
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &afreed %Sfrom jail", false);
             }
-            Server.jailed.Save();
+            Server.jailed.Save(true);
         }
 
         public override void Help(Player p) {

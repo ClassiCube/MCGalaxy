@@ -16,19 +16,19 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
- */
+*/
 using System.IO;
 
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdLoginMessage : Command {
+    public sealed class CmdLogoutMessage : Command {
         
-        public override string name { get { return "loginmessage"; } }
-        public override string shortcut { get { return "loginmsg"; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string name { get { return "logoutmessage"; } }
+        public override string shortcut { get { return "logoutmsg"; } }
+        public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdLoginMessage() { }
+        public CmdLogoutMessage() { }
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
@@ -42,16 +42,16 @@ namespace MCGalaxy.Commands {
             if (target == null && PlayerInfo.FindName(name) == null) {
                 Player.Message(p, "There is no player with the given name."); return;
             }
-            PlayerDB.SetLoginMessage(name, args[1]);
+            PlayerDB.SetLogoutMessage(name, args[1]);
             
             string fullName = target != null ? target.ColoredName : name;
-            Player.Message(p, "The login message of " + fullName + " %Shas been changed to: " + args[1]);
+            Player.Message(p, "The logout message of " + fullName + " %Shas been changed to: " + args[1]);
             string changer = p == null ? "(console)" : p.name;
-            Server.s.Log(changer + " changed " + name + "'s login message to: " + args[1]);
+            Server.s.Log(changer + " changed " + name + "'s logout message to:");
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "/loginmessage [Player] [Message] - Customize your login message.");
+         public override void Help(Player p) {
+            Player.Message(p, "/logoutmessage [Player] [Message] - Customize your logout message.");
         }
     }
 }

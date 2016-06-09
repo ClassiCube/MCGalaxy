@@ -389,8 +389,10 @@ namespace MCGalaxy {
                 
                 if ( OnSendMap != null )
                     OnSendMap(this, buffer);
-                if (!level.guns)
+                if (!level.guns && aiming) {
                     aiming = false;
+                    ClearBlockchange();
+                }
             } catch( Exception ex ) {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel.name);

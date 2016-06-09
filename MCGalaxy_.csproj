@@ -171,6 +171,8 @@
     <Compile Include="Commands\Chat\CmdHigh5.cs" />
     <Compile Include="Commands\Chat\CmdHug.cs" />
     <Compile Include="Commands\Chat\CmdIgnore.cs" />
+    <Compile Include="Commands\Chat\CmdLoginMessage.cs" />
+    <Compile Include="Commands\Chat\CmdLogoutMessage.cs" />
     <Compile Include="Commands\Chat\CmdMe.cs" />
     <Compile Include="Commands\Chat\CmdNick.cs" />
     <Compile Include="Commands\Chat\CmdOpChat.cs" />
@@ -303,6 +305,7 @@
     <Compile Include="Commands\Moderation\CmdResetBot.cs" />
     <Compile Include="Commands\Moderation\CmdRestart.cs" />
     <Compile Include="Commands\Moderation\CmdRestoreSelection.cs" />
+    <Compile Include="Commands\Moderation\CmdReview.cs" />
     <Compile Include="Commands\Moderation\CmdSetRank.cs" />
     <Compile Include="Commands\Moderation\CmdShutdown.cs" />
     <Compile Include="Commands\Moderation\CmdTempBan.cs" />
@@ -334,15 +337,11 @@
     <Compile Include="Commands\other\CmdImpersonate.cs" />
     <Compile Include="Commands\other\CmdInvincible.cs" />
     <Compile Include="Commands\other\CmdKill.cs" />
-    <Compile Include="Commands\other\CmdLoginMessage.cs" />
-    <Compile Include="Commands\other\CmdLogoutMessage.cs" />
-    <Compile Include="Commands\other\CmdMain.cs" />
     <Compile Include="Commands\other\CmdMove.cs" />
     <Compile Include="Commands\other\CmdPass.cs" />
     <Compile Include="Commands\other\CmdRepeat.cs" />
     <Compile Include="Commands\other\CmdReport.cs" />
     <Compile Include="Commands\other\CmdResetPass.cs" />
-    <Compile Include="Commands\other\CmdReview.cs" />
     <Compile Include="Commands\other\CmdRide.cs" />
     <Compile Include="Commands\other\CmdSend.cs" />
     <Compile Include="Commands\other\CmdSendCmd.cs" />
@@ -378,6 +377,7 @@
     <Compile Include="Commands\World\CmdImport.cs" />
     <Compile Include="Commands\World\CmdLoad.cs" />
     <Compile Include="Commands\World\CmdLockdown.cs" />
+    <Compile Include="Commands\World\CmdMain.cs" />
     <Compile Include="Commands\World\CmdMap.cs" />
     <Compile Include="Commands\World\CmdMuseum.cs" />
     <Compile Include="Commands\World\CmdNewLvl.cs" />

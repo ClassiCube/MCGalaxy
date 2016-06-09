@@ -337,7 +337,7 @@ namespace MCGalaxy
                     w.WriteLine("#   If someone has royally screwed up the ranks, just delete this file and let the server restart");
                     w.WriteLine("#   Allowed ranks: " + Group.concatList(false, false, true));
                     w.WriteLine("#   Disallow and allow can be left empty, just make sure there's 2 spaces between the colons");
-                    w.WriteLine("#   This works entirely on permission values, not names. Do not enter a rank name. Use it's permission value");
+                    w.WriteLine("#   This works entirely on permission values, not names. Do not enter a rank name. Use its permission value");
                     w.WriteLine("#   BlockName : LowestRank : Disallow : Allow");
                     w.WriteLine("#   lava : 60 : 80,67 : 40,41,55");
                     w.WriteLine("");

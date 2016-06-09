@@ -59,17 +59,14 @@ namespace MCGalaxy {
                     return players.Count;
             } }
         
-        public void Save() { Save(path, true); }
-        
-        public void Save(string path, bool console) {
+        public void Save(bool console = false) {
             using (StreamWriter w = File.CreateText(path)) {
                 lock (locker) {
                     foreach (string line in lines)
                         w.WriteLine(line);
                 }
             }
-            if (console)
-                Server.s.Log("SAVED: " + path);
+            if (console) Server.s.Log("SAVED: " + path);
         }
         
         public static PlayerExtList Load(string path) {
