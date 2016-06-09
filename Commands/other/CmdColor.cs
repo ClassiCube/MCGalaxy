@@ -16,31 +16,34 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.SQL;
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands {    
     public class CmdColor : Command {
-        
+		
         public override string name { get { return "color"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change color of other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the color of other players") }; }
         }
         public override CommandAlias[] Aliases {
-        	get { return new[] { new CommandAlias("colour"), new CommandAlias("xcolor") }; }
+            get { return new[] { new CommandAlias("colour"), new CommandAlias("xcolor", "-own") }; }
         }
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
+            if (args[0].CaselessEq("-own")) {
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
+                args[0] = p.name;
+            }
             
             Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
             if (who == null) return;
             if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the color of", true); return;
-            }     
+            }
+            if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the color of other players."); return; }
             
             ParameterisedQuery query = ParameterisedQuery.Create();
             if (args.Length == 1) {
@@ -50,8 +53,8 @@ namespace MCGalaxy.Commands {
                 query.AddParam("@Name", who.name);
                 Database.executeQuery(query, "UPDATE Players SET color = '' WHERE name = @Name");
             } else {
-            	string color = Colors.Parse(args[1]);
-            	if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+                string color = Colors.Parse(args[1]);
+                if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.color) { Player.Message(p, p.DisplayName + " already has that color."); return; }
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
@@ -66,33 +69,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/color <player> [color] - Gives <player> the nick color of [color].");
-            Player.Message(p, "If no [color] is specified, player's nick color reverts to group default.");
-            HelpColors(p);
-        }
-        
-        protected void HelpColors(Player p) {
-            Player.Message(p, "&0black &1navy &2green &3teal &4maroon &5purple &6gold &7silver");
-            Player.Message(p, "&8gray &9blue &alime &baqua &cred &dpink &eyellow &fwhite");
+            Player.Message(p, "/color <player> [color] - Sets the nick color of <player>");
+            Player.Message(p, "If no [color] is given, reverts to player's rank color.");
             Player.Message(p, "To see a list of all colors, use /help colors.");
         }
     }
-	
-    public sealed class CmdXColor : CmdColor {
-        
-        public override string name { get { return "xcolor"; } }
-        public override string shortcut { get { return ""; } }
-        public CmdXColor() { }
-
-        public override void Use(Player p, string message) {
-            if (message != "") message = " " + message;
-            base.Use(p, p.name + message);
-        }
-
-        public override void Help(Player p) {
-            Player.Message(p, "/xcolor [color] - Gives you the nick color of [color].");
-            Player.Message(p, "If no [color] is specified, your nick color reverts to group default.");
-            HelpColors(p);
-        }
-    }	
 }

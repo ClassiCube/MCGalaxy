@@ -302,6 +302,8 @@ namespace MCGalaxy {
         public bool loggedIn;
         public bool isDev, isMod;
         public bool verifiedName;
+        
+        public static bool IsSuper(Player p) { return p == null || p.ircNick != null; }
 
         public static string CheckPlayerStatus(Player p) {
             if ( p.hidden ) return "hidden";
