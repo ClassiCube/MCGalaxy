@@ -25,10 +25,8 @@ namespace MCGalaxy.Commands.Moderation {
         public CmdBanInfo() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
-                if (p == null) { Player.Message(p, "Console must provide a player name."); return; }
-                message = p.name;
-            }
+        	if (CheckSuper(p, message, "player name")) return;
+            if (message == "") message = p.name;
             bool banned = Group.IsBanned(message);
             string msg = message;
             string ip = PlayerInfo.FindIP(message);

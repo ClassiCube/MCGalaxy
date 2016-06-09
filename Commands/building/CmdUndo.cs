@@ -37,9 +37,9 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Use(Player p, string message) {
+            if (CheckSuper(p, message, "player name")) return;
             int ignored = 0;
             if (message == "") {
-                if (p == null) { Player.Message(null, "Console doesn't have an undo buffer."); return; }
                 UndoSelf(p); return;
             } else if (p != null && int.TryParse(message, out ignored)) {
                 message = p.name.ToLower() + " " + message;

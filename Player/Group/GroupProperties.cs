@@ -202,7 +202,7 @@ namespace MCGalaxy {
                     SW.WriteLine("MOTD = " + grp.MOTD);
                     SW.WriteLine("FileName = " + grp.fileName);
                     SW.WriteLine("OSMaps = " + grp.OverseerMaps);
-                    SW.WriteLine("Prefix = " + grp.prefix);
+                    SW.WriteLine("Prefix = " + CP437Writer.ConvertToUnicode(grp.prefix));
                     SW.WriteLine();
                 }
             }

@@ -45,7 +45,18 @@ namespace MCGalaxy {
         }
         
         protected void MessageInGameOnly(Player p) {
-            Player.Message(p, "/" + name + " can only be used in-game.");
+            Player.Message(p, "/{0} can only be used in-game.", name);
+        }
+        
+        protected bool CheckSuper(Player p, string message, string type) {
+        	if (message != "" || (p != null && p.ircNick == null)) return false;
+            SuperRequiresArgs(p, type); 
+            return true;
+        }
+        
+        protected void SuperRequiresArgs(Player p, string type) {
+        	string src = p == null ? "console" : "IRC";
+        	Player.Message(p, "When using /{0} from {2}, you must provide a {1}.", name, type, src);
         }
         
         protected bool CheckExtraPerm(Player p, int num = 1) {
@@ -60,9 +71,9 @@ namespace MCGalaxy {
         protected void MessageNeedMinPerm(Player p, string action, int perm) {
             Group grp = Group.findPermInt(perm);
             if (grp == null)
-                Player.Message(p, "Only ranks with permissions greater than &a" + perm + "%Scan " + action);
+                Player.Message(p, "Only ranks with permissions greater than &a{0}%Scan {1}", perm, action);
             else
-                Player.Message(p, "Only " + grp.ColoredName + "%S+ can " + action);
+                Player.Message(p, "Only {0}%S+ can {1}", grp.ColoredName, action);
         }
         
         protected void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
@@ -71,9 +82,9 @@ namespace MCGalaxy {
         
         protected void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
             if (canAffectGroup)
-                Player.Message(p, "Can only " + action + " players ranked " + grp.ColoredName + " %Sor below");
+                Player.Message(p, "Can only {0} players ranked {1} %Sor below", action, grp.ColoredName);
             else
-                Player.Message(p, "Can only " + action + " players ranked below " + grp.ColoredName);
+                Player.Message(p, "Can only {0} players ranked below {1}", action, grp.ColoredName);
         }
         
         internal void MessageCannotUse(Player p) {
@@ -85,14 +96,14 @@ namespace MCGalaxy {
             StringBuilder builder = new StringBuilder("Only ");            
             if (perms.allow.Count > 0) {
                 foreach (LevelPermission perm in perms.allow) {
-            		Group grp = Group.findPermInt((int)perm);
+                    Group grp = Group.findPermInt((int)perm);
                     if (grp == null) continue;
                     builder.Append(grp.ColoredName).Append("%S, ");
                 }
-            	if (builder.Length > "Only ".Length) {
+                if (builder.Length > "Only ".Length) {
                     builder.Remove(builder.Length - 2, 2);
                     builder.Append(", and ");
-            	}
+                }
             }
             
             Group minGrp = Group.findPermInt((int)perms.lowestRank);

@@ -25,10 +25,12 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("colour") }; }
+        public override CommandPerm[] AdditionalPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change color of other players") }; }
         }
-        public CmdColor() { }
+        public override CommandAlias[] Aliases {
+        	get { return new[] { new CommandAlias("colour"), new CommandAlias("xcolor") }; }
+        }
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

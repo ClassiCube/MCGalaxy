@@ -30,9 +30,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             Economy.EcoStats ecos;
-            if (p == null && message == "") {
-                Player.Message(p, "You must provide a name when using the command from console."); return;
-            }
+            if (CheckSuper(p, message, "player name")) return;
 
             int matches = 1;
             Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message, out matches);

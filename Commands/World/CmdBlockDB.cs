@@ -31,9 +31,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length == 1 && p == null) {
-                Player.Message(p, "You must provide a map name when running the command from console."); return;
-            }
+            if (args.Length == 1 && p == null) { SuperRequiresArgs(p, "map name"); return; }
             args[0] = args[0].ToLower();
             
             Level lvl = p == null ? null : p.level;

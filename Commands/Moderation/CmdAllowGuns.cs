@@ -30,13 +30,9 @@ namespace MCGalaxy.Commands {
         public CmdAllowGuns() { }
 
         public override void Use(Player p, string message) {
-            Level lvl = null;
-            if (message == "") {
-                if (p == null) {
-                    Player.Message(p, "You must provide a level name when using this command from console."); return;
-                }
-                lvl = p.level;
-            } else {
+            if (CheckSuper(p, message, "level name")) return;
+            Level lvl = p.level;
+            if (message != "") {
                 lvl = LevelInfo.FindOrShowMatches(p, message);
                 if (lvl == null) return;
             }

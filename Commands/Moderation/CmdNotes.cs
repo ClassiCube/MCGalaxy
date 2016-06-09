@@ -31,12 +31,8 @@ namespace MCGalaxy.Commands {
         	if (!Server.LogNotes) {
         		Player.Message(p, "The server does not have notes logging enabled."); return;
         	}
-            if (message == "") {
-                if (p == null) {
-                    Player.Message(p, "Console must provide a player name."); return;
-                }
-                message = p.name;
-            }
+            if (CheckSuper(p, message, "player name")) return;
+            if (message == "") message = p.name;
             
             int matches = 1;
             Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message, out matches);

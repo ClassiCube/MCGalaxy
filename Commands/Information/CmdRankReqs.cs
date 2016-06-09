@@ -38,9 +38,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") {
-                if (p == null) {
-                    Player.Message(p, "Console must provide a rank name."); return;
-                }
+                if (CheckSuper(p, message, "rank name")) return;
                 
                 Group next = null;
                 int index = Group.GroupList.IndexOf(p.group);

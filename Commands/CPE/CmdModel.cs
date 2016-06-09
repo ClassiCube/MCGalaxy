@@ -30,12 +30,8 @@ namespace MCGalaxy.Commands.CPE {
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
-            if (message == "") {
-                if (p == null) {
-                    Player.Message(p, "Console must provide a player or bot name."); return;
-                }
-                message = p.name;
-            }
+            if (CheckSuper(p, message, "player or bot name")) return;
+            message = p.name;
             
             Player who = p;
             PlayerBot pBot = null;
@@ -55,7 +51,7 @@ namespace MCGalaxy.Commands.CPE {
             } else {
                 isBot = false;
                 who = p;
-                if (who == null) { Player.Message(p, "Console must provide a player name."); return; }
+                if (who == null) { SuperRequiresArgs(p, "player name"); return; }
                 model = message;
             }
             model = model.ToLower();
