@@ -76,6 +76,7 @@ namespace MCGalaxy {
             connection.Listener.OnNames += Listener_OnNames;
             connection.Listener.OnKick += Listener_OnKick;
             connection.Listener.OnKill += Listener_OnKill;
+            connection.Listener.OnPrivateNotice += Listener_OnPrivateNotice;
         }
         
         void LoadBannedCommands() {
@@ -137,7 +138,7 @@ namespace MCGalaxy {
             connection.connectionArgs.Nick = Server.ircNick;
             connection.connectionArgs.ServerPassword = Server.ircIdentify 
                 && Server.ircPassword != "" ? Server.ircPassword : "*";
-        
+            
             if (!Server.irc) return;
             reset = true;
             retries = 0;
@@ -386,11 +387,20 @@ namespace MCGalaxy {
             retries = 0;
             Authenticate();
             Server.s.Log("Joining channels...");
-
+            JoinChannels();
+        }
+        
+        void JoinChannels() {
             if (!String.IsNullOrEmpty(channel))
                 connection.Sender.Join(channel);
             if (!String.IsNullOrEmpty(opchannel))
                 connection.Sender.Join(opchannel);
+        }
+        
+        void Listener_OnPrivateNotice(UserInfo user, string notice) {
+            if (!notice.CaselessStarts("You are now identified")) return;
+            Server.s.Log("Joining channels...");
+            JoinChannels();
         }
         
         void Authenticate() {
