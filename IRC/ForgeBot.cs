@@ -45,9 +45,10 @@ namespace MCGalaxy {
             this.server = server;
             
             if (Server.irc) {
-                ConnectionArgs con = new ConnectionArgs(nick, server);
-                con.Port = Server.ircPort;
-                connection = new Connection(new UTF8Encoding(false), con);
+                ConnectionArgs args = new ConnectionArgs(nick, server);
+                args.Port = Server.ircPort;
+                args.ServerPassword = Server.ircIdentify && Server.ircPassword != "" ? Server.ircPassword : "*";
+                connection = new Connection(new UTF8Encoding(false), args);
                 HookEvents();
                 LoadBannedCommands();
             }
@@ -134,6 +135,8 @@ namespace MCGalaxy {
             connection.connectionArgs.Port = Server.ircPort;
             connection.connectionArgs.Hostname = Server.ircServer;
             connection.connectionArgs.Nick = Server.ircNick;
+            connection.connectionArgs.ServerPassword = Server.ircIdentify 
+                && Server.ircPassword != "" ? Server.ircPassword : "*";
         
             if (!Server.irc) return;
             reset = true;
