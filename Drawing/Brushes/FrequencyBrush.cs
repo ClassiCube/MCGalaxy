@@ -24,16 +24,16 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public abstract class FrequencyBrush : Brush {
         
-        protected static ExtBlock[] GetBlocks(Player p, string[] parts,
-                                              int[] count, Predicate<string> filter,
-                                              Predicate<string> handler) {
-            ExtBlock[] blocks = new ExtBlock[parts.Length];
-            for (int i = 0; i < blocks.Length; i++) {
-                blocks[i].Type = Block.Zero;
-                count[i] = filter(parts[i]) ? 1 : 0;
-            }
+        protected static ExtBlock[] GetBlocks(BrushArgs args, out int[] count, 
+		                                      Predicate<string> filter, Predicate<string> handler) {
+			string[] parts = args.Message.Split(' ');
+			Player p = args.Player;
+            ExtBlock[] blocks;
+            GetRaw(parts, filter, args, out blocks, out count);
             
-            for (int i = 0; i < parts.Length; i++ ) {
+            for (int i = 0, j = 0; i < parts.Length; i++ ) {
+            	if (parts[i] == "") continue;
+            	
                 // Brush specific args
                 if (!filter(parts[i])) {
                     if (!handler(parts[i])) return null;
@@ -46,16 +46,38 @@ namespace MCGalaxy.Drawing.Brushes {
                 byte type = DrawCmd.GetBlock(p, block, out extType);
                 if (type == Block.Zero) return null;
                 
-                blocks[i].Type = type; blocks[i].ExtType = extType;
-                if (sepIndex < 0) continue;
+                blocks[j].Type = type; blocks[j].ExtType = extType;
+                if (sepIndex < 0) { j++; continue; }
                 int chance;
                 if (!int.TryParse(parts[i].Substring(sepIndex + 1), out chance)
                     || chance <= 0 || chance > 10000) {
                     Player.Message(p, "frequency must be an integer between 1 and 10,000."); return null;
                 }
-                count[i] = chance;
+                count[j] = chance;
+                j++;
             }
             return blocks;
+        }
+        
+        static void GetRaw(string[] parts, Predicate<string> filter, BrushArgs args,
+                           out ExtBlock[] blocks, out int[] count) {;
+            int bCount = 0;
+            for (int i = 0; i < parts.Length; i++) {
+                if (parts[i] == "" || !filter(parts[i])) continue;
+                bCount++;
+            }
+            
+            // For 0 or 1 blocks given, treat second block as 'unchanged'.
+            blocks = new ExtBlock[Math.Max(2, bCount)];
+            count = new int[blocks.Length];
+            for (int i = 0; i < count.Length; i++) {
+                count[i] = 1;
+                blocks[i] = new ExtBlock(Block.Zero, 0);
+            }
+            
+            // No blocks given, assume first is held block
+            if (bCount == 0)
+                blocks[0] = new ExtBlock(args.Type, args.ExtType);
         }
         
         protected static ExtBlock[] Combine(ExtBlock[] toAffect, int[] count) {
@@ -68,9 +90,6 @@ namespace MCGalaxy.Drawing.Brushes {
                 for (int j = 0; j < count[i]; j++)
                     blocks[index++] = toAffect[i];
             }
-            // For one block argument, leave every other block untouched.
-            if (toAffect.Length == 1)
-                blocks[blocks.Length - 1] = new ExtBlock(Block.Zero, 0);
             return blocks;
         }
     }

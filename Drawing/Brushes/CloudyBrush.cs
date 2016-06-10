@@ -67,13 +67,8 @@ namespace MCGalaxy.Drawing.Brushes {
             n.Persistence = 0.75f;
             n.Lacunarity = 2;
             
-            if (args.Message == "")
-                return new CloudyBrush(new[] { new ExtBlock(args.Type, args.ExtType),
-                                           new ExtBlock(Block.Zero, 0) }, new[] { 1, 1 }, n);
-            
-            string[] parts = args.Message.Split(' ');
-            int[] count = new int[parts.Length];
-            ExtBlock[] toAffect = GetBlocks(args.Player, parts, count,
+            int[] count;
+            ExtBlock[] toAffect = GetBlocks(args, out count,
                                             Filter, arg => Handler(arg, args.Player, ref n));
             
             if (toAffect == null) return null;

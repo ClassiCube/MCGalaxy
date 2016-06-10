@@ -43,13 +43,8 @@ namespace MCGalaxy.Drawing.Brushes {
         };
         
         public static Brush Process(BrushArgs args) {
-            if (args.Message == "")
-                return new RandomBrush(new[] { new ExtBlock(args.Type, args.ExtType), 
-                                               new ExtBlock(Block.Zero, 0) });
-            
-            string[] parts = args.Message.Split(' ');
-            int[] count = new int[parts.Length];
-            ExtBlock[] toAffect = GetBlocks(args.Player, parts, count, P => true, null);
+            int[] count;
+            ExtBlock[] toAffect = GetBlocks(args, out count, P => true, null);
             
             if (toAffect == null) return null;           
             ExtBlock[] blocks = Combine(toAffect, count);
