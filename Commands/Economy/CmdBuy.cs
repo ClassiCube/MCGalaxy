@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] parts = message.Split(' ');
 
             foreach (Item item in Economy.Items)

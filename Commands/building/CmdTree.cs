@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Building {
         static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             int mode = TreeDrawOp.T_Tree;
             string[] parts = message.Split(trimChars, 2);
             string brushMsg = parts.Length >= 2 ? parts[1] : "";

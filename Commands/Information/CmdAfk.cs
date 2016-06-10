@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public CmdAfk() { }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "list") {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {

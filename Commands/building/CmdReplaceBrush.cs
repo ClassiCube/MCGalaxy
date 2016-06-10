@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
 
 		public override void Use(Player p, string message) {
 			if (message == "") { Help(p); return; }
-			if (p == null) { MessageInGameOnly(p); return; }
+			if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
 			string replaceCmd = ReplaceNot ? "replacenot" : "replace";
 			if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("brush")) {
 				Player.Message(p, "You cannot use /brush and/or /" + replaceCmd + 

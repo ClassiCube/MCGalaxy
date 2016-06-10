@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public CmdReferee() { }
         
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
 
             if (p.Game.Referee) {
                 Player.SendChatFrom(p, p.ColoredName + " %Sis no longer a referee", false);

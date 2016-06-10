@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message)
         {
             if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message.ToLower() == "all")
             {
                 Player[] players = PlayerInfo.Online.Items;

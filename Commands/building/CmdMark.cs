@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             // convert player pos to block coords
             Vec3U16 P = Vec3U16.ClampPos(p.pos[0], (ushort)(p.pos[1] - 32), p.pos[2], p.level);
             P.X /= 32; P.Y /= 32; P.Z /= 32;

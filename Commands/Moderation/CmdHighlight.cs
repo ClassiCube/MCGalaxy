@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             long seconds;
             bool FoundUser = false;
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 300";
             string[] args = message.Split(' ');
             string name = args[0];

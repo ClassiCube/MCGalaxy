@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         public CmdPossess() { }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
 

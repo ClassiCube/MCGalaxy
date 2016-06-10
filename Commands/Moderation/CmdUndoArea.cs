@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             CatchPos cpos = default(CatchPos);
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
             
             string[] parts = message.Split(' ');

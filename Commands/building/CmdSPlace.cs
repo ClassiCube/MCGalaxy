@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             ushort distance = 0, interval = 0;
             if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             
             string[] parts = message.Split(' ');
             if (!ushort.TryParse(parts[0], out distance)) {

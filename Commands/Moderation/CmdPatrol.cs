@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-        	if (p == null) { MessageInGameOnly(p); return; }
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message != "") { Help(p); return; }
 
             List<string> getpatrol = (from pl in PlayerInfo.players where (int) pl.@group.Permission <= CommandOtherPerms.GetPerm(this) select pl.name).ToList();

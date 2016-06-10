@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-        	if (p == null) { MessageInGameOnly(p); return; }
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (Server.agreetorulesonentry == false)
             {
                 Player.Message(p, "This command can only be used if agree-to-rules-on-entry is enabled!");

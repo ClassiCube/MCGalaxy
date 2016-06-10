@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
         public CmdC4() { }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             
             if (p.level.physics >= 1 && p.level.physics < 5) {
                 sbyte numb = C4Physics.NextCircuit(p.level);

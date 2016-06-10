@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
         	message = message.ToLower();
             string[] parts = message.Split(' ');
             CatchPos cpos = default(CatchPos);

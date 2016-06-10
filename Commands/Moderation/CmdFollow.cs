@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!p.canBuild)
             {
                 Player.Message(p, "You're currently being &4possessed%S!");

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Building {
         static char[] trimChars = { ' ' };
         
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!p.group.CanExecute("write")) {
                 Player.Message(p, "You must be able to use /write to use /writetext."); return;
             }

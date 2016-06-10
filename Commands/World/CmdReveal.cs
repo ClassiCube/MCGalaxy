@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands {
 		}
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             CmdReveal.ReloadMap(p, p, false);    
         }
         

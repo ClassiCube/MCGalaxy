@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.CPE {
 		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
 		public override void Use(Player p, string message) {
-			if (p == null) { MessageInGameOnly(p); return; }
+			if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
 			if (message == "") { Help(p); return; }
 			
 			float dist;

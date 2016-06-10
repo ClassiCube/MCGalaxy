@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public CmdHuman() { }
         
         public override void Use(Player p, string message) {
-        	if (p == null) { MessageInGameOnly(p); return; }
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
         	if (p.Game.PledgeSurvive) {
         		Player.Message(p, "You cannot un-pledge that you will be infected."); return;
         	}

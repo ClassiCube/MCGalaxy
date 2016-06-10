@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") {
                 Player.Message(p, "Your current brush is: " + p.BrushName); return;
             }

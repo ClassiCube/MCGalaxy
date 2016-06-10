@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
         public CmdChain() { }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (p.level.permissionbuild > p.group.Permission) {
                 Player.Message(p, "You cannot build on this map!"); return;
             }

@@ -31,10 +31,8 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdAbout() { }
 
-        public override void Use(Player p, string message)
-        {
-        	if (p == null) { MessageInGameOnly(p); return; }
-
+        public override void Use(Player p, string message) {
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             Player.Message(p, "Break/build a block to display information.");
             p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(AboutBlockchange);            

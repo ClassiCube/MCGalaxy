@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!p.EnoughMoney(10)) {
                 Player.Message(p, "You need &f10 " + Server.moneys + " %Sto enter the lottery."); return;
             }

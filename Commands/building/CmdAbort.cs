@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Building {
         public CmdAbort() { }
 
         public override void Use(Player p, string message) {
-        	if (p == null) { MessageInGameOnly(p); return; }
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             p.ClearBlockchange();
             p.painting = false;
             p.cmdTimer = false;
