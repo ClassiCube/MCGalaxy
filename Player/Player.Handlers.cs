@@ -142,17 +142,18 @@ namespace MCGalaxy {
         
         bool DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (deleteMode) { return ChangeBlock(x, y, z, Block.air, 0); }
+            bool changed = true;
 
             Block.HandleDelete handler = Block.deleteHandlers[b];
             if (handler != null) {
                 if (handler(this, b, x, y, z)) return false;
             } else {
-                return ChangeBlock(x, y, z, Block.air, 0);
+                changed = ChangeBlock(x, y, z, Block.air, 0);
             }
 
             if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt) 
                 ChangeBlock(x, (ushort)(y - 1), z, Block.grass, 0);
-            return true;
+            return changed;
         }
 
         bool PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
