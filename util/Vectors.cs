@@ -54,7 +54,7 @@ namespace MCGalaxy {
         public float Length { get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); } }
         
         /// <summary> Clamps the given block coordinates to inside the map. </summary>
-        public static Vec3U16 ClampToBounds(ushort x, ushort y, ushort z, Level lvl) {
+        public static Vec3U16 Clamp(ushort x, ushort y, ushort z, Level lvl) {
             Vec3U16 P = new Vec3U16(x, y, z);
             if (P.X >= 32768) P.X = 0;
             if (P.Y >= 32768) P.Y = 0;
@@ -67,7 +67,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Clamps the given player position coordinates to inside the map. </summary>
-        public static Vec3U16 ClampPosToBounds(ushort x, ushort y, ushort z, Level lvl) {
+        public static Vec3U16 ClampPos(ushort x, ushort y, ushort z, Level lvl) {
             Vec3U16 P = new Vec3U16(x, y, z);
             if (P.X >= 32768) P.X = 0;
             if (P.Y >= 32768) P.Y = 0;

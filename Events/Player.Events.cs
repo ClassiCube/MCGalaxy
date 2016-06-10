@@ -28,6 +28,7 @@ namespace MCGalaxy {
         internal bool cancelBlock = false;
         internal bool cancelmysql = false;
         internal bool cancelmessage = false;
+        internal bool HasBlockchange { get { return Blockchange != null; } }
         
         //Should people be able to cancel this event?
         /// <summary> Called when the MOTD is sent to the player </summary>

@@ -125,7 +125,7 @@
     <Compile Include="Commands\building\CmdBind.cs" />
     <Compile Include="Commands\building\CmdBrush.cs" />
     <Compile Include="Commands\building\CmdCenter.cs" />
-    <Compile Include="Commands\building\CmdClick.cs" />
+    <Compile Include="Commands\building\CmdMark.cs" />
     <Compile Include="Commands\building\CmdCmdBind.cs" />
     <Compile Include="Commands\building\CmdCopy.cs" />
     <Compile Include="Commands\building\CmdCuboid.cs" />
@@ -136,7 +136,6 @@
     <Compile Include="Commands\building\CmdHollow.cs" />
     <Compile Include="Commands\building\CmdImageprint.cs" />
     <Compile Include="Commands\building\CmdLine.cs" />
-    <Compile Include="Commands\building\CmdMark.cs" />
     <Compile Include="Commands\building\CmdMaze.cs" />
     <Compile Include="Commands\building\CmdMessageBlock.cs" />
     <Compile Include="Commands\building\CmdMode.cs" />
