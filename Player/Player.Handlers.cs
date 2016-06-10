@@ -384,9 +384,9 @@ namespace MCGalaxy {
                 foreach (Player p in players) {
                     if (p.name == name)  {
                         if (Server.verify) {
-                            p.Kick("Someone logged in as you!"); break;
+                            p.LeaveServer("Someone logged in as you!", "Someone logged in as you!"); break;
                         } else { 
-                            Kick("Already logged in!", true); return;
+                            LeaveServer("Already logged in!", "Already logged in!", true); return;
                         }
                     }
                 }
