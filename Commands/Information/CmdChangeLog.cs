@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands
                 }
                 else
                 {
-                    Player player = PlayerInfo.FindOrShowMatches(p, split[0]);
+                    Player player = PlayerInfo.FindMatches(p, split[0]);
                     if (player == null) return;
 
                     Player.Message(player, "Changelog:");

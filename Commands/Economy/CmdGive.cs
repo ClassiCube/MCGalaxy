@@ -43,13 +43,13 @@ namespace MCGalaxy.Commands
             if (amount < 0) { Player.Message(p, "Cannot give negative %3" + Server.moneys); return; }
             
             int matches = 1;
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0], out matches);
+            Player who = PlayerInfo.FindMatches(p, args[0], out matches);
             if (matches > 1) return;
             if (p != null && p == who) { Player.Message(p, "You cannot give yourself %3" + Server.moneys); return; }
             Economy.EcoStats ecos;
 
             if (who == null) {
-                OfflinePlayer off = PlayerInfo.FindOfflineOrShowMatches(p, args[0]);
+                OfflinePlayer off = PlayerInfo.FindOfflineMatches(p, args[0]);
                 if (off == null) return;
                 ecos = Economy.RetrieveEcoStats(off.name);
                 if (ReachedMax(p, ecos.money, amount)) return;

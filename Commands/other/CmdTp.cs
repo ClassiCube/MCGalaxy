@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             if (args.Length > 1) { Help(p); return; }
             
-            Player target = PlayerInfo.FindOrShowMatches(p, message);
+            Player target = PlayerInfo.FindMatches(p, message);
             if (target == null) return;
             if (target.level.IsMuseum) {
                 Player.Message(p, "Player \"" + message + "\" is in a museum!"); return;

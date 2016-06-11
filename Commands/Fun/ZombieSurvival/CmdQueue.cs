@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             string value = args[1];
             
             if (args[0].CaselessEq("zombie")) {
-                Player who = PlayerInfo.FindOrShowMatches(p, value);
+                Player who = PlayerInfo.FindMatches(p, value);
                 if (who == null) return;
                 
                 Player.Message(p, value + " was queued.");
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands
                 if (Server.zombie.CurLevel != null)
                     Server.zombie.CurLevel.ChatLevel(who.ColoredName + " %Swas queued as the next zombie.");
             } else if (args[0].CaselessEq("level")) {
-                string map = LevelInfo.FindMapOrShowMatches(p, value);
+                string map = LevelInfo.FindMapMatches(p, value);
                 if (map == null) return;
                 
                 Player.Message(p, map + " was queued.");

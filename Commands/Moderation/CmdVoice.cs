@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "" && p == null) { Help(p); return; }
-            Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message);
+            Player who = message == "" ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "voice", true); return;

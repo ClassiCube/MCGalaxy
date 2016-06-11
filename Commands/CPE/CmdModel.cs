@@ -52,12 +52,12 @@ namespace MCGalaxy.Commands.CPE {
             }
 
             if (isBot && args.Length > 2) {
-                pBot = PlayerBot.FindOrShowMatches(p, args[1]);
+                pBot = PlayerBot.FindMatches(p, args[1]);
                 if (pBot == null) return;
                 model = args[2];
             } else if (args.Length > 1) {
                 isBot = false;
-                who = PlayerInfo.FindOrShowMatches(p, args[0]);
+                who = PlayerInfo.FindMatches(p, args[0]);
                 if (who == null) return;
                 model = args.Length >= 2 ? args[1] : "humanoid";
             } else {

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             Player who = p;
             if (message != "") {
             	if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can send the rules to a player."); return; }
-                who = PlayerInfo.FindOrShowMatches(p, message);
+                who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
             }
             

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.World {
                     Player.Message(p, "\"{0}\" is not a valid level name.", message); return;
                 }
                 
-                string map = LevelInfo.FindMapOrShowMatches(p, message);
+                string map = LevelInfo.FindMapMatches(p, message);
                 if (map == null) return;
                 
                 Server.level = map;

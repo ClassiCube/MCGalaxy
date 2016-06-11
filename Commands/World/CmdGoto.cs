@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.World {
                 lvl = LevelInfo.Find(message);
                 if (lvl != null) return GoToLevel(p, lvl, message);
                 
-                string map = LevelInfo.FindMapOrShowMatches(p, message);
+                string map = LevelInfo.FindMapMatches(p, message);
                 if (map == null) return false;
                 return GotoOfflineLevel(p, map);
             } else {

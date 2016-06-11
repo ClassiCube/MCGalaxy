@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         public CmdDisInfect() { }
         
         public override void Use(Player p, string message) {
-            Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message);
+            Player who = message == "" ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
             if (!who.Game.Infected || !Server.zombie.RoundInProgress) {

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             string[] parts = message.Split(trimChars, 3);
-            Player target = PlayerInfo.FindOrShowMatches(p, parts[0]);
+            Player target = PlayerInfo.FindMatches(p, parts[0]);
             if (target == null) return;        
             if (p != null && p.group.Permission < target.group.Permission) {
                 MessageTooHighRank(p, "send commands for", true); return;

@@ -19,7 +19,7 @@ namespace MCGalaxy.Commands {
             int number = message.Split(' ').Length;
             if (number > 1) { Help(p); return; }
 
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            Player who = PlayerInfo.FindMatches(p, message);
             if (who == p) { Player.Message(p, "&cError:%S You cannot send yourself a request!"); return; }
             if (who == null) return;
             if (who.listignored.Contains(p.name))

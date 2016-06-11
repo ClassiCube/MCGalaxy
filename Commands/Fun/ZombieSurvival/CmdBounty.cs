@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             if (args.Length < 2) { Help(p); return; }
             
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             byte amount = 0;
             if (!byte.TryParse(args[1], out amount)) {

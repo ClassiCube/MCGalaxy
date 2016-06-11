@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             string killer = p == null ? "(console)" : p.ColoredName;
             string[] args = message.Split(trimChars, 2);
             
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (args.Length >= 2) {
                 if(args[1].ToLower() == "explode") {
                     deathMessage = " was exploded by " + killer;

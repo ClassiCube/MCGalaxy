@@ -37,14 +37,14 @@ namespace MCGalaxy.Commands
             if (amount < 0) { Player.Message(p, "Cannot pay negative %3" + Server.moneys); return; }
             
             int matches = 1;
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0], out matches);
+            Player who = PlayerInfo.FindMatches(p, args[0], out matches);
             if (matches > 1) return;
             if (p != null && p == who) { Player.Message(p, "You cannot pay yourself %3" + Server.moneys); return; }
             string target = null;
             Economy.EcoStats payer, receiver;
             
             if (who == null) {
-                OfflinePlayer off = PlayerInfo.FindOfflineOrShowMatches(p, args[0]);
+                OfflinePlayer off = PlayerInfo.FindOfflineMatches(p, args[0]);
                 if (off == null) return;
                 payer = Economy.RetrieveEcoStats(p.name);
                 receiver = Economy.RetrieveEcoStats(off.name);

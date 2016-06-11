@@ -44,8 +44,8 @@ namespace MCGalaxy.Commands
             }
 
             if (args.Length == 2) {    // /move name map
-                Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
-                Level where = LevelInfo.FindOrShowMatches(p, args[1]);
+                Player who = PlayerInfo.FindMatches(p, args[0]);
+                Level where = LevelInfo.FindMatches(p, args[1]);
                 if (who == null || where == null) return;
                 if (p != null && who.group.Permission > p.group.Permission) { 
                     MessageTooHighRank(p, "move", true); return;
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands
                 Player who;
                 int offset = 0;
                 if (args.Length == 4) {
-                    who = PlayerInfo.FindOrShowMatches(p, args[0]);
+                    who = PlayerInfo.FindMatches(p, args[0]);
                     if (who == null) return;
                     if (p != null && who.group.Permission > p.group.Permission) { 
                         MessageTooHighRank(p, "move", true); return; 

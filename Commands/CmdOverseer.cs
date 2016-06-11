@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands
             } else if (cmd == "KICK") {
                 if (arg == "") { p.SendMessage("You must specify a player to kick."); return; }
                 
-                Player pl = PlayerInfo.FindOrShowMatches(p, arg);
+                Player pl = PlayerInfo.FindMatches(p, arg);
                 if (pl != null) {
                     if (pl.level.name == p.level.name)
                         PlayerActions.ChangeMap(pl, Server.mainLevel.name);

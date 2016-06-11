@@ -31,14 +31,14 @@ namespace MCGalaxy.Commands
             if (message == "") { Help(p); return; }
 
             int matches;
-            Player pl = PlayerInfo.FindOrShowMatches(p, message, out matches);
+            Player pl = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             if (matches == 1) {
                 Player.Message(p, pl.name + " was first seen: " + pl.firstLogin);
                 Player.Message(p, pl.color + pl.name + " %Sis currently online."); return;
             }
 
-            OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);
+            OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
             if (target == null) return;
             Player.Message(p, message + " was first seen: " + target.firstLogin);
             Player.Message(p, message + " was last seen: " + target.lastLogin);

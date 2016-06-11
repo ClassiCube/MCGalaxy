@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
                         ShowLastCommand(p, pl);
                 }
             } else {
-                Player who = PlayerInfo.FindOrShowMatches(p, message);
+                Player who = PlayerInfo.FindMatches(p, message);
                 if (who != null)
                     ShowLastCommand(p, who);
             }

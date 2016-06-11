@@ -33,10 +33,10 @@ namespace MCGalaxy.Commands {
             if (CheckSuper(p, message, "player name")) return;
 
             int matches = 1;
-            Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message, out matches);
+            Player who = message == "" ? p : PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             if (matches == 0) {
-                OfflinePlayer off = PlayerInfo.FindOfflineOrShowMatches(p, message);
+                OfflinePlayer off = PlayerInfo.FindOfflineMatches(p, message);
                 if (off == null) return;
                 ecos = Economy.RetrieveEcoStats(off.name);
                 Player.Message(p, "%3===Economy stats for: %f" + ecos.playerName + "%7(offline)%3===");

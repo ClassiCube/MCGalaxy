@@ -468,10 +468,10 @@ namespace MCGalaxy {
             return matches == 1 ? match : null;
         }
         
-        public static PlayerBot FindOrShowMatches(Player pl, string name) {
+        public static PlayerBot FindMatches(Player pl, string name) {
             int matches = 0;
-            return Extensions.FindOrShowMatches(pl, name, out matches, Bots.Items, b => true,
-                                                b => b.name, "bots");
+            return Extensions.FindMatches<PlayerBot>(pl, name, out matches, Bots.Items, 
+                                                     b => true, b => b.name, "bots");
         }
         #endregion
 

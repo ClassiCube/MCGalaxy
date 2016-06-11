@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                 args[0] = p.name;
             }
             
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the title of", true); return;

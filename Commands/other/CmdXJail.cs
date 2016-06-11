@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            Player pl = PlayerInfo.FindOrShowMatches(p, message);
+            Player pl = PlayerInfo.FindMatches(p, message);
             if (pl == null) return;
 
             Command spawn = Command.all.Find("spawn");

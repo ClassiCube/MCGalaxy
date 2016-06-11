@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
 				Player who = p;
 				string[] args = message.Split(' ');
 				if (args.Length > 1) {
-					who = PlayerInfo.FindOrShowMatches(p, args[1]);
+					who = PlayerInfo.FindMatches(p, args[1]);
 					if (who == null) return;
 				}
 				args[0] = Path.GetFileName(args[0]);

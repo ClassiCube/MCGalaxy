@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             if (CheckSuper(p, message, "level name")) return;
             Level lvl = p.level;
             if (message != "") {
-                lvl = LevelInfo.FindOrShowMatches(p, message);
+                lvl = LevelInfo.FindMatches(p, message);
                 if (lvl == null) return;
             }
             

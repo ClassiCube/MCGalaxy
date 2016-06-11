@@ -64,7 +64,7 @@ namespace MCGalaxy.Eco {
             if (Server.zombie.QueuedLevel != null) {
                 Player.Message(p, "Someone else has already queued a level."); return;
             }
-            string map = LevelInfo.FindMapOrShowMatches(p, message);
+            string map = LevelInfo.FindMapMatches(p, message);
             if (map == null) return;
             
             Command.all.Find("queue").Use(p, "level " + map);

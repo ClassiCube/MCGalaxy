@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p == who) { Player.Message(p, "Cannot freeze yourself."); return; }
             if (p != null && who.group.Permission >= p.group.Permission) { 

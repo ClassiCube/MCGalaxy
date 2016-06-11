@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(message);
             if (who == null) {
                 Player.Message(p, "&eNo online player \"" + message + "\", searching database..");
-                OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);              
+                OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);              
                 if (target == null) return;
                 ip = target.ip;
             } else {

@@ -201,7 +201,7 @@ namespace MCGalaxy.Commands {
                     return;
                 }
 
-                Player who = PlayerInfo.FindOrShowMatches(p, target);
+                Player who = PlayerInfo.FindMatches(p, target);
                 if (who == null) return;
                 if (p.group.Permission < who.group.Permission) {
                     MessageTooHighRank(p, "send countdown rules", true); return;                	

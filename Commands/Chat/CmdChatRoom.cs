@@ -201,7 +201,7 @@ namespace MCGalaxy.Commands {
             }
             
             string name = parts[1], room = parts[2];
-            Player pl = PlayerInfo.FindOrShowMatches(p, name);
+            Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             if (!Server.Chatrooms.Contains(room)) {
                 Player.Message(p, "There is no chatroom with the name '" + room + "'");
@@ -230,7 +230,7 @@ namespace MCGalaxy.Commands {
             }
             
             string name = parts[1];
-            Player pl = PlayerInfo.FindOrShowMatches(p, name);
+            Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             if (pl.group.Permission >= p.group.Permission) {
             	MessageTooHighRank(p, "kick from a chatroom", false); return;

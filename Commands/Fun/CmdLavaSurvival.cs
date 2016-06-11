@@ -106,7 +106,7 @@ namespace MCGalaxy.Commands
 					if (s[1] == "map")
 					{
 						if (s.Length < 3) { SetupHelp(p, "map"); return; }
-						Level foundLevel = LevelInfo.FindOrShowMatches(p, s[2]);
+						Level foundLevel = LevelInfo.FindMatches(p, s[2]);
 						if (foundLevel == null) { 
 							return; 
 						}

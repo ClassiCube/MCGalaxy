@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "The current owner of the team is: " + team.Owner); return;
             }
             
-            Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
+            Player who = PlayerInfo.FindMatches(p, args[1]);
             if (who == null) return;
             team.Owner = who.name;
             team.Action(who, "set the team owner to " + who.ColoredName);
@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands {
             if (args.Length == 1) {
                 Player.Message(p, "You need to provide the name of the person to invite."); return;
             }
-            Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
+            Player who = PlayerInfo.FindMatches(p, args[1]);
             if (who == null) return;
             
             Player.Message(p, "Invited " + who.ColoredName + " %Sto join your team.");

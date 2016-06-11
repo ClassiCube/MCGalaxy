@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
             string[] args = message.Split(' ');
-            Level lvl = LevelInfo.FindOrShowMatches(p, args[0]);
+            Level lvl = LevelInfo.FindMatches(p, args[0]);
             if (lvl == null) return;
             string newName = args[1];
             if (!Player.ValidName(newName)) {

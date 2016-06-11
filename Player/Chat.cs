@@ -225,7 +225,7 @@ namespace MCGalaxy {
         }
         
         static void HandleWhisper(Player p, string target, string message) {
-            Player who = PlayerInfo.FindOrShowMatches(p, target);
+            Player who = PlayerInfo.FindMatches(p, target);
             if (who == null) return;
             if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return; }
             

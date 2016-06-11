@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
                         ReloadMap(p, who, true);
                 }
             } else {
-                Player who = PlayerInfo.FindOrShowMatches(p, parts[0]);
+                Player who = PlayerInfo.FindMatches(p, parts[0]);
                 if (who == null) { 
                     return;
                 } else if (who.group.Permission > p.group.Permission && p != who) {

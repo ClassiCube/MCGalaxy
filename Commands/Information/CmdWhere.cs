@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") message = p.name;
             int matches;
-            Player pl = PlayerInfo.FindOrShowMatches(p, message, out matches);
+            Player pl = PlayerInfo.FindMatches(p, message, out matches);
             if (pl == null) return;
             if (pl.level.CurrentGame() != null && !(p == null || p.Game.Referee)) {
                 Player.Message(p, "You can only use /where on people in games when you are in referee mode."); return;

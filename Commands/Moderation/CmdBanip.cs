@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player who = PlayerInfo.Find(message);
 
                 if (who == null) {
-                    OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);
+                    OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
                     if (target == null) return;
                     message = target.ip;
                 } else {

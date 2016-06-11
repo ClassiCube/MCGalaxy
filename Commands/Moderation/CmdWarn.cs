@@ -27,15 +27,15 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(trimChars, 2);
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
+            string reason = args.Length == 1 ? "you know why." : args[1];
             
             if (who == null) return;
             if (who == p) { Player.Message(p, "you can't warn yourself"); return; }
             if (p != null && p.group.Permission <= who.group.Permission) {
                 MessageTooHighRank(p, "warn", false); return;
-            }
+            }           
             
-            string reason = args.Length == 1 ? "you know why." : args[1];
             string warnedby = (p == null) ? "(console)" : p.ColoredName;
             Player.GlobalMessage(warnedby + " %ewarned " + who.ColoredName + " %ebecause:");
             Player.GlobalMessage("&c" + reason);
@@ -54,6 +54,13 @@ namespace MCGalaxy.Commands.Moderation {
             who.warn++;
             if (args.Length == 1) Player.AddNote(who.name, p, "W");
             else Player.AddNote(who.name, p, "W", args[1]);
+        }
+        
+        static void WarnOffline(Player p, string[] args) {
+            if (!Server.LogNotes) { 
+                Player.Message(p, "Notes logging must be enabled to warn offline players."); return;
+            }
+            Player.SendMessage(p, "Searching PlayerDB..");
         }
         
         public override void Help(Player p) {

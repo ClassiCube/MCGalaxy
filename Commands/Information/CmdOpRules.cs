@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands
 
             Player who = p;
             if (message != "") {
-                who = PlayerInfo.FindOrShowMatches(p, message);
+                who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
                 if (p != null && p.group.Permission < who.group.Permission) {
                     MessageTooHighRank(p, "send /oprules", false); return;

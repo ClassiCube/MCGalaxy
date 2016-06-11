@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(trimChars, 2);
             
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             if (args.Length > 1) message = args[1];
             else if (p == null) message = "You were kicked by the console.";

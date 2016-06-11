@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") message = p.name;
             int matches;
-            Player pl = PlayerInfo.FindOrShowMatches(p, message, out matches);
+            Player pl = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             
             WhoInfo info;
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             	    Player.Message(p, "\"" + message + "\" is not a valid player name."); return; 
             	}
                 Player.Message(p, "Searching database for the player..");           
-                OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);              
+                OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);              
                 if (target == null) return;
                 info = FromOffline(target, message);
             }

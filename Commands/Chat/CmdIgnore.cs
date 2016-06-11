@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "&aNo longer ignoring {0}", unignore);
             } else {
                 int matches = 0;
-                Player who = PlayerInfo.FindOrShowMatches(p, action);
+                Player who = PlayerInfo.FindMatches(p, action);
                 if (who == null) {
                     if (matches == 0)
                         Player.SendMessage(p, "You must use the full name when unignoring offline players.");

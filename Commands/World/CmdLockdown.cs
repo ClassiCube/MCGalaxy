@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
                     Chat.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
             } else {
-                Player who = PlayerInfo.FindOrShowMatches(p, args[1]);
+                Player who = PlayerInfo.FindMatches(p, args[1]);
                 if (who == null) return;
 
                 if (!who.jailed) {

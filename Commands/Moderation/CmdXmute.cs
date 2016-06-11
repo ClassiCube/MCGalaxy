@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             }
 
             string[] args = message.Split(' ');
-            Player muter = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player muter = PlayerInfo.FindMatches(p, args[0]);
             if (muter == null) return;
 
             if (p != null && muter.group.Permission > p.group.Permission) {

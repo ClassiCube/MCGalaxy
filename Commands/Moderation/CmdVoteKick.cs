@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
 
             if (Server.voteKickInProgress) { Player.Message(p, "Please wait for the current vote to finish!"); return; }
 
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
 
             if (who.group.Permission >= p.group.Permission) {

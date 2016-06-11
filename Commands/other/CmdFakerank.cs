@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (message == "" || args.Length < 2) { Help(p); return; }
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             Group grp = Group.FindOrShowMatches(p, args[1]);            
             if (who == null || grp == null) return;
             

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             if (p != null && who.name == p.name) {
                 Player.Message(p, "You cannot hug yourself, silly!"); return;

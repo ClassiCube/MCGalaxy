@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             
             string[] args = message.Split(' ');        
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             
             int amount = 0;

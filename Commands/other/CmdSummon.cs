@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p.group.Permission < who.group.Permission) {
                 MessageTooHighRank(p, "summon", true); return;

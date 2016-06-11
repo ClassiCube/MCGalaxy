@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             if (message == "" || message.Split(' ').Length > 2) { Help(p); return; }
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) {
                 if (Server.muted.Contains(message)) {
                     Server.muted.Remove(message);

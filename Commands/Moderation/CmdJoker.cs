@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
                 Server.s.Log("Stealth joker attempted");
             }
 
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p != null && who.group.Permission > p.group.Permission) { 
                 MessageTooHighRank(p, "joker", true); return;

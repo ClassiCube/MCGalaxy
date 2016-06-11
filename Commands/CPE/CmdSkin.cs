@@ -40,12 +40,12 @@ namespace MCGalaxy.Commands.CPE {
             string skin = null;
 
             if (isBot && args.Length > 2) {
-                pBot = PlayerBot.FindOrShowMatches(p, args[1]);
+                pBot = PlayerBot.FindMatches(p, args[1]);
                 if (pBot == null) return;
                 skin = args[2];
             } else if (args.Length >= 2) {
                 isBot = false;
-                who = PlayerInfo.FindOrShowMatches(p, args[0]);
+                who = PlayerInfo.FindMatches(p, args[0]);
                 if (who == null) return;
                 skin = args.Length >= 2 ? args[1] : who.truename;
             } else {

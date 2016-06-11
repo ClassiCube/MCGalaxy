@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands {
 					Player.Message(p, "TNT Wars Error: There isn't a game on your current level!"); return;
 				}
 			} else {
-				Level lvl = LevelInfo.FindOrShowMatches(p, text[1]);
+				Level lvl = LevelInfo.FindMatches(p, text[1]);
 				if (lvl == null) return;
 
 				it = TntWarsGame.Find(lvl);
@@ -230,7 +230,7 @@ namespace MCGalaxy.Commands {
 					return;
 
 				default:
-					Player who = PlayerInfo.FindOrShowMatches(p, text[1]);
+					Player who = PlayerInfo.FindMatches(p, text[1]);
 					if (who == null) return;
 					
 					Player.Message(who, "TNT Wars Rules: (sent to you by " + p.ColoredName + " %S)");
@@ -486,7 +486,7 @@ namespace MCGalaxy.Commands {
 					if (text[2] == "") {
 						it.lvl = p.level;
 					} else {
-						it.lvl = LevelInfo.FindOrShowMatches(p, text[2]);
+						it.lvl = LevelInfo.FindMatches(p, text[2]);
 						if (it.lvl == null) return;
 					}
 					Player.Message(p, "TNT Wars: Level is now '" + it.lvl.name + "'");

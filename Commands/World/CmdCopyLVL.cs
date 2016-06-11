@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.World {
             if (!p.group.CanExecute("newlvl")) {
                 Player.Message(p, "You cannot use /copylvl as you cannot use /newlvl."); return;
             }
-            src = LevelInfo.FindMapOrShowMatches(p, src);
+            src = LevelInfo.FindMapMatches(p, src);
             if (src == null) return;
             if (!Player.ValidName(dst)) { Player.Message(p, "\"" + dst + "\" is not a valid level name."); return; }         
             if (LevelInfo.ExistsOffline(dst)) { Player.Message(p, "The level \"" + dst + "\" already exists."); return; }

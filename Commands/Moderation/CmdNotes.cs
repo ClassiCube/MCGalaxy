@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             if (message == "") message = p.name;
             
             int matches = 1;
-            Player who = message == "" ? p : PlayerInfo.FindOrShowMatches(p, message, out matches);
+            Player who = message == "" ? p : PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             if (who != null) message = who.name;
             

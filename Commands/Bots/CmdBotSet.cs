@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
-            PlayerBot bot = PlayerBot.FindOrShowMatches(p, args[0]);
+            PlayerBot bot = PlayerBot.FindMatches(p, args[0]);
             if (bot == null) return;
                 
             if (args.Length == 1) {             

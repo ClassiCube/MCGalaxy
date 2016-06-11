@@ -11,7 +11,7 @@ software distributed under the Licenses are distributed on an "AS IS"
 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -48,19 +48,19 @@ namespace MCGalaxy {
             return matches == 1 ? match : null;
         }
         
-        public static Player FindOrShowMatches(Player pl, string name, bool onlyCanSee = true) {
-            int matches = 0; return FindOrShowMatches(pl, name, out matches, onlyCanSee);
+        public static Player FindMatches(Player pl, string name, bool onlyCanSee = true) {
+            int matches = 0; return FindMatches(pl, name, out matches, onlyCanSee);
         }
         
-        public static Player FindOrShowMatches(Player pl, string name, out int matches, bool onlyCanSee = true) {
+        public static Player FindMatches(Player pl, string name, out int matches, bool onlyCanSee = true) {
             matches = 0;
             if (!Player.ValidName(name)) {
                 Player.Message(pl, "\"{0}\" is not a valid player name.", name); return null;
             }
             
-            return Extensions.FindOrShowMatches(pl, name, out matches, Online.Items,
-                                                p => Entities.CanSee(pl, p) || !onlyCanSee,
-                                                p => p.name, "online players");
+            return Extensions.FindMatches<Player>(pl, name, out matches, Online.Items,
+                                                  p => Entities.CanSee(pl, p) || !onlyCanSee,
+                                                  p => p.name, "online players");
         }
         
         public static Player FindExact(string name) {
@@ -106,7 +106,7 @@ namespace MCGalaxy {
             
             const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) " +
                 "VALUES ('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')";
-            Database.executeQuery(String.Format(query, p.name, p.ip, p.firstLogin, DateTime.Now, p.totalLogins, 
+            Database.executeQuery(String.Format(query, p.name, p.ip, p.firstLogin, DateTime.Now, p.totalLogins,
                                                 p.title, p.overallDeath, p.money, p.loginBlocks, p.totalKicked, p.time.ToDBTime()));
             string ecoQuery = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) VALUES ('" + p.name + "', " + p.money + ", 0, '%cNone', '%cNone', '%cNone', '%cNone')";
             Database.executeQuery(ecoQuery);
@@ -165,7 +165,7 @@ namespace MCGalaxy {
             }
         }
         
-         public static List<string> FindAccounts(string ip) {
+        public static List<string> FindAccounts(string ip) {
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@IP", ip);
             DataTable clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
@@ -179,42 +179,42 @@ namespace MCGalaxy {
             clones.Dispose();
             return alts;
         }
+
+        public static string FindOfflineNameMatches(Player p, string name) {
+            using (DataTable results = QueryMulti(name, "Name")) {
+                int matches = 0;
+                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                              r => true, r => r["Name"].ToString(), "players", 20);
+                return row == null ? null : row["Name"].ToString();
+            }
+        }
+        
+        public static OfflinePlayer FindOfflineMatches(Player p, string name) {
+            using (DataTable results = QueryMulti(name, "*")) {
+                int matches = 0;
+                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                              r => true, r => r["Name"].ToString(), "players", 20);
+                return row == null ? null : FillInfo(row, true);
+            }
+        }
         
         
         static DataTable Query(string name, string selector) {
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", name);
-            string syntax = Server.useMySQL ? 
+            string syntax = Server.useMySQL ?
                 "SELECT " + selector + " FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
                 "SELECT " + selector + " FROM Players WHERE Name=@Name COLLATE NOCASE";
             return Database.fillData(query, syntax);
         }
         
-        public static OfflinePlayer FindOfflineOrShowMatches(Player p, string name) {         
+        static DataTable QueryMulti(string name, string selector) {
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", "%" + name + "%");
-            string syntax = Server.useMySQL ? 
-                "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20" :
-                "SELECT * FROM Players WHERE Name LIKE @Name LIMIT 20 COLLATE NOCASE";
-            
-            using (DataTable results = Database.fillData(query, syntax)) {
-                if (results.Rows.Count == 0) {
-                    Player.Message(p, "No players found matching \"{0}\".", name); return null;
-                }
-                if (results.Rows.Count == 1)
-                    return FillInfo(results.Rows[0], true);
-                List<string> matches = new List<string>();
-                
-                foreach (DataRow row in results.Rows) {
-                    string entry = row["Name"].ToString().Trim();
-                    if (entry.CaselessEq(name)) return FillInfo(row, true);
-                    matches.Add(entry);
-                }
-                string count = matches.Count == 20 ? "20+" : matches.Count.ToString();
-                Player.Message(p, "{0} players found matching \"{1}\": {2}",
-                               count, name, String.Join(", ", matches));
-                return null;
-            }
+            string syntax = Server.useMySQL ?
+                "SELECT " + selector + " FROM Players WHERE Name LIKE @Name LIMIT 21" :
+                "SELECT " + selector + " FROM Players WHERE Name LIKE @Name LIMIT 21 COLLATE NOCASE";
+            return Database.fillData(query, syntax);
         }
         
         static OfflinePlayer FillInfo(DataRow row, bool fullStats) {

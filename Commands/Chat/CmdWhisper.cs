@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
             }
             else
             {
-                Player who = PlayerInfo.FindOrShowMatches(p, message);
+                Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) { p.whisperTo = ""; p.whisper = false; return; }
 
                 p.whisper = true;

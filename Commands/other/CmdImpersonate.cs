@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (!message.Contains(" ")) { Help(p); return; }
             string[] args = message.Split(trimChars, 2);
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null || message == "") {Help(p); return; }
             if (who.muted) { Player.Message(p, "Cannot impersonate a muted player"); return; }
             

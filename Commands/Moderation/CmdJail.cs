@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "Set Jail point.");
                 return;
             }
-            Player who = PlayerInfo.FindOrShowMatches(p, message);
+            Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
             if (!who.jailed) {

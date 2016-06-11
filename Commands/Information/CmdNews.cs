@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands
                 return;
             }
             
-            Player who = PlayerInfo.FindOrShowMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             foreach (string line in lines)
                 Player.Message(who, line);

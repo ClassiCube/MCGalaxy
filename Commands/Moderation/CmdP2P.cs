@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
             if (args.Length == 1) { Player.Message(p, "You did not specify the target player."); return; }
-            Player source = PlayerInfo.FindOrShowMatches(p, args[0]);
-            Player target = PlayerInfo.FindOrShowMatches(p, args[1]);
+            Player source = PlayerInfo.FindMatches(p, args[0]);
+            Player target = PlayerInfo.FindMatches(p, args[1]);
             
             if (source == null || target == null) return;
             if (p.group.Permission < source.group.Permission) {

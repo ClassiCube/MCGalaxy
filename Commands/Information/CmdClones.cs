@@ -36,11 +36,11 @@ namespace MCGalaxy.Commands {
 
             string name = null;
             int matches = 0;
-            Player who = PlayerInfo.FindOrShowMatches(p, message, out matches);
+            Player who = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             if (who == null) {
                 Player.Message(p, "Could not find player. Searching Player DB.");
-                OfflinePlayer target = PlayerInfo.FindOfflineOrShowMatches(p, message);
+                OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
                 if (target == null) return;
                 message = target.ip; name = target.name;
             } else {

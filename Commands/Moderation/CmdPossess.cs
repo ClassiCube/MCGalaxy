@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
                 Command.all.Find("hide").Use(p, "");
                 Player.Message(p, "Stopped possessing " + who.color + who.name + "%S.");
             } else {
-                Player who = PlayerInfo.FindOrShowMatches(p, message);
+                Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
                 if (who.group.Permission >= p.group.Permission) {
                     MessageTooHighRank(p, "possess", false); return;
