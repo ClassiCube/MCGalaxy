@@ -31,7 +31,7 @@ namespace MCGalaxy {
         public void Add(string p, string data) {
             lock (locker) {
                 players.Add(p.ToLower());
-                lines.Add(p.ToLower() + " " + data.ToLower());
+                lines.Add(p.ToLower() + " " + data);
             }
         }
         
@@ -81,19 +81,18 @@ namespace MCGalaxy {
             
             using (StreamReader r = new StreamReader(path, Encoding.UTF8)) {
                 string line = null;
-                while ((line = r.ReadLine()) != null) {
+                while ((line = r.ReadLine()) != null) {                                        
+                    list.lines.Add(line);                    
+                    int space = line.IndexOf(' ');
+                    string name = space >= 0 ? line.Substring(0, space) : line;
+                    
                     // Need to convert uppercase to lowercase, in case user added in entries.
                     bool anyUpper = false;
-                    for (int i = 0; i < line.Length; i++) {
+                    for (int i = 0; i < name.Length; i++) {
                         char c = line[i];
                         anyUpper |= (c >= 'A' && c <= 'Z');
                     }
-                    
-                    if (anyUpper) line = line.ToLower();
-                    list.lines.Add(line);
-                    
-                    int space = line.IndexOf(' ');
-                    string name = space >= 0 ? line.Substring(0, space) : line;
+                    if (anyUpper) name = name.ToLower();
                     list.players.Add(name);
                 }
             }
