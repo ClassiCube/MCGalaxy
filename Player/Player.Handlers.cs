@@ -318,7 +318,7 @@ namespace MCGalaxy {
                     }
                 }
                 DisplayName = name;
-                name += "+";
+                if (Server.ClassicubeAccountPlus) name += "+";
                 byte type = message[129];
 
                 isDev = Server.Devs.CaselessContains(truename);

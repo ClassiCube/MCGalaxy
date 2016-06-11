@@ -65,7 +65,9 @@ namespace MCGalaxy
         public static bool EnableHttpApi = false;
         [ConfigInt("position-interval", "Server", null, 100, 20, 2000)]
         public static int PositionInterval = 100;
-
+        [ConfigBool("classicube-account-plus", "Server", null, true)]
+        public static bool ClassicubeAccountPlus = true;
+        
         public static PlayersFile AutoloadMaps = new PlayersFile("text/autoload.txt");
         public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
         public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");
