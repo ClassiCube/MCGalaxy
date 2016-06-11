@@ -60,7 +60,7 @@ namespace MCGalaxy {
                 p.disconnected = true;
             } catch ( Exception e ) {
                 Server.ErrorLog(e);
-                p.Kick("Error!");
+                p.Leave("Error!");
             }
         }
         

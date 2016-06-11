@@ -61,8 +61,7 @@ namespace MCGalaxy.Commands {
             messageTimer.Start();
             messageTimer.Elapsed += delegate
             {
-                string msg = "You have been kicked for hacking the rank " + newRank.ColoredName;
-                p.LeaveServer(msg, msg);
+                p.Leave("You have been kicked for hacking the rank " + newRank.ColoredName);
                 p.color = oldCol;
                 messageTimer.Stop();
                 messageTimer.Dispose();

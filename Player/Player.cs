@@ -360,7 +360,7 @@ namespace MCGalaxy {
                 InitTimers();
                 connections.Add(this);
             }
-            catch ( Exception e ) { Kick("Login failed!"); Server.ErrorLog(e); }
+            catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
         }
 
 
@@ -525,7 +525,8 @@ namespace MCGalaxy {
         public void Disconnect() { LeaveServer("Disconnected", PlayerDB.GetLogoutMessage(this)); }
         public void Kick(string kickString) { LeaveServer(kickString, null); }
         public void Kick(string kickString, bool sync = false) { LeaveServer(kickString, null, sync); }
-
+        public void Leave(string discMsg, bool sync = false) { LeaveServer(discMsg, discMsg, sync); }
+        
         [Obsolete("Use LeaveServer() instead")]
         public void leftGame(string kickMsg = "") { LeaveServer(kickMsg, null); }
 

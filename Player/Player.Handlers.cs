@@ -118,7 +118,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if (action > 1 ) { Kick("Unknown block action!"); return; }
+            if (action > 1 ) { Leave("Unknown block action!", true); return; }
             byte oldType = type;
             if (type < 128) type = bindings[type];
             
@@ -221,7 +221,7 @@ namespace MCGalaxy {
                         break;
                     default:
                         if (!dontmindme)
-                            Kick("Unhandled message id \"" + msg + "\"!");
+                            Leave("Unhandled message id \"" + msg + "\"!", true);
                         else
                             Server.s.Log(Encoding.UTF8.GetString(buffer, 0, buffer.Length));
                         return new byte[0];
@@ -285,7 +285,7 @@ namespace MCGalaxy {
                 byte version = message[0];
                 name = enc.GetString(message, 1, 64).Trim();
                 if (name.Length > 16) {
-                    Kick("Usernames must be 16 characters or less", true); return;
+                    Leave("Usernames must be 16 characters or less", true); return;
                 }
                 truename = name;
                 skinName = name;
@@ -300,7 +300,7 @@ namespace MCGalaxy {
                     pendingNames.Add(new PendingItem(name));
                     
                     if (altsCount > 0) {
-                        Kick("Already logged in!", true); return;
+                        Leave("Already logged in!", true); return;
                     }
                 }
 
@@ -311,7 +311,7 @@ namespace MCGalaxy {
                     string hashHex = BitConverter.ToString(hash);
                     if (!verify.CaselessEq(hashHex.Replace("-", ""))) {
                         if (!IPInPrivateRange(ip)) {
-                            Kick("Login failed! Try signing in again.", true); return;
+                            Leave("Login failed! Try signing in again.", true); return;
                         }
                     } else {
                         verifiedName = true;
@@ -360,7 +360,7 @@ namespace MCGalaxy {
                 {
                     // Check to see how many guests we have
                     Player[] online = PlayerInfo.Online.Items;
-                    if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Kick("Server full!"); return; }
+                    if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Leave("Server full!", true); return; }
                     // Code for limiting no. of guests
                     if (foundGrp == Group.findPerm(LevelPermission.Guest))
                     {
@@ -371,22 +371,21 @@ namespace MCGalaxy {
                         {
                             if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + this.DisplayName + " couldn't log in - too many guests.");
                             Server.s.Log("Guest " + this.name + " couldn't log in - too many guests.");
-                            const string msg = "Server has reached max number of guests";
-                            LeaveServer(msg, msg, true);
+                            Leave("Server has reached max number of guests", true);
                             return;
                         }
                     }
                 }
 
-                if (version != Server.version) { LeaveServer("Wrong version!", "Wrong version!", true); return; }
+                if (version != Server.version) { Leave("Wrong version!", true); return; }
                 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player p in players) {
                     if (p.name == name)  {
                         if (Server.verify) {
-                            p.LeaveServer("Someone logged in as you!", "Someone logged in as you!"); break;
+                            p.Leave("Someone logged in as you!"); break;
                         } else { 
-                            LeaveServer("Already logged in!", "Already logged in!", true); return;
+                            Leave("Already logged in!", true); return;
                         }
                     }
                 }
@@ -445,8 +444,7 @@ namespace MCGalaxy {
         }
         
         bool CheckWhitelist() {
-            if (!Server.useWhitelist)
-                return true;
+            if (!Server.useWhitelist) return true;
             
             if (Server.verify) {
                 if (Server.whiteList.Contains(name))
@@ -465,7 +463,7 @@ namespace MCGalaxy {
                 ipQuery.Dispose();
             }
             if (!onWhitelist) 
-                Kick("This is a private server!"); //i think someone forgot this?
+                Leave("This is a private server!", true); //i think someone forgot this?
             return onWhitelist;
         }
         
@@ -666,7 +664,7 @@ namespace MCGalaxy {
                 PlayerActions.ChangeMap(this, level);
                 Command.all.Find("jail").Use(null, name);
             } catch (Exception ex) {
-                Kick("Error occured");
+                Leave("Error occured", true);
                 Server.ErrorLog(ex);
             }
         }
@@ -988,7 +986,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 
                 text = Regex.Replace(text, @"\s\s+", " ");
                 if ( text.Any(ch => ch == '&') ) {
-                    Kick("Illegal character in chat message!");
+                    Leave("Illegal character in chat message!", true);
                     return;
                 }
                 if ( text.Length == 0 )

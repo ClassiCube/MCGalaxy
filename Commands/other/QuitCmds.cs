@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
         public override void Use(Player p, string message)  {
-            p.LeaveServer("RAGEQUIT!!", "RAGEQUIT!!");
+            p.Leave("RAGEQUIT!!");
         }
 
         public override void Help(Player p) {
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string msg = message != "" ? "Left the game: " + message : "Left the game.";
-            p.LeaveServer(msg, msg);
+            p.Leave(msg);
         }
         
         public override void Help(Player p) {
@@ -63,8 +63,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             int code = p.random.Next(int.MinValue, int.MaxValue);
-            string msg = "Server crash! Error code 0x" + Convert.ToString(code, 16).ToUpper();
-            p.LeaveServer(msg, msg);
+            p.Leave("Server crash! Error code 0x" + Convert.ToString(code, 16).ToUpper());
         }
         
         public override void Help(Player p) {
@@ -84,8 +83,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "&cIncorrect syntax. Abuse detected.");
                 Thread.Sleep(3000);
             }
-            const string msg = "Your IP has been backtraced + reported to FBI Cyber Crimes Unit.";
-            p.LeaveServer(msg, msg);
+            p.Leave("Your IP has been backtraced + reported to FBI Cyber Crimes Unit.");
         }
         
         public override void Help(Player p) {

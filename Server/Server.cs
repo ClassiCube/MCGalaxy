@@ -692,35 +692,22 @@ namespace MCGalaxy
 
         }
 
-        public static void Exit(bool AutoRestart)
-        {
+        public static void Exit(bool AutoRestart) {
+            string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }
-            foreach (Player p in players)
-            {
-                string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
-                p.LeaveServer(msg, msg);
-            }
+            foreach (Player p in players) { p.Leave(msg); }
+  
             if (APIServer != null) APIServer.Stop();
             if (InfoServer != null) InfoServer.Stop();
-            //PlayerInfo.players.ForEach(delegate(Player p) { p.Kick("Server shutdown. Rejoin in 10 seconds."); });
-            Player.connections.ForEach(
-                delegate(Player p)
-                {
-                    string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
-                    p.LeaveServer(msg, msg);
-                }
-            );
+
+            Player.connections.ForEach(p => p.Leave(msg));
             Plugin.Unload();
-            if (listen != null)
-            {
-                listen.Close();
-            }
-            try
-            {
+            if (listen != null) listen.Close();
+            try {
                 IRC.Disconnect(!AutoRestart ? "Server is shutting down." : "Server is restarting.");
+            } catch { 
             }
-            catch { }
         }
 
         [Obsolete("Use LevelInfo.Loaded.Add()")]

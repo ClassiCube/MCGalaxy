@@ -217,7 +217,7 @@ namespace MCGalaxy.Gui
                 Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player p in players) {
                     string msg = restarting ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
-                    p.LeaveServer(msg, msg);
+                    p.Leave(msg);
                 }
             } catch (Exception ex) { 
                 Server.ErrorLog(ex); 
