@@ -170,8 +170,9 @@ namespace MCGalaxy {
             } else if (matches == 1) {
                 return match;
             } else {
+                string count = matches > limit ? limit + "+ " : matches + " ";
                 string names = matchNames.ToString(0, matchNames.Length - 2);
-                Player.Message(pl, "Multiple " + type + " match \"" + name + "\":");
+                Player.Message(pl, count + type + " match \"" + name + "\":");
                 Player.Message(pl, names); return default(T);
             }
         }
