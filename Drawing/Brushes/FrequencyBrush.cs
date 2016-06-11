@@ -16,24 +16,24 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Commands.Building;
-using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
     
-    public abstract class FrequencyBrush : Brush {
+    /// <summary> Contains helper methods for brushes that have blocks with 
+    /// optional frequency counts (e.g. random and cloudy brushes) </summary>
+    public static class FrequencyBrush {
         
-        protected static ExtBlock[] GetBlocks(BrushArgs args, out int[] count, 
-		                                      Predicate<string> filter, Predicate<string> handler) {
-			string[] parts = args.Message.Split(' ');
-			Player p = args.Player;
+        public static ExtBlock[] GetBlocks(BrushArgs args, out int[] count,
+                                           Predicate<string> filter, Predicate<string> handler) {
+            string[] parts = args.Message.Split(' ');
+            Player p = args.Player;
             ExtBlock[] blocks;
             GetRaw(parts, filter, args, out blocks, out count);
             
             for (int i = 0, j = 0; i < parts.Length; i++ ) {
-            	if (parts[i] == "") continue;
-            	
+                if (parts[i] == "") continue;
+                
                 // Brush specific args
                 if (!filter(parts[i])) {
                     if (!handler(parts[i])) return null;
@@ -48,6 +48,7 @@ namespace MCGalaxy.Drawing.Brushes {
                 
                 blocks[j].Type = type; blocks[j].ExtType = extType;
                 if (sepIndex < 0) { j++; continue; }
+                
                 int chance;
                 if (!int.TryParse(parts[i].Substring(sepIndex + 1), out chance)
                     || chance <= 0 || chance > 10000) {
@@ -80,10 +81,9 @@ namespace MCGalaxy.Drawing.Brushes {
                 blocks[0] = new ExtBlock(args.Type, args.ExtType);
         }
         
-        protected static ExtBlock[] Combine(ExtBlock[] toAffect, int[] count) {
+        public static ExtBlock[] Combine(ExtBlock[] toAffect, int[] count) {
             int sum = 0;
             for (int i = 0; i < count.Length; i++) sum += count[i];
-            if (toAffect.Length == 1) sum += 1;
             
             ExtBlock[] blocks = new ExtBlock[sum];
             for (int i = 0, index = 0; i < toAffect.Length; i++) {

@@ -105,7 +105,7 @@ namespace MCGalaxy {
             } else {
                 try {
                     int temp = int.Parse(value);
-                    if (temp >= 0 && temp <= 3)
+                    if (temp >= 0 && temp <= 5)
                         mainLevel.setPhysics(temp);
                 } catch {
                     s.Log("Physics variable invalid");

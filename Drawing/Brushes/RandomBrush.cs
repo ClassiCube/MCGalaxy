@@ -22,7 +22,7 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
     
-    public sealed class RandomBrush : FrequencyBrush {
+    public sealed class RandomBrush : Brush {
         readonly ExtBlock[] blocks;
         readonly int seed;
         
@@ -44,10 +44,10 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public static Brush Process(BrushArgs args) {
             int[] count;
-            ExtBlock[] toAffect = GetBlocks(args, out count, P => true, null);
+            ExtBlock[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => true, null);
             
             if (toAffect == null) return null;           
-            ExtBlock[] blocks = Combine(toAffect, count);
+            ExtBlock[] blocks = FrequencyBrush.Combine(toAffect, count);
             return new RandomBrush(blocks);
         }
         

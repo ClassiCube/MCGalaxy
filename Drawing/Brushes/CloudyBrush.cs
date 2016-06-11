@@ -23,7 +23,7 @@ using MCGalaxy.Generator;
 
 namespace MCGalaxy.Drawing.Brushes {
     
-    public sealed class CloudyBrush : FrequencyBrush {
+    public sealed class CloudyBrush : Brush {
         readonly ExtBlock[] blocks;
         readonly int[] counts;
         readonly float[] thresholds;
@@ -68,17 +68,16 @@ namespace MCGalaxy.Drawing.Brushes {
             n.Lacunarity = 2;
             
             int[] count;
-            ExtBlock[] toAffect = GetBlocks(args, out count,
+            ExtBlock[] toAffect = FrequencyBrush.GetBlocks(args, out count,
                                             Filter, arg => Handler(arg, args.Player, ref n));
             
             if (toAffect == null) return null;
             return new CloudyBrush(toAffect, count, n);
         }
         
-        // We want to handle non block options.
+        // Only want to handle non block options.
         static bool Filter(string arg) {
-            if (arg.Length < 2) return true;
-            return arg[1] != '_';
+            return arg.Length < 2 || arg[1] != '_';
         }
         
         static bool Handler(string arg, Player p, ref NoiseArgs args) {
