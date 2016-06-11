@@ -231,7 +231,7 @@ namespace MCGalaxy {
                         string type = line.Split(':')[0].ToLower();
                         List<string> staffList = type.Equals("devs") ? Devs : type.Equals("mods") ? Mods : null;
                         foreach (string name in line.Split(':')[1].Split())
-                        	staffList.Add(name);
+                        	staffList.Add(name.TrimEnd('+'));
                     }
                 }
             } catch (Exception e) {

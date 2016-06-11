@@ -66,7 +66,7 @@ namespace MCGalaxy {
                         w.WriteLine(line);
                 }
             }
-            if (console) Server.s.Log("SAVED: " + path);
+            if (console) Server.s.Log("SAVED: " + path, true);
         }
         
         public static PlayerExtList Load(string path) {

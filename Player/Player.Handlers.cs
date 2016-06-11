@@ -321,8 +321,8 @@ namespace MCGalaxy {
                 name += "+";
                 byte type = message[129];
 
-                isDev = Server.Devs.CaselessContains(name);
-                isMod = Server.Mods.CaselessContains(name);               
+                isDev = Server.Devs.CaselessContains(truename);
+                isMod = Server.Mods.CaselessContains(truename);
 
                 try {
                     Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());

@@ -69,9 +69,9 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "  is banned");
             }                
 
-            if (Server.Devs.CaselessContains(who.Name))
+            if (Server.Devs.CaselessContains(who.Name.TrimEnd('+')))
                 Player.Message(p, "  Player is an &9MCGalaxy Developer");
-            if (Server.Mods.CaselessContains(who.Name))
+            if (Server.Mods.CaselessContains(who.Name.TrimEnd('+')))
                 Player.Message(p, "  Player is an &9MCGalaxy Moderator");
 
             if (canSeeIP) {

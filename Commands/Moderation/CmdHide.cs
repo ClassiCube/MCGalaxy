@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands
                 if (p.adminchat) adminchat.Use(p, message);
                 Server.hidden.Remove(p.name);
             }
-            Server.hidden.Save();
+            Server.hidden.Save(false);
         }
 
         public override void Help(Player p) {

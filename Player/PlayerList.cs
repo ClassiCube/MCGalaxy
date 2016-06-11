@@ -53,6 +53,7 @@ namespace MCGalaxy {
             } }
         
         public void Save() { Save(file, true); }
+        public void Save(bool console) { Save(file, console); }
         
         public void Save(string file, bool console) {
             using (StreamWriter w = File.CreateText("ranks/" + file)) {
@@ -62,7 +63,7 @@ namespace MCGalaxy {
                 }
             }
             if (console)
-                Server.s.Log("SAVED: " + file);
+                Server.s.Log("SAVED: " + file, true);
         }
         
         public static PlayerList Load(string path) {
