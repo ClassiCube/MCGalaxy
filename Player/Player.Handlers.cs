@@ -604,7 +604,7 @@ namespace MCGalaxy {
             if (count == 0) return;
             
             string suffix = count == 1 ? " player is " : " players are ";
-            SendMessage(count + suffix + "waiting for a review, type %T/review view");
+            SendMessage(count + suffix + "waiting for a review. Type %T/review view");
         }
         
         void LoadCpeData() {
