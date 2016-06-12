@@ -355,28 +355,8 @@ namespace MCGalaxy {
                     }
                 }
 
-                //server maxplayer check
-                if (!VIP.Find(this))
-                {
-                    // Check to see how many guests we have
-                    Player[] online = PlayerInfo.Online.Items;
-                    if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Leave("Server full!", true); return; }
-                    // Code for limiting no. of guests
-                    if (foundGrp == Group.findPerm(LevelPermission.Guest))
-                    {
-                        // Check to see how many guests we have
-                        online = PlayerInfo.Online.Items;
-                        int currentNumOfGuests = online.Count(pl => pl.group.Permission <= LevelPermission.Guest);
-                        if (currentNumOfGuests >= Server.maxGuests)
-                        {
-                            if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + this.DisplayName + " couldn't log in - too many guests.");
-                            Server.s.Log("Guest " + this.name + " couldn't log in - too many guests.");
-                            Leave("Server has reached max number of guests", true);
-                            return;
-                        }
-                    }
-                }
-
+                // maxplayer check
+                if (!CheckPlayersCount(foundGrp)) return;
                 if (version != Server.version) { Leave("Wrong version!", true); return; }
                 
                 Player[] players = PlayerInfo.Online.Items;
@@ -410,6 +390,23 @@ namespace MCGalaxy {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
             }
+        }
+        
+        bool CheckPlayersCount(Group foundGrp) {
+            if (VIP.Find(this)) return true;
+            
+            Player[] online = PlayerInfo.Online.Items;
+            if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Leave("Server full!", true); return false; }
+            if (foundGrp.Permission > LevelPermission.Guest) return true;
+            
+            online = PlayerInfo.Online.Items;
+            int curGuests = online.Count(pl => pl.group.Permission <= LevelPermission.Guest);
+            if (curGuests < Server.maxGuests) return true;
+            
+            if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + DisplayName + " couldn't log in - too many guests.");
+            Server.s.Log("Guest " + name + " couldn't log in - too many guests.");
+            Leave("Server has reached max number of guests", true);
+            return false;
         }
         
         void SendCpeExtensions() {
@@ -554,6 +551,7 @@ namespace MCGalaxy {
             OnPlayerConnectEvent.Call(this);
             
             CheckLoginJailed();
+            CheckReviewList();
             if (Server.agreetorulesonentry) {
                 if (!File.Exists("ranks/agreed.txt"))
                     File.WriteAllText("ranks/agreed.txt", "");
@@ -598,6 +596,15 @@ namespace MCGalaxy {
             }
             CmdGoto.CheckGamesJoin(this, null);
             Loading = false;
+        }
+        
+        void CheckReviewList() {
+        	if (group.Permission < Server.reviewview || !group.CanExecute("review")) return;
+            int count = Server.reviewlist.Count;
+            if (count == 0) return;
+            
+            string suffix = count == 1 ? " player is " : " players are ";
+            SendMessage(count + suffix + "waiting for a review, type %T/review view");
         }
         
         void LoadCpeData() {

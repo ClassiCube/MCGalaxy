@@ -77,21 +77,20 @@ namespace MCGalaxy.Commands
                 }
             }
             
-            if (opsOn) {
-                Server.reviewlist.Add(p.name);
-                int pos = Server.reviewlist.IndexOf(p.name);
-                if (pos > 1) { Player.Message(p, "You entered the &creview %Squeue. You have &c" + pos + " %Speople in front of you in the queue"); }
-                if (pos == 1) { Player.Message(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
-                if (pos == 0) { Player.Message(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
-                Player.Message(p, "The Online Operators have been notified. Someone should be with you shortly.");
-                
-                string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
-                Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", Server.reviewnext);
-                Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", Server.reviewnext);
-                p.NextReviewTime = DateTime.UtcNow.AddSeconds(Server.reviewcooldown);
-            } else {
-                Player.Message(p, "&cThere are no operators on to review your build. Please wait for one to come on and try again.");
-            }
+            Server.reviewlist.Add(p.name);
+            int pos = Server.reviewlist.IndexOf(p.name);
+            if (pos > 1) { Player.Message(p, "You entered the &creview %Squeue. You have &c" + pos + " %Speople in front of you in the queue"); }
+            if (pos == 1) { Player.Message(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
+            if (pos == 0) { Player.Message(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
+            
+            string msg = opsOn ? "The Online staff have been notified. Someone should be with you shortly." :
+                "There are currently no staff online. Staff will be notified when they join the server.";
+            Player.Message(p, msg);
+            
+            string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
+            Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", Server.reviewnext);
+            Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", Server.reviewnext);
+            p.NextReviewTime = DateTime.UtcNow.AddSeconds(Server.reviewcooldown);
             Player.RaisePlayerAction(p, PlayerAction.Review, null, true);
         }
         

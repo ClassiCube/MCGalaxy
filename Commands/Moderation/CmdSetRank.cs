@@ -98,6 +98,7 @@ namespace MCGalaxy.Commands.Moderation {
                 }
             }
             
+            Server.reviewlist.Remove(name);
             group.playerList.Remove(name);
             group.playerList.Save();
             newRank.playerList.Add(name);
