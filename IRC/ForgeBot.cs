@@ -254,8 +254,7 @@ namespace MCGalaxy {
             // Old bot was disconnected, try to reclaim it.
             if (user.Nick == nick) connection.Sender.Nick(nick);
             
-            List<string> chanNicks = GetNicks(channel);
-            RemoveNick(user.Nick, chanNicks);
+            RemoveNick(user.Nick);
             if (user.Nick == nick) return;
             Server.s.Log(user.Nick + " has left IRC");
             Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " has left");
@@ -280,7 +279,8 @@ namespace MCGalaxy {
             }
             
             string error;
-            if (!CheckUserAndCommand(user, ircCmd, message, out error)) {
+            string chan = String.IsNullOrEmpty(channel) ? opchannel : channel;
+            if (!CheckIRCCommand(user, ircCmd, chan, out error)) {
                 if (error != null) Pm(user.Nick, error);
                 return;
             }
@@ -305,6 +305,7 @@ namespace MCGalaxy {
         void Listener_OnPublic(UserInfo user, string channel, string message) {
             message = message.TrimEnd();
             if (message.Length == 0) return;
+            bool opchat = channel == opchannel;
             
             message = Colors.IrcToMinecraftColors(message);
             message = CP437Reader.ConvertToRaw(message);
@@ -312,7 +313,7 @@ namespace MCGalaxy {
             string ircCmd = parts[0].ToLower();
             if (ircCmd == ".who" || ircCmd == ".players") {
                 try {
-                    CmdPlayers.DisplayPlayers(null, "", text => Say(text, false, true), false, false);
+                    CmdPlayers.DisplayPlayers(null, "", text => Say(text, opchat, true), false, false);
                 } catch (Exception e) {
                     Server.ErrorLog(e);
                 }
@@ -321,8 +322,8 @@ namespace MCGalaxy {
             if (ircCmd == ".x") {
                 string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
                 string error;
-                if (!CheckUserAndCommand(user, cmdName, message, out error)) {
-                    if (error != null) Say(error);
+                if (!CheckIRCCommand(user, cmdName, channel, out error)) {
+                    if (error != null) Say(error, opchat);
                     return;
                 }
 
@@ -330,16 +331,17 @@ namespace MCGalaxy {
                 if (cmdName != "" && cmd != null) {
                     Server.s.Log("IRC Command: /" + message.Replace(".x ", "") + " (by " + user.Nick + ")");
                     string args = parts.Length > 2 ? parts[2] : "";
-                    Player p = MakeIRCPlayer("#@public@#");
+                    string nick = opchat ? "#@private@#" : "#@public@#";
+                    Player p = MakeIRCPlayer(nick);
                     
                     try {
                         if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
                         cmd.Use(p, args);
-                    } catch (Exception e) {
-                        Say("CMD Error: " + e.ToString());
+                    } catch (Exception ex) {
+                        Say("CMD Error: " + ex, opchat);
                     }
                 } else {
-                    Say("Unknown command!");
+                    Say("Unknown command!", opchat);
                 }
             }
 
@@ -352,7 +354,7 @@ namespace MCGalaxy {
             }
         }
 
-        bool CheckUserAndCommand(UserInfo user, string cmdName, string message, out string error) {
+        bool CheckIRCCommand(UserInfo user, string cmdName, string channel, out string error) {
             List<string> chanNicks;
             error = null;
             if (!Server.ircControllers.Contains(user.Nick))
@@ -490,6 +492,17 @@ namespace MCGalaxy {
                 }
             }
             chanNicks.Add(n);
+        }
+        
+        void RemoveNick(string nick) {
+            if (!String.IsNullOrEmpty(channel)) {
+                List<string> chanNicks = GetNicks(channel);
+                RemoveNick(nick, chanNicks);
+            }
+            if (!String.IsNullOrEmpty(opchannel)) {
+                List<string> chanNicks = GetNicks(opchannel);
+                RemoveNick(nick, chanNicks);
+            }
         }
         
         void RemoveNick(string n, List<string> chanNicks) {
