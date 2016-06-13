@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace MCGalaxy {
     
     /// <summary> You can use this class to store extra information for/about the player/level/server.
-    /// For Example: This is useful if you want to store the value "lives" for the player object to  </summary>
+    /// For example: This is useful if you want to store the value "lives" for a player. </summary>
     public sealed class ExtrasCollection : Dictionary<string, object> {
 
         /// <summary> Returns the value associated with the given key as an object, or null if no value exists for this key </summary>

@@ -40,6 +40,7 @@ namespace MCGalaxy {
         /// <summary> Finds all lines which caselessly start with the given name. </summary>
         public IEnumerable<string> Find(string name) {
             if (!File.Exists(file)) yield break;
+            name += " ";
             
             using (StreamReader r = new StreamReader(file)) {
                 string line;
@@ -58,20 +59,6 @@ namespace MCGalaxy {
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     if (line.StartsWith(value)) continue;
-                    lines.Add(line);
-                }
-            }
-            WriteLines(lines);
-        }
-        
-        /// <summary> Deletes all lines which contain the given value. </summary>
-        public void DeleteContains(string value) {
-            if (!File.Exists(file)) return;
-            List<string> lines = new List<string>();
-            using (StreamReader r = new StreamReader(file)) {
-                string line;
-                while ((line = r.ReadLine()) != null) {
-                    if (line.Contains(value)) continue;
                     lines.Add(line);
                 }
             }

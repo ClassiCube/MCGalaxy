@@ -581,6 +581,7 @@
     <Compile Include="util\App.cs" />
     <Compile Include="util\LineWrapper.cs" />
     <Compile Include="util\SparseBitSet.cs" />
+    <Compile Include="util\TimeUtils.cs" />
     <Compile Include="util\Vectors.cs" />
     <Compile Include="util\VolatileArray.cs" />
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />

@@ -53,11 +53,8 @@ namespace MCGalaxy {
             p = p.ToLower();
             lock (locker) {
                 int idx = players.IndexOf(p);
-                if (idx == -1) {
-                    players.Add(p);
-                } else {
-                    lines[idx] = p;
-                }
+                if (idx >= 0) return;
+                players.Add(p);
             }
         }
         

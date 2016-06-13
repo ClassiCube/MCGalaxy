@@ -30,10 +30,11 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdPlayerEditDB() { }
+        static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.Split(trimChars, 3);
             Player who = PlayerInfo.Find(args[0]);
             if (who == null) {
                 string target = PlayerInfo.FindName(args[0]);
@@ -46,7 +47,6 @@ namespace MCGalaxy.Commands {
             }
             
             switch (args[1].ToLower()) {
-
                 case "firstlogin":
                     SetDate(p, args, "FirstLogin", who, v => who.firstLogin = v); break;
                 case "lastlogin":
@@ -56,9 +56,9 @@ namespace MCGalaxy.Commands {
                     SetInteger(p, args, "totalLogin", 1000000000, who, v => who.totalLogins = v); break;
                 case "title":
                     if (args.Length < 3) {
-                        Player.Message(p, "Title name can be up to 17 characters in length, but may NOT include spaces."); return;
+                        Player.Message(p, "Title can be up to 17 characters. Use \"null\" to remove the title"); return;
                     }
-                    if (args[2].Length > 17) { Player.Message(p, "Title must be under 17 letters."); return; }
+                    if (args[2].Length > 17) { Player.Message(p, "Title must be under 17 characters"); return; }
                     if (args[2] == "null") args[2] = "";
                     
                     if (who != null) {
@@ -141,6 +141,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Do not include spaces or other special characters other than what you see above.");
                 return;
             }
+        	args[2] = args[2].Replace(" ", "");
             
             if (!Regex.IsMatch(args[2], @"\d{3}:\d{2}:\d{2}:\d{2}")) {
                 Player.Message(p, "Timespan must be in the format: ddd:hh:mm:ss");
@@ -155,11 +156,11 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            args[2] = args[2].Replace(':', ' ');
+            string time = timeFrame.ToDBTime();
             if (who != null) {
-                setter(args[2]);
+                setter(time);
             } else {
-                UpdateDB(p, args[0], args[1], args[2], column);
+                UpdateDB(p, args[0], args[1], time, column);
             }
             MessageDataChanged(p, args[0], args[1], args[2]);
         }

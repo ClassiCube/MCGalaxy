@@ -87,16 +87,6 @@ namespace MCGalaxy {
             return String.Join(separator, list);
         }
         
-        public static string ToDBTime(this TimeSpan value) {
-            return value.Days + " " + value.Hours + " " + value.Minutes + " " + value.Seconds;
-        }
-        
-        public static TimeSpan ParseDBTime(this string value) {
-            string[] parts = value.Split(' ');
-            return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
-                                int.Parse(parts[2]), int.Parse(parts[3]));
-        }
-        
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static bool CaselessEq(this string a, string b) { return a.Equals(b, comp); }
         

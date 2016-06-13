@@ -49,9 +49,9 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "  &bModified &a{0} &eblocks", who.TotalBlocks);
 
             if (who.TimeOnline.Ticks > 0)
-                Player.Message(p, "  Spent {0} on the server, {1} this session", Shorten(who.TimeSpent), Shorten(who.TimeOnline));
+            	Player.Message(p, "  Spent {0} on the server, {1} this session", who.TimeSpent.Shorten(), who.TimeOnline.Shorten());
             else
-                Player.Message(p, "  Spent {0} on the server",  Shorten(who.TimeSpent));
+            	Player.Message(p, "  Spent {0} on the server", who.TimeSpent.Shorten());
             
             if (who.Last.Ticks > 0)
                 Player.Message(p, "  First login &a" + who.First.ToString("yyyy-MM-dd")
@@ -82,24 +82,15 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "  Player is &fWhitelisted");
             }
             if (who.AfkMessage != null)
-                Player.Message(p, "  Idle for {0} (AFK {1}%S)", Shorten(who.IdleTime), who.AfkMessage);
+                Player.Message(p, "  Idle for {0} (AFK {1}%S)", who.IdleTime.Shorten(), who.AfkMessage);
             else if (who.IdleTime.TotalMinutes >= 1)
-            	Player.Message(p, "  Idle for {0}", Shorten(who.IdleTime));
+            	Player.Message(p, "  Idle for {0}", who.IdleTime.Shorten());
             
             if (!Server.zombie.Running) return;
             Player.Message(p, "  Survived &a" + who.RoundsTotal +
                                " %Srounds total, most in a row was &e" + who.RoundsMax);
             Player.Message(p, "  Infected &a" + who.InfectedTotal +
                                " %Splayers total, most in a round was &e" + who.InfectedMax);
-        }
-        
-        public static string Shorten(TimeSpan value, bool seconds = false) {
-            string time = "";
-            if (value.Days >= 1) time = value.Days + "d " + value.Hours + "h " + value.Minutes + "m";
-            else if (value.Hours >= 1) time = value.Hours + "h " + value.Minutes + "m";
-            else time = value.Minutes + "m";
-            if (seconds) time += " " + value.Seconds + "s";
-            return time;
         }
     }
 }
