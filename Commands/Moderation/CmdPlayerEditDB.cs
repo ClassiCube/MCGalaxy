@@ -137,24 +137,13 @@ namespace MCGalaxy.Commands {
         
         static void SetTimespan(Player p, string[] args, string column, Player who, Action<string> setter) {
             if (args.Length < 3) {
-                Player.Message(p, "Timespan must be in the format: ddd:hh:mm:ss");
-                Player.Message(p, "Do not include spaces or other special characters other than what you see above.");
-                return;
-            }
-        	args[2] = args[2].Replace(" ", "");
-            
-            if (!Regex.IsMatch(args[2], @"\d{3}:\d{2}:\d{2}:\d{2}")) {
-                Player.Message(p, "Timespan must be in the format: ddd:hh:mm:ss");
-                Player.Message(p, "If your number needs to be a single digit place a 0 in front.");
+                Player.Message(p, "Timespan must be in the format: <number><quantifier>..");
+                Player.Message(p, TimeUtils.Help, "set time spent to");
                 return;
             }
             
             TimeSpan timeFrame;
-            if (!TimeSpan.TryParse(args[2], out timeFrame)) {
-                Player.Message(p, "Timespan must be in the format: ddd:hh:mm:ss");
-                Player.Message(p, "Hour range(0-23), Minute and Second range(0-59)");
-                return;
-            }
+            if (!args[2].TryParseShort(p, "set time spent to", out timeFrame)) return;
             
             string time = timeFrame.ToDBTime();
             if (who != null) {
@@ -162,7 +151,7 @@ namespace MCGalaxy.Commands {
             } else {
                 UpdateDB(p, args[0], args[1], time, column);
             }
-            MessageDataChanged(p, args[0], args[1], args[2]);
+            MessageDataChanged(p, args[0], args[1], timeFrame.Shorten(true));
         }
         
         static void SetInteger(Player p, string[] args, string column, int max, Player who, Action<int> setter) {
@@ -191,7 +180,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void UpdateDB(Player p, string name, string type, string value, string column) {
-        	ParameterisedQuery query = ParameterisedQuery.Create();
+            ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", name);
             if (value != "") {
                 query.AddParam("@ArgValue", value);
@@ -203,7 +192,7 @@ namespace MCGalaxy.Commands {
         
         static void MessageDataChanged(Player p, string name, string type, string value) {
             string msg = value == "" ? String.Format("The {1} data for &b{0} %Shas been reset.", name, type)
-                : String.Format("The {1} data for &b{0} %Shas been updated to &a{2} %S.", name, type, value);
+                : String.Format("The {1} data for &b{0} %Shas been updated to &a{2}%S.", name, type, value);
             Player.Message(p, msg);
         }
 

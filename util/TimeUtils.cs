@@ -28,7 +28,7 @@ namespace MCGalaxy {
             if (value.Days >= 1) time = value.Days + "d " + value.Hours + "h " + value.Minutes + "m";
             else if (value.Hours >= 1) time = value.Hours + "h " + value.Minutes + "m";
             else time = value.Minutes + "m";
-            if (seconds) time += " " + value.Seconds + "s";
+            if (seconds && value.Seconds != 0) time += " " + value.Seconds + "s";
             return time;
         }
         
@@ -38,9 +38,13 @@ namespace MCGalaxy {
             
             foreach (char c in value) {
                 long amount = 0;
+                if (c == ' ') continue;                
                 if (c >= '0' && c <= '9') {
-                    num = checked(num * 10); num += (c - '0');
-                } else if (c == 's' || c == 'S') {
+                    num = checked(num * 10); num += (c - '0'); 
+                    continue;
+                }
+                
+                if (c == 's' || c == 'S') {
                     amount = num * TimeSpan.TicksPerSecond;
                 } else if (c == 'm' || c == 'M') {
                     amount = num * TimeSpan.TicksPerMinute;
@@ -49,12 +53,30 @@ namespace MCGalaxy {
                 } else if (c == 'd' || c == 'D') {
                     amount = num * TimeSpan.TicksPerDay;
                 } else {
-                	throw new FormatException(c.ToString());
+                    throw new FormatException(c.ToString());
                 }
                 total = checked(total + amount);
+                num = 0;
             }
             return TimeSpan.FromTicks(total);
         }
+        
+        public static bool TryParseShort(this string value, Player p, 
+                                         string action, out TimeSpan span) {
+		    span = TimeSpan.Zero;
+            try {
+                span = ParseShort(value);
+                return true;
+            } catch (OverflowException) {
+                Player.Message(p, "Timespan given is too big.");
+            } catch (FormatException ex) {
+                Player.Message(p, "{0} is not a valid quantifier.", ex.Message);
+                Player.Message(p, Help, action);
+            }
+            return false;
+        }
+        
+        public const string Help = "For example, to {0} 25 and a half hours, use \"1d1h30m\".";
         
         public static string ToDBTime(this TimeSpan value) {
             return value.Days + " " + value.Hours + " " + value.Minutes + " " + value.Seconds;
