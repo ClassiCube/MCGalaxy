@@ -22,7 +22,7 @@ using System.Text;
 
 namespace MCGalaxy {
     public sealed class PlayerList {  
-		
+        
         string file;
         List<string> players = new List<string>();
         readonly object locker = new object();
@@ -47,10 +47,20 @@ namespace MCGalaxy {
                 return new List<string>(players);
         }
         
-        public int Count { get {
-                lock (locker)
-                    return players.Count;
-            } }
+        public int Count { get { lock (locker) return players.Count; } }
+        
+        public void AddOrReplace(string p) {
+            p = p.ToLower();
+            lock (locker) {
+                int idx = players.IndexOf(p);
+                if (idx == -1) {
+                    players.Add(p);
+                } else {
+                    lines[idx] = p;
+                }
+            }
+        }
+        
         
         public void Save() { Save(file, true); }
         public void Save(bool console) { Save(file, console); }

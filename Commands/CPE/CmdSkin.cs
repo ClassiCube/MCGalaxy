@@ -68,14 +68,16 @@ namespace MCGalaxy.Commands.CPE {
                 who.skinName = skin;
                 Entities.GlobalDespawn(who, true);
                 Entities.GlobalSpawn(who, true);
+                
                 if (p != who)
                     Player.GlobalMessage(who, who.ColoredName + "'s %Sskin was changed to &c" + skin);
                 else
-                    Player.Message(who, "Changed your own skin to &c" + skin);	
+                    Player.Message(who, "Changed your own skin to &c" + skin);    
                 
-                Server.skins.Remove(who.name);
-                if (skin != who.truename)
-                    Server.skins.Add(who.name, skin);
+                if (skin == who.truename)
+                    Server.skins.Remove(who.name);
+                else
+                    Server.skins.AddOrReplace(who.name, skin);
                 Server.skins.Save();
             }
         }

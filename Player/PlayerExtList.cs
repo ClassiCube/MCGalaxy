@@ -29,9 +29,9 @@ namespace MCGalaxy {
         readonly object locker = new object();
         
         public void Add(string p, string data) {
+        	p = p.ToLower();
             lock (locker) {
-                players.Add(p.ToLower());
-                lines.Add(p.ToLower() + " " + data);
+                players.Add(p); lines.Add(p + " " + data);
             }
         }
         
@@ -46,18 +46,27 @@ namespace MCGalaxy {
             }
         }
         
-        public string Find(string p) {
+        public void AddOrReplace(string p, string data) {
+        	p = p.ToLower();
             lock (locker) {
-                int idx = players.IndexOf(p.ToLower());
-                if (idx == -1) return null;
-                return lines[idx];
+                int idx = players.IndexOf(p);
+                if (idx == -1) {
+                	players.Add(p); lines.Add(p + " " + data);
+                } else {
+                	lines[idx] = p + " " + data;
+                }
             }
         }
         
-        public int Count { get {
-                lock (locker)
-                    return players.Count;
-            } }
+        public string Find(string p) {
+            lock (locker) {
+                int idx = players.IndexOf(p.ToLower());
+                return idx == -1 ? null : lines[idx];
+            }
+        }
+        
+        public int Count { get { lock (locker) return players.Count; } }
+        
         
         public void Save(bool console = false) {
             using (StreamWriter w = File.CreateText(path)) {

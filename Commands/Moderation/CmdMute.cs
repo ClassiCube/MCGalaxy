@@ -44,18 +44,16 @@ namespace MCGalaxy.Commands.Moderation {
                 who.muted = false;
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &bun-muted", false);
                 Server.muted.Remove(who.name);
-                Server.muted.Save();
             } else  {
                 if (p != null && who.group.Permission >= p.group.Permission) { 
                     MessageTooHighRank(p, "mute", false); return;
                 }
                 who.muted = true;
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &8muted", false);
-                Server.muted.Remove(who.name);
-                Server.muted.Add(who.name);
-                Server.muted.Save();
+                Server.muted.AddOrReplace(who.name);
                 Player.AddNote(who.name, p, "M");
             }
+            Server.muted.Save();
         }
 
         public override void Help(Player p) {

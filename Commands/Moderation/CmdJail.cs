@@ -48,8 +48,7 @@ namespace MCGalaxy.Commands
                 Entities.GlobalSpawn(who, (ushort)who.level.jailx, (ushort)who.level.jaily, (ushort)who.level.jailz,
                                      who.level.jailrotx, who.level.jailroty, true);
                 
-                Server.jailed.Remove(who.name);
-                Server.jailed.Add(who.name, who.level.name);
+                Server.jailed.AddOrReplace(who.name, who.level.name);
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &8jailed", false);
                 Player.AddNote(who.name, p, "J");                
             } else {

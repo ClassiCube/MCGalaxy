@@ -80,10 +80,11 @@ namespace MCGalaxy.Commands.CPE {
                     Player.GlobalMessage(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);
                 else
                     Player.Message(who, "Changed your own model to a &c" + model);
-                
-                Server.models.Remove(who.name);
+                                
                 if (model != "humanoid")
-                    Server.models.Add(who.name, model);
+                    Server.models.AddOrReplace(who.name, model);
+                else
+                    Server.models.Remove(who.name);
                 Server.models.Save();
             }
         }
