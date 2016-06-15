@@ -162,11 +162,11 @@ namespace MCGalaxy {
         }
         
         public static bool MapColor(ref char color) {
-        	if (IsStandardColor(color)) {
-        	    if (color >= 'A' && color <= 'F') color += ' ';
-        	    return true;
-        	}
-        	
+            if (IsStandardColor(color)) {
+                if (color >= 'A' && color <= 'F') color += ' ';
+                return true;
+            }
+            
             if (color == 's' || color == 'S') { color = Server.DefaultColor[1]; return true; }
             if (color == 'h' || color == 'H') { color = Server.HelpDescriptionColor[1]; return true; }
             if (color == 't' || color == 'T') { color = Server.HelpSyntaxColor[1]; return true; }
@@ -175,7 +175,7 @@ namespace MCGalaxy {
         }        
         
         public static string StripColours(string value) {
-        	if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1)
+            if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1)
                 return value;
             char[] output = new char[value.Length];
             int usedChars = 0;
@@ -272,5 +272,9 @@ namespace MCGalaxy {
         public string Name;
         
         public bool Undefined { get { return Fallback == '\0'; } }
+        
+        public string Hex() {
+             return "#" + R.ToString("X2") + G.ToString("X2") + B.ToString("X2");
+        }
     }
 }
