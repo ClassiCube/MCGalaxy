@@ -27,6 +27,9 @@ namespace MCGalaxy.Commands.Building {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdMessageBlock() { }
+        public override CommandPerm[] AdditionalPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Nobody, "+ can use moderation commands in MBs") }; }
+        }
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
@@ -49,9 +52,10 @@ namespace MCGalaxy.Commands.Building {
             }
             if (cpos.message == null)
                 cpos.message = args[1];
+            bool allCmds = CheckExtraPerm(p);
 
             foreach (Command com in Command.all.commands) {
-                if (com.defaultRank <= p.group.Permission && !com.type.Contains("mod")) continue;
+                if (com.defaultRank <= p.group.Permission && (allCmds || !com.type.Contains("mod"))) continue;
                 
                 if (IsCommand(cpos.message, "/" + com.name)) {
                     p.SendMessage("You cannot use that command in a messageblock."); return;
@@ -81,7 +85,7 @@ namespace MCGalaxy.Commands.Building {
                 UpdateDatabase(p, cpos, x, y, z);
                 Player.Message(p, "Message block created.");
             } else {
-            	p.RevertBlock(x, y, z); 
+                p.RevertBlock(x, y, z); 
                 Player.Message(p, "Failed to create a message block.");
             }
 
