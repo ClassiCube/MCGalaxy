@@ -110,15 +110,16 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             
             BlockDefinition src = defs[srcId], dst = defs[dstId];
-            if (!ExistsInScope(src, srcId, global)) { MessageNoBlock(p, srcId, global, cmd); return; }
+            if (defs[srcId] == null) { MessageNoBlock(p, srcId, global, cmd); return; }
             if (ExistsInScope(dst, dstId, global)) { MessageAlreadyBlock(p, dstId, global, cmd); return; }
             
             dst = src.Copy();
             dst.BlockID = (byte)dstId;
             BlockDefinition.Add(dst, defs, p == null ? null : p.level);
-            string scope = global ? "global" : "level";
-            Player.Message(p, "Duplicated the " + scope + " custom block " +
-                               "with id \"" + srcId + "\" to \"" + dstId + "\".");
+            
+            bool globalBlock = defs[srcId] == BlockDefinition.GlobalDefs[srcId];
+            string scope = globalBlock ? "global" : "level";
+            Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope, srcId, dstId);
         }
         
         static bool ExistsInScope(BlockDefinition def, int i, bool global) {
@@ -369,7 +370,7 @@ namespace MCGalaxy.Commands.CPE {
                     if( !(value == "0" || value == "1")) {
                         SendEditHelp(p, 8, 0); return;
                     }
-                    def.BlocksLight = value == "0"; break;
+                    def.BlocksLight = value != "0"; break;
                 case "sound":
                 case "walksound":
                     if (!EditByte(p, value, "Walk sound", ref def.WalkSound, 9, 1, 0, 11)) return;
@@ -465,7 +466,7 @@ namespace MCGalaxy.Commands.CPE {
         static void MessageNoBlock(Player p, int id, bool global, string cmd) {
             string scope = global ? "global" : "level";
             Player.Message(p, "There is no {1} custom block with the id \"{0}\".", id, scope);
-            Player.Message(p, "Type \"%T{0}list\" %Sto see a list of {1} custom blocks.", cmd, scope);
+            Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, int id, bool global, string cmd) {
