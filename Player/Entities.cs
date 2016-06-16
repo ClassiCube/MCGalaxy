@@ -252,10 +252,16 @@ namespace MCGalaxy {
         
         public static void GlobalUpdate() {
             Player[] players = PlayerInfo.Online.Items;
+            // We need to cache the player's position before iterating.
+            // Avoids the very rare issue of player's position changing mid-way through iteration,
+            // which can cause this player to show minorly offset to other players.
+            foreach (Player p in players)
+                p.tempPos = p.pos;
+            
             foreach (Player p in players)
                 UpdatePosition(p);
             foreach (Player p in players) {
-                 p.oldpos = p.pos; p.oldrot = p.rot;
+                 p.oldpos = p.tempPos; p.oldrot = p.rot;
             }
         }
         
@@ -266,7 +272,7 @@ namespace MCGalaxy {
              foreach (Player pl in players) {
                  if (p == pl || p.level != pl.level || !CanSeeEntity(p, pl)) continue;
                  byte pitch = p.hasChangeModel ? MakePitch(pl) : MakeClassicPitch(pl);                
-                 Entities.GetPositionPacket(ref ptr, pl.id, pl.pos, pl.oldpos, pl.rot, pl.oldrot, pitch);
+                 Entities.GetPositionPacket(ref ptr, pl.id, pl.tempPos, pl.oldpos, pl.rot, pl.oldrot, pitch);
              }
              
              int count = (int)(ptr - src);

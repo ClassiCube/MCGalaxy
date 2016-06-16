@@ -263,12 +263,12 @@ namespace MCGalaxy {
         public bool Loading = true; //True if player is loading a map.
         internal bool usingGoto = false;
         public Vec3U16 lastClick = Vec3U16.Zero;
-        public ushort[] beforeTeleportPos = new ushort[] { 0, 0, 0 };
+        public ushort[] beforeTeleportPos = new ushort[3];
         public string beforeTeleportMap = "";
-        public ushort[] pos = new ushort[] { 0, 0, 0 };
-        internal ushort[] oldpos = new ushort[] { 0, 0, 0 };
-        public byte[] rot = new byte[] { 0, 0 };
-        internal byte[] oldrot = new byte[] { 0, 0 };
+        public ushort[] pos = new ushort[3];        
+        public byte[] rot = new byte[2];
+        internal ushort[] oldpos = new ushort[3], tempPos = new ushort[3];
+        internal byte[] oldrot = new byte[2];
 
         //ushort[] clippos = new ushort[3] { 0, 0, 0 };
         //byte[] cliprot = new byte[2] { 0, 0 };
