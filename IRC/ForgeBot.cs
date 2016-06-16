@@ -214,8 +214,8 @@ namespace MCGalaxy {
             if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
         }
         
-        void Player_PlayerChat(Player p, string message) {    
-            if (String.IsNullOrEmpty(message.Trim())) return;
+        void Player_PlayerChat(Player p, string message) {    	
+            if (String.IsNullOrEmpty(message.Trim(trimChars))) return;
             if (!IsConnected()) return;
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
