@@ -66,11 +66,19 @@ namespace MCGalaxy {
         }
         
         void LoadPlayerLists() {
+            agreed = new PlayerList("ranks/agreed.txt");
+            try {
+                CheckOldAgreed();
+                agreed = PlayerList.Load("agreed.txt");
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
+            
             bannedIP = PlayerList.Load("banned-ip.txt");
             ircControllers = PlayerList.Load("IRC_Controllers.txt");
             muted = PlayerList.Load("muted.txt");
             frozen = PlayerList.Load("frozen.txt");
-            hidden = PlayerList.Load("hidden.txt");
+            hidden = PlayerList.Load("hidden.txt");            
             jailed = PlayerExtList.Load("ranks/jailed.txt");
             models = PlayerExtList.Load("extra/models.txt");
             skins = PlayerExtList.Load("extra/skins.txt");
@@ -79,6 +87,19 @@ namespace MCGalaxy {
                 grp.playerList = PlayerList.Load(grp.fileName);
             if (useWhitelist)
                 whiteList = PlayerList.Load("whitelist.txt");
+        }
+        
+        void CheckOldAgreed() {
+            // agreed.txt format used to be names separated by spaces, we need to fix that up.
+            if (!File.Exists("ranks/agreed.txt")) return;
+            
+            string data = null;
+            using (FileStream fs = File.OpenRead("ranks/agreed.txt")) {
+                if (fs.ReadByte() != ' ') return;
+                data = new StreamReader(fs).ReadToEnd();
+                data = data.Replace(" ", Environment.NewLine);
+            }
+            File.WriteAllText("ranks/agreed.txt", data);
         }
         
         void LoadAutoloadCommands() {

@@ -552,14 +552,9 @@ namespace MCGalaxy {
             
             CheckLoginJailed();
             CheckReviewList();
-            if (Server.agreetorulesonentry) {
-                if (!File.Exists("ranks/agreed.txt"))
-                    File.WriteAllText("ranks/agreed.txt", "");
-                var agreedFile = File.ReadAllText("ranks/agreed.txt");
-                if (group.Permission == LevelPermission.Guest && !agreedFile.Contains(this.name.ToLower())) {
-                    SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
-                    agreed = false;
-                }
+            if (Server.agreetorulesonentry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
+                SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
+                agreed = false;
             }
 
             if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank) {

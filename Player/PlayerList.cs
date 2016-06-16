@@ -27,6 +27,9 @@ namespace MCGalaxy {
         List<string> players = new List<string>();
         readonly object locker = new object();
         
+        public PlayerList() { }
+        public PlayerList(string file) { this.file = file; }
+        
         public void Add(string p) {
             lock (locker)
                 players.Add(p.ToLower());
@@ -76,10 +79,8 @@ namespace MCGalaxy {
         public static PlayerList Load(string path) {
             if (!Directory.Exists("ranks"))
                 Directory.CreateDirectory("ranks");
-            PlayerList list = new PlayerList();
-            list.file = path;
+            PlayerList list = new PlayerList(path);
             path = "ranks/" + path;
-            
             if (!File.Exists(path)) {
                 File.Create(path).Close();
                 Server.s.Log("CREATED NEW: " + list.file);

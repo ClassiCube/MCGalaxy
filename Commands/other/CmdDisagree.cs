@@ -17,10 +17,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdDisagree : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdDisagree : Command {
         public override string name { get { return "disagree"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -28,24 +26,19 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdDisagree() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
         	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (!Server.agreetorulesonentry)
-            {
+            if (!Server.agreetorulesonentry) {
                 Player.Message(p, "This command can only be used if agree-to-rules-on-entry is enabled in the console!");
                 return;
             }
-            if (p.group.Permission > LevelPermission.Guest)
-            {
-                Player.Message(p, "Your awesomeness prevents you from using this command");
-                return;
+            if (p.group.Permission > LevelPermission.Guest) {
+                Player.Message(p, "Your awesomeness prevents you from using this command"); return;
             }
             p.Leave("If you don't agree with the rules, consider playing elsewhere.");
         }
 
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.Message(p, "/disagree - Disagree to the rules when entering the server");
         }
     }
