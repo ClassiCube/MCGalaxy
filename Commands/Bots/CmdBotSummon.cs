@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/botsummon <name> - Summons a bot to your position.");
+            Player.Message(p, "%T/botsummon <name> %H- Summons a bot to your position.");
         }
     }
 }
