@@ -65,8 +65,9 @@ namespace MCGalaxy.Commands {
 		}
 		
 		public override void Help(Player p) {
-			Player.Message(p, "/nick <player> [nick] - Sets the nick of <player>");
-			Player.Message(p, "If no [nick] is given, reverts player's nick to their original name.");
+			Player.Message(p, "%T/nick <player> [nick]");
+            Player.Message(p, "%HSets the nick of <player>");
+			Player.Message(p, "%HIf no [nick] is given, reverts player's nick to their original name.");
 		}
 	}
 }

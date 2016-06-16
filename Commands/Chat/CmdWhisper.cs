@@ -26,16 +26,12 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdWhisper() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message == "")
-            {
+        public override void Use(Player p, string message) {
+            if (message == "") {
                 p.whisper = !p.whisper; p.whisperTo = "";
                 if (p.whisper) Player.Message(p, "All messages sent will now auto-whisper");
                 else Player.Message(p, "Whisper chat turned off");
-            }
-            else
-            {
+            } else {
                 Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) { p.whisperTo = ""; p.whisper = false; return; }
 
@@ -45,9 +41,9 @@ namespace MCGalaxy.Commands
             }
         }
 
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/whisper <name> - Makes all messages act like whispers");
+        public override void Help(Player p) {
+            Player.Message(p, "%T/whisper <name>");
+            Player.Message(p, "%HMakes all messages act like whispers");
         }
     }
 }

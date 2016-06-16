@@ -61,8 +61,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/tp [target] - Teleports yourself to that player.");
-            Player.Message(p, "Use /p2p to teleport a given player to a different player.");
+            Player.Message(p, "%T/tp [target]");
+            Player.Message(p, "%HTeleports yourself to that player.");
+            Player.Message(p, "%H  Use /p2p to teleport a given player to a different player.");
         }
     }
 }

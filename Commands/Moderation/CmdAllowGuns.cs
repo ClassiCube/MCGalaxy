@@ -51,8 +51,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/allowguns - Allow/disallow guns and missiles on the specified level. If no message is given, the current level is taken.");
-            Player.Message(p, "Note: If guns are allowed on a map, and /allowguns is used, all guns and missiles will be disabled.");
+            Player.Message(p, "/allowguns [level]");
+            Player.Message(p, "%HAllows/disallows guns and missiles on the specified level.");
+            Player.Message(p, "%HIf no [level] is given, uses your current level.");
         }
     }
 }

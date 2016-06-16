@@ -91,8 +91,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/highlight [player] [seconds] - Highlights blocks modified by [player] in the last [seconds]");
-            Player.Message(p, "/highlight [player] 0 - Will highlight 30 minutes");
+            Player.Message(p, "%T/highlight [player] [seconds]");
+            Player.Message(p, "%HHighlights blocks modified by [player] in the last [seconds]");
+            Player.Message(p, "%HIf no [seconds] is given, highlights for last 30 minutes");
             Player.Message(p, "&c/highlight cannot be disabled, you must use /reload to un-highlight");
         }
     }

@@ -85,9 +85,10 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.Message(p, "/move <player> <map> <x> <y> <z> - Move <player> to <map> or given coordinates");
-            Player.Message(p, "<map> must be blank if x, y or z is used and vice versa");
-            Player.Message(p, "If <map> is empty, the main level be assumed");
+            Player.Message(p, "%T/move <player> <map> <x> <y> <z>");
+            Player.Message(p, "%HMove <player> to <map> or given coordinates");
+            Player.Message(p, "%H<map> must be blank if x, y or z is used and vice versa");
+            Player.Message(p, "%HIf <map> is empty, the main level be assumed");
         }
     }
 }

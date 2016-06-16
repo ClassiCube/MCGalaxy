@@ -69,8 +69,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/title <player> [title] - Sets the title of <player>");
-            Player.Message(p, "If no [title] is given, removes player's title.");
+            Player.Message(p, "%T/title <player> [title]");
+            Player.Message(p, "%HSets the title of <player>");
+            Player.Message(p, "%HIf no [title] is given, removes player's title.");
         }
     }
 }

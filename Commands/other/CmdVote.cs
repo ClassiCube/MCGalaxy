@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            p.SendMessage("/vote [message] - Starts a vote for 15 seconds.");
+            Player.Message(p, "%T/vote [message]");
+            Player.Message(p, "%HStarts a vote for 15 seconds.");
         }
     }
 }

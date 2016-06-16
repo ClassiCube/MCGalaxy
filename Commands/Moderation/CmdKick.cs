@@ -51,7 +51,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/kick <player> [message] - Kicks a player.");
+            Player.Message(p, "%T/kick <player> [message]");
+            Player.Message(p, "%HKicks a player.");
         }
     }
 }

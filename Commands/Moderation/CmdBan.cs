@@ -96,8 +96,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/ban <player> [reason] - Bans a player without kicking them.");
-            Player.Message(p, "Add # before name to stealth ban.");
+            Player.Message(p, "%T/ban <player> [reason]");
+            Player.Message(p, "%HBans a player without kicking them.");
+            Player.Message(p, "%HAdd # before name to stealth ban.");
         }
     }
 }

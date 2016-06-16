@@ -15,8 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands {    
     public sealed class CmdGlobalCLS : Command {
         public override string name { get { return "globalcls"; } }
         public override string shortcut { get { return "gcls"; } }
@@ -33,7 +32,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/globalcls - Clears the chat for all users.");
+            Player.Message(p, "%T/globalcls");
+            Player.Message(p, "%HClears the chat for all users.");
         }
     }
 }

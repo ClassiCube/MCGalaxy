@@ -46,8 +46,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/rankmsg [Rank] [Message] - Sends a message to the specified rank.");
-            Player.Message(p, "Note: If no message is given, player's rank is taken.");
+            Player.Message(p, "%T/rankmsg [Rank] [Message]");
+            Player.Message(p, "%HSends a message to the specified rank.");
+            Player.Message(p, "%HNote: If no [rank] is given, player's rank is taken.");
         }
     }
 }

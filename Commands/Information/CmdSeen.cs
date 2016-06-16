@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/seen [player] - says when a player was first and last seen on the server");
+            Player.Message(p, "%T/seen [player]");
+            Player.Message(p, "%Hsays when a player was first and last seen on the server");
         }
     }
 }

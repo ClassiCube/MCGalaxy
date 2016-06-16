@@ -101,7 +101,8 @@ namespace MCGalaxy.Commands.Moderation {
             }*/
         }
         public override void Help(Player p) {
-            Player.Message(p, "/banip <ip/name> - Bans an ip. Also accepts a player name when you use @ before the name.");
+            Player.Message(p, "%T/banip <ip/name>");
+            Player.Message(p, "%HBans an ip. Also accepts a player name when you use @ before the name.");
         }
     }
 }

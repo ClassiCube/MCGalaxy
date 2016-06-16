@@ -83,9 +83,9 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/skin [name] [skin] - Sets the skin of that player.");
-            Player.Message(p, "/skin bot [name] [model] - Sets the model of that bot.");
-            Player.Message(p, "For example, the player \"Test\" by default has the skin \"Test\".");
+            Player.Message(p, "%T/skin [name] [skin] %H- Sets the skin of that player.");
+            Player.Message(p, "%T/skin bot [name] [model] %H- Sets the model of that bot.");
+            Player.Message(p, "%HFor example, the player \"Test\" by default has the skin \"Test\".");
         }
     }
 }

@@ -60,8 +60,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.Message(p, "/kill <name> [explode] <message>");
-            Player.Message(p, "Kills <name> with <message>. Causes explosion if [explode] is written");
+            Player.Message(p, "%T/kill <name> [explode] <message>");
+            Player.Message(p, "%HKills <name> with <message>. Causes explosion if [explode] is written");
         }
     }
 }

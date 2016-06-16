@@ -68,9 +68,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/tcolor <player> [color] - Sets the title color of [player]");
-            Player.Message(p, "If no [color] is specified, title color is removed.");
-            Player.Message(p, "To see a list of all colors, use /help colors.");
+            Player.Message(p, "%T/tcolor <player> [color]");
+            Player.Message(p, "%HSets the title color of [player]");
+            Player.Message(p, "%HIf no [color] is specified, title color is removed.");
+            Player.Message(p, "%HTo see a list of all colors, use /help colors.");
         }
     }
 }

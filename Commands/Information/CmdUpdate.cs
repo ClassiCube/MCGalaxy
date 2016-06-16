@@ -37,8 +37,10 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/update - Updates the server if it's out of date");
-            Player.Message(p, "/update force - Forces the server to update");
+            Player.Message(p, "%T/update");
+            Player.Message(p, "%HUpdates the server if it's out of date");
+            Player.Message(p, "%T/update force");
+            Player.Message(p, "%HForces the server to update");
         }
     }
 }

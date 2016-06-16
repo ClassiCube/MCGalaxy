@@ -246,8 +246,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p)  {
-            Player.Message(p, "/mapinfo <map> - Display details of <map>");
-            Player.Message(p, "/mapinfo env <map> - Display environment details of <map>");
+            Player.Message(p, "%T/mapinfo <map>");
+            Player.Message(p, "%HDisplay details of <map>");
+            Player.Message(p, "%T/mapinfo env <map>");
+            Player.Message(p, "%HDisplay environment details of <map>");
         }
     }
 }

@@ -37,7 +37,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/banedit <username> <reason> - Edits reason of ban for the user.");
+            Player.Message(p, "%T/banedit <username> <reason>");
+            Player.Message(p, "%HEdits reason of ban for the user.");
         }
     }
 }

@@ -15,31 +15,26 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdVoteResults : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdVoteResults : Command {
         public override string name { get { return "voteresults"; } }
         public override string shortcut { get { return "vr"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdVoteResults() { }
-        public override void Use(Player p, string message)
-        {
-            if (Server.YesVotes >= 1 || Server.NoVotes >= 1)
-            {
+        
+        public override void Use(Player p, string message) {
+            if (Server.YesVotes >= 1 || Server.NoVotes >= 1) {
                 Player.Message(p, Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
-                return;
-            }
-            else
-            {
+            } else {
                 Player.Message(p, "There hasn't been a vote yet!");
             }
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/voteresults - see the results of the last vote!");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/voteresults");
+            Player.Message(p, "%HSee the results of the last vote.");
         }
     }
 }

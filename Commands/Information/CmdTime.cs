@@ -44,8 +44,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/time - Shows the server time.");
-            Player.Message(p, "If zombie survival is running, shows time left until round end or start.");
+            Player.Message(p, "%T/time");
+            Player.Message(p, "%HShows the server time.");
+            Player.Message(p, "%HIf zombie survival is running, shows time left until round end or start.");
         }
     }
 }

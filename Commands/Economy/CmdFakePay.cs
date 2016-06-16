@@ -44,7 +44,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/fakepay <name> <amount> - Sends a fake give change message.");
+            Player.Message(p, "%T/fakepay <name> <amount>");
+            Player.Message(p, "%HSends a fake give change message.");
         }
     }
 }

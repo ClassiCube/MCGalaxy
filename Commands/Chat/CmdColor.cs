@@ -70,9 +70,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/color <player> [color] - Sets the nick color of <player>");
-            Player.Message(p, "If no [color] is given, reverts to player's rank color.");
-            Player.Message(p, "To see a list of all colors, use /help colors.");
+            Player.Message(p, "%T/color <player> [color]");
+            Player.Message(p, "%HSets the nick color of <player>");
+            Player.Message(p, "%HIf no [color] is given, reverts to player's rank color.");
+            Player.Message(p, "%HTo see a list of all colors, use /help colors.");
         }
     }
 }

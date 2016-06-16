@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/ragequit - Makes you ragequit");
+            Player.Message(p, "%T/ragequit");
+            Player.Message(p, "%HMakes you ragequit");
         }
     }
     
@@ -49,7 +50,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/quit <reason> - Leave the server.");
+            Player.Message(p, "%T/quit <reason>");
+            Player.Message(p, "%HLeave the server.");
         }
     }
     
@@ -67,7 +69,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/crashserver - Crash the server with a generic error");
+            Player.Message(p, "%T/crashserver");
+            Player.Message(p, "%HCrash the server with a generic error");
         }
     }
     
@@ -87,7 +90,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/hacks - Performs various server hacks. OPERATORS ONLY!!!");
+            Player.Message(p, "%T/hacks");
+            Player.Message(p, "%HPerforms various server hacks. OPERATORS ONLY!!!");
         }
     }
 }

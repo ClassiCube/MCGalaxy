@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%H  If name is \"all\", all chat is ignored.");
             Player.Message(p, "%H  If name is \"global\", MCGalaxy global chat is ignored.");
             Player.Message(p, "%H  If name is \"irc\", IRC chat is ignored.");
-            Player.Message(p, "%H  Otherwise, the online player matching the name is ignored.");
+            Player.Message(p, "%H  Otherwise, all chat from the player with [name] is ignored.");
         }
     }
 }

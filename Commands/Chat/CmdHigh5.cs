@@ -17,10 +17,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdHigh5 : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdHigh5 : Command {
         public override string name { get { return "high5"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -40,7 +38,8 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/high5 <player> - High five someone :D");
+            Player.Message(p, "%T/high5 <player>");
+            Player.Message(p, "%HHigh five someone :D");
         }
     }
 }

@@ -37,8 +37,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/hasirc - Denotes whether or not the server has IRC active.");
-            Player.Message(p, "If IRC is active, server and channel are also displayed.");
+            Player.Message(p, "%T/hasirc");
+            Player.Message(p, "%HOutputs whether the server has IRC enabled or not.");
+            Player.Message(p, "%HIf IRC is enabled, server and channel are also displayed.");
         }
     }
 }

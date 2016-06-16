@@ -15,10 +15,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdOpChat : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdOpChat : Command {
         public override string name { get { return "opchat"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -26,15 +24,15 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdOpChat() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             p.opchat = !p.opchat;
             if (p.opchat) Player.Message(p, "All messages will now be sent to OPs only");
             else Player.Message(p, "OP chat turned off");
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/opchat - Makes all messages sent go to OPs by default");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/opchat");
+            Player.Message(p, "%HMakes all messages sent go to OPs by default");
         }
     }
 }

@@ -38,7 +38,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-           Player.Message(p, "/whonick <nickname> - Displays player's real username");
+            Player.Message(p, "%T/whonick <nickname>");
+            Player.Message(p, "%HDisplays the player's real username");
         }
     }
 }

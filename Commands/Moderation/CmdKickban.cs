@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/kickban <player> [message] - Kicks and bans a player with an optional message.");
+            Player.Message(p, "%T/kickban <player> [message]");
+            Player.Message(p, "%HKicks and bans a player with an optional message.");
         }
     }
 }

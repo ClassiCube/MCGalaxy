@@ -15,10 +15,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdEmote : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdEmote : Command {
         public override string name { get { return "emote"; } }
         public override string shortcut { get { return "<3"; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -26,17 +24,15 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdEmote() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             p.parseSmiley = !p.parseSmiley;
             p.smileySaved = false;
-
-            if (p.parseSmiley) Player.Message(p, "Emote parsing is enabled.");
-            else Player.Message(p, "Emote parsing is disabled.");
+            Player.Message(p, "Emote parsing is {0}.", p.parseSmiley ? "enabled" : "disabled");
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/emote - Enables or disables emoticon parsing");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/emote");
+            Player.Message(p, "%HEnables or disables emoticon parsing");
         }
     }
 }

@@ -54,7 +54,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p)  {
-            Player.Message(p, "/unbanip <ip/player> - Un-bans an ip.  Also accepts a player name when you use @ before the name.");
+            Player.Message(p, "%T/unbanip <ip/player>");
+            Player.Message(p, "%HUn-bans an ip. Also accepts a player name when you use @ before the name.");
         }
     }
 }

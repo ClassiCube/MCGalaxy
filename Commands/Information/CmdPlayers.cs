@@ -154,7 +154,10 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/players [rank] - Shows name and general rank of all players");
+            Player.Message(p, "%T/players");
+            Player.Message(p, "%HLists name and rank of all online players");
+            Player.Message(p, "%T/players [rank]");
+            Player.Message(p, "%HLists all online players who have that rank");
         }
     }
 }

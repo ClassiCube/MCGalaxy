@@ -51,7 +51,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/loginmessage [Player] [Message] - Customize your login message.");
+            Player.Message(p, "%T/loginmessage [Player] [Message]");
+            Player.Message(p, "%HSets the login message shown for that player.");
         }
     }
 }

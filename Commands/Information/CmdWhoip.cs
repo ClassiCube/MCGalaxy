@@ -36,7 +36,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/whoip <ip address> - Displays players associated with a given IP address.");
+            Player.Message(p, "%T/whoip <ip address>");
+            Player.Message(p, "%HDisplays players associated with a given IP address.");
         }
     }
 }

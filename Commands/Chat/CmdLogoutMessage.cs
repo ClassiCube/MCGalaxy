@@ -51,7 +51,8 @@ namespace MCGalaxy.Commands {
         }
         
          public override void Help(Player p) {
-            Player.Message(p, "/logoutmessage [Player] [Message] - Customize your logout message.");
+            Player.Message(p, "%T/logoutmessage [Player] [Message]");
+            Player.Message(p, "%HSets the logout message shown for that player.");
         }
     }
 }

@@ -76,7 +76,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/botset <bot> <AI script> %H- Makes <bot> do <AI script>");
+            Player.Message(p, "%T/botset <bot> <AI script>");
+            Player.Message(p, "%HMakes <bot> do <AI script>");
             Player.Message(p, "%HSpecial AI scripts: Kill and Hunt");
         }
     }

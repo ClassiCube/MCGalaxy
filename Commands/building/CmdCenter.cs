@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/center - places a block at the center of your selection");
+            Player.Message(p, "%T/center");
+            Player.Message(p, "%HPlaces a block at the center of your selection");
         }
     }
 }

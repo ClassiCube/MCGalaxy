@@ -78,9 +78,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/reveal <name> - Reloads the map for <name>.");
-            Player.Message(p, "/reveal all - Reloads for all players in your map");
-            Player.Message(p, "/reveal all <map> - Reloads for all players in <map>");
+            Player.Message(p, "%T/reveal <name> %H- Reloads the map for <name>.");
+            Player.Message(p, "%T/reveal all %H- Reloads for all players in your map");
+            Player.Message(p, "%T/reveal all <map> %H- Reloads for all players in <map>");
         }
     }
     

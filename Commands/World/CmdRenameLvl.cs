@@ -49,8 +49,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/renamelvl <level> <new name> - Renames <level> to <new name>");
-            Player.Message(p, "Portals going to <level> will be lost");
+            Player.Message(p, "%T/renamelvl <level> <new name>");
+            Player.Message(p, "%H- Renames <level> to <new name>");
+            Player.Message(p, "%HNote: Portals going to <level> will no longer work.");
         }
     }
 }

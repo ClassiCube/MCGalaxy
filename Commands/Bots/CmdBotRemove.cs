@@ -44,7 +44,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/botremove <name> %H- Remove a bot on the same level as you");
+            Player.Message(p, "%T/botremove <name>");
+            Player.Message(p, "%HRemove a bot on the same level as you");
             Player.Message(p, "%HIf 'all' is used, all bots on the current level are removed");
         }
     }

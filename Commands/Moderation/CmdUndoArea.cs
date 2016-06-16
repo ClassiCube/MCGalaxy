@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "/undoarea [player] [seconds] - Undoes the blockchanges made by [player] in the previous [seconds].");
             if (p == null || (p.group.maxUndo <= 500000 || p.group.maxUndo == 0))
-                Player.Message(p, "/undoarea [player] all - &cWill undo 68 years, 18 days, 15 hours, 28 minutes, 31 seconds for [player]");
+                Player.Message(p, "/undoarea [player] all - &cUndoes 68 years for [player]");
         }
     }
 }

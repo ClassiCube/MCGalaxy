@@ -62,7 +62,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/pclients - Lists the clients players are using, and who uses which client.");
+            Player.Message(p, "%T/pclients");
+            Player.Message(p, "%HLists the clients players are using, and who uses which client.");
         }
     }
 }
