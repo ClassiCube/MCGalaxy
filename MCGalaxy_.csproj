@@ -188,6 +188,7 @@
     <Compile Include="Commands\CommandList.cs" />
     <Compile Include="Commands\CommandOtherPerms.cs" />
     <Compile Include="Commands\CPE\CmdCustomColors.cs" />
+    <Compile Include="Commands\CPE\CmdEnvironment.cs" />
     <Compile Include="Commands\CPE\CmdModel.cs" />
     <Compile Include="Commands\CPE\CmdReachDistance.cs" />
     <Compile Include="Commands\CPE\CmdSkin.cs" />
@@ -370,7 +371,6 @@
     <Compile Include="Commands\World\CmdBlockDB.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
     <Compile Include="Commands\World\CmdDeleteLvl.cs" />
-    <Compile Include="Commands\World\CmdEnvironment.cs" />
     <Compile Include="Commands\World\CmdFixGrass.cs" />
     <Compile Include="Commands\World\CmdGoto.cs" />
     <Compile Include="Commands\World\CmdImport.cs" />

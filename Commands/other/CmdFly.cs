@@ -31,11 +31,9 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message)
         {
-            Command CmdFly = Command.all.Find("fly");
-            if (p.level.ctfmode)
-            {
+            if (p.level.ctfmode) {
                 Player.Message(p, "You can not fly while playing CTF, that is cheating!");
-                if (p.isFlying) CmdFly.Use(p, String.Empty);
+                p.isFlying = false;
                 return;
             }
             p.isFlying = !p.isFlying;

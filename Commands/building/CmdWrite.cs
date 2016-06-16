@@ -99,8 +99,9 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/write [message] - Writes [message] in blocks");
-            Player.Message(p, "Note that this command has been deprecated by /writetext.");
+            Player.Message(p, "%T/write [message]");
+            Player.Message(p, "%HWrites [message] in blocks");
+            Player.Message(p, "%HNote that this command has been deprecated by /writetext.");
         }
     }
 }

@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/abort %H- Cancels an action.");
+            Player.Message(p, "%T/abort");
+            Player.Message(p, "%HCancels an action.");
         }
     }
 }

@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/unban <player> [reason]"");
+            Player.Message(p, "%T/unban <player> [reason]");
             Player.Message(p, "%HUnbans a player. This includes temporary bans.");
         }
     }

@@ -65,7 +65,8 @@ namespace MCGalaxy.Commands.Building {
         struct CatchPos { public byte type, extType, newType, newExtType; public ushort x, y, z; }
 
         public override void Help(Player p) {
-            Player.Message(p, "/outline [type] [type2] - Outlines [type] with [type2]");
+            Player.Message(p, "%T/outline [type] [type2]");
+            Player.Message(p, "%HOutlines [type] with [type2]");
         }
     }
 }

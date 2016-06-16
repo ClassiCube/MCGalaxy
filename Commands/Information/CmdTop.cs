@@ -19,19 +19,20 @@ using System;
 using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands {    
     public sealed class CmdTop : Command {
         
         public override string name { get { return "top"; } }
-        public override string shortcut { get { return "top"; } }
+        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdTop() { }
-
-        public override void Use(Player p, string message)
-        {
+        public override CommandAlias[] Aliases {
+            get { return new [] { new CommandAlias("topten", null, "10"), new CommandAlias("topfive", null, "5") }; }
+        }
+        
+        public override void Use(Player p, string message) {
             string[] args;
             if (message == "" || (args = message.Split(' ')).Length < 2) {
                 Help(p); return;
@@ -119,58 +120,16 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%2/top [#] [number] - Prints a particular top list with number of entries");
-            SendRecognisedTypes(p);
-        }
-        
-        internal static void SendRecognisedTypes(Player p) {
-            Player.Message(p, "1) Most logins   2) Most deaths");
-            Player.Message(p, "3) Money   4) First Players");
-            Player.Message(p, "5) Recent Players   6) Blocks Modified");
-            Player.Message(p, "7) Most kicks");
+        	Player.Message(p, "%T/top [stat] [number of players to show]");
+        	Player.Message(p, "%HPrints a list of players who have the " +
+        	               "most/top of a particular stat. Available stats:");
+            
+        	Player.Message(p, "1) Most logins, 2) Most deaths, 3) Money");
+            Player.Message(p, "4) First joined, 5) Recently joined");
+            Player.Message(p, "6) Blocks Modified, 7) Most kicks");
             if (!Server.zombie.Running) return;
-            Player.Message(p, "8) Most infected   9) Most rounds survived");
-            Player.Message(p, "10) Max infected   11) Max rounds survived");
-        }
-    }
-    
-    public sealed class CmdTopFive : Command {
-        
-        public override string name { get { return "topfive"; } }
-        public override string shortcut { get { return "5"; } }
-        public override string type { get { return CommandTypes.Information; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdTopFive() { }
-
-        public override void Use(Player p, string message)  {
-            if (message == "") { Help(p); return; }
-            Command.all.Find("top").Use(p, message + " 5 ");
-        }
-        
-        public override void Help(Player p) {
-            Player.Message(p, "%2/topfive [#] - Prints a particular top five list");
-            CmdTop.SendRecognisedTypes(p);
-        }
-    }
-    
-    public sealed class CmdTopTen : Command {
-        
-        public override string name { get { return "topten"; } }
-        public override string shortcut { get { return "10"; } }
-        public override string type { get { return CommandTypes.Information; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdTopTen() { }
-
-        public override void Use(Player p, string message)  {
-            if (message == "") { Help(p); return; }
-            Command.all.Find("top").Use(p, message + " 10 ");
-        }
-        
-        public override void Help(Player p) {
-            Player.Message(p, "%2/topten [#] - Prints a particular top ten list");
-            CmdTop.SendRecognisedTypes(p);
+            Player.Message(p, "8) Most infected, 9) Most rounds survived");
+            Player.Message(p, "10) Max infected, 11) Max rounds survived");
         }
     }
 }
