@@ -215,10 +215,7 @@ namespace MCGalaxy {
         }
         
         void Player_PlayerChat(Player p, string message) {    
-            if (String.IsNullOrEmpty(message.Trim())) {
-                Player.Message(p, "You cannot send that message");
-                return;
-            }
+            if (String.IsNullOrEmpty(message.Trim())) return;
             if (!IsConnected()) return;
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;

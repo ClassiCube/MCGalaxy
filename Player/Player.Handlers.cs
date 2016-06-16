@@ -991,7 +991,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                     return;
                 }
 
-                text = Regex.Replace(text, @"\s\s+", " ");
+                text = Regex.Replace(text, "  +", " ");
                 if ( text.Any(ch => ch == '&') ) {
                     Leave("Illegal character in chat message!", true);
                     return;
