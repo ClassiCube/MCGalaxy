@@ -297,7 +297,7 @@ namespace MCGalaxy.Commands
                 // I need to add the ability to delete a single zone, I need help!
                 if (value == "ALL" || value == "") {
                     Command zone = Command.all.Find("zone");
-                    Command click = Command.all.Find("click");
+                    Command click = Command.all.Find("mark");
                     zone.Use(p, "del all");
                     click.Use(p, "0 0 0");
                 }

@@ -27,6 +27,9 @@ namespace MCGalaxy.Commands.CPE {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override CommandPerm[] AdditionalPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the skin of other players") }; }
+        }
         static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
@@ -58,6 +61,8 @@ namespace MCGalaxy.Commands.CPE {
             if (!Player.ValidName(skin)) {
                 Player.Message(p, "\"" + skin + "\" is not a valid skin name."); return;
             }
+            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the skin of other players."); return; }
+            
             if (isBot) {
                 pBot.skinName = skin;
                 pBot.GlobalDespawn();

@@ -67,6 +67,7 @@ namespace MCGalaxy.Commands.CPE {
                 model = message;
             }
             model = model.ToLower();
+            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the model of other players."); return; }
 
             if (isBot) {
                 pBot.model = model;

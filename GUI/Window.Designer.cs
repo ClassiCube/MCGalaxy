@@ -40,18 +40,6 @@ namespace MCGalaxy.Gui
             base.Dispose(disposing);
         }
 
-        protected override void WndProc(ref Message msg)
-        {
-            /*const int WM_SIZE = 0x0005;
-            const int SIZE_MINIMIZED = 1;
-            if ((msg.Msg == WM_SIZE) && ((int)msg.WParam == SIZE_MINIMIZED) && (Window.Minimize != null))
-            {
-                this.Window_Minimize(this, EventArgs.Empty);
-            }*/
-
-            base.WndProc(ref msg);
-        }
-
         #region Windows Form Designer generated code
 
         /// <summary>
