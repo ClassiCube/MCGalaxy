@@ -72,11 +72,6 @@ namespace MCGalaxy.Gui {
             string verifyadminsperm = String.Empty;
             string grieferstonerank = String.Empty;
             string afkkickrank = String.Empty;
-            string viewqueuerank = String.Empty;
-            string enterqueuerank = String.Empty;
-            string leavequeuerank = String.Empty;
-            string clearqueuerank = String.Empty;
-            string gotonextrank = String.Empty;
             string osmaprank = String.Empty;
 
             foreach ( Group grp in Group.GroupList ) {
@@ -88,11 +83,6 @@ namespace MCGalaxy.Gui {
                 lsCmbControlRank.Items.Add(grp.name);
                 cmbAFKKickPerm.Items.Add(grp.name);
                 cmbOsMap.Items.Add(grp.name);
-                cmbViewQueue.Items.Add(grp.name);
-                cmbEnterQueue.Items.Add(grp.name);
-                cmbLeaveQueue.Items.Add(grp.name);
-                cmbClearQueue.Items.Add(grp.name);
-                cmbGotoNext.Items.Add(grp.name);
 
                 if ( grp.Permission == Server.opchatperm )
                     opchatperm = grp.name;
@@ -102,16 +92,6 @@ namespace MCGalaxy.Gui {
                     verifyadminsperm = grp.name;
                 if ( grp.Permission == Server.afkkickperm )
                     afkkickrank = grp.name;
-                if ( grp.Permission == Server.reviewenter )
-                    enterqueuerank = grp.name;
-                if ( grp.Permission == Server.reviewleave )
-                    leavequeuerank = grp.name;
-                if ( grp.Permission == Server.reviewview )
-                    viewqueuerank = grp.name;
-                if ( grp.Permission == Server.reviewclear )
-                    clearqueuerank = grp.name;
-                if ( grp.Permission == Server.reviewnext )
-                    gotonextrank = grp.name;
                 if( grp.Permission == Server.osPerbuildDefault )
                     osmaprank = grp.name;
             }
@@ -129,11 +109,6 @@ namespace MCGalaxy.Gui {
             cmbAdminChat.SelectedIndex = ( adminchatperm != String.Empty ? cmbAdminChat.Items.IndexOf(adminchatperm) : 1 );
             cmbVerificationRank.SelectedIndex = ( verifyadminsperm != String.Empty ? cmbVerificationRank.Items.IndexOf(verifyadminsperm) : 1 );
             cmbAFKKickPerm.SelectedIndex = ( afkkickrank != String.Empty ? cmbAFKKickPerm.Items.IndexOf(afkkickrank) : 1 );
-            cmbEnterQueue.SelectedIndex = ( enterqueuerank != String.Empty ? cmbEnterQueue.Items.IndexOf(enterqueuerank) : 1 );
-            cmbLeaveQueue.SelectedIndex = ( leavequeuerank != String.Empty ? cmbLeaveQueue.Items.IndexOf(leavequeuerank) : 1 );
-            cmbViewQueue.SelectedIndex = ( viewqueuerank != String.Empty ? cmbViewQueue.Items.IndexOf(viewqueuerank) : 1 );
-            cmbClearQueue.SelectedIndex = ( clearqueuerank != String.Empty ? cmbClearQueue.Items.IndexOf(clearqueuerank) : 1 );
-            cmbGotoNext.SelectedIndex = ( gotonextrank != String.Empty ? cmbGotoNext.Items.IndexOf(gotonextrank) : 1 );
             cmbOsMap.SelectedIndex = ( osmaprank != String.Empty ? cmbOsMap.Items.IndexOf(osmaprank) : 1 );
 
             //Load server stuff
@@ -170,8 +145,6 @@ namespace MCGalaxy.Gui {
             }
             try { nudCooldownTime.Value = Server.reviewcooldown; }
             catch { }
-            try { reviewlist_update(); }
-            catch ( Exception ex ) { Server.ErrorLog(ex); }
 
             //Sigh. I wish there were SOME event to help me.
             foreach(var command in Command.all.commands) {
@@ -549,15 +522,6 @@ namespace MCGalaxy.Gui {
                     chkShowEmptyRanks.Checked = value.ToLower() == "true";
                     break;
 
-                case "view":
-                    Server.reviewview = Level.PermissionFromName(value.ToLower());
-                    break;
-                case "enter":
-                    Server.reviewenter = Level.PermissionFromName(value.ToLower());
-                    break;
-                case "leave":
-                    Server.reviewleave = Level.PermissionFromName(value.ToLower());
-                    break;
                 case "cooldown":
                     try {
                         Server.reviewcooldown = Convert.ToInt32(value.ToLower()) < 600 ? Convert.ToInt32(value.ToLower()) : 600;
@@ -566,12 +530,6 @@ namespace MCGalaxy.Gui {
                         Server.reviewcooldown = 600;
                         Server.s.Log("An error occurred reading the review cooldown value");
                     }
-                    break;
-                case "clear":
-                    Server.reviewclear = Level.PermissionFromName(value.ToLower());
-                    break;
-                case "next":
-                    Server.reviewnext = Level.PermissionFromName(value.ToLower());
                     break;
             }
         }
@@ -705,12 +663,6 @@ namespace MCGalaxy.Gui {
             Server.spamcountreset = (int)numCountReset.Value;
             Server.LogNotes = cbLogNotes.Checked;
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
-
-            Server.reviewview = Group.GroupList.Find(grp => grp.name == cmbViewQueue.SelectedItem.ToString()).Permission;
-            Server.reviewenter = Group.GroupList.Find(grp => grp.name == cmbEnterQueue.SelectedItem.ToString()).Permission;
-            Server.reviewleave = Group.GroupList.Find(grp => grp.name == cmbLeaveQueue.SelectedItem.ToString()).Permission;
-            Server.reviewclear = Group.GroupList.Find(grp => grp.name == cmbClearQueue.SelectedItem.ToString()).Permission;
-            Server.reviewnext = Group.GroupList.Find(grp => grp.name == cmbGotoNext.SelectedItem.ToString()).Permission;
             Server.reviewcooldown = (int)nudCooldownTime.Value;
         }
 
@@ -1342,33 +1294,6 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                     listCommandsExtraCmdPerms.Items.Add(cmd.name);
                 }
             }
-        }
-
-        private void tabControl_Click(object sender, EventArgs e) {
-            reviewlist_update();
-        }
-        public void reviewlist_update() {
-            int people = 1;
-            listBox1.Items.Clear();
-            listBox1.Items.Add("Players in queue:");
-            listBox1.Items.Add("----------");
-            foreach ( string playerinqueue in Server.reviewlist ) {
-
-                listBox1.Items.Add(people.ToString() + ". " + playerinqueue);
-                people++;
-            }
-            people--;
-            listBox1.Items.Add("----------");
-            listBox1.Items.Add(people + " player(s) in queue.");
-        }
-
-        private void button4_Click(object sender, EventArgs e) {
-            try {
-                Command.all.Find("review").Use(null, "clear");
-                MessageBox.Show("Review queue has been cleared!");
-                reviewlist_update();
-            }
-            catch ( Exception ex ) { Server.ErrorLog(ex); }
         }
 
         private void txtGrpMOTD_TextChanged(object sender, EventArgs e) {

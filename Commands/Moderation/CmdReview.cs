@@ -70,8 +70,9 @@ namespace MCGalaxy.Commands {
 
             bool opsOn = false;
             Player[] players = PlayerInfo.Online.Items;
+            LevelPermission nextPerm = (LevelPermission)CommandOtherPerms.GetPerm(this, 2);
             foreach (Player pl in players) {
-                if (pl.group.Permission >= Server.reviewnext && Entities.CanSee(p, pl)) {
+                if (pl.group.Permission >= nextPerm && Entities.CanSee(p, pl)) {
                     opsOn = true; break;
                 }
             }
@@ -87,8 +88,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, msg);
             
             string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
-            Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", Server.reviewnext);
-            Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", Server.reviewnext);
+            Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", nextPerm);
+            Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", nextPerm);
             p.NextReviewTime = DateTime.UtcNow.AddSeconds(Server.reviewcooldown);
             Player.RaisePlayerAction(p, PlayerAction.Review, null, true);
         }

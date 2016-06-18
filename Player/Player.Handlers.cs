@@ -563,11 +563,6 @@ namespace MCGalaxy {
                 else
                     SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
             }
-            if (group.Permission >= Server.reviewnext && group.Permission >= Server.reviewview) {
-                int count = Server.reviewlist.Count;
-                if (count == 1) SendMessage("There is &a1 %Splayer waiting for a review.");
-                else if (count > 1) SendMessage("There are &a" + count + " %Splayers waiting for a review.");
-            }                
             
             try {
                 Waypoints.Load(this);
@@ -594,7 +589,7 @@ namespace MCGalaxy {
         }
         
         void CheckReviewList() {
-        	if (group.Permission < Server.reviewview || !group.CanExecute("review")) return;
+            if (group.Permission < Server.reviewview || !group.CanExecute("review")) return;
             int count = Server.reviewlist.Count;
             if (count == 0) return;
             

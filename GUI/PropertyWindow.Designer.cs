@@ -375,21 +375,6 @@ namespace MCGalaxy.Gui
             this.gbReviewOptions = new System.Windows.Forms.GroupBox();
             this.nudCooldownTime = new System.Windows.Forms.NumericUpDown();
             this.label84 = new System.Windows.Forms.Label();
-            this.gbReviewActions = new System.Windows.Forms.GroupBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.gbReviewPerms = new System.Windows.Forms.GroupBox();
-            this.label83 = new System.Windows.Forms.Label();
-            this.label82 = new System.Windows.Forms.Label();
-            this.label81 = new System.Windows.Forms.Label();
-            this.label80 = new System.Windows.Forms.Label();
-            this.cmbGotoNext = new System.Windows.Forms.ComboBox();
-            this.cmbClearQueue = new System.Windows.Forms.ComboBox();
-            this.cmbLeaveQueue = new System.Windows.Forms.ComboBox();
-            this.cmbEnterQueue = new System.Windows.Forms.ComboBox();
-            this.cmbViewQueue = new System.Windows.Forms.ComboBox();
-            this.label79 = new System.Windows.Forms.Label();
-            this.gbReviewQueue = new System.Windows.Forms.GroupBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.chat_gbTab = new System.Windows.Forms.GroupBox();
             this.chat_cbTabBots = new System.Windows.Forms.CheckBox();
@@ -476,9 +461,6 @@ namespace MCGalaxy.Gui
             this.pageReview.SuspendLayout();
             this.gbReviewOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).BeginInit();
-            this.gbReviewActions.SuspendLayout();
-            this.gbReviewPerms.SuspendLayout();
-            this.gbReviewQueue.SuspendLayout();
             this.chat_gbTab.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -3064,7 +3046,6 @@ namespace MCGalaxy.Gui
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(506, 547);
             this.tabControl.TabIndex = 1;
-            this.tabControl.Click += new System.EventHandler(this.tabControl_Click);
             // 
             // pageGames
             // 
@@ -4125,9 +4106,6 @@ namespace MCGalaxy.Gui
             // 
             this.pageReview.BackColor = System.Drawing.Color.Transparent;
             this.pageReview.Controls.Add(this.gbReviewOptions);
-            this.pageReview.Controls.Add(this.gbReviewActions);
-            this.pageReview.Controls.Add(this.gbReviewPerms);
-            this.pageReview.Controls.Add(this.gbReviewQueue);
             this.pageReview.Location = new System.Drawing.Point(4, 22);
             this.pageReview.Name = "pageReview";
             this.pageReview.Padding = new System.Windows.Forms.Padding(3);
@@ -4171,148 +4149,6 @@ namespace MCGalaxy.Gui
             this.label84.Size = new System.Drawing.Size(77, 13);
             this.label84.TabIndex = 0;
             this.label84.Text = "Cooldown time";
-            // 
-            // gbReviewActions
-            // 
-            this.gbReviewActions.Controls.Add(this.button4);
-            this.gbReviewActions.Location = new System.Drawing.Point(154, 175);
-            this.gbReviewActions.Name = "gbReviewActions";
-            this.gbReviewActions.Size = new System.Drawing.Size(328, 53);
-            this.gbReviewActions.TabIndex = 3;
-            this.gbReviewActions.TabStop = false;
-            this.gbReviewActions.Text = "Actions";
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(7, 21);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(315, 23);
-            this.button4.TabIndex = 0;
-            this.button4.Text = "Clear queue";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // gbReviewPerms
-            // 
-            this.gbReviewPerms.Controls.Add(this.label83);
-            this.gbReviewPerms.Controls.Add(this.label82);
-            this.gbReviewPerms.Controls.Add(this.label81);
-            this.gbReviewPerms.Controls.Add(this.label80);
-            this.gbReviewPerms.Controls.Add(this.cmbGotoNext);
-            this.gbReviewPerms.Controls.Add(this.cmbClearQueue);
-            this.gbReviewPerms.Controls.Add(this.cmbLeaveQueue);
-            this.gbReviewPerms.Controls.Add(this.cmbEnterQueue);
-            this.gbReviewPerms.Controls.Add(this.cmbViewQueue);
-            this.gbReviewPerms.Controls.Add(this.label79);
-            this.gbReviewPerms.Location = new System.Drawing.Point(154, 7);
-            this.gbReviewPerms.Name = "gbReviewPerms";
-            this.gbReviewPerms.Size = new System.Drawing.Size(328, 161);
-            this.gbReviewPerms.TabIndex = 2;
-            this.gbReviewPerms.TabStop = false;
-            this.gbReviewPerms.Text = "Permissions";
-            // 
-            // label83
-            // 
-            this.label83.AutoSize = true;
-            this.label83.Location = new System.Drawing.Point(6, 131);
-            this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(53, 13);
-            this.label83.TabIndex = 9;
-            this.label83.Text = "Goto next";
-            // 
-            // label82
-            // 
-            this.label82.AutoSize = true;
-            this.label82.Location = new System.Drawing.Point(6, 103);
-            this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(64, 13);
-            this.label82.TabIndex = 8;
-            this.label82.Text = "Clear queue";
-            // 
-            // label81
-            // 
-            this.label81.AutoSize = true;
-            this.label81.Location = new System.Drawing.Point(6, 75);
-            this.label81.Name = "label81";
-            this.label81.Size = new System.Drawing.Size(67, 13);
-            this.label81.TabIndex = 7;
-            this.label81.Text = "Leave queue";
-            // 
-            // label80
-            // 
-            this.label80.AutoSize = true;
-            this.label80.Location = new System.Drawing.Point(6, 47);
-            this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(64, 13);
-            this.label80.TabIndex = 6;
-            this.label80.Text = "Enter queue";
-            // 
-            // cmbGotoNext
-            // 
-            this.cmbGotoNext.FormattingEnabled = true;
-            this.cmbGotoNext.Location = new System.Drawing.Point(178, 131);
-            this.cmbGotoNext.Name = "cmbGotoNext";
-            this.cmbGotoNext.Size = new System.Drawing.Size(144, 21);
-            this.cmbGotoNext.TabIndex = 5;
-            // 
-            // cmbClearQueue
-            // 
-            this.cmbClearQueue.FormattingEnabled = true;
-            this.cmbClearQueue.Location = new System.Drawing.Point(178, 103);
-            this.cmbClearQueue.Name = "cmbClearQueue";
-            this.cmbClearQueue.Size = new System.Drawing.Size(144, 21);
-            this.cmbClearQueue.TabIndex = 4;
-            // 
-            // cmbLeaveQueue
-            // 
-            this.cmbLeaveQueue.FormattingEnabled = true;
-            this.cmbLeaveQueue.Location = new System.Drawing.Point(178, 75);
-            this.cmbLeaveQueue.Name = "cmbLeaveQueue";
-            this.cmbLeaveQueue.Size = new System.Drawing.Size(144, 21);
-            this.cmbLeaveQueue.TabIndex = 3;
-            // 
-            // cmbEnterQueue
-            // 
-            this.cmbEnterQueue.FormattingEnabled = true;
-            this.cmbEnterQueue.Location = new System.Drawing.Point(178, 47);
-            this.cmbEnterQueue.Name = "cmbEnterQueue";
-            this.cmbEnterQueue.Size = new System.Drawing.Size(144, 21);
-            this.cmbEnterQueue.TabIndex = 2;
-            // 
-            // cmbViewQueue
-            // 
-            this.cmbViewQueue.FormattingEnabled = true;
-            this.cmbViewQueue.Location = new System.Drawing.Point(178, 19);
-            this.cmbViewQueue.Name = "cmbViewQueue";
-            this.cmbViewQueue.Size = new System.Drawing.Size(144, 21);
-            this.cmbViewQueue.TabIndex = 1;
-            // 
-            // label79
-            // 
-            this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(6, 22);
-            this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(62, 13);
-            this.label79.TabIndex = 0;
-            this.label79.Text = "View queue";
-            // 
-            // gbReviewQueue
-            // 
-            this.gbReviewQueue.Controls.Add(this.listBox1);
-            this.gbReviewQueue.Location = new System.Drawing.Point(6, 6);
-            this.gbReviewQueue.Name = "gbReviewQueue";
-            this.gbReviewQueue.Size = new System.Drawing.Size(141, 497);
-            this.gbReviewQueue.TabIndex = 1;
-            this.gbReviewQueue.TabStop = false;
-            this.gbReviewQueue.Text = "Review Queue";
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(6, 20);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(129, 459);
-            this.listBox1.TabIndex = 0;
             // 
             // chat_gbTab
             // 
@@ -4492,10 +4328,6 @@ namespace MCGalaxy.Gui
             this.gbReviewOptions.ResumeLayout(false);
             this.gbReviewOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).EndInit();
-            this.gbReviewActions.ResumeLayout(false);
-            this.gbReviewPerms.ResumeLayout(false);
-            this.gbReviewPerms.PerformLayout();
-            this.gbReviewQueue.ResumeLayout(false);
             this.chat_gbTab.ResumeLayout(false);
             this.chat_gbTab.PerformLayout();
             this.ResumeLayout(false);
@@ -4769,21 +4601,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ComboBox cmbAFKKickPerm;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;
         private System.Windows.Forms.TabPage pageReview;
-        private System.Windows.Forms.GroupBox gbReviewQueue;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.GroupBox gbReviewPerms;
-        private System.Windows.Forms.Label label79;
-        private System.Windows.Forms.GroupBox gbReviewActions;
-        private System.Windows.Forms.Label label83;
-        private System.Windows.Forms.Label label82;
-        private System.Windows.Forms.Label label81;
-        private System.Windows.Forms.Label label80;
-        private System.Windows.Forms.ComboBox cmbGotoNext;
-        private System.Windows.Forms.ComboBox cmbClearQueue;
-        private System.Windows.Forms.ComboBox cmbLeaveQueue;
-        private System.Windows.Forms.ComboBox cmbEnterQueue;
-        private System.Windows.Forms.ComboBox cmbViewQueue;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.GroupBox gbReviewOptions;
         private System.Windows.Forms.NumericUpDown nudCooldownTime;
         private System.Windows.Forms.Label label84;
