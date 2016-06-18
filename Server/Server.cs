@@ -376,19 +376,8 @@ namespace MCGalaxy
         [ConfigBool("show-empty-ranks", "Other", null, false)]  
         public static bool showEmptyRanks = false;
 
-        //reviewoptions intitialize
         [ConfigInt("review-cooldown", "Review", null, 600)]
         public static int reviewcooldown = 600;
-        [ConfigPerm("review-enter-perm", "Review", null, LevelPermission.Guest)]        
-        public static LevelPermission reviewenter = LevelPermission.Guest;
-        [ConfigPerm("review-leave-perm", "Review", null, LevelPermission.Guest)]        
-        public static LevelPermission reviewleave = LevelPermission.Guest;
-        [ConfigPerm("review-view-perm", "Review", null, LevelPermission.Operator)]        
-        public static LevelPermission reviewview = LevelPermission.Operator;
-        [ConfigPerm("review-next-perm", "Review", null, LevelPermission.Operator)]        
-        public static LevelPermission reviewnext = LevelPermission.Operator;
-        [ConfigPerm("review-clear-perm", "Review", null, LevelPermission.Operator)]
-        public static LevelPermission reviewclear = LevelPermission.Operator;
 
         [ConfigInt("draw-reload-limit", "Other", null, 10000)]
         public static int DrawReloadLimit = 10000;
@@ -647,6 +636,22 @@ namespace MCGalaxy
             ProfanityFilter.Init();
             Team.LoadList();
             Chat.LoadCustomTokens();
+            FixupOldReviewPerms();
+        }
+        
+        static void FixupOldReviewPerms() {
+            Command cmd = Command.all.Find("review");
+            var perms = SrvProperties.reviewPerms;
+            if (perms.clearPerm == -1 && perms.nextPerm == -1 && perms.viewPerm == -1) return;
+            
+            // Backwards compatibility with old config, where review permissions where global
+            if (perms.viewPerm != -1)
+                CommandOtherPerms.Edit(CommandOtherPerms.Find(cmd, 1), perms.viewPerm);
+            if (perms.nextPerm != -1)
+                CommandOtherPerms.Edit(CommandOtherPerms.Find(cmd, 2), perms.nextPerm);
+            if (perms.clearPerm != -1)
+                CommandOtherPerms.Edit(CommandOtherPerms.Find(cmd, 3), perms.clearPerm);
+            CommandOtherPerms.Save();
         }
 
         public static void Setup()

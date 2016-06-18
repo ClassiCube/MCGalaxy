@@ -196,6 +196,9 @@ namespace MCGalaxy.Gui {
             }
             if ( listCommands.SelectedIndex == -1 )
                 listCommands.SelectedIndex = 0;
+            // Sort the commands list
+            listCommands.Sorted = true;
+            listCommands.Sorted = false;
         }
         public void SaveCommands() {
             GrpCommands.Save(storedCommands);
@@ -1294,6 +1297,8 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                     listCommandsExtraCmdPerms.Items.Add(cmd.name);
                 }
             }
+            listCommandsExtraCmdPerms.Sorted = true;
+            listCommandsExtraCmdPerms.Sorted = false;
         }
 
         private void txtGrpMOTD_TextChanged(object sender, EventArgs e) {

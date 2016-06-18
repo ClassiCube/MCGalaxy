@@ -589,7 +589,10 @@ namespace MCGalaxy {
         }
         
         void CheckReviewList() {
-            if (group.Permission < Server.reviewview || !group.CanExecute("review")) return;
+            Command cmd = Command.all.Find("review");
+            int perm = CommandOtherPerms.GetPerm(cmd, 1);
+            
+            if ((int)group.Permission < perm || !group.commands.Contains(cmd)) return;
             int count = Server.reviewlist.Count;
             if (count == 0) return;
             

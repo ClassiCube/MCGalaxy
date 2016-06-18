@@ -17,39 +17,27 @@
  */
 using System.Collections.Generic;
 using System.IO;
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdFaq : Command {
-        
+
+namespace MCGalaxy.Commands {    
+    public sealed class CmdFaq : Command {        
         public override string name { get { return "faq"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Builder, "+ can send the faq to other players") }; }
-        }
 
         public override void Use(Player p, string message) {
             if (!File.Exists("text/faq.txt")) {
                 CP437Writer.WriteAllText("text/faq.txt", "Example: What does this server run on? This server runs on &bMCGalaxy");
             }
-            List<string> faq = CP437Reader.ReadAllLines("text/faq.txt");
-
-            Player who = p;
-            if (message != "") {
-                if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can send the FAQ to a player."); return; }
-                who = PlayerInfo.FindMatches(p, message);
-                if (who == null) return;
-            }
-            
-            Player.Message(who, "&cFAQ&f:");
+            List<string> faq = CP437Reader.ReadAllLines("text/faq.txt");          
+            Player.Message(p, "&cFAQ&f:");
             foreach (string line in faq)
-                Player.Message(who, "&f" + line);
+                Player.Message(p, "&f" + line);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/faq [player]- Displays frequently asked questions");
+            Player.Message(p, "/faq - Displays frequently asked questions");
         }
     }
 }

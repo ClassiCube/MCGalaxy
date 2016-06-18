@@ -371,8 +371,6 @@ namespace MCGalaxy.Gui
             this.listPasswords = new System.Windows.Forms.ListBox();
             this.label39 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
-            this.pageReview = new System.Windows.Forms.TabPage();
-            this.gbReviewOptions = new System.Windows.Forms.GroupBox();
             this.nudCooldownTime = new System.Windows.Forms.NumericUpDown();
             this.label84 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -458,8 +456,6 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.numSpamMute)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpamMessages)).BeginInit();
             this.gbPasswords.SuspendLayout();
-            this.pageReview.SuspendLayout();
-            this.gbReviewOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).BeginInit();
             this.chat_gbTab.SuspendLayout();
             this.SuspendLayout();
@@ -916,7 +912,7 @@ namespace MCGalaxy.Gui
             this.pageCommandsCustom.Padding = new System.Windows.Forms.Padding(3);
             this.pageCommandsCustom.Size = new System.Drawing.Size(468, 476);
             this.pageCommandsCustom.TabIndex = 1;
-            this.pageCommandsCustom.Text = "Custom Commands";
+            this.pageCommandsCustom.Text = "Custom commands";
             // 
             // lblLoadedCommands
             // 
@@ -925,7 +921,7 @@ namespace MCGalaxy.Gui
             this.lblLoadedCommands.Name = "lblLoadedCommands";
             this.lblLoadedCommands.Size = new System.Drawing.Size(97, 13);
             this.lblLoadedCommands.TabIndex = 40;
-            this.lblLoadedCommands.Text = "Loaded Commands";
+            this.lblLoadedCommands.Text = "Loaded commands";
             // 
             // lstCommands
             // 
@@ -947,7 +943,7 @@ namespace MCGalaxy.Gui
             this.groupBox24.Size = new System.Drawing.Size(459, 100);
             this.groupBox24.TabIndex = 38;
             this.groupBox24.TabStop = false;
-            this.groupBox24.Text = "Quick Command";
+            this.groupBox24.Text = "Quick command";
             // 
             // panel1
             // 
@@ -994,7 +990,7 @@ namespace MCGalaxy.Gui
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(149, 23);
             this.btnCreate.TabIndex = 29;
-            this.btnCreate.Text = "Create Command";
+            this.btnCreate.Text = "Create command";
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
@@ -1058,7 +1054,7 @@ namespace MCGalaxy.Gui
             this.pageCommandPerms.Name = "pageCommandPerms";
             this.pageCommandPerms.Size = new System.Drawing.Size(468, 476);
             this.pageCommandPerms.TabIndex = 2;
-            this.pageCommandPerms.Text = "Additional Command Permissions";
+            this.pageCommandPerms.Text = "Extra command permissions";
             // 
             // txtcmdranks2
             // 
@@ -1085,7 +1081,7 @@ namespace MCGalaxy.Gui
             this.label73.Name = "label73";
             this.label73.Size = new System.Drawing.Size(179, 13);
             this.label73.TabIndex = 44;
-            this.label73.Text = "Command Extra Permission Number:";
+            this.label73.Text = "Extra permission number:";
             // 
             // extracmdpermnumber
             // 
@@ -2195,28 +2191,56 @@ namespace MCGalaxy.Gui
             this.buttonEco.Text = "Economy Settings";
             this.buttonEco.UseVisualStyleBackColor = true;
             this.buttonEco.Click += new System.EventHandler(this.buttonEco_Click);
-            // 
-            // grpExtra
-            // 
-            this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpExtra.Controls.Add(this.lblOsMap);
-            this.grpExtra.Controls.Add(this.cmbOsMap);
-            this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
-            this.grpExtra.Controls.Add(this.chkShowEmptyRanks);
-            this.grpExtra.Controls.Add(this.chkRepeatMessages);
-            this.grpExtra.Controls.Add(this.chkDeath);
-            this.grpExtra.Controls.Add(this.txtRestartTime);
-            this.grpExtra.Controls.Add(this.txtMoneys);
-            this.grpExtra.Controls.Add(this.chkRestartTime);
-            this.grpExtra.Controls.Add(this.chk17Dollar);
-            this.grpExtra.Controls.Add(this.chkSmile);
-            this.grpExtra.Controls.Add(this.label34);
-            this.grpExtra.Location = new System.Drawing.Point(10, 158);
-            this.grpExtra.Name = "grpExtra";
-            this.grpExtra.Size = new System.Drawing.Size(332, 234);
-            this.grpExtra.TabIndex = 40;
-            this.grpExtra.TabStop = false;
-            this.grpExtra.Text = "Extra";
+        	// 
+        	// grpExtra
+        	// 
+        	this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+        	this.grpExtra.Controls.Add(this.nudCooldownTime);
+        	this.grpExtra.Controls.Add(this.label84);
+        	this.grpExtra.Controls.Add(this.lblOsMap);
+        	this.grpExtra.Controls.Add(this.cmbOsMap);
+        	this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
+        	this.grpExtra.Controls.Add(this.chkShowEmptyRanks);
+        	this.grpExtra.Controls.Add(this.chkRepeatMessages);
+        	this.grpExtra.Controls.Add(this.chkDeath);
+        	this.grpExtra.Controls.Add(this.txtRestartTime);
+        	this.grpExtra.Controls.Add(this.txtMoneys);
+        	this.grpExtra.Controls.Add(this.chkRestartTime);
+        	this.grpExtra.Controls.Add(this.chk17Dollar);
+        	this.grpExtra.Controls.Add(this.chkSmile);
+        	this.grpExtra.Controls.Add(this.label34);
+        	this.grpExtra.Location = new System.Drawing.Point(10, 158);
+        	this.grpExtra.Name = "grpExtra";
+        	this.grpExtra.Size = new System.Drawing.Size(332, 270);
+        	this.grpExtra.TabIndex = 40;
+        	this.grpExtra.TabStop = false;
+        	this.grpExtra.Text = "Extra";
+        	// 
+        	// nudCooldownTime
+        	// 
+        	this.nudCooldownTime.Location = new System.Drawing.Point(143, 234);
+        	this.nudCooldownTime.Maximum = new decimal(new int[] {
+        	        	        	86400,
+        	        	        	0,
+        	        	        	0,
+        	        	        	0});
+        	this.nudCooldownTime.Name = "nudCooldownTime";
+        	this.nudCooldownTime.Size = new System.Drawing.Size(57, 21);
+        	this.nudCooldownTime.TabIndex = 50;
+        	this.nudCooldownTime.Value = new decimal(new int[] {
+        	        	        	600,
+        	        	        	0,
+        	        	        	0,
+        	        	        	0});
+        	// 
+        	// label84
+        	// 
+        	this.label84.AutoSize = true;
+        	this.label84.Location = new System.Drawing.Point(23, 238);
+        	this.label84.Name = "label84";
+        	this.label84.Size = new System.Drawing.Size(115, 13);
+        	this.label84.TabIndex = 49;
+        	this.label84.Text = "Review cooldown time:";
             // 
             // lblOsMap
             // 
@@ -3039,7 +3063,6 @@ namespace MCGalaxy.Gui
             this.tabControl.Controls.Add(this.pageCommands);
             this.tabControl.Controls.Add(this.pageBlocks);
             this.tabControl.Controls.Add(this.pageSecurity);
-            this.tabControl.Controls.Add(this.pageReview);
             this.tabControl.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -4102,54 +4125,6 @@ namespace MCGalaxy.Gui
             this.label38.TabIndex = 1;
             this.label38.Text = "Rank:\r\n\r\n\r\n";
             // 
-            // pageReview
-            // 
-            this.pageReview.BackColor = System.Drawing.Color.Transparent;
-            this.pageReview.Controls.Add(this.gbReviewOptions);
-            this.pageReview.Location = new System.Drawing.Point(4, 22);
-            this.pageReview.Name = "pageReview";
-            this.pageReview.Padding = new System.Windows.Forms.Padding(3);
-            this.pageReview.Size = new System.Drawing.Size(498, 521);
-            this.pageReview.TabIndex = 9;
-            this.pageReview.Text = "Review";
-            // 
-            // gbReviewOptions
-            // 
-            this.gbReviewOptions.Controls.Add(this.nudCooldownTime);
-            this.gbReviewOptions.Controls.Add(this.label84);
-            this.gbReviewOptions.Location = new System.Drawing.Point(154, 235);
-            this.gbReviewOptions.Name = "gbReviewOptions";
-            this.gbReviewOptions.Size = new System.Drawing.Size(328, 51);
-            this.gbReviewOptions.TabIndex = 4;
-            this.gbReviewOptions.TabStop = false;
-            this.gbReviewOptions.Text = "Options";
-            // 
-            // nudCooldownTime
-            // 
-            this.nudCooldownTime.Location = new System.Drawing.Point(202, 19);
-            this.nudCooldownTime.Maximum = new decimal(new int[] {
-                                    86400,
-                                    0,
-                                    0,
-                                    0});
-            this.nudCooldownTime.Name = "nudCooldownTime";
-            this.nudCooldownTime.Size = new System.Drawing.Size(120, 21);
-            this.nudCooldownTime.TabIndex = 1;
-            this.nudCooldownTime.Value = new decimal(new int[] {
-                                    600,
-                                    0,
-                                    0,
-                                    0});
-            // 
-            // label84
-            // 
-            this.label84.AutoSize = true;
-            this.label84.Location = new System.Drawing.Point(7, 21);
-            this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(77, 13);
-            this.label84.TabIndex = 0;
-            this.label84.Text = "Cooldown time";
-            // 
             // chat_gbTab
             // 
             this.chat_gbTab.Controls.Add(this.chat_cbTabRank);
@@ -4324,9 +4299,6 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.numSpamMessages)).EndInit();
             this.gbPasswords.ResumeLayout(false);
             this.gbPasswords.PerformLayout();
-            this.pageReview.ResumeLayout(false);
-            this.gbReviewOptions.ResumeLayout(false);
-            this.gbReviewOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).EndInit();
             this.chat_gbTab.ResumeLayout(false);
             this.chat_gbTab.PerformLayout();
@@ -4600,8 +4572,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label76;
         private System.Windows.Forms.ComboBox cmbAFKKickPerm;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;
-        private System.Windows.Forms.TabPage pageReview;
-        private System.Windows.Forms.GroupBox gbReviewOptions;
         private System.Windows.Forms.NumericUpDown nudCooldownTime;
         private System.Windows.Forms.Label label84;
         private System.Windows.Forms.Label lblMOTD;

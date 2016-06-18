@@ -18,18 +18,13 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdNews : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdNews : Command {
         public override string name { get { return "news"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can send the news to everyone") }; }
-        }
         
         const string newsFile = "text/news.txt";
         public override void Use(Player p, string message) {
@@ -38,31 +33,12 @@ namespace MCGalaxy.Commands
             }
             
             List<string> lines = CP437Reader.ReadAllLines(newsFile);
-            if (message == "") {
-                foreach (string line in lines)
-                    Player.Message(p, line);
-                return;
-            }
-            
-            string[] args = message.Split(' ');
-            if (args[0] == "all") {
-            	if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can send the server news to all players."); return; }
-                foreach (string line in lines)
-                    Player.GlobalMessage(line);
-                return;
-            }
-            
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
             foreach (string line in lines)
-                Player.Message(who, line);
-            Player.Message(p, "The News were successfully sent to " + who.name + ".");
+                Player.Message(p, line);
         }
         
         public override void Help(Player p) {
             Player.Message(p, "/news - Shows server news.");
-            Player.Message(p, "/news <player> - Sends the News to <player>.");
-            Player.Message(p, "/news all - Sends the News to everyone.");
         }
     }
 }

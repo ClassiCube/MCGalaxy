@@ -37,7 +37,8 @@ namespace MCGalaxy {
 			}
 			Server.salt = sb.ToString();
 
-			if (PropertiesFile.Read(givenPath, LineProcessor))
+			reviewPerms = new ReviewPerms();
+			if (PropertiesFile.Read(givenPath, ref reviewPerms, LineProcessor))
 				Server.s.SettingsUpdate();
 			
 			if (!Directory.Exists(Server.backupLocation))
@@ -46,10 +47,27 @@ namespace MCGalaxy {
 			Save(givenPath);
 		}
 		
-		static void LineProcessor(string key, string value) {
-			if (!ConfigElement.Parse(Server.serverConfig, key, value, null))
-				Server.s.Log("\"" + key + "\" was not a recognised config key.");
-		}
+		static void LineProcessor(string key, string value, ref ReviewPerms perms) {
+            switch (key.ToLower()) {
+				// Backwards compatibility with old config, where review permissions where global
+                case "review-enter-perm":
+			    case "review-leave-perm":
+                    break;
+                case "review-view-perm":
+                    perms.viewPerm = int.Parse(value); break;
+                case "review-next-perm":
+                    perms.nextPerm = int.Parse(value); break;
+                case "review-clear-perm":
+                    perms.clearPerm = int.Parse(value); break;
+                    
+                default:
+                    if (!ConfigElement.Parse(Server.serverConfig, key, value, null))
+				        Server.s.Log("\"" + key + "\" was not a recognised level property key.");
+                    break;
+			}
+		}		
+		internal static ReviewPerms reviewPerms;
+		internal class ReviewPerms { public int viewPerm = -1, nextPerm = -1, clearPerm = -1; }
 		
 		public static void Save() { Save("properties/server.properties"); }
 
