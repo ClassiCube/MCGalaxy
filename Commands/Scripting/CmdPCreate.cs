@@ -17,23 +17,19 @@
 */
 using System.Collections.Generic;
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPCreate : Command
-    {
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdPCreate : Command {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool museumUsable { get { return true; } }
         public override string name { get { return "pcreate"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
-        public override void Use(Player p, string message)
-        {
-            if (p != null) { Player.Message(p, "Creating a plugin example source"); }
-            else { Server.s.Log("Creating a plugin example source"); }
-
-            string name;
-            if (p != null) name = p.name;
-            else name = Server.name;
+        public override string type { get { return CommandTypes.Moderation; } }
+        public CmdPCreate() { }
+        
+        public override void Use(Player p, string message) {
+            Player.Message(p, "Creating a plugin example source");
+            string name = p == null ? Server.name : p.name;
 
             if (!Directory.Exists("plugin_source")) Directory.CreateDirectory("plugin_source");
             List<string> lines = new List<string>();
@@ -61,20 +57,11 @@ namespace MCGalaxy.Commands
             lines.Add("        public override void Help(Player p) { //HELP INFO! }");
             lines.Add("    }}");
             lines.Add("}");
-            File.WriteAllLines("plugin_source/" + message + ".cs", ListToArray(lines));
+            File.WriteAllLines("plugin_source/" + message + ".cs", lines.ToArray());
         }
-        public override void Help(Player p)
-        {
-            if (p != null) Player.Message(p, "/pcreate <Plugin name> - Create a example .cs file!");
-            else Server.s.Log("/pcreate <Plugin name> - Create a example .cs file!");
-        }
-        public CmdPCreate() { }
-        public string[] ListToArray(List<string> list)
-        {
-            string[] temp = new string[list.Count];
-            for (int i = 0; i < list.Count; i++)
-                temp[i] = list[i];
-            return temp;
+        
+        public override void Help(Player p) {
+            Player.Message(p, "/pcreate <Plugin name> - Create a example .cs file!");
         }
     }
 }

@@ -385,7 +385,7 @@ namespace MCGalaxy.Commands.CPE {
                     if( !(value == "0" || value == "1")) {
                         SendEditHelp(p, 12, 0); return;
                     }
-                    def.Shape = value == "1" ? (byte)0 : def.MaxY; break;
+                    def.Shape = value == "1" ? (byte)0 : def.MaxZ; break;
                 case "draw":
                 case "blockdraw":
                     if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 11, 1, 0, 4)) return;
@@ -402,7 +402,7 @@ namespace MCGalaxy.Commands.CPE {
                     if (!ParseCoords(value, out tempX, out tempY, out tempZ)) {
                         SendEditHelp(p, 14, 0); return;
                     }
-                    def.MaxX = tempX; def.MaxY = tempY; def.MaxZ = tempZ; def.Shape = def.MaxY;
+                    def.MaxX = tempX; def.MaxY = tempY; def.MaxZ = tempZ; def.Shape = def.MaxZ;
                     break;
                 case "density":
                 case "fogdensity":
