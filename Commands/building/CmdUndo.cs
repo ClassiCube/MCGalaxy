@@ -156,7 +156,7 @@ namespace MCGalaxy.Commands.Building {
             if (p != null && !p.group.CanExecute("physics")) {
                 Player.Message(p, "You can only undo physics if you can use /physics."); return;
             }
-            Command.all.Find("physics").Use(p, "0");
+            CmdPhysics.SetPhysics(p.level, 0);
             UndoPhysicsDrawOp op = new UndoPhysicsDrawOp();
             op.seconds = seconds;
             DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );

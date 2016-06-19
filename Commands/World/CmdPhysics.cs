@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "Physics killed on all levels.");
         }
         
-        static void SetPhysics(Level lvl, int state) {
+        internal static void SetPhysics(Level lvl, int state) {
             lvl.setPhysics(state);
             if (state == 0) lvl.ClearPhysics();
             string stateDesc = states[state];

@@ -103,16 +103,12 @@ namespace MCGalaxy.Commands
             if (type == "FOG" || type == "CLOUD" || type == "SKY" || type == "SHADOW" || type == "SUN" || 
                 type == "LEVEL" || type == "CLOUDHEIGHT" || type == "HORIZON" || type == "BORDER" || type == "MAXFOG") {
                 string col = value == "" ? "normal" : value;
-                Command.all.Find("env").Use(p, "l " + type.ToLower() + " " + col);
+                Command.all.Find("env").Use(p, type.ToLower() + " " + col);
             } else if (type == "WEATHER") {
-                if (value.CaselessEq("SUN") || value.CaselessEq("NORMAL")) {
-                    Command.all.Find("env").Use(p, "weather 0");
-                } else if (value.CaselessEq("RAIN")) {
-                    Command.all.Find("env").Use(p, "weather 1");
-                } else if (value.CaselessEq("SNOW")) {
-                    Command.all.Find("env").Use(p, "weather 2");
-                } else {
+                if (value == "") {
                     Player.Message(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
+                } else {
+                    LevelEnv.SetWeather(p, p.level, value);
                 }
             } else {
                 Player.Message(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
