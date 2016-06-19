@@ -100,21 +100,7 @@ namespace MCGalaxy.Commands.World {
         
         static bool GoToLevel(Player p, Level lvl, string message) {
             if (p.level == lvl) { Player.Message(p, "You are already in \"" + lvl.name + "\"."); return false; }
-            if (Player.BlacklistCheck(p.name, message) || lvl.VisitBlacklist.CaselessContains(p.name)) {
-                Player.Message(p, "You are blacklisted from " + lvl.name + "."); return false;
-            }
-            
-            bool whitelisted = lvl.VisitWhitelist.CaselessContains(p.name);
-            if (!p.ignorePermission && !whitelisted && p.group.Permission < lvl.permissionvisit) {
-                Player.Message(p, "You're not allowed to go to " + lvl.name + "."); return false;
-            }
-            if (!p.ignorePermission && !whitelisted && p.group.Permission > lvl.pervisitmax 
-                && !p.group.CanExecute("pervisitmax")) {
-                Player.Message(p, "Your rank must be " + lvl.pervisitmax + " or lower to go there!"); return false;
-            }
-            if (File.Exists("text/lockdown/map/" + message.ToLower())) {
-                Player.Message(p, "The level " + message + " is locked."); return false;
-            }
+            if (!lvl.CanJoin(p)) return false;
             if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 
             p.Loading = true;

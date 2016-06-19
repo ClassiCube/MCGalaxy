@@ -60,10 +60,12 @@ namespace MCGalaxy.Commands
                     }
                     mapname = p.name.ToLower() + arg;
                 }
+                
                 Level[] loaded = LevelInfo.Loaded.Items;
-                if (!loaded.Any(l => l.name == mapname))
+                if (LevelInfo.FindExact(mapname) == null)
                     Command.all.Find("load").Use(p, mapname);
-                PlayerActions.ChangeMap(p, mapname);
+                if (LevelInfo.FindExact(mapname) != null)
+                    PlayerActions.ChangeMap(p, mapname);
             } else if (cmd == "LB" || cmd == "LEVELBLOCK") {
                 string[] lbArgs = message.Split(trimChars, 2);
                 string lbArg = lbArgs.Length > 1 ? lbArgs[1] : "";
