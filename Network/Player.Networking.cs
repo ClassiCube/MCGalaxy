@@ -149,9 +149,11 @@ namespace MCGalaxy {
         public void SendBlankMessage() {
             byte[] buffer = new byte[66];
             buffer[0] = Opcode.Message;
-            NetUtils.WriteAscii("", buffer, 2);
+            
+            for (int i = 2; i < buffer.Length; i++)
+                buffer[i] = (byte)' ';
             SendRaw(buffer);
-        }        
+        }
         
         public static void Message(Player p, string message) {
             SendMessage(p, message, true);
@@ -217,20 +219,15 @@ namespace MCGalaxy {
             }
             
             retryTag: try {
-                foreach ( string line in LineWrapper.Wordwrap(message) ) {
-                    string newLine = line;
-                    if ( newLine.TrimEnd(' ')[newLine.TrimEnd(' ').Length - 1] < '!' ) {
-                        if (!HasCpeExt(CpeExt.EmoteFix))
-                            newLine += '\'';
-                    }
+                foreach (string raw in LineWrapper.Wordwrap(message)) {
+                    string line = raw;
+                    if (!HasCpeExt(CpeExt.EmoteFix) && line.TrimEnd(' ')[line.TrimEnd(' ').Length - 1] < '!')
+                        line += '\'';
                     
                     byte[] buffer = new byte[66];
                     buffer[0] = Opcode.Message;
                     buffer[1] = (byte)id;
-                    if (HasCpeExt(CpeExt.FullCP437))
-                        NetUtils.WriteCP437(newLine, buffer, 2);
-                    else
-                        NetUtils.WriteAscii(newLine, buffer, 2);
+                    NetUtils.Write(line, buffer, 2, HasCpeExt(CpeExt.FullCP437));
                     SendRaw(buffer);
                 }
             } catch ( Exception e ) {
@@ -255,11 +252,7 @@ namespace MCGalaxy {
             byte[] buffer = new byte[66];
             buffer[0] = Opcode.Message;
             buffer[1] = (byte)id;
-            
-            if (HasCpeExt(CpeExt.FullCP437))
-                NetUtils.WriteCP437(message, buffer, 2);
-            else
-                NetUtils.WriteAscii(message, buffer, 2);
+            NetUtils.Write(message, buffer, 2, HasCpeExt(CpeExt.FullCP437));
             SendRaw(buffer);
         }
 
@@ -306,12 +299,13 @@ namespace MCGalaxy {
             byte[] buffer = new byte[131];
             buffer[0] = Opcode.Handshake;
             buffer[1] = (byte)8;
-            NetUtils.WriteAscii(Server.name, buffer, 2);
-
-            if ( !String.IsNullOrEmpty(group.MOTD) )
-                NetUtils.WriteAscii(group.MOTD, buffer, 66);
+            bool cp437 = HasCpeExt(CpeExt.FullCP437);
+            
+            NetUtils.Write(Server.name, buffer, 2, cp437);
+            if (!String.IsNullOrEmpty(group.MOTD))
+                NetUtils.Write(group.MOTD, buffer, 66, cp437);
             else
-                NetUtils.WriteAscii(Server.motd, buffer, 66);
+                NetUtils.Write(Server.motd, buffer, 66, cp437);
 
             bool canPlace = Block.canPlace(this, Block.blackrock);
             buffer[130] = canPlace ? (byte)100 : (byte)0;
@@ -323,17 +317,18 @@ namespace MCGalaxy {
             byte[] buffer = new byte[131];
             buffer[0] = Opcode.Handshake;
             buffer[1] = Server.version;
-
+            bool cp437 = HasCpeExt(CpeExt.FullCP437);
+            
             if (level.motd == "ignore") {
-                NetUtils.WriteAscii(Server.name, buffer, 2);
+                NetUtils.Write(Server.name, buffer, 2, cp437);
                 if (!String.IsNullOrEmpty(group.MOTD) )
-                    NetUtils.WriteAscii(group.MOTD, buffer, 66);
+                    NetUtils.Write(group.MOTD, buffer, 66, cp437);
                 else
-                    NetUtils.WriteAscii(Server.motd, buffer, 66);
+                    NetUtils.Write(Server.motd, buffer, 66, cp437);
             } else {
-                NetUtils.WriteAscii(level.motd, buffer, 2);
+                NetUtils.Write(level.motd, buffer, 2, cp437);
                 if (level.motd.Length > 64)
-                    NetUtils.WriteAscii(level.motd.Substring(64), buffer, 66);
+                    NetUtils.Write(level.motd.Substring(64), buffer, 66, cp437);
             }
 
             bool canPlace = Block.canPlace(this, Block.blackrock);
@@ -587,7 +582,7 @@ namespace MCGalaxy {
         void SendKick(string message, bool sync) {
             byte[] buffer = new byte[65];
             buffer[0] = Opcode.Kick;
-            NetUtils.WriteAscii(message, buffer, 1);
+            NetUtils.Write(message, buffer, 1, HasCpeExt(CpeExt.FullCP437));
             SendRaw(buffer, sync);
         }
         
@@ -688,9 +683,9 @@ namespace MCGalaxy {
             byte[] buffer = new byte[8];
             buffer[0] = Opcode.CpeEnvColors;
             buffer[1] = type;
-            NetUtils.WriteI16( r, buffer, 2 );
-            NetUtils.WriteI16( g, buffer, 4 );
-            NetUtils.WriteI16( b, buffer, 6 );
+            NetUtils.WriteI16(r, buffer, 2);
+            NetUtils.WriteI16(g, buffer, 4);
+            NetUtils.WriteI16(b, buffer, 6);
             SendRaw(buffer);
         }
         

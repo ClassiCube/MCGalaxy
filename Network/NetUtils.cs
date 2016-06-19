@@ -21,6 +21,11 @@ namespace MCGalaxy {
 	
     public static class NetUtils {
 
+		public static void Write(string str, byte[] array, int offset, bool hasCP437) {
+			if (hasCP437) WriteCP437(str, array, offset);
+			else WriteAscii(str, array, offset);
+        }
+		
         public static void WriteAscii(string str, byte[] array, int offset) {
             for (int i = 0; i < 64; i++)
                 array[offset + i] = (byte)' ';
@@ -28,7 +33,7 @@ namespace MCGalaxy {
             for (int i = 0; i < Math.Min(str.Length, 64); i++) {
             	char raw = str[i];
             	array[offset + i] = raw >= '\u0080' ? (byte)'?' : (byte)raw;
-            }          
+            }
         }
 
 		public static void WriteCP437(string str, byte[] array, int offset) {
