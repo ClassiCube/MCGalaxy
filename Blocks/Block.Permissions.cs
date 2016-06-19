@@ -331,7 +331,7 @@ namespace MCGalaxy
         
         public static void SaveBlocks(IEnumerable<Blocks> givenList) {
             try {
-                using (StreamWriter w = File.CreateText("properties/block.properties")) {
+                using (StreamWriter w = new StreamWriter("properties/block.properties")) {
                     w.WriteLine("#Version 2");
                     w.WriteLine("#   This file dictates what levels may use what blocks");
                     w.WriteLine("#   If someone has royally screwed up the ranks, just delete this file and let the server restart");

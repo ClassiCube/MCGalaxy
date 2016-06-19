@@ -30,7 +30,7 @@ namespace MCGalaxy {
         public CP437Writer(string file, bool append) : base(file, append) {
         }
         
-        const string newline = "\r\n";
+		char[] newline = { '\r', '\n' };
         public override void WriteLine() {
             base.Write(newline);
         }

@@ -73,99 +73,89 @@ namespace MCGalaxy {
 
 		public static void Save(string givenPath) {
 			try {
-				File.Create(givenPath).Dispose();
-				using ( StreamWriter w = File.CreateText(givenPath) ) {
-					if ( givenPath.IndexOf("server") != -1 ) {
-						SaveProps(w);
-					}
-				}
-			} catch(Exception ex) {
+				using (CP437Writer w = new CP437Writer(givenPath))
+					SaveProps(w);
+			} catch (Exception ex) {
 				Server.ErrorLog(ex);
 				Server.s.Log("SAVE FAILED! " + givenPath);
 			}
 		}
 		
-		public static void SaveProps(StreamWriter w) {
+		static void SaveProps(CP437Writer w) {
 			w.WriteLine("#   Edit the settings below to modify how your server operates. This is an explanation of what each setting does.");
-			w.WriteLine("#   server-name\t\t\t\t= The name which displays on classicube.net");
-			w.WriteLine("#   motd\t\t\t\t= The message which displays when a player connects");
-			w.WriteLine("#   port\t\t\t\t= The port to operate from");
-			w.WriteLine("#   console-only\t\t\t= Run without a GUI (useful for Linux servers with mono)");
-			w.WriteLine("#   verify-names\t\t\t= Verify the validity of names");
-			w.WriteLine("#   public\t\t\t\t= Set to true to appear in the public server list");
-			w.WriteLine("#   max-players\t\t\t\t= The maximum number of connections");
-			w.WriteLine("#   max-guests\t\t\t\t= The maximum number of guests allowed");
-			w.WriteLine("#   max-maps\t\t\t\t= The maximum number of maps loaded at once");
-			w.WriteLine("#   world-chat\t\t\t\t= Set to true to enable world chat");
-			w.WriteLine("#   guest-goto\t\t\t\t= Set to true to give guests goto and levels commands (Not implemented yet)");
-			w.WriteLine("#   irc\t\t\t\t\t= Set to true to enable the IRC bot");
-			w.WriteLine("#   irc-nick\t\t\t\t= The name of the IRC bot");
-			w.WriteLine("#   irc-server\t\t\t\t= The server to connect to");
-			w.WriteLine("#   irc-channel\t\t\t\t= The channel to join");
-			w.WriteLine("#   irc-opchannel\t\t\t= The channel to join (posts OpChat)");
-			w.WriteLine("#   irc-port\t\t\t\t= The port to use to connect");
-			w.WriteLine("#   irc-identify\t\t\t= (true/false)\tDo you want the IRC bot to Identify itself with nickserv. Note: You will need to register it's name with nickserv manually.");
-			w.WriteLine("#   irc-password\t\t\t= The password you want to use if you're identifying with nickserv");
-			w.WriteLine("#   anti-tunnels\t\t\t= Stops people digging below max-depth");
-			w.WriteLine("#   max-depth\t\t\t\t= The maximum allowed depth to dig down");
-			w.WriteLine("#   backup-time\t\t\t\t= The number of seconds between automatic backups");
-			w.WriteLine("#   overload\t\t\t\t= The higher this is, the longer the physics is allowed to lag.  Default 1500");
-			w.WriteLine("#   use-whitelist\t\t\t= Switch to allow use of a whitelist to override IP bans for certain players.  Default false.");
-			w.WriteLine("#   premium-only\t\t\t= Only allow premium players (paid for minecraft) to access the server. Default false.");
-			w.WriteLine("#   force-cuboid\t\t\t= Run cuboid until the limit is hit, instead of canceling the whole operation.  Default false.");
-			w.WriteLine("#   profanity-filter\t\t\t= Replace certain bad words in the chat.  Default false.");
-			w.WriteLine("#   notify-on-join-leave\t\t= Show a balloon popup in tray notification area when a player joins/leaves the server.  Default false.");
-			w.WriteLine("#   allow-tp-to-higher-ranks\t\t= Allows the teleportation to players of higher ranks");
-			w.WriteLine("#   agree-to-rules-on-entry\t\t= Forces all new players to the server to agree to the rules before they can build or use commands.");
-			w.WriteLine("#   adminchat-perm\t\t\t= The rank required to view adminchat. Default rank is superop.");
-			w.WriteLine("#   admins-join-silent\t\t\t= Players who have adminchat permission join the game silently. Default true");
-			w.WriteLine("#   server-owner\t\t\t= The minecraft name, of the owner of the server.");
-			w.WriteLine("#   zombie-on-server-start\t\t= Starts Zombie Survival when server is started.");
-			w.WriteLine("#   no-respawning-during-zombie\t\t= Disables respawning (Pressing R) while Zombie is on.");
-			w.WriteLine("#   no-pillaring-during-zombie\t\t= Disables pillaring while Zombie Survival is activated.");
-			w.WriteLine("#   zombie-name-while-infected\t\t= Sets the zombies name while actived if there is a value.");
-			w.WriteLine("#   enable-changing-levels\t\t= After a Zombie Survival round has finished, will change the level it is running on.");
-			w.WriteLine("#   zombie-survival-only-server\t\t= iEXPERIMENTAL! Makes the server only for Zombie Survival (etc. changes main level)");
-			w.WriteLine("#   use-level-list\t\t\t= Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
-			w.WriteLine("#   zombie-level-list\t\t\t= List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
-			w.WriteLine("#   total-undo\t\t\t\t= Track changes made by the last X people logged on for undo purposes. Folder is rotated when full, so when set to 200, will actually track around 400.");
-			w.WriteLine("#   guest-limit-notify\t\t\t= Show -Too Many Guests- message in chat when maxGuests has been reached. Default false");
-			w.WriteLine("#   guest-join-notify\t\t\t= Shows when guests and lower ranks join server in chat and IRC. Default true");
-			w.WriteLine("#   guest-leave-notify\t\t\t= Shows when guests and lower ranks leave server in chat and IRC. Default true");
+			w.WriteLine("#   server-name                   = The name which displays on classicube.net");
+			w.WriteLine("#   motd                          = The message which displays when a player connects");
+			w.WriteLine("#   port                          = The port to operate from");
+			w.WriteLine("#   console-only                  = Run without a GUI (useful for Linux servers with mono)");
+			w.WriteLine("#   verify-names                  = Verify the validity of names");
+			w.WriteLine("#   public                        = Set to true to appear in the public server list");
+			w.WriteLine("#   max-players                   = The maximum number of connections");
+			w.WriteLine("#   max-guests                    = The maximum number of guests allowed");
+			w.WriteLine("#   max-maps                      = The maximum number of maps loaded at once");
+			w.WriteLine("#   world-chat                    = Set to true to enable world chat");
+			w.WriteLine("#   irc                           = Set to true to enable the IRC bot");
+			w.WriteLine("#   irc-nick                      = The name of the IRC bot");
+			w.WriteLine("#   irc-server                    = The server to connect to");
+			w.WriteLine("#   irc-channel                   = The channel to join");
+			w.WriteLine("#   irc-opchannel                 = The channel to join (posts OpChat)");
+			w.WriteLine("#   irc-port                      = The port to use to connect");
+			w.WriteLine("#   irc-identify                  = (true/false)    Do you want the IRC bot to Identify itself with nickserv. Note: You will need to register it's name with nickserv manually.");
+			w.WriteLine("#   irc-password                  = The password you want to use if you're identifying with nickserv");
+			w.WriteLine("#   anti-tunnels                  = Stops people digging below max-depth");
+			w.WriteLine("#   max-depth                     = The maximum allowed depth to dig down");
+			w.WriteLine("#   backup-time                   = The number of seconds between automatic backups");
+			w.WriteLine("#   overload                      = The higher this is, the longer the physics is allowed to lag.  Default 1500");
+			w.WriteLine("#   use-whitelist                 = Switch to allow use of a whitelist to override IP bans for certain players.  Default false.");
+			w.WriteLine("#   premium-only                  = Only allow premium players (paid for minecraft) to access the server. Default false.");
+			w.WriteLine("#   force-cuboid                  = Run cuboid until the limit is hit, instead of canceling the whole operation.  Default false.");
+			w.WriteLine("#   profanity-filter              = Replace certain bad words in the chat.  Default false.");
+			w.WriteLine("#   notify-on-join-leave          = Show a balloon popup in tray notification area when a player joins/leaves the server.  Default false.");
+			w.WriteLine("#   allow-tp-to-higher-ranks      = Allows the teleportation to players of higher ranks");
+			w.WriteLine("#   agree-to-rules-on-entry       = Forces all new players to the server to agree to the rules before they can build or use commands.");
+			w.WriteLine("#   adminchat-perm                = The rank required to view adminchat. Default rank is superop.");
+			w.WriteLine("#   admins-join-silent            = Players who have adminchat permission join the game silently. Default true");
+			w.WriteLine("#   server-owner                  = The minecraft name, of the owner of the server.");
+			w.WriteLine("#   zombie-on-server-start        = Starts Zombie Survival when server is started.");
+			w.WriteLine("#   no-respawning-during-zombie   = Disables respawning (Pressing R) while Zombie is on.");
+			w.WriteLine("#   no-pillaring-during-zombie    = Disables pillaring while Zombie Survival is activated.");
+			w.WriteLine("#   zombie-name-while-infected    = Sets the zombies name while actived if there is a value.");
+			w.WriteLine("#   enable-changing-levels        = After a Zombie Survival round has finished, will change the level it is running on.");
+			w.WriteLine("#   zombie-survival-only-server   = EXPERIMENTAL! Makes the server only for Zombie Survival (etc. changes main level)");
+			w.WriteLine("#   use-level-list                = Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
+			w.WriteLine("#   zombie-level-list             = List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
+			w.WriteLine("#   total-undo                    = Track changes made by the last X people logged on for undo purposes. Folder is rotated when full, so when set to 200, will actually track around 400.");
+			w.WriteLine("#   guest-limit-notify            = Show -Too Many Guests- message in chat when maxGuests has been reached. Default false");
+			w.WriteLine("#   guest-join-notify             = Shows when guests and lower ranks join server in chat and IRC. Default true");
+			w.WriteLine("#   guest-leave-notify            = Shows when guests and lower ranks leave server in chat and IRC. Default true");
 			w.WriteLine();
-			w.WriteLine("#   UseMySQL\t\t\t\t= Use MySQL (true) or use SQLite (false)");
-			w.WriteLine("#   Host\t\t\t\t= The host name for the database (usually 127.0.0.1)");
-			w.WriteLine("#   SQLPort\t\t\t\t= Port number to be used for MySQL.  Unless you manually changed the port, leave this alone.  Default 3306.");
-			w.WriteLine("#   Username\t\t\t\t= The username you used to create the database (usually root)");
-			w.WriteLine("#   Password\t\t\t\t= The password set while making the database");
-			w.WriteLine("#   DatabaseName\t\t\t= The name of the database stored (Default = MCZall)");
+			w.WriteLine("#   UseMySQL                      = Use MySQL (true) or use SQLite (false)");
+			w.WriteLine("#   Host                          = The host name for the database (usually 127.0.0.1)");
+			w.WriteLine("#   SQLPort                       = Port number to be used for MySQL.  Unless you manually changed the port, leave this alone.  Default 3306.");
+			w.WriteLine("#   Username                      = The username you used to create the database (usually root)");
+			w.WriteLine("#   Password                      = The password set while making the database");
+			w.WriteLine("#   DatabaseName                  = The name of the database stored (Default = MCZall)");
 			w.WriteLine();
-			w.WriteLine("#   defaultColor\t\t\t= The color code of the default messages (Default = &e)");
+			w.WriteLine("#   defaultColor                  = The color code of the default messages (Default = &e)");
 			w.WriteLine();
-			w.WriteLine("#   Super-limit\t\t\t\t= The limit for building commands for SuperOPs");
-			w.WriteLine("#   Op-limit\t\t\t\t= The limit for building commands for Operators");
-			w.WriteLine("#   Adv-limit\t\t\t\t= The limit for building commands for AdvBuilders");
-			w.WriteLine("#   Builder-limit\t\t\t= The limit for building commands for Builders");
+			w.WriteLine("#   kick-on-hackrank              = Set to true if hackrank should kick players");
+			w.WriteLine("#   hackrank-kick-time            = Number of seconds until player is kicked");
+			w.WriteLine("#   custom-rank-welcome-messages  = Decides if different welcome messages for each rank is enabled. Default true.");
+			w.WriteLine("#   ignore-ops                    = Decides whether or not an operator can be ignored. Default false.");
 			w.WriteLine();
-			w.WriteLine("#   kick-on-hackrank\t\t\t= Set to true if hackrank should kick players");
-			w.WriteLine("#   hackrank-kick-time\t\t\t= Number of seconds until player is kicked");
-			w.WriteLine("#   custom-rank-welcome-messages\t= Decides if different welcome messages for each rank is enabled. Default true.");
-			w.WriteLine("#   ignore-ops\t\t\t\t= Decides whether or not an operator can be ignored. Default false.");
+			w.WriteLine("#   admin-verification            = Determines whether admins have to verify on entry to the server.  Default true.");
+			w.WriteLine("#   verify-admin-perm             = The minimum rank required for admin verification to occur.");
 			w.WriteLine();
-			w.WriteLine("#   admin-verification\t\t\t= Determines whether admins have to verify on entry to the server.  Default true.");
-			w.WriteLine("#   verify-admin-perm\t\t\t= The minimum rank required for admin verification to occur.");
-			w.WriteLine();
-			w.WriteLine("#   mute-on-spam\t\t\t= If enabled it mutes a player for spamming.  Default false.");
-			w.WriteLine("#   spam-messages\t\t\t= The amount of messages that have to be sent \"consecutively\" to be muted.");
-			w.WriteLine("#   spam-mute-time\t\t\t= The amount of seconds a player is muted for spam.");
-			w.WriteLine("#   spam-counter-reset-time\t\t= The amount of seconds the \"consecutive\" messages have to fall between to be considered spam.");
+			w.WriteLine("#   mute-on-spam                  = If enabled it mutes a player for spamming.  Default false.");
+			w.WriteLine("#   spam-messages                 = The amount of messages that have to be sent \"consecutively\" to be muted.");
+			w.WriteLine("#   spam-mute-time                = The amount of seconds a player is muted for spam.");
+			w.WriteLine("#   spam-counter-reset-time       = The amount of seconds the \"consecutive\" messages have to fall between to be considered spam.");
 			w.WriteLine();
 			w.WriteLine("#   As an example, if you wanted the spam to only mute if a user posts 5 messages in a row within 2 seconds, you would use the folowing:");
-			w.WriteLine("#   mute-on-spam\t\t\t= true");
-			w.WriteLine("#   spam-messages\t\t\t= 5");
-			w.WriteLine("#   spam-mute-time\t\t\t= 60");
-			w.WriteLine("#   spam-counter-reset-time\t\t= 2");
-			w.WriteLine("#   bufferblocks\t\t\t= Should buffer blocks by default for maps?");
+			w.WriteLine("#   mute-on-spam                  = true");
+			w.WriteLine("#   spam-messages                 = 5");
+			w.WriteLine("#   spam-mute-time                = 60");
+			w.WriteLine("#   spam-counter-reset-time       = 2");
+			w.WriteLine("#   bufferblocks                  = Should buffer blocks by default for maps?");
 			w.WriteLine();
 			
 			ConfigElement.Serialise(Server.serverConfig, " options", w, null);

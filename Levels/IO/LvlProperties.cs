@@ -24,7 +24,7 @@ namespace MCGalaxy.Levels.IO {
         
         public static void Save(Level level, string path) {
             try {
-                using (StreamWriter writer = File.CreateText(path + ".properties"))
+                using (CP437Writer writer = new CP437Writer(path + ".properties"))
                     WriteLevelProperties(level, writer);
             } catch (Exception ex) {
                 Server.s.Log("Failed to save level properties!");
@@ -33,7 +33,7 @@ namespace MCGalaxy.Levels.IO {
             }
             
             try {
-                using( StreamWriter writer = new StreamWriter(File.Create(path + ".env")))
+                using (CP437Writer writer = new CP437Writer(path + ".env"))
                     WriteEnvProperties(level, writer);
             } catch (Exception ex) {
                 Server.s.Log("Failed to save environment properties");
@@ -41,7 +41,7 @@ namespace MCGalaxy.Levels.IO {
             }
         }
         
-        static void WriteLevelProperties(Level level, StreamWriter w) {
+        static void WriteLevelProperties(Level level, CP437Writer w) {
             w.WriteLine("#Level properties for " + level.name);
             w.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
             w.WriteLine("Physics = " + level.physics);        

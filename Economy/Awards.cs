@@ -39,14 +39,14 @@ namespace MCGalaxy {
         
         public static void Load() {
             if (!File.Exists("text/awardsList.txt")) {
-                using (StreamWriter SW = File.CreateText("text/awardsList.txt")) {
-                    SW.WriteLine("#This is a full list of awards. The server will load these and they can be awarded as you please");
-                    SW.WriteLine("#Format is:");
-                    SW.WriteLine("# AwardName : Description of award goes after the colon");
-                    SW.WriteLine();
-                    SW.WriteLine("Gotta start somewhere : Built your first house");
-                    SW.WriteLine("Climbing the ladder : Earned a rank advancement");
-                    SW.WriteLine("Do you live here? : Joined the server a huge bunch of times");
+                using (StreamWriter w = new StreamWriter("text/awardsList.txt")) {
+                    w.WriteLine("#This is a full list of awards. The server will load these and they can be awarded as you please");
+                    w.WriteLine("#Format is:");
+                    w.WriteLine("# AwardName : Description of award goes after the colon");
+                    w.WriteLine();
+                    w.WriteLine("Gotta start somewhere : Built your first house");
+                    w.WriteLine("Climbing the ladder : Earned a rank advancement");
+                    w.WriteLine("Do you live here? : Joined the server a huge bunch of times");
                 }
             }
 
@@ -80,18 +80,18 @@ namespace MCGalaxy {
         }
 
         public static void Save() {
-            using (StreamWriter SW = File.CreateText("text/awardsList.txt"))  {
-                SW.WriteLine("# This is a full list of awards. The server will load these and they can be awarded as you please");
-                SW.WriteLine("# Format is:");
-                SW.WriteLine("# AwardName : Description of award goes after the colon");
-                SW.WriteLine();
+            using (StreamWriter w = new StreamWriter("text/awardsList.txt"))  {
+                w.WriteLine("# This is a full list of awards. The server will load these and they can be awarded as you please");
+                w.WriteLine("# Format is:");
+                w.WriteLine("# AwardName : Description of award goes after the colon");
+                w.WriteLine();
                 foreach (Award award in AwardsList)
-                    SW.WriteLine(award.Name + " : " + award.Description);
+                    w.WriteLine(award.Name + " : " + award.Description);
             }
             
-            using (StreamWriter SW = File.CreateText("text/playerAwards.txt")) {
+            using (StreamWriter w = new StreamWriter("text/playerAwards.txt")) {
                 foreach (PlayerAward pA in PlayerAwards)
-                    SW.WriteLine(pA.Name.ToLower() + " : " + string.Join(",", pA.Awards.ToArray()));
+                    w.WriteLine(pA.Name.ToLower() + " : " + string.Join(",", pA.Awards.ToArray()));
             }
         }
         #endregion

@@ -556,23 +556,17 @@ namespace MCGalaxy.Gui {
             } return true;
         }
 
-        public void Save(string givenPath) {
+        void SaveProperties() {
             try {
-                using ( CP437Writer w = new CP437Writer(givenPath) ) {
-                    if ( givenPath.IndexOf("server") != -1 ) {
-                        saveAll(); // saves everything to the server variables
-                        SrvProperties.SaveProps(w); // When we have this, why define it again?
-                    }
-                }
-            }
-            catch( Exception ex ) {
+                ApplyAll();
+                SrvProperties.Save();
+            } catch( Exception ex ) {
                 Server.ErrorLog(ex);
-                Server.s.Log("SAVE FAILED! " + givenPath);
+                Server.s.Log("SAVE FAILED! properties/server.properties");
             }
         }
 
-        private void saveAll() {
-
+        void ApplyAll() {
             Server.name = txtName.Text;
             Server.motd = txtMOTD.Text;
             Server.port = int.Parse(txtPort.Text);
@@ -719,7 +713,7 @@ namespace MCGalaxy.Gui {
                                 return;
                             }
 
-            Save("properties/server.properties");
+            SaveProperties();
             SaveRanks();
             SaveCommands();
             SaveOldExtraCustomCmdChanges();

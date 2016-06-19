@@ -59,7 +59,7 @@ namespace MCGalaxy {
         }
         
         public static void Serialise(ConfigElement[] elements, string suffix,
-                                     StreamWriter dst, object instance) {
+                                     CP437Writer dst, object instance) {
             Dictionary<string, List<ConfigElement>> sections 
                 = new Dictionary<string, List<ConfigElement>>();
             

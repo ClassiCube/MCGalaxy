@@ -29,7 +29,7 @@ namespace MCGalaxy {
         public static bool Read(string path, Action<string, string> processor, char separator = '=') {
             if (!File.Exists(path)) return false;
             
-            using (StreamReader reader = new StreamReader(path)) {
+            using (StreamReader reader = new CP437Reader(path)) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
                     if (line == "" || line[0] == '#') continue;
@@ -46,7 +46,7 @@ namespace MCGalaxy {
     	public static bool Read<T>(string path, ref T state, LineProcessor<T> processor, char separator = '=') {
             if (!File.Exists(path)) return false;
             
-            using (StreamReader reader = new StreamReader(path)) {
+            using (StreamReader reader = new CP437Reader(path)) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
                     if (line == "" || line[0] == '#') continue;

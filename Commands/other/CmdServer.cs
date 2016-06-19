@@ -264,10 +264,8 @@ namespace MCGalaxy.Commands
 
         private static void SaveDatabase(string filename)
         {
-            using (StreamWriter sql = new StreamWriter(File.Create(filename)))
-            {
+            using (StreamWriter sql = new StreamWriter(filename))
                 Database.CopyDatabase(sql);
-            }
         }
 
         private static List<Uri> GetAllFiles(DirectoryInfo currDir, Uri baseUri)
