@@ -124,18 +124,18 @@ namespace MCGalaxy.Commands.Building {
 				if (b == Block.custom_block)
 					extB = p.level.GetExtTile(xx, yy, zz);
 				
-				if (b != Block.air || state.PasteAir) {
+				if (b != Block.air || state.PasteAir)
 					state.UsedBlocks++;
-					if (state.UsedBlocks > p.group.maxBlocks) {
-						Player.Message(p, "You tried to copy " + state.UsedBlocks + " or more blocks.");
-						Player.Message(p, "You cannot copy more than " + p.group.maxBlocks + ".");
-						state = null;
-						return;
-					}
-				}
 				state.Blocks[index] = b;
 				state.ExtBlocks[index] = extB;
 				index++;
+			}
+			
+			if (state.UsedBlocks > p.group.maxBlocks) {
+				Player.Message(p, "You tried to copy {0} blocks. You cannot copy more than {1} blocks.", 
+				               state.UsedBlocks, p.group.maxBlocks);
+				state.Blocks = null; state.ExtBlocks = null; state = null;
+				return;
 			}
 			
 			p.CopyBuffer = state;
