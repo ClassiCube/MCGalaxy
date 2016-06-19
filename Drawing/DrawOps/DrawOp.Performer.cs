@@ -43,11 +43,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p, 
 		                            Vec3S32[] marks, bool checkLimit = true) {
-            op.Origin = marks[0]; op.Min = marks[0]; op.Max = marks[0];
-            for (int i = 1; i < marks.Length; i++) {
-                op.Min = Vec3S32.Min(op.Min, marks[i]);
-                op.Max = Vec3S32.Max(op.Max, marks[i]);
-            }
+			op.SetMarks(marks);
             op.Level = p == null ? null : p.level;
             if (op.Level != null && !op.Level.DrawingAllowed) {
                 Player.Message(p, "Drawing commands are turned off on this map.");

@@ -148,6 +148,7 @@ namespace MCGalaxy {
                             if (rand.Next(13) == 0 && !TreeDrawOp.TreeCheck(Lvl, x, y, z, treeDist)) {
                                 treeDrawer.Type = genParams.UseCactus ? TreeDrawOp.T_Cactus : TreeDrawOp.T_Tree;
                                 treeCoords[0].X = x; treeCoords[0].Y = (ushort)(y + 1); treeCoords[0].Z = z;
+                                treeDrawer.SetMarks(treeCoords);
                                 treeDrawer.Perform(treeCoords, null, Lvl, null);
                             }
                         }

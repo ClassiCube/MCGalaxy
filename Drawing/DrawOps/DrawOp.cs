@@ -84,6 +84,14 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
+        public virtual void SetMarks(Vec3S32[] marks) {
+            Origin = marks[0]; Min = marks[0]; Max = marks[0];
+            for (int i = 1; i < marks.Length; i++) {
+                Min = Vec3S32.Min(Min, marks[i]);
+                Max = Vec3S32.Max(Max, marks[i]);
+            }
+        }
+        
         public virtual void Reset() {
             //TotalAffected = 0;
             TotalModified = 0;

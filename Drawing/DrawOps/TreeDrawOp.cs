@@ -35,24 +35,49 @@ namespace MCGalaxy.Drawing.Ops {
         
         public Random random;
         public bool overwrite = false;
-        public int Type;        
+        public int Type;
         public const int T_Tree = 0, T_NotchTree = 1, T_NotchSwamp = 2, T_Cactus = 3;
         static Brush defBrush = new SolidBrush(Block.leaf, 0);
+        byte height, top, size;
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	if (brush == null) brush = defBrush;
-        	Vec3U16 P = Clamp(marks[0]);
+            if (brush == null) brush = defBrush;
+            Vec3U16 P = Clamp(marks[0]);
             if (Type == T_Tree) AddTree(p, lvl, P.X, P.Y, P.Z, brush);
             if (Type == T_NotchTree) AddNotchTree(p, lvl, P.X, P.Y, P.Z, brush);
             if (Type == T_NotchSwamp) AddNotchSwampTree(p, lvl, P.X, P.Y, P.Z, brush);
             if (Type == T_Cactus) AddCactus(p, lvl, P.X, P.Y, P.Z);
         }
         
+        public override void SetMarks(Vec3S32[] marks) {
+            base.SetMarks(marks);
+            switch (Type) {
+                case T_Tree:
+                    height = (byte)random.Next(5, 8);
+                    top = (byte)(height - random.Next(2, 4));
+                    size = top; break;
+                case T_NotchTree:
+                    height = (byte)random.Next(3, 7);
+                    top = (byte)(height - 2);
+                    size = 2; break;
+                case T_NotchSwamp:
+                    height = (byte)random.Next(4, 8);
+                    top = (byte)(height - 2);
+                    size = 3; break;
+                case T_Cactus:
+                    height = (byte)random.Next(3, 6);
+                    top = 0;
+                    size = 0; break;
+            }
+            
+            Max.Y += height;
+            Min.X -= size; Min.Z -= size; 
+            Max.X += size; Max.Z += size;
+        }
+        
         void AddTree(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
-            byte height = (byte)random.Next(5, 8);
-            short top = (short)(height - random.Next(2, 4));
             for (ushort dy = 0; dy < top + height - 1; dy++) {
                 ushort yy = (ushort)(y + dy);
                 if (overwrite || lvl.GetTile(x, yy, z) == Block.air || (yy == y && lvl.GetTile(x, yy, z) == Block.shrub))
@@ -68,14 +93,12 @@ namespace MCGalaxy.Drawing.Ops {
                     ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy + height), zz = (ushort)(z + dz);
 
                     if ((xx != x || zz != z || dy >= top - 1) && (overwrite || lvl.GetTile(xx, yy, zz) == Block.air))
-                    	PlaceBlock(p, lvl, xx, yy, zz, brush);
+                        PlaceBlock(p, lvl, xx, yy, zz, brush);
                 }
             }
         }
 
         void AddNotchTree(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
-            byte height = (byte)random.Next(3, 7);
-            byte top = (byte)(height - 2);
             for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
                 byte tile = lvl.GetTile(x, yy, z);
@@ -106,8 +129,6 @@ namespace MCGalaxy.Drawing.Ops {
         }
 
         void AddNotchSwampTree(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
-            byte height = (byte)random.Next(4, 8);
-            byte top = (byte)(height - 2);
             for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
                 byte tile = lvl.GetTile(x, yy, z);
@@ -131,14 +152,13 @@ namespace MCGalaxy.Drawing.Ops {
                         if (random.Next(2) == 0)
                             PlaceBlock(p, lvl, xx, yy, zz, brush);
                     } else {
-                    	PlaceBlock(p, lvl, xx, yy, zz, brush);
+                        PlaceBlock(p, lvl, xx, yy, zz, brush);
                     }
                 }
             }
         }
 
         void AddCactus(Player p, Level lvl, ushort x, ushort y, ushort z) {
-            byte height = (byte)random.Next(3, 6);
             for (ushort dy = 0; dy <= height; dy++) {
                 if (overwrite || lvl.GetTile(z, (ushort)(y + dy), z) == Block.air)
                     PlaceBlock(p, lvl, x, (ushort)(y + dy), z, Block.green, 0);
