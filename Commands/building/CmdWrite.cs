@@ -20,7 +20,7 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {    
-    public sealed class CmdWriteText : Command {        
+    public class CmdWriteText : Command {        
         public override string name { get { return "writetext"; } }
         public override string shortcut { get { return "wrt"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -86,16 +86,13 @@ namespace MCGalaxy.Commands.Building {
         }
     }
     
-    public sealed class CmdWrite : Command {
-        
+    public sealed class CmdWrite : CmdWriteText {       
         public override string name { get { return "write"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {
-            Command.all.Find("writetext").Use(p, "1 1 " + message);
+            if (message == "") { Help(p); return; }
+            base.Use(p, "1 1 " + message);
         }
 
         public override void Help(Player p) {

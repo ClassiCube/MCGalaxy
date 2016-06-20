@@ -888,7 +888,7 @@ namespace MCGalaxy.Gui
                 }
                 else
                 {
-                    Command.all.Find("Impersonate").Use(null, prpertiesofplyer.name + " " + ImpersonateORSendCmdTxt.Text);
+                    Command.all.Find("impersonate").Use(null, prpertiesofplyer.name + " " + ImpersonateORSendCmdTxt.Text);
                     PlayersTextBox.AppendTextAndScroll("Sent Message '" + ImpersonateORSendCmdTxt.Text + "' as player");
                 }
                 ImpersonateORSendCmdTxt.Text = "";

@@ -17,10 +17,8 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
-    
-    public class CmdNotes : Command {
-        
+namespace MCGalaxy.Commands {    
+    public class CmdNotes : Command {        
         public override string name { get { return "notes"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -74,8 +72,7 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public class CmdMyNotes : Command {
-        
+    public sealed class CmdMyNotes : CmdNotes {        
         public override string name { get { return "mynotes"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -83,8 +80,8 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); }
-            Command.all.Find("notes").Use(p, p.name);
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+            base.Use(p, p.name);
         }
 
         public override void Help(Player p) {

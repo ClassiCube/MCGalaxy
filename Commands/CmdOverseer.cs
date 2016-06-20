@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands
             } else if (cmd == "SPAWN") {
                 Command.all.Find("setspawn").Use(p, "");
             } else if (cmd == "PRESET") {
-                Command.all.Find("env").Use(p, "l preset " + arg);
+                Command.all.Find("env").Use(p, "preset " + arg);
             } else if (cmd == "ENV") {
                 HandleEnvCommand(p, arg, arg2);
             } else if (cmd == "MAP") {

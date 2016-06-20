@@ -34,16 +34,15 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "There is no block \"" + message + "\"."); return;
             }            
             int phys = p.level.physics;
-            Command.all.Find("physics").Use(p, "0");
+            CmdPhysics.SetPhysics(p.level, 0);
             
             Command cmd = Command.all.Find("replaceall");
             string args = message.CaselessEq("all") ?
                 "lavafall waterfall lava_fast active_lava active_water " +
-                "active_hot_lava active_cold_water fast_hot_lava magma geyser air" :
-                message + " air";
-            cmd.Use(p, args);
+                "active_hot_lava active_cold_water fast_hot_lava magma geyser" : message;
+            cmd.Use(p, args + " air");
 
-            Command.all.Find("physics").Use(p, phys.ToString());
+            CmdPhysics.SetPhysics(p.level, phys);
             Player.GlobalMessage("Unflooded!");
         }
         

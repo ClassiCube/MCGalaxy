@@ -192,6 +192,7 @@
     <Compile Include="Commands\CPE\CmdModel.cs" />
     <Compile Include="Commands\CPE\CmdReachDistance.cs" />
     <Compile Include="Commands\CPE\CmdSkin.cs" />
+    <Compile Include="Commands\CPE\CmdTexture.cs" />
     <Compile Include="Commands\CPE\CustomBlockCommand.cs" />
     <Compile Include="Commands\Economy\CmdAward.cs" />
     <Compile Include="Commands\Economy\CmdAwardMod.cs" />
@@ -388,7 +389,6 @@
     <Compile Include="Commands\World\CmdReveal.cs" />
     <Compile Include="Commands\World\CmdSave.cs" />
     <Compile Include="Commands\World\CmdSetspawn.cs" />
-    <Compile Include="Commands\World\CmdTexture.cs" />
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\PermissionCmd.cs" />
