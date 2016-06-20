@@ -24,11 +24,10 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return "imp"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        static char[] trimChars = { ' ' };
         
         public override void Use(Player p, string message) {
             if (!message.Contains(" ")) { Help(p); return; }
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null || message == "") {Help(p); return; }
             if (who.muted) { Player.Message(p, "Cannot impersonate a muted player"); return; }

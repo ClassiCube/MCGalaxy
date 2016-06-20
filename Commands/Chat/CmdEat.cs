@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        static char[] trimChars = {' '};
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }

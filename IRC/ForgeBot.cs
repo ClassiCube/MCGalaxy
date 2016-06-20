@@ -83,11 +83,11 @@ namespace MCGalaxy {
             banCmd = new List<string>() { "resetbot", "resetirc", "oprules", "irccontrollers", "ircctrl" };
             
             if (File.Exists("text/ircbancmd.txt")) { // Backwards compatibility
-                using (StreamWriter sw = File.CreateText("text/irccmdblacklist.txt")) {
-                    sw.WriteLine("#Here you can put commands that cannot be used from the IRC bot.");
-                    sw.WriteLine("#Lines starting with \"#\" are ignored.");
+                using (StreamWriter w = new StreamWriter("text/irccmdblacklist.txt")) {
+                    w.WriteLine("#Here you can put commands that cannot be used from the IRC bot.");
+                    w.WriteLine("#Lines starting with \"#\" are ignored.");
                     foreach (string line in File.ReadAllLines("text/ircbancmd.txt"))
-                        sw.WriteLine(line);
+                        w.WriteLine(line);
                 }
                 File.Delete("text/ircbancmd.txt");
             } else {
@@ -264,7 +264,7 @@ namespace MCGalaxy {
         void Listener_OnPrivate(UserInfo user, string message) {
             message = Colors.IrcToMinecraftColors(message);
             message = CP437Reader.ConvertToRaw(message);
-            string[] parts = message.Split(trimChars, 2);
+            string[] parts = message.SplitSpaces(2);
             string ircCmd = parts[0].ToLower();
             if (ircCmd == ".who" || ircCmd == ".players") {
                 try {
@@ -306,7 +306,7 @@ namespace MCGalaxy {
             
             message = Colors.IrcToMinecraftColors(message);
             message = CP437Reader.ConvertToRaw(message);
-            string[] parts = message.Split(trimChars, 3);
+            string[] parts = message.SplitSpaces(3);
             string ircCmd = parts[0].ToLower();
             if (ircCmd == ".who" || ircCmd == ".players") {
                 try {

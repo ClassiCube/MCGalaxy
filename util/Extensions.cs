@@ -29,6 +29,11 @@ namespace MCGalaxy {
     
     public static class Extensions {
         
+        static char[] trimChars = {' '};
+        public static string[] SplitSpaces(this string value, int maxParts) {
+            return value.Split(trimChars, maxParts);
+        }
+        
         public static string Truncate(this string source, int maxLength) {
             if (source.Length > maxLength)
                 source = source.Substring(0, maxLength);

@@ -131,8 +131,7 @@ namespace MCGalaxy {
 
         public static void Save(List<rankAllowance> givenList) {
             try {
-                File.Create("properties/command.properties").Dispose();
-                using (StreamWriter w = File.CreateText("properties/command.properties")) {
+                using (StreamWriter w = new StreamWriter("properties/command.properties")) {
                     w.WriteLine("#Version 2");
                     w.WriteLine("#   This file contains a reference to every command found in the server software");
                     w.WriteLine("#   Use this file to specify which ranks get which commands");

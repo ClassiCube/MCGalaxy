@@ -18,14 +18,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands.CPE {
-    
+namespace MCGalaxy.Commands.CPE {    
     internal static class CustomBlockCommand {
-
-        static char[] trimChars = {' '};
         
         public static void Execute(Player p, string message, bool global, string cmd) {
-            string[] parts = message.Split(trimChars, 4);
+            string[] parts = message.SplitSpaces(4);
             for (int i = 0; i < Math.Min(parts.Length, 3); i++)
                 parts[i] = parts[i].ToLower();
             

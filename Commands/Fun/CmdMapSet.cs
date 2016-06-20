@@ -19,8 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands {   
     public sealed class CmdMapSet : Command {
         public override string name { get { return "mapset"; } }
         public override string shortcut { get { return "mset"; } }
@@ -28,7 +27,6 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
-        static char[] trimChars = {' '};
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
@@ -42,7 +40,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             if (args.Length == 1) { Player.Message(p, "You need to provide a value."); return; }
             
             if (args[0].CaselessEq("author") || args[0].CaselessEq("authors")) {

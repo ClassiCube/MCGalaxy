@@ -30,14 +30,13 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdOverseer() { }
-        static char[] trimChars = { ' ' };
         
         public override void Use(Player p, string message) {
             if (p.group.OverseerMaps == 0)
                 p.SendMessage("Your rank is set to have 0 overseer maps. Therefore, you may not use overseer.");
             if (message == "") { Help(p); return; }
             
-            string[] parts = message.Split(trimChars, 3);        
+            string[] parts = message.SplitSpaces(3);        
             string cmd = parts[0].ToUpper();
             string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
             string arg2 = parts.Length > 2 ? parts[2] : "";
@@ -67,7 +66,7 @@ namespace MCGalaxy.Commands
                 if (LevelInfo.FindExact(mapname) != null)
                     PlayerActions.ChangeMap(p, mapname);
             } else if (cmd == "LB" || cmd == "LEVELBLOCK") {
-                string[] lbArgs = message.Split(trimChars, 2);
+                string[] lbArgs = message.SplitSpaces(2);
                 string lbArg = lbArgs.Length > 1 ? lbArgs[1] : "";
                 CustomBlockCommand.Execute(p, lbArg, false, "/os lb");
             } else if (cmd == "SPAWN") {

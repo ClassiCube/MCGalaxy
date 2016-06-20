@@ -782,7 +782,7 @@ namespace MCGalaxy.Gui
             // 
             // tabPage1
             // 
-            this.tabPage1.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage1.Controls.Add(this.Unloadempty_button);
             this.tabPage1.Controls.Add(this.killphysics_button);
             this.tabPage1.Controls.Add(this.button_saveall);
@@ -1657,6 +1657,7 @@ namespace MCGalaxy.Gui
             // 
             // Chat
             // 
+            this.Chat.BackColor = System.Drawing.SystemColors.Control;
             this.Chat.Controls.Add(this.groupBox2);
             this.Chat.Controls.Add(this.groupBox1);
             this.Chat.Location = new System.Drawing.Point(4, 22);
@@ -1757,6 +1758,7 @@ namespace MCGalaxy.Gui
             // 
             // tabPage2
             // 
+            this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage2.Controls.Add(this.gbMap_Props);
             this.tabPage2.Controls.Add(this.gbMap_Lded);
             this.tabPage2.Controls.Add(this.gbMap_Unld);

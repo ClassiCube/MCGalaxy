@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands.Building {
 		public override string type { get { return CommandTypes.Building; } }
 		public override bool museumUsable { get { return false; } }
 		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-		static char[] trimChars = {' '};
 
 		public override void Use(Player p, string message) {
 			if (message == "") { Help(p); return; }
@@ -59,7 +58,7 @@ namespace MCGalaxy.Commands.Building {
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 			type = type < 128 ? p.bindings[type] : type;
 			
-			string[] parts = cpos.message.Split(trimChars, 3);
+			string[] parts = cpos.message.SplitSpaces(3);
 			if (parts.Length < 2) { Help(p); return; }
 			
 			byte extTile = 0;

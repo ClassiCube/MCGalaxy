@@ -59,7 +59,6 @@ namespace MCGalaxy.BlockBehaviour {
             return true;
         }
         
-        static char[] trimChars = { ' ' };
         internal static bool MessageBlock(Player p, byte block, ushort x, ushort y, ushort z, bool checkPos) {
             if (checkPos && p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             p.RevertBlock(x, y, z);
@@ -73,7 +72,7 @@ namespace MCGalaxy.BlockBehaviour {
                 message = message.Replace("\\'", "\'");
                 if ( message != p.prevMsg || Server.repeatMessage ) {
                     if ( message.StartsWith("/") ) {
-                        string[] parts = message.Remove(0, 1).Split(trimChars, 2);
+                        string[] parts = message.Remove(0, 1).SplitSpaces(2);
                         p.HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
                     } else {
                         Player.Message(p, message);

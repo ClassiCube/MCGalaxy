@@ -49,7 +49,7 @@ namespace MCGalaxy.Gui
         //  public static bool Minimized = false;
 
         Level prpertiesoflvl;
-        Player prpertiesofplyer;
+        Player curPlayer;
 
         internal static Server s;
 
@@ -676,7 +676,7 @@ namespace MCGalaxy.Gui
             {
                 PlayersTextBox.AppendTextAndScroll("==" + p.name + "==");
                 { //Top Stuff
-                    prpertiesofplyer = p;
+                    curPlayer = p;
                     NameTxtPlayersTab.Text = p.name;
                     MapTxt.Text = p.level.name;
                     RankTxt.Text = p.group.name;
@@ -741,59 +741,59 @@ namespace MCGalaxy.Gui
 
         private void LoginBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            CP437Writer.WriteAllText("text/login/" + prpertiesofplyer.name + ".txt", null);
-            CP437Writer.WriteAllText("text/login/" + prpertiesofplyer.name + ".txt", LoginTxt.Text);
+            CP437Writer.WriteAllText("text/login/" + curPlayer.name + ".txt", null);
+            CP437Writer.WriteAllText("text/login/" + curPlayer.name + ".txt", LoginTxt.Text);
             PlayersTextBox.AppendTextAndScroll("The login message has been saved!");
         }
 
         private void LogoutBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            CP437Writer.WriteAllText("text/logout/" + prpertiesofplyer.name + ".txt", null);
-            CP437Writer.WriteAllText("text/logout/" + prpertiesofplyer.name + ".txt", LogoutTxt.Text);
+            CP437Writer.WriteAllText("text/logout/" + curPlayer.name + ".txt", null);
+            CP437Writer.WriteAllText("text/logout/" + curPlayer.name + ".txt", LogoutTxt.Text);
             PlayersTextBox.AppendTextAndScroll("The logout message has been saved!");
         }
 
         private void TitleBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
             if (TitleTxt.Text.Length > 17) { PlayersTextBox.AppendTextAndScroll("Title must be under 17 letters."); return; }
-            prpertiesofplyer.prefix = "[" + TitleTxt.Text + "]";
+            curPlayer.prefix = "[" + TitleTxt.Text + "]";
             PlayersTextBox.AppendTextAndScroll("The title has been saved");
         }
 
         private void ColorBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            prpertiesofplyer.color = Colors.Parse(ColorCombo.Text);
+            curPlayer.color = Colors.Parse(ColorCombo.Text);
             PlayersTextBox.AppendTextAndScroll("Set color to " + ColorCombo.Text);
         }
 
         private void MapBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            if (MapCombo.Text.ToLower() == prpertiesofplyer.level.name.ToLower())
+            if (MapCombo.Text.ToLower() == curPlayer.level.name.ToLower())
             {
                 PlayersTextBox.AppendTextAndScroll("The player is already on that map");
                 return;
@@ -807,7 +807,7 @@ namespace MCGalaxy.Gui
             {
                 try
                 {
-                    Command.all.Find("goto").Use(prpertiesofplyer, MapCombo.Text);
+                    Command.all.Find("goto").Use(curPlayer, MapCombo.Text);
                     PlayersTextBox.AppendTextAndScroll("Sent player to " + MapCombo.Text);
                 }
                 catch
@@ -820,7 +820,7 @@ namespace MCGalaxy.Gui
 
         private void UndoBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
@@ -834,7 +834,7 @@ namespace MCGalaxy.Gui
             {
                 try
                 {
-                    Command.core.Find("undo").Use(null, prpertiesofplyer.name + " " + UndoTxt.Text);
+                    Command.core.Find("undo").Use(null, curPlayer.name + " " + UndoTxt.Text);
                     PlayersTextBox.AppendTextAndScroll("Undid player for " + UndoTxt.Text + " Seconds");
                 }
                 catch
@@ -847,54 +847,41 @@ namespace MCGalaxy.Gui
 
         private void MessageBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
             {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected");
                 return;
             }
-            Player.SendMessage(prpertiesofplyer, "<CONSOLE> " + PLayersMessageTxt.Text);
+            Player.SendMessage(curPlayer, "<CONSOLE> " + PLayersMessageTxt.Text);
             PlayersTextBox.AppendTextAndScroll("Sent player message '<CONSOLE> " + PLayersMessageTxt.Text + "'");
             PLayersMessageTxt.Text = "";
         }
 
         private void ImpersonateORSendCmdBt_Click(object sender, EventArgs e)
         {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            try
-            {
-                if (ImpersonateORSendCmdTxt.Text.StartsWith("/"))
-                {
-                    string[] array = ImpersonateORSendCmdTxt.Text.Split(' ');
-                    Command cmd = Command.all.Find(array[0].Replace("/", ""));
-                    if (cmd == null)
-                    {
-                        PlayersTextBox.AppendTextAndScroll("That isn't a command!!");
-                        return;
+            try {
+                if (ImpersonateORSendCmdTxt.Text.StartsWith("/")) {
+                	string[] args = ImpersonateORSendCmdTxt.Text.Trim().SplitSpaces(2);
+                    Command cmd = Command.all.Find(args[0].Replace("/", ""));
+                    if (cmd == null) {
+                        PlayersTextBox.AppendTextAndScroll("That isn't a command!!"); return;
                     }
-                    string paramaters = ImpersonateORSendCmdTxt.Text.Replace(array[0], "");
-                    cmd.Use(prpertiesofplyer, paramaters.Trim());
-                    if (paramaters != null)
-                    {
-                        PlayersTextBox.AppendTextAndScroll("Used command '" + array[0] + "' with parameters '" + paramaters + "' as player");
+                    
+                    cmd.Use(curPlayer, args.Length > 1 ? args[1] : "");
+                    if (args.Length > 1) {
+                    	PlayersTextBox.AppendTextAndScroll("Used command '" + args[0] + "' with parameters '" + args[1] + "' as player");
+                    } else {
+                        PlayersTextBox.AppendTextAndScroll("Used command '" + args[0] + "' with no parameters as player");
                     }
-                    else
-                    {
-                        PlayersTextBox.AppendTextAndScroll("Used command '" + array[0] + "' with no parameters as player");
-                    }
-                }
-                else
-                {
-                    Command.all.Find("impersonate").Use(null, prpertiesofplyer.name + " " + ImpersonateORSendCmdTxt.Text);
+                } else {
+                    Command.all.Find("impersonate").Use(null, curPlayer.name + " " + ImpersonateORSendCmdTxt.Text);
                     PlayersTextBox.AppendTextAndScroll("Sent Message '" + ImpersonateORSendCmdTxt.Text + "' as player");
                 }
                 ImpersonateORSendCmdTxt.Text = "";
-            }
-            catch
-            {
+            } catch {
                 PlayersTextBox.AppendTextAndScroll("Something went wrong");
             }
         }
@@ -940,21 +927,21 @@ namespace MCGalaxy.Gui
         void IPBanBt_Click(object sender, EventArgs e) { DoSimple("banip", "IP-Banned"); }
         
         void DoSimple(string cmdName, string action) {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer)) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            Command.all.Find(cmdName).Use(null, prpertiesofplyer.name);
+            Command.all.Find(cmdName).Use(null, curPlayer.name);
             PlayersTextBox.AppendTextAndScroll(action + " player");
         }
         
         void DoToggle(string cmdName, Button target, string targetDesc,
                       Predicate<Player> getter, string action) {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer)) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            Command.all.Find(cmdName).Use(null, prpertiesofplyer.name);
+            Command.all.Find(cmdName).Use(null, curPlayer.name);
             
-            if (getter(prpertiesofplyer)) {
+            if (getter(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll(action + " player");
                 target.Text = "Un" + targetDesc;
             } else {
@@ -963,40 +950,19 @@ namespace MCGalaxy.Gui
             }
         }
 
-        private void SendRulesTxt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        private void SendRulesTxt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            List<string> rules = new List<string>();
-            if (!File.Exists("text/rules.txt"))
-            {
-                File.WriteAllText("text/rules.txt", "No rules entered yet!");
-            }
-            using (StreamReader r = File.OpenText("text/rules.txt"))
-            {
-                while (!r.EndOfStream)
-                    rules.Add(r.ReadLine());
-            }
-            Player who = prpertiesofplyer;
-            who.SendMessage("Server Rules:");
-            foreach (string s in rules)
-            {
-                who.SendMessage(s);
-            }
+            Command.all.Find("rules").Use(curPlayer, "");
             PlayersTextBox.AppendTextAndScroll("Sent rules to player");
         }
 
-        private void SpawnBt_Click(object sender, EventArgs e)
-        {
-            if (prpertiesofplyer == null || !PlayerInfo.players.Contains(prpertiesofplyer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        private void SpawnBt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            Player p = prpertiesofplyer;
+            Player p = curPlayer;
             ushort x = (ushort)((0.5 + p.level.spawnx) * 32);
             ushort y = (ushort)((1 + p.level.spawny) * 32);
             ushort z = (ushort)((0.5 + p.level.spawnz) * 32);
@@ -1004,8 +970,7 @@ namespace MCGalaxy.Gui
             PlayersTextBox.AppendTextAndScroll("Sent player to spawn");
         }
 
-        public void UpdatePlyersListBox()
-        {
+        public void UpdatePlyersListBox() {
             RunOnUiThread(
                 delegate
                 {

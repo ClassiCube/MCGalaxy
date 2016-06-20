@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdAward() { }
-        static char[] trimChars = { ' ' };
         
         public override void Use(Player p, string message) {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
@@ -36,7 +35,7 @@ namespace MCGalaxy.Commands {
             	message = message.Substring(5); take = true;
             }
             		
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             string plName = args[0];
             Player who = PlayerInfo.Find(plName);
             if (who != null) plName = who.name;

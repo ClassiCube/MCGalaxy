@@ -34,7 +34,6 @@ namespace MCGalaxy.Commands {
                     new CommandPerm(LevelPermission.Operator, "+ can set rank requirements."),
                 }; }
         }
-        static char[] trimChars = new[] { ' ' };
 
         public override void Use(Player p, string message) {
             if (message == "") {
@@ -54,7 +53,7 @@ namespace MCGalaxy.Commands {
                     ShowRequirements(p, next);
                 }
             } else if (message.CaselessStarts("set ")) {
-                string[] args = message.Split(trimChars, 3);
+                string[] args = message.SplitSpaces(3);
                 Group grp = Group.FindOrShowMatches(p, args[1]);
                 if (grp == null) return;
                 

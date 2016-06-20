@@ -34,11 +34,10 @@ namespace MCGalaxy.Commands {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("reports", "list") }; }
         }
-        static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             if (!Directory.Exists("extra/reported"))
                 Directory.CreateDirectory("extra/reported");
 

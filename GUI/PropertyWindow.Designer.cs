@@ -1748,7 +1748,7 @@ namespace MCGalaxy.Gui
             // 
             // pageBlocks
             // 
-            this.pageBlocks.BackColor = System.Drawing.Color.Transparent;
+            this.pageBlocks.BackColor = System.Drawing.SystemColors.Control;
             this.pageBlocks.Controls.Add(this.btnBlHelp);
             this.pageBlocks.Controls.Add(this.txtBlRanks);
             this.pageBlocks.Controls.Add(this.txtBlAllow);
@@ -1846,7 +1846,7 @@ namespace MCGalaxy.Gui
             // 
             // pageRanks
             // 
-            this.pageRanks.BackColor = System.Drawing.Color.Transparent;
+            this.pageRanks.BackColor = System.Drawing.SystemColors.Control;
             this.pageRanks.Controls.Add(this.gbRankGeneral);
             this.pageRanks.Controls.Add(this.gbRankSettings);
             this.pageRanks.Controls.Add(this.button1);
@@ -3956,7 +3956,7 @@ namespace MCGalaxy.Gui
             // 
             // pageSecurity
             // 
-            this.pageSecurity.BackColor = System.Drawing.Color.Transparent;
+            this.pageSecurity.BackColor = System.Drawing.SystemColors.Control;
             this.pageSecurity.Controls.Add(this.gbSecOther);
             this.pageSecurity.Controls.Add(this.gbSpamSettings);
             this.pageSecurity.Controls.Add(this.gbPasswords);

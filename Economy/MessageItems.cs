@@ -27,7 +27,6 @@ namespace MCGalaxy.Eco {
         }
         
         public override string Name { get { return "LoginMessage"; } }
-        static char[] trimChars = { ' ' };
         
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
@@ -36,7 +35,7 @@ namespace MCGalaxy.Eco {
                 return;
             }
             
-            string text = message.Split(trimChars, 2)[1]; // keep spaces this way         
+        	string text = message.SplitSpaces(2)[1]; // keep spaces this way
             if (text == PlayerDB.GetLoginMessage(p)) {
                 Player.Message(p, "%cYou already have that login message."); return;
             }
@@ -57,7 +56,6 @@ namespace MCGalaxy.Eco {
         }
         
         public override string Name { get { return "LogoutMessage"; } }
-        static char[] trimChars = { ' ' };
 
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
@@ -66,7 +64,7 @@ namespace MCGalaxy.Eco {
                 return;
             }
             
-            string text = message.Split(trimChars, 2)[1]; // keep spaces this way         
+            string text = message.SplitSpaces(2)[1]; // keep spaces this way         
             if (text == PlayerDB.GetLogoutMessage(p)) {
                 Player.Message(p, "%cYou already have that logout message."); return;
             }       

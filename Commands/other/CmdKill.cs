@@ -15,24 +15,21 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdKill : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdKill : Command {
         public override string name { get { return "kill"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdKill() { }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }         
             bool explode = false;
             string deathMessage;
             string killer = p == null ? "(console)" : p.ColoredName;
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (args.Length >= 2) {

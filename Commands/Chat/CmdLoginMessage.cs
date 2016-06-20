@@ -29,11 +29,10 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdLoginMessage() { }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             if (args.Length < 2) { Help(p); return; }
             
             Player target = PlayerInfo.Find(args[0]);

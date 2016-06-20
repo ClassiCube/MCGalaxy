@@ -30,14 +30,13 @@ namespace MCGalaxy.Commands.Building {
         public override CommandPerm[] AdditionalPerms {
             get { return new[] { new CommandPerm(LevelPermission.Nobody, "+ can use moderation commands in MBs") }; }
         }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
 
             CatchPos cpos;
             cpos.message = null;
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             switch (args[0].ToLower()) {
                     case "air": cpos.type = Block.MsgAir; break;
                     case "water": cpos.type = Block.MsgWater; break;

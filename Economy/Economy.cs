@@ -78,7 +78,7 @@ namespace MCGalaxy {
                 Server.s.Log("Economy properties don't exist, creating"); 
                 Save(); 
             }
-            using (StreamReader r = File.OpenText("properties/economy.properties")) {
+            using (StreamReader r = new StreamReader("properties/economy.properties")) {
                 string line;
                 while (!r.EndOfStream) {
                     line = r.ReadLine().ToLower().Trim();

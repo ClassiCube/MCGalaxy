@@ -27,7 +27,6 @@ namespace MCGalaxy.Eco {
         }
         
         public override string Name { get { return "Title"; } }
-        static char[] trimChars = { ' ' };
         
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
@@ -35,7 +34,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%aYour title was removed for free."); return;
             }
             
-            string title = message.Split(trimChars, 2)[1]; // keep spaces this way
+            string title = message.SplitSpaces(2)[1]; // keep spaces this way
             if (title == p.title) {
                 Player.Message(p, "%cYou already have that title."); return;
             }
@@ -57,7 +56,6 @@ namespace MCGalaxy.Eco {
         }
         
         public override string Name { get { return "Nickname"; } }
-        static char[] trimChars = { ' ' };
         
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
@@ -65,7 +63,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%aYour nickname was removed for free."); return;
             }
             
-            string nick = message.Split(trimChars, 2)[1]; // keep spaces this way
+            string nick = message.SplitSpaces(2)[1]; // keep spaces this way
             if (nick == p.DisplayName) {
                 Player.Message(p, "%cYou already have that nickname."); return;
             }

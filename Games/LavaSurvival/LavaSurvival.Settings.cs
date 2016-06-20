@@ -90,18 +90,16 @@ namespace MCGalaxy.Games
         }
         public void SaveSettings()
         {
-            File.Create("properties/lavasurvival.properties").Dispose();
-            using (StreamWriter SW = File.CreateText("properties/lavasurvival.properties"))
-            {
-                SW.WriteLine("#Lava Survival main properties");
-                SW.WriteLine("start-on-startup = " + startOnStartup.ToString().ToLower());
-                SW.WriteLine("send-afk-to-main = " + sendAfkMain.ToString().ToLower());
-                SW.WriteLine("vote-count = " + voteCount.ToString());
-                SW.WriteLine("vote-time = " + voteTime.ToString());
-                SW.WriteLine("lives = " + lifeNum.ToString());
-                SW.WriteLine("setup-rank = " + Level.PermissionToName(setupRank).ToLower());
-                SW.WriteLine("control-rank = " + Level.PermissionToName(controlRank).ToLower());
-                SW.WriteLine("maps = " + maps.Concatenate(","));
+            using (StreamWriter w = new StreamWriter("properties/lavasurvival.properties")) {
+                w.WriteLine("#Lava Survival main properties");
+                w.WriteLine("start-on-startup = " + startOnStartup.ToString().ToLower());
+                w.WriteLine("send-afk-to-main = " + sendAfkMain.ToString().ToLower());
+                w.WriteLine("vote-count = " + voteCount.ToString());
+                w.WriteLine("vote-time = " + voteTime.ToString());
+                w.WriteLine("lives = " + lifeNum.ToString());
+                w.WriteLine("setup-rank = " + Level.PermissionToName(setupRank).ToLower());
+                w.WriteLine("control-rank = " + Level.PermissionToName(controlRank).ToLower());
+                w.WriteLine("maps = " + maps.Concatenate(","));
             }
         }
 
@@ -179,23 +177,21 @@ namespace MCGalaxy.Games
         {
             if (!Directory.Exists(propsPath)) Directory.CreateDirectory(propsPath);
 
-            File.Create(propsPath + settings.name + ".properties").Dispose();
-            using (StreamWriter SW = File.CreateText(propsPath + settings.name + ".properties"))
-            {
-                SW.WriteLine("#Lava Survival properties for " + settings.name);
-                SW.WriteLine("fast-chance = " + settings.fast);
-                SW.WriteLine("killer-chance = " + settings.killer);
-                SW.WriteLine("destroy-chance = " + settings.destroy);
-                SW.WriteLine("water-chance = " + settings.water);
-                SW.WriteLine("layer-chance = " + settings.layer);
-                SW.WriteLine("layer-height = " + settings.layerHeight);
-                SW.WriteLine("layer-count = " + settings.layerCount);
-                SW.WriteLine("layer-interval = " + settings.layerInterval);
-                SW.WriteLine("round-time = " + settings.roundTime);
-                SW.WriteLine("flood-time = " + settings.floodTime);
-                SW.WriteLine("block-flood = " + settings.blockFlood.ToString());
-                SW.WriteLine("block-layer = " + settings.blockLayer.ToString());
-                SW.WriteLine(String.Format("safe-zone = {0}-{1}", settings.safeZone[0].ToString(), settings.safeZone[1].ToString()));
+            using (StreamWriter w = new StreamWriter(propsPath + settings.name + ".properties")) {
+                w.WriteLine("#Lava Survival properties for " + settings.name);
+                w.WriteLine("fast-chance = " + settings.fast);
+                w.WriteLine("killer-chance = " + settings.killer);
+                w.WriteLine("destroy-chance = " + settings.destroy);
+                w.WriteLine("water-chance = " + settings.water);
+                w.WriteLine("layer-chance = " + settings.layer);
+                w.WriteLine("layer-height = " + settings.layerHeight);
+                w.WriteLine("layer-count = " + settings.layerCount);
+                w.WriteLine("layer-interval = " + settings.layerInterval);
+                w.WriteLine("round-time = " + settings.roundTime);
+                w.WriteLine("flood-time = " + settings.floodTime);
+                w.WriteLine("block-flood = " + settings.blockFlood.ToString());
+                w.WriteLine("block-layer = " + settings.blockLayer.ToString());
+                w.WriteLine(String.Format("safe-zone = {0}-{1}", settings.safeZone[0].ToString(), settings.safeZone[1].ToString()));
             }
         }
 

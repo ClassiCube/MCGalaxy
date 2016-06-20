@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        static char[] trimChars = { ' ' };
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("brushes", "list") }; }
         }
@@ -36,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             if (message == "") {
                 Player.Message(p, "Your current brush is: " + p.BrushName); return;
             }
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             string brush = FindBrush(args[0]);
             
             if (args[0].CaselessEq("list")) {

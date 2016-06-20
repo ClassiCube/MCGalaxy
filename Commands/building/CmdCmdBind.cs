@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdCmdBind() { }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
@@ -42,7 +41,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            string[] parts = message.Split(trimChars, 3);
+            string[] parts = message.SplitSpaces(3);
             byte index;
             if (!byte.TryParse(parts[0], out index) || index >= 10) {
                 Player.Message(p, "Bind number must be between 0 and 9."); return;

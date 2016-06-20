@@ -1187,7 +1187,6 @@ return;
             return false;
         }
         
-        static char[] trimChars = { ' ' };
         public void HandleCommand(string cmd, string message) {
             cmd = cmd.ToLower();
             try {

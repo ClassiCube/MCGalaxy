@@ -69,7 +69,7 @@ namespace MCGalaxy {
         
         
         public void Save(bool console = false) {
-            using (StreamWriter w = File.CreateText(path)) {
+            using (StreamWriter w = new StreamWriter(path)) {
                 lock (locker) {
                     foreach (string line in lines)
                         w.WriteLine(line);

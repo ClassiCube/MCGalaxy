@@ -19,20 +19,17 @@
 */
 using System;
 
-namespace MCGalaxy.Commands {
-	
-    public sealed class CmdRankMsg : Command {
-		
+namespace MCGalaxy.Commands {	
+    public sealed class CmdRankMsg : Command {		
         public override string name { get { return "rankmsg"; } }
         public override string shortcut { get { return "rm"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             string rank = args.Length == 1 ? p.group.name : args[0];
             string text = args[args.Length - 1];            
             Group grp = Group.FindOrShowMatches(p, rank);

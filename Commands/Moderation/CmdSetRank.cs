@@ -28,10 +28,9 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandAlias("promote", "+up"), new CommandAlias("demote", "-down") }; }
         }
         public CmdSetRank() { }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(trimChars, 3);
+            string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             string rank = null, name = null;
             

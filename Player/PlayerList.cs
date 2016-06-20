@@ -66,7 +66,7 @@ namespace MCGalaxy {
         public void Save(bool console) { Save(file, console); }
         
         public void Save(string file, bool console) {
-            using (StreamWriter w = File.CreateText("ranks/" + file)) {
+            using (StreamWriter w = new StreamWriter("ranks/" + file)) {
                 lock (locker) {
                     foreach (string p in players)
                         w.WriteLine(p);

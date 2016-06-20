@@ -31,11 +31,10 @@ namespace MCGalaxy.Commands {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xtitle", "-own") }; }
         }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             if (args[0].CaselessEq("-own")) {
                 if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
                 args[0] = p.name;

@@ -82,9 +82,8 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "InfectMessage"; } }
         
-        static char[] trimChars = { ' ' };
         protected override void OnBuyCommand(Player p, string message, string[] args) {
-            string text = message.Split(trimChars, 2)[1]; // keep spaces this way
+            string text = message.SplitSpaces(2)[1]; // keep spaces this way
             bool hasAToken = false;
             for (int i = 0; i < text.Length; i++) {
                 if (!CheckEscape(text, i, ref hasAToken)) { 

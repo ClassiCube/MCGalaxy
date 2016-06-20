@@ -20,21 +20,18 @@ using System.Data;
 using System.Text.RegularExpressions;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdPlayerEditDB : Command {
-        
+namespace MCGalaxy.Commands {    
+    public sealed class CmdPlayerEditDB : Command {        
         public override string name { get { return "playeredit"; } }
         public override string shortcut { get { return "pe"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdPlayerEditDB() { }
-        static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(trimChars, 3);
+            string[] args = message.SplitSpaces(3);
             Player who = PlayerInfo.Find(args[0]);
             if (who == null) {
                 string target = PlayerInfo.FindName(args[0]);

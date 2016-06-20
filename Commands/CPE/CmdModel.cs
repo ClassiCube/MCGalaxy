@@ -33,7 +33,6 @@ namespace MCGalaxy.Commands.CPE {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xmodel", "-own") }; }
         }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player or bot name")) return;
@@ -42,7 +41,7 @@ namespace MCGalaxy.Commands.CPE {
             Player who = p;
             PlayerBot pBot = null;
             bool isBot = message.CaselessStarts("bot ");
-            string[] args = message.Split(trimChars, isBot ? 3 : 2);
+            string[] args = message.SplitSpaces(isBot ? 3 : 2);
             string model = null;
             
             if (args[0].CaselessEq("-own")) {

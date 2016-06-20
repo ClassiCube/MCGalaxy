@@ -26,10 +26,9 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
-        static char[] trimChars = { ' ' };
         
         public override void Use(Player p, string message) {
-            string[] parts = message.Split(trimChars, 3);
+            string[] parts = message.SplitSpaces(3);
             Player target = PlayerInfo.FindMatches(p, parts[0]);
             if (target == null) return;        
             if (p != null && p.group.Permission < target.group.Permission) {

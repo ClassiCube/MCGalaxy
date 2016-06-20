@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        static char[] trimChars = { ' ' };
         
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
@@ -35,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(trimChars, 3);
+            string[] args = message.SplitSpaces(3);
             if (args.Length < 3) { Help(p); return; }
             
             byte scale = 1, spacing = 1;

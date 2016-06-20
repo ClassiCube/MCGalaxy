@@ -23,10 +23,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdBanEdit() { }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
-        	string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             if (args.Length < 2) { Help(p); return; }
 
             if (!Ban.ChangeBanReason(args[0], args[1])) {

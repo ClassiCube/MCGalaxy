@@ -29,7 +29,6 @@ namespace MCGalaxy.Commands {
                                  new CommandAlias("colors", "colors") }; }
         }
         public CmdHelp() { }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             switch (message.ToLower()) {
@@ -73,7 +72,7 @@ namespace MCGalaxy.Commands {
         }
         
         bool ParseCommand(Player p, string message) {
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             Alias alias = Alias.Find(args[0].ToLower());
             if (alias != null) args[0] = alias.Target;
                     

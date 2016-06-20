@@ -35,14 +35,14 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "Static mode: &a" + p.staticCommands);
             if (message == "" || !p.staticCommands) return;
 
-            string[] parts = message.Split(new char[] { ' ' }, 2);
+            string[] parts = message.SplitSpaces(2);
             Command cmd = Command.all.Find(parts[0]);
             if (cmd == null) {
-                Player.Message(p, "There is no command \"" + parts[0] + "\""); return;
+                Player.Message(p, "There is no command \"{0}\"", parts[0]); return;
             }
             
             if (!p.group.CanExecute(cmd)) {
-                Player.Message(p, "Cannot use the \"" + parts[0] + "\" command."); return;
+                Player.Message(p, "Cannot use the \"{0}\" command.", parts[0]); return;
             }
             string args = parts.Length > 1 ? parts[1] : "";
             cmd.Use(p, args);

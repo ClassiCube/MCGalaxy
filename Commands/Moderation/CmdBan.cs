@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdBan() { }
-        static char[] trimChars = { ' ' };
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
@@ -37,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Server.s.Log("Stealth ban Attempted by " + (p == null ? "Console" : p.ColoredName));
             }
             
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             string reason = args.Length > 1 ? args[1] : Server.defaultBanMessage;
             string banReason = reason == "-" ? "" : " (" + reason + ")";
             if (reason == "-") reason = "&c-";    

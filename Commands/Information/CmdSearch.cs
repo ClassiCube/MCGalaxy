@@ -26,11 +26,10 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        static char[] trimChars = { ' ' };
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(trimChars, 2);
+            string[] args = message.SplitSpaces(2);
             if (args.Length < 2) { Help(p); return; }
             args[0] = args[0].ToLower();
             string keyword = args[1];

@@ -25,12 +25,11 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             int mode = TreeDrawOp.T_Tree;
-            string[] parts = message.Split(trimChars, 2);
+            string[] parts = message.SplitSpaces(2);
             string brushMsg = parts.Length >= 2 ? parts[1] : "";
             
             switch (parts[0].ToLower()) {
@@ -80,7 +79,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static Brush ParseBrush(string brushMsg, Player p, byte type, byte extType) {
-            string[] parts = brushMsg.Split(trimChars, 2);
+            string[] parts = brushMsg.SplitSpaces(2);
             string brushName = CmdBrush.FindBrush(parts[0]);
             if (brushName == null) {
                 Player.Message(p, "No brush found with name \"" + parts[0] + "\".");

@@ -24,11 +24,10 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        static char[] trimChars = {' '};
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(trimChars, 3);
+            string[] args = message.SplitSpaces(3);
             Player who = PlayerInfo.Find(args[0]);
             
             string target = who == null ? args[0] : who.name;
