@@ -95,15 +95,18 @@ namespace MCGalaxy.Gui {
                 if( grp.Permission == Server.osPerbuildDefault )
                     osmaprank = grp.name;
             }
+            
             listPasswords.Items.Clear();
-            if ( Directory.Exists("extra/passwords") ) {
-                DirectoryInfo di = new DirectoryInfo("extra/passwords/");
-                FileInfo[] fi = di.GetFiles("*.xml");
-                Thread.Sleep(10);
-                foreach ( FileInfo file in fi ) {
-                    listPasswords.Items.Add(file.Name.Replace(".xml", ""));
+            if (Directory.Exists("extra/passwords")) {
+                string[] files = Directory.GetFiles("extra/passwords", "*.dat");
+                listPasswords.BeginUpdate();
+                foreach (string file in files) {
+                    string name = Path.GetFileNameWithoutExtension(file);
+                    listPasswords.Items.Add(name);
                 }
+                listPasswords.EndUpdate();
             }
+            
             cmbDefaultRank.SelectedIndex = 1;
             cmbOpChat.SelectedIndex = ( opchatperm != String.Empty ? cmbOpChat.Items.IndexOf(opchatperm) : 1 );
             cmbAdminChat.SelectedIndex = ( adminchatperm != String.Empty ? cmbAdminChat.Items.IndexOf(adminchatperm) : 1 );
@@ -1216,13 +1219,15 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             }
             try {
                 File.Delete("extra/passwords/" + listPasswords.Text + ".dat");
-                listPasswords.Items.Clear();
-                DirectoryInfo di = new DirectoryInfo("extra/passwords/");
-                FileInfo[] fi = di.GetFiles("*.xml");
-                Thread.Sleep(10);
-                foreach ( FileInfo file in fi ) {
-                    listPasswords.Items.Add(file.Name.Replace(".dat", ""));
+                listPasswords.Items.Clear();                
+                string[] files = Directory.GetFiles("extra/passwords", "*.dat");
+                
+                listPasswords.BeginUpdate();
+                foreach (string file in files) {
+                    string name = Path.GetFileNameWithoutExtension(file);
+                    listPasswords.Items.Add(name);
                 }
+                listPasswords.EndUpdate();
             }
             catch {
                 MessageBox.Show("Failed to reset password!");

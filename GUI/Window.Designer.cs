@@ -1657,16 +1657,15 @@ namespace MCGalaxy.Gui
             // 
             // Chat
             // 
-            this.Chat.BackColor = System.Drawing.SystemColors.Control;
-            this.Chat.Controls.Add(this.groupBox2);
-            this.Chat.Controls.Add(this.groupBox1);
-            this.Chat.Location = new System.Drawing.Point(4, 22);
-            this.Chat.Name = "Chat";
-            this.Chat.Padding = new System.Windows.Forms.Padding(3);
-            this.Chat.Size = new System.Drawing.Size(767, 488);
-            this.Chat.TabIndex = 8;
-            this.Chat.Text = "Chat";
-            this.Chat.UseVisualStyleBackColor = true;
+        	this.Chat.BackColor = System.Drawing.SystemColors.Control;
+        	this.Chat.Controls.Add(this.groupBox2);
+        	this.Chat.Controls.Add(this.groupBox1);
+        	this.Chat.Location = new System.Drawing.Point(4, 22);
+        	this.Chat.Name = "Chat";
+        	this.Chat.Padding = new System.Windows.Forms.Padding(3);
+        	this.Chat.Size = new System.Drawing.Size(767, 488);
+        	this.Chat.TabIndex = 8;
+        	this.Chat.Text = "Chat";
             // 
             // groupBox2
             // 
@@ -1768,7 +1767,6 @@ namespace MCGalaxy.Gui
             this.tabPage2.Size = new System.Drawing.Size(767, 488);
             this.tabPage2.TabIndex = 9;
             this.tabPage2.Text = "Maps";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // gbMap_Props
             // 
