@@ -1354,9 +1354,9 @@ namespace MCGalaxy.Gui
                     selectedLvl = lbMap_Unld.SelectedItem.ToString();
                 
                 lbMap_Unld.Items.Clear();
-                FileInfo[] fi = new DirectoryInfo("levels/").GetFiles("*.lvl");
-                foreach (FileInfo file in fi) {
-                    string name = file.Name.Replace(".lvl", "");
+                string[] files = Directory.GetFiles("levels", "*.lvl");
+                foreach (string file in files) {
+                    string name = Path.GetFileNameWithoutExtension(file);
                     if (LevelInfo.FindExact(name) == null)
                         lbMap_Unld.Items.Add(name);
                 }

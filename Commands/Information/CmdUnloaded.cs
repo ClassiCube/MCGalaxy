@@ -44,8 +44,7 @@ namespace MCGalaxy.Commands {
                 start = end - 50;
             }
 
-            DirectoryInfo di = new DirectoryInfo("levels/");
-            FileInfo[] files = di.GetFiles("*.lvl");
+            string[] files = Directory.GetFiles("levels", "*.lvl");
             if (end == 0) {
                 StringBuilder list = ListMaps(p, all, files, 0, files.Length);
                 if (list.Length > 0) {
@@ -69,11 +68,11 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static StringBuilder ListMaps(Player p, bool all, FileInfo[] files, int start, int end) {
+        static StringBuilder ListMaps(Player p, bool all, string[] files, int start, int end) {
             StringBuilder builder = new StringBuilder();
             Level[] loaded = LevelInfo.Loaded.Items;
             for (int i = start; i < end; i++) {
-                string level = files[i].Name.Replace(".lvl", "");
+            	string level = Path.GetFileNameWithoutExtension(files[i]);
                 if (!all && loaded.Any(l => l.name.CaselessEq(level))) continue;
                 
                 LevelPermission visitP, buildP;

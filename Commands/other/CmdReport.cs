@@ -62,12 +62,11 @@ namespace MCGalaxy.Commands {
         	if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can see the list of reports."); return; }
 
             bool foundone = false;
-            FileInfo[] fi = new DirectoryInfo("extra/reported").GetFiles("*.txt");
+            string[] files = Directory.GetFiles("extra/reported", "*.txt");
             Player.Message(p, "The following players have been reported:");
-            foreach (FileInfo file in fi) {
+            foreach (string file in files) {
                 foundone = true;
-                string parsed = file.Name.Replace(".txt", "");
-                Player.Message(p, "- %c" + parsed);
+                Player.Message(p, "- %c" + Path.GetFileNameWithoutExtension(file));
             }
             
             if (foundone) {
@@ -119,12 +118,15 @@ namespace MCGalaxy.Commands {
         
         void HandleClear(Player p, string[] args) {
             if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can clear the list of reports."); return; }
+           if (!Directory.Exists("extra/reportedbackups"))
+                Directory.CreateDirectory("extra/reportedbackups");            
+            string[] files = Directory.GetFiles("extra/reported", "*.txt");
             
-            FileInfo[] fi = new DirectoryInfo("extra/reported").GetFiles("*.txt");
-            foreach (FileInfo file in fi) {
-                if (File.Exists("extra/reportedbackups/" + file.Name))
-                    File.Delete("extra/reportedbackups/" + file.Name);
-                file.MoveTo("extra/reportedbackups/" + file.Name);
+            foreach (string path in files) {
+                string name = Path.GetFileName(path);
+                if (File.Exists("extra/reportedbackups/" + name))
+                    File.Delete("extra/reportedbackups/" + name);
+                File.Move(path, "extra/reportedbackups/" + name);
             }
             Player.Message(p, "%aYou have cleared all reports!");
             Chat.GlobalMessageOps(p.ColoredName + "%c cleared ALL reports!");

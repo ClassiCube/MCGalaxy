@@ -88,11 +88,10 @@ namespace MCGalaxy.Gui {
                     catch { }
                 }
                 if ( noUseList ) {
-                    string name;
-                    FileInfo[] fi = new DirectoryInfo("levels/").GetFiles("*.lvl");
-                    foreach ( FileInfo file in fi ) {
+                    string[] files = Directory.GetFiles("levels", "*.lvl");
+                    foreach (string file in files) {
                         try {
-                            name = file.Name.Replace(".lvl", "");
+                    	    string name = Path.GetFileNameWithoutExtension(file);
                             if ( name.ToLower() != Server.mainLevel.name && !Server.lava.HasMap(name) )
                                 lsMapNoUse.Items.Add(name);
                         }

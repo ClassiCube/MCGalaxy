@@ -17,9 +17,9 @@
  */
 using System;
 using System.IO;
+
 namespace MCGalaxy.Commands {
-	public sealed class CmdView : Command {
-		
+	public sealed class CmdView : Command {		
 		public override string name { get { return "view"; } }
 		public override string shortcut { get { return ""; } }
 		public override string type { get { return CommandTypes.Other; } }
@@ -31,10 +31,10 @@ namespace MCGalaxy.Commands {
 			if (!Directory.Exists("extra/text/")) 
 				Directory.CreateDirectory("extra/text");
 			if (message == "") {
-				DirectoryInfo di = new DirectoryInfo("extra/text/");
+			    string[] files = Directory.GetFiles("extra/text", "*.txt");
 				string allFiles = "";
-				foreach (FileInfo fi in di.GetFiles("*.txt"))
-					allFiles += ", " + fi.Name;
+				foreach (string file in files)
+				    allFiles += ", " + Path.GetFileNameWithoutExtension(file);
 
 				if (allFiles == "") {
 					Player.Message(p, "No files are viewable by you");

@@ -97,11 +97,9 @@ namespace MCGalaxy.Commands {
         
         static void SearchUnloaded(Player p, string keyword) {
             List<string> matches = new List<string>();
-            DirectoryInfo di = new DirectoryInfo("levels/");
-            FileInfo[] fi = di.GetFiles("*.lvl");
-
-            foreach (FileInfo file in fi) {
-                string level = file.Name.Replace(".lvl", "");
+            string[] files = Directory.GetFiles("levels", "*.lvl");
+            foreach (string file in files) {
+                string level = Path.GetFileNameWithoutExtension(file);
                 if (level.IndexOf(keyword, comp) >= 0)
                 matches.Add(level);
             }

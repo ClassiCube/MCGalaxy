@@ -79,8 +79,6 @@ namespace MCGalaxy.Commands
                 return;
             }
 
-            DirectoryInfo di = new DirectoryInfo("extra/passwords/");
-            FileInfo[] fi = di.GetFiles("*.dat");
             if (!File.Exists("extra/passwords/" + p.name + ".dat"))
             {
                 Player.Message(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!");

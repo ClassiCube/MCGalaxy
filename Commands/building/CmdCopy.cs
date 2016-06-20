@@ -64,10 +64,9 @@ namespace MCGalaxy.Commands.Building {
 					Player.Message(p, "No such directory exists"); return;
 				}
 				
-				FileInfo[] fin = new DirectoryInfo(dir).GetFiles();
-				for (int i = 0; i < fin.Length; i++) {
-					string name = fin[i].Name.Replace(".cpy", "").Replace(".cpb", "");
-					Player.Message(p, name);
+				string[] files = Directory.GetFiles(dir);
+				for (int i = 0; i < files.Length; i++) {
+					Player.Message(p, Path.GetFileNameWithoutExtension(files[i]));
 				}
 			} else {
 				HandleOther(p, opt, parts, allowoffset);

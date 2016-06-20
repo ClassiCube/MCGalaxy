@@ -541,11 +541,10 @@ namespace MCGalaxy.Games {
         List<string> GetCandidateLevels() {
             if (LevelList.Count > 0) return LevelList;           
             List<string> maps = new List<string>();
-            DirectoryInfo di = new DirectoryInfo("levels/");
-            FileInfo[] fi = di.GetFiles("*.lvl");
             
-            foreach (FileInfo fil in fi) {
-                string mapName = Path.GetFileNameWithoutExtension(fil.Name);
+            string[] files = Directory.GetFiles("levels", "*.lvl");
+            foreach (string file in files) {
+                string mapName = Path.GetFileNameWithoutExtension(file);
                 if (mapName.IndexOf('+') >= 0 && IgnorePersonalWorlds) 
                     continue;
                 maps.Add(mapName);
