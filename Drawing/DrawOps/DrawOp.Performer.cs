@@ -127,7 +127,7 @@ namespace MCGalaxy.Drawing.Ops {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level.name.CaselessEq(lvl.name))
-                    CmdReveal.ReloadMap(p, pl, true);
+                    CmdReload.ReloadMap(p, pl, true);
             }
             GC.Collect();
             GC.WaitForPendingFinalizers();

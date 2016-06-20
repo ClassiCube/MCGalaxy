@@ -49,14 +49,16 @@ namespace MCGalaxy {
         }
         
         protected bool CheckSuper(Player p, string message, string type) {
-        	if (message != "" || (p != null && p.ircNick == null)) return false;
-            SuperRequiresArgs(p, type); 
+            if (message != "" || !Player.IsSuper(p)) return false;
+            SuperRequiresArgs(name, p, type); 
             return true;
         }
         
-        protected void SuperRequiresArgs(Player p, string type) {
-        	string src = p == null ? "console" : "IRC";
-        	Player.Message(p, "When using /{0} from {2}, you must provide a {1}.", name, type, src);
+        protected void SuperRequiresArgs(Player p, string type) { SuperRequiresArgs(name, p, type); }
+        
+        protected static void SuperRequiresArgs(string cmd, Player p, string type) {
+            string src = p == null ? "console" : "IRC";
+            Player.Message(p, "When using /{0} from {2}, you must provide a {1}.", cmd, type, src);
         }
         
         protected bool CheckExtraPerm(Player p, int num = 1) {
