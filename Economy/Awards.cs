@@ -39,7 +39,7 @@ namespace MCGalaxy {
         
         public static void Load() {
             if (!File.Exists("text/awardsList.txt")) {
-                using (StreamWriter w = new StreamWriter("text/awardsList.txt")) {
+                using (CP437Writer w = new CP437Writer("text/awardsList.txt")) {
                     w.WriteLine("#This is a full list of awards. The server will load these and they can be awarded as you please");
                     w.WriteLine("#Format is:");
                     w.WriteLine("# AwardName : Description of award goes after the colon");
@@ -80,7 +80,7 @@ namespace MCGalaxy {
         }
 
         public static void Save() {
-            using (StreamWriter w = new StreamWriter("text/awardsList.txt"))  {
+            using (CP437Writer w = new CP437Writer("text/awardsList.txt"))  {
                 w.WriteLine("# This is a full list of awards. The server will load these and they can be awarded as you please");
                 w.WriteLine("# Format is:");
                 w.WriteLine("# AwardName : Description of award goes after the colon");

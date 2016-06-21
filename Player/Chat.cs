@@ -155,7 +155,7 @@ namespace MCGalaxy {
                 }
             } else {
                 Server.s.Log("custom$s.txt does not exist, creating");
-                using (StreamWriter w = new StreamWriter("text/custom$s.txt")) {
+                using (CP437Writer w = new CP437Writer("text/custom$s.txt")) {
                     w.WriteLine("// This is used to create custom $s");
                     w.WriteLine("// If you start the line with a // it wont be used");
                     w.WriteLine("// It should be formatted like this:");

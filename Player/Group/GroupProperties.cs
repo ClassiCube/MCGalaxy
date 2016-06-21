@@ -18,18 +18,16 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 
 namespace MCGalaxy {
-
     public sealed class GroupProperties {
         
         public static void InitAll() {
-            string[] lines = File.ReadAllLines("properties/ranks.properties");
+            List<string> lines = CP437Reader.ReadAllLines("properties/ranks.properties");
 
             Group grp = null;
             int version = 1;
-            if (lines.Length > 0 && lines[0].StartsWith("#Version ")) {
+            if (lines.Count > 0 && lines[0].StartsWith("#Version ")) {
                 try { version = int.Parse(lines[0].Remove(0, 9)); }
                 catch { Server.s.Log("The ranks.properties version header is invalid! Ranks may fail to load!"); }
             }
@@ -129,7 +127,7 @@ namespace MCGalaxy {
                     grp.OverseerMaps = osmaps;
                     break;
                 case "prefix":
-                    grp.prefix = CP437Reader.ConvertToRaw(value);
+                    grp.prefix = value;
                     break;
                     
             }
@@ -152,7 +150,7 @@ namespace MCGalaxy {
         /// <summary> Save givenList group </summary>
         /// <param name="givenList">The list of groups to save</param>
         public static void SaveGroups(List<Group> givenList) {
-            using (StreamWriter w = new StreamWriter("properties/ranks.properties")) {
+            using (CP437Writer w = new CP437Writer("properties/ranks.properties")) {
                 w.WriteLine("#Version 3");
                 w.WriteLine("#RankName = string");
                 w.WriteLine("#\tThe name of the rank, use capitalization.");
@@ -200,7 +198,7 @@ namespace MCGalaxy {
                     w.WriteLine("MOTD = " + grp.MOTD);
                     w.WriteLine("FileName = " + grp.fileName);
                     w.WriteLine("OSMaps = " + grp.OverseerMaps);
-                    w.WriteLine("Prefix = " + CP437Writer.ConvertToUnicode(grp.prefix));
+                    w.WriteLine("Prefix = " + grp.prefix);
                     w.WriteLine();
                 }
             }

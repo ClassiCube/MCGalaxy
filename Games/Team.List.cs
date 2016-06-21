@@ -47,7 +47,7 @@ namespace MCGalaxy.Games {
         
         public static void SaveList() {
             lock (readLock)
-                using (StreamWriter w = new CP437Writer("extra/teams.txt"))
+                using (CP437Writer w = new CP437Writer("extra/teams.txt"))
                     foreach (var pair in TeamsList)
             {
                 w.WriteLine("Name=" + pair.Value.Name);
