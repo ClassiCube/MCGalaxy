@@ -33,6 +33,16 @@ namespace MCGalaxy.SQL {
                 return null;
             }
         }
+        
+        public static BulkTransaction CreateNative() {
+            try {
+                if (Server.useMySQL) return new MySQLBulkTransaction(MySQL.connString);
+                else return new Native.NativeBulkTransaction();
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                return null;
+            }
+        }
 
         public abstract IDbCommand CreateCommand(string query);
         
@@ -69,6 +79,16 @@ namespace MCGalaxy.SQL {
         public bool Execute(string query) {
             using (IDbCommand cmd = CreateCommand(query))
                 return Execute(query, cmd);
+        }
+        
+        public static IDbCommand CreateCommand(string query, BulkTransaction transaction) {
+            try {
+                return transaction.CreateCommand(query);
+            } catch (Exception e) {
+                System.IO.File.AppendAllText("MySQL_error.log", DateTime.Now + " " + query + "\r\n");
+                Server.ErrorLog(e);
+                return null;
+            }
         }
         
         public static bool Execute(string query, IDbCommand cmd) {

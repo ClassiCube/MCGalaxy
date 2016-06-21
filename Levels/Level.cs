@@ -452,13 +452,8 @@ namespace MCGalaxy
             
             fixed (char* ptr = date) {
                  ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
-                 if (Server.useMySQL) {
-                     using (BulkTransaction bulk = BulkTransaction.Create())
-                         DoSaveChanges(tempCache, ptr, date, bulk);
-                 } else {
-                     using (BulkTransaction bulk = new NativeBulkTransaction())
-                         DoSaveChanges(tempCache, ptr, date, bulk);     
-                 }
+                 using (BulkTransaction bulk = BulkTransaction.CreateNative())
+                     DoSaveChanges(tempCache, ptr, date, bulk);
             }
             tempCache.Clear();
             blockCache = new List<BlockPos>();
@@ -471,7 +466,9 @@ namespace MCGalaxy
                 "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@Name, @Time, @X, @Y, @Z, @Tile, @Del)";
             ushort x, y, z;
             
-            IDbCommand cmd = transaction.CreateCommand(template);
+            IDbCommand cmd = BulkTransaction.CreateCommand(template, transaction);
+            if (cmd == null) return false;
+            
             IDataParameter nameP = transaction.CreateParam("@Name", DbType.AnsiStringFixedLength); cmd.Parameters.Add(nameP);
             IDataParameter timeP = transaction.CreateParam("@Time", DbType.AnsiStringFixedLength); cmd.Parameters.Add(timeP);
             IDataParameter xP = transaction.CreateParam("@X", DbType.UInt16); cmd.Parameters.Add(xP);
