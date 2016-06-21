@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.SQL;
 
@@ -28,7 +29,8 @@ namespace MCGalaxy.BlockBehaviour {
             p.RevertBlock(x, y, z);
             try {
                 //safe against SQL injections because no user input is given here
-                DataTable Portals = Database.fillData("SELECT * FROM `Portals" + p.level.name + "` WHERE EntryX=" + (int)x + " AND EntryY=" + (int)y + " AND EntryZ=" + (int)z);
+                DataTable Portals = Database.fillData("SELECT * FROM `Portals" + p.level.name +
+                                                      "` WHERE EntryX=" + x + " AND EntryY=" + y + " AND EntryZ=" + z);
                 int last = Portals.Rows.Count - 1;
                 if (last == -1) { Portals.Dispose(); return true; }
                 byte rotX = p.rot[0], rotY = p.rot[1];
@@ -64,18 +66,20 @@ namespace MCGalaxy.BlockBehaviour {
             p.RevertBlock(x, y, z);
             try {
                 //safe against SQL injections because no user input is given here
-                DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
+                DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name +
+                                                       "` WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
                 int last = Messages.Rows.Count - 1;
                 if (last == -1) { Messages.Dispose(); return true; }
-                
                 string message = Messages.Rows[last]["Message"].ToString().Trim();
                 message = message.Replace("\\'", "\'");
-                if ( message != p.prevMsg || Server.repeatMessage ) {
-                    if ( message.StartsWith("/") ) {
-                        string[] parts = message.Remove(0, 1).SplitSpaces(2);
+                
+                if (message != p.prevMsg || Server.repeatMessage) {
+                    string text;
+                    List<string> cmds = ParseMB(message, out text);
+                    if (text != null) Player.Message(p, text);
+                    foreach (string cmd in cmds) {
+                        string[] parts = cmd.SplitSpaces(2);
                         p.HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
-                    } else {
-                        Player.Message(p, message);
                     }
                     p.prevMsg = message;
                 }
@@ -102,6 +106,30 @@ namespace MCGalaxy.BlockBehaviour {
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
             p.level.Blockchange(x, y, z, Block.DoorAirs(block));
             return true;
+        }
+        
+        static string[] sep = { " |/" };
+        const StringSplitOptions opts = StringSplitOptions.RemoveEmptyEntries;
+        static List<string> empty = new List<string>();
+        internal static List<string> ParseMB(string message, out string text) {
+            if (message.IndexOf('|') == -1) return ParseSingle(message, out text);
+            
+            string[] parts = message.Split(sep, opts);
+            List<string> cmds = ParseSingle(parts[0], out text);
+            if (parts.Length == 1) return cmds;
+            
+            if (text != null) cmds = new List<string>();
+            for (int i = 1; i < parts.Length; i++)
+                cmds.Add(parts[i]);
+            return cmds;
+        }
+        
+        static List<string> ParseSingle(string message, out string text) {
+            if (message[0] == '/') {
+                text = null; return new List<string>(){ message.Substring(1) };
+            } else {
+                text = message; return empty;
+            }
         }
     }
 }
