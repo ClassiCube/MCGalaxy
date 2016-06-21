@@ -21,14 +21,13 @@ using System.IO;
 using System.Text;
 
 namespace MCGalaxy {
-    public sealed class PlayerList {  
-        
-        string file;
+    public sealed class PlayerList {          
+        string path;
         List<string> players = new List<string>();
         readonly object locker = new object();
         
         public PlayerList() { }
-        public PlayerList(string file) { this.file = file; }
+        public PlayerList(string path) { this.path = path; }
         
         public void Add(string p) {
             lock (locker)
@@ -62,32 +61,30 @@ namespace MCGalaxy {
         }
         
         
-        public void Save() { Save(file, true); }
-        public void Save(bool console) { Save(file, console); }
-        
-        public void Save(string file, bool console) {
-            using (StreamWriter w = new StreamWriter("ranks/" + file)) {
+        public void Save() { Save(true); }
+        public void Save(bool console) {
+            using (StreamWriter w = new StreamWriter(path)) {
                 lock (locker) {
                     foreach (string p in players)
                         w.WriteLine(p);
                 }
             }
-            if (console)
-                Server.s.Log("SAVED: " + file, true);
+            if (console) Server.s.Log("SAVED: " + path, true);
         }
         
-        public static PlayerList Load(string path) {
-            if (!Directory.Exists("ranks"))
-                Directory.CreateDirectory("ranks");
-            PlayerList list = new PlayerList(path);
-            path = "ranks/" + path;
-            if (!File.Exists(path)) {
-                File.Create(path).Close();
-                Server.s.Log("CREATED NEW: " + list.file);
+        public static PlayerList Load(string file) {
+            if (!Directory.Exists("ranks")) Directory.CreateDirectory("ranks");
+            PlayerList list = new PlayerList(file);
+            if (file.IndexOf('/') == -1) file = "ranks/" + file;
+            list.path = file;
+            
+            if (!File.Exists(list.path)) {
+                File.Create(list.path).Close();
+                Server.s.Log("CREATED NEW: " + list.path);
                 return list;
             }
             
-            using (StreamReader r = new StreamReader(path, Encoding.UTF8)) {
+            using (StreamReader r = new StreamReader(list.path, Encoding.UTF8)) {
                 string line = null;
                 while ((line = r.ReadLine()) != null) {
                     // Need to convert uppercase to lowercase, in case user added in entries.

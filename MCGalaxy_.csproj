@@ -576,7 +576,6 @@
     <Compile Include="Server\Server.Tasks.cs" />
     <Compile Include="Server\Server.Threads.cs" />
     <Compile Include="Server\Updater.cs" />
-    <Compile Include="Player\VIP.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />

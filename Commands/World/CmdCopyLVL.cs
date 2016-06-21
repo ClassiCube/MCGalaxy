@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             string src = args[0], dst = args[1];
-            if (!p.group.CanExecute("newlvl")) {
+            if (p != null && !p.group.CanExecute("newlvl")) {
                 Player.Message(p, "You cannot use /copylvl as you cannot use /newlvl."); return;
             }
             src = LevelInfo.FindMapMatches(p, src);

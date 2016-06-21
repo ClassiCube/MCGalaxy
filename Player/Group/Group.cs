@@ -88,7 +88,7 @@ namespace MCGalaxy
             fileName = file;
             OverseerMaps = maps;
             this.prefix = prefix;
-            playerList = name != "nobody" ? PlayerList.Load(fileName, this) : new PlayerList();
+            playerList = name != "nobody" ? PlayerList.Load(fileName) : new PlayerList();
             if (OnGroupLoaded != null)
                 OnGroupLoaded(this);
             OnGroupLoadedEvent.Call(this);

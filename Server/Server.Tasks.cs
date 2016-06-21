@@ -78,7 +78,8 @@ namespace MCGalaxy {
             ircControllers = PlayerList.Load("IRC_Controllers.txt");
             muted = PlayerList.Load("muted.txt");
             frozen = PlayerList.Load("frozen.txt");
-            hidden = PlayerList.Load("hidden.txt");            
+            hidden = PlayerList.Load("hidden.txt");
+            vip = PlayerList.Load("text/vip.txt");
             jailed = PlayerExtList.Load("ranks/jailed.txt");
             models = PlayerExtList.Load("extra/models.txt");
             skins = PlayerExtList.Load("extra/skins.txt");

@@ -393,7 +393,7 @@ namespace MCGalaxy {
         }
         
         bool CheckPlayersCount(Group foundGrp) {
-            if (VIP.Find(this)) return true;
+        	if (Server.vip.Contains(name)) return true;
             
             Player[] online = PlayerInfo.Online.Items;
             if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Leave("Server full!", true); return false; }

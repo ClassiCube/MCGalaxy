@@ -99,7 +99,7 @@ namespace MCGalaxy
         public static bool UseCTF = false;
         public static bool ServerSetupFinished = false;
         public static Auto_CTF ctf = null;
-        public static PlayerList bannedIP, whiteList, ircControllers, muted, ignored, frozen, hidden, agreed;
+        public static PlayerList bannedIP, whiteList, ircControllers, muted, ignored, frozen, hidden, agreed, vip;
         public static PlayerExtList jailed, models, skins;
 
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
