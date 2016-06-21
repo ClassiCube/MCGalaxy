@@ -16,7 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.BlockBehaviour;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Building {    
@@ -49,24 +51,32 @@ namespace MCGalaxy.Commands.Building {
             if (args.Length == 1) {
                 Player.Message(p, "You need to provide text to put in the messageblock."); return;
             }
-            if (cpos.message == null)
-                cpos.message = args[1];
-            bool allCmds = CheckExtraPerm(p);
-
-            foreach (Command com in Command.all.commands) {
-                if (com.defaultRank <= p.group.Permission && (allCmds || !com.type.Contains("mod"))) continue;
-                
-                if (IsCommand(cpos.message, "/" + com.name)) {
-                    p.SendMessage("You cannot use that command in a messageblock."); return;
-                }
-                if (com.shortcut != "" && IsCommand(cpos.message, "/" + com.shortcut)) {
-                    p.SendMessage("You cannot use that command in a messageblock."); return;
-                }
+            if (cpos.message == null) cpos.message = args[1];
+            
+            string text;
+            List<string> cmds = WalkthroughBehaviour.ParseMB(cpos.message, out text);
+            foreach (string cmd in cmds) {
+                if (!CheckCommand(p, cmd)) return;
             }
 
             p.blockchangeObject = cpos;
             Player.Message(p, "Place where you wish the message block to go."); p.ClearBlockchange();
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+        }
+        
+        bool CheckCommand(Player p, string message) {
+            bool allCmds = CheckExtraPerm(p);
+            foreach (Command cmd in Command.all.commands) {
+                if (cmd.defaultRank <= p.group.Permission && (allCmds || !cmd.type.Contains("mod"))) continue;
+                
+                if (IsCommand(message, cmd.name)) {
+                    p.SendMessage("You cannot use that command in a messageblock."); return false;
+                }
+                if (cmd.shortcut != "" && IsCommand(message, cmd.shortcut)) {
+                    p.SendMessage("You cannot use that command in a messageblock."); return false;
+                }
+            }
+            return true;
         }
         
         bool IsCommand(string message, string cmd) {
