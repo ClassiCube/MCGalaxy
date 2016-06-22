@@ -1190,74 +1190,82 @@ return;
         public void HandleCommand(string cmd, string message) {
             cmd = cmd.ToLower();
             try {
-                if (cmd == "") { SendMessage("No command entered."); return; }
-                if (Server.agreetorulesonentry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
-                    SendMessage("You must read /rules then agree to them with /agree!"); return;
-                }
-                if (jailed) {
-                    SendMessage("You cannot use any commands while jailed."); return;
-                }
-                if (Server.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
-                    SendMessage("&cYou must use &a/pass [Password]&c to verify!"); return;
-                }
-
-                //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
-                if (cmd == "pony") {
-                    if ( ponycount < 2 ) {
-                        GlobalMessage(color + DisplayName + " %Sjust so happens to be a proud brony! Everyone give " + color + name + " %Sa brohoof!");
-                        ponycount += 1;
-                    } else {
-                        SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
-                    }
-                    return;
-                }
-                if (cmd == "rainbowdashlikescoolthings") {
-                    if ( rdcount < 2 ) {
-                        GlobalMessage("&1T&2H&3I&4S &5S&6E&7R&8V&9E&aR &bJ&cU&dS&eT &fG&0O&1T &22&30 &4P&CE&7R&DC&EE&9N&1T &5C&6O&7O&8L&9E&aR&b!");
-                        rdcount += 1;
-                    } else {
-                        SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
-                    }
-                    return;
-                }
-
-                string shortcut = Command.all.FindShort(cmd);
-                if (shortcut != "") cmd = shortcut;
-                
-                byte bindIndex;
-                if (byte.TryParse(cmd, out bindIndex) && bindIndex < 10) {
-                    if (messageBind[bindIndex] == null) { SendMessage("No command is bound to: /" + cmd); return; }
-                    cmd = cmdBind[bindIndex];
-                    message = messageBind[bindIndex] + " " + message;
-                    message = message.TrimEnd(' ');                    
-                }
-
-                Alias alias = Alias.Find(cmd);
-                if (alias != null) {
-                    cmd = alias.Target;
-                    if (alias.Prefix != null)
-                        message = message == "" ? alias.Prefix : alias.Prefix + " " + message;
-                    if (alias.Suffix != null)
-                        message = message == "" ? alias.Suffix : message + " " + alias.Suffix;
-                }
-                
-                if (OnCommand != null) OnCommand(cmd, this, message);
-                if (PlayerCommand != null) PlayerCommand(cmd, this, message);
-                OnPlayerCommandEvent.Call(cmd, this, message);
-                if (cancelcommand) {
-                    cancelcommand = false; return;
-                }
-                
-                Command command = Command.all.Find(cmd);
-                if (command != null) {
-                    UseCommand(command, cmd, message);
-                } else if (Block.Byte(cmd.ToLower()) != Block.Zero) {
-                    HandleCommand("mode", cmd.ToLower());
-                } else {
-                    SendMessage("Unknown command \"" + cmd + "\"!");
-                }
+                if (!CheckCommand(cmd)) return;
+                Command command = GetCommand(ref cmd, ref message);
+                if (command != null) UseCommand(command, cmd, message);
+            } catch (Exception e) { 
+                Server.ErrorLog(e); SendMessage("Command failed."); 
             }
-            catch ( Exception e ) { Server.ErrorLog(e); SendMessage("Command failed."); }
+        }
+        
+        bool CheckCommand(string cmd) {
+            if (cmd == "") { SendMessage("No command entered."); return false; }
+            if (Server.agreetorulesonentry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
+                SendMessage("You must read /rules then agree to them with /agree!"); return false;
+            }
+            if (jailed) {
+                SendMessage("You cannot use any commands while jailed."); return false;
+            }
+            if (Server.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
+                SendMessage("&cYou must use &a/pass [Password]&c to verify!"); return false;
+            }
+
+            //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
+            if (cmd == "pony") {
+                if (ponycount < 2) {
+                    GlobalMessage(color + DisplayName + " %Sjust so happens to be a proud brony! Everyone give " + color + cmd + " %Sa brohoof!");
+                    ponycount++;
+                } else {
+                    SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
+                }
+                return false;
+            } else if (cmd == "rainbowdashlikescoolthings") {
+                if (rdcount < 2) {
+                    GlobalMessage("&1T&2H&3I&4S &5S&6E&7R&8V&9E&aR &bJ&cU&dS&eT &fG&0O&1T &22&30 &4P&CE&7R&DC&EE&9N&1T &5C&6O&7O&8L&9E&aR&b!");
+                    rdcount++;
+                } else {
+                    SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
+                }
+                return false;
+            }
+            return true;
+        }
+        
+        Command GetCommand(ref string cmd, ref string message) {
+            string shortcut = Command.all.FindShort(cmd);
+            if (shortcut != "") cmd = shortcut;
+            
+            byte bindIndex;
+            if (byte.TryParse(cmd, out bindIndex) && bindIndex < 10) {
+                if (messageBind[bindIndex] == null) { SendMessage("No command is bound to: /" + cmd); return null; }
+                cmd = cmdBind[bindIndex];
+                message = messageBind[bindIndex] + " " + message;
+                message = message.TrimEnd(' ');
+            }
+
+            Alias alias = Alias.Find(cmd);
+            if (alias != null) {
+                cmd = alias.Target;
+                if (alias.Prefix != null)
+                    message = message == "" ? alias.Prefix : alias.Prefix + " " + message;
+                if (alias.Suffix != null)
+                    message = message == "" ? alias.Suffix : message + " " + alias.Suffix;
+            }
+            
+            if (OnCommand != null) OnCommand(cmd, this, message);
+            if (PlayerCommand != null) PlayerCommand(cmd, this, message);
+            OnPlayerCommandEvent.Call(cmd, this, message);
+            if (cancelcommand) { cancelcommand = false; return null; }
+            
+            Command command = Command.all.Find(cmd);
+            if (command != null) return command;
+            if (Block.Byte(cmd) != Block.Zero) {
+                message = cmd.ToLower(); cmd = "mode"; 
+                return Command.all.Find("mode");
+            } else {
+                SendMessage("Unknown command \"" + cmd + "\"!");
+                return null;
+            }
         }
         
         void UseCommand(Command command, string cmd, string message) {
