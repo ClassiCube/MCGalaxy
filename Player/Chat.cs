@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using TokenParser = System.Func<bool, MCGalaxy.Player, string>;
+using TokenParser = System.Func<MCGalaxy.Player, string>;
 
 namespace MCGalaxy {
     
@@ -98,14 +98,21 @@ namespace MCGalaxy {
                 Player.Message(p, Server.DefaultColor + message);
         }
         
-        public static void ApplyTokens(StringBuilder sb, Player p, bool colorParse) {
+        public static string ApplyTokens(string text, Player p) {
+            if (text.IndexOf('$') == -1) return text;
+            StringBuilder sb = new StringBuilder(text);
+            ApplyTokens(sb, p);
+            return sb.ToString();
+        }
+        
+        public static void ApplyTokens(StringBuilder sb, Player p) {
             // only apply standard $tokens when necessary
             for (int i = 0; i < sb.Length; i++) {
                 if (sb[i] != '$') continue;
                 
                 foreach (var token in standardTokens) {
                     if (Server.disabledChatTokens.Contains(token.Key)) continue;
-                    string value = token.Value(colorParse, p);
+                    string value = token.Value(p);
                     if (value == null) continue;
                     sb.Replace(token.Key, value);
                 }
@@ -116,28 +123,30 @@ namespace MCGalaxy {
         }
         
         internal static Dictionary<string, TokenParser> standardTokens = new Dictionary<string, TokenParser> {
-            { "$name", (c, p) => p.DisplayName == null ? null :
+            { "$name", p => p.DisplayName == null ? null :
                     (Server.dollarNames ? "$" : "") + Colors.StripColours(p.DisplayName) },
-            { "$date", (c, p) => DateTime.Now.ToString("yyyy-MM-dd") },
-            { "$time", (c, p) => DateTime.Now.ToString("HH:mm:ss") },
-            { "$ip", (c, p) => p.ip },
-            { "$serverip", (c, p) => Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP },
-            { "$color", (c, p) => c ? p.color : null },
-            { "$rank", (c, p) => p.group == null ? null : p.group.name },
-            { "$level", (c, p) => p.level == null ? null : p.level.name },
+            { "$truename", p => p.truename == null ? null :
+                    (Server.dollarNames ? "$" : "") + p.truename },
+            { "$date", p => DateTime.Now.ToString("yyyy-MM-dd") },
+            { "$time", p => DateTime.Now.ToString("HH:mm:ss") },
+            { "$ip", p => p.ip },
+            { "$serverip", p => Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP },
+            { "$color", p => p.color },
+            { "$rank", p => p.group == null ? null : p.group.name },
+            { "$level", p => p.level == null ? null : p.level.name },
             
-            { "$deaths", (c, p) => p.overallDeath.ToString() },
-            { "$money", (c, p) => p.money.ToString() },
-            { "$blocks", (c, p) => p.overallBlocks.ToString() },
-            { "$first", (c, p) => p.firstLogin.ToString() },
-            { "$kicked", (c, p) => p.totalKicked.ToString() },
-            { "$server", (c, p) => Server.name },
-            { "$motd", (c, p) => Server.motd },
-            { "$banned", (c, p) => Player.GetBannedCount().ToString() },
-            { "$irc", (c, p) => Server.ircServer + " > " + Server.ircChannel },
+            { "$deaths", p => p.overallDeath.ToString() },
+            { "$money", p => p.money.ToString() },
+            { "$blocks", p => p.overallBlocks.ToString() },
+            { "$first", p => p.firstLogin.ToString() },
+            { "$kicked", p => p.totalKicked.ToString() },
+            { "$server", p => Server.name },
+            { "$motd", p => Server.motd },
+            { "$banned", p => Player.GetBannedCount().ToString() },
+            { "$irc", p => Server.ircServer + " > " + Server.ircChannel },
             
-            { "$infected", (c, p) => p.Game.TotalInfected.ToString() },
-            { "$survived", (c, p) => p.Game.TotalRoundsSurvived.ToString() },            
+            { "$infected", p => p.Game.TotalInfected.ToString() },
+            { "$survived", p => p.Game.TotalRoundsSurvived.ToString() },            
         };
         public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();
         

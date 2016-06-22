@@ -478,7 +478,7 @@ namespace MCGalaxy {
                 if (p.ignoreAll || p.ignoreIRC) continue;
                 
                 if (p.level.worldChat && p.Chatroom == null)
-                    p.SendMessage(message, true);
+                    p.SendMessage(message);
             }
         }
         

@@ -264,9 +264,9 @@ namespace MCGalaxy.Games {
                 
                 string msg = "&bInvisibility for &a" + left;
                 if (p.HasCpeExt(CpeExt.MessageTypes))
-                    p.SendCpeMessage(CpeMessageType.BottomRight2, msg, true);
+                    p.SendCpeMessage(CpeMessageType.BottomRight2, msg);
                 else
-                    p.SendMessage(msg, true);
+                    p.SendMessage(msg);
             }
         }
         
@@ -556,11 +556,11 @@ namespace MCGalaxy.Games {
             const string line1 = "&eLevel vote - type &a1&e, &c2&e or &93";
             string line2 = "&a" + lvl1 + "&e, &c" + lvl2 + "&e, &9random";
             if (p.HasCpeExt(CpeExt.MessageTypes)) {
-                p.SendCpeMessage(CpeMessageType.BottomRight2, line1, true);
-                p.SendCpeMessage(CpeMessageType.BottomRight1, line2, true);
+                p.SendCpeMessage(CpeMessageType.BottomRight2, line1);
+                p.SendCpeMessage(CpeMessageType.BottomRight1, line2);
             } else {
-                p.SendMessage(line1, true);
-                p.SendMessage(line2, true);
+                p.SendMessage(line1);
+                p.SendMessage(line2);
             }
         }
     }

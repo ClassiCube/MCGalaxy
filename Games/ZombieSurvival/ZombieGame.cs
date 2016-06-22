@@ -165,7 +165,7 @@ namespace MCGalaxy.Games {
         void UpdatePlayerStatus(Player p) {
             int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
             string status = GetStatusMessage(GetTimespan(seconds));
-            p.SendCpeMessage(CpeMessageType.Status1, status, true);
+            p.SendCpeMessage(CpeMessageType.Status1, status);
         }
         
         internal void UpdateAllPlayerStatus() {
@@ -178,7 +178,7 @@ namespace MCGalaxy.Games {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != CurLevel) continue;
-                p.SendCpeMessage(CpeMessageType.Status1, message, true);
+                p.SendCpeMessage(CpeMessageType.Status1, message);
             }
         }
 

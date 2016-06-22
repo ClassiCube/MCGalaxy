@@ -257,13 +257,11 @@ namespace MCGalaxy {
         }
 
         string ConvertMessage(string message, bool colorParse) {
-            if (colorParse)
-                message = Colors.EscapeColors(message);
+            if (colorParse) message = Colors.EscapeColors(message);
             StringBuilder sb = new StringBuilder(message);
-            if (colorParse)
-                ParseColors(sb);
+            if (colorParse) ParseColors(sb);
             
-            Chat.ApplyTokens(sb, this, colorParse);
+            Chat.ApplyTokens(sb, this);
             if ( Server.parseSmiley && parseSmiley ) {
                 sb.Replace(":)", "(darksmile)");
                 sb.Replace(":D", "(smile)");

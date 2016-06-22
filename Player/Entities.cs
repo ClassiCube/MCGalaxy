@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Text;
 using MCGalaxy.Games;
 
 namespace MCGalaxy {
@@ -132,10 +133,13 @@ namespace MCGalaxy {
         }
         
         internal static void Spawn(Player dst, PlayerBot b) {
+        	string name = Chat.ApplyTokens(b.name, dst);
+        	string skin = Chat.ApplyTokens(b.skinName, dst);
+        	
             if (dst.hasExtList) {
-                dst.SendExtAddEntity2(b.id, b.skinName, b.color + b.name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+                dst.SendExtAddEntity2(b.id, skin, b.color + name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             } else {
-                dst.SendSpawn(b.id, b.color + b.skinName, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+                dst.SendSpawn(b.id, b.color + skin, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             }
             if (Server.TablistBots)
                 TabList.Add(dst, b);
@@ -198,7 +202,7 @@ namespace MCGalaxy {
         #region Position updates
         
         public static byte[] GetPositionPacket(PlayerBot bot) {
-            // TODO: not sure why this bots only work with absolute packets
+            // TODO: not sure why bots only work with absolute packets
             byte[] buffer = new byte[10];
             buffer[0] = Opcode.EntityTeleport;
             buffer[1] = bot.id;
