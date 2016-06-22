@@ -30,10 +30,6 @@ namespace MCGalaxy.Gui
 {
     public partial class Window : Form
     {
-        // What is this???
-        /*Regex regex = new Regex(@"^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\." +
-                                "([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$");*/
-
         // for cross thread use
         delegate void StringCallback(string s);
         delegate void PlayerListCallback(List<Player> players);
@@ -41,8 +37,8 @@ namespace MCGalaxy.Gui
         public static bool fileexists = false;
         bool mapgen = false;
 
-        PlayerCollection pc = new PlayerCollection(new PlayerListView());
-        LevelCollection lc = new LevelCollection(new LevelListView());
+        PlayerCollection pc = new PlayerCollection();
+        LevelCollection lc = new LevelCollection();
 
         //public static event EventHandler Minimize;
         public NotifyIcon notifyIcon1 = new NotifyIcon();
@@ -119,7 +115,7 @@ namespace MCGalaxy.Gui
             dgvPlayers.DataSource = pc;
             dgvPlayers.Font = new Font("Calibri", 8.25f);
 
-            dgvMaps.DataSource = new LevelCollection(new LevelListView());
+            dgvMaps.DataSource = new LevelCollection();
             dgvMaps.Font = new Font("Calibri", 8.25f);
 
             UpdateListTimer.Elapsed += delegate
@@ -307,7 +303,7 @@ namespace MCGalaxy.Gui
                 // Update the data source and control
                 //dgvPlayers.SuspendLayout();
 
-                pc = new PlayerCollection(new PlayerListView());
+                pc = new PlayerCollection();
                 PlayerInfo.players.ForEach(p => pc.Add(p));
 
                 //dgvPlayers.Invalidate();

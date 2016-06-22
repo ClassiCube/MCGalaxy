@@ -48,10 +48,10 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\Descriptors.cs" />
     <Compile Include="GUI\Formatter.cs" />
     <Compile Include="GUI\Handlers.cs" />
     <Compile Include="GUI\LevelSettings.cs" />
-    <Compile Include="GUI\PlayerCollection.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="GUI\Window.cs">
       <SubType>Form</SubType>
@@ -63,7 +63,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GUI\Win32\Natives.cs" />
-    <Compile Include="GUI\LevelCollection.cs" />
     <Compile Include="GUI\PropertyWindow.Games.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>

@@ -1292,19 +1292,20 @@ return;
                 }
             } catch { }
 
-            Thread thread = new Thread(
-                new ThreadStart(delegate {
-                                    try {
-                                        command.Use(this, message);
-                                    } catch (Exception e) {
-                                        Server.ErrorLog(e);
-                                        Player.Message(this, "An error occured when using the command!");
-                                        Player.Message(this, e.GetType() + ": " + e.Message);
-                                    }
-                                }));
+            Thread thread = new Thread(() => DoCommand(command, message));
             thread.Name = "MCG_Command";
             thread.IsBackground = true;
             thread.Start();
+        }
+        
+        void DoCommand(Command cmd, string message) {
+            try {
+                cmd.Use(this, message);
+            } catch (Exception e) {
+                Server.ErrorLog(e);
+                Player.Message(this, "An error occured when using the command!");
+                Player.Message(this, e.GetType() + ": " + e.Message);
+            }
         }
     }
 }
