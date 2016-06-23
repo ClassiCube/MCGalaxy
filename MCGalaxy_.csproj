@@ -170,6 +170,7 @@
     <Compile Include="Commands\Chat\CmdHigh5.cs" />
     <Compile Include="Commands\Chat\CmdHug.cs" />
     <Compile Include="Commands\Chat\CmdIgnore.cs" />
+    <Compile Include="Commands\Chat\CmdInbox.cs" />
     <Compile Include="Commands\Chat\CmdLoginMessage.cs" />
     <Compile Include="Commands\Chat\CmdLogoutMessage.cs" />
     <Compile Include="Commands\Chat\CmdMe.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Commands\Chat\CmdRankMsg.cs" />
     <Compile Include="Commands\Chat\CmdRoll.cs" />
     <Compile Include="Commands\Chat\CmdSay.cs" />
+    <Compile Include="Commands\Chat\CmdSend.cs" />
     <Compile Include="Commands\Chat\CmdTColor.cs" />
     <Compile Include="Commands\Chat\CmdTitle.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
@@ -244,7 +246,6 @@
     <Compile Include="Commands\Information\CmdFaq.cs" />
     <Compile Include="Commands\Information\CmdHasirc.cs" />
     <Compile Include="Commands\Information\CmdHelp.cs" />
-    <Compile Include="Commands\Information\CmdInbox.cs" />
     <Compile Include="Commands\Information\CmdRankInfo.cs" />
     <Compile Include="Commands\Information\CmdServerInfo.cs" />
     <Compile Include="Commands\Information\CmdLastCmd.cs" />
@@ -344,7 +345,6 @@
     <Compile Include="Commands\other\CmdReport.cs" />
     <Compile Include="Commands\other\CmdResetPass.cs" />
     <Compile Include="Commands\other\CmdRide.cs" />
-    <Compile Include="Commands\other\CmdSend.cs" />
     <Compile Include="Commands\other\CmdSendCmd.cs" />
     <Compile Include="Commands\other\CmdServer.cs" />
     <Compile Include="Commands\other\CmdSetPass.cs" />
