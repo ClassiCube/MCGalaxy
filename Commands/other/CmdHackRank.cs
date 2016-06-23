@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/hackrank [rank] - Hacks a rank");
+            Player.Message(p, "%T/hackrank [rank] %H- Hacks a rank");
             Player.Message(p, "Available ranks: " + Group.concatList());
         }
     }

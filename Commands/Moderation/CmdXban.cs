@@ -37,7 +37,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/xban [name] [message]- Bans, IP bans, undoes, and kicks [name] with [message], if specified.");
+            Player.Message(p, "%T/xban [name] [message]");
+            Player.Message(p, "%HBans, IP bans, undoes, and kicks [name] with [message], if specified.");
         }
     }
 }

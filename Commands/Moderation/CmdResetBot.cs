@@ -15,24 +15,22 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdResetBot : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdResetBot : Command {
         public override string name { get { return "resetbot"; } }
         public override string shortcut { get { return "resetirc"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdResetBot() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             Server.IRC.Reset();
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/resetbot - reloads the IRCBot. FOR EMERGENCIES ONLY!");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/resetbot");
+            Player.Message(p, "%HReloads the IRCBot. FOR EMERGENCIES ONLY!");
         }
     }
 }

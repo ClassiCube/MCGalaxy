@@ -70,10 +70,11 @@ namespace MCGalaxy.Commands
 
             messageTimer.Start();
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/timer [time] [message] - Starts a timer which repeats [message] every 5 seconds.");
-            Player.Message(p, "Repeats constantly until [time] has passed");
+        
+        public override void Help(Player p)  {
+            Player.Message(p, "%T/timer [time] [message]");
+            Player.Message(p, "%HStarts a timer which repeats [message] every 5 seconds.");
+            Player.Message(p, "%HRepeats constantly until [time] has passed");
         }
     }
 }

@@ -103,9 +103,10 @@ namespace MCGalaxy.Commands {
         struct CatchPos { public ushort x, y, z; public string message; public long seconds; }
 
         public override void Help(Player p) {
-            Player.Message(p, "/undoarea [player] [seconds] - Undoes the blockchanges made by [player] in the previous [seconds].");
+            Player.Message(p, "%T/undoarea [player] [seconds]");
+            Player.Message(p, "%HUndoes the blockchanges made by [player] in the previous [seconds] in a specific area.");
             if (p == null || (p.group.maxUndo <= 500000 || p.group.maxUndo == 0))
-                Player.Message(p, "/undoarea [player] all - &cUndoes 68 years for [player]");
+                Player.Message(p, "%T/undoarea [player] all %H- Undoes 68 years for [player]");
         }
     }
 }

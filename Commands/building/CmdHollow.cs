@@ -66,8 +66,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/hollow - Hollows out an area without flooding it");
-            Player.Message(p, "/hollow [block] - Hollows around [block]");
+            Player.Message(p, "%T/hollow");
+            Player.Message(p, "%HHollows out an area without flooding it");
+            Player.Message(p, "%T/hollow [block]");
+            Player.Message(p, "%HHollows around [block]");
         }
     }
 }

@@ -20,18 +20,16 @@
 using System;
 using System.IO;
 using System.Threading;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdShutdown : Command
-    {
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdShutdown : Command {
         public override string name { get { return "shutdown"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public override void Help(Player p) { Player.Message(p, "/shutdown [time] [message] - Shuts the server down"); }
-        public override void Use(Player p, string message)
-        {
+
+        public override void Use(Player p, string message) {
             int secTime = 10;
             bool shutdown = true;
             string file = "stopShutdown";
@@ -65,7 +63,11 @@ namespace MCGalaxy.Commands
                 if (!File.Exists(file)) { MCGalaxy.Gui.App.ExitProgram(false); return; }
                 else { File.Delete(file); Player.GlobalMessage("Shutdown cancelled"); Server.s.Log("Shutdown cancelled"); return; }
             }
-            return;
+        }
+        
+        public override void Help(Player p) { 
+            Player.Message(p, "%T/shutdown [time] [message]");
+            Player.Message(p, "%HShuts the server down"); 
         }
     }
 }

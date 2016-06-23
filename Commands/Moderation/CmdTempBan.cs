@@ -71,9 +71,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/tempban <name> <minutes> [reason] - Bans <name> for <minutes>");
-            Player.Message(p, "Max time is 1440 (1 day). Default is 60");
-            Player.Message(p, "Temp bans will reset on server restart");
+            Player.Message(p, "%T/tempban <name> <minutes> [reason]");
+            Player.Message(p, "%HBans <name> for <minutes>. Max time is 1440 (1 day). Default is 60");
+            Player.Message(p, "%HTemp bans will reset on server restart");
         }
     }
 }

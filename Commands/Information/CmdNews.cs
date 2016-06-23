@@ -38,7 +38,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/news - Shows server news.");
+            Player.Message(p, "%T/news");
+            Player.Message(p, "%HShows server news.");
         }
     }
 }

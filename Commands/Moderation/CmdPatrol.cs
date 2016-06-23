@@ -26,17 +26,14 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "patrol"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override CommandPerm[] AdditionalPerms {
             get { return new[] { new CommandPerm(LevelPermission.Guest, " and below are patrolled") }; }
         }
         
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/patrol - Teleports you to a random " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " or lower");
-        }
+
 
         public override void Use(Player p, string message)
         {
@@ -55,6 +52,11 @@ namespace MCGalaxy.Commands
             Player who = PlayerInfo.FindExact(value);
             Command.all.Find("tp").Use(p, who.name);
             Player.Message(p, "Now visiting " + who.ColoredName + "%S.");
+        }
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/patrol");
+            Player.Message(p, "%HTeleports you to a random " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " or lower");
         }
     }
 }

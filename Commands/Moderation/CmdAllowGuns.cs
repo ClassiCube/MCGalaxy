@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/allowguns [level]");
+            Player.Message(p, "%T/allowguns [level]");
             Player.Message(p, "%HAllows/disallows guns and missiles on the specified level.");
             Player.Message(p, "%HIf no [level] is given, uses your current level.");
         }

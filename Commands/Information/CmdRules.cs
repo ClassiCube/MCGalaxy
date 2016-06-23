@@ -61,10 +61,12 @@ namespace MCGalaxy.Commands
 
         public override void Help(Player p) {
         	if (CheckExtraPerm(p)) {
-                Player.Message(p, "/rules [player]- Displays server rules to a player.");
-                Player.Message(p, "If no [player] is given, the rules will be sent to you.");
+                Player.Message(p, "%T/rules [player]");
+                Player.Message(p, "%HDisplays server rules to [player].");
+                Player.Message(p, "%HIf no [player] is given, the rules will be sent to you.");
             } else {
-                Player.Message(p, "/rules - Displays the server rules.");
+                Player.Message(p, "%T/rules");
+                Player.Message(p, "%HDisplays the server rules.");
             }
         }
     }

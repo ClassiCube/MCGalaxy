@@ -50,7 +50,8 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/oprules [player]- Displays server oprules to a player");
+            Player.Message(p, "%T/oprules [player]");
+            Player.Message(p, "%HDisplays server oprules to a player");
         }
     }
 }

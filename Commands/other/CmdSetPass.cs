@@ -70,10 +70,10 @@ namespace MCGalaxy.Commands
             Player.Message(p, "&c" + message);
         }
 
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/setpass [Password] - Sets your admin password to [password].");
-            Player.Message(p, "Note: Do NOT set this as your Minecraft password!");
+        public override void Help(Player p) {
+            Player.Message(p, "%T/setpass [Password]");
+            Player.Message(p, "%HSets your admin password to [password].");
+            Player.Message(p, "%HNote: &cDo NOT set this as your Minecraft password!");
         }
     }
 }

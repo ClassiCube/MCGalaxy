@@ -62,9 +62,11 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/jail [user] - Places [user] in jail unable to use commands.");
-            Player.Message(p, "/jail [set] - Creates the jail point for the map.");
-            Player.Message(p, "This command has been deprecated in favor of /xjail.");
+            Player.Message(p, "%T/jail [user]");
+            Player.Message(p, "%HPlaces [user] in jail unable to use commands.");
+            Player.Message(p, "%T/jail set");
+            Player.Message(p, "%HCreates the jail point for the map.");
+            Player.Message(p, "%H  This has been deprecated in favor of /xjail.");
         }
     }
 }

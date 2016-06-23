@@ -17,13 +17,11 @@
  */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
-	
-    public sealed class CmdSpawn : Command {
-		
+namespace MCGalaxy.Commands {	
+    public sealed class CmdSpawn : Command {		
         public override string name { get { return "spawn"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdSpawn() { }
@@ -58,7 +56,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/spawn - Teleports yourself to the spawn location.");
+            Player.Message(p, "%T/spawn");
+            Player.Message(p, "%HTeleports you to the spawn location of the level.");
         }
     }
 }

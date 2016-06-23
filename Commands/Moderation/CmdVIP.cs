@@ -72,11 +72,12 @@ namespace MCGalaxy.Commands {
         
         static string Name(Player pl, string name) { return pl == null ? name : pl.ColoredName; }
         
-        public override void Help(Player p) {
-            Player.Message(p, "VIPs are players who can join regardless of the player limit.");
-            Player.Message(p, "/vip add <name> - Add a VIP.");
-            Player.Message(p, "/vip remove <name> - Remove a VIP.");
-            Player.Message(p, "/vip list - List all VIPs.");
+        public override void Help(Player p) {           
+            Player.Message(p, "%T/vip <add/remove> [player]");
+            Player.Message(p, "%HAdds or removes [player] from the VIP list.");
+            Player.Message(p, "%T/vip list");
+            Player.Message(p, "%HLists all players who are on the VIP list.");
+            Player.Message(p, "%H  VIPs can join regardless of the player limit.");
         }
     }
 }

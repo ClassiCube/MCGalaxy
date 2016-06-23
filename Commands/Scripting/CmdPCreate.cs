@@ -61,7 +61,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/pcreate <Plugin name> - Create a example .cs file!");
+            Player.Message(p, "%T/pcreate <Plugin name>");
+            Player.Message(p, "%HCreate a example .cs file!");
         }
     }
 }

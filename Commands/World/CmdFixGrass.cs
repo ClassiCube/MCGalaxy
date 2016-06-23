@@ -160,11 +160,11 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/fixgrass <type> - Fixes grass based on type");
-            Player.Message(p, "<type> as \"\": Any grass with something on top is made into dirt, dirt with nothing on top is made grass");
-            Player.Message(p, "<type> as \"light\": Only dirt/grass in sunlight becomes grass");
-            Player.Message(p, "<type> as \"grass\": Only turns grass to dirt when under stuff");
-            Player.Message(p, "<type> as \"dirt\": Only turns dirt with nothing on top to grass");
+            Player.Message(p, "%T/fixgrass <type> %H- Fixes grass based on type");
+            Player.Message(p, "%H<type> as \"\": Any grass with something on top is made into dirt, dirt with nothing on top is made grass");
+            Player.Message(p, "%H<type> as \"light\": Only dirt/grass in sunlight becomes grass");
+            Player.Message(p, "%H<type> as \"grass\": Only turns grass to dirt when under stuff");
+            Player.Message(p, "%H<type> as \"dirt\": Only turns dirt with nothing on top to grass");
         }
     }
 }

@@ -58,7 +58,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.Message(p, "/descend - Teleports you to the first free space below you.");
+            Player.Message(p, "%T/descend");
+            Player.Message(p, "%HTeleports you to the first free space below you.");
         }
     }
 }

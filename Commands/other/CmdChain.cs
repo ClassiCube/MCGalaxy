@@ -102,7 +102,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/chain - Shoots a chain of brown mushrooms and grabs a block and brings it back to the start.");
+            Player.Message(p, "%T/chain");
+            Player.Message(p, "%HShoots a chain of brown mushrooms and grabs a block and brings it back to the start.");
         }
     }
 }

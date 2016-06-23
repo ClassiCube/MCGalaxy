@@ -98,7 +98,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.Message(p, "/votekick <player> - Calls a 30sec vote to kick <player>");
+            Player.Message(p, "%T/votekick <player>");
+            Player.Message(p, "%HCalls a 30sec vote to kick <player>");
         }
     }
 }

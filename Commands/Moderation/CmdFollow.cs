@@ -114,8 +114,10 @@ namespace MCGalaxy.Commands
         
         public override void Help(Player p)
         {
-            Player.Message(p, "/follow <name> - Follows <name> until the command is cancelled");
-            Player.Message(p, "/follow # <name> - Will cause /hide not to be toggled");
+            Player.Message(p, "%T/follow <name>");
+            Player.Message(p, "%HFollows <name> until the command is cancelled");
+            Player.Message(p, "%T/follow # <name>");
+            Player.Message(p, "%HWill cause /hide not to be toggled");
         }
     }
 }

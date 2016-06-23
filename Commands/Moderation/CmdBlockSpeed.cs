@@ -92,9 +92,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/bs [option] [option value] - Options for block speeds.");
-            Player.Message(p, "Options are: bs (blocks per interval), ts (interval in milliseconds), buf (toggles buffering), clear, net.");
-            Player.Message(p, "/bs net [2,4,8,12,16,20,24] - Presets, divide by 8 and times by 1000 to get blocks per second.");
+            Player.Message(p, "%T/bs [option] [option] [value].");
+            Player.Message(p, "%HOptions for block speeds are: %Sbs (blocks per interval), ts (interval in milliseconds), buf (toggles buffering), clear, net.");
+            Player.Message(p, "%T/bs net [2,4,8,12,16,20,24]");
+            Player.Message(p, "%HPresets, divide by 8 and times by 1000 to get blocks per second.");
         }
     }
 }

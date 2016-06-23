@@ -111,7 +111,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/load <level> <physics> - Loads a level.");
+            Player.Message(p, "%T/load <level> <physics>");
+            Player.Message(p, "%HLoads a level.");
         }
     }
 }

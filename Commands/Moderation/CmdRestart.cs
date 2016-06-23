@@ -33,7 +33,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.Message(p, "/restart - Restarts the server!  Use carefully!");
+            Player.Message(p, "%T/restart");
+            Player.Message(p, "%HRestarts the server! Use carefully!");
         }
     }
 }

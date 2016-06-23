@@ -106,7 +106,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/opstats [player] [today]|[yesterday]|[thismonth]|[lastmonth]|[all] - Displays information about operator command usage.");
+            Player.Message(p, "%T/opstats [player] [today]|[yesterday]|[thismonth]|[lastmonth]|[all]");
+            Player.Message(p, "%HDisplays information about operator command usage.");
         }
     }
 }

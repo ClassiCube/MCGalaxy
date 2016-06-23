@@ -62,7 +62,8 @@ namespace MCGalaxy.Commands
         }
         public override void Help(Player p)
         {
-            Player.Message(p, "/ascend - Teleports you to the first free space above you.");
+            Player.Message(p, "%T/ascend");
+            Player.Message(p, "%HTeleports you to the first free space above you.");
         }
     }
 }

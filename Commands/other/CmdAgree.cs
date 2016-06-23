@@ -50,7 +50,8 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/agree - Agree to the rules when entering the server");
+            Player.Message(p, "%T/agree");
+            Player.Message(p, "%HAgree to the rules when entering the server");
         }
     }
 }

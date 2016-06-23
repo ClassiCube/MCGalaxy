@@ -65,10 +65,12 @@ namespace MCGalaxy.Commands
             who.SendOwnHeadPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
             who.SendMessage("You were summoned by " + p.ColoredName + "%S.");
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/summon <player> - Summons a player to your position.");
-            Player.Message(p, "/summon all - Summons all players in the map");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/summon <player>");
+            Player.Message(p, "%HSummons a player to your position.");
+            Player.Message(p, "%T/summon all");
+            Player.Message(p, "%HSummons all players in the map");
         }
     }
 }

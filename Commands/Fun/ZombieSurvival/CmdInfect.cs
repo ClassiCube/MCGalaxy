@@ -40,7 +40,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/infect [name] - infects [name]");
+            Player.Message(p, "%T/infect [name]");
+            Player.Message(p, "%HTurns [name] into a zombie");
         }
     }
 }

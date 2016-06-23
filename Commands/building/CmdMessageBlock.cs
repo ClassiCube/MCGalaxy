@@ -141,9 +141,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/mb [block] [message] - Places a message in your next block.");
-            Player.Message(p, "Valid blocks: white, black, air, water, lava");
-            Player.Message(p, "/mb show shows or hides MBs");
+            Player.Message(p, "%T/mb [block] [message]");
+            Player.Message(p, "%HPlaces a message in your next block.");
+            Player.Message(p, "%H  Valid blocks: white, black, air, water, lava");
+            Player.Message(p, "%T/mb show");
+            Player.Message(p, "%Hshows or hides MBs");
         }
     }
 }

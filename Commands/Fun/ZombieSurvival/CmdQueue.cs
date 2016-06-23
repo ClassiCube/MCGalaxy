@@ -55,8 +55,10 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/queue zombie [name] - Next round [name] will be infected");
-            Player.Message(p, "/queue level [name] - Next round [name] will be the round loaded");
+            Player.Message(p, "%T/queue zombie [name]");
+            Player.Message(p, "%HNext round [name] will be infected/start zombie");
+            Player.Message(p, "%T/queue level [name]");
+            Player.Message(p, "%HNext round [name] will be the level used");
         }
     }
 }

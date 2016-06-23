@@ -69,7 +69,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/baninfo <player> - returns info about banned player.");
+            Player.Message(p, "%T/baninfo <player>");
+            Player.Message(p, "%Hreturns info about banned player.");
         }
     }
 }

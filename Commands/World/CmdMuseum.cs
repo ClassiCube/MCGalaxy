@@ -74,8 +74,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/museum <map> <restore> - Allows you to access a restore of the map entered.");
-            Player.Message(p, "Works on offline maps");
+            Player.Message(p, "%T/museum <map> <restore>");
+            Player.Message(p, "%HAllows you to access a restore of the map entered. Works on unloaded maps");
         }
     }
 }

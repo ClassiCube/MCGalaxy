@@ -70,8 +70,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/warn <player> <reason> - Warns a player.");
-            Player.Message(p, "Player will get kicked after 3 warnings.");
+            Player.Message(p, "%T/warn <player> <reason>");
+            Player.Message(p, "%HWarns a player. Players are kicked after 3 warnings.");
         }
     }
 }

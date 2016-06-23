@@ -40,7 +40,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/disinfect [name] - disinfects [name]");
+            Player.Message(p, "%T/disinfect [name]");
+            Player.Message(p, "%HTurns [name] back into a human");
         }
     }
 }

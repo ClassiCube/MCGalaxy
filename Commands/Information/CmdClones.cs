@@ -66,7 +66,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/clones <name> - Finds everyone with the same IP as <name>");
+            Player.Message(p, "%T/clones <name>");
+            Player.Message(p, "%HFinds everyone with the same IP as <name>");
         }
     }
 }

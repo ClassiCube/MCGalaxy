@@ -81,9 +81,10 @@ namespace MCGalaxy.Commands
             Player.Message(p, "Message sent to &5" + whoTo + ".");
             if (who != null) who.SendMessage("Message recieved from &5" + fromname + "%S.");
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/send [name] <message> - Sends <message> to [name].");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/send [name] <message>");
+            Player.Message(p, "%HSends <message> to [name].");
         }
     }
 }

@@ -56,7 +56,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/c4 - Place c4!");
+            Player.Message(p, "%T/c4");
+            Player.Message(p, "%HPlace c4!");
         }
     }
 }

@@ -71,8 +71,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/slap <name> - Slaps <name>, knocking them into the air");
-            Player.Message(p, "/slap <level> - Slaps all players on <level> that are a lower rank than you, knocking them into the air");
+            Player.Message(p, "%T/slap <name>");
+            Player.Message(p, "%HSlaps <name>, knocking them into the air");
+            Player.Message(p, "%T/slap <level>");
+            Player.Message(p, "%HSlaps all players on <level> that are a lower rank than you, knocking them into the air");
         }
     }
 }

@@ -38,8 +38,9 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/cmdload <command> - Loads a compiled command into the server for use.");
-            Player.Message(p, "This method load both C# and Visual Basic compiled commands.");
+            Player.Message(p, "%T/cmdload <command>");
+            Player.Message(p, "%HLoads a compiled command into the server for use.");
+            Player.Message(p, "%HThis method load both C# and Visual Basic compiled commands.");
         }
     }
 }

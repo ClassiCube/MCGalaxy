@@ -40,7 +40,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/changelog - View the most recent changelog.");
+            Player.Message(p, "%T/changelog");
+            Player.Message(p, "%HView the most recent changelog for MCGalaxy.");
         }
     }
 }

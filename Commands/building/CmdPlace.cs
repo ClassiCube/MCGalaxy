@@ -63,7 +63,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/place [block] <x y z> - Places block at your feet or <x y z>");
+            Player.Message(p, "%T/place [block] <x> <y> <z>");
+            Player.Message(p, "%HPlaces block at your feet or <x> <y> <z>");
         }
     }
 }

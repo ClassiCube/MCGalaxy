@@ -106,8 +106,9 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/splace [distance] [interval] - Measures a set [distance] and places a stone block at each end.");
-            Player.Message(p, "Optionally place a block at set [interval] between them.");
+            Player.Message(p, "%T/splace [distance] [interval]");
+            Player.Message(p, "%HMeasures a set [distance] and places a stone block at each end.");
+            Player.Message(p, "%HOptionally place a block at set [interval] between them.");
         }
     }
 }

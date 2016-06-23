@@ -100,7 +100,8 @@ namespace MCGalaxy.Commands.Building {
         struct CatchPos { public int dist; }
         
         public override void Help(Player p) {
-            Player.Message(p, "/drill [distance] - Drills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
+            Player.Message(p, "%T/drill [distance]");
+            Player.Message(p, "%HDrills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
         }
     }
 }

@@ -17,10 +17,8 @@
 */
 using System;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdGarbage : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdGarbage : Command {
         public override string name { get { return "garbage"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -28,16 +26,16 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdGarbage() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             Player.Message(p, "Forcing garbage collection...");
             GC.Collect();
             GC.WaitForPendingFinalizers();
             Player.Message(p, "Garbage collection completed!");
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/garbage - Forces the .NET garbage collector to run, which releases unused memory. You shouldn't need to use this often.");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/garbage");
+            Player.Message(p, "%HForces the .NET garbage collector to run, which releases unused memory. You shouldn't need to use this often.");
         }
     }
 }

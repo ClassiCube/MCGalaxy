@@ -47,8 +47,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/sendcmd <player> <command> [arguments] - Make another user use a command.");
-            Player.Message(p, "ex: /sendcmd bob tp bob2");
+            Player.Message(p, "%T/sendcmd <player> <command> [arguments]");
+            Player.Message(p, "%HMake another user use a command. (e.g /sendcmd bob tp bob2)");
         }
     }
 }

@@ -194,15 +194,15 @@ namespace MCGalaxy.Commands {
         }
 
         static void MessageValidTypes(Player p) {
-            Player.Message(p, "Valid types: FirstLogin, LastLogin, TotalLogins, Title, TotalDeaths, Money, " +
+            Player.Message(p, "%HValid types: %SFirstLogin, LastLogin, TotalLogins, Title, TotalDeaths, Money, " +
                                "TotalBlocks, TotalCuboid, TotalKicked, TimeSpent, Color, TitleColor ");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/pe <username> <type> <value>");
-            Player.Message(p, "Edits an online or offline player's information. Use with caution!");
+            Player.Message(p, "%T/pe <username> <type> <value>");
+            Player.Message(p, "%HEdits an online or offline player's information. Use with caution!");
             MessageValidTypes(p);
-            Player.Message(p, "To see value format for a specific type, leave <value> blank.");
+            Player.Message(p, "%HTo see value format for a specific type, leave <value> blank.");
         }
     }
 }

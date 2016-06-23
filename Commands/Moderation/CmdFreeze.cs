@@ -51,7 +51,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/freeze <name> - Stops <name> from moving until unfrozen.");
+            Player.Message(p, "%T/freeze <name>");
+            Player.Message(p, "%HStops <name> from moving until unfrozen.");
         }
     }
 }

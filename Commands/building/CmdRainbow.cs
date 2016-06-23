@@ -55,7 +55,8 @@ namespace MCGalaxy.Commands.Building {
         struct CatchPos { public ushort x, y, z; }
         
         public override void Help(Player p) {
-            Player.Message(p, "/rainbow - Taste the rainbow");
+            Player.Message(p, "%T/rainbow");
+            Player.Message(p, "%HTaste the rainbow");
         }
     }
 }

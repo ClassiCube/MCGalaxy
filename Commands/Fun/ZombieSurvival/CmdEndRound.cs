@@ -33,7 +33,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/endround - ends the round");
+            Player.Message(p, "%T/endround");
+            Player.Message(p, "%HEnds the current round of zombie survival");
         }
     }
 }

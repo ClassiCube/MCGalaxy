@@ -39,7 +39,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/disagree - Disagree to the rules when entering the server");
+            Player.Message(p, "%T/disagree");
+            Player.Message(p, "%HDisagree to the rules when entering the server");
         }
     }
 }

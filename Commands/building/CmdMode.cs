@@ -67,10 +67,11 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/mode [block] - Makes every block placed into [block].");
-            Player.Message(p, "/[block] also works");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/mode [block]");
+            Player.Message(p, "%HMakes every block placed into [block].");
+            Player.Message(p, "%H/[block] also works");
         }
     }
 }

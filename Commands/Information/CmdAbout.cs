@@ -100,7 +100,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/about - Displays information about a block.");
+            Player.Message(p, "%T/about");
+            Player.Message(p, "%HDisplays information about a block.");
         }
     }
 }

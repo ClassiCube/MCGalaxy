@@ -65,7 +65,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/ircctrl <reload/add/remove/list> [name]");
+            Player.Message(p, "%T/ircctrl <add/remove> [name]");
+            Player.Message(p, "%HAdds or removes <name> from list of IRC controllers");
+            Player.Message(p, "%T/ircctrl <reload/list>");
+            Player.Message(p, "%HReloads or outputslist of IRC controllers");
         }
     }
 }

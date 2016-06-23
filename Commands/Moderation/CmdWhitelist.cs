@@ -61,7 +61,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/whitelist <add/del/list> [player] - Handles whitelist entry for [player], or lists all entries.");
+            Player.Message(p, "%T/whitelist <add/del> [player]");
+            Player.Message(p, "%HAdds or removes [player] from the whitelist.");
+            Player.Message(p, "%T/whitelist list");
+            Player.Message(p, "%HLists all players who are on the whitelist.");
         }
     }
 }

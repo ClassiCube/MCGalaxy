@@ -106,8 +106,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/gun [at end] - Allows you to fire bullets at people");
-            Player.Message(p, "Available [at end] values: &cexplode, destroy, laser, tp");
+            Player.Message(p, "%T/gun [at end]");
+            Player.Message(p, "%HAllows you to fire bullets at people");
+            Player.Message(p, "%HAvailable [at end] types: %Sexplode, destroy, laser, tp");
         }
     }
 }

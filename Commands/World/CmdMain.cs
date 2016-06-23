@@ -52,8 +52,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/main %H- Sends you to the main level.");
-            Player.Message(p, "%T/main [level] %H- Sets the main level to that level.");
+            Player.Message(p, "%T/main");
+            Player.Message(p, "%HSends you to the main level.");
+            Player.Message(p, "%T/main [level]");
+            Player.Message(p, "%HSets the main level to that level.");
         }
     }
 }

@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/devs - Displays the MCGalaxy team (Developers and moderators).");
+            Player.Message(p, "%T/devs");
+            Player.Message(p, "%HDisplays the MCGalaxy team (Developers and moderators).");
         }
     }
 }

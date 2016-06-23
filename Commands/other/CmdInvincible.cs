@@ -49,8 +49,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/invincible [name] - Turns invincible mode on/off.");
-            Player.Message(p, "If [name] is given, that player's invincibility is toggled");
+            Player.Message(p, "%T/invincible [name]");
+            Player.Message(p, "%HTurns invincible mode on/off.");
+            Player.Message(p, "%HIf [name] is given, that player's invincibility is toggled");
         }
     }
 }

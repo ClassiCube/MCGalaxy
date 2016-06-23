@@ -96,8 +96,9 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/fly - The old method of flight before custom clients.");
-            Player.Message(p, "May not work at all depending on your connection.");
+            Player.Message(p, "%T/fly");
+            Player.Message(p, "%HThe old method of flight before custom clients.");
+            Player.Message(p, "%HMay not work at all depending on your connection.");
         }
     }
 }

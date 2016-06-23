@@ -70,7 +70,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/afk <reason> - mark yourself as AFK. Use again to mark yourself as back");
+            Player.Message(p, "%T/afk <reason>");
+            Player.Message(p, "%HMarks yourself as AFK. Use again to mark yourself as back");
         }
     }
 }
