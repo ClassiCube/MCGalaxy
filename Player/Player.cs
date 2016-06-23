@@ -681,8 +681,11 @@ Next: continue;
         }
 
         public static bool ValidName(string name) {
-            string allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._+";
-            return name.All(ch => allowedchars.IndexOf(ch) != -1);
+            const string valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._+";
+            foreach (char c in name) {
+                if (valid.IndexOf(c) == -1) return false;
+            }
+            return true;
         }
 
         public static int GetBannedCount() {

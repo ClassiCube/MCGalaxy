@@ -31,12 +31,8 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string text) {
             string[] args = text.Split(' ');
             if (args.Length != 2) { Help(p); return; }
-            if (!Player.ValidName(args[0])) {
-                Player.SendMessage(p, "\"" + args[0] + "\" is not a valid player name."); return;
-            }
-            if (!Player.ValidName(args[1])) {
-                Player.SendMessage(p, "\"" + args[1] + "\" is not a valid player name."); return;
-            }
+            if (!ValidName(p, args[0], "player")) return;
+            if (!ValidName(p, args[1], "player")) return;
             
             if (PlayerInfo.FindExact(args[0]) != null) {
                 Player.SendMessage(p, "\"" + args[0] + "\" must be offline to use /infoswap."); return;

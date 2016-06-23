@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands {
             }
             else { Help(p); return; }
 
-            if (!Player.ValidName(cpos.Owner)) { Player.Message(p, "INVALID NAME."); return; }
+            if (!ValidName(p, cpos.Owner, "player or rank")) return;
 
             cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
 

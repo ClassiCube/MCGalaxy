@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
             
-            if (!Player.ValidName(message)) { Player.Message(p, "bot name " + message + " not valid!"); return; }
+            if (!ValidName(p, message, "bot")) return;
             PlayerBot bot = new PlayerBot(message, p.level, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
             PlayerBot.Add(bot);
         }

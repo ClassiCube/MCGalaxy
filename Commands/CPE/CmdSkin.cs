@@ -57,9 +57,7 @@ namespace MCGalaxy.Commands.CPE {
                 skin = message;
             }
 
-            if (!Player.ValidName(skin)) {
-                Player.Message(p, "\"" + skin + "\" is not a valid skin name."); return;
-            }
+            if (!ValidName(p, skin, "skin")) return;
             if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the skin of other players."); return; }
             
             if (isBot) {

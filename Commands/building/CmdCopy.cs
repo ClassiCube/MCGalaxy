@@ -164,9 +164,7 @@ namespace MCGalaxy.Commands.Building {
 		}
 
 		void SaveCopy(Player p, string file) {
-			if (!Player.ValidName(file)) {
-				Player.Message(p, "Bad file name"); return;
-			}
+			if (!ValidName(p, file, "saved copy")) return;
 			
 			if (!Directory.Exists("extra/savecopy"))
 				Directory.CreateDirectory("extra/savecopy");

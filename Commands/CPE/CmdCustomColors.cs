@@ -199,7 +199,7 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "%H  code is a single ascii character.");
             Player.Message(p, "%H  fallback is the color code shown to non-supporting clients.");
             Player.Message(p, "%T/customcolors remove [code] %H- Removes that custom color.");
-            Player.Message(p, "%T/customcolors list [offset] %H - lists all custom colors.");
+            Player.Message(p, "%T/customcolors list [offset] %H- lists all custom colors.");
             Player.Message(p, "%T/customcolors edit [code] [name/fallback/hex]");
         }
         

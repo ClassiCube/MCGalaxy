@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.World {
             }
             src = LevelInfo.FindMapMatches(p, src);
             if (src == null) return;
-            if (!Player.ValidName(dst)) { Player.Message(p, "\"" + dst + "\" is not a valid level name."); return; }         
+            if (!ValidName(p, dst, "level")) return;
             if (LevelInfo.ExistsOffline(dst)) { Player.Message(p, "The level \"" + dst + "\" already exists."); return; }
             
             try {

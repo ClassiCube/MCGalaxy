@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.Find(args[0]);
             
             string target = who == null ? args[0] : who.name;
-            if (!Player.ValidName(target)) { Player.Message(p, "Invalid name \"" + target + "\"."); return; }
+            if (!ValidName(p, target, "player")) return;
             Group grp = who == null ? PlayerInfo.GetGroup(target) : who.group;
             if (p != null && grp.Permission >= p.group.Permission) {
                 MessageTooHighRank(p, "temp ban", false); return;

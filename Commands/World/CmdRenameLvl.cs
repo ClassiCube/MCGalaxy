@@ -34,9 +34,7 @@ namespace MCGalaxy.Commands.World {
             Level lvl = LevelInfo.FindMatches(p, args[0]);
             if (lvl == null) return;
             string newName = args[1];
-            if (!Player.ValidName(newName)) {
-                Player.Message(p, "\"" + newName + "\" is not a valid level name."); return;
-            }
+            if (!ValidName(p, newName, "level")) return;
             
             if (LevelInfo.ExistsOffline(newName)) { Player.Message(p, "Level already exists."); return; }
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot rename the main level."); return; }
@@ -50,7 +48,7 @@ namespace MCGalaxy.Commands.World {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/renamelvl <level> <new name>");
-            Player.Message(p, "%H- Renames <level> to <new name>");
+            Player.Message(p, "%HRenames <level> to <new name>");
             Player.Message(p, "%HNote: Portals going to <level> will no longer work.");
         }
     }

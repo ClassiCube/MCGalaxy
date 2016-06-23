@@ -39,9 +39,7 @@ namespace MCGalaxy.Commands {
 
             if (args[0].CaselessEq("map")) {
                 args[1] = args[1].ToLower();
-                if (!Player.ValidName(args[1])) {
-                    Player.Message(p, "\"" + args[1] + "\" is not a valid level name."); return;
-                }
+                if (!ValidName(p, args[1], "level")) return;
                 
                 string path = "text/lockdown/map/" + args[1];
                 if (!File.Exists(path)) {

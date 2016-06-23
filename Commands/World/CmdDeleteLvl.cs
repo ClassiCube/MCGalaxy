@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.World {
                 lvl.Unload();
             }
             
-            if (!Player.ValidName(message)) { Player.Message(p, "\"" + message + "\" is not a valid level name."); return; }
+            if (!ValidName(p, message, "level")) return;
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }
 
             string map = LevelInfo.FindMapMatches(p, message);
