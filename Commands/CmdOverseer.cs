@@ -101,27 +101,18 @@ namespace MCGalaxy.Commands
         }
         
         void HandleEnvCommand(Player p, string type, string value) {
-            if (type == "FOG" || type == "CLOUD" || type == "SKY" || type == "SHADOW" || type == "SUN" || 
-                type == "LEVEL" || type == "CLOUDHEIGHT" || type == "HORIZON" || type == "BORDER" || type == "MAXFOG") {
-                string col = value == "" ? "normal" : value;
-                Command.all.Find("env").Use(p, type.ToLower() + " " + col);
-            } else if (type == "WEATHER") {
-                if (value == "") {
-                    Player.Message(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
-                } else {
-                    LevelEnv.SetWeather(p, p.level, value);
-                }
-            } else {
-                Player.Message(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
-                Player.Message(p, "/os env level -- Sets the water height of your map");
-                Player.Message(p, "/os env cloudheight -- Sets the cloud height of your map");
-                Player.Message(p, "/os env maxfog -- Sets the max fog distance in your map");
-                Player.Message(p, "/os env horizon -- Sets what block the \"ocean\" shows outside your map");
-                Player.Message(p, "/os env border -- Sets what block replaces the \"bedrock\" below sea level in your map");
-                Player.Message(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
-                Player.Message(p, "  Warning: Shrub,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock.");
-                Player.Message(p, "  Note: If no hex or block is given, the default will be used.");
-            }
+        	string arg = value == "" ? "normal" : value;
+        	if (CmdEnvironment.Handle(p, type.ToLower(), arg)) return;
+            
+            Player.Message(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
+            Player.Message(p, "/os env level -- Sets the water height of your map");
+            Player.Message(p, "/os env cloudheight -- Sets the cloud height of your map");
+            Player.Message(p, "/os env maxfog -- Sets the max fog distance in your map");
+            Player.Message(p, "/os env horizon -- Sets what block the \"ocean\" shows outside your map");
+            Player.Message(p, "/os env border -- Sets what block replaces the \"bedrock\" below sea level in your map");
+            Player.Message(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
+            Player.Message(p, "  Warning: Shrub,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock.");
+            Player.Message(p, "  Note: If no hex or block is given, the default will be used.");
         }
         
         void HandleMapCommand(Player p, string message, string cmd, string value) {

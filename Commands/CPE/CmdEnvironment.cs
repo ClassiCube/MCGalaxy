@@ -45,11 +45,16 @@ namespace MCGalaxy.Commands {
                     args[0] = args[1];
                     args[1] = args[2];
                 }
-                Handle(p, args[0], args[1]);
+                
+                if (args[0] == "preset") {
+                    SetPreset(p, args[1]);
+                } else if (!Handle(p, args[0], args[1])) {
+                    Help(p);
+                }
             }
         }
         
-        void Handle(Player p, string variable, string value) {
+        internal static bool Handle(Player p, string variable, string value) {
             Level lvl = p.level;
             switch (variable) {
                 case "fog":
@@ -103,13 +108,11 @@ namespace MCGalaxy.Commands {
                 case "bedrock":
                     LevelEnv.SetBlock(p, value, EnvProp.SidesBlock,
                              "sides block", Block.blackrock, ref lvl.EdgeBlock); break;
-                case "preset":
-                    if (!SetPreset(p, value)) return;
-                    break;
                 default:
-                    Help(p); return;
+                    return false;
             }
             p.level.Save(true);
+            return true;
         }
         
         static void ResetEnv(Player p) {
