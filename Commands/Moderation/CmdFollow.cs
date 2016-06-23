@@ -16,10 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdFollow : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdFollow : Command {
         public override string name { get { return "follow"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -27,93 +25,64 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdFollow() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (!p.canBuild)
-            {
-                Player.Message(p, "You're currently being &4possessed%S!");
-                return;
-            }
+            if (!p.canBuild) { Player.Message(p, "You're currently being &4possessed%S!"); return; }
+            string[] args = message.SplitSpaces(2);
+            string name = args[0];
             
             bool stealth = false;
-            if (message != "")
-            {
-                if (message == "#")
-                {
-                    if (p.following != "")
-                    {
-                        stealth = true;
-                        message = "";
-                    }
-                    else
-                    {
-                        Help(p);
-                        return;
-                    }
-                }
-                else if (message.IndexOf(' ') != -1)
-                {
-                    if (message.Split(' ')[0] == "#")
-                    {
-                        if (p.hidden) stealth = true;
-                        message = message.Split(' ')[1];
-                    }
-                }
+            if (message == "#") {
+                if (p.following != "") { stealth = true; name = ""; }
+                else { Help(p); return; }
+            } else if (args.Length > 1 && args[0] == "#") {
+                if (p.hidden) stealth = true;
+                name = args[1];
             }
-
-            Player who = PlayerInfo.Find(message);
-            if (message == "" && p.following == "") {
-                Help(p);
-                return;
+            
+            if (name == "" && p.following == "") { Help(p); return; }
+            if (name.CaselessEq(p.following) || (name == "" && p.following != ""))
+                Unfollow(p, name, stealth);
+            else
+                Follow(p, name, stealth);
+        }
+        
+        static void Unfollow(Player p, string name, bool stealth) {
+            Player who = PlayerInfo.FindExact(p.following);
+            Player.Message(p, "Stopped following ", who == null ? p.following : who.ColoredName);
+            p.following = "";
+            if (who != null) Entities.Spawn(p, who);
+            
+            if (!p.hidden) return;
+            if (!stealth) {
+                Command.all.Find("hide").Use(p, "");
+            } else {
+                Player.Message(p, "You are still hidden.");
             }
-            else if (message == "" && p.following != "" || message == p.following)
-            {
-                who = PlayerInfo.Find(p.following);
-                p.following = "";
-                if (p.hidden)
-                {
-                    if (who != null)
-                        p.SpawnEntity(who, who.id, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
-                    if (!stealth)
-                    {
-                        Command.all.Find("hide").Use(p, "");
-                    }
-                    else
-                    {
-                        if (who != null)
-                        {
-                            Player.Message(p, "You have stopped following " + who.ColoredName + " %Sand remained hidden.");
-                        }
-                        else
-                        {
-                            Player.Message(p, "Following stopped.");
-                        }
-                    }
-                    return;
-                }
-            }
-            if (who == null) { Player.Message(p, "Could not find player."); return; }
-            else if (who == p) { Player.Message(p, "Cannot follow yourself."); return; }
-            else if (who.group.Permission >= p.group.Permission) { MessageTooHighRank(p, "follow", false); return;}
-            else if (who.following != "") { Player.Message(p, who.DisplayName + " is already following " + who.following); return; }
+        }
+        
+        static void Follow(Player p, string name, bool stealth) {
+            Player who = PlayerInfo.FindMatches(p, name);
+            if (who == null) return;
+            if (who == p) { Player.Message(p, "Cannot follow yourself."); return; }
+            if (who.group.Permission >= p.group.Permission) { MessageTooHighRank(p, "follow", false); return;}
+            if (who.following != "") { Player.Message(p, who.DisplayName + " is already following " + who.following); return; }
 
             if (!p.hidden) Command.all.Find("hide").Use(p, "");
 
             if (p.level != who.level) Command.all.Find("tp").Use(p, who.name);
-            if (p.following != "")
-            {
-                who = PlayerInfo.Find(p.following);
-                p.SpawnEntity(who, who.id, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
+            if (p.following != "") {
+                Player old = PlayerInfo.FindExact(p.following);
+                if (old != null)
+                    p.SpawnEntity(old, old.id, old.pos[0], old.pos[1], old.pos[2], old.rot[0], old.rot[1]);
             }
-            who = PlayerInfo.Find(message);
+            
             p.following = who.name;
             Player.Message(p, "Following " + who.ColoredName + "%S. Use \"/follow\" to stop.");
             p.DespawnEntity(who.id);
         }
         
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.Message(p, "%T/follow <name>");
             Player.Message(p, "%HFollows <name> until the command is cancelled");
             Player.Message(p, "%T/follow # <name>");

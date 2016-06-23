@@ -70,7 +70,7 @@ namespace MCGalaxy {
             MessageNeedMinPerm(p, action, perm);
         }
         
-        protected void MessageNeedMinPerm(Player p, string action, int perm) {
+        protected static void MessageNeedMinPerm(Player p, string action, int perm) {
             Group grp = Group.findPermInt(perm);
             if (grp == null)
                 Player.Message(p, "Only ranks with permissions greater than &a{0}%Scan {1}", perm, action);
@@ -78,11 +78,11 @@ namespace MCGalaxy {
                 Player.Message(p, "Only {0}%S+ can {1}", grp.ColoredName, action);
         }
         
-        protected void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
+        protected static void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
             MessageTooHighRank(p, action, p.group, canAffectOwnRank);
         }
         
-        protected void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
+        protected static void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
             if (canAffectGroup)
                 Player.Message(p, "Can only {0} players ranked {1} %Sor below", action, grp.ColoredName);
             else

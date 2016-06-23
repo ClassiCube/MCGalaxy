@@ -185,14 +185,14 @@ namespace MCGalaxy.Commands
                     if (!LevelInfo.ExistsOffline(map)) {
                         Player.Message(p, "You don't have a map with that map number."); return;
                     }
-                    LevelActions.Delete(map);
+                    Command.all.Find("deletelvl").Use(p, map);
                     Player.Message(p, "Map 1 has been removed.");
                 } else if (byte.TryParse(value, out mapNum)) {
             	    string map = p.name.ToLower() + value;
                     if (!LevelInfo.ExistsOffline(map)) {
                         Player.Message(p, "You don't have a map with that map number."); return;
                     }
-            		LevelActions.Delete(map);
+            	    Command.all.Find("deletelvl").Use(p, map);
                     Player.Message(p, "Map " + value + " has been removed.");
                 } else {
                     Help(p);

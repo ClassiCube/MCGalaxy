@@ -67,7 +67,10 @@ namespace MCGalaxy {
             }
         }
         
-
+        internal static void Spawn(Player dst, Player p) {
+            Spawn(dst, p, p.id, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+        }
+        
         internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z,
                                    byte rotx, byte roty, string possession = "") {
         	if (!Server.TablistGlobal)
