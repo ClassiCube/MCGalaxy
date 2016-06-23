@@ -237,10 +237,9 @@ namespace MCGalaxy
         public bool worldChat = true;
         
         public bool bufferblocks = Server.bufferblocks;
-        internal readonly object queueLock = new object();
-        readonly object saveLock = new object();
+        internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
         public List<BlockQueue.QueuedBlock> blockqueue = new List<BlockQueue.QueuedBlock>();
-        private readonly object physThreadLock = new object();
+        readonly object physThreadLock = new object();
         BufferedBlockSender bulkSender;
 
         public List<C4Data> C4list = new List<C4Data>();
@@ -536,8 +535,9 @@ namespace MCGalaxy
         [Obsolete]
         public static Level FindExact(string name) { return LevelInfo.FindExact(name); }
 
-        public static void SaveSettings(Level level) {
-            LvlProperties.Save(level, "levels/level properties/" + level.name);
+        public static void SaveSettings(Level lvl) {
+            lock (lvl.savePropsLock)
+                LvlProperties.Save(lvl, "levels/level properties/" + lvl.name);
         }
 
         // Returns true if ListCheck does not already have an check in the position.
@@ -546,8 +546,7 @@ namespace MCGalaxy
         	return x >= Width || y >= Height || z >= Length || !listCheckExists.Get(x, y, z);
         }
 
-        public void Save(bool Override = false, bool clearPhysics = false)
-        {
+        public void Save(bool Override = false, bool clearPhysics = false) {
             if (blocks == null) return;
             string path = LevelInfo.LevelPath(name);
             if (LevelSave != null) LevelSave(this);
@@ -555,8 +554,7 @@ namespace MCGalaxy
             if (cancelsave1) { cancelsave1 = false; return; }
             if (cancelsave) { cancelsave = false; return; }
             
-            try
-            {
+            try {
                 if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
                 if (!Directory.Exists("levels/level properties")) Directory.CreateDirectory("levels/level properties");
                 if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
@@ -659,14 +657,9 @@ namespace MCGalaxy
 
         //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
         public static Level Load(string givenName, byte phys) {
-            if (LevelLoad != null)
-                LevelLoad(givenName);
+            if (LevelLoad != null) LevelLoad(givenName);
             OnLevelLoadEvent.Call(givenName);
-            if (cancelload)
-            {
-                cancelload = false;
-                return null;
-            }
+            if (cancelload) { cancelload = false; return null; }
             CreateLeveldb(givenName);
 
             string path = LevelInfo.LevelPath(givenName);
@@ -701,12 +694,6 @@ namespace MCGalaxy
                     level.jailrotx = level.rotx;
                     level.jailroty = level.roty;
                     level.StartPhysics();
-                    //level.physChecker.Elapsed += delegate
-                    //{
-                    //    if (!level.physicssate && level.physics > 0)
-                    //        level.StartPhysics();
-                    //};
-                    //level.physChecker.Start();
 
                     try
                     {

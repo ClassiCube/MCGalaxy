@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands {
                 default:
                     return false;
             }
-            p.level.Save(true);
+            Level.SaveSettings(lvl);
             return true;
         }
         
