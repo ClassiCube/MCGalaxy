@@ -1198,6 +1198,10 @@ return;
             }
         }
         
+        public void HandleCommands(List<string> cmds) {
+        	
+        }
+        
         bool CheckCommand(string cmd) {
             if (cmd == "") { SendMessage("No command entered."); return false; }
             if (Server.agreetorulesonentry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {

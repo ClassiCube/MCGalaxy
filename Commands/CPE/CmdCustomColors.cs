@@ -110,7 +110,6 @@ namespace MCGalaxy.Commands.CPE {
                 
                 if (index >= offset) {
                     count++;
-                    Server.s.Log(col.Fallback.ToString());
                     const string format = "{4}{0} &{1}({2}){4} - %{1}, falls back to &{3}%{3}.";
                     Player.SendMessage(p, String.Format(format, col.Name, col.Code, col.Hex(), col.Fallback, Server.DefaultColor), false);
                     

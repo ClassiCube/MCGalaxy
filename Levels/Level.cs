@@ -238,6 +238,7 @@ namespace MCGalaxy
         
         public bool bufferblocks = Server.bufferblocks;
         internal readonly object queueLock = new object();
+        readonly object saveLock = new object();
         public List<BlockQueue.QueuedBlock> blockqueue = new List<BlockQueue.QueuedBlock>();
         private readonly object physThreadLock = new object();
         BufferedBlockSender bulkSender;
@@ -323,8 +324,7 @@ namespace MCGalaxy
 
         #region IDisposable Members
 
-        public void Dispose()
-        {
+        public void Dispose() {
             Extras.Clear();
             liquids.Clear();
             leaves.Clear();
@@ -333,10 +333,13 @@ namespace MCGalaxy
             UndoBuffer.Clear();
             blockCache.Clear();
             ZoneList.Clear();
+            
             lock (queueLock)
                 blockqueue.Clear();
-            blocks = null;
-            CustomBlocks = null;
+            lock (saveLock) {
+                blocks = null;
+                CustomBlocks = null;
+            }
         }
 
         #endregion
@@ -559,23 +562,10 @@ namespace MCGalaxy
                 if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
                 
                 if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {
-                    if (clearPhysics)
-                        ClearPhysics();
+                    if (clearPhysics) ClearPhysics();
                     
-                    if (File.Exists(path)) {
-                    	string prevPath = LevelInfo.PrevPath(name);
-                    	if (File.Exists(prevPath))
-                            File.Delete(prevPath);
-                        File.Copy(path, prevPath, true);
-                        File.Delete(path);
-                    }
-                    LvlFile.Save(this, path + ".backup");
-                    File.Copy(path + ".backup", path);
-                    SaveSettings(this);
-
-                    Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
-                                               PlayerInfo.Online.Count, Server.players));
-                    changed = false;
+                    lock (saveLock)
+                        SaveCore(path);
                 } else {
                     Server.s.Log("Skipping level save for " + name + ".");
                 }
@@ -586,6 +576,24 @@ namespace MCGalaxy
             }
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+        
+        void SaveCore(string path) {
+            if (blocks == null) return;
+            if (File.Exists(path)) {
+                string prevPath = LevelInfo.PrevPath(name);
+                if (File.Exists(prevPath)) File.Delete(prevPath);
+                File.Copy(path, prevPath, true);
+                File.Delete(path);
+            }
+            
+            LvlFile.Save(this, path + ".backup");
+            File.Copy(path + ".backup", path);
+            SaveSettings(this);
+
+            Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
+                                       PlayerInfo.Online.Count, Server.players));
+            changed = false;
         }
 
         public int Backup(bool Forced = false, string backupName = "") {
