@@ -365,8 +365,7 @@ namespace MCGalaxy
 
         public static bool flipHead = false;
 
-        public static bool shuttingDown = false;
-        public static bool restarting = false;
+        public static bool shuttingDown = false, restarting = false, abortShutdown = false;
 
         //hackrank stuff
         [ConfigBool("kick-on-hackrank", "Other", null, true)]

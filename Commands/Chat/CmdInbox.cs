@@ -44,8 +44,8 @@ namespace MCGalaxy.Commands {
                     int i = 0;
                     foreach (DataRow row in Inbox.Rows) {
                         Player.Message(p, "{0}: From &5{1} %Sat &a{2}:", i, row["PlayerFrom"], row["TimeSent"]); i++;
-                        Player.Message(p, row["Contents"].ToString());
                     }
+                    Player.Message(p, "Use %T/inbox [number] %Sto read the contents of that message.");
                 }
             } else if (parts[0] == "del" || parts[0] == "delete") {
                 int num = -1;
