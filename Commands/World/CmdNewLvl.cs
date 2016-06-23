@@ -29,12 +29,8 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length < 5 || args.Length > 6) {
-                Help(p); return;
-            }
-            if (!MapGen.IsRecognisedFormat(args[4])) {
-                MapGen.PrintValidFormats(p); return;
-            }
+            if (args.Length < 5 || args.Length > 6) { Help(p); return; }
+            if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return; }
 
             ushort x, y, z;
             string name = args[0].ToLower();
@@ -42,10 +38,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Invalid dimensions."); return;
             }
             
-            int seed = 0; 
-            bool useSeed = args.Length == 6;
-            if (useSeed && !Int32.TryParse(args[5], out seed))
-                seed = args[5].GetHashCode();
+            string seed = args.Length == 6 ? args[5] : "";
             if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must divisible by 16, and >= 16"); return; }
             if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be divisible by 16, and >= 16"); return; }
             if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= to 16."); return; }
@@ -70,7 +63,7 @@ namespace MCGalaxy.Commands.World {
             }
 
             try {
-                using (Level lvl = new Level(name, x, y, z, args[4], seed, useSeed)) {
+                using (Level lvl = new Level(name, x, y, z, args[4], seed)) {
                     Level.CreateLeveldb(name);
                     lvl.Save(true);
                     lvl.Dispose();
@@ -80,22 +73,31 @@ namespace MCGalaxy.Commands.World {
                 GC.WaitForPendingFinalizers();
             }
             
-            string format = useSeed ? "Level \"{0}\" created with seed \"{1}\"" : "Level \"{0}\" created";
-            if (useSeed)
-               Player.GlobalMessage(String.Format(format, name, args[5]));
+            string format = seed != "" ? "Level \"{0}\" created with seed \"{1}\"" : "Level \"{0}\" created";
+            if (seed != "")
+               Player.GlobalMessage(String.Format(format, name, seed));
             else
                 Player.GlobalMessage(String.Format(format, name));
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/newlvl - creates a new level.");
-            Player.Message(p, "/newlvl mapname 128 64 128 type seed");
-            Player.Message(p, "Valid sizes: Must be >= 16 and <= 8192, and divisible by 16.");
-            Player.Message(p, "Note due to limitations, other players don't show past 1024.");
-            MapGen.PrintValidFormats(p);
-            Player.Message(p, "The seed is optional, and controls how the level is generated.");
-            Player.Message(p, "If the seed is the same, the generated level will be the same.");
-            Player.Message(p, "For flat maps the seed (if given) is used for the grass level.");
+            Player.Message(p, "%T/newlvl [name] [width] [height] [length] [theme] <seed>");
+            Player.Message(p, "%HCreates/generates a new level.");
+            Player.Message(p, "  %HSizes must be >= 16 and <= 8192, and divisible by 16.");
+            Player.Message(p, "  %HDue to limitations, other players don't show past 1024.");
+            Player.Message(p, "  %HType %T/help newlvl themes %Hto see a list of themes.");
+            Player.Message(p, "%HSeed is optional, and controls how the level is generated.");
+            Player.Message(p, "  %HFlat theme: Seed specifies the grass height.");
+            Player.Message(p, "  %HOther themes: Seed affects how terrain is generated.");
+            Player.Message(p, "%HIf the seed is the same, the generated level will be the same.");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (message.CaselessEq("theme") || message.CaselessEq("themes")) {
+                MapGen.PrintThemes(p);
+            } else {
+                base.Help(p, message);
+            }
         }
     }
 }

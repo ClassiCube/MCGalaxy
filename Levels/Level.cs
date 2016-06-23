@@ -277,9 +277,15 @@ namespace MCGalaxy
             Init(n, x, y, z);
         }
         
-        public Level(string n, ushort x, ushort y, ushort z, string type, int seed = 0, bool useSeed = false) {
+        public Level(string n, ushort x, ushort y, ushort z, string theme, int seed = 0, bool useSeed = false) {
             Init(n, x, y, z);
-            MapGen.Generate(this, type, seed, useSeed);
+            string args = useSeed ? seed.ToString() : "";
+            MapGen.Generate(this, theme, args);
+        }
+        
+        public Level(string n, ushort x, ushort y, ushort z, string theme, string genArgs) {
+            Init(n, x, y, z);
+            MapGen.Generate(this, theme, genArgs);
         }
         
         void Init(string n, ushort x, ushort y, ushort z) {

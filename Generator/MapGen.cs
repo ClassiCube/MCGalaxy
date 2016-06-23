@@ -22,7 +22,7 @@ namespace MCGalaxy {
     
     public static class MapGen {
         
-        public static bool IsRecognisedFormat(string s) {
+        public static bool IsRecognisedTheme(string s) {
             s = s.ToLower();
             return Array.IndexOf<string>(types, s) >= 0 || Array.IndexOf<string>(advTypes, s) >= 0;
         }
@@ -32,9 +32,9 @@ namespace MCGalaxy {
         static string[] advTypes = { "billow", "perlin", "checkerboard", "spheres", "cylinders",
             "voronoi", "ridgedmultifractal", "perlin3d", "perlin3dyadjust" };
 
-        public static void PrintValidFormats(Player p) {
-            Player.Message(p, "Valid types: " + String.Join(", ", types));
-            Player.Message(p, "Advanced types: " + String.Join(", ", advTypes));
+        public static void PrintThemes(Player p) {
+            Player.Message(p, "Simple themes: " + String.Join(", ", types));
+            Player.Message(p, "Advanced themes: " + String.Join(", ", advTypes));
         }
         
         public static bool OkayAxis(int len) {
@@ -47,12 +47,17 @@ namespace MCGalaxy {
             Extensions.memset((IntPtr)ptr, block, start, end - start + 1);
         }
 
-        public unsafe static void Generate(Level lvl, string type, int seed, bool useSeed) {
+        public unsafe static void Generate(Level lvl, string type, string args) {
             int index = 0, width = lvl.Width, height = lvl.Height, length = lvl.Length;
             byte[] blocks = lvl.blocks;
-            int half = height / 2;
+            int half = height / 2;            
             RealisticMapGen generator = new RealisticMapGen();
             IModule module2D = null, module3D = null;
+            
+            int seed = 0; 
+            bool useSeed = args != "";
+            if (useSeed && !int.TryParse(args, out seed))
+                seed = args.GetHashCode();
             
             switch (type) {
                 case "flat":

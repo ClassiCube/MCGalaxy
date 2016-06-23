@@ -133,8 +133,8 @@ namespace MCGalaxy.Eco {
                         preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
                     } else { Player.Message(p, "%cDimension must be a power of 2"); break; }
                     
-                    if (!MapGen.IsRecognisedFormat(args[6])) {
-                        MapGen.PrintValidFormats(p); return;
+                    if (!MapGen.IsRecognisedTheme(args[6])) {
+                        MapGen.PrintThemes(p); return;
                     }                    
                     preset.type = args[6].ToLower();
                     if (!int.TryParse(args[7], out preset.price)) {
@@ -189,10 +189,10 @@ namespace MCGalaxy.Eco {
                             break;
 
                         case "type":
-                            if (MapGen.IsRecognisedFormat(args[4])) {
+                            if (MapGen.IsRecognisedTheme(args[4])) {
                                 preset.type = args[4].ToLower();
                             } else {
-                                MapGen.PrintValidFormats(p); return;
+                                MapGen.PrintThemes(p); return;
                             }
                             Player.Message(p, "%aSuccessfully changed preset type to %f" + preset.type);
                             break;
