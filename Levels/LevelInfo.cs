@@ -47,7 +47,7 @@ namespace MCGalaxy {
         
         public static Level FindMatches(Player pl, string name, out int matches) {
             return Extensions.FindMatches<Level>(pl, name, out matches, LevelInfo.Loaded.Items,
-        	                                     l => true, l => l.name, "loaded levels");
+                                             l => true, l => l.name, "loaded levels");
         }
         
         public static string FindMapMatches(Player pl, string name) {
@@ -96,15 +96,18 @@ namespace MCGalaxy {
             return Server.backupLocation + "/" + name + "/" + backup + "/" + name + ".lvl";
         }
         
-        public static string GetPropertiesPath(string name) {
+        public static string PropertiesPath(string name) {
+            return "levels/level properties/" + name + ".properties";
+        }
+        
+        public static string FindPropertiesFile(string name) {
             string file = "levels/level properties/" + name + ".properties";
             if (!File.Exists(file)) file = "levels/level properties/" + name;
-            if (!File.Exists(file)) return null;
-            return file;
+            return File.Exists(file) ? file : null;
         }
         
         public static string FindOfflineProperty(string name, string propKey) {
-            string file = GetPropertiesPath(name);
+            string file = FindPropertiesFile(name);
             if (file == null) return null;
 
             string[] lines = null;

@@ -370,6 +370,7 @@ namespace MCGalaxy
         }
         
         public bool CanJoin(Player p) {
+            if (p == null) return true;
             if (Player.BlacklistCheck(p.name, name) || VisitBlacklist.CaselessContains(p.name)) {
                 Player.Message(p, "You are blacklisted from going to {0}.", name); return false;
             }
@@ -543,7 +544,7 @@ namespace MCGalaxy
 
         public static void SaveSettings(Level lvl) {
             lock (lvl.savePropsLock)
-                LvlProperties.Save(lvl, "levels/level properties/" + lvl.name);
+            	LvlProperties.Save(lvl, LevelInfo.PropertiesPath(lvl.name));
         }
 
         // Returns true if ListCheck does not already have an check in the position.
@@ -741,7 +742,7 @@ namespace MCGalaxy
                     }
 
                     try {
-                        string propsPath = LevelInfo.GetPropertiesPath(level.name);
+                        string propsPath = LevelInfo.FindPropertiesFile(level.name);
                         if (propsPath != null)
                             LvlProperties.Load(level, propsPath);
                         else

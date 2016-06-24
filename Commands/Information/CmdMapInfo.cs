@@ -182,7 +182,7 @@ namespace MCGalaxy.Commands {
                 this.Name = name;
                 LvlFile.LoadDimensions(LevelInfo.LevelPath(name),
                                        out Width, out Height, out Length);
-                string path = LevelInfo.GetPropertiesPath(name);
+                string path = LevelInfo.FindPropertiesFile(name);
                 if (path != null)
                     PropertiesFile.Read(path, ParseProperty, '=');
                 

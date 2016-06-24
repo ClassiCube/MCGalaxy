@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands {
             loadOnGoto = true;
             Group grp;
             
-            string file = LevelInfo.GetPropertiesPath(level);
+            string file = LevelInfo.FindPropertiesFile(level);
             if (file == null) return;
             SearchArgs args = new SearchArgs();
             PropertiesFile.Read(file, ref args, ProcessLine);
