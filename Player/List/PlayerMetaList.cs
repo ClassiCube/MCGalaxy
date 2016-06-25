@@ -22,12 +22,12 @@ using System.IO;
 namespace MCGalaxy {
     
     /// <summary> Represents a list of metadata about players. (such as rank info, ban info, notes). </summary>
-    public sealed class PlayersFile {
+    public sealed class PlayerMetaList {
         
         public readonly string file;
         readonly object locker;
         
-        public PlayersFile(string file) {
+        public PlayerMetaList(string file) {
             this.file = file;
             locker = new object();
         }

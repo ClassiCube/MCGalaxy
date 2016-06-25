@@ -68,10 +68,10 @@ namespace MCGalaxy
         [ConfigBool("classicube-account-plus", "Server", null, true)]
         public static bool ClassicubeAccountPlus = true;
         
-        public static PlayersFile AutoloadMaps = new PlayersFile("text/autoload.txt");
-        public static PlayersFile RankInfo = new PlayersFile("text/rankinfo.txt");
-        public static PlayersFile TempRanks = new PlayersFile("text/tempranks.txt");
-        public static PlayersFile Notes = new PlayersFile("text/notes.txt"); 
+        public static PlayerMetaList AutoloadMaps = new PlayerMetaList("text/autoload.txt");
+        public static PlayerMetaList RankInfo = new PlayerMetaList("text/rankinfo.txt");
+        public static PlayerMetaList TempRanks = new PlayerMetaList("text/tempranks.txt");
+        public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt"); 
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
 
         public static string VersionString {

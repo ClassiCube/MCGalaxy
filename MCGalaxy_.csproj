@@ -518,11 +518,12 @@
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupCommands.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
+    <Compile Include="Player\List\PlayerExtList.cs" />
+    <Compile Include="Player\List\PlayerList.cs" />
+    <Compile Include="Player\List\PlayerMetaList.cs" />
     <Compile Include="Player\Player.Handlers.cs" />
     <Compile Include="Player\PlayerActions.cs" />
-    <Compile Include="Player\PlayerExtList.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
-    <Compile Include="Player\PlayersFile.cs" />
     <Compile Include="Player\TabList.cs" />
     <Compile Include="Player\Undo\UndoCache.cs" />
     <Compile Include="Player\Undo\UndoFileCBin.cs" />
@@ -567,7 +568,6 @@
     <Compile Include="Server\Extra\Heart.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
-    <Compile Include="Player\PlayerList.cs" />
     <Compile Include="Server\Extra\ProfanityFilter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -694,6 +694,7 @@
     <Folder Include="Bots" />
     <Folder Include="Events" />
     <Folder Include="Player\Group" />
+    <Folder Include="Player\List" />
     <Folder Include="Player\Undo" />
     <Folder Include="Plugins" />
     <Folder Include="Plugins\Events" />

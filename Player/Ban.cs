@@ -25,8 +25,8 @@ namespace MCGalaxy {
     /// and add / remove someone to the baninfo (NOT THE BANNED.TXT !) </summary>
     public static class Ban {
         
-        static PlayersFile bans = new PlayersFile("text/bans.txt");
-        static PlayersFile unbans = new PlayersFile("text/unbans.txt");
+        static PlayerMetaList bans = new PlayerMetaList("text/bans.txt");
+        static PlayerMetaList unbans = new PlayerMetaList("text/unbans.txt");
         
         public static void EnsureExists() {
             bans.EnsureExists();
@@ -108,7 +108,7 @@ namespace MCGalaxy {
         /// <summary> Deletes the unban information about the user. </summary>
         public static bool DeleteUnban(string name) { return DeleteInfo(name, unbans); }
         
-        static bool DeleteInfo(string name, PlayersFile list) {
+        static bool DeleteInfo(string name, PlayerMetaList list) {
             name = name.ToLower();
             bool success = false;
             StringBuilder sb = new StringBuilder();
@@ -135,7 +135,7 @@ namespace MCGalaxy {
             return ChangeReason(who, reason, unbans);
         }
         
-        static bool ChangeReason(string who, string reason, PlayersFile list) {
+        static bool ChangeReason(string who, string reason, PlayerMetaList list) {
             who = who.ToLower();
             reason = reason.Replace(" ", "%20");
             bool success = false;
