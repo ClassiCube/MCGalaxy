@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands {
                 File.Delete("extra/reportedbackups/" + args[1] + ".txt");
             
             File.Move("extra/reported/" + args[1] + ".txt", "extra/reportedbackups/" + args[1] + ".txt");
-            Player.Message(p, "%a" + args[1] + "'s report has been deleted.");
+            Player.Message(p, "&a" + args[1] + "'s report has been deleted.");
             Chat.GlobalMessageOps(p.ColoredName + " %Sdeleted " + args[1] + "'s report.");
             Server.s.Log(args[1] + "'s report has been deleted by " + p.name);
         }

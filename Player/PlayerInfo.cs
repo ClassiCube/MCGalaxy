@@ -102,7 +102,6 @@ namespace MCGalaxy {
             p.totalKicked = 0;
             p.overallDeath = 0;
             p.overallBlocks = 0;
-            p.timeLogged = DateTime.Now;
             
             const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths, Money, totalBlocks, totalKicked, TimeSpent) " +
                 "VALUES ('{0}', '{1}', '{2:yyyy-MM-dd HH:mm:ss}', '{3:yyyy-MM-dd HH:mm:ss}', {4}, '{5}', {6}, {7}, {8}, {9}, '{10}')";
@@ -118,7 +117,7 @@ namespace MCGalaxy {
             p.time = row["TimeSpent"].ToString().ParseDBTime();
             p.userID = int.Parse(row["ID"].ToString());
             p.firstLogin = DateTime.Parse(row["firstLogin"].ToString());
-            p.timeLogged = DateTime.Now;
+            p.lastLogin = DateTime.Parse(row["LastLogin"].ToString());
             
             p.title = row["Title"].ToString().Trim();
             if (p.title != "")

@@ -163,7 +163,7 @@ namespace MCGalaxy {
         public int loginBlocks = 0;
 
         public DateTime timeLogged;
-        public DateTime firstLogin;
+        public DateTime firstLogin, lastLogin;
         public int totalLogins = 0;
         public int totalKicked = 0;
         public int overallDeath = 0;

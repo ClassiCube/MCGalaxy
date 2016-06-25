@@ -507,7 +507,9 @@ namespace MCGalaxy {
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@Name", name);
             DataTable playerDb = Database.fillData(query, "SELECT * FROM Players WHERE Name=@Name");
-
+            timeLogged = DateTime.Now;
+            lastLogin = DateTime.Now;
+            	
             if (playerDb.Rows.Count == 0)
                 InitPlayerStats(playerDb);
             else
@@ -519,7 +521,6 @@ namespace MCGalaxy {
             
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
-            timeLogged = DateTime.Now;
             PlayerDB.Load(this);
             Game.Team = Team.FindTeam(this);
             SetPrefix();

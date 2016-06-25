@@ -17,10 +17,9 @@
  */
 using System.Data;
 using MCGalaxy.SQL;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdSeen : Command
-    {
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdSeen : Command {
         public override string name { get { return "seen"; } }
         public override string shortcut { get { return ""; } }
         public override bool museumUsable { get { return true; } }
@@ -34,19 +33,21 @@ namespace MCGalaxy.Commands
             Player pl = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             if (matches == 1) {
-                Player.Message(p, pl.name + " was first seen: " + pl.firstLogin);
-                Player.Message(p, pl.color + pl.name + " %Sis currently online."); return;
+                Player.Message(p, pl.ColoredName + " %Swas first seen at " + pl.firstLogin);
+                Player.Message(p, pl.ColoredName + " %Swas last seen at " + pl.lastLogin);
+                Player.Message(p, pl.ColoredName + " %Sis currently online.");                 
+                return;
             }
 
             OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
             if (target == null) return;
-            Player.Message(p, message + " was first seen: " + target.firstLogin);
-            Player.Message(p, message + " was last seen: " + target.lastLogin);
+            Player.Message(p, message + " was first seen at " + target.firstLogin);
+            Player.Message(p, message + " was last seen at " + target.lastLogin);
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/seen [player]");
-            Player.Message(p, "%Hsays when a player was first and last seen on the server");
+            Player.Message(p, "%HSays when a player was first and last seen on the server");
         }
     }
 }
