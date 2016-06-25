@@ -77,9 +77,12 @@ namespace MCGalaxy.BlockBehaviour {
                     string text;
                     List<string> cmds = ParseMB(message, out text);
                     if (text != null) Player.Message(p, text);
-                    foreach (string cmd in cmds) {
-                        string[] parts = cmd.SplitSpaces(2);
+                    
+                    if (cmds.Count == 1) {
+                        string[] parts = cmds[0].SplitSpaces(2);
                         p.HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
+                    } else if (cmds.Count > 0) {
+                        p.HandleCommands(cmds);
                     }
                     p.prevMsg = message;
                 }

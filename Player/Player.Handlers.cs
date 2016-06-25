@@ -1192,14 +1192,19 @@ return;
             try {
                 if (!CheckCommand(cmd)) return;
                 Command command = GetCommand(ref cmd, ref message);
-                if (command != null) UseCommand(command, cmd, message);
+                if (command == null) return;
+                
+                Thread thread = new Thread(() => UseCommand(command, message));
+                thread.Name = "MCG_Command";
+                thread.IsBackground = true;
+                thread.Start();
             } catch (Exception e) { 
                 Server.ErrorLog(e); SendMessage("Command failed."); 
             }
         }
         
         public void HandleCommands(List<string> cmds) {
-        	
+        	// TODO: finish this then do next release
         }
         
         bool CheckCommand(string cmd) {
@@ -1262,33 +1267,33 @@ return;
             if (cancelcommand) { cancelcommand = false; return null; }
             
             Command command = Command.all.Find(cmd);
-            if (command != null) return command;
-            if (Block.Byte(cmd) != Block.Zero) {
-                message = cmd.ToLower(); cmd = "mode"; 
-                return Command.all.Find("mode");
-            } else {
-                SendMessage("Unknown command \"" + cmd + "\"!");
-                return null;
+            if (command == null) {
+                if (Block.Byte(cmd) != Block.Zero) {
+                    message = cmd.ToLower(); cmd = "mode";
+                    command = Command.all.Find("mode");
+                } else {
+                    SendMessage("Unknown command \"" + cmd + "\"."); return null;
+                }
             }
-        }
-        
-        void UseCommand(Command command, string cmd, string message) {
-            if (!group.CanExecute(command)) { command.MessageCannotUse(this); return; }
+
+            if (!group.CanExecute(command)) { command.MessageCannotUse(this); return null; }
             string reason = Command.GetDisabledReason(command.Enabled);
             if (reason != null) {
-                SendMessage("Command is disabled as " + reason); return;
+                SendMessage("Command is disabled as " + reason); return null;
+            }           
+            if (level.IsMuseum && !command.museumUsable ) {
+                SendMessage("Cannot use this command while in a museum."); return null;
             }
+            return command;
+        }
+        
+        void UseCommand(Command command, string message) {
+            string cmd = command.name;
             if (!(cmd == "repeat" || cmd == "pass" || cmd == "setpass")) {
                 lastCMD = cmd + " " + message;
                 lastCmdTime = DateTime.Now;
             }
             
-            if (level.IsMuseum && !command.museumUsable ) {
-                SendMessage("Cannot use this command while in a museum!"); return;
-            }
-            if ((joker || muted) && cmd == "me") {
-                SendMessage("Cannot use /me while muted or jokered."); return;
-            }
             if (!(cmd == "pass" || cmd == "setpass")) {
                 Server.s.CommandUsed(name + " used /" + cmd + " " + message);
             }
@@ -1303,16 +1308,9 @@ return;
                     Database.executeQuery(query, "INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@Time, @Name, @Cmd, @Cmdmsg)");
                 }
             } catch { }
-
-            Thread thread = new Thread(() => DoCommand(command, message));
-            thread.Name = "MCG_Command";
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        
-        void DoCommand(Command cmd, string message) {
+            
             try {
-                cmd.Use(this, message);
+                command.Use(this, message);
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Player.Message(this, "An error occured when using the command!");

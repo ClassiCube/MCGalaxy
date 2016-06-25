@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.World {
             
             try {
             	File.Copy(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
-            	if (File.Exists(LevelInfo.PropertiesPath(src))
+            	if (File.Exists(LevelInfo.PropertiesPath(src)))
             	    File.Copy(LevelInfo.PropertiesPath(src), LevelInfo.PropertiesPath(dst), false);
                 if (File.Exists("blockdefs/lvl_" + src + ".json"))
                     File.Copy("blockdefs/lvl_" + src + ".json", "blockdefs/lvl_" + dst + ".json");
