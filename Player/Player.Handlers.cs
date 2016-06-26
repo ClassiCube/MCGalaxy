@@ -45,7 +45,7 @@ namespace MCGalaxy {
         }
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
-        	ManualChange(x, y, z, action, type, extType, true);
+            ManualChange(x, y, z, action, type, extType, true);
         }
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action, 

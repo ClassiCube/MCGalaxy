@@ -49,7 +49,8 @@ namespace MCGalaxy {
             deleteHandlers[Block.firework] = DeleteBehaviour.Firework;           
             deleteHandlers[Block.c4det] = DeleteBehaviour.C4Det;
             
-            placeHandlers[Block.dirt] = PlaceBehaviour.Dirt;
+            placeHandlers[Block.dirt] = PlaceBehaviour.Grass;
+            placeHandlers[Block.grass] = PlaceBehaviour.Grass;
             placeHandlers[Block.staircasestep] = PlaceBehaviour.Stairs;
             placeHandlers[Block.c4] = PlaceBehaviour.C4;
             placeHandlers[Block.c4det] = PlaceBehaviour.C4Det;

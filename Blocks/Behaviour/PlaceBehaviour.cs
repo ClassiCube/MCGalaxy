@@ -22,19 +22,19 @@ namespace MCGalaxy.BlockBehaviour {
     
     internal static class PlaceBehaviour {
 
-        internal static bool Dirt(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (!(p.level.physics == 0 || p.level.physics == 5)) {
-                p.ChangeBlock(x, y, z, Block.dirt, 0); return false;
+        internal static bool Grass(Player p, byte block, ushort x, ushort y, ushort z) {
+            Level lvl = p.level;
+            if (!(lvl.physics == 0 || lvl.physics == 5)) {
+                p.ChangeBlock(x, y, z, block, 0); return false;
             }
             
-            byte above = p.level.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
-            if (above == Block.custom_block)
-                extAbove = p.level.GetExtTile(x, (ushort)(y + 1), z);
+            byte above = lvl.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
+            if (above == Block.custom_block) 
+                extAbove = lvl.GetExtTile(x, (ushort)(y + 1), z);
             
-            if (Block.LightPass(above, extAbove, p.level.CustomBlockDefs))
-                p.ChangeBlock(x, y, z, Block.grass, 0);
-            else
-                p.ChangeBlock(x, y, z, Block.dirt, 0);
+            byte type = (above == Block.Zero || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
+                ? Block.grass : Block.dirt;
+            p.ChangeBlock(x, y, z, type, 0);
             return false;
         }
         

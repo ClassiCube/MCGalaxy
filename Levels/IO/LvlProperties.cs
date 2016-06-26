@@ -24,7 +24,7 @@ namespace MCGalaxy.Levels.IO {
         
         public static void Save(Level level, string path) {
             try {
-                using (CP437Writer writer = new CP437Writer(path + ".properties"))
+                using (CP437Writer writer = new CP437Writer(path))
                     WriteLevelProperties(level, writer);
             } catch (Exception ex) {
                 Server.s.Log("Failed to save level properties!");
@@ -32,8 +32,9 @@ namespace MCGalaxy.Levels.IO {
                 return;
             }
             
+			path = Path.ChangeExtension(path, ".env");
             try {
-                using (CP437Writer writer = new CP437Writer(path + ".env"))
+                using (CP437Writer writer = new CP437Writer(path))
                     WriteEnvProperties(level, writer);
             } catch (Exception ex) {
                 Server.s.Log("Failed to save environment properties");
