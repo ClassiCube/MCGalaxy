@@ -1210,7 +1210,28 @@ return;
         }
         
         public void HandleCommands(List<string> cmds) {
-        	// TODO: finish this then do next release
+            List<string> messages = new List<string>(cmds.Count);
+            List<Command> commands = new List<Command>(cmds.Count);
+            try {
+                foreach (string raw in cmds) {
+                    string[] parts = raw.SplitSpaces(2);
+                    string cmd = parts[0].ToLower();
+                    string message = parts.Length > 1 ? parts[1] : "";
+                    
+                     if (!CheckCommand(cmd)) return;
+                     Command command = GetCommand(ref cmd, ref message);
+                     if (command == null) return;
+                     
+                     messages.Add(message); commands.Add(command);
+                }
+
+                Thread thread = new Thread(() => UseCommands(commands, messages));
+                thread.Name = "MCG_Command";
+                thread.IsBackground = true;
+                thread.Start();
+            } catch (Exception e) { 
+                Server.ErrorLog(e); SendMessage("Command failed."); 
+            }
         }
         
         bool CheckCommand(string cmd) {
@@ -1293,7 +1314,7 @@ return;
             return command;
         }
         
-        void UseCommand(Command command, string message) {
+        bool UseCommand(Command command, string message) {
             string cmd = command.name;
             if (!(cmd == "repeat" || cmd == "pass" || cmd == "setpass")) {
                 lastCMD = cmd + " " + message;
@@ -1321,7 +1342,16 @@ return;
                 Server.ErrorLog(e);
                 Player.Message(this, "An error occured when using the command!");
                 Player.Message(this, e.GetType() + ": " + e.Message);
+                return false;
             }
+            return true;
+        }
+        
+        bool UseCommands(List<Command> commands, List<string> messages) {
+            for (int i = 0; i < messages.Count; i++) {
+                if (!UseCommand(commands[i], messages[i])) return false;
+            }
+            return true;
         }
     }
 }
