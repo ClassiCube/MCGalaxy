@@ -77,7 +77,7 @@ namespace MCGalaxy
         public static string VersionString {
             get {
                 Version v = Version;
-                return v.Major + "." + v.Minor + "." + v.Build;
+                return v.Major + "." + v.Minor + "." + v.Build + "." + v.Revision;
             }
         }
 

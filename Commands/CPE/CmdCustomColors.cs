@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.CPE {
             
             char fallback;
             if (!CheckName(p, args[2]) || !CheckFallback(p, args[3], out fallback)
-                || !CheckHex(p, ref args[4])) return;
+                || !Extensions.CheckHex(p, ref args[4])) return;
             
             CustomColor col = default(CustomColor);
             col.Code = code; col.Fallback = fallback; col.A = 255;
@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands.CPE {
                     col.Fallback = fallback; break;
                 case "hex":
                 case "color":
-                    if (!CheckHex(p, ref args[3])) return;
+                    if (!Extensions.CheckHex(p, ref args[3])) return;
                     Color rgb = ColorTranslator.FromHtml("#" + args[3]);
                     col.R = rgb.R; col.G = rgb.G; col.B = rgb.B;
                     break;
@@ -175,22 +175,6 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(p, "{0} must be a standard color code.", fallback); return false;
             }
             if (fallback >= 'A' && fallback <= 'F') fallback += ' ';
-            return true;
-        }
-        
-        static bool CheckHex(Player p, ref string arg) {
-            if (arg.Length > 0 && arg[0] == '#')
-                arg = arg.Substring(1);
-            if (arg.Length != 6 || !IsValidHex(arg)) {
-                Player.Message(p, "\"#{0}\" is not a valid hex color.", arg); return false;
-            }
-            return true;
-        }
-
-        static bool IsValidHex(string hex) {
-            for (int i = 0; i < hex.Length; i++) {
-                if (!Colors.IsStandardColor(hex[i])) return false;
-            }
             return true;
         }
         

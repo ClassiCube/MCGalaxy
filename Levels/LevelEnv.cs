@@ -86,13 +86,7 @@ namespace MCGalaxy {
                 Player.Message(p, "Reset {0} color for {1}%S to normal", envTypeName, p.level.name);
                 target = null;
             } else {
-                if (value.Length > 0 && value[0] == '#')
-                    value = value.Substring(1);
-                if (value.Length != 6 || !IsValidHex(value)) {
-                    p.SendMessage(string.Format("Env: \"#{0}\" is not a valid HEX color code.", value));
-                    return;
-                }
-                
+			    if (!Extensions.CheckHex(p, ref value)) return;              
                 Player.Message(p, "Set {0} color for {1}%S to #{2}", envTypeName, p.level.name, value);
                 target = value;
             }
@@ -147,13 +141,6 @@ namespace MCGalaxy {
                 Player.Message(p, "Set {0} for {1}%S to {2}", variable, p.level.name, value.ToString("F2"));
                 return true;
             }
-        }
-        
-        static bool IsValidHex(string hex) {
-            for (int i = 0; i < hex.Length; i++) {
-                if (!Colors.IsStandardColor(hex[i])) return false;
-            }
-            return true;
         }
         
         static bool IsResetString(string value) {

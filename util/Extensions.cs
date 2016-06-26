@@ -112,6 +112,22 @@ namespace MCGalaxy {
             return false;
         }
         
+        public static bool CheckHex(Player p, ref string arg) {
+            if (arg.Length > 0 && arg[0] == '#')
+                arg = arg.Substring(1);
+            if (arg.Length != 6 || !IsValidHex(arg)) {
+                Player.Message(p, "\"#{0}\" is not a valid HEX color.", arg); return false;
+            }
+            return true;
+        }
+
+        static bool IsValidHex(string hex) {
+            for (int i = 0; i < hex.Length; i++) {
+                if (!Colors.IsStandardColor(hex[i])) return false;
+            }
+            return true;
+        }
+        
         public static unsafe void memset( IntPtr srcPtr, byte value, int startIndex, int bytes ) {
             byte* srcByte = (byte*)srcPtr + startIndex;
             // Make sure we do an aligned write/read for the bulk copy
