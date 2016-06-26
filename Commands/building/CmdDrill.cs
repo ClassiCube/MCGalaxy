@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
             p.blockchangeObject = cpos;
             Player.Message(p, "Destroy the block you wish to drill.");
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += Blockchange1;
         }
         
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {

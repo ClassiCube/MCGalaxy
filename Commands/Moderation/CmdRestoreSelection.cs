@@ -34,21 +34,21 @@ namespace MCGalaxy.Commands {
             if (LevelInfo.ExistsBackup(p.level.name, message)) {
                 p.blockchangeObject = new CatchPos() { backup = message };
                 p.ClearBlockchange();
-                p.Blockchange += Blockchange1;
+                p.Blockchange += PlacedMark1;
                 p.SendMessage("Select two corners for restore.");
             } else {
                 Player.Message(p, "Backup " + message + " does not exist.");
             }
         }
 
-        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += Blockchange2;
+            p.Blockchange += PlacedMark2;
         }
 
-        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             string path = LevelInfo.BackupPath(p.level.name, cpos.backup);
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
                     if (!CopyBlocks(p, other, x, y, z, cpos)) return;
                 }
                 if (p.staticCommands)
-                    p.Blockchange += Blockchange1;
+                    p.Blockchange += PlacedMark1;
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 Server.s.Log("Restore selection failed");

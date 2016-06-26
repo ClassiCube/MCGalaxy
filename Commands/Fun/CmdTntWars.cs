@@ -980,7 +980,7 @@ namespace MCGalaxy.Commands {
 					CheckZone = false;
 					Player.Message(p, "TNT Wars: Place 2 blocks to create the zone for {0}!", msg);
 					//p.ClearBlockchange();
-					p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+					p.Blockchange += PlacedMark1;
 					break;
 
 				case "delete":
@@ -997,7 +997,7 @@ namespace MCGalaxy.Commands {
 					CheckZone = false;
 					Player.Message(p, "TNT Wars: Place a block to delete the zone for {0}!", msg);
 					p.ClearBlockchange();
-					p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+					p.Blockchange += PlacedMark1;
 					break;
 
 				case "check":
@@ -1006,7 +1006,7 @@ namespace MCGalaxy.Commands {
 					CheckZone = true;
 					Player.Message(p, "TNT Wars: Place a block to check for no {0}!", msg);
 					p.ClearBlockchange();
-					p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+					p.Blockchange += PlacedMark1;
 					break;
 			}
 		}
@@ -1186,13 +1186,13 @@ namespace MCGalaxy.Commands {
 			}
 		}
 		
-		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+		void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos bp = (CatchPos)p.blockchangeObject;
 			bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
 			if (DeleteZone == false && CheckZone == false) {
 				Player.Message(p, "TNT Wars: Place another block to mark the other corner of the zone!");
-				p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+				p.Blockchange += PlacedMark2;
 				return;
 			}
 			
@@ -1222,7 +1222,7 @@ namespace MCGalaxy.Commands {
 			}
 		}
 
-		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+		void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 			TntWarsGame.Zone Zn = new TntWarsGame.Zone();

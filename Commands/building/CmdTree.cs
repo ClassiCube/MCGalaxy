@@ -49,11 +49,11 @@ namespace MCGalaxy.Commands.Building {
             cpos.brushMsg = brushMsg;
             p.ClearBlockchange();
             p.blockchangeObject = cpos;
-            p.Blockchange += new Player.BlockchangeEventHandler(PlaceBlock1);
+            p.Blockchange += PlacedBase;
             Player.Message(p, "Select where you wish your tree to grow");
         }
 
-        void PlaceBlock1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedBase(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             type = type < 128 ? p.bindings[type] : type;
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Building {
             if (!DrawOp.DoDrawOp(op, brush, p, marks))
                 return;
             if (p.staticCommands)
-                p.Blockchange += new Player.BlockchangeEventHandler(PlaceBlock1);
+                p.Blockchange += PlacedBase;
         }
         
         static Brush ParseBrush(string brushMsg, Player p, byte type, byte extType) {

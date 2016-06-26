@@ -40,18 +40,18 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "Place two blocks to determine the edges.");           
             p.ClearBlockchange();
             p.blockchangeObject = cpos;
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += PlacedMark1;
         }
         
-        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             cpos.x = x; cpos.y = y; cpos.z = z;
             p.blockchangeObject = cpos;
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+            p.Blockchange += PlacedMark2;
         }
         
-        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;           
             Player who = PlayerInfo.Find(cpos.message);

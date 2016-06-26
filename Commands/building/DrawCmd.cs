@@ -36,21 +36,21 @@ namespace MCGalaxy.Commands.Building {
             p.blockchangeObject = cpos;
             Player.Message(p, PlaceMessage);
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += PlacedMark1;
         }
         
         // most draw commands use two coordinates, so implement this here to simplify implementation.
-        protected virtual void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected virtual void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z;
             p.blockchangeObject = bp;
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+            p.Blockchange += PlacedMark2;
         }
         
         protected virtual string PlaceMessage { get { return "Place two blocks to determine the edges."; } }
         
-        protected abstract void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
+        protected abstract void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
         protected abstract DrawMode ParseMode(string mode);
         

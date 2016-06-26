@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             if (cpos.ending == EndType.Invalid) return;
             p.blockchangeObject = cpos;
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += PlacedMark;
 
             p.SendMessage(Weapon + " mode engaged, fire at will");
             if (p.aiming) return;
@@ -135,7 +135,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        protected abstract void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
+        protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
         protected Player GetPlayer(Player p, Vec3U16 pos, bool skipSelf) {
             Player[] players = PlayerInfo.Online.Items;

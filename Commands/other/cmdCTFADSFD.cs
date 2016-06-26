@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands
                     cpos.x = 0; cpos.y = 0; cpos.z = 0; cpos.color = color; p.blockchangeObject = cpos;
                     Player.Message(p, "Place a block to determine where to place the flag.");
                     p.ClearBlockchange();
-                    p.Blockchange += new Player.BlockchangeEventHandler(AddFlag);
+                    p.Blockchange += AddFlag;
                 }
                 else if (message.Split(' ')[0].ToLower() == "reset")
                 {

@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected override void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             byte oldType = p.level.GetTile(x, y, z), oldExtType = 0;
@@ -72,10 +72,10 @@ namespace MCGalaxy.Commands.Building {
             op.Positions = null;
 
             if (p.staticCommands)
-                p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+                p.Blockchange += PlacedMark1;
         }
         
-        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
+        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
 
         void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, byte oldExtType, DrawMode fillType,
                        SparseBitSet bits, List<int> buffer, List<int> origins, int depth) {

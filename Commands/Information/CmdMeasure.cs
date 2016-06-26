@@ -40,17 +40,17 @@ namespace MCGalaxy.Commands {
             p.blockchangeObject = cpos;
             Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += PlacedMark1;
         }
         
-        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+            p.Blockchange += PlacedMark2;
         }
         
-        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             ushort minX = Math.Min(cpos.x, x), maxX = Math.Max(cpos.x, x);
@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands {
                                " Volume is " + (width * height * length) + " blocks." );
             string name = " non-" + Block.Name(cpos.toIgnore);
             Player.Message(p, "There are " + foundBlocks + name + " blocks in the area.");
-            if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            if (p.staticCommands) p.Blockchange += PlacedMark1;
         }
         
         struct CatchPos { public ushort x, y, z; public byte toIgnore; }

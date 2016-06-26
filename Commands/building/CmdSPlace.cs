@@ -52,17 +52,17 @@ namespace MCGalaxy.Commands.Building {
             p.blockchangeObject = cpos;
             Player.Message(p, "Place two blocks to determine direction.");
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += PlacedMark1;
         }
         
-        public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+            p.Blockchange += PlacedMark2;
         }
         
-        public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             ushort distance = cpos.distance, interval = cpos.interval;
@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Placed stone blocks " + interval + " apart");
             else
                 Player.Message(p, "Placed stone blocks " + distance + " apart");
-            if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            if (p.staticCommands) p.Blockchange += PlacedMark1;
         }
         
         struct CatchPos {

@@ -27,15 +27,15 @@ namespace MCGalaxy.Commands.Building {
 			get { return "Place three blocks to determine the edges."; }
 		} 
 
-        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
         	RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x2 = x; bp.y2 = y; bp.z2 = z;
             p.blockchangeObject = bp;
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange3);
+            p.Blockchange += PlacedMark3;
         }
         
-        void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { 
+        void PlacedMark3(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { 
         	RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Building {
             if (!DrawOp.DoDrawOp(new TriangleDrawOp(), brush, p, marks))
                 return;
             if (p.staticCommands)
-                p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+                p.Blockchange += PlacedMark1;
         }
         
         protected override DrawMode ParseMode(string msg) {

@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "pyramid"; } }
         public override string shortcut { get { return "pd"; } }
 
-        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Building {
             if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
                 return;
             if (p.staticCommands)
-                p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+                p.Blockchange += PlacedMark1;
         }
         
         protected override DrawMode ParseMode(string msg) {

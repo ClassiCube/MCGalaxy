@@ -35,11 +35,10 @@ namespace MCGalaxy.Commands
         	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             Player.Message(p, "Break/build a block to display information.");
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(AboutBlockchange);            
-        }
-        
+            p.Blockchange += PlacedBlock;
+        }       
 
-        void AboutBlockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (!p.staticCommands) p.ClearBlockchange();
             byte b = p.level.GetTile(x, y, z);
             if (b == Block.Zero) { Player.Message(p, "Invalid Block(" + x + "," + y + "," + z + ")!"); return; }

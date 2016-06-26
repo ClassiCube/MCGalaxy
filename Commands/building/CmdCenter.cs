@@ -12,16 +12,16 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += PlacedMark1;
         }
 
-       void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)  {
+       void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)  {
             RevertAndClearState(p, x, y, z);
             p.blockchangeObject = new Vec3U16(x, y, z);
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+            p.Blockchange += PlacedMark2;
         }
         
-        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             Vec3U16 start = (Vec3U16)p.blockchangeObject;
             int xCen = (start.X + x) / 2, yCen = (start.Y + y) / 2, zCen = (start.Z + z) / 2;

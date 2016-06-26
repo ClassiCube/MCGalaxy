@@ -102,14 +102,14 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "Place two blocks to determine the edges.");
             Player.Message(p, "Zone for: &b" + cpos.Owner + ".");
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += Blockchange1;
         }
 
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos bp = (CatchPos)p.blockchangeObject;
             bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+            p.Blockchange += Blockchange2;
         }
 
         void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {

@@ -149,7 +149,7 @@ using System.Threading;
 
                     Player.Message(theP, "Place a block for center of zombie spawn.");
                     theP.ClearBlockchange();
-                    theP.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+                    theP.Blockchange += Blockchange1;
                 }
                 else
                 {

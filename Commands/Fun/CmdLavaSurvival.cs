@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands
 							cpos.x = 0; cpos.y = 0; cpos.z = 0;
 							p.blockchangeObject = cpos;
 							p.ClearBlockchange();
-							p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+							p.Blockchange += PlacedMark1;
 							return;
 						}
 						if (s[2] == "layer")
@@ -167,7 +167,7 @@ namespace MCGalaxy.Commands
 							cpos.x = 0; cpos.y = 0; cpos.z = 0;
 							p.blockchangeObject = cpos;
 							p.ClearBlockchange();
-							p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+							p.Blockchange += PlacedMark1;
 							return;
 						}
 
@@ -181,7 +181,7 @@ namespace MCGalaxy.Commands
 						cpos.x = 0; cpos.y = 0; cpos.z = 0;
 						p.blockchangeObject = cpos;
 						p.ClearBlockchange();
-						p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+						p.Blockchange += PlacedMark1;
 						return;
 					}
 					if (s[1] == "settings")
@@ -364,7 +364,7 @@ namespace MCGalaxy.Commands
 			}
 		}
 
-		public void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
+		void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
 		{
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
@@ -373,7 +373,7 @@ namespace MCGalaxy.Commands
 			{
 				cpos.x = x; cpos.y = y; cpos.z = z;
 				p.blockchangeObject = cpos;
-				p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+				p.Blockchange += PlacedMark2;
 				return;
 			}
 
@@ -385,7 +385,7 @@ namespace MCGalaxy.Commands
 			Player.Message(p, "Position set! &b({0}, {1}, {2})", x, y, z);
 		}
 
-		public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
+		void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
 		{
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;

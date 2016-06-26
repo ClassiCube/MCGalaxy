@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
 
-        protected override void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             GetRealBlock(type, extType, p, ref cpos);
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Building {
             if (!DrawOp.DoDrawOp(op, brush, p, marks))
                 return;
             if (p.staticCommands)
-                p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+                p.Blockchange += PlacedMark1;
         }
         
         public override void Help(Player p) {

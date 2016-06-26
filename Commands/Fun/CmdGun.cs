@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return ""; } }
         protected override string Weapon { get { return "Gun"; } }
         
-        protected override void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.RevertBlock(x, y, z);
             if (!Block.canPlace(p, type)) { Player.Message(p, "You cannot place this block."); return; }
 

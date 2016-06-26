@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return ""; } }
         protected override string Weapon { get { return "Missile"; } }
 
-        protected override void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (!p.staticCommands) {
                 p.ClearBlockchange();
                 p.aiming = false;

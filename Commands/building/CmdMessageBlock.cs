@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Building {
 
             p.blockchangeObject = cpos;
             Player.Message(p, "Place where you wish the message block to go."); p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += PlacedMark;
         }
         
         bool CheckCommand(Player p, string message) {
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Building {
             return message.CaselessEq(cmd) || message.CaselessStarts(cmd + " ");
         }
 
-        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (p.staticCommands)
-                p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+                p.Blockchange += PlacedMark;
         }
         
         void UpdateDatabase(Player p, CatchPos cpos, ushort x, ushort y, ushort z) {

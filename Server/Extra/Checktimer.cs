@@ -14,17 +14,18 @@ permiusing MCGalaxy;ssions and limitations under the Licenses.
  */
 ﻿using System;
 using System.IO;
+using System.Timers;
 
 namespace MCGalaxy {
     
     public static class Checktimer {
         
-        static System.Timers.Timer t;
+        static Timer t;
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static void StartTimer() {
-            t = new System.Timers.Timer();
+            t = new Timer();
             t.AutoReset = false;
-            t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
+            t.Elapsed += TimerElapsed;
             t.Interval = GetInterval();
             t.Start();
         }
@@ -34,7 +35,7 @@ namespace MCGalaxy {
             return ((60 - now.Second) * 1000 - now.Millisecond);
         }
         
-        static void t_Elapsed(object sender, System.Timers.ElapsedEventArgs e) {
+        static void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e) {
             t.Interval = GetInterval();
             t.Start();
             TRExpiryCheck(); // every 60 seconds

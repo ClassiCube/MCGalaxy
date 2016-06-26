@@ -39,10 +39,10 @@ namespace MCGalaxy.Commands.Building {
             p.blockchangeObject = cpos;
             Player.Message(p, "Place a block in the corner of where you want to paste.");
             p.ClearBlockchange();
-            p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            p.Blockchange += PlacedOrigin;
         }
 
-        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedOrigin(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             RevertAndClearState(p, x, y, z);
             int x1 = p.copyoffset[0] + x, y1 = p.copyoffset[1] + y, z1 = p.copyoffset[2] + z;
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Building {
             Vec3S32[] marks = { new Vec3S32(x1, y1, z1) };
             if (!DrawOp.DoDrawOp(op, null, p, marks))
                 return;
-            if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+            if (p.staticCommands) p.Blockchange += PlacedOrigin;
         } 
 
         struct CatchPos { public string message; }

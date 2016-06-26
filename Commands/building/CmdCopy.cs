@@ -89,19 +89,19 @@ namespace MCGalaxy.Commands.Building {
 			p.blockchangeObject = cpos;
 			Player.Message(p, "Place two blocks to determine the edges.");
 			p.ClearBlockchange();
-			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
+			p.Blockchange += PlacedMark1;
 		}
 
-		void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+		void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos bp = (CatchPos)p.blockchangeObject;
 			p.copystart[0] = x; p.copystart[1] = y; p.copystart[2] = z;
 
 			bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-			p.Blockchange += new Player.BlockchangeEventHandler(Blockchange2);
+			p.Blockchange += PlacedMark2;
 		}
 
-		void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+		void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			CatchPos cpos = (CatchPos)p.blockchangeObject;
 			ushort minX = (ushort)Math.Min(x, cpos.x), maxX = (ushort)Math.Max(x, cpos.x);
@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands.Building {
 			Player.Message(p, format, state.UsedBlocks);
 			if (cpos.allowoffset != -1) {
 				Player.Message(p, "Place a block to determine where to paste from");
-				p.Blockchange += new Player.BlockchangeEventHandler(Blockchange3);
+				p.Blockchange += Blockchange3;
 			}
 		}
 
