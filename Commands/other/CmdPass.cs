@@ -1,6 +1,6 @@
 /*
  
-	Copyright 2012 MCGalaxy
+	Copyright 2012 MCForge
 		
 	Dual-licensed under the	Educational Community License, Version 2.0 and
 	the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -20,15 +20,14 @@
 using System;
 using System.IO;
 using MCGalaxy.Util;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPass : Command
-    {
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdPass : Command {
         public override string name { get { return "pass"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public CmdPass() { }
 

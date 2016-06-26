@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands {
-    public sealed class CmdIrcControllers : Command {        
+    public sealed class CmdIrcControllers : Command {
         public override string name { get { return "irccontrollers"; } }
         public override string shortcut { get { return "ircctrl"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -36,6 +36,7 @@ namespace MCGalaxy.Commands {
                     Server.ircControllers = PlayerList.Load("IRC_Controllers.txt");
                     Player.Message(p, "IRC Controllers reloaded!");
                     break;
+                    
                 case "add":
                     if (parts.Length < 2) { Player.Message(p, "You need to provide a name to add."); return; }
                     if (Server.ircControllers.Contains(parts[1])) {
@@ -46,6 +47,7 @@ namespace MCGalaxy.Commands {
                     Server.ircControllers.Save();
                     Player.Message(p, parts[1] + " added to the IRC controller list.");
                     break;
+                    
                 case "remove":
                     if (parts.Length < 2) { Player.Message(p, "You need to provide a name to remove."); return; }
                     if (!Server.ircControllers.Contains(parts[1])) {
@@ -56,19 +58,49 @@ namespace MCGalaxy.Commands {
                     Server.ircControllers.Save();
                     Player.Message(p, parts[1] + " removed from the IRC controller list.");
                     break;
+                    
                 case "list":
                     string names = Server.ircControllers.All().Concatenate(", ");
                     Player.Message(p, "IRC controllers list:");
                     Player.Message(p, names);
                     break;
-            }            
+                    
+                case "rank":
+                    if (parts.Length < 2) { 
+                        Group exist = Group.findPerm(Server.ircControllerRank);
+                        if (exist == null)
+                            Player.Message(p, "IRC controllers have permission level {0}.", (int)Server.ircControllerRank);
+                        else
+                            Player.Message(p, "IRC controllers have the rank {0}", exist.ColoredName);
+                        return;
+                    }
+                    
+                    Group grp = Group.FindOrShowMatches(p, parts[1]);
+                    if (grp == null) return;                  
+                    if (p != null && Server.ircControllerRank > p.group.Permission) {
+                        Player.Message(p, "Cannot change the IRC controllers rank, as it is currently a rank higher than yours."); return;
+                    }
+                    if (p != null && grp.Permission > p.group.Permission) {
+                        Player.Message(p, "Cannot set the IRC controllers rank to a rank higher than yours."); return;
+                    }
+                    
+                    Server.ircControllerRank = grp.Permission;
+                    SrvProperties.Save();
+                    Player.Message(p, "Set IRC controller rank to {0}%S.", grp.ColoredName);
+                    break;
+                    
+                default:
+                    Help(p); break;
+            }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ircctrl <add/remove> [name]");
-            Player.Message(p, "%HAdds or removes <name> from list of IRC controllers");
-            Player.Message(p, "%T/ircctrl <reload/list>");
+            Player.Message(p, "%T/irccontrollers <add/remove> [name]");
+            Player.Message(p, "%HAdds or removes [name] from list of IRC controllers");
+            Player.Message(p, "%T/irccontrollers <reload/list>");
             Player.Message(p, "%HReloads or outputslist of IRC controllers");
+            Player.Message(p, "%T/irccontrollers rank [rank]");
+            Player.Message(p, "%HSets which rank IRC controllers are treated as having in-game.");
         }
     }
 }

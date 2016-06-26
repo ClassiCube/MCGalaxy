@@ -70,11 +70,13 @@ namespace MCGalaxy {
 		internal class ReviewPerms { public int viewPerm = -1, nextPerm = -1, clearPerm = -1; }
 		
 		public static void Save() { Save("properties/server.properties"); }
-
+		static readonly object saveLock = new object();
 		public static void Save(string givenPath) {
 			try {
-				using (CP437Writer w = new CP437Writer(givenPath))
-					SaveProps(w);
+				lock (saveLock) {
+					using (CP437Writer w = new CP437Writer(givenPath))
+						SaveProps(w);
+				}
 			} catch (Exception ex) {
 				Server.ErrorLog(ex);
 				Server.s.Log("SAVE FAILED! " + givenPath);
