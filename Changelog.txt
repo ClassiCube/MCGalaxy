@@ -1,3 +1,26 @@
+v 1.8.7.3
+Added: Review queue shows to appropriate staff on joining
+Added: Multiple commands in a single /mb block
+Added: /seen now shows last time an online player visiited the server
+Added: /irccontrollers rank [rank] to set rank of IRC controllers
+Fixed: Being unable to place blocks when guest rank when outside map at negative coordinates
+Fixed: Dirt/Grass not changing to appropriate block in all circumstances.
+Fixed: Properly check extra permissions in /zone
+Fixed: Logging in as yourself counting as a kick
+Fixed: /skin not working properly with uppercase characters.
+Fixed: Various IRC things not outputting properly to op channel
+Fixed: Passwords list not showing in server gui
+Fixed: Make /vip actually work
+Improved: Commands that are designed to only be used in game (e.g. /z) can no longer be used by IRC controllers.
+Improved: More commands use different colours for syntax in /help
+Improved: More files support writing/reading code page 437 characters
+Improved: More saving data methods are threadsafe, minimising random data loss/corruption
+Improved: /help for /newlvl
+Improved: 'X is not a valid player/level' name messages are consistent
+Removed: /click, old behaviour is now integrated into /mark
+Removed: Separate /topfive and /topten, now just alias for /top
+Removed: /reveal, now part of /reload with extra command permissions
+
 v 1.8.7.2
 Added: Review requests appear on IRC op channel.
 Added: Can toggle whether player titles are shown on IRC.
