@@ -70,7 +70,13 @@ namespace MCGalaxy {
             }
         }
 
+        static readonly object saveLock = new object();
         public static void Save() {
+            lock (saveLock)
+                SaveCore();
+        }
+        
+        static void SaveCore() {
             using (StreamWriter w = new StreamWriter("properties/ExtraCommandPermissions.properties")) {
                 w.WriteLine("#     This file is used for setting up additional permissions that are needed in commands!!");
                 w.WriteLine("#");

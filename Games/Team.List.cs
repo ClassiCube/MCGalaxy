@@ -24,7 +24,7 @@ namespace MCGalaxy.Games {
     public sealed partial class Team {
         
         public static Dictionary<string, Team> TeamsList = new Dictionary<string, Team>();
-        static readonly object readLock = new object();
+        static readonly object ioLock = new object();
         
         public static Team FindTeam(Player p) {
             foreach (var team in TeamsList) {
@@ -46,7 +46,7 @@ namespace MCGalaxy.Games {
         }
         
         public static void SaveList() {
-            lock (readLock)
+            lock (ioLock)
                 using (CP437Writer w = new CP437Writer("extra/teams.txt"))
                     foreach (var pair in TeamsList)
             {
@@ -62,7 +62,7 @@ namespace MCGalaxy.Games {
         public static void LoadList() {
             if (!File.Exists("extra/teams.txt")) return;
             Team team = new Team();
-            lock (readLock)
+            lock (ioLock)
                 PropertiesFile.Read("extra/teams.txt", ref team, LineProcessor, '=');
             if (team.Name != null) TeamsList[team.Name] = team;
         }
