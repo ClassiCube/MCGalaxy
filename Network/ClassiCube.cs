@@ -38,7 +38,16 @@ namespace MCGalaxy {
                 "&public=" + Server.pub +
                 "&version=7" +
                 "&salt=" + Server.salt +
-                "&users=" + PlayerInfo.Online.Count + "&software=MCGalaxy";
+                "&users=" + PlayerCount() + "&software=MCGalaxy";
+        }
+        
+        static int PlayerCount() {
+            Player[] players = PlayerInfo.Online.Items;
+            int count = 0;
+            foreach (Player p in players) {
+                if (!p.hidden) count++;
+            }
+            return count;
         }
         
         bool UrlSaid = false;

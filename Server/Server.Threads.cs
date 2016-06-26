@@ -63,7 +63,7 @@ namespace MCGalaxy {
                                 p.SendPos(0xFF, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
                             }
                         } else if (p.possess != "") {
-                            Player who = PlayerInfo.Find(p.possess);
+                            Player who = PlayerInfo.FindExact(p.possess);
                             if (who == null || who.level != p.level)
                                 p.possess = "";
                         }
