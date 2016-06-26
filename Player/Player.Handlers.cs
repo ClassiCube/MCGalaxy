@@ -45,6 +45,11 @@ namespace MCGalaxy {
         }
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
+        	ManualChange(x, y, z, action, type, extType, true);
+        }
+        
+        public void ManualChange(ushort x, ushort y, ushort z, byte action, 
+                                 byte type, byte extType, bool checkPlaceDist) {
             byte b = level.GetTile(x, y, z);
             if ( b == Block.Zero ) { return; }
             if ( jailed || !agreed ) { RevertBlock(x, y, z); return; }
@@ -91,12 +96,12 @@ namespace MCGalaxy {
             OnBlockChangeEvent.Call(this, x, y, z, type, extType);
             if ( cancelBlock ) { cancelBlock = false; return; }
 
-            if ( group.Permission == LevelPermission.Banned ) return;
-            if ( group.Permission == LevelPermission.Guest ) {
-                int Diff = Math.Abs((pos[0] / 32) - x) + Math.Abs((pos[1] / 32) - y) 
-                    + Math.Abs((pos[2] / 32) - z);
+            if (group.Permission == LevelPermission.Banned) return;
+            if (checkPlaceDist && group.Permission == LevelPermission.Guest) {
+            	int Diff = Math.Abs(((short)pos[0] / 32) - x) + Math.Abs(((short)pos[1] / 32) - y) 
+            	    + Math.Abs(((short)pos[2] / 32) - z);
 
-                if ((Diff > ReachDistance + 4) && !(lastCMD == "click" || lastCMD == "mark")) {
+                if (Diff > ReachDistance + 4) {
                     Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
                     SendMessage("You can't build that far away.");
                     RevertBlock(x, y, z); return;

@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Building {
             if (!p.HasBlockchange) {
                 Player.Message(p, "Cannot mark, no selection or cuboid in progress."); return;
             }
-            p.ManualChange(P.X, P.Y, P.Z, 0, Block.rock);
+            p.ManualChange(P.X, P.Y, P.Z, 0, Block.rock, 0, false);
             Player.Message(p, "Mark placed at &b({0}, {1}, {2})", P.X, P.Y, P.Z);
         }
         

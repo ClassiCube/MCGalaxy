@@ -129,7 +129,13 @@ namespace MCGalaxy {
             }
         }
 
+        static readonly object saveLock = new object();
         public static void Save(List<rankAllowance> givenList) {
+            lock (saveLock)
+                SaveCore(givenList);
+        }
+        
+        static void SaveCore(List<rankAllowance> givenList) {
             try {
                 using (StreamWriter w = new StreamWriter("properties/command.properties")) {
                     w.WriteLine("#Version 2");

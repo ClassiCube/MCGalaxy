@@ -114,6 +114,7 @@ namespace MCGalaxy
 
         public static List<Group> GroupList = new List<Group>();
         public static Group standard;
+        static readonly object saveLock = new object();
         
         /// <summary> Load up all server groups </summary>
         public static void InitAll() {
@@ -146,9 +147,10 @@ namespace MCGalaxy
         /// <summary> Save givenList group </summary>
         /// <param name="givenList">The list of groups to save</param>
         public static void saveGroups(List<Group> givenList) {
-            GroupProperties.SaveGroups(givenList);
-            if (OnGroupSave != null)
-                OnGroupSave();
+        	lock (saveLock)
+        	    GroupProperties.SaveGroups(givenList);
+        	
+            if (OnGroupSave != null) OnGroupSave();
             OnGroupSaveEvent.Call();
         }
         

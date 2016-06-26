@@ -46,11 +46,11 @@ namespace MCGalaxy.Commands
         void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.ClearBlockchange();
             if (type == Block.red) {
-                p.ManualChange(x, y, z, 1, Block.c4det, 0);
+                p.ManualChange(x, y, z, 1, Block.c4det);
                 Player.Message(p, "Placed detonator block!");
                 return;
             } else if (type != Block.air) {
-                p.ManualChange(x, y, z, 1, Block.c4, 0);
+                p.ManualChange(x, y, z, 1, Block.c4);
             }
             p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
