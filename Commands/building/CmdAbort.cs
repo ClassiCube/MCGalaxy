@@ -31,7 +31,6 @@ namespace MCGalaxy.Commands.Building {
             p.cmdTimer = false;
             p.staticCommands = false;
             p.deleteMode = false;
-            p.ZoneCheck = false;
             p.modeType = 0;
             p.aiming = false;
             p.onTrain = false;

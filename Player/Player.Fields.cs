@@ -166,8 +166,6 @@ namespace MCGalaxy {
         internal bool outdatedClient = false; // for ClassicalSharp 0.98.5, which didn't reload map for BlockDefinitions
 
         public DateTime ZoneSpam;
-        public bool ZoneCheck = false;
-        public bool zoneDel = false;
 
         public bool aiming;
         public bool isFlying = false;
