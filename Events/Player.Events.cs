@@ -149,5 +149,8 @@ namespace MCGalaxy {
             OnPlayerAction change = DoPlayerAction;
             if (change != null) change(p, action, message, stealth);
         }
+        
+        /// <summary> Called when the player has finished providing all the marks for a selection. </summary>
+        public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, byte type, byte extType);
     }
 }

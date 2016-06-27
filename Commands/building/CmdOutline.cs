@@ -30,39 +30,25 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length != 2) { Help(p); return; }
-            CatchPos cpos = default(CatchPos);           
+            DrawArgs dArgs = default(DrawArgs);           
             
-            cpos.type = DrawCmd.GetBlock(p, args[0], out cpos.newType);
-            if (cpos.type == Block.Zero) return;
-            cpos.newType = DrawCmd.GetBlock(p, args[1], out cpos.newExtType);
-            if (cpos.newType == Block.Zero) return;
+            dArgs.type = DrawCmd.GetBlock(p, args[0], out dArgs.extType);
+            if (dArgs.type == Block.Zero) return;
+            dArgs.newType = DrawCmd.GetBlock(p, args[1], out dArgs.newExtType);
+            if (dArgs.newType == Block.Zero) return;
 
-            p.blockchangeObject = cpos;
             Player.Message(p, "Place two blocks to determine the edges.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, dArgs, DoOutline);
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            
+        bool DoOutline(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            DrawArgs dArgs = (DrawArgs)state;
             OutlineDrawOp op = new OutlineDrawOp();
-            op.Type = cpos.type; op.ExtType = cpos.extType;
-            op.NewType = cpos.newType; op.NewExtType = cpos.newExtType;
-            if (!DrawOp.DoDrawOp(op, null, p, x, y, z, cpos.x, cpos.y, cpos.z )) 
-                return;
-            if (p.staticCommands) 
-                p.Blockchange += PlacedMark1;
+            op.Type = dArgs.type; op.ExtType = dArgs.extType;
+            op.NewType = dArgs.newType; op.NewExtType = dArgs.newExtType;          
+            return DrawOp.DoDrawOp(op, null, p, marks);
         }
-        struct CatchPos { public byte type, extType, newType, newExtType; public ushort x, y, z; }
+        struct DrawArgs { public byte type, extType, newType, newExtType; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/outline [type] [type2]");

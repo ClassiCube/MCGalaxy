@@ -29,41 +29,23 @@ namespace MCGalaxy.Commands.Building {
         public CmdHollow() { }
 
         public override void Use(Player p, string message) {
-            CatchPos cpos = default(CatchPos);
-            cpos.other = Block.Zero;
+            byte skip = Block.Zero;
             if (message != "") {
-                cpos.other = Block.Byte(message.ToLower());
-                if (cpos.other == Block.Zero) { Player.Message(p, "Cannot find block entered."); return; }
+                skip = Block.Byte(message);
+                if (skip == Block.Zero) { Player.Message(p, "Cannot find block entered."); return; }
             }
 
-            p.blockchangeObject = cpos;
             Player.Message(p, "Place two blocks to determine the edges.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, skip, DoHollow);
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            
+        bool DoHollow(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             HollowDrawOp op = new HollowDrawOp();
-            op.Skip = cpos.other;
-            if (!DrawOp.DoDrawOp(op, null, p, x, y, z, cpos.x, cpos.y, cpos.z )) 
-                return;
-            if (p.staticCommands) 
-                p.Blockchange += PlacedMark1;
+            op.Skip = (byte)state;
+            return DrawOp.DoDrawOp(op, null, p, marks);
         }
 
-        struct CatchPos {
-            public ushort x, y, z; public byte other;
-        }
+        struct CatchPos { public byte skip; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/hollow");

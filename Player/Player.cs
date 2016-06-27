@@ -158,7 +158,7 @@ namespace MCGalaxy {
         public static void SendChatFrom(Player from, string message, bool showname) {
             if ( from == null ) return; // So we don't fucking derp the hell out!
             
-            if (Last50Chat.Count() == 50)
+            if (Last50Chat.Count == 50)
                 Last50Chat.RemoveAt(0);
             var chatmessage = new ChatMessage();
             chatmessage.text = message;
@@ -578,6 +578,38 @@ Next: continue;
              string time = DateTime.UtcNow.ToString("dd/mm/yyyy");
              reason = reason.Replace(" ", "%20");
              Server.Notes.Append(target + " " + type + " " + src + " " + time + " " + reason);
+        }
+        
+        readonly object selLock = new object();
+        Vec3S32[] selMarks;
+        object selState;
+        SelectionHandler selCallback;
+        int selIndex;
+
+        public void MakeSelection(int marks, object state, SelectionHandler callback) {
+            lock (selLock) {
+                selMarks = new Vec3S32[marks];
+                selState = state;
+                selCallback = callback;
+                selIndex = 0;
+                Blockchange = SelectionBlockChange;
+            }
+        }
+        
+        void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+            lock (selLock) {
+                Blockchange = SelectionBlockChange;
+                RevertBlock(x, y, z);
+                
+                selMarks[selIndex] = new Vec3S32(x, y, z);
+                selIndex++;
+                if (selIndex != selMarks.Length) return;
+                
+                Blockchange = null;
+                bool canRepeat = selCallback(this, selMarks, selState, type, extType);
+                if (canRepeat && staticCommands)
+                    MakeSelection(selIndex, selState, selCallback);
+            }
         }
     }
 }
