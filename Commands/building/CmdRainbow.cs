@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -28,31 +28,14 @@ namespace MCGalaxy.Commands.Building {
         public CmdRainbow() { }
 
         public override void Use(Player p, string message) {
-            CatchPos cpos = default(CatchPos);
-            p.blockchangeObject = cpos;
             Player.Message(p, "Place two blocks to determine the edges.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, null, DoRainbow);
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            
+        bool DoRainbow(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             RainbowDrawOp op = new RainbowDrawOp();
-            if (!DrawOp.DoDrawOp(op, null, p, x, y, z, cpos.x, cpos.y, cpos.z )) 
-                return;
-            if (p.staticCommands) 
-                p.Blockchange += PlacedMark1;
+            return DrawOp.DoDrawOp(op, null, p, marks);
         }
-        struct CatchPos { public ushort x, y, z; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/rainbow");

@@ -28,40 +28,20 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         public override void Use(Player p, string message) {
-            CatchPos cpos = default(CatchPos);
-            cpos.message = message.ToLower();
-            p.blockchangeObject = cpos;
-            
             Player.Message(p, "Place two blocks to determine the edges.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, message.ToLower(), DoReplace);
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z;
-            p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            BrushArgs args = new BrushArgs(p, cpos.message, type, extType);
+        bool DoReplace(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            BrushArgs args = new BrushArgs(p, (string)state, type, extType);
             Brush brush = ReplaceNot ? ReplaceNotBrush.Process(args) : ReplaceBrush.Process(args);
-            if (brush == null) return;
+            if (brush == null) return false;
             
             DrawOp drawOp = new CuboidDrawOp();
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            return DrawOp.DoDrawOp(drawOp, brush, p, marks);
         }
         
         protected virtual bool ReplaceNot { get { return false; } }
-        
-        struct CatchPos { public ushort x, y, z; public string message; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/replace [block] [block2].. [new]");

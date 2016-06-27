@@ -41,42 +41,28 @@ namespace MCGalaxy.Commands.Building {
             if (!byte.TryParse(args[0], out scale)) scale = 1;
             if (!byte.TryParse(args[1], out spacing)) spacing = 1;
 
-            CatchPos cpos = default(CatchPos);
-            cpos.scale = scale; cpos.spacing = spacing;
-            cpos.givenMessage = args[2].ToUpper();
-            p.blockchangeObject = cpos;
-            
+            WriteArgs wArgs = default(WriteArgs);
+            wArgs.scale = scale; wArgs.spacing = spacing;
+            wArgs.message = args[2].ToUpper();
             Player.Message(p, "Place two blocks to determine direction.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, wArgs, DoWrite);
         }
-        
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+
+        bool DoWrite(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             type = type < 128 ? p.bindings[type] : type;
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            Level lvl = p.level;
-            if (x == cpos.x && z == cpos.z) { Player.Message(p, "No direction was selected"); return; }
+            WriteArgs wArgs = (WriteArgs)state;
+            if (marks[0].X == marks[1].X && marks[0].Z == marks[1].Z) { 
+                Player.Message(p, "No direction was selected"); return false; 
+            }
             
             WriteDrawOp op = new WriteDrawOp();
-            op.Text = cpos.givenMessage;
-            op.Scale = cpos.scale; op.Spacing = cpos.spacing;
+            op.Text = wArgs.message;
+            op.Scale = wArgs.scale; op.Spacing = wArgs.spacing;
             Brush brush = new SolidBrush(type, extType);
-            if (!DrawOp.DoDrawOp(op, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
-                return;
-
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
-        struct CatchPos { public byte scale, spacing; public ushort x, y, z; public string givenMessage; }
+        struct WriteArgs { public byte scale, spacing; public ushort x, y, z; public string message; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/wrt [scale] [spacing] [message]");

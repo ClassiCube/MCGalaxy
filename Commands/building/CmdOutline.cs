@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
             DrawArgs dArgs = (DrawArgs)state;
             OutlineDrawOp op = new OutlineDrawOp();
             op.Type = dArgs.type; op.ExtType = dArgs.extType;
-            op.NewType = dArgs.newType; op.NewExtType = dArgs.newExtType;          
+            op.NewType = dArgs.newType; op.NewExtType = dArgs.newExtType;
             return DrawOp.DoDrawOp(op, null, p, marks);
         }
         struct DrawArgs { public byte type, extType, newType, newExtType; }

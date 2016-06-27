@@ -36,59 +36,37 @@ namespace MCGalaxy.Commands.Building {
 				                   ", so therefore cannot use this command."); return;
 			}
 			
-			CatchPos cpos = default(CatchPos);
-			cpos.message = message.ToLower();
-			p.blockchangeObject = cpos;
-			
 			Player.Message(p, "Place two blocks to determine the edges.");
-			p.ClearBlockchange();
-			p.Blockchange += PlacedMark1;
-		}
-		
-		void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-			RevertAndClearState(p, x, y, z);
-			CatchPos bp = (CatchPos)p.blockchangeObject;
-			bp.x = x; bp.y = y; bp.z = z;
-			p.blockchangeObject = bp;
-			p.Blockchange += PlacedMark2;
-		}
-		
-		void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-			RevertAndClearState(p, x, y, z);
-			CatchPos cpos = (CatchPos)p.blockchangeObject;
-			type = type < 128 ? p.bindings[type] : type;
-			
-			string[] parts = cpos.message.SplitSpaces(3);
-			if (parts.Length < 2) { Help(p); return; }
+            p.MakeSelection(2, message.ToLower(), DoReplace);
+        }
+        
+        bool DoReplace(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+			type = type < 128 ? p.bindings[type] : type;			
+			string[] parts = ((string)state).SplitSpaces(3);
+			if (parts.Length < 2) { Help(p); return false; }
 			
 			byte extTile = 0;
 			byte tile = DrawCmd.GetBlock(p, parts[0], out extTile);
-			if (tile == Block.Zero) return;
+			if (tile == Block.Zero) return false;
 			string brushName = CmdBrush.FindBrush(parts[1]);
 			if (brushName == null) {
 				Player.Message(p, "No brush found with name \"" + parts[1] + "\".");
 				Player.Message(p, "Available brushes: " + CmdBrush.AvailableBrushes);
-				return;
+				return false;
 			}
 
 			string brushMessage = parts.Length > 2 ? parts[2].ToLower() : "";
 			BrushArgs args = new BrushArgs(p, brushMessage, type, extType);
 			Brush brush = Brush.Brushes[brushName](args);
-			if (brush == null) return;
+			if (brush == null) return false;
 			
 			DrawOp drawOp = null;
 			if (ReplaceNot) drawOp = new ReplaceNotDrawOp(tile, extTile);
-			else drawOp = new ReplaceDrawOp(tile, extTile);
-			
-			if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
-				return;
-			if (p.staticCommands)
-				p.Blockchange += PlacedMark1;
+			else drawOp = new ReplaceDrawOp(tile, extTile);			
+			return DrawOp.DoDrawOp(drawOp, brush, p, marks);
 		}
 		
 		protected virtual bool ReplaceNot { get { return false; } }
-		
-		struct CatchPos { public ushort x, y, z; public string message; }
 		
 		public override void Help(Player p) {
 			Player.Message(p, "%T/rb [block] [brush name] <brush args>");

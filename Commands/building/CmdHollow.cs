@@ -44,8 +44,6 @@ namespace MCGalaxy.Commands.Building {
             op.Skip = (byte)state;
             return DrawOp.DoDrawOp(op, null, p, marks);
         }
-
-        struct CatchPos { public byte skip; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/hollow");
