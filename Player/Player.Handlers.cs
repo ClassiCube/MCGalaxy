@@ -81,17 +81,10 @@ namespace MCGalaxy {
             bP.SetData(type, extType, false);
 
             lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
-            if ( Blockchange != null ) {
-                if ( Blockchange.Method.ToString().IndexOf("AboutBlockchange") == -1 && !level.IsMuseum ) {
-                    bP.flags |= 1;
-                    if (level.UseBlockDB)
-                        level.blockCache.Add(bP);
-                }
-
-                Blockchange(this, x, y, z, type, extType);
-                return;
+            if (Blockchange != null) {
+                Blockchange(this, x, y, z, type, extType); return;
             }
-            if ( PlayerBlockChange != null )
+            if (PlayerBlockChange != null)
                 PlayerBlockChange(this, x, y, z, type, extType);
             OnBlockChangeEvent.Call(this, x, y, z, type, extType);
             if ( cancelBlock ) { cancelBlock = false; return; }

@@ -29,37 +29,34 @@ namespace MCGalaxy.Commands.Building {
         public CmdRestartPhysics() { }
 
         public override void Use(Player p, string message) {
-            CatchPos cpos = default(CatchPos);
+            PhysicsArgs extraInfo = default(PhysicsArgs);
             message = message.ToLower();
-            if (message != "" && !ParseArgs(p, message, ref cpos)) return;
+            if (message != "" && !ParseArgs(p, message, ref extraInfo)) return;
 
-            p.blockchangeObject = cpos;
             Player.Message(p, "Place two blocks to determine the edges.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, extraInfo, DoRestart);
         }
         
-        bool ParseArgs(Player p, string message, ref CatchPos cpos) {
+        bool ParseArgs(Player p, string message, ref PhysicsArgs extraInfo) {
             string[] parts = message.Split(' ');
             if (parts.Length % 2 == 1) {
                 Player.Message(p, "Number of parameters must be even");
                 Help(p); return false;
-            }          
-            PhysicsArgs args = default(PhysicsArgs);
+            }
             byte type = 0, value = 0;
             
             if (parts.Length >= 2) {
                 if (!Parse(p, parts[0], parts[1], ref type, ref value)) return false;
-                args.Type1 = type; args.Value1 = value;
+                extraInfo.Type1 = type; extraInfo.Value1 = value;
             }
             if (parts.Length >= 4) {
                 if (!Parse(p, parts[2], parts[3], ref type, ref value)) return false;
-                args.Type2 = type; args.Value2 = value;
+                extraInfo.Type2 = type; extraInfo.Value2 = value;
             }
             if (parts.Length >= 6) {
             	Player.Message(p, "You can only use up to two types of physics."); return false;
             }
-            cpos.extraInfo = args; return true;
+            return true;
         }
         
         bool Parse(Player p, string name, string arg, ref byte type, ref byte value) {
@@ -90,47 +87,36 @@ namespace MCGalaxy.Commands.Building {
             return false;
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        bool DoRestart(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+        	PhysicsArgs extraInfo = (PhysicsArgs)state;
             List<int> buffer = new List<int>();
             
-            for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
-                for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
-                    for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
+            for (int y = Math.Min(m[0].Y, m[1].Y); y <= Math.Max(m[0].Y, m[1].Y); y++)
+                for (int z = Math.Min(m[0].Z, m[1].Z); z <= Math.Max(m[0].Z, m[1].Z); z++)
+                    for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
             {
-                int index = p.level.PosToInt(xx, yy, zz);
+            	int index = p.level.PosToInt((ushort)x, (ushort)y, (ushort)z);
                 if (index >= 0 && p.level.blocks[index] != Block.air)
                     buffer.Add(index);
             }
 
-            if (cpos.extraInfo.Raw == 0) {
+            if (extraInfo.Raw == 0) {
                 if (buffer.Count > Server.rpNormLimit) {
                     Player.Message(p, "Cannot restart more than " + Server.rpNormLimit + " blocks.");
                     Player.Message(p, "Tried to restart " + buffer.Count + " blocks.");
-                    return;
+                    return false;
                 }
             } else if (buffer.Count > Server.rpLimit) {
                 Player.Message(p, "Tried to add physics to " + buffer.Count + " blocks.");
                 Player.Message(p, "Cannot add physics to more than " + Server.rpLimit + " blocks.");
-                return;
+                return false;
             }
 
             foreach (int index in buffer)
-                p.level.AddCheck(index, true, cpos.extraInfo);
+                p.level.AddCheck(index, true, extraInfo);
             Player.Message(p, "Activated " + buffer.Count + " blocks.");
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            return true;
         }
-
-        struct CatchPos { public ushort x, y, z; public PhysicsArgs extraInfo; }
         
         public override void Help(Player p) {
             Player.Message(p, "/restartphysics ([type] [num]) ([type2] [num2]) - Restarts every physics block in an area");

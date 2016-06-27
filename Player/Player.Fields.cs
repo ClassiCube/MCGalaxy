@@ -207,8 +207,7 @@ namespace MCGalaxy {
 
         //Copy
         public CopyState CopyBuffer;
-        public int[] copyoffset = new int[3] { 0, 0, 0 };
-        public ushort[] copystart = new ushort[3] { 0, 0, 0 };
+        public Vec3S32 copyoffset, copystart;
         
         // GlobalBlock
         internal int gbStep = 0, gbTargetId = 0;

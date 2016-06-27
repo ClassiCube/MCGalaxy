@@ -74,45 +74,34 @@ namespace MCGalaxy.Commands.Building {
 		}
 		
 		void HandleOther(Player p, string opt, string[] parts, int allowoffset) {
-			CatchPos cpos = default(CatchPos);
-			p.copyoffset[0] = 0; p.copyoffset[1] = 0; p.copyoffset[2] = 0;
-			cpos.allowoffset = allowoffset;
+			CopyArgs cArgs = default(CopyArgs);
+			p.copyoffset = default(Vec3S32);
+			cArgs.allowoffset = allowoffset;
 			
 			if (opt == "cut") {
-				cpos.type = 1;
+				cArgs.type = 1;
 			} else if (opt == "air") {
-				cpos.type = 2;
+				cArgs.type = 2;
 			} else if (!String.IsNullOrEmpty(opt)) {
 				Help(p); return;
 			}
 
-			p.blockchangeObject = cpos;
 			Player.Message(p, "Place two blocks to determine the edges.");
-			p.ClearBlockchange();
-			p.Blockchange += PlacedMark1;
+			p.MakeSelection(2, cArgs, DoCopy);
 		}
 
-		void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-			RevertAndClearState(p, x, y, z);
-			CatchPos bp = (CatchPos)p.blockchangeObject;
-			p.copystart[0] = x; p.copystart[1] = y; p.copystart[2] = z;
-
-			bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-			p.Blockchange += PlacedMark2;
-		}
-
-		void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-			RevertAndClearState(p, x, y, z);
-			CatchPos cpos = (CatchPos)p.blockchangeObject;
-			ushort minX = (ushort)Math.Min(x, cpos.x), maxX = (ushort)Math.Max(x, cpos.x);
-			ushort minY = (ushort)Math.Min(y, cpos.y), maxY = (ushort)Math.Max(y, cpos.y);
-			ushort minZ = (ushort)Math.Min(z, cpos.z), maxZ = (ushort)Math.Max(z, cpos.z);
+		bool DoCopy(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+			p.copystart = m[0];
+			CopyArgs cArgs = (CopyArgs)state;
+			ushort minX = (ushort)Math.Min(m[0].X, m[1].X), maxX = (ushort)Math.Max(m[0].X, m[1].X);
+			ushort minY = (ushort)Math.Min(m[0].Y, m[1].Y), maxY = (ushort)Math.Max(m[0].Y, m[1].Y);
+			ushort minZ = (ushort)Math.Min(m[0].Z, m[1].Z), maxZ = (ushort)Math.Max(m[0].Z, m[1].Z);
 			
-			CopyState state = new CopyState(minX, minY, minZ, maxX - minX + 1,
+			CopyState cState = new CopyState(minX, minY, minZ, maxX - minX + 1,
 			                                maxY - minY + 1, maxZ - minZ + 1);
-			state.SetOrigin(cpos.x, cpos.y, cpos.z);
-			int index = 0; state.UsedBlocks = 0;
-			state.PasteAir = cpos.type == 2;
+			cState.SetOrigin(m[0].X, m[0].Y, m[0].Z);
+			int index = 0; cState.UsedBlocks = 0;
+			cState.PasteAir = cArgs.type == 2;
 			
 			for (ushort yy = minY; yy <= maxY; ++yy)
 				for (ushort zz = minZ; zz <= maxZ; ++zz)
@@ -123,22 +112,22 @@ namespace MCGalaxy.Commands.Building {
 				if (b == Block.custom_block)
 					extB = p.level.GetExtTile(xx, yy, zz);
 				
-				if (b != Block.air || state.PasteAir)
-					state.UsedBlocks++;
-				state.Blocks[index] = b;
-				state.ExtBlocks[index] = extB;
+				if (b != Block.air || cState.PasteAir)
+					cState.UsedBlocks++;
+				cState.Blocks[index] = b;
+				cState.ExtBlocks[index] = extB;
 				index++;
 			}
 			
-			if (state.UsedBlocks > p.group.maxBlocks) {
+			if (cState.UsedBlocks > p.group.maxBlocks) {
 				Player.Message(p, "You tried to copy {0} blocks. You cannot copy more than {1} blocks.", 
-				               state.UsedBlocks, p.group.maxBlocks);
-				state.Blocks = null; state.ExtBlocks = null; state = null;
-				return;
+				               cState.UsedBlocks, p.group.maxBlocks);
+				cState.Blocks = null; cState.ExtBlocks = null; cState = null;
+				return false;
 			}
 			
-			p.CopyBuffer = state;
-			if (cpos.type == 1) {
+			p.CopyBuffer = cState;
+			if (cArgs.type == 1) {
 				DrawOp op = new CuboidDrawOp();
 				Brush brush = new SolidBrush(Block.air, 0);
 				Vec3S32[] marks = { new Vec3S32(minX, minY, minZ), new Vec3S32(maxX, maxY, maxZ) };
@@ -146,21 +135,20 @@ namespace MCGalaxy.Commands.Building {
 			}
 
 			string format = "Copied &a{0} %Sblocks." +
-				(state.PasteAir ? "" : " To also copy air blocks, use %T/copy air");
-			Player.Message(p, format, state.UsedBlocks);
-			if (cpos.allowoffset != -1) {
+				(cState.PasteAir ? "" : " To also copy air blocks, use %T/copy air");
+			Player.Message(p, format, cState.UsedBlocks);
+			if (cArgs.allowoffset != -1) {
 				Player.Message(p, "Place a block to determine where to paste from");
 				p.Blockchange += Blockchange3;
 			}
+		    return false;
 		}
 
 		void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
-			CatchPos cpos = (CatchPos)p.blockchangeObject;
-
-			p.copyoffset[0] = (p.copystart[0] - x);
-			p.copyoffset[1] = (p.copystart[1] - y);
-			p.copyoffset[2] = (p.copystart[2] - z);
+			p.copyoffset.X = p.copystart.X - x;
+			p.copyoffset.Y = p.copystart.Y - y;
+			p.copyoffset.Z = p.copystart.Z - z;
 		}
 
 		void SaveCopy(Player p, string file) {
@@ -206,7 +194,7 @@ namespace MCGalaxy.Commands.Building {
 			Player.Message(p, "Loaded copy as " + file);
 		}
 		
-		struct CatchPos { public ushort x, y, z; public int type; public int allowoffset; }
+		struct CopyArgs { public int type, allowoffset; }
 		
 		public override void Help(Player p) {
 			Player.Message(p, "/copy - Copies the blocks in an area.");

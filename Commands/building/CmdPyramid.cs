@@ -27,8 +27,8 @@ namespace MCGalaxy.Commands.Building {
 
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             DrawArgs cpos = (DrawArgs)state;
-            GetRealBlock(type, extType, p, ref cpos);
-            DrawOp drawOp = null;
+            cpos.type = type; cpos.extType = extType;
+            DrawOp op = null;
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset);
             if (brush == null) return false;
@@ -40,13 +40,13 @@ namespace MCGalaxy.Commands.Building {
             switch (cpos.mode) {
                 case DrawMode.solid:
                 case DrawMode.normal:
-                    drawOp = new PyramidSolidDrawOp(); break;
+                    op = new PyramidSolidDrawOp(); break;
                 case DrawMode.hollow:
-                    drawOp = new PyramidHollowDrawOp(); break;
+                    op = new PyramidHollowDrawOp(); break;
                 case DrawMode.reverse:
-                    drawOp = new PyramidReverseDrawOp(); break;
+                    op = new PyramidReverseDrawOp(); break;
             }           
-            return DrawOp.DoDrawOp(drawOp, brush, p, marks);
+            return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
         protected override DrawMode ParseMode(string msg) {

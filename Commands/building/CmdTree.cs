@@ -44,20 +44,15 @@ namespace MCGalaxy.Commands.Building {
                     default: brushMsg = message; break;
             }
             
-            CatchPos cpos = default(CatchPos);
-            cpos.mode = mode;
-            cpos.brushMsg = brushMsg;
-            p.ClearBlockchange();
-            p.blockchangeObject = cpos;
-            p.Blockchange += PlacedBase;
+            DrawArgs dArgs = default(DrawArgs);
+            dArgs.mode = mode;
+            dArgs.brushMsg = brushMsg;
             Player.Message(p, "Select where you wish your tree to grow");
+            p.MakeSelection(1, dArgs, DoTree);
         }
 
-        void PlacedBase(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            type = type < 128 ? p.bindings[type] : type;
-            
+        bool DoTree(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            DrawArgs cpos = (DrawArgs)state;
             TreeDrawOp op = new TreeDrawOp();
             op.Type = cpos.mode;
             op.random = p.random;
@@ -65,17 +60,12 @@ namespace MCGalaxy.Commands.Building {
             
             if (cpos.brushMsg != "") {
                 if (!p.group.CanExecute("brush")) {
-                    Player.Message(p, "You cannot use /brush, so therefore cannot use /tree with a brush."); return;
+                    Player.Message(p, "You cannot use /brush, so therefore cannot use /tree with a brush."); return false;
                 }
                 brush = ParseBrush(cpos.brushMsg, p, type, extType);
-                if (brush == null) return;
+                if (brush == null) return false;
             }
-            
-            Vec3S32[] marks = { new Vec3S32(x, y, z) };
-            if (!DrawOp.DoDrawOp(op, brush, p, marks))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedBase;
+            return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
         static Brush ParseBrush(string brushMsg, Player p, byte type, byte extType) {
@@ -92,7 +82,7 @@ namespace MCGalaxy.Commands.Building {
             return Brush.Brushes[brushName](args);
         }
         
-        struct CatchPos { public int mode; public string brushMsg; }
+        struct DrawArgs { public int mode; public string brushMsg; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/tree [type] %H- Draws a tree.");

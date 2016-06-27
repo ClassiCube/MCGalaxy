@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
             if (oldType == Block.custom_block)
                 oldExtType = p.level.GetExtTile(x, y, z);
 
-            GetRealBlock(type, extType, p, ref cpos);
+            cpos.type = type; cpos.extType = extType;
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { 
             	Player.Message(p, "Cannot fill with that."); return false;
             }

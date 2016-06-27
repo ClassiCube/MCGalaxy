@@ -28,49 +28,38 @@ namespace MCGalaxy.Commands.Building {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-        	get { return new[] { new CommandAlias("pn", "not") }; }
+        	get { return new[] { new CommandAlias("pastenot", "not"), new CommandAlias("pn", "not") }; }
         }
         
         public override void Use(Player p, string message) {
             if (p.CopyBuffer == null) { Player.Message(p, "You haven't copied anything yet"); return; }
-            
-            CatchPos cpos = default(CatchPos);
-            cpos.message = message;
-            p.blockchangeObject = cpos;
             Player.Message(p, "Place a block in the corner of where you want to paste.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedOrigin;
+            p.MakeSelection(1, message, DoPaste);
         }
 
-        void PlacedOrigin(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            RevertAndClearState(p, x, y, z);
-            int x1 = p.copyoffset[0] + x, y1 = p.copyoffset[1] + y, z1 = p.copyoffset[2] + z;
-            CopyState state = p.CopyBuffer;
-            if (state.X != state.OriginX) x1 -= (state.Width - 1);
-            if (state.Y != state.OriginY) y1 -= (state.Height - 1);
-            if (state.Z != state.OriginZ) z1 -= (state.Length - 1);
+        bool DoPaste(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+        	string message = (string)state;
+        	m[0] += p.copyoffset;
+            CopyState cState = p.CopyBuffer;
+            if (cState.X != cState.OriginX) m[0].X -= (cState.Width - 1);
+            if (cState.Y != cState.OriginY) m[0].Y -= (cState.Height - 1);
+            if (cState.Z != cState.OriginZ) m[0].Z -= (cState.Length - 1);
 
             DrawOp op;
-            if (cpos.message == "") {
+            if (message == "") {
                 op = new SimplePasteDrawOp();
                 ((SimplePasteDrawOp)op).CopyState = p.CopyBuffer;
             } else {
                 op = new PasteDrawOp();
                 ((PasteDrawOp)op).CopyState = p.CopyBuffer;
-                string[] args = cpos.message.Split(' ');
+                string[] args = message.Split(' ');
                 if (args[0].CaselessEq("not"))
                     ((PasteDrawOp)op).Exclude = ReplaceBrush.GetBlocks(p, 1, args.Length, args);
                 else
                     ((PasteDrawOp)op).Include = ReplaceBrush.GetBlocks(p, 0, args.Length, args);
             }
-            Vec3S32[] marks = { new Vec3S32(x1, y1, z1) };
-            if (!DrawOp.DoDrawOp(op, null, p, marks))
-                return;
-            if (p.staticCommands) p.Blockchange += PlacedOrigin;
-        } 
-
-        struct CatchPos { public string message; }
+            return DrawOp.DoDrawOp(op, null, p, m);
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "/paste - Pastes the stored copy.");

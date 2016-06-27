@@ -87,11 +87,6 @@ namespace MCGalaxy.Commands.Building {
         	return constructor(args);
         }
         
-        protected static void GetRealBlock(byte type, byte extType, Player p, ref DrawArgs cpos) {
-            cpos.type = type < 128 ? p.bindings[type] : type;
-            cpos.extType = extType;
-        }
-        
         protected struct DrawArgs {
             public DrawMode mode;
             public byte type, extType;

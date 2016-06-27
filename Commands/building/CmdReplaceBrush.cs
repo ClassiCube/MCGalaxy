@@ -41,7 +41,6 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DoReplace(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-			type = type < 128 ? p.bindings[type] : type;			
 			string[] parts = ((string)state).SplitSpaces(3);
 			if (parts.Length < 2) { Help(p); return false; }
 			

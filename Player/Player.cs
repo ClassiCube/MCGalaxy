@@ -606,6 +606,7 @@ Next: continue;
                 if (selIndex != selMarks.Length) return;
                 
                 Blockchange = null;
+                type = type < 128 ? p.bindings[type] : type;
                 bool canRepeat = selCallback(this, selMarks, selState, type, extType);
                 if (canRepeat && staticCommands)
                     MakeSelection(selIndex, selState, selCallback);

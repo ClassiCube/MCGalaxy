@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
 
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             DrawArgs cpos = (DrawArgs)state;
-            GetRealBlock(type, extType, p, ref cpos);
+            cpos.type = type; cpos.extType = extType;
             DrawOp op = null;
             Func<BrushArgs, Brush> constructor = null;
 

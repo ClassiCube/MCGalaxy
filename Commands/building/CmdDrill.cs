@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdDrill : Command {		
+    public sealed class CmdDrill : Command {        
         public override string name { get { return "drill"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -26,39 +26,31 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            CatchPos cpos = default(CatchPos);
-            cpos.dist = 20;
-
-            if (message != "" && !int.TryParse(message, out cpos.dist)) {
-                Help(p); return;
-            }
-
-            p.blockchangeObject = cpos;
+            int dist = 20;
+            if (message != "" && !int.TryParse(message, out dist)) { Help(p); return; }
             Player.Message(p, "Destroy the block you wish to drill.");
-            p.ClearBlockchange();
-            p.Blockchange += Blockchange1;
+            p.MakeSelection(1, dist, DoDrill);
         }
         
-        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if (!p.staticCommands) p.ClearBlockchange();
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        bool DoDrill(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             type = p.level.GetTile(x, y, z); extType = 0;
-            if (type == Block.custom_block) extType = p.level.GetExtTile(x, y, z);
-            p.RevertBlock(x, y, z);
+            if (type == Block.custom_block) 
+                extType = p.level.GetExtTile(x, y, z);
+            int dist = (int)state;
 
-            int diffX = 0, diffZ = 0;
-
-            if (p.rot[0] <= 32 || p.rot[0] >= 224) { diffZ = -1; }
-            else if (p.rot[0] <= 96) { diffX = 1; }
-            else if (p.rot[0] <= 160) { diffZ = 1; }
-            else diffX = -1;
+            int dx = 0, dz = 0;
+            if (p.rot[0] <= 32 || p.rot[0] >= 224) { dz = -1; }
+            else if (p.rot[0] <= 96) { dx = 1; }
+            else if (p.rot[0] <= 160) { dz = 1; }
+            else dx = -1;
 
             List<int> buffer = new List<int>();
             int depth = 0;
             Level lvl = p.level;
 
-            if (diffX != 0) {
-                for (ushort xx = x; depth < cpos.dist; xx += (ushort)diffX)
+            if (dx != 0) {
+                for (ushort xx = x; depth < dist; xx += (ushort)dx)
                 {
                     for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
                         for (ushort zz = (ushort)(z - 1); zz <= (ushort)(z + 1); zz++)
@@ -68,7 +60,7 @@ namespace MCGalaxy.Commands.Building {
                     depth++;
                 }
             } else {
-                for (ushort zz = z; depth < cpos.dist; zz += (ushort)diffZ)
+                for (ushort zz = z; depth < dist; zz += (ushort)dz)
                 {
                     for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
                         for (ushort xx = (ushort)(x - 1); xx <= (ushort)(x + 1); xx++)
@@ -82,7 +74,7 @@ namespace MCGalaxy.Commands.Building {
             if (buffer.Count > p.group.maxBlocks) {
                 Player.Message(p, "You tried to drill " + buffer.Count + " blocks.");
                 Player.Message(p, "You cannot drill more than " + p.group.maxBlocks + ".");
-                return;
+                return false;
             }
 
             foreach (int index in buffer) {
@@ -95,9 +87,8 @@ namespace MCGalaxy.Commands.Building {
                 if (sameBlock) p.level.UpdateBlock(p, x, y, z, Block.air, 0);
             }
             Player.Message(p, "Drilled " + buffer.Count + " blocks.");
+            return true;
         }
-
-        struct CatchPos { public int dist; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/drill [distance]");
