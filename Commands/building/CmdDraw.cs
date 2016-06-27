@@ -25,6 +25,7 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "draw"; } }
         public override string shortcut { get { return ""; } }     
         protected override string PlaceMessage { get { return "Place a block to determine the origin."; } }
+        public override int MarksCount { get { return 1; } }
         
         protected override DrawMode ParseMode(string msg) {
             if (msg == "cone") return DrawMode.cone;
@@ -41,9 +42,8 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)state;
             GetRealBlock(type, extType, p, ref cpos);
             AdvDrawOp op = null;
             switch (cpos.mode) {
@@ -70,33 +70,27 @@ namespace MCGalaxy.Commands.Building {
                 case DrawMode.volcano:
                     op = new AdvVolcanoDrawOp(); break;
                 default:
-                    Help(p); return;
+                    Help(p); return false;
             }
             ushort radius = 0, height = 0;
             string[] args = cpos.message.Split(' ');
             if ((op.UsesHeight && !CheckTwoArgs(p, ref radius, ref height, args)) || 
-                (!op.UsesHeight && !CheckOneArg(p, ref radius, args))) return;
+                (!op.UsesHeight && !CheckOneArg(p, ref radius, args))) return false;
             
             int brushOffset = op.UsesHeight ? 3 : 2;
             Brush brush = GetBrush(p, cpos, brushOffset);
-            if (brush == null) return;
+            if (brush == null) return false;
             
             Vec3S32[] marks = {
-            	new Vec3S32(x - radius, y, z - radius),
-                new Vec3S32(x + radius, y, z + radius) };
+            	new Vec3S32(m[0].X - radius, m[0].Y, m[0].Z - radius),
+            	new Vec3S32(m[0].X + radius, m[0].Y, m[0].Z + radius) };
             if (op.UsesHeight) {
                 marks[1].Y += height;
             } else {
                 marks[0].Y -= radius; marks[1].Y += radius;
-            }
-            
-            if (!DrawOp.DoDrawOp(op, brush, p, marks))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            }           
+            return DrawOp.DoDrawOp(op, brush, p, marks);
         }
-        
-        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
         
         bool CheckTwoArgs(Player p, ref ushort radius, ref ushort height, string[] parts) {
             if (parts.Length < 3) { Help(p); return false; }

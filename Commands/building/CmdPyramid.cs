@@ -25,18 +25,16 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "pyramid"; } }
         public override string shortcut { get { return "pd"; } }
 
-        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)state;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset);
-            if (brush == null) return;
+            if (brush == null) return false;
             
-            if (y != cpos.y) {
-                Player.Message(p, "The two edges of the pyramid must be on the same level");
-                return;
+            if (marks[0].Y != marks[1].Y) {
+                Player.Message(p, "The two edges of the pyramid must be on the same level"); return false;
             }
 
             switch (cpos.mode) {
@@ -47,12 +45,8 @@ namespace MCGalaxy.Commands.Building {
                     drawOp = new PyramidHollowDrawOp(); break;
                 case DrawMode.reverse:
                     drawOp = new PyramidReverseDrawOp(); break;
-            }
-            
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            }           
+            return DrawOp.DoDrawOp(drawOp, brush, p, marks);
         }
         
         protected override DrawMode ParseMode(string msg) {

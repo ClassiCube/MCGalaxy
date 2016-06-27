@@ -18,10 +18,8 @@
 using System;
 using MCGalaxy.Levels.IO;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdRestoreSelection : Command {
-        
+namespace MCGalaxy.Commands {    
+    public sealed class CmdRestoreSelection : Command {        
         public override string name { get { return "rs"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -32,40 +30,26 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             
             if (LevelInfo.ExistsBackup(p.level.name, message)) {
-                p.blockchangeObject = new CatchPos() { backup = message };
-                p.ClearBlockchange();
-                p.Blockchange += PlacedMark1;
                 p.SendMessage("Select two corners for restore.");
+                p.MakeSelection(2, message, DoRestore);
             } else {
                 Player.Message(p, "Backup " + message + " does not exist.");
             }
         }
-
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            string path = LevelInfo.BackupPath(p.level.name, cpos.backup);
-            
+        
+        bool DoRestore(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            string path = LevelInfo.BackupPath(p.level.name, (string)state);           
             try {
-                using(Level other = LvlFile.Load("tempLevel", path)) {
-                    if (!CopyBlocks(p, other, x, y, z, cpos)) return;
-                }
-                if (p.staticCommands)
-                    p.Blockchange += PlacedMark1;
+                using (Level other = LvlFile.Load("tempLevel", path))
+                    return CopyBlocks(p, other, marks);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 Server.s.Log("Restore selection failed");
+                return false;
             }
         }
         
-        static bool CopyBlocks(Player p, Level other, ushort x, ushort y, ushort z, CatchPos cpos) {
+        static bool CopyBlocks(Player p, Level other, Vec3S32[] m) {
             byte[] blocks = other.blocks;
             if (blocks.Length != p.level.blocks.Length) {
                 p.SendMessage("Cant restore selection of different size maps.");
@@ -73,21 +57,21 @@ namespace MCGalaxy.Commands {
             }
             
             int width = other.Width, length = other.Length;
-            for (ushort yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
-                for (ushort zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
-                    for (ushort xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
+            for (int y = Math.Min(m[0].Y, m[1].Y); y <= Math.Max(m[0].Y, m[1].Y); y++)
+                for (int z = Math.Min(m[0].Z, m[1].Z); z <= Math.Max(m[0].Z, m[1].Z); z++)
+                    for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
             {
-                byte tile = blocks[xx + width * (zz + yy * length)], extTile = 0;
-                if (tile == Block.custom_block) extTile = other.GetExtTile(xx, yy, zz);
-                p.level.UpdateBlock(p, xx, yy, zz, tile, extTile);
+                byte tile = blocks[x + width * (z + y * length)], extTile = 0;
+                if (tile == Block.custom_block) 
+                    extTile = other.GetExtTile((ushort)x, (ushort)y, (ushort)z);
+                p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, tile, extTile);
             }
             return true;
         }
 
-        struct CatchPos { public string backup; public ushort x, y, z; }
-
         public override void Help(Player p) {
-            Player.Message(p, "/restoreselection <number> - restores a previous backup of the current selection");
+            Player.Message(p, "%T/restoreselection <number>");
+            Player.Message(p, "%Hrestores a previous backup of the current selection");
         }
     }
 }

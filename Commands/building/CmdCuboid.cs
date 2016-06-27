@@ -30,9 +30,8 @@ namespace MCGalaxy.Commands.Building {
                     new CommandAlias("box"), new CommandAlias("hbox", null, "hollow") }; }
         }
 
-        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)state;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp op = null;
             Func<BrushArgs, Brush> constructor = null;
@@ -59,11 +58,8 @@ namespace MCGalaxy.Commands.Building {
             
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset, constructor);
-            if (brush == null) return;
-            if (!DrawOp.DoDrawOp(op, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            if (brush == null) return false;
+            return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
         protected override DrawMode ParseMode(string msg) {

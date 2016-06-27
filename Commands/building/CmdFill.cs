@@ -26,6 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override string shortcut { get { return "f"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected override string PlaceMessage { get { return "Destroy the block you wish to fill."; } }
+        public override int MarksCount { get { return 1; } }
         
         protected override DrawMode ParseMode(string msg) {
             if (msg == "normal") return DrawMode.solid;
@@ -37,16 +38,16 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            p.ClearBlockchange();
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)state;
+            ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             byte oldType = p.level.GetTile(x, y, z), oldExtType = 0;
             if (oldType == Block.custom_block)
                 oldExtType = p.level.GetExtTile(x, y, z);
-            p.RevertBlock(x, y, z);
+
             GetRealBlock(type, extType, p, ref cpos);
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { 
-            	Player.Message(p, "Cannot fill with that."); return; 
+            	Player.Message(p, "Cannot fill with that."); return false;
             }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
@@ -65,17 +66,11 @@ namespace MCGalaxy.Commands.Building {
             op.Positions = buffer;
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset);
-            if (brush == null) return;
-            if (!DrawOp.DoDrawOp(op, brush, p, cpos.x, cpos.y, cpos.z, cpos.x, cpos.y, cpos.z))
-                return;
+            if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;
             bits.Clear();
             op.Positions = null;
-
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            return true;
         }
-        
-        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { }
 
         void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, byte oldExtType, DrawMode fillType,
                        SparseBitSet bits, List<int> buffer, List<int> origins, int depth) {

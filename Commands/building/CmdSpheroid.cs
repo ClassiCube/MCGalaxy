@@ -27,14 +27,13 @@ namespace MCGalaxy.Commands.Building {
         	get { return new[] { new CommandAlias("eh", null, "hollow"), new CommandAlias("cylinder", null, "vertical") }; }
         }        
 
-        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)state;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp op = null;
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
             Brush brush = GetBrush(p, cpos, brushOffset);
-            if (brush == null) return;
+            if (brush == null) return false;
 
             switch (cpos.mode) {
                 case DrawMode.solid:
@@ -44,12 +43,8 @@ namespace MCGalaxy.Commands.Building {
                     op = new EllipsoidHollowDrawOp(); break;
                 case DrawMode.vertical:
                     op = new CylinderDrawOp(); break;
-            }
-                      
-            if (!DrawOp.DoDrawOp(op, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            }                      
+            return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
         protected override DrawMode ParseMode(string msg) {

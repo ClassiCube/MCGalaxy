@@ -29,53 +29,41 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message.IndexOf(' ') != -1) { Help(p); return; }
-            CatchPos cpos = default(CatchPos);
+            byte toIgnore = Block.air;
             if (message != "") {
-                cpos.toIgnore = Block.Byte(message);
-                if (cpos.toIgnore == Block.Zero) {
+                toIgnore = Block.Byte(message);
+                if (toIgnore == Block.Zero) {
                     Player.Message(p, "Could not find block specified"); return;
                 }
             }
             
-            p.blockchangeObject = cpos;
             Player.Message(p, "Place two blocks to determine the edges.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, toIgnore, DoMeasure);
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            ushort minX = Math.Min(cpos.x, x), maxX = Math.Max(cpos.x, x);
-            ushort minY = Math.Min(cpos.y, y), maxY = Math.Max(cpos.y, y);
-            ushort minZ = Math.Min(cpos.z, z), maxZ = Math.Max(cpos.z, z);
-            int foundBlocks = 0;
+        bool DoMeasure(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+            byte toIgnore = (byte)state;
+            int minX = Math.Min(m[0].X, m[1].X), maxX = Math.Max(m[0].X, m[1].X);
+            int minY = Math.Min(m[0].Y, m[1].Y), maxY = Math.Max(m[0].Y, m[1].Y);
+            int minZ = Math.Min(m[0].Z, m[1].Z), maxZ = Math.Max(m[0].Z, m[1].Z);
+            int found = 0;
 
-            for (ushort yy = minY; yy <= maxY; yy++)
-                for (ushort zz = minZ; zz <= maxZ; zz++)
-                    for (ushort xx = minX; xx <= maxX; xx++)
+            for (int y = minY; y <= maxY; y++)
+                for (int z = minZ; z <= maxZ; z++)
+                    for (int x = minX; x <= maxX; x++)
             {
-                if (p.level.GetTile(xx, yy, zz) != cpos.toIgnore) foundBlocks++;
+                if (p.level.GetTile((ushort)x, (ushort)y, (ushort)z) != toIgnore)
+                    found++;
             }
 
             int width = maxX - minX + 1, height = maxY - minY + 1, length = maxZ - minZ + 1;
-            Player.Message(p, "Measuring between (" + minX + ", " + minY + ", " + minZ +
-                               ") and (" + maxX + ", " + maxY + ", " + maxZ + ")");
-            Player.Message(p, "Area is " + width + " wide, " + height + " high, " + length + " long." +
-                               " Volume is " + (width * height * length) + " blocks." );
-            string name = " non-" + Block.Name(cpos.toIgnore);
-            Player.Message(p, "There are " + foundBlocks + name + " blocks in the area.");
-            if (p.staticCommands) p.Blockchange += PlacedMark1;
+            Player.Message(p, "Measuring from &a({0}, {1}, {2})%S to &a({3}, {4}, {5})", 
+                           minX, minY, minZ, maxX, maxY, maxZ);
+            Player.Message(p, "Area is {0} wide, {1} high, {2} long. Volume is {3} blocks.", 
+                           width, height, length, width * height * length);
+            Player.Message(p, "There are {0} {1} blocks in the area.", found, "non-" + Block.Name(toIgnore));
+            return true;
         }
-        
-        struct CatchPos { public ushort x, y, z; public byte toIgnore; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/measure [ignore]");

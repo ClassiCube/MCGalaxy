@@ -52,20 +52,19 @@ namespace MCGalaxy.Commands.Building {
             return ParseMode(parts[parts.Length - 2]);
         }
 
-        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)state;
             GetRealBlock(type, extType, p, ref cpos);
 
             if (cpos.mode == DrawMode.straight) { 
-                int dx = Math.Abs(cpos.x - x), dy = Math.Abs(cpos.y - y), dz = Math.Abs(cpos.z - z);
+            	int dx = Math.Abs(m[0].X - m[1].X), dy = Math.Abs(m[0].Y - m[1].Y), dz = Math.Abs(m[0].Z - m[1].Z);
 
                 if (dx > dy && dx > dz) {
-                    y = cpos.y; z = cpos.z;
+            		m[1].Y = m[0].Y; m[1].Z = m[0].Z;
                 } else if (dy > dx && dy > dz) {
-                    x = cpos.x; z = cpos.z;
+                    m[1].X = m[0].X; m[1].Z = m[0].Z;
                 } else if (dz > dy && dz > dx) {
-                    y = cpos.y; x = cpos.x;
+                    m[1].X = m[0].X; m[1].Y = m[0].Y;
                 }
             }
             
@@ -76,12 +75,8 @@ namespace MCGalaxy.Commands.Building {
                 drawOp.MaxLength = (ushort)cpos.data; brushOffset++;
             }
             Brush brush = GetBrush(p, cpos, brushOffset);
-            if (brush == null) return;
-                      
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, cpos.x, cpos.y, cpos.z, x, y, z))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            if (brush == null) return false;
+            return DrawOp.DoDrawOp(drawOp, brush, p, m);
         }
         
         public override void Help(Player p) {

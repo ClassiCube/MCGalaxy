@@ -23,36 +23,21 @@ namespace MCGalaxy.Commands.Building {
 	public sealed class CmdTriangle : DrawCmd {
         public override string name { get { return "triangle"; } }
         public override string shortcut { get { return "tri"; } }
+        public override int MarksCount { get { return 3; } }
 		protected override string PlaceMessage {
 			get { return "Place three blocks to determine the edges."; }
 		} 
 
-        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-        	RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x2 = x; bp.y2 = y; bp.z2 = z;
-            p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark3;
-        }
-        
-        void PlacedMark3(Player p, ushort x, ushort y, ushort z, byte type, byte extType) { 
-        	RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)state;
             GetRealBlock(type, extType, p, ref cpos);
-            Vec3S32[] marks = { new Vec3S32(cpos.x, cpos.y, cpos.z),
-            	new Vec3S32(cpos.x2, cpos.y2, cpos.z2), new Vec3S32(x, y, z) };
             
             Brush brush = GetBrush(p, cpos, 0, null);
-            if (brush == null) return;
-            if (!DrawOp.DoDrawOp(new TriangleDrawOp(), brush, p, marks))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            if (brush == null) return false;
+            return DrawOp.DoDrawOp(new TriangleDrawOp(), brush, p, marks);
         }
         
-        protected override DrawMode ParseMode(string msg) {
-            return DrawMode.normal;
-        }
+        protected override DrawMode ParseMode(string msg) { return DrawMode.normal; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/triangle [brush args]");

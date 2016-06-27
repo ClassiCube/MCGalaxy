@@ -29,24 +29,20 @@ namespace MCGalaxy.Commands.Building {
         }
         protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
         
-        protected override void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+        protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+            CatchPos cpos = (CatchPos)state;
             GetRealBlock(type, extType, p, ref cpos);
             
             DrawOp drawOp = new TorusDrawOp();
             Brush brush = GetBrush(p, cpos, 0);
-            if (brush == null) return;
+            if (brush == null) return false;
             
-            int dx = cpos.x - x, dy = cpos.y - y, dz = cpos.z - z;
+            int dx = m[0].X - m[1].X, dy = m[0].Y - m[1].Y, dz = m[0].Z - m[1].Z;
             int horR = (int)Math.Sqrt(dx * dx + dz * dz), verR = Math.Abs(dy);
-            Vec3S32[] marks = { new Vec3S32(cpos.x - horR, cpos.y - verR, cpos.z - horR),
-                new Vec3S32(cpos.x + horR, cpos.y + verR, cpos.z + horR) };
+            Vec3S32[] marks = { new Vec3S32(m[0].X - horR, m[0].Y - verR, m[0].Z - horR),
+            	new Vec3S32(m[0].X + horR, m[0].Y + verR, m[0].Z + horR) };
                       
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, marks))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+            return DrawOp.DoDrawOp(drawOp, brush, p, m);
         }
         
         protected override DrawMode ParseMode(string msg) { return DrawMode.normal; }

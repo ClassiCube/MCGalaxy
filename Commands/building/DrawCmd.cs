@@ -23,6 +23,7 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
+        public virtual int MarksCount { get { return 2; } }
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
@@ -33,24 +34,13 @@ namespace MCGalaxy.Commands.Building {
             cpos.mode = GetMode(message, parts);
             OnUse(p, message, parts, ref cpos);
             
-            p.blockchangeObject = cpos;
             Player.Message(p, PlaceMessage);
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(MarksCount, cpos, DoDraw);
         }
         
-        // most draw commands use two coordinates, so implement this here to simplify implementation.
-        protected virtual void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z;
-            p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
+        protected abstract bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType);
         
         protected virtual string PlaceMessage { get { return "Place two blocks to determine the edges."; } }
-        
-        protected abstract void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         
         protected abstract DrawMode ParseMode(string mode);
         
@@ -105,8 +95,6 @@ namespace MCGalaxy.Commands.Building {
         protected struct CatchPos {
             public DrawMode mode;
             public byte type, extType;
-            public ushort x, y, z;
-            public ushort x2, y2, z2; // for triangle
             public object data;
             public string message;
         }
