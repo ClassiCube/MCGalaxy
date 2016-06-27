@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Use(Player p, string message) {
-            CatchPos cpos;
+            string owner = null;
             if (message == "") {
                 p.ZoneCheck = true;
                 Player.Message(p, "Place a block where you would like to check for zones.");
@@ -89,48 +89,34 @@ namespace MCGalaxy.Commands {
             {
                 Player foundPlayer = PlayerInfo.Find(message.Split(' ')[1]);
                 if (foundPlayer == null)
-                    cpos.Owner = message.Split(' ')[1].ToString();
+                    owner = message.Split(' ')[1].ToString();
                 else
-                    cpos.Owner = foundPlayer.name;
+                    owner = foundPlayer.name;
             }
             else { Help(p); return; }
 
-            if (!ValidName(p, cpos.Owner, "player or rank")) return;
-
-            cpos.x = 0; cpos.y = 0; cpos.z = 0; p.blockchangeObject = cpos;
+            if (!ValidName(p, owner, "player or rank")) return;
 
             Player.Message(p, "Place two blocks to determine the edges.");
-            Player.Message(p, "Zone for: &b" + cpos.Owner + ".");
-            p.ClearBlockchange();
-            p.Blockchange += Blockchange1;
+            Player.Message(p, "Zone for: &b" + owner + ".");
+            p.MakeSelection(2, owner, DoZone);
         }
-
-        void Blockchange1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += Blockchange2;
-        }
-
-        void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-
+        
+        bool DoZone(Player p, Vec3S32[] m, object state, byte type, byte extType) {
             Level.Zone Zn;
-            Zn.smallX = Math.Min(cpos.x, x);
-            Zn.smallY = Math.Min(cpos.y, y);
-            Zn.smallZ = Math.Min(cpos.z, z);
-            Zn.bigX = Math.Max(cpos.x, x);
-            Zn.bigY = Math.Max(cpos.y, y);
-            Zn.bigZ = Math.Max(cpos.z, z);
-            Zn.Owner = cpos.Owner;
+            Zn.smallX = (ushort)Math.Min(m[0].X, m[1].X);
+            Zn.smallY = (ushort)Math.Min(m[0].Y, m[1].Y);
+            Zn.smallZ = (ushort)Math.Min(m[0].Z, m[1].Z);
+            Zn.bigX = (ushort)Math.Max(m[0].X, m[1].X);
+            Zn.bigY = (ushort)Math.Max(m[0].Y, m[1].Y);
+            Zn.bigZ = (ushort)Math.Max(m[0].Z, m[1].Z);
+            Zn.Owner = (string)state;
 
             p.level.ZoneList.Add(Zn);
             Zones.Create(p.level.name, Zn);
-            Player.Message(p, "Added zone for &b" + cpos.Owner);
+            Player.Message(p, "Added zone for &b" + (string)state);
+            return false;
         }
-
-        struct CatchPos { public ushort x, y, z; public string Owner; }
         
         public override void Help(Player p) {
             Player.Message(p, "/zone [add] [name] - Creates a zone only [name] can build in");

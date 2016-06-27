@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Building {
 		} 
 
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            CatchPos cpos = (CatchPos)state;
+            DrawArgs cpos = (DrawArgs)state;
             GetRealBlock(type, extType, p, ref cpos);
             
             Brush brush = GetBrush(p, cpos, 0, null);

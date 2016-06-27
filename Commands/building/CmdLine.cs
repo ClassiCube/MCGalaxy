@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override void OnUse(Player p, string msg, string[] parts, ref CatchPos cpos) {
+        protected override void OnUse(Player p, string msg, string[] parts, ref DrawArgs cpos) {
             if (parts.Length < 2 || cpos.mode == DrawMode.normal) return;
             string arg = parts[parts.Length - 1];
             ushort len;
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-            CatchPos cpos = (CatchPos)state;
+            DrawArgs cpos = (DrawArgs)state;
             GetRealBlock(type, extType, p, ref cpos);
 
             if (cpos.mode == DrawMode.straight) { 

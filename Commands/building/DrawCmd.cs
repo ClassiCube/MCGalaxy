@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Building {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
         	message = message.ToLower();
             string[] parts = message.Split(' ');
-            CatchPos cpos = default(CatchPos);
+            DrawArgs cpos = default(DrawArgs);
             cpos.message = message;
             cpos.mode = GetMode(message, parts);
             OnUse(p, message, parts, ref cpos);
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected abstract DrawMode ParseMode(string mode);
         
-        protected virtual void OnUse(Player p, string msg, string[] parts, ref CatchPos cpos) { }
+        protected virtual void OnUse(Player p, string msg, string[] parts, ref DrawArgs cpos) { }
         
         protected virtual DrawMode GetMode(string message, string[] parts) {
         	return message == "" ? DrawMode.normal : ParseMode(parts[parts.Length - 1]);
@@ -71,28 +71,28 @@ namespace MCGalaxy.Commands.Building {
             return type;
         }
         
-        protected static Brush GetBrush(Player p, CatchPos cpos, 
+        protected static Brush GetBrush(Player p, DrawArgs dArgs, 
                                         int usedFromEnd, Func<BrushArgs, Brush> constructor = null) {
-        	int end = cpos.message.Length;
+        	int end = dArgs.message.Length;
         	string brushMsg = "";
         	for (int i = 0; i < usedFromEnd; i++) {
-        		end = cpos.message.LastIndexOf(' ', end - 1);
+        		end = dArgs.message.LastIndexOf(' ', end - 1);
         		if (end == -1) break;  
         	}
         	
-        	if (end >= 0) brushMsg = cpos.message.Substring(0, end);
+        	if (end >= 0) brushMsg = dArgs.message.Substring(0, end);
         	if (brushMsg == "") brushMsg = p.DefaultBrushArgs;
         	if (constructor == null) constructor = Brush.Brushes[p.BrushName];
-        	BrushArgs args = new BrushArgs(p, brushMsg, cpos.type, cpos.extType);
+        	BrushArgs args = new BrushArgs(p, brushMsg, dArgs.type, dArgs.extType);
         	return constructor(args);
         }
         
-        protected static void GetRealBlock(byte type, byte extType, Player p, ref CatchPos cpos) {
+        protected static void GetRealBlock(byte type, byte extType, Player p, ref DrawArgs cpos) {
             cpos.type = type < 128 ? p.bindings[type] : type;
             cpos.extType = extType;
         }
         
-        protected struct CatchPos {
+        protected struct DrawArgs {
             public DrawMode mode;
             public byte type, extType;
             public object data;

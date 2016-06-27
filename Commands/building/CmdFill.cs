@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            CatchPos cpos = (CatchPos)state;
+            DrawArgs cpos = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             byte oldType = p.level.GetTile(x, y, z), oldExtType = 0;
             if (oldType == Block.custom_block)

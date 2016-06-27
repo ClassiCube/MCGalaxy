@@ -12,21 +12,14 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             Player.Message(p, "Place two blocks to determine the edges.");
             p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
-        }
-
-       void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType)  {
-            RevertAndClearState(p, x, y, z);
-            p.blockchangeObject = new Vec3U16(x, y, z);
-            p.Blockchange += PlacedMark2;
+            p.MakeSelection(2, null, DoCentre);
         }
         
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            Vec3U16 start = (Vec3U16)p.blockchangeObject;
-            int xCen = (start.X + x) / 2, yCen = (start.Y + y) / 2, zCen = (start.Z + z) / 2;
+        bool DoCentre(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+        	int xCen = (m[0].X + m[1].X) / 2, yCen = (m[0].Y + m[1].Y) / 2, zCen = (m[0].Z + m[1].Z) / 2;
             p.level.UpdateBlock(p, (ushort)xCen, (ushort)yCen, (ushort)zCen, Block.goldsolid, 0);
-            Player.Message(p, "A gold block was placed at (" + xCen + ", " + yCen + ", " + zCen + ").");
+            Player.Message(p, "A gold block was placed at ({0}, {1}, {2}).", xCen, yCen, zCen);
+            return false;
         }
         
         public override void Help(Player p) {

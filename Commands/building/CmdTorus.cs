@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
         protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
         
         protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-            CatchPos cpos = (CatchPos)state;
+            DrawArgs cpos = (DrawArgs)state;
             GetRealBlock(type, extType, p, ref cpos);
             
             DrawOp drawOp = new TorusDrawOp();

@@ -27,42 +27,24 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         public override void Use(Player p, string message) {
-        	CatchPos cpos = default(CatchPos);
-            if (message.Length > 0 && !int.TryParse(message, out cpos.randomizer)) {
+        	int randomizer = 0;
+            if (message.Length > 0 && !int.TryParse(message, out randomizer)) {
                 Help(p); return;
             }
         	
             Player.Message(p, "Place two blocks to determine the edges.");           
-            p.ClearBlockchange();
-            p.blockchangeObject = cpos;
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, randomizer, DoMaze);
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            cpos.x = x; cpos.y = y; cpos.z = z;
-            p.blockchangeObject = cpos;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            MazeDrawOp drawOp = new MazeDrawOp();
-            drawOp.randomizer = cpos.randomizer;
-            
-            if (!DrawOp.DoDrawOp(drawOp, null, p, cpos.x, cpos.y, cpos.z, x, y, z))
-                return;
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark1;
+        bool DoMaze(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+            MazeDrawOp op = new MazeDrawOp();
+            op.randomizer = (int)state;
+            return DrawOp.DoDrawOp(op, null, p, marks);
         }
         
         public override void Help(Player p) {
         	Player.Message(p, "%T/maze");
         	Player.Message(p, "%HGenerates a random maze between two points.");
         }
-        
-        struct CatchPos { public ushort x, y, z; public int randomizer; }
     }
 }

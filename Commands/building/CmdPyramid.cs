@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override string shortcut { get { return "pd"; } }
 
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            CatchPos cpos = (CatchPos)state;
+            DrawArgs cpos = (DrawArgs)state;
             GetRealBlock(type, extType, p, ref cpos);
             DrawOp drawOp = null;
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
