@@ -39,8 +39,9 @@ namespace MCGalaxy.Commands.Building {
             
             int dx = m[0].X - m[1].X, dy = m[0].Y - m[1].Y, dz = m[0].Z - m[1].Z;
             int horR = (int)Math.Sqrt(dx * dx + dz * dz), verR = Math.Abs(dy);
-            Vec3S32[] marks = { new Vec3S32(m[0].X - horR, m[0].Y - verR, m[0].Z - horR),
-            	new Vec3S32(m[0].X + horR, m[0].Y + verR, m[0].Z + horR) };
+            Vec3S32 p0 = m[0];
+            m = new [] { new Vec3S32(p0.X - horR, p0.Y - verR, p0.Z - horR),
+                         new Vec3S32(p0.X + horR, p0.Y + verR, p0.Z + horR) };
                       
             return DrawOp.DoDrawOp(drawOp, brush, p, m);
         }
