@@ -154,6 +154,15 @@ namespace MCGalaxy.Commands {
             } else if (value.CaselessEq("midnight2")) {
                 preset = new EnvPreset("131947", "070A23", "1E223A", "181828", "0F0F19");
             }
+            else
+            {
+                if (File.Exists("presets/" + value.ToLower() + ".env"))
+                {
+                    string text = File.ReadAllText("presets/" + value.ToLower() + ".env");
+                    string[] parts = text.Split(' ');
+                    preset = new EnvPreset(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                }
+            }
             
             if( preset != null ) {
                 LevelEnv.SendEnvColorPackets(p, 0, preset.Sky);
@@ -186,6 +195,15 @@ namespace MCGalaxy.Commands {
         static void SendPresetsMessage(Player p) {
             p.SendMessage("/env preset [type] -- Uses an env preset on your current map");
             p.SendMessage("Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
+            string totalList = "";
+            foreach (string s in Directory.GetFiles("presets/", "*.env"))
+            {
+                totalList += ", " + Path.GetFileNameWithoutExtension(s);
+            }
+            if (totalList != "")
+            {
+                p.SendMessage("Custom preset types: " + totalList.Remove(0, 2));
+            }
         }
         
         public override void Help(Player p) {
