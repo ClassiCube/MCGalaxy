@@ -29,9 +29,9 @@ namespace MCGalaxy {
 
         public static bool Enabled = false;
         
-        public const string createTable =
+        const string createTable =
             @"CREATE TABLE if not exists Economy (
-                player         VARCHAR(20),
+                player      VARCHAR(20),
                 money       INT UNSIGNED,
                 total       INT UNSIGNED NOT NULL DEFAULT 0,
                 purchase    VARCHAR(255) NOT NULL DEFAULT '%cNone',
