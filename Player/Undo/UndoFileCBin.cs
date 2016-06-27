@@ -217,7 +217,7 @@ namespace MCGalaxy.Util {
                         ushort x = (ushort)(index % chunk.Width);
                         ushort y = (ushort)((index / chunk.Width) / chunk.Length);
                         ushort z = (ushort)((index / chunk.Width) % chunk.Length);
-                        HighlightBlock(p, lvl, temp[offset + 7], x, y, z);
+                        HighlightBlock(p, lvl, temp[offset + 6], temp[offset + 7], x, y, z);
                     }
                 }
             }

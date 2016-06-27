@@ -144,13 +144,13 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected static void HighlightBlock(Player p, Level lvl, byte type, ushort x, ushort y, ushort z) {
-            byte lvlTile = lvl.GetTile(x, y, z);
-            if (lvlTile == type || Block.Convert(lvlTile) == Block.water || Block.Convert(lvlTile) == Block.lava) {             
-                byte block = (lvlTile == Block.air || Block.Convert(lvlTile) == Block.water
-                              || Block.Convert(lvlTile) == Block.lava) ? Block.red : Block.green;
-                p.SendBlockchange(x, y, z, block);
-            }
+        protected static void HighlightBlock(Player p, Level lvl, byte type, byte newType, 
+                                             ushort x, ushort y, ushort z) {
+            byte block = (newType == Block.air 
+        	              || Block.Convert(type) == Block.water || type == Block.waterstill
+        	              || Block.Convert(type) == Block.lava || type == Block.lavastill) 
+        	    ? Block.red : Block.green;
+            p.SendBlockchange(x, y, z, block);
         }
         
         public static void CreateDefaultDirectories() {

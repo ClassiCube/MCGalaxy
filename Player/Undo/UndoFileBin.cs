@@ -133,7 +133,7 @@ namespace MCGalaxy.Util {
                         DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
                         if (time < start) return false;
                         ushort x = U16(temp, offset + 2), y = U16(temp, offset + 4), z = U16(temp, offset + 6);
-                        HighlightBlock(p, lvl, temp[offset + 10], x, y, z);
+                        HighlightBlock(p, lvl, temp[offset + 8], temp[offset + 10], x, y, z);
                     }
                 }
             }

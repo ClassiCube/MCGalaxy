@@ -117,7 +117,7 @@ namespace MCGalaxy.Util {
                     ushort x = Convert.ToUInt16(lines[(i * 7) - 6]);
                     ushort y = Convert.ToUInt16(lines[(i * 7) - 5]);
                     ushort z = Convert.ToUInt16(lines[(i * 7) - 4]);
-                    HighlightBlock(p, lvl, Convert.ToByte(lines[(i * 7) - 1]), x, y, z);
+                    HighlightBlock(p, lvl, Convert.ToByte(lines[(i * 7) - 2]), Convert.ToByte(lines[(i * 7) - 1]), x, y, z);
                 } catch { }
             }
             return true;
