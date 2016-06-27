@@ -67,20 +67,18 @@ namespace MCGalaxy.Commands.Building {
             if (!File.Exists("extra/images/" + bitmapLoc + ".bmp")) {
                 Player.Message(p, "The URL entered was invalid!"); return;
             }
-            CatchPos cpos = default(CatchPos);
-            cpos.layer = layer;
-            cpos.bitmapLoc = bitmapLoc;
-            cpos.popType = popType;
-            p.blockchangeObject = cpos;
+            
+            DrawArgs dArgs = default(DrawArgs);
+            dArgs.layer = layer;
+            dArgs.bitmapLoc = bitmapLoc;
+            dArgs.popType = popType;
             Player.Message(p, "Place two blocks to determine direction.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, dArgs, DoImage);
         }
         
         bool DownloadWebFile(string url, Player p) {
-            if (!(url.StartsWith("http://") || url.StartsWith("https://"))) {
+            if (!(url.StartsWith("http://") || url.StartsWith("https://")))
                 url = "http://" + url;
-            }
             
             try {
                 using (WebClient web = new WebClient()) {
@@ -97,33 +95,25 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            if (x == cpos.x && z == cpos.z) { Player.Message(p, "No direction was selected"); return; }
+        bool DoImage(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+            if (m[0].X == m[1].X && m[0].Z == m[1].Z) { Player.Message(p, "No direction was selected"); return false; }
 
-            int direction;
-            if (Math.Abs(cpos.x - x) > Math.Abs(cpos.z - z))
-                direction = x <= cpos.x ? 1 : 0;
+            int dir;
+            if (Math.Abs(m[1].X - m[0].X) > Math.Abs(m[1].Z - m[0].Z))
+            	dir = m[1].X <= m[0].X ? 1 : 0;
             else
-                direction = z <= cpos.z ? 3 : 2;
+            	dir = m[1].Z <= m[0].Z ? 3 : 2;
             
-            Thread thread = new Thread(() => DoDrawImage(p, cpos, direction));
+            Thread thread = new Thread(() => DoDrawImage(p, m[0], (DrawArgs)state, dir));
             thread.Name = "MCG_ImagePrint";
             thread.Start();
+            return false;
         }
         
-        void DoDrawImage(Player p, CatchPos cpos, int direction) {
+        void DoDrawImage(Player p, Vec3S32 p0, DrawArgs dArgs, int direction) {
             Bitmap bmp = null;
             try {
-                bmp = new Bitmap("extra/images/" + cpos.bitmapLoc + ".bmp");
+                bmp = new Bitmap("extra/images/" + dArgs.bitmapLoc + ".bmp");
                 bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
@@ -133,15 +123,15 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
-            byte popType = cpos.popType;
-            bool layer = cpos.layer;
+            byte popType = dArgs.popType;
+            bool layer = dArgs.layer;
             if (layer) {
                 if (popType == 1) popType = 2;
                 if (popType == 3) popType = 4;
             }
             ColorBlock[] palette = ImagePalette.GetPalette(popType);
             ColorBlock cur = default(ColorBlock);
-            Vec3U16 P;
+            Vec3S32 P;
             
             IPalette selector = null;
             if (popType == 6) selector = new GrayscalePalette();
@@ -152,24 +142,24 @@ namespace MCGalaxy.Commands.Building {
                 for (int xx = 0; xx < bmp.Width; xx++)
             {
                 if (layer) {
-                    P.Y = cpos.y;
+                    P.Y = p0.Y;
                     if (direction <= 1) {
-                        if (direction == 0) { P.X = (ushort)(cpos.x + xx); P.Z = (ushort)(cpos.z - yy); }
-                        else { P.X = (ushort)(cpos.x - xx); P.Z = (ushort)(cpos.z + yy); }
+                        if (direction == 0) { P.X = (ushort)(p0.X + xx); P.Z = (ushort)(p0.Z - yy); }
+                        else { P.X = (ushort)(p0.X - xx); P.Z = (ushort)(p0.Z + yy); }
                     } else {
-                        if (direction == 2) { P.Z = (ushort)(cpos.z + xx); P.X = (ushort)(cpos.x + yy); }
-                        else { P.Z = (ushort)(cpos.z - xx); P.X = (ushort)(cpos.x - yy); }
+                        if (direction == 2) { P.Z = (ushort)(p0.Z + xx); P.X = (ushort)(p0.X + yy); }
+                        else { P.Z = (ushort)(p0.Z - xx); P.X = (ushort)(p0.X - yy); }
                     }
                 } else {
-                    P.Y = (ushort)(cpos.y + yy);
+                    P.Y = (ushort)(p0.Y + yy);
                     if (direction <= 1) {
-                        if (direction == 0) P.X = (ushort)(cpos.x + xx);
-                        else P.X = (ushort)(cpos.x - xx);
-                        P.Z = cpos.z;
+                        if (direction == 0) P.X = (ushort)(p0.X + xx);
+                        else P.X = (ushort)(p0.X - xx);
+                        P.Z = p0.Z;
                     } else {
-                        if (direction == 2) P.Z = (ushort)(cpos.z + xx);
-                        else P.Z = (ushort)(cpos.z - xx);
-                        P.X = cpos.x;
+                        if (direction == 2) P.Z = (ushort)(p0.X + xx);
+                        else P.Z = (ushort)(p0.Z - xx);
+                        P.X = p0.X;
                     }
                 }
 
@@ -192,10 +182,10 @@ namespace MCGalaxy.Commands.Building {
                 }
 
                 if (cur.a < 20) cur.type = Block.air;
-                p.level.UpdateBlock(p, P.X, P.Y, P.Z, cur.type, 0);
+                p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.type, 0);
             }
             
-            if (cpos.bitmapLoc == "tempImage_" + p.name)
+            if (dArgs.bitmapLoc == "tempImage_" + p.name)
                 File.Delete("extra/images/tempImage_" + p.name + ".bmp");
             Player.Message(p, "Finished printing image using " + ImagePalette.Names[popType]);
         }
@@ -210,7 +200,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "Use switch (&flayer%S) or (&fl%S) to print horizontally.");
         }
 
-        struct CatchPos { public bool layer; public byte popType; public string bitmapLoc; public ushort x, y, z; }
+        struct DrawArgs { public bool layer; public byte popType; public string bitmapLoc; }
     }
 }
 

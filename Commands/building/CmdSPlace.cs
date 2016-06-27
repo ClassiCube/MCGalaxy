@@ -46,64 +46,48 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "The Interval cannot be greater than the distance."); return;
             }
 
-            CatchPos cpos = default(CatchPos);
-            cpos.givenMessage = message;
-            cpos.distance = distance; cpos.interval = interval;
-            p.blockchangeObject = cpos;
+            DrawArgs dArgs = default(DrawArgs);
+            dArgs.distance = distance; dArgs.interval = interval;
             Player.Message(p, "Place two blocks to determine direction.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            p.MakeSelection(2, dArgs, DoSPlace);
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-            p.Blockchange += PlacedMark2;
-        }
-        
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            ushort distance = cpos.distance, interval = cpos.interval;
-            if (x == cpos.x && y == cpos.y && z == cpos.z) { Player.Message(p, "No direction was selected"); return; }
+        bool DoSPlace(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+            DrawArgs dArgs = (DrawArgs)state;
+            ushort distance = dArgs.distance, interval = dArgs.interval;
+            if (m[0] == m[1]) { Player.Message(p, "No direction was selected"); return false; }
             
             int dirX = 0, dirY = 0, dirZ = 0;
-            int dx = Math.Abs(cpos.x - x), dy = Math.Abs(cpos.y - y), dz = Math.Abs(cpos.z - z);
-            if (dy > dx && dy > dz) dirY = y > cpos.y ? 1 : -1;
-            else if (dx > dz) dirX = x > cpos.x ? 1 : -1;
-            else dirZ = z > cpos.z ? 1 : -1;
+            int dx = Math.Abs(m[1].X - m[0].X), dy = Math.Abs(m[1].Y - m[0].Y), dz = Math.Abs(m[1].Z - m[0].Z);
+            if (dy > dx && dy > dz) 
+                dirY = m[1].Y > m[0].Y ? 1 : -1;
+            else if (dx > dz) 
+                dirX = m[1].X > m[0].X ? 1 : -1;
+            else 
+                dirZ = m[1].Z > m[0].Z ? 1 : -1;
             
-            ushort endX = (ushort)(cpos.x + dirX * distance);
-            ushort endY = (ushort)(cpos.y + dirY * distance);
-            ushort endZ = (ushort)(cpos.z + dirZ * distance);            
+            ushort endX = (ushort)(m[0].X + dirX * distance);
+            ushort endY = (ushort)(m[0].Y + dirY * distance);
+            ushort endZ = (ushort)(m[0].Z + dirZ * distance);
             p.level.UpdateBlock(p, endX, endY, endZ, Block.rock, 0);   
             
             if (interval > 0) {
-                ushort xx = cpos.x, yy = cpos.y, zz = cpos.z;
+                int x = m[0].X, y = m[0].Y, z = m[0].Z;
                 int delta = 0;
-                while (xx < p.level.Width && yy < p.level.Height && zz < p.level.Length && delta < distance) {
-                    p.level.UpdateBlock(p, xx, yy, zz, Block.rock, 0);
-                    xx = (ushort)(xx + dirX * interval);
-                    yy = (ushort)(yy + dirY * interval);
-                    zz = (ushort)(zz + dirZ * interval);
-                    delta = Math.Abs(xx - cpos.x) + Math.Abs(yy - cpos.y) + Math.Abs(zz - cpos.z);
+                while (x >= 0 && y >= 0 && z >= 0 && x < p.level.Width && y < p.level.Height && z < p.level.Length && delta < distance) {
+                    p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, Block.rock, 0);
+                    x += dirX * interval; y += dirY * interval; z += dirZ * interval;
+                    delta = Math.Abs(x - m[0].X) + Math.Abs(y - m[0].Y) + Math.Abs(z - m[0].Z);
                 }
             } else {
-                p.level.UpdateBlock(p, cpos.x, cpos.y, cpos.z, Block.rock, 0);
+                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, Block.rock, 0);
             }
 
-            if (interval > 0)
-                Player.Message(p, "Placed stone blocks " + interval + " apart");
-            else
-                Player.Message(p, "Placed stone blocks " + distance + " apart");
-            if (p.staticCommands) p.Blockchange += PlacedMark1;
+            Player.Message(p, "Placed stone blocks {0} apart.", interval > 0 ? interval : distance);
+            return true;
         }
         
-        struct CatchPos {
-            public ushort x, y, z; public string givenMessage;
-            public ushort distance, interval;
-        }
+        struct DrawArgs { public ushort distance, interval; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/splace [distance] [interval]");

@@ -139,12 +139,12 @@ namespace MCGalaxy.Commands.Building {
 			Player.Message(p, format, cState.UsedBlocks);
 			if (cArgs.allowoffset != -1) {
 				Player.Message(p, "Place a block to determine where to paste from");
-				p.Blockchange += Blockchange3;
+				p.Blockchange += BlockchangeOffset;
 			}
 		    return false;
 		}
 
-		void Blockchange3(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+		void BlockchangeOffset(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
 			RevertAndClearState(p, x, y, z);
 			p.copyoffset.X = p.copystart.X - x;
 			p.copyoffset.Y = p.copystart.Y - y;
