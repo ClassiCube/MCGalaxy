@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 using MCGalaxy.Commands.Building;
 
 namespace MCGalaxy.Commands {
@@ -153,15 +154,10 @@ namespace MCGalaxy.Commands {
                 preset = new EnvPreset("FFA322", "836668", "9A6551", "7F6C60", "46444C");
             } else if (value.CaselessEq("midnight2")) {
                 preset = new EnvPreset("131947", "070A23", "1E223A", "181828", "0F0F19");
-            }
-            else
-            {
-                if (File.Exists("presets/" + value.ToLower() + ".env"))
-                {
-                    string text = File.ReadAllText("presets/" + value.ToLower() + ".env");
-                    string[] parts = text.Split(' ');
-                    preset = new EnvPreset(parts[0], parts[1], parts[2], parts[3], parts[4]);
-                }
+            } else if (File.Exists("presets/" + value.ToLower() + ".env")) {
+                string text = File.ReadAllText("presets/" + value.ToLower() + ".env");
+                string[] parts = text.Split(' ');
+                preset = new EnvPreset(parts[0], parts[1], parts[2], parts[3], parts[4]);
             }
             
             if( preset != null ) {
@@ -195,15 +191,13 @@ namespace MCGalaxy.Commands {
         static void SendPresetsMessage(Player p) {
             p.SendMessage("/env preset [type] -- Uses an env preset on your current map");
             p.SendMessage("Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
-            string totalList = "";
+            
+            if (!Directory.Exists("presets")) return;
+            string custom = "";
             foreach (string s in Directory.GetFiles("presets/", "*.env"))
-            {
-                totalList += ", " + Path.GetFileNameWithoutExtension(s);
-            }
-            if (totalList != "")
-            {
-                p.SendMessage("Custom preset types: " + totalList.Remove(0, 2));
-            }
+                custom += ", " + Path.GetFileNameWithoutExtension(s);
+            if (custom != "")
+                p.SendMessage("Custom preset types: " + custom.Remove(0, 2));
         }
         
         public override void Help(Player p) {
