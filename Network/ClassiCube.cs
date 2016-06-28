@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace MCGalaxy {
     
@@ -50,7 +51,7 @@ namespace MCGalaxy {
             return count;
         }
         
-        bool UrlSaid = false;
+        bool foundUrl = false;
         public void OnResponse(string line) {
             if (String.IsNullOrEmpty(line.Trim())) return;
             string newHash = line.Substring(line.LastIndexOf('/') + 1);
@@ -62,16 +63,26 @@ namespace MCGalaxy {
                 if (!Server.URL.Contains("\"errors\": [")) {
                     Server.s.UpdateUrl(Server.URL);
                     File.WriteAllText("text/externalurl.txt", Server.URL);
-                    if (!UrlSaid) {
+                    if (!foundUrl) {
                         Server.s.Log("ClassiCube URL found: " + Server.URL);
-                        UrlSaid = true;
+                        foundUrl = true;
                     }
                 } else {
-                    Server.URL = "Error while finding URL. Is the port open?";
+                    Response resp = JsonConvert.DeserializeObject<Response>(Server.URL);
+                    if (resp.errors != null && resp.errors.Length > 0 && resp.errors[0].Length > 0)
+                        Server.URL = resp.errors[0][0];
+                    else
+                        Server.URL = "Error while finding URL. Is the port open?";
                     Server.s.UpdateUrl(Server.URL);
                     Server.s.Log(Server.URL);
                 }
             }
+        }        
+        
+        class Response {
+        	public string[][] errors;
+        	public string response;
+        	public string status;
         }
     }
 }
