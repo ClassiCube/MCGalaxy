@@ -342,10 +342,7 @@ namespace MCGalaxy {
             useCheckpointSpawn = false;
             lastCheckpointIndex = -1;
             
-            try {
-                int usedLength = 0;
-                byte[] buffer = CompressRawMap(out usedLength);
-                
+            try {               
                 if (hasBlockDefs) {
                     if (oldLevel != null && oldLevel != level)
                         RemoveOldLevelCustomBlocks(oldLevel);
@@ -353,22 +350,10 @@ namespace MCGalaxy {
                 }
                 
                 SendRaw(Opcode.LevelInitialise);
-                int totalRead = 0;
-                while (totalRead < usedLength) {
-                    byte[] packet = new byte[1028]; // need each packet separate for Mono
-                    packet[0] = Opcode.LevelDataChunk;
-                    short length = (short)Math.Min(buffer.Length - totalRead, 1024);
-                    NetUtils.WriteI16(length, packet, 1);
-                    Buffer.BlockCopy(buffer, totalRead, packet, 3, length);
-                    packet[1027] = (byte)(100 * (float)totalRead / buffer.Length);
-                    
-                    SendRaw(packet);
-                    if (ip != "127.0.0.1")
-                        Thread.Sleep(Server.updateTimer.Interval > 1000 ? 100 : 10);
-                    totalRead += length;
-                }
+                using (LevelChunkStream s = new LevelChunkStream(this))
+                	CompressRawMap(s);
                 
-                buffer = new byte[7];
+                byte[] buffer = new byte[7];
                 buffer[0] = Opcode.LevelFinalise;
                 NetUtils.WriteI16((short)level.Width, buffer, 1);
                 NetUtils.WriteI16((short)level.Height, buffer, 3);
@@ -403,10 +388,9 @@ namespace MCGalaxy {
             return success;
         }
         
-        unsafe byte[] CompressRawMap(out int usedLength) {
+        unsafe void CompressRawMap(LevelChunkStream dst) {
             const int bufferSize = 64 * 1024;
             byte[] buffer = new byte[bufferSize];
-            MemoryStream temp = new MemoryStream();
             int bIndex = 0;
             
             // Store locally instead of performing func call for every block in map
@@ -419,9 +403,10 @@ namespace MCGalaxy {
                     convCPE[i] = Block.ConvertCPE((byte)i);
             }
             
-            using (GZipStream compressor = new GZipStream(temp, CompressionMode.Compress, true)) {
+            using (GZipStream compressor = new GZipStream(dst, CompressionMode.Compress, true)) {
                 NetUtils.WriteI32(level.blocks.Length, buffer, 0);
                 compressor.Write(buffer, 0, sizeof(int));
+                dst.length = level.blocks.Length;
                 
                 // compress the map data in 64 kb chunks
                 if (hasCustomBlocks) {
@@ -435,6 +420,7 @@ namespace MCGalaxy {
                         
                         bIndex++;
                         if (bIndex == bufferSize) {
+                            dst.position = i;
                             compressor.Write(buffer, 0, bufferSize); bIndex = 0;
                         }
                     }
@@ -450,14 +436,13 @@ namespace MCGalaxy {
                         
                         bIndex++;
                         if (bIndex == bufferSize) {
+                            dst.position = i;
                             compressor.Write(buffer, 0, bufferSize); bIndex = 0;
                         }
                     }
                 }
                 if (bIndex > 0) compressor.Write(buffer, 0, bIndex);
             }
-            usedLength = (int)temp.Length;
-            return temp.GetBuffer();
         }
         
         void RemoveOldLevelCustomBlocks(Level oldLevel) {

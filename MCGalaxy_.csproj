@@ -513,6 +513,7 @@
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
     <Compile Include="Levels\Zones.cs" />
+    <Compile Include="Network\LevelChunkStream.cs" />
     <Compile Include="Player\Chat.cs" />
     <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />
