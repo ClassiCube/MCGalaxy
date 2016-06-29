@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands {
             }
             
             TimeSpan timeFrame;
-            if (!args[2].TryParseShort(p, "set time spent to", out timeFrame)) return;
+            if (!args[2].TryParseShort(p, 'm', "set time spent to", out timeFrame)) return;
             
             string time = timeFrame.ToDBTime();
             if (who != null) {

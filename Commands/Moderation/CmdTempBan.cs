@@ -37,26 +37,23 @@ namespace MCGalaxy.Commands.Moderation {
                 MessageTooHighRank(p, "temp ban", false); return;
             }
             
-            int minutes = 60;
-            if (args.Length > 1 && !int.TryParse(args[1], out minutes)) {
-                Player.Message(p, "Invalid minutes given."); return;
-            }
-            if (minutes > 1440) { Player.Message(p, "Cannot temp ban for more than a day"); return; }
-            if (minutes < 1) { Player.Message(p, "Cannot temp ban someone for less than a minute"); return; }
+            TimeSpan time = TimeSpan.FromHours(1);
+            if (args.Length > 1 && !args[1].TryParseShort(p, 'm', "temp ban for", out time)) return;
+            if (time.TotalDays > 1) { Player.Message(p, "Cannot temp ban for more than a day."); return; }
+            if (time.TotalSeconds < 1) { Player.Message(p, "Cannot temp ban someone for less than a second."); return; }
             
             Server.TempBan tBan;
             tBan.name = target;
             tBan.reason = args.Length > 2 ? args[2] : "";
-            tBan.expiryTime = DateTime.UtcNow.AddMinutes(minutes);
+            tBan.expiryTime = DateTime.UtcNow.Add(time);
             AddTempban(tBan);
             
             if (who != null) {
-                string reason = String.IsNullOrEmpty(tBan.reason) ? ""
-                    : " - (" + tBan.reason + ")";
-                who.Kick("Banned for " + minutes + " minutes!" + reason);
+                string reason = tBan.reason == "" ? "" : " - (" + tBan.reason + ")";
+                who.Kick("Banned for " + time.Shorten(true) + "." + reason);
             }
             
-            Player.Message(p, "Temp banned " + target + " for " + minutes + " minutes.");
+            Player.Message(p, "Temp banned " + target + " for " + time.Shorten(true) + ".");
             if (args.Length <= 2) Player.AddNote(target, p, "T");
             else Player.AddNote(target, p, "T", args[2]);
         }
@@ -71,8 +68,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/tempban <name> <minutes> [reason]");
-            Player.Message(p, "%HBans <name> for <minutes>. Max time is 1440 (1 day). Default is 60");
+            Player.Message(p, "%T/tempban <name> <timespan> [reason]");
+            Player.Message(p, "%HBans <name> for <timespan>. Max is 1 day, default is 1 hour.");
+            Player.Message(p, "%H  e.g. to tempban for 90 minutes, <timespan> would be 1h30m");
             Player.Message(p, "%HTemp bans will reset on server restart");
         }
     }

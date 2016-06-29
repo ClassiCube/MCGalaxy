@@ -20,52 +20,46 @@
 using System;
 using System.Linq;
 
-namespace MCGalaxy {    
+namespace MCGalaxy {
     public static class TimeUtils {
         
         public static string Shorten(this TimeSpan value, bool seconds = false) {
             string time = "";
-            if (value.Days >= 1) time = value.Days + "d " + value.Hours + "h " + value.Minutes + "m";
-            else if (value.Hours >= 1) time = value.Hours + "h " + value.Minutes + "m";
-            else time = value.Minutes + "m";
-            if (seconds && value.Seconds != 0) time += " " + value.Seconds + "s";
+            Add(ref time, value.Days, 'd');
+            Add(ref time, value.Hours, 'h');
+            Add(ref time, value.Minutes, 'm');          
+            if (seconds) Add(ref time, value.Seconds, 's');
+            
+            if (time == "") time = seconds ? "0s" : "0m";
             return time;
         }
         
-        public static TimeSpan ParseShort(this string value) {
+        public static TimeSpan ParseShort(this string value, char defUnit) {
             int num = 0;
-            long total = 0;
+            long amount = 0, total = 0;
             
             foreach (char c in value) {
-                long amount = 0;
-                if (c == ' ') continue;                
+                if (c == ' ') continue;
                 if (c >= '0' && c <= '9') {
-                    num = checked(num * 10); num += (c - '0'); 
+                    num = checked(num * 10); num += (c - '0');
                     continue;
                 }
                 
-                if (c == 's' || c == 'S') {
-                    amount = num * TimeSpan.TicksPerSecond;
-                } else if (c == 'm' || c == 'M') {
-                    amount = num * TimeSpan.TicksPerMinute;
-                } else if (c == 'h' || c == 'H') {
-                    amount = num * TimeSpan.TicksPerHour;
-                } else if (c == 'd' || c == 'D') {
-                    amount = num * TimeSpan.TicksPerDay;
-                } else {
-                    throw new FormatException(c.ToString());
-                }
+                amount = GetTicks(num, c);
                 total = checked(total + amount);
                 num = 0;
             }
+            
+            amount = GetTicks(num, defUnit);
+            total = checked(total + amount);
             return TimeSpan.FromTicks(total);
         }
         
-        public static bool TryParseShort(this string value, Player p, 
+        public static bool TryParseShort(this string value, Player p, char defUnit,
                                          string action, out TimeSpan span) {
-		    span = TimeSpan.Zero;
+            span = TimeSpan.Zero;
             try {
-                span = ParseShort(value);
+                span = ParseShort(value, defUnit);
                 return true;
             } catch (OverflowException) {
                 Player.Message(p, "Timespan given is too big.");
@@ -86,6 +80,26 @@ namespace MCGalaxy {
             string[] parts = value.Split(' ');
             return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
                                 int.Parse(parts[2]), int.Parse(parts[3]));
+        }
+        
+        static void Add(ref string time, int amount, char suffix) {
+            if (amount == 0) return;
+            if (time == "") time = "" + amount + suffix;
+            else time = time + " " + amount + suffix;
+        }
+        
+        static long GetTicks(int num, char unit) {
+            if (unit == 's' || unit == 'S')
+                return num * TimeSpan.TicksPerSecond;
+            if (unit == 'm' || unit == 'M')
+                return num * TimeSpan.TicksPerMinute;
+            if (unit == 'h' || unit == 'H')
+                return num * TimeSpan.TicksPerHour;
+            if (unit == 'd' || unit == 'D')
+                return num * TimeSpan.TicksPerDay;
+            if (unit == 'w' || unit == 'W')
+                return num * TimeSpan.TicksPerDay * 7;
+            throw new FormatException(unit.ToString());
         }
     }
 }
