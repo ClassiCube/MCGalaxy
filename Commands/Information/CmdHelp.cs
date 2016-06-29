@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks"),
-                                 new CommandAlias("colors", "colors") }; }
+                    new CommandAlias("colors", "colors") }; }
         }
         public CmdHelp() { }
 
@@ -46,13 +46,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "To send private messages, type %T@PlayerName Message");
                     break;
                 case "ranks":
-                    message = "";
-                    foreach (Group grp in Group.GroupList)
-                    {
-                        if (grp.Permission < LevelPermission.Nobody) // Note that -1 means max undo.  Undo anything and everything.
-                            Player.Message(p, grp.ColoredName + " - &bCmd: " + grp.maxBlocks + " - &2Undo: " + ((grp.maxUndo != -1) ? grp.maxUndo.ToString() : "max") + " - &cPerm: " + (int)grp.Permission);
-                    }
-                    break;
+                    PrintRanks(p); break;
                 case "colours":
                 case "colors":
                     Player.Message(p, "&fTo use a color, put a '%' and then put the color code.");
@@ -71,11 +65,21 @@ namespace MCGalaxy.Commands {
             }
         }
         
+        static void PrintRanks(Player p) {
+            foreach (Group grp in Group.GroupList) {
+                if (grp.Permission >= LevelPermission.Nobody) continue; // Note that -1 means max undo.  Undo anything and everything.
+                int count = grp.playerList.Count;
+                Player.Message(p, "{0} ({1}) %S- Cmd: {2}, Undo: {3}, Perm: {4}", 
+                               grp.ColoredName, count, grp.maxBlocks, 
+                               grp.maxUndo == -1 ? "max" : grp.maxUndo.ToString(), (int)grp.Permission);
+            }
+        }
+        
         bool ParseCommand(Player p, string message) {
             string[] args = message.SplitSpaces(2);
             Alias alias = Alias.Find(args[0].ToLower());
             if (alias != null) args[0] = alias.Target;
-                    
+            
             Command cmd = Command.all.Find(args[0]);
             if (cmd == null) return false;
             
@@ -142,10 +146,10 @@ namespace MCGalaxy.Commands {
                 dst.Append('/').Append(a.Trigger);
                 string args = a.Prefix == null ? a.Suffix : a.Prefix;
                 if (args != null) {
-                    string name = String.IsNullOrEmpty(cmd.shortcut) 
+                    string name = String.IsNullOrEmpty(cmd.shortcut)
                         ? cmd.name : cmd.shortcut;
                     dst.Append(" for /").Append(name + " " + args);
-                }                
+                }
                 dst.Append(", ");
             }
         }
