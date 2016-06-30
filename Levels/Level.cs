@@ -646,16 +646,48 @@ namespace MCGalaxy
             }
         }
 
+        const string createBlock = 
+            @"CREATE TABLE if not exists `Block{0}` (
+Username      CHAR(20), 
+TimePerformed DATETIME, 
+X             SMALLINT  UNSIGNED, 
+Y             SMALLINT UNSIGNED, 
+Z             SMALLINT UNSIGNED, 
+Type          TINYINT UNSIGNED, 
+Deleted       {1})";
+        
+        const string createPortals =
+            @"CREATE TABLE if not exists `Portals{0}` (
+EntryX  SMALLINT UNSIGNED, 
+EntryY  SMALLINT UNSIGNED, 
+EntryZ  SMALLINT UNSIGNED, 
+ExitMap CHAR(20), 
+ExitX   SMALLINT UNSIGNED, 
+ExitY   SMALLINT UNSIGNED, 
+ExitZ   SMALLINT UNSIGNED)";
+            
+        const string createMessages =
+            @"CREATE TABLE if not exists `Messages{0}` (
+X       SMALLINT UNSIGNED, 
+Y       SMALLINT UNSIGNED, 
+Z       SMALLINT UNSIGNED, 
+Message CHAR(255))";
+        
+        const string createZones =
+            @"CREATE TABLE if not exists `Zone{0}` (
+SmallX SMALLINT UNSIGNED, 
+SmallY SMALLINT UNSIGNED, 
+SmallZ SMALLINT UNSIGNED, 
+BigX   SMALLINT UNSIGNED, 
+BigY   SMALLINT UNSIGNED,
+BigZ   SMALLINT UNSIGNED, 
+Owner  VARCHAR(20))";
+        
         public static void CreateLeveldb(string givenName) {
-            Database.executeQuery("CREATE TABLE if not exists `Block" + givenName +
-                                  "` (Username CHAR(20), TimePerformed DATETIME, X SMALLINT UNSIGNED, Y SMALLINT UNSIGNED, Z SMALLINT UNSIGNED, Type TINYINT UNSIGNED, Deleted " +
-                                  (Server.useMySQL ? "BOOL" : "INT") + ")");
-            Database.executeQuery("CREATE TABLE if not exists `Portals" + givenName +
-                                  "` (EntryX SMALLINT UNSIGNED, EntryY SMALLINT UNSIGNED, EntryZ SMALLINT UNSIGNED, ExitMap CHAR(20), ExitX SMALLINT UNSIGNED, ExitY SMALLINT UNSIGNED, ExitZ SMALLINT UNSIGNED)");
-            Database.executeQuery("CREATE TABLE if not exists `Messages" + givenName +
-                                  "` (X SMALLINT UNSIGNED, Y SMALLINT UNSIGNED, Z SMALLINT UNSIGNED, Message CHAR(255));");
-            Database.executeQuery("CREATE TABLE if not exists `Zone" + givenName +
-                                  "` (SmallX SMALLINT UNSIGNED, SmallY SMALLINT UNSIGNED, SmallZ SMALLINT UNSIGNED, BigX SMALLINT UNSIGNED, BigY SMALLINT UNSIGNED, BigZ SMALLINT UNSIGNED, Owner VARCHAR(20));");
+            Database.executeQuery(String.Format(createBlock, givenName, Server.useMySQL ? "BOOL" : "INT"));
+            Database.executeQuery(String.Format(createPortals, givenName));
+            Database.executeQuery(String.Format(createMessages, givenName));
+            Database.executeQuery(String.Format(createZones, givenName));
         }
 
         public static Level Load(string givenName) {

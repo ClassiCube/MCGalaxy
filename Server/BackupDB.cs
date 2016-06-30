@@ -114,7 +114,7 @@ namespace MCGalaxy {
                 string[] rowParams;
                 string pri;
                 sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
-                using (DataTable schema = Database.fillData("DESCRIBE " + tableName)) {
+                using (DataTable schema = Database.fillData("DESCRIBE `" + tableName + "`")) {
                     rowParams = new string[schema.Columns.Count];
                     pri = "";
                     foreach (DataRow row in schema.Rows) {
