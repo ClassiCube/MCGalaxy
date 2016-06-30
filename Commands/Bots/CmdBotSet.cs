@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                 bot.kill = false;
                 bot.hunt = false;
                 bot.AIName = "";
-                Player.Message(p, bot.color + bot.name + "%S's AI was turned off.");
+                Player.Message(p, bot.ColoredName + "%S's AI was turned off.");
                 Server.s.Log(bot.name + "'s AI was turned off.");
                 return;
             } else if (args.Length != 2) {
@@ -55,14 +55,14 @@ namespace MCGalaxy.Commands {
                 try { bot.Waypoints.Clear(); }
                 catch { }
                 bot.AIName = "";
-                if (p != null) Chat.GlobalChatLevel(p, bot.color + bot.name + "%S's hunt instinct: " + bot.hunt, false);
+                if (p != null) Chat.GlobalChatLevel(p, bot.ColoredName + "%S's hunt instinct: " + bot.hunt, false);
                 Server.s.Log(bot.name + "'s hunt instinct: " + bot.hunt);
                 BotsFile.UpdateBot(bot);
                 return;
             } else if (ai == "kill") {
                 if (!CheckExtraPerm(p)) { MessageNeedPerms(p, "can toggle a bot's killer instinct."); return; }
                 bot.kill = !bot.kill;
-                if (p != null) Chat.GlobalChatLevel(p, bot.color + bot.name + "%S's kill instinct: " + bot.kill, false);
+                if (p != null) Chat.GlobalChatLevel(p, bot.ColoredName + "%S's kill instinct: " + bot.kill, false);
                 Server.s.Log(bot.name + "'s kill instinct: " + bot.kill);
                 BotsFile.UpdateBot(bot);
                 return;
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
             
             if (!ScriptFile.Parse(p, bot, "bots/" + ai)) return;
             bot.AIName = ai;
-            if (p != null) Chat.GlobalChatLevel(p, bot.color + bot.name + "%S's AI is now set to " + ai, false);
+            if (p != null) Chat.GlobalChatLevel(p, bot.ColoredName + "%S's AI is now set to " + ai, false);
             Server.s.Log(bot.name + "'s AI was set to " + ai);
             BotsFile.UpdateBot(bot);
         }

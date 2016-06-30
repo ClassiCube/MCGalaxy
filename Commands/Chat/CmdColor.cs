@@ -43,10 +43,8 @@ namespace MCGalaxy.Commands {
             Player who = null;
             PlayerBot pBot = null;
             bool isBot = message.CaselessStarts("bot ");
-            if (isBot)
-                pBot = PlayerBot.FindMatches(p, args[1]);
-            else
-                who = PlayerInfo.FindMatches(p, args[0]);
+            if (isBot) pBot = PlayerBot.FindMatches(p, args[1]);
+            else who = PlayerInfo.FindMatches(p, args[0]);
             if (pBot == null && who == null) return;
             
             if (p != null && who != null && who.group.Permission > p.group.Permission) {
@@ -61,11 +59,11 @@ namespace MCGalaxy.Commands {
             ParameterisedQuery query = ParameterisedQuery.Create();
             string color = args.Length == 2 ? "&1" : Colors.Parse(args[2]);
             if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
+            Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Scolor was changed to " + color + Colors.Name(color));
+             
             pBot.color = color;
-            
             pBot.GlobalDespawn();
             pBot.GlobalSpawn();
-            Player.GlobalMessage("Bot " + pBot.name + "'s %Scolor was changed to " + color + Colors.Name(color));
             BotsFile.UpdateBot(pBot);
         }
         
@@ -94,9 +92,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/color <player> [color]");
-            Player.Message(p, "%HSets the nick color of <player>");
+            Player.Message(p, "%T/color [player] [color]");
+            Player.Message(p, "%HSets the nick color of that player");
             Player.Message(p, "%HIf no [color] is given, reverts to player's rank color.");
+            Player.Message(p, "%H/color bot [bot] [color]");
+            Player.Message(p, "%TSets the name color of that bot.");
             Player.Message(p, "%HTo see a list of all colors, use /help colors.");
         }
     }

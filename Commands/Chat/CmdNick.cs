@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy;
+using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands {    
     public class CmdNick : Command {       
@@ -34,19 +35,41 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.SplitSpaces(2);
+            bool isBot = message.CaselessStarts("bot ");
+            string[] args = message.SplitSpaces(isBot ? 3 : 2);
             if (args[0].CaselessEq("-own")) {
                 if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
                 args[0] = p.name;
             }
             
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
-            if (p != null && who.group.Permission > p.group.Permission) {
+            Player who = null;
+            PlayerBot pBot = null;            
+            if (isBot) pBot = PlayerBot.FindMatches(p, args[1]);
+            else who = PlayerInfo.FindMatches(p, args[0]);
+            if (pBot == null && who == null) return;
+            
+            if (p != null && who != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the nick of", true); return;
             }
-            if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the nick of others."); return; }
-            SetNick(p, who, args);
+            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the nick of others."); return; }
+            if (isBot) SetBotNick(p, pBot, args);
+            else SetNick(p, who, args);
+        }
+        
+        static void SetBotNick(Player p, PlayerBot pBot, string[] args) {
+            string newName = args.Length > 2 ? args[2] : "";
+            if (newName == "") {
+                pBot.DisplayName = pBot.name;
+                Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sreverted to their original name.");
+            } else {
+                if (newName.Length >= 30) { Player.Message(p, "Name must be under 30 letters."); return; }                
+                Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sname was set to " + newName + "%S.");
+                pBot.DisplayName = newName;
+            }
+            
+            pBot.GlobalDespawn();
+            pBot.GlobalSpawn();
+            BotsFile.UpdateBot(pBot);
         }
         
         static void SetNick(Player p, Player who, string[] args) {
@@ -66,9 +89,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/nick <player> [nick]");
-            Player.Message(p, "%HSets the nick of <player>");
+            Player.Message(p, "%T/nick [player] [nick]");
+            Player.Message(p, "%HSets the nick of that player.");
             Player.Message(p, "%HIf no [nick] is given, reverts player's nick to their original name.");
+            Player.Message(p, "%T/nick bot [bot] [name]");
+            Player.Message(p, "%HSets the name shown above that bot in game.");
         }
     }
 }

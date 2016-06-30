@@ -54,7 +54,7 @@ namespace MCGalaxy {
         /// <summary> Adds the given bot to that player's tab list (if their client support it). </summary>
         public static void Add(Player dst, PlayerBot b) {
             if (!dst.hasExtList) return;
-            dst.SendExtAddPlayerName(b.id, b.skinName, b.color + b.name, "Bots", 0);
+            dst.SendExtAddPlayerName(b.id, b.SkinName, b.color + b.name, "Bots", 0);
         }
         
         /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>

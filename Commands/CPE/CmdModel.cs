@@ -65,13 +65,17 @@ namespace MCGalaxy.Commands.CPE {
                 if (who == null) { SuperRequiresArgs(p, "player name"); return; }
                 model = message;
             }
+            
             model = model.ToLower();
+            if (p != null && who != null && who.group.Permission > p.group.Permission) {
+                MessageTooHighRank(p, "change the model of", true); return;
+            }
             if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the model of others."); return; }
 
             if (isBot) {
                 bot.model = model;
                 Entities.UpdateModel(bot.id, model, bot.level, null);
-                Player.GlobalMessage("Bot " + bot.name + "'s %Smodel was changed to a &c" + model);
+                Player.GlobalMessage("Bot " + bot.ColoredName + "'s %Smodel was changed to a &c" + model);
                 BotsFile.UpdateBot(bot);
             } else {
                 who.model = model;

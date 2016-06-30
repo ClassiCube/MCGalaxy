@@ -58,15 +58,18 @@ namespace MCGalaxy.Commands.CPE {
             }
 
             if (!ValidName(p, skin, "skin")) return;
+            if (p != null && who != null && who.group.Permission > p.group.Permission) {
+                MessageTooHighRank(p, "change the skin of", true); return;
+            }
             if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the skin of others."); return; }
             if (skin[0] == '+') 
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             
             if (isBot) {
-                pBot.skinName = skin;
+                pBot.SkinName = skin;
                 pBot.GlobalDespawn();
                 pBot.GlobalSpawn();
-                Player.GlobalMessage("Bot " + pBot.name + "'s %Sskin was changed to &c" + skin);
+                Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sskin was changed to &c" + skin);
                 BotsFile.UpdateBot(pBot);
             } else {
                 who.skinName = skin;

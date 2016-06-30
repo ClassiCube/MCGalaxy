@@ -35,6 +35,11 @@ namespace MCGalaxy.Bots {
                 string json = File.ReadAllText("extra/bots.json");
                 var bots = JsonConvert.DeserializeObject<BotProperties[]>(json);
                 SavedBots = new List<BotProperties>(bots);
+                
+                foreach (BotProperties bot in SavedBots) {
+                	if (String.IsNullOrEmpty(bot.DisplayName))
+                	    bot.DisplayName = bot.Name;
+                }
             }
         }
         
@@ -49,8 +54,9 @@ namespace MCGalaxy.Bots {
                 foreach (BotProperties props in SavedBots) {
                     if (lvl.name != props.Level) continue;
                     PlayerBot bot = new PlayerBot(props.Name, lvl, props.X, props.Y, props.Z, props.RotX, props.RotY);
-                    bot.skinName = props.Skin; bot.model = props.Model; bot.color = props.Color;
+                    bot.SkinName = props.Skin; bot.model = props.Model; bot.color = props.Color;
                     bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
+                    bot.DisplayName = props.DisplayName;
                     
                     PlayerBot.Add(bot, false);
                     if (String.IsNullOrEmpty(props.AI)) continue;
@@ -117,6 +123,7 @@ namespace MCGalaxy.Bots {
     }
     
     public sealed class BotProperties {
+        public string DisplayName { get; set; }
         public string Name { get; set; }
         public string Level { get; set; }
         public string Skin { get; set; }
@@ -135,7 +142,7 @@ namespace MCGalaxy.Bots {
         
         public void FromBot(PlayerBot bot) {
             Name = bot.name; Level = bot.level.name;
-            Skin = bot.skinName; AI = bot.AIName;
+            Skin = bot.SkinName; AI = bot.AIName;
             Model = bot.model; Color = bot.color;
             Kill = bot.kill; Hunt = bot.hunt;
             

@@ -32,11 +32,11 @@ namespace MCGalaxy {
 
         public bool hunt = false, kill = false;
 
-        public string AIName = "";
-        public string name, skinName;
-        public string model = "humanoid";
+        public string AIName = "", color, model = "humanoid";
+        public string name, SkinName, DisplayName;
+        public string ColoredName { get { return color + DisplayName; } }
+        
         public byte id;
-        public string color;
         public Level level;
         public int cur = 0;
         public int countdown = 0;
@@ -57,7 +57,8 @@ namespace MCGalaxy {
 
         public PlayerBot(string n, Level lvl, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             name = n;
-            skinName = n;
+            DisplayName = n;
+            SkinName = n;
             color = "&1";
             id = FreeId();
             
