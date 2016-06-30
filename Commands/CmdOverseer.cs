@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands
                     zn.bigZ = (ushort)(lvl.Length - 1);
                     zn.Owner = p.name;
                     lvl.ZoneList.Add(zn);
-                    Zones.Create(lvl.name, zn);
+                    LevelDB.CreateZone(lvl.name, zn);
                     
                     Group grp = Group.findPerm(osPerm);
                     if (grp != null) {

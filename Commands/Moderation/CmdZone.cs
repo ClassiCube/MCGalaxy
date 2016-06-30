@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
                 
                 for (int i = 0; i < p.level.ZoneList.Count; i++) {
                     Level.Zone Zn = p.level.ZoneList[i];
-                    Zones.Delete(p.level.name, Zn);
+                    LevelDB.DeleteZone(p.level.name, Zn);
                     Player.Message(p, "Zone deleted for &b" + Zn.Owner);
                     p.level.ZoneList.Remove(p.level.ZoneList[i]);
                     if (i == p.level.ZoneList.Count) { Player.Message(p, "Finished removing all zones"); return; }
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands {
                     if (p.group.Permission < group.Permission) continue;
                 }
                 
-                Zones.Delete(lvl.name, zn);
+                LevelDB.DeleteZone(lvl.name, zn);
                 lvl.ZoneList.RemoveAt(i); i--;
                 Player.Message(p, "Zone deleted for &b" + zn.Owner);
                 foundDel = true;
@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands {
             Zn.Owner = (string)state;
 
             p.level.ZoneList.Add(Zn);
-            Zones.Create(p.level.name, Zn);
+            LevelDB.CreateZone(p.level.name, Zn);
             Player.Message(p, "Added zone for &b" + (string)state);
             return false;
         }

@@ -486,7 +486,7 @@
     <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\IO\McfFile.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
-    <Compile Include="Levels\Level.DB.cs" />
+    <Compile Include="Levels\LevelDB.cs" />
     <Compile Include="Levels\Level.Physics.cs" />
     <Compile Include="Levels\LevelActions.cs" />
     <Compile Include="Levels\LevelEnv.cs" />
@@ -512,7 +512,6 @@
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
-    <Compile Include="Levels\Zones.cs" />
     <Compile Include="Network\LevelChunkStream.cs" />
     <Compile Include="Player\Chat.cs" />
     <Compile Include="Player\Entities.cs" />

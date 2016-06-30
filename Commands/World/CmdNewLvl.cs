@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.World {
 
             try {
                 using (Level lvl = new Level(name, x, y, z, args[4], seed)) {
-                    Level.CreateLeveldb(name);
+                    LevelDB.CreateTables(name);
                     lvl.Save(true);
                     lvl.Dispose();
                 }

@@ -110,7 +110,7 @@ namespace MCGalaxy.Eco {
                     zn.bigZ = (ushort)(level.Length - 1);
                     zn.Owner = p.name;
                     level.ZoneList.Add(zn);
-                    Zones.Create(level.name, zn);
+                    LevelDB.CreateZone(level.name, zn);
                     Player.Message(p, "%aZoning Succesful");
                 } catch { Player.Message(p, "%cZoning Failed"); }
             } catch {

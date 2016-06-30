@@ -31,12 +31,10 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); }
             string[] parts = message.ToLower().SplitSpaces(2);
-            //safe against SQL injections because no user input is given here
-            if (Server.useMySQL)
-                Database.executeQuery("CREATE TABLE if not exists `Inbox" + p.name + "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
-            else
-                Database.executeQuery("CREATE TABLE if not exists `Inbox" + p.name + "` (PlayerFrom TEXT, TimeSent DATETIME, Contents TEXT);");
-            
+            if (!Database.TableExists("Inbox" + p.name)) {
+                Player.Message(p, "Your inbox is empty."); return;
+            }
+
             if (message == "") {
                 //safe against SQL injections because no user input is given here
                 using (DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent")) {

@@ -46,14 +46,14 @@ namespace MCGalaxy {
                             Log("mainlevel not found");
                             mainLevel = new Level(level, 128, 64, 128, "flat");
                             mainLevel.Save();
-                            Level.CreateLeveldb(level);
+                            LevelDB.CreateTables(level);
                         }
                     }
                 } else {
                     Log("mainlevel not found");
                     mainLevel = new Level(level, 128, 64, 128, "flat");
                     mainLevel.Save();
-                    Level.CreateLeveldb(level);
+                    LevelDB.CreateTables(level);
                 }
                 LevelInfo.Loaded.Add(mainLevel);
 

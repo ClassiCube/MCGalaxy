@@ -577,7 +577,7 @@ namespace MCGalaxy
             if (LevelLoad != null) LevelLoad(givenName);
             OnLevelLoadEvent.Call(givenName);
             if (cancelload) { cancelload = false; return null; }
-            CreateLeveldb(givenName);
+            LevelDB.CreateTables(givenName);
 
             string path = LevelInfo.LevelPath(givenName);
             if (File.Exists(path))
@@ -587,7 +587,7 @@ namespace MCGalaxy
                     Level level = LvlFile.Load(givenName, path);
                     level.setPhysics(phys);
                     level.backedup = true;
-                    LoadZones(level, givenName);
+                    LevelDB.LoadZones(level, givenName);
 
                     level.jailx = (ushort)(level.spawnx * 32);
                     level.jaily = (ushort)(level.spawny * 32);
@@ -597,7 +597,7 @@ namespace MCGalaxy
                     level.StartPhysics();
 
                     try {
-                    	LoadMetadata(level, givenName);
+                    	LevelDB.LoadMetadata(level, givenName);
                     } catch (Exception e) {
                         Server.ErrorLog(e);
                     }
@@ -684,6 +684,8 @@ namespace MCGalaxy
                 if (p.level == this) return true;
             return false;
         }
+        
+        public void saveChanges() { LevelDB.SaveBlockDB(this); }
 
         public List<Player> getPlayers() {
             Player[] players = PlayerInfo.Online.Items; 

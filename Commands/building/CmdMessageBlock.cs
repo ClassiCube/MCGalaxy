@@ -145,8 +145,8 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HPlaces a message in your next block.");
             Player.Message(p, "%H  Valid blocks: white, black, air, water, lava");
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
-            Player.Message(p, "%T/mb show");
-            Player.Message(p, "%HShows or hides MBs");
+            Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");            
+            Player.Message(p, "%T/mb show %H- Shows or hides MBs");
         }
     }
 }

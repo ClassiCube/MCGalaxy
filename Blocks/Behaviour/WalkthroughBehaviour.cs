@@ -72,6 +72,7 @@ namespace MCGalaxy.BlockBehaviour {
                 if (last == -1) { Messages.Dispose(); return true; }
                 string message = Messages.Rows[last]["Message"].ToString().Trim();
                 message = message.Replace("\\'", "\'");
+                message = message.Replace("@p", p.name);
                 
                 if (message != p.prevMsg || Server.repeatMessage) {
                     string text;
