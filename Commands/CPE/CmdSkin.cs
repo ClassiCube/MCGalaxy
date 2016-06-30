@@ -59,6 +59,8 @@ namespace MCGalaxy.Commands.CPE {
 
             if (!ValidName(p, skin, "skin")) return;
             if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the skin of other players."); return; }
+            if (skin[0] == '+') 
+                skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             
             if (isBot) {
                 pBot.skinName = skin;
@@ -86,8 +88,10 @@ namespace MCGalaxy.Commands.CPE {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/skin [name] [skin] %H- Sets the skin of that player.");
-            Player.Message(p, "%T/skin bot [name] [model] %H- Sets the model of that bot.");
-            Player.Message(p, "%HFor example, the player \"Test\" by default has the skin \"Test\".");
+            Player.Message(p, "%T/skin bot [name] [skin] %H- Sets the skin of that bot.");     
+            Player.Message(p, "%H e.g the player \"Test\" by default has the skin \"Test\".");
+            Player.Message(p, "%H If you put a + before [skin], players will retrieve [skin] " +
+                           "from minecraft.net instead of classicube.net.");
         }
     }
 }
