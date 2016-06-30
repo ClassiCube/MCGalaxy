@@ -15,10 +15,11 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Bots;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {    
-    public class CmdColor : Command {		
+    public class CmdColor : Command {        
         public override string name { get { return "color"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -39,14 +40,33 @@ namespace MCGalaxy.Commands {
                 args[0] = p.name;
             }
             
-            Player who = PlayerInfo.FindMatches(p, args[0]);
+            Player who = null;
+            PlayerBot pBot = null;
             bool isBot = message.CaselessStarts("bot ");
-            if (who == null) return;
-            if (p != null && who.group.Permission > p.group.Permission) {
+            if (isBot)
+                pBot = PlayerBot.FindMatches(p, args[1]);
+            else
+                who = PlayerInfo.FindMatches(p, args[0]);
+            if (pBot == null && who == null) return;
+            
+            if (p != null && who != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the color of", true); return;
             }
             if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the color of others."); return; }
-            SetColor(who, args);
+            if (isBot) SetBotColor(p, pBot, args);
+            else SetColor(p, who, args);
+        }
+
+        static void SetBotColor(Player p, PlayerBot pBot, string[] args) {
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            string color = args.Length == 2 ? "&1" : Colors.Parse(args[2]);
+            if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
+            pBot.color = color;
+            
+            pBot.GlobalDespawn();
+            pBot.GlobalSpawn();
+            Player.GlobalMessage("Bot " + pBot.name + "'s %Scolor was changed to " + color + Colors.Name(color));
+            BotsFile.UpdateBot(pBot);
         }
         
         static void SetColor(Player p, Player who, string[] args) {

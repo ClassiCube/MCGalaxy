@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             SetTColor(p, who, args);
         }
         
-        static void SetTColor(Player p, player who, string[] args) {
+        static void SetTColor(Player p, Player who, string[] args) {
             ParameterisedQuery query = ParameterisedQuery.Create();
             if (args.Length == 1) {                
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their title color removed.", false);
