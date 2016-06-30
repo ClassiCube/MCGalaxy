@@ -48,7 +48,7 @@ namespace MCGalaxy.SQL {
                 BackupTable(tableName, sql);
         }
         
-        static void BackupTable(string tableName, StreamWriter sql) {
+        public static void BackupTable(string tableName, StreamWriter sql) {
             //For each table, we iterate through all rows, (and save them)
             sql.WriteLine("-- --------------------------------------------------------");
             sql.WriteLine();
@@ -184,19 +184,16 @@ namespace MCGalaxy.SQL {
             return schema;
         }
 
-        private static List<string> getTables()
-        {
+        static List<string> getTables() {
             List<string> tableNames = new List<string>();
-            using (DataTable tables = fillData((Server.useMySQL ? "SHOW TABLES" : "SELECT * FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")))
-            {
-                foreach (DataRow row in tables.Rows)
-                {
+            using (DataTable tables = fillData((Server.useMySQL ? "SHOW TABLES" : "SELECT * FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"))) {
+                foreach (DataRow row in tables.Rows) {
                     string tableName = row.Field<string>((Server.useMySQL ? 0 : 1));
                     tableNames.Add(tableName);
                 }
             }
             return tableNames;
-        }// end:CopyDatabase()
+        }
         
         internal static void fillDatabase(Stream stream)
         {

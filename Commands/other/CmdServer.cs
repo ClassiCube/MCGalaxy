@@ -1,19 +1,19 @@
 /*
-	Copyright 2011 MCForge
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCForge
+        
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands {
         public CmdServer() { }
 
         public override void Use(Player p, string message) {
-            switch (message) {
+            string[] args = message.ToLower().Split(' ');
+            switch (args[0]) {
                 case "public":
                     Server.pub = true;
                     Player.Message(p, "Server is now public!");
@@ -74,32 +75,41 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Settings reloaded!  You may need to restart the server, however.");
                     break;
                 case "backup":
-                case "backup all":
-                    // Backup Everything.
-                    //   Create SQL statements for this.  The SQL will assume the settings for the current configuration are correct.
-                    //   This means we use the currently defined port, database, user, password, and pooling.
-                    // Also important to save everything to a .zip file (Though we can rename the extention.)
-                    // When backing up, one option is to save all non-main program files.
-                    //    This means all folders, and files in these folders.
-                    Player.Message(p, "Server backup (Everything): Started. Please wait while backup finishes.");
-                    Save(true, true, p);
-                    break;
-                case "backup db":
-                    // Backup database only.
-                    //   Create SQL statements for this.  The SQL will assume the settings for the current configuration are correct.
-                    //   This means we use the currently defined port, database, user, password, and pooling.
-                    // Also important to save everything to a .zip file (Though we can rename the extention.)
-                    // When backing up, one option is to save all non-main program files.
-                    //    This means all folders, and files in these folders.
-                    Player.Message(p, "Server backup (Database): Started. Please wait while backup finishes.");
-                    Save(false, true, p);
-                    break;
-                case "backup allbutdb":
-                    // Important to save everything to a .zip file (Though we can rename the extention.)
-                    // When backing up, one option is to save all non-main program files.
-                    //    This means all folders, and files in these folders.
-                    Player.Message(p, "Server backup (Everything but Database): Started. Please wait while backup finishes.");
-                    Save(true, false, p);
+                    if (args.Length == 1 || args[1] == "all") {
+                        // Backup Everything.
+                        //   Create SQL statements for this.  The SQL will assume the settings for the current configuration are correct.
+                        //   This means we use the currently defined port, database, user, password, and pooling.
+                        // Also important to save everything to a .zip file (Though we can rename the extention.)
+                        // When backing up, one option is to save all non-main program files.
+                        //    This means all folders, and files in these folders.
+                        Player.Message(p, "Server backup (Everything) started. Please wait while backup finishes.");
+                        Save(true, true, p);
+                    } else if (args[1] == "db") {
+                        // Backup database only.
+                        //   Create SQL statements for this.  The SQL will assume the settings for the current configuration are correct.
+                        //   This means we use the currently defined port, database, user, password, and pooling.
+                        // Also important to save everything to a .zip file (Though we can rename the extention.)
+                        // When backing up, one option is to save all non-main program files.
+                        //    This means all folders, and files in these folders.
+                        Player.Message(p, "Server backup (Database) started. Please wait while backup finishes.");
+                        Save(false, true, p);
+                    } else if (args[1] == "allbutdb") {
+                        // Important to save everything to a .zip file (Though we can rename the extention.)
+                        // When backing up, one option is to save all non-main program files.
+                        //    This means all folders, and files in these folders.
+                        Player.Message(p, "Server backup (Everything but Database) started. Please wait while backup finishes.");
+                        Save(true, false, p);
+                    } else if (args[1] == "table") {
+                        if (args.Length == 2) { Player.Message(p, "You need to provide the table name to backup."); return; }       
+                        if (!ValidName(p, args[2], "table")) return;
+                        
+                        Player.Message(p, "Backing up table {0} started. Please wait while backup finishes.", args[2]);
+                        using (StreamWriter sql = new StreamWriter(args[2] + ".sql"))
+                            Database.BackupTable(args[2], sql);
+                        Player.Message(p, "Finished backing up table {0}.", args[2]);
+                    } else {
+                        Help(p);
+                    }
                     break;
                 case "restore":
                     if (!CheckPerms(p)) {
@@ -137,8 +147,8 @@ namespace MCGalaxy.Commands {
         }
 
         void SetToDefault() {
-        	foreach (var elem in Server.serverConfig)
-        		elem.Field.SetValue(null, elem.Attrib.DefaultValue);
+            foreach (var elem in Server.serverConfig)
+                elem.Field.SetValue(null, elem.Attrib.DefaultValue);
 
             Server.tempBans = new List<Server.TempBan>();
             Server.ircafkset = new List<string>();
@@ -175,10 +185,10 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "all      - Make a backup of the server and all SQL data. (Default)");
             Player.Message(p, "db       - Just backup the database.");
             Player.Message(p, "allbutdb - Backup everything BUT the database.");
+            Player.Message(p, "/server <backup> table [name] - Make a backups of that database table");
         }
 
-        static void CreatePackage(object par)
-        {
+        static void CreatePackage(object par)  {
             List<object> param = (List<object>)par;
             CreatePackage((string)param[0], (bool)param[1], (bool)param[2], (Player)param[3]);
         }
