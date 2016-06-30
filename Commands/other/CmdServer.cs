@@ -21,10 +21,9 @@ using System.IO;
 using System.IO.Packaging;
 using System.Threading;
 using MCGalaxy.SQL;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdServer : Command
-    {
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdServer : Command {
         public override string name { get { return "server"; } }
         public override string shortcut { get { return "serv"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -32,15 +31,8 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdServer() { }
 
-        public override void Use(Player p, string message)
-        {
-            switch (message)
-            {
-                case "restart":
-                case "update":
-                case "shutdown":
-                    Command.all.Find(message).Use(p, ""); //Will use other options later.
-                    break;
+        public override void Use(Player p, string message) {
+            switch (message) {
                 case "public":
                     Server.pub = true;
                     Player.Message(p, "Server is now public!");
@@ -90,7 +82,7 @@ namespace MCGalaxy.Commands
                     // When backing up, one option is to save all non-main program files.
                     //    This means all folders, and files in these folders.
                     Player.Message(p, "Server backup (Everything): Started. Please wait while backup finishes.");
-                    Save(true, p);
+                    Save(true, true, p);
                     break;
                 case "backup db":
                     // Backup database only.
@@ -107,7 +99,7 @@ namespace MCGalaxy.Commands
                     // When backing up, one option is to save all non-main program files.
                     //    This means all folders, and files in these folders.
                     Player.Message(p, "Server backup (Everything but Database): Started. Please wait while backup finishes.");
-                    Save(false, p);
+                    Save(true, false, p);
                     break;
                 case "restore":
                     if (!CheckPerms(p)) {
@@ -131,11 +123,8 @@ namespace MCGalaxy.Commands
             if (Server.server_owner.CaselessEq("Notch")) return false;
             return p.name.CaselessEq(Server.server_owner);
         }
-        
-        private void Save(bool withDB, Player p) { Save(true, withDB, p); }
 
-        private void Save(bool withFiles, bool withDB, Player p)
-        {
+        void Save(bool withFiles, bool withDB, Player p) {
             ParameterizedThreadStart pts = new ParameterizedThreadStart(CreatePackage);
             Thread doWork = new Thread(new ParameterizedThreadStart(CreatePackage));
             doWork.Name = "MCG_SaveServer";
@@ -174,14 +163,10 @@ namespace MCGalaxy.Commands
             Server.restarting = false;
         }
 
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/server <reset|restart|reload|update|shutdown|public|private|backup|restore> - All server commands.");
+        public override void Help(Player p) {
+            Player.Message(p, "/server <reset|reload|public|private|backup|restore> - All server commands.");
             Player.Message(p, "/server <reset>    - Reset everything to defaults. (Owner only)  WARNING: This will erase ALL properties.  Use with caution. (Likely requires restart)");
-            Player.Message(p, "/server <restart>  - Restart the server.");
             Player.Message(p, "/server <reload>   - Reload the server files. (May require restart) (Owner only)");
-            Player.Message(p, "/server <update>   - Update the server");
-            Player.Message(p, "/server <shutdown> - Shutdown the server");
             Player.Message(p, "/server <public>   - Make the server public. (Start listening for new connections.)");
             Player.Message(p, "/server <private>  - Make the server private. (Stop listening for new connections.)");
             Player.Message(p, "/server <restore>  - Restore the server from a backup.");
@@ -192,7 +177,7 @@ namespace MCGalaxy.Commands
             Player.Message(p, "allbutdb - Backup everything BUT the database.");
         }
 
-        private static void CreatePackage(object par)
+        static void CreatePackage(object par)
         {
             List<object> param = (List<object>)par;
             CreatePackage((string)param[0], (bool)param[1], (bool)param[2], (Player)param[3]);
@@ -202,7 +187,7 @@ namespace MCGalaxy.Commands
         /// <summary>
         ///   Creates a package zip file containing specified
         ///   content and resource files.</summary>
-        private static void CreatePackage(string packagePath, bool withFiles, bool withDB, Player p)
+        static void CreatePackage(string packagePath, bool withFiles, bool withDB, Player p)
         {
 
             // Create the Package
