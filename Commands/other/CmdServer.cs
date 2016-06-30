@@ -36,9 +36,6 @@ namespace MCGalaxy.Commands
         {
             switch (message)
             {
-                case "": // To prevent '/server' from causing an error message
-                    Help(p);
-                    break;
                 case "restart":
                 case "update":
                 case "shutdown":
@@ -92,7 +89,7 @@ namespace MCGalaxy.Commands
                     // Also important to save everything to a .zip file (Though we can rename the extention.)
                     // When backing up, one option is to save all non-main program files.
                     //    This means all folders, and files in these folders.
-                    Player.Message(p, "Server backup (Everything): Started.\n\tPlease wait while backup finishes.");
+                    Player.Message(p, "Server backup (Everything): Started. Please wait while backup finishes.");
                     Save(true, p);
                     break;
                 case "backup db":
@@ -102,14 +99,14 @@ namespace MCGalaxy.Commands
                     // Also important to save everything to a .zip file (Though we can rename the extention.)
                     // When backing up, one option is to save all non-main program files.
                     //    This means all folders, and files in these folders.
-                    Player.Message(p, "Server backup (Database): Started.\n\tPlease wait while backup finishes.");
+                    Player.Message(p, "Server backup (Database): Started. Please wait while backup finishes.");
                     Save(false, true, p);
                     break;
                 case "backup allbutdb":
                     // Important to save everything to a .zip file (Though we can rename the extention.)
                     // When backing up, one option is to save all non-main program files.
                     //    This means all folders, and files in these folders.
-                    Player.Message(p, "Server backup (Everything but Database): Started.\n\tPlease wait while backup finishes.");
+                    Player.Message(p, "Server backup (Everything but Database): Started. Please wait while backup finishes.");
                     Save(false, p);
                     break;
                 case "restore":
@@ -122,11 +119,10 @@ namespace MCGalaxy.Commands
                     extract.Start(p);
                     break;
                 default:
-                    Player.Message(p, "/server " + message + " is not currently implemented.");
-                    goto case "";
-                //case "help":
-                //    Help(p);
-                //    break;
+                    if (message != "")
+                        Player.Message(p, "/server " + message + " is not currently implemented.");
+                    Help(p);
+                    break;
             }
         }
 
@@ -265,7 +261,7 @@ namespace MCGalaxy.Commands
         private static void SaveDatabase(string filename)
         {
             using (StreamWriter sql = new StreamWriter(filename))
-                Database.CopyDatabase(sql);
+                Database.BackupDatabase(sql);
         }
 
         private static List<Uri> GetAllFiles(DirectoryInfo currDir, Uri baseUri)

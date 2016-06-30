@@ -26,7 +26,7 @@ namespace MCGalaxy.SQL {
     
     public static partial class Database {
         
-        public static void CopyDatabase(StreamWriter sql) {
+        public static void BackupDatabase(StreamWriter sql) {
             //We technically know all tables in the DB...  But since this is MySQL, we can also get them all with a MySQL command
             //So we show the tables, and store the result.
             //Also output information data (Same format as phpMyAdmin's dump)
@@ -41,153 +41,125 @@ namespace MCGalaxy.SQL {
             sql.WriteLine("-- Generation Time: {0} at {1}", DateTime.Now.Date, DateTime.Now.TimeOfDay);
             sql.WriteLine("-- MCGalaxy Version: {0}", Server.Version);
             sql.WriteLine();
-            //Extra stuff goes here
             sql.WriteLine();
-            //database here
-            List<String> sqlTables = (Database.getTables());
+
+            List<string> sqlTables = Database.getTables();
             foreach (string tableName in sqlTables)
-            {
-                //For each table, we iterate through all rows, (and save them)
-                sql.WriteLine("-- --------------------------------------------------------");
-                sql.WriteLine();
-                sql.WriteLine("--");
-                sql.WriteLine("-- Table structure for table `{0}`", tableName);
-                sql.WriteLine("--");
-                sql.WriteLine();
-                List<string[]> tableSchema = new List<string[]>();
-                if (Server.useMySQL)
-                {
-                    string[] rowParams;
-                    string pri;
-                    sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
-                    using (DataTable tableRowSchema = Database.fillData("DESCRIBE " + tableName))
-                    {
-                        rowParams = new string[tableRowSchema.Columns.Count];
-                        pri = "";
-                        foreach (DataRow row in tableRowSchema.Rows)
-                        {
-                            //Save the info contained to file
-                            List<string> tmp = new List<string>();
-                            for (int col = 0; col < tableRowSchema.Columns.Count; col++)
-                            {
-                                tmp.Add(row.Field<string>(col));
-                            }// end:for(col)
-                            rowParams = tmp.ToArray<string>();
-                            rowParams[2] = (rowParams[2].ToLower().Equals("no") ? "NOT " : "DEFAULT ") + "NULL";
-                            pri += (rowParams[3].ToLower().Equals("pri") ? rowParams[0] + ";" : "");
-                            sql.WriteLine("`{0}` {1} {2}" + (rowParams[5].Equals("") ? "" : " {5}") + (pri.Equals("") && row == tableRowSchema.Rows[tableRowSchema.Rows.Count - 1] ? "" : ","), rowParams);
-                            tableSchema.Add(rowParams);
-                        }// end:foreach(DataRow row)
-                    }
-                    if (!pri.Equals(""))
-                    {
-                        string[] tmp = pri.Substring(0, pri.Length - 1).Split(';');
-                        sql.Write("PRIMARY KEY (`");
-                        foreach (string prim in tmp)
-                        {
-                            sql.Write(prim);
-                            sql.Write("`" + (tmp[tmp.Count() - 1].Equals(prim) ? ")" : ", `"));
-                        }
-                    } /*else {
-                            sql.Flush();
-                            sql.BaseStream.Seek(-3, SeekOrigin.Current);
-                        }*/
-                    sql.WriteLine(");");
-                }
-                else
-                {
-                    using (DataTable tableSQL = Database.fillData("SELECT sql FROM" +
-                                                                  "   (SELECT * FROM sqlite_master UNION ALL" +
-                                                                  "    SELECT * FROM sqlite_temp_master)" +
-                                                                  "WHERE tbl_name LIKE '" + tableName + "'" +
-                                                                  "  AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'" +
-                                                                  "ORDER BY substr(type,2,1), name"))
-                    {
-                        //just print out the data in the table.
-                        foreach (DataRow row in tableSQL.Rows)
-                        {
-                            string tableSQLString = row.Field<string>(0);
-                            sql.WriteLine(tableSQLString.Replace(" " + tableName, " `" + tableName + "`").Replace("CREATE TABLE `" + tableName + "`", "CREATE TABLE IF NOT EXISTS `" + tableName + "`") + ";");
-                            //We parse this ourselves to find the actual types.
-                            tableSchema = getSchema(tableSQLString);
-
-                        }
-                    }
-                }
-                sql.WriteLine();
-                using (DataTable tableRowData = Database.fillData("SELECT * FROM `" + tableName + "`"))
-                {
-                    if (tableRowData.Rows.Count > 0)
-                    {
-                        sql.WriteLine("--");
-                        sql.WriteLine("-- Dumping data for table `{0}`", tableName);
-                        sql.WriteLine("--");
-                        sql.WriteLine();
-                        List<DataColumn> allCols = new List<DataColumn>();
-                        foreach (DataColumn col in tableRowData.Columns)
-                        {
-                            allCols.Add(col);
-                        }
-                        foreach (DataRow row in tableRowData.Rows)
-                        { //We rely on the correct datatype being given here.
-                            sql.WriteLine();
-                            sql.Write("INSERT INTO `{0}` (`", tableName);
-                            foreach (string[] rParams in tableSchema)
-                            {
-                                sql.Write(rParams[0]);
-                                sql.Write((tableSchema.ElementAt<string[]>(tableSchema.Count() - 1).Equals(rParams) ? "`) VALUES" : "`, `"));
-                            }
-                            //Save the info contained to file
-                            sql.WriteLine();
-                            sql.Write("(");
-                            for (int col = 0; col < row.ItemArray.Length; col++)
-                            {
-                                //The values themselves can be integers or strings, or null
-                                Type eleType = allCols[col].DataType;
-                                if (row.IsNull(col))
-                                {
-                                    sql.Write("NULL");
-
-                                }
-                                else if (eleType.Name.Equals("DateTime"))
-                                { // special format
-                                    DateTime dt = row.Field<DateTime>(col);
-                                    sql.Write("'{0:yyyy-MM-dd HH:mm:ss.ffff}'", dt);
-
-                                }
-                                else if (eleType.Name.Equals("Boolean"))
-                                {
-                                    sql.Write(row.Field<Boolean>(col) ? "1" : "0");
-
-                                }
-                                else if (eleType.Name.Equals("String"))
-                                { // Requires ''
-                                    sql.Write("'{0}'", row.Field<string>(col));
-
-                                }
-                                else
-                                {
-                                    sql.Write(row.Field<Object>(col)); // We assume all other data is left as-is
-                                    //This includes numbers, blobs, etc.  (As well as objects, but we don't save them into the database)
-
-                                }
-                                sql.Write((col < row.ItemArray.Length - 1 ? ", " : ");"));
-                            }// end:for(col)
-
-                        }// end:foreach(DataRow row)
-                    }
-                    else
-                    {
-                        sql.WriteLine("-- No data in table `{0}`!", tableName);
-                    }
+                BackupTable(tableName, sql);
+        }
+        
+        static void BackupTable(string tableName, StreamWriter sql) {
+            //For each table, we iterate through all rows, (and save them)
+            sql.WriteLine("-- --------------------------------------------------------");
+            sql.WriteLine();
+            sql.WriteLine("--");
+            sql.WriteLine("-- Table structure for table `{0}`", tableName);
+            sql.WriteLine("--");
+            sql.WriteLine();
+            List<string[]> tableSchema = WriteTableSchema(tableName, sql);
+            
+            using (DataTable data = Database.fillData("SELECT * FROM `" + tableName + "`")) {
+                if (data.Rows.Count == 0) {
+                    sql.WriteLine("-- No data in table `{0}`!", tableName);
                     sql.WriteLine();
+                    return;
                 }
+                
+                sql.WriteLine("--");
+                sql.WriteLine("-- Dumping data for table `{0}`", tableName);
+                sql.WriteLine("--");
+                sql.WriteLine();
+                List<DataColumn> allCols = new List<DataColumn>();
+                foreach (DataColumn col in data.Columns)
+                    allCols.Add(col);
+                
+                foreach (DataRow row in data.Rows) { //We rely on the correct datatype being given here.
+                    sql.WriteLine();
+                    sql.Write("INSERT INTO `{0}` (`", tableName);
+                    foreach (string[] rParams in tableSchema) {
+                        sql.Write(rParams[0]);
+                        sql.Write((tableSchema[tableSchema.Count - 1].Equals(rParams) ? "`) VALUES" : "`, `"));
+                    }
 
-            }// end:foreach(DataRow sqlTablesRow)
+                    sql.WriteLine();
+                    sql.Write("(");
+                    for (int col = 0; col < row.ItemArray.Length; col++) {
+                        //The values themselves can be integers or strings, or null
+                        Type eleType = allCols[col].DataType;
+                        if (row.IsNull(col)) {
+                            sql.Write("NULL");
+                        } else if (eleType.Name.Equals("DateTime")) { // special format
+                            DateTime dt = row.Field<DateTime>(col);
+                            sql.Write("'{0:yyyy-MM-dd HH:mm:ss.ffff}'", dt);
+                        } else if (eleType.Name.Equals("Boolean")) {
+                            sql.Write(row.Field<Boolean>(col) ? "1" : "0");
+                        } else if (eleType.Name.Equals("String")) { // Requires ''
+                            sql.Write("'{0}'", row.Field<string>(col));
+                        } else {
+                            sql.Write(row.Field<Object>(col)); // We assume all other data is left as-is
+                            //This includes numbers, blobs, etc.  (As well as objects, but we don't save them into the database)
+                        }
+                        sql.Write((col < row.ItemArray.Length - 1 ? ", " : ");"));
+                    }
+                }
+                sql.WriteLine();
+            }
+        }
+        
+        static List<string[]> WriteTableSchema(string tableName, StreamWriter sql) {
+            List<string[]> tableSchema = new List<string[]>();
+            if (Server.useMySQL) {
+                string[] rowParams;
+                string pri;
+                sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
+                using (DataTable schema = Database.fillData("DESCRIBE " + tableName)) {
+                    rowParams = new string[schema.Columns.Count];
+                    pri = "";
+                    foreach (DataRow row in schema.Rows) {
+                        //Save the info contained to file
+                        List<string> tmp = new List<string>();
+                        for (int col = 0; col < schema.Columns.Count; col++)
+                            tmp.Add(row.Field<string>(col));
+                        
+                        rowParams = tmp.ToArray();
+                        rowParams[2] = (rowParams[2].ToLower().Equals("no") ? "NOT " : "DEFAULT ") + "NULL";
+                        pri += (rowParams[3].ToLower().Equals("pri") ? rowParams[0] + ";" : "");
+                        sql.WriteLine("`{0}` {1} {2}" + (rowParams[5].Equals("") ? "" : " {5}") + (pri.Equals("") && row == schema.Rows[schema.Rows.Count - 1] ? "" : ","), rowParams);
+                        tableSchema.Add(rowParams);
+                    }
+                }
+                
+                if (pri != "") {
+                    string[] tmp = pri.Substring(0, pri.Length - 1).Split(';');
+                    sql.Write("PRIMARY KEY (`");
+                    foreach (string prim in tmp) {
+                        sql.Write(prim);
+                        sql.Write("`" + (tmp[tmp.Length - 1].Equals(prim) ? ")" : ", `"));
+                    }
+                }
+                sql.WriteLine(");");
+            } else {
+                using (DataTable tableSQL = Database.fillData("SELECT sql FROM" +
+                                                              "   (SELECT * FROM sqlite_master UNION ALL" +
+                                                              "    SELECT * FROM sqlite_temp_master)" +
+                                                              "WHERE tbl_name LIKE '" + tableName + "'" +
+                                                              "  AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'" +
+                                                              "ORDER BY substr(type,2,1), name"))
+                {
+                    //just print out the data in the table.
+                    foreach (DataRow row in tableSQL.Rows) {
+                        string tableSQLString = row.Field<string>(0);
+                        sql.WriteLine(tableSQLString.Replace(" " + tableName, " `" + tableName + "`").Replace("CREATE TABLE `" + tableName + "`", "CREATE TABLE IF NOT EXISTS `" + tableName + "`") + ";");
+                        //We parse this ourselves to find the actual types.
+                        tableSchema = getSchema(tableSQLString);
+                    }
+                }
+            }
+            sql.WriteLine();
+            return tableSchema;
         }
 
-        private static List<string[]> getSchema(string tableSQLString)
-        {
+        static List<string[]> getSchema(string tableSQLString) {
             // All SQL for creating tables looks like "CREATE TABLE [IF NOT EXISTS] <TableName> (<ColumnDef>[, ... [, PRIMARY KEY (<ColumnName>[, ...])]])
             // <ColumnDef> = <name> <type> [[NOT|DEFAULT] NULL] [PRIMARY KEY] [AUTO_INCREMENT]
             List<string[]> schema = new List<string[]>();
@@ -231,7 +203,7 @@ namespace MCGalaxy.SQL {
             //Backup
             using (FileStream backup = File.Create("backup.sql"))
             {
-                CopyDatabase(new StreamWriter(backup));
+                BackupDatabase(new StreamWriter(backup));
             }
             //Delete old
             List<string> tables = getTables();

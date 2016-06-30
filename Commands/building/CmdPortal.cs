@@ -49,6 +49,7 @@ namespace MCGalaxy.Commands.Building {
             else if (block == "water") { data.type = Block.water_portal; }
             else if (block == "lava") { data.type = Block.lava_portal; }
             else if (block == "show") { ShowPortals(p); return; }
+            else if (block == "list") { ListPortals(p); return; }
             else { Help(p); return; }
 
             Player.Message(p, "Place an &aEntry block %Sfor the portal");
@@ -94,13 +95,10 @@ namespace MCGalaxy.Commands.Building {
                 DataTable Portals = Database.fillData("SELECT * FROM `Portals" + pos.mapName + "` WHERE EntryX=" + (int)pos.x + " AND EntryY=" + (int)pos.y + " AND EntryZ=" + (int)pos.z);
                 Portals.Dispose();
 
-                if (Portals.Rows.Count == 0)
-                {//safe against SQL injections because no user input is given here
+                if (Portals.Rows.Count == 0) {//safe against SQL injections because no user input is given here
                     Database.executeQuery("INSERT INTO `Portals" + pos.mapName + "` (EntryX, EntryY, EntryZ, ExitMap, ExitX, ExitY, ExitZ) VALUES (" 
                                           + (int)pos.x + ", " + (int)pos.y + ", " + (int)pos.z + ", '" + p.level.name + "', " + (int)x + ", " + (int)y + ", " + (int)z + ")");
-                }
-                else
-                {//safe against SQL injections because no user input is given here
+                } else {//safe against SQL injections because no user input is given here
                     Database.executeQuery("UPDATE `Portals" + pos.mapName + "` SET ExitMap='" + p.level.name + "', ExitX=" + (int)x + ", ExitY=" + (int)y + ", ExitZ=" + 
                                           (int)z + " WHERE EntryX=" + (int)pos.x + " AND EntryY=" + (int)pos.y + " AND EntryZ=" + (int)pos.z);
                 }
@@ -127,8 +125,7 @@ namespace MCGalaxy.Commands.Building {
             DataTable Portals = Database.fillData("SELECT * FROM `Portals" + p.level.name + "`");
 
             if (p.showPortals) {
-                for (int i = 0; i < Portals.Rows.Count; i++) {
-                    DataRow row = Portals.Rows[i];
+                foreach (DataRow row in Portals.Rows) {
                     if (row["ExitMap"].ToString() == p.level.name)
                         p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), Block.red);
                     p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.green);
@@ -136,14 +133,25 @@ namespace MCGalaxy.Commands.Building {
 
                 Player.Message(p, "Now showing &a" + Portals.Rows.Count + " %Sportals.");
             } else {
-                for (int i = 0; i < Portals.Rows.Count; i++) {
-                    DataRow row = Portals.Rows[i];
+                foreach (DataRow row in Portals.Rows) {
                     if (row["ExitMap"].ToString() == p.level.name)
                         p.RevertBlock(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]));
                     p.RevertBlock(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]));
                 }
                 Player.Message(p, "Now hiding portals.");
             }
+            Portals.Dispose();
+        }
+        
+        void ListPortals(Player p) {
+            //safe against SQL injections because no user input is given here
+            DataTable Portals = Database.fillData("SELECT * FROM `Portals" + p.level.name + "`");
+            const string format = "({0},{1},{2}) to ({3},{4},{5}) on {6}";
+            foreach (DataRow row in Portals.Rows) {
+                Player.Message(p, format, U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]),
+                               U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), row["ExitMap"]);
+            }
+            Player.Message(p, "{0} portals in total.", Portals.Rows.Count);
             Portals.Dispose();
         }
         
