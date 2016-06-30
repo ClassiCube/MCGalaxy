@@ -86,8 +86,8 @@ namespace MCGalaxy.Commands {
                 query.AddParam("@Name", who.name);
                 Database.executeQuery(query, "UPDATE Players SET color = @Color WHERE name = @Name");
             }
-            Entities.GlobalDespawn(who, false);
-            Entities.GlobalSpawn(who, false);
+            Entities.GlobalDespawn(who, true);
+            Entities.GlobalSpawn(who, true);
             who.SetPrefix();
         }
         
