@@ -31,6 +31,16 @@ namespace MCGalaxy {
         
         public static void CreatePackage(object p) {
             BackupArgs args = (BackupArgs)p;
+            try {
+                CreatePackage(args);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                Server.s.Log("Error while trying to perform backup.");
+                Player.Message(args.p, "Error while trying to perform backup.");
+            }
+        }
+        
+        static void CreatePackageCore(BackupArgs args) {
             if (args.Database)  {
                 Server.s.Log("Saving DB...");
                 using (StreamWriter sql = new StreamWriter("SQL.sql"))
