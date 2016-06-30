@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands {
                         
                         Player.Message(p, "Backing up table {0} started. Please wait while backup finishes.", args[2]);
                         using (StreamWriter sql = new StreamWriter(args[2] + ".sql"))
-                            Database.BackupTable(args[2], sql);
+                            Backup.BackupTable(args[2], sql);
                         Player.Message(p, "Finished backing up table {0}.", args[2]);
                     } else {
                         Help(p);
@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands {
                         Player.Message(p, "Only Console or the Server Owner can restore the server.");
                         return;
                     }
-                    Thread extract = new Thread(new ParameterizedThreadStart(ExtractPackage));
+                    Thread extract = new Thread(new ParameterizedThreadStart(Backup.ExtractPackage));
                     extract.Name = "MCG_RestoreServer";
                     extract.Start(p);
                     break;
@@ -192,150 +192,7 @@ namespace MCGalaxy.Commands {
 
         static void CreatePackage(object par)  {
             List<object> param = (List<object>)par;
-            CreatePackage((string)param[0], (bool)param[1], (bool)param[2], (Player)param[3]);
-        }
-
-        //  -------------------------- CreatePackage --------------------------
-        /// <summary>
-        ///   Creates a package zip file containing specified
-        ///   content and resource files.</summary>
-        static void CreatePackage(string packagePath, bool withFiles, bool withDB, Player p)
-        {
-
-            // Create the Package
-            if (withDB)
-            {
-                Server.s.Log("Saving DB...");
-                SaveDatabase("SQL.sql");
-                Server.s.Log("Saved DB to SQL.sql");
-            }
-
-            Server.s.Log("Creating package...");
-            using (ZipPackage package = (ZipPackage)ZipPackage.Open(packagePath, FileMode.Create))
-            {
-
-                if (withFiles)
-                {
-                    Server.s.Log("Collecting Directory structure...");
-                    string currDir = Directory.GetCurrentDirectory() + "\\";
-                    List<Uri> partURIs = GetAllFiles(new DirectoryInfo("./"), new Uri(currDir));
-                    Server.s.Log("Structure complete");
-
-                    Server.s.Log("Saving data...");
-                    foreach (Uri loc in partURIs)
-                    {
-                        if (!Uri.UnescapeDataString(loc.ToString()).Contains(packagePath))
-                        {
-
-                            // Add the part to the Package
-
-                            ZipPackagePart packagePart =
-                                (ZipPackagePart)package.CreatePart(loc, "");
-
-                            // Copy the data to the Document Part
-                            using (FileStream fileStream = new FileStream(
-                                    "./" + Uri.UnescapeDataString(loc.ToString()), FileMode.Open, FileAccess.Read))
-                            {
-                                CopyStream(fileStream, packagePart.GetStream());
-                            }// end:using(fileStream) - Close and dispose fileStream.
-                        }
-                    }// end:foreach(Uri loc)
-                }
-                if (withDB)
-                { // If we don't want to back up database, we don't do this part.
-                    Server.s.Log("Compressing Database...");
-                    ZipPackagePart packagePart =
-                                (ZipPackagePart)package.CreatePart(new Uri("/SQL.sql", UriKind.Relative), "", CompressionOption.Normal);
-                    CopyStream(File.OpenRead("SQL.sql"), packagePart.GetStream());
-                    Server.s.Log("Database compressed.");
-                }// end:if(withFiles)
-                Server.s.Log("Data saved!");
-            }// end:using (Package package) - Close and dispose package.
-            Player.Message(p, "Server backup (" + (withFiles ? "Everything" + (withDB ? "" : " but Database") : "Database") + "): Complete!");
-            Server.s.Log("Server backed up!");
-        }// end:CreatePackage()
-
-        private static void SaveDatabase(string filename)
-        {
-            using (StreamWriter sql = new StreamWriter(filename))
-                Database.BackupDatabase(sql);
-        }
-
-        private static List<Uri> GetAllFiles(DirectoryInfo currDir, Uri baseUri)
-        {
-            List<Uri> uriList = new List<Uri>();
-            foreach (FileSystemInfo entry in currDir.GetFileSystemInfos())
-            {
-                if (entry is FileInfo)
-                {
-                    // Make a relative URI
-                    Uri fullURI = new Uri(((FileInfo)entry).FullName);
-                    Uri relURI = baseUri.MakeRelativeUri(fullURI);
-                    if (relURI.ToString().IndexOfAny("/\\".ToCharArray()) > 0)
-                    {
-                        uriList.Add(PackUriHelper.CreatePartUri(relURI));
-                    }
-                }
-                else
-                {
-                    uriList.AddRange(GetAllFiles((DirectoryInfo)entry, baseUri));
-                }
-            }
-            return uriList;
-        }
-
-
-        //  --------------------------- CopyStream ---------------------------
-        /// <summary>
-        ///   Copies data from a source stream to a target stream.</summary>
-        /// <param name="source">
-        ///   The source stream to copy from.</param>
-        /// <param name="target">
-        ///   The destination stream to copy to.</param>
-        private static void CopyStream(Stream source, Stream target)
-        {
-            const int bufSize = 0x1000;
-            byte[] buf = new byte[bufSize];
-            int bytesRead = 0;
-            while ((bytesRead = source.Read(buf, 0, bufSize)) > 0)
-                target.Write(buf, 0, bytesRead);
-        }// end:CopyStream()
-
-        private static void ExtractPackage(object p)
-        {
-            int errors = 0;
-            using (ZipPackage zip = (ZipPackage)ZipPackage.Open(File.OpenRead("MCGalaxy.zip")))
-            {
-                PackagePartCollection pc = zip.GetParts();
-                foreach (ZipPackagePart item in pc)
-                {
-                    try
-                    {
-                        CopyStream(item.GetStream(), File.Create("./" + Uri.UnescapeDataString(item.Uri.ToString())));
-                    }
-                    catch
-                    {
-                        try
-                        {
-                            Directory.CreateDirectory("./" + item.Uri.ToString().Substring(0, item.Uri.ToString().LastIndexOfAny("\\/".ToCharArray())));
-                            CopyStream(item.GetStream(), File.Create("./" + Uri.UnescapeDataString(item.Uri.ToString())));
-                        }
-                        catch (IOException e)
-                        {
-                            Server.ErrorLog(e);
-                            Server.s.Log("Caught ignoreable Error.  See log for more details.  Will continue with rest of files.");
-                            errors++;
-                        }
-                    }
-                    // To make life easier, we reload settings now, to maker it less likely to need restart
-                    Command.all.Find("server").Use(null, "reload"); //Reload, as console
-                    if (item.Uri.ToString().ToLower().Contains("sql.sql"))
-                    { // If it's in there, they backed it up, meaning they want it restored
-                        Database.fillDatabase(item.GetStream());
-                    }
-                }
-            }
-            Player.Message((Player)p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is reccommended, though not required.");
+            Backup.CreatePackage((string)param[0], (bool)param[1], (bool)param[2], (Player)param[3]);
         }
     }
 }
