@@ -79,6 +79,16 @@ namespace MCGalaxy.SQL {
                 return results;
             }
         }
+        
+        public static bool TableExists(string tableName) {
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@Name", tableName);
+            query.AddParam("@DB", Server.MySQLDatabaseName);
+            
+            string syntax = Server.useMySQL ? MySQL.TableExists : SQLite.TableExists;
+            using (DataTable table = fillData(query, syntax))
+                return table.Rows.Count > 0;
+        }
     }
 	
 	public static class MySQL { //: Database //Extending for future improvement (Making it object oriented later)
@@ -90,6 +100,8 @@ namespace MCGalaxy.SQL {
         public static void AddParams(string name, object param) { query.AddParam(name, param); }
         
         public static void ClearParams() { query.ClearParams(); }
+        
+        public const string TableExists = "SELECT * FROM information_schema.tables WHERE table_schema = @DB AND table_name = @Name";
     }
 	
 	public static class SQLite {
@@ -101,5 +113,7 @@ namespace MCGalaxy.SQL {
         public static void AddParams(string name, object param) { query.AddParam(name, param); }
         
         public static void ClearParams() { query.ClearParams(); }
+        
+        public const string TableExists = "SELECT name FROM sqlite_master WHERE type='table' AND name=@Name";
     }
 }

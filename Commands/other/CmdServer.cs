@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands {
         public CmdServer() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.ToLower().Split(' ');
-            switch (args[0]) {
+            string[] args = message.Split(' ');
+            switch (args[0].ToLower()) {
                 case "public":
                     Server.pub = true;
                     Player.Message(p, "Server is now public!");
@@ -75,7 +75,8 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Settings reloaded!  You may need to restart the server, however.");
                     break;
                 case "backup":
-                    if (args.Length == 1 || args[1] == "all") {
+                    string type = args.Length == 1 ? "" : args[1].ToLower();
+                    if (type == "" || type == "all") {
                         // Backup Everything.
                         //   Create SQL statements for this.  The SQL will assume the settings for the current configuration are correct.
                         //   This means we use the currently defined port, database, user, password, and pooling.
@@ -84,7 +85,7 @@ namespace MCGalaxy.Commands {
                         //    This means all folders, and files in these folders.
                         Player.Message(p, "Server backup (Everything) started. Please wait while backup finishes.");
                         Save(true, true, p);
-                    } else if (args[1] == "db") {
+                    } else if (type == "db") {
                         // Backup database only.
                         //   Create SQL statements for this.  The SQL will assume the settings for the current configuration are correct.
                         //   This means we use the currently defined port, database, user, password, and pooling.
@@ -93,15 +94,16 @@ namespace MCGalaxy.Commands {
                         //    This means all folders, and files in these folders.
                         Player.Message(p, "Server backup (Database) started. Please wait while backup finishes.");
                         Save(false, true, p);
-                    } else if (args[1] == "allbutdb") {
+                    } else if (type == "allbutdb") {
                         // Important to save everything to a .zip file (Though we can rename the extention.)
                         // When backing up, one option is to save all non-main program files.
                         //    This means all folders, and files in these folders.
                         Player.Message(p, "Server backup (Everything but Database) started. Please wait while backup finishes.");
                         Save(true, false, p);
-                    } else if (args[1] == "table") {
-                        if (args.Length == 2) { Player.Message(p, "You need to provide the table name to backup."); return; }       
-                        if (!ValidName(p, args[2], "table")) return;
+                    } else if (type == "table") {
+                        if (args.Length == 2) { Player.Message(p, "You need to provide the table name to backup."); return; }
+                        if (!ValidName(p, args[2], "table")) return;                        
+                        if (!Database.TableExists(args[2])) { Player.Message(p, "Table \"{0}\" does not exist.", args[2]); return; }
                         
                         Player.Message(p, "Backing up table {0} started. Please wait while backup finishes.", args[2]);
                         using (StreamWriter sql = new StreamWriter(args[2] + ".sql"))
