@@ -16,16 +16,16 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.SQL;
+
 namespace MCGalaxy.Commands {    
-    public class CmdColor : Command {
-		
+    public class CmdColor : Command {		
         public override string name { get { return "color"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the color of other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the color of others") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("colour"), new CommandAlias("xcolor", "-own") }; }
@@ -40,12 +40,16 @@ namespace MCGalaxy.Commands {
             }
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
+            bool isBot = message.CaselessStarts("bot ");
             if (who == null) return;
             if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the color of", true); return;
             }
-            if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the color of other players."); return; }
-            
+            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the color of others."); return; }
+            SetColor(who, args);
+        }
+        
+        static void SetColor(Player p, Player who, string[] args) {
             ParameterisedQuery query = ParameterisedQuery.Create();
             if (args.Length == 1) {
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color removed.", false);
@@ -56,7 +60,7 @@ namespace MCGalaxy.Commands {
             } else {
                 string color = Colors.Parse(args[1]);
                 if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
-                else if (color == who.color) { Player.Message(p, p.DisplayName + " already has that color."); return; }
+                else if (color == who.color) { Player.Message(p, who.DisplayName + " already has that color."); return; }
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
                 

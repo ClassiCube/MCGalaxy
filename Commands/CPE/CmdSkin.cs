@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.CPE {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the skin of other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the skin of others") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.CPE {
             }
 
             if (!ValidName(p, skin, "skin")) return;
-            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the skin of other players."); return; }
+            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the skin of others."); return; }
             if (skin[0] == '+') 
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             

@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the title color of other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the title color of others") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("tcolour"), new CommandAlias("xtcolor", "-own") }; }
@@ -44,8 +44,11 @@ namespace MCGalaxy.Commands {
             if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the title color of", true); return;
             }
-            if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the title color of other players."); return; }
-            
+            if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the title color of others."); return; }
+            SetTColor(p, who, args);
+        }
+        
+        static void SetTColor(Player p, player who, string[] args) {
             ParameterisedQuery query = ParameterisedQuery.Create();
             if (args.Length == 1) {                
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their title color removed.", false);
@@ -64,7 +67,7 @@ namespace MCGalaxy.Commands {
                 query.AddParam("@Name", who.name);
                 Database.executeQuery(query, "UPDATE Players SET title_color = @Color WHERE Name = @Name");                
             }
-            who.SetPrefix();
+            who.SetPrefix();        	
         }
 
         public override void Help(Player p) {

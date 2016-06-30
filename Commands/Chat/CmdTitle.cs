@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the title of other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the title of others") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xtitle", "-own") }; }
@@ -45,26 +45,29 @@ namespace MCGalaxy.Commands {
             if (p != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the title of", true); return;
             }
-            if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the title of other players."); return; }
-            
-            string newTitle = args.Length > 1 ? args[1] : "";
+            if (who != p && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the title of others."); return; }
+            SetTitle(p, who, args);
+        }
+        
+        static void SetTitle(Player p, Player who, string[] args) {
+            string title = args.Length > 1 ? args[1] : "";
             ParameterisedQuery query = ParameterisedQuery.Create();
-            if (newTitle != "")
-                newTitle = newTitle.Replace("[", "").Replace("]", "");
-            if (newTitle.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
+            if (title != "")
+                title = title.Replace("[", "").Replace("]", "");
+            if (title.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
 
-            if (newTitle == "") {
+            if (title == "") {
                 Player.SendChatFrom(who, who.FullName + " %Shad their title removed.", false);
                 query.AddParam("@Name", who.name);
                 Database.executeQuery(query, "UPDATE Players SET Title = '' WHERE Name = @Name");
             } else {
-                Player.SendChatFrom(who, who.FullName + " %Swas given the title of &b[" + newTitle + "%b]", false);
-                query.AddParam("@Title", newTitle);
+                Player.SendChatFrom(who, who.FullName + " %Swas given the title of &b[" + title + "%b]", false);
+                query.AddParam("@Title", title);
                 query.AddParam("@Name", who.name);
                 Database.executeQuery(query, "UPDATE Players SET Title = @Title WHERE Name = @Name");
             }        
-            who.title = newTitle;
-            who.SetPrefix();
+            who.title = title;
+            who.SetPrefix();            
         }
         
         public override void Help(Player p) {

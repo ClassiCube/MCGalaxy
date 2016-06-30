@@ -859,10 +859,5 @@ namespace MCGalaxy
             }
             return Group.standard.color;
         }
-
-        public static bool canusegc = true; //badpokerface
-        public static int gcmultiwarns = 0, gcspamcount = 0, gccapscount = 0, gcfloodcount = 0;
-        public static DateTime gclastmsgtime = DateTime.MinValue;
-        public static string gclastmsg = "";
     }
 }

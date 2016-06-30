@@ -59,19 +59,19 @@ namespace MCGalaxy.Commands {
             Level lvl = p.level;
             switch (variable) {
                 case "fog":
-                    LevelEnv.SetColour(p, value, 2, "fog", ref lvl.FogColor); break;
+                    LevelEnv.SetColor(p, value, 2, "fog", ref lvl.FogColor); break;
                 case "cloud":
                 case "clouds":
-                    LevelEnv.SetColour(p, value, 1, "cloud", ref lvl.CloudColor); break;
+                    LevelEnv.SetColor(p, value, 1, "cloud", ref lvl.CloudColor); break;
                 case "sky":
-                    LevelEnv.SetColour(p, value, 0, "sky", ref lvl.SkyColor); break;
+                    LevelEnv.SetColor(p, value, 0, "sky", ref lvl.SkyColor); break;
                 case "dark":
                 case "shadow":
-                    LevelEnv.SetColour(p, value, 3, "shadow", ref lvl.ShadowColor); break;
+                    LevelEnv.SetColor(p, value, 3, "shadow", ref lvl.ShadowColor); break;
                 case "sun":
                 case "light":
                 case "sunlight":
-                    LevelEnv.SetColour(p, value, 4, "sunlight", ref lvl.LightColor); break;
+                    LevelEnv.SetColor(p, value, 4, "sunlight", ref lvl.LightColor); break;
                 case "weather":
                     LevelEnv.SetWeather(p, p.level, value); break;
                 case "cloudsheight":

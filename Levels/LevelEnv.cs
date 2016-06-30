@@ -81,7 +81,7 @@ namespace MCGalaxy {
             SendCurrentMapAppearance(p.level, prop, target);
         }
         
-        public static void SetColour(Player p, string value, byte envType, string envTypeName, ref string target) {
+        public static void SetColor(Player p, string value, byte envType, string envTypeName, ref string target) {
             if (IsResetString(value)) {
                 Player.Message(p, "Reset {0} color for {1}%S to normal", envTypeName, p.level.name);
                 target = null;

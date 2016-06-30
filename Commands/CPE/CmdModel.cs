@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.CPE {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the model of other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the model of others") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xmodel", "-own") }; }
@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.CPE {
             if (message == "") message = p.name;
             
             Player who = p;
-            PlayerBot pBot = null;
+            PlayerBot bot = null;
             bool isBot = message.CaselessStarts("bot ");
             string[] args = message.SplitSpaces(isBot ? 3 : 2);
             string model = null;
@@ -51,8 +51,8 @@ namespace MCGalaxy.Commands.CPE {
             }
 
             if (isBot && args.Length > 2) {
-                pBot = PlayerBot.FindMatches(p, args[1]);
-                if (pBot == null) return;
+                bot = PlayerBot.FindMatches(p, args[1]);
+                if (bot == null) return;
                 model = args[2];
             } else if (args.Length > 1) {
                 isBot = false;
@@ -66,13 +66,13 @@ namespace MCGalaxy.Commands.CPE {
                 model = message;
             }
             model = model.ToLower();
-            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the model of other players."); return; }
+            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the model of others."); return; }
 
             if (isBot) {
-                pBot.model = model;
-                Entities.UpdateModel(pBot.id, model, pBot.level, null);
-                Player.GlobalMessage("Bot " + pBot.name + "'s %Smodel was changed to a &c" + model);
-                BotsFile.UpdateBot(pBot);
+                bot.model = model;
+                Entities.UpdateModel(bot.id, model, bot.level, null);
+                Player.GlobalMessage("Bot " + bot.name + "'s %Smodel was changed to a &c" + model);
+                BotsFile.UpdateBot(bot);
             } else {
                 who.model = model;
                 Entities.UpdateModel(who.id, model, who.level, who);
