@@ -14,23 +14,23 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
 
-namespace MCGalaxy {    
+namespace MCGalaxy {
     public static partial class Backup {
 
-		const string path = "MCGalaxy.zip";
-		public class BackupArgs {
-			public Player p;
-			public bool Files, Database, Lite;
-		}
-		
+        const string path = "MCGalaxy.zip";
+        public class BackupArgs {
+            public Player p;
+            public bool Files, Database, Lite;
+        }
+        
         public static void CreatePackage(object p) {
-			BackupArgs args = (BackupArgs)p;
+            BackupArgs args = (BackupArgs)p;
             if (args.Database)  {
                 Server.s.Log("Saving DB...");
                 using (StreamWriter sql = new StreamWriter("SQL.sql"))
@@ -39,58 +39,67 @@ namespace MCGalaxy {
             }
 
             Server.s.Log("Creating package...");
-            using (ZipPackage package = (ZipPackage)ZipPackage.Open(path, FileMode.Create))
-            {
+            using (ZipPackage package = (ZipPackage)ZipPackage.Open(path, FileMode.Create)) {
                 if (args.Files) {
                     Server.s.Log("Collecting Directory structure...");
-                    string currDir = Directory.GetCurrentDirectory() + "\\";
-                    List<Uri> partURIs = GetAllFiles(new DirectoryInfo("./"), new Uri(currDir));
+                    string dir = Directory.GetCurrentDirectory() + "\\";
+                    List<Uri> uris = GetAllFiles(new DirectoryInfo("./"), new Uri(dir), args.Lite);
                     Server.s.Log("Structure complete");
 
                     Server.s.Log("Saving data...");
-                    foreach (Uri loc in partURIs) {
-                    	string file = Uri.UnescapeDataString(loc.ToString());
-                    	if (args.Lite && file.Contains("extra/undo/")) continue;
-                    	if (args.Lite && file.Contains("extra/undoPrevious")) continue;
-                    	
-                        if (!file.Contains(path)) {
-                            // Add the part to the Package
-                            ZipPackagePart packagePart = (ZipPackagePart)package.CreatePart(loc, "");
-
-                            // Copy the data to the Document Part
-                            using (FileStream stream = new FileStream("./" + file, FileMode.Open, FileAccess.Read))
-                                CopyStream(stream, packagePart.GetStream());
-                        }
-                    }// end:foreach(Uri loc)
+                    SaveFiles(package, uris);
                 }
-                if (args.Database) { // If we don't want to back up database, we don't do this part.
-                    Server.s.Log("Compressing Database...");
-                    ZipPackagePart packagePart =
-                                (ZipPackagePart)package.CreatePart(new Uri("/SQL.sql", UriKind.Relative), "", CompressionOption.Normal);
-                    CopyStream(File.OpenRead("SQL.sql"), packagePart.GetStream());
-                    Server.s.Log("Database compressed.");
-                }// end:if(withFiles)
+                
+                if (args.Database)
+                    SaveDatabase(package);
                 Server.s.Log("Data saved!");
-            }// end:using (Package package) - Close and dispose package.
+            }
             Player.Message(args.p, "Server backup (" + (args.Files ? "Everything" + (args.Database ? "" : " but Database") : "Database") + "): Complete!");
             Server.s.Log("Server backed up!");
-        }// end:CreatePackage()
+        }
 
-        static List<Uri> GetAllFiles(DirectoryInfo currDir, Uri baseUri) {
-            List<Uri> uriList = new List<Uri>();
-            foreach (FileSystemInfo entry in currDir.GetFileSystemInfos()) {
+        static List<Uri> GetAllFiles(DirectoryInfo dir, Uri baseUri, bool lite) {
+            List<Uri> list = new List<Uri>();
+            foreach (FileSystemInfo entry in dir.GetFileSystemInfos()) {
                 if (entry is FileInfo) {
+                    string path = ((FileInfo)entry).FullName;
+                    if (lite && path.Contains("extra/undo/")) continue;
+                    if (lite && path.Contains("extra/undoPrevious")) continue;
+                    
                     // Make a relative URI
-                    Uri fullURI = new Uri(((FileInfo)entry).FullName);
-                    Uri relURI = baseUri.MakeRelativeUri(fullURI);
-                    if (relURI.ToString().IndexOfAny("/\\".ToCharArray()) > 0) {
-                        uriList.Add(PackUriHelper.CreatePartUri(relURI));
-                    }
+                    Uri uri = baseUri.MakeRelativeUri(new Uri(path));
+                    if (uri.ToString().IndexOfAny("/\\".ToCharArray()) > 0)
+                        list.Add(PackUriHelper.CreatePartUri(uri));
                 } else {
-                    uriList.AddRange(GetAllFiles((DirectoryInfo)entry, baseUri));
+                    list.AddRange(GetAllFiles((DirectoryInfo)entry, baseUri, lite));
                 }
             }
-            return uriList;
+            return list;
+        }
+        
+        static void SaveFiles(ZipPackage package, List<Uri> partURIs) {
+            foreach (Uri loc in partURIs) {
+                string file = Uri.UnescapeDataString(loc.ToString());
+                if (file.Contains(path)) continue;
+                
+                try {
+                    PackagePart part = package.CreatePart(loc, "");
+                    using (Stream stream = new FileStream("./" + file, FileMode.Open, FileAccess.Read))
+                        CopyStream(stream, part.GetStream());
+                } catch (Exception ex) {
+                    Server.s.Log("Failed to save file: " + file);
+                    Server.ErrorLog(ex);
+                }
+            }
+        }
+        
+        static void SaveDatabase(ZipPackage package) {
+            Server.s.Log("Compressing Database...");
+            Uri uri = new Uri("/SQL.sql", UriKind.Relative);
+            
+            PackagePart part = package.CreatePart(uri, "", CompressionOption.Normal);
+            CopyStream(File.OpenRead("SQL.sql"), part.GetStream());
+            Server.s.Log("Database compressed.");
         }
 
         static void CopyStream(Stream source, Stream target) {
@@ -101,7 +110,7 @@ namespace MCGalaxy {
                 target.Write(buf, 0, bytesRead);
         }
 
-       public static void ExtractPackage(object p) {
+        public static void ExtractPackage(object p) {
             int errors = 0;
             using (ZipPackage zip = (ZipPackage)ZipPackage.Open(File.OpenRead(path)))  {
                 PackagePartCollection pc = zip.GetParts();
@@ -118,7 +127,7 @@ namespace MCGalaxy {
                             errors++;
                         }
                     }
-                	
+                    
                     // To make life easier, we reload settings now, to maker it less likely to need restart
                     Command.all.Find("server").Use(null, "reload"); //Reload, as console
                     if (item.Uri.ToString().ToLower().Contains("sql.sql"))
