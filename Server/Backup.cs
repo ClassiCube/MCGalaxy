@@ -32,7 +32,7 @@ namespace MCGalaxy {
         public static void CreatePackage(object p) {
             BackupArgs args = (BackupArgs)p;
             try {
-                CreatePackage(args);
+                CreatePackageCore(args);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 Server.s.Log("Error while trying to perform backup.");
