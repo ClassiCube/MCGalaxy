@@ -185,15 +185,14 @@ namespace MCGalaxy {
                 msg = p.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S";
             else if (action == PlayerAction.Unjoker)
                 msg = p.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S";
-            else if (action == PlayerAction.JoinWorld)
-                msg = p.ColoredName + " %Swent to &8" + message;
             else if (action == PlayerAction.Me)
                 msg = "*" + p.DisplayName + " " + message;
             else if (action == PlayerAction.Review)
                 msg = p.ColoredName + " %Sis requesting a review.";
+            else if (action == PlayerAction.JoinWorld && Server.ircShowWorldChanges)
+                msg = p.ColoredName + " %Swent to &8" + message;
             
-            if (msg != null)
-                Say(msg, stealth);
+            if (msg != null) Say(msg, stealth);
         }
         
         void Player_PlayerDisconnect(Player p, string reason) {
