@@ -560,8 +560,8 @@
     <Compile Include="Games\CTF\Auto_CTF.cs" />
     <Compile Include="IRC\ForgeBot.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
-    <Compile Include="Server\Backup\Backup.cs" />
-    <Compile Include="Server\Backup\BackupDB.cs" />
+    <Compile Include="Server\Backup.cs" />
+    <Compile Include="Server\BackupDB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Server\Colors.cs" />
@@ -702,7 +702,6 @@
     <Folder Include="Plugins" />
     <Folder Include="Plugins\Events" />
     <Folder Include="Plugins\Manager" />
-    <Folder Include="Server\Backup" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

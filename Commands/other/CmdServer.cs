@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands {
                         //    This means all folders, and files in these folders.
                         Player.Message(p, "Server backup (Everything) started. Please wait while backup finishes.");
                         Save(true, true, p);
-                    } else if (type == "db") {
+                    } else if (type == "database" || type == "sql" || type == "db") {
                         // Backup database only.
                         //   Create SQL statements for this.  The SQL will assume the settings for the current configuration are correct.
                         //   This means we use the currently defined port, database, user, password, and pooling.
@@ -94,12 +94,15 @@ namespace MCGalaxy.Commands {
                         //    This means all folders, and files in these folders.
                         Player.Message(p, "Server backup (Database) started. Please wait while backup finishes.");
                         Save(false, true, p);
-                    } else if (type == "allbutdb") {
+                    } else if (type == "allbutdb" || type == "files" || type == "file") {
                         // Important to save everything to a .zip file (Though we can rename the extention.)
                         // When backing up, one option is to save all non-main program files.
                         //    This means all folders, and files in these folders.
                         Player.Message(p, "Server backup (Everything but Database) started. Please wait while backup finishes.");
                         Save(true, false, p);
+                    } else if (type == "lite") {
+                        Player.Message(p, "Server backup (Everything but BlockDB tables and undo files) started. Please wait while backup finishes.");
+                        Save(true, true, p, true);
                     } else if (type == "table") {
                         if (args.Length == 2) { Player.Message(p, "You need to provide the table name to backup."); return; }
                         if (!ValidName(p, args[2], "table")) return;                        
@@ -136,16 +139,14 @@ namespace MCGalaxy.Commands {
             return p.name.CaselessEq(Server.server_owner);
         }
 
-        void Save(bool withFiles, bool withDB, Player p) {
-            ParameterizedThreadStart pts = new ParameterizedThreadStart(CreatePackage);
-            Thread doWork = new Thread(new ParameterizedThreadStart(CreatePackage));
-            doWork.Name = "MCG_SaveServer";
-            List<object> param = new List<object>();
-            param.Add("MCGalaxy.zip");
-            param.Add(withFiles);
-            param.Add(withDB);
-            param.Add(p);
-            doWork.Start(param);
+        static void Save(bool withFiles, bool withDB, Player p, bool lite = false) {
+            Thread worker = new Thread(Backup.CreatePackage);
+            worker.Name = "MCG_SaveServer";
+            
+            Backup.BackupArgs args = new Backup.BackupArgs();
+            args.p = p; args.Lite = lite;
+            args.Files = withFiles; args.Database = withDB;
+            worker.Start(args);
         }
 
         void SetToDefault() {
@@ -182,17 +183,13 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "/server <public>   - Make the server public. (Start listening for new connections.)");
             Player.Message(p, "/server <private>  - Make the server private. (Stop listening for new connections.)");
             Player.Message(p, "/server <restore>  - Restore the server from a backup.");
-            Player.Message(p, "/server <backup> [all/db/allbutdb] - Make a backup. (Default is all)");
+            Player.Message(p, "/server <backup> [all/db/files/lite] - Make a backup. (Default all)");
             Player.Message(p, "Backup options:");
-            Player.Message(p, "all      - Make a backup of the server and all SQL data. (Default)");
-            Player.Message(p, "db       - Just backup the database.");
-            Player.Message(p, "allbutdb - Backup everything BUT the database.");
-            Player.Message(p, "/server <backup> table [name] - Make a backups of that database table");
-        }
-
-        static void CreatePackage(object par)  {
-            List<object> param = (List<object>)par;
-            Backup.CreatePackage((string)param[0], (bool)param[1], (bool)param[2], (Player)param[3]);
+            Player.Message(p, "all    - Make a backup of the server and all SQL data.");
+            Player.Message(p, "db    - Just backup the database.");
+            Player.Message(p, "files - Backup everything BUT the database.");
+            Player.Message(p, "lite   - Backups everything, except BlockDB and undo files.");
+            Player.Message(p, "/server <backup> table [name] - Backups that database table");
         }
     }
 }
