@@ -346,11 +346,9 @@
     <Compile Include="Commands\other\CmdPass.cs" />
     <Compile Include="Commands\other\CmdRepeat.cs" />
     <Compile Include="Commands\other\CmdReport.cs" />
-    <Compile Include="Commands\other\CmdResetPass.cs" />
     <Compile Include="Commands\other\CmdRide.cs" />
     <Compile Include="Commands\other\CmdSendCmd.cs" />
     <Compile Include="Commands\other\CmdServer.cs" />
-    <Compile Include="Commands\other\CmdSetPass.cs" />
     <Compile Include="Commands\other\CmdSummon.cs" />
     <Compile Include="Commands\other\CmdTimer.cs" />
     <Compile Include="Commands\other\CmdTnt.cs" />

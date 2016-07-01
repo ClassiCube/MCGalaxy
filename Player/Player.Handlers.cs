@@ -62,8 +62,8 @@ namespace MCGalaxy {
 
             if ( !canBuild ) { RevertBlock(x, y, z); return; }
 
-            if ( Server.verifyadmins && adminpen ) {
-                SendMessage("&cYou must use &a/pass [Password]&c to verify!");
+            if (Server.verifyadmins && adminpen) {
+                SendMessage("&cYou must first verify with %T/pass [Password]");
                 RevertBlock(x, y, z); return;
             }
 
@@ -1235,8 +1235,8 @@ return;
             if (jailed) {
                 SendMessage("You cannot use any commands while jailed."); return false;
             }
-            if (Server.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
-                SendMessage("&cYou must use &a/pass [Password]&c to verify!"); return false;
+            if (Server.verifyadmins && adminpen && cmd != "pass") {
+                SendMessage("&cYou must verify first with %T/pass [Password]"); return false;
             }
 
             //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
@@ -1309,14 +1309,11 @@ return;
         
         bool UseCommand(Command command, string message) {
             string cmd = command.name;
-            if (!(cmd == "repeat" || cmd == "pass" || cmd == "setpass")) {
+            if (cmd != "repeat" && cmd != "pass") {
                 lastCMD = cmd + " " + message;
                 lastCmdTime = DateTime.Now;
-            }
-            
-            if (!(cmd == "pass" || cmd == "setpass")) {
-                Server.s.CommandUsed(name + " used /" + cmd + " " + message);
-            }
+            }            
+            if (cmd != "pass") Server.s.CommandUsed(name + " used /" + cmd + " " + message);
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {

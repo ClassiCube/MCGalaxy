@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Place a block where you would like to check for zones.");
                 p.MakeSelection(1, null, CheckZone);
             } else if (args[0].CaselessEq("add")) {
-                if (!CheckExtraPerm(p, 3)) { MessageNeedPerms(p, "can create zones.", 3); return; }
+                if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, "can create zones.", 3); return; }
                 if (args.Length == 1) { Help(p); return; }
                 
                 if (Group.Find(args[1]) != null)
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Zone for: &b" + args[1] + ".");
                 p.MakeSelection(2, args[1], AddZone);
             } else if (args[0].CaselessEq("del") && args.Length > 1 && args[1].CaselessEq("all")) {
-                if (!CheckExtraPerm(p, 2)) { MessageNeedPerms(p, "can delete all zones.", 2); return; }
+                if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "can delete all zones.", 2); return; }
                 
                 for (int i = 0; i < p.level.ZoneList.Count; i++) {
                     Level.Zone Zn = p.level.ZoneList[i];
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                     i--;
                 }
             } else if (args[0].CaselessEq("del")) {
-                if (!CheckExtraPerm(p, 1)) { MessageNeedPerms(p, "can delete zones.", 1); return; }
+                if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, "can delete zones.", 1); return; }
                 
                 if (p.canBuild) { //Checks if player can build there
                     Player.Message(p, "Place a block where you would like to delete a zone.");

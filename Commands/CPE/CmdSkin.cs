@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.CPE {
             if (p != null && who != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the skin of", true); return;
             }
-            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the skin of others."); return; }
+            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedExtra(p, "can change the skin of others."); return; }
             if (skin[0] == '+') 
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             

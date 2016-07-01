@@ -65,7 +65,7 @@ namespace MCGalaxy {
             return p == null || (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, num);
         }
         
-        protected void MessageNeedPerms(Player p, string action, int num = 1) {
+        protected void MessageNeedExtra(Player p, string action, int num = 1) {
             int perm = CommandOtherPerms.GetPerm(this, num);
             MessageNeedMinPerm(p, action, perm);
         }

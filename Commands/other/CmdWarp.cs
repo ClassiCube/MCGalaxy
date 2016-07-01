@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { MessageNeedPerms(p, "can create warps.", 1); return; }
+                else { MessageNeedExtra(p, "can create warps.", 1); return; }
             }
 
             if (par0 == "delete" || par0 == "remove" || par0 == "d" || par0 == "r")
@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { MessageNeedPerms(p, "can delete warps.", 2); return; }
+                else { MessageNeedExtra(p, "can delete warps.", 2); return; }
             }
 
             if (par0 == "move" || par0 == "change" || par0 == "edit" || par0 == "m" || par0 == "e")
@@ -137,7 +137,7 @@ namespace MCGalaxy.Commands
                         }
                     }
                 }
-                else { MessageNeedPerms(p, "can move warps.", 3); return; }
+                else { MessageNeedExtra(p, "can move warps.", 3); return; }
             }
 
             else

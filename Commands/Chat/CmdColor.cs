@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
             if (p != null && who != null && who.group.Permission > p.group.Permission) {
                 MessageTooHighRank(p, "change the color of", true); return;
             }
-            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedPerms(p, "can change the color of others."); return; }
+            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedExtra(p, "can change the color of others."); return; }
             if (isBot) SetBotColor(p, pBot, args);
             else SetColor(p, who, args);
         }
