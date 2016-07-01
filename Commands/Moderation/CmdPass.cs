@@ -2,7 +2,7 @@
     Written by Jack1312
     Copyright 2011-2012 MCForge
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
     public sealed class CmdPass : Command {
         public override string name { get { return "pass"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
@@ -36,15 +36,15 @@ namespace MCGalaxy.Commands {
             if (!Directory.Exists("extra/passwords"))
                 Directory.CreateDirectory("extra/passwords");
             if (p.group.Permission < Server.verifyadminsrank) {
-            	MessageNeedMinPerm(p, "verify or set a password", (int)Server.verifyadminsrank); return;
+                MessageNeedMinPerm(p, "verify or set a password", (int)Server.verifyadminsrank); return;
             }
             if (!Server.verifyadmins) { Player.Message(p, "Admin verficiation is not currently enabled."); return; }
             if (message == "") { Help(p); return; }
             
             string[] args = message.SplitSpaces(2);
-            if (args.Length == 2 && args[1].CaselessEq("set"))
+            if (args.Length == 2 && args[0].CaselessEq("set"))
                 SetPassword(p, args[1]);
-            else if (args.Length == 2 && args[1].CaselessEq("reset"))
+            else if (args.Length == 2 && args[0].CaselessEq("reset"))
                 ResetPassword(p, args[1]);
             else
                 VerifyPassword(p, message);
@@ -70,6 +70,7 @@ namespace MCGalaxy.Commands {
         }
         
         void SetPassword(Player p, string message) {
+            Server.s.Log("_" + message + "_");
             if (p.adminpen && File.Exists("extra/passwords/" + p.name + ".dat")) {
                 Player.Message(p, "&cYou already have a password set. %SYou &ccannot change %Sit unless &cyou verify it with &a/pass [Password]. " +
                                "%SIf you have &cforgotten %Syour password, contact &c" + Server.server_owner + " %Sand they can &creset it!");
@@ -111,8 +112,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%T/pass set [Password] %H- Sets your password to [password]");
             Player.Message(p, "%H Note: &cDo NOT set this as your Minecraft password!");
             Player.Message(p, "%T/pass [Password]");
-            Player.Message(p, "%HIf you are an admin, use this command to verify your login. " +
-                           "You will need to be verified to be able to use commands.");
+            Player.Message(p, "%HIf you are an admin, use this command to verify your login.");
+            Player.Message(p, "%H You will need to be verified to be able to use commands.");
         }
     }
 }

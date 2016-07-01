@@ -303,6 +303,7 @@
     <Compile Include="Commands\Moderation\CmdOhide.cs" />
     <Compile Include="Commands\Moderation\CmdOZone.cs" />
     <Compile Include="Commands\Moderation\CmdP2P.cs" />
+    <Compile Include="Commands\Moderation\CmdPass.cs" />
     <Compile Include="Commands\Moderation\CmdPatrol.cs" />
     <Compile Include="Commands\Moderation\CmdPlayerEditDB.cs" />
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
@@ -343,7 +344,6 @@
     <Compile Include="Commands\other\CmdInvincible.cs" />
     <Compile Include="Commands\other\CmdKill.cs" />
     <Compile Include="Commands\other\CmdMove.cs" />
-    <Compile Include="Commands\other\CmdPass.cs" />
     <Compile Include="Commands\other\CmdRepeat.cs" />
     <Compile Include="Commands\other\CmdReport.cs" />
     <Compile Include="Commands\other\CmdRide.cs" />

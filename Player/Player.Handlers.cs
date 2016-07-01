@@ -1235,7 +1235,7 @@ return;
             if (jailed) {
                 SendMessage("You cannot use any commands while jailed."); return false;
             }
-            if (Server.verifyadmins && adminpen && cmd != "pass") {
+            if (Server.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
                 SendMessage("&cYou must verify first with %T/pass [Password]"); return false;
             }
 
