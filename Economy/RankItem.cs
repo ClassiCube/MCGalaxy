@@ -28,7 +28,9 @@ namespace MCGalaxy.Eco {
             Aliases = new [] { "rank", "ranks", "rankup" };
         }
         
-        public override string Name { get { return "Rankup"; } }
+        public override string Name { get { return "Rank"; } }
+        
+        public override string ShopName { get { return "Rankup"; } }
         
         public string MaxRank = Group.findPerm(LevelPermission.AdvBuilder).name;
         
@@ -120,17 +122,17 @@ namespace MCGalaxy.Eco {
         }
 
         protected internal override void OnStoreOverview(Player p) {
-        	Group maxrank = Group.Find(MaxRank);
-            if (p.group.Permission >= maxrank.Permission) {
+            Group maxrank = Group.Find(MaxRank);
+            if (p == null || p.group.Permission >= maxrank.Permission) {
                 Player.Message(p, "Rankup - &calready at max rank."); return;
             }
-        	Rank rnk = NextRank(p);
+            Rank rnk = NextRank(p);
             Player.Message(p, "Rankup to " + rnk.group.color + rnk.group.name + " %S- costs &f" + rnk.price + " &3" + Server.moneys);
         }
         
         protected internal override void OnStoreCommand(Player p) {
             Group maxrank = Group.Find(MaxRank);
-        	Player.Message(p, "Syntax: %T/buy rankup");            
+            Player.Message(p, "Syntax: %T/buy rankup");            
             Player.Message(p, "%fThe max buyable rank is: " + maxrank.ColoredName);
             Player.Message(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
@@ -149,19 +151,10 @@ namespace MCGalaxy.Eco {
         }
 
         public Rank NextRank(Player p) {
-            Group foundGroup = p.group;
-            Group nextGroup = null; bool nextOne = false;
-            for (int i = 0; i < Group.GroupList.Count; i++) {
-                Group grp = Group.GroupList[i];
-                if (nextOne) {
-                    if (grp.Permission >= LevelPermission.Nobody) break;
-                    nextGroup = grp;
-                    break;
-                }
-                if (grp == foundGroup)
-                    nextOne = true;
-            }
-            return FindRank(nextGroup.name);
+            int index = Group.GroupList.IndexOf(p.group);
+            if (index < Group.GroupList.Count - 1)
+                return FindRank(Group.GroupList[index + 1].name);
+            return null;
         }
         
         public void UpdatePrices() {

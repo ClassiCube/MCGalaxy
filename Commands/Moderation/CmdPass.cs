@@ -70,7 +70,6 @@ namespace MCGalaxy.Commands {
         }
         
         void SetPassword(Player p, string message) {
-            Server.s.Log("_" + message + "_");
             if (p.adminpen && File.Exists("extra/passwords/" + p.name + ".dat")) {
                 Player.Message(p, "&cYou already have a password set. %SYou &ccannot change %Sit unless &cyou verify it with &a/pass [Password]. " +
                                "%SIf you have &cforgotten %Syour password, contact &c" + Server.server_owner + " %Sand they can &creset it!");

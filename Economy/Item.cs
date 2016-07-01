@@ -27,6 +27,9 @@ namespace MCGalaxy.Eco {
         /// <summary> Simple name for this item. </summary>
         public abstract string Name { get; }
         
+        /// <summary> Simple name displayed in /shop, defaults to item name. </summary>
+        public virtual string ShopName { get { return Name; } }
+        
         /// <summary> Other common names for this item. </summary>
         public string[] Aliases;
         

@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             {
                 if (message.CaselessEq(alias)) {
                     if (!item.Enabled) { 
-                        Player.Message(p, "%cThe " + item.Name + " item is not currently buyable."); return; 
+                        Player.Message(p, "%cThe " + item.ShopName + " item is not currently buyable."); return; 
                     }
                     item.OnStoreCommand(p); 
                     return;

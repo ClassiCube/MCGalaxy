@@ -167,7 +167,7 @@ namespace MCGalaxy {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < Items.Length; i++) {
                 if (!Items[i].Enabled) continue;
-                builder.Append(Items[i].Name);
+                builder.Append(Items[i].ShopName);
                 if (i < Items.Length - 1)
                     builder.Append(separator);
             }
