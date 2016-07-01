@@ -15,13 +15,12 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System.IO;
+
 namespace MCGalaxy.Commands {
-    public sealed class CmdXJail : Command {
-        
+    public sealed class CmdXJail : Command {        
         public override string name { get { return "xjail"; } }
         public override string shortcut { get { return "xj"; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool museumUsable { get { return true; } }
 

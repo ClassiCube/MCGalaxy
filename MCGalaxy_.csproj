@@ -183,6 +183,8 @@
     <Compile Include="Commands\Chat\CmdSend.cs" />
     <Compile Include="Commands\Chat\CmdTColor.cs" />
     <Compile Include="Commands\Chat\CmdTitle.cs" />
+    <Compile Include="Commands\Chat\CmdVote.cs" />
+    <Compile Include="Commands\Chat\CmdVoteResults.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
     <Compile Include="Commands\Command.cs" />
@@ -266,8 +268,8 @@
     <Compile Include="Commands\Information\CmdTop.cs" />
     <Compile Include="Commands\Information\CmdUnloaded.cs" />
     <Compile Include="Commands\Information\CmdUpdate.cs" />
+    <Compile Include="Commands\Information\CmdView.cs" />
     <Compile Include="Commands\Information\CmdViewRanks.cs" />
-    <Compile Include="Commands\Information\CmdVoteResults.cs" />
     <Compile Include="Commands\Information\CmdWhere.cs" />
     <Compile Include="Commands\Information\CmdWhoip.cs" />
     <Compile Include="Commands\Information\CmdWhois.cs" />
@@ -322,6 +324,7 @@
     <Compile Include="Commands\Moderation\CmdWarn.cs" />
     <Compile Include="Commands\Moderation\CmdWhitelist.cs" />
     <Compile Include="Commands\Moderation\CmdXban.cs" />
+    <Compile Include="Commands\Moderation\CmdXJail.cs" />
     <Compile Include="Commands\Moderation\CmdXmute.cs" />
     <Compile Include="Commands\Moderation\CmdZone.cs" />
     <Compile Include="Commands\other\CmdAgree.cs" />
@@ -354,11 +357,8 @@
     <Compile Include="Commands\other\CmdTp.cs" />
     <Compile Include="Commands\other\CmdTpA.cs" />
     <Compile Include="Commands\other\CmdTpZone.cs" />
-    <Compile Include="Commands\other\CmdView.cs" />
-    <Compile Include="Commands\other\CmdVote.cs" />
     <Compile Include="Commands\other\CmdWarp.cs" />
     <Compile Include="Commands\other\CmdWaypoint.cs" />
-    <Compile Include="Commands\other\CmdXJail.cs" />
     <Compile Include="Commands\other\QuitCmds.cs" />
     <Compile Include="Commands\Scripting\CmdCmdCreate.cs" />
     <Compile Include="Commands\Scripting\CmdCmdLoad.cs" />

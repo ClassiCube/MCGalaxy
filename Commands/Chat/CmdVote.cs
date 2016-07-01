@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands
     {
         public override string name { get { return "vote"; } }
         public override string shortcut { get { return "vo"; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdVote() { }
