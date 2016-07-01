@@ -156,26 +156,30 @@ namespace MCGalaxy {
         
         public static void SendChatFrom(Player from, string message) { SendChatFrom(from, message, true); }
         public static void SendChatFrom(Player from, string message, bool showname) {
-            if ( from == null ) return; // So we don't fucking derp the hell out!
+            if (from == null) return; // So we don't fucking derp the hell out!
             
-            if (Last50Chat.Count == 50)
-                Last50Chat.RemoveAt(0);
+            if (Last50Chat.Count == 50) Last50Chat.RemoveAt(0);
             var chatmessage = new ChatMessage();
             chatmessage.text = message;
             chatmessage.username = from.color + from.name;
             chatmessage.time = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
-
             Last50Chat.Add(chatmessage);
-            if (showname)
-                message = from.voicestring + from.color + from.prefix + from.DisplayName + ": &f" + message;
+            
+            string messageLite = message;
+            if (showname) {
+                string prefix = from.group.prefix == "" ? "" : "&f" + from.group.prefix;
+                messageLite = from.voicestring + prefix + from.ColoredName + ": &f" + message;
+                message = from.voicestring + from.FullName + ": &f" + message;
+            }
             
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.level.worldChat && p.Chatroom == null) {
                     if (from != null && p.listignored.Contains(from.name)) continue;
-                   
+                    
+                    string msg = p.ignoreTitles ? messageLite : message;
                     if (!p.ignoreAll || (from != null && from == p))
-                        Player.Message(p, message);
+                        Player.Message(p, msg);
                 }
             }
         }
@@ -314,7 +318,7 @@ namespace MCGalaxy {
                     Server.s.Log(name + " disconnected (" + discMsg + ").");
                 } else {
                     totalKicked++;
-                    SendChatFrom(this, "&c- " + color + prefix + DisplayName + " %Skicked (" + kickMsg + "%S).", false);
+                    SendChatFrom(this, "&c- " + FullName + " %Skicked (" + kickMsg + "%S).", false);
                     Server.s.Log(name + " kicked (" + kickMsg + ").");
                 }
 
@@ -524,6 +528,7 @@ Next: continue;
                     if (ignoreAll) w.WriteLine("&all");
                     if (ignoreGlobal) w.WriteLine("&global");
                     if (ignoreIRC) w.WriteLine("&irc");
+                    if (ignoreTitles) w.WriteLine("&titles");
                     
                     foreach (string line in listignored)
                         w.WriteLine(line);
@@ -543,16 +548,17 @@ Next: continue;
                 foreach (string line in lines) {
                     if (line == "&global") ignoreGlobal = true;
                     else if (line == "&all") ignoreAll = true;
-                    else if (line == "&irc") ignoreIRC = true;                    
+                    else if (line == "&irc") ignoreIRC = true;
+                    else if (line == "&titles") ignoreTitles = true;
                     else listignored.Add(line);
                 }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 Server.s.Log("Failed to load ignore list for: " + name);
             }
-            if (ignoreAll || ignoreGlobal || ignoreIRC || listignored.Count > 0) {
+            
+            if (ignoreAll || ignoreGlobal || ignoreIRC || ignoreTitles || listignored.Count > 0)
                 SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
-            }
         }
         
         internal void RemoveInvalidUndos() {
