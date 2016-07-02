@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.CPE {
 
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player or bot name")) return;
-            if (message == "") message = p.name;
+            if (message == "") message = "humanoid";
             
             Player who = p;
             PlayerBot bot = null;

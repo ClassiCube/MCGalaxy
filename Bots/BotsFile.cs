@@ -145,6 +145,7 @@ namespace MCGalaxy.Bots {
             Skin = bot.SkinName; AI = bot.AIName;
             Model = bot.model; Color = bot.color;
             Kill = bot.kill; Hunt = bot.hunt;
+            DisplayName = bot.DisplayName;
             
             X = bot.pos[0]; Y = bot.pos[1]; Z = bot.pos[2];
             RotX = bot.rot[0]; RotY = bot.rot[1];

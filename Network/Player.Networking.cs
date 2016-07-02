@@ -710,6 +710,13 @@ namespace MCGalaxy {
         }
         
         public void SendChangeModel( byte id, string model ) {
+            // Fallback block models for clients that don't support block definitions
+            byte block; 
+            bool fallback = byte.TryParse(model, out block) && block >= Block.CpeCount;
+            block = level == null ? block : level.GetFallback(block);
+            if (fallback && !hasBlockDefs && block != Block.air)
+                model = block.ToString();
+                
             byte[] buffer = new byte[66];
             buffer[0] = Opcode.CpeChangeModel;
             buffer[1] = id;

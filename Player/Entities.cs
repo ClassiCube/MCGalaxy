@@ -142,7 +142,7 @@ namespace MCGalaxy {
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(b.id, skin, b.color + name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             } else {
-                dst.SendSpawn(b.id, b.color + skin, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+                dst.SendSpawn(b.id, b.color + name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             }
             if (Server.TablistBots)
                 TabList.Add(dst, b);
