@@ -61,6 +61,20 @@ namespace MCGalaxy {
             core.commands = new List<Command>(all.commands);
             Scripting.Autoload();
         }
+        
+        /// <summary> Modifies the parameters if they match any command shortcut or command alias. </summary>
+        public static void Search(ref string cmd, ref string cmdArgs) {
+            string shortcut = all.FindShort(cmd);
+            if (shortcut != "") cmd = shortcut;
+            Alias alias = Alias.Find(cmd);
+            if (alias == null) return;
+            
+            cmd = alias.Target;
+            if (alias.Prefix != null)
+                cmdArgs = cmdArgs == "" ? alias.Prefix : alias.Prefix + " " + cmdArgs;
+            if (alias.Suffix != null)
+                cmdArgs = cmdArgs == "" ? alias.Suffix : cmdArgs + " " + alias.Suffix;
+        }
     }
     
     public struct CommandPerm {

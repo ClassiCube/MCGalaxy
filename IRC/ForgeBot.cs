@@ -264,8 +264,10 @@ namespace MCGalaxy {
             message = Colors.IrcToMinecraftColors(message);
             message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.SplitSpaces(2);
-            string ircCmd = parts[0].ToLower();
-            if (ircCmd == ".who" || ircCmd == ".players") {
+            string cmdName = parts[0].ToLower();
+            string cmdArgs = parts.Length > 1 ? parts[1] : "";
+            
+            if (cmdName == ".who" || cmdName == ".players") {
                 try {
                     CmdPlayers.DisplayPlayers(null, "", text => Pm(user.Nick, text), false, false);
                 } catch (Exception e) {
@@ -273,15 +275,16 @@ namespace MCGalaxy {
                 }
                 return;
             }
+            Command.Search(ref cmdName, ref cmdArgs);
             
             string error;
             string chan = String.IsNullOrEmpty(channel) ? opchannel : channel;
-            if (!CheckIRCCommand(user, ircCmd, chan, out error)) {
+            if (!CheckIRCCommand(user, cmdName, chan, out error)) {
                 if (error != null) Pm(user.Nick, error);
                 return;
             }
 
-            Command cmd = Command.all.Find(ircCmd);
+            Command cmd = Command.all.Find(cmdName);
             if (cmd != null) {
                 Server.s.Log("IRC Command: /" + message + " (by " + user.Nick + ")");
                 string args = parts.Length > 1 ? parts[1] : "";
@@ -317,22 +320,24 @@ namespace MCGalaxy {
             
             if (ircCmd == ".x") {
                 string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
+                string cmdArgs = parts.Length > 2 ? parts[2] : "";
+                Command.Search(ref cmdName, ref cmdArgs);
+                
                 string error;
                 if (!CheckIRCCommand(user, cmdName, channel, out error)) {
                     if (error != null) Say(error, opchat);
                     return;
                 }
-
+                
                 Command cmd = Command.all.Find(cmdName);
                 if (cmdName != "" && cmd != null) {
                     Server.s.Log("IRC Command: /" + message.Replace(".x ", "") + " (by " + user.Nick + ")");
-                    string args = parts.Length > 2 ? parts[2] : "";
                     string nick = opchat ? "#@private@#" : "#@public@#";
                     Player p = MakeIRCPlayer(nick);
                     
                     try {
                         if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
-                        cmd.Use(p, args);
+                        cmd.Use(p, cmdArgs);
                     } catch (Exception ex) {
                         Say("CMD Error: " + ex, opchat);
                     }

@@ -1086,7 +1086,7 @@ namespace MCGalaxy.Gui
 
         private void killphysics_button_Click(object sender, EventArgs e)
         {
-            Command.all.Find("killphysics").Use(null, "");
+            Command.all.Find("physics").Use(null, "kill");
             try { UpdateMapList(); }
             catch { }
         }
@@ -1096,11 +1096,6 @@ namespace MCGalaxy.Gui
             Command.all.Find("unload").Use(null, "empty");
             try { UpdateMapList(); }
             catch { }
-        }
-
-        private void dgvMaps_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
 
         private void loadOngotoToolStripMenuItem_Click(object sender, EventArgs e)

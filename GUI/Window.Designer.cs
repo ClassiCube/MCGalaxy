@@ -878,7 +878,6 @@ namespace MCGalaxy.Gui
             this.dgvMaps.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvMaps.Size = new System.Drawing.Size(246, 150);
             this.dgvMaps.TabIndex = 38;
-            this.dgvMaps.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaps_CellContentClick);
             // 
             // gBChat
             // 

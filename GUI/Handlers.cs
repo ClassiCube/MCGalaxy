@@ -48,6 +48,7 @@ namespace MCGalaxy.Gui {
             } else {
                 name = text;
             }
+            Command.Search(ref name, ref args);
             if (Server.Check(name, args)) { Server.cancelcommand = false; return null; }
             
             Command cmd = Command.all.Find(name);

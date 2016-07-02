@@ -57,13 +57,11 @@ namespace MCGalaxy
             return commands.FirstOrDefault(cmd => cmd.name == name || cmd.shortcut == name);
         }
 
-        public string FindShort(string shortcut)
-        {
+        public string FindShort(string shortcut) {
             if (shortcut == "") return "";
 
-            shortcut = shortcut.ToLower();
-            foreach (Command cmd in commands.Where(cmd => cmd.shortcut == shortcut)){
-                return cmd.name;
+            foreach (Command cmd in commands) {
+                if (cmd.shortcut.CaselessEq(shortcut)) return cmd.name;
             }
             return "";
         }

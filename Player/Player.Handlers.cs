@@ -1260,36 +1260,26 @@ return;
             return true;
         }
         
-        Command GetCommand(ref string cmd, ref string message) {
-            string shortcut = Command.all.FindShort(cmd);
-            if (shortcut != "") cmd = shortcut;
+        Command GetCommand(ref string cmd, ref string cmdArgs) {
+            Command.Search(ref cmd, ref cmdArgs);
             
             byte bindIndex;
             if (byte.TryParse(cmd, out bindIndex) && bindIndex < 10) {
                 if (messageBind[bindIndex] == null) { SendMessage("No command is bound to: /" + cmd); return null; }
                 cmd = cmdBind[bindIndex];
-                message = messageBind[bindIndex] + " " + message;
-                message = message.TrimEnd(' ');
-            }
-
-            Alias alias = Alias.Find(cmd);
-            if (alias != null) {
-                cmd = alias.Target;
-                if (alias.Prefix != null)
-                    message = message == "" ? alias.Prefix : alias.Prefix + " " + message;
-                if (alias.Suffix != null)
-                    message = message == "" ? alias.Suffix : message + " " + alias.Suffix;
+                cmdArgs = messageBind[bindIndex] + " " + cmdArgs;
+                cmdArgs = cmdArgs.TrimEnd(' ');
             }
             
-            if (OnCommand != null) OnCommand(cmd, this, message);
-            if (PlayerCommand != null) PlayerCommand(cmd, this, message);
-            OnPlayerCommandEvent.Call(cmd, this, message);
+            if (OnCommand != null) OnCommand(cmd, this, cmdArgs);
+            if (PlayerCommand != null) PlayerCommand(cmd, this, cmdArgs);
+            OnPlayerCommandEvent.Call(cmd, this, cmdArgs);
             if (cancelcommand) { cancelcommand = false; return null; }
             
             Command command = Command.all.Find(cmd);
             if (command == null) {
                 if (Block.Byte(cmd) != Block.Zero) {
-                    message = cmd.ToLower(); cmd = "mode";
+                    cmdArgs = cmd.ToLower(); cmd = "mode";
                     command = Command.all.Find("mode");
                 } else {
                     SendMessage("Unknown command \"" + cmd + "\"."); return null;
