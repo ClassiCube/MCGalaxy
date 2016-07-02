@@ -50,7 +50,7 @@ namespace MCGalaxy {
         public unsafe static void Generate(Level lvl, string type, string args) {
             int index = 0, width = lvl.Width, height = lvl.Height, length = lvl.Length;
             byte[] blocks = lvl.blocks;
-            int half = height / 2;            
+            int half = height / 2;
             RealisticMapGen generator = new RealisticMapGen();
             IModule module2D = null, module3D = null;
             

@@ -45,48 +45,48 @@ namespace MCGalaxy {
         public static string Parse(string name) {
             name = name.ToLower();
             switch (name) {
-                    case "black": return black;
-                    case "navy": return navy;
-                    case "green": return green;
-                    case "teal": return teal;
-                    case "maroon": return maroon;
-                    case "purple": return purple;
-                    case "gold": return gold;
-                    case "silver": return silver;
-                    case "gray": return gray;
-                    case "blue": return blue;
-                    case "lime": return lime;
-                    case "aqua": return aqua;
-                    case "red": return red;
-                    case "pink": return pink;
-                    case "yellow": return yellow;
-                    case "white": return white;
-                    default: return GetExtColor(name);
+                case "black": return black;
+                case "navy": return navy;
+                case "green": return green;
+                case "teal": return teal;
+                case "maroon": return maroon;
+                case "purple": return purple;
+                case "gold": return gold;
+                case "silver": return silver;
+                case "gray": return gray;
+                case "blue": return blue;
+                case "lime": return lime;
+                case "aqua": return aqua;
+                case "red": return red;
+                case "pink": return pink;
+                case "yellow": return yellow;
+                case "white": return white;
+                default: return GetExtColor(name);
             }
         }
         
         public static string Name(string str) {
             if (str.Length != 2 || str[0] != '&') return "";
             switch (str) {
-                    case black: return "black";
-                    case navy: return "navy";
-                    case green: return "green";
-                    case teal: return "teal";
-                    case maroon: return "maroon";
-                    case purple: return "purple";
-                    case gold: return "gold";
-                    case silver: return "silver";
-                    case gray: return "gray";
-                    case blue: return "blue";
-                    case lime: return "lime";
-                    case aqua: return "aqua";
-                    case red: return "red";
-                    case pink: return "pink";
-                    case yellow: return "yellow";
-                    case white: return "white";
-                    default:
-                        char fallback = GetFallback(str[1]);
-                        return fallback == '\0' ? "" : ExtColors[str[1]].Name;
+                case black: return "black";
+                case navy: return "navy";
+                case green: return "green";
+                case teal: return "teal";
+                case maroon: return "maroon";
+                case purple: return "purple";
+                case gold: return "gold";
+                case silver: return "silver";
+                case gray: return "gray";
+                case blue: return "blue";
+                case lime: return "lime";
+                case aqua: return "aqua";
+                case red: return "red";
+                case pink: return "pink";
+                case yellow: return "yellow";
+                case white: return "white";
+                default:
+                    char fallback = GetFallback(str[1]);
+                    return fallback == '\0' ? "" : ExtColors[str[1]].Name;
             }
         }
         

@@ -50,15 +50,6 @@ namespace MCGalaxy {
             }
         }
         
-        public static byte[] GZip(this byte[] bytes, out int length) {
-            using (MemoryStream ms = new MemoryStream()) {
-                using (GZipStream gs = new GZipStream(ms, CompressionMode.Compress, true))
-                    gs.Write(bytes, 0, bytes.Length);
-                length = (int)ms.Length;
-                return ms.GetBuffer();
-            }
-        }
-        
         public static byte[] Decompress(this byte[] gzip, int capacity = 16)
         {
             // Create a GZIP stream with decompression mode.

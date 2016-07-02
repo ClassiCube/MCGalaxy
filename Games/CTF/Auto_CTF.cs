@@ -324,6 +324,14 @@ namespace MCGalaxy.Games
 
         }
         
+        const string createSyntax = 
+            @"CREATE TABLE if not exists CTF (
+ID       INTEGER {0}{2}INCREMENT NOT NULL, 
+Name     VARCHAR(20), 
+Points   MEDIUMINT UNSIGNED, 
+Captures MEDIUMINT UNSIGNED,
+tags     MEDIUMINT UNSIGNED{1});";
+        
         /// <summary> Start the CTF game </summary>
         public void Start()
         {
@@ -358,8 +366,13 @@ namespace MCGalaxy.Games
             bluebase.block = Block.blue;
             Server.s.Log("[Auto_CTF] Running...");
             started = true;
-            Database.executeQuery("CREATE TABLE if not exists CTF (ID INTEGER " + (Server.useMySQL ? "" : "PRIMARY KEY ") + "AUTO" + (Server.useMySQL ? "_" : "") + "INCREMENT NOT NULL, Name VARCHAR(20), Points MEDIUMINT UNSIGNED, Captures MEDIUMINT UNSIGNED, tags MEDIUMINT UNSIGNED" + (Server.useMySQL ? ", PRIMARY KEY (ID)" : "") + ");");
+            
+            string prim1 = Server.useMySQL ? "" : "PRIMARY KEY ";
+            string prim2 = Server.useMySQL ? ", PRIMARY KEY (ID)" : "";
+            string autoI = Server.useMySQL ? "AUTO_" : "AUTO";
+            Database.executeQuery(String.Format(createSyntax, prim1, prim2, autoI));
         }
+        
         string Vote()
         {
             started = false;

@@ -152,67 +152,6 @@ namespace MCGalaxy {
             catch { }
         }
         
-        void InitDatabase() {
-            try {
-                if (Server.useMySQL)
-                    Database.executeQuery("CREATE DATABASE if not exists `" + MySQLDatabaseName + "`", true);
-            } catch (Exception e) {
-                ErrorLog(e);
-                s.Log("MySQL settings have not been set! Please Setup using the properties window.");
-                return;
-            }
-            
-            string autoInc = useMySQL ? "AUTO_INCREMENT" : "AUTOINCREMENT";
-            Database.executeQuery(string.Format("CREATE TABLE if not exists Players (ID INTEGER {0}" + autoInc + " NOT NULL, " +
-                                                "Name TEXT, IP CHAR(15), FirstLogin DATETIME, LastLogin DATETIME, totalLogin MEDIUMINT, " +
-                                                "Title CHAR(20), TotalDeaths SMALLINT, Money MEDIUMINT UNSIGNED, totalBlocks BIGINT, " +
-                                                "totalCuboided BIGINT, totalKicked MEDIUMINT, TimeSpent VARCHAR(20), color VARCHAR(6), " +
-                                                "title_color VARCHAR(6){1});", (useMySQL ? "" : "PRIMARY KEY "), (useMySQL ? ", PRIMARY KEY (ID)" : "")));
-            Database.executeQuery(string.Format("CREATE TABLE if not exists Opstats (ID INTEGER {0}" + autoInc + " NOT NULL, " +
-                                                "Time DATETIME, Name TEXT, Cmd VARCHAR(40), Cmdmsg VARCHAR(40){1});",
-                                                (useMySQL ? "" : "PRIMARY KEY "), (useMySQL ? ", PRIMARY KEY (ID)" : "")));
-            if (!File.Exists("extra/alter.txt") && useMySQL) {
-                Database.executeQuery("ALTER TABLE Players MODIFY Name TEXT");
-                Database.executeQuery("ALTER TABLE Opstats MODIFY Name TEXT");
-                File.Create("extra/alter.txt");
-            }
-            
-            //since 5.5.11 we are cleaning up the table Playercmds
-            string query = Server.useMySQL ? "SHOW TABLES LIKE 'Playercmds'" : "SELECT name FROM sqlite_master WHERE type='table' AND name='Playercmds';";
-            DataTable playercmds = Database.fillData(query), opstats = Database.fillData("SELECT * FROM Opstats");
-            //if Playercmds exists copy-filter to Ostats and remove Playercmds
-            if (playercmds.Rows.Count != 0) {
-                foreach (string cmd in Server.Opstats)
-                    Database.executeQuery(string.Format("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE cmd = '{0}';", cmd));
-                Database.executeQuery("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE cmd = 'review' AND cmdmsg = 'next';");
-                Database.fillData("DROP TABLE Playercmds");
-            }
-            playercmds.Dispose(); opstats.Dispose();
-
-            // Here, since SQLite is a NEW thing from 5.3.0.0, we do not have to check for existing tables in SQLite.
-            if (!useMySQL) return;
-            // Check if the color column exists.
-            DataTable colorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='color'");
-            if (colorExists.Rows.Count == 0)
-                Database.executeQuery("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
-            colorExists.Dispose();
-
-            DataTable tcolorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
-            if (tcolorExists.Rows.Count == 0)
-                Database.executeQuery("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
-            tcolorExists.Dispose();
-
-            DataTable timespent = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
-            if (timespent.Rows.Count == 0)
-                Database.executeQuery("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked");
-            timespent.Dispose();
-
-            DataTable totalCuboided = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
-            if (totalCuboided.Rows.Count == 0)
-                Database.executeQuery("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks");
-            totalCuboided.Dispose();
-        }
-        
         public static string SendResponse(HttpListenerRequest request) {
             try {
                 string api = "";

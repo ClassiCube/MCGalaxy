@@ -115,6 +115,10 @@
     <Compile Include="Bots\Instructions.cs" />
     <Compile Include="Bots\PlayerBot.cs" />
     <Compile Include="Bots\ScriptFile.cs" />
+    <Compile Include="Chat\Chat.cs" />
+    <Compile Include="Chat\Colors.cs" />
+    <Compile Include="Chat\EmotesHandler.cs" />
+    <Compile Include="Chat\FullCP437Handler.cs" />
     <Compile Include="Commands\Bots\CmdBotAdd.cs" />
     <Compile Include="Commands\Bots\CmdBotAI.cs" />
     <Compile Include="Commands\Bots\CmdBotRemove.cs" />
@@ -511,7 +515,6 @@
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
     <Compile Include="Network\LevelChunkStream.cs" />
-    <Compile Include="Player\Chat.cs" />
     <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupCommands.cs" />
@@ -545,8 +548,6 @@
     <Compile Include="Network\Player.Networking.cs" />
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
-    <Compile Include="Player\EmotesHandler.cs" />
-    <Compile Include="Player\FullCP437Handler.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Server\AutoSaver.cs" />
     <Compile Include="Player\Ban.cs" />
@@ -562,7 +563,6 @@
     <Compile Include="Server\BackupDB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
-    <Compile Include="Server\Colors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
@@ -574,6 +574,7 @@
     </Compile>
     <Compile Include="Scripting\Backends.cs" />
     <Compile Include="Server\Server.cs" />
+    <Compile Include="Server\Server.DB.cs" />
     <Compile Include="Server\Server.Fields.cs" />
     <Compile Include="Server\Server.Tasks.cs" />
     <Compile Include="Server\Server.Threads.cs" />
@@ -695,6 +696,7 @@
     <Folder Include="Config" />
     <Folder Include="Bots" />
     <Folder Include="Events" />
+    <Folder Include="Chat" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\List" />
     <Folder Include="Player\Undo" />
