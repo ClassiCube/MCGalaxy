@@ -252,11 +252,11 @@ namespace MCGalaxy {
         public void Kick(string kickString, bool sync = false) { LeaveServer(kickString, null, sync); }
         public void Leave(string discMsg, bool sync = false) { LeaveServer(discMsg, discMsg, sync); }
         
-        [Obsolete("Use LeaveServer() instead")]
+        [Obsolete("Use Leave() or Kick() instead")]
         public void leftGame(string kickMsg = "") { LeaveServer(kickMsg, null); }
 
         bool leftServer = false;
-        public void LeaveServer(string kickMsg, string discMsg, bool sync = false) {
+        void LeaveServer(string kickMsg, string discMsg, bool sync = false) {
             if (discMsg != null) discMsg = Colors.EscapeColors(discMsg);
             if (kickMsg != null) kickMsg = Colors.EscapeColors(kickMsg);
             if (leftServer) return;

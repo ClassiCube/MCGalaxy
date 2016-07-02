@@ -35,9 +35,9 @@ namespace MCGalaxy.Commands
             if (Server.chatmod && !p.voice) { Player.Message(p, "Chat moderation is on, you cannot emote."); return; }
 
             if (!p.level.worldChat) {
-                Chat.GlobalChatLevel(p, "<Level>" + p.color + "*" + Colors.StripColours(p.DisplayName) + " " + message, false);
+                Chat.GlobalChatLevel(p, "<Level>" + p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message, false);
             } else {
-                Player.SendChatFrom(p, p.color + "*" + Colors.StripColours(p.DisplayName) + " " + message, false);
+                Player.SendChatFrom(p, p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message, false);
                 Player.RaisePlayerAction(p, PlayerAction.Me, message);
             }
         }

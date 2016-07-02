@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
                     if (pl.group != grp) continue;
                     if (pl.hidden && !showHidden) continue;
                     if (p == pl || Entities.CanSee(p, pl)) {
-                        string name = Colors.StripColours(pl.DisplayName);
+                        string name = Colors.StripColors(pl.DisplayName);
                         AddStates(pl, ref name);
                         rankSec.Append(pl, name);
                     }
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands
             	if (pl.hidden && !showHidden) continue;
             	if (p == pl || Entities.CanSee(p, pl)) {
                     totalPlayers++;
-                    string name = Colors.StripColours(pl.DisplayName);
+                    string name = Colors.StripColors(pl.DisplayName);
                     AddStates(pl, ref name);
 
                     if (pl.isDev) devSec.Append(pl, name);

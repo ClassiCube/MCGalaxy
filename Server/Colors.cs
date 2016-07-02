@@ -174,7 +174,7 @@ namespace MCGalaxy {
             return Colors.GetFallback(color) != '\0';
         }        
         
-        public static string StripColours(string value) {
+        public static string StripColors(string value) {
             if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1)
                 return value;
             char[] output = new char[value.Length];

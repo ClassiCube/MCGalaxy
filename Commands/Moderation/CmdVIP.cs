@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands {
                 } else {
                     string count = list.Count > 1 ? "is 1" : "are " + list.Count;
                     Player.Message(p, "There " + count + " VIPs:");
-                    Player.Message(p, list.Concatenate(", "));
+                    Player.Message(p, list.Concatenate());
                 }
             } else {
                 Help(p);

@@ -31,7 +31,7 @@ namespace MCGalaxy {
             string name = Server.name;
             Server.zombie.OnHeartbeat(ref name);
             Server.lava.OnHeartbeat(ref name);
-            name = Colors.StripColours(name);
+            name = Colors.StripColors(name);
             
             return "&port=" + Server.port +
                 "&max=" + Server.players +

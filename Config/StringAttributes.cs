@@ -95,7 +95,7 @@ namespace MCGalaxy.Config {
         
         public override string Serialise(object value) {
             List<string> elements = (List<string>)value;
-            return String.Join(",", elements);
+            return elements.Concatenate(",");
         }
     }
 }

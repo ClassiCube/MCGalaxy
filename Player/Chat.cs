@@ -124,7 +124,7 @@ namespace MCGalaxy {
         
         internal static Dictionary<string, TokenParser> standardTokens = new Dictionary<string, TokenParser> {
             { "$name", p => p.DisplayName == null ? null :
-                    (Server.dollarNames ? "$" : "") + Colors.StripColours(p.DisplayName) },
+                    (Server.dollarNames ? "$" : "") + Colors.StripColors(p.DisplayName) },
             { "$truename", p => p.truename == null ? null :
                     (Server.dollarNames ? "$" : "") + p.truename },
             { "$date", p => DateTime.Now.ToString("yyyy-MM-dd") },

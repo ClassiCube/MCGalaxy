@@ -99,7 +99,7 @@ namespace MCGalaxy.Games
                 w.WriteLine("lives = " + lifeNum.ToString());
                 w.WriteLine("setup-rank = " + Level.PermissionToName(setupRank).ToLower());
                 w.WriteLine("control-rank = " + Level.PermissionToName(controlRank).ToLower());
-                w.WriteLine("maps = " + maps.Concatenate(","));
+                w.WriteLine("maps = " + maps.Concatenate());
             }
         }
 

@@ -18,22 +18,31 @@
 using System;
 
 namespace MCGalaxy.Commands {
-	
     public sealed class Cmd8Ball : Command {
-
         public override string name { get { return "8ball"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-		public Cmd8Ball() { }
+        public Cmd8Ball() { }
+        static string[] answers = { "Not likely." , "Very likely." , "Impossible!" , "Probably." , "Ask again later." , "No." , "Maybe." };
+        DateTime nextUse;
+        
         public override void Use(Player p, string message) {
             if (String.IsNullOrEmpty(message)) { Help(p); return; }
             if (p.joker || p.muted) { Player.Message(p, "Cannot use 8ball while muted or jokered."); return; }
+            
+            TimeSpan delta = nextUse - DateTime.UtcNow;
+            if (delta.TotalSeconds > 0) {
+                Player.Message(p, "The 8-ball is still recharging, wait another {0} seconds.",
+                               (int)Math.Ceiling(delta.TotalSeconds));
+                return;
+            }
+            nextUse = DateTime.UtcNow.AddSeconds(10);
+            
             Random random = new Random();
-            string[] messages = { "Not likely." , "Very likely." , "Impossible!" , "Probably." , "Ask again later." , "No." , "Maybe." };
-            Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColours(p.DisplayName) + p.color + " asked the question " + message + " ", false);
-            Chat.GlobalChatLevel(p, p.color + "*" + p.color + "The answer was " + messages[random.Next(messages.Length)], false);
+            Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColors(p.DisplayName) + " asked the question " + message, false);
+            Chat.GlobalChatLevel(p, p.color + "*" + "The answer was " + answers[random.Next(answers.Length)], false);
         }
 
         public override void Help(Player p) {

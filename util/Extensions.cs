@@ -88,7 +88,7 @@ namespace MCGalaxy {
             return new string(a);
         }
         
-        public static string Concatenate<T>(this List<T> list, string separator) {
+        public static string Concatenate<T>(this IEnumerable<T> list, string separator = ", ") {
             return String.Join(separator, list);
         }
         
