@@ -574,6 +574,7 @@
     </Compile>
     <Compile Include="Scripting\Backends.cs" />
     <Compile Include="Server\Server.cs" />
+    <Compile Include="Server\Server.Fields.cs" />
     <Compile Include="Server\Server.Tasks.cs" />
     <Compile Include="Server\Server.Threads.cs" />
     <Compile Include="Server\Updater.cs" />
