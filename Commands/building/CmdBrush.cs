@@ -78,9 +78,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "No brush found with name \"{0}\".", message);
                 Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
             } else {
-                string[] help = Brush.BrushesHelp[brush];
-                foreach (string line in help)
-                    Player.Message(p, line);
+                Player.MessageLines(p, Brush.BrushesHelp[brush]);
             }
         }
     }

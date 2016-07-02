@@ -101,18 +101,9 @@ namespace MCGalaxy.Commands
         }
         
         void HandleEnvCommand(Player p, string type, string value) {
-        	string arg = value == "" ? "normal" : value;
-        	if (CmdEnvironment.Handle(p, type.ToLower(), arg)) return;
-            
-            Player.Message(p, "/os env [fog/cloud/sky/shadow/sun] [hex color code] -- Changes env colors of your map");
-            Player.Message(p, "/os env level -- Sets the water height of your map");
-            Player.Message(p, "/os env cloudheight -- Sets the cloud height of your map");
-            Player.Message(p, "/os env maxfog -- Sets the max fog distance in your map");
-            Player.Message(p, "/os env horizon -- Sets what block the \"ocean\" shows outside your map");
-            Player.Message(p, "/os env border -- Sets what block replaces the \"bedrock\" below sea level in your map");
-            Player.Message(p, "/os env weather [sun/rain/snow/normal] -- Changes the weather of your map.");
-            Player.Message(p, "  Warning: Shrub,Flowers,Mushroom,Rope,Fire cannot be used for horizon/bedrock.");
-            Player.Message(p, "  Note: If no hex or block is given, the default will be used.");
+            string arg = value == "" ? "normal" : value;
+            if (CmdEnvironment.Handle(p, type.ToLower(), arg)) return;           
+            Player.MessageLines(p, envHelp);
         }
         
         void HandleMapCommand(Player p, string message, string cmd, string value) {
@@ -188,11 +179,11 @@ namespace MCGalaxy.Commands
                     Command.all.Find("deletelvl").Use(p, map);
                     Player.Message(p, "Map 1 has been removed.");
                 } else if (byte.TryParse(value, out mapNum)) {
-            	    string map = p.name.ToLower() + value;
+                    string map = p.name.ToLower() + value;
                     if (!LevelInfo.ExistsOffline(map)) {
                         Player.Message(p, "You don't have a map with that map number."); return;
                     }
-            	    Command.all.Find("deletelvl").Use(p, map);
+                    Command.all.Find("deletelvl").Use(p, map);
                     Player.Message(p, "Map " + value + " has been removed.");
                 } else {
                     Help(p);
@@ -248,24 +239,8 @@ namespace MCGalaxy.Commands
                 Command.all.Find("map").Use(p, "buildable");
             } else if (cmd == "DELETABLE") {
                 Command.all.Find("map").Use(p, "deletable");
-            }  else {
-                Player.Message(p, "/os map add [type - default is flat] -- Creates your map (128x64x128)");
-                Player.Message(p, "/os map add [width] [height] [length] [type] -- Creates your map");
-                Player.Message(p, "/os map physics -- Sets the physics on your map.");
-                Player.Message(p, "/os map delete -- Deletes your map");
-                Player.Message(p, "/os map restore [num] -- Restores backup [num] of your map");
-                Player.Message(p, "/os map save -- Saves your map");
-                Player.Message(p, "/os map chat -- Sets whether roleplay (level only) chat is used.");
-                Player.Message(p, "/os map motd -- Changes the motd of your map");
-                Player.Message(p, "/os map guns -- Toggles if guns can be used on your map");
-                Player.Message(p, "/os map pervisit %b[default is " + Server.defaultRank + "]%S -- Changes the pervisit of you map");
-                Player.Message(p, "/os map texture -- Sets terrain.png url for your map");
-                Player.Message(p, "/os map texturezip -- Sets texture pack .zip url for your map");
-                Player.Message(p, "/os map buildable -- Sets whether any blocks can be placed");
-                Player.Message(p, "/os map deletable -- Sets whether any blocks can be deleted");
-                Player.Message(p, "  Textures: If your URL is too long, use the \"<\" symbol to continue it on another line.");
-                Player.Message(p, "  Map Types: Desert, flat, forest, island, mountains, ocean, pixel, empty and space");
-                Player.Message(p, "  Motd: If no message is provided, the default message will be used.");
+            } else {
+                Player.MessageLines(p, mapHelp);
             }
         }
         
@@ -349,13 +324,7 @@ namespace MCGalaxy.Commands
                     Player.Message(p, blocked);
                 }
             } else {
-                Player.Message(p, "/os zone add [playername or rank] -- Add a zone for a player or a rank."); ;
-                Player.Message(p, "/os zone del [all] -- Deletes all zones.");
-                Player.Message(p, "/os zone list -- show active zones on brick.");
-                Player.Message(p, "/os zone block - Blacklist a player from joining your map.");
-                Player.Message(p, "/os zone unblock - Unblocks a player from your map.");
-                Player.Message(p, "/os zone blacklist - Show current blacklisted players.");
-                Player.Message(p, "You can only delete all zones for now.");
+                Player.MessageLines(p, zoneHelp);
             }
         }
         
@@ -385,5 +354,49 @@ namespace MCGalaxy.Commands
                            "kickall, env, preset, levelblock(lb)");            
             Player.Message(p, "%T/os zone add [name] %H- allows [name] to build in the world.");
         }
+        
+        #region Help messages
+        
+        static string[] envHelp = {
+            "%T/os env [fog/cloud/sky/shadow/sun] [hex color] %H- Changes env colors of your map.",
+            "%T/os env level [height] %H- Sets the water height of your map.",
+            "%T/os env cloudheight [height] %H-Sets cloud height of your map.",
+            "%T/os env maxfog %H- Sets the max fog distance in your map.",
+            "%T/os env horizon %H- Sets the \"ocean\" block outside your map.",
+            "%T/os env border %H- Sets the \"bedrock\" block outside your map.",
+            "%T/os env weather [sun/rain/snow] %H- Sets weather of your map.",
+            " Note: Shrub, flowers, mushrooms, rope, fire cannot be used for horizon/bedrock.",
+            " Note: If no hex or block is given, the default will be used.",
+        };
+        
+        static string[] mapHelp = {
+            "%T/os map add [type - default is flat] %H- Creates your map (128x64x128)",
+            "%T/os map add [width] [height] [length] [type]",
+            " See %T/help newlvl types %Sfor a list of map types.",
+            "%T/os map physics [level] %H- Sets the physics on your map.",
+            "%T/os map delete %H- Deletes your map",
+            "%T/os map restore [num] %H- Restores backup [num] of your map",
+            "%T/os map save %H- Saves your map",
+            "%T/os map chat %H- Sets if roleplay(level only) chat is used.",
+            "%T/os map motd [message] %H- Sets the motd of your map",
+            " Motd: If message is not given, server default is used.",
+            "%T/os map guns %H- Toggles if guns can be used on your map",
+            "%T/os map pervisit [rank] %H- Sets the pervisit of you map",
+            "%T/os map texture [url] %H- Sets terrain.png for your map",
+            "%T/os map texturezip [url] %H- Sets texture .zip for your map",
+            "%T/os map buildable %H- Sets whether any blocks can be placed",
+            "%T/os map deletable %H- Sets whether any blocks can be deleted",
+        };
+        
+        static string[] zoneHelp = {
+            "%T/os zone add [player/rank] %H- Adds a zone for a player or a rank, " +
+            "allowing them to always build in your map.",
+            "%T/os zone del all %H- Deletes all zones in your map.",
+            "%T/os zone list %H- Shows zones affecting a particular block.",
+            "%T/os zone block [name] %H- Prevents them from joining your map.",
+            "%T/os zone unblock [name] %H- Allows them to join your map.",
+            "%T/os zone blacklist %H- Shows currently blacklisted players.",
+        };
+        #endregion
     }
 }

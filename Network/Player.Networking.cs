@@ -155,6 +155,11 @@ namespace MCGalaxy {
             SendRaw(buffer);
         }
         
+        public static void MessageLines(Player p, IEnumerable<string> lines) {
+            foreach (string line in lines)
+                SendMessage(p, line, true);
+        }
+        
         public static void Message(Player p, string message) {
             SendMessage(p, message, true);
         }

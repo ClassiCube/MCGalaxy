@@ -30,11 +30,9 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (!File.Exists(newsFile)) {
                 CP437Writer.WriteAllText(newsFile, "News have not been created. Put News in '" + newsFile + "'."); return;
-            }
-            
+            }           
             List<string> lines = CP437Reader.ReadAllLines(newsFile);
-            foreach (string line in lines)
-                Player.Message(p, line);
+            Player.MessageLines(p, lines);
         }
         
         public override void Help(Player p) {
