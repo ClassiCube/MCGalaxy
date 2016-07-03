@@ -15,8 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System.Data;
-using MCGalaxy.SQL;
+using System;
 
 namespace MCGalaxy.Commands {
     public sealed class CmdSeen : Command {
@@ -33,16 +32,23 @@ namespace MCGalaxy.Commands {
             Player pl = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             if (matches == 1) {
-                Player.Message(p, pl.ColoredName + " %Swas first seen at " + pl.firstLogin);
-                Player.Message(p, pl.ColoredName + " %Swas last seen at " + pl.lastLogin);
-                Player.Message(p, pl.ColoredName + " %Sis currently online.");                 
+                Show(p, pl.ColoredName, pl.firstLogin, pl.lastLogin);
+                Player.Message(p, pl.ColoredName + " %Sis currently online.");
                 return;
             }
 
+            Player.Message(p, "Searching PlayerDB..");
             OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
             if (target == null) return;
-            Player.Message(p, message + " was first seen at " + target.firstLogin);
-            Player.Message(p, message + " was last seen at " + target.lastLogin);
+            Show(p, target.name, DateTime.Parse(target.firstLogin), 
+                 DateTime.Parse(target.lastLogin));
+        }
+        
+        static void Show(Player p, string name, DateTime first, DateTime last) {
+            TimeSpan firstDelta = DateTime.Now - first;
+            TimeSpan lastDelta = DateTime.Now - last;
+            Player.Message(p, "{0} %Swas first seen at {1:H:mm} on {1:d} ({2} ago)", name, first, firstDelta.Shorten());
+            Player.Message(p, "{0} %Swas last seen at {1:H:mm} on {1:d} ({2} ago)", name, last, lastDelta.Shorten());
         }
         
         public override void Help(Player p) {
