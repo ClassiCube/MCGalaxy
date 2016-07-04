@@ -379,16 +379,14 @@ namespace MCGalaxy {
                     uP.index = b;
                     uP.SetData(oldBlock, oldExtType, type, extType);
 
-                    if (currentUndo > Server.physUndo) {
-                        currentUndo = 0;
-                        UndoBuffer[currentUndo] = uP;
-                    } else if (UndoBuffer.Count < Server.physUndo) {
-                        currentUndo++;
+                    if (UndoBuffer.Count < Server.physUndo) {
                         UndoBuffer.Add(uP);
                     } else {
-                        currentUndo++;
+                        if (currentUndo >= Server.physUndo)
+                            currentUndo = 0;
                         UndoBuffer[currentUndo] = uP;
                     }
+                    currentUndo++;
                 }
 
                 blocks[b] = type;
